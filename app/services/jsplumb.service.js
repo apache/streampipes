@@ -66,10 +66,11 @@ export class JsplumbService {
 
     connectNodes($parentElement, $target) {
         var options;
+        // TODO: getJsplumbConfig depends on isPreview. Not implemented yet
         if ($parentElement.hasClass("stream")) {
-            options = this.JsplumbConfigService.streamEndpointOptions;
+            options = this.getJsplumbConfig(true).streamEndpointOptions;
         } else {
-            options = this.JsplumbConfigService.sepaEndpointOptions;
+            options = this.getJsplumbConfig(true).sepaEndpointOptions;
         }
         var sourceEndPoint;
         if (this.JsplumbBridge.selectEndpoints({source: $parentElement}).length > 0) {
