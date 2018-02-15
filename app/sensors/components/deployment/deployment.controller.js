@@ -1,7 +1,7 @@
 export class DeploymentController {
 
-    constructor(deploymentService) {
-        this.deploymentService = deploymentService;
+    constructor(DeploymentService) {
+        this.DeploymentService = DeploymentService;
         this.deployment = {};
         this.deployment.elementType = this.deploymentSettings.elementType;
 
@@ -15,7 +15,7 @@ export class DeploymentController {
     generateImplementation() {
         this.resultReturned = false;
         this.loading = true;
-        this.deploymentService.generateImplementation(this.deployment, this.element)
+        this.DeploymentService.generateImplementation(this.deployment, this.element)
             .success((data, status, headers, config) => {
                 //$scope.openSaveAsDialog($scope.deployment.artifactId +".zip", data, "application/zip");
                 this.resultReturned = true;
@@ -29,7 +29,7 @@ export class DeploymentController {
 
     generateDescription() {
         this.loading = true;
-        this.deploymentService.generateDescriptionJava(this.deployment, this.element)
+        this.DeploymentService.generateDescriptionJava(this.deployment, this.element)
             .success((data, status, headers, config) => {
                 // $scope.openSaveAsDialog($scope.element.name +".jsonld", data, "application/json");
                 this.loading = false;
@@ -38,7 +38,7 @@ export class DeploymentController {
             }).error((data, status, headers, config) => {
             this.loading = false;
         });
-        this.deploymentService.generateDescriptionJsonld(this.deployment, this.element)
+        this.DeploymentService.generateDescriptionJsonld(this.deployment, this.element)
             .success((data, status, headers, config) => {
                 // $scope.openSaveAsDialog($scope.element.name +".jsonld", data, "application/json");
                 this.loading = false;
@@ -56,3 +56,5 @@ export class DeploymentController {
         this.saveAs(blob, filename);
     }
 }
+
+DeploymentController.$inject = ['DeploymentService'];

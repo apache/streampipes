@@ -16,9 +16,9 @@ import { PipelinePositioningService } from './pipeline-positioning.service'
 import { PipelineEditorService } from './pipeline-editor.service'
 import { DialogBuilder } from './dialog-builder.service'
 import { MeasurementUnits } from './measurement-units.service'
+import { DeploymentService } from './deployment.service'
 
 import httpInterceptor from './http-interceptor.service'
-import deploymentService from './deployment.service'
 import {ObjectProvider} from './object-provider.service'
 
 import jsplumbConfigService from './jsplumb-config.service'
@@ -40,9 +40,9 @@ export default angular.module('sp.services', [spConstants])
 	.service('PipelineEditorService', PipelineEditorService)
 	.service('DialogBuilder', DialogBuilder)
     .service('MeasurementUnitsService', MeasurementUnits)
+    .service('DeploymentService', DeploymentService)
 
 	.factory('httpInterceptor', httpInterceptor)
-	.factory('deploymentService', deploymentService)
 	.factory('jsplumbConfigService', jsplumbConfigService)
 	.factory('pipelineElementIconService', pipelineElementIconService)
 	.component('pipelineElementOptions', PipelineElementOptionsComponent)
