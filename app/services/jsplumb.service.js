@@ -1,8 +1,8 @@
 export class JsplumbService {
 
-    constructor($http, pipelineElementIconService, ObjectProvider, apiConstants, $compile, JsplumbConfigService, JsplumbBridge, $timeout) {
+    constructor($http, PipelineElementIconService, ObjectProvider, apiConstants, $compile, JsplumbConfigService, JsplumbBridge, $timeout) {
         this.$http = $http;
-        this.pipelineElementIconService = pipelineElementIconService;
+        this.PipelineElementIconService = PipelineElementIconService;
         this.objectProvider = ObjectProvider;
         this.apiConstants = apiConstants;
         this.$compile = $compile;
@@ -66,10 +66,11 @@ export class JsplumbService {
 
     connectNodes($parentElement, $target) {
         var options;
-        // TODO: getJsplumbConfig depends on isPreview. Not implemented yet
         if ($parentElement.hasClass("stream")) {
+            // TODO: getJsplumbConfig depends on isPreview. Not implemented yet
             options = this.getJsplumbConfig(true).streamEndpointOptions;
         } else {
+            // TODO: getJsplumbConfig depends on isPreview. Not implemented yet
             options = this.getJsplumbConfig(true).sepaEndpointOptions;
         }
         var sourceEndPoint;
@@ -168,4 +169,4 @@ export class JsplumbService {
     }
 }
 
-JsplumbService.$inject = ['$http', 'pipelineElementIconService', 'ObjectProvider', 'apiConstants', '$compile', 'JsplumbConfigService', 'JsplumbBridge', '$timeout'];
+JsplumbService.$inject = ['$http', 'PipelineElementIconService', 'ObjectProvider', 'apiConstants', '$compile', 'JsplumbConfigService', 'JsplumbBridge', '$timeout'];

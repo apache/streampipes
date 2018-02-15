@@ -18,12 +18,12 @@ import { DialogBuilder } from './dialog-builder.service'
 import { MeasurementUnits } from './measurement-units.service'
 import { DeploymentService } from './deployment.service'
 import { JsplumbConfigService } from './jsplumb-config.service'
+import { PipelineElementIconService } from './pipeline-icon.service'
 
 import httpInterceptor from './http-interceptor.service'
-import {ObjectProvider} from './object-provider.service'
+import { ObjectProvider } from './object-provider.service'
 
-import pipelineElementIconService from './pipeline-icon.service'
-import {PipelineElementOptionsComponent} from '../editor/components/pipeline-element-options/pipeline-element-options.component'
+import { PipelineElementOptionsComponent } from '../editor/components/pipeline-element-options/pipeline-element-options.component'
 
 export default angular.module('sp.services', [spConstants])
 	.service('ImageChecker', ImageChecker)
@@ -42,8 +42,8 @@ export default angular.module('sp.services', [spConstants])
     .service('MeasurementUnitsService', MeasurementUnits)
     .service('DeploymentService', DeploymentService)
     .service('JsplumbConfigService', JsplumbConfigService)
+    .service('PipelineElementIconService', PipelineElementIconService)
 
 	.factory('httpInterceptor', httpInterceptor)
-	.factory('pipelineElementIconService', pipelineElementIconService)
 	.component('pipelineElementOptions', PipelineElementOptionsComponent)
 	.name;
