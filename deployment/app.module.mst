@@ -36,8 +36,8 @@ export default angular
         {{module}},
         {{/modulesActive}}
     ])
-    .run(["$rootScope", "$location", "RestApi", "AuthService", "$state", "$urlRouter", "objectProvider", "AuthStatusService",
-    function ($rootScope, $location, RestApi, AuthService, $state, $urlRouter, objectProvider, AuthStatusService) {
+    .run(["$rootScope", "$location", "RestApi", "AuthService", "$state", "$urlRouter", "ObjectProvider", "AuthStatusService",
+    function ($rootScope, $location, RestApi, AuthService, $state, $urlRouter, ObjectProvider, AuthStatusService) {
         var bypass;
         window.loading_screen.finish();
         if (!$location.path().startsWith("/login") && !$location.path().startsWith("/sso")) {
@@ -72,7 +72,7 @@ export default angular
         $rootScope.$on("$routeChangeStart", function (event, nextRoute, currentRoute) {
             AuthService.authenticate();
         });
-        $rootScope.state = new objectProvider.State();
+        $rootScope.state = new ObjectProvider.State();
         $rootScope.state.sources = false;
         $rootScope.state.sepas = false;
         $rootScope.state.actions = false;
