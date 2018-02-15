@@ -9,18 +9,21 @@ import { ElementIconText } from './get-element-icon-text.service'
 import { InitTooltips } from './init-tooltips.service'
 import { RestApi } from './rest-api.service'
 import { AuthStatusService } from './auth-status.service'
+import { DomainProperties } from './domain-properties.service'
+import { JsplumbBridge } from './jsplumb-bridge.service'
+import { JsplumbService } from './jsplumb.service'
+import { PipelinePositioningService } from './pipeline-positioning.service'
+import { PipelineEditorService } from './pipeline-editor.service'
+import { DialogBuilder } from './dialog-builder.service'
+import { MeasurementUnits } from './measurement-units.service'
+import { DeploymentService } from './deployment.service'
+import { JsplumbConfigService } from './jsplumb-config.service'
+import { PipelineElementIconService } from './pipeline-icon.service'
 
-import domainProperties from './domain-properties.service'
 import httpInterceptor from './http-interceptor.service'
-import measurementUnits from './measurement-units.service'
-import deploymentService from './deployment.service'
-import objectProvider from './object-provider.service'
-import pipelinePositioningService from './pipeline-positioning.service'
-import jsplumbService from './jsplumb.service'
-import jsplumbConfigService from './jsplumb-config.service'
-import pipelineElementIconService from './pipeline-icon.service'
-import pipelineElementOptions from '../editor/directives/pipeline-element-options/pipeline-element-options.directive'
-import pipelineEditorService from './pipeline-editor.service'
+import { ObjectProvider } from './object-provider.service'
+
+import { PipelineElementOptionsComponent } from '../editor/components/pipeline-element-options/pipeline-element-options.component'
 
 export default angular.module('sp.services', [spConstants])
 	.service('ImageChecker', ImageChecker)
@@ -29,16 +32,18 @@ export default angular.module('sp.services', [spConstants])
 	.service('InitTooltips', InitTooltips)
 	.service('RestApi', RestApi)
 	.service('AuthStatusService', AuthStatusService)
+	.service('ObjectProvider', ObjectProvider)
+	.service('DomainProperties', DomainProperties)
+	.service('JsplumbBridge', JsplumbBridge)
+	.service('JsplumbService', JsplumbService)
+	.service('PipelinePositioningService', PipelinePositioningService)
+	.service('PipelineEditorService', PipelineEditorService)
+	.service('DialogBuilder', DialogBuilder)
+    .service('MeasurementUnitsService', MeasurementUnits)
+    .service('DeploymentService', DeploymentService)
+    .service('JsplumbConfigService', JsplumbConfigService)
+    .service('PipelineElementIconService', PipelineElementIconService)
 
-	.service('objectProvider', objectProvider)
-	.factory('domainPropertiesService', domainProperties)
 	.factory('httpInterceptor', httpInterceptor)
-	.factory('measurementUnitsService', measurementUnits)
-	.factory('deploymentService', deploymentService)
-	.factory('jsplumbService', jsplumbService)
-	.factory('jsplumbConfigService', jsplumbConfigService)
-	.factory('pipelineElementIconService', pipelineElementIconService)
-	.factory('pipelinePositioningService', pipelinePositioningService)
-	.factory('pipelineEditorService', pipelineEditorService)
-	.directive('pipelineElementOptions', pipelineElementOptions)
+	.component('pipelineElementOptions', PipelineElementOptionsComponent)
 	.name;

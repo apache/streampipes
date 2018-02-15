@@ -1,0 +1,61 @@
+<div ng-show="ctrl.currentMouseOverElement==ctrl.pipelineElement.payload.DOM" style="z-index:10">
+<span class="customize-button" ng-show="ctrl.pipelineElement.type!='stream'" style="z-index:10">
+    <md-button ng-click="ctrl.openCustomizeDialog()" ng-disabled="!ctrl.isRootElement()" class="md-icon-button"
+               style="margin:0px;font-size:20px;">
+        <md-icon md-svg-icon='action:ic_settings_24px'
+        > <md-tooltip md-direction="top">
+                    Configure Element
+                </md-tooltip></md-icon>
+        </md-button>
+</span>
+    <span class="customize-button" ng-show="ctrl.pipelineElement.type=='stream' && ctrl.isWildcardTopic()"
+          style="z-index:10">
+    <md-button ng-click="ctrl.openCustomizeStreamDialog()" ng-disabled="!ctrl.isRootElement()" class="md-icon-button"
+               style="margin:0px;font-size:20px;">
+        <md-icon md-svg-icon='action:ic_settings_24px'>
+            <md-tooltip md-direction="top">
+                    Configure Element
+                </md-tooltip></md-icon>
+        </md-button>
+</span>
+    <span class="delete-button" style="z-index:10">
+    <md-button ng-click="ctrl.removeElement()" ng-disabled="!ctrl.isRootElement()" class="md-icon-button"
+               style="margin:0px;font-size:20px;">
+        <md-icon md-svg-icon='navigation:ic_cancel_24px' class="red">
+
+</md-icon>
+        </md-button>
+    </span>
+    <span class="possible-button" ng-show="ctrl.pipelineElement.type!='action'" style="z-index:10"><md-button
+            ng-disabled="!ctrl.possibleElements || ctrl.possibleElements.length == 0 || !ctrl.isConfigured()"
+            ng-click="ctrl.EditorDialogManager.openPossibleElementsDialog(ctrl.pipelineModel, ctrl.possibleElements, ctrl.pipelineElement.payload.DOM)"
+            class="md-icon-button" style="margin:0px;font-size:20px;"><md-icon
+            md-svg-icon='action:ic_visibility_24px'>
+    <md-tooltip md-direction="bottom">
+                    Compatible Elements
+                </md-tooltip>
+
+</md-icon></md-button>
+    </span>
+    <span class="recommended-button" ng-show="ctrl.pipelineElement.type!='action'" style="z-index:10"><md-button
+            ng-click="ctrl.showRecommendations($event)"
+            ng-disabled="!ctrl.recommendationsAvailable || !ctrl.isConfigured()"
+            class="md-icon-button" style="margin:0px;font-size:20px;"><md-icon
+            md-svg-icon='content:ic_add_circle_24px'>
+    <md-tooltip md-direction="bottom">
+                    Recommended Elements
+                </md-tooltip>
+</md-icon>
+    </md-button>
+    </span>
+    <span class="help-button" style="z-index:10"><md-button ng-click="ctrl.openHelpDialog()" class="md-icon-button"
+                                                            style="margin:0px;font-size:20px;"><md-icon
+            md-svg-icon='action:ic_help_24px'>
+    <md-tooltip md-direction="bottom">
+                    Help
+                </md-tooltip></md-icon>
+    </md-button>
+</span>
+</div>
+<pipeline-element-recommendation pipeline-model="ctrl.pipelineModel" pipeline-element-dom-id="ctrl.pipelineElement.payload.DOM" recommended-elements="ctrl.recommendedElements" recommendations-shown="ctrl.recommendationsShown"></pipeline-element-recommendation>
+

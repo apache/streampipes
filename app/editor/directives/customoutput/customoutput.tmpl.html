@@ -1,6 +1,0 @@
-<div ng-repeat="property in outputStrategy.properties.providesProperties">
-    <md-checkbox ng-checked="exists(property)" ng-click="toggle(property)">
-        <div ng-if="property.properties.label"><b>{{property.properties.label}}</b> <i>({{property.properties.description}})</i><br/></div>
-        <div ng-if="!property.properties.label"> <b>{{property.properties.runtimeName}}</b><br/></div>
-    </md-checkbox>
-</div>

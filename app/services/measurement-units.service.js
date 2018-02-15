@@ -1,51 +1,43 @@
-measurementUnits.$inject = ['$http', 'RestApi'];
+export class MeasurementUnits {
 
-export default function measurementUnits($http, RestApi) {
-	var measurementUnitsService = {};
+    constructor($http, RestApi) {
+        this.measurementUnitsService = {};
+        this.allMeasurementUnits = {};
+        this.allMeasurementUnitTypes = {};
+        this.$http = $http;
+        this.RestApi = RestApi;
+        this.updateUnits();
+        this.updateUnitTypes();
+    }
 
-	var allMeasurementUnits = {};
-	var allMeasurementUnitTypes = {};
+    updateUnits() {
+        this.RestApi.getAllUnits()
+            .success(measurementUnits => {
+                this.allMeasurementUnits = measurementUnits;
+            })
+            .error(msg => {
+                console.log(msg);
+            });
+    }
 
-	var updateUnits = function() {
-		RestApi.getAllUnits()
-			.success(function(measurementUnits){
-				allMeasurementUnits = measurementUnits;
-			})
-			.error(function(msg){
-				console.log(msg);
-			});
-	};
+    updateUnitTypes() {
+        this.RestApi.getAllUnitTypes()
+            .success(measurementUnits => {
+                this.allMeasurementUnitTypes = measurementUnits;
+            })
+            .error(msg => {
+                console.log(msg);
+            });
+    }
 
+    getUnits() {
+        return this.allMeasurementUnits;
+    }
 
-	var updateUnitTypes = function() {
-		RestApi.getAllUnitTypes()
-			.success(function(measurementUnits){
-				allMeasurementUnitTypes = measurementUnits;
-			})
-			.error(function(msg){
-				console.log(msg);
-			});
-	};
+    getUnitTypes() {
+        return this.allMeasurementUnitTypes;
+    }
 
-	updateUnits();
-	updateUnitTypes();
+}
 
-	measurementUnitsService.getUnits = function() {
-		return allMeasurementUnits;
-	}
-
-	measurementUnitsService.getUnitTypes = function() {
-		return allMeasurementUnitTypes;
-	}
-
-	measurementUnitsService.updateUnits = function() {
-		updateUnits();
-	}
-
-	measurementUnitsService.updateUnitTypes = function() {
-		updateUnitTypes;
-	}
-
-	return measurementUnitsService;
-
-};
+MeasurementUnits.$inject = ['$http', 'RestApi'];

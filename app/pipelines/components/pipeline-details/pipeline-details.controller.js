@@ -2,10 +2,11 @@ import {PipelineStatusDialogController} from '../../dialog/pipeline-status-dialo
 
 export class PipelineDetailsController {
 
-    constructor(RestApi, $mdDialog, $rootScope) {
+    constructor(RestApi, $mdDialog, $rootScope, $state) {
         this.RestApi = RestApi;
         this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
+        this.$state = $state;
 
         if (this.pipeline.immediateStart) {
             if (!this.pipeline.running) {
@@ -91,11 +92,11 @@ export class PipelineDetailsController {
     };
 
     showPipelineInEditor(id) {
-        this.$rootScope.go("streampipes.editor", {pipeline: id});
+        this.$state.go("streampipes.editor", {pipeline: id});
     }
 
     showPipelineDetails(id) {
-        this.$rootScope.go("streampipes.pipelineDetails", {pipeline: id});
+        this.$state.go("streampipes.pipelineDetails", {pipeline: id});
     }
 
     modifyPipeline(pipeline) {
@@ -104,4 +105,4 @@ export class PipelineDetailsController {
 
 }
 
-PipelineDetailsController.$inject = ['RestApi', '$mdDialog', '$rootScope'];
+PipelineDetailsController.$inject = ['RestApi', '$mdDialog', '$rootScope', '$state'];

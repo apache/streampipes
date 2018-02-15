@@ -42,7 +42,7 @@ export class EndpointInstallationController {
     }
 
     installElement(endpointUri, index) {
-        endpointUri = this.encodeURIComponent(endpointUri.uri);
+        endpointUri = encodeURIComponent(endpointUri.uri);
 
         this.RestApi.add(endpointUri, true)
             .success(data => {

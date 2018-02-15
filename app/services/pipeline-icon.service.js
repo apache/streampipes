@@ -1,19 +1,20 @@
-pipelineElementIconService.$inject = ['$http', '$rootScope', 'ImageChecker', 'ElementIconText'];
+export class PipelineElementIconService {
 
-export default function pipelineElementIconService($http, $rootScope, ImageChecker, ElementIconText) {
+    constructor(ImageChecker, ElementIconText) {
+        this.ImageChecker = ImageChecker;
+        this.ElementIconText = ElementIconText;
+    }
 
-    var pipelineElementIconService = {};
-
-    pipelineElementIconService.addImageOrTextIcon = function ($element, json, small, type) {
-        var iconUrl = "";
+    addImageOrTextIcon = function ($element, json, small, type) {
+        let iconUrl = "";
         if (type == 'block' && json.streams != null && typeof json.streams !== 'undefined') {
             iconUrl = json.streams[0].iconUrl;
         } else {
             iconUrl = json.iconUrl;
         }
-        ImageChecker.imageExists(iconUrl, function (exists) {
+        this.ImageChecker.imageExists(iconUrl, exists => {
             if (exists) {
-                var $img = $('<img>')
+                let $img = $('<img>')
                     .attr("src", iconUrl)
                     .data("JSON", $.extend(true, {}, json));
                 if (type == 'draggable') {
@@ -27,14 +28,14 @@ export default function pipelineElementIconService($http, $rootScope, ImageCheck
                 }
                 $element.append($img);
             } else {
-                var name = "";
+                let name = "";
                 if (type == 'block' && json.streams != null && typeof json.streams !== 'undefined') {
                     name = json.streams[0].name;
                 } else {
                     name = json.name;
                 }
-                var $span = $("<span>")
-                    .text(ElementIconText.getElementIconText(name) || "N/A")
+                let $span = $("<span>")
+                    .text(this.ElementIconText.getElementIconText(name) || "N/A")
                     .attr(
                         {
                             "data-toggle": "tooltip",
@@ -50,8 +51,9 @@ export default function pipelineElementIconService($http, $rootScope, ImageCheck
                 }
                 $element.append($span);
             }
-        });
+        })
     }
 
-    return pipelineElementIconService;
 }
+
+PipelineElementIconService.$inject = ['ImageChecker', 'ElementIconText'];

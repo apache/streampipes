@@ -1,0 +1,26 @@
+<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'OneOfStaticProperty'">
+    <oneof static-property="ctrl.staticProperty"></oneof>
+</div>
+<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'FreeTextStaticProperty'">
+    <freetext input-streams="ctrl.selectedElement.inputStreams"
+              static-property="ctrl.staticProperty" mapping-property="ctrl.getMappingProperty(ctrl.staticProperty.properties.mapsTo)"></freetext>
+</div>
+<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'AnyStaticProperty'">
+    <any static-property="ctrl.staticProperty"></any>
+</div>
+<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'DomainStaticProperty'">
+    <domain-concept-input static-property="ctrl.staticProperty"
+                          auto-complete-static-property="ctrl.staticProperty"></domain-concept-input>
+</div>
+<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MappingPropertyUnary'">
+    <mapping-property-unary static-property="ctrl.staticProperty" display-recommended="ctrl.displayRecommended"></mapping-property-unary>
+</div>
+<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MappingPropertyNary'">
+    <mapping-property-nary static-property="ctrl.staticProperty" display-recommended="ctrl.displayRecommended"></mapping-property-nary>
+</div>
+<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MatchingProperty'">
+    <matching-property static-property="ctrl.staticProperty"></matching-property>
+</div>
+<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'CollectionStaticProperty'">
+    <collection-static-property static-property="ctrl.staticProperty"></collection-static-property>
+</div>

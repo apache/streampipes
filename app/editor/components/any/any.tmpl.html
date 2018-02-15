@@ -1,0 +1,5 @@
+<div ng-repeat="option in ctrl.staticProperty.properties.options">
+    <md-checkbox ng-checked="ctrl.exists(option, ctrl.staticProperty.properties.options)" ng-click="ctrl.toggle(option, ctrl.staticProperty.properties.options)">
+        {{option.name}}
+    </md-checkbox>
+</div>

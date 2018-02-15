@@ -10,48 +10,58 @@ import angulerUiSortable from 'npm/angular-ui-sortable';
 import angulerUiBootstrap from 'npm/angular-ui-bootstrap';
 import 'npm/angular-trix';
 
-import EditorCtrl from './editor.controller';
+import {EditorCtrl} from './editor.controller';
 import myDataBind from './my-data-bind.directive';
 import imageBind  from './image-bind.directive';
-import capitalize from './capitalize.filter';
+//import capitalize from './capitalize.filter';
 import displayRecommendedFilter from './display-recommended.filter';
-import objectProvider from '../services/object-provider.service';
+//import objectProvider from '../services/object-provider.service';
 
-import any from './directives/any/any.directive';
-import customOutput from './directives/customoutput/customoutput.directive';
-import domainConceptInput from './directives/domainconcept/domainconcept.directive';
-import freetext from './directives/freetext/freetext.directive';
-import mappingPropertyUnary from './directives/mappingunary/mappingunary.directive';
-import mappingPropertyNary from './directives/mappingnary/mappingnary.directive';
-import matchingProperty from './directives/matchingproperty/matchingproperty.directive';
-import oneof from './directives/oneof/oneof.directive';
-import replaceOutput from './directives/replaceoutput/replaceoutput.directive';
-import multipleValueInput from './directives/multivalue/multiple-value-input.directive';
-import pipelineElementOptions from './directives/pipeline-element-options/pipeline-element-options.directive';
-import collectionStaticProperty from './directives/collection/collection.directive';
-import customizeDialog from './directives/customize/customize-dialog.directive';
-import topicSelectionDialog from './directives/topic/topic-selection-dialog.directive';
+import {AnyComponent} from './components/any/any.component';
+import {CustomOutputComponent} from './components/customoutput/customoutput.component';
+import {DomainConceptComponent} from './components/domainconcept/domainconcept.component';
+import {FreeTextComponent} from './components/freetext/freetext.component';
+import {MappingUnaryComponent} from './components/mappingunary/mappingunary.component';
+import {MappingNaryComponent} from './components/mappingnary/mappingnary.component';
+import {MatchingPropertyComponent} from './components/matchingproperty/matchingproperty.component';
+import {OneOfComponent} from './components/oneof/oneof.component';
+import {ReplaceOutputComponent} from './components/replaceoutput/replaceoutput.component';
+import {MultipleValueInputComponent} from './components/multivalue/multiple-value-input.component';
+import {PipelineElementOptionsComponent} from './components/pipeline-element-options/pipeline-element-options.component';
+import {CollectionComponent} from './components/collection/collection.component';
+import {CustomizeDialogComponent} from './components/customize/customize-dialog.component';
+import {TopicSelectionDialogComponent} from './components/topic/topic-selection-dialog.component';
+import {PipelineComponent} from './components/pipeline/pipeline.component';
+import {EditorDialogManager} from './services/editor-dialog-manager.service';
+import {PipelineElementComponent} from './components/pipeline-element/pipeline-element.component';
+import {PipelineElementRecommendationComponent} from "./components/pipeline-element-recommendation/pipeline-element-recommendation.component";
+import {PipelineElementRecommendationService} from "./services/pipeline-element-recommendation.service";
+import {PipelineAssemblyComponent} from "./components/pipeline-assembly/pipeline-assembly.component";
 
-
-
-export default angular.module('sp.editor', [spServices, 'angularTrix'])
+export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate'])
     .controller('EditorCtrl', EditorCtrl)
     .directive('myDataBind', myDataBind)
     .directive('imageBind', imageBind)
-    .directive('objectProvider', objectProvider)
-    .filter('capitalize', objectProvider)
+    //.directive('objectProvider', objectProvider)
+    //.filter('capitalize', objectProvider)
     .filter('displayRecommendedFilter', displayRecommendedFilter)
-    .directive('any', any)
-    .directive('customOutput', customOutput)
-    .directive('domainConceptInput', domainConceptInput)
-    .directive('freetext', freetext)
-    .directive('mappingPropertyNary', mappingPropertyNary)
-    .directive('mappingPropertyUnary', mappingPropertyUnary)
-    .directive('matchingProperty', matchingProperty)
-    .directive('oneof', oneof)
-    .directive('replaceOutput', replaceOutput)
-    .directive('multipleValueInput', multipleValueInput)
-    .directive('collectionStaticProperty', collectionStaticProperty)
-    .directive('customizeDialog', customizeDialog)
-    .directive('topicSelectionDialog', topicSelectionDialog)
+    .component('any', AnyComponent)
+    .component('customOutput', CustomOutputComponent)
+    .component('domainConceptInput', DomainConceptComponent)
+    .component('freetext', FreeTextComponent)
+    .component('mappingPropertyNary', MappingNaryComponent)
+    .component('mappingPropertyUnary', MappingUnaryComponent)
+    .component('matchingProperty', MatchingPropertyComponent)
+    .component('oneof', OneOfComponent)
+    .component('replaceOutput', ReplaceOutputComponent)
+    .component('multipleValueInput', MultipleValueInputComponent)
+    .component('collectionStaticProperty', CollectionComponent)
+    .component('customizeDialog', CustomizeDialogComponent)
+    .component('topicSelectionDialog', TopicSelectionDialogComponent)
+    .component('pipeline', PipelineComponent)
+    .component('pipelineElement', PipelineElementComponent)
+    .component('pipelineElementRecommendation', PipelineElementRecommendationComponent)
+    .component('pipelineAssembly', PipelineAssemblyComponent)
+    .service('EditorDialogManager', EditorDialogManager)
+    .service('PipelineElementRecommendationService', PipelineElementRecommendationService)
     .name;

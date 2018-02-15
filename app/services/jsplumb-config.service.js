@@ -1,27 +1,26 @@
-jsplumbConfigService.$inject = [];
+export class JsplumbConfigService {
 
-export default function jsplumbConfigService() {
-
-    var jsplumbConfigService = {};
-
-    jsplumbConfigService.getEditorConfig = function () {
-        return makeConfig(makeSettings(12, 5, 30, 30, 2, 80));
+    constructor() {
     }
 
-    jsplumbConfigService.getPreviewConfig = function () {
-        return makeConfig(makeSettings(6, 2, 15, 15, 1, 40));
+    getEditorConfig() {
+        return this.makeConfig(this.makeSettings(12, 5, 30, 30, 2, 80));
     }
 
-    var makeConfig = function(settings) {
-        var config = {};
-        config.streamEndpointOptions = makeStreamEndpointOptions(settings);
-        config.sepaEndpointOptions = makeSepaEndpointOptions(settings);
-        config.leftTargetPointOptions = makeLeftTargetPointOptions(settings);
+    getPreviewConfig() {
+        return this.makeConfig(this.makeSettings(6, 2, 15, 15, 1, 40));
+    }
+
+    makeConfig(settings) {
+        let config = {};
+        config.streamEndpointOptions = this.makeStreamEndpointOptions(settings);
+        config.sepaEndpointOptions = this.makeSepaEndpointOptions(settings);
+        config.leftTargetPointOptions = this.makeLeftTargetPointOptions(settings);
         return config;
     }
 
-    var makeSettings = function(dotRadius, lineWidth, arrowWidth, arrowLength, arrowLineWidth, curviness) {
-        var settings = {};
+    makeSettings(dotRadius, lineWidth, arrowWidth, arrowLength, arrowLineWidth, curviness) {
+        let settings = {};
         settings.dotRadius = dotRadius;
         settings.lineWidth = lineWidth;
         settings.arrowWidth = arrowWidth;
@@ -31,7 +30,7 @@ export default function jsplumbConfigService() {
         return settings;
     }
 
-    var makeStreamEndpointOptions = function (settings) {
+    makeStreamEndpointOptions(settings) {
         return {
             endpoint: ["Dot", {radius: settings.dotRadius}],
             connectorStyle: {strokeStyle: "#BDBDBD", outlineColor: "#9E9E9E", lineWidth: settings.lineWidth},
@@ -52,7 +51,7 @@ export default function jsplumbConfigService() {
         }
     }
 
-    var makeSepaEndpointOptions = function (settings) {
+    makeSepaEndpointOptions(settings) {
         return {
             endpoint: ["Dot", {radius: settings.dotRadius}],
             connectorStyle: {
@@ -75,7 +74,7 @@ export default function jsplumbConfigService() {
         }
     }
 
-    var makeLeftTargetPointOptions = function (settings) {
+    makeLeftTargetPointOptions(settings) {
         return {
             endpoint: ["Dot", {radius: settings.dotRadius}],
             type: "empty",
@@ -84,5 +83,6 @@ export default function jsplumbConfigService() {
         }
     }
 
-    return jsplumbConfigService;
 }
+
+JsplumbConfigService.$inject = [];
