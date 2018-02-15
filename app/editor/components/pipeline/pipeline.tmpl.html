@@ -1,14 +1,16 @@
 <div ng-repeat="(index, pipelineElement) in ctrl.pipelineModel track by $index" style="width:100%;height:100%;">
-    <span id="{{pipelineElement.payload.DOM}}" style="{{ctrl.getElementCss(pipelineElement.settings)}}"
-          class="{{pipelineElement.type}} {{ctrl.getElementCssClasses(pipelineElement.settings)}}" ng-mouseover="ctrl.updateMouseover(pipelineElement.payload.DOM)" ng-mouseleave="ctrl.updateMouseover('')">
-        <pipeline-element pipeline-element="pipelineElement"></pipeline-element>
-        <pipeline-element-options delete-function="ctrl.handleDeleteOption"
-                                  current-mouse-over-element="ctrl.currentMouseOverElement"
-                                  all-elements="ctrl.allElements"
-                                  pipeline-element="pipelineElement"
-                                  pipeline-model="ctrl.pipelineModel"
-                                  pipeline-element-id="pipelineElement.type == 'stream' ? pipelineElement.payload.elementId : pipelineElement.payload.belongsTo)"
-                                  internal-id=""{{pipelineElement.payload.DOM}}">
+    <span id="{{pipelineElement.payload.DOM}}" style="{{ctrl.getElementCss(pipelineElement.settings)}}" ng-mouseover="ctrl.updateMouseover(pipelineElement.payload.DOM)" ng-mouseleave="ctrl.updateMouseover('')">
+        <span style="z-index:5"
+              class="{{pipelineElement.type}} {{ctrl.getElementCssClasses(pipelineElement.settings)}}">
+            <pipeline-element pipeline-element="pipelineElement.payload"></pipeline-element>
+        </span>
+         <pipeline-element-options delete-function="ctrl.handleDeleteOption"
+                                   current-mouse-over-element="ctrl.currentMouseOverElement"
+                                   all-elements="ctrl.allElements"
+                                   pipeline-element="pipelineElement"
+                                   pipeline-model="ctrl.pipelineModel"
+                                   pipeline-element-id="pipelineElement.type == 'stream' ? pipelineElement.payload.elementId : pipelineElement.payload.belongsTo)"
+                                   internal-id="" {{pipelineElement.payload.DOM}}">
         </pipeline-element-options>
     </span>
 </div>

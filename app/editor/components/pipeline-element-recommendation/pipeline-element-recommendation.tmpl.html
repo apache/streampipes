@@ -1,0 +1,12 @@
+<div class="cv-wrapper" ng-class="ctrl.recommendationsShown ? 'opened-nav' : ''"
+     ng-if="ctrl.recommendedElements.length > 0">
+    <ul>
+        <li ng-repeat="(index, recommendedElement) in ctrl.recommendedElements track by $index"
+            ng-style="recommendedElement.name ? ctrl.getSkewStyle(index) : {'opacity':0}">
+            <a ng-style="ctrl.getUnskewStyle(recommendedElement, index)" ng-class="recommendedElement.type" ng-click="ctrl.create(recommendedElement)">
+            </a>
+            <div ng-click="ctrl.create(recommendedElement)" ng-style="ctrl.getUnskewStyleLabel(index)" style="margin-left:50%;margin-top:50%;position:absolute;background:white;height:50px;width:50px;font-size:16px;text-align:center;line-height:50px;"
+                 class="{{recommendedElement.type}}"><pipeline-element pipeline-element="recommendedElement" ng-if="recommendedElement.name"></pipeline-element></div>
+        </li>
+    </ul>
+</div>

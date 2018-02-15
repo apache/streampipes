@@ -1,9 +1,9 @@
-import {CustomizeController} from "./dialog/customize-pipeline-element/customize.controller";
-import {MatchingErrorController} from "./dialog/matching-error/matching-error.controller";
-import {TopicSelectionDialog} from "./dialog/topic/topic-selection-modal.controller";
-import {PossibleElementsController} from "./dialog/possible-elements/possible-elements-dialog.controller";
-import {HelpDialogController} from "./dialog/help/help-dialog.controller";
-import {SavePipelineController} from "./dialog/save-pipeline/save-pipeline.controller";
+import {CustomizeController} from "../dialog/customize-pipeline-element/customize.controller";
+import {MatchingErrorController} from "../dialog/matching-error/matching-error.controller";
+import {TopicSelectionDialog} from "../dialog/topic/topic-selection-modal.controller";
+import {PossibleElementsController} from "../dialog/possible-elements/possible-elements-dialog.controller";
+import {HelpDialogController} from "../dialog/help/help-dialog.controller";
+import {SavePipelineController} from "../dialog/save-pipeline/save-pipeline.controller";
 
 export class EditorDialogManager {
 
