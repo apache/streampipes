@@ -26,7 +26,7 @@ export class PipelineAssemblyController {
     }
 
     autoLayout() {
-        this.pipelinePositioningService.layoutGraph("#assembly", "span.connectable-editor", 110, false);
+        this.pipelinePositioningService.layoutGraph("#assembly", "span[id^='jsplumb']", 110, false);
         this.JsplumbBridge.repaintEverything();
     }
 
@@ -66,9 +66,9 @@ export class PipelineAssemblyController {
      * clears the Assembly of all elements
      */
     clearAssembly() {
-        $('#assembly').children().not('#clear, #submit').remove();
+        //$('#assembly').children().not('#clear, #submit').remove();
         this.JsplumbBridge.deleteEveryEndpoint();
-        this.$rootScope.state.adjustingPipelineState = false;
+        this.pipelineModel = [];
         $("#assembly").panzoom("reset", {
             disablePan: true,
             increment: 0.25,

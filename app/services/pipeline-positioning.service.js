@@ -3,10 +3,8 @@ import * as dagre from "dagre";
 
 export class PipelinePositioningService {
 
-    constructor($rootScope, JsplumbService, apiConstants, JsplumbConfigService, JsplumbBridge) {
-        this.$rootScope = $rootScope;
+    constructor(JsplumbService, JsplumbConfigService, JsplumbBridge) {
         this.JsplumbService = JsplumbService;
-        this.apiConstants = apiConstants;
         this.JsplumbConfigService = JsplumbConfigService;
         this.JsplumbBridge = JsplumbBridge;
     }
@@ -31,11 +29,11 @@ export class PipelinePositioningService {
         for (var i = 0, action; action = pipeline.actions[i]; i++) {
             var $action = this.JsplumbService.actionDropped(scope, this.JsplumbService.createNewAssemblyElement(action, tempPos, false, targetCanvas, isPreview)
                 .data("options", true), true, isPreview);
-            jsplumb.addEndpoint($action, jsplumbConfig.leftTargetPointOptions);
+            this.JsplumbBridge.addEndpoint($action, jsplumbConfig.leftTargetPointOptions);
         }
 
         this.connectPipelineElements(pipeline, !isPreview, jsplumbConfig);
-        this.layoutGraph(targetCanvas, "span.a", jsplumb, isPreview ? 75 : 110, isPreview);
+        this.layoutGraph(targetCanvas, "span.a", isPreview ? 75 : 110, isPreview);
         this.JsplumbBridge.repaintEverything();
 
     };
@@ -47,17 +45,18 @@ export class PipelinePositioningService {
             return {};
         });
         var nodes = $(canvas).find(nodeIdentifier).get();
+
         for (var i = 0; i < nodes.length; i++) {
             var n = nodes[i];
             g.setNode(n.id, {label: n.id, width: dimension, height: dimension});
         }
-        var edges = jsplumb.getAllConnections();
+        var edges = this.JsplumbBridge.getAllConnections();
         for (var i = 0; i < edges.length; i++) {
             var c = edges[i];
             g.setEdge(c.source.id, c.target.id);
         }
         dagre.layout(g);
-        g.nodes().forEach(function (v) {
+        g.nodes().forEach(v => {
             $("#" + v).css("left", g.node(v).x + "px");
             $("#" + v).css("top", g.node(v).y + "px");
         });
@@ -107,4 +106,4 @@ export class PipelinePositioningService {
 
 }
 
-PipelinePositioningService.$inject = ['$rootScope', 'JsplumbService', 'apiConstants', 'JsplumbConfigService', 'JsplumbBridge'];
+PipelinePositioningService.$inject = ['JsplumbService', 'JsplumbConfigService', 'JsplumbBridge'];

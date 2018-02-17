@@ -72,6 +72,10 @@ export class JsplumbBridge {
     setSuspendDrawing(bool1) {
         jsPlumb.setSuspendDrawing(bool1);
     }
+
+    getAllConnections() {
+        return jsPlumb.getAllConnections();
+    }
 }
 
 JsplumbBridge.$inject = ['$timeout'];
