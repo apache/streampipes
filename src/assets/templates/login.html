@@ -1,0 +1,48 @@
+<div class="md-padding logo-production" layout-xs="column" layout="row" layout-align="center center"
+     style="min-height:100vh !important;" ng-controller="LoginCtrl as ctrl">
+    <div flex="40" layout-align="center center">
+        <div layout="column" flex="60" layout-align="center center" style="position:relative;top:-25px;margin-left:auto;margin-right:auto;">
+            <div flex="60" layout-align="center center" layout="row"
+                 style="padding:20px;color:white;" class="sp-darkblue"><img
+                    alt="icon" src="assets/img/login/logo.png">
+            </div>
+        </div>
+        <md-card class="card-100-center" style="padding:20px;position:relative;top:-25px;">
+            <div flex layout-align="center center"><h1>Login</h1></div>
+            <div flex-sm="100" layout="column">
+                <form name="loginForm" ng-submit="ctrl.logIn()" role="form">
+                    <div flex layout="column">
+                        <md-input-container><label>Email</label> <input
+                                type="email" ng-model="ctrl.credentials.username" required></md-input-container>
+                        <md-input-container flex><label>Password:</label>
+                            <input type="password" ng-model="ctrl.credentials.password" required>
+                        </md-input-container>
+                        <md-input-container flex>
+                            <md-checkbox
+                                    ng-model="ctrl.credentials.rememberMe"> Remember me
+                            </md-checkbox>
+                        </md-input-container>
+                    </div>
+                    <div class="form-actions">
+                        <md-button class="md-accent md-raised" type="submit"
+                                   ng-disabled="ctrl.loginForm.$pristine || ctrl.loginForm.$invalid || ctrl.loading">Login
+                        </md-button>
+                        <md-progress-circular class="md-accent" md-mode="indeterminate"
+                                              ng-show="ctrl.loading"></md-progress-circular>
+                        <div class="md-warn" ng-show="ctrl.authenticationFailed">
+                            <h4>The password you entered is incorrect. Please try again.</h4>
+                        </div>
+                    </div>
+                </form>
+                <!--<a ui-sref="register">Create new account</a>-->
+            </div>
+        </md-card>
+        <div flex="100" layout="column" layout-align="center center">
+            <md-button ng-click="ctrl.openDocumentation()" class="md-accent md-raised"
+                       style="min-width:0px;padding-left:20px;padding-right:20px;font-size:18px;">
+                View Docs
+            </md-button>
+        </div>
+    </div>
+
+</div>

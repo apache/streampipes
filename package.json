@@ -14,9 +14,17 @@
   "scripts": {
     "start": "node deployment/prebuild.js && webpack-dev-server",
     "dev-build": "node deployment/prebuild.js && webpack -d --display-modules --progress",
-    "dist-build": "node deployment/prebuild.js && webpack -p --display-modules --progress"
+    "dist-build": "node deployment/prebuild.js && webpack -p --display-modules --progress",
+    "build": "webpack",
+    "dev-server": "webpack-dev-server"
   },
   "dependencies": {
+    "@angular/common": "^5.2.5",
+    "@angular/compiler": "^5.2.5",
+    "@angular/core": "^5.2.5",
+    "@angular/platform-browser": "^5.2.5",
+    "@angular/platform-browser-dynamic": "^5.2.5",
+    "@angular/upgrade": "^5.2.5",
     "angular": "1.5.11",
     "angular-animate": "1.5.11",
     "angular-aria": "1.5.11",
@@ -48,19 +56,30 @@
     "ng-file-upload": "9.0.13",
     "ng-prettyjson": "0.1.8",
     "ngmap": "1.18.0",
-    "slick-carousel": "1.6.0"
+    "rxjs": "^5.5.6",
+    "slick-carousel": "1.6.0",
+    "zone.js": "^0.8.20"
   },
   "devDependencies": {
+    "@angular/compiler-cli": "^5.2.5",
+    "@ngtools/webpack": "^1.10.0",
+    "@types/jquery": "^3.3.0",
     "babel": "^6.5.2",
     "babel-core": "^6.2.5",
     "babel-loader": "^7.1.2",
     "babel-preset-es2015": "^6.2.5",
     "bower-webpack-plugin": "^0.1.9",
     "clean-webpack-plugin": "^0.1.10",
+    "copy-webpack-plugin": "^4.4.1",
+    "file-loader": "^1.1.6",
+    "html-webpack-plugin": "^2.30.1",
     "js-yaml": "^3.10.0",
     "mustache": "^2.3.0",
     "ng-annotate-webpack-plugin": "^0.1.3",
-    "webpack": "^3.10.0",
+    "raw-loader": "^0.5.1",
+    "typescript": "~2.5.3",
+    "url-loader": "^0.6.2",
+    "webpack": "^3.11.0",
     "webpack-dev-server": "^2.9.7"
   }
 }
