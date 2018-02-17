@@ -32,8 +32,7 @@ export class EditorCtrl {
         this.activePossibleElementFilter = {};
         this.selectedTab = 0;
         $rootScope.title = "StreamPipes";
-        this.options = [];
-        this.selectedOptions = [];
+
 
         this.currentPipelineName = "";
         this.currentPipelineDescription = "";
@@ -44,6 +43,7 @@ export class EditorCtrl {
         this.currentPipelineElementDom;
 
         this.pipelineModel = [];
+        this.activeType = "stream";
 
         if (this.AuthStatusService.email != undefined) {
             this.RestApi
@@ -119,69 +119,14 @@ export class EditorCtrl {
         return this.currentlyFocusedElement == element;
     }
 
-    possibleFilter(value, index, array) {
-        if (this.possibleElements.length > 0) {
-            for (var i = 0; i < this.possibleElements.length; i++) {
-                if (value.belongsTo === this.possibleElements[i].elementId) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        return true;
-    };
-
-    selectFilter(value, index, array) {
-        if (this.selectedOptions.length > 0) {
-            var found = false;
-            if (value.category.length == 0) value.category[0] = "UNCATEGORIZED";
-            angular.forEach(value.category, c => {
-                if (this.selectedOptions.indexOf(c) > -1) found = true;
-            });
-            return found;
-        } else {
-            return false;
-        }
-    };
-
-    toggleFilter(option) {
-        this.selectedOptions = [];
-        this.selectedOptions.push(option.type);
-    }
-
-    optionSelected(option) {
-        return this.selectedOptions.indexOf(option.type) > -1;
-    }
-
-    selectAllOptions() {
-        this.selectedOptions = [];
-        angular.forEach(this.options, o => {
-            this.selectedOptions.push(o.type);
-        });
-    }
-
-    deselectAllOptions() {
-        this.selectedOptions = [];
-    }
-
     showImageIf(iconUrl) {
         return !!(iconUrl != null && iconUrl != 'http://localhost:8080/img' && iconUrl !== 'undefined');
     };
 
     loadCurrentElements(type) {
-
-        this.currentElements = [];
-        if (type == 'stream') {
-            this.loadOptions("stream");
-            this.currentElements = this.allElements["stream"];
-        } else if (type == 'sepa') {
-            this.loadOptions("sepa");
-            this.currentElements = this.allElements["sepa"];
-        } else if (type == 'action') {
-            this.loadOptions("action");
-            this.currentElements = this.allElements["action"];
-        }
-    };
+        this.currentElements = this.allElements[type];
+        this.activeType = type;
+    }
 
     displayPipelineById() {
         this.RestApi.getPipelineById(this.currentModifiedPipeline)
@@ -193,32 +138,6 @@ export class EditorCtrl {
             })
     };
 
-    loadOptions(type) {
-        this.options = [];
-        this.selectedOptions = [];
-
-        if (type == 'stream') {
-            this.RestApi.getEpCategories()
-                .then(s => this.handleCategoriesSuccess(s), e => this.handleCategoriesError(e));
-        } else if (type == 'sepa') {
-            this.RestApi.getEpaCategories()
-                .then(s => this.handleCategoriesSuccess(s), e => this.handleCategoriesError(e));
-        } else if (type == 'action') {
-            this.RestApi.getEcCategories()
-                .then(s => this.handleCategoriesSuccess(s), e => this.handleCategoriesError(e));
-        }
-    };
-
-    handleCategoriesSuccess(result) {
-        this.options = result.data;
-        angular.forEach(this.options, o => {
-            this.selectedOptions.push(o.type);
-        });
-    }
-
-    handleCategoriesError(error) {
-        this.options = [];
-    }
 
     loadSources() {
         var tempStreams = [];
@@ -284,10 +203,6 @@ export class EditorCtrl {
         }
         return string;
     }
-
-    clearCurrentElement() {
-        this.$rootScope.state.currentElement = null;
-    };
 
 }
 
