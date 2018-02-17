@@ -5,7 +5,6 @@ export class EditorCtrl {
                 RestApi,
                 $stateParams,
                 $window,
-                $mdToast,
                 PipelinePositioningService,
                 JsplumbBridge,
                 EditorDialogManager,
@@ -16,7 +15,6 @@ export class EditorCtrl {
         this.RestApi = RestApi;
         this.$stateParams = $stateParams;
         this.$window = $window;
-        this.$mdToast = $mdToast;
         this.pipelinePositioningService = PipelinePositioningService;
         this.JsplumbBridge = JsplumbBridge;
         this.EditorDialogManager = EditorDialogManager;
@@ -28,19 +26,12 @@ export class EditorCtrl {
         this.currentElements = [];
         this.allElements = {};
         this.currentModifiedPipeline = $stateParams.pipeline;
-        this.possibleElements = [];
-        this.activePossibleElementFilter = {};
         this.selectedTab = 0;
-        $rootScope.title = "StreamPipes";
-
 
         this.currentPipelineName = "";
         this.currentPipelineDescription = "";
 
         this.minimizedEditorStand = false;
-
-        this.currentPipelineElement;
-        this.currentPipelineElementDom;
 
         this.pipelineModel = [];
         this.activeType = "stream";
@@ -71,9 +62,6 @@ export class EditorCtrl {
 
         $scope.$on('$viewContentLoaded', event => {
             JsplumbBridge.setContainer("assembly");
-
-            //this.initAssembly();
-            //this.initPlumb();
         });
 
         $rootScope.$on("elements.loaded", () => {
@@ -119,10 +107,6 @@ export class EditorCtrl {
         return this.currentlyFocusedElement == element;
     }
 
-    showImageIf(iconUrl) {
-        return !!(iconUrl != null && iconUrl != 'http://localhost:8080/img' && iconUrl !== 'undefined');
-    };
-
     loadCurrentElements(type) {
         this.currentElements = this.allElements[type];
         this.activeType = type;
@@ -144,7 +128,7 @@ export class EditorCtrl {
         this.RestApi.getOwnSources()
             .then((sources) => {
                 sources.data.forEach((source, i, sources) => {
-                    source.spDataStreams.forEach(function (stream) {
+                    source.spDataStreams.forEach(stream =>{
                         stream.type = 'stream';
                         tempStreams = tempStreams.concat(stream);
                     });
@@ -157,7 +141,7 @@ export class EditorCtrl {
     loadSepas() {
         this.RestApi.getOwnSepas()
             .success(sepas => {
-                $.each(sepas, (i, sepa) => {
+                angular.forEach(sepas, sepa => {
                     sepa.type = 'sepa';
                 });
                 this.allElements["sepa"] = sepas;
@@ -167,7 +151,7 @@ export class EditorCtrl {
     loadActions() {
         this.RestApi.getOwnActions()
             .success((actions) => {
-                $.each(actions, (i, action) => {
+                angular.forEach(actions, action => {
                     action.type = 'action';
                 });
                 this.allElements["action"] = actions;
@@ -189,21 +173,6 @@ export class EditorCtrl {
         });
     };
 
-    elementTextIcon(string) {
-        var result = "";
-        if (string.length <= 4) {
-            result = string;
-        } else {
-            var words = string.split(" ");
-            words.forEach(function (word, i) {
-                if (word.charAt(0) != '(' && word.charAt(0) != ')') {
-                    result += word.charAt(0);
-                }
-            });
-        }
-        return string;
-    }
-
 }
 
 EditorCtrl.$inject = ['$scope',
@@ -211,7 +180,6 @@ EditorCtrl.$inject = ['$scope',
     'RestApi',
     '$stateParams',
     '$window',
-    '$mdToast',
     'PipelinePositioningService',
     'JsplumbBridge',
     'EditorDialogManager',
