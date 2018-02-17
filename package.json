@@ -16,7 +16,8 @@
     "dev-build": "node deployment/prebuild.js && webpack -d --display-modules --progress",
     "dist-build": "node deployment/prebuild.js && webpack -p --display-modules --progress",
     "build": "webpack",
-    "dev-server": "webpack-dev-server"
+    "dev-server": "webpack-dev-server",
+    "lint": "tslint -c tslint.json 'src/**/*.ts*"
   },
   "dependencies": {
     "@angular/common": "^5.2.5",
@@ -64,21 +65,15 @@
     "@angular/compiler-cli": "^5.2.5",
     "@ngtools/webpack": "^1.10.0",
     "@types/jquery": "^3.3.0",
-    "babel": "^6.5.2",
-    "babel-core": "^6.2.5",
-    "babel-loader": "^7.1.2",
-    "babel-preset-es2015": "^6.2.5",
-    "bower-webpack-plugin": "^0.1.9",
-    "clean-webpack-plugin": "^0.1.10",
+    "codelyzer": "^4.1.0",
     "copy-webpack-plugin": "^4.4.1",
     "file-loader": "^1.1.6",
     "html-webpack-plugin": "^2.30.1",
     "js-yaml": "^3.10.0",
     "mustache": "^2.3.0",
-    "ng-annotate-webpack-plugin": "^0.1.3",
     "raw-loader": "^0.5.1",
+    "tslint": "^5.9.1",
     "typescript": "~2.5.3",
-    "url-loader": "^0.6.2",
     "webpack": "^3.11.0",
     "webpack-dev-server": "^2.9.7"
   }

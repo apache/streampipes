@@ -5,13 +5,13 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        'app': './src/bootstrap.ts'
+        'polyfills': './src/polyfills.ts',
+        'main': './src/main.ts'
     },
     output: {
         path: path.join(process.cwd(), "dist"),
         publicPath: '/',
         filename: "[name].bundle.js",
-        chunkFilename: "[id].chunk.js",
         crossOriginLoading: false
     },
     module: {
@@ -40,7 +40,7 @@ module.exports = {
     },
     plugins: [
         new AngularCompilerPlugin({
-            "mainPath": "bootstrap.ts",
+            "mainPath": "main.ts",
             "platform": 0,
             "sourceMap": true,
             "tsConfigPath": path.join(__dirname, 'src', 'tsconfig.app.json'),
@@ -73,7 +73,9 @@ module.exports = {
             "debug": "warning"
         }),
         new HtmlWebpackPlugin({
-            template: 'src/index.html'
+            template: 'src/index.html',
+            chunks: ['polyfills', 'main'],
+            chunksSortMode: 'manual'
         })
     ],
     devServer: {
