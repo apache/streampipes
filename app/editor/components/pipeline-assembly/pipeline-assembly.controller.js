@@ -1,10 +1,12 @@
 export class PipelineAssemblyController {
 
-    constructor($rootScope, JsplumbBridge, PipelinePositioningService, EditorDialogManager) {
+    constructor($rootScope, JsplumbBridge, PipelinePositioningService, EditorDialogManager, PipelineValidationService, ObjectProvider) {
         this.$rootScope = $rootScope;
         this.JsplumbBridge = JsplumbBridge;
         this.pipelinePositioningService = PipelinePositioningService;
         this.EditorDialogManager = EditorDialogManager;
+        this.PipelineValidationService = PipelineValidationService;
+        this.ObjectProvider = ObjectProvider;
 
         this.selectMode = true;
         this.currentZoomLevel = 1;
@@ -68,7 +70,7 @@ export class PipelineAssemblyController {
     clearAssembly() {
         //$('#assembly').children().not('#clear, #submit').remove();
         this.JsplumbBridge.deleteEveryEndpoint();
-        this.pipelineModel = [];
+        this.rawPipelineModel = [];
         $("#assembly").panzoom("reset", {
             disablePan: true,
             increment: 0.25,
@@ -85,73 +87,23 @@ export class PipelineAssemblyController {
      * Sends the pipeline to the server
      */
     submit() {
-        var error = false;
-        var pipelineNew = this.objectProvider.makePipeline(this.pipelineModel);
-        var streamPresent = false;
-        var sepaPresent = false;
-        var actionPresent = false;
+        var pipeline = this.ObjectProvider.makeFinalPipeline(this.rawPipelineModel);
+
+        pipeline.name = this.currentPipelineName;
+        pipeline.description = this.currentPipelineDescription;
 
 
-        // $('#assembly').find('.connectable, .connectable-block').each((i, element) => {
-        //     var $element = $(element);
-        //
-        //     if (!this.pipelineEditorService.isConnected(element)) {
-        //         error = true;
-        //         this.showToast("error", "All elements must be connected", "Submit Error");
-        //     }
-        //
-        //     if ($element.hasClass('sepa')) {
-        //         sepaPresent = true;
-        //         if ($element.data("options")) {
-        //             pipelineNew.addElement(element);
-        //
-        //         } else if ($element.data("JSON").staticProperties != null) {
-        //             this.showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
-        //             error = true;
-        //         }
-        //     } else if ($element.hasClass('stream')) {
-        //         streamPresent = true;
-        //         pipelineNew.addElement(element);
-        //
-        //     } else if ($element.hasClass('action')) {
-        //         actionPresent = true;
-        //         if ($element.data("JSON").staticProperties == null || $element.data("options")) {
-        //             pipelineNew.addElement(element);
-        //         } else {
-        //             this.showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
-        //             ;
-        //             error = true;
-        //         }
-        //     }
-        // });
-        // if (!streamPresent) {
-        //     this.showToast("error", "No stream element present in pipeline", "Submit Error");
-        //     error = true;
-        // }
-        //
-        // if (!actionPresent) {
-        //     this.showToast("error", "No action element present in pipeline", "Submit Error");
-        //     error = true;
-        //}
-
-        var error = false;
-        if (!error) {
-            this.$rootScope.state.currentPipeline = pipelineNew;
-            if (this.$rootScope.state.adjustingPipelineState) {
-                this.$rootScope.state.currentPipeline.name = this.currentPipelineName;
-                this.$rootScope.state.currentPipeline.description = this.currentPipelineDescription;
-            }
-
-            this.openPipelineNameModal(pipelineNew);
-        }
+        this.openPipelineNameModal(pipeline);
     }
 
-    openPipelineNameModal(pipelineNew) {
+
+    openPipelineNameModal(pipeline) {
         if (this.$rootScope.state.adjustingPipelineState) {
             this.modifyPipelineMode = true;
         }
-        this.EditorDialogManager.showSavePipelineDialog(pipelineNew);
+        this.EditorDialogManager.showSavePipelineDialog(pipeline);
     }
+
 }
 
-PipelineAssemblyController.$inject = ['$rootScope', 'JsplumbBridge', 'PipelinePositioningService', 'EditorDialogManager'];
+PipelineAssemblyController.$inject = ['$rootScope', 'JsplumbBridge', 'PipelinePositioningService', 'EditorDialogManager', 'PipelineValidationService', 'ObjectProvider'];

@@ -54,7 +54,7 @@ export class PipelineController {
                         return false;
                     }
                     var pipelineElementConfig = this.jsplumbService.createNewPipelineElementConfig(ui.draggable.data("JSON"), this.pipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false);
-                    this.pipelineModel.push(pipelineElementConfig);
+                    this.rawPipelineModel.push(pipelineElementConfig);
 
                     //Droppable Streams
                     if (ui.draggable.hasClass('stream')) {
@@ -116,9 +116,9 @@ export class PipelineController {
     }
 
     handleDeleteOption(internalId) {
-        angular.forEach(this.pipelineModel, (pe, index) => {
+        angular.forEach(this.rawPipelineModel, (pe, index) => {
            if (pe.payload.DOM == internalId) {
-               this.pipelineModel.splice(index, 1);
+               this.rawPipelineModel.splice(index, 1);
            }
         });
         this.JsplumbBridge.removeAllEndpoints(internalId);
@@ -143,7 +143,7 @@ export class PipelineController {
 
         this.JsplumbBridge.bind("connectionDrag", connection => {
             this.JsplumbBridge.selectEndpoints().each(function (endpoint) {
-                if (endpoint.isTarget && endpoint.connections.length == 0) {
+                if (endpoint.isTarget && endpoint.connections.length === 0) {
                     endpoint.setType("highlight");
                 }
             });
@@ -151,7 +151,7 @@ export class PipelineController {
         });
         this.JsplumbBridge.bind("connectionAborted", connection => {
             this.JsplumbBridge.selectEndpoints().each(endpoint => {
-                if (endpoint.isTarget && endpoint.connections.length == 0) {
+                if (endpoint.isTarget && endpoint.connections.length === 0) {
                     endpoint.setType("empty");
                 }
             });
@@ -160,17 +160,17 @@ export class PipelineController {
         this.JsplumbBridge.bind("connection", (info, originalEvent) => {
             var $target = $(info.target);
             if (!$target.hasClass('a')) { //class 'a' = do not show customize modal //TODO class a zuweisen
-                this.currentPipelineModel = this.objectProvider.makePipeline(info.target, this.pipelineModel, info.target.id );
+                this.currentPipelineModel = this.objectProvider.makePipeline(this.rawPipelineModel, info.target.id);
                 console.log(this.currentPipelineModel);
                 this.objectProvider.updatePipeline(this.currentPipelineModel)
                     .success(data => {
                         if (data.success) {
                             info.targetEndpoint.setType("token");
                             this.modifyPipeline(data.pipelineModifications);
-                            for (var i = 0, sepa; sepa = this.pipelineModel[i]; i++) {
+                            for (var i = 0, sepa; sepa = this.rawPipelineModel[i]; i++) {
                                 var id = "#" + sepa.payload.DOM;
                                 if ($(id).length > 0) {
-                                    if (sepa.payload.configured != true) {
+                                    if (sepa.payload.configured !== true) {
                                         // if (!this.pipelineEditorService.isFullyConnected(id)) {
                                         //     return;
                                         // }
@@ -196,7 +196,7 @@ export class PipelineController {
         for (var i = 0, modification; modification = pipelineModifications[i]; i++) {
             var id = modification.domId;
             if (id !== "undefined") {
-                var pe = this.objectProvider.findElement(id, this.pipelineModel);
+                var pe = this.objectProvider.findElement(id, this.rawPipelineModel);
                 pe.payload.staticProperties = modification.staticProperties;
                 pe.payload.outputStrategies = modification.outputStrategies;
                 pe.payload.inputStreams = modification.inputStreams;

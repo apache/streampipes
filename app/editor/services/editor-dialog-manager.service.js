@@ -38,7 +38,7 @@ export class EditorDialogManager {
         this.$mdDialog.show(dialogContent);
     }
 
-    showSavePipelineDialog(elementData, sepaName, pipelineNew) {
+    showSavePipelineDialog(pipelineNew) {
         var dialogContent = this.DialogBuilder.getDialogTemplate(SavePipelineController, 'app/editor/dialog/save-pipeline/submitPipelineModal.tmpl.html');
         dialogContent.locals = {
             pipeline: pipelineNew
@@ -60,7 +60,7 @@ export class EditorDialogManager {
         })
     };
 
-    openPossibleElementsDialog(pipelineModel, possibleElements, pipelineElementDomId) {
+    openPossibleElementsDialog(rawPipelineModel, possibleElements, pipelineElementDomId) {
         this.$mdDialog.show({
             controller: PossibleElementsController,
             controllerAs: 'ctrl',
@@ -69,7 +69,7 @@ export class EditorDialogManager {
             clickOutsideToClose: true,
             bindToController: true,
             locals: {
-                pipelineModel: pipelineModel,
+                rawPipelineModel: rawPipelineModel,
                 possibleElements: possibleElements,
                 pipelineElementDomId: pipelineElementDomId
             }

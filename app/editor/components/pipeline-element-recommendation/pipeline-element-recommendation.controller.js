@@ -6,7 +6,7 @@ export class PipelineElementRecommendationController {
 
     create(recommendedElement) {
         this.recommendationsShown = false;
-        this.JsplumbService.createElement(this.pipelineModel, recommendedElement, this.pipelineElementDomId);
+        this.JsplumbService.createElement(this.rawPipelineModel, recommendedElement, this.pipelineElementDomId);
     }
 
     getUnskewStyle(recommendedElement, index) {
@@ -20,7 +20,7 @@ export class PipelineElementRecommendationController {
     }
 
     getBackgroundColor(recommendedElement, index) {
-        var alpha = recommendedElement.weight < 0.2 ? 0.2 : recommendedElement.weight;
+        var alpha = recommendedElement.weight < 0.2 ? 0.2 : (recommendedElement.weight - 0.2);
         var rgb = recommendedElement.type === 'sepa' ? this.getSepaColor(index) : this.getActionColor(index);
 
         return "rgba(" +rgb +"," +alpha +")";

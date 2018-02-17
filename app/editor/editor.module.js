@@ -38,6 +38,8 @@ import {PipelineElementRecommendationComponent} from "./components/pipeline-elem
 import {PipelineElementRecommendationService} from "./services/pipeline-element-recommendation.service";
 import {PipelineAssemblyComponent} from "./components/pipeline-assembly/pipeline-assembly.component";
 import {PipelineElementIconStandComponent} from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
+import {PipelineValidationService} from "./services/pipeline-validation.service";
+
 import selectFilter from './filter/select.filter';
 import elementNameFilter from './filter/element-name.filter';
 
@@ -46,7 +48,6 @@ export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimat
     .controller('EditorCtrl', EditorCtrl)
     .directive('myDataBind', myDataBind)
     .directive('imageBind', imageBind)
-    //.filter('capitalize', objectProvider)
     .filter('displayRecommendedFilter', displayRecommendedFilter)
     .filter('selectFilter', selectFilter)
     .filter('elementNameFilter', elementNameFilter)
@@ -68,6 +69,8 @@ export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimat
     .component('pipelineElementRecommendation', PipelineElementRecommendationComponent)
     .component('pipelineAssembly', PipelineAssemblyComponent)
     .component('pipelineElementIconStand', PipelineElementIconStandComponent)
+    .component('pipelineElementOptions', PipelineElementOptionsComponent)
     .service('EditorDialogManager', EditorDialogManager)
     .service('PipelineElementRecommendationService', PipelineElementRecommendationService)
+    .service('PipelineValidationService', PipelineValidationService)
     .name;

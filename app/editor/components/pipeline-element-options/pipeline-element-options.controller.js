@@ -15,7 +15,7 @@ export class PipelineElementOptionsController {
 
         $rootScope.$on("SepaElementConfigured", (event, item) => {
             if (item === this.pipelineElement.payload.DOM) {
-                this.initRecs(this.pipelineElement.payload.DOM, this.pipelineModel);
+                this.initRecs(this.pipelineElement.payload.DOM, this.rawPipelineModel);
             }
         });
 
@@ -25,7 +25,7 @@ export class PipelineElementOptionsController {
         // });
 
         if (this.pipelineElement.type === 'stream') {
-            this.initRecs(this.pipelineElement.payload.DOM, this.pipelineModel);
+            this.initRecs(this.pipelineElement.payload.DOM, this.rawPipelineModel);
         }
     }
 
@@ -42,7 +42,7 @@ export class PipelineElementOptionsController {
     }
 
     initRecs(elementId, currentPipelineElements) {
-        var currentPipeline = this.ObjectProvider.makePipeline($("#" + elementId), currentPipelineElements, elementId);
+        var currentPipeline = this.ObjectProvider.makePipeline(currentPipelineElements, elementId);
         this.PipelineElementRecommendationService.getRecommendations(this.allElements, currentPipeline).then((result) => {
             this.possibleElements = result.possibleElements;
             this.recommendedElements = result.recommendations;

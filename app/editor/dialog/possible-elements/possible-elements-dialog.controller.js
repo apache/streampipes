@@ -1,16 +1,16 @@
 export class PossibleElementsController {
 
-    constructor($mdDialog, ElementIconText, JsplumbService, pipelineModel, possibleElements, pipelineElementDomId) {
+    constructor($mdDialog, ElementIconText, JsplumbService, rawPipelineModel, possibleElements, pipelineElementDomId) {
         this.$mdDialog = $mdDialog;
         this.ElementIconText = ElementIconText;
-        this.pipelineModel = pipelineModel;
+        this.rawPipelineModel = rawPipelineModel;
         this.pipelineElementDomId = pipelineElementDomId;
         this.possibleElements = possibleElements;
         this.JsplumbService = JsplumbService;
     }
 
     create(possibleElement) {
-        this.JsplumbService.createElement(this.pipelineModel, possibleElement, this.pipelineElementDomId);
+        this.JsplumbService.createElement(this.rawPipelineModel, possibleElement, this.pipelineElementDomId);
     }
 
     iconText(elementId) {
@@ -26,4 +26,4 @@ export class PossibleElementsController {
     };
 }
 
-PossibleElementsController.$inject = ['$mdDialog', 'ElementIconText', 'JsplumbService', 'pipelineModel', 'possibleElements', 'pipelineElementDomId'];
+PossibleElementsController.$inject = ['$mdDialog', 'ElementIconText', 'JsplumbService', 'rawPipelineModel', 'possibleElements', 'pipelineElementDomId'];

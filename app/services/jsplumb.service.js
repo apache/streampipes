@@ -1,11 +1,8 @@
 export class JsplumbService {
 
-    constructor($http, PipelineElementIconService, ObjectProvider, apiConstants, $compile, JsplumbConfigService, JsplumbBridge, $timeout) {
-        this.$http = $http;
+    constructor(PipelineElementIconService, ObjectProvider, JsplumbConfigService, JsplumbBridge, $timeout) {
         this.PipelineElementIconService = PipelineElementIconService;
         this.objectProvider = ObjectProvider;
-        this.apiConstants = apiConstants;
-        this.$compile = $compile;
         this.JsplumbConfigService = JsplumbConfigService;
         this.JsplumbBridge = JsplumbBridge;
         this.$timeout = $timeout;
@@ -169,4 +166,4 @@ export class JsplumbService {
     }
 }
 
-JsplumbService.$inject = ['$http', 'PipelineElementIconService', 'ObjectProvider', 'apiConstants', '$compile', 'JsplumbConfigService', 'JsplumbBridge', '$timeout'];
+JsplumbService.$inject = ['PipelineElementIconService', 'ObjectProvider', 'JsplumbConfigService', 'JsplumbBridge', '$timeout'];

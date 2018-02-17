@@ -33,7 +33,7 @@ export class EditorCtrl {
 
         this.minimizedEditorStand = false;
 
-        this.pipelineModel = [];
+        this.rawPipelineModel = [];
         this.activeType = "stream";
 
         if (this.AuthStatusService.email != undefined) {
@@ -88,11 +88,6 @@ export class EditorCtrl {
         this.loadActions();
     }
 
-    isValidPipeline() {
-        return true;
-        // TODO change later
-        //return this.isStreamInAssembly && this.isActionInAssembly;
-    }
 
     toggleEditorStand() {
         this.minimizedEditorStand = !this.minimizedEditorStand;
