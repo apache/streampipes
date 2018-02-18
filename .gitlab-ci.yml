@@ -19,10 +19,10 @@ build:
       - dist/assets/img/
       - dist/assets/css/
       - dist/assets/lib/
+      - dist/assets/templates/
       - dist/index.html
       - dist/main.bundle.js
       - dist/polyfills.bundle.js
-      - dist/assets/templates/**/*.html
     expire_in: 1 hour
 
 nginx:
