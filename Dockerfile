@@ -6,7 +6,7 @@ COPY dist/assets/css/ /usr/share/nginx/html/assets/css/
 COPY dist/assets/templates/ /usr/share/nginx/html/assets/templates/
 COPY dist/index.html /usr/share/nginx/html/
 COPY dist/main.bundle.js /usr/share/nginx/html/
-COPY dist/main.polyfills.js /usr/share/nginx/html/
+COPY dist/polyfills.bundle.js /usr/share/nginx/html/
 
 COPY site/ /usr/share/nginx/html/docs
 COPY javadoc/ /usr/share/nginx/html/javadoc
