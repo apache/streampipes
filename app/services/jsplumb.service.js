@@ -41,6 +41,21 @@ export class JsplumbService {
         });
     }
 
+    makeRawPipeline(pipelineModel) {
+        return pipelineModel
+            .streams
+            .map(s => this.toConfig(s, "stream"))
+            .concat(pipelineModel.sepas.map(s => this.toConfig(s, "sepa")))
+            .concat(pipelineModel.actions.map(s => this.toConfig(s, "action")));
+    }
+
+    toConfig(pe, type) {
+        pe.type = type;
+        pe.configured = true;
+        return this.createNewPipelineElementConfig(pe, {x: 100, y: 100}, false);
+    }
+
+
     createElement(pipelineModel, pipelineElement, pipelineElementDomId) {
         var pipelineElementDom = $("#" + pipelineElementDomId);
         var pipelineElementConfig = this.createNewPipelineElementConfigWithFixedCoordinates(pipelineElementDom, pipelineElement, false);
@@ -101,7 +116,7 @@ export class JsplumbService {
 
         var pipelineElementConfig = {
             type: json.type, settings: {
-                openCustomize: typeof json.DOM !== "undefined",
+                openCustomize: !json.configured,
                 preview: isPreview,
                 displaySettings: displaySettings,
                 connectable: connectable,
@@ -112,8 +127,10 @@ export class JsplumbService {
             }, payload: angular.copy(json)
         };
 
-        pipelineElementConfig.payload.DOM = "jsplumb_" + this.idCounter;
-        this.idCounter++;
+        if (!pipelineElementConfig.payload.DOM) {
+            pipelineElementConfig.payload.DOM = "jsplumb_" + this.idCounter;
+            this.idCounter++;
+        }
 
         return pipelineElementConfig;
     }

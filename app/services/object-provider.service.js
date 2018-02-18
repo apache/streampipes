@@ -33,7 +33,6 @@ export class ObjectProvider {
         return pipeline;
     }
 
-
     findElement(elementId, currentPipeline) {
         var result = {};
         angular.forEach(currentPipeline, pe => {

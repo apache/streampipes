@@ -1,7 +1,6 @@
 export class EditorCtrl {
 
-    constructor($scope,
-                $rootScope,
+    constructor($rootScope,
                 RestApi,
                 $stateParams,
                 $window,
@@ -10,7 +9,6 @@ export class EditorCtrl {
                 EditorDialogManager,
                 AuthStatusService) {
 
-        this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.RestApi = RestApi;
         this.$stateParams = $stateParams;
@@ -20,16 +18,14 @@ export class EditorCtrl {
         this.EditorDialogManager = EditorDialogManager;
         this.AuthStatusService = AuthStatusService;
 
-        this.isStreamInAssembly = false;
-        this.isSepaInAssembly = false;
-        this.isActionInAssembly = false;
         this.currentElements = [];
         this.allElements = {};
-        this.currentModifiedPipeline = $stateParams.pipeline;
-        this.selectedTab = 0;
 
-        this.currentPipelineName = "";
-        this.currentPipelineDescription = "";
+        if ($stateParams.pipeline) {
+            this.currentModifiedPipelineId = $stateParams.pipeline;
+        }
+
+        this.selectedTab = 0;
 
         this.minimizedEditorStand = false;
 
@@ -56,13 +52,6 @@ export class EditorCtrl {
             JsplumbBridge.repaintEverything();
         });
 
-        $scope.$on('$destroy', () => {
-            JsplumbBridge.deleteEveryEndpoint();
-        });
-
-        $scope.$on('$viewContentLoaded', event => {
-            JsplumbBridge.setContainer("assembly");
-        });
 
         $rootScope.$on("elements.loaded", () => {
             this.makeDraggable();
@@ -107,23 +96,12 @@ export class EditorCtrl {
         this.activeType = type;
     }
 
-    displayPipelineById() {
-        this.RestApi.getPipelineById(this.currentModifiedPipeline)
-            .success((pipeline) => {
-                this.pipelinePositioningService.displayPipeline(this.$scope, pipeline, "#assembly", false);
-                this.currentPipelineName = pipeline.name;
-                this.currentPipelineDescription = pipeline.description;
-
-            })
-    };
-
-
     loadSources() {
         var tempStreams = [];
         this.RestApi.getOwnSources()
             .then((sources) => {
                 sources.data.forEach((source, i, sources) => {
-                    source.spDataStreams.forEach(stream =>{
+                    source.spDataStreams.forEach(stream => {
                         stream.type = 'stream';
                         tempStreams = tempStreams.concat(stream);
                     });
@@ -170,8 +148,7 @@ export class EditorCtrl {
 
 }
 
-EditorCtrl.$inject = ['$scope',
-    '$rootScope',
+EditorCtrl.$inject = ['$rootScope',
     'RestApi',
     '$stateParams',
     '$window',

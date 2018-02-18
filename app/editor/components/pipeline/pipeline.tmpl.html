@@ -1,7 +1,7 @@
 <div ng-repeat="(index, pipelineElement) in ctrl.rawPipelineModel track by $index" style="width:100%;height:100%;">
     <span id="{{pipelineElement.payload.DOM}}" style="{{ctrl.getElementCss(pipelineElement.settings)}}" ng-mouseover="ctrl.updateMouseover(pipelineElement.payload.DOM)" ng-mouseleave="ctrl.updateMouseover('')">
         <span style="z-index:5"
-              class="{{pipelineElement.type}} {{ctrl.getElementCssClasses(pipelineElement.settings)}}">
+              ng-class="ctrl.getElementCssClasses(pipelineElement)">
             <pipeline-element pipeline-element="pipelineElement.payload"></pipeline-element>
         </span>
          <pipeline-element-options delete-function="ctrl.handleDeleteOption"

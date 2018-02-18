@@ -19,11 +19,6 @@ export class PipelineElementOptionsController {
             }
         });
 
-        // $(document).click(() => {
-        //     console.log("shown out");
-        //     this.recommendationsShown = false;
-        // });
-
         if (this.pipelineElement.type === 'stream') {
             this.initRecs(this.pipelineElement.payload.DOM, this.rawPipelineModel);
         }

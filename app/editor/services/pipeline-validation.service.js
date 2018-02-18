@@ -12,7 +12,7 @@ export class PipelineValidationService {
 
     allElementsConnected(rawPipelineModel) {
         // TODO implement
-        var pipeline = this.ObjectProvider.makePipeline(rawPipelineModel);
+        //var pipeline = this.ObjectProvider.makeFinalPipeline(rawPipelineModel);
         return true;
     }
 

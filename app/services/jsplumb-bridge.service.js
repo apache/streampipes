@@ -45,8 +45,7 @@ export class JsplumbBridge {
     }
 
     addEndpoint(element, options) {
-        jsPlumb.addEndpoint(element, options);
-        this.repaintEverything();
+        return jsPlumb.addEndpoint(element, options);
     }
 
     connect(connection) {
@@ -75,6 +74,10 @@ export class JsplumbBridge {
 
     getAllConnections() {
         return jsPlumb.getAllConnections();
+    }
+
+    reset() {
+        jsPlumb.reset();
     }
 }
 
