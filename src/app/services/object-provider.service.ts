@@ -1,4 +1,4 @@
-import angular from 'angular';
+import * as angular from 'angular';
 declare const jsPlumb: any;
 
 export class ObjectProvider {

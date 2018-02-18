@@ -1,10 +1,10 @@
 'use strict';
 
-import angular from 'angular';
+import * as angular from 'angular';
 
 import "jquery-ui";
 
-import uiRouter from 'angular-ui-router';
+import '@uirouter/angular-hybrid';
 
 import spServices from './services/services.module';
 
@@ -40,7 +40,8 @@ export const Ng1AppModule = angular
         //spNotifications,
         //spAppLinks,
         //spPipelineDetails,
-        uiRouter,
+        'ui.router',
+        'ui.router.upgrade'
         //spEditor,
         //spPipelines,
         //spDashboard,

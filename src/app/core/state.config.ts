@@ -1,5 +1,7 @@
 //stateConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
 
+import { HomeComponent } from '../home/home.component';
+
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
     //	    $urlRouterProvider.otherwise( function($injector, $location) {
@@ -10,17 +12,17 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/streampipes");
 
     var spNavbar = {
-        templateUrl: "assets/templates/navbar.html",
+        templateUrl: "../../assets/templates/navbar.html",
         controller: 'AppCtrl'
     }
 
     var spIconBar = {
-        templateUrl: "assets/templates/iconbar.html",
+        templateUrl: "../../assets/templates/iconbar.html",
         controller:'AppCtrl'
     }
 
     var container = {
-        templateUrl: "assets/templates/streampipes.html",
+        templateUrl: "../../assets/templates/streampipes.html",
         controller: 'AppCtrl'
     }
 
@@ -32,8 +34,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 "spNavbar@streampipes": spNavbar,
                 "spIconBar@streampipes" : spIconBar,
                 "spMain@streampipes": {
-                    templateUrl: 'src/app/home/home.html',
-                    controller: 'HomeCtrl',
+                    component: HomeComponent,
                     resolve: {
                         'AuthData': function (AuthService) {
                             return AuthService.authenticate();
@@ -42,6 +43,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        /*
         .state('streampipes.pipelineDetails', {
             url: '/pipelines/:pipeline/details',
             views: {
@@ -51,15 +53,17 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        */
         .state('login', {
             url: '/login/:target?session',
             views: {
                 "container": {
-                    templateUrl: 'assets/templates/login.html',
+                    templateUrl: '../../assets/templates/login.html',
                     controller: 'LoginCtrl'
                 }
             }
         })
+        /*
         .state('streampipes.applinks', {
             url: '/applinks',
             views: {
@@ -69,11 +73,12 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        */
         .state('register', {
             url: '/register',
             views: {
                 "container": {
-                    templateUrl: 'assets/templates/register.html',
+                    templateUrl: '../../assets/templates/register.html',
                     controller: 'RegisterCtrl'
                 }
             }
@@ -82,7 +87,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             url: '/setup',
             views: {
                 "container": {
-                    templateUrl: 'assets/templates/setup.html',
+                    templateUrl: '../../assets/templates/setup.html',
                     controller: 'SetupCtrl'
                 }
             }
@@ -91,11 +96,12 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             url: '/error',
             views: {
                 "spMain@streampipes": {
-                    templateUrl: 'assets/templates/error.html',
+                    templateUrl: '../../assets/templates/error.html',
                     controller: 'SetupCtrl'
                 }
             }
         })
+        /*
         .state('streampipes.notifications', {
             url: '/notifications',
             views: {
@@ -178,4 +184,5 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         });
+        */
 };

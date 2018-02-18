@@ -1,4 +1,4 @@
-import angular from 'angular';
+import * as angular from 'angular';
 import ngCookies from 'angular-cookies';
 import 'npm/angular-notification-icons';
 

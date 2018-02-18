@@ -1,4 +1,4 @@
-import angular from 'angular';
+import * as angular from 'angular';
 import {noUndefined} from "@angular/compiler/src/util";
 import 'legacy/stomp';
 declare const Stomp: any;

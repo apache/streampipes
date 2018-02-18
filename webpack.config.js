@@ -1,4 +1,4 @@
-const { AngularCompilerPlugin } = require('@ngtools/webpack');
+const {AngularCompilerPlugin} = require('@ngtools/webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
@@ -23,6 +23,10 @@ module.exports = {
             {
                 test: /\.html$/,
                 loader: 'raw-loader'
+            },
+            {
+                test: /\.css$/,
+                loaders: ['to-string-loader', 'css-loader']
             },
             {
                 test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
