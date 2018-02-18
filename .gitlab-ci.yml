@@ -18,6 +18,7 @@ build:
     paths:
       - dist/assets/img/
       - dist/assets/css/
+      - dist/assets/lib/
       - dist/index.html
       - dist/main.bundle.js
       - dist/polyfills.bundle.js
