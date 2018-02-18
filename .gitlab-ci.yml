@@ -13,15 +13,15 @@ build:
   script:
     - export NODE_PATH=/cache/node_modules
     - npm install --unsafe-perm
-    - npm run dev-build
+    - npm run build
   artifacts:
     paths:
-      - img/
-      - css/
-      - index.html
-      - bundle.js
-      - app/**/*.html
-      - templates/**/*.html
+      - dist/assets/img/
+      - dist/assets/css/
+      - dist/index.html
+      - dist/main.bundle.js
+      - dist/polyfills.bundle.js
+      - dist/assets/templates/**/*.html
     expire_in: 1 hour
 
 nginx:
