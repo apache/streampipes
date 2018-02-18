@@ -11,7 +11,6 @@ import spServices from './services/services.module';
 import spCore from './core/core.module';
 import spLayout from './layout/layout.module';
 import spLogin from './login/login.module';
-import spHome from './home/home.module';
 
 /*
 import spNotifications from './notifications/notifications.module';
@@ -34,7 +33,6 @@ export const Ng1AppModule = angular
     .module(MODULE_NAME, [
         spServices,
         spCore,
-        spHome,
         spLayout,
         spLogin,
         //spNotifications,

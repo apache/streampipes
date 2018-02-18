@@ -12,14 +12,14 @@
     "url": "https://laus.fzi.de/gitlab/streampipes/streampipes-ui"
   },
   "scripts": {
-    "start": "node deployment/prebuild.js && webpack-dev-server",
+    "start": "webpack-dev-server",
     "dev-build": "node deployment/prebuild.js && webpack -d --display-modules --progress",
     "dist-build": "node deployment/prebuild.js && webpack -p --display-modules --progress",
-    "build": "webpack",
-    "dev-server": "webpack-dev-server",
+    "build": "webpack --display-modules --progress",
     "lint": "tslint -c tslint.json 'src/**/*.ts*"
   },
   "dependencies": {
+    "@angular/animations": "^5.2.5",
     "@angular/cdk": "^5.2.1",
     "@angular/common": "^5.2.5",
     "@angular/compiler": "^5.2.5",

@@ -1,10 +1,26 @@
-import * as angular from 'angular';
-
-import { HomeService } from './home.service';
+import { NgModule } from '@angular/core';
 import { HomeComponent } from './home.component';
-import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
+import { HomeService } from './home.service';
+import { MatGridListModule } from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { CommonModule } from '@angular/common';
 
-export default angular.module('sp.home', [])
-    .directive('homeComponent', downgradeComponent({component: HomeComponent}))
-    .service('HomeService', downgradeInjectable(HomeService))
-    .name;
+@NgModule({
+    imports: [
+        CommonModule,
+        FlexLayoutModule,
+        MatGridListModule
+    ],
+    declarations: [
+        HomeComponent
+    ],
+    providers: [
+        HomeService
+    ],
+    entryComponents: [
+        HomeComponent
+    ]
+})
+export class HomeModule {
+
+}
