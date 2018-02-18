@@ -1,6 +1,7 @@
 //stateConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
 
 import { HomeComponent } from '../home/home.component';
+import { ConfigurationComponent } from '../configuration/configuration.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
@@ -56,6 +57,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         */
         .state('login', {
             url: '/login/:target?session',
+            params: {target: null},
             views: {
                 "container": {
                     templateUrl: '../../assets/templates/login.html',
@@ -175,14 +177,14 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                     controller: 'MyElementsCtrl'
                 }
             }
-        })        .state('streampipes.configuration', {
+        })
+        */
+        .state('streampipes.configuration', {
             url: '/configuration',
             views: {
                 "spMain@streampipes": {
-                    templateUrl: 'app/configuration/configuration.html',
-                    controller: 'ConfigurationCtrl'
+                    component: ConfigurationComponent
                 }
             }
         });
-        */
 };

@@ -24,7 +24,6 @@ import spOntology from './ontology/ontology.module';
 import spSensors from './sensors/sensors.module';
 import spAdd from './add/add.module';
 import spMyElements from './myelements/my-elements.module';
-import spConfiguration from './configuration/configuration.module';
 */
 
 const MODULE_NAME = 'streamPipesApp';
@@ -48,7 +47,6 @@ export const Ng1AppModule = angular
         //spSensors,
         //spAdd,
         //spMyElements,
-        //spConfiguration,
     ])
     .run(["$rootScope", "$location", "RestApi", "AuthService", "$state", "$urlRouter", "ObjectProvider", "AuthStatusService",
     function ($rootScope, $location, RestApi, AuthService, $state, $urlRouter, ObjectProvider, AuthStatusService) {

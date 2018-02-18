@@ -1,6 +1,0 @@
-<div flex class="page-container page-container-padding" ng-controller="ConfigurationCtrl as ctrl">
-    <div layout="row" layout-wrap layout-align="start stretch">
-        <consul-service-component ng-repeat="service in ctrl.services" flex="33" style="padding:5px" service-details="service"
-                        on-update="ctrl.updateConfigurations(serviceDetails)"></consul-service-component>
-    </div>
-</div>
