@@ -5,7 +5,9 @@ export let PipelineComponent = {
     bindings: {
         staticProperty : "=",
         rawPipelineModel: "=",
-        allElements: "="
+        allElements: "=",
+        preview: "<",
+        canvasId: "@"
     },
     controller: PipelineController,
     controllerAs: 'ctrl'

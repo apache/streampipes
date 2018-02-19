@@ -13,9 +13,9 @@
     <div flex layout="row" layout-align="start top" ng-if="ctrl.selectedTab == 'overview'">
         <div flex="60" class="md-padding">
             <div flex layout="column">
-                <pipeline-preview jspcanvas="assembly-preview" pipeline="ctrl.pipeline" name="{{ctrl.pipeline.name}}" update-selected="ctrl.updateSelected(selected)"
+                <pipeline-preview jspcanvas="assembly-preview" pipeline="ctrl.pipeline" name="{{ctrl.pipeline.name}}" selected-element="ctrl.selectedElement"
                                   ng-if="ctrl.pipeline.name!=undefined" style="margin-bottom:15px;"></pipeline-preview>
-                <pipeline-elements pipeline="ctrl.pipeline" ng-if="ctrl.pipeline.name != undefined"
+                <pipeline-elements pipeline="ctrl.pipeline"
                                    selected-element="ctrl.selectedElement"></pipeline-elements>
 
             </div>
@@ -31,7 +31,7 @@
     <div flex layout="row" layout-align="start top" ng-if="ctrl.selectedTab == 'quick-edit'">
         <div flex="100" class="md-padding">
             <div flex layout="column">
-                <pipeline-preview jspcanvas="assembly-quick" pipeline="ctrl.pipeline" name="{{ctrl.pipeline.name}}" update-selected="ctrl.updateSelected(selected)"
+                <pipeline-preview jspcanvas="assembly-quickedit" pipeline="ctrl.pipeline" name="{{ctrl.pipeline.name}}" selected-element="ctrl.selectedElement"
                                   ng-if="ctrl.pipeline.name!=undefined" style="margin-bottom:15px;"></pipeline-preview>
                 <quick-edit pipeline="ctrl.pipeline" selected-element="ctrl.selectedElement" ng-if="ctrl.pipeline.name != undefined"></quick-edit>
             </div>

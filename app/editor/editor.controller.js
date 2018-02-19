@@ -4,7 +4,6 @@ export class EditorCtrl {
                 RestApi,
                 $stateParams,
                 $window,
-                PipelinePositioningService,
                 JsplumbBridge,
                 EditorDialogManager,
                 AuthStatusService) {
@@ -13,7 +12,6 @@ export class EditorCtrl {
         this.RestApi = RestApi;
         this.$stateParams = $stateParams;
         this.$window = $window;
-        this.pipelinePositioningService = PipelinePositioningService;
         this.JsplumbBridge = JsplumbBridge;
         this.EditorDialogManager = EditorDialogManager;
         this.AuthStatusService = AuthStatusService;
@@ -152,7 +150,6 @@ EditorCtrl.$inject = ['$rootScope',
     'RestApi',
     '$stateParams',
     '$window',
-    'PipelinePositioningService',
     'JsplumbBridge',
     'EditorDialogManager',
     'AuthStatusService'];

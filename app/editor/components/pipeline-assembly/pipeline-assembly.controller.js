@@ -1,9 +1,8 @@
 export class PipelineAssemblyController {
 
-    constructor($scope, $rootScope, JsplumbBridge, PipelinePositioningService, EditorDialogManager, PipelineValidationService, ObjectProvider, RestApi, JsplumbService, $timeout) {
-        this.$rootScope = $rootScope;
+    constructor(JsplumbBridge, PipelinePositioningService, EditorDialogManager, PipelineValidationService, ObjectProvider, RestApi, JsplumbService, $timeout) {
         this.JsplumbBridge = JsplumbBridge;
-        this.pipelinePositioningService = PipelinePositioningService;
+        this.PipelinePositioningService = PipelinePositioningService;
         this.EditorDialogManager = EditorDialogManager;
         this.PipelineValidationService = PipelineValidationService;
         this.ObjectProvider = ObjectProvider;
@@ -35,7 +34,7 @@ export class PipelineAssemblyController {
     }
 
     autoLayout() {
-        this.pipelinePositioningService.layoutGraph("#assembly", "span[id^='jsplumb']", 110, false);
+        this.PipelinePositioningService.layoutGraph("#assembly", "span[id^='jsplumb']", 110, false);
         this.JsplumbBridge.repaintEverything();
     }
 
@@ -104,9 +103,6 @@ export class PipelineAssemblyController {
 
 
     openPipelineNameModal(pipeline) {
-        if (this.$rootScope.state.adjustingPipelineState) {
-            this.modifyPipelineMode = true;
-        }
         this.EditorDialogManager.showSavePipelineDialog(pipeline);
     }
 
@@ -115,13 +111,13 @@ export class PipelineAssemblyController {
             .success((pipeline) => {
                 this.currentPipelineName = pipeline.name;
                 this.currentPipelineDescription = pipeline.description;
-                this.rawPipelineModel = this.JsplumbService.makeRawPipeline(pipeline);
+                this.rawPipelineModel = this.JsplumbService.makeRawPipeline(pipeline, false);
                 this.$timeout(() => {
-                    this.pipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false);
+                    this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false);
                 });
             })
     };
 
 }
 
-PipelineAssemblyController.$inject = ['$scope', '$rootScope', 'JsplumbBridge', 'PipelinePositioningService', 'EditorDialogManager', 'PipelineValidationService', 'ObjectProvider', 'RestApi', 'JsplumbService', '$timeout'];
+PipelineAssemblyController.$inject = ['JsplumbBridge', 'PipelinePositioningService', 'EditorDialogManager', 'PipelineValidationService', 'ObjectProvider', 'RestApi', 'JsplumbService', '$timeout'];

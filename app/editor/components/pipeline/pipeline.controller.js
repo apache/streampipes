@@ -1,33 +1,33 @@
 export class PipelineController {
 
-    constructor($scope, $timeout, JsplumbService, PipelineEditorService, JsplumbBridge, ObjectProvider, DialogBuilder, EditorDialogManager, RestApi, PipelinePositioningService) {
-        this.$scope = $scope;
+    constructor($timeout, JsplumbService, PipelineEditorService, JsplumbBridge, ObjectProvider, DialogBuilder, EditorDialogManager) {
         this.plumbReady = false;
         this.JsplumbBridge = JsplumbBridge;
-        this.jsplumbService = JsplumbService;
-        this.pipelineEditorService = PipelineEditorService;
+        this.JsplumbService = JsplumbService;
+        this.PipelineEditorService = PipelineEditorService;
         this.$timeout = $timeout;
         this.objectProvider = ObjectProvider;
         this.DialogBuilder = DialogBuilder;
         this.EditorDialogManager = EditorDialogManager;
-        this.RestApi = RestApi;
         this.currentMouseOverElement = "";
-        this.PipelinePositioningService = PipelinePositioningService;
 
         this.currentPipelineModel = {};
         this.idCounter = 0;
 
         this.currentZoomLevel = 1;
 
-        JsplumbBridge.setContainer("assembly");
+    }
+
+    $onInit() {
+        this.JsplumbBridge.setContainer(this.canvasId);
         this.initAssembly();
         this.initPlumb();
+    }
 
-        $scope.$on('$destroy', () => {
-            JsplumbBridge.deleteEveryEndpoint();
-            JsplumbBridge.reset();
-            this.plumbReady = false;
-        });
+    $onDestroy() {
+        this.JsplumbBridge.deleteEveryEndpoint();
+        //this.JsplumbBridge.reset();
+        this.plumbReady = false;
     }
 
     updateMouseover(elementId) {
@@ -35,7 +35,9 @@ export class PipelineController {
     }
 
     getElementCss(currentPipelineElementSettings) {
-        return "position:absolute;width:110px;height:110px;"
+        return "position:absolute;"
+            + (this.preview ? "width:75px;" : "width:110px;")
+            + (this.preview ? "height:75px;" : "height:110px;")
             + "left: " + currentPipelineElementSettings.position.x + "px; "
             + "top: " + currentPipelineElementSettings.position.y + "px; "
     }
@@ -53,7 +55,7 @@ export class PipelineController {
             drop: (element, ui) => {
 
                 if (ui.draggable.hasClass('draggable-icon')) {
-                    var pipelineElementConfig = this.jsplumbService.createNewPipelineElementConfig(ui.draggable.data("JSON"), this.pipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false);
+                    var pipelineElementConfig = this.JsplumbService.createNewPipelineElementConfig(ui.draggable.data("JSON"), this.PipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false);
                     this.rawPipelineModel.push(pipelineElementConfig);
                     //Droppable Streams
                     if (ui.draggable.hasClass('stream')) {
@@ -62,14 +64,14 @@ export class PipelineController {
                     } else if (ui.draggable.hasClass('sepa')) {
                         this.$timeout(() => {
                             this.$timeout(() => {
-                                this.jsplumbService.sepaDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                                this.JsplumbService.sepaDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
                             });
                         });
                         //Droppable Actions
                     } else if (ui.draggable.hasClass('action')) {
                         this.$timeout(() => {
                             this.$timeout(() => {
-                                this.jsplumbService.actionDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                                this.JsplumbService.actionDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
                             });
                         });
                     }
@@ -92,7 +94,7 @@ export class PipelineController {
     checkTopicModel(pipelineElementConfig) {
         this.$timeout(() => {
             this.$timeout(() => {
-                this.jsplumbService.streamDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                this.JsplumbService.streamDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
             });
         });
 
@@ -117,7 +119,7 @@ export class PipelineController {
 
     initPlumb() {
 
-        this.jsplumbService.prepareJsplumb();
+        this.JsplumbService.prepareJsplumb();
 
         this.JsplumbBridge.unbind("connection");
 
@@ -198,4 +200,4 @@ export class PipelineController {
 
 }
 
-PipelineController.$inject = ['$scope', '$timeout', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ObjectProvider', 'DialogBuilder', 'EditorDialogManager', 'RestApi', 'PipelinePositioningService']
+PipelineController.$inject = ['$timeout', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ObjectProvider', 'DialogBuilder', 'EditorDialogManager']

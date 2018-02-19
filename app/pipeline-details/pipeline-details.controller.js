@@ -1,12 +1,9 @@
 
 export class PipelineDetailsCtrl {
 
-    constructor($scope, RestApi, $rootScope, $stateParams, PipelinePositioningService) {
+    constructor(RestApi, $stateParams) {
         this.RestApi = RestApi;
-        this.$rootScope = $rootScope;
-        this.$scope = $scope;
         this.$stateParams = $stateParams;
-        this.pipelinePositioningService = PipelinePositioningService;
 
         this.currentPipeline = $stateParams.pipeline;
         this.pipeline = {};
@@ -14,6 +11,9 @@ export class PipelineDetailsCtrl {
         this.selectedTab = "overview";
         this.selectedElement = "";
 
+    }
+
+    $onInit() {
         this.loadPipeline();
     }
 
@@ -21,10 +21,6 @@ export class PipelineDetailsCtrl {
         this.selectedTab = tabTitle;
     }
 
-    updateSelected(selected) {
-        this.selectedElement = selected;
-        this.$scope.$apply();
-    }
 
     loadPipeline() {
         this.RestApi.getPipelineById(this.currentPipeline)
@@ -38,4 +34,4 @@ export class PipelineDetailsCtrl {
 
 }
 
-PipelineDetailsCtrl.$inject = ['$scope', 'RestApi', '$rootScope', '$stateParams', 'PipelinePositioningService'];
+PipelineDetailsCtrl.$inject = ['RestApi', '$stateParams'];

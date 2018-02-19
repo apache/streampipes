@@ -41,18 +41,18 @@ export class JsplumbService {
         });
     }
 
-    makeRawPipeline(pipelineModel) {
+    makeRawPipeline(pipelineModel, isPreview) {
         return pipelineModel
             .streams
-            .map(s => this.toConfig(s, "stream"))
-            .concat(pipelineModel.sepas.map(s => this.toConfig(s, "sepa")))
-            .concat(pipelineModel.actions.map(s => this.toConfig(s, "action")));
+            .map(s => this.toConfig(s, "stream", isPreview))
+            .concat(pipelineModel.sepas.map(s => this.toConfig(s, "sepa", isPreview)))
+            .concat(pipelineModel.actions.map(s => this.toConfig(s, "action", isPreview)));
     }
 
-    toConfig(pe, type) {
+    toConfig(pe, type, isPreview) {
         pe.type = type;
         pe.configured = true;
-        return this.createNewPipelineElementConfig(pe, {x: 100, y: 100}, false);
+        return this.createNewPipelineElementConfig(pe, {x: 100, y: 100}, isPreview);
     }
 
 
@@ -138,7 +138,9 @@ export class JsplumbService {
     streamDropped($newElement, json, endpoints, preview) {
         var jsplumbConfig = this.getJsplumbConfig(preview);
         if (endpoints) {
-            this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
+            if (!preview) {
+                this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
+            }
             this.JsplumbBridge.addEndpoint($newElement, jsplumbConfig.streamEndpointOptions);
         }
         return $newElement;
@@ -146,7 +148,9 @@ export class JsplumbService {
 
     sepaDropped($newElement, json, endpoints, preview) {
         var jsplumbConfig = this.getJsplumbConfig(preview);
-        this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
+        if (!preview) {
+            this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
+        }
         if (endpoints) {
             if (json.inputStreams.length < 2) { //1 InputNode
                 this.JsplumbBridge.addEndpoint($newElement, jsplumbConfig.leftTargetPointOptions);
@@ -162,7 +166,10 @@ export class JsplumbService {
 
     actionDropped($newElement, json, endpoints, preview) {
         var jsplumbConfig = this.getJsplumbConfig(preview);
-        this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
+        if (!preview) {
+            this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
+        }
+
         if (endpoints) {
             this.JsplumbBridge.addEndpoint($newElement, jsplumbConfig.leftTargetPointOptions);
         }
