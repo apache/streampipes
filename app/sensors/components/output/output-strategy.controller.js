@@ -21,15 +21,15 @@ export class OutputStrategyController {
 
     getNewOutputStrategy() {
         if (this.selectedOutputStrategy === this.outputStrategyTypes[0].type)
-            return {"type": $scope.outputStrategyTypes[0].type, "properties": {"eventProperties": []}};
+            return {"type": this.outputStrategyTypes[0].type, "properties": {"eventProperties": []}};
         else if (this.selectedOutputStrategy === this.outputStrategyTypes[1].type)
-            return {"type": $scope.outputStrategyTypes[1].type, "properties": {"eventProperties": []}};
+            return {"type": this.outputStrategyTypes[1].type, "properties": {"eventProperties": []}};
         else if (this.selectedOutputStrategy === this.outputStrategyTypes[2].type)
-            return {"type": $scope.outputStrategyTypes[2].type, "properties": {"eventProperties": []}};
+            return {"type": this.outputStrategyTypes[2].type, "properties": {"eventProperties": []}};
         else if (this.selectedOutputStrategy === this.outputStrategyTypes[3].type)
-            return {"type": $scope.outputStrategyTypes[3].type, "properties": {}};
+            return {"type": this.outputStrategyTypes[3].type, "properties": {}};
         else if (this.selectedOutputStrategy === this.outputStrategyTypes[4].type)
-            return {"type": $scope.outputStrategyTypes[4].type, "properties": {}};
+            return {"type": this.outputStrategyTypes[4].type, "properties": {}};
 
     }
 

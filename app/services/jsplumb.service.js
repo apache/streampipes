@@ -1,7 +1,6 @@
 export class JsplumbService {
 
-    constructor(PipelineElementIconService, ObjectProvider, JsplumbConfigService, JsplumbBridge, $timeout) {
-        this.PipelineElementIconService = PipelineElementIconService;
+    constructor(ObjectProvider, JsplumbConfigService, JsplumbBridge, $timeout) {
         this.objectProvider = ObjectProvider;
         this.JsplumbConfigService = JsplumbConfigService;
         this.JsplumbBridge = JsplumbBridge;
@@ -190,4 +189,4 @@ export class JsplumbService {
     }
 }
 
-JsplumbService.$inject = ['PipelineElementIconService', 'ObjectProvider', 'JsplumbConfigService', 'JsplumbBridge', '$timeout'];
+JsplumbService.$inject = ['ObjectProvider', 'JsplumbConfigService', 'JsplumbBridge', '$timeout'];

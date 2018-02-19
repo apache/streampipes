@@ -1,6 +1,6 @@
 export class CustomizeController {
 
-    constructor($scope, $rootScope, $mdDialog, elementData, sourceEndpoint, sepa) {
+    constructor($rootScope, $mdDialog, elementData, sourceEndpoint, sepa) {
         this.selectedElement = sepa;
         this.selection = [];
         this.matchingSelectionLeft = [];
@@ -168,4 +168,4 @@ export class CustomizeController {
 
 }
 
-CustomizeController.$inject = ['$scope', '$rootScope', '$mdDialog', 'elementData', 'sourceEndpoint', 'sepa'];
+CustomizeController.$inject = ['$rootScope', '$mdDialog', 'elementData', 'sourceEndpoint', 'sepa'];

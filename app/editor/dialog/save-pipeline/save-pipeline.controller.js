@@ -1,10 +1,9 @@
 export class SavePipelineController {
 
-    constructor($scope, $rootScope, $mdDialog, $state, RestApi, $mdToast, ObjectProvider, pipeline) {
+    constructor($mdDialog, $state, RestApi, $mdToast, ObjectProvider, pipeline) {
         this.RestApi = RestApi;
         this.$mdToast = $mdToast;
         this.$state = $state;
-        this.$rootScope = $rootScope;
         this.$mdDialog = $mdDialog;
         this.pipelineCategories = [];
         this.pipeline = pipeline;
@@ -54,7 +53,7 @@ export class SavePipelineController {
                     if (this.startPipelineAfterStorage) this.$state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
                     // TODO update pipelines properly
                     if (this.overwrite) {
-                        var pipelineId = $rootScope.state.adjustingPipeline._id;
+                        //var pipelineId = $rootScope.state.adjustingPipeline._id;
 
                         this.RestApi.deleteOwnPipeline(pipelineId)
                             .success(data => {
@@ -97,4 +96,4 @@ export class SavePipelineController {
     }
 }
 
-SavePipelineController.$inject = ['$scope', '$rootScope', '$mdDialog', '$state', 'RestApi', '$mdToast', 'ObjectProvider', 'pipeline'];
+SavePipelineController.$inject = ['$mdDialog', '$state', 'RestApi', '$mdToast', 'ObjectProvider', 'pipeline'];

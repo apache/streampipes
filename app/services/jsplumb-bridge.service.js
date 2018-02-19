@@ -1,7 +1,6 @@
 export class JsplumbBridge {
 
-    constructor($timeout) {
-        this.$timeout = $timeout;
+    constructor() {
     }
 
     setZoom(scale) {
@@ -81,4 +80,4 @@ export class JsplumbBridge {
     }
 }
 
-JsplumbBridge.$inject = ['$timeout'];
+JsplumbBridge.$inject = [];
