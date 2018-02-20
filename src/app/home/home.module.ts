@@ -21,6 +21,4 @@ import { CommonModule } from '@angular/common';
         HomeComponent
     ]
 })
-export class HomeModule {
-
-}
+export class HomeModule {}
