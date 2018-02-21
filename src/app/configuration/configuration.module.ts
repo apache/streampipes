@@ -30,4 +30,5 @@ import { FormsModule } from '@angular/forms';
         ConfigurationComponent
     ]
 })
-export class ConfigurationModule {}
+export class ConfigurationModule {
+}

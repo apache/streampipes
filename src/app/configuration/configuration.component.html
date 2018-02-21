@@ -8,7 +8,8 @@
 -->
 <div fxFlex class="page-container page-container-padding">
     <div fxLayout="row" fxLayoutAlign="start stretch">
-        <consul-service fxFlex="33" *ngFor="let consulService of consulServices" class="consul-service" [serviceData]="consulService">
+        <consul-service fxFlex="33" *ngFor="let consulService of consulServices" class="consul-service"
+                        [serviceData]="consulService">
         </consul-service>
     </div>
 </div>

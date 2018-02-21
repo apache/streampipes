@@ -12,7 +12,7 @@ export class HomeComponent {
     serviceLinks = [];
 
     constructor(private homeService: HomeService, private sanitizer: DomSanitizer, private stateService: StateService) {
-        this.serviceLinks = homeService.getServiceLinks();
+        this.serviceLinks = this.homeService.getServiceLinks();
     }
 
     getBackground(url) {

@@ -5,10 +5,11 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class ConfigurationService {
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {
+    }
 
     getServerUrl() {
-        return "/streampipes-backend";;
+        return '/streampipes-backend';
     }
 
     getConsulServices() {
@@ -16,7 +17,7 @@ export class ConfigurationService {
     }
 
     updateConsulService(configuration) {
-        return this.http.post(this.getServerUrl() + '/api/v2/consul', configuration)
+        return this.http.post(this.getServerUrl() + '/api/v2/consul', configuration);
     }
 
 }
