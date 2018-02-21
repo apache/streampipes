@@ -1,11 +1,11 @@
 <div class="assemblyOptions sp-blue-bg" fxLayout="row" fxLayoutAlign="space-between center">
-    <span *ngIf="serviceData.meta.status === 'passing'" fxLayoutAlign="center center">
+    <span *ngIf="consulService.meta.status === 'passing'" fxLayoutAlign="center center">
         <mat-icon class="service-icon-passing">lens</mat-icon>
     </span>
-    <span *ngIf="serviceData.meta.status === 'critical'" fxLayoutAlign="center center">
+    <span *ngIf="consulService.meta.status === 'critical'" fxLayoutAlign="center center">
         <mat-icon class="service-icon-passing">lens</mat-icon>
     </span>
-    <h4>{{serviceData.name}}</h4>
+    <h4>{{consulService.name}}</h4>
     <span *ngIf="showConfiguration" fxLayoutAlign="center center" class="show-configuration-icon">
         <mat-icon (click)="toggleConfiguration()">expand_less</mat-icon>
     </span>
@@ -16,9 +16,9 @@
 
 <div class="sp-blue-border" *ngIf="showConfiguration" style="padding:5px">
     <form (ngSubmit)="updateConfiguration()">
-        <section *ngFor="let configuration of serviceData['configs']">
+        <section *ngFor="let configuration of consulService.configs">
             <!-- If Input is Text or Number -->
-            <mat-form-field style="width: 100%" *ngIf="configuration.valueType != 'xs:boolean'">
+            <mat-form-field class="form-field" *ngIf="configuration.valueType != 'xs:boolean'">
                 <input *ngIf="configuration.valueType == 'xs:integer' || configuration.valueType == 'xs:double'"
                        matInput [(ngModel)]="configuration.value" [placeholder]="configuration.key" type="number"
                        [ngModelOptions]="{standalone: true}">
@@ -30,7 +30,8 @@
                 </mat-icon>
             </mat-form-field>
             <!-- If Input is Boolean -->
-            <section style="padding-bottom: 1.25em" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="configuration.valueType == 'xs:boolean'">
+            <section class="checkbox-field" fxLayout="row" fxLayoutAlign="space-between center"
+                     *ngIf="configuration.valueType == 'xs:boolean'">
                 <mat-checkbox matInput [(ngModel)]="configuration.value" type="checkbox"
                               [ngModelOptions]="{standalone: true}">
                     {{configuration.key}}
@@ -40,7 +41,7 @@
                 </mat-icon>
             </section>
         </section>
-        <button style="width: 100%" mat-raised-button color="primary" type="submit" class="md-raised md-primary">Update
+        <button mat-raised-button color="primary" type="submit" class="md-raised md-primary submit-button">Update
         </button>
     </form>
 </div>

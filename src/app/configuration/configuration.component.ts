@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { ConfigurationService } from './configuration.service';
+
+import { ConfigurationService } from './shared/configuration.service';
+import { ConsulService } from './shared/consul-service.model';
 
 @Component({
     templateUrl: './configuration.component.html',
@@ -7,36 +9,25 @@ import { ConfigurationService } from './configuration.service';
 })
 export class ConfigurationComponent {
 
-    consulServices = [];
+    consulServices: ConsulService[];
 
     constructor(private configurationService: ConfigurationService) {
         this.getConsulServices();
     }
 
-    getConsulServices() {
+    getConsulServices(): void {
         this.configurationService.getConsulServices()
-            .subscribe(services => {
-                for (let service of services as any[]) {
-                    for (let config of service['configs']) {
-                        if (config.valueType === 'xs:integer') {
-                            config.value = parseInt(config.value);
-                        } else if (config.valueType === 'xs:double') {
-                            config.value = parseFloat('xs:double');
-                        } else if (config.valueType === 'xs:boolean') {
-                            config.value = (config.value === 'true');
-                        }
-                    }
-                }
-                this.consulServices = services as any[];
+            .subscribe(response => {
+                this.consulServices = response;
             }, error => {
                 console.error(error);
             });
     }
 
-    updateConsulService(consulService: any) {
+    updateConsulService(consulService: ConsulService): void {
         this.configurationService.updateConsulService(consulService)
             .subscribe(response => {
-                
+
             }, error => {
                 console.error(error);
             });

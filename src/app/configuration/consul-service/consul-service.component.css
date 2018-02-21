@@ -10,10 +10,22 @@
 
 .show-configuration-icon {
     cursor: pointer;
-    color: rgba(0,0,0,0.54);
+    color: rgba(0, 0, 0, 0.54);
 }
 
 .tooltip-icon {
     cursor: default;
     font-size: 150%;
+}
+
+.submit-button {
+    width: 100%;
+}
+
+.form-field {
+    width: 100%;
+}
+
+.checkbox-field {
+    padding-bottom: 1.25em;
 }

@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
+import { ConsulService } from '../shared/consul-service.model';
+
 @Component({
     selector: 'consul-service',
     templateUrl: './consul-service.component.html',
@@ -7,18 +9,19 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ConsulServiceComponent {
 
-    @Input() serviceData;
-    @Output() updateServiceData: EventEmitter<any> = new EventEmitter<any>();
+    @Input() consulService: ConsulService;
+    @Output() updateConsulService: EventEmitter<ConsulService> = new EventEmitter<ConsulService>();
     showConfiguration: boolean = false;
 
-    constructor() {}
+    constructor() {
+    }
 
-    toggleConfiguration() {
+    toggleConfiguration(): void {
         this.showConfiguration = !this.showConfiguration;
     }
 
-    updateConfiguration() {
-        this.updateServiceData.emit(this.serviceData);
+    updateConfiguration(): void {
+        this.updateConsulService.emit(this.consulService);
     }
 
 }
