@@ -28,13 +28,17 @@ export class ConfigurationComponent {
                     }
                 }
                 this.consulServices = services as any[];
+            }, error => {
+                console.error(error);
             });
     }
 
-    updateConsulService(consulService) {
+    updateConsulService(consulService: any) {
         this.configurationService.updateConsulService(consulService)
             .subscribe(response => {
-
+                
+            }, error => {
+                console.error(error);
             });
     }
 

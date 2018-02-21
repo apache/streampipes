@@ -9,7 +9,7 @@
 <div fxFlex class="page-container page-container-padding">
     <div fxLayout="row" fxLayoutAlign="start stretch">
         <consul-service fxFlex="33" *ngFor="let consulService of consulServices" class="consul-service"
-                        [serviceData]="consulService">
+                        [serviceData]="consulService" (updateServiceData)="updateConsulService($event)">
         </consul-service>
     </div>
 </div>

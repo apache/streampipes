@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'consul-service',
@@ -8,12 +8,17 @@ import { Component, Input } from '@angular/core';
 export class ConsulServiceComponent {
 
     @Input() serviceData;
+    @Output() updateServiceData: EventEmitter<any> = new EventEmitter<any>();
     showConfiguration: boolean = false;
 
     constructor() {}
 
     toggleConfiguration() {
         this.showConfiguration = !this.showConfiguration;
+    }
+
+    updateConfiguration() {
+        this.updateServiceData.emit(this.serviceData);
     }
 
 }
