@@ -1,5 +1,7 @@
 package org.streampipes.model.base;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.streampipes.model.SpDataStream;
@@ -45,7 +47,9 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 	private List<SpDataStream> streamRequirements;
 
 	private boolean configured;
-	
+
+	private Logger LOG;
+
 	public InvocableStreamPipesEntity() {
 		super();
 	}
@@ -135,5 +139,14 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
 	public void setStatusInfoSettings(ElementStatusInfoSettings statusInfoSettings) {
 		this.statusInfoSettings = statusInfoSettings;
+	}
+
+	public Logger getLogger(Class clazz) {
+		if (LOG == null) {
+			LOG = LoggerFactory.getLogger(clazz.getName()
+                    + "correspondingPipeline: " + getCorrespondingPipeline() + " - "
+                    + "URI: " + getUri());
+		}
+		return LOG;
 	}
 }
