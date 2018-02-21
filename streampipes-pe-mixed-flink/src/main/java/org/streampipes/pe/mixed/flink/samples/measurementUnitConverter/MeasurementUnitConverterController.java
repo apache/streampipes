@@ -4,6 +4,7 @@ import com.github.jqudt.Unit;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.staticproperty.Option;
+import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -15,6 +16,7 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.units.UnitProvider;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -76,9 +78,9 @@ public class MeasurementUnitConverterController extends FlinkDataProcessorDeclar
         );
 
 
-        //return new MeasurementUnitConverterProgram(staticParams,  new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
-        //        FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));
-        return new MeasurementUnitConverterProgram(staticParams);
+        return new MeasurementUnitConverterProgram(staticParams,  new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
+                FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));
+        //return new MeasurementUnitConverterProgram(staticParams);
     }
 
 

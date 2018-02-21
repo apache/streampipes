@@ -17,13 +17,14 @@ public class EmailPublisher implements EventSink<EmailParameters> {
     static Logger LOG = LoggerFactory.getLogger(EmailPublisher.class);
 
     MimeMessage message;
+    String content;
 
     @Override
     public void bind(EmailParameters parameters) throws SpRuntimeException {
         String from = ActionConfig.INSTANCE.getEmailFrom();
         String to = parameters.getToEmailAddress();
         String subject = parameters.getSubject();
-        String content = parameters.getContent();
+        this.content = parameters.getContent();
         String username = ActionConfig.INSTANCE.getEmailUsername();
         String password = ActionConfig.INSTANCE.getEmailPassword();
         String host = ActionConfig.INSTANCE.getEmailSmtpHost();
@@ -50,11 +51,10 @@ public class EmailPublisher implements EventSink<EmailParameters> {
         });
 
         try {
-            message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(from));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-            message.setSubject(subject);
-            message.setContent(content, "text/html; charset=utf-8");
+            this.message = new MimeMessage(session);
+            this.message.setFrom(new InternetAddress(from));
+            this.message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            this.message.setSubject(subject);
         } catch (MessagingException e) {
            LOG.error(e.toString());
         }
@@ -63,8 +63,15 @@ public class EmailPublisher implements EventSink<EmailParameters> {
 
     @Override
     public void onEvent(Map<String, Object> event, String sourceInfo) {
+        String contentWithValues = this.content;
         try {
+            for (Map.Entry entry: event.entrySet()) {
+                contentWithValues = contentWithValues.replaceAll("#" + entry.getKey() + "#",
+                        entry.getValue().toString());
+            }
+            this.message.setContent(contentWithValues, "text/html; charset=utf-8");
             Transport.send(message);
+            LOG.info("Sent notifaction email");
         } catch (MessagingException e) {
             LOG.error(e.toString());
         }

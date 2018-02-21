@@ -64,14 +64,13 @@ public enum ActionConfig implements PeConfig {
     config.register(ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ICON_PORT, 80, "Port for the icons in nginx");
 
-
     config.register(EMAIL_FROM, "", "The Email adress which send from");
     config.register(EMAIL_USERNAME, "", "The username of the email account");
     config.registerPassword(EMAIL_PASSWORD, "", "The password of the email account");
     config.register(EMAIL_SMTP_HOST, "", "The SMTP Host");
     config.register(EMAIL_SMTP_PORT, "", "The SMTP Port");
-    config.register(EMAIL_STARTTLS, "", "Use startls?");
-    config.register(EMAIL_SLL, "", "Use SLL?");
+    config.register(EMAIL_STARTTLS, false, "Use startls?");
+    config.register(EMAIL_SLL, false, "Use SLL?");
 
     config.register(SERVICE_NAME, "Sinks standalone", "The name of the service");
   }
@@ -158,7 +157,6 @@ public enum ActionConfig implements PeConfig {
   public int getIconPort() {
     return config.getInteger(ICON_PORT);
   }
-
 
 
   @Override
