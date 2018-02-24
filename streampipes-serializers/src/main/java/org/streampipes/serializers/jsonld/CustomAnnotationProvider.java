@@ -50,6 +50,8 @@ import org.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
+import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
 
 import java.lang.annotation.Annotation;
@@ -124,7 +126,9 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             ApplicationLink.class,
             ElementStatusInfoSettings.class,
             WildcardTopicDefinition.class,
-            SimpleTopicDefinition.class
+            SimpleTopicDefinition.class,
+            RuntimeResolvableAnyStaticProperty.class,
+            RuntimeResolvableOneOfStaticProperty.class
     );
   }
 }

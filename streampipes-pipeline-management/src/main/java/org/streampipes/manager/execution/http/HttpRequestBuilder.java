@@ -5,7 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.Utils;
@@ -28,8 +28,7 @@ public class HttpRequestBuilder {
   public PipelineElementStatus invoke() {
     LOG.info("Invoking element: " + payload.getBelongsTo());
     try {
-      Response httpResp = Request.Post(payload.getBelongsTo()).bodyForm(new BasicNameValuePair("json", jsonLd())).execute();
-//			Response httpResp = Request.Post(payload.getBelongsTo()).bodyString(jsonLd(), ContentType.APPLICATION_JSON).execute();
+			Response httpResp = Request.Post(payload.getBelongsTo()).bodyString(jsonLd(), ContentType.APPLICATION_JSON).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       LOG.error(e.getMessage());

@@ -3,6 +3,7 @@ package org.streampipes.pe.processors.esper.main;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.pe.processors.esper.absence.AbsenceController;
 import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
@@ -83,6 +84,7 @@ public class EsperInit extends StandaloneModelSubmitter {
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
+    DeclarersSingleton.getInstance().registerProtocol(new SpJmsProtocolFactory());
 
     new Thread(new EsperEngineSettings()).start();
     new EsperInit().init(EsperConfig.INSTANCE);

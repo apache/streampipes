@@ -1,27 +1,27 @@
 package org.streampipes.container.api;
 
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.streampipes.container.declarer.Declarer;
+import org.streampipes.container.declarer.InvocableDeclarer;
+import org.streampipes.container.init.RunningInstances;
+import org.streampipes.container.transform.Transformer;
+import org.streampipes.container.util.Util;
+import org.streampipes.model.Response;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.runtime.RuntimeOptionsRequest;
+import org.streampipes.model.runtime.RuntimeOptionsResponse;
+
 import java.io.IOException;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import org.streampipes.container.init.RunningInstances;
-import org.streampipes.container.util.Util;
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.RDFParseException;
-
-import org.streampipes.container.declarer.Declarer;
-import org.streampipes.container.declarer.InvocableDeclarer;
-import org.streampipes.container.transform.Transformer;
-import org.streampipes.model.base.InvocableStreamPipesEntity;
-import org.streampipes.model.Response;
 
 public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D extends Declarer> extends Element<D> {
 
@@ -34,20 +34,17 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
         this.clazz = clazz;
     }
 
-    //TODO remove the Form paramerter thing
     @POST
     @Path("{elementId}")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-//    public String invokeRuntime(@PathParam("elementId") String elementId, String payload) {
-    public String invokeRuntime(@PathParam("elementId") String elementId, @FormParam("json") String payload) {
+    public String invokeRuntime(@PathParam("elementId") String elementId, String payload) {
 
         try {
             I graph = Transformer.fromJsonLd(clazz, payload);
             InvocableDeclarer declarer = (InvocableDeclarer) getDeclarerById(elementId);
 
             if (declarer != null) {
-//                String runningInstanceId = Util.getInstanceId(graph.getElementId(), "sepa", elementId);
                 String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
                 RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
                 Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph);
@@ -61,6 +58,20 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
         return Util.toResponseString(elementId, false, "Could not find the element with id: " + elementId);
     }
 
+    @POST
+    @Path("{elementId}/configurations")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public RuntimeOptionsResponse fetchConfigurations(@PathParam("elementId") String elementId, RuntimeOptionsRequest
+            runtimeOptionsRequest) {
+
+        // TODO implement
+        return null;
+
+    }
+
+
+    // TODO move endpoint to /elementId/instances/runningInstanceId
     @DELETE
     @Path("{elementId}/{runningInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)

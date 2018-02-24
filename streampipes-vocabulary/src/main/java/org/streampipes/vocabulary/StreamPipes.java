@@ -38,6 +38,11 @@ public class StreamPipes {
   public static final String MEASUREMENT_CAPABILITY = NS + "MeasurementCapability";
   public static final String MEASUREMENT_OBJECT = NS + "MeasurementObject";
 
+  public static final String SELECTION_STATIC_PROPERTY = NS + "SelectionStaticProperty";
+  public static final String RUNTIME_RESOLVABLE_SELECTION_STATIC_PROPERTY = NS +
+          "RuntimeResolvableSelectionStaticProperty";
+  public static final String RUNTIME_RESOLVABLE_ANY_STATIC_PROPERTY = NS + "RuntimeResolvableAnyStaticProperty";
+  public static final String RUNTIME_RESOLVABLE_ONE_OF_STATIC_PROPERTY = NS + "RuntimeResolvableOneOfStaticProperty";
   public static final String ANY_STATIC_PROPERTY = NS + "AnyStaticProperty";
   public static final String COLLECTION_STATIC_PROPERTY = NS + "CollectionStaticProperty";
   public static final String DOMAIN_STATIC_PROPERTY = NS + "DomainStaticProperty";
@@ -201,4 +206,6 @@ public class StreamPipes {
   public static final String HAS_TOPIC_PARAMETER_TYPE = NS + "hasTopicParameterType" ;
   public static final String HAS_TOPIC_MAPPING_ID = NS + "hasTopicMappingId";
   public static final String HAS_MAPPED_RUNTIME_NAME = NS + "hasMappedRuntimeName";
+
+  public static final String HAS_LINKED_MAPPING_PROPERTY_ID = NS + "hasLinkedMappingPropertyId";
 }
