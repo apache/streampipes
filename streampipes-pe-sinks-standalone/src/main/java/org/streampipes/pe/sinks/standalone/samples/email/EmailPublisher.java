@@ -14,13 +14,15 @@ import java.util.Properties;
 
 public class EmailPublisher implements EventSink<EmailParameters> {
 
-    static Logger LOG = LoggerFactory.getLogger(EmailPublisher.class);
+    static Logger LOG;
 
     MimeMessage message;
     String content;
 
     @Override
     public void bind(EmailParameters parameters) throws SpRuntimeException {
+        LOG = parameters.getGraph().getLogger(EmailPublisher.class);
+
         String from = ActionConfig.INSTANCE.getEmailFrom();
         String to = parameters.getToEmailAddress();
         String subject = parameters.getSubject();
