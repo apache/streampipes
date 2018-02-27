@@ -266,6 +266,16 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-spark</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pe-mixed-spark</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-sources</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -428,6 +438,7 @@
         <module>streampipes-pe-processors-esper</module>
         <module>streampipes-pe-processors-standalone</module>
         <module>streampipes-pe-mixed-flink</module>
+        <module>streampipes-pe-mixed-spark</module>
         <module>streampipes-pe-sinks-standalone</module>
         <module>streampipes-pe-slack</module>
         <module>streampipes-pe-sources-axoom-hmi</module>
@@ -444,6 +455,7 @@
         <module>streampipes-wrapper</module>
         <module>streampipes-wrapper-esper</module>
         <module>streampipes-wrapper-flink</module>
+        <module>streampipes-wrapper-spark</module>
         <module>streampipes-wrapper-standalone</module>
         <module>streampipes-performance-tests</module>
         <module>streampipes-storage-rdf4j</module>

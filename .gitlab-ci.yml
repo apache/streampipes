@@ -36,6 +36,7 @@ build:
       - ./streampipes-pe-sources-mnist/target/*.jar
       - ./streampipes-pe-mixed-flink/target/*.jar
       - ./streampipes-pe-mixed-kafka-streams/target/*.jar
+      - ./streampipes-pe-mixed-spark/target/*.jar
       - ./target/site/apidocs/**
       - ./target/mvn_version
     expire_in:  1 week
@@ -123,6 +124,18 @@ docker-pe-mixed-flink:
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
      - docker build --pull -t $IMAGE_NAME/pe-mixed-flink:SNAPSHOT ./streampipes-pe-mixed-flink/
      - docker push $IMAGE_NAME/pe-mixed-flink:SNAPSHOT
+   only:
+     - dev
+     
+docker-pe-mixed-spark:
+   image: docker:17.06.0-ce
+   stage: docker
+   dependencies: 
+     - build
+   script: 
+     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+     - docker build --pull -t $IMAGE_NAME/pe-mixed-spark:SNAPSHOT ./streampipes-pe-mixed-spark/
+     - docker push $IMAGE_NAME/pe-mixed-spark:SNAPSHOT
    only:
      - dev
 

@@ -20,6 +20,13 @@ public abstract class EventProcessorBindingParams extends
 
 	private final Map<String, Object> outEventType;
 	
+	private final static String topicPrefix = "topic://";
+
+	protected EventProcessorBindingParams() {
+		super();
+		outEventType = null;
+	}
+
 	public EventProcessorBindingParams(DataProcessorInvocation graph)
 	{
 		super(new DataProcessorInvocation(graph));
