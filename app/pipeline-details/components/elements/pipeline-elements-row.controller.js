@@ -23,7 +23,6 @@ export class PipelineElementsRowController {
             }
         });
 
-        console.log(elementType);
         return elementType;
     }
 }

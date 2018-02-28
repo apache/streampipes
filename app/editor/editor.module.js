@@ -14,7 +14,7 @@ import {EditorCtrl} from './editor.controller';
 import myDataBind from './my-data-bind.directive';
 import imageBind  from './image-bind.directive';
 //import capitalize from './capitalize.filter';
-import displayRecommendedFilter from './display-recommended.filter';
+import displayRecommendedFilter from './filter/display-recommended.filter';
 //import objectProvider from '../services/object-provider.service';
 
 import {AnyComponent} from './components/any/any.component';
@@ -37,14 +37,21 @@ import {PipelineElementComponent} from './components/pipeline-element/pipeline-e
 import {PipelineElementRecommendationComponent} from "./components/pipeline-element-recommendation/pipeline-element-recommendation.component";
 import {PipelineElementRecommendationService} from "./services/pipeline-element-recommendation.service";
 import {PipelineAssemblyComponent} from "./components/pipeline-assembly/pipeline-assembly.component";
+import {PipelineElementIconStandComponent} from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
+import {PipelineValidationService} from "./services/pipeline-validation.service";
+import {OneOfRemoteComponent} from "./components/oneof-remote/oneof-remote.component";
+
+import selectFilter from './filter/select.filter';
+import elementNameFilter from './filter/element-name.filter';
+
 
 export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate'])
     .controller('EditorCtrl', EditorCtrl)
     .directive('myDataBind', myDataBind)
     .directive('imageBind', imageBind)
-    //.directive('objectProvider', objectProvider)
-    //.filter('capitalize', objectProvider)
     .filter('displayRecommendedFilter', displayRecommendedFilter)
+    .filter('selectFilter', selectFilter)
+    .filter('elementNameFilter', elementNameFilter)
     .component('any', AnyComponent)
     .component('customOutput', CustomOutputComponent)
     .component('domainConceptInput', DomainConceptComponent)
@@ -53,6 +60,7 @@ export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimat
     .component('mappingPropertyUnary', MappingUnaryComponent)
     .component('matchingProperty', MatchingPropertyComponent)
     .component('oneof', OneOfComponent)
+    .component('oneofRemote', OneOfRemoteComponent)
     .component('replaceOutput', ReplaceOutputComponent)
     .component('multipleValueInput', MultipleValueInputComponent)
     .component('collectionStaticProperty', CollectionComponent)
@@ -62,6 +70,9 @@ export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimat
     .component('pipelineElement', PipelineElementComponent)
     .component('pipelineElementRecommendation', PipelineElementRecommendationComponent)
     .component('pipelineAssembly', PipelineAssemblyComponent)
+    .component('pipelineElementIconStand', PipelineElementIconStandComponent)
+    .component('pipelineElementOptions', PipelineElementOptionsComponent)
     .service('EditorDialogManager', EditorDialogManager)
     .service('PipelineElementRecommendationService', PipelineElementRecommendationService)
+    .service('PipelineValidationService', PipelineValidationService)
     .name;

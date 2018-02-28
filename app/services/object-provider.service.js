@@ -1,30 +1,13 @@
 export class ObjectProvider {
 
-    constructor($http, RestApi, ImageChecker) {
-        this.$http = $http;
+    constructor(RestApi, JsplumbBridge) {
         this.RestApi = RestApi;
-        this.ImageChecker = ImageChecker;
+        this.JsplumbBridge = JsplumbBridge;
     }
 
     prepareElement(json) {
         json.connectedTo = [];
         return json;
-    }
-
-    makePipeline(pipelineModel) {
-        var pipeline = this.preparePipeline();
-
-        angular.forEach(pipelineModel, pe => {
-            if (pe.type === 'stream') {
-                pipeline.streams.push(pe.payload);
-            } else if (pe.type === 'sepa') {
-                pipeline.sepas.push(pe.payload);
-            } else if (pe.type === 'action') {
-                pipeline.actions.push(pe.payload);
-            }
-        })
-
-        return pipeline;
     }
 
     preparePipeline() {
@@ -38,13 +21,17 @@ export class ObjectProvider {
         return pipeline;
     }
 
-    makePipeline(element, currentPipelineElements, rootElementId) {
-        var pipeline = this.preparePipeline();
-        var rootElement = this.findElement(rootElementId, currentPipelineElements);
-        this.addElement(element, rootElement, currentPipelineElements, pipeline);
-        return pipeline;
+    makeFinalPipeline(currentPipelineElements) {
+        return this.makePipeline(currentPipelineElements, currentPipelineElements[currentPipelineElements.length - 1].payload.DOM);
     }
 
+    makePipeline(currentPipelineElements, rootElementId) {
+        var domElement = $("#" + rootElementId);
+        var pipeline = this.preparePipeline();
+        var rootPipelineElement = this.findElement(rootElementId, currentPipelineElements);
+        this.addElement(domElement, rootPipelineElement, currentPipelineElements, pipeline);
+        return pipeline;
+    }
 
     findElement(elementId, currentPipeline) {
         var result = {};
@@ -57,7 +44,7 @@ export class ObjectProvider {
     }
 
     addElement(element, rootElement, currentPipelineElements, pipeline) {
-        var connections = jsPlumb.getConnections({
+        var connections = this.JsplumbBridge.getConnections({
             target: element
         });
         if (rootElement.type === 'action' || rootElement.type === 'sepa') {
@@ -98,4 +85,4 @@ export class ObjectProvider {
     };
 }
 
-ObjectProvider.$inject = ['$http', 'RestApi', 'ImageChecker'];
+ObjectProvider.$inject = ['RestApi', 'JsplumbBridge'];

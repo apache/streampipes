@@ -5,7 +5,7 @@ export let PipelineElementRecommendationComponent = {
     bindings: {
         recommendedElements: "<",
         recommendationsShown: "<",
-        pipelineModel: "=",
+        rawPipelineModel: "=",
         pipelineElementDomId: "<"
     },
     controller: PipelineElementRecommendationController,

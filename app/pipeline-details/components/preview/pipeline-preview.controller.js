@@ -1,26 +1,34 @@
 export class PipelinePreviewController {
 
-    constructor($scope, pipelinePositioningService, jsplumbService, $timeout) {
-        this.$scope = $scope;
+    constructor(PipelinePositioningService, JsplumbService, $timeout, ObjectProvider, JsplumbBridge) {
+        this.PipelinePositioningService = PipelinePositioningService;
+        this.JsplumbService = JsplumbService;
+        this.$timeout = $timeout;
+        this.ObjectProvider = ObjectProvider;
+        this.JsplumbBridge = JsplumbBridge;
+    }
 
-        $timeout(() => {
-            var js2 = jsPlumb.getInstance({});
-            js2.setContainer(this.jspcanvas);
-            jsplumbService.prepareJsplumb(js2);
+    $onInit() {
+        this.$timeout(() => {
             var elid = "#" + this.jspcanvas;
-            pipelinePositioningService.displayPipeline($scope, js2, this.pipeline, elid, true);
-            var existingEndpointIds = [];
-            js2.selectEndpoints().each(endpoint => {
-                if (existingEndpointIds.indexOf(endpoint.element.id) == -1) {
-                    $(endpoint.element).click(ev => {
-                        this.updateSelected({selected: $(endpoint.element).data("JSON")});
+            this.rawPipelineModel = this.JsplumbService.makeRawPipeline(this.pipeline, true);
+            this.$timeout(() => {
+                this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, elid, true);
+                var existingEndpointIds = [];
+                this.$timeout(() => {
+                    this.JsplumbBridge.selectEndpoints().each(endpoint => {
+                        if (existingEndpointIds.indexOf(endpoint.element.id) === -1) {
+                            $(endpoint.element).click(() => {
+                                var payload = this.ObjectProvider.findElement(endpoint.element.id, this.rawPipelineModel).payload;
+                                this.selectedElement = payload;
+                            });
+                            existingEndpointIds.push(endpoint.element.id);
+                        }
                     });
-                    existingEndpointIds.push(endpoint.element.id);
-                }
+                });
             });
-
         });
     }
 }
 
-PipelinePreviewController.$inject = ['$scope', 'pipelinePositioningService', 'jsplumbService', '$timeout'];
+PipelinePreviewController.$inject = ['PipelinePositioningService', 'JsplumbService', '$timeout', 'ObjectProvider', 'JsplumbBridge'];

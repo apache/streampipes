@@ -1,15 +1,18 @@
 export class PipelineAssemblyController {
 
-    constructor($rootScope, JsplumbBridge, PipelinePositioningService, EditorDialogManager) {
-        this.$rootScope = $rootScope;
+    constructor(JsplumbBridge, PipelinePositioningService, EditorDialogManager, PipelineValidationService, ObjectProvider, RestApi, JsplumbService, $timeout) {
         this.JsplumbBridge = JsplumbBridge;
-        this.pipelinePositioningService = PipelinePositioningService;
+        this.PipelinePositioningService = PipelinePositioningService;
         this.EditorDialogManager = EditorDialogManager;
+        this.PipelineValidationService = PipelineValidationService;
+        this.ObjectProvider = ObjectProvider;
+        this.RestApi = RestApi;
+        this.JsplumbService = JsplumbService;
+        this.$timeout = $timeout;
 
         this.selectMode = true;
         this.currentZoomLevel = 1;
 
-        // T1
         $("#assembly").panzoom({
             disablePan: true,
             increment: 0.25,
@@ -23,10 +26,15 @@ export class PipelineAssemblyController {
             JsplumbBridge.setZoom(scale);
             JsplumbBridge.repaintEverything();
         });
+
+        if (this.currentModifiedPipelineId) {
+            this.displayPipelineById();
+        }
+
     }
 
     autoLayout() {
-        this.pipelinePositioningService.layoutGraph("#assembly", "span.connectable-editor", 110, false);
+        this.PipelinePositioningService.layoutGraph("#assembly", "span[id^='jsplumb']", 110, false);
         this.JsplumbBridge.repaintEverything();
     }
 
@@ -66,9 +74,9 @@ export class PipelineAssemblyController {
      * clears the Assembly of all elements
      */
     clearAssembly() {
-        $('#assembly').children().not('#clear, #submit').remove();
+        //$('#assembly').children().not('#clear, #submit').remove();
         this.JsplumbBridge.deleteEveryEndpoint();
-        this.$rootScope.state.adjustingPipelineState = false;
+        this.rawPipelineModel = [];
         $("#assembly").panzoom("reset", {
             disablePan: true,
             increment: 0.25,
@@ -85,73 +93,31 @@ export class PipelineAssemblyController {
      * Sends the pipeline to the server
      */
     submit() {
-        var error = false;
-        var pipelineNew = this.objectProvider.makePipeline(this.pipelineModel);
-        var streamPresent = false;
-        var sepaPresent = false;
-        var actionPresent = false;
+        var pipeline = this.ObjectProvider.makeFinalPipeline(this.rawPipelineModel);
 
+        pipeline.name = this.currentPipelineName;
+        pipeline.description = this.currentPipelineDescription;
 
-        // $('#assembly').find('.connectable, .connectable-block').each((i, element) => {
-        //     var $element = $(element);
-        //
-        //     if (!this.pipelineEditorService.isConnected(element)) {
-        //         error = true;
-        //         this.showToast("error", "All elements must be connected", "Submit Error");
-        //     }
-        //
-        //     if ($element.hasClass('sepa')) {
-        //         sepaPresent = true;
-        //         if ($element.data("options")) {
-        //             pipelineNew.addElement(element);
-        //
-        //         } else if ($element.data("JSON").staticProperties != null) {
-        //             this.showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
-        //             error = true;
-        //         }
-        //     } else if ($element.hasClass('stream')) {
-        //         streamPresent = true;
-        //         pipelineNew.addElement(element);
-        //
-        //     } else if ($element.hasClass('action')) {
-        //         actionPresent = true;
-        //         if ($element.data("JSON").staticProperties == null || $element.data("options")) {
-        //             pipelineNew.addElement(element);
-        //         } else {
-        //             this.showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
-        //             ;
-        //             error = true;
-        //         }
-        //     }
-        // });
-        // if (!streamPresent) {
-        //     this.showToast("error", "No stream element present in pipeline", "Submit Error");
-        //     error = true;
-        // }
-        //
-        // if (!actionPresent) {
-        //     this.showToast("error", "No action element present in pipeline", "Submit Error");
-        //     error = true;
-        //}
-
-        var error = false;
-        if (!error) {
-            this.$rootScope.state.currentPipeline = pipelineNew;
-            if (this.$rootScope.state.adjustingPipelineState) {
-                this.$rootScope.state.currentPipeline.name = this.currentPipelineName;
-                this.$rootScope.state.currentPipeline.description = this.currentPipelineDescription;
-            }
-
-            this.openPipelineNameModal(pipelineNew);
-        }
+        this.openPipelineNameModal(pipeline);
     }
 
-    openPipelineNameModal(pipelineNew) {
-        if (this.$rootScope.state.adjustingPipelineState) {
-            this.modifyPipelineMode = true;
-        }
-        this.EditorDialogManager.showSavePipelineDialog(pipelineNew);
+
+    openPipelineNameModal(pipeline) {
+        this.EditorDialogManager.showSavePipelineDialog(pipeline);
     }
+
+    displayPipelineById() {
+        this.RestApi.getPipelineById(this.currentModifiedPipelineId)
+            .success((pipeline) => {
+                this.currentPipelineName = pipeline.name;
+                this.currentPipelineDescription = pipeline.description;
+                this.rawPipelineModel = this.JsplumbService.makeRawPipeline(pipeline, false);
+                this.$timeout(() => {
+                    this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false);
+                });
+            })
+    };
+
 }
 
-PipelineAssemblyController.$inject = ['$rootScope', 'JsplumbBridge', 'PipelinePositioningService', 'EditorDialogManager'];
+PipelineAssemblyController.$inject = ['JsplumbBridge', 'PipelinePositioningService', 'EditorDialogManager', 'PipelineValidationService', 'ObjectProvider', 'RestApi', 'JsplumbService', '$timeout'];

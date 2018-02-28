@@ -1,0 +1,7 @@
+<md-input-container flex="100" layout="column">
+    <md-radio-group class="md-accent" name="{{ctrl.staticProperty.properties.elementId}}" ng-model="ctrl.staticProperty.properties.currentSelection">
+        <md-radio-button ng-repeat="option in ctrl.staticProperty.properties.options" ng-value="option">
+            <b>{{option.name}}</b><br/>
+        </md-radio-button>
+    </md-radio-group>
+</md-input-container>

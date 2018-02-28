@@ -1,6 +1,6 @@
 export class CustomizeController {
 
-    constructor($scope, $rootScope, $mdDialog, elementData, sourceEndpoint, sepa) {
+    constructor($rootScope, $mdDialog, elementData, sourceEndpoint, sepa) {
         this.selectedElement = sepa;
         this.selection = [];
         this.matchingSelectionLeft = [];
@@ -67,11 +67,13 @@ export class CustomizeController {
     saveProperties() {
 
         angular.forEach(this.selectedElement.staticProperties, item => {
-                if (item.properties.staticPropertyType === 'OneOfStaticProperty') {
+                if (item.properties.staticPropertyType === 'OneOfStaticProperty' || item.properties.staticPropertyType === 'RuntimeResolvableOneOfStaticProperty') {
                     angular.forEach(item.properties.options, option => {
                             if (item.properties.currentSelection) {
                                 if (option.elementId == item.properties.currentSelection.elementId) {
                                     option.selected = true;
+                                } else {
+                                    option.selected = false;
                                 }
                             }
                         }
@@ -168,4 +170,4 @@ export class CustomizeController {
 
 }
 
-CustomizeController.$inject = ['$scope', '$rootScope', '$mdDialog', 'elementData', 'sourceEndpoint', 'sepa'];
+CustomizeController.$inject = ['$rootScope', '$mdDialog', 'elementData', 'sourceEndpoint', 'sepa'];
