@@ -20,6 +20,7 @@ import { DeploymentService } from './deployment.service'
 import { JsplumbConfigService } from './jsplumb-config.service'
 import { PipelineElementIconService } from './pipeline-icon.service'
 import { ObjectProvider } from './object-provider.service'
+import { downgradeInjectable } from '@angular/upgrade/static';
 
 //mport { PipelineElementOptionsComponent } from '../editor/components/pipeline-element-options/pipeline-element-options.component'
 
@@ -29,7 +30,7 @@ export default angular.module('sp.services', [spConstants])
 	.service('ElementIconText', ElementIconText)
 	.service('InitTooltips', InitTooltips)
 	.service('RestApi', RestApi)
-	.service('AuthStatusService', AuthStatusService)
+	.service('AuthStatusService', downgradeInjectable(AuthStatusService))
 	.service('ObjectProvider', ObjectProvider)
 	.service('DomainProperties', DomainProperties)
 	.service('JsplumbBridge', JsplumbBridge)

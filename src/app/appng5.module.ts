@@ -5,12 +5,14 @@ import { UpgradeModule } from '@angular/upgrade/static';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { UIRouterUpgradeModule } from '@uirouter/angular-hybrid';
-import { HomeModule } from './home/home.module';
 import { HttpClientModule } from '@angular/common/http';
-import { ConfigurationModule } from './configuration/configuration.module';
 import { MatIconModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+
+import { HomeModule } from './home/home.module';
+import { ConfigurationModule } from './configuration/configuration.module';
+import { AuthStatusService } from './services/auth-status.service';
 
 @NgModule({
     imports: [
@@ -25,6 +27,9 @@ import { FormsModule } from '@angular/forms';
         UIRouterUpgradeModule.forChild(),
         HomeModule,
         ConfigurationModule
+    ],
+    providers: [
+        AuthStatusService
     ]
 })
 export class AppModule {
