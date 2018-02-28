@@ -7,6 +7,7 @@ import org.streampipes.manager.execution.http.PipelineExecutor;
 import org.streampipes.manager.execution.http.PipelineStorageService;
 import org.streampipes.manager.matching.PipelineVerificationHandler;
 import org.streampipes.manager.recommender.ElementRecommender;
+import org.streampipes.manager.remote.ContainerProvidedOptionsHandler;
 import org.streampipes.manager.topic.WildcardTopicGenerator;
 import org.streampipes.manager.verification.extractor.TypeExtractor;
 import org.streampipes.model.SpDataStream;
@@ -17,6 +18,8 @@ import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.pipeline.PipelineElementRecommendationMessage;
 import org.streampipes.model.client.pipeline.PipelineModificationMessage;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
+import org.streampipes.model.client.runtime.ContainerProvidedOptionsParameterRequest;
+import org.streampipes.model.staticproperty.Option;
 
 import java.util.List;
 
@@ -106,5 +109,9 @@ public class Operations {
 
 	public static SpDataStream updateActualTopic(SpDataStream stream) {
 		return new WildcardTopicGenerator(stream).computeActualTopic();
+	}
+
+	public static List<Option> fetchRemoteOptions(ContainerProvidedOptionsParameterRequest request) {
+		return new ContainerProvidedOptionsHandler().fetchRemoteOptions(request);
 	}
 }

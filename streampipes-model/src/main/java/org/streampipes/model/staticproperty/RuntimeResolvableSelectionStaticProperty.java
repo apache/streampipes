@@ -36,6 +36,9 @@ public abstract class RuntimeResolvableSelectionStaticProperty extends Selection
 
   public RuntimeResolvableSelectionStaticProperty(RuntimeResolvableSelectionStaticProperty other) {
     super(other);
+    if (other.getLinkedMappingPropertyId() != null) {
+      this.linkedMappingPropertyId = other.getLinkedMappingPropertyId();
+    }
   }
 
   public RuntimeResolvableSelectionStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label, String

@@ -30,6 +30,7 @@ import org.streampipes.sdk.helpers.Formats;
 import org.streampipes.sdk.helpers.Protocols;
 import org.streampipes.sdk.utils.Datatypes;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -100,6 +101,7 @@ public class RandomNumberStreamWildcard extends RandomNumberStream {
                     .label("Pressure")
                     .description("Measures the current pressure")
                     .domainProperty("http://domain.prop/pressure")
+                    .measurementUnit(URI.create("http://qudt.org/vocab/unit#Kilogram"))
                     .scope(PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
             .format(Formats.jsonFormat())

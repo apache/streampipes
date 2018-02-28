@@ -25,7 +25,7 @@ import javax.persistence.Entity;
 public class RuntimeResolvableOneOfStaticProperty extends RuntimeResolvableSelectionStaticProperty {
 
   public RuntimeResolvableOneOfStaticProperty() {
-    super(StaticPropertyType.AnyStaticProperty);
+    super(StaticPropertyType.RuntimeResolvableOneOfStaticProperty);
   }
 
   public RuntimeResolvableOneOfStaticProperty(org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty other) {
@@ -33,6 +33,6 @@ public class RuntimeResolvableOneOfStaticProperty extends RuntimeResolvableSelec
   }
 
   public RuntimeResolvableOneOfStaticProperty(String internalName, String label, String description) {
-    super(StaticPropertyType.AnyStaticProperty, internalName, label, description);
+    super(StaticPropertyType.RuntimeResolvableOneOfStaticProperty, internalName, label, description);
   }
 }

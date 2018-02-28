@@ -42,6 +42,8 @@ import org.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
+import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
 
@@ -84,9 +86,14 @@ public class Cloner {
       return new CollectionStaticProperty((CollectionStaticProperty) o);
     } else if (o instanceof MatchingStaticProperty) {
       return new MatchingStaticProperty((MatchingStaticProperty) o);
+    } else if (o instanceof RuntimeResolvableOneOfStaticProperty) {
+      return new RuntimeResolvableOneOfStaticProperty((RuntimeResolvableOneOfStaticProperty) o);
+    } else if (o instanceof RuntimeResolvableAnyStaticProperty) {
+      return new RuntimeResolvableAnyStaticProperty((RuntimeResolvableAnyStaticProperty) o);
     } else {
       return new MappingPropertyUnary((MappingPropertyUnary) o);
     }
+
   }
 
   public List<TransportProtocol> protocols(List<TransportProtocol> protocols) {

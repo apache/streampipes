@@ -11,6 +11,7 @@ import org.streampipes.model.Response;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.streampipes.serializers.json.GsonSerializer;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,13 +61,19 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
 
     @POST
     @Path("{elementId}/configurations")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public RuntimeOptionsResponse fetchConfigurations(@PathParam("elementId") String elementId, RuntimeOptionsRequest
-            runtimeOptionsRequest) {
+    //@Consumes(MediaType.APPLICATION_JSON)
+    //@Produces(MediaType.APPLICATION_JSON)
+    public String fetchConfigurations(@PathParam("elementId") String elementId, String payload) {
 
-        // TODO implement
-        return null;
+        RuntimeOptionsRequest runtimeOptionsRequest = GsonSerializer.getGsonWithIds().fromJson(payload,
+                RuntimeOptionsRequest.class);
+        ResolvesContainerProvidedOptions resolvesOptions = (ResolvesContainerProvidedOptions) getDeclarerById(elementId);
+
+        List<String> availableOptions = resolvesOptions.resolveOptions(runtimeOptionsRequest.getRequestId(),
+                runtimeOptionsRequest.getMappedEventProperty());
+
+        return GsonSerializer.getGsonWithIds().toJson(new RuntimeOptionsResponse(runtimeOptionsRequest,
+                availableOptions));
 
     }
 

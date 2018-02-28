@@ -1,9 +1,12 @@
 package org.streampipes.pe.mixed.flink.samples.measurementUnitConverter;
 
 import com.github.jqudt.Unit;
+import org.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -18,10 +21,13 @@ import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
-import java.util.LinkedList;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class MeasurementUnitConverterController extends FlinkDataProcessorDeclarer<MeasurementUnitConverterParameters> {
+public class MeasurementUnitConverterController extends
+        FlinkDataProcessorDeclarer<MeasurementUnitConverterParameters> implements ResolvesContainerProvidedOptions {
 
     private static final String UNIT_NAME = "unitName";
     private static final String INPUT_UNIT = "inputUnit";
@@ -29,28 +35,24 @@ public class MeasurementUnitConverterController extends FlinkDataProcessorDeclar
 
     @Override
     public DataProcessorDescription declareModel() {
-        List<Unit> availableUnits = UnitProvider.INSTANCE.getAvailableUnits();
-        List<Option> optionsListInput = new LinkedList<>();
-        List<Option> optionsListOutput = new LinkedList<>();
-        availableUnits.forEach(unit -> {
-                optionsListInput.add(new Option(unit.getLabel()));
-                optionsListOutput.add(new Option(unit.getLabel()));
-                }
-        );
 
 
         return ProcessingElementBuilder.create("measurement_unit_converter", "Measurement Unit Converter",
                 "Converts a unit of measurement to another one")
                 .requiredStream(StreamRequirementsBuilder
                         .create()
-                        .requiredProperty(EpRequirements.anyProperty())
+                        .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.from
+                                ("convert-property","Property", "The" +
+                                " property to convert"), PropertyScope.MEASUREMENT_PROPERTY)
                         .build())
                 .requiredTextParameter(Labels.from(UNIT_NAME, "Unit name",
                         "The name of the unit which should convert"))
-                .requiredSingleValueSelection(Labels.from(INPUT_UNIT, "Input type",
-                        "The input type unit of "), optionsListInput)
-                .requiredSingleValueSelection(Labels.from(OUTPUT_UNIT, "Output type",
-                        "The output type unit of measurement"), optionsListOutput)
+//                .requiredSingleValueSelection(Labels.from(INPUT_UNIT, "Input type",
+//                        "The input type unit of "), optionsListInput)
+//                .requiredSingleValueSelection(Labels.from(OUTPUT_UNIT, "Output type",
+//                        "The output type unit of measurement"), optionsListOutput)
+                .requiredSingleValueSelectionFromContainer(Labels.from(OUTPUT_UNIT, "The output type unit of " +
+                        "measurement", ""), "convert-property")
                 .supportedProtocols(SupportedProtocols.kafka())
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .outputStrategy(OutputStrategies.keep())
@@ -84,4 +86,17 @@ public class MeasurementUnitConverterController extends FlinkDataProcessorDeclar
     }
 
 
+    @Override
+    public List<String> resolveOptions(String requestId, EventProperty linkedEventProperty) {
+        if (linkedEventProperty instanceof EventPropertyPrimitive && ((EventPropertyPrimitive) linkedEventProperty)
+                .getMeasurementUnit() != null) {
+            Unit measurementUnit = UnitProvider.INSTANCE.getUnit(((EventPropertyPrimitive) linkedEventProperty)
+                    .getMeasurementUnit().toString());
+            URI type = measurementUnit.getType();
+            List<Unit> availableUnits = UnitProvider.INSTANCE.getUnitsByType(type);
+            return availableUnits.stream().map(unit -> unit.getLabel()).collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
+    }
 }

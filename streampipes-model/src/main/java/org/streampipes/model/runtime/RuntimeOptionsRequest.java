@@ -19,17 +19,21 @@ import org.streampipes.model.schema.EventProperty;
 
 public class RuntimeOptionsRequest {
 
-  private String requestId;
+  protected String requestId;
 
-  private EventProperty mappedEventPropety;
+  protected EventProperty mappedEventProperty;
 
   public RuntimeOptionsRequest() {
 
   }
 
+  public RuntimeOptionsRequest(String requestId) {
+    this.requestId = requestId;
+  }
+
   public RuntimeOptionsRequest(String requestId, EventProperty mappedEventPropety) {
     this.requestId = requestId;
-    this.mappedEventPropety = mappedEventPropety;
+    this.mappedEventProperty = mappedEventPropety;
   }
 
   public String getRequestId() {
@@ -40,11 +44,11 @@ public class RuntimeOptionsRequest {
     this.requestId = requestId;
   }
 
-  public EventProperty getMappedEventPropety() {
-    return mappedEventPropety;
+  public EventProperty getMappedEventProperty() {
+    return mappedEventProperty;
   }
 
-  public void setMappedEventPropety(EventProperty mappedEventPropety) {
-    this.mappedEventPropety = mappedEventPropety;
+  public void setMappedEventProperty(EventProperty mappedEventPropety) {
+    this.mappedEventProperty = mappedEventPropety;
   }
 }

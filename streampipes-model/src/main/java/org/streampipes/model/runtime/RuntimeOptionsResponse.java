@@ -15,5 +15,28 @@ limitations under the License.
 */
 package org.streampipes.model.runtime;
 
-public class RuntimeOptionsResponse {
+import java.util.List;
+
+public class RuntimeOptionsResponse extends RuntimeOptionsRequest {
+
+  private List<String> options;
+
+  public RuntimeOptionsResponse() {
+    super();
+  }
+
+  public RuntimeOptionsResponse(RuntimeOptionsRequest request, List<String> options) {
+    super();
+    this.requestId = request.getRequestId();
+    this.mappedEventProperty = request.getMappedEventProperty();
+    this.options = options;
+  }
+
+  public List<String> getOptions() {
+    return options;
+  }
+
+  public void setOptions(List<String> options) {
+    this.options = options;
+  }
 }

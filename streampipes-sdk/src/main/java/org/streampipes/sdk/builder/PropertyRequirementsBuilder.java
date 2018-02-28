@@ -49,6 +49,18 @@ public class PropertyRequirementsBuilder {
     return this;
   }
 
+  public PropertyRequirementsBuilder measurementUnitReq(String measurementUnit) {
+    this.propertyReq.setMeasurementUnit(URI.create(measurementUnit));
+    return this;
+  }
+
+  // TODO add any to vocabulary
+  public PropertyRequirementsBuilder measurementUnitPresence() {
+    this.propertyReq.setMeasurementUnit(URI.create("ANY"));
+
+    return this;
+  }
+
   public PropertyRequirementsBuilder measurementUnit() {
     return this;
   }

@@ -17,6 +17,7 @@ import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.PropertyValueSpecification;
+import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
 import org.streampipes.sdk.helpers.CollectedStreamRequirements;
@@ -607,6 +608,24 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     this.staticProperties.add(osp);
     return me();
 
+  }
+
+  public BU requiredSingleValueSelectionFromRemote(Label label) {
+    RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
+            .getLabel(), label.getDescription());
+
+    this.staticProperties.add(rsp);
+    return me();
+  }
+
+  public BU requiredSingleValueSelectionFromContainer(Label label, String linkedMappingPropertyId) {
+    RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
+            .getLabel(), label.getDescription());
+
+    rsp.setLinkedMappingPropertyId(linkedMappingPropertyId);
+
+    this.staticProperties.add(rsp);
+    return me();
   }
 
   /**
