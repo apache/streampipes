@@ -33,8 +33,8 @@ export class AppFileDownloadCtrl {
     createNewFile(file) {
         var start = new Date(file.timestampFrom).getTime();
         var end = new Date(file.timestampTo).getTime();
-        this.appFileDownloadRestApiService.createFile(file.index, start, end).success(function (err, res) {
-            $scope.getFiles();
+        this.appFileDownloadRestApiService.createFile(file.index, start, end).success((err, res) => {
+            this.getFiles();
         });
     };
 }

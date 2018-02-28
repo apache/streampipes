@@ -3,8 +3,8 @@ declare const jsPlumb: any;
 
 export class ObjectProvider {
 
-    $http: any;
     RestApi: any;
+    JsplumbBridge: any;
     ImageChecker: any;
     adjustingPipelineState: any;
     plumbReady: any;
@@ -15,10 +15,9 @@ export class ObjectProvider {
     //this.currentPipeline = new this.Pipeline();
     adjustingPipeline: any;
 
-    constructor($http, RestApi, ImageChecker) {
-        this.$http = $http;
+    constructor(RestApi, JsplumbBridge) {
         this.RestApi = RestApi;
-        this.ImageChecker = ImageChecker;
+        this.JsplumbBridge = JsplumbBridge;
     }
 
     prepareElement(json) {
@@ -26,31 +25,6 @@ export class ObjectProvider {
         return json;
     }
 
-    makePipeline(pipelineModel) {
-        var pipeline = this.preparePipeline();
-
-        angular.forEach(pipelineModel, pe => {
-            if (pe.type === 'stream') {
-                pipeline['streams'].push(pe.payload);
-            } else if (pe.type === 'sepa') {
-                pipeline['sepas'].push(pe.payload);
-            } else if (pe.type === 'action') {
-                pipeline['actions'].push(pe.payload);
-            }
-        })
-
-        return pipeline;
-    }
-
-    // TODO: Function overloading?
-/*
-    makePipeline(element, currentPipelineElements, rootElementId) {
-        var pipeline = this.preparePipeline();
-        var rootElement = this.findElement(rootElementId, currentPipelineElements);
-        this.addElement(element, rootElement, currentPipelineElements, pipeline);
-        return pipeline;
-    }
-*/
     preparePipeline() {
         var pipeline = {};
         pipeline['name'] = "";
@@ -59,6 +33,18 @@ export class ObjectProvider {
         pipeline['sepas'] = [];
         pipeline['actions'] = [];
 
+        return pipeline;
+    }
+
+    makeFinalPipeline(currentPipelineElements) {
+        return this.makePipeline(currentPipelineElements, currentPipelineElements[currentPipelineElements.length - 1].payload.DOM);
+    }
+
+    makePipeline(currentPipelineElements, rootElementId) {
+        var domElement = $("#" + rootElementId);
+        var pipeline = this.preparePipeline();
+        var rootPipelineElement = this.findElement(rootElementId, currentPipelineElements);
+        this.addElement(domElement, rootPipelineElement, currentPipelineElements, pipeline);
         return pipeline;
     }
 
@@ -73,7 +59,7 @@ export class ObjectProvider {
     }
 
     addElement(element, rootElement, currentPipelineElements, pipeline) {
-        var connections = jsPlumb.getConnections({
+        var connections = this.JsplumbBridge.getConnections({
             target: element
         });
         if (rootElement.type === 'action' || rootElement.type === 'sepa') {
@@ -112,6 +98,7 @@ export class ObjectProvider {
         //this.currentPipeline = new this.Pipeline();
         this.adjustingPipeline = {};
     };
+
 }
 
-//ObjectProvider.$inject = ['$http', 'RestApi', 'ImageChecker'];
+//ObjectProvider.$inject = ['RestApi', 'JsplumbBridge'];

@@ -2,10 +2,7 @@ declare const jsPlumb: any;
 
 export class JsplumbBridge {
 
-    $timeout: any;
-
-    constructor($timeout) {
-        this.$timeout = $timeout;
+    constructor() {
     }
 
     setZoom(scale) {
@@ -34,7 +31,7 @@ export class JsplumbBridge {
 
     // TODO: Overloading Functions?
     selectEndpoints(endpoint?) {
-        if(endpoint === undefined) {
+        if (endpoint === undefined) {
             return jsPlumb.selectEndpoints();
         }
         return jsPlumb.selectEndpoints(endpoint);
@@ -49,8 +46,7 @@ export class JsplumbBridge {
     }
 
     addEndpoint(element, options) {
-        jsPlumb.addEndpoint(element, options);
-        this.repaintEverything();
+        return jsPlumb.addEndpoint(element, options);
     }
 
     connect(connection) {
@@ -71,12 +67,20 @@ export class JsplumbBridge {
 
     // TODO: Overloading Functions?
     setSuspendDrawing(bool1, bool2?) {
-        if(bool2 === undefined) {
+        if (bool2 === undefined) {
             jsPlumb.setSuspendDrawing(bool1);
         } else {
             jsPlumb.setSuspendDrawing(bool1, bool2);
         }
     }
+
+    getAllConnections() {
+        return jsPlumb.getAllConnections();
+    }
+
+    reset() {
+        jsPlumb.reset();
+    }
 }
 
-//JsplumbBridge.$inject = ['$timeout'];
+//JsplumbBridge.$inject = [];

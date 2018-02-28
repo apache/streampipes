@@ -1,6 +1,6 @@
 export class SavePipelineController {
 
-    constructor($scope, $rootScope, $mdDialog, $state, RestApi, $mdToast, ObjectProvider, pipeline) {
+    constructor($mdDialog, $state, RestApi, $mdToast, ObjectProvider, pipeline) {
         this.RestApi = RestApi;
         this.$mdToast = $mdToast;
         this.$state = $state;
@@ -8,9 +8,6 @@ export class SavePipelineController {
         this.pipelineCategories = [];
         this.pipeline = pipeline;
         this.ObjectProvider = ObjectProvider;
-
-        console.log("save pipeline");
-        console.log(this.pipeline);
 
         this.getPipelineCategories();
     }
@@ -54,15 +51,14 @@ export class SavePipelineController {
                     this.hide();
                     if (switchTab) this.$state.go("streampipes.pipelines");
                     if (this.startPipelineAfterStorage) this.$state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
-                    if (this.state.adjustingPipelineState && $scope.overwrite) {
-                        var pipelineId = $rootScope.state.adjustingPipeline._id;
+                    // TODO update pipelines properly
+                    if (this.overwrite) {
+                        //var pipelineId = $rootScope.state.adjustingPipeline._id;
 
                         this.RestApi.deleteOwnPipeline(pipelineId)
                             .success(data => {
                                 if (data.success) {
-                                    $rootScope.state.adjustingPipelineState = false;
                                     $("#overwriteCheckbox").css("display", "none");
-                                    refresh("Proa");
                                 } else {
                                     this.displayErrors(data);
                                 }
@@ -73,7 +69,8 @@ export class SavePipelineController {
                             })
 
                     }
-                    this.clearAssembly();
+                    // TODO clear assembly
+                    //this.clearAssembly();
 
                 } else {
                     this.displayErrors(data);
@@ -81,7 +78,6 @@ export class SavePipelineController {
             })
             .error(function (data) {
                 this.showToast("error", "Could not fulfill request", "Connection Error");
-                console.log(data);
             });
 
     };
@@ -100,4 +96,4 @@ export class SavePipelineController {
     }
 }
 
-SavePipelineController.$inject = ['$scope', '$rootScope', '$mdDialog', '$state', 'RestApi', '$mdToast', 'ObjectProvider', 'pipeline'];
+SavePipelineController.$inject = ['$mdDialog', '$state', 'RestApi', '$mdToast', 'ObjectProvider', 'pipeline'];

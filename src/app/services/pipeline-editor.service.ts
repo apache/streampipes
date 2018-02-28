@@ -1,14 +1,8 @@
 export class PipelineEditorService {
 
-    $rootScope: any;
-    JsplumbService: any;
-    apiConstants: any;
     JsplumbBridge: any;
 
-    constructor($rootScope, JsplumbService, apiConstants, JsplumbBridge) {
-        this.$rootScope = $rootScope;
-        this.JsplumbService = JsplumbService;
-        this.apiConstants = apiConstants;
+    constructor(JsplumbBridge) {
         this.JsplumbBridge = JsplumbBridge;
     }
 
@@ -51,4 +45,4 @@ export class PipelineEditorService {
 
 }
 
-//PipelineEditorService.$inject = ['$rootScope', 'JsplumbService', 'apiConstants', 'JsplumbBridge'];
+//PipelineEditorService.$inject = ['JsplumbBridge'];

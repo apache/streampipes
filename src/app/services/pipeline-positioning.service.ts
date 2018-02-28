@@ -4,72 +4,67 @@ declare const jsPlumb: any;
 
 export class PipelinePositioningService {
 
-    $rootScope: any;
     JsplumbService: any;
-    apiConstants: any;
     JsplumbConfigService: any;
     JsplumbBridge: any;
 
-    constructor($rootScope, JsplumbService, apiConstants, JsplumbConfigService, JsplumbBridge) {
-        this.$rootScope = $rootScope;
+    constructor(JsplumbService, JsplumbConfigService, JsplumbBridge) {
         this.JsplumbService = JsplumbService;
-        this.apiConstants = apiConstants;
         this.JsplumbConfigService = JsplumbConfigService;
         this.JsplumbBridge = JsplumbBridge;
     }
 
 
-    displayPipeline(scope, pipeline, targetCanvas, isPreview) {
-        var tempPos = {x : 0, y: 0};
+    displayPipeline(rawPipelineModel, targetCanvas, isPreview) {
         var jsplumbConfig = isPreview ? this.JsplumbConfigService.getPreviewConfig() : this.JsplumbConfigService.getEditorConfig();
 
-        for (var i = 0, stream; stream = pipeline.streams[i]; i++) {
-            this.JsplumbService
-                .streamDropped(scope, this.JsplumbService
-                    .createNewAssemblyElement(stream, tempPos, false, targetCanvas, isPreview), true, isPreview);
-        }
-        for (var i = 0, sepa; sepa = pipeline.sepas[i]; i++) {
-            var $sepa = this.JsplumbService.sepaDropped(scope, this.JsplumbService.createNewAssemblyElement(sepa, tempPos, false, targetCanvas, isPreview)
-                .data("options", true), false, isPreview);
-            if (this.JsplumbBridge.getConnections({source: sepa.DOM}).length == 0) { //Output Element
-                this.JsplumbBridge.addEndpoint($sepa, jsplumbConfig.sepaEndpointOptions);
+        for (var i = 0; i < rawPipelineModel.length; i++) {
+            var currentPe = rawPipelineModel[i];
+            if (currentPe.type === "stream") {
+                this.JsplumbService
+                    .streamDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
+            }
+            if (currentPe.type === "sepa") {
+                var $sepa = this.JsplumbService.sepaDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
+                if (this.JsplumbBridge.getConnections({source: currentPe.payload.DOM}).length == 0) { //Output Element
+                    this.JsplumbBridge.addEndpoint($sepa, jsplumbConfig.sepaEndpointOptions);
+                }
+            }
+            if (currentPe.type === "action") {
+                var $action = this.JsplumbService.actionDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
+                this.JsplumbBridge.addEndpoint($action, jsplumbConfig.leftTargetPointOptions);
             }
         }
-        for (var i = 0, action; action = pipeline.actions[i]; i++) {
-            var $action = this.JsplumbService.actionDropped(scope, this.JsplumbService.createNewAssemblyElement(action, tempPos, false, targetCanvas, isPreview)
-                .data("options", true), true, isPreview);
-            jsPlumb.addEndpoint($action, jsplumbConfig.leftTargetPointOptions);
-        }
 
-        this.connectPipelineElements(pipeline, !isPreview, jsplumbConfig);
-        // TODO: Not Valid!!
-        //this.layoutGraph(targetCanvas, "span.a", jsPlumb, isPreview ? 75 : 110, isPreview);
+        this.connectPipelineElements(rawPipelineModel, !isPreview, jsplumbConfig);
+        this.layoutGraph(targetCanvas, "span[id^='jsplumb']", isPreview ? 75 : 110, isPreview);
         this.JsplumbBridge.repaintEverything();
 
-    };
+    }
 
     layoutGraph(canvas, nodeIdentifier, dimension, isPreview) {
         var g = new dagre.graphlib.Graph();
-        g.setGraph({rankdir : "LR", ranksep : isPreview ? "50" : "100"});
+        g.setGraph({rankdir: "LR", ranksep: isPreview ? "50" : "100"});
         g.setDefaultEdgeLabel(function () {
             return {};
         });
         var nodes = $(canvas).find(nodeIdentifier).get();
+
         for (var i = 0; i < nodes.length; i++) {
             var n = nodes[i];
             g.setNode(n.id, {label: n.id, width: dimension, height: dimension});
         }
-        var edges = jsPlumb.getAllConnections();
+        var edges = this.JsplumbBridge.getAllConnections();
         for (var i = 0; i < edges.length; i++) {
             var c = edges[i];
             g.setEdge(c.source.id, c.target.id);
         }
         dagre.layout(g);
-        g.nodes().forEach(function (v) {
+        g.nodes().forEach(v => {
             $("#" + v).css("left", g.node(v).x + "px");
             $("#" + v).css("top", g.node(v).y + "px");
         });
-    };
+    }
 
     connectPipelineElements(json, detachable, jsplumbConfig) {
         var source, target;
@@ -77,37 +72,45 @@ export class PipelinePositioningService {
         var targetEndpoint
 
         this.JsplumbBridge.setSuspendDrawing(true);
+        for (var i = 0; i < json.length; i++) {
+            var pe = json[i];
 
-        //Sepas --> Streams / Sepas --> Sepas---------------------//
-        for (var i = 0, sepa; sepa = json.sepas[i]; i++) {
-            for (var j = 0, connection; connection = sepa.connectedTo[j]; j++) {
+            if (pe.type == "sepa") {
+                for (var j = 0, connection; connection = pe.payload.connectedTo[j]; j++) {
+                    source = connection;
+                    target = pe.payload.DOM;
 
-                source = connection;
-                target = sepa.DOM;
+                    var options;
+                    var id = "#" + source;
+                    if ($(id).hasClass("sepa")) {
+                        options = jsplumbConfig.sepaEndpointOptions;
+                    } else {
+                        options = jsplumbConfig.streamEndpointOptions;
+                    }
 
-                var options;
-                var id = "#" + source;
-                if ($(id).hasClass("sepa")) {
-                    options = jsplumbConfig.sepaEndpointOptions;
-                } else {
-                    options = jsplumbConfig.streamEndpointOptions;
+                    sourceEndpoint = this.JsplumbBridge.addEndpoint(source, options);
+                    targetEndpoint = this.JsplumbBridge.addEndpoint(target, jsplumbConfig.leftTargetPointOptions);
+                    this.JsplumbBridge.connect({
+                        source: sourceEndpoint,
+                        target: targetEndpoint,
+                        detachable: detachable
+                    });
                 }
+            } else if (pe.type == "action") {
+                target = pe.payload.DOM;
 
-                sourceEndpoint = this.JsplumbBridge.addEndpoint(source, options);
-                targetEndpoint = this.JsplumbBridge.addEndpoint(target, jsplumbConfig.leftTargetPointOptions);
-                this.JsplumbBridge.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
-            }
-        }
-        for (var i = 0, action; action = json.actions[i]; i++) {
-            //Action --> Sepas----------------------//
-            target = action.DOM;
+                for (var j = 0, connection; connection = pe.payload.connectedTo[j]; j++) {
+                    source = connection;
+                    sourceEndpoint = this.JsplumbBridge.addEndpoint(source, jsplumbConfig.sepaEndpointOptions);
+                    targetEndpoint = this.JsplumbBridge.addEndpoint(target, jsplumbConfig.leftTargetPointOptions);
+                    this.JsplumbBridge.connect({
+                        source: sourceEndpoint,
+                        target: targetEndpoint,
+                        detachable: detachable
+                    });
 
-            for (var j = 0, connection; connection = action.connectedTo[j]; j++) {
-                source = connection;
 
-                sourceEndpoint = this.JsplumbBridge.addEndpoint(source, jsplumbConfig.sepaEndpointOptions);
-                targetEndpoint = this.JsplumbBridge.addEndpoint(target, jsplumbConfig.leftTargetPointOptions);
-                this.JsplumbBridge.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
+                }
             }
         }
         this.JsplumbBridge.setSuspendDrawing(false, true);
@@ -115,4 +118,4 @@ export class PipelinePositioningService {
 
 }
 
-//PipelinePositioningService.$inject = ['$rootScope', 'JsplumbService', 'apiConstants', 'JsplumbConfigService', 'JsplumbBridge'];
+//PipelinePositioningService.$inject = ['JsplumbService', 'JsplumbConfigService', 'JsplumbBridge'];

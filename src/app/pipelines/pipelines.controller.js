@@ -4,9 +4,8 @@ import {ElementIconText} from "../services/get-element-icon-text.service";
 
 export class PipelineCtrl {
 
-    constructor($scope, RestApi, $rootScope, $mdDialog, $state, $timeout, $stateParams, ImageChecker, ElementIconText) {
+    constructor(RestApi, $mdDialog, $state, $timeout, $stateParams, ImageChecker, ElementIconText) {
         this.RestApi = RestApi;
-        this.$rootScope = $rootScope;
         this.$mdDialog = $mdDialog;
         this.$state = $state;
         this.$timeout = $timeout;
@@ -27,13 +26,13 @@ export class PipelineCtrl {
 
         this.startPipelineDirectly = $stateParams.pipeline;
 
-        $scope.$on('$destroy', () => {
-            this.pipelinePlumb.deleteEveryEndpoint();
-        });
-
         this.getPipelineCategories();
         this.getPipelines();
         this.getSystemPipelines();
+    }
+
+    $onDestroy() {
+        this.pipelinePlumb.deleteEveryEndpoint();
     }
 
     setSelectedTab(categoryId) {
@@ -182,4 +181,4 @@ export class PipelineCtrl {
 
 }
 
-PipelineCtrl.$inject = ['$scope', 'RestApi', '$rootScope', '$mdDialog', '$state', '$timeout', '$stateParams', 'ImageChecker', 'ElementIconText'];
+PipelineCtrl.$inject = ['RestApi', '$mdDialog', '$state', '$timeout', '$stateParams', 'ImageChecker', 'ElementIconText'];

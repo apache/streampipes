@@ -22,8 +22,6 @@ import { PipelineElementIconService } from './pipeline-icon.service'
 import { ObjectProvider } from './object-provider.service'
 import { downgradeInjectable } from '@angular/upgrade/static';
 
-//mport { PipelineElementOptionsComponent } from '../editor/components/pipeline-element-options/pipeline-element-options.component'
-
 export default angular.module('sp.services', [spConstants])
 	.service('ImageChecker', ImageChecker)
 	.service('AuthService', AuthService)
@@ -42,5 +40,4 @@ export default angular.module('sp.services', [spConstants])
     .service('DeploymentService', DeploymentService)
     .service('JsplumbConfigService', JsplumbConfigService)
     .service('PipelineElementIconService', PipelineElementIconService)
-	//.component('pipelineElementOptions', PipelineElementOptionsComponent)
 	.name;

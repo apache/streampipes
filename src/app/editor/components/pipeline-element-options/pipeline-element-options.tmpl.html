@@ -28,7 +28,7 @@
     </span>
     <span class="possible-button" ng-show="ctrl.pipelineElement.type!='action'" style="z-index:10"><md-button
             ng-disabled="!ctrl.possibleElements || ctrl.possibleElements.length == 0 || !ctrl.isConfigured()"
-            ng-click="ctrl.EditorDialogManager.openPossibleElementsDialog(ctrl.pipelineModel, ctrl.possibleElements, ctrl.pipelineElement.payload.DOM)"
+            ng-click="ctrl.EditorDialogManager.openPossibleElementsDialog(ctrl.rawPipelineModel, ctrl.possibleElements, ctrl.pipelineElement.payload.DOM)"
             class="md-icon-button" style="margin:0px;font-size:20px;"><md-icon
             md-svg-icon='action:ic_visibility_24px'>
     <md-tooltip md-direction="bottom">
@@ -57,5 +57,5 @@
     </md-button>
 </span>
 </div>
-<pipeline-element-recommendation pipeline-model="ctrl.pipelineModel" pipeline-element-dom-id="ctrl.pipelineElement.payload.DOM" recommended-elements="ctrl.recommendedElements" recommendations-shown="ctrl.recommendationsShown"></pipeline-element-recommendation>
+<pipeline-element-recommendation raw-pipeline-model="ctrl.rawPipelineModel" pipeline-element-dom-id="ctrl.pipelineElement.payload.DOM" recommended-elements="ctrl.recommendedElements" recommendations-shown="ctrl.recommendationsShown"></pipeline-element-recommendation>
 

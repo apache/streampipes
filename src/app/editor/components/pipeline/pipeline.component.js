@@ -4,8 +4,10 @@ export let PipelineComponent = {
     templateUrl: 'app/editor/components/pipeline/pipeline.tmpl.html',
     bindings: {
         staticProperty : "=",
-        pipelineModel: "=",
-        allElements: "="
+        rawPipelineModel: "=",
+        allElements: "=",
+        preview: "<",
+        canvasId: "@"
     },
     controller: PipelineController,
     controllerAs: 'ctrl'

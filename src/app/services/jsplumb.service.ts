@@ -2,8 +2,6 @@ import * as angular from 'angular';
 
 export class JsplumbService {
 
-    $http: any;
-    PipelineElementIconService: any;
     objectProvider: any;
     apiConstants: any;
     $compile: any;
@@ -12,12 +10,8 @@ export class JsplumbService {
     $timeout: any;
     idCounter: any;
 
-    constructor($http, PipelineElementIconService, ObjectProvider, apiConstants, $compile, JsplumbConfigService, JsplumbBridge, $timeout) {
-        this.$http = $http;
-        this.PipelineElementIconService = PipelineElementIconService;
+    constructor(ObjectProvider, JsplumbConfigService, JsplumbBridge, $timeout) {
         this.objectProvider = ObjectProvider;
-        this.apiConstants = apiConstants;
-        this.$compile = $compile;
         this.JsplumbConfigService = JsplumbConfigService;
         this.JsplumbBridge = JsplumbBridge;
         this.$timeout = $timeout;
@@ -55,6 +49,21 @@ export class JsplumbService {
             }
         });
     }
+
+    makeRawPipeline(pipelineModel, isPreview) {
+        return pipelineModel
+            .streams
+            .map(s => this.toConfig(s, "stream", isPreview))
+            .concat(pipelineModel.sepas.map(s => this.toConfig(s, "sepa", isPreview)))
+            .concat(pipelineModel.actions.map(s => this.toConfig(s, "action", isPreview)));
+    }
+
+    toConfig(pe, type, isPreview) {
+        pe.type = type;
+        pe.configured = true;
+        return this.createNewPipelineElementConfig(pe, {x: 100, y: 100}, isPreview);
+    }
+
 
     createElement(pipelineModel, pipelineElement, pipelineElementDomId) {
         var pipelineElementDom = $("#" + pipelineElementDomId);
@@ -116,7 +125,7 @@ export class JsplumbService {
 
         var pipelineElementConfig = {
             type: json.type, settings: {
-                openCustomize: typeof json.DOM !== "undefined",
+                openCustomize: !json.configured,
                 preview: isPreview,
                 displaySettings: displaySettings,
                 connectable: connectable,
@@ -127,8 +136,10 @@ export class JsplumbService {
             }, payload: angular.copy(json)
         };
 
-        pipelineElementConfig.payload.DOM = "jsplumb_" + this.idCounter;
-        this.idCounter++;
+        if (!pipelineElementConfig.payload.DOM) {
+            pipelineElementConfig.payload.DOM = "jsplumb_" + this.idCounter;
+            this.idCounter++;
+        }
 
         return pipelineElementConfig;
     }
@@ -136,7 +147,9 @@ export class JsplumbService {
     streamDropped($newElement, json, endpoints, preview) {
         var jsplumbConfig = this.getJsplumbConfig(preview);
         if (endpoints) {
-            this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
+            if (!preview) {
+                this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
+            }
             this.JsplumbBridge.addEndpoint($newElement, jsplumbConfig.streamEndpointOptions);
         }
         return $newElement;
@@ -144,7 +157,9 @@ export class JsplumbService {
 
     sepaDropped($newElement, json, endpoints, preview) {
         var jsplumbConfig = this.getJsplumbConfig(preview);
-        this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
+        if (!preview) {
+            this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
+        }
         if (endpoints) {
             if (json.inputStreams.length < 2) { //1 InputNode
                 this.JsplumbBridge.addEndpoint($newElement, jsplumbConfig.leftTargetPointOptions);
@@ -160,7 +175,10 @@ export class JsplumbService {
 
     actionDropped($newElement, json, endpoints, preview) {
         var jsplumbConfig = this.getJsplumbConfig(preview);
-        this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
+        if (!preview) {
+            this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
+        }
+
         if (endpoints) {
             this.JsplumbBridge.addEndpoint($newElement, jsplumbConfig.leftTargetPointOptions);
         }
@@ -181,4 +199,4 @@ export class JsplumbService {
     }
 }
 
-//JsplumbService.$inject = ['$http', 'PipelineElementIconService', 'ObjectProvider', 'apiConstants', '$compile', 'JsplumbConfigService', 'JsplumbBridge', '$timeout'];
+//JsplumbService.$inject = ['ObjectProvider', 'JsplumbConfigService', 'JsplumbBridge', '$timeout'];

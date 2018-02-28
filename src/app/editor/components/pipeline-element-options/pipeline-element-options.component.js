@@ -8,7 +8,7 @@ export let PipelineElementOptionsComponent = {
         pipelineElement: "<",
         allElements: "=",
         deleteFunction: "=",
-        pipelineModel: "=",
+        rawPipelineModel: "=",
         currentMouseOverElement: "="
     },
     controller: PipelineElementOptionsController,

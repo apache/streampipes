@@ -5,7 +5,7 @@ export let PipelinePreviewComponent = {
     bindings: {
         pipeline: "<",
         name: "@",
-        updateSelected: "&",
+        selectedElement: "=",
         jspcanvas: "@"
     },
     controller: PipelinePreviewController,

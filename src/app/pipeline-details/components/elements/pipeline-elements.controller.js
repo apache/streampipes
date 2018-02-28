@@ -1,0 +1,6 @@
+export class PipelineElementsController  {
+
+    constructor() {
+
+    }
+}
