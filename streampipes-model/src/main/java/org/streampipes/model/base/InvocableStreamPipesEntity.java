@@ -143,7 +143,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
 	public Logger getLogger(Class clazz) {
 		if (LOG == null) {
-			LOG = LoggerFactory.getLogger(clazz.getName()
+			LOG = LoggerFactory.getLogger(clazz.getName() + " - "
                     + "correspondingPipeline: " + getCorrespondingPipeline() + " - "
                     + "URI: " + getUri());
 		}
