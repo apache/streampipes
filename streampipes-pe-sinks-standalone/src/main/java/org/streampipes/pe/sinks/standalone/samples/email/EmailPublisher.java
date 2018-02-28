@@ -1,7 +1,6 @@
 package org.streampipes.pe.sinks.standalone.samples.email;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.wrapper.runtime.EventSink;
@@ -14,10 +13,10 @@ import java.util.Properties;
 
 public class EmailPublisher implements EventSink<EmailParameters> {
 
-    static Logger LOG;
+    private static Logger LOG;
 
-    MimeMessage message;
-    String content;
+    private MimeMessage message;
+    private String content;
 
     @Override
     public void bind(EmailParameters parameters) throws SpRuntimeException {
