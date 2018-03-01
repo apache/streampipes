@@ -10,9 +10,9 @@ import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.builder.PropertyRequirementsBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
@@ -42,7 +42,10 @@ public class MeasurementUnitConverterController extends
                 "Converts a unit of measurement to another one")
                 .requiredStream(StreamRequirementsBuilder
                         .create()
-                        .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.from
+                        .requiredPropertyWithUnaryMapping(PropertyRequirementsBuilder
+                                .create()
+                                .measurementUnitPresence()
+                                .build(), Labels.from
                                 (CONVERT_PROPERTY,"Property", "The" +
                                 " property to convert"), PropertyScope.MEASUREMENT_PROPERTY)
                         .build())

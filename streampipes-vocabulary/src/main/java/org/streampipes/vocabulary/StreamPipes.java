@@ -7,6 +7,8 @@ public class StreamPipes {
 
   // Concepts
 
+  public static final String ANYTHING = NS + "Anything";
+
   public static final String DATA_PROCESSOR_DESCRIPTION = NS + "DataProcessorDescription";
   public static final String DATA_PROCESSOR_INVOCATION = NS + "DataProcessorInvocation";
   public static final String DATA_SINK_DESCRIPTION = NS + "DataSinkDescription";

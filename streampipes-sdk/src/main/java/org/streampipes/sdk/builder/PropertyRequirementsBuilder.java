@@ -17,6 +17,7 @@ package org.streampipes.sdk.builder;
 
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.sdk.utils.Datatypes;
+import org.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -35,9 +36,22 @@ public class PropertyRequirementsBuilder {
     return new PropertyRequirementsBuilder(propertyDatatype);
   }
 
+  public static PropertyRequirementsBuilder create() {
+    return new PropertyRequirementsBuilder();
+  }
+
+  private PropertyRequirementsBuilder() {
+    this.propertyReq = new EventPropertyPrimitive();
+  }
+
   private PropertyRequirementsBuilder(Datatypes propertyDatatype) {
     this.propertyReq = new EventPropertyPrimitive();
     this.propertyReq.setRuntimeType(propertyDatatype.toString());
+  }
+
+  public PropertyRequirementsBuilder datatype(Datatypes propertyDatatype) {
+    this.propertyReq.setRuntimeType(propertyDatatype.toString());
+    return this;
   }
 
   public PropertyRequirementsBuilder domainPropertyReq(String... domainProperties) {
@@ -54,14 +68,13 @@ public class PropertyRequirementsBuilder {
     return this;
   }
 
-  // TODO add any to vocabulary
   public PropertyRequirementsBuilder measurementUnitPresence() {
-    this.propertyReq.setMeasurementUnit(URI.create("ANY"));
+    this.propertyReq.setMeasurementUnit(URI.create(StreamPipes.ANYTHING));
 
     return this;
   }
 
-  public PropertyRequirementsBuilder measurementUnit() {
-    return this;
+  public EventPropertyPrimitive build() {
+    return this.propertyReq;
   }
 }
