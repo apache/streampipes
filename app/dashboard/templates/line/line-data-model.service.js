@@ -1,23 +1,28 @@
-import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
+import { SocketConnectionDataModel } from '../../socket-connection-data-model.service.js'
 
-LineDataModel.$inject = ['SocketConnectionDataModel', '$http'];
 
-export default function LineDataModel(SocketConnectionDataModel, $http) {
+// export default function LineDataModel(SocketConnectionDataModel, $http) {
+export class LineDataModel extends SocketConnectionDataModel {
+// export class LineDataModel {
 
-	LineDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
-	function LineDataModel(id) {
-		SocketConnectionDataModel.call(this, id);
-	}
+	constructor(WidgetDataModel, $http, id) {
+        super(WidgetDataModel, $http, id);
+    }
 
-	LineDataModel.prototype.newData = function(message) {
-	this.updateScope(message);
-	}
+	// LineDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
+	// function LineDataModel(id) {
+	// 	SocketConnectionDataModel.call(this, id);
+	// }
 
-	LineDataModel.prototype.newData = function(message) {
+	// LineDataModel.prototype.newData = function(message) {
+	// this.updateScope(message);
+	// }
 
-		//dataArray.push(message);
+	newData(message) {
 		this.updateScope(message);
 	}
 	
-	return LineDataModel;
+	// return LineDataModel;
 };
+
+LineDataModel.$inject = ['WidgetDataModel', '$http'];

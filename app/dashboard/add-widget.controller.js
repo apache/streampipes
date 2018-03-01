@@ -1,14 +1,15 @@
 import angular from 'angular';
 
-export class AddWidget {
+export class AddWidgetCtrl {
 
-    constructor($mdDialog, visualizablePipelines, rerenderDashboard, layoutId, WidgetInstances, $compile, WidgetTemplates, ElementIconText) {
-        this.layoutId = layoutId;
+    constructor($mdDialog, WidgetTemplates, WidgetInstances, ElementIconText, $http, rerenderDashboard, dashboard, layoutId) {
         this.page = 'select-viz';
-        this.rerenderDashboard = rerenderDashboard;
         this.$mdDialog = $mdDialog;
-        this.$compile = $compile;
         this.ElementIconText = ElementIconText;
+        this.$http = $http;
+        this.rerenderDashboard = rerenderDashboard;
+        this.dashboard = dashboard;
+        this.layoutId = layoutId;
 
         this.WidgetInstaces = WidgetInstances;
 
@@ -26,13 +27,29 @@ export class AddWidget {
             description : "Customize your visualization"
         }];
 
-        this.visualizablePipelines = angular.copy(visualizablePipelines);
+        // this.visualizablePipelines = angular.copy(visualizablePipelines);
 
         // This is the object that the user manipulates
         this.selectedVisualisation = {};
 
         this.possibleVisualisationTypes = WidgetTemplates.getAllNames();
         this.selectedVisualisationType = '';
+
+        this.visualizablePipelines = [];
+
+        this.$http.get('/visualizablepipeline/_all_docs?include_docs=true')
+            .success(data => {
+                var tempVisPipelines = data.rows;
+
+                // get the names for each pipeline
+                angular.forEach(tempVisPipelines, vis => {
+                    this.$http.get('/pipeline/' + vis.doc.pipelineId)
+                        .success(pipeline => {
+                            vis.doc.name = pipeline.name;
+                            this.visualizablePipelines.push(vis);
+                        });
+                });
+            });
 
 
     }
@@ -71,18 +88,18 @@ export class AddWidget {
         else return "md-fab md-accent wizard-inactive";
     }
 
-
     next() {
         if (this.page == 'select-viz') {
             this.page = 'select-type';
         } else if (this.page == 'select-type') {
             this.page = 'select-scheme';
 
-            var directiveName = 'sp-' + this.selectedType + '-widget-config'
-            var widgetConfig = this.$compile( '<'+ directiveName + ' wid=selectedVisualisation></' + directiveName + '>')( this );
+            // var directiveName = 'sp-' + this.selectedType + '-widget-config'
+            // var widgetConfig = this.$compile( '<'+ directiveName + ' wid=selectedVisualisation></' + directiveName + '>')( this );
+            //
+            // var schemaSelection = angular.element( document.querySelector( '#scheme-selection' ) );
+            // schemaSelection.append( widgetConfig );
 
-            var schemaSelection = angular.element( document.querySelector( '#scheme-selection' ) );
-            schemaSelection.append( widgetConfig );
 
         } else {
 
@@ -93,8 +110,8 @@ export class AddWidget {
 
 
             widget.visualisationId = this.selectedVisualisation._id;
-            this.WidgetInstances.add(widget);
-            this.rerenderDashboard();
+            this.WidgetInstaces.add(widget);
+            this.rerenderDashboard(this.dashboard);
             this.$mdDialog.cancel();
 
         }
@@ -105,5 +122,4 @@ export class AddWidget {
     };
 }
 
-AddWidget.$inject = ['$mdDialog', 'visualizablePipelines', 'rerenderDashboard', 'layoutId', '$compile', 'WidgetTemplates', 'ElementIconText'];
-
+AddWidgetCtrl.$inject = ['$mdDialog', 'WidgetTemplates', 'WidgetInstances', 'ElementIconText', '$http', 'rerenderDashboard', 'dashboard', 'layoutId'];

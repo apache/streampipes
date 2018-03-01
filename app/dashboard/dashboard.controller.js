@@ -1,7 +1,6 @@
-import { AddWidgetController } from './add-widget.controller';
+import { AddWidgetCtrl } from './add-widget.controller';
 
 export class DashboardCtrl {
-
 
 
     constructor($http, $mdDialog, WidgetInstances, $scope) {
@@ -10,7 +9,7 @@ export class DashboardCtrl {
         this.WidgetInstances = WidgetInstances;
         this.$scope = $scope;
 
-        this.visualizablePipelines = [];
+        // this.visualizablePipelines = [];
         this.layoutOptions = {
             widgetDefinitions: [],
             widgetButtons: false,
@@ -18,34 +17,37 @@ export class DashboardCtrl {
 
         this.rerender = true;
 
-        this.$http.get('/visualizablepipeline/_all_docs?include_docs=true')
-            .success(data => {
-                var tempVisPipelines = data.rows;
+        // this.$http.get('/visualizablepipeline/_all_docs?include_docs=true')
+        //     .success(data => {
+        //         var tempVisPipelines = data.rows;
+        //
+        //         // get the names for each pipeline
+        //         angular.forEach(tempVisPipelines, vis => {
+        //             this.$http.get('/pipeline/' + vis.doc.pipelineId)
+        //                 .success(pipeline => {
+        //                     vis.doc.name = pipeline.name;
+        //                     this.visualizablePipelines.push(vis);
+        //                 });
+        //         });
+        //     });
 
-                // get the names for each pipeline
-                angular.forEach(tempVisPipelines, vis => {
-                    this.$http.get('/pipeline/' + vis.doc.pipelineId)
-                        .success(pipeline => {
-                            vis.doc.name = pipeline.name;
-                            this.visualizablePipelines.push(vis);
-                        });
-                });
-            });
 
-
-        this.rerenderDashboard();
+        this.rerenderDashboard(this);
     }
 
-    addSpWidget(layoutId) {
+    addSpWidget(layout) {
         this.$mdDialog.show({
-            controller: AddWidgetController,
+            controller: AddWidgetCtrl,
+            controllerAs: 'ctrl',
             templateUrl: 'app/dashboard/add-widget-template.html',
             parent: angular.element(document.body),
             clickOutsideToClose:false,
+            bindToController: true,
             locals : {
-                visualizablePipelines: this.visualizablePipelines,
+                // visualizablePipelines: this.visualizablePipelines,
                 rerenderDashboard: this.rerenderDashboard,
-                layoutId: layoutId
+                dashboard: this,
+                layoutId: layout.id
             }
         });
     };
@@ -53,7 +55,7 @@ export class DashboardCtrl {
     removeSpWidget(widget) {
         this.WidgetInstances.get(widget.attrs['widget-id']).then(w =>  {
             this.WidgetInstances.remove(w).then(res => {
-                this.rerenderDashboard();
+                this.rerenderDashboard(this);
             });
         });
     };
@@ -61,14 +63,13 @@ export class DashboardCtrl {
 
     // TODO Helper to add new Widgets to the dashboard
     // Find a better solution
-    rerenderDashboard() {
-        var self = this;
-        this.rerender = false;
+    rerenderDashboard(dashboard) {
+        dashboard.rerender = false;
         setTimeout(() => {
-            this.$scope.$apply(() => {
-                this.getOptions().then(options => {
-                    self.layoutOptions = options;
-                    this.rerender = true;
+            dashboard.$scope.$apply(() => {
+                dashboard.getOptions().then(options => {
+                    dashboard.layoutOptions = options;
+                    dashboard.rerender = true;
                 });
             });
         }, 100);
@@ -94,17 +95,14 @@ export class DashboardCtrl {
     getOptions() {
         return this.WidgetInstances.getAllWidgetDefinitions().then(widgets => {
 
-            // this.getLayouts(widgets);
+            this.getLayouts(widgets);
             return 	{
                 widgetDefinitions: widgets,
                 widgetButtons: false,
                 defaultLayouts: this.getLayouts(widgets)
             }
         });
-    };
-
-
-
+    }
 }
 
 DashboardCtrl.$inject = ['$http', '$mdDialog', 'WidgetInstances', '$scope'];

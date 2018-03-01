@@ -1,17 +1,28 @@
-import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
+// export default function NumberDataModel(SocketConnectionDataModel, $http) {
 
-NumberDataModel.$inject = ['SocketConnectionDataModel', '$http'];
+import { SocketConnectionDataModel } from '../../socket-connection-data-model.service';
 
-export default function NumberDataModel(SocketConnectionDataModel, $http) {
+// export class NumberDataModel extends SocketConnectionDataModel {
+    export class NumberDataModel  {
 
-	NumberDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
-	function NumberDataModel(id) {
-		SocketConnectionDataModel.call(this, id);
-	}
+    constructor(WidgetDataModel, $http, id) {
+        // super(WidgetDataModel, $http, id);
 
-	NumberDataModel.prototype.newData = function(message) {
+        // Object.setPrototypeOf(SocketConnectionDataModel, WidgetDataModel);
+        // NumberDataModel.prototype.constructor = this.constructor;
+
+    }
+
+	// NumberDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
+	// function NumberDataModel(id) {
+	// 	SocketConnectionDataModel.call(this, id);
+	// }
+
+	newData(message) {
 		this.updateScope(message);
 	}
 
-	return NumberDataModel;
+	// return NumberDataModel;
 };
+
+NumberDataModel.$inject = ['WidgetDataModel', '$http'];

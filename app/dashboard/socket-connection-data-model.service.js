@@ -1,21 +1,29 @@
-SocketConnectionDataModel.$inject = ['WidgetDataModel', '$http'];
 
-export default function SocketConnectionDataModel(WidgetDataModel, $http) {
-	function SocketConnectionDataModel(visualisationId) {
-		var visualisationId = visualisationId;
-		this.visualisationId = visualisationId;
-		this.client = {};
+export class SocketConnectionDataModel {
+
+
+
+	constructor(WidgetDataModel, $http, visualisationId) {
+    // constructor() {
+
+        Object.setPrototypeOf(this.constructor, WidgetDataModel);
+        // SocketConnectionDataModel.prototype.constructor = this.constructor;
+
+	    this.WidgetDataModel = WidgetDataModel;
+	    this.$http = $http;
+        this.visualisationId = visualisationId;
+        this.client = {};
 	}
 
-	SocketConnectionDataModel.prototype = Object.create(WidgetDataModel.prototype);
-	SocketConnectionDataModel.prototype.init = function () {
+	// SocketConnectionDataModel.prototype = Object.create(WidgetDataModel.prototype);
+	init() {
 		
 		//TODO find better solution
 		var login = 'admin';
 		var passcode = 'admin';
 		var self = this;
 
-		$http.get('/dashboard/_all_docs?include_docs=true')
+		this.$http.get('/dashboard/_all_docs?include_docs=true')
 			.success(function(data) {
 
 				var element = _.find(data.rows, function(elem) {
@@ -45,8 +53,8 @@ export default function SocketConnectionDataModel(WidgetDataModel, $http) {
 			});
 	};
 
-	SocketConnectionDataModel.prototype.destroy = function () {
-		WidgetDataModel.prototype.destroy.call(this);
+	destroy() {
+		this.WidgetDataModel.prototype.destroy.call(this);
 
 		this.client.disconnect(function() {
 			console.log("Disconnected websocket connection");
@@ -54,15 +62,17 @@ export default function SocketConnectionDataModel(WidgetDataModel, $http) {
 	};
 
 
-	SocketConnectionDataModel.prototype.updateScope = function(data) {
+	updateScope(data) {
 		this.widgetScope.widgetData = data;
 		this.widgetScope.$apply(function () {
 		});
 	}
 
-	SocketConnectionDataModel.prototype.newData = function(message) {
+	newData(message) {
 		// to be overridden by subclasses
 	}
 
-	return SocketConnectionDataModel;
+	// return SocketConnectionDataModel;
 };
+
+SocketConnectionDataModel.$inject = ['WidgetDataModel', '$http'];
