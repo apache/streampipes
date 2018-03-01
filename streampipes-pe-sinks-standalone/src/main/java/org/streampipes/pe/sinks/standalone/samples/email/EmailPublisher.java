@@ -1,7 +1,7 @@
 package org.streampipes.pe.sinks.standalone.samples.email;
 
-import org.slf4j.Logger;
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.util.Logger;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.wrapper.runtime.EventSink;
 

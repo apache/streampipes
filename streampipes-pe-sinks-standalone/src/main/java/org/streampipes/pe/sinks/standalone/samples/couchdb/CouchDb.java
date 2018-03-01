@@ -2,8 +2,8 @@ package org.streampipes.pe.sinks.standalone.samples.couchdb;
 
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
-import org.slf4j.Logger;
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.util.Logger;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Map;

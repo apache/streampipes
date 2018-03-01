@@ -1,21 +1,19 @@
 package org.streampipes.model.base;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.streampipes.empire.annotations.RdfProperty;
-import org.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.Cloner;
+import org.streampipes.model.util.Logger;
 import org.streampipes.vocabulary.StreamPipes;
-
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.util.List;
 
 public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity {
 
@@ -47,8 +45,6 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 	private List<SpDataStream> streamRequirements;
 
 	private boolean configured;
-
-	private Logger LOG;
 
 	public InvocableStreamPipesEntity() {
 		super();
@@ -142,11 +138,6 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 	}
 
 	public Logger getLogger(Class clazz) {
-		if (LOG == null) {
-			LOG = LoggerFactory.getLogger(clazz.getName() + " - "
-                    + "correspondingPipeline: " + getCorrespondingPipeline() + " - "
-                    + "URI: " + getUri());
-		}
-		return LOG;
+		return Logger.getLogger(clazz, getCorrespondingPipeline(), getUri());
 	}
 }
