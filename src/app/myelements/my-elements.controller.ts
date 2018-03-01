@@ -1,6 +1,16 @@
+import * as angular from 'angular';
+
 import {JsonLdDialogController} from "./dialog/jsonldDialog.controller";
 
 export class MyElementsCtrl {
+
+    RestApi: any;
+    $mdToast: any;
+    $mdDialog: any;
+    currentElements: any;
+    tabs: any;
+    currentTabType: any;
+    status: any;
 
     constructor(RestApi, $mdToast, $mdDialog) {
         this.RestApi = RestApi;
@@ -213,7 +223,7 @@ export class MyElementsCtrl {
         this.$mdDialog.show({
             controller: JsonLdDialogController,
             controllerAs: '$ctrl',
-            templateUrl: 'app/myelements/dialog/jsonldDialog.tmpl.html',
+            templateUrl: 'dialog/jsonldDialog.tmpl.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             locals: {

@@ -169,16 +169,16 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                     controller: 'AddCtrl'
                 }
             }
-        })        .state('streampipes.myelements', {
+        })
+                */.state('streampipes.myelements', {
             url: '/myelements',
             views: {
                 "spMain@streampipes": {
-                    templateUrl: 'app/myelements/myelements.html',
+                    templateUrl: '../myelements/myelements.html',
                     controller: 'MyElementsCtrl'
                 }
             }
         })
-        */
         .state('streampipes.configuration', {
             url: '/configuration',
             views: {
