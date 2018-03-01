@@ -17,6 +17,8 @@ import org.streampipes.model.output.KeepOutputStrategy;
 import org.streampipes.model.output.ListOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.output.ReplaceOutputStrategy;
+import org.streampipes.model.output.TransformOperation;
+import org.streampipes.model.output.TransformOutputStrategy;
 import org.streampipes.model.output.UriPropertyMapping;
 import org.streampipes.model.quality.Accuracy;
 import org.streampipes.model.quality.EventPropertyQualityDefinition;
@@ -64,7 +66,9 @@ public class Cloner {
       return new CustomOutputStrategy((CustomOutputStrategy) other);
     } else if (other instanceof ReplaceOutputStrategy) {
       return new ReplaceOutputStrategy((ReplaceOutputStrategy) other);
-    } else {
+    } else if (other instanceof TransformOutputStrategy) {
+      return new TransformOutputStrategy((TransformOutputStrategy) other);
+    } else{
       return new AppendOutputStrategy((AppendOutputStrategy) other);
     }
   }
@@ -177,6 +181,10 @@ public class Cloner {
 
   public List<EventProperty> properties(List<EventProperty> eventProperties) {
     return eventProperties.stream().map(o -> new Cloner().property(o)).collect(Collectors.toList());
+  }
+
+  public List<TransformOperation> transformOperations(List<TransformOperation> transformOperations) {
+    return transformOperations.stream().map(o -> new TransformOperation(o)).collect(Collectors.toList());
   }
 
   public List<EventPropertyQualityRequirement> reqEpQualitities(

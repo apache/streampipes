@@ -32,6 +32,12 @@ public class Option extends UnnamedStreamPipesEntity {
 		super();
 		this.name = name;
 	}
+
+	public Option(String name, String internalName) {
+		super();
+		this.name = name;
+		this.internalName = internalName;
+	}
 	
 	public Option(String name, boolean selected)
 	{

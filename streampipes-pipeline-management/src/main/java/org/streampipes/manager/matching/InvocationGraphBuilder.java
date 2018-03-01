@@ -55,8 +55,7 @@ public class InvocationGraphBuilder {
 
                 DataProcessorInvocation dataProcessorInvocation = (DataProcessorInvocation) source;
                 EventSchema outputSchema = new EventSchema();
-                OutputSchemaGenerator schemaGenerator = new OutputSchemaFactory(dataProcessorInvocation
-                        .getOutputStrategies()).getOuputSchemaGenerator();
+                OutputSchemaGenerator schemaGenerator = new OutputSchemaFactory(dataProcessorInvocation).getOuputSchemaGenerator();
 
                 if (((DataProcessorInvocation) source).getInputStreams().size() == 1)
                     outputSchema = schemaGenerator.buildFromOneStream(dataProcessorInvocation.getInputStreams().get(0));
@@ -97,7 +96,9 @@ public class InvocationGraphBuilder {
             t.setCorrespondingPipeline(pipelineId);
             t.setStatusInfoSettings(makeStatusInfoSettings(elementIdentifier));
 
-            configure(t, getConnections(t));
+            if (getConnections(t).size() > 0) {
+                configure(t, getConnections(t));
+            }
         });
 
     }

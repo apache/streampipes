@@ -13,14 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.streampipes.container.api;
+package org.streampipes.model.output;
 
-import org.streampipes.model.runtime.RuntimeOptions;
-import org.streampipes.model.schema.EventProperty;
+public enum TransformOperationType {
 
-import java.util.List;
+  MEASUREMENT_UNIT_TRANSFORMATION,
+  DATATYPE_TRANSFORMATION,
+  RUNTIME_NAME_TRANSFORMATION,
+  DOMAIN_PROPERTY_TRANSFORMATION;
 
-public interface ResolvesContainerProvidedOptions {
 
-  List<RuntimeOptions> resolveOptions(String requestId, EventProperty linkedEventProperty);
 }

@@ -1,11 +1,13 @@
 package org.streampipes.sdk.helpers;
 
-import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.CustomOutputStrategy;
 import org.streampipes.model.output.FixedOutputStrategy;
-import org.streampipes.model.output.ListOutputStrategy;
 import org.streampipes.model.output.KeepOutputStrategy;
+import org.streampipes.model.output.ListOutputStrategy;
+import org.streampipes.model.output.TransformOperation;
+import org.streampipes.model.output.TransformOutputStrategy;
+import org.streampipes.model.schema.EventProperty;
 
 import java.util.Arrays;
 import java.util.List;
@@ -76,5 +78,11 @@ public class OutputStrategies {
 
     public static ListOutputStrategy list(String propertyRuntimeName) {
         return new ListOutputStrategy(propertyRuntimeName);
+    }
+
+    public static TransformOutputStrategy transform(TransformOperation... transformOperations) {
+        TransformOutputStrategy tos = new TransformOutputStrategy();
+        tos.setTransformOperations(Arrays.asList(transformOperations));
+        return tos;
     }
 }

@@ -9,6 +9,7 @@ import org.streampipes.container.transform.Transformer;
 import org.streampipes.container.util.Util;
 import org.streampipes.model.Response;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.runtime.RuntimeOptions;
 import org.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.streampipes.serializers.json.GsonSerializer;
@@ -69,7 +70,7 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
                 RuntimeOptionsRequest.class);
         ResolvesContainerProvidedOptions resolvesOptions = (ResolvesContainerProvidedOptions) getDeclarerById(elementId);
 
-        List<String> availableOptions = resolvesOptions.resolveOptions(runtimeOptionsRequest.getRequestId(),
+        List<RuntimeOptions> availableOptions = resolvesOptions.resolveOptions(runtimeOptionsRequest.getRequestId(),
                 runtimeOptionsRequest.getMappedEventProperty());
 
         return GsonSerializer.getGsonWithIds().toJson(new RuntimeOptionsResponse(runtimeOptionsRequest,

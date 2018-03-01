@@ -78,7 +78,7 @@ public class ContainerProvidedOptionsHandler {
     return response
             .getOptions()
             .stream()
-            .map(Option::new)
+            .map(o -> new Option(o.getLabel(), o.getAdditionalPayload()))
             .collect(Collectors.toList());
   }
 

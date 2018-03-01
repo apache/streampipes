@@ -13,14 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.streampipes.container.api;
+package org.streampipes.manager.util;
 
-import org.streampipes.model.runtime.RuntimeOptions;
-import org.streampipes.model.schema.EventProperty;
-
-import java.util.List;
-
-public interface ResolvesContainerProvidedOptions {
-
-  List<RuntimeOptions> resolveOptions(String requestId, EventProperty linkedEventProperty);
+public class EventSchemaUtils {
 }
