@@ -71,6 +71,16 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
               .getName(), targetClass);
   }
 
+  public <V> V selectedSingleValueInternalName(String internalName, Class<V> targetClass) {
+    return typeParser.parse(getStaticPropertyByName(internalName, OneOfStaticProperty.class)
+            .getOptions()
+            .stream()
+            .filter(Option::isSelected)
+            .findFirst()
+            .get()
+            .getInternalName(), targetClass);
+  }
+
   public <V> List<V> singleValueParameterFromCollection(String internalName, Class<V> targetClass) {
     CollectionStaticProperty collection = getStaticPropertyByName(internalName, CollectionStaticProperty.class);
     return collection

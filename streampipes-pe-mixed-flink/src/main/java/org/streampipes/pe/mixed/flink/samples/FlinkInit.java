@@ -3,11 +3,11 @@ package org.streampipes.pe.mixed.flink.samples;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
-import org.streampipes.container.util.ConsulUtil;
 import org.streampipes.pe.mixed.flink.samples.axoom.MaintenancePredictionController;
 import org.streampipes.pe.mixed.flink.samples.batchstream.FirstBatchThenStreamController;
 import org.streampipes.pe.mixed.flink.samples.breakdown.Prediction2BreakdownController;
 import org.streampipes.pe.mixed.flink.samples.classification.number.NumberClassificationController;
+import org.streampipes.pe.mixed.flink.samples.converter.FieldConverterController;
 import org.streampipes.pe.mixed.flink.samples.count.aggregate.CountAggregateController;
 import org.streampipes.pe.mixed.flink.samples.delay.sensor.DelayController;
 import org.streampipes.pe.mixed.flink.samples.delay.taxi.DelayTaxiController;
@@ -57,7 +57,8 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .add(new ListFilterController())
             .add(new PerformanceTestController())
             .add(new PerformanceElasticController())
-            .add(new MeasurementUnitConverterController());
+            .add(new MeasurementUnitConverterController())
+            .add(new FieldConverterController());
 
     new FlinkInit().init(FlinkConfig.INSTANCE);
   }

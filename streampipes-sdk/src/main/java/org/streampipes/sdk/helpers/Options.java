@@ -16,4 +16,8 @@ public class Options {
   public static List<Option> from(String... optionLabel) {
     return Arrays.stream(optionLabel).map(Option::new).collect(Collectors.toList());
   }
+
+  public static List<Option> from(Tuple2<String, String>... options) {
+    return Arrays.stream(options).map(o -> new Option(o.a, o.b)).collect(Collectors.toList());
+  }
 }
