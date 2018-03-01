@@ -9,24 +9,24 @@ import java.util.Map;
 
 public class MeasurementUnitConverter implements FlatMapFunction<Map<String, Object>, Map<String, Object>>  {
 
-    private String unitName;
+    private String convertProperty;
     private Unit inputUnit;
-    private Unit outputtUnit;
+    private Unit outputUnit;
 
     public MeasurementUnitConverter(MeasurementUnitConverterParameters params) {
-        unitName = params.getUnitName();
+        convertProperty = params.getConvertProperty();
         inputUnit = params.getInputUnit();
-        outputtUnit = params.getOutputtUnit();
+        outputUnit = params.getOutputUnit();
     }
 
     @Override
     public void flatMap(Map<String, Object> in, Collector<Map<String, Object>> out) throws Exception {
-        double value = (double) in.get(unitName);
+        double value = (double) in.get(convertProperty);
 
         Quantity obs = new Quantity(value, inputUnit);
-        double newValue = obs.convertTo(outputtUnit).getValue();
+        double newValue = obs.convertTo(outputUnit).getValue();
 
-        in.put(unitName, newValue);
+        in.put(convertProperty, newValue);
 
         out.collect(in);
     }

@@ -6,27 +6,28 @@ import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class MeasurementUnitConverterParameters extends EventProcessorBindingParams {
 
-    private String unitName;
+    private String convertProperty;
     private Unit inputUnit;
-    private Unit outputtUnit;
+    private Unit outputUnit;
 
-    public MeasurementUnitConverterParameters(DataProcessorInvocation graph, String unitName, Unit inputUnit, Unit outputtUnit) {
+    public MeasurementUnitConverterParameters(DataProcessorInvocation graph, String convertProperty, Unit inputUnit,
+                                              Unit outputUnit) {
         super(graph);
-        this.unitName = unitName;
+        this.convertProperty = convertProperty;
         this.inputUnit = inputUnit;
-        this.outputtUnit = outputtUnit;
+        this.outputUnit = outputUnit;
     }
 
-    public String getUnitName() {
-        return unitName;
+    public String getConvertProperty() {
+        return convertProperty;
     }
 
     public Unit getInputUnit() {
         return inputUnit;
     }
 
-    public Unit getOutputtUnit() {
-        return outputtUnit;
+    public Unit getOutputUnit() {
+        return outputUnit;
     }
 
 }

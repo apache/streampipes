@@ -31,8 +31,7 @@ import java.util.stream.Collectors;
 public class MeasurementUnitConverterController extends
         FlinkDataProcessorDeclarer<MeasurementUnitConverterParameters> implements ResolvesContainerProvidedOptions {
 
-    private static final String UNIT_NAME = "unitName";
-    private static final String INPUT_UNIT = "inputUnit";
+    private static final String CONVERT_PROPERTY = "convert-property";
     private static final String OUTPUT_UNIT = "outputUnit";
 
     @Override
@@ -44,21 +43,15 @@ public class MeasurementUnitConverterController extends
                 .requiredStream(StreamRequirementsBuilder
                         .create()
                         .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.from
-                                ("convert-property","Property", "The" +
+                                (CONVERT_PROPERTY,"Property", "The" +
                                 " property to convert"), PropertyScope.MEASUREMENT_PROPERTY)
                         .build())
-                .requiredTextParameter(Labels.from(UNIT_NAME, "Unit name",
-                        "The name of the unit which should convert"))
-//                .requiredSingleValueSelection(Labels.from(INPUT_UNIT, "Input type",
-//                        "The input type unit of "), optionsListInput)
-//                .requiredSingleValueSelection(Labels.from(OUTPUT_UNIT, "Output type",
-//                        "The output type unit of measurement"), optionsListOutput)
                 .requiredSingleValueSelectionFromContainer(Labels.from(OUTPUT_UNIT, "The output type unit of " +
                         "measurement", ""), "convert-property")
                 .supportedProtocols(SupportedProtocols.kafka())
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .outputStrategy(OutputStrategies.transform(TransformOperations
-                        .dynamicMeasurementUnitTransformation("convert-property", OUTPUT_UNIT)))
+                        .dynamicMeasurementUnitTransformation(CONVERT_PROPERTY, OUTPUT_UNIT)))
                 .build();
     }
 
@@ -67,21 +60,19 @@ public class MeasurementUnitConverterController extends
     @Override
     public FlinkDataProcessorRuntime<MeasurementUnitConverterParameters> getRuntime(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 
-        String unitName = extractor.singleValueParameter(UNIT_NAME, String.class);
-        String inputUnitName = extractor.selectedSingleValue(INPUT_UNIT, String.class);
-        String outputUnityName =  extractor.selectedSingleValue(OUTPUT_UNIT, String.class);
+        String convertProperty = extractor.mappingPropertyValue(CONVERT_PROPERTY);
+        String inputUnitId = extractor.measurementUnit(convertProperty, 0);
+        String outputUnitId =  extractor.selectedSingleValue(OUTPUT_UNIT, String.class);
 
-        Unit inputUnit = UnitProvider.INSTANCE.getUnitByLabel(inputUnitName);
-        Unit outputUnit = UnitProvider.INSTANCE.getUnitByLabel(outputUnityName);
-
+        Unit inputUnit = UnitProvider.INSTANCE.getUnit(inputUnitId);
+        Unit outputUnit = UnitProvider.INSTANCE.getUnit(outputUnitId);
 
         MeasurementUnitConverterParameters staticParams = new MeasurementUnitConverterParameters(
                 sepa,
-                unitName,
+                convertProperty,
                 inputUnit,
                 outputUnit
         );
-
 
         return new MeasurementUnitConverterProgram(staticParams,  new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
                 FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));

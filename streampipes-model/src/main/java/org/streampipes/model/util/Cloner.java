@@ -16,10 +16,8 @@ import org.streampipes.model.output.FixedOutputStrategy;
 import org.streampipes.model.output.KeepOutputStrategy;
 import org.streampipes.model.output.ListOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
-import org.streampipes.model.output.ReplaceOutputStrategy;
 import org.streampipes.model.output.TransformOperation;
 import org.streampipes.model.output.TransformOutputStrategy;
-import org.streampipes.model.output.UriPropertyMapping;
 import org.streampipes.model.quality.Accuracy;
 import org.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.streampipes.model.quality.EventPropertyQualityRequirement;
@@ -64,8 +62,6 @@ public class Cloner {
       return new ListOutputStrategy((ListOutputStrategy) other);
     } else if (other instanceof CustomOutputStrategy) {
       return new CustomOutputStrategy((CustomOutputStrategy) other);
-    } else if (other instanceof ReplaceOutputStrategy) {
-      return new ReplaceOutputStrategy((ReplaceOutputStrategy) other);
     } else if (other instanceof TransformOutputStrategy) {
       return new TransformOutputStrategy((TransformOutputStrategy) other);
     } else{
@@ -212,11 +208,6 @@ public class Cloner {
 
   public List<String> ecTypes(List<String> ecTypes) {
     return ecTypes;
-  }
-
-  public List<UriPropertyMapping> replaceStrategy(
-          List<UriPropertyMapping> replaceProperties) {
-    return replaceProperties.stream().map(s -> new UriPropertyMapping(s)).collect(Collectors.toList());
   }
 
   public List<MeasurementCapability> mc(

@@ -25,8 +25,6 @@ import org.streampipes.model.client.pipeline.PipelineModification;
 import org.streampipes.model.client.pipeline.PipelineModificationMessage;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.output.CustomOutputStrategy;
-import org.streampipes.model.output.ReplaceOutputStrategy;
-import org.streampipes.model.output.UriPropertyMapping;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
 import org.streampipes.model.schema.EventPropertyNested;
@@ -294,22 +292,6 @@ public class PipelineVerificationHandler {
                                 outputStrategy.setProvidesProperties(new ArrayList<>());
                             }
                             outputStrategy.getProvidesProperties().addAll(stream.getEventSchema().getEventProperties());
-                        }
-                    });
-
-            ((DataProcessorInvocation) rdfRootElement)
-                    .getOutputStrategies()
-                    .stream()
-                    .filter(strategy -> strategy instanceof ReplaceOutputStrategy)
-                    .forEach(strategy -> {
-                        ReplaceOutputStrategy outputStrategy = (ReplaceOutputStrategy) strategy;
-
-                        for (UriPropertyMapping mapping : outputStrategy.getReplaceProperties()) {
-                            if (mapping.getReplaceFrom() != null) {
-                                mapping.setReplaceWithOptions(findSupportedEventProperties(stream, rdfRootElement.getStreamRequirements(), mapping.getReplaceFrom()));
-                            } else {
-                                mapping.setReplaceWithOptions(stream.getEventSchema().getEventProperties());
-                            }
                         }
                     });
         }

@@ -31,6 +31,21 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     this.typeParser = TypeParser.newBuilder().build();
   }
 
+  public String measurementUnit(String runtimeName, Integer streamIndex) {
+   return sepaElement
+           .getInputStreams()
+           .get(streamIndex)
+           .getEventSchema()
+           .getEventProperties()
+           .stream()
+           .filter(ep -> ep.getRuntimeName().equals(runtimeName))
+           .map(ep -> (EventPropertyPrimitive) ep)
+           .findFirst()
+           .get()
+           .getMeasurementUnit()
+           .toString();
+  }
+
   public String inputTopic(Integer streamIndex) {
     return sepaElement
             .getInputStreams()

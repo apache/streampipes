@@ -21,10 +21,8 @@ import org.streampipes.model.output.CustomOutputStrategy;
 import org.streampipes.model.output.FixedOutputStrategy;
 import org.streampipes.model.output.KeepOutputStrategy;
 import org.streampipes.model.output.ListOutputStrategy;
-import org.streampipes.model.output.ReplaceOutputStrategy;
 import org.streampipes.model.output.TransformOperation;
 import org.streampipes.model.output.TransformOutputStrategy;
-import org.streampipes.model.output.UriPropertyMapping;
 import org.streampipes.model.quality.Accuracy;
 import org.streampipes.model.quality.EventPropertyQualityRequirement;
 import org.streampipes.model.quality.EventStreamQualityRequirement;
@@ -117,10 +115,6 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             DomainStaticProperty.class,
             SupportedProperty.class,
             CollectionStaticProperty.class,
-            //EcType.class,
-            //EpaType.class,
-            ReplaceOutputStrategy.class,
-            UriPropertyMapping.class,
             MeasurementCapability.class,
             MeasurementObject.class,
             Enumeration.class,

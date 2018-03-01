@@ -7,7 +7,6 @@ import org.streampipes.model.output.FixedOutputStrategy;
 import org.streampipes.model.output.KeepOutputStrategy;
 import org.streampipes.model.output.ListOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
-import org.streampipes.model.output.ReplaceOutputStrategy;
 import org.streampipes.model.output.TransformOutputStrategy;
 
 public class OutputSchemaFactory {
@@ -33,8 +32,6 @@ public class OutputSchemaFactory {
 			return new CustomOutputSchemaGenerator(((CustomOutputStrategy) firstOutputStrategy).getEventProperties());
 		else if (firstOutputStrategy instanceof ListOutputStrategy)
 			return new ListOutputSchemaGenerator(((ListOutputStrategy) firstOutputStrategy).getPropertyName());
-		else if (firstOutputStrategy instanceof ReplaceOutputStrategy)
-			return new ReplaceOutputSchemaGenerator((ReplaceOutputStrategy) firstOutputStrategy);
 		else if (firstOutputStrategy instanceof TransformOutputStrategy) {
 			return new TransformOutputSchemaGenerator(dataProcessorInvocation, (TransformOutputStrategy) firstOutputStrategy);
 		} else {
