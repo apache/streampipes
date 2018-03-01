@@ -16,12 +16,14 @@ import { AddWidgetCtrl } from './add-widget.controller';
 import { WidgetInstances } from './widget-instances.service';
 import { WidgetTemplates } from './templates/widget-templates.service';
 
+import {WidgetDataModel} from "./widget-data-model.service";
+
 import { SocketConnectionDataModel } from './socket-connection-data-model.service';
 
 import soFilter from './templates/so.filter';
 
 import spNumberWidget from './templates/number/number.directive';
-import spNumberWidgetConfig from './templates/number/number-config.directive';
+import { SpNumberWidgetConfig }from './templates/number/number-config.component';
 import { NumberDataModel } from './templates/number/number-data-model.service';
 
 import spVerticalbarWidget from './templates/verticalbar/verticalbar.directive';
@@ -61,6 +63,7 @@ export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhr
 	.controller('AddWidgetCtrl', AddWidgetCtrl)
     .service('WidgetTemplates', WidgetTemplates)
     .service('SocketConnectionDataModel', SocketConnectionDataModel)
+    .service('WidgetDataModel', WidgetDataModel)
 
 
 
@@ -73,7 +76,7 @@ export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhr
 	.filter('geoLng', soFilter.geoLng)
 
 	.directive('spNumberWidget', spNumberWidget)
-	.directive('spNumberWidgetConfig', spNumberWidgetConfig)
+	.component('spNumberWidgetConfig', SpNumberWidgetConfig)
 	.service('NumberDataModel', NumberDataModel)
 
 	// .directive('spVerticalbarWidget', spVerticalbarWidget)

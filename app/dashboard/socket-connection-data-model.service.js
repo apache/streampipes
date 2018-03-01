@@ -1,21 +1,14 @@
+import { WidgetDataModel} from "./widget-data-model.service";
 
-export class SocketConnectionDataModel {
+export class SocketConnectionDataModel extends WidgetDataModel {
 
-
-
-	constructor(WidgetDataModel, $http, visualisationId) {
-    // constructor() {
-
-        Object.setPrototypeOf(this.constructor, WidgetDataModel);
-        // SocketConnectionDataModel.prototype.constructor = this.constructor;
-
-	    this.WidgetDataModel = WidgetDataModel;
+	constructor($http, visualisationId) {
+        super();
 	    this.$http = $http;
         this.visualisationId = visualisationId;
         this.client = {};
 	}
 
-	// SocketConnectionDataModel.prototype = Object.create(WidgetDataModel.prototype);
 	init() {
 		
 		//TODO find better solution
@@ -71,8 +64,6 @@ export class SocketConnectionDataModel {
 	newData(message) {
 		// to be overridden by subclasses
 	}
-
-	// return SocketConnectionDataModel;
 };
 
-SocketConnectionDataModel.$inject = ['WidgetDataModel', '$http'];
+SocketConnectionDataModel.$inject = ['$http'];
