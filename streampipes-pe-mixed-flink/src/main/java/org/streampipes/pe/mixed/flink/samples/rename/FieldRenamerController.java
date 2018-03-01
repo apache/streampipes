@@ -35,7 +35,7 @@ public class FieldRenamerController extends FlinkDataProcessorDeclarer<FieldRena
 						.supportedProtocols(SupportedProtocols.kafka())
 						.supportedFormats(SupportedFormats.jsonFormat())
 						.outputStrategy(OutputStrategies.transform(TransformOperations
-										.dynamicMeasurementUnitTransformation(CONVERT_PROPERTY, FIELD_NAME)))
+										.dynamicRuntimeNameTransformation(CONVERT_PROPERTY, FIELD_NAME)))
 						.build();
 	}
 
