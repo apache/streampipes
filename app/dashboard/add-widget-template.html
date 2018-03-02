@@ -68,7 +68,7 @@
                         <b><h4>{{ctrl.pages[2].description}}</h4></b>
                     </md-select-header>
                     <md-input-container id="scheme-selection">
-                        <sp-number-widget-config wid=ctrl.selectedVisualisation></sp-number-widget-config>
+                        <sp-number-widget-config ng-if="ctrl.selectedType == 'number'" wid=ctrl.selectedVisualisation></sp-number-widget-config>
 
                     </md-input-container>
                 </md-dialog-content>

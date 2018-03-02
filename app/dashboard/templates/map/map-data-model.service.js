@@ -1,17 +1,16 @@
 import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
 
-MapDataModel.$inject = ['SocketConnectionDataModel', '$http'];
 
-export default function MapDataModel(SocketConnectionDataModel, $http) {
+export class MapDataModel extends SocketConnectionDataModel {
 
-    MapDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
-    function MapDataModel(id) {
-        SocketConnectionDataModel.call(this, id);
+    constructor($http, id) {
+        super($http, id);
     }
 
-    MapDataModel.prototype.newData = function(message) {
+    newData(message) {
         this.updateScope(message);
     }
 
-    return MapDataModel;
 };
+
+MapDataModel.$inject = ['$http'];

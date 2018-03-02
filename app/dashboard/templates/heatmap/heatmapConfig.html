@@ -1,7 +1,7 @@
 <h4>Select Latitude</h4>
 <md-input-container class="md-block" flex-gt-sm>
-    <md-select ng-model="wid.schema.config.selectedLatitudeMapping">
-        <md-option ng-value="lat" ng-repeat="lat in wid.schema.eventProperties | geoLat">{{
+    <md-select ng-model="ctrl.wid.schema.config.selectedLatitudeMapping">
+        <md-option ng-value="lat" ng-repeat="lat in ctrl.wid.schema.eventProperties | geoLat">{{
             lat.properties.runtimeName }}
         </md-option>
     </md-select>
@@ -9,8 +9,8 @@
 
 <h4>Select Longitude</h4>
 <md-input-container class="md-block" flex-gt-sm>
-    <md-select ng-model="wid.schema.config.selectedLongitudeMapping">
-        <md-option ng-value="lng" ng-repeat="lng in wid.schema.eventProperties | geoLng">{{
+    <md-select ng-model="ctrl.wid.schema.config.selectedLongitudeMapping">
+        <md-option ng-value="lng" ng-repeat="lng in ctrl.wid.schema.eventProperties | geoLng">{{
             lng.properties.runtimeName }}
         </md-option>
     </md-select>

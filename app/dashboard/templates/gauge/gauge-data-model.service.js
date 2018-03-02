@@ -1,23 +1,15 @@
 import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
 
-GaugeDataModel.$inject = ['SocketConnectionDataModel', '$http'];
+class GaugeDataModel extends SocketConnectionDataModel {
 
-export default function GaugeDataModel(SocketConnectionDataModel, $http) {
+	constructor($http, id) {
+        super($http, id);
+    }
 
-	GaugeDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
-	function GaugeDataModel(id) {
-		SocketConnectionDataModel.call(this, id);
-	}
-
-	GaugeDataModel.prototype.newData = function(message) {
-	this.updateScope(message);
-	}
-
-	GaugeDataModel.prototype.newData = function(message) {
-
-		//dataArray.push(message);
+	newData(message) {
 		this.updateScope(message);
 	}
-	
-	return GaugeDataModel;
+
 };
+
+GaugeDataModel.$inject = ['$http'];
