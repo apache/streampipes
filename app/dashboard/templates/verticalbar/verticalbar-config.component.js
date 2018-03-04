@@ -1,7 +1,7 @@
-export let SpVerticalbarWidgetConfig = {
+export let spVerticalbarWidgetConfig = {
     restrict: 'E',
     templateUrl: 'app/dashboard/templates/verticalbar/verticalbarConfig.html',
-    scope: {
+    bindings: {
         wid: '='
     },
     controller: class VerticalbarConfigCtrl {

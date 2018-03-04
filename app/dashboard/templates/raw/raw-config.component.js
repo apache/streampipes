@@ -1,6 +1,6 @@
-export let SpRawWidgetConfig = {
+export let spRawWidgetConfig = {
     templateUrl: 'app/dashboard/templates/raw/rawConfig.html',
-    scope: {
+    bindings: {
         wid: '='
     },
     controller: class RawConfigCtrl {

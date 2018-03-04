@@ -1,6 +1,6 @@
-export let SpTableWidgetConfig = {
+export let spTableWidgetConfig = {
     templateUrl: 'app/dashboard/templates/table/tableConfig.html',
-    scope: {
+    bindings: {
         wid: '='
     },
     controller: class TableConfigCtrl {

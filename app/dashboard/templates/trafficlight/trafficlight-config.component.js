@@ -1,6 +1,6 @@
-export let SpTrafficlightWidgetConfig = {
+export let spTrafficlightWidgetConfig = {
     templateUrl: 'app/dashboard/templates/trafficlight/trafficlightConfig.html',
-    scope: {
+    bindings: {
         wid: '='
     },
     controller: class TrafficlightConfigCtrl {

@@ -1,4 +1,4 @@
-export let SpHeatmapWidgetConfig = {
+export let spHeatmapWidgetConfig = {
     templateUrl: 'app/dashboard/templates/heatmap/heatmapConfig.html',
     bindings: {
             wid: '='

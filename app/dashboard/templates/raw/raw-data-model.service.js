@@ -1,7 +1,7 @@
-import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
+import { SocketConnectionDataModel } from '../../socket-connection-data-model.service.js'
 
 
-export class RawDataModelextends extends SocketConnectionDataModel {
+export class RawDataModel extends SocketConnectionDataModel {
 
     constructor($http, id) {
         super($http, id);

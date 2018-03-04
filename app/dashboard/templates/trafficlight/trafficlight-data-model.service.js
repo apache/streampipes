@@ -1,6 +1,6 @@
-import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
+import { SocketConnectionDataModel } from '../../socket-connection-data-model.service.js'
 
-export class TrafficlightDataModelextends extends SocketConnectionDataModel {
+export class TrafficLightDataModel extends SocketConnectionDataModel {
 
     constructor($http, id) {
         super($http, id);
@@ -12,4 +12,4 @@ export class TrafficlightDataModelextends extends SocketConnectionDataModel {
 
 };
 
-TrafficlightDataModel.$inject = ['$http'];
+TrafficLightDataModel.$inject = ['$http'];

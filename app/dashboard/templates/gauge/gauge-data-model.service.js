@@ -1,6 +1,6 @@
-import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
+import { SocketConnectionDataModel } from '../../socket-connection-data-model.service.js'
 
-class GaugeDataModel extends SocketConnectionDataModel {
+export class GaugeDataModel extends SocketConnectionDataModel {
 
 	constructor($http, id) {
         super($http, id);

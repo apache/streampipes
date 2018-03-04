@@ -1,6 +1,6 @@
-export let SpMapWidgetConfig = {
+export let spMapWidgetConfig = {
     templateUrl: 'app/dashboard/templates/map/mapConfig.html',
-    scope: {
+    bindings: {
         wid: '='
     },
     controller: class MapConfigCtrl {

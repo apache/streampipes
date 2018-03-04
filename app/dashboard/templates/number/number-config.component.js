@@ -1,4 +1,4 @@
-export let SpNumberWidgetConfig = {
+export let spNumberWidgetConfig = {
     templateUrl: 'app/dashboard/templates/number/numberConfig.html',
     bindings: {
         wid: '='

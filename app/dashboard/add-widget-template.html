@@ -68,7 +68,15 @@
                         <b><h4>{{ctrl.pages[2].description}}</h4></b>
                     </md-select-header>
                     <md-input-container id="scheme-selection">
+                        <sp-gauge-widget-config ng-if="ctrl.selectedType == 'gauge'" wid=ctrl.selectedVisualisation></sp-gauge-widget-config>
+                        <sp-heatmap-widget-config ng-if="ctrl.selectedType == 'heatmap'" wid=ctrl.selectedVisualisation></sp-heatmap-widget-config>
+                        <sp-line-widget-config ng-if="ctrl.selectedType == 'line'" wid=ctrl.selectedVisualisation></sp-line-widget-config>
+                        <sp-map-widget-config ng-if="ctrl.selectedType == 'map'" wid=ctrl.selectedVisualisation></sp-map-widget-config>
                         <sp-number-widget-config ng-if="ctrl.selectedType == 'number'" wid=ctrl.selectedVisualisation></sp-number-widget-config>
+                        <sp-raw-widget-config ng-if="ctrl.selectedType == 'raw'" wid=ctrl.selectedVisualisation></sp-raw-widget-config>
+                        <sp-table-widget-config ng-if="ctrl.selectedType == 'table'" wid=ctrl.selectedVisualisation></sp-table-widget-config>
+                        <sp-trafficlight-widget-config ng-if="ctrl.selectedType == 'trafficlight'" wid=ctrl.selectedVisualisation></sp-trafficlight-widget-config>
+                        <sp-verticalbar-widget-config ng-if="ctrl.selectedType == 'verticalbar'" wid=ctrl.selectedVisualisation></sp-verticalbar-widget-config>
 
                     </md-input-container>
                 </md-dialog-content>

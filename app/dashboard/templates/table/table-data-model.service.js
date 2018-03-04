@@ -1,4 +1,4 @@
-import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
+import { SocketConnectionDataModel } from '../../socket-connection-data-model.service.js'
 
 export class TableDataModel extends SocketConnectionDataModel {
 
