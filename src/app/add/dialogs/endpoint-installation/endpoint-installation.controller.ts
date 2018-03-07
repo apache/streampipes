@@ -1,5 +1,16 @@
 export class EndpointInstallationController {
 
+    $mdDialog: any;
+    RestApi: any;
+    endpointItems : any;
+    install: any;
+    endpointItemsToInstall: any;
+    installationStatus: any;
+    installationFinished: any;
+    page: any;
+    nextButton: any;
+    installationRunning: any;
+
     constructor($mdDialog, RestApi, endpointItems, install) {
         this.$mdDialog = $mdDialog;
         this.RestApi = RestApi;
@@ -41,6 +52,8 @@ export class EndpointInstallationController {
         }
     }
 
+
+    // TODO: getEndpointItems not implemented
     installElement(endpointUri, index) {
         endpointUri = encodeURIComponent(endpointUri.uri);
 
@@ -61,13 +74,14 @@ export class EndpointInstallationController {
                     index++;
                     this.initiateInstallation(this.endpointItemsToInstall[index], index);
                 } else {
-                    this.getEndpointItems();
+                    //this.getEndpointItems();
                     this.nextButton = "Close";
                     this.installationRunning = false;
                 }
             });
     }
 
+    // TODO: getEndpointItems not implemented
     uninstallElement(endpointUri, index) {
         this.RestApi.del(endpointUri.uri)
             .success(data => {
@@ -87,7 +101,7 @@ export class EndpointInstallationController {
                 } else {
                     this.nextButton = "Close";
                     this.installationRunning = false;
-                    this.getEndpointItems();
+                    //this.getEndpointItems();
                 }
             });
     }

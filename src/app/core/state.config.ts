@@ -163,16 +163,16 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                     controller: 'SensorsCtrl'
                 }
             }
-        })        .state('streampipes.add', {
+        })*/        .state('streampipes.add', {
             url: '/add',
             views: {
                 "spMain@streampipes": {
-                    templateUrl: 'app/add/add.html',
+                    templateUrl: '../add/add.html',
                     controller: 'AddCtrl'
                 }
             }
         })
-                */.state('streampipes.myelements', {
+                .state('streampipes.myelements', {
             url: '/myelements',
             views: {
                 "spMain@streampipes": {

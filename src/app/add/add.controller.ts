@@ -1,8 +1,18 @@
 import {AddEndpointController} from './dialogs/add-endpoint/add-endpoint.controller';
 import {EndpointInstallationController} from './dialogs/endpoint-installation/endpoint-installation.controller';
-import angular from 'angular';
+import * as angular from 'angular';
 
 export class AddCtrl {
+
+    RestApi: any;
+    $mdDialog: any;
+    ElementIconText: any;
+    elements: any;
+    results: any;
+    loading: any;
+    endpointItems: any;
+    endpointItemsLoadingComplete: any;
+    selectedTab: any;
 
     constructor(RestApi, $mdDialog, ElementIconText) {
         this.RestApi = RestApi;
@@ -60,7 +70,7 @@ export class AddCtrl {
         this.$mdDialog.show({
             controller: AddEndpointController,
             controllerAs: 'ctrl',
-            templateUrl: 'app/add/dialogs/add-endpoint/add-endpoint.tmpl.html',
+            templateUrl: 'dialogs/add-endpoint/add-endpoint.tmpl.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             locals: {
@@ -94,8 +104,8 @@ export class AddCtrl {
                     this.results[index].details = [];
                     element.notifications.forEach(notification => {
                         let detail = {};
-                        detail.description = notification.description;
-                        detail.title = notification.title;
+                        detail['description'] = notification.description;
+                        detail['title'] = notification.title;
                         this.results[index].details.push(detail);
                     })
                 });
@@ -140,7 +150,7 @@ export class AddCtrl {
         this.$mdDialog.show({
             controller: EndpointInstallationController,
             controllerAs: 'ctrl',
-            templateUrl: 'app/add/dialogs/endpoint-installation/endpoint-installation.tmpl.html',
+            templateUrl: 'dialogs/endpoint-installation/endpoint-installation.tmpl.html',
             parent: angular.element(document.body),
             clickOutsideToClose: false,
             locals: {

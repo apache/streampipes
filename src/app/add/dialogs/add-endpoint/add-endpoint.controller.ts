@@ -1,5 +1,11 @@
 export class AddEndpointController {
 
+    $mdDialog: any;
+    RestApi: any;
+    rdfEndpoints: any;
+    addSelected: any;
+    newEndpoint: any;
+
     constructor($mdDialog, RestApi) {
         this.$mdDialog = $mdDialog;
         this.RestApi = RestApi;
@@ -23,11 +29,12 @@ export class AddEndpointController {
             });
     }
 
+    // TODO: getEndpointItems() not implemented
     addRdfEndpoint(rdfEndpoint) {
         this.RestApi.addRdfEndpoint(rdfEndpoint)
             .success(message => {
                 this.loadRdfEndpoints();
-                this.getEndpointItems();
+                //this.getEndpointItems();
             })
             .error(error => {
                 console.log(error);
