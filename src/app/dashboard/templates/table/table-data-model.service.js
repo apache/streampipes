@@ -1,27 +1,22 @@
-import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
+import { SocketConnectionDataModel } from '../../socket-connection-data-model.service.js'
 
-TableDataModel.$inject = ['SocketConnectionDataModel', '$http'];
+export class TableDataModel extends SocketConnectionDataModel {
 
-export default function TableDataModel(SocketConnectionDataModel, $http) {
-	TableDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
+    constructor($http, id) {
+        super($http, id);
+        this.dataArray = [];
+        this.dataArrayLength = 5;
+    }
 
-	var dataArray = [];
-	var dataArrayLength = 5;
-
-	function TableDataModel(id) {
-		SocketConnectionDataModel.call(this, id);
-	}
-
-	TableDataModel.prototype.newData = function(message) {
-		//dataArray = _.sortBy(dataArray, [function(o) { return o[0]}]);
-		if (dataArray.length > dataArrayLength - 1) {
-			dataArray = dataArray.slice(Math.max(dataArray.length - dataArrayLength , 1));
+	newData(message) {
+		if (this.dataArray.length > this.dataArrayLength - 1) {
+			this.dataArray = this.dataArray.slice(Math.max(this.dataArray.length - this.dataArrayLength , 1));
 		}
 
-		dataArray.push(message);
+		this.dataArray.push(message);
 		this.updateScope(dataArray);
 	
 	}
-
-	return TableDataModel;
 };
+
+TableDataModel.$inject = ['$http'];

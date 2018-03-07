@@ -1,17 +1,15 @@
-import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
+import { SocketConnectionDataModel } from '../../socket-connection-data-model.service';
 
-NumberDataModel.$inject = ['SocketConnectionDataModel', '$http'];
+export class NumberDataModel extends SocketConnectionDataModel {
 
-export default function NumberDataModel(SocketConnectionDataModel, $http) {
+    constructor($http, id) {
+        super($http, id);
+    }
 
-	NumberDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
-	function NumberDataModel(id) {
-		SocketConnectionDataModel.call(this, id);
-	}
-
-	NumberDataModel.prototype.newData = function(message) {
+	newData(message) {
 		this.updateScope(message);
 	}
 
-	return NumberDataModel;
 };
+
+NumberDataModel.$inject = ['$http'];

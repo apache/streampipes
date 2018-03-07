@@ -1,24 +1,26 @@
-import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
+import { SocketConnectionDataModel } from '../../socket-connection-data-model.service.js'
 
-RawDataModel.$inject = ['SocketConnectionDataModel', '$http'];
 
-export default function RawDataModel(SocketConnectionDataModel, $http) {
-    var dataArray = [];
-    var dataArrayLength = 5;
+export class RawDataModel extends SocketConnectionDataModel {
 
-    RawDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
-    function RawDataModel(id) {
-        SocketConnectionDataModel.call(this, id);
+    constructor($http, id) {
+        super($http, id);
+        this.dataArray = [];
+        this.dataArrayLength = 5;
+
     }
 
-    RawDataModel.prototype.newData = function(message) {
-        if (dataArray.length > dataArrayLength - 1) {
-            dataArray = dataArray.slice(Math.max(dataArray.length - dataArrayLength , 1));
+
+
+    newData(message) {
+        if (this.dataArray.length > dataArrayLength - 1) {
+            this.dataArray = this.dataArray.slice(Math.max(this.dataArray.length - this.dataArrayLength , 1));
         }
 
-        dataArray.push(message);
+        this.dataArray.push(message);
         this.updateScope(dataArray);
     }
 
-    return RawDataModel;
 };
+
+RawDataModel.$inject = ['$http'];

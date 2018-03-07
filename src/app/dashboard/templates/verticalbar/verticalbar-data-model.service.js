@@ -1,17 +1,15 @@
-import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
+import { SocketConnectionDataModel } from '../../socket-connection-data-model.service.js'
 
-VerticalbarDataModel.$inject = ['SocketConnectionDataModel'];
+export class VerticalbarDataModel extends SocketConnectionDataModel {
 
-export default function VerticalbarDataModel(SocketConnectionDataModel) {
-
-    VerticalbarDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
-    function VerticalbarDataModel(id) {
-        SocketConnectionDataModel.call(this, id);
+    constructor($http, id) {
+        super($http, id);
     }
 
-    VerticalbarDataModel.prototype.newData = function(message) {
+    newData(message) {
         this.updateScope(message);
     }
 
-    return VerticalbarDataModel;
 };
+
+VerticalbarDataModel.$inject = ['$http'];

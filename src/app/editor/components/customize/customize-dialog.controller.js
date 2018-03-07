@@ -1,7 +1,6 @@
 export class CustomizeDialogController {
 
     constructor() {
-
     }
 
     getMappingProperty(mapsTo) {

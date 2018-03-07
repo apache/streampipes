@@ -24,3 +24,7 @@
 <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'CollectionStaticProperty'">
     <collection-static-property static-property="ctrl.staticProperty"></collection-static-property>
 </div>
+<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'RuntimeResolvableOneOfStaticProperty'">
+    <oneof-remote belongs-to="ctrl.selectedElement.belongsTo" event-properties="ctrl.selectedElement.inputStreams[0].eventSchema.eventProperties"
+              static-property="ctrl.staticProperty" static-properties="ctrl.selectedElement.staticProperties"></oneof-remote>
+</div>

@@ -67,11 +67,13 @@ export class CustomizeController {
     saveProperties() {
 
         angular.forEach(this.selectedElement.staticProperties, item => {
-                if (item.properties.staticPropertyType === 'OneOfStaticProperty') {
+                if (item.properties.staticPropertyType === 'OneOfStaticProperty' || item.properties.staticPropertyType === 'RuntimeResolvableOneOfStaticProperty') {
                     angular.forEach(item.properties.options, option => {
                             if (item.properties.currentSelection) {
                                 if (option.elementId == item.properties.currentSelection.elementId) {
                                     option.selected = true;
+                                } else {
+                                    option.selected = false;
                                 }
                             }
                         }

@@ -1,8 +1,4 @@
-import WidgetInstances from '../../widget-instances.service.js'
-'use strict';
-lineWidget.$inject = ['WidgetInstances'];
-
-export default function lineWidget(WidgetInstances) {
+export default function lineWidget() {
 	return {
 		restrict: 'A',
 		replace: true,
@@ -12,10 +8,10 @@ export default function lineWidget(WidgetInstances) {
 			widgetId: '@'
 		},
 		controller: function ($scope) {
-			WidgetInstances.get($scope.widgetId).then(function(data) {
-				$scope.widgetConfig = data.visualisation.schema.config;
-			});
-			$scope.myChart = null;
+			// WidgetInstances.get($scope.widgetId).then(function(data) {
+			// 	$scope.widgetConfig = data.visualisation.schema.config;
+			// });
+			// $scope.myChart = null;
 		},
 		link: function postLink(scope, element) {
 				scope.$watch('data', function (data) {

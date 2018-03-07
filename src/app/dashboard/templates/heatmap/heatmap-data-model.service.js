@@ -1,17 +1,16 @@
-import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
+import { SocketConnectionDataModel } from '../../socket-connection-data-model.service.js'
 
-HeatmapDataModel.$inject = ['SocketConnectionDataModel', '$http'];
 
-export default function HeatmapDataModel(SocketConnectionDataModel, $http) {
+export class HeatmapDataModel extends SocketConnectionDataModel {
 
-    HeatmapDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
-    function HeatmapDataModel(id) {
-        SocketConnectionDataModel.call(this, id);
+    constructor($http, id) {
+        super($http, id);
     }
 
-    HeatmapDataModel.prototype.newData = function(message) {
+    newData(message) {
         this.updateScope(message);
     }
     
-    return HeatmapDataModel;
 };
+
+HeatmapDataModel.$inject = ['$http'];

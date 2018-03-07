@@ -1,1 +1,4 @@
-<div ng-if="rerender" dashboard-layouts="layoutOptions" template-url="app/dashboard/dashboard-layout-frame.html"></div>
+
+<div ng-controller="DashboardCtrl as ctrl">
+    <div ng-if="ctrl.rerender" dashboard-layouts="ctrl.layoutOptions" template-url="app/dashboard/dashboard-layout-frame.html"></div>
+</div>

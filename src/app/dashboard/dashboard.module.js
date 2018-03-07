@@ -11,56 +11,62 @@ import 'npm/epoch-charting';
 import 'npm/ngmap'
 
 
-import DashboardCtrl from './dashboard.controller';
-import AddWidgetController from './add-widget.controller';
-import SocketConnectionDataModel from './socket-connection-data-model.service';
-import WidgetInstances from './widget-instances.service';
-import WidgetTemplates from './templates/widget-templates.service';
+import { DashboardCtrl } from './dashboard.controller';
+import { AddWidgetCtrl } from './add-widget.controller';
+import { WidgetInstances } from './widget-instances.service';
+import { WidgetTemplates } from './templates/widget-templates.service';
+
+import {WidgetDataModel} from "./widget-data-model.service";
+
+import { SocketConnectionDataModel } from './socket-connection-data-model.service';
 
 import soFilter from './templates/so.filter';
 
 import spNumberWidget from './templates/number/number.directive';
-import spNumberWidgetConfig from './templates/number/number-config.directive';
-import NumberDataModel from './templates/number/number-data-model.service';
+import { spNumberWidgetConfig }from './templates/number/number-config.component';
+import { NumberDataModel } from './templates/number/number-data-model.service';
 
 import spVerticalbarWidget from './templates/verticalbar/verticalbar.directive';
-import spVerticalbarWidgetConfig from './templates/verticalbar/verticalbar-config.directive';
-import VerticalbarDataModel from './templates/verticalbar/verticalbar-data-model.service';
+import { spVerticalbarWidgetConfig } from './templates/verticalbar/verticalbar-config.component';
+import { VerticalbarDataModel } from './templates/verticalbar/verticalbar-data-model.service';
 
 import spTableWidget from './templates/table/table.directive';
-import spTableWidgetConfig from './templates/table/table-config.directive';
-import TableDataModel from './templates/table/table-data-model.service';
+import { spTableWidgetConfig } from './templates/table/table-config.component';
+import { TableDataModel } from './templates/table/table-data-model.service';
 
 import spLineWidget from './templates/line/line.directive';
-import spLineWidgetConfig from './templates/line/line-config.directive';
-import LineDataModel from './templates/line/line-data-model.service';
+import { spLineWidgetConfig } from './templates/line/line-config.component';
+import { LineDataModel } from './templates/line/line-data-model.service';
 
 import spGaugeWidget from './templates/gauge/gauge.directive';
-import spGaugeWidgetConfig from './templates/gauge/gauge-config.directive';
-import GaugeDataModel from './templates/gauge/gauge-data-model.service';
+import { spGaugeWidgetConfig } from './templates/gauge/gauge-config.component';
+import { GaugeDataModel } from './templates/gauge/gauge-data-model.service';
 
 import spTrafficlightWidget from './templates/trafficlight/trafficlight.directive';
-import spTrafficlightWidgetConfig from './templates/trafficlight/trafficlight-config.directive';
-import TrafficlightDataModel from './templates/trafficlight/trafficlight-data-model.service';
+import { spTrafficlightWidgetConfig } from './templates/trafficlight/trafficlight-config.component';
+import { TrafficLightDataModel } from './templates/trafficlight/trafficlight-data-model.service';
 
 import spRawWidget from './templates/raw/raw.directive';
-import spRawWidgetConfig from './templates/raw/raw-config.directive';
-import RawDataModel from './templates/raw/raw-data-model.service';
-
+import { spRawWidgetConfig } from './templates/raw/raw-config.component';
+import { RawDataModel } from './templates/raw/raw-data-model.service';
+//
 import spMapWidget from './templates/map/map.directive';
-import spMapWidgetConfig from './templates/map/map-config.directive';
-import MapDataModel from './templates/map/map-data-model.service';
+import { spMapWidgetConfig } from './templates/map/map-config.component';
+import { MapDataModel } from './templates/map/map-data-model.service';
 
 import spHeatmapWidget from './templates/heatmap/heatmap.directive';
-import spHeatmapWidgetConfig from './templates/heatmap/heatmap-config.directive';
-import HeatmapDataModel from './templates/heatmap/heatmap-data-model.service';
+import { spHeatmapWidgetConfig } from './templates/heatmap/heatmap-config.component';
+import { HeatmapDataModel } from './templates/heatmap/heatmap-data-model.service';
 
 export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhrTable', 'ngMap'])
 	.controller('DashboardCtrl', DashboardCtrl)
-	.factory('AddWidgetController', AddWidgetController)
-	.factory('SocketConnectionDataModel', SocketConnectionDataModel)
-	.factory('WidgetInstances', WidgetInstances)
-	.factory('WidgetTemplates', WidgetTemplates)
+	.controller('AddWidgetCtrl', AddWidgetCtrl)
+    .service('WidgetTemplates', WidgetTemplates)
+    .service('WidgetDataModel', WidgetDataModel)
+    .service('SocketConnectionDataModel', SocketConnectionDataModel)
+
+
+	.service('WidgetInstances', WidgetInstances)
 
 	.filter('soNumber', soFilter.soNumber)
 	.filter('soDateTime', soFilter.soDateTime)
@@ -68,40 +74,41 @@ export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhr
 	.filter('geoLat', soFilter.geoLat)
 	.filter('geoLng', soFilter.geoLng)
 
-	.directive('spNumberWidget', spNumberWidget)
-	.directive('spNumberWidgetConfig', spNumberWidgetConfig)
-	.factory('NumberDataModel', NumberDataModel)
+    .directive('spNumberWidget', spNumberWidget)
+    .component('spNumberWidgetConfig', spNumberWidgetConfig)
+    .service('NumberDataModel', NumberDataModel)
 
-	.directive('spVerticalbarWidget', spVerticalbarWidget)
-	.directive('spVerticalbarWidgetConfig', spVerticalbarWidgetConfig)
-	.factory('VerticalbarDataModel', VerticalbarDataModel)
+    .directive('spVerticalbarWidget', spVerticalbarWidget)
+    .component('spVerticalbarWidgetConfig', spVerticalbarWidgetConfig)
+    .service('VerticalbarDataModel', VerticalbarDataModel)
 
-	.directive('spTableWidget', spTableWidget)
-	.directive('spTableWidgetConfig', spTableWidgetConfig)
-	.factory('TableDataModel', TableDataModel)
-	
-	.directive('spLineWidget', spLineWidget)
-	.directive('spLineWidgetConfig', spLineWidgetConfig)
-	.factory('LineDataModel', LineDataModel)
+    .directive('spTableWidget', spTableWidget)
+    .component('spTableWidgetConfig', spTableWidgetConfig)
+    .service('TableDataModel', TableDataModel)
 
-	.directive('spGaugeWidget', spGaugeWidget)
-	.directive('spGaugeWidgetConfig', spGaugeWidgetConfig)
-	.factory('GaugeDataModel', GaugeDataModel)
+    .directive('spLineWidget', spLineWidget)
+    .component('spLineWidgetConfig', spLineWidgetConfig)
+    .service('LineDataModel', LineDataModel)
 
-	.directive('spTrafficlightWidget', spTrafficlightWidget)
-	.directive('spTrafficlightWidgetConfig', spTrafficlightWidgetConfig)
-	.factory('TrafficlightDataModel', TrafficlightDataModel)
+    .directive('spGaugeWidget', spGaugeWidget)
+    .component('spGaugeWidgetConfig', spGaugeWidgetConfig)
+    .service('GaugeDataModel', GaugeDataModel)
 
-	.directive('spRawWidget', spRawWidget)
-	.directive('spRawWidgetConfig', spRawWidgetConfig)
-	.factory('RawDataModel', RawDataModel)
 
-	.directive('spMapWidget', spMapWidget)
-	.directive('spMapWidgetConfig', spMapWidgetConfig)
-	.factory('MapDataModel', MapDataModel)
+    .directive('spTrafficlightWidget', spTrafficlightWidget)
+    .component('spTrafficlightWidgetConfig', spTrafficlightWidgetConfig)
+    .service('TrafficLightDataModel', TrafficLightDataModel)
 
-	.directive('spHeatmapWidget', spHeatmapWidget)
-	.directive('spHeatmapWidgetConfig', spHeatmapWidgetConfig)
-	.factory('HeatmapDataModel', HeatmapDataModel)
+    .directive('spRawWidget', spRawWidget)
+    .component('spRawWidgetConfig', spRawWidgetConfig)
+    .service('RawDataModel', RawDataModel)
+
+    .directive('spMapWidget', spMapWidget)
+    .component('spMapWidgetConfig', spMapWidgetConfig)
+    .service('MapDataModel', MapDataModel)
+
+    .directive('spHeatmapWidget', spHeatmapWidget)
+    .component('spHeatmapWidgetConfig', spHeatmapWidgetConfig)
+    .service('HeatmapDataModel', HeatmapDataModel)
 
 	.name;

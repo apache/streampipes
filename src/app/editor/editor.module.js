@@ -39,6 +39,7 @@ import {PipelineElementRecommendationService} from "./services/pipeline-element-
 import {PipelineAssemblyComponent} from "./components/pipeline-assembly/pipeline-assembly.component";
 import {PipelineElementIconStandComponent} from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
 import {PipelineValidationService} from "./services/pipeline-validation.service";
+import {OneOfRemoteComponent} from "./components/oneof-remote/oneof-remote.component";
 
 import selectFilter from './filter/select.filter';
 import elementNameFilter from './filter/element-name.filter';
@@ -59,6 +60,7 @@ export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimat
     .component('mappingPropertyUnary', MappingUnaryComponent)
     .component('matchingProperty', MatchingPropertyComponent)
     .component('oneof', OneOfComponent)
+    .component('oneofRemote', OneOfRemoteComponent)
     .component('replaceOutput', ReplaceOutputComponent)
     .component('multipleValueInput', MultipleValueInputComponent)
     .component('collectionStaticProperty', CollectionComponent)

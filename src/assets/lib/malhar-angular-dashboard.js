@@ -317,7 +317,7 @@ $templateCache.put("components/directives/dashboardLayouts/dashboardLayouts.html
 'use strict';
 
 angular.module('ui.dashboard')
-  .directive('widget', ['$injector', function ($injector) {
+  .directive('widget', ['$injector', '$http', function ($injector, $http) {
 
     return {
 
@@ -332,7 +332,9 @@ angular.module('ui.dashboard')
         if (dataModelType) {
           var DataModelConstructor; // data model constructor function
 
-          if (angular.isFunction(dataModelType)) {
+            // Quick fix fo
+          // if (angular.isFunction(dataModelType)) {
+          if (true) {
             DataModelConstructor = dataModelType;
           } else if (angular.isString(dataModelType)) {
             $injector.invoke([dataModelType, function (DataModelType) {
@@ -344,7 +346,7 @@ angular.module('ui.dashboard')
 
           var ds;
           if (widget.dataModelArgs) {
-            ds = new DataModelConstructor(widget.dataModelArgs);
+            ds = new DataModelConstructor.constructor($http, widget.dataModelArgs);
           } else {
             ds = new DataModelConstructor();
           }
@@ -1010,32 +1012,32 @@ angular.module('ui.dashboard')
 'use strict';
 
 angular.module('ui.dashboard')
-  .factory('WidgetDataModel', function () {
-    function WidgetDataModel() {
-    }
-
-    WidgetDataModel.prototype = {
-      setup: function (widget, scope) {
-        this.dataAttrName = widget.dataAttrName;
-        this.dataModelOptions = widget.dataModelOptions;
-        this.widgetScope = scope;
-      },
-
-      updateScope: function (data) {
-        this.widgetScope.widgetData = data;
-      },
-
-      init: function () {
-        // to be overridden by subclasses
-      },
-
-      destroy: function () {
-        // to be overridden by subclasses
-      }
-    };
-
-    return WidgetDataModel;
-  });
+  // .factory('WidgetDataModel', function () {
+  //   function WidgetDataModel() {
+  //   }
+  //
+  //   WidgetDataModel.prototype = {
+  //     setup: function (widget, scope) {
+  //       this.dataAttrName = widget.dataAttrName;
+  //       this.dataModelOptions = widget.dataModelOptions;
+  //       this.widgetScope = scope;
+  //     },
+  //
+  //     updateScope: function (data) {
+  //       this.widgetScope.widgetData = data;
+  //     },
+  //
+  //     init: function () {
+  //       // to be overridden by subclasses
+  //     },
+  //
+  //     destroy: function () {
+  //       // to be overridden by subclasses
+  //     }
+  //   };
+  //
+  //   return WidgetDataModel;
+  // });
 /*
  * Copyright (c) 2014 DataTorrent, Inc. ALL Rights Reserved.
  *

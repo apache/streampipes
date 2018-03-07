@@ -1,9 +1,13 @@
 export class JsonLdDialogController {
 
     $mdDialog: any;
+    title: any;
+    content: any;
 
-    constructor($mdDialog) {
+    constructor($mdDialog, title, content) {
         this.$mdDialog = $mdDialog;
+        this.title = title;
+        this.content = content;
     }
 
     hide() {

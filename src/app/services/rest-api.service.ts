@@ -61,7 +61,7 @@ export class RestApi {
     removePreferredAction(elementUri) {
         return this.$http({
             method: 'DELETE',
-            url: this.urlBase() + "/actions/favorites/" + this.encodeURIComponent(elementUri)
+            url: this.urlBase() + "/actions/favorites/" + encodeURIComponent(elementUri)
         })
     }
 
@@ -89,7 +89,7 @@ export class RestApi {
     removePreferredSepa(elementUri) {
         return this.$http({
             method: 'DELETE',
-            url: this.urlBase() + "/sepas/favorites/" + this.encodeURIComponent(elementUri)
+            url: this.urlBase() + "/sepas/favorites/" + encodeURIComponent(elementUri)
         })
     }
 
@@ -117,12 +117,12 @@ export class RestApi {
     removePreferredSource(elementUri) {
         return this.$http({
             method: 'DELETE',
-            url: this.urlBase() + "/sources/favorites/" + this.encodeURIComponent(elementUri)
+            url: this.urlBase() + "/sources/favorites/" + encodeURIComponent(elementUri)
         })
     }
 
     getOwnStreams(source){
-        return this.$http.get(this.urlBase() + "/sources/" + this.encodeURIComponent(source.uri) + "/streams");
+        return this.$http.get(this.urlBase() + "/sources/" + encodeURIComponent(source.uri) + "/streams");
 
     };
 
@@ -147,19 +147,19 @@ export class RestApi {
     update(elementUri) {
         return this.$http({
             method: 'PUT',
-            url: this.urlBase() + "/element/" + this.encodeURIComponent(elementUri)
+            url: this.urlBase() + "/element/" + encodeURIComponent(elementUri)
         })
     }
 
     del(elementUri) {
         return this.$http({
             method: 'DELETE',
-            url: this.urlBase() + "/element/" + this.encodeURIComponent(elementUri)
+            url: this.urlBase() + "/element/" + encodeURIComponent(elementUri)
         })
     }
 
     jsonld(elementUri) {
-        return this.$http.get(this.urlBase() +"/element/" + this.encodeURIComponent(elementUri) +"/jsonld");
+        return this.$http.get(this.urlBase() +"/element/" + encodeURIComponent(elementUri) +"/jsonld");
     }
 
     configured() {
@@ -230,6 +230,10 @@ export class RestApi {
         });
     }
 
+    fetchRemoteOptions(resolvableOptionsParameterRequest) {
+        return this.$http.post(this.urlBase() +"/pe/options", resolvableOptionsParameterRequest);
+    }
+
     recommendPipelineElement(pipeline) {
         return this.$http.post(this.urlBase() +"/pipelines/recommend", pipeline);
     }
@@ -279,11 +283,11 @@ export class RestApi {
     }
 
     getSepaById(elementId) {
-        return this.$http.get(this.urlBase() +"/sepas/" + this.encodeURIComponent(elementId));
+        return this.$http.get(this.urlBase() +"/sepas/" + encodeURIComponent(elementId));
     }
 
     getActionById(elementId) {
-        return this.$http.get(this.urlBase() +"/actions/" + this.encodeURIComponent(elementId));
+        return this.$http.get(this.urlBase() +"/actions/" + encodeURIComponent(elementId));
     };
 
     getOntologyProperties() {
@@ -291,7 +295,7 @@ export class RestApi {
     };
 
     getOntologyPropertyDetails(propertyId) {
-        return this.$http.get(this.getServerUrl() + "/ontology/properties/" + this.encodeURIComponent(propertyId));
+        return this.$http.get(this.getServerUrl() + "/ontology/properties/" + encodeURIComponent(propertyId));
     }
 
     addOntologyProperty(propertyData) {
@@ -303,7 +307,7 @@ export class RestApi {
     };
 
     getOntologyConceptDetails(conceptId) {
-        return this.$http.get(this.getServerUrl() + "/ontology/types/" + this.encodeURIComponent(conceptId));
+        return this.$http.get(this.getServerUrl() + "/ontology/types/" + encodeURIComponent(conceptId));
     }
 
     getOntologyNamespaces() {
@@ -317,7 +321,7 @@ export class RestApi {
     deleteOntologyNamespace(prefix) {
         return this.$http({
             method: 'DELETE',
-            url: this.getServerUrl() + "/ontology/namespaces/" + this.encodeURIComponent(prefix)
+            url: this.getServerUrl() + "/ontology/namespaces/" + encodeURIComponent(prefix)
         });
     }
 
@@ -330,39 +334,39 @@ export class RestApi {
     }
 
     getOntologyInstanceDetails(instanceId) {
-        return this.$http.get(this.getServerUrl() + "/ontology/instances/" + this.encodeURIComponent(instanceId));
+        return this.$http.get(this.getServerUrl() + "/ontology/instances/" + encodeURIComponent(instanceId));
     }
 
     updateOntologyProperty(propertyId, propertyData) {
-        return this.$http.put(this.getServerUrl() + "/ontology/properties/" + this.encodeURIComponent(propertyId), propertyData);
+        return this.$http.put(this.getServerUrl() + "/ontology/properties/" + encodeURIComponent(propertyId), propertyData);
     }
 
     updateOntologyConcept(conceptId, conceptData) {
-        return this.$http.put(this.getServerUrl() + "/ontology/types/" + this.encodeURIComponent(conceptId), conceptData);
+        return this.$http.put(this.getServerUrl() + "/ontology/types/" + encodeURIComponent(conceptId), conceptData);
     }
 
     updateOntologyInstance(instanceId, instanceData) {
-        return this.$http.put(this.getServerUrl() + "/ontology/instances/" + this.encodeURIComponent(instanceId), instanceData);
+        return this.$http.put(this.getServerUrl() + "/ontology/instances/" + encodeURIComponent(instanceId), instanceData);
     }
 
     deleteOntologyInstance(instanceId) {
         return this.$http({
             method: 'DELETE',
-            url: this.getServerUrl() + "/ontology/instances/" + this.encodeURIComponent(instanceId)
+            url: this.getServerUrl() + "/ontology/instances/" + encodeURIComponent(instanceId)
         });
     }
 
     deleteOntologyProperty(propertyId) {
         return this.$http({
             method: 'DELETE',
-            url: this.getServerUrl() + "/ontology/properties/" + this.encodeURIComponent(propertyId)
+            url: this.getServerUrl() + "/ontology/properties/" + encodeURIComponent(propertyId)
         });
     }
 
     deleteOntologyConcept(conceptId) {
         return this.$http({
             method: 'DELETE',
-            url: this.getServerUrl() + "/ontology/types/" + this.encodeURIComponent(conceptId)
+            url: this.getServerUrl() + "/ontology/types/" + encodeURIComponent(conceptId)
         });
     }
 
@@ -373,7 +377,7 @@ export class RestApi {
     deleteContext(contextId) {
         return this.$http({
             method: 'DELETE',
-            url: this.getServerUrl() + "/contexts/" + this.encodeURIComponent(contextId)
+            url: this.getServerUrl() + "/contexts/" + encodeURIComponent(contextId)
         });
     }
 
@@ -387,7 +391,7 @@ export class RestApi {
     }
 
     getSepaDetailsFromOntology(uri, keepIds) {
-        return this.$http.get(this.getServerUrl() + "/ontology/sepas/" + this.encodeURIComponent(uri) +"?keepIds=" +keepIds);
+        return this.$http.get(this.getServerUrl() + "/ontology/sepas/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
     }
 
     getSourcesFromOntology() {
@@ -395,7 +399,7 @@ export class RestApi {
     }
 
     getSourceDetailsFromOntology(uri, keepIds) {
-        return this.$http.get(this.getServerUrl() + "/ontology/sources/" + this.encodeURIComponent(uri) +"?keepIds=" +keepIds);
+        return this.$http.get(this.getServerUrl() + "/ontology/sources/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
     }
 
     getActionsFromOntology() {
@@ -403,7 +407,7 @@ export class RestApi {
     }
 
     getActionDetailsFromOntology(uri, keepIds) {
-        return this.$http.get(this.getServerUrl() + "/ontology/actions/" + this.encodeURIComponent(uri) +"?keepIds=" +keepIds);
+        return this.$http.get(this.getServerUrl() + "/ontology/actions/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
     }
 
     getRunningVisualizations() {
@@ -419,7 +423,7 @@ export class RestApi {
     }
 
     getUnit(resource) {
-        return this.$http.get(this.getServerUrl() + "/units/instances/" + this.encodeURIComponent(resource));
+        return this.$http.get(this.getServerUrl() + "/units/instances/" + encodeURIComponent(resource));
     }
 
     getEpaCategories() {
