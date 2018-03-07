@@ -2,6 +2,8 @@
 
 import { HomeComponent } from '../home/home.component';
 import { ConfigurationComponent } from '../configuration/configuration.component';
+import { AppContainerModule } from '../app-container/app-container.module';
+import { AppContainerComponent } from '../app-container/app-container.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
@@ -184,6 +186,14 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             views: {
                 "spMain@streampipes": {
                     component: ConfigurationComponent
+                }
+            }
+        })
+        .state('streampipes.appcontainer', {
+            url: '/appcontainer',
+            views: {
+                "spMain@streampipes": {
+                    component: AppContainerComponent
                 }
             }
         });

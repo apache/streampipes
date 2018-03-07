@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { HomeModule } from './home/home.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { AuthStatusService } from './services/auth-status.service';
+import { AppContainerModule } from './app-container/app-container.module';
 
 @NgModule({
     imports: [
@@ -26,7 +27,8 @@ import { AuthStatusService } from './services/auth-status.service';
         FormsModule,
         UIRouterUpgradeModule.forChild(),
         HomeModule,
-        ConfigurationModule
+        ConfigurationModule,
+        AppContainerModule
     ],
     providers: [
         AuthStatusService
