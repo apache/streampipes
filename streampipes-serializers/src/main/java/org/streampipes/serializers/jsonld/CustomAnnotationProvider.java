@@ -18,6 +18,7 @@ import org.streampipes.model.grounding.WildcardTopicDefinition;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.CustomTransformOutputStrategy;
 import org.streampipes.model.output.FixedOutputStrategy;
 import org.streampipes.model.output.KeepOutputStrategy;
 import org.streampipes.model.output.ListOutputStrategy;
@@ -126,7 +127,8 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             RuntimeResolvableAnyStaticProperty.class,
             RuntimeResolvableOneOfStaticProperty.class,
             TransformOutputStrategy.class,
-            TransformOperation.class
+            TransformOperation.class,
+            CustomTransformOutputStrategy.class
     );
   }
 }

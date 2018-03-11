@@ -12,6 +12,7 @@ import org.streampipes.model.grounding.WildcardTopicDefinition;
 import org.streampipes.model.grounding.WildcardTopicMapping;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.CustomTransformOutputStrategy;
 import org.streampipes.model.output.FixedOutputStrategy;
 import org.streampipes.model.output.KeepOutputStrategy;
 import org.streampipes.model.output.ListOutputStrategy;
@@ -64,7 +65,9 @@ public class Cloner {
       return new CustomOutputStrategy((CustomOutputStrategy) other);
     } else if (other instanceof TransformOutputStrategy) {
       return new TransformOutputStrategy((TransformOutputStrategy) other);
-    } else{
+    } else if (other instanceof CustomTransformOutputStrategy) {
+      return new CustomTransformOutputStrategy((CustomTransformOutputStrategy) other);
+    } else {
       return new AppendOutputStrategy((AppendOutputStrategy) other);
     }
   }

@@ -78,6 +78,20 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
 
     }
 
+    @POST
+    @Path("{elementId}/output")
+    //@Consumes(MediaType.APPLICATION_JSON)
+    //@Produces(MediaType.APPLICATION_JSON)
+    public String fetchOutputStrategy(@PathParam("elementId") String elementId, String payload) {
+
+        I runtimeOptionsRequest = GsonSerializer.getGsonWithIds().fromJson(payload, clazz);
+        ResolvesContainerProvidedOutputStrategy<I> resolvesOutput = (ResolvesContainerProvidedOutputStrategy<I>)
+                getDeclarerById
+                (elementId);
+
+        return GsonSerializer.getGsonWithIds().toJson(resolvesOutput.resolveOutputStrategy(runtimeOptionsRequest));
+    }
+
 
     // TODO move endpoint to /elementId/instances/runningInstanceId
     @DELETE
@@ -99,6 +113,5 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
 
         return Util.toResponseString(elementId, false, "Could not find the running instance with id: " + runningInstanceId);
     }
-
 }
 

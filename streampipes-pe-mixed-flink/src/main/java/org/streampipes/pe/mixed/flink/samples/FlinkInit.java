@@ -19,6 +19,7 @@ import org.streampipes.pe.mixed.flink.samples.filter.numericallist.ListFilterCon
 import org.streampipes.pe.mixed.flink.samples.hasher.FieldHasherController;
 import org.streampipes.pe.mixed.flink.samples.healthindex.HealthIndexController;
 import org.streampipes.pe.mixed.flink.samples.labelorder.LabelOrderController;
+import org.streampipes.pe.mixed.flink.samples.mapper.FieldMapperController;
 import org.streampipes.pe.mixed.flink.samples.measurementUnitConverter.MeasurementUnitConverterController;
 import org.streampipes.pe.mixed.flink.samples.peak.PeakDetectionController;
 import org.streampipes.pe.mixed.flink.samples.performance.PerformanceTestController;
@@ -58,7 +59,8 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .add(new PerformanceTestController())
             .add(new PerformanceElasticController())
             .add(new MeasurementUnitConverterController())
-            .add(new FieldConverterController());
+            .add(new FieldConverterController())
+            .add(new FieldMapperController());
 
     new FlinkInit().init(FlinkConfig.INSTANCE);
   }

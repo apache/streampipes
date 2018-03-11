@@ -15,5 +15,10 @@ limitations under the License.
 */
 package org.streampipes.container.api;
 
-public interface ResolvesContainerProvidedOutputStrategy {
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.schema.EventSchema;
+
+public interface ResolvesContainerProvidedOutputStrategy<T extends InvocableStreamPipesEntity> {
+
+  EventSchema resolveOutputStrategy(T processingElement);
 }

@@ -3,6 +3,7 @@ package org.streampipes.manager.matching.output;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.CustomTransformOutputStrategy;
 import org.streampipes.model.output.FixedOutputStrategy;
 import org.streampipes.model.output.KeepOutputStrategy;
 import org.streampipes.model.output.ListOutputStrategy;
@@ -34,6 +35,9 @@ public class OutputSchemaFactory {
 			return new ListOutputSchemaGenerator(((ListOutputStrategy) firstOutputStrategy).getPropertyName());
 		else if (firstOutputStrategy instanceof TransformOutputStrategy) {
 			return new TransformOutputSchemaGenerator(dataProcessorInvocation, (TransformOutputStrategy) firstOutputStrategy);
+		} else if (firstOutputStrategy instanceof CustomTransformOutputStrategy) {
+			return new CustomTransformOutputSchemaGenerator(dataProcessorInvocation, (CustomTransformOutputStrategy)
+							firstOutputStrategy);
 		} else {
 			throw new IllegalArgumentException();
 		}

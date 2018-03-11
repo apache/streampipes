@@ -2,6 +2,7 @@ package org.streampipes.sdk.helpers;
 
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.CustomTransformOutputStrategy;
 import org.streampipes.model.output.FixedOutputStrategy;
 import org.streampipes.model.output.KeepOutputStrategy;
 import org.streampipes.model.output.ListOutputStrategy;
@@ -84,5 +85,9 @@ public class OutputStrategies {
         TransformOutputStrategy tos = new TransformOutputStrategy();
         tos.setTransformOperations(Arrays.asList(transformOperations));
         return tos;
+    }
+
+    public static CustomTransformOutputStrategy customTransformation() {
+        return new CustomTransformOutputStrategy();
     }
 }

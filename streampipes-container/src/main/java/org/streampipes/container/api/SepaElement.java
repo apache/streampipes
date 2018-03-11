@@ -1,13 +1,13 @@
 package org.streampipes.container.api;
 
-import java.util.List;
-
-import javax.ws.rs.Path;
-
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.util.Util;
 import org.streampipes.model.graph.DataProcessorInvocation;
+
+import java.util.List;
+
+import javax.ws.rs.Path;
 
 @Path("/sepa")
 public class SepaElement extends InvocableElement<DataProcessorInvocation, SemanticEventProcessingAgentDeclarer> {
@@ -26,5 +26,4 @@ public class SepaElement extends InvocableElement<DataProcessorInvocation, Seman
     protected String getInstanceId(String uri, String elementId) {
         return Util.getInstanceId(uri, "sepa", elementId);
     }
-
 }

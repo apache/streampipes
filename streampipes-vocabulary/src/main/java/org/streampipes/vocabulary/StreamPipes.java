@@ -30,6 +30,7 @@ public class StreamPipes {
   public static final String KEEP_OUTPUT_STRATEGY = NS + "KeepOutputStrategy";
   public static final String REPLACE_OUTPUT_STRATEGY = NS + "ReplaceOutputStrategy";
   public static final String TRANSFORM_OUTPUT_STRATEGY = NS + "TransformOutputStrategy";
+  public static final String CUSTOM_TRANSFORM_OUTPUT_STRATEGY = NS + "CustomTransformOutputStrategy";
   public static final String RUNTIME_RESOLVABLE_TRANSFORM_OUTPUT_STRATEGY = NS +
           "RuntimeResolvableTransformOutputStrategy";
   public static final String TRANSFORM_OPERATION = NS + "TransformOperation";
