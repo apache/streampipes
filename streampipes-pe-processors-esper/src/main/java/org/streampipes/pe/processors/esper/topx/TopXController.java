@@ -38,7 +38,7 @@ public class TopXController extends StandaloneEventProcessorDeclarerSingleton<To
 		Integer limit = extractor.singleValueParameter("topx", Integer.class);
 		String direction = extractor.selectedSingleValue("direction", String.class);
 
-		List<String> uniqueProperties = extractor.mappingPropertyValues("unique", true);
+		List<String> uniqueProperties = extractor.mappingPropertyValues("unique");
 
 		OrderDirection orderDirection;
 
