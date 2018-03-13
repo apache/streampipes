@@ -18,11 +18,12 @@ import org.streampipes.model.grounding.WildcardTopicDefinition;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.CustomTransformOutputStrategy;
 import org.streampipes.model.output.FixedOutputStrategy;
 import org.streampipes.model.output.KeepOutputStrategy;
 import org.streampipes.model.output.ListOutputStrategy;
-import org.streampipes.model.output.ReplaceOutputStrategy;
-import org.streampipes.model.output.UriPropertyMapping;
+import org.streampipes.model.output.TransformOperation;
+import org.streampipes.model.output.TransformOutputStrategy;
 import org.streampipes.model.quality.Accuracy;
 import org.streampipes.model.quality.EventPropertyQualityRequirement;
 import org.streampipes.model.quality.EventStreamQualityRequirement;
@@ -50,6 +51,8 @@ import org.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
+import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
 
 import java.lang.annotation.Annotation;
@@ -113,10 +116,6 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             DomainStaticProperty.class,
             SupportedProperty.class,
             CollectionStaticProperty.class,
-            //EcType.class,
-            //EpaType.class,
-            ReplaceOutputStrategy.class,
-            UriPropertyMapping.class,
             MeasurementCapability.class,
             MeasurementObject.class,
             Enumeration.class,
@@ -124,7 +123,12 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             ApplicationLink.class,
             ElementStatusInfoSettings.class,
             WildcardTopicDefinition.class,
-            SimpleTopicDefinition.class
+            SimpleTopicDefinition.class,
+            RuntimeResolvableAnyStaticProperty.class,
+            RuntimeResolvableOneOfStaticProperty.class,
+            TransformOutputStrategy.class,
+            TransformOperation.class,
+            CustomTransformOutputStrategy.class
     );
   }
 }

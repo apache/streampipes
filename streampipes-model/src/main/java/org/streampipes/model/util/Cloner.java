@@ -12,12 +12,13 @@ import org.streampipes.model.grounding.WildcardTopicDefinition;
 import org.streampipes.model.grounding.WildcardTopicMapping;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.CustomTransformOutputStrategy;
 import org.streampipes.model.output.FixedOutputStrategy;
 import org.streampipes.model.output.KeepOutputStrategy;
 import org.streampipes.model.output.ListOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
-import org.streampipes.model.output.ReplaceOutputStrategy;
-import org.streampipes.model.output.UriPropertyMapping;
+import org.streampipes.model.output.TransformOperation;
+import org.streampipes.model.output.TransformOutputStrategy;
 import org.streampipes.model.quality.Accuracy;
 import org.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.streampipes.model.quality.EventPropertyQualityRequirement;
@@ -42,6 +43,8 @@ import org.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
+import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
 
@@ -60,8 +63,10 @@ public class Cloner {
       return new ListOutputStrategy((ListOutputStrategy) other);
     } else if (other instanceof CustomOutputStrategy) {
       return new CustomOutputStrategy((CustomOutputStrategy) other);
-    } else if (other instanceof ReplaceOutputStrategy) {
-      return new ReplaceOutputStrategy((ReplaceOutputStrategy) other);
+    } else if (other instanceof TransformOutputStrategy) {
+      return new TransformOutputStrategy((TransformOutputStrategy) other);
+    } else if (other instanceof CustomTransformOutputStrategy) {
+      return new CustomTransformOutputStrategy((CustomTransformOutputStrategy) other);
     } else {
       return new AppendOutputStrategy((AppendOutputStrategy) other);
     }
@@ -84,9 +89,14 @@ public class Cloner {
       return new CollectionStaticProperty((CollectionStaticProperty) o);
     } else if (o instanceof MatchingStaticProperty) {
       return new MatchingStaticProperty((MatchingStaticProperty) o);
+    } else if (o instanceof RuntimeResolvableOneOfStaticProperty) {
+      return new RuntimeResolvableOneOfStaticProperty((RuntimeResolvableOneOfStaticProperty) o);
+    } else if (o instanceof RuntimeResolvableAnyStaticProperty) {
+      return new RuntimeResolvableAnyStaticProperty((RuntimeResolvableAnyStaticProperty) o);
     } else {
       return new MappingPropertyUnary((MappingPropertyUnary) o);
     }
+
   }
 
   public List<TransportProtocol> protocols(List<TransportProtocol> protocols) {
@@ -172,6 +182,10 @@ public class Cloner {
     return eventProperties.stream().map(o -> new Cloner().property(o)).collect(Collectors.toList());
   }
 
+  public List<TransformOperation> transformOperations(List<TransformOperation> transformOperations) {
+    return transformOperations.stream().map(o -> new TransformOperation(o)).collect(Collectors.toList());
+  }
+
   public List<EventPropertyQualityRequirement> reqEpQualitities(
           List<EventPropertyQualityRequirement> requiresEventPropertyQualities) {
     return requiresEventPropertyQualities.stream().map(o -> new Cloner().qualityreq(o)).collect(Collectors.toList());
@@ -197,11 +211,6 @@ public class Cloner {
 
   public List<String> ecTypes(List<String> ecTypes) {
     return ecTypes;
-  }
-
-  public List<UriPropertyMapping> replaceStrategy(
-          List<UriPropertyMapping> replaceProperties) {
-    return replaceProperties.stream().map(s -> new UriPropertyMapping(s)).collect(Collectors.toList());
   }
 
   public List<MeasurementCapability> mc(

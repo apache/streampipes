@@ -1,10 +1,11 @@
 package org.streampipes.manager.matching.v2;
 
-import java.net.URI;
-import java.util.List;
-
 import org.streampipes.model.client.matching.MatchingResultMessage;
 import org.streampipes.model.client.matching.MatchingResultType;
+import org.streampipes.vocabulary.StreamPipes;
+
+import java.net.URI;
+import java.util.List;
 
 public class MeasurementUnitMatch extends AbstractMatcher<URI, URI> {
 
@@ -14,10 +15,8 @@ public class MeasurementUnitMatch extends AbstractMatcher<URI, URI> {
 
 	@Override
 	public boolean match(URI offer, URI requirement, List<MatchingResultMessage> errorLog) {
-		// TODO check with knowledge base
-//		return MatchingUtils.nullCheck(offer, requirement) ||
-//				requirement.toString().equals(offer.toString());
-		return true;
+		return requirement == null || (requirement.toString().equals(StreamPipes.ANYTHING) && offer != null) ||
+						(offer != null && requirement.toString().equals(offer.toString()));
 	}
 
 }

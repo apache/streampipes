@@ -3,11 +3,11 @@ package org.streampipes.pe.mixed.flink.samples;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
-import org.streampipes.container.util.ConsulUtil;
 import org.streampipes.pe.mixed.flink.samples.axoom.MaintenancePredictionController;
 import org.streampipes.pe.mixed.flink.samples.batchstream.FirstBatchThenStreamController;
 import org.streampipes.pe.mixed.flink.samples.breakdown.Prediction2BreakdownController;
 import org.streampipes.pe.mixed.flink.samples.classification.number.NumberClassificationController;
+import org.streampipes.pe.mixed.flink.samples.converter.FieldConverterController;
 import org.streampipes.pe.mixed.flink.samples.count.aggregate.CountAggregateController;
 import org.streampipes.pe.mixed.flink.samples.delay.sensor.DelayController;
 import org.streampipes.pe.mixed.flink.samples.delay.taxi.DelayTaxiController;
@@ -19,6 +19,7 @@ import org.streampipes.pe.mixed.flink.samples.filter.numericallist.ListFilterCon
 import org.streampipes.pe.mixed.flink.samples.hasher.FieldHasherController;
 import org.streampipes.pe.mixed.flink.samples.healthindex.HealthIndexController;
 import org.streampipes.pe.mixed.flink.samples.labelorder.LabelOrderController;
+import org.streampipes.pe.mixed.flink.samples.mapper.FieldMapperController;
 import org.streampipes.pe.mixed.flink.samples.measurementUnitConverter.MeasurementUnitConverterController;
 import org.streampipes.pe.mixed.flink.samples.peak.PeakDetectionController;
 import org.streampipes.pe.mixed.flink.samples.performance.PerformanceTestController;
@@ -57,7 +58,9 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .add(new ListFilterController())
             .add(new PerformanceTestController())
             .add(new PerformanceElasticController())
-            .add(new MeasurementUnitConverterController());
+            .add(new MeasurementUnitConverterController())
+            .add(new FieldConverterController())
+            .add(new FieldMapperController());
 
     new FlinkInit().init(FlinkConfig.INSTANCE);
   }

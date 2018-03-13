@@ -8,5 +8,7 @@ public enum StaticPropertyType {
     MappingPropertyUnary,
     MappingPropertyNary,
     MatchingStaticProperty,
-    OneOfStaticProperty;
+    OneOfStaticProperty,
+    RuntimeResolvableAnyStaticProperty,
+    RuntimeResolvableOneOfStaticProperty;
 }

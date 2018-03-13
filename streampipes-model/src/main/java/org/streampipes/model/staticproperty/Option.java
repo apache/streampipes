@@ -18,6 +18,9 @@ public class Option extends UnnamedStreamPipesEntity {
 	
 	@RdfProperty(StreamPipes.IS_SELECTED)
 	private boolean selected;
+
+	@RdfProperty(StreamPipes.INTERNAL_NAME)
+	private String internalName;
 	
 	public Option()
 	{
@@ -28,6 +31,12 @@ public class Option extends UnnamedStreamPipesEntity {
 	{
 		super();
 		this.name = name;
+	}
+
+	public Option(String name, String internalName) {
+		super();
+		this.name = name;
+		this.internalName = internalName;
 	}
 	
 	public Option(String name, boolean selected)
@@ -41,6 +50,7 @@ public class Option extends UnnamedStreamPipesEntity {
 		super(o);
 		this.name = o.getName();
 		this.selected = o.isSelected();
+		this.internalName = o.getInternalName();
 		
 	}
 
@@ -59,6 +69,12 @@ public class Option extends UnnamedStreamPipesEntity {
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
-	
-	
+
+	public String getInternalName() {
+		return internalName;
+	}
+
+	public void setInternalName(String internalName) {
+		this.internalName = internalName;
+	}
 }
