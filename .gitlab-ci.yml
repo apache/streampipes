@@ -49,9 +49,10 @@ docker-backend:
    dependencies: 
      - build
    script: 
+     - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/backend:SNAPSHOT ./streampipes-backend/
-     - docker push $IMAGE_NAME/backend:SNAPSHOT
+     - docker build --pull -t $IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
+     - docker push $IMAGE_NAME/backend:$MVN_VERSION
    only:
      - dev
 
@@ -61,9 +62,10 @@ docker-pe-sinks:
    dependencies: 
      - build
    script: 
+     - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-sinks-standalone:SNAPSHOT ./streampipes-pe-sinks-standalone/
-     - docker push $IMAGE_NAME/pe-sinks-standalone:SNAPSHOT
+     - docker build --pull -t $IMAGE_NAME/pe-sinks-standalone:$MVN_VERSION ./streampipes-pe-sinks-standalone/
+     - docker push $IMAGE_NAME/pe-sinks-standalone:$MVN_VERSION
    only:
      - dev
     
@@ -73,9 +75,10 @@ docker-pe-sources-samples:
    dependencies: 
      - build
    script: 
+     - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-sources-samples:SNAPSHOT ./streampipes-pe-sources-samples/
-     - docker push $IMAGE_NAME/pe-sources-samples:SNAPSHOT
+     - docker build --pull -t $IMAGE_NAME/pe-sources-samples:$MVN_VERSION ./streampipes-pe-sources-samples/
+     - docker push $IMAGE_NAME/pe-sources-samples:$MVN_VERSION
    only:
      - dev
  
@@ -85,9 +88,10 @@ docker-pe-processors-esper:
    dependencies: 
      - build
    script: 
+     - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-processors-esper:SNAPSHOT ./streampipes-pe-processors-esper/
-     - docker push $IMAGE_NAME/pe-processors-esper:SNAPSHOT
+     - docker build --pull -t $IMAGE_NAME/pe-processors-esper:$MVN_VERSION ./streampipes-pe-processors-esper/
+     - docker push $IMAGE_NAME/pe-processors-esper:$MVN_VERSION
    only:
      - dev
 
@@ -97,9 +101,10 @@ docker-pe-sources-axoom-hmi:
    dependencies: 
      - build
    script: 
+     - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-sources-axoom-hmi:SNAPSHOT ./streampipes-pe-sources-axoom-hmi/
-     - docker push $IMAGE_NAME/pe-sources-axoom-hmi:SNAPSHOT
+     - docker build --pull -t $IMAGE_NAME/pe-sources-axoom-hmi:$MVN_VERSION ./streampipes-pe-sources-axoom-hmi/
+     - docker push $IMAGE_NAME/pe-sources-axoom-hmi:$MVN_VERSION
    only:
      - dev
 
@@ -109,9 +114,10 @@ docker-pe-sources-mnist:
    dependencies: 
      - build
    script: 
+     - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-sources-mnist:SNAPSHOT ./streampipes-pe-sources-mnist/
-     - docker push $IMAGE_NAME/pe-sources-mnist:SNAPSHOT
+     - docker build --pull -t $IMAGE_NAME/pe-sources-mnist:$MVN_VERSION ./streampipes-pe-sources-mnist/
+     - docker push $IMAGE_NAME/pe-sources-mnist:$MVN_VERSION
    only:
      - dev
 
@@ -121,9 +127,10 @@ docker-pe-mixed-flink:
    dependencies: 
      - build
    script: 
+     - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-mixed-flink:SNAPSHOT ./streampipes-pe-mixed-flink/
-     - docker push $IMAGE_NAME/pe-mixed-flink:SNAPSHOT
+     - docker build --pull -t $IMAGE_NAME/pe-mixed-flink:$MVN_VERSION ./streampipes-pe-mixed-flink/
+     - docker push $IMAGE_NAME/pe-mixed-flink:$MVN_VERSION
    only:
      - dev
      
@@ -133,9 +140,10 @@ docker-pe-mixed-spark:
    dependencies: 
      - build
    script: 
+     - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-mixed-spark:SNAPSHOT ./streampipes-pe-mixed-spark/
-     - docker push $IMAGE_NAME/pe-mixed-spark:SNAPSHOT
+     - docker build --pull -t $IMAGE_NAME/pe-mixed-spark:$MVN_VERSION ./streampipes-pe-mixed-spark/
+     - docker push $IMAGE_NAME/pe-mixed-spark:$MVN_VERSION
    only:
      - dev
 
@@ -145,9 +153,10 @@ docker-pe-mixed-kafka:
    dependencies:
      - build
    script:
+     - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-mixed-kafka:SNAPSHOT ./streampipes-pe-mixed-kafka-streams/
-     - docker push $IMAGE_NAME/pe-mixed-kafka:SNAPSHOT
+     - docker build --pull -t $IMAGE_NAME/pe-mixed-kafka:$MVN_VERSION ./streampipes-pe-mixed-kafka-streams/
+     - docker push $IMAGE_NAME/pe-mixed-kafka:$MVN_VERSION
    only:
      - dev
 
@@ -215,7 +224,6 @@ docker hub:
   when: manual
   script:
     - export MVN_VERSION=$(cat ./target/mvn_version)
-    - echo $MVN_VERSION
     - docker login -u streampipesbuild -p $DOCKER_HUB_USER_PWD
     - docker build --pull -t streampipes/backend:$MVN_VERSION ./streampipes-backend/
     - docker push streampipes/backend:$MVN_VERSION
