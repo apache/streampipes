@@ -460,6 +460,8 @@
         <module>streampipes-wrapper-distributed</module>
         <module>streampipes-storage-management</module>
         <module>streampipes-logging</module>
+        <module>archetypes/streampipes-archetype-pe-sources</module>
+        <module>archetypes/streampipes-archetype-pe-jvm</module>
     </modules>
 
     <profiles>
