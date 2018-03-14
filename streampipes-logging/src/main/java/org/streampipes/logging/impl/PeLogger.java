@@ -13,7 +13,8 @@ public class PeLogger implements Logger {
 
 
     public PeLogger(Class clazz, String correspondingPipeline, String peUri, PeConfig peConfig){
-        this.prefix =   "serverName: " + peConfig.getName()
+        this.prefix =  "USERLOG" + " - "
+                       + "serverName: " + peConfig.getName()
                        + "correspondingPipeline: " + correspondingPipeline + " - "
                        + "peURI: " + peUri + " - ";
 
