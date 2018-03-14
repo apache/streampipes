@@ -1,6 +1,5 @@
 package org.streampipes.logging.impl;
 
-import org.streampipes.container.model.PeConfig;
 import org.streampipes.logging.api.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +11,10 @@ public class PeLogger implements Logger {
 
 
 
-    public PeLogger(Class clazz, String correspondingPipeline, String peUri, PeConfig peConfig){
+    //public PeLogger(Class clazz, String correspondingPipeline, String peUri, PeConfig peConfig){
+    public PeLogger(Class clazz, String correspondingPipeline, String peUri){
         this.prefix =  "USERLOG" + " - "
-                       + "serverName: " + peConfig.getName()
+                      // + "serviceName: " + peConfig.getName() + " - "
                        + "correspondingPipeline: " + correspondingPipeline + " - "
                        + "peURI: " + peUri + " - ";
 

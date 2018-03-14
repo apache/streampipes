@@ -1,6 +1,5 @@
 package org.streampipes.model.base;
 
-import org.streampipes.container.model.PeConfig;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.logging.LoggerFactory;
 import org.streampipes.logging.api.Logger;
@@ -138,7 +137,9 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 		this.statusInfoSettings = statusInfoSettings;
 	}
 
-	public Logger getLogger(Class clazz, PeConfig peConfig) {
-		return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri(), peConfig);
+	//public Logger getLogger(Class clazz, PeConfig peConfig) {
+	public Logger getLogger(Class clazz) {
+	//	return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri(), peConfig);
+		return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri());
 	}
 }
