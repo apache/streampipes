@@ -17,8 +17,16 @@
 			<artifactId>streampipes-vocabulary</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-logging</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>persistence-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-container</artifactId>
 		</dependency>
 	</dependencies>
 </project>

@@ -414,6 +414,11 @@
                 <artifactId>streampipes-empire-pinto</artifactId>
                 <version>${streampipes-empire.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-logging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -454,6 +459,7 @@
         <module>streampipes-wrapper-kafka-streams</module>
         <module>streampipes-wrapper-distributed</module>
         <module>streampipes-storage-management</module>
+        <module>streampipes-logging</module>
     </modules>
 
     <profiles>

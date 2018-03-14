@@ -1,14 +1,15 @@
 package org.streampipes.model.base;
 
+import org.streampipes.container.model.PeConfig;
 import org.streampipes.empire.annotations.RdfProperty;
+import org.streampipes.logging.LoggerFactory;
+import org.streampipes.logging.api.Logger;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.Cloner;
-import org.streampipes.model.util.Logger;
 import org.streampipes.vocabulary.StreamPipes;
-
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
@@ -137,7 +138,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 		this.statusInfoSettings = statusInfoSettings;
 	}
 
-	public Logger getLogger(Class clazz) {
-		return Logger.getLogger(clazz, getCorrespondingPipeline(), getUri());
+	public Logger getLogger(Class clazz, PeConfig peConfig) {
+		return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri(), peConfig);
 	}
 }
