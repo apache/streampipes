@@ -13,6 +13,9 @@ public enum BackendConfig {
   private final static String KAFKA_PORT = "kafka_port";
   private final static String ZOOKEEPER_HOST = "zookeeper_host";
   private final static String ZOOKEEPER_PORT = "zookeeper_port";
+  private final static String ELASTICSEARCH_HOST ="elasticsearch_host";
+  private final static String ELASTICSEARCH_PORT ="elasticsearch_port";
+  private final static String ELASTICSEARCH_PROTOCOL = "elasticsearch_protocol";
   private final static String IS_CONFIGURED = "is_configured";
 
   BackendConfig() {
@@ -24,8 +27,12 @@ public enum BackendConfig {
     config.register(KAFKA_PORT, 9092, "Port for backend service for kafka");
     config.register(ZOOKEEPER_HOST, "zookeeper", "Hostname for backend service for zookeeper");
     config.register(ZOOKEEPER_PORT, 2181, "Port for backend service for zookeeper");
+    config.register(ELASTICSEARCH_HOST, "elasticsearch", "Hostname for elasticsearch service");
+    config.register(ELASTICSEARCH_PORT, 9200, "Port for elasticsearch service");
+    config.register(ELASTICSEARCH_PROTOCOL, "http", "Protocol the elasticsearch service");
     config.register(IS_CONFIGURED, false, "Boolean that indicates whether streampipes is " +
             "already configured or not");
+
   }
 
   public String getJmsHost() {
@@ -76,5 +83,20 @@ public enum BackendConfig {
     config.setBoolean(IS_CONFIGURED, b);
   }
 
+  public String getElasticsearchHost() {
+    return config.getString(ELASTICSEARCH_HOST);
+  }
+
+  public int getElasticsearchPort() {
+    return config.getInteger(ELASTICSEARCH_PORT);
+  }
+
+  public String getElasticsearchProtocol() {
+    return config.getString(ELASTICSEARCH_PROTOCOL);
+  }
+
+  public String getElasticsearchURL() {
+    return getElasticsearchProtocol()+ "://" + getElasticsearchHost() + ":" + getElasticsearchPort();
+  }
 
 }
