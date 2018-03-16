@@ -8,6 +8,6 @@ public interface ILogs {
 
     Response getAllByPipelineId(String pipelineId);
 
-    Response getAllByPipelineIdAndPeuri(String pipelineId, String peuri);
+    Response getAllByPeuri(String peuri);
 
 }
