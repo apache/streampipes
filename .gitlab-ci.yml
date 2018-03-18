@@ -74,7 +74,7 @@ deploy to test:
     - ssh "$TESTSERVER_USER"@"$TESTSERVER_HOSTNAME" "cd ~/streampipes-cd && docker-compose pull backend && docker-compose up -d"
   environment:
     name: test
-    url: http://$TESTSERVER_URL
+    url: http://$TESTSERVER_HOSTNAME
   only:
     - dev
 
