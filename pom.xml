@@ -8,19 +8,19 @@
     <version>0.51.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
-        <rdf4j.version>2.2.2</rdf4j.version>
+        <rdf4j.version>2.2.4</rdf4j.version>
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
         <javassist.version>3.19.0-GA</javassist.version>
         <logback-classic.version>1.1.9</logback-classic.version>
         <jackson.version>2.7.4</jackson.version>
         <type-parser.version>0.6.0</type-parser.version>
         <simple-slack-api.version>0.5.1</simple-slack-api.version>
-        <consul-client.version>0.16.4</consul-client.version>
+        <consul-client.version>1.1.1</consul-client.version>
         <persistence-api.version>1.0.2</persistence-api.version>
         <junit.version>4.12</junit.version>
-        <kafka.version>0.10.0.1</kafka.version>
+        <kafka.version>1.0.0</kafka.version>
         <shiro.version>1.2.3</shiro.version>
-        <streampipes-empire.version>1.9.4</streampipes-empire.version>
+        <streampipes-empire.version>1.9.8</streampipes-empire.version>
         <dependency.locations.enabled>false</dependency.locations.enabled>
     </properties>
 
@@ -405,12 +405,12 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes.empire</groupId>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-empire-rdf4j</artifactId>
                 <version>${streampipes-empire.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes.empire</groupId>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-empire-pinto</artifactId>
                 <version>${streampipes-empire.version}</version>
             </dependency>
@@ -574,7 +574,7 @@
         </repository>
         <snapshotRepository>
             <id>deployment</id>
-            <name>Internal Releases</name>
+            <name>Internal Snapshots</name>
             <url>https://laus.fzi.de/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>

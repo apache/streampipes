@@ -1,17 +1,16 @@
 package org.streampipes.config.consul;
 
-import com.google.common.base.Optional;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.KeyValueClient;
 import com.orbitz.consul.model.kv.Value;
 import org.streampipes.config.SpConfig;
 import org.streampipes.config.SpConfigChangeCallback;
-import retrofit2.http.Url;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ConsulSpConfig extends SpConfig implements Runnable {
 //    final static Logger logger = LogUtil.getInstance(ConsulSpConfig.class);

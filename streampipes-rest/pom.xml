@@ -85,6 +85,10 @@
 			<artifactId>streampipes-messaging-jms</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-container</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.mashape.unirest</groupId>
 			<artifactId>unirest-java</artifactId>
 			<version>1.4.9</version>

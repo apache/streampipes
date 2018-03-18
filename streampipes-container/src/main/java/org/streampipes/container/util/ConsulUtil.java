@@ -43,7 +43,7 @@ public class ConsulUtil {
     }
 
     public static void registerService(String serviceName, String serviceID, String url, int port, String tag) {
-        String body = createServiceRegisterBody(serviceName, serviceID, PROTOCOL + url, port, tag);
+        String body = createServiceRegisterBody(serviceName, serviceID, url, port, tag);
         try {
             registerServiceHttpClient(body);
             LOG.info("Register service " + serviceID, "succesful");
@@ -165,13 +165,13 @@ public class ConsulUtil {
     }
 
     private static String createServiceRegisterBody(String name, String id, String url, int port, String tag) {
-        String healthCheckURL = url + ":" + port;
+        String healthCheckURL = PROTOCOL + url + ":" + port;
 
         return "{" +
                 "\"ID\": \"" + id + "\"," +
                 "\"Name\": \"" + name + "\"," +
                 "\"Tags\": [" +
-                "    \"" + tag + "\"" +
+                "    \"" + tag + "\"" + ",\"urlprefix-/" +id +" strip=/" +id +"\"" +
                 " ]," +
                 " \"Address\": \""+ url + "\"," +
                 " \"Port\":" + port + "," +

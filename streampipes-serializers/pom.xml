@@ -18,7 +18,7 @@
             <artifactId>streampipes-model-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.streampipes.empire</groupId>
+            <groupId>org.streampipes</groupId>
             <artifactId>streampipes-empire-pinto</artifactId>
         </dependency>
     </dependencies>
