@@ -2,29 +2,29 @@
 
 import * as angular from 'angular';
 
-import "jquery-ui";
+//import "jquery-ui";
 
 import '@uirouter/angular-hybrid';
 
 import spServices from './services/services.module';
 
+import spDashboard from './dashboard/dashboard.module';
 import spCore from './core/core.module';
 import spLayout from './layout/layout.module';
 import spLogin from './login/login.module';
+import spAdd from './add/add.module';
+import spMyElements from './myelements/my-elements.module';
+import spNotifications from './notifications/notifications.module';
+import spEditor from './editor/editor.module';
+import spAppFileDownload from './app-file-download/app-file-download.module';
 
 /*
-import spNotifications from './notifications/notifications.module';
 import spAppLinks from './applinks/applinks.module';
 import spPipelineDetails from './pipeline-details/pipeline-details.module';
-import spEditor from './editor/editor.module';
 import spPipelines from './pipelines/pipelines.module';
-import spDashboard from './dashboard/dashboard.module';
-import spAppFileDownload from './app-file-download/app-file-download.module';
 import spOntology from './ontology/ontology.module';
 import spSensors from './sensors/sensors.module';
 */
-import spAdd from './add/add.module';
-import spMyElements from './myelements/my-elements.module';
 
 const MODULE_NAME = 'streamPipesApp';
 
@@ -34,15 +34,15 @@ export const Ng1AppModule = angular
         spCore,
         spLayout,
         spLogin,
-        //spNotifications,
+        spNotifications,
         //spAppLinks,
         //spPipelineDetails,
         'ui.router',
         'ui.router.upgrade',
-        //spEditor,
+        spEditor,
         //spPipelines,
-        //spDashboard,
-        //spAppFileDownload,
+        spDashboard,
+        spAppFileDownload,
         //spOntology,
         //spSensors,
         spAdd,

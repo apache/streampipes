@@ -105,25 +105,25 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        /*
         .state('streampipes.notifications', {
             url: '/notifications',
             views: {
                 "spMain@streampipes": {
-                    templateUrl: 'app/notifications/notifications.html',
+                    templateUrl: '../notifications/notifications.html',
                     controller: 'NotificationsCtrl'
                 }
             }
         })
         .state('streampipes.editor', {
             url: '/editor/:pipeline',
+            params: {pipeline: null},
             views: {
                 "spMain@streampipes": {
-                    templateUrl: 'app/editor/editor.html',
+                    templateUrl: '../editor/editor.html',
                     controller: 'EditorCtrl'
                 }
             }
-        })        .state('streampipes.pipelines', {
+        })    /*    .state('streampipes.pipelines', {
             url: '/pipelines/:pipeline',
             views: {
                 "spMain@streampipes": {
@@ -131,23 +131,23 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                     controller: 'PipelineCtrl'
                 }
             }
-        })        .state('streampipes.dashboard', {
+        })*/        .state('streampipes.dashboard', {
             url: '/dashboard',
             views: {
                 "spMain@streampipes": {
-                    templateUrl: 'app/dashboard/dashboard.html',
+                    templateUrl: '../dashboard/dashboard.html',
                     controller: 'DashboardCtrl'
                 }
             }
-        })        .state('streampipes.appfiledownload', {
+        })       .state('streampipes.appfiledownload', {
             url: '/appfiledownload',
             views: {
                 "spMain@streampipes": {
-                    templateUrl: 'app/app-file-download/app-file-download.tmpl.html',
+                    templateUrl: '../app-file-download/app-file-download.tmpl.html',
                     controller: 'AppFileDownloadCtrl'
                 }
             }
-        })        .state('streampipes.ontology', {
+        })   /*     .state('streampipes.ontology', {
             url: '',
             views: {
                 "spMain@streampipes": {

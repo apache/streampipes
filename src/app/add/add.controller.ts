@@ -2,6 +2,8 @@ import {AddEndpointController} from './dialogs/add-endpoint/add-endpoint.control
 import {EndpointInstallationController} from './dialogs/endpoint-installation/endpoint-installation.controller';
 import * as angular from 'angular';
 
+declare const require: any;
+
 export class AddCtrl {
 
     RestApi: any;
@@ -13,8 +15,9 @@ export class AddCtrl {
     endpointItems: any;
     endpointItemsLoadingComplete: any;
     selectedTab: any;
+    $templateCache: any;
 
-    constructor(RestApi, $mdDialog, ElementIconText) {
+    constructor(RestApi, $mdDialog, ElementIconText, $templateCache) {
         this.RestApi = RestApi;
         this.$mdDialog = $mdDialog;
         this.ElementIconText = ElementIconText;
@@ -25,6 +28,8 @@ export class AddCtrl {
         this.endpointItemsLoadingComplete = false;
         this.selectedTab = "MARKETPLACE";
         this.getEndpointItems();
+        this.$templateCache = $templateCache;
+        this.$templateCache.put('endpoint-item.tmpl.html', require('./endpoint-item.tmpl.html'));
     }
 
     iconText(elementName) {
@@ -164,4 +169,4 @@ export class AddCtrl {
 
 }
 
-AddCtrl.$inject = ['RestApi', '$mdDialog', 'ElementIconText'];
+AddCtrl.$inject = ['RestApi', '$mdDialog', 'ElementIconText', '$templateCache'];

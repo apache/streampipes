@@ -38,7 +38,7 @@
                             </md-button>
                         </div>
                         <div ng-repeat="endpointItem in ctrl.endpointItems | filter:{type:ctrl.selectedTab} |orderBy: '+name'">
-                            <ng-include src="'app/add/endpoint-item.tmpl.html'"></ng-include>
+                            <ng-include src="'endpoint-item.tmpl.html'"></ng-include>
                         </div>
                     </div>
                     <div ng-if="!ctrl.endpointItemsLoadingComplete">
