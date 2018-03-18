@@ -43,8 +43,9 @@ docker-backend:
    script: 
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
+     - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
      - docker push $IMAGE_NAME/backend:$MVN_VERSION
+     - docker push $IMAGE_NAME/backend:latest
    only:
      - dev
 
@@ -60,6 +61,23 @@ deploy:
     paths:
       - ./**/*.jar
     expire_in:  1 hour
+    
+deploy to test:
+  image: maven:3-jdk-8
+  stage: deploy
+  before_script:
+    - mkdir -p ~/.ssh
+    - echo -e "$TESTSERVER_SSH" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  script:
+    - ssh "$TESTSERVER_USER"@"$TESTSERVER_HOSTNAME" "cd ~/streampipes-cd && docker-compose pull backend && docker-compose up -d"
+  environment:
+    name: test
+    url: http://$TESTSERVER_HOSTNAME
+  only:
+    - dev
+
 
 start release:
   image: maven:3-jdk-8
