@@ -29,13 +29,12 @@ export class NewComponent implements OnInit {
 
   myFormat: Format;
 
-  constructor(private restService: RestService, private _formBuilder: FormBuilder, private rdfMapperService:
-    // constructor(private _formBuilder: FormBuilder, private rdfMapperService:
-    RdfmapperService) { }
+  // constructor(private restService: RestService, private _formBuilder: FormBuilder, private rdfMapperService:
+    constructor(private restService: RestService, private _formBuilder: FormBuilder) { }
 
   ngOnInit() {
 
-    this.rdfMapperService.testRdfMapper();
+    // this.rdfMapperService.testRdfMapper();
 
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ['', Validators.required]

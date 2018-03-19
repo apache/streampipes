@@ -52,8 +52,8 @@ export class AppCtrl {
                 },
                 {
                     link: 'streampipes.connect',
-                    title: 'Configuration',
-                    icon: 'power:ic_settings_24px'
+                    title: 'StreamPipes Connect',
+                    icon: 'notification:ic_power_24px'
                 },
                 {
                     link: 'streampipes.pipelines',
