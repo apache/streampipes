@@ -17,14 +17,11 @@ import spMyElements from './myelements/my-elements.module';
 import spNotifications from './notifications/notifications.module';
 import spEditor from './editor/editor.module';
 import spAppFileDownload from './app-file-download/app-file-download.module';
-
-/*
-import spAppLinks from './applinks/applinks.module';
+import spOntology from './ontology/ontology.module';
 import spPipelineDetails from './pipeline-details/pipeline-details.module';
 import spPipelines from './pipelines/pipelines.module';
-import spOntology from './ontology/ontology.module';
 import spSensors from './sensors/sensors.module';
-*/
+import spAppLinks from './applinks/applinks.module';
 
 const MODULE_NAME = 'streamPipesApp';
 
@@ -35,16 +32,16 @@ export const Ng1AppModule = angular
         spLayout,
         spLogin,
         spNotifications,
-        //spAppLinks,
-        //spPipelineDetails,
+        spAppLinks,
+        spPipelineDetails,
         'ui.router',
         'ui.router.upgrade',
         spEditor,
-        //spPipelines,
+        spPipelines,
         spDashboard,
         spAppFileDownload,
-        //spOntology,
-        //spSensors,
+        spOntology,
+        spSensors,
         spAdd,
         spMyElements
     ])

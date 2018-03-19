@@ -12,31 +12,31 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
     //            $state.go("streampipes");
     //        });
 
-    $urlRouterProvider.otherwise("/streampipes");
+    $urlRouterProvider.otherwise('/streampipes');
 
     var spNavbar = {
-        templateUrl: "../../assets/templates/navbar.html",
+        templateUrl: '../../assets/templates/navbar.html',
         controller: 'AppCtrl'
-    }
+    };
 
     var spIconBar = {
-        templateUrl: "../../assets/templates/iconbar.html",
-        controller:'AppCtrl'
-    }
+        templateUrl: '../../assets/templates/iconbar.html',
+        controller: 'AppCtrl'
+    };
 
     var container = {
-        templateUrl: "../../assets/templates/streampipes.html",
+        templateUrl: '../../assets/templates/streampipes.html',
         controller: 'AppCtrl'
-    }
+    };
 
     $stateProvider
         .state('streampipes', {
             url: '/streampipes',
             views: {
-                "container" : container,
-                "spNavbar@streampipes": spNavbar,
-                "spIconBar@streampipes" : spIconBar,
-                "spMain@streampipes": {
+                'container': container,
+                'spNavbar@streampipes': spNavbar,
+                'spIconBar@streampipes': spIconBar,
+                'spMain@streampipes': {
                     component: HomeComponent,
                     resolve: {
                         'AuthData': function (AuthService) {
@@ -46,22 +46,20 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        /*
         .state('streampipes.pipelineDetails', {
             url: '/pipelines/:pipeline/details',
             views: {
-                "spMain@streampipes": {
-                    templateUrl: "app/pipeline-details/pipeline-details.html",
+                'spMain@streampipes': {
+                    templateUrl: '../pipeline-details/pipeline-details.html',
                     controller: 'PipelineDetailsCtrl'
                 }
             }
         })
-        */
         .state('login', {
             url: '/login/:target?session',
             params: {target: null},
             views: {
-                "container": {
+                'container': {
                     templateUrl: '../../assets/templates/login.html',
                     controller: 'LoginCtrl'
                 }
@@ -81,7 +79,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         .state('register', {
             url: '/register',
             views: {
-                "container": {
+                'container': {
                     templateUrl: '../../assets/templates/register.html',
                     controller: 'RegisterCtrl'
                 }
@@ -90,7 +88,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         .state('setup', {
             url: '/setup',
             views: {
-                "container": {
+                'container': {
                     templateUrl: '../../assets/templates/setup.html',
                     controller: 'SetupCtrl'
                 }
@@ -99,7 +97,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         .state('streampipes.error', {
             url: '/error',
             views: {
-                "spMain@streampipes": {
+                'spMain@streampipes': {
                     templateUrl: '../../assets/templates/error.html',
                     controller: 'SetupCtrl'
                 }
@@ -108,7 +106,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         .state('streampipes.notifications', {
             url: '/notifications',
             views: {
-                "spMain@streampipes": {
+                'spMain@streampipes': {
                     templateUrl: '../notifications/notifications.html',
                     controller: 'NotificationsCtrl'
                 }
@@ -118,64 +116,66 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             url: '/editor/:pipeline',
             params: {pipeline: null},
             views: {
-                "spMain@streampipes": {
+                'spMain@streampipes': {
                     templateUrl: '../editor/editor.html',
                     controller: 'EditorCtrl'
                 }
             }
-        })    /*    .state('streampipes.pipelines', {
-            url: '/pipelines/:pipeline',
-            views: {
-                "spMain@streampipes": {
-                    templateUrl: 'app/pipelines/pipelines.html',
-                    controller: 'PipelineCtrl'
-                }
+        }).state('streampipes.pipelines', {
+        url: '/pipelines/:pipeline',
+        params: {pipeline: null},
+        views: {
+            'spMain@streampipes': {
+                templateUrl: '../pipelines/pipelines.html',
+                controller: 'PipelineCtrl'
             }
-        })*/        .state('streampipes.dashboard', {
-            url: '/dashboard',
-            views: {
-                "spMain@streampipes": {
-                    templateUrl: '../dashboard/dashboard.html',
-                    controller: 'DashboardCtrl'
-                }
+        }
+    }).state('streampipes.dashboard', {
+        url: '/dashboard',
+        views: {
+            'spMain@streampipes': {
+                templateUrl: '../dashboard/dashboard.html',
+                controller: 'DashboardCtrl'
             }
-        })       .state('streampipes.appfiledownload', {
-            url: '/appfiledownload',
-            views: {
-                "spMain@streampipes": {
-                    templateUrl: '../app-file-download/app-file-download.tmpl.html',
-                    controller: 'AppFileDownloadCtrl'
-                }
+        }
+    }).state('streampipes.appfiledownload', {
+        url: '/appfiledownload',
+        views: {
+            'spMain@streampipes': {
+                templateUrl: '../app-file-download/app-file-download.tmpl.html',
+                controller: 'AppFileDownloadCtrl'
             }
-        })   /*     .state('streampipes.ontology', {
+        }
+    }).state('streampipes.ontology', {
+        url: '',
+        views: {
+            'spMain@streampipes': {
+                templateUrl: '../ontology/ontology.html',
+                controller: 'OntologyCtrl'
+            }
+        }
+    })
+        .state('streampipes.sensors', {
             url: '',
             views: {
-                "spMain@streampipes": {
-                    templateUrl: 'app/ontology/ontology.html',
-                    controller: 'OntologyCtrl'
-                }
-            }
-        })        .state('streampipes.sensors', {
-            url: '',
-            views: {
-                "spMain@streampipes": {
-                    templateUrl: 'app/sensors/sensors.html',
+                'spMain@streampipes': {
+                    templateUrl: '../sensors/sensors.html',
                     controller: 'SensorsCtrl'
                 }
             }
-        })*/        .state('streampipes.add', {
-            url: '/add',
-            views: {
-                "spMain@streampipes": {
-                    templateUrl: '../add/add.html',
-                    controller: 'AddCtrl'
-                }
+        }).state('streampipes.add', {
+        url: '/add',
+        views: {
+            'spMain@streampipes': {
+                templateUrl: '../add/add.html',
+                controller: 'AddCtrl'
             }
-        })
-                .state('streampipes.myelements', {
+        }
+    })
+        .state('streampipes.myelements', {
             url: '/myelements',
             views: {
-                "spMain@streampipes": {
+                'spMain@streampipes': {
                     templateUrl: '../myelements/myelements.html',
                     controller: 'MyElementsCtrl'
                 }
@@ -184,7 +184,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         .state('streampipes.configuration', {
             url: '/configuration',
             views: {
-                "spMain@streampipes": {
+                'spMain@streampipes': {
                     component: ConfigurationComponent
                 }
             }
@@ -192,7 +192,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         .state('streampipes.appcontainer', {
             url: '/appcontainer',
             views: {
-                "spMain@streampipes": {
+                'spMain@streampipes': {
                     component: AppContainerComponent
                 }
             }
