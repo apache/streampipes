@@ -1,0 +1,56 @@
+<div>
+    <div class="assemblyOptions sp-blue-bg">
+        <div layout="row" layout-align="start center">
+            <md-button ng-disabled="!ctrl.PipelineValidationService.isValidPipeline(ctrl.rawPipelineModel)"
+                       class="md-icon-button" ng-click="ctrl.submit()" type="submit">
+                <md-tooltip md-direction="top">
+                    Submit Pipeline
+                </md-tooltip>
+                <i class="material-icons">save</i>
+            </md-button>
+            <md-button class="md-icon-button" ng-disabled="!ctrl.selectMode" ng-click="ctrl.toggleSelectMode()">
+                <md-tooltip md-direction="top">
+                    Pan
+                </md-tooltip>
+                <i class="material-icons">open_with</i>
+            </md-button>
+            <md-button class="md-icon-button" ng-disabled="ctrl.selectMode" ng-click="ctrl.toggleSelectMode()">
+                <i class="material-icons">mode_edit</i>
+                <md-tooltip md-direction="top">
+                    Select
+                </md-tooltip>
+            </md-button>
+            <md-button class="md-icon-button" ng-disabled="ctrl.currentZoomLevel == 1" ng-click="ctrl.zoomIn()">
+                <i class="material-icons">zoom_in</i>
+                <md-tooltip md-direction="top">
+                    Zoom In
+                </md-tooltip>
+            </md-button>
+            <md-button class="md-icon-button" ng-disabled="ctrl.currentZoomLevel == 0.5" ng-click="ctrl.zoomOut()">
+                <i class="material-icons">zoom_out</i>
+                <md-tooltip md-direction="top">
+                    Zoom Out
+                </md-tooltip>
+            </md-button>
+            <md-button class="md-icon-button" ng-click="ctrl.autoLayout()">
+                <i class="material-icons">settings_overscan</i>
+                <md-tooltip md-direction="top">
+                    Auto Layout
+                </md-tooltip>
+            </md-button>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="ctrl.showClearAssemblyConfirmDialog($event)">
+                <i class="material-icons">clear</i>
+                <md-tooltip md-direction="top">
+                    Clear Assembly Area
+                </md-tooltip>
+            </md-button>
+        </div>
+    </div>
+    <div id="outerAssemblyArea" class="outerAssembly">
+
+        <div id="assembly" class="canvas">
+            <pipeline canvas-id="assembly" raw-pipeline-model="ctrl.rawPipelineModel" all-elements="ctrl.allElements" preview="false"></pipeline>
+        </div>
+    </div>
+</div>

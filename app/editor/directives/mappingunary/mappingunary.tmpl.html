@@ -1,6 +1,0 @@
-<md-select ng-model="staticProperty.properties.mapsTo"  placeholder="{{staticProperty.properties.description}}">
-    <md-option ng-repeat="option in staticProperty.properties.mapsFromOptions | displayRecommendedFilter: staticProperty.properties.propertyScope:displayRecommended" ng-value="option.properties.elementName" ng-selected="selected(option, staticProperty)">
-        <div ng-if="option.properties.label"><b>{{option.properties.label}}</b> <i>({{option.properties.description}})</i><br/></div>
-        <div ng-if="!option.properties.label"> <b>{{option.properties.runtimeName}}</b><br/></div>
-    </md-option>
-</md-select>

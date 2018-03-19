@@ -1,0 +1,25 @@
+<div flex class="page-container page-container-padding">
+    <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6;">
+        <div flex="none" layout-wrap layout="row" layout-align="start center"
+             style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+            <md-button class="md-accent">Manage Layouts</md-button>
+        </div>
+        <div layout-fill style="line-height:24px;border-bottom:1px solid #ccc">
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="{{layout.title}}" md-on-select="makeLayoutActive(layout)"
+                        ng-repeat="layout in layouts"></md-tab>
+            </md-tabs>
+        </div>
+
+    </div>
+
+    <div class="container-fluid">
+        <div>
+            <md-content layout-padding>
+                <div ng-repeat="layout in layouts | filter:isActive" dashboard="layout.dashboard"
+                     template-url="dashboard-frame.html"></div>
+            </md-content>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,19 @@
+<div fxLayout="column" class="page-container page-container-padding">
+    <div fxFlex="48px" fxLayout="row" fxLayoutAlign="start center" class="pageheadbar">
+        <h5>Overview</h5>
+    </div>
+
+    <div fxFlex fxLayout="row" fxLayoutAlign="start start">
+        <div fxFlex="100">
+            <div class="md-padding">
+                <mat-grid-list cols="3" gutterSize="1em" rowHeight="30:9">
+                    <mat-grid-tile (click)="openLink(link)" *ngFor="let link of serviceLinks"
+                                   class="sp-darkblue-border home-image-wrapper">
+                        <div class="home-image" [style.background-image]="getBackground(link.imageUrl)"></div>
+                        <h4 class="sp-darkblue-border home-image-caption">{{link.name}}</h4>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </div>
+        </div>
+    </div>
+</div>

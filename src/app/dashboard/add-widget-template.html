@@ -1,0 +1,96 @@
+<md-dialog aria-label="Pipeline Status">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Add a new Widget</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                    <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <div style="width:900px;height:810px;padding-top:20px;">
+            <div layout="row" flex="100" layout-align="center center" class="wizard-row" style="margin-bottom:5%;">
+                <div layout="column" flex="33" layout-align="center center"
+                     ng-repeat="(index, p) in ctrl.pages track by $index">
+                    <md-button ng-class="ctrl.getTabCss(p.type)" aria-label="p.title">{{index+1}}
+                    </md-button>
+                    {{p.title}}
+                </div>
+            </div>
+            <md-divider/>
+            <!-- Select element to visualize -->
+            <div flex="100" style="margin:20px;width:80%">
+                <md-dialog-content ng-show="ctrl.page == 'select-viz'">
+                    <md-input-container>
+                        <md-select-header>
+                            <h4>{{ctrl.pages[0].description}}</h4>
+                        </md-select-header>
+                    </md-input-container>
+                    <md-grid-list
+                            md-cols="4" md-row-height="2:2"
+                            md-gutter="12px">
+
+                        <md-grid-tile class="gray" ng-repeat="opt in ctrl.visualizablePipelines">
+                            <div ng-class="ctrl.getSelectedPipelineCss(opt.doc)" ng-click="ctrl.selectPipeline(opt.doc)">
+                                {{ctrl.iconText(opt.doc.name)}}
+                                <h5>{{opt.doc.name}}</h5>
+                            </div>
+                        </md-grid-tile>
+                    </md-grid-list>
+                </md-dialog-content>
+
+                <!-- Select Type -->
+                <md-dialog-content ng-show="ctrl.page == 'select-type'">
+                    <md-input-container>
+                        <md-select-header>
+                            <h4>{{ctrl.pages[1].description}}</h4>
+                        </md-select-header>
+                    </md-input-container>
+                    <md-grid-list
+                            md-cols="4" md-row-height="2:2"
+                            md-gutter="12px">
+
+                        <md-grid-tile class="gray" ng-repeat="opt in ctrl.possibleVisualisationTypes">
+                            <div ng-class="ctrl.getSelectedVisTypeCss(opt.name)" ng-click="ctrl.selectVisType(opt.name)">
+                                <div ng-if="opt.icon == ''" style="color:#39b54a;">{{ctrl.iconText(opt.label)}}</div>
+                                <div ng-if="opt.icon != ''"><i class="material-icons" style="font-size:48px;color:#39b54a;">{{opt.icon}}</i></div>
+                                <h5>{{opt.label}}</h5>
+                            </div>
+                        </md-grid-tile>
+                    </md-grid-list>
+                </md-dialog-content>
+
+                <!-- Select Scheme -->
+                <md-dialog-content ng-show="ctrl.page == 'select-scheme'">
+                    <md-select-header>
+                        <b><h4>{{ctrl.pages[2].description}}</h4></b>
+                    </md-select-header>
+                    <md-input-container id="scheme-selection">
+                        <sp-gauge-widget-config ng-if="ctrl.selectedType == 'gauge'" wid=ctrl.selectedVisualisation></sp-gauge-widget-config>
+                        <sp-heatmap-widget-config ng-if="ctrl.selectedType == 'heatmap'" wid=ctrl.selectedVisualisation></sp-heatmap-widget-config>
+                        <sp-line-widget-config ng-if="ctrl.selectedType == 'line'" wid=ctrl.selectedVisualisation></sp-line-widget-config>
+                        <sp-map-widget-config ng-if="ctrl.selectedType == 'map'" wid=ctrl.selectedVisualisation></sp-map-widget-config>
+                        <sp-number-widget-config ng-if="ctrl.selectedType == 'number'" wid=ctrl.selectedVisualisation></sp-number-widget-config>
+                        <sp-raw-widget-config ng-if="ctrl.selectedType == 'raw'" wid=ctrl.selectedVisualisation></sp-raw-widget-config>
+                        <sp-table-widget-config ng-if="ctrl.selectedType == 'table'" wid=ctrl.selectedVisualisation></sp-table-widget-config>
+                        <sp-trafficlight-widget-config ng-if="ctrl.selectedType == 'trafficlight'" wid=ctrl.selectedVisualisation></sp-trafficlight-widget-config>
+                        <sp-verticalbar-widget-config ng-if="ctrl.selectedType == 'verticalbar'" wid=ctrl.selectedVisualisation></sp-verticalbar-widget-config>
+
+                    </md-input-container>
+                </md-dialog-content>
+
+            </div>
+            <md-divider/>
+            <div class="md-actions" layout="row">
+                <md-button ng-click="ctrl.cancel()" style="margin-right:20px;">
+                    Cancel
+                </md-button>
+                <md-button ng-click="ctrl.next()" class="md-raised md-accent" style="margin-right:20px;">
+                    Next
+                </md-button>
+            </div>
+        </div>
+    </form>
+</md-dialog>

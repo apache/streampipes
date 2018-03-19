@@ -1,0 +1,89 @@
+<div flex="100" layout="column">
+    <div flex="100" layout="row" style="border-bottom:1px solid #ccc">
+        <div layout="row">
+            <md-menu-bar>
+                <md-menu>
+                    <button ng-click="$mdOpenMenu()" style="color: rgb(63, 81, 181);">
+                        <md-icon md-svg-icon="content:ic_add_circle_outline_24px"
+                                 style="color: rgb(63,81,181);"></md-icon>
+                        Create new data sink
+                    </button>
+                    <md-menu-content>
+                        <md-menu-item class="md-indent">
+                            <md-button ng-click="ctrl.addNewAction()">&nbsp;New</md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </md-menu-bar>
+        </div>
+        <div layout="row">
+            <md-menu-bar>
+                <md-menu>
+                    <button ng-click="$mdOpenMenu()" style="color: rgb(63, 81, 181);">
+                        <md-icon md-svg-icon="file:ic_folder_open_24px"
+                                 style="color: rgb(63,81,181);"></md-icon>
+                        View existing data sinks
+                    </button>
+                    <md-menu-content>
+                        <md-menu-item class="md-indent">
+                            <md-menu>
+                                <md-button ng-click="$mdOpenMenu()">A-F</md-button>
+                                <md-menu-content>
+                                    <div ng-repeat="action in ctrl.actions | startsWithLetter:'a':'f' | orderBy: 'name'">
+                                        <md-menu-item class="md-indent">
+                                            <md-button ng-click="ctrl.loadActionDetails(action.uri, true, true)">
+                                                &nbsp;{{action.name}}
+                                            </md-button>
+                                        </md-menu-item>
+                                    </div>
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+                        <md-menu-item class="md-indent">
+                            <md-menu>
+                                <md-button ng-click="$mdOpenMenu()">G-M</md-button>
+                                <md-menu-content>
+                                    <div ng-repeat="action in ctrl.actions | startsWithLetter:'g':'m' | orderBy: 'name'">
+                                        <md-menu-item class="md-indent">
+                                            <md-button ng-click="ctrl.loadActionDetails(action.uri, true, true)">
+                                                &nbsp;{{action.name}}
+                                            </md-button>
+                                        </md-menu-item>
+                                    </div>
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+                        <md-menu-item class="md-indent">
+                            <md-menu>
+                                <md-button ng-click="$mdOpenMenu()">N-S</md-button>
+                                <md-menu-content>
+                                    <div ng-repeat="action in ctrl.actions | startsWithLetter:'n':'s' | orderBy: 'name'">
+                                        <md-menu-item class="md-indent">
+                                            <md-button ng-click="ctrl.loadActionDetails(action.uri, true, true)">
+                                                &nbsp;{{action.name}}
+                                            </md-button>
+                                        </md-menu-item>
+                                    </div>
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+                        <md-menu-item class="md-indent">
+                            <md-menu>
+                                <md-button ng-click="$mdOpenMenu()">T-Z</md-button>
+                                <md-menu-content>
+                                    <div ng-repeat="action in ctrl.actions | startsWithLetter:'t':'z' | orderBy: 'name'">
+                                        <md-menu-item class="md-indent">
+                                            <md-button ng-click="ctrl.loadActionDetails(action.uri, true, true)">
+                                                &nbsp;{{action.name}}
+                                            </md-button>
+                                        </md-menu-item>
+                                    </div>
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </md-menu-bar>
+        </div>
+    </div>
+</div>

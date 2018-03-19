@@ -1,45 +1,88 @@
-'use strict';
+const {AngularCompilerPlugin} = require('@ngtools/webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require('path');
 
-// import Webpack plugins
-const cleanPlugin = require('clean-webpack-plugin');
-const ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
-const webpack = require('webpack');
-const BowerWebpackPlugin = require("bower-webpack-plugin");
-var path = require('path');
-
-// define Webpack configuration object to be exported
-let config = {
-    context: path.join(__dirname, 'app'),
-    entry: './app.module.js',
-    output: {
-        path: path.resolve(__dirname),
-        filename: 'bundle.js'
+module.exports = {
+    entry: {
+        'polyfills': './src/polyfills.ts',
+        'main': './src/main.ts'
     },
-    resolve: {
-        alias: {
-            'npm': path.join(__dirname, 'node_modules'),
-            'legacy': path.join(__dirname, 'lib'),
-            "jquery-ui": path.join(__dirname, 'lib', 'jquery-ui.min.js')
-        }
+    output: {
+        path: path.join(process.cwd(), "dist"),
+        publicPath: '/',
+        filename: "[name].bundle.js",
+        crossOriginLoading: false
     },
     module: {
         rules: [
             {
-                test: /\.css$/,
-                loader: 'style!css'
+                test: /\.ts$/,
+                loader: '@ngtools/webpack'
             },
             {
-                test: /.js$/,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['es2015']
-                }
+                test: /\.html$/,
+                loader: 'raw-loader'
+            },
+            {
+                test: /\.css$/,
+                loaders: ['to-string-loader', 'css-loader']
+            },
+            {
+                test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+                loader: 'file-loader?name=assets/[name].[hash].[ext]'
             }
         ]
     },
-    //devtool: 'source-map',
+    resolve: {
+        alias: {
+            'npm': path.join(__dirname, 'node_modules'),
+            'legacy': path.join(__dirname, 'src', 'assets', 'lib'),
+            "jquery-ui": path.join(__dirname, 'src', 'assets', 'lib', 'jquery-ui.min.js')
+        },
+        extensions: ['.ts', '.js']
+    },
+    plugins: [
+        new AngularCompilerPlugin({
+            "mainPath": "main.ts",
+            "platform": 0,
+            "sourceMap": true,
+            "tsConfigPath": path.join(__dirname, 'src', 'tsconfig.app.json'),
+            "skipCodeGeneration": true,
+            "compilerOptions": {}
+        }),
+        new CopyWebpackPlugin([
+            {
+                to: "",
+                context: "src/",
+                from: {
+                    glob: "assets/**/*",
+                    dot: true
+                }
+            },
+            {
+                to: "",
+                context: "src/",
+                from: {
+                    glob: "/favicon.ico",
+                    dot: true
+                }
+            }
+        ], {
+            "ignore": [
+                ".gitkeep",
+                "**/.DS_Store",
+                "**/Thumbs.db"
+            ],
+            "debug": "warning"
+        }),
+        new HtmlWebpackPlugin({
+            template: 'src/index.html',
+            chunks: ['polyfills', 'main'],
+            chunksSortMode: 'manual'
+        })
+    ],
     devServer: {
-        contentBase: `${__dirname}/`,
         port: 8082,
         proxy: {
             '/streampipes-backend': {
@@ -59,31 +102,10 @@ let config = {
                 secure: false
             },
             '/streampipes/ws': {
-                target: 'ws://ipe-koi04.fzi.de:61614',
+                target: 'ws://localhost:61614',
                 ws: true,
                 secure: false
             }
         }
-        //inline: true
-    },
-    plugins: [
-        new cleanPlugin(['dist']),
-        new ngAnnotatePlugin({
-            add: true
-        }),
-        new webpack.ProvidePlugin({
-            $: "jquery",
-            jQuery: "jquery",
-            "window.jQuery": "jquery",
-        }),
-        new webpack.HotModuleReplacementPlugin(),
-        //new webpack.OldWatchingPlugin()
-        //new webpack.optimize.UglifyJsPlugin({
-        //compress: {
-        //warnings: false
-        //}
-        //})
-    ]
+    }
 };
-
-module.exports = config;

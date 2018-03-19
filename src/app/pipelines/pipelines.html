@@ -1,0 +1,60 @@
+<div flex class="page-container page-container-padding" ng-controller="PipelineCtrl as ctrl">
+    <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6;">
+        <div flex="none" layout-wrap layout="row" layout-align="start center"
+             style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+            <md-button ng-click="ctrl.showPipelineCategoriesDialog()" class="md-accent">Manage Categories</md-button>
+        </div>
+        <div layout-fill style="line-height:24px;border-bottom:1px solid #ccc">
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="All Pipelines" md-on-select="ctrl.setSelectedTab('')"></md-tab>
+                <md-tab label="{{pipelineCategory.categoryName}}" md-on-select="ctrl.setSelectedTab(pipelineCategory._id)"
+                        ng-repeat="pipelineCategory in ctrl.pipelineCategories"></md-tab>
+            </md-tabs>
+        </div>
+
+    </div>
+
+    <div class="container-fluid">
+        <div>
+            <md-content layout-padding>
+                <div flayout="row">
+                    <md-button ng-click="ctrl.startAllPipelines(true)" ng-disabled="ctrl.checkCurrentSelectionStatus(false)" type="button" class="md-raised md-accent">Start all pipelines
+                    </md-button>
+                    <md-button ng-click="ctrl.startAllPipelines(false)" ng-disabled="ctrl.checkCurrentSelectionStatus(true)" type="button" class="md-raised md-accent">Stop all pipelines
+                    </md-button>
+                </div>
+                <md-list>
+                    <div class="assemblyOptions sp-blue-bg">
+                        <h4>My pipelines</h4>
+                    </div>
+                    <div class="sp-blue-border">
+                        <div layout="column"
+                             ng-repeat="pipeline in ctrl.pipelines | pipelineCategoryFilter: ctrl.activeCategory | orderBy:'+name'">
+                            <pipeline-details pipeline="pipeline" refresh-pipelines="ctrl.refreshPipelines()"></pipeline-details>
+                        </div>
+                        <div layout="row" layout-align="center center" ng-if="ctrl.pipelines.length == 0">
+                            <h5>(no pipelines available)</h5>
+                        </div>
+                    </div>
+                    <div flex="100" style="margin-top:20px;margin-bottom:20px;">
+                    </div>
+                    <div class="assemblyOptions sp-blue-bg">
+                        <h4>System-generated pipelines</h4>
+                    </div>
+                    <div class="sp-blue-border">
+                        <div layout="column"
+                             ng-repeat="pipeline in ctrl.systemPipelines | pipelineCategoryFilter: ctrl.activeCategory | orderBy:'+name'">
+                            <pipeline-details></pipeline-details>
+                        </div>
+                        <div layout="row" layout-align="center center" ng-if="ctrl.systemPipelines.length == 0">
+                            <h5>(no system pipelines available)</h5>
+                        </div>
+                    </div>
+
+                </md-list>
+            </md-content>
+        </div>
+    </div>
+
+
+</div>

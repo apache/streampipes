@@ -1,0 +1,74 @@
+<div ng-if="!ctrl.staticProperty.properties.valueSpecification && !ctrl.staticProperty.properties.mapsTo">
+    <div flex="100" layout="column" ng-if="ctrl.staticProperty.properties.placeholdersSupported">
+        <h5>{{ctrl.staticProperty.properties.description}}</h5>
+        <h5>Possible placeholders: </h5>
+        <div flex="100" layout="row" style="background:white;">
+            <div class="sp-accent-bg" style="color:white;padding:5px;margin:5px;"
+                 ng-repeat="property in ctrl.inputStreams[0].eventSchema.eventProperties">
+                #{{property.properties.runtimeName}}#
+            </div>
+        </div>
+        &nbsp;&nbsp;
+    </div>
+    <md-input-container ng-if="!ctrl.staticProperty.properties.multiLine" flex="100" layout="column"><label>{{ctrl.staticProperty.properties.description}}</label>
+        <input name="{{ctrl.staticProperty.properties.elementName}}" ng-model="ctrl.staticProperty.properties.value"/>
+    </md-input-container>
+    <div ng-if="ctrl.staticProperty.properties.multiLine">
+        <trix-editor ng-if="true" ng-model-options="{ updateOn: 'blur' }"
+                     spellcheck="false" class="trix-content"
+                     ng-model="ctrl.staticProperty.properties.value"
+                     angular-trix
+                     trix-initialize="trixInitialize(e, editor);"
+                     trix-change="trixChange(e, editor);"
+                     trix-selection-change="trixSelectionChange(e, editor);"
+                     trix-focus="trixFocus(e, editor);"
+                     trix-blur="trixBlur(e, editor);"
+                     trix-file-accept="trixFileAccept(e, editor);"
+                     trix-attachment-add="trixAttachmentAdd(e, editor);"
+                     trix-attachment-remove="trixAttachmentRemove(e, editor);"
+                     placeholder="Write something.."></trix-editor>
+    </div>
+</div>
+<div ng-if="ctrl.staticProperty.properties.valueSpecification" style="margin-top:20px;">
+    <div layout="column">
+        <span>{{ctrl.staticProperty.properties.description}}</span>
+        <md-slider md-discrete flex min="{{ctrl.staticProperty.properties.valueSpecification.minValue}}"
+                   max="{{ctrl.staticProperty.properties.valueSpecification.maxValue}}"
+                   step="{{ctrl.staticProperty.properties.valueSpecification.step}}"
+                   ng-model="ctrl.staticProperty.properties.value">
+        </md-slider>
+        <md-input-container flex="100">
+            <input name="{{ctrl.staticProperty.properties.elementName}}"
+                   ng-model="ctrl.staticProperty.properties.value">
+        </md-input-container>
+    </div>
+</div>
+<div ng-if="!ctrl.staticProperty.properties.valueSpecification && ctrl.staticProperty.properties.mapsTo" style="margin-top:20px;">
+    <div layout="column">
+        <span>{{ctrl.staticProperty.properties.description}}</span>
+        <div ng-if="!ctrl.selectedEventProperty.properties.valueSpecification">
+            <md-input-container flex="100" layout="column">
+                <input name="{{ctrl.staticProperty.properties.elementName}}" ng-model="ctrl.staticProperty.properties.value"/>
+            </md-input-container>
+        </div>
+        <div ng-if="ctrl.selectedEventProperty.properties.valueSpecification.type=='org.streampipes.model.schema.QuantitativeValue'">
+            <md-slider md-discrete flex
+                       min="{{ctrl.selectedEventProperty.properties.valueSpecification.properties.minValue}}"
+                       max="{{ctrl.selectedEventProperty.properties.valueSpecification.properties.maxValue}}"
+                       step="{{ctrl.selectedEventProperty.properties.valueSpecification.properties.step}}"
+                       ng-model="ctrl.staticProperty.properties.value">
+            </md-slider>
+            <md-input-container flex="100">
+                <input name="{{ctrl.staticProperty.properties.elementName}}"
+                       ng-model="ctrl.staticProperty.properties.value">
+            </md-input-container>
+        </div>
+        <div ng-if="ctrl.selectedEventProperty.properties.valueSpecification.type=='org.streampipes.model.schema.Enumeration'">
+            <md-autocomplete md-no-cache="true" md-selected-item="ctrl.staticProperty.properties.value"
+                             md-items="item in ctrl.selectedEventProperty.properties.valueSpecification.properties.runtimeValues"
+                             md-search-text="ctrl.searchText" md-item-text="item" placeholder="Enter value">
+                <span>{{ item }}</span>
+            </md-autocomplete>
+        </div>
+    </div>
+</div>

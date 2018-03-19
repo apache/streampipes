@@ -10,7 +10,6 @@ import spServices from './services/services.module';
 
 import spCore from './core/core.module';
 import spHome from './home/home.module';
-import spCreate from './create/create.module';
 import spLayout from './layout/layout.module';
 import spLogin from './login/login.module';
 import spNotifications from './notifications/notifications.module';
@@ -27,7 +26,6 @@ export default angular
         spServices,
         spCore,
         spHome,
-        spCreate,
         spLayout,
         spLogin,
         spNotifications,
@@ -38,16 +36,17 @@ export default angular
         {{module}},
         {{/modulesActive}}
     ])
-    .run(function ($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {
+    .run(["$rootScope", "$location", "RestApi", "AuthService", "$state", "$urlRouter", "ObjectProvider", "AuthStatusService",
+    function ($rootScope, $location, RestApi, AuthService, $state, $urlRouter, ObjectProvider, AuthStatusService) {
         var bypass;
         window.loading_screen.finish();
         if (!$location.path().startsWith("/login") && !$location.path().startsWith("/sso")) {
-            restApi.configured().success(function (msg) {
+            RestApi.configured().success(function (msg) {
                 if (msg.configured) {
-                    authService.authenticate;
+                    AuthService.authenticate();
                 }
                 else {
-                    $rootScope.authenticated = false;
+                    AuthStatusService.authenticated = false;
                     $state.go("setup");
                 }
             });
@@ -58,12 +57,11 @@ export default angular
             function (event, toState, toParams, fromState, fromParams) {
                 var isLogin = toState.name === "login";
                 var isSetup = toState.name === "setup";
-                var isExternalLogin = (toState.name === "sso" || toState.name === "ssosuccess");
                 var isRegister = toState.name === "register";
-                if (isLogin || isSetup || isRegister || isExternalLogin) {
+                if (isLogin || isSetup || isRegister) {
                     return;
                 }
-                else if ($rootScope.authenticated === false) {
+                else if (AuthStatusService.authenticated === false) {
                     event.preventDefault();
                     console.log("logging in event prevent");
                     $state.go('login');
@@ -72,16 +70,16 @@ export default angular
             })
 
         $rootScope.$on("$routeChangeStart", function (event, nextRoute, currentRoute) {
-            authService.authenticate;
+            AuthService.authenticate();
         });
-        $rootScope.state = new objectProvider.State();
+        $rootScope.state = new ObjectProvider.State();
         $rootScope.state.sources = false;
         $rootScope.state.sepas = false;
         $rootScope.state.actions = false;
         $rootScope.state.adjustingPipelineState = false;
         $rootScope.state.adjustingPipeline = {};
 
-    }).config(function($mdThemingProvider) {
+    }]).config(function($mdThemingProvider) {
 
         $mdThemingProvider.definePalette('streamPipesPrimary', {
             '50': '304269',

@@ -1,0 +1,52 @@
+<div flex="100" layout="row" layout-align="start center"
+     style="border:1px solid darkblue;margin-bottom:10px;background:{{ctrl.getSelectedBackground(endpointItem)}}"
+     ng-click="ctrl.toggleSelected(endpointItem)">
+
+    <div flex="20" layout="row" style="margin:10px;">
+        <div class="draggable-icon {{endpointItem.type}}">{{ctrl.iconText(endpointItem.name)}}</div>
+    </div>
+    <div flex="80" layout="row" layout-align="start center" style="margin:10px;">
+        <div flex="100" layout="column">
+            <div layout="column">
+                <div flex layout="column">
+                    <h2 class="md-title">{{endpointItem.name}}</h2>
+                    <p>{{endpointItem.description}}</p>
+                </div>
+                <div flex layout="column" ng-if="endpointItem.type=='source'">
+                    <h4>Data streams included in this source</h4>
+                    <div flex layout="row" ng-repeat="stream in endpointItem.streams">
+                        <div flex="10" layout="row" layout-align="start center">
+                            <div class="draggable-icon-preview stream" style="margin-right:5px;">
+                                {{ctrl.iconText(stream.name)}}
+                            </div>
+                        </div>
+                        <div flex="90">
+                            <h5><b>{{stream.name}}</b></h5>
+                            <p>{{stream.description}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div flex layout="row" layout-align="end end">
+                <div flex layout="row" layout-align="end end">
+						<span flex flex-order="1" layout="row" layout-align="end end" ng-if="!endpointItem.installed">
+							<md-button aria-label="As Favorite" class="md-accent"
+                                       ng-click="ctrl.installSingleElement(endpointItem)">
+								<md-icon md-svg-icon="file:ic_cloud_download_24px" aria-label="Action"></md-icon>&nbsp;&nbsp;Install&nbsp;&nbsp;
+							</md-button>
+						</span>
+						 <span flex flex-order="1" layout="row" layout-align="end end" ng-if="endpointItem.installed">
+	  						<md-progress-circular md-mode="indeterminate" class="md-accent"
+                                                  ng-show="uninstalling"></md-progress-circular>
+							<md-button aria-label="As Favorite" class="md-accent"
+                                       ng-click="ctrl.uninstallSingleElement(endpointItem)">
+								<md-icon md-svg-icon="action:ic_delete_24px" aria-label="Action"
+                                         class="md-accent"></md-icon>&nbsp;&nbsp;Uninstall&nbsp;&nbsp;
+							</md-button>
+						</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+<div flex class="page-container page-container-padding" ng-controller="AppLinksCtrl as ctrl">
+    <div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6">
+        <div flex layout-fill layout="row" layout-align="start center"
+             style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+            <h5>APPLICATION LINKS</h5>
+        </div>
+    </div>
+
+    <div flex layout="row" layout-align="center center">
+        <div flex="80">
+            <md-content class="md-padding">
+                <h2>Application Links</h2>
+
+                <div flex="100" layout="row" layout-align="start center"
+                     style="border:1px solid darkblue;margin-bottom:10px;" ng-repeat="applink in ctrl.applicationLinks">
+
+                    <div flex="20" layout="row" layout-align="center center" style="margin:10px;">
+                        <img class="md-card-image" ng-src="{{applink.applicationIconUrl}}"/>
+                    </div>
+                    <div flex="80" layout="row" layout-align="start center" style="margin:10px;">
+                        <div flex="100" layout="column">
+                            <div layout="column">
+                                <div flex layout="column">
+                                    <h2 class="md-title">{{applink.applicationName}}</h2>
+                                    <p>{{applink.applicationDescription}}</p>
+                                </div>
+                            </div>
+
+                            <div flex layout="row" layout-align="end end">
+                                <div flex layout="row" layout-align="end end">
+						<span flex flex-order="1" layout="row" layout-align="end end">
+							<md-button aria-label="As Favorite" class="md-accent"
+                                       ng-click="openApp(applink.applicationUrl)">
+								&nbsp;&nbsp;Open Application&nbsp;&nbsp;
+							</md-button>
+						</span>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </md-content>
+        </div>
+    </div>
+
+</div>

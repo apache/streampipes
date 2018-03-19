@@ -1,0 +1,5 @@
+<div>
+    <span class="app-link" *ngFor="let installedApp of installedApps" (click)="activateApp(installedApp)">{{installedApp.moduleName}}</span>
+</div>
+<div *ngIf="isLoading">Loading ...</div>
+<view *ngIf="isAppActive" [installedApp]="activeApp"></view>
