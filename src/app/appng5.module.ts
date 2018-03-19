@@ -10,7 +10,10 @@ import { MatIconModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 
+import { CustomMaterialModule } from './CustomMaterial/custom-material.module';
+
 import { HomeModule } from './home/home.module';
+import { SpConnectModule } from './connect/connect.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { AuthStatusService } from './services/auth-status.service';
 import { AppContainerModule } from './app-container/app-container.module';
@@ -20,6 +23,7 @@ import { AppContainerModule } from './app-container/app-container.module';
         BrowserModule,
         BrowserAnimationsModule,
         UpgradeModule,
+        CustomMaterialModule,
         MatGridListModule,
         MatIconModule,
         FlexLayoutModule,
@@ -27,6 +31,7 @@ import { AppContainerModule } from './app-container/app-container.module';
         FormsModule,
         UIRouterUpgradeModule.forChild(),
         HomeModule,
+        SpConnectModule,
         ConfigurationModule,
         AppContainerModule
     ],

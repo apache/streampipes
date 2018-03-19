@@ -1,0 +1,14 @@
+<form class="example-form" fxLayout="column">
+
+  <div fxLayout="column" *ngFor="let formatDescription of allFormats; let i = index" >
+
+    <mat-radio-group name="selectedFormat" [(ngModel)]="selectedFormat">
+      <mat-radio-button [value]="formatDescription"> {{formatDescription.label}} </mat-radio-button>
+    </mat-radio-group>
+
+    <app-static-properties [hidden]="!isSelected(formatDescription)" [staticProperties]="formatDescription.config">
+    </app-static-properties>
+
+  </div>
+
+</form>

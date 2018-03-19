@@ -1,0 +1,9 @@
+<div *ngFor="let staticProperty of staticProperties">
+
+  <mat-form-field *ngIf="isFreeTextStaticProperty(staticProperty)" class="example-full-width">
+    <!--<mat-form-field class="example-full-width">-->
+    <input class="example-full-width" matInput [placeholder]="staticProperty.label"
+           [(ngModel)]="asFreeTextStaticProperty(staticProperty).value">
+  </mat-form-field>
+
+</div>

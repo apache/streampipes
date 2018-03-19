@@ -65,6 +65,10 @@
     "ngmap": "1.18.0",
     "rxjs": "^5.5.6",
     "slick-carousel": "1.6.0",
+    "ng2-dragula": "^1.5.0",
+    "angular2-uuid": "^1.1.1",
+    "fast-json-patch": "^2.0.6",
+    "jsonld": "0.4.12",
     "zone.js": "^0.8.20"
   },
   "devDependencies": {
