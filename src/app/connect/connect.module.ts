@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatGridListModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -15,16 +16,21 @@ import { EventPropertyComponent } from './schema-editor/event-property/event-pro
 import { EventPropertyNestedComponent } from './schema-editor/event-property-nested/event-property-nested.component';
 import { EventPropoertyListComponent } from './schema-editor/event-propoerty-list/event-propoerty-list.component';
 
+import { EventPropertyBagComponent } from './schema-editor/event-property-bag/event-property-bag.component';
+
 import { StaticPropertiesComponent } from './static-properties/static-properties.component';
 
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
+
 import { RestService } from './rest.service';
 
-import { DragulaModule } from 'ng2-dragula';
+    import { DragulaModule } from 'ng2-dragula';
+// import {DataTypesService} from './schema-editor/data-type.service';
 
 @NgModule({
     imports: [
+        BrowserModule,
         FormsModule,
         ReactiveFormsModule,
         CommonModule,
@@ -38,6 +44,7 @@ import { DragulaModule } from 'ng2-dragula';
         ProtocolFormComponent,
         FormatFormComponent,
         EventSchemaComponent,
+        EventPropertyBagComponent,
         EventPropertyPrimitiveComponent,
         EventPropertyComponent,
         EventPropertyNestedComponent,
@@ -47,6 +54,7 @@ import { DragulaModule } from 'ng2-dragula';
     ],
     providers: [
         RestService
+        // DataTypesService
     ],
     entryComponents: [
         NewComponent

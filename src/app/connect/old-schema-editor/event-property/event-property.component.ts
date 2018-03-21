@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EventProperty} from '../model/EventProperty';
-// import {WriteJsonService} from '../write-json.service';
-// import {DragDropService} from '../drag-drop.service';
+import {WriteJsonService} from '../write-json.service';
+import {DragDropService} from '../drag-drop.service';
 // import {dataTypes} from '../data-model';
 
 @Component({
@@ -17,7 +17,6 @@ export class EventPropertyComponent implements OnInit {
   // protected dataTypes = dataTypes;
 
   @Input() property: EventProperty;
-  @Output() propertyChange = new EventEmitter<EventProperty>();
 
   @Output() save: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
 
@@ -42,16 +41,16 @@ export class EventPropertyComponent implements OnInit {
 
   // aufgerufen, wenn FormGroup valide ist
   submit(): void {
-    // const writeJsonService: WriteJsonService = WriteJsonService.getInstance();
-    // const dragDropService: DragDropService = DragDropService.getInstance();
+    const writeJsonService: WriteJsonService = WriteJsonService.getInstance();
+    const dragDropService: DragDropService = DragDropService.getInstance();
 
     this.property.label = this.propertyForm.value.label;
     this.property.description = this.propertyForm.value.description;
     this.property.runTimeName = this.propertyForm.value.runtimeName;
     this.property.domainProperty = encodeURIComponent(this.propertyForm.value.domainProperty);
 
-    // const path: string = dragDropService.buildPath(this.property);
-    // writeJsonService.add(path, this.propertyForm.value.runtimeName);
-    // this.save.emit(this.property);
+    const path: string = dragDropService.buildPath(this.property);
+    writeJsonService.add(path, this.propertyForm.value.runtimeName);
+    this.save.emit(this.property);
   }
 }

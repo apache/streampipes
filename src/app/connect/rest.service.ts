@@ -19,11 +19,11 @@ import {ProtocolDescription} from './model/ProtocolDescription';
 import {FormatDescriptionList} from './model/FormatDescriptionList';
 import {FormatDescription} from './model/FormatDescription';
 import {FreeTextStaticProperty} from './model/FreeTextStaticProperty';
-import {EventSchema} from './schema-editor/properties/EventSchema';
-import {EventProperty} from './schema-editor/properties/EventProperty';
-import {EventPropertyNested} from './schema-editor/properties/EventPropertyNested';
-import {EventPropertyPrimitive} from './schema-editor/properties/EventPropertyPrimitive';
-import {EventPropertyList} from './schema-editor/properties/EventPropertyList';
+import {EventSchema} from './schema-editor/model/EventSchema';
+import {EventProperty} from './schema-editor/model/EventProperty';
+import {EventPropertyNested} from './schema-editor/model/EventPropertyNested';
+import {EventPropertyPrimitive} from './schema-editor/model/EventPropertyPrimitive';
+import {EventPropertyList} from './schema-editor/model/EventPropertyList';
 
 @Injectable()
 export class RestService {
@@ -85,7 +85,7 @@ export class RestService {
   getProtocols(): Observable<ProtocolDescriptionList> {
 
     return this.http
-      .get('http://localhost:4200/api/v1/adapter/allProtocols')
+      .get('http://localhost:8082/streampipes-backend/api/v2/adapter/allProtocols')
       .map(response => {
 
         const tsonld = new TsonLd();
@@ -104,7 +104,7 @@ export class RestService {
   getFormats(): Observable<FormatDescriptionList> {
 
     return this.http
-      .get('http://localhost:4200/api/v1/adapter/allFormats')
+      .get('http://localhost:8082/streampipes-backend/api/v2/adapter/allFormats')
       .map(response => {
 
         const tsonld = new TsonLd();

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {WriteJsonService} from './write-json.service';
-import {EventProperty} from './properties/EventProperty';
+import {EventProperty} from './model/EventProperty';
 import {Subject} from 'rxjs/Subject';
 
 @Injectable()

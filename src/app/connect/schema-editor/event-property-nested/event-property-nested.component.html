@@ -3,15 +3,6 @@
   <h3>
     {{getLabel()}}
   </h3>
-  <button mat-button (click)=OnClickDeleteProperty()>
-    <mat-icon>delete</mat-icon>
-  </button>
-  <button mat-button (click)=addNestedProperty()>
-    <mat-icon>queue</mat-icon>
-  </button>
-  <button mat-button (click)=addPrimitiveProperty()>
-    <mat-icon>add</mat-icon>
-  </button>
   <button mat-button (click)=OnClickOpen()>
     <div *ngIf=open><mat-icon>expand_less</mat-icon></div>
     <div *ngIf=!open><mat-icon>expand_more</mat-icon></div>
@@ -22,26 +13,9 @@
   <div [hidden]=!open>
     <app-event-property [property]="eventPropertyNested"></app-event-property>
   </div>
-  <!-- nestedProperty start -->
-  <div class="nestedProperty">
-    <ul [dragula]='"schema-bag"' [dragulaModel]='eventPropertyNested.eventProperties'>
-      <div class="nested" *ngFor="let property of eventPropertyNested.eventProperties; let j=index">
-        <div *ngIf="isEventPropertyPrimitive(property)">
-          <app-event-property-primitive [index]="j + 1"
-                                        [property]="property"
-                                        (delete)=deleteProperty($event)></app-event-property-primitive>
-        </div>
-        <div *ngIf="isEventPropertyNested(property)">
-          <app-event-property-nested [index]="j + 1"
-                                     [eventPropertyNested]="property"
-                                     (delete)=deleteProperty($event)></app-event-property-nested>
-        </div>
-        <div *ngIf="isEventPropertyList(property)">
-          <app-event-propoerty-list (delete)=deleteProperty($event)
-                                    [eventPropertyList]="property"
-                                    [index]="j + 1"></app-event-propoerty-list>
-        </div>
-      </div>
-    </ul>
+
+  <div style="padding-left: 50px; border-left: 4px dotted black;">
+    <app-event-property-bag [eventProperties]="eventPropertyNested.eventProperties">
+    </app-event-property-bag>
   </div>
 </div>

@@ -1,3 +1,7 @@
+.gu-mirror {
+    display: none; /* This fixes a bug with the dragular framework */
+}
+
 body {
     overflow: auto;
     margin-bottom: 1%;

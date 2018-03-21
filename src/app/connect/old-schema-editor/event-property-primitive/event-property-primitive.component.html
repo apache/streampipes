@@ -15,7 +15,7 @@
   </button>
 </div>
 <div class="body" [hidden]=!open>
-  <app-event-property [(property)]="property"></app-event-property>
+  <app-event-property [property]="property"></app-event-property>
 
   <mat-form-field>
     <mat-select placeholder="Runtime Type" [(ngModel)]="property.runtimeType">
@@ -26,18 +26,18 @@
   </mat-form-field>
 
   <!-- TODO FIX this -->
-  <!--<form [formGroup]="propertyPrimitivForm " novalidate>-->
-    <!--<div fxLayout="row" fxLayoutAlign="start">-->
-      <!--<div class="form-group">-->
-        <!--<select class="form-controll" formControlName="dataType">-->
+  <form [formGroup]="propertyPrimitivForm " novalidate>
+    <div fxLayout="row" fxLayoutAlign="start">
+      <div class="form-group">
+        <select class="form-controll" formControlName="dataType">
           <!--<mat-error *ngIf="propertyForm.controls['dataType'].errors?.required && propertyForm.controls['dataType'].touched">-->
             <!--DataTypey is <strong>required</strong>-->
           <!--</mat-error>-->
           <!--<option *ngFor="let dataType of dataTypes" [value]="dataType">{{dataType}}</option>-->
-        <!--</select>-->
-      <!--</div>-->
-    <!--</div>-->
-<!---->
-  <!--</form>-->
+        </select>
+      </div>
+    </div>
+
+  </form>
 </div>
 
