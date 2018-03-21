@@ -14,6 +14,7 @@ export default function imageWidget(WidgetInstances) {
         controller: function ($scope) {
             WidgetInstances.get($scope.widgetId).then(function(data) {
                 $scope.widgetConfig = data.visualisation.schema.config;
+                $scope.selectedImageMapping = data.visualisation.schema.selectedNumberProperty.properties.runtimeName;
 
             })
 
