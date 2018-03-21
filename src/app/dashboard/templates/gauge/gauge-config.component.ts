@@ -1,5 +1,7 @@
+declare const require: any;
+
 export let spGaugeWidgetConfig = {
-    templateUrl: 'src/app/dashboard/templates/gauge/gaugeConfig.html',
+    template: require('./gaugeConfig.html'),
     bindings: {
         wid: '='
     },
