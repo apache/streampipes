@@ -77,7 +77,10 @@ public class JsonLdTransformer implements RdfTransformer {
             hasObject(s, StreamPipes.DATA_SOURCE_DESCRIPTION) ||
             hasObject(s, StreamPipes.DATA_SINK_DESCRIPTION) ||
             hasObject(s, StreamPipes.DATA_PROCESSOR_INVOCATION) ||
-            hasObject(s, StreamPipes.DATA_SINK_INVOCATION);
+            hasObject(s, StreamPipes.DATA_SINK_INVOCATION) ||
+            hasObject(s, StreamPipes.FORMAT_DESCRIPTION_LIST) ||
+            hasObject(s, StreamPipes.PROTOCOL_DESCRIPTION_LIST) ||
+            hasObject(s, StreamPipes.ADAPTER_DESCRIPTION);
   }
 
   private boolean hasObject(Statement statement, String voc) {

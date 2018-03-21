@@ -14,6 +14,9 @@ public class StreamPipes {
   public static final String DATA_SINK_DESCRIPTION = NS + "DataSinkDescription";
   public static final String DATA_SINK_INVOCATION = NS + "DataSinkInvocation";
   public static final String DATA_SOURCE_DESCRIPTION = NS + "DataSourceDescription";
+  public static final String ADAPTER_DESCRIPTION = NS + "AdapterDescription";
+  public static final String FORMAT_DESCRIPTION_LIST = NS + "FromatDescriptionList";
+  public static final String PROTOCOL_DESCRIPTION_LIST = NS + "ProtocolDescriptionList";
 
   public static final String VALUE_SPECIFICATION = NS + "ValueSpecification";
 
