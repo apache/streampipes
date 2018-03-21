@@ -3,7 +3,7 @@ export let spGaugeWidgetConfig = {
     bindings: {
         wid: '='
     },
-    controller: class LineConfigCtrl {
+    controller: class GaugeConfigCtrl {
         constructor() {}
     },
     controllerAs: 'ctrl'

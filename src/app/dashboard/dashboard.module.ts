@@ -61,6 +61,10 @@ import spHeatmapWidget from './templates/heatmap/heatmap.directive';
 import { spHeatmapWidgetConfig } from './templates/heatmap/heatmap-config.component';
 import { HeatmapDataModel } from './templates/heatmap/heatmap-data-model.service';
 
+import spImageWidget from './templates/image/image.directive';
+import { spImageWidgetConfig } from './templates/image/image-config.component';
+import { ImageDataModel } from './templates/image/image-data-model.service';
+
 export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhrTable', 'ngMap'])
 	.controller('DashboardCtrl', DashboardCtrl)
 	.controller('AddWidgetCtrl', AddWidgetCtrl)
@@ -97,7 +101,6 @@ export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhr
     .component('spGaugeWidgetConfig', spGaugeWidgetConfig)
     .service('GaugeDataModel', GaugeDataModel)
 
-
     .directive('spTrafficlightWidget', spTrafficlightWidget)
     .component('spTrafficlightWidgetConfig', spTrafficlightWidgetConfig)
     .service('TrafficLightDataModel', TrafficLightDataModel)
@@ -113,5 +116,9 @@ export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhr
     .directive('spHeatmapWidget', spHeatmapWidget)
     .component('spHeatmapWidgetConfig', spHeatmapWidgetConfig)
     .service('HeatmapDataModel', HeatmapDataModel)
+
+    .directive('spImageWidget', spImageWidget)
+    .component('spImageWidgetConfig', spImageWidgetConfig)
+    .service('ImageDataModel', ImageDataModel)
 
 	.name;
