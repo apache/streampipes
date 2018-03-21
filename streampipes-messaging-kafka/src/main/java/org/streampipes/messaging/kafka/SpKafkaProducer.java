@@ -17,12 +17,12 @@
 
 package org.streampipes.messaging.kafka;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.streampipes.messaging.EventProducer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.streampipes.messaging.EventProducer;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.io.Serializable;

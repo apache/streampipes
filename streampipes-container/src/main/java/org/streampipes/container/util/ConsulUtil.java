@@ -190,7 +190,7 @@ public class ConsulUtil {
                 "\"Tags\": [" +
                 "    \"" + tag + "\"" + ",\"urlprefix-/" +id +" strip=/" +id +"\"" +
                 " ]," +
-                " \"Address\": \""+ url + "\"," +
+                " \"Address\": \""+ PROTOCOL +url + "\"," +
                 " \"Port\":" + port + "," +
                 " \"EnableTagOverride\": true" + "," +
                 "\"Check\": {" +
