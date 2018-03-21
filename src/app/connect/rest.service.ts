@@ -27,6 +27,8 @@ import {EventPropertyList} from './schema-editor/model/EventPropertyList';
 
 @Injectable()
 export class RestService {
+  private host = 'http://localhost:8082/streampipes-backend/';
+
   // private obj: { protocol: Protocol; format: Format };
   // private http: HttpClient;
   constructor( private http: HttpClient) {
@@ -41,14 +43,14 @@ export class RestService {
 
     tsonld.toflattenJsonLd(adapter).subscribe(res => {
       console.log(JSON.stringify(res));
-      this.http.post('http://localhost:4200/api/v1/adapter', res).subscribe();
+      this.http.post(this.host + 'api/v1/adapter', res).subscribe();
     });
 
   }
 
   getAdapters(): Observable<{ protocol: Protocol; format: Format}[]> {
     return this.http
-      .get('http://localhost:4200/api/v1/adapter/all')
+      .get(this.host + 'api/v1/adapter/all')
       .map(response => response as { protocol: Protocol; format: Format}[]);
 
   }
@@ -64,7 +66,7 @@ export class RestService {
     return Observable.fromPromise(new Promise(function(resolve, reject) {
       tsonld.toflattenJsonLd(adapter).subscribe(res => {
         return self.http
-          .post('http://localhost:4200/api/v1/guess/schema', res)
+          .post(self.host + 'api/v2/guess/schema', res)
           .map(response => {
 
             tsonld.addClassMapping(EventSchema);
@@ -85,7 +87,7 @@ export class RestService {
   getProtocols(): Observable<ProtocolDescriptionList> {
 
     return this.http
-      .get('http://localhost:8082/streampipes-backend/api/v2/adapter/allProtocols')
+      .get(this.host + 'api/v2/adapter/allProtocols')
       .map(response => {
 
         const tsonld = new TsonLd();
@@ -104,7 +106,7 @@ export class RestService {
   getFormats(): Observable<FormatDescriptionList> {
 
     return this.http
-      .get('http://localhost:8082/streampipes-backend/api/v2/adapter/allFormats')
+      .get(this.host + 'api/v2/adapter/allFormats')
       .map(response => {
 
         const tsonld = new TsonLd();
