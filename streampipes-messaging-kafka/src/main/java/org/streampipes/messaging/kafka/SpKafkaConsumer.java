@@ -109,6 +109,8 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
         props.put("enable.auto.commit", "true");
         props.put("auto.commit.interval.ms", "10000");
         props.put("session.timeout.ms", "30000");
+        props.put("message.max.bytes", 5000012);
+        props.put("fetch.message.max.bytes", 5000012);
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
         props.put("zookeeper.session.timeout.ms", "60000");

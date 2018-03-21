@@ -65,6 +65,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
         props.put("batch.size", 16384);
         props.put("linger.ms", 1);
         props.put("buffer.memory", 33554432);
+        props.put("message.max.bytes", 5000012);
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
         return props;
