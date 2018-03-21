@@ -1,7 +1,7 @@
 declare const require: any;
 
 export let spImageWidgetConfig = {
-    templateUrl: require('./imageConfig.html'),
+    template: require('./imageConfig.html'),
     bindings: {
         wid: '='
     },
