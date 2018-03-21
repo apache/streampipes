@@ -1,5 +1,5 @@
 export let spLineWidgetConfig = {
-    templateUrl: 'app/dashboard/templates/line/lineConfig.html',
+    templateUrl: 'src/app/dashboard/templates/line/lineConfig.html',
     bindings: {
         wid: '='
     },

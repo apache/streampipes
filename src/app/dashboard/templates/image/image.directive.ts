@@ -22,7 +22,7 @@ export default function imageWidget(WidgetInstances) {
 
             scope.$watch('data', function (data) {
                 if (data) {
-
+                    scope.item = data[scope.selectedImageMapping];
                 }
             });
         }

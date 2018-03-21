@@ -1,5 +1,5 @@
 export let spGaugeWidgetConfig = {
-    templateUrl: 'app/dashboard/templates/gauge/gaugeConfig.html',
+    templateUrl: 'src/app/dashboard/templates/gauge/gaugeConfig.html',
     bindings: {
         wid: '='
     },

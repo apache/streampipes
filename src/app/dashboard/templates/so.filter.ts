@@ -57,6 +57,10 @@ function soNumber() {
 	return filter('http://schema.org/Number');
 };
 
+function image() {
+	return filter("https://image.com");
+}
+
 function soDateTime() {
 	return filter('http://schema.org/DateTime');
 };
@@ -66,5 +70,6 @@ export default {
 	soNumber: soNumber,
 	soDateTime: soDateTime,
 	geoLat: geoLat,
-	geoLng: geoLng
+	geoLng: geoLng,
+	image: image
 }

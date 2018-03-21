@@ -1,5 +1,5 @@
 export let spTrafficlightWidgetConfig = {
-    templateUrl: 'app/dashboard/templates/trafficlight/trafficlightConfig.html',
+    templateUrl: 'src/app/dashboard/templates/trafficlight/trafficlightConfig.html',
     bindings: {
         wid: '='
     },

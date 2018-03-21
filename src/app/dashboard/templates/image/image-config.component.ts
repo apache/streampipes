@@ -1,5 +1,5 @@
 export let spImageWidgetConfig = {
-    templateUrl: 'app/dashboard/templates/image/image.html',
+    templateUrl: 'src/app/dashboard/templates/image/imageConfig.html',
     bindings: {
         wid: '='
     },

@@ -82,7 +82,7 @@ export class WidgetTemplates {
                 dataModel: HeatmapDataModel,
             },
             image: {
-            name: 'image',
+                name: 'image',
                 label: 'Image',
                 icon: '',
                 directive: 'sp-image-widget',
