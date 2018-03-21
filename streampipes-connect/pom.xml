@@ -29,16 +29,8 @@
             <artifactId>streampipes-serializers</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-commons</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
