@@ -181,7 +181,7 @@ public class JsonParser extends Parser {
         List<Object> arr = null;
 
         while (jsonParser.hasNext()) {
-            Event event = jsonParser.next();
+            javax.json.stream.JsonParser.Event event = jsonParser.next();
             switch (event) {
                 case KEY_NAME:
                     mapKey = jsonParser.getString();
