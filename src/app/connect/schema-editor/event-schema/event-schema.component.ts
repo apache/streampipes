@@ -5,6 +5,7 @@ import {EventSchema} from '../model/EventSchema';
 import {AdapterDescription} from '../../model/AdapterDescription';
 import {ProtocolDescription} from '../../model/ProtocolDescription';
 import {FormatDescription} from '../../model/FormatDescription';
+import {EventProperty} from '../model/EventProperty';
 
 @Component({
     selector: 'app-event-schema',
@@ -31,17 +32,15 @@ export class EventSchemaComponent implements OnInit {
         adapter.protocol = this.protocol;
         adapter.format = this.format;
 
+        // let self = this;
+
         this.restService.getGuessSchema(adapter).subscribe(x => {
             this.eventSchema = x;
+            // this.eventProperties = x.eventProperties;
             console.log(x);
+            console.log(this.eventSchema);
         });
     }
-    // public addPrimitiveProperty(): void {
-    //       const uuid: string = UUID.UUID();
-    //       const path = '/' + uuid;
-    //
-    //       this.eventSchema.eventProperties.push(new EventPropertyPrimitive(uuid, undefined));
-    //  }
 
     ngOnInit() {
         this.eventSchema = new EventSchema();

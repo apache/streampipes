@@ -5,6 +5,8 @@ import {EventProperty} from '../model/EventProperty';
 import {Subscription} from 'rxjs/Subscription';
 import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {DataTypesService} from '../data-type.service';
+
 // import {DataTypesService} from '../data-type.service';
 
 @Component({
@@ -25,14 +27,15 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   @Output() addNested: EventEmitter<any> = new EventEmitter<any>();
 
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private dataTypeService: DataTypesService) {
+      this.dataTypeService = dataTypeService;
       // constructor(private dragulaService: DragulaService, private formBuilder: FormBuilder) {
       // constructor(private dragulaService: DragulaService, private formBuilder: FormBuilder, private dataTypesService: DataTypesService) {
-    this.propertyPrimitivForm = formBuilder.group({
-      dataType: ['', Validators.required]
-    });
+    // this.propertyPrimitivForm = formBuilder.group({
+    //   dataType: ['', Validators.required]
+    // });
 
-    // this.runtimeDataTypes = this.dataTypesService.getDataTypes();
+    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
   }
 
   protected open = false;
