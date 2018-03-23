@@ -14,26 +14,19 @@
  * limitations under the License.
  *
  */
-package org.streampipes.model.graph;
+package org.streampipes.model.client.pipeline;
 
-import org.streampipes.empire.annotations.RdfProperty;
-import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
+public class DataSetModificationMessage extends Message {
 
-public class DataSetInvocation extends NamedStreamPipesEntity {
-
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @RdfProperty(StreamPipes.HAS_GROUNDING)
   private EventGrounding eventGrounding;
 
-  public DataSetInvocation(DataSetInvocation other) {
-    if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
+  public DataSetModificationMessage(
+          EventGrounding eventGrounding) {
+    super(true);
+    this.eventGrounding = eventGrounding;
   }
 
   public EventGrounding getEventGrounding() {

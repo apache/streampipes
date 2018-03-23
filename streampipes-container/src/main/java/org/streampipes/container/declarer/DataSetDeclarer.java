@@ -17,11 +17,11 @@ package org.streampipes.container.declarer;
 
 import org.streampipes.model.Response;
 import org.streampipes.model.SpDataSet;
-import org.streampipes.model.graph.DataSetInvocation;
+import org.streampipes.model.grounding.EventGrounding;
 
 public interface DataSetDeclarer extends DataSequenceDeclarer<SpDataSet> {
 
-  Response invokeRuntime(DataSetInvocation invocation);
+  Response invokeRuntime(EventGrounding eventGrounding);
 
   Response detachRuntime(String pipelineId);
 

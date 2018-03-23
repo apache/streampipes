@@ -47,7 +47,7 @@ public class GsonSerializer {
     builder.registerTypeAdapter(TransportProtocol.class, new JsonLdSerializer<TransportProtocol>());
     builder.registerTypeAdapter(ValueSpecification.class, new JsonLdSerializer<ValueSpecification>());
     builder.registerTypeAdapter(TopicDefinition.class, new JsonLdSerializer<TopicDefinition>());
-    builder.registerTypeAdapter(SpDataSequence.class, new JsonLdSerializer<SpDataSequence>());
+    builder.registerTypeAdapter(SpDataSequence.class, new ProcessingElementSerializer<>());
     builder.setPrettyPrinting();
     return builder.create();
   }
@@ -67,7 +67,7 @@ public class GsonSerializer {
     builder.registerTypeAdapter(EventPropertyQualityDefinition.class, new JsonLdSerializer<EventPropertyQualityDefinition>());
     builder.registerTypeAdapter(EventStreamQualityDefinition.class, new JsonLdSerializer<EventStreamQualityDefinition>());
     builder.registerTypeAdapter(TopicDefinition.class, new JsonLdSerializer<TopicDefinition>());
-    builder.registerTypeAdapter(SpDataSequence.class, new JsonLdSerializer<SpDataSequence>());
+    builder.registerTypeAdapter(SpDataSequence.class, new ProcessingElementSerializer<SpDataSequence>());
 
     builder.setPrettyPrinting();
     return builder;
