@@ -25,8 +25,8 @@ import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
+import org.streampipes.model.SpDataSequence;
 import org.streampipes.model.client.pipeline.Pipeline;
-import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.storage.couchdb.impl.PipelineStorageImpl;
 
@@ -56,10 +56,10 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<DataSourceDescr
 		try {
 			Pipeline pipeline = new PipelineStorageImpl().getPipeline(observer.getPipelineId());
 
-			List<SpDataStream> allStreams = new ArrayList<>();
+			List<SpDataSequence> allStreams = new ArrayList<>();
 			pipeline.getStreams().forEach((s) -> allStreams.add(s));
 
-			for (SpDataStream s : allStreams) {
+			for (SpDataSequence s : allStreams) {
 				if (streamToObserver.get(s.getElementId()) == null) {
 					List<PipelineObserver> po = new ArrayList<>();
 					po.add(observer);
@@ -97,9 +97,9 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<DataSourceDescr
 	public boolean remove(PipelineObserver observer) {
 
 		Pipeline pipeline = new PipelineStorageImpl().getPipeline(observer.getPipelineId());
-		List<SpDataStream> streams = pipeline.getStreams();
+		List<SpDataSequence> streams = pipeline.getStreams();
 
-		for (SpDataStream sc : streams) {
+		for (SpDataSequence sc : streams) {
 			String streamId = sc.getElementId();
 			List<PipelineObserver> po = streamToObserver.get(streamId);
 			if (po.size() == 1) {

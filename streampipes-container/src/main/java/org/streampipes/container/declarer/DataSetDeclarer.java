@@ -15,12 +15,18 @@ limitations under the License.
 */
 package org.streampipes.container.declarer;
 
+import org.streampipes.model.Response;
 import org.streampipes.model.SpDataSet;
-import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.graph.DataSetInvocation;
 
-public interface DataSetDeclarer {
+public interface DataSetDeclarer extends DataSequenceDeclarer<SpDataSet> {
 
-  SpDataSet declareModel(DataSourceDescription sep);
+  Response invokeRuntime(DataSetInvocation invocation);
+
+  Response detachRuntime(String pipelineId);
+
+  Response notifyDataSetFinished();
+
 
 
 }

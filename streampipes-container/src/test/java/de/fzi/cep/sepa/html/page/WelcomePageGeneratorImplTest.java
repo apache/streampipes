@@ -21,26 +21,26 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Test;
-
+import org.streampipes.container.declarer.DataSequenceDeclarer;
 import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.container.html.model.Description;
 import org.streampipes.container.html.model.DataSourceDescriptionHtml;
+import org.streampipes.container.html.model.Description;
 import org.streampipes.container.html.page.WelcomePageGenerator;
 import org.streampipes.container.html.page.WelcomePageGeneratorImpl;
-import org.streampipes.model.SpDataStream;
 import org.streampipes.model.Response;
-import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.graph.DataSourceDescription;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class WelcomePageGeneratorImplTest {
 
@@ -105,7 +105,7 @@ public class WelcomePageGeneratorImplTest {
     private SemanticEventProducerDeclarer getSepdDeclarer() {
         return new SemanticEventProducerDeclarer() {
             @Override
-            public List<EventStreamDeclarer> getEventStreams() {
+            public List<DataSequenceDeclarer> getEventStreams() {
                 return Arrays.asList(new EventStreamDeclarer() {
                     @Override
                     public SpDataStream declareModel(DataSourceDescription sep) {

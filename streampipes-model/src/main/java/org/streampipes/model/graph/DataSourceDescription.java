@@ -20,7 +20,7 @@ package org.streampipes.model.graph;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.DataSource;
-import org.streampipes.model.SpDataStream;
+import org.streampipes.model.SpDataSequence;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
@@ -47,7 +47,7 @@ public class DataSourceDescription extends NamedStreamPipesEntity {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty(StreamPipes.PRODUCES)
-	private List<SpDataStream> spDataStreams;
+	private List<SpDataSequence> spDataStreams;
 	
 	private DataSource dataSource;
 		
@@ -59,33 +59,33 @@ public class DataSourceDescription extends NamedStreamPipesEntity {
 	public DataSourceDescription(DataSourceDescription other)
 	{
 		super(other);
-		this.spDataStreams = new Cloner().streams(other.getSpDataStreams());
+		this.spDataStreams = new Cloner().seq(other.getSpDataStreams());
 		this.spDataStreams.forEach(e -> e.setCategory(Arrays.asList(this.getElementId())));
 	}
 	
-	public DataSourceDescription(String uri, String name, String description, String iconUrl, List<SpDataStream> spDataStreams)
+	public DataSourceDescription(String uri, String name, String description, String iconUrl, List<SpDataSequence> spDataStreams)
 	{
 		super(uri, name, description, iconUrl);
 		this.spDataStreams = spDataStreams;
 	}
 	
 	public DataSourceDescription(String uri, String name2, String description2, String iconUrl) {
-		this(uri, name2, description2, iconUrl, new ArrayList<SpDataStream>());
+		this(uri, name2, description2, iconUrl, new ArrayList<>());
 	}
 	
 	public DataSourceDescription(String uri, String name, String description) {
-		this(uri, name, description, "", new ArrayList<SpDataStream>());
+		this(uri, name, description, "", new ArrayList<>());
 	}
 
-	public List<SpDataStream> getSpDataStreams() {
+	public List<SpDataSequence> getSpDataStreams() {
 		return spDataStreams;
 	}
 
-	public void setSpDataStreams(List<SpDataStream> spDataStreams) {
+	public void setSpDataStreams(List<SpDataSequence> spDataStreams) {
 		this.spDataStreams = spDataStreams;
 	}
 	
-	public void addEventStream(SpDataStream spDataStream)
+	public void addEventStream(SpDataSequence spDataStream)
 	{
 		spDataStreams.add(spDataStream);
 	}

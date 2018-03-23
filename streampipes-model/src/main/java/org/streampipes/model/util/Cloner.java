@@ -18,6 +18,8 @@
 package org.streampipes.model.util;
 
 import org.streampipes.model.ApplicationLink;
+import org.streampipes.model.SpDataSequence;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
@@ -169,8 +171,20 @@ public class Cloner {
     }
   }
 
+  public List<SpDataSequence> seq(List<SpDataSequence> spDataStreams) {
+    return spDataStreams.stream().map(s -> mapSequence(s)).collect(Collectors.toList());
+  }
+
   public List<SpDataStream> streams(List<SpDataStream> spDataStreams) {
     return spDataStreams.stream().map(s -> new SpDataStream(s)).collect(Collectors.toList());
+  }
+
+  public SpDataSequence mapSequence(SpDataSequence seq) {
+    if (seq instanceof SpDataStream) {
+      return new SpDataStream((SpDataStream) seq);
+    } else {
+      return new SpDataSet((SpDataSet) seq);
+    }
   }
 
   public SpDataStream stream(SpDataStream other) {
@@ -181,7 +195,7 @@ public class Cloner {
     if (outputStrategies != null) {
       return outputStrategies.stream().map(o -> outputStrategy(o)).collect(Collectors.toList());
     } else {
-      return new ArrayList<OutputStrategy>();
+      return new ArrayList<>();
     }
   }
 

@@ -17,15 +17,15 @@
 
 package org.streampipes.container.html.page;
 
+import org.streampipes.container.declarer.DataSequenceDeclarer;
 import org.streampipes.container.declarer.Declarer;
-import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.InvocableDeclarer;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
-import org.streampipes.container.html.model.Description;
-import org.streampipes.container.html.model.DataSourceDescriptionHtml;
-import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
+import org.streampipes.container.html.model.DataSourceDescriptionHtml;
+import org.streampipes.container.html.model.Description;
+import org.streampipes.model.graph.DataSinkDescription;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
         desc.setDescription(declarer.declareModel().getDescription());
         desc.setUri(URI.create(baseUri + "sep/" + declarer.declareModel().getUri()));
         desc.setType("source");
-        for (EventStreamDeclarer streamDeclarer : declarer.getEventStreams()) {
+        for (DataSequenceDeclarer streamDeclarer : declarer.getEventStreams()) {
             Description ad = new Description();
             ad.setDescription(streamDeclarer.declareModel(declarer.declareModel()).getDescription());
             ad.setUri(URI.create(baseUri +"stream/" + streamDeclarer.declareModel(declarer.declareModel()).getUri()));

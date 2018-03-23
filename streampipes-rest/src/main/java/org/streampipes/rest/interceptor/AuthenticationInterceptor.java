@@ -14,13 +14,22 @@
  * limitations under the License.
  *
  */
+package org.streampipes.rest.interceptor;
 
-package org.streampipes.container.declarer;
+import org.streampipes.rest.annotation.NoAuthenticationRequired;
+import org.streampipes.rest.authentication.StreamPipesFilter;
 
-import org.streampipes.model.graph.DataSourceDescription;
+import javax.ws.rs.container.DynamicFeature;
+import javax.ws.rs.container.ResourceInfo;
+import javax.ws.rs.core.FeatureContext;
 
-import java.util.List;
+public class AuthenticationInterceptor implements DynamicFeature {
 
-public interface SemanticEventProducerDeclarer extends Declarer<DataSourceDescription> {
-	List<DataSequenceDeclarer> getEventStreams();
+
+  @Override
+  public void configure(ResourceInfo resourceInfo, FeatureContext context) {
+    if (!resourceInfo.getResourceMethod().isAnnotationPresent(NoAuthenticationRequired.class)) {
+      context.register(StreamPipesFilter.class);
+    }
+  }
 }

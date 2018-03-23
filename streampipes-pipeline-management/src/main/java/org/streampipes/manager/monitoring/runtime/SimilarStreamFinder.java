@@ -17,7 +17,7 @@
 
 package org.streampipes.manager.monitoring.runtime;
 
-import org.streampipes.model.SpDataStream;
+import org.streampipes.model.SpDataSequence;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.quality.MeasurementCapability;
@@ -32,7 +32,7 @@ public class SimilarStreamFinder {
 
 	private Pipeline pipeline;
 	
-	private List<SpDataStream> similarStreams;
+	private List<SpDataSequence> similarStreams;
 	
 	public SimilarStreamFinder(String pipelineId) {
 		this.pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(pipelineId);
@@ -49,13 +49,13 @@ public class SimilarStreamFinder {
 	private boolean isSimilarStreamAvailable() {
 		
 		List<DataSourceDescription> seps = StorageManager.INSTANCE.getStorageAPI().getAllSEPs();
-		List<SpDataStream> streams = getEventStreams(seps);
+		List<SpDataSequence> streams = getEventStreams(seps);
 		
-		SpDataStream pipelineInputStream = getStream();
+		SpDataSequence pipelineInputStream = getStream();
 		List<MeasurementCapability> pipelineInputStreamCapabilities = pipelineInputStream.getMeasurementCapability();
 		List<MeasurementObject> pipelineInputStreamMeasurementObject = pipelineInputStream.getMeasurementObject();
 		
-		for(SpDataStream stream : streams) {
+		for(SpDataSequence stream : streams) {
 			if (!stream.getElementId().equals(pipelineInputStream.getElementId())) {
 				if (matchesStream(pipelineInputStreamCapabilities, pipelineInputStreamMeasurementObject, stream.getMeasurementCapability(), stream.getMeasurementObject())) {
 					similarStreams.add(stream);
@@ -89,21 +89,21 @@ public class SimilarStreamFinder {
 		else return pipelineInputStreamCapabilities.stream().allMatch(p -> measurementCapability.stream().anyMatch(mc -> mc.getCapability().toString().equals(p.getCapability().toString())));
 	}
 
-	private SpDataStream getStream() {
+	private SpDataSequence getStream() {
 		String streamId = pipeline.getStreams().get(0).getElementId();
 		
 		return StorageManager.INSTANCE.getStorageAPI().getEventStreamById(streamId);
 	}
 	
-	private List<SpDataStream> getEventStreams(List<DataSourceDescription> seps) {
-		List<SpDataStream> result = new ArrayList<>();
+	private List<SpDataSequence> getEventStreams(List<DataSourceDescription> seps) {
+		List<SpDataSequence> result = new ArrayList<>();
 		for(DataSourceDescription sep : seps) {
 			result.addAll(sep.getSpDataStreams());
 		}
 		return result;
 	}
 
-	public List<SpDataStream> getSimilarStreams() {
+	public List<SpDataSequence> getSimilarStreams() {
 		return similarStreams;
 	}
 	

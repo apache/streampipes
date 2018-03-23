@@ -15,7 +15,6 @@ limitations under the License.
 */
 package org.streampipes.model;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.NamedStreamPipesEntity;
@@ -47,29 +46,29 @@ public abstract class SpDataSequence extends NamedStreamPipesEntity {
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @RdfProperty(StreamPipes.HAS_EVENT_STREAM_QUALITY_DEFINITION)
-  private transient List<EventStreamQualityDefinition> hasEventStreamQualities;
+  protected transient List<EventStreamQualityDefinition> hasEventStreamQualities;
 
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @RdfProperty(StreamPipes.HAS_EVENT_STREAM_QUALITY_REQUIREMENT)
-  private transient List<EventStreamQualityRequirement> requiresEventStreamQualities;
+  protected transient List<EventStreamQualityRequirement> requiresEventStreamQualities;
 
   @OneToOne(fetch = FetchType.EAGER,
           cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @RdfProperty(StreamPipes.HAS_GROUNDING)
-  private EventGrounding eventGrounding;
+  protected EventGrounding eventGrounding;
 
   @OneToOne(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
   @RdfProperty(StreamPipes.HAS_SCHEMA)
-  private EventSchema eventSchema;
+  protected EventSchema eventSchema;
 
   @RdfProperty(StreamPipes.HAS_MEASUREMENT_CAPABILTIY)
   @OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
-  private List<MeasurementCapability> measurementCapability;
+  protected List<MeasurementCapability> measurementCapability;
 
   @RdfProperty(StreamPipes.HAS_MEASUREMENT_OBJECT)
   @OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
-  private List<MeasurementObject> measurementObject;
+  protected List<MeasurementObject> measurementObject;
 
   protected List<String> category;
 
@@ -98,7 +97,7 @@ public abstract class SpDataSequence extends NamedStreamPipesEntity {
   }
 
 
-  public SpDataSequence(SpDataStream other) {
+  public SpDataSequence(SpDataSequence other) {
     super(other);
     if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
     if (other.getEventSchema() != null) this.eventSchema = new EventSchema(other.getEventSchema());

@@ -19,6 +19,7 @@ package org.streampipes.serializers.jsonld;
 
 import org.streampipes.empire.core.empire.util.EmpireAnnotationProvider;
 import org.streampipes.model.ApplicationLink;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -32,7 +33,11 @@ import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.grounding.WildcardTopicDefinition;
-import org.streampipes.model.modelconnect.*;
+import org.streampipes.model.modelconnect.AdapterDescription;
+import org.streampipes.model.modelconnect.FormatDescription;
+import org.streampipes.model.modelconnect.FormatDescriptionList;
+import org.streampipes.model.modelconnect.ProtocolDescription;
+import org.streampipes.model.modelconnect.ProtocolDescriptionList;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.CustomOutputStrategy;
@@ -104,6 +109,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             FixedOutputStrategy.class,
             AppendOutputStrategy.class,
             SpDataStream.class,
+            SpDataSet.class,
             Accuracy.class,
             EventPropertyQualityRequirement.class,
             EventStreamQualityRequirement.class,

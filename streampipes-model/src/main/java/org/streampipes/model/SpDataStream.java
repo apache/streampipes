@@ -57,5 +57,8 @@ public class SpDataStream extends SpDataSequence {
 	}
 
 
-
+  public SpDataStream(SpDataSet seq) {
+		this.eventGrounding = seq.getEventGrounding();
+		this.eventSchema = seq.getEventSchema();
+  }
 }
