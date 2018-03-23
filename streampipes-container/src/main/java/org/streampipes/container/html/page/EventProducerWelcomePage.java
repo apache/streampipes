@@ -21,7 +21,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.container.declarer.DataStreamDeclarer;
+import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.container.html.model.AgentDescription;
 import org.streampipes.container.html.model.Description;
@@ -45,7 +45,7 @@ public class EventProducerWelcomePage extends WelcomePageGenerator<SemanticEvent
 			description.setName(declarer.declareModel().getName());
 			description.setDescription(declarer.declareModel().getDescription());
 			description.setUri(URI.create(baseUri + declarer.declareModel().getUri()));
-			for(DataStreamDeclarer streamDeclarer : declarer.getEventStreams())
+			for(EventStreamDeclarer streamDeclarer : declarer.getEventStreams())
 			{
 				AgentDescription ad = new AgentDescription();
 				ad.setDescription(streamDeclarer.declareModel(declarer.declareModel()).getDescription());

@@ -17,9 +17,9 @@
 
 package org.streampipes.sources;
 
-import org.streampipes.container.declarer.DataStreamDeclarer;
+import org.streampipes.container.declarer.EventStreamDeclarer;
 
-public abstract class AbstractAdapterIncludedStream implements DataStreamDeclarer {
+public abstract class AbstractAdapterIncludedStream implements EventStreamDeclarer {
 
 
   @Override

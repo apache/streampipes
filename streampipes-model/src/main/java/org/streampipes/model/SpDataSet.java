@@ -26,7 +26,7 @@ import java.util.List;
 
 import javax.persistence.Entity;
 
-@RdfsClass(StreamPipes.DATA_STREAM)
+@RdfsClass(StreamPipes.DATA_SET)
 @Entity
 public class SpDataSet extends SpDataSequence {
 

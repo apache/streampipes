@@ -17,7 +17,7 @@
 
 package org.streampipes.manager.matching.v2;
 
-import org.streampipes.container.declarer.DataStreamDeclarer;
+import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.empire.core.empire.SupportsRdfId;
@@ -55,7 +55,7 @@ public class TestUtils {
 		return new TransportFormat(MessageFormat.Thrift);
 	}
 	
-	public static Pipeline makePipeline(SemanticEventProducerDeclarer producer, DataStreamDeclarer stream, SemanticEventProcessingAgentDeclarer agent) {
+	public static Pipeline makePipeline(SemanticEventProducerDeclarer producer, EventStreamDeclarer stream, SemanticEventProcessingAgentDeclarer agent) {
 		DataSourceDescription dataSourceDescription = new DataSourceDescription(producer.declareModel());
 		dataSourceDescription.setRdfId(new SupportsRdfId.URIKey(URI.create("http://www.schema.org/test1")));
 		SpDataStream offer = stream.declareModel(dataSourceDescription);
@@ -93,7 +93,7 @@ public class TestUtils {
         return invocation;
     }
 
-    public static SpDataStream makeStream(SemanticEventProducerDeclarer declarer, DataStreamDeclarer streamDec, String domId) {
+    public static SpDataStream makeStream(SemanticEventProducerDeclarer declarer, EventStreamDeclarer streamDec, String domId) {
         SpDataStream stream = new SpDataStream(streamDec.declareModel(declarer.declareModel()));
         stream.setDOM(domId);
         return stream;
