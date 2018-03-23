@@ -3,14 +3,20 @@ package org.streampipes.rest.impl.connect;
 
 
 import org.streampipes.commons.Utils;
+import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.container.html.JSONGenerator;
+import org.streampipes.container.html.model.DataSourceDescriptionHtml;
+import org.streampipes.container.html.model.Description;
 import org.streampipes.connect.firstconnector.Adapter;
 import org.streampipes.connect.firstconnector.format.csv.CsvFormat;
 import org.streampipes.connect.firstconnector.format.json.JsonFormat;
 import org.streampipes.connect.firstconnector.protocol.FileProtocol;
 import org.streampipes.connect.firstconnector.protocol.HttpProtocol;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.modelconnect.AdapterDescription;
 import org.streampipes.model.modelconnect.FormatDescriptionList;
 import org.streampipes.model.modelconnect.ProtocolDescriptionList;
+import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.impl.AbstractRestInterface;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 
@@ -25,6 +31,10 @@ import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/v2/adapter")
 public class SpConnect extends AbstractRestInterface {
@@ -112,12 +122,64 @@ public class SpConnect extends AbstractRestInterface {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @GsonWithIds
     @Path("/all")
     public Response getAllAdapters() {
-        //TODO get all from CouchDB
-//        AdapterStorageImpl adapterStorage = new AdapterStorageImpl();
-        return Response.ok().build();
+        String host = BackendConfig.INSTANCE.getBackendHost() + ":" + BackendConfig.INSTANCE.getBackendPort();
+
+        List<AdapterDescription> allAdapters = new AdapterStorageImpl().getAllAdapters();
+        List<Description> allAdapterDescriptions = new ArrayList<>();
+
+        for (AdapterDescription ad : allAdapters) {
+             URI uri = null;
+            try {
+                uri = new URI("http://" + host + "/streampipes-backend/api/v2/adapter/all/" + ad.getId());
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+                List<Description> streams = new ArrayList<>();
+                Description d = new Description("A" + ad.getId(), "description", uri);
+                d.setType("stream");
+                streams.add(d);
+                DataSourceDescriptionHtml dsd = new DataSourceDescriptionHtml("AStream" + ad.getId(), "description", uri, streams);
+                dsd.setType("source");
+                allAdapterDescriptions.add(dsd);
+        }
+
+        JSONGenerator json = new JSONGenerator(allAdapterDescriptions);
+
+        return ok(json.buildJson());
     }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/all/{id}")
+    public Response getAdapter(@PathParam("id") String id) {
+
+        AdapterDescription adapterDescription = new AdapterStorageImpl().getAdapter(id);
+
+        DataSourceDescription dataSourceDescription = new DataSourceDescription("http://todo.de/dsd", "name", "description");
+        dataSourceDescription.addEventStream(adapterDescription.getDataSet());
+
+        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
+        String result = null;
+        try {
+            result = Utils.asString(jsonLdTransformer.toJsonLd(dataSourceDescription));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvalidRdfException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return ok(result);
+    }
+
+
+
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)

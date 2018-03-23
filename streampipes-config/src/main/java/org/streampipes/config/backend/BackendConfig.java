@@ -24,6 +24,8 @@ public enum BackendConfig {
   INSTANCE;
 
   private SpConfig config;
+  private final static String BACKEND_HOST = "backend_host";
+  private final static String BACKEND_PORT = "backend_port";
   private final static String JMS_HOST = "jms_host";
   private final static String JMS_PORT = "jms_port";
   private final static String KAFKA_HOST = "kafka_host";
@@ -38,6 +40,9 @@ public enum BackendConfig {
   BackendConfig() {
     config = SpConfig.getSpConfig("backend");
 
+    config.register(BACKEND_HOST, "backend", "Hostname for backend");
+    config.register(BACKEND_PORT, 8082, "Port for backend");
+
     config.register(JMS_HOST, "activemq", "Hostname for backend service for active mq");
     config.register(JMS_PORT, 61616, "Port for backend service for active mq");
     config.register(KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
@@ -50,6 +55,14 @@ public enum BackendConfig {
     config.register(IS_CONFIGURED, false, "Boolean that indicates whether streampipes is " +
             "already configured or not");
 
+  }
+
+  public String getBackendHost() {
+    return config.getString(BACKEND_HOST);
+  }
+
+  public int getBackendPort() {
+    return config.getInteger(BACKEND_PORT);
   }
 
   public String getJmsHost() {
@@ -115,5 +128,7 @@ public enum BackendConfig {
   public String getElasticsearchURL() {
     return getElasticsearchProtocol()+ "://" + getElasticsearchHost() + ":" + getElasticsearchPort();
   }
+
+
 
 }
