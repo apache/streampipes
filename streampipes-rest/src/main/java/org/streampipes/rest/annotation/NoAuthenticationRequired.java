@@ -14,13 +14,14 @@
  * limitations under the License.
  *
  */
+package org.streampipes.rest.annotation;
 
-package org.streampipes.container.declarer;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.streampipes.model.graph.DataSourceDescription;
-
-import java.util.List;
-
-public interface SemanticEventProducerDeclarer extends Declarer<DataSourceDescription> {
-	List<DataSequenceDeclarer> getEventStreams();
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface NoAuthenticationRequired {
 }

@@ -17,11 +17,11 @@
 
 package org.streampipes.storage.api;
 
+import org.streampipes.model.SpDataSequence;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
-import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.staticproperty.StaticProperty;
 
 import java.net.URI;
@@ -92,6 +92,6 @@ public interface IPipelineElementDescriptionStorage {
 	
 	StaticProperty getStaticPropertyById(String rdfId);
 	
-	SpDataStream getEventStreamById(String rdfId);
+	SpDataSequence getEventStreamById(String rdfId);
 	
 }

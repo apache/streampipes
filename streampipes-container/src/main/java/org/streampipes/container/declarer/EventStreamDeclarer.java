@@ -17,15 +17,8 @@
 
 package org.streampipes.container.declarer;
 
-import org.streampipes.model.SpDataStream;
-import org.streampipes.model.graph.DataSourceDescription;
+@Deprecated
+public interface EventStreamDeclarer extends DataStreamDeclarer {
 
 
-public interface EventStreamDeclarer {
-
-	SpDataStream declareModel(DataSourceDescription sep);
-	
-	void executeStream();
-	
-	boolean isExecutable();
 }

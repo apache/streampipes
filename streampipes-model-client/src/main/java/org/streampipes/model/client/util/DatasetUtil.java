@@ -14,13 +14,19 @@
  * limitations under the License.
  *
  */
+package org.streampipes.model.client.util;
 
-package org.streampipes.container.declarer;
+import org.streampipes.model.SpDataSequence;
+import org.streampipes.model.SpDataSet;
+import org.streampipes.model.SpDataStream;
 
-import org.streampipes.model.graph.DataSourceDescription;
+public class DatasetUtil {
 
-import java.util.List;
+  public static SpDataStream asStream(SpDataSequence seq) {
+    if (seq instanceof SpDataStream) return (SpDataStream) seq;
+    else {
+      return new SpDataStream((SpDataSet) seq);
+    }
+  }
 
-public interface SemanticEventProducerDeclarer extends Declarer<DataSourceDescription> {
-	List<DataSequenceDeclarer> getEventStreams();
 }

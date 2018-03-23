@@ -14,13 +14,13 @@
  * limitations under the License.
  *
  */
-
 package org.streampipes.container.declarer;
 
-import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.SpDataStream;
 
-import java.util.List;
+public interface DataStreamDeclarer extends DataSequenceDeclarer<SpDataStream> {
 
-public interface SemanticEventProducerDeclarer extends Declarer<DataSourceDescription> {
-	List<DataSequenceDeclarer> getEventStreams();
+  void executeStream();
+
+  boolean isExecutable();
 }

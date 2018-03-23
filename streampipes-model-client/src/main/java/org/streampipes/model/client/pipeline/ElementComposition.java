@@ -17,13 +17,14 @@
 
 package org.streampipes.model.client.pipeline;
 
-import org.streampipes.model.SpDataStream;
+import org.streampipes.model.SpDataSequence;
 import org.streampipes.model.graph.DataProcessorInvocation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public abstract class ElementComposition {
@@ -32,7 +33,7 @@ public abstract class ElementComposition {
 	protected List<DataProcessorInvocation> sepas;
 	
 	@OneToMany(cascade=CascadeType.ALL)
-	protected List<SpDataStream> streams;
+	protected List<SpDataSequence> streams;
 	
 	protected String name;
 	protected String description;
@@ -50,11 +51,11 @@ public abstract class ElementComposition {
 		this.sepas = sepas;
 	}
 
-	public List<SpDataStream> getStreams() {
+	public List<SpDataSequence> getStreams() {
 		return streams;
 	}
 
-	public void setStreams(List<SpDataStream> streams) {
+	public void setStreams(List<SpDataSequence> streams) {
 		this.streams = streams;
 	}
 	
