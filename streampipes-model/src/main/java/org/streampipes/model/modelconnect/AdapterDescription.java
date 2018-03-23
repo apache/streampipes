@@ -1,5 +1,6 @@
 package org.streampipes.model.modelconnect;
 
+import com.google.gson.annotations.SerializedName;
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
@@ -13,8 +14,8 @@ import javax.persistence.Entity;
 @Entity
 public class AdapterDescription extends NamedStreamPipesEntity {
 
-//    private @SerializedName("_id") String id;
-//    private @SerializedName("_rev") String rev;
+    private @SerializedName("_id") String id;
+    private @SerializedName("_rev") String rev;
 
     @RdfProperty("sp:hasFormat")
     private FormatDescription formatDescription;
@@ -58,19 +59,19 @@ public class AdapterDescription extends NamedStreamPipesEntity {
         this.dataSet = dataSet;
     }
 
-    //    public String getId() {
-//        return id;
-//    }
-//
-//    public void setId(String id) {
-//        this.id = id;
-//    }
-//
-//    public String getRev() {
-//        return rev;
-//    }
-//
-//    public void setRev(String rev) {
-//        this.rev = rev;
-//    }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getRev() {
+        return rev;
+    }
+
+    public void setRev(String rev) {
+        this.rev = rev;
+    }
 }

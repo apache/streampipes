@@ -53,11 +53,7 @@ import org.streampipes.model.quality.MeasurementProperty;
 import org.streampipes.model.quality.MeasurementRange;
 import org.streampipes.model.quality.Precision;
 import org.streampipes.model.quality.Resolution;
-import org.streampipes.model.schema.Enumeration;
-import org.streampipes.model.schema.EventPropertyList;
-import org.streampipes.model.schema.EventPropertyNested;
-import org.streampipes.model.schema.EventPropertyPrimitive;
-import org.streampipes.model.schema.QuantitativeValue;
+import org.streampipes.model.schema.*;
 import org.streampipes.model.staticproperty.AnyStaticProperty;
 import org.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
@@ -100,6 +96,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             MappingPropertyNary.class,
             EventPropertyList.class,
             EventPropertyNested.class,
+            EventSchema.class,
             EventPropertyPrimitive.class,
             MatchingStaticProperty.class,
             DataSinkDescription.class,
