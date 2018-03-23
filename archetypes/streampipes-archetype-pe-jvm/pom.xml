@@ -6,6 +6,7 @@
         <groupId>org.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
         <version>0.51.2-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>streampipes-archetype-pe-jvm</artifactId>
     <packaging>maven-archetype</packaging>
