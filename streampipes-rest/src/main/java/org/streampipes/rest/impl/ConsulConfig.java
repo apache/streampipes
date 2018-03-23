@@ -1,3 +1,20 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.rest.impl;
 
 import com.google.gson.Gson;
@@ -22,7 +39,6 @@ import static org.streampipes.container.util.ConsulUtil.updateConfig;
 
 @Path("/v2/consul")
 public class ConsulConfig extends AbstractRestInterface implements IConsulConfig {
-
 
     static Logger LOG = LoggerFactory.getLogger(ConsulConfig.class);
 
@@ -113,7 +129,8 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
             updateConfig(prefix + "/" + configItem.getKey(),
                             configItem.getValue(),
                             configItem.getValueType(),
-                            configItem.getDescription());
+                            configItem.getDescription(),
+                            configItem.isPassword());
         }
         return Response.status(Response.Status.OK).build();
     }
@@ -128,8 +145,6 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
         return Response.status(Response.Status.OK).build();
     }
 
-
-
     private List<ConfigItem> getConfigForService(String serviceId) {
         Map<String, String> keyValues = ConsulUtil.getKeyValue(ConsulSpConfig.SERVICE_ROUTE_PREFIX + serviceId);
 
@@ -137,14 +152,23 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
 
         for(Map.Entry<String, String> entry : keyValues.entrySet()) {
             String key = entry.getKey();
-            if(!key.endsWith("_description") && !key.endsWith("_type")) {
+            if(!key.endsWith("_description") && !key.endsWith("_type") && !key.endsWith("_isPassword")) {
                 ConfigItem configItem = new ConfigItem();
 
                 String[] splittedKey = entry.getKey().split("/");
                 String shortKey = splittedKey[splittedKey.length - 1];
 
                 configItem.setKey(shortKey);
-                configItem.setValue(entry.getValue());
+
+                String isPasswordKey = key + "_isPassword";
+                if(keyValues.containsKey(isPasswordKey)) {
+                    if(keyValues.get(isPasswordKey).equals("true")) {
+                        configItem.setPassword(true);
+                        configItem.setValue("");
+                    }
+                }
+                if(!configItem.isPassword())
+                    configItem.setValue(entry.getValue());
 
                 String descriptionKey = key + "_description";
                 if(keyValues.containsKey(descriptionKey)) {

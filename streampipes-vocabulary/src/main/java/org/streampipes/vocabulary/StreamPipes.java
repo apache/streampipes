@@ -1,3 +1,20 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.vocabulary;
 
 public class StreamPipes {
@@ -6,6 +23,8 @@ public class StreamPipes {
   public static final String NS_PREFIX = "sp";
 
   // Concepts
+
+  public static final String ANYTHING = NS + "Anything";
 
   public static final String DATA_PROCESSOR_DESCRIPTION = NS + "DataProcessorDescription";
   public static final String DATA_PROCESSOR_INVOCATION = NS + "DataProcessorInvocation";
@@ -27,6 +46,11 @@ public class StreamPipes {
   public static final String OUTPUT_STRATEGY = NS + "OutputStrategy";
   public static final String KEEP_OUTPUT_STRATEGY = NS + "KeepOutputStrategy";
   public static final String REPLACE_OUTPUT_STRATEGY = NS + "ReplaceOutputStrategy";
+  public static final String TRANSFORM_OUTPUT_STRATEGY = NS + "TransformOutputStrategy";
+  public static final String CUSTOM_TRANSFORM_OUTPUT_STRATEGY = NS + "CustomTransformOutputStrategy";
+  public static final String RUNTIME_RESOLVABLE_TRANSFORM_OUTPUT_STRATEGY = NS +
+          "RuntimeResolvableTransformOutputStrategy";
+  public static final String TRANSFORM_OPERATION = NS + "TransformOperation";
 
   public static final String URI_PROPERTY_MAPPING = NS + "UriPropertyMapping";
 
@@ -38,6 +62,11 @@ public class StreamPipes {
   public static final String MEASUREMENT_CAPABILITY = NS + "MeasurementCapability";
   public static final String MEASUREMENT_OBJECT = NS + "MeasurementObject";
 
+  public static final String SELECTION_STATIC_PROPERTY = NS + "SelectionStaticProperty";
+  public static final String RUNTIME_RESOLVABLE_SELECTION_STATIC_PROPERTY = NS +
+          "RuntimeResolvableSelectionStaticProperty";
+  public static final String RUNTIME_RESOLVABLE_ANY_STATIC_PROPERTY = NS + "RuntimeResolvableAnyStaticProperty";
+  public static final String RUNTIME_RESOLVABLE_ONE_OF_STATIC_PROPERTY = NS + "RuntimeResolvableOneOfStaticProperty";
   public static final String ANY_STATIC_PROPERTY = NS + "AnyStaticProperty";
   public static final String COLLECTION_STATIC_PROPERTY = NS + "CollectionStaticProperty";
   public static final String DOMAIN_STATIC_PROPERTY = NS + "DomainStaticProperty";
@@ -59,13 +88,16 @@ public class StreamPipes {
   public static final String EVENT_SCHEMA = NS + "EventSchema";
   public static final String DATA_SOURCE = NS + "DataSource";
   public static final String DATA_STREAM = NS + "DataStream";
-  public static final String DATA_SEQUENCE = NS + "DataSequence";
-  public static final String DATA_SET = NS + "DataSet";
 
   public static final String JMS_TRANSPORT_PROTOCOL = NS + "JmsTransportProtocol";
   public static final String KAFKA_TRANSPORT_PROTOCOL = NS + "KafkaTransportProtocol";
   public static final String TRANSPORT_FORMAT = NS + "TransportFormat";
   public static final String TRANSPORT_PROTOCOL = NS + "TransportProtocol";
+
+  public static final String TOPIC_DEFINITION = NS + "TopicDefinition";
+  public static final String SIMPLE_TOPIC_DEFINITION = NS + "SimpleTopicDefinition";
+  public static final String WILDCARD_TOPIC_DEFINITION = NS + "WildcardTopicDefinition";
+  public static final String WILDCARD_TOPIC_MAPPING = NS + "WildcardTopicMapping";
 
   // Properties
 
@@ -106,6 +138,10 @@ public class StreamPipes {
   public static final String APPENDS_PROPERTY = NS + "appendsProperty";
   public static final String PRODUCES_PROPERTY = NS + "producesProperty";
   public static final String OUTPUT_RIGHT = NS + "outputRight";
+  public static final String HAS_TRANSFORM_OPERATION = NS + "hasTransformOperation";
+  public static final String HAS_SOURCE_PROPERTY_INTERNAL_NAME = NS + "hasSourcePropertyInternalName";
+  public static final String HAS_TRANSFORMATION_SCOPE = NS + "hasTransformationScope";
+  public static final String HAS_TARGET_VALUE = NS + "hasTargetValue";
 
   public static final String EVENT_NAME = NS + "eventName";
   public static final String KEEP_BOTH = NS + "keepBoth";
@@ -191,4 +227,13 @@ public class StreamPipes {
 
   public static final String HAS_PROPERTY_SCOPE = NS + "hasPropertyScope";
 
+  public static final String HAS_WILDCARD_TOPIC_NAME = NS + "hasWildcardTopicName";
+  public static final String HAS_WILDCARD_TOPIC_MAPPING = NS + "hasWildcardTopicMapping";
+  public static final String HAS_ACTUAL_TOPIC_NAME = NS + "hasActualTopicName";
+
+  public static final String HAS_TOPIC_PARAMETER_TYPE = NS + "hasTopicParameterType" ;
+  public static final String HAS_TOPIC_MAPPING_ID = NS + "hasTopicMappingId";
+  public static final String HAS_MAPPED_RUNTIME_NAME = NS + "hasMappedRuntimeName";
+
+  public static final String HAS_LINKED_MAPPING_PROPERTY_ID = NS + "hasLinkedMappingPropertyId";
 }

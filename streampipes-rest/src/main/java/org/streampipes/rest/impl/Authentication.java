@@ -1,3 +1,20 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.rest.impl;
 
 import org.apache.shiro.SecurityUtils;
@@ -5,6 +22,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.manager.storage.UserManagementService;
 import org.streampipes.model.client.messages.ErrorMessage;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
@@ -16,8 +34,6 @@ import org.streampipes.model.client.user.ShiroAuthenticationResponse;
 import org.streampipes.model.client.user.ShiroAuthenticationResponseFactory;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IAuthentication;
-import org.streampipes.storage.controller.StorageManager;
-import org.streampipes.user.management.UserManagementService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -70,9 +86,9 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
     @Override
     public Response doRegister(RegistrationData data) {
 
-        Set<Role> roles = new HashSet<Role>();
+        Set<Role> roles = new HashSet<>();
         roles.add(data.getRole());
-        if (StorageManager.INSTANCE.getUserStorageAPI().emailExists(data.getEmail())) {
+        if (getUserStorage().emailExists(data.getEmail())) {
             return ok(Notifications.error("This email address already exists. Please choose another address."));
         } else {
             new UserManagementService().registerUser(data, roles);
@@ -89,7 +105,8 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
 
         if (BackendConfig.INSTANCE.isConfigured()) {
             if (SecurityUtils.getSubject().isAuthenticated()) {
-                ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create(StorageManager.INSTANCE.getUserStorageAPI().getUser((String) SecurityUtils.getSubject().getPrincipal()));
+                ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create(getUserStorage().getUser((String)
+                        SecurityUtils.getSubject().getPrincipal()));
                 System.out.println(SecurityUtils.getSubject().getSession().getId().toString());
                 return ok(response);
             }
@@ -107,8 +124,8 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
         shiroToken.setRememberMe(true);
 
         subject.login(shiroToken);
-        ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create(StorageManager
-                .INSTANCE.getUserStorageAPI().getUser((String) subject.getPrincipal()));
+        ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create(getUserStorage().getUser((String) subject
+                .getPrincipal()));
         response.setToken(subject.getSession().getId().toString());
 
         return response;

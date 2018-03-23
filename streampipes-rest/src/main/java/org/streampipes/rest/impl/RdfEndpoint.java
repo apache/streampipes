@@ -1,3 +1,20 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.rest.impl;
 
 import org.streampipes.container.util.ConsulUtil;
@@ -5,7 +22,7 @@ import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.client.endpoint.RdfEndpointItem;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IRdfEndpoint;
-import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.storage.api.IRdfEndpointStorage;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,8 +57,7 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
   @GsonWithIds
   @Override
   public Response addRdfEndpoint(org.streampipes.model.client.endpoint.RdfEndpoint rdfEndpoint) {
-    StorageManager.INSTANCE
-            .getRdfEndpointStorage()
+    getRdfEndpointStorage()
             .addRdfEndpoint(rdfEndpoint);
 
     return Response.status(Response.Status.OK).build();
@@ -54,8 +70,7 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
   @GsonWithIds
   @Override
   public Response removeRdfEndpoint(@PathParam("rdfEndpointId") String rdfEndpointId) {
-    StorageManager.INSTANCE
-            .getRdfEndpointStorage()
+    getRdfEndpointStorage()
             .removeRdfEndpoint(rdfEndpointId);
 
     return Response.status(Response.Status.OK).build();
@@ -84,9 +99,7 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
               new org.streampipes.model.client.endpoint.RdfEndpoint(endpoint);
       servicerdRdfEndpoints.add(rdfEndpoint);
     }
-    List<org.streampipes.model.client.endpoint.RdfEndpoint> databasedRdfEndpoints = StorageManager
-            .INSTANCE
-            .getRdfEndpointStorage()
+    List<org.streampipes.model.client.endpoint.RdfEndpoint> databasedRdfEndpoints = getRdfEndpointStorage()
             .getRdfEndpoints();
 
     List<org.streampipes.model.client.endpoint.RdfEndpoint> concatList =
@@ -109,5 +122,9 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
     elementUris.addAll(getUserService().getOwnActionUris(username));
     elementUris.addAll(getUserService().getOwnSepaUris(username));
     return elementUris;
+  }
+
+  private IRdfEndpointStorage getRdfEndpointStorage() {
+    return getNoSqlStorage().getRdfEndpointStorage();
   }
 }

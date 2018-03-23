@@ -1,17 +1,33 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.config.consul;
 
-import com.google.common.base.Optional;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.KeyValueClient;
 import com.orbitz.consul.model.kv.Value;
 import org.streampipes.config.SpConfig;
 import org.streampipes.config.SpConfigChangeCallback;
-import retrofit2.http.Url;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ConsulSpConfig extends SpConfig implements Runnable {
 //    final static Logger logger = LogUtil.getInstance(ConsulSpConfig.class);
@@ -81,26 +97,31 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
 
     @Override
     public void register(String key, boolean defaultValue, String description) {
-        register(key, Boolean.toString(defaultValue), "xs:boolean", description);
+        register(key, Boolean.toString(defaultValue), "xs:boolean", description, false);
     }
 
     @Override
     public void register(String key, int defaultValue, String description) {
-        register(key, Integer.toString(defaultValue), "xs:integer", description);
+        register(key, Integer.toString(defaultValue), "xs:integer", description, false);
     }
 
     @Override
     public void register(String key, double defaultValue, String description) {
-        register(key, Double.toString(defaultValue), "xs:double", description);
+        register(key, Double.toString(defaultValue), "xs:double", description, false);
 
     }
 
     @Override
     public void register(String key, String defaultValue, String description) {
-        register(key, defaultValue, "xs:string", description);
+        register(key, defaultValue, "xs:string", description, false);
     }
 
-    private void register(String key, String defaultValue, String valueType, String description) {
+    @Override
+    public void registerPassword(String key, String defaultValue, String description) {
+        register(key, defaultValue, "xs:string", description, true);
+    }
+
+    private void register(String key, String defaultValue, String valueType, String description, boolean isPassword) {
 
         Optional<String> i = kvClient.getValueAsString(addSn(key));
         // TODO this check does not work
@@ -108,6 +129,8 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
             kvClient.putValue(addSn(key), defaultValue);
             kvClient.putValue(addSn(key) + "_description", description);
             kvClient.putValue(addSn(key) + "_type", valueType);
+            if(isPassword)
+                kvClient.putValue(addSn(key) + "_isPassword", "true");
         }
 
         if (configProps != null) {

@@ -1,4 +1,30 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.rest.impl;
+
+import com.google.gson.JsonObject;
+import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.manager.setup.Installer;
+import org.streampipes.model.client.messages.Message;
+import org.streampipes.model.client.messages.Notifications;
+import org.streampipes.model.client.setup.InitialSettings;
+import org.streampipes.rest.api.ISetup;
+import org.streampipes.rest.notifications.NotificationListener;
 
 import java.util.List;
 
@@ -9,16 +35,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.google.gson.JsonObject;
-
-import org.streampipes.config.backend.BackendConfig;
-import org.streampipes.model.client.setup.InitialSettings;
-import org.streampipes.manager.setup.Installer;
-import org.streampipes.model.client.messages.Message;
-import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.rest.api.ISetup;
-import org.streampipes.rest.notifications.NotificationListener;
 
 @Path("/v2/setup")
 public class Setup extends AbstractRestInterface implements ISetup {

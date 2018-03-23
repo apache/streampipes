@@ -1,3 +1,20 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.rest.impl;
 
 import java.net.URISyntaxException;
@@ -16,7 +33,7 @@ import javax.ws.rs.core.Response;
 
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.rest.annotation.GsonWithIds;
-import org.streampipes.storage.api.StorageRequests;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 
 import org.streampipes.model.client.messages.Notification;
@@ -24,7 +41,7 @@ import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.rest.api.IPipelineElement;
-import org.streampipes.storage.filter.Filter;
+import org.streampipes.storage.rdf4j.filter.Filter;
 
 @Path("/v2/users/{username}/actions")
 public class SemanticEventConsumer extends AbstractRestInterface implements IPipelineElement {
@@ -96,7 +113,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@Override
 	public Response removeOwn(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		try {
-			StorageRequests requestor = getPipelineElementRdfStorage();
+			IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
 			getUserService().deleteOwnAction(username, elementUri);
 			requestor.deleteSEC(requestor.getSECById(elementUri));
 		} catch (URISyntaxException e) {

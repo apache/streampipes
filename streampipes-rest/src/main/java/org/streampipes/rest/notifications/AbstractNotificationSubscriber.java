@@ -1,3 +1,20 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.rest.notifications;
 
 import com.google.gson.Gson;
@@ -7,7 +24,8 @@ import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.jms.ActiveMQConsumer;
 import org.streampipes.model.Notification;
 import org.streampipes.model.grounding.JmsTransportProtocol;
-import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.model.grounding.SimpleTopicDefinition;
+import org.streampipes.storage.management.StorageDispatcher;
 
 import java.text.SimpleDateFormat;
 
@@ -30,7 +48,7 @@ public abstract class AbstractNotificationSubscriber implements InternalEventPro
         JmsTransportProtocol protocol = new JmsTransportProtocol();
         protocol.setPort(BackendConfig.INSTANCE.getJmsPort());
         protocol.setBrokerHostname("tcp://" +BackendConfig.INSTANCE.getJmsHost());
-        protocol.setTopicName(topic);
+        protocol.setTopicDefinition(new SimpleTopicDefinition(topic));
 
         return protocol;
     }
@@ -45,8 +63,7 @@ public abstract class AbstractNotificationSubscriber implements InternalEventPro
     }
 
     protected void storeNotification(Notification message) {
-        StorageManager
-                .INSTANCE
+        StorageDispatcher.INSTANCE.getNoSqlStore()
                 .getNotificationStorageApi()
                 .addNotification(message);
     }

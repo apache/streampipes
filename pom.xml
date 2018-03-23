@@ -1,26 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2018 FZI Forschungszentrum Informatik
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- The Basics -->
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.50.2-SNAPSHOT</version>
+    <version>0.51.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
-        <rdf4j.version>2.2.2</rdf4j.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <rdf4j.version>2.2.4</rdf4j.version>
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
         <javassist.version>3.19.0-GA</javassist.version>
         <logback-classic.version>1.1.9</logback-classic.version>
         <jackson.version>2.7.4</jackson.version>
         <type-parser.version>0.6.0</type-parser.version>
         <simple-slack-api.version>0.5.1</simple-slack-api.version>
-        <consul-client.version>0.16.4</consul-client.version>
+        <consul-client.version>1.1.1</consul-client.version>
         <persistence-api.version>1.0.2</persistence-api.version>
         <junit.version>4.12</junit.version>
-        <kafka.version>0.10.0.1</kafka.version>
+        <kafka.version>1.0.0</kafka.version>
         <shiro.version>1.2.3</shiro.version>
-        <streampipes-empire.version>1.9.4</streampipes-empire.version>
+        <streampipes-empire.version>1.9.8</streampipes-empire.version>
         <dependency.locations.enabled>false</dependency.locations.enabled>
     </properties>
 
@@ -241,7 +258,7 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-manager</artifactId>
+                <artifactId>streampipes-pipeline-management</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -262,6 +279,16 @@
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pe-mixed-flink</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-spark</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pe-mixed-spark</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -326,11 +353,6 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-storage</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-measurement-units</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -380,15 +402,41 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes.empire</groupId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-storage-couchdb</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-storage-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-storage-management</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-storage-rdf4j</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-empire-rdf4j</artifactId>
                 <version>${streampipes-empire.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes.empire</groupId>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-empire-pinto</artifactId>
                 <version>${streampipes-empire.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-logging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -402,32 +450,22 @@
         <module>streampipes-container-standalone</module>
         <module>streampipes-dataformat</module>
         <module>streampipes-dataformat-json</module>
-        <module>streampipes-manager</module>
+        <module>streampipes-pipeline-management</module>
         <module>streampipes-measurement-units</module>
         <module>streampipes-messaging-kafka</module>
         <module>streampipes-messaging</module>
         <module>streampipes-messaging-jms</module>
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
-        <module>streampipes-pe-processors-esper</module>
-        <module>streampipes-pe-processors-standalone</module>
-        <module>streampipes-pe-mixed-flink</module>
-        <module>streampipes-pe-sinks-standalone</module>
-        <module>streampipes-pe-slack</module>
-        <module>streampipes-pe-sources-axoom-hmi</module>
         <module>streampipes-sources</module>
-        <module>streampipes-pe-sources-kd2</module>
-        <module>streampipes-pe-sources-hella</module>
-        <module>streampipes-pe-sources-mhwirth</module>
-        <module>streampipes-pe-sources-mnist</module>
-        <module>streampipes-pe-sources-samples</module>
         <module>streampipes-rest</module>
         <module>streampipes-sdk</module>
-        <module>streampipes-storage</module>
+        <module>streampipes-storage-api</module>
         <module>streampipes-user-management</module>
         <module>streampipes-wrapper</module>
         <module>streampipes-wrapper-esper</module>
         <module>streampipes-wrapper-flink</module>
+        <module>streampipes-wrapper-spark</module>
         <module>streampipes-wrapper-standalone</module>
         <module>streampipes-performance-tests</module>
         <module>streampipes-storage-rdf4j</module>
@@ -436,8 +474,11 @@
         <module>streampipes-vocabulary</module>
         <module>streampipes-serializers</module>
         <module>streampipes-wrapper-kafka-streams</module>
-        <module>streampipes-pe-mixed-kafka-streams</module>
         <module>streampipes-wrapper-distributed</module>
+        <module>streampipes-storage-management</module>
+        <module>streampipes-logging</module>
+        <module>archetypes/streampipes-archetype-pe-sources</module>
+        <module>archetypes/streampipes-archetype-pe-jvm</module>
     </modules>
 
     <profiles>
@@ -496,6 +537,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -518,7 +560,6 @@
         </plugins>
     </build>
 
-    <!-- Environment Settings -->
     <scm>
         <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce-backend.git
         </developerConnection>
@@ -550,7 +591,7 @@
         </repository>
         <snapshotRepository>
             <id>deployment</id>
-            <name>Internal Releases</name>
+            <name>Internal Snapshots</name>
             <url>https://laus.fzi.de/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>

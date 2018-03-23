@@ -1,27 +1,46 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.container.api;
+
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.streampipes.container.declarer.Declarer;
+import org.streampipes.container.declarer.InvocableDeclarer;
+import org.streampipes.container.init.RunningInstances;
+import org.streampipes.container.transform.Transformer;
+import org.streampipes.container.util.Util;
+import org.streampipes.model.Response;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.runtime.RuntimeOptions;
+import org.streampipes.model.runtime.RuntimeOptionsRequest;
+import org.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.streampipes.serializers.json.GsonSerializer;
 
 import java.io.IOException;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import org.streampipes.container.init.RunningInstances;
-import org.streampipes.container.util.Util;
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.RDFParseException;
-
-import org.streampipes.container.declarer.Declarer;
-import org.streampipes.container.declarer.InvocableDeclarer;
-import org.streampipes.container.transform.Transformer;
-import org.streampipes.model.base.InvocableStreamPipesEntity;
-import org.streampipes.model.Response;
 
 public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D extends Declarer> extends Element<D> {
 
@@ -34,20 +53,17 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
         this.clazz = clazz;
     }
 
-    //TODO remove the Form paramerter thing
     @POST
     @Path("{elementId}")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-//    public String invokeRuntime(@PathParam("elementId") String elementId, String payload) {
-    public String invokeRuntime(@PathParam("elementId") String elementId, @FormParam("json") String payload) {
+    public String invokeRuntime(@PathParam("elementId") String elementId, String payload) {
 
         try {
             I graph = Transformer.fromJsonLd(clazz, payload);
             InvocableDeclarer declarer = (InvocableDeclarer) getDeclarerById(elementId);
 
             if (declarer != null) {
-//                String runningInstanceId = Util.getInstanceId(graph.getElementId(), "sepa", elementId);
                 String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
                 RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
                 Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph);
@@ -61,6 +77,40 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
         return Util.toResponseString(elementId, false, "Could not find the element with id: " + elementId);
     }
 
+    @POST
+    @Path("{elementId}/configurations")
+    //@Consumes(MediaType.APPLICATION_JSON)
+    //@Produces(MediaType.APPLICATION_JSON)
+    public String fetchConfigurations(@PathParam("elementId") String elementId, String payload) {
+
+        RuntimeOptionsRequest runtimeOptionsRequest = GsonSerializer.getGsonWithIds().fromJson(payload,
+                RuntimeOptionsRequest.class);
+        ResolvesContainerProvidedOptions resolvesOptions = (ResolvesContainerProvidedOptions) getDeclarerById(elementId);
+
+        List<RuntimeOptions> availableOptions = resolvesOptions.resolveOptions(runtimeOptionsRequest.getRequestId(),
+                runtimeOptionsRequest.getMappedEventProperty());
+
+        return GsonSerializer.getGsonWithIds().toJson(new RuntimeOptionsResponse(runtimeOptionsRequest,
+                availableOptions));
+
+    }
+
+    @POST
+    @Path("{elementId}/output")
+    //@Consumes(MediaType.APPLICATION_JSON)
+    //@Produces(MediaType.APPLICATION_JSON)
+    public String fetchOutputStrategy(@PathParam("elementId") String elementId, String payload) {
+
+        I runtimeOptionsRequest = GsonSerializer.getGsonWithIds().fromJson(payload, clazz);
+        ResolvesContainerProvidedOutputStrategy<I> resolvesOutput = (ResolvesContainerProvidedOutputStrategy<I>)
+                getDeclarerById
+                (elementId);
+
+        return GsonSerializer.getGsonWithIds().toJson(resolvesOutput.resolveOutputStrategy(runtimeOptionsRequest));
+    }
+
+
+    // TODO move endpoint to /elementId/instances/runningInstanceId
     @DELETE
     @Path("{elementId}/{runningInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -80,6 +130,5 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
 
         return Util.toResponseString(elementId, false, "Could not find the running instance with id: " + runningInstanceId);
     }
-
 }
 

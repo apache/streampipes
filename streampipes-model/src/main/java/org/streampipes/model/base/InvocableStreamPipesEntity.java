@@ -1,19 +1,36 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.model.base;
 
 import org.streampipes.empire.annotations.RdfProperty;
-import org.streampipes.model.monitoring.ElementStatusInfoSettings;
+import org.streampipes.logging.LoggerFactory;
+import org.streampipes.logging.api.Logger;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
-
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.util.List;
 
 public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity {
 
@@ -45,7 +62,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 	private List<SpDataStream> streamRequirements;
 
 	private boolean configured;
-	
+
 	public InvocableStreamPipesEntity() {
 		super();
 	}
@@ -135,5 +152,11 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
 	public void setStatusInfoSettings(ElementStatusInfoSettings statusInfoSettings) {
 		this.statusInfoSettings = statusInfoSettings;
+	}
+
+	//public Logger getLogger(Class clazz, PeConfig peConfig) {
+	public Logger getLogger(Class clazz) {
+	//	return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri(), peConfig);
+		return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri());
 	}
 }
