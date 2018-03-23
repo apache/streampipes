@@ -3,6 +3,7 @@ package org.streampipes.model.modelconnect;
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 
 import javax.persistence.Entity;
@@ -20,6 +21,10 @@ public class AdapterDescription extends NamedStreamPipesEntity {
 
     @RdfProperty("sp:hasProtocol")
     private ProtocolDescription protocolDescription;
+
+
+    @RdfProperty("sp:hasDataSet")
+    private SpDataStream dataSet;
 
     public AdapterDescription() {
     }
@@ -45,7 +50,15 @@ public class AdapterDescription extends NamedStreamPipesEntity {
         this.protocolDescription = protocolDescription;
     }
 
-//    public String getId() {
+    public SpDataStream getDataSet() {
+        return dataSet;
+    }
+
+    public void setDataSet(SpDataStream dataSet) {
+        this.dataSet = dataSet;
+    }
+
+    //    public String getId() {
 //        return id;
 //    }
 //
