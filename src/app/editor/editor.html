@@ -6,14 +6,12 @@
 
                 <md-tab ng-repeat="tab in ctrl.tabs"
                         label="{{tab.title}}"
-                        md-on-select="ctrl.loadCurrentElements(tab.type)">
+                        md-on-select="ctrl.loadCurrentElements(tab.elementType)">
                     <md-tab-label>
                         {{tab.title}}
                         <md-icon md-svg-icon="navigation:ic_arrow_forward_24px"></md-icon>
                     </md-tab-label>
-
                 </md-tab>
-
             </md-tabs>
         </div>
         <div flex="30" layout="row" layout-align="end center"

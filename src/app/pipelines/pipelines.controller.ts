@@ -172,15 +172,15 @@ export class PipelineCtrl {
     
 
     addImageOrTextIcon($element, json) {
-        this.ImageChecker.imageExists(json.iconUrl, function (exists) {
+        this.ImageChecker.imageExists(json.properties.iconUrl, function (exists) {
             if (exists) {
                 var $img = $('<img>')
-                    .attr("src", json.iconUrl)
+                    .attr("src", json.properties.iconUrl)
                     .addClass('pipeline-display-element-img');
                 $element.append($img);
             } else {
                 var $span = $("<span>")
-                    .text((<any>ElementIconText).getElementIconText(json.name) || "N/A")
+                    .text((<any>ElementIconText).getElementIconText(json.properties.name) || "N/A")
                     .addClass("element-text-icon")
                 $element.append($span);
             }

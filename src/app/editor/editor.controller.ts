@@ -47,7 +47,7 @@ export class EditorCtrl {
         this.minimizedEditorStand = false;
 
         this.rawPipelineModel = [];
-        this.activeType = "stream";
+        this.activeType = "set";
 
         if (this.AuthStatusService.email != undefined) {
             this.RestApi
@@ -76,16 +76,20 @@ export class EditorCtrl {
 
         this.tabs = [
             {
+                title: 'Data Sets',
+                elementType: 'set',
+            },
+            {
                 title: 'Data Streams',
-                type: 'stream',
+                elementType: 'stream',
             },
             {
                 title: 'Data Processors',
-                type: 'sepa',
+                elementType: 'sepa',
             },
             {
                 title: 'Data Sinks',
-                type: 'action',
+                elementType: 'action',
             }
         ];
 
@@ -109,21 +113,32 @@ export class EditorCtrl {
     }
 
     loadCurrentElements(type) {
+        console.log(type);
+        console.log(this.allElements[type]);
         this.currentElements = this.allElements[type];
         this.activeType = type;
+        console.log(this.currentElements);
     }
 
     loadSources() {
         var tempStreams = [];
+        var tempSets = [];
         this.RestApi.getOwnSources()
             .then((sources) => {
                 sources.data.forEach((source, i, sources) => {
                     source.spDataStreams.forEach(stream => {
-                        stream.type = 'stream';
-                        tempStreams = tempStreams.concat(stream);
+                        if (stream.type == 'org.streampipes.model.SpDataSet') {
+                            stream.elementType = "set";
+                            tempSets = tempSets.concat(stream);
+                        } else {
+                            stream.elementType = "stream";
+                            tempStreams = tempStreams.concat(stream);
+                        }
                     });
                     this.allElements["stream"] = tempStreams;
+                    this.allElements["set"] = tempSets;
                     this.currentElements = this.allElements["stream"];
+                    console.log(this.allElements["set"]);
                 });
             });
     };
