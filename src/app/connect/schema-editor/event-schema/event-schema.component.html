@@ -1,14 +1,10 @@
 <button md-icon-button color="primary" mat-button (click)=guessSchema()>
     Guess Schema
 </button>
-<button md-icon-button color="primary" mat-button (click)=newEventSchema()>
-    New Schema
-</button>
 
 <div fxLayout="column" fxLayoutAlign="space-evenly stretched" >
-    <app-event-property-bag [(eventProperties)]="eventSchema.eventProperties">
+    <app-event-property-bag [(eventProperties)]="adapterDescription.eventSchema.eventProperties">
     </app-event-property-bag>
-
 </div>
 
 

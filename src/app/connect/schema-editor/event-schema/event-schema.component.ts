@@ -15,9 +15,7 @@ import {EventProperty} from '../model/EventProperty';
 
 export class EventSchemaComponent implements OnInit {
 
-    @Input() protocol: ProtocolDescription;
-    @Input() format: FormatDescription;
-
+    @Input() adapterDescription;
     @Output() adapterChange = new EventEmitter<AdapterDescription>();
 
     public eventSchema: EventSchema = null;
@@ -28,22 +26,15 @@ export class EventSchemaComponent implements OnInit {
 
 
     public guessSchema(): void {
-        const adapter = new AdapterDescription('http://bb.de');
-        adapter.protocol = this.protocol;
-        adapter.format = this.format;
-
-        // let self = this;
-
-        this.restService.getGuessSchema(adapter).subscribe(x => {
-            this.eventSchema = x;
-            // this.eventProperties = x.eventProperties;
-            console.log(x);
-            console.log(this.eventSchema);
+        this.restService.getGuessSchema(this.adapterDescription).subscribe(eventSchema => {
+            this.adapterDescription.eventSchema  = eventSchema;
         });
     }
 
     ngOnInit() {
-        this.eventSchema = new EventSchema();
+        if (this.adapterDescription.eventSchema == null) {
+            this.adapterDescription.eventSchema = new EventSchema();
+        }
     }
 
 

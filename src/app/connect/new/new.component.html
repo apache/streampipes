@@ -7,7 +7,7 @@
         <ng-template matStepLabel>Select Protocol</ng-template>
 
         <div fxLayoutAlign="center">
-          <app-protocol-form  [(selectedProtocol)]="selectedProtocol" [allProtocols]="allProtocols"></app-protocol-form>
+          <app-protocol-form  [(selectedProtocol)]="newAdapterDescription.protocol" [allProtocols]="allProtocols"></app-protocol-form>
         </div>
         <div fxLayoutAlign="end">
           <button color="accent" mat-button matStepperNext>Next</button>
@@ -24,7 +24,7 @@
         <ng-template matStepLabel>Select Format</ng-template>
 
         <div fxLayoutAlign="center">
-          <app-format-form [(selectedFormat)]="selectedFormat" [allFormats]="allFormats"></app-format-form>
+          <app-format-form [(selectedFormat)]="newAdapterDescription.format" [allFormats]="allFormats"></app-format-form>
         </div>
 
         <div fxLayoutAlign="end">
@@ -39,7 +39,7 @@
 
     <mat-step>
       <ng-template matStepLabel>Define Event Schema</ng-template>
-      <app-event-schema [(format)]="selectedFormat" [(protocol)]="selectedProtocol"></app-event-schema>
+      <app-event-schema [(adapterDescription)]="newAdapterDescription"></app-event-schema>
 
         <div fxLayoutAlign="end">
           <button color="accent" mat-button matStepperPrevious>Back</button>
