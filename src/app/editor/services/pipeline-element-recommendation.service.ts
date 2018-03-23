@@ -18,7 +18,9 @@ export class PipelineElementRecommendationService {
                         result['possibleElements'] = this.collectPossibleElements(allElements, data.possibleElements);
                         resolve(result);
                     } else {
-                        reject(data);
+                        // TODO improve
+                        var noresult = {success: false};
+                        resolve(noresult);
                     }
                 });
         });

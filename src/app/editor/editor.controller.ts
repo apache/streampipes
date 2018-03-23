@@ -42,12 +42,12 @@ export class EditorCtrl {
             this.currentModifiedPipelineId = $stateParams.pipeline;
         }
 
-        this.selectedTab = 0;
+        this.selectedTab = 1;
 
         this.minimizedEditorStand = false;
 
         this.rawPipelineModel = [];
-        this.activeType = "set";
+        this.activeType = "stream";
 
         if (this.AuthStatusService.email != undefined) {
             this.RestApi
@@ -77,19 +77,19 @@ export class EditorCtrl {
         this.tabs = [
             {
                 title: 'Data Sets',
-                elementType: 'set',
+                type: 'set',
             },
             {
                 title: 'Data Streams',
-                elementType: 'stream',
+                type: 'stream',
             },
             {
                 title: 'Data Processors',
-                elementType: 'sepa',
+                type: 'sepa',
             },
             {
                 title: 'Data Sinks',
-                elementType: 'action',
+                type: 'action',
             }
         ];
 
@@ -98,6 +98,9 @@ export class EditorCtrl {
         this.loadActions();
     }
 
+    isActiveTab(elementType) {
+        return elementType === this.activeType;
+    }
 
     toggleEditorStand() {
         this.minimizedEditorStand = !this.minimizedEditorStand;
@@ -113,11 +116,8 @@ export class EditorCtrl {
     }
 
     loadCurrentElements(type) {
-        console.log(type);
-        console.log(this.allElements[type]);
         this.currentElements = this.allElements[type];
         this.activeType = type;
-        console.log(this.currentElements);
     }
 
     loadSources() {
@@ -127,18 +127,17 @@ export class EditorCtrl {
             .then((sources) => {
                 sources.data.forEach((source, i, sources) => {
                     source.spDataStreams.forEach(stream => {
-                        if (stream.type == 'org.streampipes.model.SpDataSet') {
-                            stream.elementType = "set";
+                        if (stream.sourceClass == 'org.streampipes.model.SpDataSet') {
+                            stream.type = "set";
                             tempSets = tempSets.concat(stream);
                         } else {
-                            stream.elementType = "stream";
+                            stream.type = "stream";
                             tempStreams = tempStreams.concat(stream);
                         }
                     });
                     this.allElements["stream"] = tempStreams;
                     this.allElements["set"] = tempSets;
                     this.currentElements = this.allElements["stream"];
-                    console.log(this.allElements["set"]);
                 });
             });
     };

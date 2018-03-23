@@ -73,7 +73,7 @@ export class ObjectProvider {
                 var $conObj = $("#" + el.connectedTo[i]);
                 this.addElement($conObj, this.findElement(el.connectedTo[i], currentPipelineElements), currentPipelineElements, pipeline);
             }
-        } else if (rootElement.type === 'stream') {
+        } else if (rootElement.type === 'stream' || rootElement.type === 'set') {
             var el = rootElement.payload;
             pipeline.streams.push(el);
         }

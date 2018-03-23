@@ -76,7 +76,7 @@ export class PipelineController {
                     var pipelineElementConfig = this.JsplumbService.createNewPipelineElementConfig(ui.draggable.data("JSON"), this.PipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false);
                     this.rawPipelineModel.push(pipelineElementConfig);
                     //Droppable Streams
-                    if (ui.draggable.hasClass('stream')) {
+                    if (ui.draggable.hasClass('stream') || ui.draggable.hasClass('set')) {
                         this.checkTopicModel(pipelineElementConfig);
                         //Droppable Sepas
                     } else if (ui.draggable.hasClass('sepa')) {
@@ -116,8 +116,8 @@ export class PipelineController {
             });
         });
 
-        var streamDescription = pipelineElementConfig.payload
-        if (streamDescription
+        var streamDescription = pipelineElementConfig.payload;
+        if (pipelineElementConfig.type != 'set' && streamDescription
                 .eventGrounding
                 .transportProtocols[0]
                 .properties.topicDefinition
