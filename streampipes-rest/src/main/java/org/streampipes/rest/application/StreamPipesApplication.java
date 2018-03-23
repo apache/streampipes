@@ -20,7 +20,6 @@ package org.streampipes.rest.application;
 import org.streampipes.rest.impl.*;
 import org.streampipes.rest.impl.connect.GuessResource;
 import org.streampipes.rest.impl.connect.SpConnect;
-import org.streampipes.rest.interceptor.AuthenticationInterceptor;
 import org.streampipes.rest.serializer.GsonClientModelProvider;
 import org.streampipes.rest.serializer.GsonWithIdProvider;
 import org.streampipes.rest.serializer.GsonWithoutIdProvider;
@@ -37,7 +36,7 @@ public class StreamPipesApplication extends Application {
         Set<Class<?>> apiClasses = new HashSet<>();
 
         // APIs
-        apiClasses.add(AuthenticationInterceptor.class);
+        apiClasses.add(Authentication.class);
         apiClasses.add(AutoComplete.class);
         apiClasses.add(PipelineElementCategory.class);
         apiClasses.add(Deployment.class);
