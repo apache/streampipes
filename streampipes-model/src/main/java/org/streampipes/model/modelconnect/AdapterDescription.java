@@ -1,8 +1,10 @@
 package org.streampipes.model.modelconnect;
 
+import com.google.gson.annotations.SerializedName;
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 
 import javax.persistence.Entity;
@@ -12,14 +14,18 @@ import javax.persistence.Entity;
 @Entity
 public class AdapterDescription extends NamedStreamPipesEntity {
 
-//    private @SerializedName("_id") String id;
-//    private @SerializedName("_rev") String rev;
+    private @SerializedName("_id") String id;
+    private @SerializedName("_rev") String rev;
 
     @RdfProperty("sp:hasFormat")
     private FormatDescription formatDescription;
 
     @RdfProperty("sp:hasProtocol")
     private ProtocolDescription protocolDescription;
+
+
+    @RdfProperty("sp:hasDataSet")
+    private SpDataStream dataSet;
 
     public AdapterDescription() {
     }
@@ -45,19 +51,27 @@ public class AdapterDescription extends NamedStreamPipesEntity {
         this.protocolDescription = protocolDescription;
     }
 
-//    public String getId() {
-//        return id;
-//    }
-//
-//    public void setId(String id) {
-//        this.id = id;
-//    }
-//
-//    public String getRev() {
-//        return rev;
-//    }
-//
-//    public void setRev(String rev) {
-//        this.rev = rev;
-//    }
+    public SpDataStream getDataSet() {
+        return dataSet;
+    }
+
+    public void setDataSet(SpDataStream dataSet) {
+        this.dataSet = dataSet;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getRev() {
+        return rev;
+    }
+
+    public void setRev(String rev) {
+        this.rev = rev;
+    }
 }

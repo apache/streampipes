@@ -44,12 +44,14 @@ public class JsonFormat extends Format {
     public FormatDescription declareModel() {
         FormatDescription fd = new FormatDescription(ID, "Json", "This is the description" +
                 "for json format");
-        FreeTextStaticProperty delimiterProperty = new FreeTextStaticProperty("key",
+        FreeTextStaticProperty keyProperty = new FreeTextStaticProperty("key",
                 "key", "Key of the json part that should be parsed");
         FreeTextStaticProperty delme = new FreeTextStaticProperty("delme",
                 "optional", "Just needed to avoid parsing bug in JSON-LD");
 
-        fd.addConfig(delimiterProperty);
+        //TODO remove just for testing
+        keyProperty.setValue("records");
+        fd.addConfig(keyProperty);
         fd.addConfig(delme);
 
         return fd;

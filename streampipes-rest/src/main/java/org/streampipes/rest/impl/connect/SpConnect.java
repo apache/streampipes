@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -133,13 +134,16 @@ public class SpConnect extends AbstractRestInterface {
             e.printStackTrace();
         }
 
+        new AdapterStorageImpl().storeAdapter(a);
+
         // TODO fix adapter storage again
 //    AdapterStorageImpl adapterStorage = new AdapterStorageImpl();
 //    adapterStorage.add(a);
 
-        Adapter adapter = new Adapter("ipe-koi06.fzi.de:9092", "org.streampipes.streamconnect", true);
-        adapter.run(a);
+//        Adapter adapter = new Adapter("ipe-koi06.fzi.de:9092", "org.streampipes.streamconnect", true);
+//        adapter.run(a);
 
+        System.out.println(a);
 
         return Response.ok().build();
     }
