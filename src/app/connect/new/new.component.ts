@@ -68,6 +68,8 @@ export class NewComponent implements OnInit {
 
     public startAdapter() {
         console.log(this.newAdapterDescription);
+
+        this.restService.addAdapter(this.newAdapterDescription);
         console.log('bbb');
     }
 

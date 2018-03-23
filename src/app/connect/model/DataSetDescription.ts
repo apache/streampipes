@@ -5,7 +5,7 @@ import {FormatDescription} from './FormatDescription';
 import {ProtocolDescription} from './ProtocolDescription';
 import {EventSchema} from '../schema-editor/model/EventSchema';
 
-@RdfsClass('sp:DataStreamDescription')
+@RdfsClass('sp:DataStream')
 export class DataSetDescription {
 
   @RdfId
@@ -20,7 +20,7 @@ export class DataSetDescription {
   @RdfProperty('sp:hasUri')
   public uri: string;
 
-  @RdfProperty('sp:hasEventSchema')
+  @RdfProperty('sp:hasSchema')
   public eventSchema: EventSchema;
 
   constructor(id: string) {

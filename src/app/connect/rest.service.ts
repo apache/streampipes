@@ -43,14 +43,14 @@ export class RestService {
 
     tsonld.toflattenJsonLd(adapter).subscribe(res => {
       console.log(JSON.stringify(res));
-      this.http.post(this.host + 'api/v1/adapter', res).subscribe();
+      this.http.post(this.host + 'api/v2/adapter', res).subscribe();
     });
 
   }
 
   getAdapters(): Observable<{ protocol: Protocol; format: Format}[]> {
     return this.http
-      .get(this.host + 'api/v1/adapter/all')
+      .get(this.host + 'api/v2/adapter/all')
       .map(response => response as { protocol: Protocol; format: Format}[]);
 
   }

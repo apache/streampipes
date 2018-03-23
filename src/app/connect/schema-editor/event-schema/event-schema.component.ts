@@ -27,13 +27,13 @@ export class EventSchemaComponent implements OnInit {
 
     public guessSchema(): void {
         this.restService.getGuessSchema(this.adapterDescription).subscribe(eventSchema => {
-            this.adapterDescription.eventSchema  = eventSchema;
+            this.adapterDescription.dataSet.eventSchema  = eventSchema;
         });
     }
 
     ngOnInit() {
-        if (this.adapterDescription.eventSchema == null) {
-            this.adapterDescription.eventSchema = new EventSchema();
+        if (this.adapterDescription.dataSet.eventSchema == null) {
+            this.adapterDescription.dataSet.eventSchema = new EventSchema();
         }
     }
 
