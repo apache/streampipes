@@ -1,19 +1,11 @@
-import {Component, Input, EventEmitter, OnInit, Output} from '@angular/core';
-import {EventPropertyNested} from '../../old-schema-editor/model/EventPropertyNested';
-import {EventProperty} from '../../old-schema-editor/model/EventProperty';
-import {EventPropertyList} from '../../old-schema-editor/model/EventPropertyList';
-// import {DragulaService} from 'ng2-dragula';
+import {Component, Input, EventEmitter, OnInit, Output, OnChanges} from '@angular/core';
 import {UUID} from 'angular2-uuid';
-import {WriteJsonService} from '../../old-schema-editor/write-json.service';
-// import {DragDropService} from '../drag-drop.service';
-import {EventPropertyNestedComponent} from '../../old-schema-editor/event-property-nested/event-property-nested.component';
 import {RestService} from '../../rest.service';
-import {EventPropertyPrimitive} from '../../old-schema-editor/model/EventPropertyPrimitive';
-import {EventSchema} from '../../old-schema-editor/model/EventSchema';
-import {AdapterDescription} from '../../model/AdapterDescription';
-import {ProtocolDescription} from '../../model/ProtocolDescription';
-import {FormatDescription} from '../../model/FormatDescription';
 import {DragulaService} from 'ng2-dragula';
+import {EventProperty} from '../model/EventProperty';
+import {EventPropertyNested} from '../model/EventPropertyNested';
+import {EventPropertyList} from '../model/EventPropertyList';
+import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
 
 
 @Component({
@@ -25,6 +17,8 @@ import {DragulaService} from 'ng2-dragula';
 export class EventPropertyBagComponent implements OnInit {
 
     @Input() eventProperties: EventProperty[];
+    @Output() eventPropertiesChange = new EventEmitter<EventProperty[]>();
+
 
     private dragularOptions: any = {
         removeOnSpill: false
@@ -34,10 +28,10 @@ export class EventPropertyBagComponent implements OnInit {
                 private dragulaService: DragulaService) {
     }
 
-
     ngOnInit() {
 
     }
+
     public addPrimitiveProperty(): void {
         const uuid: string = UUID.UUID();
         const path = '/' + uuid;

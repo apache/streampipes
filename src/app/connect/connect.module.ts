@@ -25,8 +25,8 @@ import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
 import { RestService } from './rest.service';
 
-    import { DragulaModule } from 'ng2-dragula';
-// import {DataTypesService} from './schema-editor/data-type.service';
+import { DragulaModule } from 'ng2-dragula';
+import {DataTypesService} from './schema-editor/data-type.service';
 
 @NgModule({
     imports: [
@@ -53,8 +53,8 @@ import { RestService } from './rest.service';
 
     ],
     providers: [
-        RestService
-        // DataTypesService
+        RestService,
+        DataTypesService
     ],
     entryComponents: [
         NewComponent

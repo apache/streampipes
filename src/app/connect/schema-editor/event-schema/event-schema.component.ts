@@ -5,6 +5,7 @@ import {EventSchema} from '../model/EventSchema';
 import {AdapterDescription} from '../../model/AdapterDescription';
 import {ProtocolDescription} from '../../model/ProtocolDescription';
 import {FormatDescription} from '../../model/FormatDescription';
+import {EventProperty} from '../model/EventProperty';
 
 @Component({
     selector: 'app-event-schema',
@@ -14,9 +15,7 @@ import {FormatDescription} from '../../model/FormatDescription';
 
 export class EventSchemaComponent implements OnInit {
 
-    @Input() protocol: ProtocolDescription;
-    @Input() format: FormatDescription;
-
+    @Input() adapterDescription;
     @Output() adapterChange = new EventEmitter<AdapterDescription>();
 
     public eventSchema: EventSchema = null;
@@ -27,24 +26,15 @@ export class EventSchemaComponent implements OnInit {
 
 
     public guessSchema(): void {
-        const adapter = new AdapterDescription('http://bb.de');
-        adapter.protocol = this.protocol;
-        adapter.format = this.format;
-
-        this.restService.getGuessSchema(adapter).subscribe(x => {
-            this.eventSchema = x;
-            console.log(x);
+        this.restService.getGuessSchema(this.adapterDescription).subscribe(eventSchema => {
+            this.adapterDescription.dataSet.eventSchema  = eventSchema;
         });
     }
-    // public addPrimitiveProperty(): void {
-    //       const uuid: string = UUID.UUID();
-    //       const path = '/' + uuid;
-    //
-    //       this.eventSchema.eventProperties.push(new EventPropertyPrimitive(uuid, undefined));
-    //  }
 
     ngOnInit() {
-        this.eventSchema = new EventSchema();
+        if (this.adapterDescription.dataSet.eventSchema == null) {
+            this.adapterDescription.dataSet.eventSchema = new EventSchema();
+        }
     }
 
 
