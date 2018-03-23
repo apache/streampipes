@@ -1,5 +1,5 @@
 export let spMapWidgetConfig = {
-    templateUrl: 'app/dashboard/templates/map/mapConfig.html',
+    templateUrl: 'src/app/dashboard/templates/map/mapConfig.html',
     bindings: {
         wid: '='
     },

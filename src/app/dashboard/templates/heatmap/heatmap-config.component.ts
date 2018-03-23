@@ -1,5 +1,5 @@
 export let spHeatmapWidgetConfig = {
-    templateUrl: 'app/dashboard/templates/heatmap/heatmapConfig.html',
+    templateUrl: 'src/app/dashboard/templates/heatmap/heatmapConfig.html',
     bindings: {
             wid: '='
     },

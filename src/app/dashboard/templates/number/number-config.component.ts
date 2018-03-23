@@ -1,5 +1,5 @@
 export let spNumberWidgetConfig = {
-    templateUrl: 'app/dashboard/templates/number/numberConfig.html',
+    templateUrl: 'src/app/dashboard/templates/number/numberConfig.html',
     bindings: {
         wid: '='
     },

@@ -1,11 +1,11 @@
 declare const require: any;
 
-export let spGaugeWidgetConfig = {
-    template: require('./gaugeConfig.html'),
+export let spImageWidgetConfig = {
+    template: require('./imageConfig.html'),
     bindings: {
         wid: '='
     },
-    controller: class GaugeConfigCtrl {
+    controller: class ImageConfigCtrl {
         constructor() {}
     },
     controllerAs: 'ctrl'

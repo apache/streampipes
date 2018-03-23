@@ -1,6 +1,6 @@
 export let spVerticalbarWidgetConfig = {
     restrict: 'E',
-    templateUrl: 'app/dashboard/templates/verticalbar/verticalbarConfig.html',
+    templateUrl: 'src/app/dashboard/templates/verticalbar/verticalbarConfig.html',
     bindings: {
         wid: '='
     },

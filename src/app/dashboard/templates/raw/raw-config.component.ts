@@ -1,5 +1,5 @@
 export let spRawWidgetConfig = {
-    templateUrl: 'app/dashboard/templates/raw/rawConfig.html',
+    templateUrl: 'src/app/dashboard/templates/raw/rawConfig.html',
     bindings: {
         wid: '='
     },
