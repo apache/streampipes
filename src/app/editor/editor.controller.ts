@@ -127,7 +127,7 @@ export class EditorCtrl {
             .then((sources) => {
                 sources.data.forEach((source, i, sources) => {
                     source.spDataStreams.forEach(stream => {
-                        if (stream.sourceClass == 'org.streampipes.model.SpDataSet') {
+                        if (stream.sourceType == 'org.streampipes.model.SpDataSet') {
                             stream.type = "set";
                             tempSets = tempSets.concat(stream);
                         } else {

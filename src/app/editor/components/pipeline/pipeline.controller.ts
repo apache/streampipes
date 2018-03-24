@@ -75,10 +75,15 @@ export class PipelineController {
                 if (ui.draggable.hasClass('draggable-icon')) {
                     var pipelineElementConfig = this.JsplumbService.createNewPipelineElementConfig(ui.draggable.data("JSON"), this.PipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false);
                     this.rawPipelineModel.push(pipelineElementConfig);
-                    //Droppable Streams
-                    if (ui.draggable.hasClass('stream') || ui.draggable.hasClass('set')) {
+                    if (ui.draggable.hasClass('set')) {
+                        this.$timeout(() => {
+                            this.$timeout(() => {
+                                this.JsplumbService.setDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                            });
+                        });
+                    }
+                    else if (ui.draggable.hasClass('stream')) {
                         this.checkTopicModel(pipelineElementConfig);
-                        //Droppable Sepas
                     } else if (ui.draggable.hasClass('sepa')) {
                         this.$timeout(() => {
                             this.$timeout(() => {
@@ -117,7 +122,7 @@ export class PipelineController {
         });
 
         var streamDescription = pipelineElementConfig.payload;
-        if (pipelineElementConfig.type != 'set' && streamDescription
+        if (streamDescription
                 .eventGrounding
                 .transportProtocols[0]
                 .properties.topicDefinition

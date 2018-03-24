@@ -242,6 +242,10 @@ export class RestApi {
         return this.$http.post(this.urlBase() +"/pipelines/update", pipeline);
     }
 
+    updateDataSet(dataSet) {
+        return this.$http.post(this.urlBase() +"/pipelines/update/dataset", dataSet);
+    }
+
     startPipeline(pipelineId) {
         return this.$http.get(this.urlBase() +"/pipelines/" +pipelineId +"/start");
     }
