@@ -17,7 +17,6 @@ build:
   artifacts:
     paths:
       - dist/assets/img/
-      - dist/assets/css/
       - dist/assets/lib/
       - dist/assets/templates/
       - dist/index.html
