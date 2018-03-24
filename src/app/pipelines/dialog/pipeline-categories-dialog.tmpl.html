@@ -14,7 +14,7 @@
             <div ng-repeat="pipelineCategory in ctrl.pipelineCategories">
                 <div style="border: 5px;border-color:blue;">
                     <md-list-item layout="row" layout-align="start start" class="md-with-secondary"
-                                  style="padding:5px;border:1px solid;border-color:#39b54a">
+                                  style="padding:5px;margin-bottom:5px;" class="sp-primary-border-1px">
                         <div class="md-list-item-text" flex="80" layout="column">
                             <div flex layout="column">
                                 <h4><b>{{pipelineCategory.categoryName}}</b></h4>
@@ -82,7 +82,7 @@
                             <div class="md-list-item-text" flex="33" layout="row" layout-align="center start">
                                 <md-button class="md-icon-button" ng-show="categoryDetailsVisible[pipelineCategory._id]"
                                            ng-click="ctrl.toggleCategoryDetailsVisibility(pipelineCategory._id)">
-                                    <i class="material-icons" style="color:rgb(255,64,129);">arrow_drop_up</i>
+                                    <i class="material-icons" class="sp-accent">arrow_drop_up</i>
                                     <md-tooltip md-direction="top">
                                         Hide Details
                                     </md-tooltip>
@@ -90,7 +90,7 @@
                                 <md-button class="md-icon-button"
                                            ng-show="!ctrl.categoryDetailsVisible[pipelineCategory._id]"
                                            ng-click="ctrl.toggleCategoryDetailsVisibility(pipelineCategory._id)">
-                                    <i class="material-icons" style="color:rgb(255,64,129);">arrow_drop_down</i>
+                                    <i class="material-icons" class="sp-accent">arrow_drop_down</i>
                                     <md-tooltip md-direction="top">
                                         Show Details
                                     </md-tooltip>

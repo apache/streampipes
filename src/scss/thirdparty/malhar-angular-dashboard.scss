@@ -1,3 +1,5 @@
+@import "../_variables";
+
 .dashboard-widget-area {
   margin: 10px 0 30px;
   min-height: 200px;
@@ -14,7 +16,7 @@
 }
 
 .widget-label-accent {
-	background-color: #39b54a;
+	background-color: $sp-color-accent;
 }
 .widget-container {
   float: left;

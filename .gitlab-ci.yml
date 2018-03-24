@@ -23,6 +23,7 @@ build:
       - dist/index.html
       - dist/main.bundle.js
       - dist/polyfills.bundle.js
+      - dist/style.bundle.css
     expire_in: 1 hour
 
 nginx:

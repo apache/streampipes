@@ -1,4 +1,4 @@
-/*! 
+/*!
  * angular-loading-bar v0.8.0
  * https://chieffancypants.github.io/angular-loading-bar
  * Copyright (c) 2015 Wes Cruver
@@ -6,6 +6,7 @@
  */
 
 /* Make clicks pass-through */
+
 #loading-bar,
 #loading-bar-spinner {
   pointer-events: none;
@@ -36,7 +37,7 @@
   -o-transition: width 350ms;
   transition: width 350ms;
 
-  background: #39b54a;
+  background: $sp-color-accent;
   position: fixed;
   z-index: 10002;
   top: 0px;
@@ -77,8 +78,8 @@
   height: 14px;
 
   border:  solid 2px transparent;
-  border-top-color:  #39b54a;
-  border-left-color: #39b54a;
+  border-top-color:  $sp-color-accent;
+  border-left-color: $sp-color-accent;
   border-radius: 50%;
 
   -webkit-animation: loading-bar-spinner 400ms linear infinite;
