@@ -1,0 +1,37 @@
+@import './thirdparty/spinkit';
+@import './thirdparty/please-wait';
+@import './thirdparty/jsplumb';
+@import './thirdparty/toastr';
+@import './thirdparty/prism';
+@import './thirdparty/loading-bar.min';
+@import './thirdparty/ng-prettyjson.min';
+@import './thirdparty/angular-ui-tree.min';
+@import './thirdparty/mlhr-table';
+@import './thirdparty/malhar-angular-dashboard';
+@import './thirdparty/epoch.min';
+@import './thirdparty/trafficlight';
+@import './thirdparty/angularjs-datetime-picker';
+@import './thirdparty/angular-notification-icons.min';
+@import './thirdparty/indigo-pink';
+
+@import './sp/main';
+
+@import './thirdparty/colors.scss';
+
+.cv-wrapper {
+  font-size: 1em;
+  width: 320px;
+  height: 320px;
+  overflow: hidden;
+  position: absolute;
+  left: -100px;
+  top: -100px;
+  border-radius: 50%;
+  pointer-events:none;
+  /*margin-left: -13em;*/
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  transition: all .3s ease;
+  transform: scale(0.1);
+  visibility:hidden;
+}
