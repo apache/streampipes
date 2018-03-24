@@ -99,12 +99,12 @@ export const Ng1AppModule = angular
             '500': '304269',
             '600': '304269',
             '700': '003B3D',
-            '800': '0A3F54',
-            '900': '0A3F54',
-            'A100': '0A3F54',
-            'A200': '0A3F54',
-            'A400': '0A3F54',
-            'A700': '0A3F54',
+            '800': '39b54a',
+            '900': '39b54a',
+            'A100': '39b54a',
+            'A200': '39b54a',
+            'A400': '39b54a',
+            'A700': '39b54a',
             'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
                                                 // on this palette should be dark or light
 
@@ -122,11 +122,11 @@ export const Ng1AppModule = angular
             '600': '45DA59',
             '700': '45DA59',
             '800': '45DA59',
-            '900': '39B54A',
-            'A100': '39b54a',
-            'A200': '39b54a',
-            'A400': '39B54A',
-            'A700': '39B54A',
+            '900': '1B1464',
+            'A100': '1B1464',
+            'A200': '1B1464',
+            'A400': '1B1464',
+            'A700': '1B1464',
             'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
                                                 // on this palette should be dark or light
 

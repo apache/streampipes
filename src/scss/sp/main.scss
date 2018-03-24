@@ -1,3 +1,5 @@
+@import '../_variables';
+
 .gu-mirror {
     display: none; /* This fixes a bug with the dragular framework */
 }
@@ -135,7 +137,7 @@ position: fixed; /* fix the "displacement" bug in webkit browsers when using tab
 }
 
 md-toolbar:not(.md-menu-toolbar) {
-    background: #0A3F54;
+    background: $sp-color-primary;
 }
 
 .md-button {
@@ -147,8 +149,8 @@ md-toolbar:not(.md-menu-toolbar) {
 }
 
 .md-button.md-raised:not[disabled] {
-    background-color: #39b54a !important;
-    border: 2px solid #39b54a;
+    background-color: $sp-color-accent !important;
+    border: 2px solid $sp-color-accent;
     box-shadow: none !important;
     border-radius: 2px !important;
     text-transform: none !important;
@@ -234,7 +236,7 @@ md-toolbar:not(.md-menu-toolbar) {
 .angular-notifications-icon {
     right: -7px !important;
     top: -7px !important;
-    background: #39b54a !important;
+    background: $sp-color-accent !important;
 }
 
 .speech-bubble {
@@ -297,7 +299,7 @@ md-content {
     transform: perspective(4px) rotateX(1deg);
     transform-origin: bottom;
     height: calc(100% - 20px);
-    border: 0px solid #39b54a;
+    border: 0px solid $sp-color-accent;
     border-bottom: .1em none #fff;
 }
 
@@ -334,7 +336,7 @@ md-toolbar.top-nav {
 
 .top-nav {
     height: 50px !important;
-    border-bottom: 0px solid #39b54a;
+    border-bottom: 0px solid $sp-color-accent;
 }
 
 md-list-item > .md-button {
@@ -357,7 +359,7 @@ md-list-item._md-button-wrap > div.md-button:first-child {
 .wizard-preview {
     height: 150px !important;
     width: 150px !important;
-    box-shadow: 0 0 2px #39b54a;
+    box-shadow: 0 0 2px $sp-color-accent;
     display: inline-block;
     vertical-align: middle;
     background-color: white;
@@ -372,7 +374,7 @@ md-list-item._md-button-wrap > div.md-button:first-child {
 }
 
 .wizard-preview-selected {
-    border: 5px solid #39b54a;
+    border: 5px solid $sp-color-accent;
 }
 
 .letter-circle {
@@ -459,7 +461,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 .wizard-inactive {
     background-color: white !important;
     color: black !important;
-    border: 2px solid #39b54a !important;
+    border: 2px solid $sp-color-accent !important;
 }
 
 .jsplumb-endpoint {
@@ -467,7 +469,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 }
 
 .popover {
-    border: 1px solid #39b54a;
+    border: 1px solid $sp-color-accent;
     box-shadow: 0 0px 0px;
     -webkit-bow-shadow: none;
     border-radius: 0px;
@@ -475,17 +477,17 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 }
 
 .arrow {
-    color: #39b54a;
+    color: $sp-color-accent;
 }
 
 .popover-title {
-    background-color: #39b54a;
+    background-color: $sp-color-accent;
     color: white;
     border-radius: 0px 0px 0 0;
 }
 
 .logo-production {
-    background: url(../img/login/background.png) no-repeat center center fixed;
+    background: url('/assets/img/login/background.png') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -532,13 +534,13 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 }
 
 .customize-item-main-help {
-    border: 1px solid #39b54a;
+    border: 1px solid $sp-color-accent;
     border-radius: 0px;
     margin: 5px;
 }
 
 .customize-item-title-help {
-    background: #39b54a;
+    background: $sp-color-accent;
     color: white;
     font-size: 12pt;
     padding: 5px;
@@ -637,7 +639,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
     right: 16px;
     top: 25px;
     color: #ffffff;
-    background-color: #39b54a;
+    background-color: $sp-color-accent;
     vertical-align: middle;
 }
 
@@ -942,7 +944,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
     cursor: move;
     height: 150px !important;
     width: 150px !important;
-    box-shadow: 0 0 2px #39b54a;
+    box-shadow: 0 0 2px $sp-color-accent;
     display: inline-block;
     vertical-align: middle;
     background-color: white;

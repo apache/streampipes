@@ -130,8 +130,8 @@ pre[data-line] {
 	position: absolute;
 	left: 0;
 	right: 0;
-	padding: inherit 0;
-	margin-top: 1em; /* Same as .prism’s padding-top */
+	padding: inherit;
+	margin-top: 1em;
 
 	background: hsla(24, 20%, 50%,.08);
 	background: -moz-linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
