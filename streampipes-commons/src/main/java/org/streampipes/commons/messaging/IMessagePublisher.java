@@ -21,6 +21,6 @@ import java.io.Serializable;
 
 public interface IMessagePublisher<T> extends Serializable {
 
-	void publish(T message);
-	
+  void publish(T message);
+
 }

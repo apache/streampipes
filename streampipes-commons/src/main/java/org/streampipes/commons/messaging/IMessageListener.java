@@ -19,6 +19,6 @@ package org.streampipes.commons.messaging;
 
 public interface IMessageListener<T> {
 
-	void onEvent(T payload);
-	
+  void onEvent(T payload);
+
 }
