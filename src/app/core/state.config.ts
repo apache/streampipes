@@ -38,12 +38,12 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 'spNavbar@streampipes': spNavbar,
                 'spIconBar@streampipes': spIconBar,
                 'spMain@streampipes': {
-                    component: HomeComponent,
-                    resolve: {
-                        'AuthData': function (AuthService) {
-                            return AuthService.authenticate();
-                        }
-                    }
+                    component: HomeComponent
+                }
+            },
+            resolve: {
+                "authData": function (AuthService) {
+                    return AuthService.authenticate();
                 }
             }
         })

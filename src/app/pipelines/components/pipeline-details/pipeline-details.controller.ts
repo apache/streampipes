@@ -11,6 +11,7 @@ export class PipelineDetailsController {
     pipeline: any;
     starting: any;
     stopping: any;
+    refreshPipelines: any;
 
     constructor(RestApi, $mdDialog, $rootScope, $state) {
         this.RestApi = RestApi;
@@ -31,7 +32,7 @@ export class PipelineDetailsController {
             .success(data => {
                 this.showDialog(data);
                 // TODO: refreshPipelines not implemented
-                //this.refreshPipelines();
+                this.refreshPipelines();
                 this.starting = false;
 
             })
@@ -54,7 +55,7 @@ export class PipelineDetailsController {
                 this.stopping = false;
                 this.showDialog(data);
                 // TODO: refreshPipelines not implemented
-                //this.refreshPipelines();
+                this.refreshPipelines();
             })
             .error(data => {
                 console.log(data);
@@ -80,7 +81,7 @@ export class PipelineDetailsController {
             this.RestApi.deleteOwnPipeline(pipelineId)
                 .success(data => {
                     // TODO: refreshPipelines not implemented
-                    //this.refreshPipelines();
+                    this.refreshPipelines();
                 })
                 .error(function (data) {
                     console.log(data);
