@@ -16,6 +16,7 @@
  */
 package org.streampipes.manager.matching;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.manager.util.TopicGenerator;
 import org.streampipes.model.SpDataSet;
@@ -48,6 +49,6 @@ public class DataSetGroundingSelector {
     outputGrounding.setTransportProtocol(protocol);
     outputGrounding.setTransportFormats(Arrays.asList(format));
 
-    return new DataSetModificationMessage(outputGrounding);
+    return new DataSetModificationMessage(outputGrounding,RandomStringUtils.randomAlphanumeric(10));
   }
 }

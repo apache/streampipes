@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
-import org.streampipes.container.declarer.DataSequenceDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
@@ -105,7 +105,7 @@ public class WelcomePageGeneratorImplTest {
     private SemanticEventProducerDeclarer getSepdDeclarer() {
         return new SemanticEventProducerDeclarer() {
             @Override
-            public List<DataSequenceDeclarer> getEventStreams() {
+            public List<DataStreamDeclarer> getEventStreams() {
                 return Arrays.asList(new EventStreamDeclarer() {
                     @Override
                     public SpDataStream declareModel(DataSourceDescription sep) {

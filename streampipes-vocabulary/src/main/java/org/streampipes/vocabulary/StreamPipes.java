@@ -93,6 +93,7 @@ public class StreamPipes {
   public static final String DATA_STREAM = NS + "DataStream";
   public static final String DATA_SET = NS + "DataSet";
   public static final String DATA_SEQUENCE = NS + "DataSequence";
+  public static final String DATA_SET_INVOCATION_ID = NS + "DataSetInvocationId";
 
   public static final String JMS_TRANSPORT_PROTOCOL = NS + "JmsTransportProtocol";
   public static final String KAFKA_TRANSPORT_PROTOCOL = NS + "KafkaTransportProtocol";

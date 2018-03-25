@@ -564,6 +564,7 @@
                 </configuration>
             </plugin>
         </plugins>
+
     </build>
 
     <scm>

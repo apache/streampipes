@@ -18,12 +18,11 @@
 package org.streampipes.storage.rdf4j.impl;
 
 import com.rits.cloning.Cloner;
-import org.streampipes.model.SpDataSequence;
-import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 
@@ -39,7 +38,7 @@ public class InMemoryStorage implements IPipelineElementDescriptionStorage {
 	private Map<String, DataSinkDescription> inMemorySECStorage;
 	private Map<String, DataSourceDescription> inMemorySEPStorage;
 	private Map<String, DataProcessorDescription> inMemorySEPAStorage;
-	private Map<String, SpDataSequence> inMemoryEventStreamStorage;
+	private Map<String, SpDataStream> inMemoryEventStreamStorage;
 	private IPipelineElementDescriptionStorage sesameStorage;
 	private Cloner cloner;
 	
@@ -277,7 +276,7 @@ public class InMemoryStorage implements IPipelineElementDescriptionStorage {
 	}
 
 	@Override
-	public SpDataSequence getEventStreamById(String rdfId) {
+	public SpDataStream getEventStreamById(String rdfId) {
 		return inMemoryEventStreamStorage.get(rdfId);
 	}
 }

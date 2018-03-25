@@ -18,7 +18,6 @@
 package org.streampipes.manager.monitoring.runtime;
 
 import org.streampipes.manager.operations.Operations;
-import org.streampipes.model.SpDataSequence;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -35,9 +34,9 @@ import java.util.UUID;
 public class PipelineStreamReplacer {
 
 	private String pipelineId;
-	private SpDataSequence streamToReplace;
+	private SpDataStream streamToReplace;
 	
-	public PipelineStreamReplacer(String pipelineId, SpDataSequence streamToReplace) {
+	public PipelineStreamReplacer(String pipelineId, SpDataStream streamToReplace) {
 		this.pipelineId = pipelineId;
 		this.streamToReplace = streamToReplace;
 	}
@@ -99,7 +98,7 @@ public class PipelineStreamReplacer {
 		List<DataSourceDescription> seps = StorageManager.INSTANCE.getStorageAPI().getAllSEPs();
 		
 		for(DataSourceDescription sep : seps) {
-			for(SpDataSequence stream : sep.getSpDataStreams()) {
+			for(SpDataStream stream : sep.getSpDataStreams()) {
 				if (stream.getElementId().equals(streamToReplace2.getElementId())) return sep;
 			}
 		}

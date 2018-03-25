@@ -20,7 +20,7 @@ import org.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
 import org.streampipes.commons.exceptions.NoSepaInPipelineException;
 import org.streampipes.commons.exceptions.RemoteServerNotAccessibleException;
 import org.streampipes.manager.matching.PipelineVerificationHandler;
-import org.streampipes.model.SpDataSequence;
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.client.exception.InvalidConnectionException;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.pipeline.PipelineModificationMessage;
@@ -102,7 +102,7 @@ public class PipelineGenerator {
 
   }
 
-  private List<SpDataSequence> buildStreams() {
+  private List<SpDataStream> buildStreams() {
     //Optional<SpDataStream> streamOpt = dataSourceDescription.getSpDataStreams().
     return null;
   }

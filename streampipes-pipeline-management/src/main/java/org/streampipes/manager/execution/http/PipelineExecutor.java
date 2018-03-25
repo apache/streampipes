@@ -21,6 +21,7 @@ import org.lightcouch.DocumentConflictException;
 import org.streampipes.manager.execution.status.PipelineStatusManager;
 import org.streampipes.manager.execution.status.SepMonitoringManager;
 import org.streampipes.manager.util.TemporaryGraphStorage;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PipelineExecutor {
 
@@ -56,6 +58,8 @@ public class PipelineExecutor {
 
 		List<DataProcessorInvocation> sepas = pipeline.getSepas();
 		List<DataSinkInvocation> secs = pipeline.getActions();
+		List<SpDataSet> dataSets = pipeline.getStreams().stream().filter(s -> s instanceof SpDataSet).map(s -> new
+						SpDataSet((SpDataSet) s)).collect(Collectors.toList());
 
 		List<InvocableStreamPipesEntity> graphs = new ArrayList<>();
 		graphs.addAll(sepas);
@@ -63,11 +67,12 @@ public class PipelineExecutor {
 
 		graphs.forEach(g -> g.setStreamRequirements(Arrays.asList()));
 
-		PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(), graphs).invokeGraphs();
+		PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(), graphs, dataSets)
+						.invokeGraphs();
 		
 		if (status.isSuccess()) 
 		{
-			storeInvocationGraphs(pipeline.getPipelineId(), graphs);
+			storeInvocationGraphs(pipeline.getPipelineId(), graphs, dataSets);
 			
 			PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(), 
 					new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), PipelineStatusMessageType.PIPELINE_STARTED.title(), PipelineStatusMessageType.PIPELINE_STARTED.description()));
@@ -82,7 +87,10 @@ public class PipelineExecutor {
 	public PipelineOperationStatus stopPipeline()
 	{
 		List<InvocableStreamPipesEntity> graphs = TemporaryGraphStorage.graphStorage.get(pipeline.getPipelineId());
-		PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(), graphs).detachGraphs();
+		List<SpDataSet> dataSets = TemporaryGraphStorage.datasetStorage.get(pipeline.getPipelineId());
+
+		PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(), graphs, dataSets)
+						.detachGraphs();
 		
 		if (status.isSuccess())
 		{
@@ -115,9 +123,10 @@ public class PipelineExecutor {
 		getPipelineStorageApi().updatePipeline(pipeline);
 	}
 	
-	private void storeInvocationGraphs(String pipelineId, List<InvocableStreamPipesEntity> graphs)
+	private void storeInvocationGraphs(String pipelineId, List<InvocableStreamPipesEntity> graphs, List<SpDataSet> dataSets)
 	{
 		TemporaryGraphStorage.graphStorage.put(pipelineId, graphs);
+		TemporaryGraphStorage.datasetStorage.put(pipelineId, dataSets);
 	}
 
 	private IPipelineStorage getPipelineStorageApi() {

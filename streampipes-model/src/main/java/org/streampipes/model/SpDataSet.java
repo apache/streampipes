@@ -15,7 +15,6 @@ limitations under the License.
 */
 package org.streampipes.model;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.grounding.EventGrounding;
@@ -32,7 +31,7 @@ import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.DATA_SET)
 @Entity
-public class SpDataSet extends SpDataSequence {
+public class SpDataSet extends SpDataStream {
 
   private static final String prefix = "urn:fzi.de:dataset:";
 
@@ -40,6 +39,10 @@ public class SpDataSet extends SpDataSequence {
           cascade = {CascadeType.ALL})
   @RdfProperty(StreamPipes.SUPPORTED_GROUNDING)
   private EventGrounding supportedGrounding;
+
+  @RdfProperty(StreamPipes.DATA_SET_INVOCATION_ID)
+  private String datasetInvocationId;
+
 
   public SpDataSet(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition>
           hasEventStreamQualities,
@@ -54,11 +57,12 @@ public class SpDataSet extends SpDataSequence {
   }
 
   public SpDataSet() {
-    super(prefix + RandomStringUtils.randomAlphabetic(6));
+    super();
   }
 
   public SpDataSet(SpDataSet other) {
     super(other);
+    this.datasetInvocationId = other.getDatasetInvocationId();
     if (other.getSupportedGrounding() != null) this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
   }
 
@@ -70,4 +74,11 @@ public class SpDataSet extends SpDataSequence {
     this.supportedGrounding = supportedGrounding;
   }
 
+  public String getDatasetInvocationId() {
+    return datasetInvocationId;
+  }
+
+  public void setDatasetInvocationId(String datasetInvocationId) {
+    this.datasetInvocationId = datasetInvocationId;
+  }
 }

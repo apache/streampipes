@@ -22,5 +22,5 @@ import org.streampipes.model.graph.DataSourceDescription;
 import java.util.List;
 
 public interface SemanticEventProducerDeclarer extends Declarer<DataSourceDescription> {
-	List<DataSequenceDeclarer> getEventStreams();
+	List<DataStreamDeclarer> getEventStreams();
 }

@@ -36,6 +36,8 @@ public class DeclarersSingleton {
   private List<SemanticEventProcessingAgentDeclarer> epaDeclarers;
   private List<SemanticEventProducerDeclarer> producerDeclarers;
   private List<SemanticEventConsumerDeclarer> consumerDeclarers;
+  private List<DataStreamDeclarer> streamDeclarers;
+
   private int port;
   private String route;
   private String hostName;
@@ -45,6 +47,7 @@ public class DeclarersSingleton {
     this.epaDeclarers = new ArrayList<>();
     this.producerDeclarers = new ArrayList<>();
     this.consumerDeclarers = new ArrayList<>();
+    this.streamDeclarers = new ArrayList<>();
     this.route = "/";
   }
 
@@ -96,6 +99,7 @@ public class DeclarersSingleton {
   public void addProducerDeclarer(SemanticEventProducerDeclarer sourceDeclarer) {
     checkAndStartExecutableStreams(sourceDeclarer);
     producerDeclarers.add(sourceDeclarer);
+    streamDeclarers.addAll(sourceDeclarer.getEventStreams());
   }
 
   public void addConsumerDeclarer(SemanticEventConsumerDeclarer consumerDeclarer) {
@@ -112,6 +116,10 @@ public class DeclarersSingleton {
 
   public List<SemanticEventConsumerDeclarer> getConsumerDeclarers() {
     return consumerDeclarers;
+  }
+
+  public List<DataStreamDeclarer> getStreamDeclarers() {
+    return streamDeclarers;
   }
 
   public void setPort(int port) {
@@ -133,9 +141,7 @@ public class DeclarersSingleton {
   private void checkAndStartExecutableStreams(SemanticEventProducerDeclarer sourceDeclarer) {
     sourceDeclarer.getEventStreams()
             .stream()
-            .filter(s -> s instanceof DataStreamDeclarer)
-            .map(s -> (DataStreamDeclarer) s)
-            .filter(s -> s.isExecutable())
+            .filter(DataStreamDeclarer::isExecutable)
             .forEach(es -> {
               es.declareModel(sourceDeclarer.declareModel());
               es.executeStream();

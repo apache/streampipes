@@ -17,7 +17,6 @@
 
 package org.streampipes.manager.util;
 
-import org.streampipes.model.SpDataSequence;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
@@ -42,7 +41,7 @@ public class TreeUtils {
 	 * @return a SEPA-client element
 	 */
 	
-	public static NamedStreamPipesEntity findSEPAElement(String id, List<DataProcessorInvocation> sepas, List<SpDataSequence>
+	public static NamedStreamPipesEntity findSEPAElement(String id, List<DataProcessorInvocation> sepas, List<SpDataStream>
 					streams)
 	{ 
 		List<NamedStreamPipesEntity> allElements = new ArrayList<>();

@@ -23,17 +23,16 @@ import org.streampipes.commons.exceptions.NoMatchingSchemaException;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.manager.matching.PipelineVerificationHandler;
 import org.streampipes.manager.operations.Operations;
-import org.streampipes.model.SpDataSequence;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.pipeline.PipelineModificationMessage;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.graph.DataProcessorDescription;
-import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
@@ -58,7 +57,7 @@ public class SepStoppedMonitoringPipelineBuilder {
 	private final String KAFKA_SEC_URI = "http://ipe-koi04.perimeter.fzi.de:8091/kafka";
 	private final String OUTPUT_TOPIC = "internal.streamepipes.sec.stopped";
 
-	private SpDataSequence stream;
+	private SpDataStream stream;
 	private final String outputTopic;
 
 	private DataSourceDescription dataSourceDescription;
@@ -80,7 +79,8 @@ public class SepStoppedMonitoringPipelineBuilder {
 	public Pipeline buildPipeline()
 			throws NoMatchingFormatException, NoMatchingSchemaException, NoMatchingProtocolException, Exception {
 		DataProcessorInvocation rateSepaClient = new DataProcessorInvocation(streamStoppedDataProcessorDescription);
-		SpDataSequence streamClient = stream instanceof SpDataStream ? new SpDataStream((SpDataStream) stream) : new SpDataSet((SpDataSet) stream);
+		SpDataStream streamClient = stream instanceof SpDataStream ? new SpDataStream(stream) : new SpDataSet(
+						(SpDataSet) stream);
 		DataSinkInvocation kafkaActionClient = new DataSinkInvocation(kafkaDataSinkDescription);
 
 		List<NamedStreamPipesEntity> elements = new ArrayList<>();

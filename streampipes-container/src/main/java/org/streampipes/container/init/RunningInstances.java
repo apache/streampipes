@@ -17,25 +17,25 @@
 
 package org.streampipes.container.init;
 
+import org.streampipes.container.declarer.InvocableDeclarer;
+import org.streampipes.container.util.ElementInfo;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.streampipes.container.util.ElementInfo;
-import org.streampipes.container.declarer.InvocableDeclarer;
-import org.streampipes.model.base.NamedStreamPipesEntity;
 
 public enum RunningInstances {
     INSTANCE;
 
-    private final Map<String, ElementInfo> runningInstances = new HashMap<>();
+    private final Map<String, ElementInfo<NamedStreamPipesEntity, InvocableDeclarer>> runningInstances = new HashMap<>();
 
 
     public void add(String id, NamedStreamPipesEntity description, InvocableDeclarer invocation) {
-        runningInstances.put(id, new ElementInfo(description, invocation));
+        runningInstances.put(id, new ElementInfo<>(description, invocation));
     }
 
     public InvocableDeclarer getInvocation(String id) {
-        ElementInfo result = runningInstances.get(id);
+        ElementInfo<NamedStreamPipesEntity, InvocableDeclarer> result = runningInstances.get(id);
         if (result != null) {
             return result.getInvocation();
         } else {

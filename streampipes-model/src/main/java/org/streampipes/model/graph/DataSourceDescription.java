@@ -19,8 +19,7 @@ package org.streampipes.model.graph;
 
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
-import org.streampipes.model.DataSource;
-import org.streampipes.model.SpDataSequence;
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
@@ -47,9 +46,9 @@ public class DataSourceDescription extends NamedStreamPipesEntity {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty(StreamPipes.PRODUCES)
-	private List<SpDataSequence> spDataStreams;
-	
-	private DataSource dataSource;
+	private List<SpDataStream> spDataStreams;
+
+	private String correspondingSourceId;
 		
 	public DataSourceDescription() {
 		super();
@@ -63,7 +62,7 @@ public class DataSourceDescription extends NamedStreamPipesEntity {
 		this.spDataStreams.forEach(e -> e.setCategory(Arrays.asList(this.getElementId())));
 	}
 	
-	public DataSourceDescription(String uri, String name, String description, String iconUrl, List<SpDataSequence> spDataStreams)
+	public DataSourceDescription(String uri, String name, String description, String iconUrl, List<SpDataStream> spDataStreams)
 	{
 		super(uri, name, description, iconUrl);
 		this.spDataStreams = spDataStreams;
@@ -77,24 +76,24 @@ public class DataSourceDescription extends NamedStreamPipesEntity {
 		this(uri, name, description, "", new ArrayList<>());
 	}
 
-	public List<SpDataSequence> getSpDataStreams() {
+	public List<SpDataStream> getSpDataStreams() {
 		return spDataStreams;
 	}
 
-	public void setSpDataStreams(List<SpDataSequence> spDataStreams) {
+	public void setSpDataStreams(List<SpDataStream> spDataStreams) {
 		this.spDataStreams = spDataStreams;
 	}
 	
-	public void addEventStream(SpDataSequence spDataStream)
+	public void addEventStream(SpDataStream spDataStream)
 	{
 		spDataStreams.add(spDataStream);
 	}
 
-	public DataSource getDataSource() {
-		return dataSource;
+	public String getCorrespondingSourceId() {
+		return correspondingSourceId;
 	}
 
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}			
+	public void setCorrespondingSourceId(String correspondingSourceId) {
+		this.correspondingSourceId = correspondingSourceId;
+	}
 }

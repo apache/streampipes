@@ -38,4 +38,10 @@ public class Transformer {
 	{
 		return new JsonLdTransformer().fromJsonLd(json, destination);
 	}
+
+	public static <T> T fromJsonLd(Class<T> destination, String json, String rootElement) throws RDFParseException,
+					UnsupportedRDFormatException, IOException, RepositoryException
+	{
+		return new JsonLdTransformer(rootElement).fromJsonLd(json, destination);
+	}
 }

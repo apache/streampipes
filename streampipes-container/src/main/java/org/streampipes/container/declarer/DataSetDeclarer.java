@@ -15,18 +15,13 @@ limitations under the License.
 */
 package org.streampipes.container.declarer;
 
-import org.streampipes.model.Response;
+import org.streampipes.container.model.DataSetReplayFinishedNotifier;
 import org.streampipes.model.SpDataSet;
-import org.streampipes.model.grounding.EventGrounding;
 
-public interface DataSetDeclarer extends DataSequenceDeclarer<SpDataSet> {
+public interface DataSetDeclarer extends DataStreamDeclarer {
 
-  Response invokeRuntime(EventGrounding eventGrounding);
+  boolean invokeRuntime(SpDataSet dataSetDescription, DataSetReplayFinishedNotifier replayFinishedNotifier);
 
-  Response detachRuntime(String pipelineId);
-
-  Response notifyDataSetFinished();
-
-
+  boolean detachRuntime(String pipelineId);
 
 }

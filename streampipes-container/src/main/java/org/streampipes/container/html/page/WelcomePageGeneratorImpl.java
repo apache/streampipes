@@ -17,7 +17,7 @@
 
 package org.streampipes.container.html.page;
 
-import org.streampipes.container.declarer.DataSequenceDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.InvocableDeclarer;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
@@ -79,7 +79,7 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
         desc.setDescription(declarer.declareModel().getDescription());
         desc.setUri(URI.create(baseUri + "sep/" + declarer.declareModel().getUri()));
         desc.setType("source");
-        for (DataSequenceDeclarer streamDeclarer : declarer.getEventStreams()) {
+        for (DataStreamDeclarer streamDeclarer : declarer.getEventStreams()) {
             Description ad = new Description();
             ad.setDescription(streamDeclarer.declareModel(declarer.declareModel()).getDescription());
             ad.setUri(URI.create(baseUri +"stream/" + streamDeclarer.declareModel(declarer.declareModel()).getUri()));

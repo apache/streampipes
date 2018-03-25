@@ -16,13 +16,12 @@
  */
 package org.streampipes.model.client.util;
 
-import org.streampipes.model.SpDataSequence;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 
 public class DatasetUtil {
-
-  public static SpDataStream asStream(SpDataSequence seq) {
+// TODO delete
+  public static SpDataStream asStream(SpDataStream seq) {
     if (seq instanceof SpDataStream) return (SpDataStream) seq;
     else {
       return new SpDataStream((SpDataSet) seq);

@@ -17,31 +17,28 @@
 
 package org.streampipes.container.util;
 
-import org.streampipes.container.declarer.InvocableDeclarer;
-import org.streampipes.model.base.NamedStreamPipesEntity;
+public class ElementInfo<G, D> {
+    private G description;
+    private D invocation;
 
-public class ElementInfo {
-    private NamedStreamPipesEntity description;
-    private InvocableDeclarer invocation;
-
-    public ElementInfo(NamedStreamPipesEntity description, InvocableDeclarer invocation) {
+    public ElementInfo(G description, D invocation) {
         this.description = description;
         this.invocation = invocation;
     }
 
-    public NamedStreamPipesEntity getDescription() {
+    public G getDescription() {
         return description;
     }
 
-    public void setDescription(NamedStreamPipesEntity description) {
+    public void setDescription(G description) {
         this.description = description;
     }
 
-    public InvocableDeclarer getInvocation() {
+    public D getInvocation() {
         return invocation;
     }
 
-    public void setInvocation(InvocableDeclarer invocation) {
+    public void setInvocation(D invocation) {
         this.invocation = invocation;
     }
 }

@@ -22,11 +22,13 @@ import org.streampipes.model.grounding.EventGrounding;
 public class DataSetModificationMessage extends Message {
 
   private EventGrounding eventGrounding;
+  private String invocationId;
 
   public DataSetModificationMessage(
-          EventGrounding eventGrounding) {
+          EventGrounding eventGrounding, String invocationId) {
     super(true);
     this.eventGrounding = eventGrounding;
+    this.invocationId = invocationId;
   }
 
   public EventGrounding getEventGrounding() {
@@ -35,5 +37,13 @@ public class DataSetModificationMessage extends Message {
 
   public void setEventGrounding(EventGrounding eventGrounding) {
     this.eventGrounding = eventGrounding;
+  }
+
+  public String getInvocationId() {
+    return invocationId;
+  }
+
+  public void setInvocationId(String invocationId) {
+    this.invocationId = invocationId;
   }
 }
