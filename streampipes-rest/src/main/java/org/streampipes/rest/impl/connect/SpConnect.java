@@ -6,6 +6,8 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.streampipes.commons.Utils;
 import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.connect.RunningAdapterInstances;
+import org.streampipes.container.declarer.DataSetDeclarer;
 import org.streampipes.container.html.JSONGenerator;
 import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.streampipes.container.html.model.Description;
@@ -14,6 +16,7 @@ import org.streampipes.connect.firstconnector.format.csv.CsvFormat;
 import org.streampipes.connect.firstconnector.format.json.JsonFormat;
 import org.streampipes.connect.firstconnector.protocol.FileProtocol;
 import org.streampipes.connect.firstconnector.protocol.HttpProtocol;
+import org.streampipes.container.init.RunningDatasetInstances;
 import org.streampipes.container.transform.Transformer;
 import org.streampipes.container.util.Util;
 import org.streampipes.model.SpDataSet;
@@ -168,21 +171,15 @@ public class SpConnect extends AbstractRestInterface {
     @Path("/all/{id}")
     public Response getAdapter(@PathParam("id") String id) {
 
-
-//        SpDataSet dataSet = DataSetBuilder.create("adapter", "Adapter", "")
-//                .supportedFormat(SupportedFormats.jsonFormat())
-//                .supportedProtocol(SupportedProtocols.kafka())
-//                .build();
-
         AdapterDescription adapterDescription = new AdapterStorageImpl().getAdapter(id);
 
         SpDataSet dataSet = adapterDescription.getDataSet();
 
-        Label labels = Labels.from("", "", "");
+        // TODO remove localhost
 
         dataSet.setName("Adapter: " + id);
         dataSet.setDescription("Description");
-        dataSet.setUri("http://localhost:8082/streampipes-backend/api/v2/adapter/all/" + id);
+        dataSet.setUri("http://localhost:8082/streampipes-backend/api/v2/adapter/all/" + id + "/streams");
 
         EventGrounding eg = new EventGrounding();
         eg.setTransportProtocol(SupportedProtocols.kafka());
@@ -192,7 +189,7 @@ public class SpConnect extends AbstractRestInterface {
         dataSet.setSupportedGrounding(eg);
 
         DataSourceDescription dataSourceDescription = new DataSourceDescription(
-                "http://localhost:8082/streampipes-backend/api/v2/adapter/all", "Adaper Data Source",
+                "http://localhost:8082/streampipes-backend/api/v2/adapter/all/" + id, "Adaper Data Source",
                 "This data source contains one data stream from the adapters");
 
         dataSourceDescription.addEventStream(dataSet);
@@ -234,9 +231,12 @@ public class SpConnect extends AbstractRestInterface {
             AdapterDescription adapterDescription = new AdapterStorageImpl().getAdapter(streamId);
             Adapter adapter = new Adapter(brokerUrl, topic, false);
 
-            adapter.run(adapterDescription);
-            // TODO think of what happens when finished
+            RunningAdapterInstances.INSTANCE.addAdapter(dataSet.getDatasetInvocationId(), adapter);
 
+            adapter.run(adapterDescription);
+
+
+            // TODO think of what happens when finished
 //            RunningDatasetInstances.INSTANCE.add(runningInstanceId, dataSet, (DataSetDeclarer) streamDeclarer.get().getClass().newInstance());
 //            boolean success = RunningDatasetInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(dataSet, ()
 //                    -> {
@@ -250,8 +250,20 @@ public class SpConnect extends AbstractRestInterface {
             e.printStackTrace();
             return Util.toResponseString(new org.streampipes.model.Response("", false, e.getMessage()));
         }
-
     }
+
+
+    @DELETE
+    @Path("all/{streamId}/{runningInstanceId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String detach(@PathParam("runningInstanceId") String runningInstanceId) {
+
+        RunningAdapterInstances.INSTANCE.removeAdapter(runningInstanceId);
+        org.streampipes.model.Response resp = new org.streampipes.model.Response("", true);
+
+        return Util.toResponseString(resp);
+    }
+
 
 
 
@@ -259,7 +271,6 @@ public class SpConnect extends AbstractRestInterface {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAdapter(String ar) {
 
-        System.out.println(ar);
 
         JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
 
@@ -267,20 +278,13 @@ public class SpConnect extends AbstractRestInterface {
         try {
             a = jsonLdTransformer.fromJsonLd(ar, AdapterDescription.class);
 
+            logger.info("Add Adapter Description " + a.getId());
         } catch (IOException e) {
+            logger.error("" + a.getId());
             e.printStackTrace();
         }
 
         new AdapterStorageImpl().storeAdapter(a);
-
-        // TODO fix adapter storage again
-//    AdapterStorageImpl adapterStorage = new AdapterStorageImpl();
-//    adapterStorage.add(a);
-
-//        Adapter adapter = new Adapter("ipe-koi06.fzi.de:9092", "org.streampipes.streamconnect", true);
-//        adapter.run(a);
-
-        System.out.println(a);
 
         return Response.ok().build();
     }
