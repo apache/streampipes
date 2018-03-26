@@ -33,11 +33,7 @@ import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.grounding.WildcardTopicDefinition;
-import org.streampipes.model.modelconnect.AdapterDescription;
-import org.streampipes.model.modelconnect.FormatDescription;
-import org.streampipes.model.modelconnect.FormatDescriptionList;
-import org.streampipes.model.modelconnect.ProtocolDescription;
-import org.streampipes.model.modelconnect.ProtocolDescriptionList;
+import org.streampipes.model.modelconnect.*;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.CustomOutputStrategy;
@@ -151,6 +147,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             TransformOperation.class,
             CustomTransformOutputStrategy.class,
             AdapterDescription.class,
+            AdapterDescriptionList.class,
             FormatDescription.class,
             FormatDescriptionList.class,
             ProtocolDescription.class,

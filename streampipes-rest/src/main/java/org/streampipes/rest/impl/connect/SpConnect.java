@@ -23,6 +23,7 @@ import org.streampipes.model.SpDataSet;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.modelconnect.AdapterDescription;
+import org.streampipes.model.modelconnect.AdapterDescriptionList;
 import org.streampipes.model.modelconnect.FormatDescriptionList;
 import org.streampipes.model.modelconnect.ProtocolDescriptionList;
 import org.streampipes.rest.annotation.GsonWithIds;
@@ -288,4 +289,39 @@ public class SpConnect extends AbstractRestInterface {
 
         return Response.ok().build();
     }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @GsonWithIds
+    @Path("/allrunning")
+    public Response getAllRunningAdapters() {
+
+        AdapterDescriptionList adapterDescriptionList = new AdapterDescriptionList();
+
+        List<AdapterDescription> allAdapters = new AdapterStorageImpl().getAllAdapters();
+        adapterDescriptionList.setList(allAdapters);
+
+        // TODO add a valid URI
+        for(AdapterDescription ad : adapterDescriptionList.getList()) {
+            ad.setUri("http://www.test.de/bb/");
+        }
+
+        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
+        String result = null;
+        try {
+            result = Utils.asString(jsonLdTransformer.toJsonLd(adapterDescriptionList));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvalidRdfException e) {
+            e.printStackTrace();
+        }
+
+        return ok(result);
+    }
+
+
 }
