@@ -1,1 +1,42 @@
-<b>Test</b>
+<div>
+    <div class="assemblyOptions sp-blue-bg" fxLayout="row" fxLayoutAlign="space-between center">
+        <h4 fxAlign="start">Title</h4>
+        <span>
+            <form fxAlign="end">
+                <mat-form-field>
+                    <input matInput ngui-datetime-picker placeholder="Start Date" [(ngModel)]="startDate">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput ngui-datetime-picker placeholder="End Date" [(ngModel)]="endDate">
+                </mat-form-field>
+            </form>
+        </span>
+        <button mat-icon-button (click)="load()">
+            <mat-icon>loop</mat-icon>
+        </button>
+    </div>
+
+
+
+    <div class="sp-blue-border" (scroll)="true">
+            <table class="logs-table" border="0">
+                   <tr class="logs-header">
+                       <th class="logs-padding">Timestamp</th>
+                       <th class="logs-padding">Level</th>
+                       <th class="logs-padding">Type</th>
+                       <th class="logs-padding">Message</th>
+                   </tr>
+                   <tr *ngFor="let log of logs">
+                       <td class="logs-padding">{{log.timestamp}}</td>
+                       <td class="logs-padding">{{log.level}}</td>
+                       <td class="logs-padding">{{log.type}}</td>
+                       <td class="logs-padding">{{log.message}}</td>
+                   </tr>
+               </table>
+    </div>
+
+
+
+
+</div>
+
