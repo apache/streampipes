@@ -112,7 +112,7 @@ module.exports = {
                 secure: false
             },
             '/streampipes/ws': {
-                target: 'ws://localhost:61614',
+                target: 'ws://ipe-koi06.fzi.de:61614',
                 ws: true,
                 secure: false
             }
