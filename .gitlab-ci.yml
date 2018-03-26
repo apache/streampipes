@@ -62,21 +62,21 @@ deploy:
       - ./**/*.jar
     expire_in:  1 hour
     
-deploy to test:
-  image: maven:3-jdk-8
-  stage: deploy
-  before_script:
-    - mkdir -p ~/.ssh
-    - echo -e "$TESTSERVER_SSH" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-  script:
-    - ssh "$TESTSERVER_USER"@"$TESTSERVER_HOSTNAME" "cd ~/streampipes-cd && docker-compose pull backend && docker-compose up -d"
-  environment:
-    name: test
-    url: http://$TESTSERVER_HOSTNAME
-  only:
-    - dev
+#deploy to test:
+#  image: maven:3-jdk-8
+#  stage: deploy
+#  before_script:
+#    - mkdir -p ~/.ssh
+#    - echo -e "$TESTSERVER_SSH" > ~/.ssh/id_rsa
+#    - chmod 600 ~/.ssh/id_rsa
+#    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+#  script:
+#    - ssh "$TESTSERVER_USER"@"$TESTSERVER_HOSTNAME" "cd ~/streampipes-cd && docker-compose pull backend && docker-compose up -d"
+#  environment:
+#    name: test
+#    url: http://$TESTSERVER_HOSTNAME
+#  only:
+#    - dev
 
 
 start release:
