@@ -67,36 +67,56 @@ export class PipelineController {
             + currentPipelineElement.settings.displaySettings;
     }
 
+    isStreamInPipeline() {
+        return this.isInPipeline('stream');
+    }
+
+    isSetInPipeline() {
+        return this.isInPipeline('set');
+    }
+
+    isInPipeline(type) {
+        return this.rawPipelineModel.some(x => x.type == type);
+    }
+
+    showMixedStreamAlert() {
+        this.EditorDialogManager.showMixedStreamAlert();
+    }
+
     initAssembly() {
         ($('#assembly') as any).droppable({
             tolerance: "fit",
             drop: (element, ui) => {
-
                 if (ui.draggable.hasClass('draggable-icon')) {
                     var pipelineElementConfig = this.JsplumbService.createNewPipelineElementConfig(ui.draggable.data("JSON"), this.PipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false);
-                    this.rawPipelineModel.push(pipelineElementConfig);
-                    if (ui.draggable.hasClass('set')) {
-                        this.$timeout(() => {
+                    if ((this.isStreamInPipeline() && pipelineElementConfig.type == 'set') ||
+                        this.isSetInPipeline() && pipelineElementConfig.type == 'stream') {
+                        this.showMixedStreamAlert();
+                    } else {
+                        this.rawPipelineModel.push(pipelineElementConfig);
+                        if (ui.draggable.hasClass('set')) {
                             this.$timeout(() => {
-                                this.JsplumbService.setDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                                this.$timeout(() => {
+                                    this.JsplumbService.setDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                                });
                             });
-                        });
-                    }
-                    else if (ui.draggable.hasClass('stream')) {
-                        this.checkTopicModel(pipelineElementConfig);
-                    } else if (ui.draggable.hasClass('sepa')) {
-                        this.$timeout(() => {
+                        }
+                        else if (ui.draggable.hasClass('stream')) {
+                            this.checkTopicModel(pipelineElementConfig);
+                        } else if (ui.draggable.hasClass('sepa')) {
                             this.$timeout(() => {
-                                this.JsplumbService.sepaDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                                this.$timeout(() => {
+                                    this.JsplumbService.sepaDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                                });
                             });
-                        });
-                        //Droppable Actions
-                    } else if (ui.draggable.hasClass('action')) {
-                        this.$timeout(() => {
+                            //Droppable Actions
+                        } else if (ui.draggable.hasClass('action')) {
                             this.$timeout(() => {
-                                this.JsplumbService.actionDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                                this.$timeout(() => {
+                                    this.JsplumbService.actionDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                                });
                             });
-                        });
+                        }
                     }
                 }
                 this.JsplumbBridge.repaintEverything();
