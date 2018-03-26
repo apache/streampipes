@@ -1,20 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Format } from '../format-form/format';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {RdfmapperService} from '../rdfmapper/rdfmapper.service';
 import {RestService} from '../rest.service';
 import {ProtocolDescription} from '../model/ProtocolDescription';
 import {FormatDescription} from '../model/FormatDescription';
 import {AdapterDescription} from '../model/AdapterDescription';
 import {DataSetDescription} from '../model/DataSetDescription';
-import {Data} from '@angular/router';
 import {EventSchema} from '../schema-editor/model/EventSchema';
-// import {AdapterDescription} from '../model/AdapterDescription';
-
-// import { TsonLd } from '../tsonld';
 
 @Component({
-    selector: 'app-new',
+    selector: 'sp-new-adapter',
     templateUrl: './new.component.html',
     styleUrls: ['./new.component.css']
 })

@@ -4,7 +4,7 @@ import { HomeComponent } from '../home/home.component';
 import { ConfigurationComponent } from '../configuration/configuration.component';
 import { AppContainerModule } from '../app-container/app-container.module';
 import { AppContainerComponent } from '../app-container/app-container.component';
-import {NewComponent} from '../connect/new/new.component';
+import {MainComponent} from '../connect/main/main.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
@@ -202,7 +202,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             url: '/connect',
             views: {
                 'spMain@streampipes': {
-                    component: NewComponent
+                    component: MainComponent
                 }
             }
         });
