@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core';
 
 import { PipelineLogsComponent } from './pipeline-logs.component';
-import { PipelineLogsRestService } from './pipeline-logs-rest.service';
+import { LogViewRestService } from './components/logView/services/logView-rest.service';
+import { LogViewComponent } from './components/logView/logView.component';
 
 @NgModule({
     declarations: [
-        PipelineLogsComponent
+        PipelineLogsComponent,
+        LogViewComponent
     ],
     providers: [
-        PipelineLogsRestService
+        LogViewRestService
     ],
     entryComponents: [
         PipelineLogsComponent
