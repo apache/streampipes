@@ -14,6 +14,7 @@ import { HomeModule } from './home/home.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { AuthStatusService } from './services/auth-status.service';
 import { AppContainerModule } from './app-container/app-container.module';
+import { PipelineLogsModule } from './pipeline-logs/pipeline-logs.module';
 
 @NgModule({
     imports: [
@@ -28,7 +29,8 @@ import { AppContainerModule } from './app-container/app-container.module';
         UIRouterUpgradeModule.forChild(),
         HomeModule,
         ConfigurationModule,
-        AppContainerModule
+        AppContainerModule,
+        PipelineLogsModule
     ],
     providers: [
         AuthStatusService
