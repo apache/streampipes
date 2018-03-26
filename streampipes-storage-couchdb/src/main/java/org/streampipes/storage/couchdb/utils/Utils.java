@@ -24,7 +24,11 @@ import org.streampipes.storage.couchdb.utils.CouchDbConfig;
 
 public class Utils {
 
-
+	public static CouchDbClient getCouchDbAdapterClient() {
+		CouchDbClient dbClient = new CouchDbClient(props("adapter"));
+		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+		return dbClient;
+	}
 
 	public static CouchDbClient getCouchDbPipelineClient() {
 		CouchDbClient dbClient = new CouchDbClient(props("pipeline"));

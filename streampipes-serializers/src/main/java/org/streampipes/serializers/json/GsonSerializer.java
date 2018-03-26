@@ -23,6 +23,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.DataSinkType;
+import org.streampipes.model.SpDataSet;
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.grounding.TopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.output.OutputStrategy;
@@ -46,6 +48,9 @@ public class GsonSerializer {
     builder.registerTypeAdapter(TransportProtocol.class, new JsonLdSerializer<TransportProtocol>());
     builder.registerTypeAdapter(ValueSpecification.class, new JsonLdSerializer<ValueSpecification>());
     builder.registerTypeAdapter(TopicDefinition.class, new JsonLdSerializer<TopicDefinition>());
+    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
+            .registerSubtype(SpDataSet.class, "org.streampipes.model.SpDataSet")
+            .registerSubtype(SpDataStream.class, "org.streampipes.model.SpDataStream"));
     builder.setPrettyPrinting();
     return builder.create();
   }
@@ -65,6 +70,9 @@ public class GsonSerializer {
     builder.registerTypeAdapter(EventPropertyQualityDefinition.class, new JsonLdSerializer<EventPropertyQualityDefinition>());
     builder.registerTypeAdapter(EventStreamQualityDefinition.class, new JsonLdSerializer<EventStreamQualityDefinition>());
     builder.registerTypeAdapter(TopicDefinition.class, new JsonLdSerializer<TopicDefinition>());
+    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
+            .registerSubtype(SpDataSet.class, "org.streampipes.model.SpDataSet")
+            .registerSubtype(SpDataStream.class, "org.streampipes.model.SpDataStream"));
 
     builder.setPrettyPrinting();
     return builder;

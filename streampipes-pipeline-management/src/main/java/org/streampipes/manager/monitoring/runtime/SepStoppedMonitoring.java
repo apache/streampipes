@@ -25,8 +25,8 @@ import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
-import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.storage.couchdb.impl.PipelineStorageImpl;
 

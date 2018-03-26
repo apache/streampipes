@@ -22,15 +22,18 @@ import org.streampipes.commons.exceptions.SepaParseException;
 import org.streampipes.manager.endpoint.EndpointItemFetcher;
 import org.streampipes.manager.execution.http.PipelineExecutor;
 import org.streampipes.manager.execution.http.PipelineStorageService;
+import org.streampipes.manager.matching.DataSetGroundingSelector;
 import org.streampipes.manager.matching.PipelineVerificationHandler;
 import org.streampipes.manager.recommender.ElementRecommender;
 import org.streampipes.manager.remote.ContainerProvidedOptionsHandler;
 import org.streampipes.manager.topic.WildcardTopicGenerator;
 import org.streampipes.manager.verification.extractor.TypeExtractor;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.client.endpoint.RdfEndpoint;
 import org.streampipes.model.client.endpoint.RdfEndpointItem;
 import org.streampipes.model.client.messages.Message;
+import org.streampipes.model.client.pipeline.DataSetModificationMessage;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.pipeline.PipelineElementRecommendationMessage;
 import org.streampipes.model.client.pipeline.PipelineModificationMessage;
@@ -73,6 +76,10 @@ public class Operations {
 		.computeMappingProperties(username)
 		.storeConnection()
 		.getPipelineModificationMessage();
+	}
+
+	public static DataSetModificationMessage updateDataSet(SpDataSet dataSet) {
+		return new DataSetGroundingSelector(dataSet).selectGrounding();
 	}
 	
 	public static Message verifyAndAddElement(String graphData, String username) throws SepaParseException

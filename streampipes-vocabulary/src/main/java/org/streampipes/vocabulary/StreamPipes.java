@@ -31,6 +31,9 @@ public class StreamPipes {
   public static final String DATA_SINK_DESCRIPTION = NS + "DataSinkDescription";
   public static final String DATA_SINK_INVOCATION = NS + "DataSinkInvocation";
   public static final String DATA_SOURCE_DESCRIPTION = NS + "DataSourceDescription";
+  public static final String ADAPTER_DESCRIPTION = NS + "AdapterDescription";
+  public static final String FORMAT_DESCRIPTION_LIST = NS + "FromatDescriptionList";
+  public static final String PROTOCOL_DESCRIPTION_LIST = NS + "ProtocolDescriptionList";
 
   public static final String VALUE_SPECIFICATION = NS + "ValueSpecification";
 
@@ -88,6 +91,9 @@ public class StreamPipes {
   public static final String EVENT_SCHEMA = NS + "EventSchema";
   public static final String DATA_SOURCE = NS + "DataSource";
   public static final String DATA_STREAM = NS + "DataStream";
+  public static final String DATA_SET = NS + "DataSet";
+  public static final String DATA_SEQUENCE = NS + "DataSequence";
+  public static final String DATA_SET_INVOCATION_ID = NS + "DataSetInvocationId";
 
   public static final String JMS_TRANSPORT_PROTOCOL = NS + "JmsTransportProtocol";
   public static final String KAFKA_TRANSPORT_PROTOCOL = NS + "KafkaTransportProtocol";

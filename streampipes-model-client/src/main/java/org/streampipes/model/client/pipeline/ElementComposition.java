@@ -20,10 +20,11 @@ package org.streampipes.model.client.pipeline;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataProcessorInvocation;
 
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
 
 
 public abstract class ElementComposition {

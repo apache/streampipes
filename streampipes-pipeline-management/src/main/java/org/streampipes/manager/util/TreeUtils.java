@@ -17,19 +17,19 @@
 
 package org.streampipes.manager.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.base.NamedStreamPipesEntity;
-import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
-import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.staticproperty.MappingProperty;
 import org.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TreeUtils {
 
@@ -41,7 +41,8 @@ public class TreeUtils {
 	 * @return a SEPA-client element
 	 */
 	
-	public static NamedStreamPipesEntity findSEPAElement(String id, List<DataProcessorInvocation> sepas, List<SpDataStream> streams)
+	public static NamedStreamPipesEntity findSEPAElement(String id, List<DataProcessorInvocation> sepas, List<SpDataStream>
+					streams)
 	{ 
 		List<NamedStreamPipesEntity> allElements = new ArrayList<>();
 		allElements.addAll(sepas);

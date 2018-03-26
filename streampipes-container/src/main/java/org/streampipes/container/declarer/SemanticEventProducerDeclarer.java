@@ -17,10 +17,10 @@
 
 package org.streampipes.container.declarer;
 
-import java.util.List;
-
 import org.streampipes.model.graph.DataSourceDescription;
 
+import java.util.List;
+
 public interface SemanticEventProducerDeclarer extends Declarer<DataSourceDescription> {
-	List<EventStreamDeclarer> getEventStreams();
+	List<DataStreamDeclarer> getEventStreams();
 }

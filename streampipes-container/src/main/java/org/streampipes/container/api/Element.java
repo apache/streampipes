@@ -20,18 +20,18 @@ package org.streampipes.container.api;
 import org.eclipse.rdf4j.model.Graph;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.streampipes.commons.Utils;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.Declarer;
-import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.transform.Transformer;
 import org.streampipes.empire.core.empire.SupportsRdfId;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
-import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.graph.DataProcessorDescription;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
@@ -57,8 +57,12 @@ public abstract class Element<D extends Declarer> {
     }
 
     protected String getJsonLd(String id) {
-        NamedStreamPipesEntity elem = getById(id);
+        NamedStreamPipesEntity elem = rewrite(getById(id));
         return toJsonLd(elem);
+    }
+
+    protected String getJsonLd(NamedStreamPipesEntity desc, String appendix) {
+        return toJsonLd(rewrite(desc, appendix));
     }
 
     protected D getDeclarerById(String id) {
@@ -77,8 +81,8 @@ public abstract class Element<D extends Declarer> {
                 //TODO find a better solution to add the event streams to the SepDescription
                 if (declarer instanceof SemanticEventProducerDeclarer) {
                     DataSourceDescription secDesc = ((SemanticEventProducerDeclarer) declarer).declareModel();
-                    List<EventStreamDeclarer> eventStreamDeclarers = ((SemanticEventProducerDeclarer) declarer).getEventStreams();
-                    for (EventStreamDeclarer esd : eventStreamDeclarers) {
+                    List<DataStreamDeclarer> eventStreamDeclarers = ((SemanticEventProducerDeclarer) declarer).getEventStreams();
+                    for (DataStreamDeclarer esd : eventStreamDeclarers) {
                         secDesc.addEventStream(esd.declareModel(secDesc));
                     }
 
@@ -88,6 +92,14 @@ public abstract class Element<D extends Declarer> {
                 }
             }
         }
+        return desc;
+    }
+
+    protected NamedStreamPipesEntity rewrite(NamedStreamPipesEntity desc) {
+        return rewrite(desc, "");
+    }
+
+    protected NamedStreamPipesEntity rewrite(NamedStreamPipesEntity desc, String appendix) {
 
         //TODO remove this and find a better solution
         if (desc != null) {
@@ -99,15 +111,22 @@ public abstract class Element<D extends Declarer> {
                 type = "sep/";
             } else if (desc instanceof DataSinkDescription) {
                 type = "sec/";
+            } else if (desc instanceof SpDataStream) {
+                type = "sep/" + appendix + "/";
             }
 
+            String originalId = desc.getUri();
             String uri = DeclarersSingleton.getInstance().getBaseUri()+ type + desc.getUri();
             desc.setUri(uri);
             desc.setRdfId(new SupportsRdfId.URIKey(URI.create(uri)));
 
             if (desc instanceof DataSourceDescription) {
                 for(SpDataStream stream : ((DataSourceDescription) desc).getSpDataStreams()) {
-                    String baseUri = DeclarersSingleton.getInstance().getBaseUri() + type +stream.getUri();
+                    String baseUri = DeclarersSingleton.getInstance().getBaseUri()
+                            +type
+                            +originalId
+                            +"/"
+                            +stream.getUri();
                     stream.setUri(baseUri);
                     stream.setRdfId(new SupportsRdfId.URIKey(URI.create(baseUri)));
                 }

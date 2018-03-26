@@ -26,7 +26,7 @@ import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.Utils;
-import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.client.pipeline.PipelineElementStatus;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 
@@ -34,32 +34,34 @@ import java.io.IOException;
 
 public class HttpRequestBuilder {
 
-  private InvocableStreamPipesEntity payload;
+  private NamedStreamPipesEntity payload;
+  private String belongsTo;
 
   private final static Logger LOG = LoggerFactory.getLogger(HttpRequestBuilder.class);
 
-  public HttpRequestBuilder(InvocableStreamPipesEntity payload) {
+  public HttpRequestBuilder(NamedStreamPipesEntity payload, String belongsTo) {
     this.payload = payload;
+    this.belongsTo = belongsTo;
   }
 
   public PipelineElementStatus invoke() {
-    LOG.info("Invoking element: " + payload.getBelongsTo());
+    LOG.info("Invoking element: " + belongsTo);
     try {
-			Response httpResp = Request.Post(payload.getBelongsTo()).bodyString(jsonLd(), ContentType.APPLICATION_JSON).execute();
+			Response httpResp = Request.Post(belongsTo).bodyString(jsonLd(), ContentType.APPLICATION_JSON).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       LOG.error(e.getMessage());
-      return new PipelineElementStatus(payload.getBelongsTo(), payload.getName(), false, e.getMessage());
+      return new PipelineElementStatus(belongsTo, payload.getName(), false, e.getMessage());
     }
   }
 
   public PipelineElementStatus detach() {
     try {
-      Response httpResp = Request.Delete(payload.getUri()).execute();
+      Response httpResp = Request.Delete(belongsTo).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
-      LOG.error(e.getMessage());
-      return new PipelineElementStatus(payload.getBelongsTo(), payload.getName(), false, e.getMessage());
+      LOG.error("Could not stop pipeline " + belongsTo, e.getMessage());
+      return new PipelineElementStatus(belongsTo, payload.getName(), false, e.getMessage());
     }
   }
 
@@ -74,6 +76,6 @@ public class HttpRequestBuilder {
   }
 
   private PipelineElementStatus convert(org.streampipes.model.Response response) {
-    return new PipelineElementStatus(payload.getBelongsTo(), payload.getName(), response.isSuccess(), response.getOptionalMessage());
+    return new PipelineElementStatus(belongsTo, payload.getName(), response.isSuccess(), response.getOptionalMessage());
   }
 }

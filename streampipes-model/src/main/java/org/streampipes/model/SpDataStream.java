@@ -17,9 +17,9 @@
 
 package org.streampipes.model;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
-import org.apache.commons.lang.RandomStringUtils;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.quality.EventStreamQualityDefinition;
@@ -49,31 +49,31 @@ public class SpDataStream extends NamedStreamPipesEntity {
 	private static final String prefix = "urn:fzi.de:eventstream:";
 
 	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+					cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty(StreamPipes.HAS_EVENT_STREAM_QUALITY_DEFINITION)
-	private transient List<EventStreamQualityDefinition> hasEventStreamQualities;
+	protected transient List<EventStreamQualityDefinition> hasEventStreamQualities;
 
 	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+					cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty(StreamPipes.HAS_EVENT_STREAM_QUALITY_REQUIREMENT)
-	private transient List<EventStreamQualityRequirement> requiresEventStreamQualities;
+	protected transient List<EventStreamQualityRequirement> requiresEventStreamQualities;
 
 	@OneToOne(fetch = FetchType.EAGER,
-		   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+					cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty(StreamPipes.HAS_GROUNDING)
-	private EventGrounding eventGrounding;
-	
+	protected EventGrounding eventGrounding;
+
 	@OneToOne(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
 	@RdfProperty(StreamPipes.HAS_SCHEMA)
-	private EventSchema eventSchema;
-	
+	protected EventSchema eventSchema;
+
 	@RdfProperty(StreamPipes.HAS_MEASUREMENT_CAPABILTIY)
 	@OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
-	private List<MeasurementCapability> measurementCapability;
-	
+	protected List<MeasurementCapability> measurementCapability;
+
 	@RdfProperty(StreamPipes.HAS_MEASUREMENT_OBJECT)
 	@OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
-	private List<MeasurementObject> measurementObject;
+	protected List<MeasurementObject> measurementObject;
 
 	protected List<String> category;
 
@@ -98,32 +98,32 @@ public class SpDataStream extends NamedStreamPipesEntity {
 
 
 	public SpDataStream(SpDataStream other) {
-		super(other);		
+		super(other);
 		if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
 		if (other.getEventSchema() != null) this.eventSchema = new EventSchema(other.getEventSchema());
 		if (other.getHasEventStreamQualities() != null) this.hasEventStreamQualities = other.getHasEventStreamQualities().stream().map(s -> new EventStreamQualityDefinition(s)).collect(Collectors.toCollection(ArrayList<EventStreamQualityDefinition>::new));
 		if (other.getRequiresEventStreamQualities() != null) this.requiresEventStreamQualities = other.getRequiresEventStreamQualities().stream().map(s -> new EventStreamQualityRequirement(s)).collect(Collectors.toCollection(ArrayList<EventStreamQualityRequirement>::new));
 		if (other.getMeasurementCapability() != null) this.measurementCapability =  new Cloner().mc(other.getMeasurementCapability());
 		if (other.getMeasurementObject() != null) this.measurementObject = new Cloner().mo(other.getMeasurementObject());
-	}
 
+	}
 
 	public List<EventStreamQualityDefinition> getHasEventStreamQualities() {
 		return hasEventStreamQualities;
 	}
 
 	public void setHasEventStreamQualities(
-			List<EventStreamQualityDefinition> hasEventStreamQualities) {
+					List<EventStreamQualityDefinition> hasEventStreamQualities) {
 		this.hasEventStreamQualities = hasEventStreamQualities;
 	}
-	
+
 
 	public List<EventStreamQualityRequirement> getRequiresEventStreamQualities() {
 		return requiresEventStreamQualities;
 	}
 
 	public void setRequiresEventStreamQualities(
-			List<EventStreamQualityRequirement> requiresEventStreamQualities) {
+					List<EventStreamQualityRequirement> requiresEventStreamQualities) {
 		this.requiresEventStreamQualities = requiresEventStreamQualities;
 	}
 
@@ -148,7 +148,7 @@ public class SpDataStream extends NamedStreamPipesEntity {
 	}
 
 	public void setMeasurementCapability(
-			List<MeasurementCapability> measurementCapability) {
+					List<MeasurementCapability> measurementCapability) {
 		this.measurementCapability = measurementCapability;
 	}
 
@@ -160,11 +160,12 @@ public class SpDataStream extends NamedStreamPipesEntity {
 		this.measurementObject = measurementObject;
 	}
 
-    public List<String> getCategory() {
-        return category;
-    }
+	public List<String> getCategory() {
+		return category;
+	}
 
-    public void setCategory(List<String> category) {
-        this.category = category;
-    }
+	public void setCategory(List<String> category) {
+		this.category = category;
+	}
+
 }

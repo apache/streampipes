@@ -19,6 +19,7 @@ package org.streampipes.serializers.jsonld;
 
 import org.streampipes.empire.core.empire.util.EmpireAnnotationProvider;
 import org.streampipes.model.ApplicationLink;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -32,6 +33,11 @@ import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.grounding.WildcardTopicDefinition;
+import org.streampipes.model.modelconnect.AdapterDescription;
+import org.streampipes.model.modelconnect.FormatDescription;
+import org.streampipes.model.modelconnect.FormatDescriptionList;
+import org.streampipes.model.modelconnect.ProtocolDescription;
+import org.streampipes.model.modelconnect.ProtocolDescriptionList;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.CustomOutputStrategy;
@@ -52,11 +58,7 @@ import org.streampipes.model.quality.MeasurementProperty;
 import org.streampipes.model.quality.MeasurementRange;
 import org.streampipes.model.quality.Precision;
 import org.streampipes.model.quality.Resolution;
-import org.streampipes.model.schema.Enumeration;
-import org.streampipes.model.schema.EventPropertyList;
-import org.streampipes.model.schema.EventPropertyNested;
-import org.streampipes.model.schema.EventPropertyPrimitive;
-import org.streampipes.model.schema.QuantitativeValue;
+import org.streampipes.model.schema.*;
 import org.streampipes.model.staticproperty.AnyStaticProperty;
 import org.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
@@ -99,6 +101,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             MappingPropertyNary.class,
             EventPropertyList.class,
             EventPropertyNested.class,
+            EventSchema.class,
             EventPropertyPrimitive.class,
             MatchingStaticProperty.class,
             DataSinkDescription.class,
@@ -106,6 +109,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             FixedOutputStrategy.class,
             AppendOutputStrategy.class,
             SpDataStream.class,
+            SpDataSet.class,
             Accuracy.class,
             EventPropertyQualityRequirement.class,
             EventStreamQualityRequirement.class,
@@ -145,7 +149,14 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             RuntimeResolvableOneOfStaticProperty.class,
             TransformOutputStrategy.class,
             TransformOperation.class,
-            CustomTransformOutputStrategy.class
+            CustomTransformOutputStrategy.class,
+            AdapterDescription.class,
+            FormatDescription.class,
+            FormatDescriptionList.class,
+            ProtocolDescription.class,
+            ProtocolDescriptionList.class
+
+
     );
   }
 }

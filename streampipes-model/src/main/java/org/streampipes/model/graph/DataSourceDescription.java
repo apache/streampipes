@@ -19,7 +19,6 @@ package org.streampipes.model.graph;
 
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
-import org.streampipes.model.DataSource;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.util.Cloner;
@@ -48,8 +47,8 @@ public class DataSourceDescription extends NamedStreamPipesEntity {
 			   cascade = {CascadeType.ALL})
 	@RdfProperty(StreamPipes.PRODUCES)
 	private List<SpDataStream> spDataStreams;
-	
-	private DataSource dataSource;
+
+	private String correspondingSourceId;
 		
 	public DataSourceDescription() {
 		super();
@@ -59,7 +58,7 @@ public class DataSourceDescription extends NamedStreamPipesEntity {
 	public DataSourceDescription(DataSourceDescription other)
 	{
 		super(other);
-		this.spDataStreams = new Cloner().streams(other.getSpDataStreams());
+		this.spDataStreams = new Cloner().seq(other.getSpDataStreams());
 		this.spDataStreams.forEach(e -> e.setCategory(Arrays.asList(this.getElementId())));
 	}
 	
@@ -70,11 +69,11 @@ public class DataSourceDescription extends NamedStreamPipesEntity {
 	}
 	
 	public DataSourceDescription(String uri, String name2, String description2, String iconUrl) {
-		this(uri, name2, description2, iconUrl, new ArrayList<SpDataStream>());
+		this(uri, name2, description2, iconUrl, new ArrayList<>());
 	}
 	
 	public DataSourceDescription(String uri, String name, String description) {
-		this(uri, name, description, "", new ArrayList<SpDataStream>());
+		this(uri, name, description, "", new ArrayList<>());
 	}
 
 	public List<SpDataStream> getSpDataStreams() {
@@ -90,11 +89,11 @@ public class DataSourceDescription extends NamedStreamPipesEntity {
 		spDataStreams.add(spDataStream);
 	}
 
-	public DataSource getDataSource() {
-		return dataSource;
+	public String getCorrespondingSourceId() {
+		return correspondingSourceId;
 	}
 
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}			
+	public void setCorrespondingSourceId(String correspondingSourceId) {
+		this.correspondingSourceId = correspondingSourceId;
+	}
 }

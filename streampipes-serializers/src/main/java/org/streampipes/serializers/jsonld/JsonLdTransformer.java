@@ -41,9 +41,30 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 public class JsonLdTransformer implements RdfTransformer {
+
+  private static final List<String> standardRootElements = Arrays.asList(StreamPipes.DATA_PROCESSOR_DESCRIPTION,
+          StreamPipes.DATA_SOURCE_DESCRIPTION,
+          StreamPipes.DATA_SINK_DESCRIPTION,
+          StreamPipes.DATA_PROCESSOR_INVOCATION,
+          StreamPipes.DATA_SINK_INVOCATION,
+          StreamPipes.FORMAT_DESCRIPTION_LIST,
+          StreamPipes.PROTOCOL_DESCRIPTION_LIST,
+          StreamPipes.ADAPTER_DESCRIPTION);
+
+  private List<String> selectedRootElements;
+
+  public JsonLdTransformer() {
+    this.selectedRootElements = standardRootElements;
+  }
+
+  public JsonLdTransformer(String rootElement) {
+    this.selectedRootElements = Collections.singletonList(rootElement);
+  }
 
   @Override
   public <T> Graph toJsonLd(T element) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException, ClassNotFoundException, InvalidRdfException {
@@ -89,12 +110,10 @@ public class JsonLdTransformer implements RdfTransformer {
     return null;
   }
 
-  private boolean isRootElement(Statement s)  {
-    return hasObject(s, StreamPipes.DATA_PROCESSOR_DESCRIPTION) ||
-            hasObject(s, StreamPipes.DATA_SOURCE_DESCRIPTION) ||
-            hasObject(s, StreamPipes.DATA_SINK_DESCRIPTION) ||
-            hasObject(s, StreamPipes.DATA_PROCESSOR_INVOCATION) ||
-            hasObject(s, StreamPipes.DATA_SINK_INVOCATION);
+  private boolean isRootElement(Statement s) {
+    return selectedRootElements
+            .stream()
+            .anyMatch(rootElement -> hasObject(s, rootElement));
   }
 
   private boolean hasObject(Statement statement, String voc) {

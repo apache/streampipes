@@ -17,14 +17,17 @@
 
 package org.streampipes.manager.util;
 
+import org.streampipes.model.SpDataSet;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.streampipes.model.base.InvocableStreamPipesEntity;
-
 public class TemporaryGraphStorage {
 
 	public static Map<String, List<InvocableStreamPipesEntity>> graphStorage = new HashMap<>();
+
+	public static Map<String, List<SpDataSet>> datasetStorage = new HashMap<>();
 	
 }

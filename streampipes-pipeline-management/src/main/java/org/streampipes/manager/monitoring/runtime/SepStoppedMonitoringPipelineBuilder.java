@@ -23,15 +23,16 @@ import org.streampipes.commons.exceptions.NoMatchingSchemaException;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.manager.matching.PipelineVerificationHandler;
 import org.streampipes.manager.operations.Operations;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.pipeline.PipelineModificationMessage;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.graph.DataProcessorDescription;
-import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
@@ -78,7 +79,8 @@ public class SepStoppedMonitoringPipelineBuilder {
 	public Pipeline buildPipeline()
 			throws NoMatchingFormatException, NoMatchingSchemaException, NoMatchingProtocolException, Exception {
 		DataProcessorInvocation rateSepaClient = new DataProcessorInvocation(streamStoppedDataProcessorDescription);
-		SpDataStream streamClient = new SpDataStream(stream);
+		SpDataStream streamClient = stream instanceof SpDataStream ? new SpDataStream(stream) : new SpDataSet(
+						(SpDataSet) stream);
 		DataSinkInvocation kafkaActionClient = new DataSinkInvocation(kafkaDataSinkDescription);
 
 		List<NamedStreamPipesEntity> elements = new ArrayList<>();

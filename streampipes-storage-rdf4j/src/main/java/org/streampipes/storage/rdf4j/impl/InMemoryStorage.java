@@ -18,11 +18,11 @@
 package org.streampipes.storage.rdf4j.impl;
 
 import com.rits.cloning.Cloner;
-import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 

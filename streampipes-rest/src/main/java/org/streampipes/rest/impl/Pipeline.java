@@ -193,6 +193,15 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
         }
     }
 
+    @Path("/update/dataset")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @GsonWithIds
+    public Response updateDataSet(org.streampipes.model.SpDataSet spDataSet, @PathParam("username")
+            String username) {
+        return ok(Operations.updateDataSet(spDataSet));
+    }
+
     @Path("/update")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
