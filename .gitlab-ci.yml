@@ -16,6 +16,7 @@ build:
     - npm run build
   artifacts:
     paths:
+      - dist/assets/css/
       - dist/assets/img/
       - dist/assets/lib/
       - dist/assets/templates/
