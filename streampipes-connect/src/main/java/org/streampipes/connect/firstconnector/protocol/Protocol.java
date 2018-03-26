@@ -17,7 +17,7 @@ public abstract class Protocol implements Runnable {
     /*
         This method is used when the adapter is started to send constantly events to Kafka
      */
-    public abstract void run();
+    public abstract void run(String broker, String topic);
 
     public abstract String getId();
 }

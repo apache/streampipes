@@ -24,12 +24,16 @@ public class Adapter {
     private static Map<String, Protocol> allProtocols = new HashMap<>();
     private static Map<String, Parser> allParsers = new HashMap<>();
 
+    private String kafkaUrl;
+    private String topic;
 
     Logger logger = LoggerFactory.getLogger(Adapter.class);
-    private SpKafkaProducer producer;
     private boolean debug;
 
     public Adapter(String kafkaUrl, String topic, boolean debug) {
+        this.kafkaUrl = kafkaUrl;
+        this.topic = topic;
+
         allFormats.put(JsonFormat.ID, new JsonFormat());
 
         allFormats.put(CsvFormat.ID, new CsvFormat());
@@ -41,10 +45,6 @@ public class Adapter {
         allProtocols.put(FileProtocol.ID, new FileProtocol());
 
         this.debug = debug;
-
-        if (!debug) {
-            producer = new SpKafkaProducer(kafkaUrl, topic);
-        }
     }
 
     public Adapter(String kafkaUrl, String topic) {
@@ -61,7 +61,7 @@ public class Adapter {
 
         logger.debug("Start adatper with format: " + format.getId() + " and " + protocol.getId());
 
-        protocol.run();
+        protocol.run(this.kafkaUrl, this.topic);
 
     }
 

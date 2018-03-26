@@ -53,10 +53,10 @@ public class FileProtocol extends Protocol {
     }
 
     @Override
-    public void run() {
+    public void run(String broker, String topic) {
         FileReader fr = null;
 
-        SendToKafka stk = new SendToKafka(format);
+        SendToKafka stk = new SendToKafka(format, broker, topic);
         try {
             fr = new FileReader(fileUri);
             BufferedReader br = new BufferedReader(fr);
@@ -100,5 +100,10 @@ public class FileProtocol extends Protocol {
     @Override
     public String getId() {
         return ID;
+    }
+
+    @Override
+    public void run() {
+
     }
 }

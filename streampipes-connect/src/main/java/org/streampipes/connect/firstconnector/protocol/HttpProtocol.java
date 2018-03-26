@@ -55,9 +55,9 @@ public class HttpProtocol extends Protocol {
     }
 
     @Override
-    public void run() {
+    public void run(String broker, String topic) {
 
-        SendToKafka stk = new SendToKafka(format);
+        SendToKafka stk = new SendToKafka(format, broker, topic);
 
         try {
             String s = Request.Get(url)
@@ -95,5 +95,10 @@ public class HttpProtocol extends Protocol {
     @Override
     public String getId() {
         return ID;
+    }
+
+    @Override
+    public void run() {
+
     }
 }

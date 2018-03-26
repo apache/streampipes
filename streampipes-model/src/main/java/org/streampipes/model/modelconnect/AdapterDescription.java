@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 
@@ -25,7 +26,7 @@ public class AdapterDescription extends NamedStreamPipesEntity {
 
 
     @RdfProperty("sp:hasDataSet")
-    private SpDataStream dataSet;
+    private SpDataSet dataSet;
 
     public AdapterDescription() {
     }
@@ -51,11 +52,11 @@ public class AdapterDescription extends NamedStreamPipesEntity {
         this.protocolDescription = protocolDescription;
     }
 
-    public SpDataStream getDataSet() {
+    public SpDataSet getDataSet() {
         return dataSet;
     }
 
-    public void setDataSet(SpDataStream dataSet) {
+    public void setDataSet(SpDataSet dataSet) {
         this.dataSet = dataSet;
     }
 
