@@ -36,6 +36,11 @@
     <dependencies>
         <dependency>
             <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-container-standalone</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
             <artifactId>streampipes-model-client</artifactId>
         </dependency>
         <dependency>
