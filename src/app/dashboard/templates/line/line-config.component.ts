@@ -1,5 +1,7 @@
+declare const require: any;
+
 export let spLineWidgetConfig = {
-    template: '.lineConfig.html',
+    template: require('./lineConfig.html'),
     bindings: {
         wid: '='
     },

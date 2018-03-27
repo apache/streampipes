@@ -1,5 +1,7 @@
+declare const require: any;
+
 export let spNumberWidgetConfig = {
-    template: './numberConfig.html',
+    template: require('./numberConfig.html'),
     bindings: {
         wid: '='
     },
