@@ -37,33 +37,33 @@
 
 <div flex="100" class="md-whiteframe-z1">
     <collapsible title-label="'Basics'" disabled="disabled" removable="false" collapsible="false" layout-fill
-                 ng-if="isEpaTabSelected('basics')">
-        <sepa-basics element="selectedSepa" disabled="editingDisabled"></sepa-basics>
+                 ng-if="ctrl.isEpaTabSelected('basics')">
+        <sepa-basics element="ctrl.selectedSepa" disabled="ctrl.editingDisabled"></sepa-basics>
         Category:
         <!-- 			 <div ng-dropdown-multiselect="" options="availableEpaCategories" selected-model="selectedCategories" extra-settings="categoryOpt"></div> -->
 
     </collapsible>
     <collapsible title-label="'Stream Requirements'" disabled="disabled" removable="false" collapsible="false"
-                 layout-fill ng-if="isEpaTabSelected('streams')">
-        <stream-restriction element="selectedSepa.spDataStreams" disabled="editingDisabled"></stream-restriction>
+                 layout-fill ng-if="ctrl.isEpaTabSelected('streams')">
+        <stream-restriction element="ctrl.selectedSepa.spDataStreams" disabled="ctrl.editingDisabled"></stream-restriction>
     </collapsible>
     <collapsible title-label="'Static Properties'" disabled="disabled" removable="false" collapsible="false" layout-fill
-                 ng-if="isEpaTabSelected('staticProperties')">
-        <static-properties element="selectedSepa.staticProperties" streams="selectedSepa.spDataStreams"
-                           disabled="editingDisabled"></static-properties>
+                 ng-if="ctrl.isEpaTabSelected('staticProperties')">
+        <static-properties element="sctrl.electedSepa.staticProperties" streams="ctrl.selectedSepa.spDataStreams"
+                           disabled="ctrl.editingDisabled"></static-properties>
     </collapsible>
     <collapsible title-label="'Output Strategy'" disabled="disabled" removable="false" collapsible="false" layout-fill
-                 ng-if="isEpaTabSelected('outputStrategy')">
-        <output-strategy strategies="selectedSepa.outputStrategies" disabled="editingDisabled"></output-strategy>
+                 ng-if="ctrl.isEpaTabSelected('outputStrategy')">
+        <output-strategy strategies="ctrl.selectedSepa.outputStrategies" disabled="ctrl.editingDisabled"></output-strategy>
     </collapsible>
     <collapsible title-label="'Supported Grounding'" disabled="disabled" removable="false" collapsible="false"
-                 layout-fill ng-if="isEpaTabSelected('supportedGrounding')">
-        <supported-grounding grounding="selectedSepa.supportedGrounding"
-                             disabled="editingDisabled"></supported-grounding>
+                 layout-fill ng-if="ctrl.isEpaTabSelected('supportedGrounding')">
+        <supported-grounding grounding="ctrl.selectedSepa.supportedGrounding"
+                             disabled="ctrl.editingDisabled"></supported-grounding>
     </collapsible>
     <collapsible title-label="'Deployment'" disabled="disabled" removable="false" collapsible="false" layout-fill
-                 ng-if="isEpaTabSelected('deployment')">
-        <deployment element="selectedSepa" deployment-settings="deploymentSettings[0]" disabled="disabled"
+                 ng-if="ctrl.isEpaTabSelected('deployment')">
+        <deployment element="ctrl.selectedSepa" deployment-settings="ctrl.deploymentSettings[0]" disabled="ctrl.disabled"
                     style="width:100%;"></deployment>
     </collapsible>
 </div>

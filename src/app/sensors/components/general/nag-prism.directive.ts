@@ -1,6 +1,7 @@
+import Prism from 'prismjs';
+
 nagPrism.$inject = ['$compile'];
 
-declare const Prism: any;
 
 export default function nagPrism($compile) {
 	return {
