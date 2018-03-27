@@ -11,13 +11,13 @@ export class PipelineElementController {
         this.ElementIconText = ElementIconText;
 
         this.showImage = false;
-        this.iconText =  this.ElementIconText.getElementIconText(this.pipelineElement.name);
+        this.iconText =  this.ElementIconText.getElementIconText(this.pipelineElement.payload.name);
 
         this.checkImageAvailable();
     }
 
     checkImageAvailable() {
-        this.ImageChecker.imageExists(this.pipelineElement.iconUrl, (exists) => {
+        this.ImageChecker.imageExists(this.pipelineElement.payload.iconUrl, (exists) => {
             this.showImage = exists;
         })
     }
