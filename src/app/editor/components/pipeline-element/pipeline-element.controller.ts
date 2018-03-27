@@ -17,6 +17,7 @@ export class PipelineElementController {
     }
 
     checkImageAvailable() {
+        console.log(this.pipelineElement);
         this.ImageChecker.imageExists(this.pipelineElement.iconUrl, (exists) => {
             this.showImage = exists;
         })
