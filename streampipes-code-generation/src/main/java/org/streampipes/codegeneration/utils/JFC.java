@@ -22,10 +22,9 @@ import com.squareup.javapoet.ClassName;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
-import org.streampipes.model.graph.DataProcessorDescription;
-import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.schema.EventProperty;
@@ -34,11 +33,6 @@ import org.streampipes.sdk.PrimitivePropertyBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.stream.SchemaBuilder;
 import org.streampipes.sdk.stream.StreamBuilder;
-import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
-import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +44,12 @@ import java.util.Map;
  *
  */
 public abstract class JFC {
+
+	private static final String STREAMPIPES_MODEL_PACKAGE = "org.streampipes.model";
+	private static final String STREAMPIPES_MODEL_PACKAGE_GRAPH = STREAMPIPES_MODEL_PACKAGE + ".graph";
+
+	private static final String SP_FLINK_PACKAGE = "org.streampipes.wrapper.flink";
+	private static final String SP_WRAPPER_PACKAGE = "org.streampipes.wrapper";
 
 	public static ClassName MAP = ClassName.get(Map.class);
 	public static ClassName LIST = ClassName.get(List.class);
@@ -65,7 +65,7 @@ public abstract class JFC {
 	public static ClassName FLAT_MAP_FUNCTION = ClassName.get("org.apache.flink.api.common.functions", "FlatMapFunction");
 	public static ClassName COLLECTOR = ClassName.get("org.apache.flink.util", "Collector");
 
-	public static ClassName SEPA_DESCRIPTION = ClassName.get(DataProcessorDescription.class);
+	public static ClassName SEPA_DESCRIPTION = ClassName.get(STREAMPIPES_MODEL_PACKAGE_GRAPH, "DataProcessorInvocation");
 	public static ClassName SEC_DESCRIPTION = ClassName.get(DataSinkDescription.class);
 	public static ClassName SEPA_INVOCATION = ClassName.get(DataProcessorInvocation.class);
 	public static ClassName SEC_INVOCATION = ClassName.get(DataSinkInvocation.class);
@@ -89,9 +89,11 @@ public abstract class JFC {
 
 
 
-	public static ClassName FLINK_DEPLOYMENT_CONFIG = ClassName.get(FlinkDeploymentConfig.class);
-	public static ClassName FLINK_SEPA_RUNTIME = ClassName.get(FlinkDataProcessorRuntime.class);
-	public static ClassName FLINK_SEC_RUNTIME = ClassName.get(FlinkDataSinkRuntime.class);
-	public static ClassName ABSTRACT_FLINK_AGENT_DECLARER = ClassName.get(FlinkDataProcessorDeclarer.class);
-	public static ClassName ABSTRACT_FLINK_CONSUMER_DECLARER = ClassName.get(FlinkDataSinkDeclarer.class);
+	public static ClassName FLINK_DEPLOYMENT_CONFIG = ClassName.get(SP_FLINK_PACKAGE, "FlinkDeploymentConfig");
+	public static ClassName FLINK_SEPA_RUNTIME =  ClassName.get(SP_FLINK_PACKAGE, "FlinkDataProcessorRuntime");
+	public static ClassName FLINK_SEC_RUNTIME = ClassName.get(SP_FLINK_PACKAGE, "FlinkDataSinkRuntime");
+	public static ClassName ABSTRACT_FLINK_AGENT_DECLARER =  ClassName.get(SP_FLINK_PACKAGE, "FlinkDataProcessorDeclarer");
+	public static ClassName ABSTRACT_FLINK_CONSUMER_DECLARER =  ClassName.get(SP_FLINK_PACKAGE, "DataSinkDeclarer");
+
+	public static ClassName EVENT_PROCESSOR_BINDING_PARAMS = ClassName.get(SP_WRAPPER_PACKAGE +".params.binding", "EventProcessorBindingParams");
 }

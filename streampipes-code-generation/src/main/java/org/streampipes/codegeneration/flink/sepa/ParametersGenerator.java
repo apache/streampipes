@@ -17,19 +17,17 @@
 
 package org.streampipes.codegeneration.flink.sepa;
 
-import javax.lang.model.element.Modifier;
-
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.TypeSpec;
-
-import org.streampipes.model.base.ConsumableStreamPipesEntity;
-import org.streampipes.model.staticproperty.StaticProperty;
-import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.streampipes.codegeneration.Generator;
 import org.streampipes.codegeneration.utils.JFC;
 import org.streampipes.codegeneration.utils.Utils;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.streampipes.model.staticproperty.StaticProperty;
+
+import javax.lang.model.element.Modifier;
 
 public class ParametersGenerator extends Generator {
 
@@ -57,7 +55,7 @@ public class ParametersGenerator extends Generator {
 		MethodSpec constructor = getConstructor();
 
 		TypeSpec.Builder parameterClass = TypeSpec.classBuilder(name + "Parameters").addModifiers(Modifier.PUBLIC)
-				.superclass(EventProcessorBindingParams.class).addMethod(constructor);
+				.superclass(JFC.EVENT_PROCESSOR_BINDING_PARAMS).addMethod(constructor);
 
 		for (StaticProperty sp : element.getStaticProperties()) {
 			String internalName = Utils.toCamelCase(sp.getInternalName());

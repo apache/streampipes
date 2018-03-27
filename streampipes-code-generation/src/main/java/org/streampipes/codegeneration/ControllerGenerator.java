@@ -20,18 +20,18 @@ package org.streampipes.codegeneration;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
-import org.streampipes.model.base.ConsumableStreamPipesEntity;
-import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.model.SpDataStream;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.graph.DataProcessorDescription;
-import org.streampipes.model.output.AppendOutputStrategy;
-import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.codegeneration.utils.JFC;
-
-import java.util.List;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.schema.EventProperty;
 
 import javax.lang.model.element.Modifier;
+import java.util.List;
 
 public abstract class ControllerGenerator extends Generator {
 	public ControllerGenerator(ConsumableStreamPipesEntity element, String name, String packageName) {
@@ -64,6 +64,12 @@ public abstract class ControllerGenerator extends Generator {
 		return b;
 	}
 
+	public Builder getCustomOutputStrategy(Builder b, CustomOutputStrategy cos, int n) {
+		b.addStatement("$T outputStrategy$L = new $T()", JFC.APPEND_OUTPUT_STRATEGY, n, JFC.APPEND_OUTPUT_STRATEGY);
+
+		return b;
+	}
+
 	public Builder getAppendOutputStrategy(Builder b, AppendOutputStrategy aos, int n) {
 		b.addStatement("$T outputStrategy$L = new $T()", JFC.APPEND_OUTPUT_STRATEGY, n, JFC.APPEND_OUTPUT_STRATEGY);
 		b.addStatement("$T<$T> appendProperties = new $T<$T>()", JFC.LIST, JFC.EVENT_PROPERTY, JFC.ARRAY_LIST,
@@ -87,6 +93,8 @@ public abstract class ControllerGenerator extends Generator {
 			OutputStrategy outputStrategy = outputStrategies.get(i);
 			if (outputStrategy instanceof AppendOutputStrategy) {
 				b = getAppendOutputStrategy(b, (AppendOutputStrategy) outputStrategy, i);
+			} else if (outputStrategy instanceof CustomOutputStrategy) {
+				b = getCustomOutputStrategy(b, (CustomOutputStrategy) outputStrategy, i);
 			} else {
 				// TODO add implementation for the other strategies
 				try {
