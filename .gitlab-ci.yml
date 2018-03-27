@@ -39,7 +39,7 @@ nginx:
     - unzip javadoc.zip
     - mkdir javadoc && mv target/site/apidocs/* ./javadoc
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-    - docker build --pull -t $IMAGE_NAME .
+    - docker build --no-cache --pull -t $IMAGE_NAME .
     - docker push $IMAGE_NAME
 
 nginx-docker-hub:
