@@ -11,7 +11,7 @@ export class PipelineElementController {
         this.ElementIconText = ElementIconText;
 
         this.showImage = false;
-        this.iconText =  this.ElementIconText.getElementIconText(this.pipelineElement.payload.name);
+        this.iconText =  this.ElementIconText.getElementIconText(this.pipelineElement.name);
 
         this.checkImageAvailable();
     }
