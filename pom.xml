@@ -588,7 +588,7 @@
                     <suppressionsLocation>/tools/maven/suppressions.xml</suppressionsLocation>
                     <includeTestSourceDirectory>false</includeTestSourceDirectory>
                     <configLocation>/tools/maven/checkstyle.xml</configLocation>
-                    <logViolationsToConsole>true</logViolationsToConsole>
+                    <logViolationsToConsole>false</logViolationsToConsole>
                     <failOnViolation>false</failOnViolation>
                 </configuration>
             </plugin>
