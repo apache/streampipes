@@ -53,7 +53,7 @@ export class PipelineElementOptionsController {
     }
 
     initRecs(elementId, currentPipelineElements) {
-        var currentPipeline = this.ObjectProvider.makePipeline(currentPipelineElements, elementId);
+        var currentPipeline = this.ObjectProvider.makePipeline(currentPipelineElements);
         this.PipelineElementRecommendationService.getRecommendations(this.allElements, currentPipeline).then((result) => {
             if (result.success) {
                 this.possibleElements = result.possibleElements;

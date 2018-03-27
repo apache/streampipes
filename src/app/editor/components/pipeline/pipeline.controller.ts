@@ -193,7 +193,7 @@ export class PipelineController {
         this.JsplumbBridge.bind("connection", (info, originalEvent) => {
             var pe = this.objectProvider.findElement(info.target.id, this.rawPipelineModel);
             if (pe.settings.openCustomize) {
-                this.currentPipelineModel = this.objectProvider.makePipeline(this.rawPipelineModel, info.target.id);
+                this.currentPipelineModel = this.objectProvider.makePipeline(this.rawPipelineModel);
                 this.objectProvider.updatePipeline(this.currentPipelineModel)
                     .success(data => {
                         if (data.success) {
