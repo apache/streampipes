@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {AdapterDataSource} from '../all-adapters/adapter-data-source.service';
+import {RestService} from '../rest.service';
 
 @Component({
     selector: 'sp-main',
@@ -7,8 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-    public MainComponent() {}
+    private dataSource: AdapterDataSource;
+    private restService: RestService;
 
-    ngOnInit() {}
+    public MainComponent(restService: RestService) {
+        this.restService = restService;
+    }
+
+    ngOnInit() {
+        this.dataSource = new AdapterDataSource(this.restService);
+    }
 
 }

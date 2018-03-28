@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {RestService} from '../rest.service';
 import {ProtocolDescription} from '../model/ProtocolDescription';
@@ -6,6 +6,7 @@ import {FormatDescription} from '../model/FormatDescription';
 import {AdapterDescription} from '../model/AdapterDescription';
 import {DataSetDescription} from '../model/DataSetDescription';
 import {EventSchema} from '../schema-editor/model/EventSchema';
+import {AdapterDataSource} from '../all-adapters/adapter-data-source.service';
 
 @Component({
     selector: 'sp-new-adapter',
@@ -61,10 +62,7 @@ export class NewComponent implements OnInit {
     }
 
     public startAdapter() {
-        console.log(this.newAdapterDescription);
-
         this.restService.addAdapter(this.newAdapterDescription);
-        console.log('bbb');
     }
 
 }

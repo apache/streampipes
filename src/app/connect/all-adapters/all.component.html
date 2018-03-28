@@ -7,25 +7,31 @@
 
     <mat-table #table [dataSource]="dataSource">
 
-        <!-- Position Column -->
-        <ng-container matColumnDef="position">
-            <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.position}} </mat-cell>
-        </ng-container>
-
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
+        <ng-container matColumnDef="id">
             <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+            <mat-cell *matCellDef="let adapter"> {{adapter.label}} </mat-cell>
         </ng-container>
 
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="symbol">
-            <mat-header-cell *matHeaderCellDef> Symbol </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.symbol}} </mat-cell>
+        <ng-container matColumnDef="protocol">
+            <mat-header-cell *matHeaderCellDef> Protocol </mat-header-cell>
+            <mat-cell *matCellDef="let adapter"> {{adapter.protocol.label}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="format">
+            <mat-header-cell *matHeaderCellDef> Format </mat-header-cell>
+            <mat-cell *matCellDef="let adapter"> {{adapter.format.label}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+            <mat-header-cell *matHeaderCellDef> Remove </mat-header-cell>
+            <mat-cell  onmouseover="" style="cursor: pointer;" (click)="deleteAdapter(adapter)" *matCellDef="let adapter">
+                <mat-icon>
+                    delete
+                </mat-icon>
+            </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <mat-row *matRowDef="let adapter; columns: displayedColumns;"></mat-row>
     </mat-table>
 </div>

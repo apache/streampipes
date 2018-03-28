@@ -43,10 +43,18 @@
     </mat-step>
 
     <mat-step>
+
+
       <ng-template matStepLabel>Start Adapter</ng-template>
+      <div fxLayoutAlign="center">
+          <mat-form-field>
+            <input matInput [(ngModel)]="newAdapterDescription.label" placeholder="Adapter Name">
+          </mat-form-field>
+      </div>
       <div fxLayoutAlign="center">
         <button mat-raised-button color="accent" (click)="startAdapter()" mat-button>Start Adapter</button>
       </div>
+
 
       <div fxLayoutAlign="end">
           <button color="accent" mat-button matStepperPrevious>Back</button>

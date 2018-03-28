@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import {MatTableDataSource} from '@angular/material';
+import {Component, Input, OnInit} from '@angular/core';
+import {RestService} from '../rest.service';
+import {AdapterDescription} from '../model/AdapterDescription';
+import {AdapterDataSource} from './adapter-data-source.service';
 
 @Component({
     selector: 'sp-all-adapters',
@@ -7,23 +9,34 @@ import {MatTableDataSource} from '@angular/material';
     styleUrls: ['./all.component.css']
 })
 export class AllAdaptersComponent implements OnInit {
-    private ELEMENT_DATA: Element[] = [
-        {position: 1, name: 'Hydrogen', symbol: 'H'},
-        {position: 2, name: 'Helium',  symbol: 'He'},
-        {position: 3, name: 'Lithium',  symbol: 'Li'},
-    ];
 
-    displayedColumns = ['position', 'name','symbol'];
-    dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
-    public AllAdaptersComponent() {}
+    private restService: RestService;
 
-    ngOnInit() {}
+    private allAdapters: AdapterDescription[];
 
-}
+    displayedColumns = ['id', 'protocol','format', 'delete'];
 
-interface Element {
-    name: string;
-    position: number;
-    symbol: string;
+    @Input() dataSource: AdapterDataSource;
+
+    constructor(restService: RestService) {
+        this.restService = restService;
+    }
+
+    ngOnInit() {
+        const adapter = new AdapterDescription("iii");
+
+        this.allAdapters = [adapter];
+        this.dataSource = new AdapterDataSource(this.restService);
+
+    }
+
+
+    private deleteAdapter(adapter: AdapterDescription) {
+        // this.dataSource.delete(adapter);
+        this.restService.deleteAdapter(adapter).subscribe(x => {
+            this.dataSource.reload();
+        });
+    }
+
 }
