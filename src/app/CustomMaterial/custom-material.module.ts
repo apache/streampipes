@@ -1,22 +1,25 @@
-import {NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
 
 import {
-  MatButtonModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatDialogModule, MatExpansionModule,
-  MatIconModule,
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,
-  MatSelectModule,
-  MatSidenavModule,
-  MatSlideToggleModule,
-  MatTabsModule,
-  MatToolbarModule
+    MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSlideToggleModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatTableModule,
+    MatPaginatorModule,
 } from '@angular/material';
-import {MatStepperModule} from '@angular/material/stepper';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatRadioModule } from '@angular/material/radio';
 
 
 @NgModule({
@@ -36,7 +39,9 @@ import {MatRadioModule} from '@angular/material/radio';
     MatToolbarModule,
     MatStepperModule,
     MatRadioModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatTableModule,
+    MatPaginatorModule
   ],
   exports: [
     MatButtonModule,
@@ -54,7 +59,8 @@ import {MatRadioModule} from '@angular/material/radio';
     MatToolbarModule,
     MatStepperModule,
     MatRadioModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatTableModule, MatPaginatorModule
   ],
 })
 export class CustomMaterialModule { }

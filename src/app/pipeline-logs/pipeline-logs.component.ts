@@ -6,8 +6,18 @@ import { Component } from '@angular/core';
 })
 export class PipelineLogsComponent {
 
-    constructor() {
+    // TODO: Get LogSourceID from pipelinegraph
 
+    logSourceIDs: string[];
+
+    constructor() {
+        this.logSourceIDs = new Array();
+        this.logSourceIDs.push('asdsaddd');
+      //  this.logSourceIDs.push('asdsaddd');
+    }
+
+    createLogView(logSourceID: string) {
+        this.logSourceIDs.push(logSourceID);
     }
 
 }

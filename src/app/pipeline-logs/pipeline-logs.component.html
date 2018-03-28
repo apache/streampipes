@@ -1,3 +1,13 @@
 <div class="page-container page-container-padding">
-    <logView></logView>
+
+    <form>
+        <mat-form-field>
+            <input #input matInput placeholder="LogSourceID" value="">
+        </mat-form-field>
+        <button mat-button (click)="createLogView(input.value)">Go</button>
+    </form>
+
+
+    <logView *ngFor="let logSourceID of logSourceIDs"
+        [logSourceID]="logSourceID"></logView>
 </div>
