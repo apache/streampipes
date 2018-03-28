@@ -1,4 +1,13 @@
-<h3>Select Columns</h3>
-<md-checkbox ng-model="prop.isSelected" ng-repeat="prop in ctrl.wid.schema.eventProperties" aria-label="{{prop.properties.runtimeName}}">
-	{{prop.properties.runtimeName}}
-</md-checkbox>
+<div layout="column" flex="100">
+    <h4>Select Columns</h4>
+    <div flex="100" layout="row">
+        <b ng-click="ctrl.selectAll()">Select all</b>&nbsp;&nbsp;
+        <b ng-click="ctrl.deselectAll()">Select none</b>
+    </div>
+    <p/>
+    <md-checkbox ng-model="prop.isSelected" ng-repeat="prop in ctrl.wid.schema.eventProperties"
+                 aria-label="{{prop.properties.runtimeName}}">
+        {{prop.properties.runtimeName}}
+    </md-checkbox>
+
+</div>

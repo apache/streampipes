@@ -25,7 +25,7 @@
                 <md-dialog-content ng-show="ctrl.page == 'select-viz'">
                     <md-input-container>
                         <md-select-header>
-                            <h4>{{ctrl.pages[0].description}}</h4>
+                            <h3>{{ctrl.pages[0].description}}</h3>
                         </md-select-header>
                     </md-input-container>
                     <md-grid-list
@@ -45,7 +45,7 @@
                 <md-dialog-content ng-show="ctrl.page == 'select-type'">
                     <md-input-container>
                         <md-select-header>
-                            <h4>{{ctrl.pages[1].description}}</h4>
+                            <h3>{{ctrl.pages[1].description}}</h3>
                         </md-select-header>
                     </md-input-container>
                     <md-grid-list
@@ -65,19 +65,19 @@
                 <!-- Select Scheme -->
                 <md-dialog-content ng-show="ctrl.page == 'select-scheme'">
                     <md-select-header>
-                        <b><h4>{{ctrl.pages[2].description}}</h4></b>
+                        <b><h3>{{ctrl.pages[2].description}}</h3></b>
                     </md-select-header>
-                    <md-input-container id="scheme-selection">
-                        <sp-gauge-widget-config ng-if="ctrl.selectedType == 'gauge'" wid=ctrl.selectedVisualisation></sp-gauge-widget-config>
-                        <sp-heatmap-widget-config ng-if="ctrl.selectedType == 'heatmap'" wid=ctrl.selectedVisualisation></sp-heatmap-widget-config>
-                        <sp-line-widget-config ng-if="ctrl.selectedType == 'line'" wid=ctrl.selectedVisualisation></sp-line-widget-config>
-                        <sp-map-widget-config ng-if="ctrl.selectedType == 'map'" wid=ctrl.selectedVisualisation></sp-map-widget-config>
-                        <sp-number-widget-config ng-if="ctrl.selectedType == 'number'" wid=ctrl.selectedVisualisation></sp-number-widget-config>
-                        <sp-raw-widget-config ng-if="ctrl.selectedType == 'raw'" wid=ctrl.selectedVisualisation></sp-raw-widget-config>
-                        <sp-table-widget-config ng-if="ctrl.selectedType == 'table'" wid=ctrl.selectedVisualisation></sp-table-widget-config>
-                        <sp-trafficlight-widget-config ng-if="ctrl.selectedType == 'trafficlight'" wid=ctrl.selectedVisualisation></sp-trafficlight-widget-config>
-                        <sp-verticalbar-widget-config ng-if="ctrl.selectedType == 'verticalbar'" wid=ctrl.selectedVisualisation></sp-verticalbar-widget-config>
-                        <sp-image-widget-config ng-if="ctrl.selectedType == 'image'" wid=ctrl.selectedVisualisation></sp-image-widget-config>
+                    <md-input-container id="scheme-selection" layout="row" flex="100">
+                        <sp-gauge-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'gauge'" wid=ctrl.selectedVisualisation></sp-gauge-widget-config>
+                        <sp-heatmap-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'heatmap'" wid=ctrl.selectedVisualisation></sp-heatmap-widget-config>
+                        <sp-line-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'line'" wid=ctrl.selectedVisualisation></sp-line-widget-config>
+                        <sp-map-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'map'" wid=ctrl.selectedVisualisation></sp-map-widget-config>
+                        <sp-number-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'number'" wid=ctrl.selectedVisualisation></sp-number-widget-config>
+                        <sp-raw-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'raw'" wid=ctrl.selectedVisualisation></sp-raw-widget-config>
+                        <sp-table-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'table'" wid=ctrl.selectedVisualisation></sp-table-widget-config>
+                        <sp-trafficlight-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'trafficlight'" wid=ctrl.selectedVisualisation></sp-trafficlight-widget-config>
+                        <sp-verticalbar-widget-config  layout="row" flex="100" ng-if="ctrl.selectedType == 'verticalbar'" wid=ctrl.selectedVisualisation></sp-verticalbar-widget-config>
+                        <sp-image-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'image'" wid=ctrl.selectedVisualisation></sp-image-widget-config>
 
                     </md-input-container>
                 </md-dialog-content>

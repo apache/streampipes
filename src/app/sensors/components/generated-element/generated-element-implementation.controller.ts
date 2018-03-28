@@ -22,7 +22,6 @@ export class GeneratedElementImplementationController {
 
         this.new_zip.loadAsync(this.zipFile)
             .then(zip => {
-
                 angular.forEach(zip.files, file => {
                     var filename = file.name;
                      this.extractedFiles.push({
@@ -32,7 +31,6 @@ export class GeneratedElementImplementationController {
                          "fileContents": file
                      });
                 })
-                console.log(this.extractedFiles);
             });
     }
 
@@ -80,7 +78,6 @@ export class GeneratedElementImplementationController {
 
     openSaveAsDialog(filename, content, mediaType) {
         var blob = new Blob([content], {type: mediaType})
-        // TODO: saveAs not implemented
         FileSaver.saveAs(blob, filename);
     }
 
