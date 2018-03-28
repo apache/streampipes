@@ -26,6 +26,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.logging.model.LogRequest;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.ILogs;
 
@@ -35,56 +36,51 @@ import javax.ws.rs.core.Response;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-@Path("/v1/logs")
+@Path("/v2/logs")
 public class Logs extends AbstractRestInterface implements ILogs {
 
     static Logger LOG = LoggerFactory.getLogger(Logs.class);
 
-    @POST
-    @Path("/pipeline")
-    @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
-    @Override
-    public Response getAllByPipelineId(String pipelineId) {
-        String url = BackendConfig.INSTANCE.getElasticsearchURL() + "/" + "logstash-*" +"/_search";
-        HttpResponse<JsonNode> jsonResponse = null;
-        try {
-            jsonResponse = Unirest.post(url)
-                    .header("accept", "application/json")
-                    .body("{\"query\": {\"match_phrase\" : {\"correspondingPipeline\" : \"" + pipelineId + "\"}}}")
-                    .asJson();
-            String respones = jsonResponse.getBody().getObject().toString();
-            String hits = extractHits(respones);
-            LOG.info("Returned logs for pipeline:" + pipelineId);
-            return Response.ok(hits).build();
-        } catch (UnirestException e) {
-            LOG.error(e.toString());
-            return Response.serverError().build();
-        }
-     }
 
     @POST
-    @Path("/pe")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @GsonWithIds
     @Override
-    public Response getAllByPeuri(String peuri) {
+    public Response getLogs(LogRequest logRequest) {
         String url = BackendConfig.INSTANCE.getElasticsearchURL() + "/" + "logstash-*" +"/_search";
         HttpResponse<JsonNode> jsonResponse = null;
         try {
             jsonResponse = Unirest.post(url)
                     .header("accept", "application/json")
-                    .body("{\"query\": {\"match_phrase\" : {\"peURI\" : \"" + peuri + "\"}}}")
+                    .body("GET logstash-*/_search\n" +
+                            "{\n" +
+                            "  \"query\": {\n" +
+                            "    \"bool\": {\n" +
+                            "      \"must\": [\n" +
+                            "        {\"match_phrase\" : \n" +
+                            "    {\"logsource\" : \"" + logRequest.getsource()  + "\"}\n" +
+                            "  },\n" +
+                            "        {\n" +
+                            "          \"range\" : {\n" +
+                            "            \"time\": {\"gte\" :" + logRequest.getDateTo() + ",\"lte\" :" + logRequest.getDateFrom() + "}\n" +
+                            "          }\n" +
+                            "        }\n" +
+                            "      ]\n" +
+                            "    }\n" +
+                            "  }\n" +
+                            "}")
                     .asJson();
             String respones = jsonResponse.getBody().getObject().toString();
             String hits = extractHits(respones);
-            LOG.info("Returned logs for peuri:" + peuri);
+            LOG.info("Returned logs for logsource:" + logRequest.getsource());
             return Response.ok(hits).build();
         } catch (UnirestException e) {
             LOG.error(e.toString());
             return Response.serverError().build();
         }
     }
+
 
     private String extractHits(String response) {
         Gson gson =  new Gson();
