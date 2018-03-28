@@ -1,5 +1,5 @@
 <div flex="100" style="border: 1px solid rgb(63,81,181);">
-	<div class="assemblyOptions" style="padding:0px;margin:0px;">
+	<div class="assemblyOptions sp-accent-bg" style="padding:0px;margin:0px;">
 	       <md-button class="md-icon-button" aria-label="Download" ng-click="ctrl.downloadZip()">
 	       	<md-icon md-svg-icon="file:ic_file_download_24px" style="color: white;"> </md-icon>
 	       	<md-tooltip md-direction="top">
@@ -21,8 +21,8 @@
 			</md-list>
 		</div>
 		<div flex="70">
-			<pre nag-prism source="{{ctrl.currentFileContents}}" class="language-java line-numbers" style="margin-top:0px;border-radius:0px;" ng-if="ctrl.getLanguage(currentFileName) == 'java' && ctrl.loadingCompleted"/>
-		    <pre nag-prism source="{{ctrl.currentFileContents}}" class="language-xml line-numbers" style="margin-top:0px;border-radius:0px;" ng-if="ctrl.getLanguage(currentFileName) == 'xml' && ctrl.loadingCompleted"/>
+			<pre nag-prism source="{{ctrl.currentFileContents}}" class="language-clike language-java line-numbers" style="margin-top:0px;border-radius:0px;" ng-if="ctrl.getLanguage(ctrl.currentFileName) == 'java' && ctrl.loadingCompleted"/>
+		    <pre nag-prism source="{{ctrl.currentFileContents}}" class="language-xml line-numbers" style="margin-top:0px;border-radius:0px;" ng-if="ctrl.getLanguage(ctrl.currentFileName) == 'xml' && ctrl.loadingCompleted"/>
 		</div>
 	</div>
 </div>

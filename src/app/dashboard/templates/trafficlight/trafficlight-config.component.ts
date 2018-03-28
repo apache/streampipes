@@ -1,5 +1,7 @@
+declare const require: any;
+
 export let spTrafficlightWidgetConfig = {
-    templateUrl: 'src/app/dashboard/templates/trafficlight/trafficlightConfig.html',
+    template: require('./trafficlightConfig.html'),
     bindings: {
         wid: '='
     },

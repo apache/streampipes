@@ -4,7 +4,8 @@ import { HomeComponent } from '../home/home.component';
 import { ConfigurationComponent } from '../configuration/configuration.component';
 import { AppContainerModule } from '../app-container/app-container.module';
 import { AppContainerComponent } from '../app-container/app-container.component';
-import { PipelineLogsComponent } from '../pipeline-logs/pipeline-logs.component';
+import {PipelineLogsComponent} from '../pipeline-logs/pipeline-logs.component';
+import {NewComponent} from '../connect/new/new.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
@@ -38,12 +39,12 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 'spNavbar@streampipes': spNavbar,
                 'spIconBar@streampipes': spIconBar,
                 'spMain@streampipes': {
-                    component: HomeComponent,
-                    resolve: {
-                        'AuthData': function (AuthService) {
-                            return AuthService.authenticate();
-                        }
-                    }
+                    component: HomeComponent
+                }
+            },
+            resolve: {
+                "authData": function (AuthService) {
+                    return AuthService.authenticate();
                 }
             }
         })
@@ -203,6 +204,14 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             views: {
                 'spMain@streampipes': {
                     component: PipelineLogsComponent
+                }
+            }
+        })
+        .state('streampipes.connect', {
+            url: '/connect',
+            views: {
+                'spMain@streampipes': {
+                    component: NewComponent
                 }
             }
         });

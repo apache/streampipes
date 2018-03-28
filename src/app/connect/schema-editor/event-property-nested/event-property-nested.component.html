@@ -1,0 +1,21 @@
+<!-- Liste von EventProperties -->
+<div class="header" fxLayout="row" fxLayoutAlign="start center" >
+  <h3>
+    {{getLabel()}}
+  </h3>
+  <button mat-button (click)=OnClickOpen()>
+    <div *ngIf=open><mat-icon>expand_less</mat-icon></div>
+    <div *ngIf=!open><mat-icon>expand_more</mat-icon></div>
+  </button>
+</div>
+<!-- body start -->
+<div class="body">
+  <div [hidden]=!open>
+    <app-event-property [property]="eventPropertyNested"></app-event-property>
+  </div>
+
+  <div style="padding-left: 50px; border-left: 4px dotted black;">
+    <app-event-property-bag [eventProperties]="eventPropertyNested.eventProperties">
+    </app-event-property-bag>
+  </div>
+</div>

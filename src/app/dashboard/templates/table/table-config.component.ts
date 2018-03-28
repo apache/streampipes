@@ -1,5 +1,7 @@
+declare const require: any;
+
 export let spTableWidgetConfig = {
-    templateUrl: 'src/app/dashboard/templates/table/tableConfig.html',
+    template: require('./tableConfig.html'),
     bindings: {
         wid: '='
     },

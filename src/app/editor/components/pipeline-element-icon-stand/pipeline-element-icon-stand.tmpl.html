@@ -47,11 +47,11 @@
     </div>
 </div>
 <div flex id="editor-icon-stand" class="icon-stand" ng-if="ctrl.currentElements">
+    <!-- selectFilter:ctrl.selectedOptions | -->
     <span
-          data-ng-repeat="element in ctrl.currentElements | elementNameFilter:ctrl.elName | selectFilter:ctrl.selectedOptions | orderBy: 'name'"
+          data-ng-repeat="element in ctrl.currentElements | elementNameFilter:ctrl.elName | orderBy: 'name'"
           my-data-bind image-bind="draggable" class="draggable-icon tt" ng-class="element.type"
           data-target="testMenu" ng-if="element.type !== 'block'">
-
     </span>
 
 </div>

@@ -112,6 +112,15 @@ export class EditorDialogManager {
             .cancel('Cancel');
         return this.$mdDialog.show(confirm);
     }
+
+    showMixedStreamAlert(ev) {
+        var confirm = this.$mdDialog.confirm()
+            .title('Not allowed')
+            .textContent('Currently, it is not possible to mix data streams and data sets in a single pipeline.')
+            .targetEvent(ev)
+            .ok('Ok')
+        return this.$mdDialog.show(confirm);
+    }
 }
 
 EditorDialogManager.$inject = ['$mdDialog', 'DialogBuilder'];

@@ -51,6 +51,11 @@ export class AppCtrl {
                     icon: 'action:ic_dashboard_24px'
                 },
                 {
+                    link: 'streampipes.connect',
+                    title: 'StreamPipes Connect',
+                    icon: 'notification:ic_power_24px'
+                },
+                {
                     link: 'streampipes.pipelines',
                     title: 'Pipelines',
                     icon: 'av:ic_play_arrow_24px'

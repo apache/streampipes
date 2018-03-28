@@ -1,0 +1,43 @@
+<div class="header" fxLayout="row" fxLayoutAlign="start center">
+  <h3>
+    {{getLabel()}}
+  </h3>
+  <button mat-button (click)=OnClickDeleteProperty()>
+    <mat-icon>delete</mat-icon>
+  </button>
+  <button mat-button (click)=OnClickOpen()>
+    <div *ngIf=open>
+      <mat-icon>expand_less</mat-icon>
+    </div>
+    <div *ngIf=!open>
+      <mat-icon>expand_more</mat-icon>
+    </div>
+  </button>
+</div>
+<div class="body" [hidden]=!open>
+  <app-event-property [(property)]="property"></app-event-property>
+
+  <mat-form-field>
+    <mat-select placeholder="Runtime Type" [(ngModel)]="property.runtimeType">
+      <mat-option *ngFor="let dataType of runtimeDataTypes" [value]="dataType.url">
+        {{ dataType.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- TODO FIX this -->
+  <!--<form [formGroup]="propertyPrimitivForm " novalidate>-->
+    <!--<div fxLayout="row" fxLayoutAlign="start">-->
+      <!--<div class="form-group">-->
+        <!--<select class="form-controll" formControlName="dataType">-->
+          <!--<mat-error *ngIf="propertyForm.controls['dataType'].errors?.required && propertyForm.controls['dataType'].touched">-->
+            <!--DataTypey is <strong>required</strong>-->
+          <!--</mat-error>-->
+          <!--<option *ngFor="let dataType of dataTypes" [value]="dataType">{{dataType}}</option>-->
+        <!--</select>-->
+      <!--</div>-->
+    <!--</div>-->
+<!---->
+  <!--</form>-->
+</div>
+

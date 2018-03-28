@@ -9,12 +9,14 @@ export class JsplumbService {
     JsplumbBridge: any;
     $timeout: any;
     idCounter: any;
+    RestApi: any;
 
-    constructor(ObjectProvider, JsplumbConfigService, JsplumbBridge, $timeout) {
+    constructor(ObjectProvider, JsplumbConfigService, JsplumbBridge, $timeout, RestApi) {
         this.objectProvider = ObjectProvider;
         this.JsplumbConfigService = JsplumbConfigService;
         this.JsplumbBridge = JsplumbBridge;
         this.$timeout = $timeout;
+        this.RestApi = RestApi;
 
         this.idCounter = 0;
     }
@@ -154,6 +156,14 @@ export class JsplumbService {
         }
         return $newElement;
     };
+
+    setDropped($newElement, json, endpoints, preview) {
+        this.RestApi.updateDataSet(json).success(data => {
+            json.eventGrounding = data.eventGrounding;
+            json.datasetInvocationId = data.invocationId;
+            this.streamDropped($newElement, json, endpoints, preview);
+        });
+    }
 
     sepaDropped($newElement, json, endpoints, preview) {
         var jsplumbConfig = this.getJsplumbConfig(preview);

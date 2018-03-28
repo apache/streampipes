@@ -1,0 +1,21 @@
+<div class="header" fxLayout="row" fxLayoutAlign="start center">
+  <h3>
+    {{getLabel()}}
+  </h3>
+  <button mat-button (click)=OnClickDeleteProperty()>
+    <mat-icon>delete</mat-icon>
+  </button>
+  <button mat-button (click)=OnClickOpen()>
+    <div *ngIf=open>
+      <mat-icon>expand_less</mat-icon>
+    </div>
+    <div *ngIf=!open>
+      <mat-icon>expand_more</mat-icon>
+    </div>
+  </button>
+</div>
+<div class="body" [hidden]=!open>
+  <app-event-property
+                      [property]="eventPropertyList"></app-event-property>
+</div>
+<!-- (save)=saveThisProperty($event) nach Angular 5 update -->

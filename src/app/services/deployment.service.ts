@@ -5,10 +5,11 @@ export class DeploymentService {
     $http: any;
     $rootScope: any;
     RestApi: any;
+    AuthStatusService: any;
 
-    constructor($http, $rootScope, RestApi) {
+    constructor($http, AuthStatusService, RestApi) {
         this.$http = $http;
-        this.$rootScope = $rootScope;
+        this.AuthStatusService = AuthStatusService;
         this.RestApi = RestApi;
     }
 
@@ -16,7 +17,7 @@ export class DeploymentService {
         return this.$http({
             method: 'POST',
             headers: {'Accept': 'application/json', 'Content-Type': undefined},
-            url: '/semantic-epa-backend/api/v2/users/' + this.$rootScope.email + '/deploy/update',
+            url: '/streampipes-backend/api/v2/users/' + this.AuthStatusService.email + '/deploy/update',
             data: this.getFormData(deploymentConfig, model)
         });
     }
@@ -26,7 +27,7 @@ export class DeploymentService {
             method: 'POST',
             responseType: 'arraybuffer',
             headers: {'Accept': 'application/zip', 'Content-Type': undefined},
-            url: '/semantic-epa-backend/api/v2/users/' + this.$rootScope.email + '/deploy/implementation',
+            url: '/streampipes-backend/api/v2/users/' + this.AuthStatusService.email + '/deploy/implementation',
             data: this.getFormData(deploymentConfig, model)
         });
     }
@@ -35,7 +36,7 @@ export class DeploymentService {
         return this.$http({
             method: 'POST',
             headers: {'Accept': 'text/plain', 'Content-Type': undefined},
-            url: '/semantic-epa-backend/api/v2/users/' + this.$rootScope.email + '/deploy/description/java',
+            url: '/streampipes-backend/api/v2/users/' + this.$rootScope.email + '/deploy/description/java',
             data: this.getFormData(deploymentConfig, model)
         });
     }
@@ -44,7 +45,7 @@ export class DeploymentService {
         return this.$http({
             method: 'POST',
             headers: {'Accept': 'application/json', 'Content-Type': undefined},
-            url: '/semantic-epa-backend/api/v2/users/' + this.$rootScope.email + '/deploy/description/jsonld',
+            url: '/streampipes-backend/api/v2/users/' + this.AuthStatusService.email + '/deploy/description/jsonld',
             data: this.getFormData(deploymentConfig, model)
         });
     }

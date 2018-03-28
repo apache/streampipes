@@ -5,6 +5,7 @@ export class PipelineElementController {
     showImage: any;
     iconText: any;
     pipelineElement: any;
+    preview: any;
 
     constructor(ImageChecker, ElementIconText) {
         this.ImageChecker = ImageChecker;
@@ -17,11 +18,19 @@ export class PipelineElementController {
     }
 
     checkImageAvailable() {
+        console.log(this.pipelineElement);
         this.ImageChecker.imageExists(this.pipelineElement.iconUrl, (exists) => {
             this.showImage = exists;
         })
     }
 
+    iconSizeCss() {
+        if (this.preview) {
+            return 'width:50px;height:50px;';
+        } else {
+            return 'width:80px;height:80px;';
+        }
+    }
 }
 
 PipelineElementController.$inject=['ImageChecker', 'ElementIconText']

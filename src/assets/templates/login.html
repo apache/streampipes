@@ -1,13 +1,14 @@
 <div class="md-padding logo-production" layout-xs="column" layout="row" layout-align="center center"
      style="min-height:100vh !important;" ng-controller="LoginCtrl as ctrl">
     <div flex="40" layout-align="center center">
-        <div layout="column" flex="60" layout-align="center center" style="position:relative;top:-25px;margin-left:auto;margin-right:auto;">
-            <div flex="60" layout-align="center center" layout="row"
-                 style="padding:20px;color:white;" class="sp-darkblue"><img
-                    alt="icon" src="assets/img/login/logo.png">
-            </div>
-        </div>
+
         <md-card class="card-100-center" style="padding:20px;position:relative;top:-25px;">
+            <div layout="column" flex="60" layout-align="center center" style="margin-left:auto;margin-right:auto;">
+                <div flex="60" layout-align="center center" layout="row"
+                     style="color:white;"><img
+                        alt="icon" src="assets/img/login/logo.png">
+                </div>
+            </div>
             <div flex layout-align="center center"><h1>Login</h1></div>
             <div flex-sm="100" layout="column">
                 <form name="loginForm" ng-submit="ctrl.logIn()" role="form">

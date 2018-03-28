@@ -47,8 +47,6 @@ export const Ng1AppModule = angular
     ])
     .run(["$rootScope", "$location", "RestApi", "AuthService", "$state", "$urlRouter", "ObjectProvider", "AuthStatusService",
     function ($rootScope, $location, RestApi, AuthService, $state, $urlRouter, ObjectProvider, AuthStatusService) {
-        var bypass;
-        window['loading_screen'].finish();
         if (!$location.path().startsWith("/login") && !$location.path().startsWith("/sso")) {
             RestApi.configured().success(function (msg) {
                 if (msg.configured) {
@@ -60,7 +58,7 @@ export const Ng1AppModule = angular
                 }
             });
         }
-
+        window['loading_screen'].finish();
 
         $rootScope.$on('$stateChangeStart',
             function (event, toState, toParams, fromState, fromParams) {
@@ -82,11 +80,6 @@ export const Ng1AppModule = angular
             AuthService.authenticate();
         });
         $rootScope.state = new ObjectProvider.State();
-        $rootScope.state.sources = false;
-        $rootScope.state.sepas = false;
-        $rootScope.state.actions = false;
-        $rootScope.state.adjustingPipelineState = false;
-        $rootScope.state.adjustingPipeline = {};
 
     }]).config(function($mdThemingProvider) {
 

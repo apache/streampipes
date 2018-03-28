@@ -1,5 +1,9 @@
 @import '../_variables';
 
+.gu-mirror {
+    display: none; /* This fixes a bug with the dragular framework */
+}
+
 body {
     overflow: auto;
     margin-bottom: 1%;
@@ -733,6 +737,11 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 .stream {
     border-radius: 50%;
     border: 2px solid #FFEB3B;
+}
+
+.set {
+    border-radius: 50%;
+    border: 2px solid #ffa23b;
 }
 
 .action {

@@ -21,7 +21,7 @@ export class PipelineValidationService {
     }
 
     isStreamInAssembly(rawPipelineModel) {
-        return this.isInAssembly(rawPipelineModel, "stream")
+        return this.isInAssembly(rawPipelineModel, "stream") || this.isInAssembly(rawPipelineModel, "set");
     }
 
     isActionInAssembly(rawPipelineModel) {
