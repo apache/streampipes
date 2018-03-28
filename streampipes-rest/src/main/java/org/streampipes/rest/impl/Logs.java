@@ -26,6 +26,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.logging.model.Log;
 import org.streampipes.logging.model.LogRequest;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.ILogs;
@@ -34,6 +35,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Type;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 @Path("/v2/logs")
@@ -59,7 +62,7 @@ public class Logs extends AbstractRestInterface implements ILogs {
                             "    \"bool\": {\n" +
                             "      \"must\": [\n" +
                             "        {\"match_phrase\" : \n" +
-                            "    {\"logsource\" : \"" + logRequest.getsource()  + "\"}\n" +
+                            "    {\"logSourceID\" : \"" + logRequest.getsource()  + "\"}\n" +
                             "  },\n" +
                             "        {\n" +
                             "          \"range\" : {\n" +
@@ -72,9 +75,14 @@ public class Logs extends AbstractRestInterface implements ILogs {
                             "}")
                     .asJson();
             String respones = jsonResponse.getBody().getObject().toString();
-            String hits = extractHits(respones);
+            List<Log> logs = extractLogs(respones);
+
+            String json = new Gson().toJson(logs);
+
+
             LOG.info("Returned logs for logsource:" + logRequest.getsource());
-            return Response.ok(hits).build();
+
+            return Response.ok(json).build();
         } catch (UnirestException e) {
             LOG.error(e.toString());
             return Response.serverError().build();
@@ -82,11 +90,26 @@ public class Logs extends AbstractRestInterface implements ILogs {
     }
 
 
-    private String extractHits(String response) {
+    private List<Log> extractLogs(String response) {
+        List logs = new LinkedList();
+
         Gson gson =  new Gson();
         Type stringStringMap = new TypeToken<Map<String, Object>>(){}.getType();
-        Map<String,Object> map  = gson.fromJson(response, stringStringMap);
-        String json = gson.toJson(map.get("hits"));
-        return json;
+        Map<String,Object> responsMap  = gson.fromJson(response, stringStringMap);
+
+        List<Map> logIndexes = (List) ((Map) responsMap.get("hits")).get("hits");
+
+        logIndexes.forEach(logIndex -> {
+            Map sourcs = (Map) logIndex.get("_source");
+            Log log = new Log();
+            log.setTimestamp((String) sourcs.get("time"));
+            log.setLevel((String) sourcs.get("logLevel"));
+            log.setsourceID((String) sourcs.get("logSourceID"));
+            log.setType((String) sourcs.get("logType"));
+            log.setMessage((String)  sourcs.get("logMessage"));
+
+            ((LinkedList) logs).push(log);
+        });
+        return logs;
     }
 }

@@ -19,8 +19,6 @@ package org.streampipes.rest.api;
 
 import org.streampipes.logging.model.LogRequest;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 public interface ILogs {

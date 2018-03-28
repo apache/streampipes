@@ -2,9 +2,9 @@ package org.streampipes.logging.model;
 
 public class Log {
 
-    String source;
+    String sourceID;
 
-    String date;
+    String timestamp;
 
     String level;
 
@@ -13,20 +13,20 @@ public class Log {
     String message;
 
 
-    public String getsource() {
-        return source;
+    public String getsourceID() {
+        return sourceID;
     }
 
-    public void setsource(String source) {
-        this.source = source;
+    public void setsourceID(String sourceID) {
+        this.sourceID = sourceID;
     }
 
-    public String getDate() {
-        return date;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getLevel() {
