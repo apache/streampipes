@@ -21,30 +21,6 @@ export class LogViewComponent implements AfterViewInit {
 
     endDate = new Date(Date.now());
 
-/*
-    logs: Log[] = [
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'Test'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'Test'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'Test'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'Test'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'T asdfasd fs dfa sfas sa dfas fas d sdfa est'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'Tesasd fas fasd fasd fas dfast'},
-        {timestamp: '12.12.12', level: 'INFO123213', type: 'USERLOG', message: 'Test'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'Test33333 asdfasdfasdf asdf as fs'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'Test'},
-        {timestamp: '12.12.12', level: 'ERROR', type: 'USERLOG', message: 'Test'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'Test'},
-        {timestamp: '12.12.12', level: 'ERROR', type: 'USERLOG', message: 'Teddasdfas das dfas da sdfst'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'Test'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'Test'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'T asdfas dfasd fsad as dfas dfasfest'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'Testdasdsadsadasdasdasdasdasdasdasdasdasdqwww w eqwe wq asdsd afsadf sdf sasa dsd fsd  wes fsa df'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'Test'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'Test'},
-        {timestamp: '12.12.12', level: 'INFO', type: 'USERLOG', message: 'Test'}
-    ];
-    */
-
     logs: Log[];
 
     displayedColumns = ['timestamp', 'level', 'type', 'message'];
