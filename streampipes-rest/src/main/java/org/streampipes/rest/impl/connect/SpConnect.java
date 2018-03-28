@@ -51,6 +51,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Path("/v2/adapter")
 public class SpConnect extends AbstractRestInterface {
@@ -276,6 +277,7 @@ public class SpConnect extends AbstractRestInterface {
         JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
 
         AdapterDescription a = null;
+
         try {
             a = jsonLdTransformer.fromJsonLd(ar, AdapterDescription.class);
 
@@ -286,6 +288,17 @@ public class SpConnect extends AbstractRestInterface {
         }
 
         new AdapterStorageImpl().storeAdapter(a);
+
+        return Response.ok().build();
+    }
+
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{adapterId}")
+    public Response deleteAdapter(@PathParam("adapterId") String adapterId) {
+
+        new AdapterStorageImpl().delete(adapterId);
 
         return Response.ok().build();
     }
@@ -301,9 +314,8 @@ public class SpConnect extends AbstractRestInterface {
         List<AdapterDescription> allAdapters = new AdapterStorageImpl().getAllAdapters();
         adapterDescriptionList.setList(allAdapters);
 
-        // TODO add a valid URI
         for(AdapterDescription ad : adapterDescriptionList.getList()) {
-            ad.setUri("http://www.test.de/bb/");
+            ad.setUri("https://www.streampipes.org/adapter/" + UUID.randomUUID());
         }
 
         JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();

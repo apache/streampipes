@@ -15,11 +15,14 @@ import javax.persistence.Entity;
 @Entity
 public class AdapterDescription extends NamedStreamPipesEntity {
 
+    @RdfProperty("sp:couchDBId")
     private @SerializedName("_id") String id;
+
     private @SerializedName("_rev") String rev;
 
     @RdfProperty("sp:hasFormat")
     private FormatDescription formatDescription;
+
 
     @RdfProperty("sp:hasProtocol")
     private ProtocolDescription protocolDescription;
