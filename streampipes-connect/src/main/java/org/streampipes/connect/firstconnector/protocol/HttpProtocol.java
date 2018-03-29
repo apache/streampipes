@@ -35,14 +35,11 @@ public class HttpProtocol extends Protocol {
                 "description for the http protocol");
         FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("url", "url",
                 "This property defines the URL for the http request.");
-        FreeTextStaticProperty urlProperty1 = new FreeTextStaticProperty("url1", "optional",
-                "This property defines the URL for the http request.1");
 
         //TODO remove just for testing
         urlProperty.setValue("https://www.offenedaten-koeln.de/api/action/datastore/search.json?resource_id=81aa61e9-5123-4874-95d8-b93ee7da794f");
 
         pd.addConfig(urlProperty);
-        pd.addConfig(urlProperty1);
         return pd;
     }
 

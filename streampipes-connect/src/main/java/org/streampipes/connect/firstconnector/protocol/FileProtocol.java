@@ -36,10 +36,7 @@ public class FileProtocol extends Protocol {
                 "description for the File protocol");;
         FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("fileUri", "fileUri",
                 "This property defines the URL for the http request.");
-                FreeTextStaticProperty urlProperty1 = new FreeTextStaticProperty("fileUri1",
-                        "optional", "This property defines the URL for the http request.");
         pd.addConfig(urlProperty);
-        pd.addConfig(urlProperty1);
         return pd;
     }
 
