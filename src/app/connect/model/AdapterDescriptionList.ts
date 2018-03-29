@@ -10,7 +10,7 @@ export class AdapterDescriptionList {
     public id: string;
 
     @RdfProperty('sp:list')
-    public list: AdapterDescription[];
+    public list: AdapterDescription[] = [];
 
 
     constructor(id: string) {
