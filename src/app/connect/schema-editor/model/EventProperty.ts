@@ -32,6 +32,7 @@ export abstract class EventProperty {
 
   constructor(propertyID: string, parent: EventProperty, child?: EventProperty) {
     this.propertyID = propertyID;
+    this.id = "http://eventProperty.de/" + propertyID;
     this.parent = parent;
     this.child = child;
   }
