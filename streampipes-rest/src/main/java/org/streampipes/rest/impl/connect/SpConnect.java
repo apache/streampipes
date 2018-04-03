@@ -7,6 +7,7 @@ import org.eclipse.rdf4j.rio.RDFParseException;
 import org.streampipes.commons.Utils;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.connect.RunningAdapterInstances;
+import org.streampipes.connect.firstconnector.protocol.KafkaProtocol;
 import org.streampipes.container.declarer.DataSetDeclarer;
 import org.streampipes.container.html.JSONGenerator;
 import org.streampipes.container.html.model.DataSourceDescriptionHtml;
@@ -64,9 +65,9 @@ public class SpConnect extends AbstractRestInterface {
     @Path("/allProtocols")
     public Response getAllProtocols() {
         ProtocolDescriptionList pdl = new ProtocolDescriptionList();
-//      pdl.setLabel("blabla");
         pdl.addDesctiption(new HttpProtocol().declareModel());
         pdl.addDesctiption(new FileProtocol().declareModel());
+        pdl.addDesctiption(new KafkaProtocol().declareModel());
 
         JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
         String result = null;
