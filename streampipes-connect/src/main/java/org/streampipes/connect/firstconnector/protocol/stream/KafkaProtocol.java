@@ -1,4 +1,4 @@
-package org.streampipes.connect.firstconnector.protocol;
+package org.streampipes.connect.firstconnector.protocol.stream;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.connect.SendToKafka;
 import org.streampipes.connect.firstconnector.format.Format;
 import org.streampipes.connect.firstconnector.format.Parser;
+import org.streampipes.connect.firstconnector.protocol.Protocol;
 import org.streampipes.connect.firstconnector.sdk.ParameterExtractor;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
@@ -14,12 +15,14 @@ import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public class KafkaProtocol extends Protocol {
 
     Logger logger = LoggerFactory.getLogger(KafkaProtocol.class);
 
-    public static String ID = "https://streampipes.org/vocabulary/v1/protocol/kafka";
+    public static String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/kafka";
 
     private Parser parser;
     private Format format;
@@ -62,6 +65,11 @@ public class KafkaProtocol extends Protocol {
 
     @Override
     public EventSchema getSchema() {
+        return null;
+    }
+
+    @Override
+    public List<Map<String, Object>> getNElements(int n) {
         return null;
     }
 

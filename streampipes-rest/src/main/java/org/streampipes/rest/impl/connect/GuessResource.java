@@ -25,7 +25,6 @@ public class GuessResource extends AbstractRestInterface {
 
     Logger logger = LoggerFactory.getLogger(GuessResource.class);
 
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/format")

@@ -48,7 +48,7 @@ public class JsonFormat extends Format {
                 "key", "Key of the json part that should be parsed");
 
         //TODO remove just for testing
-        keyProperty.setValue("records");
+        keyProperty.setValue("elements");
         fd.addConfig(keyProperty);
 
         return fd;

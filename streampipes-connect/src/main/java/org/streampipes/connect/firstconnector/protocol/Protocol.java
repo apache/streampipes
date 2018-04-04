@@ -5,6 +5,9 @@ import org.streampipes.model.schema.EventSchema;
 import org.streampipes.connect.firstconnector.format.Format;
 import org.streampipes.connect.firstconnector.format.Parser;
 
+import java.util.List;
+import java.util.Map;
+
 
 public abstract class Protocol implements Runnable {
 
@@ -13,6 +16,8 @@ public abstract class Protocol implements Runnable {
     public abstract ProtocolDescription declareModel();
 
     public abstract EventSchema getSchema();
+
+    public abstract List<Map<String, Object>> getNElements(int n);
 
     /*
         This method is used when the adapter is started to send constantly events to Kafka
