@@ -1,11 +1,7 @@
-package org.streampipes.rest.impl.connect;
+package org.streampipes.connect;
 
 
-import ch.qos.logback.core.net.SyslogOutputStream;
-import com.sun.java.browser.plugin2.DOM;
 import org.apache.http.client.fluent.Request;
-import org.eclipse.rdf4j.query.algebra.Str;
-import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.firstconnector.format.json.JsonFormat;
 import org.streampipes.connect.firstconnector.format.json.JsonParser;
 import org.streampipes.connect.firstconnector.protocol.Protocol;
@@ -36,13 +32,16 @@ public class GetTrainingData {
 
     }
 
-    public DomainPropertyProbabilityList getDomainPropertyProbability(Object[] sampleData) {
+    public static DomainPropertyProbabilityList getDomainPropertyProbability(Object[] sampleData) {
 
         String url = "http://localhost/predict";
 
         String numbers = "";
         for (Object d : sampleData) {
-            if (d instanceof String) {
+            if (d instanceof String || d == null) {
+//                if (d == null) {
+//                    d = "";
+//                }
                 numbers = numbers + "\"" + d + "\",";
             } else  {
                 numbers = numbers + d + ",";
@@ -51,6 +50,7 @@ public class GetTrainingData {
         }
         numbers = numbers.substring(0, numbers.length() - 1) + "";
 
+        numbers = numbers.replaceAll("\"null\"", "0.0");
 
         try {
             url = url + "?X=[" + URLEncoder.encode(numbers, "UTF-8") + "]";
@@ -64,7 +64,7 @@ public class GetTrainingData {
             System.out.println(url);
             String s = Request.Get(url)
             .connectTimeout(10000)
-            .socketTimeout(10000)
+            .socketTimeout(100000)
             .execute().returnContent().asString();
 
 
@@ -84,14 +84,14 @@ public class GetTrainingData {
         return result;
     }
 
-    private DomainPropertyProbability parseDomainPropertyProbability(String s) {
+    private static DomainPropertyProbability parseDomainPropertyProbability(String s) {
         DomainPropertyProbability result = new DomainPropertyProbability();
         String property = s.substring(s.indexOf("\""), s.lastIndexOf("\""));
         String numberString = s.substring(s.indexOf(",") + 1, s.indexOf("]"));
-        double number = Double.parseDouble(numberString);
+//        double number = Double.parseDouble(numberString);
 
         result.setDomainProperty(property);
-        result.setProbability(number);
+        result.setProbability(numberString);
         return result;
     }
 

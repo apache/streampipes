@@ -6,6 +6,7 @@ import org.streampipes.connect.SendToKafka;
 import org.streampipes.connect.firstconnector.format.Format;
 import org.streampipes.connect.firstconnector.protocol.Protocol;
 import org.streampipes.connect.firstconnector.sdk.ParameterExtractor;
+import org.streampipes.model.modelconnect.GuessSchema;
 import org.streampipes.model.modelconnect.ProtocolDescription;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
@@ -74,7 +75,7 @@ public class FileProtocol extends Protocol {
 
 
     @Override
-    public EventSchema getSchema() {
+    public GuessSchema getSchema() {
         EventSchema result = null;
 
         FileReader fr = null;
@@ -93,7 +94,8 @@ public class FileProtocol extends Protocol {
             e.printStackTrace();
         }
 
-        return result;
+//        return result;
+        return null;
     }
 
     @Override

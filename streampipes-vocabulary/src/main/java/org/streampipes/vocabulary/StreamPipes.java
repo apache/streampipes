@@ -35,6 +35,8 @@ public class StreamPipes {
   public static final String ADAPTER_DESCRIPTION_LIST = NS + "AdapterDescriptionList";
   public static final String FORMAT_DESCRIPTION_LIST = NS + "FromatDescriptionList";
   public static final String PROTOCOL_DESCRIPTION_LIST = NS + "ProtocolDescriptionList";
+  public static final String DOMAIN_PROPERTY_PROBABILITY_LIST = NS + "DomainPropertyProbabilityList";
+  public static final String GUESS_SCHEMA = NS + "GuessSchema";
 
   public static final String VALUE_SPECIFICATION = NS + "ValueSpecification";
 

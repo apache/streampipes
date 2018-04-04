@@ -55,6 +55,8 @@ public class JsonLdTransformer implements RdfTransformer {
           StreamPipes.ADAPTER_DESCRIPTION_LIST,
           StreamPipes.FORMAT_DESCRIPTION_LIST,
           StreamPipes.PROTOCOL_DESCRIPTION_LIST,
+          StreamPipes.GUESS_SCHEMA,
+          StreamPipes.DOMAIN_PROPERTY_PROBABILITY_LIST,
           StreamPipes.ADAPTER_DESCRIPTION);
 
   private List<String> selectedRootElements;
