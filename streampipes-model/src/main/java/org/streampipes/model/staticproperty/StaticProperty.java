@@ -46,6 +46,9 @@ public abstract class StaticProperty extends UnnamedStreamPipesEntity {
 	@RdfProperty(SO.ValueRequired)
 	protected boolean valueRequired;
 
+	@RdfProperty(StreamPipes.IS_PREDEFINED)
+	private boolean predefined;
+
 	protected StaticPropertyType staticPropertyType;
 	
 	
@@ -67,6 +70,7 @@ public abstract class StaticProperty extends UnnamedStreamPipesEntity {
 		this.valueRequired = other.isValueRequired();
 		this.staticPropertyType = other.getStaticPropertyType();
 		this.label = other.getLabel();
+		this.predefined = other.isPredefined();
 	}
 	
 	public StaticProperty(StaticPropertyType type, String internalName, String label, String description)
@@ -116,5 +120,13 @@ public abstract class StaticProperty extends UnnamedStreamPipesEntity {
 
 	public void setStaticPropertyType(StaticPropertyType staticPropertyType) {
 		this.staticPropertyType = staticPropertyType;
+	}
+
+	public boolean isPredefined() {
+		return predefined;
+	}
+
+	public void setPredefined(boolean predefined) {
+		this.predefined = predefined;
 	}
 }

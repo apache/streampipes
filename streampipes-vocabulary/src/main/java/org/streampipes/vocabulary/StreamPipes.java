@@ -243,4 +243,11 @@ public class StreamPipes {
   public static final String HAS_MAPPED_RUNTIME_NAME = NS + "hasMappedRuntimeName";
 
   public static final String HAS_LINKED_MAPPING_PROPERTY_ID = NS + "hasLinkedMappingPropertyId";
+  public static final String BOUND_PIPELINE_ELEMENT = NS + "BoundPipelineElement";
+  public static final String HAS_PIPELINE_ELEMENT_TEMPLATE = NS + "hasPipelineElementTemplate" ;
+  public static final String IS_CONNECTED_TO = NS + "isConnectedTo";
+  public static final String PIPELINE_TEMPLATE_DESCRIPTION = NS + "PipelineTemplateDescription";
+  public static final String PIPELINE_TEMPLATE_INVOCATION = NS + "PipelineTemplateInvocation";
+  public static final String HAS_DATASET_ID = NS + "hasDataSetId";
+  public static final String IS_PREDEFINED = NS + "isPredefined" ;
 }
