@@ -26,6 +26,8 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.logging.model.Log;
+import org.streampipes.logging.model.LogRequest;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.ILogs;
 
@@ -33,64 +35,81 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Type;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
-@Path("/v1/logs")
+@Path("/v2/logs")
 public class Logs extends AbstractRestInterface implements ILogs {
 
     static Logger LOG = LoggerFactory.getLogger(Logs.class);
 
-    @POST
-    @Path("/pipeline")
-    @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
-    @Override
-    public Response getAllByPipelineId(String pipelineId) {
-        String url = BackendConfig.INSTANCE.getElasticsearchURL() + "/" + "logstash-*" +"/_search";
-        HttpResponse<JsonNode> jsonResponse = null;
-        try {
-            jsonResponse = Unirest.post(url)
-                    .header("accept", "application/json")
-                    .body("{\"query\": {\"match_phrase\" : {\"correspondingPipeline\" : \"" + pipelineId + "\"}}}")
-                    .asJson();
-            String respones = jsonResponse.getBody().getObject().toString();
-            String hits = extractHits(respones);
-            LOG.info("Returned logs for pipeline:" + pipelineId);
-            return Response.ok(hits).build();
-        } catch (UnirestException e) {
-            LOG.error(e.toString());
-            return Response.serverError().build();
-        }
-     }
 
     @POST
-    @Path("/pe")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @GsonWithIds
     @Override
-    public Response getAllByPeuri(String peuri) {
+    public Response getLogs(LogRequest logRequest) {
         String url = BackendConfig.INSTANCE.getElasticsearchURL() + "/" + "logstash-*" +"/_search";
         HttpResponse<JsonNode> jsonResponse = null;
         try {
             jsonResponse = Unirest.post(url)
                     .header("accept", "application/json")
-                    .body("{\"query\": {\"match_phrase\" : {\"peURI\" : \"" + peuri + "\"}}}")
+                    .body("GET logstash-*/_search\n" +
+                            "{\n" +
+                            "  \"query\": {\n" +
+                            "    \"bool\": {\n" +
+                            "      \"must\": [\n" +
+                            "        {\"match_phrase\" : \n" +
+                            "    {\"logSourceID\" : \"" + logRequest.getsource()  + "\"}\n" +
+                            "  },\n" +
+                            "        {\n" +
+                            "          \"range\" : {\n" +
+                            "            \"time\": {\"gte\" :" + logRequest.getDateTo() + ",\"lte\" :" + logRequest.getDateFrom() + "}\n" +
+                            "          }\n" +
+                            "        }\n" +
+                            "      ]\n" +
+                            "    }\n" +
+                            "  }\n" +
+                            "}")
                     .asJson();
             String respones = jsonResponse.getBody().getObject().toString();
-            String hits = extractHits(respones);
-            LOG.info("Returned logs for peuri:" + peuri);
-            return Response.ok(hits).build();
+            List<Log> logs = extractLogs(respones);
+
+            String json = new Gson().toJson(logs);
+
+
+            LOG.info("Returned logs for logsource:" + logRequest.getsource());
+
+            return Response.ok(json).build();
         } catch (UnirestException e) {
             LOG.error(e.toString());
             return Response.serverError().build();
         }
     }
 
-    private String extractHits(String response) {
+
+    private List<Log> extractLogs(String response) {
+        List logs = new LinkedList();
+
         Gson gson =  new Gson();
         Type stringStringMap = new TypeToken<Map<String, Object>>(){}.getType();
-        Map<String,Object> map  = gson.fromJson(response, stringStringMap);
-        String json = gson.toJson(map.get("hits"));
-        return json;
+        Map<String,Object> responsMap  = gson.fromJson(response, stringStringMap);
+
+        List<Map> logIndexes = (List) ((Map) responsMap.get("hits")).get("hits");
+
+        logIndexes.forEach(logIndex -> {
+            Map sourcs = (Map) logIndex.get("_source");
+            Log log = new Log();
+            log.setTimestamp((String) sourcs.get("time"));
+            log.setLevel((String) sourcs.get("logLevel"));
+            log.setsourceID((String) sourcs.get("logSourceID"));
+            log.setType((String) sourcs.get("logType"));
+            log.setMessage((String)  sourcs.get("logMessage"));
+
+            ((LinkedList) logs).push(log);
+        });
+        return logs;
     }
 }
