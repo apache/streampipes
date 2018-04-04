@@ -25,6 +25,9 @@ import {AdapterDescriptionList} from './model/AdapterDescriptionList';
 import {DataSetDescription} from './model/DataSetDescription';
 import {resolveReflectiveProviders} from '@angular/core/src/di/reflective_provider';
 import {Subscription} from 'rxjs/Subscription';
+import {DomainPropertyProbability} from './schema-editor/model/DomainPropertyProbability';
+import {GuessSchema} from './schema-editor/model/GuessSchema';
+import {DomainPropertyProbabilityList} from './schema-editor/model/DomainPropertyProbabilityList';
 
 @Injectable()
 export class RestService {
@@ -47,6 +50,9 @@ export class RestService {
         tsonld.addClassMapping(EventPropertyNested);
         tsonld.addClassMapping(EventPropertyList);
         tsonld.addClassMapping(EventPropertyPrimitive);
+        tsonld.addClassMapping(DomainPropertyProbability);
+        tsonld.addClassMapping(DomainPropertyProbabilityList);
+        tsonld.addClassMapping(GuessSchema);
 
         return tsonld;
     }
@@ -89,7 +95,7 @@ export class RestService {
     }
 
 
-    getGuessSchema(adapter: AdapterDescription): Observable<EventSchema> {
+    getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
         const self = this;
         const tsonld = new TsonLd();
         tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
@@ -107,8 +113,11 @@ export class RestService {
                         tsonld.addClassMapping(EventPropertyPrimitive);
                         tsonld.addClassMapping(EventPropertyList);
                         tsonld.addClassMapping(EventPropertyNested);
+                        tsonld.addClassMapping(GuessSchema);
+                        tsonld.addClassMapping(DomainPropertyProbability);
+                        tsonld.addClassMapping(DomainPropertyProbabilityList);
 
-                        const r = tsonld.fromJsonLdType(response, 'sp:EventSchema');
+                        const r = tsonld.fromJsonLdType(response, 'sp:GuessSchema');
                         resolve(r);
                     }).subscribe();
             });

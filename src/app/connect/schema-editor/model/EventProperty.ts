@@ -28,7 +28,7 @@ export abstract class EventProperty {
   public runTimeName: string;
 
   @RdfProperty('sp:domainProperty')
-  public domainProperty: string;
+  public domainProperty: String;
 
   constructor(propertyID: string, parent: EventProperty, child?: EventProperty) {
     this.propertyID = propertyID;

@@ -6,6 +6,8 @@ import {EventProperty} from '../model/EventProperty';
 import {EventPropertyNested} from '../model/EventPropertyNested';
 import {EventPropertyList} from '../model/EventPropertyList';
 import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
+import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
+import {DomainPropertyProbability} from '../model/DomainPropertyProbability';
 
 
 @Component({
@@ -19,6 +21,7 @@ export class EventPropertyBagComponent implements OnInit {
     @Input() eventProperties: EventProperty[];
     @Output() eventPropertiesChange = new EventEmitter<EventProperty[]>();
 
+    @Input() domainPropertyGuesses: DomainPropertyProbabilityList[];
 
     private dragularOptions: any = {
         removeOnSpill: false
@@ -29,7 +32,22 @@ export class EventPropertyBagComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (this.domainPropertyGuesses == null) {
+            this.domainPropertyGuesses = [];
+        }
+    }
 
+    public getDomainProbability(name: string) {
+        var result: DomainPropertyProbabilityList;
+
+        console.log(this.domainPropertyGuesses);
+        for (let entry of this.domainPropertyGuesses) {
+            if (entry.runtimeName == name) {
+                result = entry;
+            }
+        }
+
+        return result;
     }
 
     public addPrimitiveProperty(): void {

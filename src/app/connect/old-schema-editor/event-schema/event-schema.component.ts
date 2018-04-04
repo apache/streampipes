@@ -61,7 +61,7 @@ export class EventSchemaComponent implements OnInit {
     adapter.format = this.format;
 
     this.restService.getGuessSchema(adapter).subscribe(x => {
-      this.eventSchema = x;
+      this.eventSchema = x.eventSchema;
       console.log(x);
     });
   }
