@@ -17,17 +17,18 @@
 
 package org.streampipes.storage.rdf4j.filter;
 
+import org.streampipes.model.client.ontology.OntologyNode;
+import org.streampipes.model.client.ontology.Property;
+import org.streampipes.storage.rdf4j.util.BackgroundKnowledgeUtils;
+import org.streampipes.vocabulary.StreamPipes;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.streampipes.model.client.ontology.OntologyNode;
-import org.streampipes.model.client.ontology.Property;
-import org.streampipes.storage.rdf4j.util.BackgroundKnowledgeUtils;
-
 public class BackgroundKnowledgeFilter {
 
-	public static List<String> omittedPropertyPrefixes = Arrays.asList("http://schema.org/Thing", "http://purl.oclc.org/NET/ssnx/ssn#", "http://sepa.event-processing.org/sepa#", "http://www.w3.org/2000/01/rdf-schema#", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+	public static List<String> omittedPropertyPrefixes = Arrays.asList(StreamPipes.NS, "http://schema.org/Thing", "http://purl.oclc.org/NET/ssnx/ssn#", "http://sepa.event-processing.org/sepa#", "http://www.w3.org/2000/01/rdf-schema#", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 	
 	public static List<OntologyNode> propertiesFilter(List<OntologyNode> nodes, boolean filterDuplicates)
 	{
