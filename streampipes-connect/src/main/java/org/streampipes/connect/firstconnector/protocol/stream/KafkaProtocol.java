@@ -10,6 +10,7 @@ import org.streampipes.connect.firstconnector.protocol.Protocol;
 import org.streampipes.connect.firstconnector.sdk.ParameterExtractor;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
+import org.streampipes.model.modelconnect.GuessSchema;
 import org.streampipes.model.modelconnect.ProtocolDescription;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
@@ -64,7 +65,7 @@ public class KafkaProtocol extends Protocol {
     }
 
     @Override
-    public EventSchema getSchema() {
+    public GuessSchema getSchema() {
         return null;
     }
 

@@ -150,6 +150,9 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             AdapterDescriptionList.class,
             FormatDescription.class,
             FormatDescriptionList.class,
+            DomainPropertyProbability.class,
+            DomainPropertyProbabilityList.class,
+            GuessSchema.class,
             ProtocolDescription.class,
             ProtocolDescriptionList.class
 

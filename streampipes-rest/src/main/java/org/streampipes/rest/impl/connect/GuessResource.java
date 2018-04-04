@@ -6,6 +6,7 @@ import org.streampipes.commons.Utils;
 import org.streampipes.connect.firstconnector.Adapter;
 import org.streampipes.model.modelconnect.AdapterDescription;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
+import org.streampipes.model.modelconnect.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.rest.impl.AbstractRestInterface;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
@@ -60,7 +61,9 @@ public class GuessResource extends AbstractRestInterface {
         }
 
         Adapter adapter = new Adapter("ipe-koi06.fzi.de:9092", "org.streampipes.streamconnect", true);
-        EventSchema resultSchema = adapter.getSchema(a);
+        GuessSchema resultSchema = adapter.getSchema(a);
+
+        // TODO get domainproperty probabilities
 
         String result = null;
         try {
