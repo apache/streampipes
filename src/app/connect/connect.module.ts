@@ -39,6 +39,9 @@ import {DataTypesService} from './schema-editor/data-type.service';
         CustomMaterialModule,
         DragulaModule
     ],
+    exports: [
+        StaticPropertiesComponent
+    ],
     declarations: [
         NewComponent,
         ProtocolFormComponent,

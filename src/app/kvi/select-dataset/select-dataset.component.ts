@@ -1,0 +1,42 @@
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { map, startWith } from 'rxjs/operators';
+
+import { DataSetDescription } from '../../connect/model/DataSetDescription';
+import { Observable } from 'rxjs/Observable';
+
+@Component({
+    selector: 'select-dataset',
+    templateUrl: './select-dataset.component.html',
+    styleUrls: ['./select-dataset.component.css']
+})
+export class SelectDatasetComponent implements OnInit {
+
+    @Input() dataSets: DataSetDescription[];
+    @Output() selectDataSet: EventEmitter<DataSetDescription> = new EventEmitter<DataSetDescription>();
+
+    filteredDataSets: Observable<DataSetDescription[]>;
+    myControl: FormControl = new FormControl();
+
+    constructor() {
+    }
+
+    ngOnInit() {
+        this.filteredDataSets = this.myControl.valueChanges
+            .pipe(
+                startWith<string | DataSetDescription>(''),
+                map(value => typeof value === 'string' ? value : value.label),
+                map(label => label ? this.filter(label) : this.dataSets.slice())
+            );
+    }
+
+    filter(val: string): DataSetDescription[] {
+        return this.dataSets.filter(dataSet =>
+            dataSet.label.toLowerCase().indexOf(val.toLowerCase()) === 0);
+    }
+
+    getDataSetLabel(dataSet?: DataSetDescription): string | undefined {
+        return dataSet ? dataSet.label : undefined;
+    }
+
+}

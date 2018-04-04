@@ -17,6 +17,7 @@ import { SpConnectModule } from './connect/connect.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { AuthStatusService } from './services/auth-status.service';
 import { AppContainerModule } from './app-container/app-container.module';
+import { KviModule } from './kvi/kvi.module';
 
 @NgModule({
     imports: [
@@ -33,7 +34,8 @@ import { AppContainerModule } from './app-container/app-container.module';
         HomeModule,
         SpConnectModule,
         ConfigurationModule,
-        AppContainerModule
+        AppContainerModule,
+        KviModule
     ],
     providers: [
         AuthStatusService
