@@ -27,6 +27,7 @@ import org.streampipes.manager.matching.PipelineVerificationHandler;
 import org.streampipes.manager.recommender.ElementRecommender;
 import org.streampipes.manager.remote.ContainerProvidedOptionsHandler;
 import org.streampipes.manager.template.PipelineTemplateGenerator;
+import org.streampipes.manager.template.PipelineTemplateInvocationGenerator;
 import org.streampipes.manager.template.PipelineTemplateInvocationHandler;
 import org.streampipes.manager.topic.WildcardTopicGenerator;
 import org.streampipes.manager.verification.extractor.TypeExtractor;
@@ -144,5 +145,9 @@ public class Operations {
 
   public static PipelineOperationStatus handlePipelineTemplateInvocation(PipelineTemplateInvocation pipelineTemplateInvocation) {
     return new PipelineTemplateInvocationHandler(pipelineTemplateInvocation).handlePipelineInvocation();
+  }
+
+  public static PipelineTemplateInvocation getPipelineInvocationTemplate(SpDataStream dataStream, PipelineTemplateDescription pipelineTemplateDescription) {
+    return new PipelineTemplateInvocationGenerator(dataStream, pipelineTemplateDescription).generateInvocation();
   }
 }
