@@ -56,17 +56,17 @@ public class Logs extends AbstractRestInterface implements ILogs {
         try {
             jsonResponse = Unirest.post(url)
                     .header("accept", "application/json")
-                    .body("GET logstash-*/_search\n" +
-                            "{\n" +
-                            "  \"query\": {\n" +
+                    .header("Content-Type", "application/json")
+                    .body(  "{" +
+                            " \"query\": {\n" +
                             "    \"bool\": {\n" +
                             "      \"must\": [\n" +
                             "        {\"match_phrase\" : \n" +
-                            "    {\"logSourceID\" : \"" + logRequest.getsource()  + "\"}\n" +
+                            "    {\"logSourceID\" : \"" + logRequest.getsourceID()  + "\"}\n" +
                             "  },\n" +
                             "        {\n" +
                             "          \"range\" : {\n" +
-                            "            \"time\": {\"gte\" :" + logRequest.getDateTo() + ",\"lte\" :" + logRequest.getDateFrom() + "}\n" +
+                            "            \"time\": {\"gte\" :" + logRequest.getDateFrom() + ",\"lte\" :" + logRequest.getDateTo() + "}\n" +
                             "          }\n" +
                             "        }\n" +
                             "      ]\n" +
@@ -80,7 +80,7 @@ public class Logs extends AbstractRestInterface implements ILogs {
             String json = new Gson().toJson(logs);
 
 
-            LOG.info("Returned logs for logsource:" + logRequest.getsource());
+            LOG.info("Returned logs for logsource:" + logRequest.getsourceID());
 
             return Response.ok(json).build();
         } catch (UnirestException e) {
