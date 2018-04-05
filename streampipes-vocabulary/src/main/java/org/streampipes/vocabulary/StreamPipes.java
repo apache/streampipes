@@ -252,4 +252,6 @@ public class StreamPipes {
   public static final String PIPELINE_TEMPLATE_INVOCATION = NS + "PipelineTemplateInvocation";
   public static final String HAS_DATASET_ID = NS + "hasDataSetId";
   public static final String IS_PREDEFINED = NS + "isPredefined" ;
+  public static final String HAS_PIPELINE_TEMPLATE_DESCRIPTION = NS + "hasPipelineTemplateDescription" ;
+  public static final String DATA_STREAM_CONTAINER = NS + "DataStreamContainer";
 }

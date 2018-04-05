@@ -18,15 +18,22 @@ package org.streampipes.rest.impl;
 
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.SpDataSet;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.SpDataStreamContainer;
+import org.streampipes.model.client.pipeline.PipelineOperationStatus;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.template.PipelineTemplateInvocation;
 import org.streampipes.rest.api.IPipelineTemplate;
+import org.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.streampipes.vocabulary.StreamPipes;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Path("/v2/users/{username}/pipeline-templates")
 public class PipelineTemplate extends AbstractRestInterface implements IPipelineTemplate {
@@ -36,7 +43,18 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   @Produces(MediaType.APPLICATION_JSON)
   @Override
   public Response getAvailableDataStreams() {
-    return null;
+    List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllSEPs();
+    List<SpDataStream> datasets = new ArrayList<>();
+
+    for(DataSourceDescription source : sources) {
+      source
+              .getSpDataStreams()
+              .stream()
+              .filter(Objects::nonNull)
+              .forEach(datasets::add);
+    }
+
+    return ok(toJsonLd(new SpDataStreamContainer(datasets)));
   }
 
   @GET
@@ -46,7 +64,7 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   public Response getAvailableDataSets() {
 
     List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllSEPs();
-    List<SpDataSet> datasets = new ArrayList<>();
+    List<SpDataStream> datasets = new ArrayList<>();
 
     for(DataSourceDescription source : sources) {
       source
@@ -56,28 +74,33 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
               .forEach(set -> datasets.add((SpDataSet) set));
     }
 
-    return ok(datasets);
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Override
-  public Response getAllPipelineTemplates() {
-    return ok(Operations.getAllPipelineTemplates());
+    return ok(toJsonLd(new SpDataStreamContainer(datasets)));
   }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Override
   public Response getPipelineTemplates(@QueryParam("streamId") String streamId) {
-    return ok(Operations.getCompatiblePipelineTemplates(streamId));
+    if (streamId != null) {
+      return ok(toJson(Operations.getCompatiblePipelineTemplates(streamId)));
+    } else {
+      return ok(toJsonLd(Operations.getAllPipelineTemplates()));
+    }
   }
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Override
-  public Response generatePipeline(PipelineTemplateInvocation pipelineTemplateInvocation) {
-    // TODO
-    return null;
+  public Response generatePipeline(String pipelineTemplateInvocationString) {
+    try {
+      PipelineTemplateInvocation pipelineTemplateInvocation = new JsonLdTransformer(StreamPipes.PIPELINE_TEMPLATE_INVOCATION).fromJsonLd(pipelineTemplateInvocationString, PipelineTemplateInvocation.class);
+      PipelineOperationStatus status = Operations.handlePipelineTemplateInvocation(pipelineTemplateInvocation);
+
+      return ok(status);
+
+    } catch (IOException e) {
+      e.printStackTrace();
+      return fail();
+    }
   }
 }

@@ -22,10 +22,7 @@ import org.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +35,11 @@ public class PipelineTemplateInvocation extends UnnamedStreamPipesEntity {
 
   @RdfProperty(StreamPipes.HAS_DATASET_ID)
   private String dataSetId;
+
+  @RdfProperty(StreamPipes.HAS_PIPELINE_TEMPLATE_DESCRIPTION)
+  @OneToOne(fetch = FetchType.EAGER,
+          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  private PipelineTemplateDescription pipelineTemplateDescription;
 
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
@@ -71,5 +73,13 @@ public class PipelineTemplateInvocation extends UnnamedStreamPipesEntity {
 
   public void setStaticProperties(List<StaticProperty> staticProperties) {
     this.staticProperties = staticProperties;
+  }
+
+  public PipelineTemplateDescription getPipelineTemplateDescription() {
+    return pipelineTemplateDescription;
+  }
+
+  public void setPipelineTemplateDescription(PipelineTemplateDescription pipelineTemplateDescription) {
+    this.pipelineTemplateDescription = pipelineTemplateDescription;
   }
 }

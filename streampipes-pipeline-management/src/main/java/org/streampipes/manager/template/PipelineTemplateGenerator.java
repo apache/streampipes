@@ -18,8 +18,11 @@ package org.streampipes.manager.template;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
+import org.streampipes.manager.matching.DataSetGroundingSelector;
 import org.streampipes.manager.matching.v2.StreamMatch;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.client.pipeline.DataSetModificationMessage;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.template.PipelineTemplateDescription;
@@ -54,7 +57,10 @@ public class PipelineTemplateGenerator {
 
   public List<PipelineTemplateDescription> getCompatibleTemplates(String streamId) {
     List<PipelineTemplateDescription> compatibleTemplates = new ArrayList<>();
-    SpDataStream streamOffer = getStream(streamId);
+    SpDataStream streamOffer =getStream(streamId);
+    if (streamOffer instanceof SpDataSet) {
+      streamOffer = prepareStream((SpDataSet) streamOffer);
+    }
     if (streamOffer != null) {
       for(PipelineTemplateDescription pipelineTemplateDescription : makeExampleTemplates()) {
         // TODO make this work for 2+ input streams
@@ -68,9 +74,16 @@ public class PipelineTemplateGenerator {
     return compatibleTemplates;
   }
 
+  private SpDataStream prepareStream(SpDataSet stream) {
+    DataSetModificationMessage message = new DataSetGroundingSelector(stream).selectGrounding();
+    stream.setEventGrounding(message.getEventGrounding());
+    stream.setDatasetInvocationId(message.getInvocationId());
+    return stream;
+  }
+
 
   private PipelineTemplateDescription makeExampleTemplate() throws URISyntaxException {
-    return PipelineTemplateBuilder.create("test", "test")
+    return new PipelineTemplateDescription(PipelineTemplateBuilder.create("test", "test")
             .boundPipelineElementTemplate(BoundPipelineElementBuilder
                     .create(getProcessor("http://localhost:8093/sepa/aggregation"))
                     .withPredefinedFreeTextValue("timeWindow", "30")
@@ -80,7 +93,7 @@ public class PipelineTemplateGenerator {
                             .create(getSink("http://localhost:8091/sec/dashboard_sink"))
                             .build())
                     .build())
-            .build();
+            .build());
   }
 
   private SpDataStream getStream(String streamId) {
