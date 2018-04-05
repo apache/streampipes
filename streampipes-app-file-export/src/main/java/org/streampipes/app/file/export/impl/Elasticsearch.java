@@ -69,6 +69,7 @@ public class Elasticsearch implements IElasticsearch {
         try {
             HttpResponse<JsonNode> jsonResponse = Unirest.post(url)
                     .header("accept", "application/json")
+                    .header("Content-Type", "application/json")
                     .body("{\"query\": {\"range\" : {\"timestamp\" : {\"gte\" : " + timestampFrom + ",\"lte\" : " + timeStampTo + "}}}}")
                     .asJson();
             String respones = jsonResponse.getBody().getObject().toString();
