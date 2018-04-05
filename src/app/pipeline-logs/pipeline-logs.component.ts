@@ -17,7 +17,9 @@ export class PipelineLogsComponent {
     }
 
     createLogView(logSourceID: string) {
-        this.logSourceIDs.push(logSourceID);
+        if (logSourceID !== '') {
+            this.logSourceIDs.push(logSourceID);
+        }
     }
 
 }

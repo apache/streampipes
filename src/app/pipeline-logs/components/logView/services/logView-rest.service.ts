@@ -12,7 +12,7 @@ export class LogViewRestService {
     }
 
     getServerUrl() {
-        return '/streampipes-backend';
+        return '/streampipes-backend/api';
     }
 
     getLogs(logRequest: LogRequest): Observable<Log[]> {

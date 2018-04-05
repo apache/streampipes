@@ -21,40 +21,36 @@ export class LogViewComponent implements AfterViewInit {
 
     endDate = new Date(Date.now());
 
-    logs: Log[];
+    error: string;
 
     displayedColumns = ['timestamp', 'level', 'type', 'message'];
-    dataSource = new MatTableDataSource<Log>(this.logs);
+    dataSource;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    /**
-     * Set the paginator after the view init since this component will
-     * be able to query its view for the initialized paginator.
-     */
     ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
         this.loadLogs();
     }
 
 
     constructor(private logviewRestService: LogViewRestService) {
-
     }
 
     loadLogs() {
-        let logRequest: LogRequest = any;
+
+        const logRequest = <LogRequest>{};
         logRequest.dateFrom = this.startDate.getTime();
         logRequest.dateTo = this.endDate.getTime();
         logRequest.sourceID = this.logSourceID;
 
-        console.log(logRequest);
 
         this.logviewRestService.getLogs(logRequest)
-            .subscribe(response => {
-                this.logs = response;
+            .subscribe( response => {
+                this.dataSource = new MatTableDataSource<Log>(response);
+                this.dataSource.paginator = this.paginator;
             }, error => {
                 console.log(error);
+                this.error = 'ERROR12';
             });
     }
 
