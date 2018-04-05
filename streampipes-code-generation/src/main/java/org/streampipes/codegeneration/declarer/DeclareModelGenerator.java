@@ -14,15 +14,7 @@
  * limitations under the License.
  *
  */
+package org.streampipes.codegeneration.declarer;
 
-package org.streampipes.rest.api;
-
-import org.streampipes.logging.model.LogRequest;
-
-import javax.ws.rs.core.Response;
-
-public interface ILogs {
-
-    Response getLogs(LogRequest logRequest);
-
+public class DeclareModelGenerator {
 }

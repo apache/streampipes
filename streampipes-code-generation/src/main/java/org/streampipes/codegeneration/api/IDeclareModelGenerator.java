@@ -14,15 +14,13 @@
  * limitations under the License.
  *
  */
+package org.streampipes.codegeneration.api;
 
-package org.streampipes.rest.api;
+import com.squareup.javapoet.MethodSpec.Builder;
 
-import org.streampipes.logging.model.LogRequest;
+public class IDeclareModelGenerator {
 
-import javax.ws.rs.core.Response;
-
-public interface ILogs {
-
-    Response getLogs(LogRequest logRequest);
-
+  Builder outputStrategies() {
+    return null;
+  }
 }
