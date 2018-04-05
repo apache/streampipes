@@ -15,7 +15,7 @@
   </button>
 </div>
 <div class="body" [hidden]=!open>
-  <app-event-property [(property)]="property"></app-event-property>
+  <app-event-property [(property)]="property" [domainPropertyGuess]="domainPropertyGuess"></app-event-property>
 
   <mat-form-field>
     <mat-select placeholder="Runtime Type" [(ngModel)]="property.runtimeType">

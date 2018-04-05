@@ -1,44 +1,38 @@
 <div class="page-container page-container-padding">
     <mat-horizontal-stepper [linear]="true">
 
-        <mat-step [completed]="isValidDataSet">
+        <mat-step [completed]="isValidDataSet" [editable]="false">
             <ng-template matStepLabel>Data-Set</ng-template>
-            <select-dataset [dataSets]="dataSets"></select-dataset>
-            <div fxLayout="row" fxLayoutAlign="space-between">
-                <button disabled color="primary" mat-raised-button matStepperPrevious>Back</button>
+            <select-dataset [dataSets]="dataSets" (selectDataSet)="selectDataSet($event)"></select-dataset>
+            <div fxLayout="row" fxLayoutAlign="end">
                 <button [disabled]="!isValidDataSet" color="primary" mat-raised-button matStepperNext>Next</button>
             </div>
         </mat-step>
 
-
-        <mat-step [completed]="isValidOperator">
+        <mat-step [completed]="isValidOperator" [editable]="false">
             <ng-template matStepLabel>Operator</ng-template>
-            <select-operator [operators]="operators"></select-operator>
-            <div fxLayout="row" fxLayoutAlign="space-between">
-                <button color="primary" mat-raised-button matStepperPrevious>Back</button>
+            <select-operator [operators]="operators" (selectOperator)="selectOperator($event)"></select-operator>
+            <div fxLayout="row" fxLayoutAlign="end">
                 <button [disabled]="!isValidOperator" color="primary" mat-raised-button matStepperNext>Next</button>
             </div>
         </mat-step>
 
-
-        <mat-step [completed]="isValidConfiguration">
+        <mat-step [completed]="isValidConfiguration" [editable]="false">
             <ng-template matStepLabel>Configuration</ng-template>
-            <kvi-configuration [operators]="selectedOperators"></kvi-configuration>
-            <div fxLayout="row" fxLayoutAlign="space-between">
-                <button color="primary" mat-raised-button matStepperPrevious>Back</button>
+            <kvi-configuration [operator]="selectedOperator"></kvi-configuration>
+            <div fxLayout="row" fxLayoutAlign="end">
                 <button [disabled]="!isValidConfiguration" color="primary" mat-raised-button matStepperNext>Next</button>
             </div>
         </mat-step>
 
         <mat-step>
             <ng-template matStepLabel>Calculation</ng-template>
-            <div fxLayout="row" fxLayoutAlign="center center">
-                <button color="primary" mat-raised-button>Calculate KVI</button>
-                <button disabled color="primary" mat-raised-button>Add another KVI</button>
-            </div>
-            <div fxLayout="row" fxLayoutAlign="space-between">
-                <button color="primary" mat-raised-button matStepperPrevious>Back</button>
-                <button disabled color="primary" mat-raised-button matStepperNext>Next</button>
+            <p>Enter the name of the new KVI</p>
+            <mat-form-field class="example-full-width">
+                <input matInput type="text" placeholder="KVI Name">
+            </mat-form-field>
+            <div fxLayout="row" fxLayoutAlign="end">
+                <button color="primary" mat-raised-button (click)="calculateKvi()">Calculate KVI</button>
             </div>
         </mat-step>
 

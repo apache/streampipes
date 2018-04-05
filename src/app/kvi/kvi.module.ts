@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { KviComponent } from './kvi.component';
@@ -19,6 +20,7 @@ import { SpConnectModule } from '../connect/connect.module';
         FlexLayoutModule,
         ReactiveFormsModule,
         MatAutocompleteModule,
+        MatProgressSpinnerModule,
         SpConnectModule
     ],
     declarations: [

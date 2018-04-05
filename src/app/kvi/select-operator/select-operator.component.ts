@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChildren } from '@angular/core';
 
 import { Operator } from '../shared/operator.model';
 
@@ -13,6 +13,14 @@ export class SelectOperatorComponent {
     @Output() selectOperator: EventEmitter<Operator> = new EventEmitter<Operator>();
 
     constructor() {
+    }
+
+    selectedOperatorChange(operatorsList) {
+        if(operatorsList.selectedOptions.selected.length > 0) {
+            this.selectOperator.emit(operatorsList.selectedOptions.selected[0].value);
+        } else {
+            this.selectOperator.emit(undefined);
+        }
     }
 
 }

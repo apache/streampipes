@@ -6,7 +6,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
 
 
-import { NewComponent } from './new/new.component';
+import { NewComponent } from './new-adapter/new.component';
+import { MainComponent } from './main/main.component';
+import {AllAdaptersComponent} from './all-adapters/all.component';
+
 import { ProtocolFormComponent } from './protocol-form/protocol-form.component';
 import { FormatFormComponent } from './format-form/format-form.component';
 
@@ -44,6 +47,8 @@ import {DataTypesService} from './schema-editor/data-type.service';
     ],
     declarations: [
         NewComponent,
+        MainComponent,
+        AllAdaptersComponent,
         ProtocolFormComponent,
         FormatFormComponent,
         EventSchemaComponent,
@@ -60,7 +65,7 @@ import {DataTypesService} from './schema-editor/data-type.service';
         DataTypesService
     ],
     entryComponents: [
-        NewComponent
+        MainComponent
     ]
 })
 export class SpConnectModule {

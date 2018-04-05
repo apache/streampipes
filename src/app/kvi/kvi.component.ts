@@ -12,19 +12,37 @@ import { KviConfiguration } from './shared/kvi-configuration.model';
 export class KviComponent {
 
     dataSets: DataSetDescription[];
-    selectedDataSet: DataSetDescription = null;
-    isValidDataSet: boolean = true;
+    selectedDataSet: DataSetDescription;
+    isValidDataSet: boolean = false;
 
     operators: Operator[];
-    selectedOperators: Operator[];
-    isValidOperator: boolean = true;
+    selectedOperator: Operator;
+    isValidOperator: boolean = false;
 
     configuration: KviConfiguration[];
     isValidConfiguration: boolean = true;
 
     constructor(private kviService: KviService) {
         this.dataSets = this.kviService.getDataSets();
-        this.operators = this.kviService.getOperators(this.selectedDataSet);
+    }
+
+    selectDataSet(dataSet: DataSetDescription) {
+        this.isValidDataSet = !!dataSet;
+        if (this.isValidDataSet) {
+            this.selectedDataSet = dataSet;
+            this.operators = this.kviService.getOperators(dataSet);
+        }
+    }
+
+    selectOperator(operator: Operator) {
+        this.isValidOperator = !!operator;
+        if (this.isValidOperator) {
+            this.selectedOperator = operator;
+        }
+    }
+
+    calculateKvi() {
+        console.log('Los gehts')
     }
 
 }

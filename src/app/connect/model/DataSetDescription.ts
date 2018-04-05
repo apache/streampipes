@@ -5,7 +5,7 @@ import {FormatDescription} from './FormatDescription';
 import {ProtocolDescription} from './ProtocolDescription';
 import {EventSchema} from '../schema-editor/model/EventSchema';
 
-@RdfsClass('sp:DataStream')
+@RdfsClass('sp:DataSet')
 export class DataSetDescription {
 
   @RdfId

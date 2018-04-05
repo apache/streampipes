@@ -9,8 +9,8 @@ import { Operator } from '../shared/operator.model';
 })
 export class KviConfigurationComponent {
 
-    @Input() operators: Operator[];
-    @Output() configuredOperators: EventEmitter<Operator[]> = new EventEmitter<Operator[]>();
+    @Input() operator: Operator;
+    @Output() configuredOperator: EventEmitter<Operator> = new EventEmitter<Operator>();
 
     constructor() {
     }

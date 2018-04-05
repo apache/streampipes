@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EventProperty} from '../model/EventProperty';
+import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
+import {DomainPropertyProbability} from '../model/DomainPropertyProbability';
 // import {WriteJsonService} from '../write-json.service';
 // import {DragDropService} from '../drag-drop.service';
 // import {dataTypes} from '../data-model';
@@ -18,6 +20,8 @@ export class EventPropertyComponent implements OnInit {
 
   @Input() property: EventProperty;
   @Output() propertyChange = new EventEmitter<EventProperty>();
+
+  @Input() domainPropertyGuess: DomainPropertyProbabilityList;
 
   @Output() save: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
 
@@ -37,7 +41,30 @@ export class EventPropertyComponent implements OnInit {
 
   ngOnInit(): void {
     this.createForm();
-    console.log(this.property);
+
+    if (this.domainPropertyGuess == null) {
+      this.domainPropertyGuess = new DomainPropertyProbabilityList();
+    }
+
+    const tmpBestDomainProperty = this.getDomainPropertyWithHighestConfidence(this.domainPropertyGuess.list);
+
+    if (tmpBestDomainProperty != null) {
+      this.property.domainProperty = tmpBestDomainProperty.domainProperty;
+    }
+
+
+  }
+
+  private getDomainPropertyWithHighestConfidence(list: DomainPropertyProbability[]): DomainPropertyProbability {
+    var result: DomainPropertyProbability = null;
+
+    for (var _i = 0; _i < list.length; _i++) {
+       if (result == null || +result.probability < +list[_i].probability) {
+           result = list[_i];
+       }
+    }
+
+    return result;
   }
 
   // aufgerufen, wenn FormGroup valide ist

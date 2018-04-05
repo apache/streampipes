@@ -5,12 +5,15 @@
          <!--placeholder for nested-properties-->
         <app-event-property-nested [index]="i + 1"
                                    [eventPropertyNested]="property"
+                                   [domainPropertyGuess]="getDomainProbability(property.runTimeName)"
+                                   [domainPropertyGuesses]="domainPropertyGuesses"
                                    (delete)=deleteProperty($event)></app-event-property-nested>
       </div>
       <div *ngIf="isEventPropertyPrimitive(property)">
         <!-- placeholder for event-properties -->
         <app-event-property-primitive (delete)=deleteProperty($event)
                                       (addPrimitive)=addPrimitiveProperty($event)
+                                      [domainPropertyGuess]="getDomainProbability(property.runTimeName)"
                                       [property]="property">
         </app-event-property-primitive>
       </div>

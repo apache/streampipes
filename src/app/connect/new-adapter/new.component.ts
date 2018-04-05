@@ -1,20 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { Format } from '../format-form/format';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {RdfmapperService} from '../rdfmapper/rdfmapper.service';
 import {RestService} from '../rest.service';
 import {ProtocolDescription} from '../model/ProtocolDescription';
 import {FormatDescription} from '../model/FormatDescription';
 import {AdapterDescription} from '../model/AdapterDescription';
 import {DataSetDescription} from '../model/DataSetDescription';
-import {Data} from '@angular/router';
 import {EventSchema} from '../schema-editor/model/EventSchema';
-// import {AdapterDescription} from '../model/AdapterDescription';
-
-// import { TsonLd } from '../tsonld';
+import {AdapterDataSource} from '../all-adapters/adapter-data-source.service';
 
 @Component({
-    selector: 'app-new',
+    selector: 'sp-new-adapter',
     templateUrl: './new.component.html',
     styleUrls: ['./new.component.css']
 })
@@ -67,10 +62,7 @@ export class NewComponent implements OnInit {
     }
 
     public startAdapter() {
-        console.log(this.newAdapterDescription);
-
         this.restService.addAdapter(this.newAdapterDescription);
-        console.log('bbb');
     }
 
 }

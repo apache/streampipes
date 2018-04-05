@@ -1,7 +1,6 @@
 <div style="margin-right: 10vh; margin-left: 10vh;" fxLayout="column" fxLayoutAlign="center stretch">
   <mat-horizontal-stepper [linear]="isLinear">
 
-
     <mat-step [stepControl]="firstFormGroup">
       <form [formGroup]="firstFormGroup">
         <ng-template matStepLabel>Select Protocol</ng-template>
@@ -15,8 +14,6 @@
       </form>
 
     </mat-step>
-
-
 
 
     <mat-step [stepControl]="secondFormGroup">
@@ -35,8 +32,6 @@
     </mat-step>
 
 
-
-
     <mat-step>
       <ng-template matStepLabel>Define Event Schema</ng-template>
       <app-event-schema [(adapterDescription)]="newAdapterDescription"></app-event-schema>
@@ -48,10 +43,18 @@
     </mat-step>
 
     <mat-step>
+
+
       <ng-template matStepLabel>Start Adapter</ng-template>
+      <div fxLayoutAlign="center">
+          <mat-form-field>
+            <input matInput [(ngModel)]="newAdapterDescription.label" placeholder="Adapter Name">
+          </mat-form-field>
+      </div>
       <div fxLayoutAlign="center">
         <button mat-raised-button color="accent" (click)="startAdapter()" mat-button>Start Adapter</button>
       </div>
+
 
       <div fxLayoutAlign="end">
           <button color="accent" mat-button matStepperPrevious>Back</button>
