@@ -34,6 +34,9 @@ public class PipelineTemplateDescription extends UnnamedStreamPipesEntity {
   @RdfProperty(RDFS.LABEL)
   private String pipelineTemplateName;
 
+  @RdfProperty(StreamPipes.INTERNAL_NAME)
+  private String pipelineTemplateId;
+
   @RdfProperty(RDFS.DESCRIPTION)
   private String pipelineTemplateDescription;
 
@@ -58,6 +61,7 @@ public class PipelineTemplateDescription extends UnnamedStreamPipesEntity {
     this.connectedTo = other.getConnectedTo();
     this.pipelineTemplateName = other.getPipelineTemplateName();
     this.pipelineTemplateDescription = other.getPipelineTemplateDescription();
+    this.pipelineTemplateId = other.getPipelineTemplateId();
   }
 
   public PipelineTemplateDescription(String elementName, SpDataStream requiredStream, List<BoundPipelineElement> connectedTo) {
@@ -87,5 +91,13 @@ public class PipelineTemplateDescription extends UnnamedStreamPipesEntity {
 
   public void setPipelineTemplateDescription(String pipelineTemplateDescription) {
     this.pipelineTemplateDescription = pipelineTemplateDescription;
+  }
+
+  public String getPipelineTemplateId() {
+    return pipelineTemplateId;
+  }
+
+  public void setPipelineTemplateId(String pipelineTemplateId) {
+    this.pipelineTemplateId = pipelineTemplateId;
   }
 }

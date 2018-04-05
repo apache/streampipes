@@ -32,6 +32,7 @@ import org.streampipes.model.schema.*;
 import org.streampipes.model.staticproperty.*;
 import org.streampipes.model.template.BoundPipelineElement;
 import org.streampipes.model.template.PipelineTemplateDescription;
+import org.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.streampipes.model.template.PipelineTemplateInvocation;
 
 import java.lang.annotation.Annotation;
@@ -122,7 +123,8 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             PipelineTemplateDescription.class,
             PipelineTemplateInvocation.class,
             BoundPipelineElement.class,
-            SpDataStreamContainer.class
+            SpDataStreamContainer.class,
+            PipelineTemplateDescriptionContainer.class
 
     );
   }

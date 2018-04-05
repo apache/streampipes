@@ -19,12 +19,15 @@ package org.streampipes.manager.template;
 import org.streampipes.commons.Utils;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.manager.matching.DataSetGroundingSelector;
-import org.streampipes.manager.matching.v2.StreamMatch;
+import org.streampipes.manager.matching.v2.ElementVerification;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.client.pipeline.DataSetModificationMessage;
 import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.sdk.builder.BoundPipelineElementBuilder;
 import org.streampipes.sdk.builder.PipelineTemplateBuilder;
@@ -57,21 +60,32 @@ public class PipelineTemplateGenerator {
 
   public List<PipelineTemplateDescription> getCompatibleTemplates(String streamId) {
     List<PipelineTemplateDescription> compatibleTemplates = new ArrayList<>();
-    SpDataStream streamOffer =getStream(streamId);
+    ElementVerification verifier = new ElementVerification();
+    SpDataStream streamOffer = getStream(streamId);
     if (streamOffer instanceof SpDataSet) {
-      streamOffer = prepareStream((SpDataSet) streamOffer);
+      streamOffer = new SpDataSet((SpDataSet) prepareStream((SpDataSet) streamOffer));
+    } else {
+      streamOffer = new SpDataStream(streamOffer);
     }
     if (streamOffer != null) {
       for(PipelineTemplateDescription pipelineTemplateDescription : makeExampleTemplates()) {
         // TODO make this work for 2+ input streams
-        SpDataStream streamRequirements = pipelineTemplateDescription.getConnectedTo().get(0).getPipelineElementTemplate().getStreamRequirements().get(0);
-        if (new StreamMatch().match(streamOffer, streamRequirements, new ArrayList<>())) {
+        InvocableStreamPipesEntity entity = cloneInvocation(pipelineTemplateDescription.getConnectedTo().get(0).getPipelineElementTemplate());
+        if (verifier.verify(streamOffer, entity)) {
           compatibleTemplates.add(pipelineTemplateDescription);
         }
       }
     }
 
     return compatibleTemplates;
+  }
+
+  private InvocableStreamPipesEntity cloneInvocation(InvocableStreamPipesEntity pipelineElementTemplate) {
+    if (pipelineElementTemplate instanceof DataProcessorInvocation) {
+      return new DataProcessorInvocation((DataProcessorInvocation) pipelineElementTemplate);
+    } else {
+      return new DataSinkInvocation((DataSinkInvocation) pipelineElementTemplate);
+    }
   }
 
   private SpDataStream prepareStream(SpDataSet stream) {
@@ -83,7 +97,7 @@ public class PipelineTemplateGenerator {
 
 
   private PipelineTemplateDescription makeExampleTemplate() throws URISyntaxException {
-    return new PipelineTemplateDescription(PipelineTemplateBuilder.create("test", "test")
+    return new PipelineTemplateDescription(PipelineTemplateBuilder.create("test-id","test", "test")
             .boundPipelineElementTemplate(BoundPipelineElementBuilder
                     .create(getProcessor("http://localhost:8093/sepa/aggregation"))
                     .withPredefinedFreeTextValue("timeWindow", "30")

@@ -22,6 +22,7 @@ import org.streampipes.model.SpDataStream;
 import org.streampipes.model.SpDataStreamContainer;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
 import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.streampipes.model.template.PipelineTemplateInvocation;
 import org.streampipes.rest.api.IPipelineTemplate;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
@@ -82,9 +83,9 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   @Override
   public Response getPipelineTemplates(@QueryParam("streamId") String streamId) {
     if (streamId != null) {
-      return ok(toJson(Operations.getCompatiblePipelineTemplates(streamId)));
+      return ok(toJsonLd(new PipelineTemplateDescriptionContainer(Operations.getCompatiblePipelineTemplates(streamId))));
     } else {
-      return ok(toJsonLd(Operations.getAllPipelineTemplates()));
+      return ok(toJsonLd(new PipelineTemplateDescriptionContainer(Operations.getAllPipelineTemplates())));
     }
   }
 

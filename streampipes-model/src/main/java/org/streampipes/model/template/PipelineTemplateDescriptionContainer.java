@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package org.streampipes.model;
+package org.streampipes.model.template;
 
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
@@ -28,30 +28,30 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-@RdfsClass(StreamPipes.DATA_STREAM_CONTAINER)
+@RdfsClass(StreamPipes.PIPELINE_TEMPLATE_DESCRIPTION_CONTAINER)
 @Entity
-public class SpDataStreamContainer extends UnnamedStreamPipesEntity {
+public class PipelineTemplateDescriptionContainer extends UnnamedStreamPipesEntity  {
 
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
   @RdfProperty("sp:list")
-  private List<SpDataStream> list;
+  private List<PipelineTemplateDescription> list;
 
-  public SpDataStreamContainer() {
-      super();
-      this.list = new ArrayList<>();
+  public PipelineTemplateDescriptionContainer() {
+    super();
+    this.list = new ArrayList<>();
   }
 
-  public SpDataStreamContainer(List<SpDataStream> dataStreams) {
+  public PipelineTemplateDescriptionContainer(List<PipelineTemplateDescription> dataStreams) {
     super();
     this.list = dataStreams;
   }
 
-  public List<SpDataStream> getList() {
+  public List<PipelineTemplateDescription> getList() {
     return list;
   }
 
-  public void setList(List<SpDataStream> list) {
+  public void setList(List<PipelineTemplateDescription> list) {
     this.list = list;
   }
 }
