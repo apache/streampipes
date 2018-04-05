@@ -46,8 +46,7 @@ docker-backend:
      - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
      - docker push $IMAGE_NAME/backend:$MVN_VERSION
      - docker push $IMAGE_NAME/backend:latest
-   only:
-     - dev
+  
 
 deploy:
   image: maven:3-jdk-8
