@@ -8,6 +8,7 @@ import org.streampipes.commons.Utils;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.connect.RunningAdapterInstances;
 import org.streampipes.connect.firstconnector.protocol.stream.KafkaProtocol;
+import org.streampipes.container.declarer.InvocableDeclarer;
 import org.streampipes.container.html.JSONGenerator;
 import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.streampipes.container.html.model.Description;
@@ -16,6 +17,7 @@ import org.streampipes.connect.firstconnector.format.csv.CsvFormat;
 import org.streampipes.connect.firstconnector.format.json.JsonFormat;
 import org.streampipes.connect.firstconnector.protocol.set.FileProtocol;
 import org.streampipes.connect.firstconnector.protocol.set.HttpProtocol;
+import org.streampipes.container.init.RunningInstances;
 import org.streampipes.container.transform.Transformer;
 import org.streampipes.container.util.Util;
 import org.streampipes.model.SpDataSet;
@@ -181,6 +183,8 @@ public class SpConnect extends AbstractRestInterface {
 
         dataSet.setName(adapterDescription.getName());
         dataSet.setDescription("Description");
+
+//        dataSet.setUri(url);
         dataSet.setUri(url + "/streams");
 
         EventGrounding eg = new EventGrounding();
@@ -215,7 +219,7 @@ public class SpConnect extends AbstractRestInterface {
     }
 
     @POST
-    @Path("/all/{streamId}")
+    @Path("/all/{streamId}/streams")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String invokeAdapter(@PathParam("streamId") String streamId, String
@@ -256,17 +260,21 @@ public class SpConnect extends AbstractRestInterface {
 
 
     @DELETE
-    @Path("all/{streamId}/{runningInstanceId}")
+    @Path("/all/{streamId}/streams/{runningInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String detach(@PathParam("runningInstanceId") String runningInstanceId) {
+    public String detach(@PathParam("streamId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
 
-        RunningAdapterInstances.INSTANCE.removeAdapter(runningInstanceId);
-        org.streampipes.model.Response resp = new org.streampipes.model.Response("", true);
+        Adapter adapter = RunningAdapterInstances.INSTANCE.removeAdapter(runningInstanceId);
 
-        return Util.toResponseString(resp);
+        if (adapter != null) {
+            adapter.stop();
+
+            org.streampipes.model.Response resp = new org.streampipes.model.Response("", true);
+            return Util.toResponseString(resp);
+        }
+
+        return Util.toResponseString(elementId, false, "Could not find the running instance with id: " + runningInstanceId);
     }
-
-
 
 
     @POST
