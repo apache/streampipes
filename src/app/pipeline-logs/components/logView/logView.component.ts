@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { Log } from './model/log.model';
 import { LogViewRestService } from './services/logView-rest.service';
@@ -9,18 +9,18 @@ import { LogRequest } from './model/logRequest.model';
     templateUrl: './logView.component.html',
     styleUrls: ['./logView.component.css']
 })
-export class LogViewComponent implements AfterViewInit {
+export class LogViewComponent implements AfterViewInit, OnChanges {
 
     static MS_PER_MINUTE = 60000;
     static DEFAULT_DATE_OFFSET = 10 * LogViewComponent.MS_PER_MINUTE;
 
-    @Input() logSourceID: string;
+    @Input() logSourceIDs: string[];
 
     startDate = new Date(Date.now() - LogViewComponent.DEFAULT_DATE_OFFSET);
 
     endDate = new Date(Date.now());
 
-    logLevels;
+    logLevels = [];
 
     selectedLogLevel = 'ALL';
 
@@ -39,24 +39,44 @@ export class LogViewComponent implements AfterViewInit {
     constructor(private logviewRestService: LogViewRestService) {
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+        console.log(this.logSourceIDs);
+        this.loadLogs();
+    }
+
     loadLogs() {
 
+        let logs = [];
+
         const logRequest = <LogRequest>{};
+        this.logLevels = [];
+
         logRequest.dateFrom = this.startDate.getTime();
         logRequest.dateTo = this.endDate.getTime();
-        logRequest.sourceID = this.logSourceID;
+
+        for (let logSourceID of this.logSourceIDs) {
+
+            logRequest.sourceID = logSourceID;
+
+            this.logviewRestService.getLogs(logRequest)
+                .subscribe( response => {
+                    logs = logs.concat(response);
+                    this.dataSourceDisplay = new MatTableDataSource<Log>(logs);
+                    this.dataSource = new MatTableDataSource<Log>(logs);
+                    this.dataSourceDisplay.paginator = this.paginator;
+
+                    this.logLevels.push(Array.from(new Set(response.map(t => t.level))));
+                }, error => {
+                    console.log(error);
+                });
 
 
-        this.logviewRestService.getLogs(logRequest)
-            .subscribe( response => {
-                this.dataSourceDisplay = new MatTableDataSource<Log>(response);
-                this.dataSource = new MatTableDataSource<Log>(response);
-                this.dataSourceDisplay.paginator = this.paginator;
+        }
 
-                this.logLevels = Array.from(new Set(response.map(t => t.level)));
-            }, error => {
-                console.log(error);
-            });
+
+
+
+
     }
 
     applyFilter(filterValue: string) {
@@ -78,12 +98,9 @@ export class LogViewComponent implements AfterViewInit {
             this.dataSource.filter = filterValue;
         }
 
-
-
         this.dataSourceDisplay = this.dataSource;
         this.dataSourceDisplay.paginator = this.paginator;
         console.log(this.filter);
-
 
     }
 

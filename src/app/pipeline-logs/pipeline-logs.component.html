@@ -1,13 +1,36 @@
+<form>
+    <mat-form-field>
+        <input #input matInput placeholder="PipelineID" value="">
+    </mat-form-field>
+    <button mat-button (click)="createLogView(input.value)">Go</button>
+</form>
+
 <div class="page-container page-container-padding">
 
-    <form>
-        <mat-form-field>
-            <input #input matInput placeholder="LogSourceID" value="">
-        </mat-form-field>
-        <button mat-button (click)="createLogView(input.value)">Go</button>
-    </form>
+    <div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6">
+        <div flex layout-fill layout="row" layout-align="start center"
+             style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+            <h5>PipelineName</h5>
+        </div>
+    </div>
 
+    <mat-form-field>
+        <mat-select [(value)]="logSourceIDsSelected" (selectionChange)="logSourcelSelection()" placeholder="Log level filter">
+            <mat-option value="ALL">All</mat-option>
+            <mat-option *ngFor="let logSourceID of logSourceIDsSelect" value="{{logSourceID.uri}}">{{logSourceID.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
 
-    <logView *ngFor="let logSourceID of logSourceIDs"
-        [logSourceID]="logSourceID"></logView>
+    <div class="container-fluid">
+
+        <logView [logSourceIDs]="logSourceIDs"></logView>
+    </div>
+
 </div>
+
+
+
+
+
+
+
