@@ -28,7 +28,7 @@ import org.streampipes.model.client.pipeline.PipelineModificationMessage;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.template.BoundPipelineElement;
-import org.streampipes.model.template.PipelineTemplateInvocation;
+import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.storage.management.StorageDispatcher;
 
 import java.util.ArrayList;
@@ -38,24 +38,26 @@ import java.util.List;
 
 public class PipelineGenerator {
 
-  private PipelineTemplateInvocation pipelineTemplateInvocation;
+  private PipelineTemplateDescription pipelineTemplateDescription;
+  private String datasetId;
   private Pipeline pipeline;
 
   private int count = 0;
 
-  public PipelineGenerator(PipelineTemplateInvocation pipelineTemplateInvocation) {
-    this.pipelineTemplateInvocation = pipelineTemplateInvocation;
+  public PipelineGenerator(String datasetId, PipelineTemplateDescription pipelineTemplateDescription) {
+    this.pipelineTemplateDescription = pipelineTemplateDescription;
+    this.datasetId = datasetId;
     this.pipeline = new Pipeline();
   }
 
   public Pipeline makePipeline() {
 
-    pipeline.setName(pipelineTemplateInvocation.getKviName());
+    //pipeline.setName(pipelineTemplateDescription.getKviName());
 
-    pipeline.setStreams(Collections.singletonList(prepareStream(pipelineTemplateInvocation.getDataSetId())));
+    pipeline.setStreams(Collections.singletonList(prepareStream(datasetId)));
     pipeline.setSepas(new ArrayList<>());
     pipeline.setActions(new ArrayList<>());
-    collectInvocations("domId" + count, pipeline.getStreams().get(0), pipelineTemplateInvocation.getPipelineTemplateDescription().getConnectedTo());
+    collectInvocations("domId" + count, pipeline.getStreams().get(0), pipelineTemplateDescription.getConnectedTo());
 
     return pipeline;
   }

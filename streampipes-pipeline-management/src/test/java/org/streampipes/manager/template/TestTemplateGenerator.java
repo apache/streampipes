@@ -36,7 +36,7 @@ public class TestTemplateGenerator {
 
     if (descriptions.size() > 0) {
       PipelineTemplateInvocation invocation = new PipelineTemplateInvocationGenerator(getSource(), descriptions.get(0)).generateInvocation();
-      Pipeline pipeline = new PipelineGenerator(invocation).makePipeline();
+      Pipeline pipeline = new PipelineGenerator("http://localhost:8089/sep/source_random/random-data-set", descriptions.get(0)).makePipeline();
       System.out.println(GsonSerializer.getGson().toJson(pipeline));
       try {
         System.out.println(Utils.asString(new JsonLdTransformer().toJsonLd(invocation)));
