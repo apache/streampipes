@@ -36,9 +36,12 @@ public class PipelineTemplateInvocation extends UnnamedStreamPipesEntity {
   @RdfProperty(StreamPipes.HAS_DATASET_ID)
   private String dataSetId;
 
-  @RdfProperty(StreamPipes.HAS_PIPELINE_TEMPLATE_DESCRIPTION)
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @RdfProperty(StreamPipes.INTERNAL_NAME)
+  private String pipelineTemplateId;
+
+  //@RdfProperty(StreamPipes.HAS_PIPELINE_TEMPLATE_DESCRIPTION)
+  //@OneToOne(fetch = FetchType.EAGER,
+  //        cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   private PipelineTemplateDescription pipelineTemplateDescription;
 
   @OneToMany(fetch = FetchType.EAGER,
@@ -81,5 +84,13 @@ public class PipelineTemplateInvocation extends UnnamedStreamPipesEntity {
 
   public void setPipelineTemplateDescription(PipelineTemplateDescription pipelineTemplateDescription) {
     this.pipelineTemplateDescription = pipelineTemplateDescription;
+  }
+
+  public String getPipelineTemplateId() {
+    return pipelineTemplateId;
+  }
+
+  public void setPipelineTemplateId(String pipelineTemplateId) {
+    this.pipelineTemplateId = pipelineTemplateId;
   }
 }
