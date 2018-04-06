@@ -35,7 +35,6 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Path("/v2/users/{username}/pipeline-templates")
 public class PipelineTemplate extends AbstractRestInterface implements IPipelineTemplate {
@@ -52,7 +51,8 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
       source
               .getSpDataStreams()
               .stream()
-              .filter(Objects::nonNull)
+              .filter(stream -> !(stream instanceof SpDataSet))
+              .map(stream -> new SpDataStream(stream))
               .forEach(datasets::add);
     }
 
@@ -73,6 +73,7 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
               .getSpDataStreams()
               .stream()
               .filter(stream -> stream instanceof SpDataSet)
+              .map(stream -> new SpDataSet((SpDataSet) stream))
               .forEach(set -> datasets.add((SpDataSet) set));
     }
 

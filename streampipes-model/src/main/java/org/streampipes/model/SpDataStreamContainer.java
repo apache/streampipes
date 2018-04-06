@@ -16,6 +16,7 @@
  */
 package org.streampipes.model;
 
+import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.UnnamedStreamPipesEntity;
@@ -28,6 +29,7 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass(StreamPipes.DATA_STREAM_CONTAINER)
 @Entity
 public class SpDataStreamContainer extends UnnamedStreamPipesEntity {

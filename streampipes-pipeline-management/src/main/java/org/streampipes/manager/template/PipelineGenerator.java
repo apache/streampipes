@@ -16,9 +16,15 @@
  */
 package org.streampipes.manager.template;
 
+import org.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
+import org.streampipes.commons.exceptions.NoSepaInPipelineException;
+import org.streampipes.commons.exceptions.RemoteServerNotAccessibleException;
+import org.streampipes.manager.matching.PipelineVerificationHandler;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.client.exception.InvalidConnectionException;
 import org.streampipes.model.client.pipeline.Pipeline;
+import org.streampipes.model.client.pipeline.PipelineModificationMessage;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.template.BoundPipelineElement;
@@ -65,11 +71,22 @@ public class PipelineGenerator {
       InvocableStreamPipesEntity entity = pipelineElement.getPipelineElementTemplate();
       entity.setConnectedTo(Arrays.asList(currentDomId));
       entity.setDOM(getDom());
-      entity.setConfigured(true);
+      //entity.setConfigured(true);
       // TODO hack
       entity.setInputStreams(Arrays.asList(inputStream));
       if (entity instanceof DataProcessorInvocation) {
         pipeline.getSepas().add((DataProcessorInvocation) entity);
+        try {
+          PipelineModificationMessage message = new PipelineVerificationHandler(pipeline).validateConnection().computeMappingProperties().getPipelineModificationMessage();
+        } catch (RemoteServerNotAccessibleException e) {
+          e.printStackTrace();
+        } catch (NoMatchingJsonSchemaException e) {
+          e.printStackTrace();
+        } catch (InvalidConnectionException e) {
+          e.printStackTrace();
+        } catch (NoSepaInPipelineException e) {
+          e.printStackTrace();
+        }
         if (pipelineElement.getConnectedTo().size() > 0) {
           collectInvocations(entity.getDOM(), ((DataProcessorInvocation) entity).getOutputStream(), pipelineElement.getConnectedTo());
         }
