@@ -100,10 +100,10 @@ public class PipelineTemplateGenerator {
     return new PipelineTemplateDescription(PipelineTemplateBuilder.create("distance-kvi","Distance KVI",
             "Calculates the distance between two locations")
             .boundPipelineElementTemplate(BoundPipelineElementBuilder
-                    .create(getProcessor("http://pe-flink-samples:8090/sepa/maintenance-prediction"))
-                    .withPredefinedFreeTextValue("timeWindow", "30")
-                    .withPredefinedSelection("operation", Collections.singletonList("Average"))
-                    .withOverwrittenLabel("aggregate", "Select a field you'd like to use for the KVI calculation")
+                    .create(getProcessor("http://pe-jvm:8090/sepa/google-routing"))
+//                    .withPredefinedFreeTextValue("timeWindow", "30")
+//                    .withPredefinedSelection("operation", Collections.singletonList("Average"))
+//                    .withOverwrittenLabel("aggregate", "Select a field you'd like to use for the KVI calculation")
                     .connectTo(BoundPipelineElementBuilder
                             .create(getSink("http://pe-sinks:8090/sec/dashboard_sink"))
                             .build())
