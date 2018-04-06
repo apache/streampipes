@@ -19,6 +19,7 @@ package org.streampipes.manager.template;
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
+import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.model.template.PipelineTemplateInvocation;
 
 public class PipelineTemplateInvocationHandler {
@@ -31,10 +32,14 @@ public class PipelineTemplateInvocationHandler {
 
 
   public PipelineOperationStatus handlePipelineInvocation() {
-    Pipeline pipeline = new PipelineGenerator(pipelineTemplateInvocation).makePipeline();
+    Pipeline pipeline = new PipelineGenerator(pipelineTemplateInvocation.getDataSetId(), getTemplateById(pipelineTemplateInvocation.getPipelineTemplateId())).makePipeline();
 
     Operations.storePipeline(pipeline);
     return Operations.startPipeline(pipeline);
 
+  }
+
+  private PipelineTemplateDescription getTemplateById(String pipelineTemplateId) {
+    return new PipelineTemplateGenerator().makeExampleTemplates().stream().filter(template -> template.getPipelineTemplateId().equals(pipelineTemplateId)).findFirst().get();
   }
 }
