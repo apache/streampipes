@@ -20,6 +20,7 @@ import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.*;
@@ -52,6 +53,15 @@ public class PipelineTemplateInvocation extends UnnamedStreamPipesEntity {
   public PipelineTemplateInvocation() {
     super();
     this.staticProperties = new ArrayList<>();
+  }
+
+  public PipelineTemplateInvocation(PipelineTemplateInvocation other) {
+    super(other);
+    this.kviName = other.getKviName();
+    this.dataSetId = other.getDataSetId();
+    this.pipelineTemplateId = other.getPipelineTemplateId();
+
+    if (other.getStaticProperties() != null) this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
   }
 
   public String getKviName() {
