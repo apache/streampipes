@@ -40,9 +40,9 @@ public class PipelineTemplateDescription extends UnnamedStreamPipesEntity {
   @RdfProperty(RDFS.DESCRIPTION)
   private String pipelineTemplateDescription;
 
-  @OneToMany(fetch = FetchType.EAGER,
-          cascade = {CascadeType.ALL})
-  @RdfProperty(StreamPipes.IS_CONNECTED_TO)
+  //@OneToMany(fetch = FetchType.EAGER,
+  //        cascade = {CascadeType.ALL})
+  //@RdfProperty(StreamPipes.IS_CONNECTED_TO)
   private List<BoundPipelineElement> connectedTo;
 
   public PipelineTemplateDescription() {
