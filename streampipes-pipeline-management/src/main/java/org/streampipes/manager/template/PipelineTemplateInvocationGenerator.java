@@ -18,10 +18,12 @@ package org.streampipes.manager.template;
 
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.client.pipeline.Pipeline;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.model.template.PipelineTemplateInvocation;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,7 +40,7 @@ public class PipelineTemplateInvocationGenerator {
 
   public PipelineTemplateInvocation generateInvocation() {
 
-    Pipeline pipeline = new PipelineGenerator(spDataStream.getElementId(), pipelineTemplateDescription).makePipeline();
+    Pipeline pipeline = new PipelineGenerator(spDataStream.getElementId(), pipelineTemplateDescription, "test").makePipeline();
 
     PipelineTemplateInvocation pipelineTemplateInvocation = new PipelineTemplateInvocation();
     pipelineTemplateInvocation.setStaticProperties(collectStaticProperties(pipeline));
@@ -51,9 +53,23 @@ public class PipelineTemplateInvocationGenerator {
   private List<StaticProperty> collectStaticProperties(Pipeline pipeline) {
     List<StaticProperty> staticProperties = new ArrayList<>();
 
-    pipeline.getSepas().forEach(pe -> staticProperties.addAll(pe.getStaticProperties()));
-    pipeline.getActions().forEach(pe -> staticProperties.addAll(pe.getStaticProperties()));
+    pipeline.getSepas().forEach(pe -> {
+      pe.getStaticProperties().forEach(sp -> sp.setInternalName(pe.getDOM() + sp.getInternalName()));
+      staticProperties.addAll(pe.getStaticProperties());
+    });
+    pipeline.getActions().forEach(pe -> {
+      pe.getStaticProperties().forEach(sp -> sp.setInternalName(pe.getDOM() + sp.getInternalName()));
+      staticProperties.addAll(pe.getStaticProperties());
+    });
 
+    staticProperties
+            .stream()
+            .filter(sp -> sp instanceof MappingPropertyUnary)
+            .forEach(mp -> ((MappingPropertyUnary) mp)
+                    .setMapsTo(URI.create(((MappingPropertyUnary) mp)
+                            .getMapsFromOptions()
+                            .get(0)
+                            .getElementId())));
 
     return staticProperties;
   }
@@ -63,7 +79,7 @@ public class PipelineTemplateInvocationGenerator {
             .stream()
             // TODO fix (predefined is always true
             //.filter(sp -> !(sp instanceof MappingProperty))
-            //.filter(sp -> !(sp.isPredefined()))
+            .filter(sp -> !(sp.isPredefined()))
             .collect(Collectors.toList());
   }
 }

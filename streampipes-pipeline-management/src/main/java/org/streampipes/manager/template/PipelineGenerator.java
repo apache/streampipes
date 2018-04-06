@@ -34,28 +34,28 @@ import org.streampipes.model.template.BoundPipelineElement;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.storage.management.StorageDispatcher;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class PipelineGenerator {
 
   private PipelineTemplateDescription pipelineTemplateDescription;
   private String datasetId;
   private Pipeline pipeline;
+  private String pipelineName;
 
   private int count = 0;
 
-  public PipelineGenerator(String datasetId, PipelineTemplateDescription pipelineTemplateDescription) {
+  public PipelineGenerator(String datasetId, PipelineTemplateDescription pipelineTemplateDescription, String pipelineName) {
     this.pipelineTemplateDescription = pipelineTemplateDescription;
     this.datasetId = datasetId;
+    this.pipelineName = pipelineName;
     this.pipeline = new Pipeline();
   }
 
   public Pipeline makePipeline() {
 
-    //pipeline.setName(pipelineTemplateDescription.getKviName());
+    pipeline.setName(pipelineName);
+    pipeline.setPipelineId(UUID.randomUUID().toString());
 
     pipeline.setStreams(Collections.singletonList(prepareStream(datasetId)));
     pipeline.setSepas(new ArrayList<>());

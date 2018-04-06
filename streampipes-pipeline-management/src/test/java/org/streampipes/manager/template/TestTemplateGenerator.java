@@ -20,10 +20,8 @@ import org.streampipes.commons.Utils;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.model.template.PipelineTemplateInvocation;
-import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.management.StorageDispatcher;
 
@@ -37,10 +35,9 @@ public class TestTemplateGenerator {
 
     if (descriptions.size() > 0) {
       PipelineTemplateInvocation invocation = new PipelineTemplateInvocationGenerator(getSource(), descriptions.get(0)).generateInvocation();
-      Pipeline pipeline = new PipelineGenerator("http://localhost:8089/sep/source_random/random-data-set", descriptions.get(0)).makePipeline();
+      //Pipeline pipeline = new PipelineGenerator("http://localhost:8089/sep/source_random/random-data-set", descriptions.get(0), "test").makePipeline();
 
-      Operations.startPipeline(pipeline);
-      System.out.println(GsonSerializer.getGson().toJson(pipeline));
+      Operations.handlePipelineTemplateInvocation("riemer@fzi.de", invocation);
       try {
         System.out.println(Utils.asString(new JsonLdTransformer().toJsonLd(invocation)));
       } catch (IllegalAccessException | InvocationTargetException | InvalidRdfException | ClassNotFoundException e) {

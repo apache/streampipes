@@ -139,10 +139,10 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Override
-  public Response generatePipeline(String pipelineTemplateInvocationString) {
+  public Response generatePipeline(@PathParam("username") String username, String pipelineTemplateInvocationString) {
     try {
       PipelineTemplateInvocation pipelineTemplateInvocation = new JsonLdTransformer(StreamPipes.PIPELINE_TEMPLATE_INVOCATION).fromJsonLd(pipelineTemplateInvocationString, PipelineTemplateInvocation.class);
-      PipelineOperationStatus status = Operations.handlePipelineTemplateInvocation(pipelineTemplateInvocation);
+      PipelineOperationStatus status = Operations.handlePipelineTemplateInvocation(username, pipelineTemplateInvocation);
 
       return ok(status);
 

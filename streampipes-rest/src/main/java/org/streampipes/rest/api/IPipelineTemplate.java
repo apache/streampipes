@@ -26,7 +26,7 @@ public interface IPipelineTemplate {
 
   Response getPipelineTemplates(String streamId);
 
-  Response generatePipeline(String pipelineTemplateInvocation);
+  Response generatePipeline(String username, String pipelineTemplateInvocation);
 
   Response getPipelineTemplateInvocation(String streamId, String pipelineTemplateId);
 }

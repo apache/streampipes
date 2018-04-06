@@ -143,8 +143,8 @@ public class Operations {
     return new PipelineTemplateGenerator().getCompatibleTemplates(streamId);
   }
 
-  public static PipelineOperationStatus handlePipelineTemplateInvocation(PipelineTemplateInvocation pipelineTemplateInvocation) {
-    return new PipelineTemplateInvocationHandler(pipelineTemplateInvocation).handlePipelineInvocation();
+  public static PipelineOperationStatus handlePipelineTemplateInvocation(String username, PipelineTemplateInvocation pipelineTemplateInvocation) {
+    return new PipelineTemplateInvocationHandler(username, pipelineTemplateInvocation).handlePipelineInvocation();
   }
 
   public static PipelineTemplateInvocation getPipelineInvocationTemplate(SpDataStream dataStream, PipelineTemplateDescription pipelineTemplateDescription) {

@@ -17,27 +17,74 @@
 package org.streampipes.manager.template;
 
 import org.streampipes.manager.operations.Operations;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.model.template.PipelineTemplateInvocation;
+import org.streampipes.storage.management.StorageDispatcher;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PipelineTemplateInvocationHandler {
 
   private PipelineTemplateInvocation pipelineTemplateInvocation;
+  private String username;
 
-  public PipelineTemplateInvocationHandler(PipelineTemplateInvocation pipelineTemplateInvocation) {
+  public PipelineTemplateInvocationHandler(String username, PipelineTemplateInvocation pipelineTemplateInvocation) {
+    this.username = username;
     this.pipelineTemplateInvocation = pipelineTemplateInvocation;
   }
 
 
   public PipelineOperationStatus handlePipelineInvocation() {
-    Pipeline pipeline = new PipelineGenerator(pipelineTemplateInvocation.getDataSetId(), getTemplateById(pipelineTemplateInvocation.getPipelineTemplateId())).makePipeline();
-
+    Pipeline pipeline = new PipelineGenerator(pipelineTemplateInvocation.getDataSetId(), getTemplateById(pipelineTemplateInvocation.getPipelineTemplateId()), pipelineTemplateInvocation.getKviName()).makePipeline();
+    pipeline.setCreatedByUser(username);
+    pipeline.setCreatedAt(System.currentTimeMillis());
+    replaceStaticProperties(pipeline);
     Operations.storePipeline(pipeline);
-    return Operations.startPipeline(pipeline);
-
+    Pipeline storedPipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(pipeline.getPipelineId());
+    return Operations.startPipeline(storedPipeline);
   }
+
+  private void replaceStaticProperties(Pipeline pipeline) {
+    pipeline.getSepas().forEach(this::replace);
+    pipeline.getActions().forEach(this::replace);
+  }
+
+  private void replace(InvocableStreamPipesEntity pe) {
+    List<StaticProperty> newProperties = new ArrayList<>();
+    pe.getStaticProperties().forEach(sp -> {
+      if (existsInCustomizedElements(pe.getDOM(), sp)) {
+        newProperties.add(getCustomizedElement(pe.getDOM(), pe.getDOM() + sp.getInternalName()));
+      } else {
+        newProperties.add(sp);
+      }
+    });
+    pe.setStaticProperties(newProperties);
+  }
+
+
+
+  private StaticProperty getCustomizedElement(String dom, String internalName) {
+    StaticProperty staticProperty = pipelineTemplateInvocation
+            .getStaticProperties()
+            .stream()
+            .filter(sp -> sp.getInternalName().equals(internalName)).findFirst().get();
+
+    staticProperty.setInternalName(staticProperty.getInternalName().replace(dom, ""));
+    return staticProperty;
+  }
+
+  private boolean existsInCustomizedElements(String dom, StaticProperty staticProperty) {
+    return pipelineTemplateInvocation
+            .getStaticProperties()
+            .stream()
+            .anyMatch(sp -> sp.getInternalName().equals(dom +staticProperty.getInternalName()));
+  }
+  
 
   private PipelineTemplateDescription getTemplateById(String pipelineTemplateId) {
     return new PipelineTemplateGenerator().makeExampleTemplates().stream().filter(template -> template.getPipelineTemplateId().equals(pipelineTemplateId)).findFirst().get();
