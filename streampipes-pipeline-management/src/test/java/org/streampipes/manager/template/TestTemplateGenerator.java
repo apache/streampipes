@@ -18,6 +18,7 @@ package org.streampipes.manager.template;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
+import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.template.PipelineTemplateDescription;
@@ -37,6 +38,8 @@ public class TestTemplateGenerator {
     if (descriptions.size() > 0) {
       PipelineTemplateInvocation invocation = new PipelineTemplateInvocationGenerator(getSource(), descriptions.get(0)).generateInvocation();
       Pipeline pipeline = new PipelineGenerator("http://localhost:8089/sep/source_random/random-data-set", descriptions.get(0)).makePipeline();
+
+      Operations.startPipeline(pipeline);
       System.out.println(GsonSerializer.getGson().toJson(pipeline));
       try {
         System.out.println(Utils.asString(new JsonLdTransformer().toJsonLd(invocation)));

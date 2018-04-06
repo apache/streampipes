@@ -19,10 +19,13 @@ package org.streampipes.manager.template;
 import org.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
 import org.streampipes.commons.exceptions.NoSepaInPipelineException;
 import org.streampipes.commons.exceptions.RemoteServerNotAccessibleException;
+import org.streampipes.manager.matching.DataSetGroundingSelector;
 import org.streampipes.manager.matching.PipelineVerificationHandler;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.client.exception.InvalidConnectionException;
+import org.streampipes.model.client.pipeline.DataSetModificationMessage;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.pipeline.PipelineModificationMessage;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -57,44 +60,68 @@ public class PipelineGenerator {
     pipeline.setStreams(Collections.singletonList(prepareStream(datasetId)));
     pipeline.setSepas(new ArrayList<>());
     pipeline.setActions(new ArrayList<>());
-    collectInvocations("domId" + count, pipeline.getStreams().get(0), pipelineTemplateDescription.getConnectedTo());
+    collectInvocations("domId" + count, pipelineTemplateDescription.getConnectedTo());
 
     return pipeline;
   }
 
   private SpDataStream prepareStream(String datasetId) {
-    SpDataStream stream = new SpDataStream(getStream(datasetId));
+    SpDataSet stream = new SpDataSet((SpDataSet) getStream(datasetId));
+    if (stream instanceof SpDataSet) {
+      DataSetModificationMessage message = new DataSetGroundingSelector((SpDataSet) stream).selectGrounding();
+      stream.setEventGrounding(message.getEventGrounding());
+      ((SpDataSet) stream).setDatasetInvocationId(message.getInvocationId());
+    } else {
+
+    }
     stream.setDOM(getDom());
     return stream;
   }
 
-  private void collectInvocations(String currentDomId, SpDataStream inputStream, List<BoundPipelineElement> boundPipelineElements) {
+  private void collectInvocations(String currentDomId, List<BoundPipelineElement> boundPipelineElements) {
     for (BoundPipelineElement pipelineElement : boundPipelineElements) {
-      InvocableStreamPipesEntity entity = pipelineElement.getPipelineElementTemplate();
+      InvocableStreamPipesEntity entity = clonePe(pipelineElement.getPipelineElementTemplate());
       entity.setConnectedTo(Arrays.asList(currentDomId));
       entity.setDOM(getDom());
       //entity.setConfigured(true);
       // TODO hack
-      entity.setInputStreams(Arrays.asList(inputStream));
+      //entity.setInputStreams(Arrays.asList(inputStream));
       if (entity instanceof DataProcessorInvocation) {
         pipeline.getSepas().add((DataProcessorInvocation) entity);
         try {
           PipelineModificationMessage message = new PipelineVerificationHandler(pipeline).validateConnection().computeMappingProperties().getPipelineModificationMessage();
-        } catch (RemoteServerNotAccessibleException e) {
-          e.printStackTrace();
-        } catch (NoMatchingJsonSchemaException e) {
-          e.printStackTrace();
-        } catch (InvalidConnectionException e) {
-          e.printStackTrace();
-        } catch (NoSepaInPipelineException e) {
+          //entity.setInputStreams(message.getPipelineModifications().get(0).getInputStreams());
+          pipeline.getSepas().remove(entity);
+          entity.setConfigured(true);
+          entity.setStaticProperties(message.getPipelineModifications().get(0).getStaticProperties());
+          pipeline.getSepas().add((DataProcessorInvocation) entity);
+        } catch (RemoteServerNotAccessibleException | NoMatchingJsonSchemaException | NoSepaInPipelineException | InvalidConnectionException e) {
           e.printStackTrace();
         }
         if (pipelineElement.getConnectedTo().size() > 0) {
-          collectInvocations(entity.getDOM(), ((DataProcessorInvocation) entity).getOutputStream(), pipelineElement.getConnectedTo());
+          collectInvocations(entity.getDOM(), pipelineElement.getConnectedTo());
         }
       } else {
         pipeline.getActions().add((DataSinkInvocation) entity);
+        try {
+          PipelineModificationMessage message = new PipelineVerificationHandler(pipeline).validateConnection().computeMappingProperties().getPipelineModificationMessage();
+          pipeline.getActions().remove(entity);
+          //entity.setInputStreams(message.getPipelineModifications().get(0).getInputStreams());
+          entity.setConfigured(true);
+          entity.setStaticProperties(message.getPipelineModifications().get(0).getStaticProperties());
+          pipeline.getActions().add((DataSinkInvocation) entity);
+        } catch (RemoteServerNotAccessibleException | NoMatchingJsonSchemaException | NoSepaInPipelineException | InvalidConnectionException e) {
+          e.printStackTrace();
+        }
       }
+    }
+  }
+
+  private InvocableStreamPipesEntity clonePe(InvocableStreamPipesEntity pipelineElementTemplate) {
+    if (pipelineElementTemplate instanceof DataProcessorInvocation) {
+      return new DataProcessorInvocation((DataProcessorInvocation) pipelineElementTemplate);
+    } else {
+      return new DataSinkInvocation((DataSinkInvocation) pipelineElementTemplate);
     }
   }
 
