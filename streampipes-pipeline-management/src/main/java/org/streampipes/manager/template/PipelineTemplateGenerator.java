@@ -83,9 +83,9 @@ public class PipelineTemplateGenerator {
 
 
   private PipelineTemplateDescription makeExampleTemplate() throws URISyntaxException {
-    return new PipelineTemplateDescription(PipelineTemplateBuilder.create("test", "test")
+    return new PipelineTemplateDescription(PipelineTemplateBuilder.create("Distance KVI", "Calculates the distance between two locations")
             .boundPipelineElementTemplate(BoundPipelineElementBuilder
-                    .create(getProcessor("http://localhost:8093/sepa/aggregation"))
+                    .create(getProcessor("http://localhost:8090/sepa/google-routing"))
                     .withPredefinedFreeTextValue("timeWindow", "30")
                     .withPredefinedSelection("operation", Collections.singletonList("Average"))
                     .withOverwrittenLabel("aggregate", "Select a field you'd like to use for the KVI calculation")
