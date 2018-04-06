@@ -17,8 +17,8 @@
 package org.streampipes.manager.template;
 
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.staticproperty.StaticProperty;
-import org.streampipes.model.template.BoundPipelineElement;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.model.template.PipelineTemplateInvocation;
 
@@ -38,24 +38,24 @@ public class PipelineTemplateInvocationGenerator {
 
   public PipelineTemplateInvocation generateInvocation() {
 
-    List<StaticProperty> propertiesToConfigure = new ArrayList<>();
-    collectStaticProperties(propertiesToConfigure, pipelineTemplateDescription.getConnectedTo());
+    Pipeline pipeline = new PipelineGenerator(spDataStream.getElementId(), pipelineTemplateDescription).makePipeline();
 
     PipelineTemplateInvocation pipelineTemplateInvocation = new PipelineTemplateInvocation();
-    pipelineTemplateInvocation.setStaticProperties(propertiesToConfigure);
+    pipelineTemplateInvocation.setStaticProperties(collectStaticProperties(pipeline));
     pipelineTemplateInvocation.setDataSetId(spDataStream.getElementId());
     //pipelineTemplateInvocation.setPipelineTemplateDescription(pipelineTemplateDescription);
     pipelineTemplateInvocation.setPipelineTemplateId(pipelineTemplateDescription.getPipelineTemplateId());
     return pipelineTemplateInvocation;
   }
 
-  private void collectStaticProperties(List<StaticProperty> staticProperties, List<BoundPipelineElement> boundPipelineElements) {
-      for(BoundPipelineElement element : boundPipelineElements) {
-        staticProperties.addAll(filter(element.getPipelineElementTemplate().getStaticProperties()));
-        if (element.getConnectedTo().size() > 0) {
-          collectStaticProperties(staticProperties, element.getConnectedTo());
-        }
-      }
+  private List<StaticProperty> collectStaticProperties(Pipeline pipeline) {
+    List<StaticProperty> staticProperties = new ArrayList<>();
+
+    pipeline.getSepas().forEach(pe -> staticProperties.addAll(pe.getStaticProperties()));
+    pipeline.getActions().forEach(pe -> staticProperties.addAll(pe.getStaticProperties()));
+
+
+    return staticProperties;
   }
 
   private List<StaticProperty> filter(List<StaticProperty> staticProperties) {

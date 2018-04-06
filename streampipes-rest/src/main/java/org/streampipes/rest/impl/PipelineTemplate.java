@@ -99,7 +99,9 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
     if (pipelineTemplateId != null) {
       SpDataStream dataStream = getDataStream(streamId);
       PipelineTemplateDescription pipelineTemplateDescription = getPipelineTemplateDescription(pipelineTemplateId);
-      return ok(toJsonLd(new PipelineTemplateInvocation(Operations.getPipelineInvocationTemplate(dataStream, pipelineTemplateDescription))));
+      PipelineTemplateInvocation invocation = Operations.getPipelineInvocationTemplate(dataStream, pipelineTemplateDescription);
+      PipelineTemplateInvocation clonedInvocation = new PipelineTemplateInvocation(invocation);
+      return ok(toJsonLd(new PipelineTemplateInvocation(clonedInvocation)));
     } else {
       return fail();
     }
