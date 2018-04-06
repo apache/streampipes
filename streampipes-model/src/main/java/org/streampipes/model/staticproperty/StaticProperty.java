@@ -47,7 +47,7 @@ public abstract class StaticProperty extends UnnamedStreamPipesEntity {
 	protected boolean valueRequired;
 
 	@RdfProperty(StreamPipes.IS_PREDEFINED)
-	private boolean predefined;
+	private boolean predefined = false;
 
 	protected StaticPropertyType staticPropertyType;
 	

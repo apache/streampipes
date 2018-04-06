@@ -27,15 +27,16 @@ public class PipelineTemplateBuilder {
   private PipelineTemplateDescription pipelineTemplateDescription;
   private List<BoundPipelineElement> boundPipelineElements;
 
-  private PipelineTemplateBuilder(String pipelineTemplateName, String pipelineTemplateDescription) {
+  private PipelineTemplateBuilder(String internalId, String pipelineTemplateName, String pipelineTemplateDescription) {
     this.pipelineTemplateDescription = new PipelineTemplateDescription();
     this.pipelineTemplateDescription.setPipelineTemplateName(pipelineTemplateName);
+    this.pipelineTemplateDescription.setPipelineTemplateId(internalId);
     this.pipelineTemplateDescription.setPipelineTemplateDescription(pipelineTemplateDescription);
     this.boundPipelineElements = new ArrayList<>();
   }
 
-  public static PipelineTemplateBuilder create(String pipelineTemplateName, String pipelineTemplateDescription) {
-    return new PipelineTemplateBuilder(pipelineTemplateName, pipelineTemplateDescription);
+  public static PipelineTemplateBuilder create(String internalId, String pipelineTemplateName, String pipelineTemplateDescription) {
+    return new PipelineTemplateBuilder(internalId, pipelineTemplateName, pipelineTemplateDescription);
   }
 
   public PipelineTemplateBuilder boundPipelineElementTemplate(BoundPipelineElement boundPipelineElement) {

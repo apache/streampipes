@@ -22,6 +22,8 @@ import org.streampipes.model.SpDataStream;
 import org.streampipes.model.SpDataStreamContainer;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
 import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.template.PipelineTemplateDescription;
+import org.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.streampipes.model.template.PipelineTemplateInvocation;
 import org.streampipes.rest.api.IPipelineTemplate;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
@@ -82,10 +84,53 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   @Override
   public Response getPipelineTemplates(@QueryParam("streamId") String streamId) {
     if (streamId != null) {
-      return ok(toJson(Operations.getCompatiblePipelineTemplates(streamId)));
+      return ok(toJsonLd(new PipelineTemplateDescriptionContainer(Operations.getCompatiblePipelineTemplates(streamId))));
     } else {
-      return ok(toJsonLd(Operations.getAllPipelineTemplates()));
+      return ok(toJsonLd(new PipelineTemplateDescriptionContainer(Operations.getAllPipelineTemplates())));
     }
+  }
+
+  @GET
+  @Path("/invocations")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Override
+  public Response getPipelineTemplateInvocation(@QueryParam("streamId") String streamId, @QueryParam("templateId") String pipelineTemplateId) {
+    if (pipelineTemplateId != null) {
+      SpDataStream dataStream = getDataStream(streamId);
+      PipelineTemplateDescription pipelineTemplateDescription = getPipelineTemplateDescription(pipelineTemplateId);
+      return ok(toJsonLd(Operations.getPipelineInvocationTemplate(dataStream, pipelineTemplateDescription)));
+    } else {
+      return fail();
+    }
+  }
+
+  private PipelineTemplateDescription getPipelineTemplateDescription(String pipelineTemplateId) {
+    return Operations
+            .getAllPipelineTemplates()
+            .stream()
+            .filter(pt -> pt.getPipelineTemplateId().equals(pipelineTemplateId))
+            .findFirst()
+            .get();
+  }
+
+  private List<SpDataStream> getAllDataStreams() {
+    List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllSEPs();
+    List<SpDataStream> datasets = new ArrayList<>();
+
+    for(DataSourceDescription source : sources) {
+      datasets.addAll(source
+              .getSpDataStreams());
+    }
+
+    return datasets;
+  }
+
+  private SpDataStream getDataStream(String streamId) {
+    return getAllDataStreams()
+            .stream()
+            .filter(sp -> sp.getElementId().equals(streamId))
+            .findFirst()
+            .get();
   }
 
   @POST

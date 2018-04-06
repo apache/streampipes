@@ -17,7 +17,6 @@
 package org.streampipes.manager.template;
 
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.staticproperty.MappingProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.template.BoundPipelineElement;
 import org.streampipes.model.template.PipelineTemplateDescription;
@@ -61,8 +60,9 @@ public class PipelineTemplateInvocationGenerator {
   private List<StaticProperty> filter(List<StaticProperty> staticProperties) {
     return staticProperties
             .stream()
-            .filter(sp -> !(sp instanceof MappingProperty))
-            .filter(sp -> !(sp.isPredefined()))
+            // TODO fix (predefined is always true
+            //.filter(sp -> !(sp instanceof MappingProperty))
+            //.filter(sp -> !(sp.isPredefined()))
             .collect(Collectors.toList());
   }
 }
