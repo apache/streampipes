@@ -3,7 +3,6 @@ import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { Log } from './model/log.model';
 import { LogViewRestService } from './services/logView-rest.service';
 import { LogRequest } from './model/logRequest.model';
-import {any} from 'codelyzer/util/function';
 
 @Component({
     selector: 'logView',
@@ -21,10 +20,14 @@ export class LogViewComponent implements AfterViewInit {
 
     endDate = new Date(Date.now());
 
-    error: string;
+    logLevels;
+
+    selectedLogLevel = 'ALL';
 
     displayedColumns = ['timestamp', 'level', 'type', 'message'];
     dataSource;
+    dataSourceDisplay;
+    filter = '';
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -46,12 +49,42 @@ export class LogViewComponent implements AfterViewInit {
 
         this.logviewRestService.getLogs(logRequest)
             .subscribe( response => {
+                this.dataSourceDisplay = new MatTableDataSource<Log>(response);
                 this.dataSource = new MatTableDataSource<Log>(response);
-                this.dataSource.paginator = this.paginator;
+                this.dataSourceDisplay.paginator = this.paginator;
+
+                this.logLevels = Array.from(new Set(response.map(t => t.level)));
             }, error => {
                 console.log(error);
-                this.error = 'ERROR12';
             });
+    }
+
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim();
+        filterValue = filterValue.toLowerCase();
+        this.dataSourceDisplay.filter = filterValue;
+    }
+
+    logLevelSelection() {
+        let filterValue;
+
+        if (this.selectedLogLevel === 'ALL') {
+            filterValue = ''.trim();
+            filterValue = filterValue.toLowerCase();
+            this.dataSource.filter = filterValue;
+        } else {
+            filterValue = this.selectedLogLevel.trim();
+            filterValue = filterValue.toLowerCase();
+            this.dataSource.filter = filterValue;
+        }
+
+
+
+        this.dataSourceDisplay = this.dataSource;
+        this.dataSourceDisplay.paginator = this.paginator;
+        console.log(this.filter);
+
+
     }
 
 

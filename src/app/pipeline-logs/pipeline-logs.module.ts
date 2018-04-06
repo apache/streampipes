@@ -6,6 +6,7 @@ import { LogViewComponent } from './components/logView/logView.component';
 import { NguiDatetimePickerModule } from '@ngui/datetime-picker';
 import { BrowserModule } from '@angular/platform-browser';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
         BrowserModule,
         NguiDatetimePickerModule,
         CustomMaterialModule,
+        FlexLayoutModule
     ],
     declarations: [
         PipelineLogsComponent,

@@ -1,28 +1,43 @@
 <div>
 
-    <div class="assemblyOptions sp-blue-bg" fxLayout="row" fxLayoutAlign="space-between center">
-        <h4>{{logSourceID}}</h4>
+    <div class="assemblyOptions sp-blue-bg" fxLayout="row" fxLayoutAlign=" center">
 
-        {{error}}
-        <span>
-            <form fxLayoutAlign="center center">
+            <form>
                 <mat-form-field>
-                    <input matInput ngui-datetime-picker placeholder="Start Date" [(ngModel)]="startDate">
+                    <input matInput ngui-datetime-picker placeholder="From" [(ngModel)]="startDate">
                 </mat-form-field>
                 <mat-form-field>
-                    <input matInput ngui-datetime-picker placeholder="End Date" [(ngModel)]="endDate">
+                    <input matInput ngui-datetime-picker placeholder="To" [(ngModel)]="endDate">
                 </mat-form-field>
             </form>
-        </span>
-        <button mat-icon-button (click)="loadLogs()" fxLayoutAlign="center center">
-            <mat-icon>loop</mat-icon>
-        </button>
+            <button mat-icon-button (click)="loadLogs()" >
+                <mat-icon>loop</mat-icon>
+            </button>
+
+
+
+
     </div>
 
     <div class="sp-blue-border" (scroll)="true">
 
+
+        <div fxLayout="row" fxLayoutAlign=" center">
+
+            <mat-form-field>
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-select [(value)]="selectedLogLevel" (selectionChange)="logLevelSelection()" placeholder="Log level filter">
+                    <mat-option value="ALL">All</mat-option>
+                    <mat-option *ngFor="let level of logLevels" value="{{level}}">{{level}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
         <div>
-            <mat-table ng-if="dataSource" class="logs-table" [dataSource]="dataSource">
+            <mat-table ng-if="dataSourceDisplay" class="logs-table" [dataSource]="dataSourceDisplay">
 
                 <ng-container matColumnDef="timestamp">
                     <mat-header-cell *matHeaderCellDef> Timestamp </mat-header-cell>
