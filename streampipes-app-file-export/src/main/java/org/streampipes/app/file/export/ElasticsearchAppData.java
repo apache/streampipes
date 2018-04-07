@@ -25,13 +25,16 @@ public class ElasticsearchAppData {
 
     private long timestampTo;
 
+    private String output;
+
     public ElasticsearchAppData() {
     }
 
-    public ElasticsearchAppData(String index, long timestampFrom, long timeStampTo) {
+    public ElasticsearchAppData(String index, long timestampFrom, long timeStampTo, String output) {
         this.index = index;
         this.timestampFrom = timestampFrom;
         this.timestampTo = timestampTo;
+        this.output = output;
     }
 
     public String getIndex() {
@@ -54,8 +57,15 @@ public class ElasticsearchAppData {
         return timestampTo;
     }
 
-
     public void setTimeStampTo(long timestampTo) {
         this.timestampTo = timestampTo;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public void setOutput(String output) {
+        this.output = output;
     }
 }
