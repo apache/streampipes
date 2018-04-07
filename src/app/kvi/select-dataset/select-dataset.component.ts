@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
@@ -10,7 +10,7 @@ import { DataSetDescription } from '../../connect/model/DataSetDescription';
     templateUrl: './select-dataset.component.html',
     styleUrls: ['./select-dataset.component.css']
 })
-export class SelectDatasetComponent implements OnInit {
+export class SelectDatasetComponent implements OnChanges {
 
     @Input() dataSets: DataSetDescription[];
     @Output() selectDataSet: EventEmitter<DataSetDescription> = new EventEmitter<DataSetDescription>();
@@ -21,7 +21,7 @@ export class SelectDatasetComponent implements OnInit {
     constructor() {
     }
 
-    ngOnInit() {
+    ngOnChanges() {
         this.filteredDataSets = this.myControl.valueChanges
             .pipe(
                 startWith<string | DataSetDescription>(''),

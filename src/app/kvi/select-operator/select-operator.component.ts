@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChildren } from '@angular/core';
 
-import { Operator } from '../shared/operator.model';
+import { PipelineTemplateDescription } from '../../connect/model/PipelineTemplateDescription';
 
 @Component({
     selector: 'select-operator',
@@ -9,8 +9,8 @@ import { Operator } from '../shared/operator.model';
 })
 export class SelectOperatorComponent {
 
-    @Input() operators: Operator[];
-    @Output() selectOperator: EventEmitter<Operator> = new EventEmitter<Operator>();
+    @Input() operators: PipelineTemplateDescription[] = [];
+    @Output() selectOperator: EventEmitter<PipelineTemplateDescription> = new EventEmitter<PipelineTemplateDescription>();
 
     constructor() {
     }

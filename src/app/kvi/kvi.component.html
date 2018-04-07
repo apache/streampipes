@@ -19,7 +19,7 @@
 
         <mat-step [completed]="isValidConfiguration" [editable]="false">
             <ng-template matStepLabel>Configuration</ng-template>
-            <kvi-configuration [operator]="selectedOperator"></kvi-configuration>
+            <kvi-configuration [configurations]="configurations" [dataSet]="selectedDataSet" (configuredOperators)="selectConfiguration($event)"></kvi-configuration>
             <div fxLayout="row" fxLayoutAlign="end">
                 <button [disabled]="!isValidConfiguration" color="primary" mat-raised-button matStepperNext>Next</button>
             </div>
@@ -29,10 +29,10 @@
             <ng-template matStepLabel>Calculation</ng-template>
             <p>Enter the name of the new KVI</p>
             <mat-form-field class="example-full-width">
-                <input matInput type="text" placeholder="KVI Name">
+                <input matInput type="text" placeholder="KVI Name" [formControl]="nameControl">
             </mat-form-field>
             <div fxLayout="row" fxLayoutAlign="end">
-                <button color="primary" mat-raised-button (click)="calculateKvi()">Calculate KVI</button>
+                <button [disabled]="!isValidName" color="primary" mat-raised-button (click)="calculateKvi()">Calculate KVI</button>
             </div>
         </mat-step>
 

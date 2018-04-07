@@ -4,6 +4,6 @@
     <mat-list-option #operatorOption *ngFor="let operator of operators"
                      [disabled]="operatorsList.selectedOptions.selected.length > 0 && !operatorOption.selected"
                      [value]="operator">
-        {{operator.name}}
+        {{operator.label}} ({{operator.description}})
     </mat-list-option>
 </mat-selection-list>
