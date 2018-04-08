@@ -2,6 +2,7 @@ import {RdfId} from '../tsonld/RdfId';
 import {RdfProperty} from '../tsonld/RdfsProperty';
 import {RdfsClass} from '../tsonld/RdfsClass';
 import {StaticProperty} from './StaticProperty';
+import {EventPropertyPrimitive} from '../schema-editor/model/EventPropertyPrimitive';
 
 @RdfsClass('sp:MappingPropertyUnary')
 export class MappingPropertyUnary extends StaticProperty {
@@ -16,7 +17,7 @@ export class MappingPropertyUnary extends StaticProperty {
     public internalName: string;
 
     @RdfProperty('sp:mapsTo')
-    public mapsTo: Object;
+    public mapsTo: String;
 
     constructor(id: string) {
         super();

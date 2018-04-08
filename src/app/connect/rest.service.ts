@@ -23,8 +23,6 @@ import {EventPropertyPrimitive} from './schema-editor/model/EventPropertyPrimiti
 import {EventPropertyList} from './schema-editor/model/EventPropertyList';
 import {AdapterDescriptionList} from './model/AdapterDescriptionList';
 import {DataSetDescription} from './model/DataSetDescription';
-import {resolveReflectiveProviders} from '@angular/core/src/di/reflective_provider';
-import {Subscription} from 'rxjs/Subscription';
 import {DomainPropertyProbability} from './schema-editor/model/DomainPropertyProbability';
 import {GuessSchema} from './schema-editor/model/GuessSchema';
 import {DomainPropertyProbabilityList} from './schema-editor/model/DomainPropertyProbabilityList';

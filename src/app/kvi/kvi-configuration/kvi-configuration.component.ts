@@ -22,7 +22,8 @@ export class KviConfigurationComponent {
         if (configuration !== undefined) {
             for (let config of this.configurations) {
                 if (config['id'] == configuration['a']['id']) {
-                    config['mapsTo'] = {"@id": configuration['b']['id']};
+                    // config['mapsTo'] = {"@id": configuration['b']['id']};
+                    config['mapsTo'] = configuration['b']['id'];
                 }
             }
         }
