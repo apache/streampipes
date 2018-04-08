@@ -60,7 +60,7 @@ export class KviComponent implements OnInit {
             this.kviService.getStaticProperties(this.selectedDataSet, operator).subscribe(res => {
                 this.invocationGraph = res;
                 this.invocationGraph.dataSetId = this.selectedDataSet.id;
-                this.invocationGraph.pipelineTemplateId = this.selectedOperator.id;
+                this.invocationGraph.pipelineTemplateId = this.selectedOperator.internalName;
                 this.configurations = res.list;
             });
         }
