@@ -9,7 +9,7 @@ export class PipelineTemplateInvocation {
     @RdfId
     public id: string;
 
-    @RdfProperty('sp:name')
+    @RdfProperty('sp:hasName')
     public name: string;
 
     @RdfProperty('sp:hasStaticProperty')
