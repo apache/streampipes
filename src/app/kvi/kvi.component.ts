@@ -72,7 +72,8 @@ export class KviComponent implements OnInit {
     }
 
     calculateKvi() {
-        this.kviService.createPipelineTemplateInvocation(this.invocationGraph).subscribe(res => console.log(res));
+        // this.kviService.createPipelineTemplateInvocation(this.invocationGraph).subscribe(res => console.log(res));
+        this.kviService.createPipelineTemplateInvocation(this.invocationGraph);
     }
 
 }
