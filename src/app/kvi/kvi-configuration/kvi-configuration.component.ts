@@ -3,6 +3,7 @@ import { StaticProperty } from '../../connect/model/StaticProperty';
 import { DataSetDescription } from '../../connect/model/DataSetDescription';
 import { FreeTextStaticProperty } from '../../connect/model/FreeTextStaticProperty';
 import { MappingPropertyUnary } from '../../connect/model/MappingPropertyUnary';
+import {URI} from '../../connect/model/URI';
 
 @Component({
     selector: 'kvi-configuration',
@@ -23,7 +24,8 @@ export class KviConfigurationComponent {
             for (let config of this.configurations) {
                 if (config['id'] == configuration['a']['id']) {
                     // config['mapsTo'] = {"@id": configuration['b']['id']};
-                    config['mapsTo'] = configuration['b']['id'];
+                    const tmpURI = new URI(configuration['b']['id']);
+                    config['mapsTo'] = tmpURI;
                 }
             }
         }

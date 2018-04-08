@@ -25,6 +25,7 @@ import { PipelineTemplateDescription } from '../../connect/model/PipelineTemplat
 import { PipelineTemplateDescriptionContainer } from '../../connect/model/PipelineTemplateDescriptionContainer';
 import { StaticProperty } from '../../connect/model/StaticProperty';
 import { MappingPropertyUnary } from '../../connect/model/MappingPropertyUnary';
+import {URI} from '../../connect/model/URI';
 
 @Injectable()
 export class KviService {
@@ -60,6 +61,13 @@ export class KviService {
         tsonld.addClassMapping(DomainPropertyProbability);
         tsonld.addClassMapping(DomainPropertyProbabilityList);
         tsonld.addClassMapping(GuessSchema);
+        tsonld.addClassMapping(URI);
+
+        tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
+        tsonld.addContext('spi', 'urn:streampipes.org:spi:');
+        tsonld.addContext('xsd', 'http://www.w3.org/2001/XMLSchema#');
+        tsonld.addContext('empire', 'urn:clarkparsia.com:empire:');
+
 
         return tsonld;
     }
