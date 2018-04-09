@@ -2,7 +2,9 @@
     Guess Schema
 </button>
 
-<mat-spinner *ngIf="isLoading">Loading</mat-spinner>
+<div fxLayoutAlign="center">
+<mat-spinner fxLayoutAlign="center" *ngIf="isLoading">Loading</mat-spinner>
+</div>
 
 <div fxLayout="column" fxLayoutAlign="space-evenly stretched" >
     <app-event-property-bag [(eventProperties)]="adapterDescription.dataSet.eventSchema.eventProperties" [domainPropertyGuesses]="schemaGuess.eventProperties">

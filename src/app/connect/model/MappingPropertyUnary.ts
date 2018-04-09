@@ -4,6 +4,7 @@ import {RdfsClass} from '../tsonld/RdfsClass';
 import {StaticProperty} from './StaticProperty';
 import {EventPropertyPrimitive} from '../schema-editor/model/EventPropertyPrimitive';
 import {URI} from './URI';
+import {EventProperty} from "../schema-editor/model/EventProperty";
 
 @RdfsClass('sp:MappingPropertyUnary')
 export class MappingPropertyUnary extends StaticProperty {
@@ -16,6 +17,9 @@ export class MappingPropertyUnary extends StaticProperty {
 
     @RdfProperty('sp:internalName')
     public internalName: string;
+
+    @RdfProperty('sp:mapsFrom')
+    public mapsFromOptions: Array<URI>;
 
     @RdfProperty('sp:mapsTo')
     public mapsTo: URI;
