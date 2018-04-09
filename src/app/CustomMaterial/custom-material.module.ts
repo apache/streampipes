@@ -4,7 +4,7 @@ import {
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
-  MatDialogModule, MatExpansionModule,
+  MatExpansionModule,
   MatIconModule,
   MatInputModule,
   MatListModule,
@@ -19,6 +19,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatTableModule} from '@angular/material/table';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatDialogModule} from '@angular/material/dialog';
 
 
 
@@ -61,7 +62,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatStepperModule,
     MatRadioModule,
     MatTableModule,
-    MatAutocompleteModule,
+     MatAutocompleteModule,
     MatExpansionModule
   ],
 })

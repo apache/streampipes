@@ -30,6 +30,7 @@ import { RestService } from './rest.service';
 
 import { DragulaModule } from 'ng2-dragula';
 import {DataTypesService} from './schema-editor/data-type.service';
+import {AdapterStartedDialog} from './new-adapter/component/adapter-started-dialog.component';
 
 @NgModule({
     imports: [
@@ -58,6 +59,7 @@ import {DataTypesService} from './schema-editor/data-type.service';
         EventPropertyNestedComponent,
         EventPropoertyListComponent,
         StaticPropertiesComponent,
+        AdapterStartedDialog,
 
     ],
     providers: [
@@ -65,7 +67,8 @@ import {DataTypesService} from './schema-editor/data-type.service';
         DataTypesService
     ],
     entryComponents: [
-        MainComponent
+        MainComponent,
+        AdapterStartedDialog,
     ]
 })
 export class SpConnectModule {

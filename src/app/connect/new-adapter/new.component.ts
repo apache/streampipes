@@ -7,6 +7,8 @@ import {AdapterDescription} from '../model/AdapterDescription';
 import {DataSetDescription} from '../model/DataSetDescription';
 import {EventSchema} from '../schema-editor/model/EventSchema';
 import {AdapterDataSource} from '../all-adapters/adapter-data-source.service';
+import {MatDialog} from '@angular/material';
+import {AdapterStartedDialog} from './component/adapter-started-dialog.component';
 
 @Component({
     selector: 'sp-new-adapter',
@@ -27,7 +29,7 @@ export class NewComponent implements OnInit {
     // selectedFormat: FormatDescription = new FormatDescription('');
 
     public newAdapterDescription: AdapterDescription;
-    constructor(private restService: RestService, private _formBuilder: FormBuilder) { }
+    constructor(private restService: RestService, private _formBuilder: FormBuilder, public dialog: MatDialog) { }
 
     ngOnInit() {
 
@@ -62,7 +64,17 @@ export class NewComponent implements OnInit {
     }
 
     public startAdapter() {
+       let dialogRef = this.dialog.open(AdapterStartedDialog, {
+            // width: '250px',
+            // data: { name: this.name, animal: this.animal }
+        });
+       
         this.restService.addAdapter(this.newAdapterDescription);
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+            // this.animal = result;
+        });
     }
 
 }
