@@ -90,6 +90,10 @@ public class Utils {
 	public static CouchDbClient getCouchDbElasticsearchFilesEndppointClient() {
 		return new CouchDbClient(props("file-export-endpoints-elasticsearch"));
 	}
+
+	public static CouchDbClient getCoucbDbClient(String table) {
+		return new CouchDbClient(props(table));
+	}
 	
 	private static CouchDbProperties props(String dbname)
 	{

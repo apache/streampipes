@@ -63,6 +63,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(SpConnect.class);
         apiClasses.add(GuessResource.class);
         apiClasses.add(PipelineTemplate.class);
+        apiClasses.add(Couchdb.class);
 
 
         // Serializers
