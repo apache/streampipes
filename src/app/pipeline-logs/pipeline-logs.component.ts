@@ -27,8 +27,8 @@ export class PipelineLogsComponent implements AfterViewInit {
 
         this.pipelineLogsRestService.getPipelineElement(pipelineID)
             .subscribe( graph => {
-                const actions = graph.actions;
-                this.pipelineName = graph.name;
+                const actions = (<Graph> graph).actions;
+                this.pipelineName = (<Graph> graph).name;
 
                 actions.forEach( action => {
                     this.logSourceIDsSelect.push({
@@ -53,4 +53,9 @@ export class PipelineLogsComponent implements AfterViewInit {
         }
     }
 
+}
+
+interface Graph {
+    actions;
+    name;
 }

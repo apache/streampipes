@@ -1,8 +1,6 @@
 <div>
 
     <div class="assemblyOptions sp-blue-bg" fxLayout="row" fxLayoutAlign="space-between center">
-
-
         <div fxLayout="row" fxLayoutAlign=" center">
             <h4 style="padding-right: 10px;">Date Range: </h4>
             <form>
@@ -18,7 +16,6 @@
             </button>
         </div>
 
-
         <div fxLayout="row" fxLayoutAlign=" center">
             <h4 style="padding-right: 10px">Log Level: </h4>
             <mat-form-field>
@@ -29,27 +26,15 @@
             </mat-form-field>
         </div>
 
-
         <div fxLayout="row" fxLayoutAlign=" center">
-
+            <h4 style="padding-right: 10px">Search: </h4>
             <mat-form-field>
-                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="">
             </mat-form-field>
-
-
         </div>
-
-
-
-
-
     </div>
 
     <div class="sp-blue-border" (scroll)="true">
-
-
-
-
         <div>
             <mat-table class="logs-table" [dataSource]="dataSourceDisplay" matSort>
 
@@ -82,5 +67,4 @@
                        [showFirstLastButtons]="true">
         </mat-paginator>
     </div>
-
 </div>
