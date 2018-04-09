@@ -30,7 +30,7 @@ import {URI} from './model/URI';
 
 @Injectable()
 export class RestService {
-    private host = 'http://localhost:8082/streampipes-backend/';
+    private host = '/streampipes-backend/';
 
 
     private getTsonLd(): any {
