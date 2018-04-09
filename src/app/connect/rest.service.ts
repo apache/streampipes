@@ -26,6 +26,7 @@ import {DataSetDescription} from './model/DataSetDescription';
 import {DomainPropertyProbability} from './schema-editor/model/DomainPropertyProbability';
 import {GuessSchema} from './schema-editor/model/GuessSchema';
 import {DomainPropertyProbabilityList} from './schema-editor/model/DomainPropertyProbabilityList';
+import {URI} from './model/URI';
 
 @Injectable()
 export class RestService {
@@ -51,6 +52,7 @@ export class RestService {
         tsonld.addClassMapping(DomainPropertyProbability);
         tsonld.addClassMapping(DomainPropertyProbabilityList);
         tsonld.addClassMapping(GuessSchema);
+        tsonld.addClassMapping(URI);
 
         return tsonld;
     }
@@ -77,6 +79,16 @@ export class RestService {
             .get(this.host + 'api/v2/adapter/allrunning')
             .map(response => {
 
+
+                // TODO remove this
+                // quick fix to deserialize URIs
+                response['@graph'].forEach(function (object) {
+                   if (object['sp:domainProperty'] != undefined) {
+                       // object['sp:domainProperty']['@type'] = "sp:URI";
+                       object['sp:domainProperty'] = object['sp:domainProperty']['@id'];
+                       delete object['sp:domainProperty']['@id'];
+                   }
+                })
                 const tsonld = this.getTsonLd();
 
                 // console.log(JSON.stringify(response, null, 2));
