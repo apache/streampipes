@@ -1,6 +1,7 @@
 import {RdfId} from '../../tsonld/RdfId';
 import {RdfProperty} from '../../tsonld/RdfsProperty';
 import {RdfsClass} from '../../tsonld/RdfsClass';
+import {URI} from '../../model/URI';
 
 
 @RdfsClass('sp:EventProperty')
@@ -28,7 +29,7 @@ export abstract class EventProperty {
   public runTimeName: string;
 
   @RdfProperty('sp:domainProperty')
-  public domainProperty: string;
+  public domainProperty: URI;
 
   constructor(propertyID: string, parent: EventProperty, child?: EventProperty) {
     this.propertyID = propertyID;
