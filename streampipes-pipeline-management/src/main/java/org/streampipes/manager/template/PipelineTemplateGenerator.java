@@ -105,7 +105,9 @@ public class PipelineTemplateGenerator {
 //                    .withPredefinedSelection("operation", Collections.singletonList("Average"))
 //                    .withOverwrittenLabel("aggregate", "Select a field you'd like to use for the KVI calculation")
                     .connectTo(BoundPipelineElementBuilder
-                            .create(getSink("http://localhost:8090/sec/dashboard_sink"))
+//                            .create(getSink("http://localhost:8090/sec/dashboard_sink"))
+                            .create(getSink("http://localhost:8090/sec/couchdb"))
+                              .withPredefinedFreeTextValue("db_name", "kvi")
                             .build())
                     .build())
             .build());
