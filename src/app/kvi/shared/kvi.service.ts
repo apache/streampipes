@@ -97,9 +97,27 @@ export class KviService {
             .get(this.getServerUrl() + '/api/v2/users/zehnder@fzi.de/pipeline-templates/invocations?streamId=' + dataSet.id + '&templateId=' + operator.internalName)
             .map(response => {
                 const tsonld = this.getTsonLd();
-                const res = tsonld.fromJsonLdType(response, 'sp:PipelineTemplateInvocation');
+                const res: PipelineTemplateInvocation = tsonld.fromJsonLdType(response, 'sp:PipelineTemplateInvocation');
+
+                // TODO find better solution
+                // This will remove preconfigured values from the UI
+                res.list.forEach(property => {
+                    if (this.isFreeTextStaticProperty(property)) {
+                        if (this.asFreeTextStaticProperty(property).value != undefined) {
+                            this.asFreeTextStaticProperty(property).render = false;
+                        }
+                    }
+                });
                 return res;
             });
+    }
+
+    isFreeTextStaticProperty(val) {
+        return val instanceof FreeTextStaticProperty;
+    }
+
+    asFreeTextStaticProperty(val: StaticProperty): FreeTextStaticProperty {
+        return <FreeTextStaticProperty> val;
     }
 
     createPipelineTemplateInvocation(invocation: PipelineTemplateInvocation) {
@@ -108,10 +126,10 @@ export class KviService {
 
 
 
-       tsonld.toflattenJsonLd(invocation).subscribe(res => {
+        tsonld.toflattenJsonLd(invocation).subscribe(res => {
             this.http
-            .post(this.getServerUrl() + '/api/v2/users/zehnder@fzi.de/pipeline-templates', res)
-            .subscribe();
+                .post(this.getServerUrl() + '/api/v2/users/zehnder@fzi.de/pipeline-templates', res)
+                .subscribe();
         });
 
 

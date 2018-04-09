@@ -20,10 +20,14 @@ export class StaticPropertiesComponent implements OnInit {
     mappingFormControl: FormControl = new FormControl();
     freeTextFormControl: FormControl = new FormControl();
 
+    private doNotRender: boolean;
+
     constructor() {
     }
 
     ngOnInit() {
+
+
 
         this.mappingFormControl.valueChanges
             .subscribe(res => {
