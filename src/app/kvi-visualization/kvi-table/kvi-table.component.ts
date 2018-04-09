@@ -20,6 +20,7 @@ export class KviTableComponent implements OnChanges, AfterViewInit {
 
     ngOnChanges() {
         this.kviDataSource = new MatTableDataSource(this.kviData);
+        this.kviDataSource.sort = this.sort;
     }
 
     ngAfterViewInit() {
