@@ -12,7 +12,7 @@ export class KviTableComponent implements OnChanges, AfterViewInit {
     kviDataSource = new MatTableDataSource();
     @ViewChild(MatSort) sort: MatSort;
 
-    displayedColumns = ['name', 'kvi'];
+    displayedColumns = ['rowindex', 'name', 'kvi'];
 
     constructor() {
 

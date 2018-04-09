@@ -6,6 +6,12 @@
 
 <mat-table #table [dataSource]="kviDataSource" matSort>
 
+    <!-- Index Column -->
+    <ng-container matColumnDef="rowindex">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Index </mat-header-cell>
+        <mat-cell *matCellDef="let element; let rIndex = index"> {{rIndex}} </mat-cell>
+    </ng-container>
+
     <!-- Name Column -->
     <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
