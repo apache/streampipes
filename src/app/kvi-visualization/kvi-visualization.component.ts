@@ -10,7 +10,9 @@ export class KviVisualizationComponent {
     kviData;
 
     constructor(private kviVisualizationService: KviVisualizationService) {
-        this.kviData = this.kviVisualizationService.getKviData();
+        this.kviVisualizationService.getKviData().subscribe(res => {
+            this.kviData = res;
+        });
     }
 
 }
