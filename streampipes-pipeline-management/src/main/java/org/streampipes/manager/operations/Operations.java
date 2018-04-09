@@ -27,6 +27,8 @@ import org.streampipes.manager.matching.PipelineVerificationHandler;
 import org.streampipes.manager.recommender.ElementRecommender;
 import org.streampipes.manager.remote.ContainerProvidedOptionsHandler;
 import org.streampipes.manager.template.PipelineTemplateGenerator;
+import org.streampipes.manager.template.PipelineTemplateInvocationGenerator;
+import org.streampipes.manager.template.PipelineTemplateInvocationHandler;
 import org.streampipes.manager.topic.WildcardTopicGenerator;
 import org.streampipes.manager.verification.extractor.TypeExtractor;
 import org.streampipes.model.SpDataSet;
@@ -38,6 +40,7 @@ import org.streampipes.model.client.pipeline.*;
 import org.streampipes.model.client.runtime.ContainerProvidedOptionsParameterRequest;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.template.PipelineTemplateDescription;
+import org.streampipes.model.template.PipelineTemplateInvocation;
 
 import java.util.List;
 
@@ -138,5 +141,13 @@ public class Operations {
 
   public static List<PipelineTemplateDescription> getCompatiblePipelineTemplates(String streamId) {
     return new PipelineTemplateGenerator().getCompatibleTemplates(streamId);
+  }
+
+  public static PipelineOperationStatus handlePipelineTemplateInvocation(String username, PipelineTemplateInvocation pipelineTemplateInvocation) {
+    return new PipelineTemplateInvocationHandler(username, pipelineTemplateInvocation).handlePipelineInvocation();
+  }
+
+  public static PipelineTemplateInvocation getPipelineInvocationTemplate(SpDataStream dataStream, PipelineTemplateDescription pipelineTemplateDescription) {
+    return new PipelineTemplateInvocationGenerator(dataStream, pipelineTemplateDescription).generateInvocation();
   }
 }

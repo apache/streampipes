@@ -16,8 +16,6 @@
  */
 package org.streampipes.rest.api;
 
-import org.streampipes.model.template.PipelineTemplateInvocation;
-
 import javax.ws.rs.core.Response;
 
 public interface IPipelineTemplate {
@@ -26,9 +24,9 @@ public interface IPipelineTemplate {
 
   Response getAvailableDataSets();
 
-  Response getAllPipelineTemplates();
-
   Response getPipelineTemplates(String streamId);
 
-  Response generatePipeline(PipelineTemplateInvocation pipelineTemplateInvocation);
+  Response generatePipeline(String username, String pipelineTemplateInvocation);
+
+  Response getPipelineTemplateInvocation(String streamId, String pipelineTemplateId);
 }

@@ -59,6 +59,7 @@ public class BoundPipelineElementBuilder {
   public BoundPipelineElementBuilder withPredefinedFreeTextValue(String internalStaticPropertyId, String value) {
     this.streamPipesEntity.getStaticProperties().stream().filter(sp -> sp instanceof FreeTextStaticProperty).forEach(sp -> {
       if (sp.getInternalName().equals(internalStaticPropertyId)) {
+        sp.setPredefined(true);
         ((FreeTextStaticProperty) sp).setValue(value);
       }
     });

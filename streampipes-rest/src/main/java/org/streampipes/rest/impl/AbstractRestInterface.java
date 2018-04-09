@@ -29,32 +29,22 @@ import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.manager.storage.UserManagementService;
 import org.streampipes.manager.storage.UserService;
 import org.streampipes.model.base.NamedStreamPipesEntity;
-import org.streampipes.model.client.messages.ErrorMessage;
-import org.streampipes.model.client.messages.Message;
+import org.streampipes.model.client.messages.*;
 import org.streampipes.model.client.messages.Notification;
-import org.streampipes.model.client.messages.NotificationType;
-import org.streampipes.model.client.messages.SuccessMessage;
 import org.streampipes.rest.http.HttpJsonParser;
 import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
-import org.streampipes.storage.api.INoSqlStorage;
-import org.streampipes.storage.api.INotificationStorage;
-import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
-import org.streampipes.storage.api.IPipelineStorage;
-import org.streampipes.storage.api.ITripleStorage;
-import org.streampipes.storage.api.IUserStorage;
-import org.streampipes.storage.api.IVisualizationStorage;
+import org.streampipes.storage.api.*;
 import org.streampipes.storage.management.StorageDispatcher;
 import org.streampipes.storage.management.StorageManager;
 import org.streampipes.storage.rdf4j.util.Transformer;
 
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
-
-import javax.ws.rs.core.Response;
 
 public abstract class AbstractRestInterface {
 
@@ -64,6 +54,14 @@ public abstract class AbstractRestInterface {
 			return Utils.asString(new JsonLdTransformer().toJsonLd(object));
 		} catch (RDFHandlerException | IllegalArgumentException
 				| IllegalAccessException | SecurityException | InvocationTargetException | ClassNotFoundException | InvalidRdfException e) {
+			return toJson(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage())));
+		}
+	}
+
+	protected <T> String toJsonLd(String rootElementUri, T object) {
+		try {
+			return Utils.asString(new JsonLdTransformer(rootElementUri).toJsonLd(object));
+		} catch (IllegalAccessException | InvocationTargetException | InvalidRdfException | ClassNotFoundException e) {
 			return toJson(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage())));
 		}
 	}
@@ -159,6 +157,10 @@ public abstract class AbstractRestInterface {
 		return Response
 				.ok(entity)
 				.build();
+	}
+
+	protected Response fail() {
+		return Response.serverError().build();
 	}
 
 	protected <T> String toJson(T element) {

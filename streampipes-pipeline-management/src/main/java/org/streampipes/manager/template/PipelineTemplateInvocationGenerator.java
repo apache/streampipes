@@ -17,12 +17,13 @@
 package org.streampipes.manager.template;
 
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.staticproperty.MappingProperty;
+import org.streampipes.model.client.pipeline.Pipeline;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.StaticProperty;
-import org.streampipes.model.template.BoundPipelineElement;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.model.template.PipelineTemplateInvocation;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,28 +40,45 @@ public class PipelineTemplateInvocationGenerator {
 
   public PipelineTemplateInvocation generateInvocation() {
 
-    List<StaticProperty> propertiesToConfigure = new ArrayList<>();
-    collectStaticProperties(propertiesToConfigure, pipelineTemplateDescription.getConnectedTo());
+    Pipeline pipeline = new PipelineGenerator(spDataStream.getElementId(), pipelineTemplateDescription, "test").makePipeline();
 
     PipelineTemplateInvocation pipelineTemplateInvocation = new PipelineTemplateInvocation();
-    pipelineTemplateInvocation.setStaticProperties(propertiesToConfigure);
+    pipelineTemplateInvocation.setStaticProperties(collectStaticProperties(pipeline));
     pipelineTemplateInvocation.setDataSetId(spDataStream.getElementId());
+    //pipelineTemplateInvocation.setPipelineTemplateDescription(pipelineTemplateDescription);
+    pipelineTemplateInvocation.setPipelineTemplateId(pipelineTemplateDescription.getPipelineTemplateId());
     return pipelineTemplateInvocation;
   }
 
-  private void collectStaticProperties(List<StaticProperty> staticProperties, List<BoundPipelineElement> boundPipelineElements) {
-      for(BoundPipelineElement element : boundPipelineElements) {
-        staticProperties.addAll(filter(element.getPipelineElementTemplate().getStaticProperties()));
-        if (element.getConnectedTo().size() > 0) {
-          collectStaticProperties(staticProperties, element.getConnectedTo());
-        }
-      }
+  private List<StaticProperty> collectStaticProperties(Pipeline pipeline) {
+    List<StaticProperty> staticProperties = new ArrayList<>();
+
+    pipeline.getSepas().forEach(pe -> {
+      pe.getStaticProperties().forEach(sp -> sp.setInternalName(pe.getDOM() + sp.getInternalName()));
+      staticProperties.addAll(pe.getStaticProperties());
+    });
+    pipeline.getActions().forEach(pe -> {
+      pe.getStaticProperties().forEach(sp -> sp.setInternalName(pe.getDOM() + sp.getInternalName()));
+      staticProperties.addAll(pe.getStaticProperties());
+    });
+
+    staticProperties
+            .stream()
+            .filter(sp -> sp instanceof MappingPropertyUnary)
+            .forEach(mp -> ((MappingPropertyUnary) mp)
+                    .setMapsTo(URI.create(((MappingPropertyUnary) mp)
+                            .getMapsFromOptions()
+                            .get(0)
+                            .getElementId())));
+
+    return staticProperties;
   }
 
   private List<StaticProperty> filter(List<StaticProperty> staticProperties) {
     return staticProperties
             .stream()
-            .filter(sp -> !(sp instanceof MappingProperty))
+            // TODO fix (predefined is always true
+            //.filter(sp -> !(sp instanceof MappingProperty))
             .filter(sp -> !(sp.isPredefined()))
             .collect(Collectors.toList());
   }

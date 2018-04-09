@@ -21,6 +21,7 @@ import org.streampipes.empire.core.empire.util.EmpireAnnotationProvider;
 import org.streampipes.model.ApplicationLink;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.SpDataStreamContainer;
 import org.streampipes.model.graph.*;
 import org.streampipes.model.grounding.*;
 import org.streampipes.model.modelconnect.*;
@@ -31,6 +32,7 @@ import org.streampipes.model.schema.*;
 import org.streampipes.model.staticproperty.*;
 import org.streampipes.model.template.BoundPipelineElement;
 import org.streampipes.model.template.PipelineTemplateDescription;
+import org.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.streampipes.model.template.PipelineTemplateInvocation;
 
 import java.lang.annotation.Annotation;
@@ -120,7 +122,9 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             ProtocolDescriptionList.class,
             PipelineTemplateDescription.class,
             PipelineTemplateInvocation.class,
-            BoundPipelineElement.class
+            BoundPipelineElement.class,
+            SpDataStreamContainer.class,
+            PipelineTemplateDescriptionContainer.class
 
     );
   }

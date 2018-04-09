@@ -60,6 +60,7 @@ public abstract class StaticProperty extends UnnamedStreamPipesEntity {
 	public StaticProperty(StaticPropertyType type) {
 		super();
 		this.staticPropertyType = type;
+		this.predefined = false;
 	}
 	
 	public StaticProperty(StaticProperty other)
@@ -80,6 +81,7 @@ public abstract class StaticProperty extends UnnamedStreamPipesEntity {
 		this.internalName = internalName;
 		this.label = label;
 		this.description = description;
+		this.predefined = false;
 	}
 
 	public String getInternalName() {

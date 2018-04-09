@@ -20,16 +20,12 @@ package org.streampipes.model.staticproperty;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.*;
 import java.net.URI;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.MAPPING_PROPERTY)
 @MappedSuperclass
@@ -41,6 +37,9 @@ public abstract class MappingProperty extends StaticProperty {
 	@RdfProperty(StreamPipes.MAPS_FROM)
 	protected URI mapsFrom;
 
+	@RdfProperty(StreamPipes.MAPS_FROM_OPTIONS)
+	@OneToMany(fetch = FetchType.EAGER,
+					cascade = {CascadeType.ALL})
 	private List<EventProperty> mapsFromOptions;
 
 	@OneToOne(fetch = FetchType.EAGER,
@@ -62,7 +61,9 @@ public abstract class MappingProperty extends StaticProperty {
 		super(other);
 		this.mapsFrom = other.getMapsFrom();
 		this.propertyScope = other.getPropertyScope();
-        //this.mapsFromOptions = other.getMapsFromOptions();
+		if (other.getMapsFromOptions() != null) {
+			this.mapsFromOptions = new Cloner().properties(other.getMapsFromOptions());
+		}
 	}
 	
 	protected MappingProperty(StaticPropertyType type, URI mapsFrom, String internalName, String label, String description)
