@@ -9,6 +9,8 @@ export class PipelineLogsComponent implements AfterViewInit {
 
     @Input() pipelineID: string;
 
+    pipelineName: string;
+
     logSourceIDs: string[];
     logSourceIDsSelect = [];
     logSourceIDsSelected = 'ALL';
@@ -26,6 +28,7 @@ export class PipelineLogsComponent implements AfterViewInit {
         this.pipelineLogsRestService.getPipelineElement(pipelineID)
             .subscribe( graph => {
                 const actions = graph.actions;
+                this.pipelineName = graph.name;
 
                 actions.forEach( action => {
                     this.logSourceIDsSelect.push({
