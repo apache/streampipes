@@ -4,11 +4,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatGridListModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 import { NewComponent } from './new-adapter/new.component';
 import { MainComponent } from './main/main.component';
-import {AllAdaptersComponent} from './all-adapters/all.component';
+import { AllAdaptersComponent } from './all-adapters/all.component';
 
 import { ProtocolFormComponent } from './protocol-form/protocol-form.component';
 import { FormatFormComponent } from './format-form/format-form.component';
@@ -29,8 +30,8 @@ import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { RestService } from './rest.service';
 
 import { DragulaModule } from 'ng2-dragula';
-import {DataTypesService} from './schema-editor/data-type.service';
-import {AdapterStartedDialog} from './new-adapter/component/adapter-started-dialog.component';
+import { DataTypesService } from './schema-editor/data-type.service';
+import { AdapterStartedDialog } from './new-adapter/component/adapter-started-dialog.component';
 
 @NgModule({
     imports: [
@@ -41,7 +42,8 @@ import {AdapterStartedDialog} from './new-adapter/component/adapter-started-dial
         FlexLayoutModule,
         MatGridListModule,
         CustomMaterialModule,
-        DragulaModule
+        DragulaModule,
+        MatProgressSpinnerModule
     ],
     exports: [
         StaticPropertiesComponent

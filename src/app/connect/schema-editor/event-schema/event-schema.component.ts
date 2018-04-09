@@ -23,13 +23,17 @@ export class EventSchemaComponent implements OnInit {
 
     public schemaGuess: GuessSchema = new GuessSchema();
 
+    public isLoading: boolean = false;
+
     constructor(private restService: RestService,
                 private dragulaService: DragulaService) {
     }
 
 
     public guessSchema(): void {
+        this.isLoading = true;
         this.restService.getGuessSchema(this.adapterDescription).subscribe(x => {
+            this.isLoading = false;
             this.adapterDescription.dataSet.eventSchema  = x.eventSchema;
             this.schemaGuess = x;
         });
