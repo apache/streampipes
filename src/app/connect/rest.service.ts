@@ -69,7 +69,7 @@ export class RestService {
 
         tsonld.toflattenJsonLd(adapter).subscribe(res => {
             console.log(JSON.stringify(res));
-            this.http.post(this.host + 'api/v2/adapter', res).subscribe();
+            this.http.post('/streampipes-backend/api/v2/adapter', res).subscribe();
         });
 
     }
