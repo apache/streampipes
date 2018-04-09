@@ -68,7 +68,7 @@ export class NewComponent implements OnInit {
             // width: '250px',
             // data: { name: this.name, animal: this.animal }
         });
-       
+
         this.restService.addAdapter(this.newAdapterDescription);
 
         dialogRef.afterClosed().subscribe(result => {
