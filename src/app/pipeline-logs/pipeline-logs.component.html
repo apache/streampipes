@@ -7,19 +7,24 @@
 
 <div class="page-container page-container-padding">
 
-    <div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6">
-        <div flex layout-fill layout="row" layout-align="start center"
-             style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <h5>PipelineName</h5>
-        </div>
+
+
+    <div _ngcontent-c10="" class="pageheadbar" fxflex="48px" fxlayout="row" fxlayoutalign="start center" ng-reflect-layout="row" ng-reflect-align="start center" ng-reflect-flex="48px"
+         style="flex: 1 1 48px; box-sizing: border-box; flex-direction: row; display: flex; max-height: 48px; place-content: center flex-start; align-items: center; min-height: 60px;">
+        <h4 style="padding-right: 20px">Pipeline Name</h4>
+
+        <mat-form-field>
+            <mat-select [(value)]="logSourceIDsSelected" (selectionChange)="logSourcelSelection()" placeholder="Processing Element">
+                <mat-option value="ALL">All</mat-option>
+                <mat-option *ngFor="let logSourceID of logSourceIDsSelect" value="{{logSourceID.uri}}">{{logSourceID.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
     </div>
 
-    <mat-form-field>
-        <mat-select [(value)]="logSourceIDsSelected" (selectionChange)="logSourcelSelection()" placeholder="Log level filter">
-            <mat-option value="ALL">All</mat-option>
-            <mat-option *ngFor="let logSourceID of logSourceIDsSelect" value="{{logSourceID.uri}}">{{logSourceID.name}}</mat-option>
-        </mat-select>
-    </mat-form-field>
+
+
+
 
     <div class="container-fluid">
 

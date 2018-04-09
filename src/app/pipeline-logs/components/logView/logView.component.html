@@ -1,7 +1,10 @@
 <div>
 
-    <div class="assemblyOptions sp-blue-bg" fxLayout="row" fxLayoutAlign=" center">
+    <div class="assemblyOptions sp-blue-bg" fxLayout="row" fxLayoutAlign="space-between center">
 
+
+        <div fxLayout="row" fxLayoutAlign=" center">
+            <h4 style="padding-right: 10px;">Date Range: </h4>
             <form>
                 <mat-form-field>
                     <input matInput ngui-datetime-picker placeholder="From" [(ngModel)]="startDate">
@@ -13,6 +16,29 @@
             <button mat-icon-button (click)="loadLogs()" >
                 <mat-icon>loop</mat-icon>
             </button>
+        </div>
+
+
+        <div fxLayout="row" fxLayoutAlign=" center">
+            <h4 style="padding-right: 10px">Log Level: </h4>
+            <mat-form-field>
+                <mat-select [(value)]="selectedLogLevel" (selectionChange)="logLevelSelection()" placeholder="">
+                    <mat-option value="ALL">All</mat-option>
+                    <mat-option *ngFor="let level of logLevels" value="{{level}}">{{level}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+
+        <div fxLayout="row" fxLayoutAlign=" center">
+
+            <mat-form-field>
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+            </mat-form-field>
+
+
+        </div>
+
 
 
 
@@ -22,19 +48,7 @@
     <div class="sp-blue-border" (scroll)="true">
 
 
-        <div fxLayout="row" fxLayoutAlign=" center">
 
-            <mat-form-field>
-                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-            </mat-form-field>
-
-            <mat-form-field>
-                <mat-select [(value)]="selectedLogLevel" (selectionChange)="logLevelSelection()" placeholder="Log level filter">
-                    <mat-option value="ALL">All</mat-option>
-                    <mat-option *ngFor="let level of logLevels" value="{{level}}">{{level}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
 
         <div>
             <mat-table ng-if="dataSourceDisplay" class="logs-table" [dataSource]="dataSourceDisplay">
