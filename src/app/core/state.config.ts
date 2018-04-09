@@ -7,6 +7,7 @@ import { AppContainerComponent } from '../app-container/app-container.component'
 import {NewComponent} from '../connect/new-adapter/new.component';
 import { KviComponent } from '../kvi/kvi.component';
 import {MainComponent} from '../connect/main/main.component';
+import { KviVisualizationComponent } from '../kvi-visualization/kvi-visualization.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
@@ -213,6 +214,14 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             views: {
                 'spMain@streampipes': {
                     component: KviComponent
+                }
+            }
+        })
+        .state('streampipes.kvivisualization', {
+            url: '/kvivisualization',
+            views: {
+                'spMain@streampipes': {
+                    component: KviVisualizationComponent
                 }
             }
         });
