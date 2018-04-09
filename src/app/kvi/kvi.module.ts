@@ -12,6 +12,7 @@ import { SelectDatasetComponent } from './select-dataset/select-dataset.componen
 import { SelectOperatorComponent } from './select-operator/select-operator.component';
 import { KviConfigurationComponent } from './kvi-configuration/kvi-configuration.component';
 import { SpConnectModule } from '../connect/connect.module';
+import { KviCreatedDialog } from './kvi-created/kvi-created.dialog';
 
 @NgModule({
     imports: [
@@ -27,13 +28,15 @@ import { SpConnectModule } from '../connect/connect.module';
         KviComponent,
         SelectDatasetComponent,
         SelectOperatorComponent,
-        KviConfigurationComponent
+        KviConfigurationComponent,
+        KviCreatedDialog
     ],
     providers: [
         KviService
     ],
     entryComponents: [
-        KviComponent
+        KviComponent,
+        KviCreatedDialog
     ]
 })
 export class KviModule {

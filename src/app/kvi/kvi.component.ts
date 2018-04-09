@@ -7,6 +7,8 @@ import { PipelineTemplateDescription } from '../connect/model/PipelineTemplateDe
 import { StaticProperty } from '../connect/model/StaticProperty';
 import { PipelineTemplateInvocation } from '../connect/model/PipelineTemplateInvocation';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material';
+import { KviCreatedDialog } from './kvi-created/kvi-created.dialog';
 
 @Component({
     templateUrl: './kvi.component.html',
@@ -29,7 +31,7 @@ export class KviComponent implements OnInit {
     isValidName: boolean = false;
     nameControl: FormControl = new FormControl();
 
-    constructor(private kviService: KviService) {
+    constructor(private kviService: KviService, public dialog: MatDialog) {
         this.kviService.getDataSets().subscribe(res => {
             this.dataSets = res;
         });
@@ -74,7 +76,8 @@ export class KviComponent implements OnInit {
     }
 
     calculateKvi() {
-        // this.kviService.createPipelineTemplateInvocation(this.invocationGraph).subscribe(res => console.log(res));
+        let dialogRef = this.dialog.open(KviCreatedDialog, {});
+        dialogRef.afterClosed().subscribe(result => {});
         this.kviService.createPipelineTemplateInvocation(this.invocationGraph);
     }
 
