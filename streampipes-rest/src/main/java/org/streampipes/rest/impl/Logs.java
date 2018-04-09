@@ -18,11 +18,6 @@
 package org.streampipes.rest.impl;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.search.ClearScrollRequest;
 import org.elasticsearch.action.search.SearchRequest;
@@ -48,7 +43,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -60,6 +58,8 @@ import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 public class Logs extends AbstractRestInterface implements ILogs {
 
     static Logger LOG = LoggerFactory.getLogger(Logs.class);
+
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS");
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -128,11 +128,20 @@ public class Logs extends AbstractRestInterface implements ILogs {
         Map logMap = hit.getSourceAsMap();
 
         Log log = new Log();
-        log.setTimestamp((String) logMap.get("time"));
         log.setLevel((String) logMap.get("logLevel"));
         log.setsourceID((String) logMap.get("logSourceID"));
         log.setType((String) logMap.get("logType"));
         log.setMessage((String)  logMap.get("logMessage"));
+
+        String tmpTimestamp = (String) logMap.get("time");
+        tmpTimestamp = tmpTimestamp.substring(0,22);
+        try {
+            Date date = formatter.parse(tmpTimestamp);
+            log.setTimestamp(date.toString().replace("CEST", ""));
+        } catch (ParseException e) {
+            LOG.error(e.toString());
+            log.setLevel(tmpTimestamp);
+        }
 
         return log;
     }
