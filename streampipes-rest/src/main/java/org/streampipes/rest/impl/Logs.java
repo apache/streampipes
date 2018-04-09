@@ -48,10 +48,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
@@ -62,7 +60,6 @@ import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 public class Logs extends AbstractRestInterface implements ILogs {
 
     static Logger LOG = LoggerFactory.getLogger(Logs.class);
-
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -83,7 +80,6 @@ public class Logs extends AbstractRestInterface implements ILogs {
         SearchRequest searchRequest = new SearchRequest("logstash-*");
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 
-
         searchSourceBuilder.query(boolQuery()
                 .must(matchPhraseQuery("logSourceID", logRequest.getsourceID()))
                 .must(rangeQuery("time").gte(logRequest.getDateFrom()).lte(logRequest.getDateTo())));
@@ -93,7 +89,6 @@ public class Logs extends AbstractRestInterface implements ILogs {
         searchSourceBuilder.fetchSource(true);
         searchRequest.source(searchSourceBuilder);
         searchRequest.scroll(TimeValue.timeValueMinutes(1L));
-
 
         SearchResponse searchResponse = null;
         try {
@@ -114,8 +109,6 @@ public class Logs extends AbstractRestInterface implements ILogs {
 
             ClearScrollRequest request = new ClearScrollRequest();
             request.addScrollId(scrollId);
-
-
 
             client.close();
 
