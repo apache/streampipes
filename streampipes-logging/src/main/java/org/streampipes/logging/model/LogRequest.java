@@ -2,18 +2,18 @@ package org.streampipes.logging.model;
 
 public class LogRequest {
 
-    String source;
+    String sourceID;
 
     String dateFrom;
 
     String dateTo;
 
-    public String getsource() {
-        return source;
+    public String getsourceID() {
+        return sourceID;
     }
 
-    public void setsource(String source) {
-        this.source = source;
+    public void setSourceID(String source) {
+        this.sourceID = source;
     }
 
     public String getDateFrom() {

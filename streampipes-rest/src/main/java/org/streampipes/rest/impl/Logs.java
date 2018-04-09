@@ -23,6 +23,19 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.apache.http.HttpHost;
+import org.elasticsearch.action.search.ClearScrollRequest;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchScrollRequest;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.config.backend.BackendConfig;
@@ -34,16 +47,19 @@ import org.streampipes.rest.api.ILogs;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.lang.reflect.Type;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchPhraseQuery;
+import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 
 @Path("/v2/logs")
 public class Logs extends AbstractRestInterface implements ILogs {
 
     static Logger LOG = LoggerFactory.getLogger(Logs.class);
-
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -52,64 +68,72 @@ public class Logs extends AbstractRestInterface implements ILogs {
     @Override
     public Response getLogs(LogRequest logRequest) {
         String url = BackendConfig.INSTANCE.getElasticsearchURL() + "/" + "logstash-*" +"/_search";
-        HttpResponse<JsonNode> jsonResponse = null;
+
+        LinkedList logs = new LinkedList();
+
+        RestHighLevelClient client = new RestHighLevelClient(
+                RestClient.builder(
+                        new HttpHost(   BackendConfig.INSTANCE.getElasticsearchHost(),
+                                        BackendConfig.INSTANCE.getElasticsearchPort(),
+                                        BackendConfig.INSTANCE.getElasticsearchProtocol())));
+
+        SearchRequest searchRequest = new SearchRequest("logstash-*");
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+        searchSourceBuilder.query(boolQuery()
+                .must(matchPhraseQuery("logSourceID", logRequest.getsourceID()))
+                .must(rangeQuery("time").gte(logRequest.getDateFrom()).lte(logRequest.getDateTo())));
+
+        searchSourceBuilder.size(100);
+        searchSourceBuilder.sort(new FieldSortBuilder("time").order(SortOrder.DESC));
+        searchSourceBuilder.fetchSource(true);
+        searchRequest.source(searchSourceBuilder);
+        searchRequest.scroll(TimeValue.timeValueMinutes(1L));
+
+        SearchResponse searchResponse = null;
         try {
-            jsonResponse = Unirest.post(url)
-                    .header("accept", "application/json")
-                    .body("GET logstash-*/_search\n" +
-                            "{\n" +
-                            "  \"query\": {\n" +
-                            "    \"bool\": {\n" +
-                            "      \"must\": [\n" +
-                            "        {\"match_phrase\" : \n" +
-                            "    {\"logSourceID\" : \"" + logRequest.getsource()  + "\"}\n" +
-                            "  },\n" +
-                            "        {\n" +
-                            "          \"range\" : {\n" +
-                            "            \"time\": {\"gte\" :" + logRequest.getDateTo() + ",\"lte\" :" + logRequest.getDateFrom() + "}\n" +
-                            "          }\n" +
-                            "        }\n" +
-                            "      ]\n" +
-                            "    }\n" +
-                            "  }\n" +
-                            "}")
-                    .asJson();
-            String respones = jsonResponse.getBody().getObject().toString();
-            List<Log> logs = extractLogs(respones);
+            searchResponse = client.search(searchRequest);
 
-            String json = new Gson().toJson(logs);
+            String scrollId = searchResponse.getScrollId();
+            SearchHits hits = searchResponse.getHits();
+            Arrays.asList(hits.getHits()).forEach(hit -> logs.add(extractLog(hit)));
 
+            while (hits.getHits().length > 0) {
+                SearchScrollRequest scrollRequest = new SearchScrollRequest(scrollId);
+                scrollRequest.scroll(TimeValue.timeValueSeconds(30));
+                SearchResponse searchScrollResponse = client.searchScroll(scrollRequest);
+                scrollId = searchScrollResponse.getScrollId();
+                hits = searchScrollResponse.getHits();
+                Arrays.asList(hits.getHits()).forEach(hit -> logs.add(extractLog(hit)));
+            }
 
-            LOG.info("Returned logs for logsource:" + logRequest.getsource());
+            ClearScrollRequest request = new ClearScrollRequest();
+            request.addScrollId(scrollId);
 
-            return Response.ok(json).build();
-        } catch (UnirestException e) {
+            client.close();
+
+        } catch (IOException e) {
             LOG.error(e.toString());
             return Response.serverError().build();
         }
+
+        String response = new Gson().toJson(logs);
+
+        return Response.ok(logs).build();
     }
 
 
-    private List<Log> extractLogs(String response) {
-        List logs = new LinkedList();
+    private Log extractLog(SearchHit hit) {
 
-        Gson gson =  new Gson();
-        Type stringStringMap = new TypeToken<Map<String, Object>>(){}.getType();
-        Map<String,Object> responsMap  = gson.fromJson(response, stringStringMap);
+        Map logMap = hit.getSourceAsMap();
 
-        List<Map> logIndexes = (List) ((Map) responsMap.get("hits")).get("hits");
+        Log log = new Log();
+        log.setTimestamp((String) logMap.get("time"));
+        log.setLevel((String) logMap.get("logLevel"));
+        log.setsourceID((String) logMap.get("logSourceID"));
+        log.setType((String) logMap.get("logType"));
+        log.setMessage((String)  logMap.get("logMessage"));
 
-        logIndexes.forEach(logIndex -> {
-            Map sourcs = (Map) logIndex.get("_source");
-            Log log = new Log();
-            log.setTimestamp((String) sourcs.get("time"));
-            log.setLevel((String) sourcs.get("logLevel"));
-            log.setsourceID((String) sourcs.get("logSourceID"));
-            log.setType((String) sourcs.get("logType"));
-            log.setMessage((String)  sourcs.get("logMessage"));
-
-            ((LinkedList) logs).push(log);
-        });
-        return logs;
+        return log;
     }
 }
