@@ -28,6 +28,7 @@ export class PipelineLogsComponent implements AfterViewInit {
         this.pipelineLogsRestService.getPipelineElement(pipelineID)
             .subscribe( graph => {
                 const actions = (<Graph> graph).actions;
+                const sepas = (<Graph> graph).sepas;
                 this.pipelineName = (<Graph> graph).name;
 
                 actions.forEach( action => {
@@ -36,6 +37,13 @@ export class PipelineLogsComponent implements AfterViewInit {
                         uri: action.uri,
                     });
                 });
+                sepas.forEach( sepa => {
+                    this.logSourceIDsSelect.push({
+                        name: sepa.name + ' - ' + sepa.uri,
+                        uri: sepa.uri,
+                    });
+                });
+
                 this.logSourcelSelection();
 
             }, error => {
@@ -58,4 +66,5 @@ export class PipelineLogsComponent implements AfterViewInit {
 interface Graph {
     actions;
     name;
+    sepas;
 }
