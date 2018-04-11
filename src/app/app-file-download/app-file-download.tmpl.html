@@ -14,21 +14,41 @@
                         <h4>Export File</h4>
                     </div>
                     <div class="sp-blue-border">
-                        <div layout="row">
+                        <div layout="column" layout-padding>
                             <md-input-container>
                                 <label>Index</label>
-                                <input ng-model="newFile.index">
+                                <md-select ng-model="newFile.index">
+                                    <md-option ng-repeat="availableIndex in ctrl.availableIndices"
+                                               ng-value="availableIndex.indexName">
+                                        <div><b>{{availableIndex.indexName}} ({{availableIndex.documentCount}} entries)</b><br/>
+                                        </div>
+                                    </md-option>
+                                </md-select>
                             </md-input-container>
-                            <md-input-container>
-                                <label>Start date</label>
-                                <input datetime-picker ng-model="newFile.timestampFrom" />
-                            </md-input-container>
-                            <md-input-container>
-                                <label>End date</label>
-                                <input datetime-picker ng-model="newFile.timestampTo" />
-                            </md-input-container>
+                            <div layout="row">
+                                <md-input-container>
+                                    <label>Start date</label>
+                                    <input datetime-picker ng-model="newFile.timestampFrom"/>
+                                </md-input-container>
+                                <md-input-container>
+                                    <label>End date</label>
+                                    <input datetime-picker ng-model="newFile.timestampTo"/>
+                                </md-input-container>
+                            </div>
+                            <div layout="row">
+                                <md-radio-group layout="row" class="md-accent" ng-model="newFile.output">
+                                    <md-radio-button value="json">
+                                        <b>JSON</b>
+                                    </md-radio-button>
+                                    <md-radio-button value="csv">
+                                        <b>CSV</b>
+                                    </md-radio-button>
+                                </md-radio-group>
+                            </div>
                             <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-                                <md-button ng-click="ctrl.createNewFile(newFile)" class="md-raised md-primary">Create File</md-button>
+                                <md-button ng-click="ctrl.createNewFile(newFile)" class="md-raised md-primary">Create
+                                    File
+                                </md-button>
                             </section>
                         </div>
 
@@ -42,7 +62,7 @@
                     <div class="sp-blue-border">
                         <div layout="column"
                              ng-repeat="file in ctrl.allFiles">
-                            <file-details></file-details>
+                            <file-details file="file" get-files="ctrl.getFiles"></file-details>
                         </div>
                         <div layout="row" layout-align="center center" ng-if="ctrl.allFiles.length == 0">
                             <h5>(no files available)</h5>
