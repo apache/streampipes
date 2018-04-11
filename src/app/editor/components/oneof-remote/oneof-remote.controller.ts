@@ -14,6 +14,11 @@ export class OneOfRemoteController {
         this.$rootScope = $rootScope;
         this.loadSavedProperty();
 
+
+        if (this.staticProperty.properties.linkedMappingPropertyId == undefined && this.staticProperty.properties.options.length == 0) {
+            this.loadOptionsFromRestApi();
+        }
+
         this.$rootScope.$on(this.staticProperty.properties.linkedMappingPropertyId, () => {
             angular.forEach(this.staticProperties, sp => {
                 if (sp.properties.internalName === this.staticProperty.properties.linkedMappingPropertyId) {
