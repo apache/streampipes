@@ -18,8 +18,8 @@ export class MappingPropertyUnary extends StaticProperty {
     @RdfProperty('sp:internalName')
     public internalName: string;
 
-    @RdfProperty('sp:mapsFrom')
-    public mapsFromOptions: Array<URI>;
+    // @RdfProperty('sp:mapsFrom')
+    // public mapsFromOptions: Array<URI>;
 
     @RdfProperty('sp:mapsTo')
     public mapsTo: URI;

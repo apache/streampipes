@@ -76,7 +76,21 @@ export class KviService {
         return this.http
             .get(this.getServerUrl() + '/api/v2/users/zehnder@fzi.de/pipeline-templates/sets')
             .map(response => {
+
+
+
+                // TODO remove this
+                // quick fix to deserialize URIs
+                response['@graph'].forEach(function (object) {
+                   if (object['sp:domainProperty'] != undefined) {
+                       // object['sp:domainProperty']['@type'] = "sp:URI";
+                       object['sp:domainProperty'] = object['sp:domainProperty']['@id'];
+                       delete object['sp:domainProperty']['@id'];
+                   }
+                });
+
                 const tsonld = this.getTsonLd();
+
                 const res = tsonld.fromJsonLdType(response, 'sp:DataStreamContainer');
                 return res.list;
             });
@@ -96,6 +110,8 @@ export class KviService {
         return this.http
             .get(this.getServerUrl() + '/api/v2/users/zehnder@fzi.de/pipeline-templates/invocations?streamId=' + dataSet.id + '&templateId=' + operator.internalName)
             .map(response => {
+
+
                 const tsonld = this.getTsonLd();
                 const res: PipelineTemplateInvocation = tsonld.fromJsonLdType(response, 'sp:PipelineTemplateInvocation');
 
