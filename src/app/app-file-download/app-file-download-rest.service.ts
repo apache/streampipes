@@ -15,6 +15,10 @@ export class AppFileDownloadRestApi {
         return this.apiConstants.contextPath + "/api/apps/v1/elasticsearch";
     }
 
+    getIndices() {
+        return this.$http.get(this.getServerUrl() + "/indices");
+    }
+
     getAll() {
         return this.$http.get(this.getServerUrl() +'/files');
     }
@@ -30,12 +34,13 @@ export class AppFileDownloadRestApi {
         })
     }
     
-    createFile(index, timestampFrom, timestampTo) {
+    createFile(index, timestampFrom, timestampTo, output) {
 
         var postObject = {};
         postObject['index'] = index;
         postObject['timestampFrom'] = timestampFrom;
         postObject['timestampTo'] = timestampTo;
+        postObject['output'] = output;
 
         return this.$http({
             method: 'POST',

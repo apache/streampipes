@@ -3,32 +3,40 @@ export class AppFileDownloadCtrl {
     appFileDownloadRestApiService: any;
     newFile: any;
     allFiles: any;
+    availableIndices: any;
+    $rootScope: any;
 
-    constructor(AppFileDownloadRestApi) {
+    constructor($rootScope, AppFileDownloadRestApi) {
+        this.$rootScope = $rootScope;
         this.appFileDownloadRestApiService = AppFileDownloadRestApi;
         this.newFile = {};
         this.allFiles = [];
+        this.availableIndices = [];
         this.getFiles();
-    }
+        this.getAvailableIndices();
 
-
-    deleteFile(fileName) {
-        this.appFileDownloadRestApiService.removeFile(fileName).success(function () {
-            this.getFiles();
+        $rootScope.$on("UpdateFiles", (event, item) => {
+           this.getFiles();
         });
     }
 
-    downloadFile(fileName) {
-        this.appFileDownloadRestApiService.getFile(fileName);
+    getAvailableIndices() {
+        this.appFileDownloadRestApiService.getIndices()
+            .success(indices => {
+                this.availableIndices = indices;
+                console.log(indices);
+            })
+            .error(msg => {
+                console.log(msg);
+            });
     }
 
     getFiles() {
-        const self = this;
         this.appFileDownloadRestApiService.getAll()
-            .success(function (allFiles) {
-                self.allFiles = allFiles;
+            .success(allFiles => {
+                this.allFiles = allFiles;
             })
-            .error(function (msg) {
+            .error(msg => {
                 console.log(msg);
             });
 
@@ -37,10 +45,11 @@ export class AppFileDownloadCtrl {
     createNewFile(file) {
         var start = new Date(file.timestampFrom).getTime();
         var end = new Date(file.timestampTo).getTime();
-        this.appFileDownloadRestApiService.createFile(file.index, start, end).success((err, res) => {
+        var output = file.output;
+        this.appFileDownloadRestApiService.createFile(file.index, start, end, output).success((err, res) => {
             this.getFiles();
         });
     };
 }
 
-AppFileDownloadCtrl.$inject = ['AppFileDownloadRestApi'];
+AppFileDownloadCtrl.$inject = ['$rootScope', 'AppFileDownloadRestApi'];
