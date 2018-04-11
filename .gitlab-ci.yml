@@ -1,5 +1,7 @@
 variables:
   REGISTRY_HOST: ipe-wim-gitlab.fzi.de:5000
+  HARBOR_REGISTRY_HOST: laus.fzi.de:8201
+  HARBOR_IMAGE_NAME: $HARBOR_REGISTRY_HOST/$CI_PROJECT_PATH/$CI_COMMIT_REF_NAME
   IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH/$CI_COMMIT_REF_NAME
 
 stages:
@@ -39,8 +41,10 @@ nginx:
     - unzip javadoc.zip
     - mkdir javadoc && mv target/site/apidocs/* ./javadoc
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-    - docker build --no-cache --pull -t $IMAGE_NAME .
+    - docker login -u riemer -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST
+    - docker build --no-cache --pull -t $HARBOR_IMAGE_NAME -t $IMAGE_NAME .
     - docker push $IMAGE_NAME
+    - docker push $HARBOR_IMAGE_NAME
 
 nginx-docker-hub:
   image: docker:17.06.0-ce
