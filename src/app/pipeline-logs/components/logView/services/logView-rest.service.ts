@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
-import {Log} from '../model/log.model';
-import {map} from 'rxjs/operators';
-import {LogRequest} from '../model/logRequest.model';
+import { Observable } from 'rxjs/Observable';
+import { Log } from '../model/log.model';
+import { map } from 'rxjs/operators';
+import { LogRequest } from '../model/logRequest.model';
 
 @Injectable()
 export class LogViewRestService {

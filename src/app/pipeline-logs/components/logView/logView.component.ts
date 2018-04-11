@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { Log } from './model/log.model';
 import { LogViewRestService } from './services/logView-rest.service';
@@ -69,14 +69,7 @@ export class LogViewComponent implements AfterViewInit, OnChanges {
                 }, error => {
                     console.log(error);
                 });
-
-
         }
-
-
-
-
-
     }
 
     applyFilter(filterValue: string) {
