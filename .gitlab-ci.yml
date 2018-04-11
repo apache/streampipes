@@ -43,9 +43,11 @@ docker-backend:
    script: 
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
+     - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION -t $HARBOR_IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
      - docker push $IMAGE_NAME/backend:$MVN_VERSION
      - docker push $IMAGE_NAME/backend:latest
+     - docker push $HARBOR_IMAGE_NAME/backend:$MVN_VERSION
+     - docker push $HARBOR_IMAGE_NAME/backend:latest
    only:
      - dev
 
