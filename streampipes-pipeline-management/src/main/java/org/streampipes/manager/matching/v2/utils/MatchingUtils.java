@@ -20,7 +20,7 @@ package org.streampipes.manager.matching.v2.utils;
 public class MatchingUtils {
 
 	public static boolean nullCheck(Object offer, Object requirement) {
-		return (offer == null) || (requirement == null);
+		return ((offer == null) && (requirement == null)) || (requirement == null);
 	}
 	
 	public static boolean nullCheckRightNullDisallowed(Object offer, Object requirement) {
