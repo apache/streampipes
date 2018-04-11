@@ -47,8 +47,8 @@ public class JsonFormat extends Format {
         FreeTextStaticProperty keyProperty = new FreeTextStaticProperty("key",
                 "key", "Key of the json part that should be parsed");
 
-        //TODO remove just for testing
-        keyProperty.setValue("elements");
+//        TODO remove just for testing
+//        keyProperty.setValue("elements");
         fd.addConfig(keyProperty);
 
         return fd;

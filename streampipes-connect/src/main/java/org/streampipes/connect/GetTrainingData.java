@@ -23,12 +23,12 @@ import java.util.Map;
  */
 public class GetTrainingData {
     public static void main(String... args) {
-//        new GetTrainingData().getTrainingData();
+        new GetTrainingData().getTrainingData();
 
-        Double[] x = {34292.0, 34292.0, 34292.0, 84155.0, 34466.0, 83352.0, 84503.0, 63916.0, 9456.0, 9456.0, 9456.0, 8359.0, 84371.0, 63743.0, 8280.0, 8280.0, 34454.0, 84364.0, 94081.0, 57334.0};
+//        Double[] x = {34292.0, 34292.0, 34292.0, 84155.0, 34466.0, 83352.0, 84503.0, 63916.0, 9456.0, 9456.0, 9456.0, 8359.0, 84371.0, 63743.0, 8280.0, 8280.0, 34454.0, 84364.0, 94081.0, 57334.0};
 //        String[] x = {"a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a"};
 
-        new GetTrainingData().getDomainPropertyProbability(x);
+//        new GetTrainingData().getDomainPropertyProbability(x);
 
     }
 
@@ -86,7 +86,7 @@ public class GetTrainingData {
 
     private static DomainPropertyProbability parseDomainPropertyProbability(String s) {
         DomainPropertyProbability result = new DomainPropertyProbability();
-        String property = s.substring(s.indexOf("\""), s.lastIndexOf("\""));
+        String property = s.substring(s.indexOf("\"") + 1, s.lastIndexOf("\""));
         String numberString = s.substring(s.indexOf(",") + 1, s.indexOf("]"));
 //        double number = Double.parseDouble(numberString);
 
@@ -99,7 +99,7 @@ public class GetTrainingData {
                 ProtocolDescription httpDescription = new HttpProtocol().declareModel();
 
 
-        JsonParser parser = new JsonParser(true, "elements");
+        JsonParser parser = new JsonParser(true, "records");
         JsonFormat format = new JsonFormat();
 
 
@@ -107,8 +107,13 @@ public class GetTrainingData {
 
         List<Map<String, Object>> result =  httpProtocol.getNElements(100);
 
-        String[] tagsLabels = {"addr:city", "addr:country", "addr:housenumber", "addr:postcode", "addr:street", "amenity", "dispensing",
-                "email", "fax", "name", "opening_hours", "operator", "phone", "website", "wheelchair"};
+//        String[] tagsLabels = {"addr:city", "addr:country", "addr:housenumber", "addr:postcode", "addr:street", "amenity", "dispensing",
+//                "email", "fax", "name", "opening_hours", "operator", "phone", "website", "wheelchair"};
+
+           String[] tagsLabels = {"name", "strae", "hausnummer", "plz", "stadteil", "bezirk", "nvr", "trger", "kurzbeschreibung", "erweit__informationen",
+                   "ffnungszeiten", "urls", "gf1", "gf2", "gf3", "feeds_flatstore_entry_id", "timestamp", "feeds_entity_id"};
+
+
         String resultString = "";
 
 
@@ -116,12 +121,13 @@ public class GetTrainingData {
             for (int j = 0; j < result.size(); j = j + 20) {
                 String subString = "[";
                 for (int i = 0; i < 20; i++) {
-                    Map<String, Object> tags = (Map<String, Object>) result.get(i + j).get("tags");
-                    String s = (String) tags.get(label);
+//                    Map<String, Object> tags = (Map<String, Object>) result.get(i + j).get("tags");
+//                    String s = (String) tags.get(label);
 //                    subString = subString + "\"" + s + "\", ";
-                    subString = subString + "" + s + ", ";
+//                    subString = subString + "" + s + ", ";
 
-//                subString = subString + "" + result.get(i).get("lon") + ", ";
+                subString = subString + "" + "\"" + result.get(i + j).get(label) + "\", ";
+//                subString = subString + "" + result.get(i + j).get(label) + ", ";
                 }
 
                 subString = subString.substring(0, subString.length() - 2);

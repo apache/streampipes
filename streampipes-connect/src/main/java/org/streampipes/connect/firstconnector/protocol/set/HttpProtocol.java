@@ -48,7 +48,7 @@ public class HttpProtocol extends Protocol {
                 "This property defines the URL for the http request.");
 
         //TODO remove just for testing
-        urlProperty.setValue("http://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A90%5D%3Barea%5Bname%3D%22Bonn%22%5D%5Badmin_level%5D-%3E.a%3B%28node%28area.a%29%5B%22amenity%22%3D%22pharmacy%22%5D%3B%29%3B%28._%3B%3E%3B%29%3Bout%3B");
+//        urlProperty.setValue("https://opendata.bonn.de/api/action/datastore/search.json?resource_id=0a41c514-f760-4a17-b0a8-e1b755204fee&limit=100");
 
         pd.addConfig(urlProperty);
         return pd;
