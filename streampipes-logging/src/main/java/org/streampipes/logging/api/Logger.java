@@ -17,7 +17,9 @@
 
 package org.streampipes.logging.api;
 
-public interface Logger {
+import java.io.Serializable;
+
+public interface Logger extends Serializable {
 
     void info(String s);
 
