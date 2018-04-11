@@ -42,8 +42,7 @@ public class ProcessingElementBuilder extends AbstractProcessingElementBuilder<P
      * @param label A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
      * @param description A human-readable description of the element.
      */
-    public static ProcessingElementBuilder create(String id, String label, String description)
-    {
+    public static ProcessingElementBuilder create(String id, String label, String description) {
         return new ProcessingElementBuilder(id, label, description);
     }
 

@@ -32,8 +32,11 @@ public class StreamPipes {
   public static final String DATA_SINK_INVOCATION = NS + "DataSinkInvocation";
   public static final String DATA_SOURCE_DESCRIPTION = NS + "DataSourceDescription";
   public static final String ADAPTER_DESCRIPTION = NS + "AdapterDescription";
+  public static final String ADAPTER_DESCRIPTION_LIST = NS + "AdapterDescriptionList";
   public static final String FORMAT_DESCRIPTION_LIST = NS + "FromatDescriptionList";
   public static final String PROTOCOL_DESCRIPTION_LIST = NS + "ProtocolDescriptionList";
+  public static final String DOMAIN_PROPERTY_PROBABILITY_LIST = NS + "DomainPropertyProbabilityList";
+  public static final String GUESS_SCHEMA = NS + "GuessSchema";
 
   public static final String VALUE_SPECIFICATION = NS + "ValueSpecification";
 
@@ -242,4 +245,15 @@ public class StreamPipes {
   public static final String HAS_MAPPED_RUNTIME_NAME = NS + "hasMappedRuntimeName";
 
   public static final String HAS_LINKED_MAPPING_PROPERTY_ID = NS + "hasLinkedMappingPropertyId";
+  public static final String BOUND_PIPELINE_ELEMENT = NS + "BoundPipelineElement";
+  public static final String HAS_PIPELINE_ELEMENT_TEMPLATE = NS + "hasPipelineElementTemplate" ;
+  public static final String IS_CONNECTED_TO = NS + "isConnectedTo";
+  public static final String PIPELINE_TEMPLATE_DESCRIPTION = NS + "PipelineTemplateDescription";
+  public static final String PIPELINE_TEMPLATE_INVOCATION = NS + "PipelineTemplateInvocation";
+  public static final String HAS_DATASET_ID = NS + "hasDataSetId";
+  public static final String IS_PREDEFINED = NS + "isPredefined" ;
+  public static final String HAS_PIPELINE_TEMPLATE_DESCRIPTION = NS + "hasPipelineTemplateDescription" ;
+  public static final String DATA_STREAM_CONTAINER = NS + "DataStreamContainer";
+  public static final String PIPELINE_TEMPLATE_DESCRIPTION_CONTAINER = NS + "PipelineTemplateDescriptionContainer" ;
+  public static final String MAPS_FROM_OPTIONS = NS + "hasMapsFromOptions";
 }
