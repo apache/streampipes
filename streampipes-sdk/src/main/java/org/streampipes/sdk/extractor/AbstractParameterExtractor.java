@@ -24,14 +24,7 @@ import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
 import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventPropertyPrimitive;
-import org.streampipes.model.staticproperty.CollectionStaticProperty;
-import org.streampipes.model.staticproperty.DomainStaticProperty;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.staticproperty.MappingPropertyNary;
-import org.streampipes.model.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.staticproperty.Option;
-import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.*;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -79,14 +72,23 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .getValue(), targetClass);
   }
 
-  public <V> V selectedSingleValue(String internalName, Class<V> targetClass) {
-      return typeParser.parse(getStaticPropertyByName(internalName, OneOfStaticProperty.class)
+  private <V, T extends SelectionStaticProperty> V selectedSingleValue(String internalName, Class<V> targetClass, Class<T > oneOfStaticProperty) {
+    return typeParser.parse(getStaticPropertyByName(internalName, oneOfStaticProperty)
               .getOptions()
               .stream()
               .filter(Option::isSelected)
               .findFirst()
               .get()
               .getName(), targetClass);
+  }
+
+
+  public <V> V selectedSingleValueFromRemote(String internalName, Class<V> targetClass) {
+      return selectedSingleValue(internalName, targetClass, RuntimeResolvableOneOfStaticProperty.class);
+  }
+
+  public <V> V selectedSingleValue(String internalName, Class<V> targetClass) {
+    return selectedSingleValue(internalName, targetClass, OneOfStaticProperty.class);
   }
 
   public <V> V selectedSingleValueInternalName(String internalName, Class<V> targetClass) {
