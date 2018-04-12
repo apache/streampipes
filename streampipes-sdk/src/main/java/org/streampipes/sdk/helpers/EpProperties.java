@@ -137,6 +137,29 @@ public class EpProperties {
 	}
 
 	/**
+	 * Creates a new list-based event property of the parameter type eventProperty
+	 * @param label A human-readable label of the property
+	 * @param runtimeName The field identifier of the event property at runtime.
+	 * @param eventProperty The complex type of data in the list
+	 * @return {@link org.streampipes.model.schema.EventPropertyList}
+	 */
+	public static EventPropertyList listEp(Label label, String runtimeName, EventProperty eventProperty) {
+		return getPreparedProperty(label, new EventPropertyList(runtimeName, eventProperty));
+	}
+
+	/**
+	 * Creates a new list-based event property of the parameter type eventProperty
+	 * @param label A human-readable label of the property
+	 * @param runtimeName The field identifier of the event property at runtime.
+	 * @param eventProperty The complex type of data in the list
+	 * @return {@link org.streampipes.model.schema.EventPropertyList}
+	 */
+	public static EventPropertyList listEp(Label label, String runtimeName, EventProperty eventProperty, String domainProperty) {
+		return getPreparedProperty(label, new EventPropertyList(runtimeName, eventProperty, Utils.createURI
+					(domainProperty)));
+	}
+
+	/**
 	 * Creates a new primitive property of type boolean and the provided domain property.
 	 * @param runtimeName The field identifier of the event property at runtime.
 	 * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI

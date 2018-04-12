@@ -18,6 +18,7 @@
 package org.streampipes.sdk.helpers;
 
 import org.streampipes.commons.Utils;
+import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.vocabulary.SO;
@@ -25,6 +26,10 @@ import org.streampipes.vocabulary.XSD;
 import org.streampipes.sdk.utils.Datatypes;
 
 public class EpRequirements {
+
+	public static EventPropertyList listRequirement() {
+		return new EventPropertyList();
+	}
 
 	public static EventPropertyList listRequirement(Datatypes datatype) {
 		return new EventPropertyList("", datatypeReq(datatype));
@@ -92,12 +97,29 @@ public class EpRequirements {
 	public static EventPropertyPrimitive numberReq(String domainProperty) {
 		return appendDomainProperty(datatypeReq(SO.Number), domainProperty);
 	}
-	
-	public static EventPropertyPrimitive domainPropertyReq(String domainProperty)
+
+	private static <T extends EventProperty> EventProperty domainPropertyReq(String domainProperty, Class<T> eventProperty)
 	{
-		EventPropertyPrimitive ep = new EventPropertyPrimitive();
+		EventProperty ep = null;
+		try {
+			ep = eventProperty.newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 		ep.setDomainProperties(Utils.createURI(domainProperty));
 		return ep;
+	}
+
+	public static EventPropertyPrimitive domainPropertyReq(String domainProperty)
+	{
+	    return (EventPropertyPrimitive) domainPropertyReq(domainProperty, EventPropertyPrimitive.class);
+	}
+
+	public static EventPropertyList domainPropertyReqList(String domainProperty)
+	{
+		return (EventPropertyList) domainPropertyReq(domainProperty, EventPropertyList.class);
 	}
 
 	private static EventPropertyPrimitive appendDomainProperty(EventPropertyPrimitive property, String domainProperty) {
