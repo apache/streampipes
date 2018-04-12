@@ -1,20 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { Format } from '../format-form/format';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {RdfmapperService} from '../rdfmapper/rdfmapper.service';
 import {RestService} from '../rest.service';
 import {ProtocolDescription} from '../model/ProtocolDescription';
 import {FormatDescription} from '../model/FormatDescription';
 import {AdapterDescription} from '../model/AdapterDescription';
 import {DataSetDescription} from '../model/DataSetDescription';
-import {Data} from '@angular/router';
 import {EventSchema} from '../schema-editor/model/EventSchema';
-// import {AdapterDescription} from '../model/AdapterDescription';
-
-// import { TsonLd } from '../tsonld';
+import {AdapterDataSource} from '../all-adapters/adapter-data-source.service';
+import {MatDialog} from '@angular/material';
+import {AdapterStartedDialog} from './component/adapter-started-dialog.component';
 
 @Component({
-    selector: 'app-new',
+    selector: 'sp-new-adapter',
     templateUrl: './new.component.html',
     styleUrls: ['./new.component.css']
 })
@@ -32,7 +29,7 @@ export class NewComponent implements OnInit {
     // selectedFormat: FormatDescription = new FormatDescription('');
 
     public newAdapterDescription: AdapterDescription;
-    constructor(private restService: RestService, private _formBuilder: FormBuilder) { }
+    constructor(private restService: RestService, private _formBuilder: FormBuilder, public dialog: MatDialog) { }
 
     ngOnInit() {
 
@@ -67,10 +64,17 @@ export class NewComponent implements OnInit {
     }
 
     public startAdapter() {
-        console.log(this.newAdapterDescription);
+       let dialogRef = this.dialog.open(AdapterStartedDialog, {
+            // width: '250px',
+            // data: { name: this.name, animal: this.animal }
+        });
 
         this.restService.addAdapter(this.newAdapterDescription);
-        console.log('bbb');
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+            // this.animal = result;
+        });
     }
 
 }

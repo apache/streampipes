@@ -1,0 +1,9 @@
+<p>Select the Data-Set for which the KVI should be created</p>
+<mat-form-field>
+    <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
+</mat-form-field>
+<mat-autocomplete #auto="matAutocomplete" [displayWith]="getDataSetLabel">
+    <mat-option *ngFor="let dataSet of filteredDataSets | async" [value]="dataSet">
+        {{ dataSet.label }}
+    </mat-option>
+</mat-autocomplete>

@@ -47,7 +47,7 @@ export class EventPropertyComponent implements OnInit {
     this.property.label = this.propertyForm.value.label;
     this.property.description = this.propertyForm.value.description;
     this.property.runTimeName = this.propertyForm.value.runtimeName;
-    this.property.domainProperty = encodeURIComponent(this.propertyForm.value.domainProperty);
+    //this.property.domainProperty = encodeURIComponent(this.propertyForm.value.domainProperty);
 
     const path: string = dragDropService.buildPath(this.property);
     writeJsonService.add(path, this.propertyForm.value.runtimeName);

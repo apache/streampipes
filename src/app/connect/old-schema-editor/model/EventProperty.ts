@@ -1,6 +1,7 @@
 import {RdfId} from '../../tsonld/RdfId';
 import {RdfProperty} from '../../tsonld/RdfsProperty';
 import {RdfsClass} from '../../tsonld/RdfsClass';
+import {URI} from '../../model/URI';
 
 
 @RdfsClass('sp:EventProperty')

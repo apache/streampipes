@@ -7,6 +7,7 @@ import {EventPropertyList} from '../model/EventPropertyList';
 // import {DragDropService} from '../drag-drop.service';
 // import {WriteJsonService} from '../write-json.service';
 import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
+import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
 
 @Component({
   selector: 'app-event-property-nested',
@@ -25,6 +26,10 @@ export class EventPropertyNestedComponent implements OnInit, DoCheck {
 
   @Input() eventPropertyNested: EventPropertyNested;
   @Input() index: number;
+
+
+  @Input() domainPropertyGuesses: DomainPropertyProbabilityList[];
+  @Input() domainPropertyGuess: DomainPropertyProbabilityList;
 
   @Output()delete: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
 

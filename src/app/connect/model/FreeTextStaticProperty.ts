@@ -24,9 +24,13 @@ export class FreeTextStaticProperty extends StaticProperty {
   @RdfProperty('sp:internalName')
   public internalName: string;
 
+  //TODO find better solution
+  public render: boolean;
+
   constructor(id: string) {
     super();
     this.id = id;
+    this.render = true;
   }
 
 }

@@ -6,6 +6,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataTypesService} from '../data-type.service';
+import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
 
 // import {DataTypesService} from '../data-type.service';
 
@@ -18,6 +19,8 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
   @Input() property: EventPropertyPrimitive;
   @Input() index: number;
+
+  @Input() domainPropertyGuess: DomainPropertyProbabilityList;
 
 
   private propertyPrimitivForm: FormGroup;

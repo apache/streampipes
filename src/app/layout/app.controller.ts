@@ -1,6 +1,7 @@
 import * as angular from 'angular';
-import {noUndefined} from "@angular/compiler/src/util";
+import { noUndefined } from '@angular/compiler/src/util';
 import 'legacy/stomp';
+
 declare const Stomp: any;
 
 export class AppCtrl {
@@ -30,74 +31,84 @@ export class AppCtrl {
         this.$location = $location;
 
         this.unreadNotifications = [];
-        this.title = "StreamPipes";
+        this.title = 'StreamPipes';
 
         this.notificationCount = 0;
 
         this.AuthStatusService.userInfo = {
-            Name: "D",
+            Name: 'D',
             Avatar: null
         };
 
         this.menu = [
-                {
-                    link: 'streampipes',
-                    title: 'Home',
-                    icon: 'action:ic_home_24px'
-                },
-                {
-                    link: 'streampipes.editor',
-                    title: 'Pipeline Editor',
-                    icon: 'action:ic_dashboard_24px'
-                },
-                {
-                    link: 'streampipes.connect',
-                    title: 'StreamPipes Connect',
-                    icon: 'notification:ic_power_24px'
-                },
-                {
-                    link: 'streampipes.pipelines',
-                    title: 'Pipelines',
-                    icon: 'av:ic_play_arrow_24px'
-                },
-                {
-                    link: 'streampipes.dashboard',
-                    title: 'Live Dashboard',
-                    icon: 'editor:ic_insert_chart_24px'
-                },
-                {
-                    link: 'streampipes.appfiledownload',
-                    title: 'File Download',
-                    icon: 'file:ic_file_download_24px'
-                },
-                {
-                    link: 'streampipes.ontology',
-                    title: 'Knowledge Management',
-                    icon: 'social:ic_share_24px'
-                },
-                {
-                    link: 'streampipes.sensors',
-                    title: 'Pipeline Element Generator',
-                    icon: 'content:ic_add_24px'
-                },
-            ];
-            this.admin = [
-                {
-                    link: 'streampipes.add',
-                    title: 'Install Pipeline Elements',
-                    icon: 'file:ic_cloud_download_24px'
-                },
-                {
-                    link: 'streampipes.myelements',
-                    title: 'My Elements',
-                    icon: 'image:ic_portrait_24px'
-                },
-                {
-                    link: 'streampipes.configuration',
-                    title: 'Configuration',
-                    icon: 'action:ic_settings_24px'
-                },
-            ];
+            {
+                link: 'streampipes',
+                title: 'Home',
+                icon: 'action:ic_home_24px'
+            },
+            {
+                link: 'streampipes.editor',
+                title: 'Pipeline Editor',
+                icon: 'action:ic_dashboard_24px'
+            },
+            {
+                link: 'streampipes.connect',
+                title: 'StreamPipes Connect',
+                icon: 'notification:ic_power_24px'
+            },
+            {
+                link: 'streampipes.pipelines',
+                title: 'Pipelines',
+                icon: 'av:ic_play_arrow_24px'
+            },
+            {
+                link: 'streampipes.dashboard',
+                title: 'Live Dashboard',
+                icon: 'editor:ic_insert_chart_24px'
+            },
+            {
+                link: 'streampipes.appfiledownload',
+                title: 'File Download',
+                icon: 'file:ic_file_download_24px'
+            },
+            {
+                link: 'streampipes.ontology',
+                title: 'Knowledge Management',
+                icon: 'social:ic_share_24px'
+            },
+            {
+                link: 'streampipes.sensors',
+                title: 'Pipeline Element Generator',
+                icon: 'content:ic_add_24px'
+            },
+            {
+                link: 'streampipes.kvi',
+                title: 'KVI Editor',
+                icon: 'action:ic_trending_up_24px'
+            },
+            {
+                link: 'streampipes.kvivisualization',
+                title: 'KVI Visualization',
+                icon: 'editor:ic_format_list_numbered_24px'
+            },
+        ];
+        this.admin = [
+            {
+                link: 'streampipes.add',
+                title: 'Install Pipeline Elements',
+                icon: 'file:ic_cloud_download_24px'
+            },
+            {
+                link: 'streampipes.myelements',
+                title: 'My Elements',
+                icon: 'image:ic_portrait_24px'
+            },
+            {
+                link: 'streampipes.configuration',
+                title: 'Configuration',
+                icon: 'action:ic_settings_24px'
+            },
+        ];
 
         this.toggleLeft = this.buildToggler('left');
         this.activePage = this.getPageTitle(this.$state.current.name);
@@ -107,97 +118,97 @@ export class AppCtrl {
     }
 
 
-   authenticated() {
-           return this.AuthStatusService.authenticated;
-       }
+    authenticated() {
+        return this.AuthStatusService.authenticated;
+    }
 
-   updateUnreadNotifications(){
-       this.RestApi.getNotifications()
-           .success(notifications => {
-               var notificationCount = 0;
-               angular.forEach(notifications, (value, key) => {
-                   if (!value.read) {
-                       notificationCount++;
-                   }
-               });
-               this.notificationCount = notificationCount;
-               console.log("count");
-               console.log(this.notificationCount);
-           })
-           .error(function(msg){
-               console.log(msg);
-           });
-   };
+    updateUnreadNotifications() {
+        this.RestApi.getNotifications()
+            .success(notifications => {
+                var notificationCount = 0;
+                angular.forEach(notifications, (value, key) => {
+                    if (!value.read) {
+                        notificationCount++;
+                    }
+                });
+                this.notificationCount = notificationCount;
+                console.log('count');
+                console.log(this.notificationCount);
+            })
+            .error(function (msg) {
+                console.log(msg);
+            });
+    };
 
     // TODO: Function overloading?
-   go(path, payload?) {
-       if(payload === undefined) {
-           this.$state.go(path);
-           this.activePage = this.getPageTitle(path);
-           this.$mdSidenav('left').close();
-       } else {
-           this.$state.go(path, payload);
-           this.activePage = this.getPageTitle(path);
-       }
-   };
+    go(path, payload?) {
+        if (payload === undefined) {
+            this.$state.go(path);
+            this.activePage = this.getPageTitle(path);
+            this.$mdSidenav('left').close();
+        } else {
+            this.$state.go(path, payload);
+            this.activePage = this.getPageTitle(path);
+        }
+    };
 
-   logout() {
-       this.RestApi.logout().then(() => {
-           this.AuthStatusService.user = undefined;
-           this.AuthStatusService.authenticated = false;
-           this.$state.go("login");
-       });
-   };
+    logout() {
+        this.RestApi.logout().then(() => {
+            this.AuthStatusService.user = undefined;
+            this.AuthStatusService.authenticated = false;
+            this.$state.go('login');
+        });
+    };
 
-   openDocumentation(){
-       this.$window.open('/docs', '_blank');
-   };
+    openDocumentation() {
+        this.$window.open('/docs', '_blank');
+    };
 
-   isActivePage(path) {
-       return (this.$state.current.name == path);
-   }
+    isActivePage(path) {
+        return (this.$state.current.name == path);
+    }
 
-   getPageTitle(path) {
-       var allMenuItems = this.menu.concat(this.admin);
-       var currentTitle = "Notifications";
-       angular.forEach(allMenuItems, m => {
-           if (m.link === path) {
-               currentTitle = m.title;
-           }
-       });
-       if (path == 'streampipes.pipelineDetails') {
-           currentTitle = "Pipeline Details";
-       } else if (path == 'streampipes.edit') {
-           currentTitle = this.menu[0].title;
-       }
-       return currentTitle;
-   }
+    getPageTitle(path) {
+        var allMenuItems = this.menu.concat(this.admin);
+        var currentTitle = 'Notifications';
+        angular.forEach(allMenuItems, m => {
+            if (m.link === path) {
+                currentTitle = m.title;
+            }
+        });
+        if (path == 'streampipes.pipelineDetails') {
+            currentTitle = 'Pipeline Details';
+        } else if (path == 'streampipes.edit') {
+            currentTitle = this.menu[0].title;
+        }
+        return currentTitle;
+    }
 
-   buildToggler(navID) {
-       var debounceFn = this.$mdUtil.debounce(() => {
-           this.$mdSidenav(navID)
-               .toggle();
-       }, 300);
-       return debounceFn;
-   }
+    buildToggler(navID) {
+        var debounceFn = this.$mdUtil.debounce(() => {
+            this.$mdSidenav(navID)
+                .toggle();
+        }, 300);
+        return debounceFn;
+    }
 
-   connectToBroker() {
-       var login = 'admin';
-       var passcode = 'admin';
-       var brokerUrl = 'ws://' +this.$location.host() +":" +this.$location.port() +"/streampipes/ws";
-       var inputTopic = '/topic/org.streampipes.notifications';
+    connectToBroker() {
+        var login = 'admin';
+        var passcode = 'admin';
+        var brokerUrl = 'ws://' + this.$location.host() + ':' + this.$location.port() + '/streampipes/ws';
+        var inputTopic = '/topic/org.streampipes.notifications';
 
-       var client = Stomp.client(brokerUrl + inputTopic);
+        var client = Stomp.client(brokerUrl + inputTopic);
 
-       var onConnect = function (frame) {
+        var onConnect = function (frame) {
 
-           client.subscribe(inputTopic, message => {
-               this.notificationCount++;
-           });
-       };
+            client.subscribe(inputTopic, message => {
+                this.notificationCount++;
+            });
+        };
 
-       client.connect(login, passcode, onConnect);
-   }
+        client.connect(login, passcode, onConnect);
+    }
 
 };
 

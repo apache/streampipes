@@ -12,12 +12,16 @@
     </div>
   </div>
 
-  <div class="form-group">
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="Domain Property" class="form-control" name="domainproperty" id="domainproperty" [(ngModel)]="property.domainProperty">
+  <div class="form-group" >
+    <mat-form-field class="example-full-width" style="width: 100%;">
+      <input matInput placeholder="Domain Property" class="form-control" name="domainproperty" id="domainproperty" [matAutocomplete]="auto" [(ngModel)]="property.domainProperty">
     </mat-form-field>
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let propertyGuess of domainPropertyGuess.list" [value]="propertyGuess.domainProperty">
+        {{ propertyGuess.domainProperty + propertyGuess.probability}}
+      </mat-option>
+    </mat-autocomplete>
   </div>
-
   <div class="form-group">
     <mat-form-field class="example-full-width">
       <input matInput placeholder="Description" class="form-control" name="description" id="description" [(ngModel)]="property.description">

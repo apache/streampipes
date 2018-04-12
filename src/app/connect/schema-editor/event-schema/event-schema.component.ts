@@ -6,6 +6,7 @@ import {AdapterDescription} from '../../model/AdapterDescription';
 import {ProtocolDescription} from '../../model/ProtocolDescription';
 import {FormatDescription} from '../../model/FormatDescription';
 import {EventProperty} from '../model/EventProperty';
+import {GuessSchema} from '../model/GuessSchema';
 
 @Component({
     selector: 'app-event-schema',
@@ -20,14 +21,21 @@ export class EventSchemaComponent implements OnInit {
 
     public eventSchema: EventSchema = null;
 
+    public schemaGuess: GuessSchema = new GuessSchema();
+
+    public isLoading: boolean = false;
+
     constructor(private restService: RestService,
                 private dragulaService: DragulaService) {
     }
 
 
     public guessSchema(): void {
-        this.restService.getGuessSchema(this.adapterDescription).subscribe(eventSchema => {
-            this.adapterDescription.dataSet.eventSchema  = eventSchema;
+        this.isLoading = true;
+        this.restService.getGuessSchema(this.adapterDescription).subscribe(x => {
+            this.isLoading = false;
+            this.adapterDescription.dataSet.eventSchema  = x.eventSchema;
+            this.schemaGuess = x;
         });
     }
 

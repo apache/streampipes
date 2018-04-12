@@ -4,7 +4,10 @@ import { HomeComponent } from '../home/home.component';
 import { ConfigurationComponent } from '../configuration/configuration.component';
 import { AppContainerModule } from '../app-container/app-container.module';
 import { AppContainerComponent } from '../app-container/app-container.component';
-import {NewComponent} from '../connect/new/new.component';
+import {NewComponent} from '../connect/new-adapter/new.component';
+import { KviComponent } from '../kvi/kvi.component';
+import {MainComponent} from '../connect/main/main.component';
+import { KviVisualizationComponent } from '../kvi-visualization/kvi-visualization.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
@@ -202,7 +205,23 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             url: '/connect',
             views: {
                 'spMain@streampipes': {
-                    component: NewComponent
+                    component: MainComponent
+                }
+            }
+        })
+        .state('streampipes.kvi', {
+            url: '/kvi',
+            views: {
+                'spMain@streampipes': {
+                    component: KviComponent
+                }
+            }
+        })
+        .state('streampipes.kvivisualization', {
+            url: '/kvivisualization',
+            views: {
+                'spMain@streampipes': {
+                    component: KviVisualizationComponent
                 }
             }
         });

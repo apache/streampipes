@@ -172,7 +172,6 @@ export class TsonLd {
             jsonObject = elem;
           }
         }
-        console.log('json object: ' + jsonObject);
         if (isUndefined(jsonObject) || jsonObject == null) {
           console.error('id ' + id + ' is not in graph. this should never happen');
         }
@@ -195,6 +194,7 @@ export class TsonLd {
     }
     const result = new c();
 
+
     for (const property in jsonObject) {
       let objectProp: string;
       // Remove the @type property
@@ -210,9 +210,11 @@ export class TsonLd {
         // check whether property is object or literal
         if (typeof jsonObject[property] === 'object'  && !isUndefined(objectProp)) {
 
-          result[objectProp] = [];
+
           // check if object or array
           if (Array.isArray(jsonObject[property])) {
+            //TODO check if needed
+             result[objectProp] = [];
             // ARRAY
             if (jsonObject[property].length > 0 && typeof jsonObject[property][0] === 'object') {
 
@@ -255,26 +257,44 @@ export class TsonLd {
             // NO ARRAY
             // console.log('bbbb ' + jsonObject[property] + ' xxxx ' + Array.isArray(jsonObject[property]));
 
+            // if (Array.isArray(result[objectProp])) {
 
-            // check if already deserialized
-            if (!isUndefined(ids[jsonObject[property]['@id']])) {
-              // when already desirialized use object from stored array
-              result[objectProp] = ids[jsonObject[property]['@id']];
-            } else {
-              // if not recursion and add to ids array
-              const index = graph.indexOf(jsonObject, 0);
-              if (index > -1) {
-                graph.splice(index, 1);
-              }
-              const newObj = {'@context': context, '@graph': graph};
-              ids[jsonObject['@id']] = result;
+              // check if already deserialized
+              if (!isUndefined(ids[jsonObject[property]['@id']])) {
+                // when already desirialized use object from stored array
 
-              // console.log('ddddd: ' + JSON.stringify(ids,null, 2));
+                // case where array just has one element (this is serialized as an object)
 
-              if (!isUndefined(jsonObject[property]['@id'])) {
-                const nestedResult = this.fromJsonLd(newObj, ids, jsonObject[property]['@id']);
-                result[objectProp] = nestedResult;
-              }
+                if (Array.isArray(result[objectProp])) {
+                  result[objectProp] = [ids[jsonObject[property]['@id']]];
+                  // result[objectProp] = ids[jsonObject[property]['@id']];
+                } else {
+                  result[objectProp] = ids[jsonObject[property]['@id']];
+                }
+              } else {
+                // if not recursion and add to ids array
+                const index = graph.indexOf(jsonObject, 0);
+                if (index > -1) {
+                  graph.splice(index, 1);
+                }
+                const newObj = {'@context': context, '@graph': graph};
+                ids[jsonObject['@id']] = result;
+
+                // console.log('ddddd: ' + JSON.stringify(ids,null, 2));
+
+                if (!isUndefined(jsonObject[property]['@id'])) {
+                  const nestedResult = this.fromJsonLd(newObj, ids, jsonObject[property]['@id']);
+                                  // case where array just has one element (this is serialized as an object)
+
+                  console.log(JSON.stringify(result, null, 2));
+                  console.log(objectProp);
+                if (Array.isArray(result[objectProp])) {
+
+                  result[objectProp] = [nestedResult];
+                } else {
+                  result[objectProp] = nestedResult;
+                }
+                }
             }
           }
         } else {
