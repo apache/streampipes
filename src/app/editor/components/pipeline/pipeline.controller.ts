@@ -53,6 +53,14 @@ export class PipelineController {
         this.currentMouseOverElement = elementId;
     }
 
+    updateOptionsClick(elementId) {
+        if (this.currentMouseOverElement == elementId) {
+            this.currentMouseOverElement = "";
+        } else {
+            this.currentMouseOverElement = elementId;
+        }
+    }
+
     getElementCss(currentPipelineElementSettings) {
         return "position:absolute;"
             + (this.preview ? "width:75px;" : "width:110px;")
