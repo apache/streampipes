@@ -8,10 +8,10 @@
         <div id='barBottom' style="border-top:2px #009688 solid;border-right:15px #009688 solid"></div>
     </div>
     <div id='legend' style="position:relative;top:-200px;left:-50px;">
-        <div id='valueTop'>{{max}}</div>
+        <div  id='valueTop'>{{max}}</div>
         <div id='space'>
             <!--<div id='legendSpace' style="min-height:10px;max-height:169px;height:%"></div>-->
-            <div id='valueCurrent' style="color:#009688;font-weight:bold;position:relative;left:60px;top:{{(printValue(item[selectedNumberProperty])+20)}}px">{{item[selectedNumberProperty] | number : 2}}</div>
+            <div id='valueCurrent'style="color:black;font-weight:bold;position:relative;left:60px;top:{{(printValue(item[selectedNumberProperty])+20)}}px">{{item[selectedNumberProperty] | number : 2}}</div>
         </div>
         <div id='valueBottom' style="position:relative;top:130px;color:#009688;font-weight:bold;">{{min}}</div>
     </div>
