@@ -30,6 +30,15 @@ public class ListPropertyMatch implements Matcher<EventPropertyList, EventProper
 		if (requirement.getEventProperties() == null) {
 			return false;
 		} else if (requirement.getEventProperties().size() == 0) {
+
+			// Check if the requirement has no restrictions
+			if (requirement.getDomainProperties() == null || requirement.getDomainProperties().size() == 0) {
+			    if (requirement.getEventProperty() == null && requirement.getEventProperties() != null && requirement.getEventProperties().size() == 0) {
+					return true;
+				}
+			}
+
+			// Check if the domain property matches
 			if (requirement.getDomainProperties() != null && offer.getDomainProperties() != null && requirement.getDomainProperties().size() > 0) {
 				return new DomainPropertyMatch().match(offer.getDomainProperties(), requirement.getDomainProperties(), errorLog);
 			} else {

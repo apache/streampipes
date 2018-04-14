@@ -32,26 +32,12 @@ public class TestMeasurementUnitMatch extends TestCase {
 
 	@Test
 	public void testPositiveMeasurementUnitMatch() {
-		
-		URI offered = UnitProvider.INSTANCE.getAvailableUnits().get(0).getResource();
-		URI required = UnitProvider.INSTANCE.getAvailableUnits().get(0).getResource();
-		
+		URI offered = URI.create(	"http://qudt.org/1.1/schema/qudt#DegreeCelsius");
+		URI required = URI.create(	"http://qudt.org/1.1/schema/qudt#DegreeCelsius");
+
 		List<MatchingResultMessage> errorLog = new ArrayList<>();
-		
+
 		boolean matches = new MeasurementUnitMatch().match(offered, required, errorLog);
 		assertTrue(matches);
 	}
-	
-/*	@consul
-	public void testNegativeMeasurementUnitMatch() {
-		
-		URI offered = UnitProvider.INSTANCE.getAvailableUnits().get(0).getResource();
-		URI required = UnitProvider.INSTANCE.getAvailableUnits().get(1).getResource();
-		
-		List<MatchingResultMessage> errorLog = new ArrayList<>();
-		
-		boolean matches = new MeasurementUnitMatch().match(offered, required, errorLog);
-		assertFalse(matches);
-	}
-*/
 }
