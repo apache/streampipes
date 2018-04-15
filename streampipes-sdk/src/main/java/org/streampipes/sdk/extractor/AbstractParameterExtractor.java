@@ -43,18 +43,18 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   public String measurementUnit(String runtimeName, Integer streamIndex) {
-   return sepaElement
-           .getInputStreams()
-           .get(streamIndex)
-           .getEventSchema()
-           .getEventProperties()
-           .stream()
-           .filter(ep -> ep.getRuntimeName().equals(runtimeName))
-           .map(ep -> (EventPropertyPrimitive) ep)
-           .findFirst()
-           .get()
-           .getMeasurementUnit()
-           .toString();
+    return sepaElement
+            .getInputStreams()
+            .get(streamIndex)
+            .getEventSchema()
+            .getEventProperties()
+            .stream()
+            .filter(ep -> ep.getRuntimeName().equals(runtimeName))
+            .map(ep -> (EventPropertyPrimitive) ep)
+            .findFirst()
+            .get()
+            .getMeasurementUnit()
+            .toString();
   }
 
   public String inputTopic(Integer streamIndex) {
@@ -72,19 +72,19 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .getValue(), targetClass);
   }
 
-  private <V, T extends SelectionStaticProperty> V selectedSingleValue(String internalName, Class<V> targetClass, Class<T > oneOfStaticProperty) {
+  private <V, T extends SelectionStaticProperty> V selectedSingleValue(String internalName, Class<V> targetClass, Class<T> oneOfStaticProperty) {
     return typeParser.parse(getStaticPropertyByName(internalName, oneOfStaticProperty)
-              .getOptions()
-              .stream()
-              .filter(Option::isSelected)
-              .findFirst()
-              .get()
-              .getName(), targetClass);
+            .getOptions()
+            .stream()
+            .filter(Option::isSelected)
+            .findFirst()
+            .get()
+            .getName(), targetClass);
   }
 
 
   public <V> V selectedSingleValueFromRemote(String internalName, Class<V> targetClass) {
-      return selectedSingleValue(internalName, targetClass, RuntimeResolvableOneOfStaticProperty.class);
+    return selectedSingleValue(internalName, targetClass, RuntimeResolvableOneOfStaticProperty.class);
   }
 
   public <V> V selectedSingleValue(String internalName, Class<V> targetClass) {
@@ -127,24 +127,22 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return spType.cast(getStaticPropertyByName(internalName));
   }
 
-  private StaticProperty getStaticPropertyByName(String name)
-  {
-    for(StaticProperty p : sepaElement.getStaticProperties())
-    {
-      if (p.getInternalName().equals(name)) return p;
+  private StaticProperty getStaticPropertyByName(String name) {
+    for (StaticProperty p : sepaElement.getStaticProperties()) {
+      if (p.getInternalName().equals(name)) {
+        return p;
+      }
     }
     return null;
   }
 
-  public String mappingPropertyValue(String staticPropertyName)
-  {
+  public String mappingPropertyValue(String staticPropertyName) {
     URI propertyURI = getURIFromStaticProperty(staticPropertyName);
     return mappingPropertyValues(staticPropertyName, false, propertyURI).get(0);
   }
 
-  public List<String> mappingPropertyValues(String staticPropertyName)
-  {
-    Optional<MappingPropertyNary> mappingPropertyOpt =  sepaElement.getStaticProperties().stream()
+  public List<String> mappingPropertyValues(String staticPropertyName) {
+    Optional<MappingPropertyNary> mappingPropertyOpt = sepaElement.getStaticProperties().stream()
             .filter(p -> p instanceof MappingPropertyNary)
             .map((p -> (MappingPropertyNary) p))
             .filter(p -> p.getInternalName().equals(staticPropertyName))
@@ -153,8 +151,17 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     if (mappingPropertyOpt.isPresent()) {
       MappingPropertyNary mappingProperty = mappingPropertyOpt.get();
       List<String> result = new ArrayList<>();
-      for(URI uri : mappingProperty.getMapsTo()) {
-        result.addAll(mappingPropertyValues(staticPropertyName, false, uri));
+
+      // TODO fix empire which is sometimes not returning a URI
+      for (Object obj : mappingProperty.getMapsTo()) {
+        if (obj.getClass().isAssignableFrom(URI.class)) {
+          result.addAll(mappingPropertyValues(staticPropertyName, false, (URI) obj));
+        } else {
+          if (obj instanceof EventProperty) {
+            EventProperty property = (EventProperty) obj;
+            result.add(property.getRuntimeName());
+          }
+        }
       }
       return result;
     } else {
@@ -164,14 +171,14 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
 
   public String propertyDatatype(String runtimeName) {
     List<EventProperty> eventProperties = new ArrayList<>();
-    for(SpDataStream is : sepaElement.getInputStreams()) {
+    for (SpDataStream is : sepaElement.getInputStreams()) {
       eventProperties.addAll(is.getEventSchema().getEventProperties());
     }
 
     Optional<EventProperty> matchedProperty = eventProperties
             .stream()
             .filter(ep -> ep.getRuntimeName().equals
-            (runtimeName))
+                    (runtimeName))
             .findFirst();
 
     if (matchedProperty.isPresent()) {
@@ -190,20 +197,19 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   public List<String> mappingPropertyValues(String staticPropertyName,
-                                       boolean completeNames, URI propertyURI)
-  {
-    for(SpDataStream stream : sepaElement.getInputStreams())
-    {
+                                            boolean completeNames, URI propertyURI) {
+    for (SpDataStream stream : sepaElement.getInputStreams()) {
       List<String> matchedProperties = getMappingPropertyName(stream.getEventSchema().getEventProperties(), propertyURI, completeNames, "");
-      if (matchedProperties.size() > 0) return matchedProperties;
+      if (matchedProperties.size() > 0) {
+        return matchedProperties;
+      }
     }
     return null;
     //TODO: exceptions
   }
 
   public <V> V supportedOntologyPropertyValue(String domainPropertyInternalId, String
-          propertyId, Class<V> targetClass)
-  {
+          propertyId, Class<V> targetClass) {
     DomainStaticProperty dsp = getStaticPropertyByName(domainPropertyInternalId,
             DomainStaticProperty.class);
 
@@ -218,40 +224,32 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   // TODO copied from SepaUtils, refactor code
-  private List<String> getMappingPropertyName(List<EventProperty> eventProperties, URI propertyURI, boolean completeNames, String prefix)
-  {
+  private List<String> getMappingPropertyName(List<EventProperty> eventProperties, URI propertyURI, boolean completeNames, String prefix) {
     List<String> result = new ArrayList<String>();
-    for(EventProperty p : eventProperties)
-    {
-      if (p instanceof EventPropertyPrimitive || p instanceof EventPropertyList)
-      {
-        if (p.getElementId().equals(propertyURI.toString()))
-        {
-          if (!completeNames) result.add(p.getRuntimeName());
-          else
+    for (EventProperty p : eventProperties) {
+      if (p instanceof EventPropertyPrimitive || p instanceof EventPropertyList) {
+        if (p.getElementId().equals(propertyURI.toString())) {
+          if (!completeNames) {
+            result.add(p.getRuntimeName());
+          } else {
             result.add(prefix + p.getRuntimeName());
+          }
         }
-        if (p instanceof EventPropertyList)
-        {
-          for(EventProperty sp : ((EventPropertyList) p).getEventProperties())
-          {
-            if (sp.getElementId().equals(propertyURI.toString()))
-            {
-              result.add(p.getRuntimeName() + "," +sp.getRuntimeName());
+        if (p instanceof EventPropertyList) {
+          for (EventProperty sp : ((EventPropertyList) p).getEventProperties()) {
+            if (sp.getElementId().equals(propertyURI.toString())) {
+              result.add(p.getRuntimeName() + "," + sp.getRuntimeName());
             }
           }
         }
-      }
-      else if (p instanceof EventPropertyNested)
-      {
-        result.addAll(getMappingPropertyName(((EventPropertyNested) p).getEventProperties(), propertyURI, completeNames, prefix + p.getRuntimeName() +"."));
+      } else if (p instanceof EventPropertyNested) {
+        result.addAll(getMappingPropertyName(((EventPropertyNested) p).getEventProperties(), propertyURI, completeNames, prefix + p.getRuntimeName() + "."));
       }
     }
     return result;
   }
 
-  private URI getURIFromStaticProperty(String staticPropertyName)
-  {
+  private URI getURIFromStaticProperty(String staticPropertyName) {
     Optional<MappingPropertyUnary> property = sepaElement.getStaticProperties().stream()
             .filter(p -> p instanceof MappingPropertyUnary)
             .map((p -> (MappingPropertyUnary) p))
