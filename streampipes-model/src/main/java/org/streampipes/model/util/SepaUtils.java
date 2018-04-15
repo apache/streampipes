@@ -135,7 +135,7 @@ public class SepaUtils {
 				{
 					for(EventProperty sp : ((EventPropertyList) p).getEventProperties())
 					{
-						if (sp.getRdfId().toString().equals(propertyURI.toString()))
+						if (sp.getElementId().toString().equals(propertyURI.toString()))
 						{
 							result.add(p.getRuntimeName() + "," +sp.getRuntimeName());
 						}
