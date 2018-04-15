@@ -42,6 +42,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ *
+ * @deprecated Use the extractors from the SDK instead
+ */
+@Deprecated
 public class SepaUtils {
 
 	// TODO move this to SDK (extractors)
