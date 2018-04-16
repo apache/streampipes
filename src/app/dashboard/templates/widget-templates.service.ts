@@ -84,7 +84,7 @@ export class WidgetTemplates {
             image: {
                 name: 'image',
                 label: 'Image',
-                icon: '',
+                icon: 'image',
                 directive: 'sp-image-widget',
                 dataModel: ImageDataModel,
             }
