@@ -4,9 +4,10 @@ import { HomeComponent } from '../home/home.component';
 import { ConfigurationComponent } from '../configuration/configuration.component';
 import { AppContainerModule } from '../app-container/app-container.module';
 import { AppContainerComponent } from '../app-container/app-container.component';
-import {NewComponent} from '../connect/new-adapter/new.component';
+import { PipelineLogsComponent } from '../pipeline-logs/pipeline-logs.component';
+import { NewComponent } from '../connect/new/new.component';
 import { KviComponent } from '../kvi/kvi.component';
-import {MainComponent} from '../connect/main/main.component';
+import { MainComponent } from '../connect/main/main.component';
 import { KviVisualizationComponent } from '../kvi-visualization/kvi-visualization.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
@@ -198,6 +199,14 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             views: {
                 'spMain@streampipes': {
                     component: AppContainerComponent
+                }
+            }
+        })
+        .state('streampipes.pipelinelogs', {
+            url: '/pipelines/:pipeline/logs',
+            views: {
+                'spMain@streampipes': {
+                    component: PipelineLogsComponent
                 }
             }
         })
