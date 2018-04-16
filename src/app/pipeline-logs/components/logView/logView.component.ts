@@ -78,7 +78,7 @@ export class LogViewComponent implements AfterViewInit, OnChanges {
                     this.dataSource = new MatTableDataSource<Log>(logs);
                     this.dataSourceDisplay.paginator = this.paginator;
 
-                    this.logLevels.push(response.map(t => t.level));
+                    this.logLevels.push(Array.from(new Set(response.map(t => t.level))));
                     this.logLevels.push(Array.from(new Set(this.logLevels)));
 
                 }, error => {

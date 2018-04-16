@@ -1,6 +1,6 @@
 <div>
 
-    <div class="assemblyOptions sp-blue-bg" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="assemblyOptions sp-blue-bg" fxLayout="row" fxLayoutAlign="space-between center" style="height: 50px">
         <div fxLayout="row" fxLayoutAlign=" center">
             <h4 style="padding-right: 10px;">Date Range: </h4>
             <form>
@@ -36,25 +36,25 @@
 
     <div class="sp-blue-border" (scroll)="true">
         <div>
-            <mat-table class="logs-table" [dataSource]="dataSourceDisplay" matSort>
+            <mat-table class="logs-table" [dataSource]="dataSourceDisplay">
 
                 <ng-container matColumnDef="timestamp">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="25%"> Timestamp </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef fxFlex="25%"> Timestamp </mat-header-cell>
                     <mat-cell *matCellDef="let log" fxFlex="25%"> {{log.timestamp}} </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="level">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Level </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef> Level </mat-header-cell>
                     <mat-cell *matCellDef="let log"> {{log.level}} </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="type">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Type </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef> Type </mat-header-cell>
                     <mat-cell *matCellDef="let log"> {{log.type}} </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="message" >
-                    <mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="50%"> Message </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef fxFlex="50%"> Message </mat-header-cell>
                     <mat-cell *matCellDef="let log" fxFlex="50%"> {{log.message}} </mat-cell>
                 </ng-container>
 
