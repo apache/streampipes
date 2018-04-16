@@ -19,4 +19,9 @@ export class PipelineActionsController {
     deletePipeline() {
 
     }
+
+    showLogs() {
+
+    }
+
 }

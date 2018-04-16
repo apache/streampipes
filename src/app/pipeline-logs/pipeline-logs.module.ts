@@ -7,15 +7,15 @@ import { NguiDatetimePickerModule } from '@ngui/datetime-picker';
 import { BrowserModule } from '@angular/platform-browser';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {PipelineLogsRestService} from './components/services/pipeline-logs-rest.service';
-
+import { PipelineLogsRestService } from './components/services/pipeline-logs-rest.service';
 
 @NgModule({
     imports: [
         BrowserModule,
         NguiDatetimePickerModule,
         CustomMaterialModule,
-        FlexLayoutModule
+        FlexLayoutModule,
+     //   RouterModule.forRoot( [] )
     ],
     declarations: [
         PipelineLogsComponent,
@@ -23,7 +23,7 @@ import {PipelineLogsRestService} from './components/services/pipeline-logs-rest.
     ],
     providers: [
         LogViewRestService,
-        PipelineLogsRestService
+        PipelineLogsRestService,
     ],
     entryComponents: [
         PipelineLogsComponent

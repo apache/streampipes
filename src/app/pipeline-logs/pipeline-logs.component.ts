@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, SimpleChanges} from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { PipelineLogsRestService } from './components/services/pipeline-logs-rest.service';
 
 @Component({
@@ -7,25 +7,27 @@ import { PipelineLogsRestService } from './components/services/pipeline-logs-res
 })
 export class PipelineLogsComponent implements AfterViewInit {
 
-    @Input() pipelineID: string;
 
     pipelineName: string;
+    pipelineID;
 
     logSourceIDs: string[];
     logSourceIDsSelect = [];
     logSourceIDsSelected = 'ALL';
 
     constructor(private pipelineLogsRestService: PipelineLogsRestService) {
-
     }
 
     ngAfterViewInit() {
-    }
+        let url: string = window.location.href;
 
-    // TODO: Move this all to AfterViewInit if will get pipelineID via Input, and input field is not used anymore
-    createLogView(pipelineID: string) {
+        url = url.replace('/logs', '');
+        const lastSlash = url.lastIndexOf('/');
 
-        this.pipelineLogsRestService.getPipelineElement(pipelineID)
+        this.pipelineID = url.substring(lastSlash + 1);
+
+
+        this.pipelineLogsRestService.getPipelineElement(this.pipelineID)
             .subscribe( graph => {
                 const actions = (<Graph> graph).actions;
                 const sepas = (<Graph> graph).sepas;
@@ -49,8 +51,8 @@ export class PipelineLogsComponent implements AfterViewInit {
             }, error => {
                 console.log(error);
             });
-
     }
+
 
     logSourcelSelection() {
         if (this.logSourceIDsSelected === 'ALL') {

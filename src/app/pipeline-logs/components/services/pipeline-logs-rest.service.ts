@@ -15,7 +15,7 @@ export class PipelineLogsRestService {
     }
 
     getPipelineElement(pipelineID: string) {
-        return this.http.get(this.getServerUrl() + '/v2/users/' + this.authStatusService.user + '/pipelines/' + pipelineID)
+        return this.http.get(this.getServerUrl() + '/v2/users/' + this.authStatusService.email + '/pipelines/' + pipelineID)
             .pipe(
                 map(response => {
                     return response;

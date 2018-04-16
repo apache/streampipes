@@ -80,11 +80,6 @@ export class AppCtrl {
                     title: 'Pipeline Element Generator',
                     icon: 'content:ic_add_24px'
                 },
-                {
-                    link: 'streampipes.pipelinelogs',
-                    title: 'Pipeline Logs',
-                    icon: 'action:ic_info_24px'
-                },
             ];
             this.admin = [
                 {
