@@ -1,20 +1,20 @@
 import { NgModule } from '@angular/core';
 
 import {
-  MatButtonModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatExpansionModule,
-  MatIconModule,
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,
-  MatSelectModule,
-  MatSidenavModule,
-  MatSlideToggleModule,
-  MatTabsModule,
-  MatToolbarModule,
-  MatPaginatorModule,
+    MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatExpansionModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSlideToggleModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatPaginatorModule, MatSortModule,
 
 } from '@angular/material';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -46,7 +46,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatExpansionModule,
     MatExpansionModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSortModule
   ],
   exports: [
     MatButtonModule,
@@ -68,6 +69,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatAutocompleteModule,
     MatExpansionModule,
     MatPaginatorModule,
+    MatSortModule
   ],
 })
 export class CustomMaterialModule { }

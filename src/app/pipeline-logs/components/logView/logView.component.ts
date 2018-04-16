@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
+import {MatPaginator, MatSort, MatSortable, MatTableDataSource} from '@angular/material';
 import { Log } from './model/log.model';
 import { LogViewRestService } from './services/logView-rest.service';
 import { LogRequest } from './model/logRequest.model';
@@ -29,6 +29,7 @@ export class LogViewComponent implements AfterViewInit, OnChanges {
     dataSourceDisplay;
     filter = '';
 
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     ngAfterViewInit() {
@@ -42,6 +43,7 @@ export class LogViewComponent implements AfterViewInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         console.log(this.logSourceIDs);
         this.loadLogs();
+
     }
 
     loadLogs() {
@@ -61,11 +63,24 @@ export class LogViewComponent implements AfterViewInit, OnChanges {
             this.logviewRestService.getLogs(logRequest)
                 .subscribe( response => {
                     logs = logs.concat(response);
+
+                    logs.sort((a, b) => {
+                        if (a.timestamp < b.timestamp) {
+                            return 1;
+                        }
+                        if (a.timestamp > b.timestamp) {
+                            return -1;
+                        }
+                        return 0;
+                    });
+
                     this.dataSourceDisplay = new MatTableDataSource<Log>(logs);
                     this.dataSource = new MatTableDataSource<Log>(logs);
                     this.dataSourceDisplay.paginator = this.paginator;
 
-                    this.logLevels.push(Array.from(new Set(response.map(t => t.level))));
+                    this.logLevels.push(response.map(t => t.level));
+                    this.logLevels.push(Array.from(new Set(this.logLevels)));
+
                 }, error => {
                     console.log(error);
                 });
@@ -97,11 +112,4 @@ export class LogViewComponent implements AfterViewInit, OnChanges {
 
     }
 
-
 }
-
-
-
-
-
-
