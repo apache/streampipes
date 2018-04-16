@@ -195,7 +195,8 @@ export class AppCtrl {
     connectToBroker() {
         var login = 'admin';
         var passcode = 'admin';
-        var brokerUrl = 'ws://' + this.$location.host() + ':' + this.$location.port() + '/streampipes/ws';
+        var websocketProtocol = this.$location.protocol() === "http" ? "ws" : "wss";
+        var brokerUrl = websocketProtocol +'://' + this.$location.host() + ':' + this.$location.port() + '/streampipes/ws';
         var inputTopic = '/topic/org.streampipes.notifications';
 
         var client = Stomp.client(brokerUrl + inputTopic);
