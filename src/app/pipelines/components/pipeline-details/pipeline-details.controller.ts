@@ -117,6 +117,11 @@ export class PipelineDetailsController {
         this.showPipelineInEditor(pipeline);
     }
 
+    showLogs(id) {
+        this.$state.go("streampipes.pipelinelogs", {pipeline: id});
+    }
+
+
 }
 
 PipelineDetailsController.$inject = ['RestApi', '$mdDialog', '$rootScope', '$state'];
