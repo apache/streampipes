@@ -62,12 +62,12 @@ public class Elasticsearch implements IElasticsearch {
     long timeStampTo = data.getTimestampTo();
     String output = data.getOutput();
 
-    String url = ElasticsearchConfig.INSTANCE.getElasticsearchURL() + "/" + index + "/_search&size=100000000";
+    String url = ElasticsearchConfig.INSTANCE.getElasticsearchURL() + "/" + index + "/_search";
     try {
       HttpResponse<JsonNode> jsonResponse = Unirest.post(url)
               .header("accept", "application/json")
               .header("Content-Type", "application/json")
-              .body("{\"query\": {\"range\" : {\"timestamp\" : {\"gte\" : " + timestampFrom + ",\"lte\" : " + timeStampTo + "}}}}")
+              .body("{\"from\" : 0, \"size\" : 100000, \"query\": {\"range\" : {\"timestamp\" : {\"gte\" : " + timestampFrom + ",\"lte\" : " + timeStampTo + "}}}}")
               .asJson();
       String response = jsonResponse.getBody().getObject().toString();
 
