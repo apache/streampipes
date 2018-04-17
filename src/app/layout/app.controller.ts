@@ -81,16 +81,16 @@ export class AppCtrl {
                 title: 'Pipeline Element Generator',
                 icon: 'content:ic_add_24px'
             },
-            {
-                link: 'streampipes.kvi',
-                title: 'KVI Editor',
-                icon: 'action:ic_trending_up_24px'
-            },
-            {
-                link: 'streampipes.kvivisualization',
-                title: 'KVI Visualization',
-                icon: 'editor:ic_format_list_numbered_24px'
-            },
+            // {
+            //     link: 'streampipes.kvi',
+            //     title: 'KVI Editor',
+            //     icon: 'action:ic_trending_up_24px'
+            // },
+            // {
+            //     link: 'streampipes.kvivisualization',
+            //     title: 'KVI Visualization',
+            //     icon: 'editor:ic_format_list_numbered_24px'
+            // },
         ];
         this.admin = [
             {
