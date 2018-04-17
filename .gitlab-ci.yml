@@ -22,6 +22,7 @@ build:
       - dist/assets/img/
       - dist/assets/lib/
       - dist/assets/templates/
+      - dist/assets/fonts/
       - dist/index.html
       - dist/main.bundle.js
       - dist/polyfills.bundle.js
