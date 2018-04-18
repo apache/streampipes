@@ -1,5 +1,3 @@
-import * as angular from 'angular';
-
 export class PipelineController {
 
     $timeout: any;
@@ -159,12 +157,11 @@ export class PipelineController {
     }
 
     handleDeleteOption(internalId) {
-        angular.forEach(this.rawPipelineModel, (pe, index) => {
-            if (pe.payload.DOM == internalId) {
-                this.rawPipelineModel.splice(index, 1);
-            }
-        });
+        console.log(internalId);
         this.JsplumbBridge.removeAllEndpoints(internalId);
+        this.rawPipelineModel = this.rawPipelineModel.filter(item => !(item.payload.DOM == internalId));
+        console.log(this.rawPipelineModel);
+        this.JsplumbBridge.repaintEverything();
     }
 
     initPlumb() {
@@ -206,18 +203,8 @@ export class PipelineController {
                         if (data.success) {
                             info.targetEndpoint.setType("token");
                             this.modifyPipeline(data.pipelineModifications);
-                            for (var i = 0, sepa; sepa = this.rawPipelineModel[i]; i++) {
-                                var id = "#" + sepa.payload.DOM;
-                                if ($(id).length > 0) {
-                                    if (sepa.payload.configured !== true) {
-                                        // if (!this.pipelineEditorService.isFullyConnected(id)) {
-                                        //     return;
-                                        // }
-                                        var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
-                                        this.EditorDialogManager.showCustomizeDialog($(id), sourceEndpoint, sepa.payload);
-                                    }
-                                }
-                            }
+                            var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
+                            this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload);
                         } else {
                             this.JsplumbBridge.detach(info.connection);
                             this.EditorDialogManager.showMatchingErrorDialog(data);

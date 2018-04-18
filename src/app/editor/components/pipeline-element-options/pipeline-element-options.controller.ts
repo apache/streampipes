@@ -42,7 +42,6 @@ export class PipelineElementOptionsController {
     }
 
     removeElement() {
-        // TODO: deleteFunction not implemented
         this.deleteFunction(this.pipelineElement.payload.DOM);
     }
 

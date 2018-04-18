@@ -68,7 +68,9 @@ export class ObjectProvider {
                 for (var i = 0; i < connections.length; i++) {
                     payload.connectedTo.push(connections[i].sourceId);
                 }
-                pe.type === 'action' ? pipeline.actions.push(payload) : pipeline.sepas.push(payload);
+                if (payload.connectedTo && payload.connectedTo.length > 0) {
+                    pe.type === 'action' ? pipeline.actions.push(payload) : pipeline.sepas.push(payload);
+                }
             }
             else {
                 pipeline.streams.push(pe.payload);

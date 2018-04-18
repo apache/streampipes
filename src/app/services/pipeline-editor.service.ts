@@ -23,8 +23,8 @@ export class PipelineEditorService {
         return true;
     }
 
-    isFullyConnected(element) {
-        return $(element).data("JSON").inputStreams == null || this.JsplumbBridge.getConnections({target: $(element)}).length == $(element).data("JSON").inputStreams.length;
+    isFullyConnected(element, json) {
+        return json.payload.inputStreams == null || this.JsplumbBridge.getConnections({target: $(element)}).length == json.payload.inputStreams.length;
     }
 
     getDropPositionY(helper, currentZoomLevel) {
