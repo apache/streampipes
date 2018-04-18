@@ -130,7 +130,9 @@ export class PipelineAssemblyController {
             .success((pipeline) => {
                 this.currentPipelineName = pipeline.name;
                 this.currentPipelineDescription = pipeline.description;
+                console.log(pipeline);
                 this.rawPipelineModel = this.JsplumbService.makeRawPipeline(pipeline, false);
+                console.log(this.rawPipelineModel);
                 this.$timeout(() => {
                     this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false);
                 });

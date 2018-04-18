@@ -34,7 +34,6 @@ export class PipelineController {
         this.idCounter = 0;
 
         this.currentZoomLevel = 1;
-
     }
 
     $onInit() {

@@ -22,7 +22,9 @@ export class ObjectProvider {
     }
 
     prepareElement(json) {
-        json.connectedTo = [];
+        if (json.connectedTo == undefined) {
+            json.connectedTo = [];
+        }
         return json;
     }
 

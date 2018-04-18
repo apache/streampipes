@@ -121,7 +121,6 @@ export class JsplumbService {
     }
 
     createNewPipelineElementConfig(json, coordinates, isPreview) {
-
         var displaySettings = isPreview ? 'connectable-preview' : 'connectable-editor';
         var connectable = "connectable";
 
@@ -137,7 +136,6 @@ export class JsplumbService {
                 }
             }, payload: angular.copy(json)
         };
-
         if (!pipelineElementConfig.payload.DOM) {
             pipelineElementConfig.payload.DOM = "jsplumb_" + this.idCounter;
             this.idCounter++;
