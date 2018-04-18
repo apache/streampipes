@@ -157,10 +157,8 @@ export class PipelineController {
     }
 
     handleDeleteOption(internalId) {
-        console.log(internalId);
         this.JsplumbBridge.removeAllEndpoints(internalId);
         this.rawPipelineModel = this.rawPipelineModel.filter(item => !(item.payload.DOM == internalId));
-        console.log(this.rawPipelineModel);
         this.JsplumbBridge.repaintEverything();
     }
 

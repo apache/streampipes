@@ -5,6 +5,7 @@ export let PipelineElementComponent = {
     bindings: {
         pipelineElement : "<",
         preview: "<",
+        iconSize: "<"
     },
     controller: PipelineElementController,
     controllerAs: 'ctrl'
