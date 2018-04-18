@@ -59,21 +59,23 @@ export class ObjectProvider {
 
     addElementNew(pipeline, currentPipelineElements) {
         currentPipelineElements.forEach(pe => {
-            if (pe.type === 'sepa' || pe.type === 'action') {
-                var payload = pe.payload;
-                payload = this.prepareElement(payload);
-                var connections = this.JsplumbBridge.getConnections({
-                    target: $("#" + payload.DOM)
-                });
-                for (var i = 0; i < connections.length; i++) {
-                    payload.connectedTo.push(connections[i].sourceId);
+            if (pe.settings.disabled == undefined || !pe.settings.disabled) {
+                if (pe.type === 'sepa' || pe.type === 'action') {
+                    var payload = pe.payload;
+                    payload = this.prepareElement(payload);
+                    var connections = this.JsplumbBridge.getConnections({
+                        target: $("#" + payload.DOM)
+                    });
+                    for (var i = 0; i < connections.length; i++) {
+                        payload.connectedTo.push(connections[i].sourceId);
+                    }
+                    if (payload.connectedTo && payload.connectedTo.length > 0) {
+                        pe.type === 'action' ? pipeline.actions.push(payload) : pipeline.sepas.push(payload);
+                    }
                 }
-                if (payload.connectedTo && payload.connectedTo.length > 0) {
-                    pe.type === 'action' ? pipeline.actions.push(payload) : pipeline.sepas.push(payload);
+                else {
+                    pipeline.streams.push(pe.payload);
                 }
-            }
-            else {
-                pipeline.streams.push(pe.payload);
             }
         });
         return pipeline;

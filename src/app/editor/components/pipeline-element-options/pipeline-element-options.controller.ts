@@ -41,8 +41,8 @@ export class PipelineElementOptionsController {
         }
     }
 
-    removeElement() {
-        this.deleteFunction(this.pipelineElement.payload.DOM);
+    removeElement(pipelineElement) {
+        this.deleteFunction(pipelineElement);
     }
 
     openCustomizeDialog() {

@@ -1,3 +1,5 @@
+import * as angular from "angular";
+
 export class PipelineController {
 
     $timeout: any;
@@ -156,10 +158,17 @@ export class PipelineController {
         }
     }
 
-    handleDeleteOption(internalId) {
-        this.JsplumbBridge.removeAllEndpoints(internalId);
-        this.rawPipelineModel = this.rawPipelineModel.filter(item => !(item.payload.DOM == internalId));
+    handleDeleteOption(pipelineElement) {
+        this.JsplumbBridge.removeAllEndpoints(pipelineElement.payload.DOM);
+        //this.rawPipelineModel = this.rawPipelineModel.filter(item => !(item.payload.DOM == internalId));
+        angular.forEach(this.rawPipelineModel, pe => {
+           if (pe.payload.DOM == pipelineElement.payload.DOM) {
+               pe.settings.disabled = true;
+           }
+        });
         this.JsplumbBridge.repaintEverything();
+        console.log("ppp");
+        console.log(this.rawPipelineModel);
     }
 
     initPlumb() {
