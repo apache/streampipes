@@ -22,9 +22,7 @@ export class ObjectProvider {
     }
 
     prepareElement(json) {
-        if (json.connectedTo == undefined) {
-            json.connectedTo = [];
-        }
+        json.connectedTo = [];
         return json;
     }
 
@@ -65,7 +63,7 @@ export class ObjectProvider {
                 var payload = pe.payload;
                 payload = this.prepareElement(payload);
                 var connections = this.JsplumbBridge.getConnections({
-                    target: $("#" +payload.DOM)
+                    target: $("#" + payload.DOM)
                 });
                 for (var i = 0; i < connections.length; i++) {
                     payload.connectedTo.push(connections[i].sourceId);

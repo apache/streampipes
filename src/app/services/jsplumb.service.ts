@@ -123,7 +123,6 @@ export class JsplumbService {
     createNewPipelineElementConfig(json, coordinates, isPreview) {
         var displaySettings = isPreview ? 'connectable-preview' : 'connectable-editor';
         var connectable = "connectable";
-
         var pipelineElementConfig = {
             type: json.type, settings: {
                 openCustomize: !json.configured,

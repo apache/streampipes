@@ -1,6 +1,6 @@
 <div ng-repeat="property in ctrl.outputStrategy.properties.providesProperties">
     <md-checkbox ng-checked="ctrl.exists(property)" ng-click="ctrl.toggle(property)">
-        <div ng-if="property.properties.label"><b>{{property.properties.label}}</b> <i>({{property.properties.description}})</i><br/></div>
+        <div ng-if="property.properties.label"><b>{{property.properties.label}}</b> <i>({{property.properties.description}}, field name: {{property.properties.runtimeName}})</i><br/></div>
         <div ng-if="!property.properties.label"> <b>{{property.properties.runtimeName}}</b><br/></div>
     </md-checkbox>
 </div>
