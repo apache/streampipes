@@ -7,7 +7,6 @@ export default function imageBind(PipelineElementIconService) {
                 if (attrs.imageBind == 'block') {
                     PipelineElementIconService.addImageOrTextIcon(elem, scope.element, false, 'block');
                 } else if (attrs.imageBind == 'draggable') {
-                    console.log(scope.element);
                     PipelineElementIconService.addImageOrTextIcon(elem, scope.element, false, 'draggable');
                 }
 

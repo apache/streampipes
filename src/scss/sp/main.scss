@@ -270,10 +270,17 @@ md-content {
 }
 
 .current-nav-page-box {
-    margin-top: 25px;
-    position: relative;
-    z-index: 1;
+    //margin-top: 25px;
+    //position: relative;
+    //z-index: 1;
     white-space: nowrap;
+    align-items: end;
+    margin-top:1px;
+}
+
+.md-toolbar-tools {
+    height: 50px;
+    max-height: 50px;
 }
 
 .current-nav-page-content {

@@ -1,3 +1,5 @@
+import * as angular from 'angular';
+
 export class PipelineElementOptionsController {
 
     ObjectProvider: any;
@@ -39,9 +41,8 @@ export class PipelineElementOptionsController {
         }
     }
 
-    removeElement() {
-        // TODO: deleteFunction not implemented
-        this.deleteFunction(this.pipelineElement.payload.DOM);
+    removeElement(pipelineElement) {
+        this.deleteFunction(pipelineElement);
     }
 
     openCustomizeDialog() {
@@ -53,7 +54,7 @@ export class PipelineElementOptionsController {
     }
 
     initRecs(elementId, currentPipelineElements) {
-        var currentPipeline = this.ObjectProvider.makePipeline(currentPipelineElements);
+        var currentPipeline = this.ObjectProvider.makePipeline(angular.copy(currentPipelineElements));
         this.PipelineElementRecommendationService.getRecommendations(this.allElements, currentPipeline).then((result) => {
             if (result.success) {
                 this.possibleElements = result.possibleElements;

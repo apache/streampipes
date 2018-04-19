@@ -1,4 +1,4 @@
-import * as angular from 'angular';
+import * as angular from "angular";
 
 export class PipelineController {
 
@@ -34,7 +34,6 @@ export class PipelineController {
         this.idCounter = 0;
 
         this.currentZoomLevel = 1;
-
     }
 
     $onInit() {
@@ -159,13 +158,17 @@ export class PipelineController {
         }
     }
 
-    handleDeleteOption(internalId) {
-        angular.forEach(this.rawPipelineModel, (pe, index) => {
-            if (pe.payload.DOM == internalId) {
-                this.rawPipelineModel.splice(index, 1);
-            }
+    handleDeleteOption(pipelineElement) {
+        this.JsplumbBridge.removeAllEndpoints(pipelineElement.payload.DOM);
+        //this.rawPipelineModel = this.rawPipelineModel.filter(item => !(item.payload.DOM == internalId));
+        angular.forEach(this.rawPipelineModel, pe => {
+           if (pe.payload.DOM == pipelineElement.payload.DOM) {
+               pe.settings.disabled = true;
+           }
         });
-        this.JsplumbBridge.removeAllEndpoints(internalId);
+        this.JsplumbBridge.repaintEverything();
+        console.log("ppp");
+        console.log(this.rawPipelineModel);
     }
 
     initPlumb() {
@@ -207,18 +210,8 @@ export class PipelineController {
                         if (data.success) {
                             info.targetEndpoint.setType("token");
                             this.modifyPipeline(data.pipelineModifications);
-                            for (var i = 0, sepa; sepa = this.rawPipelineModel[i]; i++) {
-                                var id = "#" + sepa.payload.DOM;
-                                if ($(id).length > 0) {
-                                    if (sepa.payload.configured !== true) {
-                                        // if (!this.pipelineEditorService.isFullyConnected(id)) {
-                                        //     return;
-                                        // }
-                                        var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
-                                        this.EditorDialogManager.showCustomizeDialog($(id), sourceEndpoint, sepa.payload);
-                                    }
-                                }
-                            }
+                            var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
+                            this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload);
                         } else {
                             this.JsplumbBridge.detach(info.connection);
                             this.EditorDialogManager.showMatchingErrorDialog(data);
