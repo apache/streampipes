@@ -18,13 +18,25 @@
 package org.streampipes.wrapper.runtime;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.wrapper.params.binding.BindingParams;
 
 import java.util.Map;
 
-public interface PipelineElement<B extends BindingParams> {
+public abstract class PipelineElement<B extends BindingParams> {
 
-  void onEvent(Map<String, Object> event, String sourceInfo);
+  InvocableStreamPipesEntity graph;
 
-  void discard() throws SpRuntimeException;
+  public PipelineElement(B bindingParams) {
+    this.graph = bindingParams.getGraph();
+  }
+
+  public InvocableStreamPipesEntity getGraph() {
+    return this.graph;
+  }
+
+  public abstract void onEvent(Map<String, Object> event, String sourceInfo);
+
+  public abstract void discard() throws SpRuntimeException;
+
 }

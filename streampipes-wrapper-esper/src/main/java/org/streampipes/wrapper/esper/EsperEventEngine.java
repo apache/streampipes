@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public abstract class EsperEventEngine<T extends EventProcessorBindingParams> implements EventProcessor<T> {
+public abstract class EsperEventEngine<T extends EventProcessorBindingParams> extends EventProcessor<T> {
 
 	protected EPServiceProvider epService;
 	protected List<EPStatement> epStatements;	
@@ -30,7 +30,11 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 	private List<String> eventTypeNames = new ArrayList<>();
 	
 	private static final Logger LOG = LoggerFactory.getLogger(EsperEventEngine.class);
-	
+
+	public EsperEventEngine(T bindingParams) {
+		super(bindingParams);
+	}
+
 	@Override
 	public void bind(T parameters, SpOutputCollector collector) {
 		if (parameters.getInEventTypes().size() != parameters.getGraph().getInputStreams().size())

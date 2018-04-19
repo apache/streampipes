@@ -53,6 +53,7 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
   private void send(PipelineElement<?> processor, byte[] event) {
     try {
       processor.onEvent(dataFormatDefinition.toMap(event), getTopic());
+      //TODO LOG
     } catch (SpRuntimeException e) {
       e.printStackTrace();
     }

@@ -25,9 +25,13 @@ import org.streampipes.wrapper.runtime.EventProcessor;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class StandaloneEventProcessorEngine<B extends EventProcessorBindingParams> implements EventProcessor<B> {
+public abstract class StandaloneEventProcessorEngine<B extends EventProcessorBindingParams> extends EventProcessor<B> {
 
   private Optional<SpOutputCollector> collectorOpt;
+
+  StandaloneEventProcessorEngine(B bindingParams) {
+    super(bindingParams);
+  }
 
   @Override
   public void bind(B parameters, SpOutputCollector collector) {
