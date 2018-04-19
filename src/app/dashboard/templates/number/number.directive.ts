@@ -31,7 +31,7 @@ export default function numberWidget(WidgetInstances, $filter) {
             }
 
             $scope.isNumber = function(number) {
-                return !(Number.isNaN(number));
+                return (typeof number) === "number";
             }
 
             $scope.color = $scope.getRandomColor();
