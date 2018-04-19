@@ -30,6 +30,10 @@ export default function numberWidget(WidgetInstances, $filter) {
                 return colors[random];
             }
 
+            $scope.isNumber = function(number) {
+                return !(Number.isNaN(number));
+            }
+
             $scope.color = $scope.getRandomColor();
         },
         link: function postLink(scope) {
