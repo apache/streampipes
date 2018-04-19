@@ -78,7 +78,6 @@ export class SavePipelineController {
                             })
                             .error(data => {
                                 this.showToast("error", "Could not delete Pipeline");
-                                console.log(data);
                             })
 
                     }

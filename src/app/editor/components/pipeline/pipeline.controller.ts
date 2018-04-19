@@ -167,8 +167,6 @@ export class PipelineController {
            }
         });
         this.JsplumbBridge.repaintEverything();
-        console.log("ppp");
-        console.log(this.rawPipelineModel);
     }
 
     initPlumb() {
@@ -211,7 +209,9 @@ export class PipelineController {
                             info.targetEndpoint.setType("token");
                             this.modifyPipeline(data.pipelineModifications);
                             var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
-                            this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload);
+                            if (this.PipelineEditorService.isFullyConnected(pe)) {
+                                this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload);
+                            }
                         } else {
                             this.JsplumbBridge.detach(info.connection);
                             this.EditorDialogManager.showMatchingErrorDialog(data);
