@@ -24,10 +24,9 @@ import org.streampipes.rest.serializer.GsonClientModelProvider;
 import org.streampipes.rest.serializer.GsonWithIdProvider;
 import org.streampipes.rest.serializer.GsonWithoutIdProvider;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 public class StreamPipesApplication extends Application {
 
@@ -63,6 +62,8 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(Logs.class);
         apiClasses.add(SpConnect.class);
         apiClasses.add(GuessResource.class);
+        apiClasses.add(PipelineTemplate.class);
+        apiClasses.add(Couchdb.class);
 
 
         // Serializers

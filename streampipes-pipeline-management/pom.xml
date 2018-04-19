@@ -28,6 +28,10 @@
     <dependencies>
         <dependency>
             <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-sdk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
             <artifactId>streampipes-storage-management</artifactId>
         </dependency>
         <dependency>

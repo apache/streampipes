@@ -25,25 +25,19 @@ import org.streampipes.model.output.TransformOutputStrategy;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.staticproperty.Option;
-import org.streampipes.model.staticproperty.SelectionStaticProperty;
-import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.*;
 import org.streampipes.model.util.Cloner;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TransformOutputSchemaGenerator implements OutputSchemaGenerator<TransformOutputStrategy> {
 
   private TransformOutputStrategy strategy;
   private DataProcessorInvocation dataProcessorInvocation;
+
+  protected static final String prefix = "urn:streampipes.org:spi:";
 
   public TransformOutputSchemaGenerator(DataProcessorInvocation dataProcessorInvocation, TransformOutputStrategy
           strategy) {
@@ -55,27 +49,33 @@ public class TransformOutputSchemaGenerator implements OutputSchemaGenerator<Tra
   public EventSchema buildFromOneStream(SpDataStream stream) {
     // TODO exceptions
     Map<String, EventProperty> modifiedEventProperties = new HashMap<>();
-    EventSchema outSchema = stream.getEventSchema();
+    EventSchema outSchema = new EventSchema();
+    EventSchema inSchema = stream.getEventSchema();
     strategy.getTransformOperations().forEach(to -> {
       Optional<MappingPropertyUnary> mappingPropertyOpt = findMappingProperty(to.getMappingPropertyInternalName(),
               dataProcessorInvocation.getStaticProperties());
 
       if (mappingPropertyOpt.isPresent()) {
-        Optional<EventProperty> eventPropertyOpt = findEventProperty(mappingPropertyOpt.get().getMapsTo(), outSchema
+        Optional<EventProperty> eventPropertyOpt = findEventProperty(mappingPropertyOpt.get().getMapsTo(), inSchema
                 .getEventProperties());
-        
+
         if (eventPropertyOpt.isPresent()) {
           EventProperty eventProperty = eventPropertyOpt.get();
-            modifiedEventProperties.put(eventProperty.getElementId(), modifyEventProperty(eventProperty, to,
-                    dataProcessorInvocation.getStaticProperties()));
+          modifiedEventProperties.put(eventProperty.getElementId(), modifyEventProperty(eventProperty, to,
+                  dataProcessorInvocation.getStaticProperties()));
         }
       }
     });
 
-    List<EventProperty> newProperties = outSchema.getEventProperties().stream().map(ep -> modifiedEventProperties
-            .getOrDefault(ep
-            .getElementId
-            (), ep)).collect(Collectors.toList());
+    List<EventProperty> newProperties = inSchema.getEventProperties().stream().map(ep -> {
+      if (modifiedEventProperties.containsKey(ep.getElementId())) {
+        EventProperty newProperty = modifiedEventProperties.get(ep.getElementId());
+        newProperty.setElementId(prefix + UUID.randomUUID().toString());
+        return newProperty;
+      } else {
+        return ep;
+      }
+    }).collect(Collectors.toList());
 
     outSchema.setEventProperties(newProperties);
     return outSchema;
@@ -98,18 +98,18 @@ public class TransformOutputSchemaGenerator implements OutputSchemaGenerator<Tra
   }
 
   private EventProperty modifyEventProperty(EventProperty eventProperty, StaticProperty staticProperty,
-                                      TransformOperationType
-          transformOperationType) {
-      if (staticProperty instanceof SelectionStaticProperty) {
-        return modifyEventProperty(eventProperty, transformOperationType, findSelected(((SelectionStaticProperty)
-                staticProperty).getOptions()).getInternalName());
-      } else if (staticProperty instanceof FreeTextStaticProperty) {
-        return modifyEventProperty(eventProperty, transformOperationType, ((FreeTextStaticProperty) staticProperty)
-                .getValue
-                ());
-      }
+                                            TransformOperationType
+                                                    transformOperationType) {
+    if (staticProperty instanceof SelectionStaticProperty) {
+      return modifyEventProperty(eventProperty, transformOperationType, findSelected(((SelectionStaticProperty)
+              staticProperty).getOptions()).getInternalName());
+    } else if (staticProperty instanceof FreeTextStaticProperty) {
+      return modifyEventProperty(eventProperty, transformOperationType, ((FreeTextStaticProperty) staticProperty)
+              .getValue
+                      ());
+    }
 
-      return eventProperty;
+    return eventProperty;
   }
 
   private Option findSelected(List<Option> options) {
@@ -156,7 +156,12 @@ public class TransformOutputSchemaGenerator implements OutputSchemaGenerator<Tra
     return eventProperties
             .stream()
             .filter(ep -> ep.getElementId().equals(mapsTo.toString()))
+            .map(this::cloneEp)
             .findFirst();
+  }
+
+  private EventProperty cloneEp(EventProperty ep) {
+    return new Cloner().property(ep);
   }
 
   private Optional<MappingPropertyUnary> findMappingProperty(String mappingPropertyInternalName, List<StaticProperty>

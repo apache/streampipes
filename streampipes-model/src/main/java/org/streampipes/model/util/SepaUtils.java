@@ -42,6 +42,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ *
+ * @deprecated Use the extractors from the SDK instead
+ */
+@Deprecated
 public class SepaUtils {
 
 	// TODO move this to SDK (extractors)
@@ -135,7 +140,7 @@ public class SepaUtils {
 				{
 					for(EventProperty sp : ((EventPropertyList) p).getEventProperties())
 					{
-						if (sp.getRdfId().toString().equals(propertyURI.toString()))
+						if (sp.getElementId().toString().equals(propertyURI.toString()))
 						{
 							result.add(p.getRuntimeName() + "," +sp.getRuntimeName());
 						}

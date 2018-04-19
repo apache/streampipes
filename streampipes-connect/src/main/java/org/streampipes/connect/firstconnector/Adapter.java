@@ -3,7 +3,7 @@ package org.streampipes.connect.firstconnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.model.modelconnect.AdapterDescription;
-import org.streampipes.messaging.kafka.SpKafkaProducer;
+import org.streampipes.model.modelconnect.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.connect.firstconnector.format.Format;
 import org.streampipes.connect.firstconnector.format.Parser;
@@ -11,8 +11,8 @@ import org.streampipes.connect.firstconnector.format.csv.CsvFormat;
 import org.streampipes.connect.firstconnector.format.csv.CsvParser;
 import org.streampipes.connect.firstconnector.format.json.JsonFormat;
 import org.streampipes.connect.firstconnector.format.json.JsonParser;
-import org.streampipes.connect.firstconnector.protocol.FileProtocol;
-import org.streampipes.connect.firstconnector.protocol.HttpProtocol;
+import org.streampipes.connect.firstconnector.protocol.set.FileProtocol;
+import org.streampipes.connect.firstconnector.protocol.set.HttpProtocol;
 import org.streampipes.connect.firstconnector.protocol.Protocol;
 
 import java.util.HashMap;
@@ -65,7 +65,7 @@ public class Adapter {
 
     }
 
-    public EventSchema getSchema(AdapterDescription adapterDescription) {
+    public GuessSchema getSchema(AdapterDescription adapterDescription) {
         Parser parser = allParsers.get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
         Format format = allFormats.get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
 

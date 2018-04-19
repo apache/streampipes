@@ -1,20 +1,24 @@
-package org.streampipes.connect.firstconnector.protocol;
+package org.streampipes.connect.firstconnector.protocol.set;
 
 
 
 import org.streampipes.connect.SendToKafka;
 import org.streampipes.connect.firstconnector.format.Format;
+import org.streampipes.connect.firstconnector.protocol.Protocol;
 import org.streampipes.connect.firstconnector.sdk.ParameterExtractor;
+import org.streampipes.model.modelconnect.GuessSchema;
 import org.streampipes.model.modelconnect.ProtocolDescription;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.connect.firstconnector.format.Parser;
 
 import java.io.*;
+import java.util.List;
+import java.util.Map;
 
 public class FileProtocol extends Protocol {
 
-    public static String ID = "https://streampipes.org/vocabulary/v1/protocol/file";
+    public static String ID = "https://streampipes.org/vocabulary/v1/protocol/set/file";
 
 
     private Parser parser;
@@ -36,10 +40,7 @@ public class FileProtocol extends Protocol {
                 "description for the File protocol");;
         FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("fileUri", "fileUri",
                 "This property defines the URL for the http request.");
-                FreeTextStaticProperty urlProperty1 = new FreeTextStaticProperty("fileUri1",
-                        "optional", "This property defines the URL for the http request.");
         pd.addConfig(urlProperty);
-        pd.addConfig(urlProperty1);
         return pd;
     }
 
@@ -74,7 +75,7 @@ public class FileProtocol extends Protocol {
 
 
     @Override
-    public EventSchema getSchema() {
+    public GuessSchema getSchema() {
         EventSchema result = null;
 
         FileReader fr = null;
@@ -93,7 +94,13 @@ public class FileProtocol extends Protocol {
             e.printStackTrace();
         }
 
-        return result;
+//        return result;
+        return null;
+    }
+
+    @Override
+    public List<Map<String, Object>> getNElements(int n) {
+        return null;
     }
 
 

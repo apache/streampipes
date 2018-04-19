@@ -28,5 +28,9 @@
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-commons</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-rio-rdfxml</artifactId>
+		</dependency>
 	</dependencies>
 </project>

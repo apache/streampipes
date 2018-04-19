@@ -21,18 +21,22 @@ import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.Entity;
 
 @RdfsClass(StreamPipes.MAPPING_PROPERTY_NARY)
 @Entity
 public class MappingPropertyNary extends MappingProperty {
 
 	private static final long serialVersionUID = 7570213252902343160L;
-	
+
+	@OneToMany(fetch = FetchType.EAGER,
+					cascade = {CascadeType.ALL})
 	@RdfProperty(StreamPipes.MAPS_TO)
 	private List<URI> mapsTo;
 	

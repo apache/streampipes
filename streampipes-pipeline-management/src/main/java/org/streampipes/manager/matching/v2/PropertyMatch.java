@@ -35,13 +35,27 @@ public class PropertyMatch extends AbstractMatcher<EventProperty, EventProperty>
 
 	@Override
 	public boolean match(EventProperty offer, EventProperty requirement, List<MatchingResultMessage> errorLog) {
-		if (!matchesType(offer, requirement)) return false; 
+		// return true if the requirement is an any property
+	    if (isAnyProperty(requirement)) {
+			return true;
+		}
+
+		if (!matchesType(offer, requirement)) {
+			return false;
+		}
 		else {
 			if (isPrimitive(requirement)) return new PrimitivePropertyMatch().match(toPrimitive(offer), toPrimitive(requirement), errorLog);
 			else if (isList(requirement)) return new ListPropertyMatch().match(toList(offer), toList(requirement), errorLog);
 			else if (isNested(requirement)) return new NestedPropertyMatch().match(toNested(offer), toNested(requirement), errorLog);
 			else return false;
 		}
+	}
+
+	private boolean isAnyProperty(EventProperty eventProperty) {
+		return eventProperty instanceof EventPropertyPrimitive &&
+				eventProperty.getDomainProperties() == null &&
+				((EventPropertyPrimitive) eventProperty).getMeasurementUnit() == null &&
+				((EventPropertyPrimitive) eventProperty).getRuntimeType() == null;
 	}
 	
 	private EventPropertyNested toNested(EventProperty property) {
