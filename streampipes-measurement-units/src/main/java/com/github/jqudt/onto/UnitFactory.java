@@ -42,10 +42,10 @@ public class UnitFactory {
 	private UnitFactory() {
 		repos = new LinkedHashModel();
 		try {
-//			OntoReader.read(repos, "unit");
+			OntoReader.read(repos, "unit");
 			OntoReader.read(repos, "qudt");
-//			OntoReader.read(repos, "quantity");
-//			OntoReader.read(repos, "ops.ttl");
+			OntoReader.read(repos, "quantity");
+			OntoReader.read(repos, "ops.ttl");
 		} catch (Exception exception) {
 			throw new IllegalStateException(
 				"Could not load the QUDT ontologies: " + exception.getMessage(), exception
