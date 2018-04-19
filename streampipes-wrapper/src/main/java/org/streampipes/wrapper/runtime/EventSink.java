@@ -20,12 +20,8 @@ package org.streampipes.wrapper.runtime;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public abstract class EventSink<B extends EventSinkBindingParams> extends PipelineElement<B> {
+public interface EventSink<B extends EventSinkBindingParams> extends PipelineElement<B> {
 
-  public EventSink(B bindingParams) {
-    super(bindingParams);
-  }
-
-  abstract public void bind(B parameters) throws SpRuntimeException;
+  void bind(B parameters) throws SpRuntimeException;
 
 }

@@ -21,11 +21,7 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 
-public abstract class EventProcessor<B extends EventProcessorBindingParams> extends PipelineElement<B> {
+public interface EventProcessor<B extends EventProcessorBindingParams> extends PipelineElement<B> {
 
-	public EventProcessor(B bindingParams) {
-		super(bindingParams);
-	}
-
-	abstract public void bind(B parameters, SpOutputCollector collector) throws SpRuntimeException;
+	void bind(B parameters, SpOutputCollector collector) throws SpRuntimeException;
 }

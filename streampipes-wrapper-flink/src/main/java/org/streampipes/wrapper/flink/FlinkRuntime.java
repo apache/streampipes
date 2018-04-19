@@ -132,7 +132,7 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
     SourceFunction<String> source1 = getStream1Source();
     if (source1 != null) {
       messageStream1 = env
-              .addSource(source1).flatMap(new JsonToMapFormat(getGraph()));
+              .addSource(source1).flatMap(new JsonToMapFormat());
     } else {
       throw new SpRuntimeException("At least one source must be defined for a flink sepa");
     }
@@ -141,7 +141,7 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
     SourceFunction<String> source2 = getStream2Source();
     if (source2 != null) {
       messageStream2 = env
-              .addSource(source2).flatMap(new JsonToMapFormat(getGraph()));
+              .addSource(source2).flatMap(new JsonToMapFormat());
 
       appendExecutionConfig(messageStream1, messageStream2);
     } else {
