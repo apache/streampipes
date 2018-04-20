@@ -1,3 +1,7 @@
-<div id="circleNumber" style="background-color:{{color}};width: 300px; height: 150px; font-size: 30px; color: #fff; line-height: 150px; text-align: center;  left: 50%; ">
-	<div id="number">{{item | number : 2}}</div>
+<div id="circleNumber"
+     style="background-color:{{color}};width: 300px; height: 150px; font-size: 30px; color: #fff; line-height: 150px; text-align: center;  left: 50%; ">
+    <div id="number">
+        <div ng-if="isNumber(item)">{{item | number : 2}}</div>
+        <div ng-if="!isNumber(item)">{{item}}</div>
+    </div>
 </div>

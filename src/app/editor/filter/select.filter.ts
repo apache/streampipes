@@ -6,7 +6,6 @@ class SelectFilter {
         return (pipelineElements, selectedOptions) => {
             var filteredElements = [];
             angular.forEach(pipelineElements, pe => {
-                console.log(pe);
                 if (!pe.properties.category || pe.properties.category.length === 0) {
                     filteredElements.push(pe);
                 }

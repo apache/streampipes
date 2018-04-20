@@ -30,6 +30,10 @@ export default function numberWidget(WidgetInstances, $filter) {
                 return colors[random];
             }
 
+            $scope.isNumber = function(number) {
+                return (typeof number) === "number";
+            }
+
             $scope.color = $scope.getRandomColor();
         },
         link: function postLink(scope) {

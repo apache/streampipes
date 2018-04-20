@@ -3,7 +3,6 @@ capitalize.$inject = [];
 export default function capitalize() {
 	return function(input) {
 		if (input!=null) {
-			console.log(input);
 			input = input.replace(/_/g, " ");
 			var stringArr = input.split(" ");
 			var result = "";

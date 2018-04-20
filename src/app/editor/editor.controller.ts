@@ -169,10 +169,10 @@ export class EditorCtrl {
             stack: '.draggable-icon',
             start: function (el, ui) {
                 ui.helper.appendTo('#content');
-                $('#outerAssemblyArea').css('border', '3px dashed rgb(255,64,129)');
+                $('#outerAssemblyArea').css('border', '3px dashed #39b54a');
             },
             stop: function (el, ui) {
-                $('#outerAssemblyArea').css('border', '1px solid rgb(63,81,181)');
+                $('#outerAssemblyArea').css('border', '1px solid #878787');
             }
         });
     };

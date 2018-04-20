@@ -70,7 +70,6 @@ export class CustomizeController {
     };
 
     setSelectValue(c, q) {
-        console.log(q);
         angular.forEach(q, function (item) {
             item.selected = false;
         });
@@ -128,8 +127,6 @@ export class CustomizeController {
                 if (!anyOccurrence) valid = false;
             } else if (staticProperty.properties.staticPropertyType === 'FreeTextStaticProperty') {
                 if (!staticProperty.properties.value) {
-                    console.log(staticProperty.properties.value);
-                    console.log("VALUE");
                     valid = false;
                 }
                 if (staticProperty.properties.requiredDatatype) {
