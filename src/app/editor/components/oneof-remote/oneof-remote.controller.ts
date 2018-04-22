@@ -43,6 +43,7 @@ export class OneOfRemoteController {
         resolvableOptionsParameterRequest['runtimeResolvableInternalId'] = this.staticProperty.properties.internalName;
 
         this.showOptions = false;
+        var self = this;
         this.RestApi.fetchRemoteOptions(resolvableOptionsParameterRequest).success(data => {
                     this.staticProperty.properties.options = data;
                     if (this.staticProperty.properties.options.length > 0) {
@@ -51,7 +52,7 @@ export class OneOfRemoteController {
                     }
             this.$timeout(() => {
                     // this.$rootScope.$apply();
-                this.showOptions = true;
+                self.showOptions = true;
             }, 400);
 
 
