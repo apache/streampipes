@@ -24,7 +24,8 @@ function nu() {
             else if (eventProperty.properties.runtimeType == 'http://www.w3.org/2001/XMLSchema#integer') {
                 result.push(eventProperty)
             }
-            else if (eventProperty.properties.runtimeType == 'http://www.w3.org/2001/XMLSchema#double') {
+            else if (eventProperty.properties.runtimeType == 'http://www.w3.org/2001/XMLSchema#double' ||
+                (eventProperty.properties.runtimeType == 'http://www.w3.org/2001/XMLSchema#float')) {
                 result.push(eventProperty)
             } else if (eventProperty.properties.domainProperties && eventProperty.properties.domainProperties.indexOf('http://schema.org/Number') > -1) {
                 result.push(eventProperty)
