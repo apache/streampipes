@@ -25,7 +25,7 @@ export default function tableWidget(WidgetInstances, $filter) {
 			}
 
 			var isDate = function(eventProperty) {
-				if (eventProperty.properties.domainProperties.indexOf('http://schema.org/DateTime')>-1) {
+				if (eventProperty.properties.domainProperties && eventProperty.properties.domainProperties.indexOf('http://schema.org/DateTime')>-1) {
 					return true;	
 				}
 				return false;

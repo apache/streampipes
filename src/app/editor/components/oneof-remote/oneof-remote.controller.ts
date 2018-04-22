@@ -8,10 +8,12 @@ export class OneOfRemoteController {
     staticProperties: any;
     eventProperties: any;
     belongsTo: any;
+    $timeout: any;
 
-    constructor(RestApi, $rootScope) {
+    constructor(RestApi, $rootScope, $timeout) {
         this.RestApi = RestApi;
-        this.$rootScope = $rootScope;
+        this.$rootScope = $rootScope
+        this.$timeout = $timeout;
         this.loadSavedProperty();
 
 
@@ -38,7 +40,10 @@ export class OneOfRemoteController {
         resolvableOptionsParameterRequest['belongsTo'] = this.belongsTo;
         resolvableOptionsParameterRequest['runtimeResolvableInternalId'] = this.staticProperty.properties.internalName;
         this.RestApi.fetchRemoteOptions(resolvableOptionsParameterRequest).success(data => {
-            this.staticProperty.properties.options = data;
+            this.$timeout(() => {
+                this.staticProperty.properties.options = data;
+                this.$rootScope.$apply();
+            });
         });
     }
 
@@ -51,4 +56,4 @@ export class OneOfRemoteController {
     }
 }
 
-OneOfRemoteController.$inject= ['RestApi', '$rootScope'];
+OneOfRemoteController.$inject= ['RestApi', '$rootScope', '$timeout'];
