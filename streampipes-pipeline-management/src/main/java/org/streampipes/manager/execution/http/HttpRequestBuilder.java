@@ -47,7 +47,7 @@ public class HttpRequestBuilder {
   public PipelineElementStatus invoke() {
     LOG.info("Invoking element: " + belongsTo);
     try {
-			Response httpResp = Request.Post(belongsTo).bodyString(jsonLd(), ContentType.APPLICATION_JSON).execute();
+			Response httpResp = Request.Post(belongsTo).bodyString(jsonLd(), ContentType.APPLICATION_JSON).connectTimeout(10000).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       LOG.error(e.getMessage());
@@ -57,7 +57,7 @@ public class HttpRequestBuilder {
 
   public PipelineElementStatus detach() {
     try {
-      Response httpResp = Request.Delete(belongsTo).execute();
+      Response httpResp = Request.Delete(belongsTo).connectTimeout(10000).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       LOG.error("Could not stop pipeline " + belongsTo, e.getMessage());
