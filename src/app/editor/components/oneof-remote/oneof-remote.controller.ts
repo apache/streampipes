@@ -10,6 +10,8 @@ export class OneOfRemoteController {
     belongsTo: any;
     $timeout: any;
 
+    showOptions: boolean = false;
+
     constructor(RestApi, $rootScope, $timeout) {
         this.RestApi = RestApi;
         this.$rootScope = $rootScope
@@ -39,15 +41,18 @@ export class OneOfRemoteController {
         resolvableOptionsParameterRequest['eventProperties'] = this.eventProperties;
         resolvableOptionsParameterRequest['belongsTo'] = this.belongsTo;
         resolvableOptionsParameterRequest['runtimeResolvableInternalId'] = this.staticProperty.properties.internalName;
+
+        this.showOptions = false;
         this.RestApi.fetchRemoteOptions(resolvableOptionsParameterRequest).success(data => {
-                this.$timeout(() => {
                     this.staticProperty.properties.options = data;
                     if (this.staticProperty.properties.options.length > 0) {
                         this.staticProperty.properties.options[0].selected = true;
                         this.loadSavedProperty();
                     }
+            this.$timeout(() => {
                     // this.$rootScope.$apply();
-                }, 400);
+                this.showOptions = true;
+            }, 400);
 
 
         });
@@ -57,6 +62,7 @@ export class OneOfRemoteController {
         angular.forEach(this.staticProperty.properties.options, option => {
             if (option.selected) {
                 this.staticProperty.properties.currentSelection = option;
+                this.showOptions = true;
             }
         });
     }
