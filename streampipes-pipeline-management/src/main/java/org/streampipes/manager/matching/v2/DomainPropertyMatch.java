@@ -17,12 +17,12 @@
 
 package org.streampipes.manager.matching.v2;
 
-import java.net.URI;
-import java.util.List;
-
 import org.streampipes.manager.matching.v2.utils.MatchingUtils;
 import org.streampipes.model.client.matching.MatchingResultMessage;
 import org.streampipes.model.client.matching.MatchingResultType;
+
+import java.net.URI;
+import java.util.List;
 
 public class DomainPropertyMatch extends AbstractMatcher<List<URI>, List<URI>> {
 
@@ -32,6 +32,9 @@ public class DomainPropertyMatch extends AbstractMatcher<List<URI>, List<URI>> {
 
 	@Override
 	public boolean match(List<URI> offer, List<URI> requirement, List<MatchingResultMessage> errorLog) {
+		if (offer == null && ((requirement != null) && requirement.size() > 0)) {
+			return false;
+		}
 		boolean match = MatchingUtils.nullCheck(offer, requirement) ||
 				requirement
 				.stream()
