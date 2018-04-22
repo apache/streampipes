@@ -43,20 +43,20 @@ export class OneOfRemoteController {
         resolvableOptionsParameterRequest['runtimeResolvableInternalId'] = this.staticProperty.properties.internalName;
 
         this.showOptions = false;
-        var self = this;
         this.RestApi.fetchRemoteOptions(resolvableOptionsParameterRequest).success(data => {
                     this.staticProperty.properties.options = data;
                     if (this.staticProperty.properties.options.length > 0) {
                         this.staticProperty.properties.options[0].selected = true;
                         this.loadSavedProperty();
                     }
-            this.$timeout(() => {
-                    // this.$rootScope.$apply();
-                self.showOptions = true;
-            }, 400);
 
 
         });
+
+        this.$timeout(() => {
+            this.showOptions = true;
+        }, 2000);
+
     }
 
     loadSavedProperty() {
