@@ -14,7 +14,7 @@ export class OneOfRemoteController {
         this.RestApi = RestApi;
         this.$rootScope = $rootScope
         this.$timeout = $timeout;
-        this.loadSavedProperty();
+        // this.loadSavedProperty();
 
 
         if (this.staticProperty.properties.linkedMappingPropertyId == undefined && this.staticProperty.properties.options.length == 0) {
@@ -40,10 +40,10 @@ export class OneOfRemoteController {
         resolvableOptionsParameterRequest['belongsTo'] = this.belongsTo;
         resolvableOptionsParameterRequest['runtimeResolvableInternalId'] = this.staticProperty.properties.internalName;
         this.RestApi.fetchRemoteOptions(resolvableOptionsParameterRequest).success(data => {
-            this.$timeout(() => {
+            // this.$timeout(() => {
                 this.staticProperty.properties.options = data;
-                this.$rootScope.$apply();
-            });
+                // this.$rootScope.$apply();
+            // });
         });
     }
 
