@@ -32,7 +32,7 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> ex
 	
 	private static final Logger LOG = LoggerFactory.getLogger(EsperEventEngine.class);
 
-	EsperEventEngine(T params) {
+	public EsperEventEngine(T params) {
 		super(params);
 	}
 
