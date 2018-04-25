@@ -30,6 +30,7 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
+import org.streampipes.logging.impl.EventStatisticLogger;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
@@ -80,7 +81,7 @@ public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> impleme
                 JavaDStream<Map<String, Object>> messageStream1 = null;
                 JavaInputDStream<ConsumerRecord<String, String>> source1 = getStream1Source(streamingContext);
                 if (source1 != null) {
-                    messageStream1 = source1.flatMap(new JsonToMapFormat());
+                    messageStream1 = source1.flatMap(new JsonToMapFormat(graph));
                 } else {
                     throw new Exception("At least one source must be defined for a Spark SEPA");
                 }

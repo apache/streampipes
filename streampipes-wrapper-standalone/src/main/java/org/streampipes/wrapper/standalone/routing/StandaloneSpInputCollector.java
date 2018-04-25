@@ -18,7 +18,9 @@
 package org.streampipes.wrapper.standalone.routing;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.logging.impl.EventStatisticLogger;
 import org.streampipes.messaging.InternalEventProcessor;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.wrapper.routing.SpInputCollector;
@@ -53,7 +55,8 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
   private void send(PipelineElement<?> processor, byte[] event) {
     try {
       processor.onEvent(dataFormatDefinition.toMap(event), getTopic());
-      //TODO LOG
+      InvocableStreamPipesEntity graph = processor.getGraph();
+      EventStatisticLogger.log(graph.getName(), graph.getCorrespondingPipeline(), graph.getUri());
     } catch (SpRuntimeException e) {
       e.printStackTrace();
     }

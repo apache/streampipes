@@ -24,6 +24,7 @@ import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.streampipes.logging.impl.EventStatisticLogger;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 
 public class JsonToMapFormat implements FlatMapFunction<String, Map<String, Object>> {
@@ -33,9 +34,11 @@ public class JsonToMapFormat implements FlatMapFunction<String, Map<String, Obje
 	 */
 	private static final long serialVersionUID = 1L;
 	private ObjectMapper mapper;
+	InvocableStreamPipesEntity graph;
 	
 	public JsonToMapFormat(InvocableStreamPipesEntity graph) {
 		this.mapper = new ObjectMapper();
+		this.graph = graph;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -43,7 +46,7 @@ public class JsonToMapFormat implements FlatMapFunction<String, Map<String, Obje
 	public void flatMap(String in, Collector<Map<String, Object>> out)
 			throws Exception {
 		out.collect(mapper.readValue(in, HashMap.class));
-		//TODO LOG!
+		EventStatisticLogger.log(graph.getName(), graph.getCorrespondingPipeline(), graph.getUri());
 	}
 
 }

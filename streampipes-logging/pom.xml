@@ -35,9 +35,14 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.25</version>
         </dependency>
-<!--        <dependency>
+<!--    <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-model</artifactId>
         </dependency>
 -->
     </dependencies>
