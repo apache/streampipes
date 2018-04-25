@@ -16,7 +16,8 @@ public class EventStatisticLogger implements Serializable {
                 + "correspondingPipeline: " + correspondingPipeline + " - "
                 + "peURI: " + source + " - ";
 
-        org.slf4j.Logger logger = LoggerFactory.getLogger(name.replaceAll("\\s+",""));
+      //  org.slf4j.Logger logger = LoggerFactory.getLogger(name.replaceAll("\\s+",""));
+        org.slf4j.Logger logger = LoggerFactory.getLogger(EventStatisticLogger.class);
         logger.info(prefix + 1);
 
     }
