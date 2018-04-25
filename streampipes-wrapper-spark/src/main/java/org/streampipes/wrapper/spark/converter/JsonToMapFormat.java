@@ -20,6 +20,8 @@ package org.streampipes.wrapper.spark.converter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.spark.api.java.function.FlatMapFunction;
+import org.streampipes.logging.impl.EventStatisticLogger;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,11 +32,14 @@ import java.util.Map;
  * Created by Jochen Lutz on 2018-01-11.
  */
 public class JsonToMapFormat implements FlatMapFunction<ConsumerRecord<String, String>, Map<String, Object>> {
+
     private static final long serialVersionUID = 1L;
     private ObjectMapper mapper;
+    private InvocableStreamPipesEntity graph;
 
-    public JsonToMapFormat() {
+    public JsonToMapFormat(InvocableStreamPipesEntity graph) {
         this.mapper = new ObjectMapper();
+        this.graph = graph;
     }
 
     @Override
@@ -43,6 +48,7 @@ public class JsonToMapFormat implements FlatMapFunction<ConsumerRecord<String, S
 
         System.out.println(s.value());
 
+        EventStatisticLogger.log(graph.getName(), graph.getCorrespondingPipeline(), graph.getUri());
         return Arrays.asList((Map<String, Object>)json).iterator();
     }
 }

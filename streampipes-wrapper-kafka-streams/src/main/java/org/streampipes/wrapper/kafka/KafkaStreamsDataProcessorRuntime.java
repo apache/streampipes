@@ -58,7 +58,7 @@ public abstract class KafkaStreamsDataProcessorRuntime<B extends EventProcessorB
       }
 
       KStream<String, Map<String, Object>> mapFormat = stream.flatMapValues((ValueMapper<String, Iterable<Map<String,
-              Object>>>) s -> new JsonToMapFormat().apply(s));
+              Object>>>) s -> new JsonToMapFormat(getGraph()).apply(s));
 
       KStream<String, String> outStream = getApplicationLogic(mapFormat).flatMapValues(new
               MapToJsonFormat());

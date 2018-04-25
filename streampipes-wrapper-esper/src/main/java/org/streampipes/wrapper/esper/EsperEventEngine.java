@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.Utils;
+import org.streampipes.logging.impl.EventStatisticLogger;
 import org.streampipes.wrapper.esper.config.EsperEngineConfig;
 import org.streampipes.wrapper.esper.writer.Writer;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
@@ -121,6 +122,7 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 	public void onEvent(Map<String, Object> event, String sourceInfo) {
 		//MapUtils.debugPrint(System.out, "", event);
 		//if (i % 10000 == 0) System.out.println(i +" in Esper.");
+		EventStatisticLogger.log(getGraph().getName(), getGraph().getCorrespondingPipeline(), getGraph().getUri());
 		epService.getEPRuntime().sendEvent(event, sourceInfo);
 	}
 
