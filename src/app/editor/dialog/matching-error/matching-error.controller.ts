@@ -3,6 +3,7 @@ export class MatchingErrorController {
     $mdDialog: any;
     elementData: any;
     msg: any;
+    statusDetailsVisible: any;
 
     constructor($mdDialog, elementData) {
         this.$mdDialog = $mdDialog;
@@ -18,6 +19,10 @@ export class MatchingErrorController {
     cancel() {
         this.$mdDialog.cancel();
     };
+
+    toggleStatusDetailsVisible() {
+        this.statusDetailsVisible = !(this.statusDetailsVisible);
+    }
 }
 
 MatchingErrorController.$inject = ['$mdDialog', 'elementData'];
