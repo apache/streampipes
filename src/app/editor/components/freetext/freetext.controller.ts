@@ -33,4 +33,11 @@ export class FreeTextController {
         });
         return eventProperty;
     }
+
+    applyPlaceholder(runtimeName) {
+        if (!this.staticProperty.properties.value) {
+            this.staticProperty.properties.value = "";
+        }
+        this.staticProperty.properties.value = this.staticProperty.properties.value +"#" +runtimeName +"#" +" ";
+    }
 }
