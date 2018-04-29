@@ -49,6 +49,10 @@ export class PipelineElementOptionsController {
         this.EditorDialogManager.showCustomizeDialog($("#" + this.pipelineElement.payload.DOM), "", this.pipelineElement.payload);
     }
 
+    openHelpDialog() {
+        this.EditorDialogManager.openHelpDialog(this.pipelineElement.payload);
+    }
+
     openCustomizeStreamDialog() {
         this.EditorDialogManager.showCustomizeStreamDialog(this.pipelineElement.payload);
     }

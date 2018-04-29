@@ -8,31 +8,39 @@ export class OneOfRemoteController {
     staticProperties: any;
     eventProperties: any;
     belongsTo: any;
-    $timeout: any;
+    currentlyLinkedProperty: any;
 
     showOptions: boolean = false;
 
-    constructor(RestApi, $rootScope, $timeout) {
+    constructor(RestApi, $rootScope) {
         this.RestApi = RestApi;
         this.$rootScope = $rootScope
-        this.$timeout = $timeout;
-        // this.loadSavedProperty();
 
-
-        if (this.staticProperty.properties.linkedMappingPropertyId == undefined && this.staticProperty.properties.options.length == 0) {
+        if (this.staticProperty.properties.options.length == 0) {
             this.loadOptionsFromRestApi();
+        } else {
+            this.loadSavedProperty();
         }
 
+        angular.forEach(this.staticProperties, sp => {
+            if (sp.properties.internalName === this.staticProperty.properties.linkedMappingPropertyId) {
+                this.currentlyLinkedProperty = sp.properties.mapsTo;
+            }
+        });
+
         this.$rootScope.$on(this.staticProperty.properties.linkedMappingPropertyId, () => {
+            this.showOptions = false;
             angular.forEach(this.staticProperties, sp => {
                 if (sp.properties.internalName === this.staticProperty.properties.linkedMappingPropertyId) {
-                    if (this.staticProperty.lastMappingState !== sp.properties.mapsTo) {
-                        this.staticProperty.lastMappingState = sp.properties.mapsTo;
+                    if (this.currentlyLinkedProperty !== sp.properties.mapsTo) {
+                        console.log("reloading");
+                        this.currentlyLinkedProperty = sp.properties.mapsTo;
                         this.loadOptionsFromRestApi();
                     }
                 }
             });
         });
+
     }
 
     loadOptionsFromRestApi() {
@@ -44,29 +52,20 @@ export class OneOfRemoteController {
 
         this.showOptions = false;
         this.RestApi.fetchRemoteOptions(resolvableOptionsParameterRequest).success(data => {
-                    this.staticProperty.properties.options = data;
-                    if (this.staticProperty.properties.options.length > 0) {
-                        this.staticProperty.properties.options[0].selected = true;
-                        this.loadSavedProperty();
-                    }
-
-
+            this.staticProperty.properties.options = data;
+                this.staticProperty.properties.options[0].selected = true;
+                this.loadSavedProperty();
         });
-
-        this.$timeout(() => {
-            this.showOptions = true;
-        }, 2000);
-
     }
 
     loadSavedProperty() {
         angular.forEach(this.staticProperty.properties.options, option => {
             if (option.selected) {
                 this.staticProperty.properties.currentSelection = option;
-                this.showOptions = true;
             }
         });
+        this.showOptions = true;
     }
 }
 
-OneOfRemoteController.$inject= ['RestApi', '$rootScope', '$timeout'];
+OneOfRemoteController.$inject = ['RestApi', '$rootScope'];
