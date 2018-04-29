@@ -20,7 +20,6 @@ export class PipelineDetailsController {
     }
 
     toggleRunningOperation(currentOperation) {
-        console.log(currentOperation);
         if (currentOperation === 'starting') {
             this.starting = !(this.starting);
         } else {

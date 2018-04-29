@@ -22,7 +22,7 @@
         </div>
         <div flex="40" class="md-padding">
             <div flex layout="column">
-                <pipeline-actions pipeline="ctrl.pipeline" ng-if="ctrl.pipeline.name != undefined"
+                <pipeline-actions load-pipeline="ctrl.loadPipeline()" pipeline="ctrl.pipeline" ng-if="ctrl.pipeline.name != undefined"
                                   style="margin-bottom:15px;"></pipeline-actions>
                 <pipeline-status pipeline="ctrl.pipeline" ng-if="ctrl.pipeline.name != undefined"></pipeline-status>
             </div>
