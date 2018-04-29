@@ -136,11 +136,21 @@ export class JsplumbService {
             }, payload: angular.copy(json)
         };
         if (!pipelineElementConfig.payload.DOM) {
-            pipelineElementConfig.payload.DOM = "jsplumb_" + this.idCounter;
+            pipelineElementConfig.payload.DOM = "jsplumb_" + this.idCounter +"_" +this.makeId(4);
             this.idCounter++;
         }
 
         return pipelineElementConfig;
+    }
+
+    makeId(count) {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < count; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
     }
 
     streamDropped($newElement, json, endpoints, preview) {
