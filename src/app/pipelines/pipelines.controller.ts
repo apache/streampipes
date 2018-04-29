@@ -160,7 +160,6 @@ export class PipelineCtrl {
     };
 
     refreshPipelines() {
-        console.log("refreshing pipelines");
         this.getPipelines();
         this.getSystemPipelines();
     }
