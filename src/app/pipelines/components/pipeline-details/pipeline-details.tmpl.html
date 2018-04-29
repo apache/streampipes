@@ -43,8 +43,9 @@
             </md-button>
         </span>
         <span flex flex-order="4" layout="row" layout-align="center center">
-            <md-button ng-click="ctrl.deletePipeline($event, ctrl.pipeline._id)" class="md-icon-button"><md-icon
+            <md-button ng-click="ctrl.deletePipeline($event, ctrl.pipeline._id)" ng-disabled="ctrl.pipeline.running" class="md-icon-button"><md-icon
                     md-svg-icon="action:ic_delete_24px"
+                    class="md-accent"
                     aria-label="Delete"></md-icon>
                 <md-tooltip md-direction="top">
                 Delete Pipeline
@@ -54,6 +55,7 @@
         <span flex flex-order="4" layout="row" layout-align="center center">
             <md-button ng-click="ctrl.showLogs(ctrl.pipeline._id)" class="md-icon-button"><md-icon
                     md-svg-icon="action:ic_info_24px"
+                    class="md-accent"
                     aria-label="Logs"></md-icon>
                 <md-tooltip md-direction="top">
                 Show Logs

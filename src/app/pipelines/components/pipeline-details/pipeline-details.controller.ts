@@ -31,7 +31,6 @@ export class PipelineDetailsController {
         this.RestApi.startPipeline(pipelineId)
             .success(data => {
                 this.showDialog(data);
-                // TODO: refreshPipelines not implemented
                 this.refreshPipelines();
                 this.starting = false;
 
@@ -54,7 +53,6 @@ export class PipelineDetailsController {
             .success(data => {
                 this.stopping = false;
                 this.showDialog(data);
-                // TODO: refreshPipelines not implemented
                 this.refreshPipelines();
             })
             .error(data => {
