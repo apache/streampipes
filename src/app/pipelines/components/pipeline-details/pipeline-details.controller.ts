@@ -14,7 +14,7 @@ export class PipelineDetailsController {
 
         if (this.pipeline.immediateStart) {
             if (!this.pipeline.running) {
-                this.PipelineOperationsService.startPipeline(this.pipeline._id, this.starting, this.refreshPipelines);
+                this.PipelineOperationsService.startPipeline(this.pipeline._id, this.toggleRunningOperation, this.refreshPipelines);
             }
         }
     }
