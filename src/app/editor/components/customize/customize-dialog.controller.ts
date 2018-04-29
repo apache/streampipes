@@ -3,9 +3,11 @@ import * as angular from 'angular';
 export class CustomizeDialogController {
 
     selectedElement: any;
+    staticProperty: any;
 
     constructor() {
     }
+
 
     getMappingProperty(mapsTo) {
         var sps;
