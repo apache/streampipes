@@ -1,6 +1,7 @@
 export class PipelineAssemblyController {
 
     $timeout: any;
+    $state: any;
     JsplumbService: any;
     PipelineEditorService: any;
     JsplumbBridge: any;
@@ -19,7 +20,7 @@ export class PipelineAssemblyController {
     currentPipelineDescription: any;
     currentModifiedPipelineId: any;
 
-    constructor(JsplumbBridge, PipelinePositioningService, EditorDialogManager, PipelineValidationService, ObjectProvider, RestApi, JsplumbService, $timeout) {
+    constructor(JsplumbBridge, PipelinePositioningService, EditorDialogManager, PipelineValidationService, ObjectProvider, RestApi, JsplumbService, $timeout, $state) {
         this.JsplumbBridge = JsplumbBridge;
         this.PipelinePositioningService = PipelinePositioningService;
         this.EditorDialogManager = EditorDialogManager;
@@ -28,6 +29,7 @@ export class PipelineAssemblyController {
         this.RestApi = RestApi;
         this.JsplumbService = JsplumbService;
         this.$timeout = $timeout;
+        this.$state = $state;
 
         this.selectMode = true;
         this.currentZoomLevel = 1;
@@ -84,6 +86,9 @@ export class PipelineAssemblyController {
 
     showClearAssemblyConfirmDialog(ev) {
         this.EditorDialogManager.showClearAssemblyDialog(ev).then(() => {
+            if (this.currentModifiedPipelineId) {
+                this.currentModifiedPipelineId = undefined;
+            }
             this.clearAssembly();
         }, function () {
         });
@@ -116,13 +121,16 @@ export class PipelineAssemblyController {
 
         pipeline.name = this.currentPipelineName;
         pipeline.description = this.currentPipelineDescription;
+        if (this.currentModifiedPipelineId) {
+            pipeline._id = this.currentModifiedPipelineId;
+        }
 
-        this.openPipelineNameModal(pipeline);
+        this.openPipelineNameModal(pipeline, (!!this.currentModifiedPipelineId));
     }
 
 
-    openPipelineNameModal(pipeline) {
-        this.EditorDialogManager.showSavePipelineDialog(pipeline);
+    openPipelineNameModal(pipeline, modificationMode) {
+        this.EditorDialogManager.showSavePipelineDialog(pipeline, modificationMode);
     }
 
     displayPipelineById() {
@@ -139,4 +147,12 @@ export class PipelineAssemblyController {
 
 }
 
-PipelineAssemblyController.$inject = ['JsplumbBridge', 'PipelinePositioningService', 'EditorDialogManager', 'PipelineValidationService', 'ObjectProvider', 'RestApi', 'JsplumbService', '$timeout'];
+PipelineAssemblyController.$inject = ['JsplumbBridge',
+    'PipelinePositioningService',
+    'EditorDialogManager',
+    'PipelineValidationService',
+    'ObjectProvider',
+    'RestApi',
+    'JsplumbService',
+    '$timeout',
+    '$state'];

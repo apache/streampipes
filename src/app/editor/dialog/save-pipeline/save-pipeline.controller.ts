@@ -8,9 +8,10 @@ export class SavePipelineController {
     pipeline: any;
     ObjectProvider: any;
     startPipelineAfterStorage: any;
-    overwrite: any;
+    modificationMode: any;
+    updateMode: any;
 
-    constructor($mdDialog, $state, RestApi, $mdToast, ObjectProvider, pipeline) {
+    constructor($mdDialog, $state, RestApi, $mdToast, ObjectProvider, pipeline, modificationMode) {
         this.RestApi = RestApi;
         this.$mdToast = $mdToast;
         this.$state = $state;
@@ -18,6 +19,8 @@ export class SavePipelineController {
         this.pipelineCategories = [];
         this.pipeline = pipeline;
         this.ObjectProvider = ObjectProvider;
+        this.modificationMode = modificationMode;
+        this.updateMode = "update";
 
         this.getPipelineCategories();
     }
@@ -57,30 +60,18 @@ export class SavePipelineController {
         this.ObjectProvider.storePipeline(this.pipeline)
             .success(data => {
                 if (data.success) {
-                    this.displaySuccess(data);
-                    this.hide();
-                    if (switchTab) this.$state.go("streampipes.pipelines");
-                    if (this.startPipelineAfterStorage) this.$state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
-                    // TODO update pipelines properly
-                    if (this.overwrite) {
-                        //var pipelineId = $rootScope.state.adjustingPipeline._id;
-
-                        // TODO: pipelineId not defined
-                        let pipelineId;
-
-                        this.RestApi.deleteOwnPipeline(pipelineId)
+                    if (this.modificationMode && this.updateMode === 'update') {
+                        this.RestApi.deleteOwnPipeline(this.pipeline._id)
                             .success(data => {
-                                if (data.success) {
-                                    $("#overwriteCheckbox").css("display", "none");
-                                } else {
-                                    this.displayErrors(data);
-                                }
                             })
                             .error(data => {
                                 this.showToast("error", "Could not delete Pipeline");
                             })
-
                     }
+                    this.displaySuccess(data);
+                    this.hide();
+                    if (switchTab) this.$state.go("streampipes.pipelines");
+                    if (this.startPipelineAfterStorage) this.$state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
                     // TODO clear assembly
                     //this.clearAssembly();
 
@@ -108,4 +99,4 @@ export class SavePipelineController {
     }
 }
 
-SavePipelineController.$inject = ['$mdDialog', '$state', 'RestApi', '$mdToast', 'ObjectProvider', 'pipeline'];
+SavePipelineController.$inject = ['$mdDialog', '$state', 'RestApi', '$mdToast', 'ObjectProvider', 'pipeline', 'modificationMode'];

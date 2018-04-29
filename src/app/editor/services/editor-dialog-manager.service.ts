@@ -46,10 +46,11 @@ export class EditorDialogManager {
         this.$mdDialog.show(dialogContent);
     }
 
-    showSavePipelineDialog(pipelineNew) {
+    showSavePipelineDialog(pipelineNew, modificationModeOn) {
         var dialogContent = this.DialogBuilder.getDialogTemplate(SavePipelineController, require('../dialog/save-pipeline/submitPipelineModal.tmpl.html'));
         dialogContent.locals = {
-            pipeline: pipelineNew
+            pipeline: pipelineNew,
+            modificationMode: modificationModeOn
         }
         this.$mdDialog.show(dialogContent);
     }

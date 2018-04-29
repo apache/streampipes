@@ -4,7 +4,6 @@ export class JsplumbService {
 
     objectProvider: any;
     apiConstants: any;
-    $compile: any;
     JsplumbConfigService: any;
     JsplumbBridge: any;
     $timeout: any;
