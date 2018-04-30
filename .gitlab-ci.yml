@@ -5,9 +5,18 @@ variables:
   IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH/$CI_COMMIT_REF_NAME
 
 stages:
+   - test
    - build
    - docker
    - docker-hub
+
+test:
+  image: beevelop/nodejs-python
+    stage: test
+    script:
+      - export NODE_PATH=/cache/node_modules
+      - npm install --unsafe-perm
+      - npm test
 
 build:
   image: beevelop/nodejs-python
