@@ -12,11 +12,11 @@ stages:
 
 test:
   image: beevelop/nodejs-python
-    stage: test
-    script:
-      - export NODE_PATH=/cache/node_modules
-      - npm install --unsafe-perm
-      - npm test
+  stage: test
+  script:
+    - export NODE_PATH=/cache/node_modules
+    - npm install --unsafe-perm
+    - npm test
 
 build:
   image: beevelop/nodejs-python
