@@ -11,7 +11,7 @@ stages:
    - docker-hub
 
 test:
-  image: registry.gitlab.com/gitlab-org/gitlab-build-images:node-6-chrome-64.0
+  image: weltn24/up-docker-node-chrome-headless
   stage: test
   script:
     - export CHROME_BIN=google-chrome
