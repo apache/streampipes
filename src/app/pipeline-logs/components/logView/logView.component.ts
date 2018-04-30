@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort, MatSortable, MatTableDataSource} from '@angular/material';
+import { AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { Log } from './model/log.model';
 import { LogViewRestService } from './services/logView-rest.service';
 import { LogRequest } from './model/logRequest.model';
@@ -19,8 +19,6 @@ export class LogViewComponent implements AfterViewInit, OnChanges {
     startDate = new Date(Date.now() - LogViewComponent.DEFAULT_DATE_OFFSET);
 
     endDate = new Date(Date.now());
-
-    logLevels = [];
 
     selectedLogLevel = 'ALL';
 
@@ -51,12 +49,11 @@ export class LogViewComponent implements AfterViewInit, OnChanges {
         let logs = [];
 
         const logRequest = <LogRequest>{};
-        this.logLevels = [];
 
         logRequest.dateFrom = this.startDate.getTime();
         logRequest.dateTo = this.endDate.getTime();
 
-        for (let logSourceID of this.logSourceIDs) {
+        for (const logSourceID of this.logSourceIDs) {
 
             logRequest.sourceID = logSourceID;
 
@@ -77,9 +74,6 @@ export class LogViewComponent implements AfterViewInit, OnChanges {
                     this.dataSourceDisplay = new MatTableDataSource<Log>(logs);
                     this.dataSource = new MatTableDataSource<Log>(logs);
                     this.dataSourceDisplay.paginator = this.paginator;
-
-                    this.logLevels.push(Array.from(new Set(response.map(t => t.level))));
-                    this.logLevels.push(Array.from(new Set(this.logLevels)));
 
                 }, error => {
                     console.log(error);
