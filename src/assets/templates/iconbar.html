@@ -14,7 +14,7 @@
         <notification-icon count='notificationCount'>
             <md-button class="md-icon-button button-margin-iconbar" ng-click="appCtrl.go('streampipes.notifications')">
                 <md-icon md-svg-icon="communication:ic_chat_24px" aria-label="Notifications"
-                         style="color:{{isActivePage('streampipes.notifications') ? '#39b54a' : 'white'}};"></md-icon>
+                         style="color:{{appCtrl.isActivePage('streampipes.notifications') ? '#39b54a' : 'white'}};"></md-icon>
                 <md-tooltip md-direction="right">
                     Notifications
                 </md-tooltip>
@@ -26,7 +26,7 @@
                   ng-repeat="item in appCtrl.admin" role="link">
         <md-button class="md-icon-button button-margin-iconbar" ng-click="appCtrl.go(item.link)">
             <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"
-                     style="color:{{isActivePage(item.link) ? '#39b54a' : 'white'}};"></md-icon>
+                     style="color:{{appCtrl.isActivePage(item.link) ? '#39b54a' : 'white'}};"></md-icon>
             <md-tooltip md-direction="right">
                 {{item.title}}
             </md-tooltip>
