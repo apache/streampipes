@@ -9,7 +9,7 @@ class ElementNameFilter {
             } else {
                 var filteredElements = [];
                 angular.forEach(pipelineElements, pe => {
-                    if (pe.properties.name.indexOf(elementName) !== -1) {
+                    if (pe.name.indexOf(elementName) !== -1) {
                         filteredElements.push(pe);
                     }
                 })
