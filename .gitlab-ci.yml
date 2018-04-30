@@ -40,13 +40,13 @@ github:
   image: maven:3-jdk-8
   stage: github
   script:
+    - git remote add github https://$GITHUB_TOKEN:x-oauth-basicgithub.com/streampipes/pe-templates-sources.git
     - git config --global user.email 'zehnder@fzi.de'
     - git config --global user.name 'zehnder'
     - git checkout $CI_COMMIT_REF_NAME
     - git pull
     - git remote set-url github https://$GITHUB_TOKEN:x-oauth-basic@github.com/streampipes/streampipes-ce.git
     - git push github $CI_COMMIT_REF_NAME
-  when: manual
   only:
     - dev
     - master
