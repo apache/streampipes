@@ -9,6 +9,7 @@ variables:
 
 stages:
   - build
+  - github
   - docker
   - deploy
   - release
@@ -34,6 +35,22 @@ build:
     expire_in:  1 week
   except:
       - /release-.*$/
+      
+github:
+  image: maven:3-jdk-8
+  stage: github
+  script:
+    - git config --global user.email 'zehnder@fzi.de'
+    - git config --global user.name 'zehnder'
+    - git checkout $CI_COMMIT_REF_NAME
+    - git pull
+    - git remote set-url github https://$GITHUB_TOKEN:x-oauth-basic@github.com/streampipes/streampipes-ce.git
+    - git push github $CI_COMMIT_REF_NAME
+  when: manual
+  only:
+    - dev
+    - master
+
 
 docker-backend:
    image: docker:17.06.0-ce
