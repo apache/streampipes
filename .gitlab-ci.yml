@@ -14,7 +14,7 @@ test:
   image: beevelop/nodejs-python
   stage: test
   script:
-    - apt-get install chromium-browser
+    - apt-get -y install chromium-browser
     - export CHROME_BIN=chromium-browser
     - export NODE_PATH=/cache/node_modules
     - npm install --unsafe-perm
