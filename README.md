@@ -1,5 +1,9 @@
 <img src="https://www.streampipes.org/images/screenshot.png" alt="StreamPipes Pipeline Editor"/>
 
+[![Docker pulls](https://img.shields.io/docker/pulls/streampipes/backend.svg)](https://hub.docker.com/r/streampipes/backend/)
+[![License](https://img.shields.io/github/license/streampipes/streampipes-ce.svg)](https://docs.streampipes.org/license/)
+[![License](https://img.shields.io/github/last-commit/streampipes/streampipes-ce.svg)]()
+
 # StreamPipes
 
 
