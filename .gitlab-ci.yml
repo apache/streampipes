@@ -11,11 +11,10 @@ stages:
    - docker-hub
 
 test:
-  image: beevelop/nodejs-python
+  image: registry.gitlab.com/gitlab-org/gitlab-build-images:node-6-chrome-64.0
   stage: test
   script:
-    - apt-get -y install chromium-browser
-    - export CHROME_BIN=chromium-browser
+    - export CHROME_BIN=google-chrome
     - export NODE_PATH=/cache/node_modules
     - npm install --unsafe-perm
     - npm test
