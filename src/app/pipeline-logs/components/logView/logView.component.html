@@ -21,7 +21,11 @@
             <mat-form-field>
                 <mat-select [(value)]="selectedLogLevel" (selectionChange)="logLevelSelection()" placeholder="">
                     <mat-option value="ALL">All</mat-option>
-                    <mat-option *ngFor="let level of logLevels" value="{{level}}">{{level}}</mat-option>
+                    <mat-option value="INFO">Info</mat-option>
+                    <mat-option value="DEBUG">Debug</mat-option>
+                    <mat-option value="ERROR">Err‚or</mat-option>
+                    <mat-option value="WARN">Warn</mat-option>
+                    <mat-option value="TRACE">Trace</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
