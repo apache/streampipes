@@ -9,9 +9,9 @@
       </md-button>
     </div>
   </md-toolbar>
-  <md-dialog-content style="max-width:800px;max-height:810px; ">
+  <md-dialog-content flex="100" class="md-dialog-content">
     <div>
-      <pre nag-prism source="{{ctrl.content}}" class="language-json line-numbers"></pre>
+      <pre nag-prism source="{{ctrl.content}}" class="language-json line-numbers" ng-if="ctrl.loadingCompleted"></pre>
       <!--<pre pretty-json="content"></pre>-->
     </div>
   </md-dialog-content>
