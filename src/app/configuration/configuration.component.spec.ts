@@ -8,7 +8,7 @@ import { ConsulServiceComponent } from './consul-service/consul-service.componen
 import { ConfigurationService } from './shared/configuration.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('ConfigurationComponent', () => {
+describe('ConfigurationModule', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -32,7 +32,7 @@ describe('ConfigurationComponent', () => {
             ]
         }).compileComponents();
     }));
-    it('should create the app', async(() => {
+    it('should create the component', async(() => {
         const fixture = TestBed.createComponent(ConfigurationComponent);
         const app = fixture.debugElement.componentInstance;
         expect(app).toBeTruthy();

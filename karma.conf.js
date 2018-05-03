@@ -8,7 +8,9 @@ module.exports = function (config) {
         plugins: [
             require('karma-jasmine'),
             require('karma-chrome-launcher'),
+            require('karma-firefox-launcher'),
             require('karma-jasmine-html-reporter'),
+            require('karma-verbose-reporter'),
             require('karma-coverage-istanbul-reporter'),
             require('@angular/cli/plugins/karma')
         ],
@@ -31,14 +33,22 @@ module.exports = function (config) {
                     '--no-sandbox',
                     '--remote-debugging-port=9222'
                 ]
+            },
+            FirefoxHeadless: {
+                base: 'Firefox',
+                flags: [
+                    '--headless'
+                ]
             }
         },
-        reporters: ['progress', 'kjhtml'],
+        reporters: ['verbose'],
         port: 9876,
+        browserDisconnectTolerance: 2,
+        browserNoActivityTimeout: 50000,
         colors: true,
         logLevel: config.LOG_INFO,
-        autoWatch: true,
-        browsers: ['ChromeHeadless'],
-        singleRun: false
+        autoWatch: false,
+        browsers: ['ChromeHeadless', 'FirefoxHeadless'],
+        singleRun: true
     });
 };

@@ -13,7 +13,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server -d",
-    "test": "karma start ./karma.conf.js --single-run",
+    "test": "karma start ./karma.conf.js",
     "build": "webpack --display-modules --progress",
     "lint": "tslint -c tslint.json 'src/**/*.ts*"
   },
@@ -93,8 +93,10 @@
     "karma": "~2.0.0",
     "karma-chrome-launcher": "~2.2.0",
     "karma-coverage-istanbul-reporter": "^1.2.1",
+    "karma-firefox-launcher": "^1.1.0",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "karma-verbose-reporter": "0.0.6",
     "mustache": "^2.3.0",
     "node-sass": "^4.8.3",
     "raw-loader": "^0.5.1",
