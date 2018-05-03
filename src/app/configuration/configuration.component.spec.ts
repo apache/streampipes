@@ -6,7 +6,7 @@ import { MatButtonModule, MatGridListModule, MatTooltipModule, MatCheckboxModule
 import { FormsModule } from '@angular/forms';
 import { ConsulServiceComponent } from './consul-service/consul-service.component';
 import { ConfigurationService } from './shared/configuration.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ConfigurationComponent', () => {
     beforeEach(async(() => {
@@ -21,7 +21,7 @@ describe('ConfigurationComponent', () => {
                 MatCheckboxModule,
                 MatTooltipModule,
                 FormsModule,
-                HttpClientModule
+                HttpClientTestingModule
             ],
             declarations: [
                 ConfigurationComponent,
