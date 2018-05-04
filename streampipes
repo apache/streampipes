@@ -1,0 +1,53 @@
+#!/bin/bash
+if [ -z "$1" ] || [ "$#" -lt 1 ]; 
+then
+	echo "Use 'streampipes start' to start StreamPipes, 'streampipes stop' to stop it, and 'streampipes clean' to remove streampipes."
+	exit 1
+fi
+
+if [ $1 = "start" ];
+then
+
+	if [ ! -f ./tmpl-docker-compose.yml ]; then
+		curl https://raw.githubusercontent.com/streampipes/preview-docker/master/docker-compose.yml > ./tmpl-docker-compose.yml
+	fi
+
+
+	if [ ! -f ./docker-compose.yml ]; then
+		cp ./tmpl-docker-compose.yml ./docker-compose.yml
+	fi
+
+	ip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -1) 
+
+	sed -i -e "s/###TODO ADD HOSTNAME HERE ###/${ip}/g" ./docker-compose.yml
+
+	docker-compose up -d
+
+	if [ $? -eq 0 ]; then
+		echo "StreamPipes successfully started"
+	else
+		echo "ERROR: There was a problem while starting StreamPipes"
+	fi
+
+else
+	if [ $1 = "stop" ] || [ $1 = "clean" ];
+	then
+		docker-compose stop
+		yes Y | docker-compose down -v
+
+		echo "StreamPipes successfully stopped"
+
+		if [ $1 = "clean" ];
+		then
+			rm ./docker-compose.yml
+			rm ./tmpl-docker-compose.yml
+			rm -r ./config/
+			echo "All StreamPipes System informations were deleted. The system can now be installed again."
+		fi
+
+	else
+		echo "Command '$1' is not supported! Use 'streampipes start' to start StreamPipes, 'streampipes stop' to stop it, and 'streampipes clean' to remove streampipes."
+	fi
+
+fi
+
