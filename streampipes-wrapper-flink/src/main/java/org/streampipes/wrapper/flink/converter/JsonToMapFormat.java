@@ -29,16 +29,11 @@ import org.streampipes.model.base.InvocableStreamPipesEntity;
 
 public class JsonToMapFormat implements FlatMapFunction<String, Map<String, Object>> {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ObjectMapper mapper;
-	InvocableStreamPipesEntity graph;
 
-	public JsonToMapFormat(InvocableStreamPipesEntity graph) {
+	public JsonToMapFormat() {
 		this.mapper = new ObjectMapper();
-		this.graph = graph;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -46,7 +41,6 @@ public class JsonToMapFormat implements FlatMapFunction<String, Map<String, Obje
 	public void flatMap(String in, Collector<Map<String, Object>> out)
 			throws Exception {
 		out.collect(mapper.readValue(in, HashMap.class));
-		EventStatisticLogger.log(graph.getName(), graph.getCorrespondingPipeline(), graph.getUri());
 	}
 
 }
