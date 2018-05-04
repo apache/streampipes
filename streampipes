@@ -12,7 +12,16 @@ then
 		curl https://raw.githubusercontent.com/streampipes/preview-docker/master/docker-compose.yml > ./tmpl-docker-compose.yml
 	fi
 
-	ip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -1) 
+    if command -v ifconfig;
+    then
+        # If Unix
+        ip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -1)
+    else
+        # If Windows
+        ip=$(ipconfig | grep -Eo 'IPv4-Adresse  . . . . . . . . . . : ?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | tail -1)
+        # Workaround for Kafka (https://github.com/docker/for-win/issues/1829)
+        export COMPOSE_CONVERT_WINDOWS_PATHS=1
+    fi
 
 	sed "s/###TODO ADD HOSTNAME HERE ###/${ip}/g" ./tmpl-docker-compose.yml > ./docker-compose.yml
 

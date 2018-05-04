@@ -1,3 +1,4 @@
 docker-compose.yml
 tmpl-docker-compose.yml
 config/
+.idea/
