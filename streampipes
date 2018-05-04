@@ -12,14 +12,9 @@ then
 		curl https://raw.githubusercontent.com/streampipes/preview-docker/master/docker-compose.yml > ./tmpl-docker-compose.yml
 	fi
 
-
-	if [ ! -f ./docker-compose.yml ]; then
-		cp ./tmpl-docker-compose.yml ./docker-compose.yml
-	fi
-
 	ip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -1) 
 
-	sed -i -e "s/###TODO ADD HOSTNAME HERE ###/${ip}/g" ./docker-compose.yml
+	sed "s/###TODO ADD HOSTNAME HERE ###/${ip}/g" ./tmpl-docker-compose.yml > ./docker-compose.yml
 
 	docker-compose up -d
 
