@@ -33,7 +33,9 @@ export class HelpDialogController {
         this.$timeout = $timeout;
         this.pollingActive = true;
         this.error = false;
-        this.loadCurrentData();
+        if (this.pipelineElement.type == 'stream') {
+            this.loadCurrentData();
+        }
     }
 
     setSelectedTab(type) {
