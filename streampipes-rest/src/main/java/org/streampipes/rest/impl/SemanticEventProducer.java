@@ -26,19 +26,12 @@ import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IPipelineElement;
 import org.streampipes.storage.rdf4j.filter.Filter;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/sources")
 public class SemanticEventProducer extends AbstractRestInterface implements IPipelineElement {
@@ -163,11 +156,6 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 		} catch (URISyntaxException e) {
 			return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
 		}
-	}
-	
-	public static void main(String[] args)
-	{
-		System.out.println(new SemanticEventProducer().getOwn("riemer@fzi.de"));
 	}
 
 }
