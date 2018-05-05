@@ -16,6 +16,7 @@ export class AddCtrl {
     endpointItemsLoadingComplete: any;
     selectedTab: any;
     $templateCache: any;
+    availableTypes: {"source", "sepa", "action"};
 
     constructor(RestApi, $mdDialog, ElementIconText, $templateCache) {
         this.RestApi = RestApi;
@@ -55,7 +56,7 @@ export class AddCtrl {
 
     selectAll(selected) {
         this.endpointItems.forEach(item => {
-            if (item.type === this.selectedTab) item.selected = selected;
+            if (item.type === this.selectedTab || this.selectedTab == 'all') item.selected = selected;
         });
     }
 
@@ -66,11 +67,33 @@ export class AddCtrl {
             return "Processing Elements";
         } else if (selectedTab === 'action') {
             return "Data Sinks";
+        } else if (selectedTab === 'all') {
+            return "All Pipeline Elements";
         } else {
             return "Marketplace";
         }
     }
 
+    getItemTitle(selectedTab) {
+        if (selectedTab === 'source') {
+            return "Data Source";
+        } else if (selectedTab === 'sepa') {
+            return "Data Processor";
+        } else {
+            return "Data Sink";
+        }
+    }
+
+    getItemStyle(type) {
+        let baseType = "pe-label ";
+        if (type == 'source') {
+            return baseType + "source-label";
+        } else if (type == 'sepa') {
+            return baseType + "processor-label";
+        } else {
+            return baseType + "sink-label";
+        }
+    }
     showManageRdfEndpointsDialog() {
         this.$mdDialog.show({
             controller: AddEndpointController,
@@ -141,7 +164,7 @@ export class AddCtrl {
         let elementsToInstall = [];
 
         this.endpointItems.forEach(item => {
-            if (item.type === this.selectedTab) {
+            if (item.type === this.selectedTab || this.selectedTab == 'all') {
                 if (item.installed === !install && item.selected) {
                     elementsToInstall.push(item);
                 }
