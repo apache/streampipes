@@ -1,29 +1,47 @@
-<md-list-item layout="row" class="md-with-secondary">
-    <md-button flex="10" ng-click="ctrl.PipelineOperationsService.startPipeline(ctrl.pipeline._id, ctrl.toggleRunningOperation, ctrl.refreshPipelines)" class="md-icon-button"
-               ng-disabled="ctrl.starting" ng-if="!ctrl.pipeline.running">
-        <md-icon md-svg-icon="av:ic_play_arrow_24px" aria-label="Start"
-                 class="md-accent"></md-icon>
-        <md-tooltip md-direction="top">
-            Start Pipeline
-        </md-tooltip>
-    </md-button>
-    <md-button flex="10" ng-click="ctrl.PipelineOperationsService.stopPipeline(ctrl.pipeline._id, ctrl.toggleRunningOperation, ctrl.refreshPipelines)" class="md-icon-button"
-               ng-disabled="ctrl.stopping" ng-if="ctrl.pipeline.running">
-        <md-icon md-svg-icon="av:ic_stop_24px" aria-label="Stop" class="md-accent"></md-icon>
-        <md-tooltip md-direction="top">
-            Stop Pipeline
-        </md-tooltip>
-    </md-button>
-    <div class="md-list-item-text" flex="35" layout="column">
-        <h4 style="margin-bottom:0px;">{{ctrl.pipeline.name}}</h4>
-        <h5>{{ctrl.pipeline.description != '' ? ctrl.pipeline.description : '-'}}</h5>
-    </div>
-    <div class="md-list-item-text" flex="20" layout="column">
-        <h5>{{ctrl.pipeline.createdAt | date:'dd.MM.yyyy HH:mm'}}</h5>
-    </div>
-    <div flex layout="row">
-        <span flex flex-order="1" layout="row" layout-align="center center">
-            <md-button ng-click="ctrl.PipelineOperationsService.showPipelineDetails(ctrl.pipeline._id)" class="md-icon-button"><md-icon
+<table datatable="" dt-options="ctrl.dtOptions" class="row-border hover" ng-if="ctrl.pipelines.length > 0">
+    <thead>
+    <tr>
+        <th>Start</th>
+        <th>Name</th>
+        <th>Last modified</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="pipeline in ctrl.pipelines | pipelineCategoryFilter: ctrl.activeCategory | orderBy:'+name'">
+        <td>
+            <md-button
+                    ng-click="ctrl.PipelineOperationsService.startPipeline(pipeline._id, ctrl.toggleRunningOperation, ctrl.refreshPipelines)"
+                    class="md-icon-button"
+                    ng-disabled="ctrl.starting" ng-if="!pipeline.running">
+                <md-icon md-svg-icon="av:ic_play_arrow_24px" aria-label="Start"
+                         class="md-accent"></md-icon>
+                <md-tooltip md-direction="top">
+                    Start Pipeline
+                </md-tooltip>
+            </md-button>
+            <md-button
+                    ng-click="ctrl.PipelineOperationsService.stopPipeline(pipeline._id, ctrl.toggleRunningOperation, ctrl.refreshPipelines)"
+                    class="md-icon-button"
+                    ng-disabled="ctrl.stopping" ng-if="pipeline.running">
+                <md-icon md-svg-icon="av:ic_stop_24px" aria-label="Stop" class="md-accent"></md-icon>
+                <md-tooltip md-direction="top">
+                    Stop Pipeline
+                </md-tooltip>
+            </md-button>
+        </td>
+        <td>
+            <h4 style="margin-bottom:0px;">{{pipeline.name}}</h4>
+            <h5>{{pipeline.description != '' ? pipeline.description : '-'}}</h5>
+        </td>
+        <td>
+            <h5>{{pipeline.createdAt | date:'dd.MM.yyyy HH:mm'}}</h5>
+        </td>
+        <td>
+            <div layout="row">
+            <span flex flex-order="1" layout="row" layout-align="center center">
+            <md-button ng-click="ctrl.PipelineOperationsService.showPipelineDetails(pipeline._id)"
+                       class="md-icon-button"><md-icon
                     md-svg-icon="action:ic_search_24px" aria-label="Inspect"
                     class="md-accent"></md-icon>
             <md-tooltip md-direction="top">
@@ -31,19 +49,21 @@
             </md-tooltip>
             </md-button>
         </span>
-        <span flex flex-order="2" layout="row" layout-align="center center">
-            <md-button ng-click="ctrl.PipelineOperationsService.modifyPipeline(ctrl.pipeline._id)" class="md-icon-button">
+                <span flex flex-order="2" layout="row" layout-align="center center">
+            <md-button ng-click="ctrl.PipelineOperationsService.modifyPipeline(pipeline._id)" class="md-icon-button">
                 <md-icon
-                    md-svg-icon="editor:ic_mode_edit_24px" aria-label="Modify"
-                    class="md-accent">
+                        md-svg-icon="editor:ic_mode_edit_24px" aria-label="Modify"
+                        class="md-accent">
                 </md-icon>
                 <md-tooltip md-direction="top">
                 Modify Pipeline
             </md-tooltip>
             </md-button>
         </span>
-        <span flex flex-order="4" layout="row" layout-align="center center">
-            <md-button ng-click="ctrl.PipelineOperationsService.deletePipeline($event, ctrl.pipeline._id, ctrl.refreshPipelines)" ng-disabled="ctrl.pipeline.running" class="md-icon-button"><md-icon
+                <span flex flex-order="4" layout="row" layout-align="center center">
+            <md-button
+                    ng-click="ctrl.PipelineOperationsService.deletePipeline($event, pipeline._id, ctrl.refreshPipelines)"
+                    ng-disabled="ctrl.pipeline.running" class="md-icon-button"><md-icon
                     md-svg-icon="action:ic_delete_24px"
                     class="md-accent"
                     aria-label="Delete"></md-icon>
@@ -52,8 +72,8 @@
             </md-tooltip>
             </md-button>
         </span>
-        <span flex flex-order="4" layout="row" layout-align="center center">
-            <md-button ng-click="ctrl.PipelineOperationsService.showLogs(ctrl.pipeline._id)" class="md-icon-button"><md-icon
+                <span flex flex-order="4" layout="row" layout-align="center center">
+            <md-button ng-click="ctrl.PipelineOperationsService.showLogs(pipeline._id)" class="md-icon-button"><md-icon
                     md-svg-icon="action:ic_info_24px"
                     class="md-accent"
                     aria-label="Logs"></md-icon>
@@ -62,5 +82,9 @@
             </md-tooltip>
             </md-button>
         </span>
-    </div>
-</md-list-item>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
