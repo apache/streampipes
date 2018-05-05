@@ -1,4 +1,4 @@
-<md-dialog aria-label="Pipeline Element Info" flex="60">
+<md-dialog aria-label="Pipeline Element Info" flex="80" style="min-height:80%;">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Pipeline Element Information</h2>
@@ -9,9 +9,71 @@
         </div>
     </md-toolbar>
 
-    <md-dialog-content flex="100" class="md-dialog-content">
-        <h3>{{ctrl.pipelineElement.name}}</h3>
-        <h4>{{ctrl.pipelineElement.description}}</h4>
+    <md-dialog-content flex="100" class="md-dialog-content" style="height:100%;">
+        <h4>{{ctrl.pipelineElement.name}}</h4>
+        <p>
+            {{ctrl.pipelineElement.description}}
+        </p>
+
+        <div ng-if="ctrl.pipelineElement.type == 'stream' || ctrl.pipelineElement.type == 'set'">
+            <md-tabs md-border-bottom md-selected="ctrl.selectedTab">
+                <md-tab ng-repeat="tab in ctrl.tabs"
+                        label="{{tab.title}}"
+                        md-on-select="ctrl.setSelectedTab(tab.type)">
+                    <md-tab-label>
+                        {{tab.title}}
+                    </md-tab-label>
+                </md-tab>
+            </md-tabs>
+
+            <div ng-if="ctrl.selectedTab == 0">
+                <h5>Field Names</h5>
+
+                <div>
+                    <table datatable="" dt-options="ctrl.dtOptions" class="row-border hover">
+                        <thead>
+                        <tr>
+                            <th>Field Name</th>
+                            <th>Description</th>
+                            <th>Runtime Name</th>
+                            <th>Type</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="property in ctrl.pipelineElement.eventSchema.eventProperties">
+                            <td>{{property.properties.label ? property.properties.label : "(n/a)"}}</td>
+                            <td>{{property.properties.description ? property.properties.description : "(n/a)"}}</td>
+                            <td>{{property.properties.runtimeName}}</td>
+                            <td>{{ctrl.getFriendlyRuntimeType(property.properties.runtimeType)}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div ng-if="ctrl.selectedTab == 1">
+            <div>
+                <table datatable="" dt-options="ctrl.dtOptions" class="row-border hover" ng-if="!ctrl.error">
+                    <thead>
+                    <tr>
+                        <th>Runtime Name</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="property in ctrl.pipelineElement.eventSchema.eventProperties">
+                        <td>{{property.properties.runtimeName}}</td>
+                        <td>{{ctrl.latestMeasurements[property.properties.runtimeName]}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <h5 ng-if="ctrl.error">Runtime information is currently not available.</h5>
+            </div>
+        </div>
+        <div ng-if="ctrl.selectedTab == 2">
+            <pre nag-prism source="{{ctrl.latestMeasurements}}" class="language-json line-numbers" ng-if="!ctrl.error"></pre>
+            <h5 ng-if="ctrl.error">Runtime information is currently not available.</h5>
+        </div>
     </md-dialog-content>
     <div class="md-actions" layout="row">
         <md-button ng-click="ctrl.hide()" style="margin-right:20px;">

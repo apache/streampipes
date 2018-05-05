@@ -48,10 +48,25 @@
 </div>
 <div flex id="editor-icon-stand" class="icon-stand" ng-if="ctrl.currentElements">
     <!-- selectFilter:ctrl.selectedOptions | -->
-    <span
-          data-ng-repeat="element in ctrl.currentElements |  selectFilter:ctrl.selectedOptions | elementNameFilter:ctrl.elName | orderBy: 'name'"
-          my-data-bind image-bind="draggable" class="draggable-icon tt" ng-class="element.type"
-          data-target="testMenu" ng-if="element.type !== 'block'">
+    <span ng-mouseover="ctrl.updateMouseOver(element.name)" ng-mouseleave="ctrl.updateMouseOver('')"
+          ng-repeat="element in ctrl.currentElements |  selectFilter:ctrl.selectedOptions | elementNameFilter:ctrl.elName | orderBy: 'name'" my-data-bind class="draggable-icon tt"
+          ng-class="element.type">
+        <span id="container" style="position:relative;display:block;width:80px;height:80px;">
+        <pipeline-element pipeline-element="element" preview="false"></pipeline-element>
+            <span style="display:block;width:100%;height:100%;position:absolute; top:0; left:0;" ng-if="ctrl.currentElementName==element.name">
+                <span class="help-button-icon-stand" style="z-index:10"><md-button ng-click="ctrl.openHelpDialog(element)"
+                class="md-icon-button"
+                style="margin:0px;font-size:20px;"><md-icon
+                md-svg-icon='action:ic_help_24px'>
+                </span>
+                </span>
+        </span>
     </span>
+
+    <!--<span-->
+    <!--data-ng-repeat="element in ctrl.currentElements |  selectFilter:ctrl.selectedOptions | elementNameFilter:ctrl.elName | orderBy: 'name'"-->
+    <!--my-data-bind image-bind="draggable" class="draggable-icon tt" ng-class="element.type"-->
+    <!--data-target="testMenu">-->
+    <!--</span>-->
 
 </div>

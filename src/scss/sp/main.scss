@@ -1032,6 +1032,22 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 
 }
 
+.help-button-icon-stand {
+    display:block;
+    cursor: pointer;
+    position: relative;
+    left: 20px;
+    top: 40px;
+    height: 40px;
+    width: 40px;
+    border-radius:50%;
+    background-color: #ffffff;
+    box-shadow: 0 0 2px #555;
+    line-height: 1.6;
+    text-align:center;
+
+}
+
 .recommended-button {
     cursor: pointer;
     position: absolute;

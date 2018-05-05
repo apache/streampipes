@@ -506,6 +506,12 @@ export class RestApi {
     getApplicationLinks() {
         return this.$http.get(this.getServerUrl() + "/applink");
     };
+
+    getRuntimeInfo(dataStream) {
+        return this.$http.post(this.urlBase() +"/pipeline-element/runtime", dataStream, {
+            ignoreLoadingBar: true
+        });
+    }
 }
 
 //RestApi.$inject = ['$http', 'apiConstants', 'AuthStatusService'];

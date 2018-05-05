@@ -163,6 +163,7 @@ export class EditorCtrl {
     };
 
     makeDraggable() {
+        console.log("making draggable");
         (<any>$('.draggable-icon')).draggable({
             revert: 'invalid',
             helper: 'clone',

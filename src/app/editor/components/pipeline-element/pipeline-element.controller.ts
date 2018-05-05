@@ -31,7 +31,7 @@ export class PipelineElementController {
         else if (this.preview) {
             return 'width:50px;height:50px;';
         } else {
-            return 'width:80px;height:80px;';
+            return 'width:70px;height:70px;';
         }
     }
 }

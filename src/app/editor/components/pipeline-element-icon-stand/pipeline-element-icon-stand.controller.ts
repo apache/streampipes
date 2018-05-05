@@ -7,17 +7,29 @@ export class PipelineElementIconStandController {
     selectedOptions: any;
     options: any;
     activeType: any;
+    currentElementName: any;
+    EditorDialogManager: any;
 
-    constructor($scope, RestApi) {
+    constructor($scope, $rootScope, RestApi, EditorDialogManager) {
         this.RestApi = RestApi;
         this.availableOptions = [];
         this.selectedOptions = [];
         this.options = [];
+        this.EditorDialogManager = EditorDialogManager;
         this.loadOptions();
 
         $scope.$watch(() => this.activeType, () => {
             this.selectAllOptions();
         });
+
+    }
+
+    openHelpDialog(pipelineElement) {
+        this.EditorDialogManager.openHelpDialog(pipelineElement);
+    }
+
+    updateMouseOver(elementName) {
+        this.currentElementName = elementName;
     }
 
     loadOptions(type?) {
@@ -67,4 +79,4 @@ export class PipelineElementIconStandController {
     }
 }
 
-PipelineElementIconStandController.$inject = ['$scope', 'RestApi'];
+PipelineElementIconStandController.$inject = ['$scope', '$rootScope', 'RestApi', 'EditorDialogManager'];
