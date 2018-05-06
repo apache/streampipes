@@ -10,6 +10,8 @@ export class SetupCtrl {
     showAdvancedSettings: any;
     setup: any;
     setupForm: any;
+    installationRunning: any;
+    nextTaskTitle: any;
 
     constructor($location, RestApi, $mdToast) {
         this.$location = $location;
@@ -18,7 +20,7 @@ export class SetupCtrl {
 
         this.installationFinished = false;
         this.installationSuccessful = false;
-        this.installationResults = [{}];
+        this.installationResults = [];
         this.loading = false;
         this.showAdvancedSettings = false;
 
@@ -30,27 +32,34 @@ export class SetupCtrl {
             jmsHost: '',
             adminEmail: '',
             adminPassword: '',
+            installPipelineElements: true
         };
     }
 
 
 
 
-    configure() {
+    configure(currentInstallationStep) {
+        this.installationRunning = true;
         this.loading = true;
-        this.RestApi.setupInstall(this.setup).success(data => {
-            this.installationResults = data;
-
-            this.RestApi.configured()
-                .then(response => {
-                    if (response.data.configured) {
-                        this.installationFinished = true;
-                        this.loading = false;
-                    }
-                }).error(data => {
-                this.loading = false;
-                this.showToast("Fatal error, contact administrator");
-            });
+        this.RestApi.setupInstall(this.setup, currentInstallationStep).success(data => {
+            this.installationResults = this.installationResults.concat(data.statusMessages);
+            this.nextTaskTitle = data.nextTaskTitle;
+            let nextInstallationStep = currentInstallationStep + 1;
+            if (nextInstallationStep > (data.installationStepCount - 1)) {
+                this.RestApi.configured()
+                    .success(data => {
+                        if (data.configured) {
+                            this.installationFinished = true;
+                            this.loading = false;
+                        }
+                    }).error(data => {
+                    this.loading = false;
+                    this.showToast("Fatal error, contact administrator");
+                });
+            } else {
+                this.configure(nextInstallationStep);
+            }
         });
     }
 

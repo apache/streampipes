@@ -490,8 +490,8 @@ export class RestApi {
         return this.$http.get(this.getServerUrl() + "/admin/logout");
     }
 
-    setupInstall(setup) {
-        return this.$http.post(this.getServerUrl() + "/setup/install", setup);
+    setupInstall(setup, installationStep) {
+        return this.$http.post(this.getServerUrl() + "/setup/install/" +installationStep, setup);
     }
 
     register(payload) {
