@@ -106,10 +106,6 @@
 			<artifactId>streampipes-messaging-jms</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-container</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>elasticsearch-rest-high-level-client</artifactId>
 			<version>6.2.1</version>

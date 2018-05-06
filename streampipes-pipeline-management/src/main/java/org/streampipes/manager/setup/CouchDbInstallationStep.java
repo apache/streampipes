@@ -46,6 +46,11 @@ public class CouchDbInstallationStep implements InstallationStep {
         return msgs;
     }
 
+    @Override
+    public String getTitle() {
+        return "Creating CouchDB databases...";
+    }
+
     private List<Message> createDatabases() {
         try {
 
@@ -60,9 +65,9 @@ public class CouchDbInstallationStep implements InstallationStep {
             Utils.getCouchDbDashboardClient();
             Utils.getCouchDbVisualizablePipelineClient();
 
-            return Arrays.asList(Notifications.success("Creating CouchDB databases..."));
+            return Arrays.asList(Notifications.success(getTitle()));
         } catch (Exception e) {
-            return Arrays.asList(Notifications.error("Creating CouchDB databases..."));
+            return Arrays.asList(Notifications.error(getTitle()));
         }
     }
 

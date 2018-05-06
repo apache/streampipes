@@ -108,7 +108,9 @@
             <artifactId>json</artifactId>
             <version>20180130</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-container</artifactId>
+        </dependency>
     </dependencies>
 </project>

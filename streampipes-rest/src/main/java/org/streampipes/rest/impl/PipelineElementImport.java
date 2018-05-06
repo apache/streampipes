@@ -22,30 +22,23 @@ import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SepaParseException;
+import org.streampipes.manager.endpoint.EndpointItemParser;
 import org.streampipes.manager.operations.Operations;
+import org.streampipes.manager.storage.UserService;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
-import org.streampipes.manager.storage.UserService;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/element")
 public class PipelineElementImport extends AbstractRestInterface {
@@ -82,15 +75,7 @@ public class PipelineElementImport extends AbstractRestInterface {
 	}
 
 	private Message verifyAndAddElement(String uri, String username, boolean publicElement) {
-		try {
-			uri = URLDecoder.decode(uri, "UTF-8");
-			String payload = parseURIContent(uri);
-			return Operations.verifyAndAddElement(payload, username, publicElement);
-		} catch (Exception e) {
-            e.printStackTrace();
-			return Notifications.error(NotificationType.PARSE_ERROR, e.getMessage());
-
-		}
+		return new EndpointItemParser().parseAndAddEndpointItem(uri, username, publicElement);
 	}
 	
 	@PUT

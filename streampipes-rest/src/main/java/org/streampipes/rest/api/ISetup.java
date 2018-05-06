@@ -25,7 +25,7 @@ public interface ISetup {
 
 	Response isConfigured();
 
-	Response configure(InitialSettings settings);
+	Response configure(InitialSettings settings, Integer currentInstallationStep);
 
 	Response getConfiguration();
 

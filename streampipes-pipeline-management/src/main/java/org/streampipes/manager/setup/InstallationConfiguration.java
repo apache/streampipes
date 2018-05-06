@@ -18,6 +18,8 @@
 package org.streampipes.manager.setup;
 
 import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.manager.endpoint.EndpointFetcher;
+import org.streampipes.model.client.endpoint.RdfEndpoint;
 import org.streampipes.model.client.setup.InitialSettings;
 import org.streampipes.storage.couchdb.utils.CouchDbConfig;
 import org.streampipes.storage.rdf4j.util.SesameConfig;
@@ -36,6 +38,12 @@ public class InstallationConfiguration {
 		steps.add(new SesameDbInstallationStep());
 		steps.add(new CouchDbInstallationStep());
 		steps.add(new UserRegistrationInstallationStep(settings.getAdminEmail(), settings.getAdminPassword()));
+
+		if (settings.getInstallPipelineElements()) {
+			for(RdfEndpoint endpoint : new EndpointFetcher().getEndpoints()) {
+				steps.add(new PipelineElementInstallationStep(endpoint, settings.getAdminEmail()));
+			}
+		}
 		
 		return steps;
 	}
