@@ -9,6 +9,7 @@ export class SetupCtrl {
     loading: any;
     showAdvancedSettings: any;
     setup: any;
+    setupForm: any;
 
     constructor($location, RestApi, $mdToast) {
         this.$location = $location;
