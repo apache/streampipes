@@ -7,6 +7,22 @@ fi
 
 if [ $1 = "start" ];
 then
+    if [ -z "$2" ] || [ $2 = "desktop" ];
+    then
+		curl https://raw.githubusercontent.com/streampipes/preview-docker/master/desktop/docker-compose.yml > ./tmpl-docker-compose.yml
+
+	else
+	    if [ $2 = "bigdata" ];
+        then
+            #TODO change url for the bigdata version
+		    curl https://raw.githubusercontent.com/streampipes/preview-docker/master/big-data/docker-compose.yml > ./tmpl-docker-compose.yml
+
+		else
+		    echo "Wrong starting command. Use 'streampipes start desktop' or 'streampipes start bigdata'"
+	        exit 1
+	    fi
+    fi
+
 
 	if [ ! -f ./tmpl-docker-compose.yml ]; then
 		curl https://raw.githubusercontent.com/streampipes/preview-docker/master/docker-compose.yml > ./tmpl-docker-compose.yml
