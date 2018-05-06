@@ -41,6 +41,11 @@ then
 
 	sed "s/###TODO ADD HOSTNAME HERE ###/${ip}/g" ./tmpl-docker-compose.yml > ./docker-compose.yml
 
+
+    # Remove old containers
+	docker-compose stop
+	yes Y | docker-compose down -v
+
 	docker-compose up -d
 
 	if [ $? -eq 0 ]; then
