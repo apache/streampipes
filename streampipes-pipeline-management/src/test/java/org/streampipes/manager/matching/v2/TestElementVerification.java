@@ -17,15 +17,8 @@
 
 package org.streampipes.manager.matching.v2;
 
-import org.streampipes.model.graph.DataProcessorInvocation;
 import junit.framework.TestCase;
-
 import org.junit.Test;
-
-import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
-import org.streampipes.model.SpDataStream;
-import org.streampipes.model.graph.DataProcessorDescription;
-import org.streampipes.pe.sources.samples.random.RandomDataProducer;
 
 public class TestElementVerification extends TestCase {
 
