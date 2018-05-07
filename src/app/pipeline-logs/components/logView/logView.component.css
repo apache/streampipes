@@ -1,3 +1,15 @@
 .logs-table {
    background: #FAFAFA;
 }
+
+::ng-deep .select2 .mat-select-value {
+   color: white;
+}
+
+::ng-deep .date-picker .select2 .mat-select-arrow {
+   color: white;
+}
+
+::ng-deep .date-picker .mat-form-field-label {
+   color: white;
+}

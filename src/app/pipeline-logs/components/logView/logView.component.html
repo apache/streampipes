@@ -1,13 +1,13 @@
 <div>
 
-    <div class="assemblyOptions sp-blue-bg" fxLayout="row" fxLayoutAlign="space-between center" style="height: 50px">
+    <div class="assemblyOptions sp-blue-bg" fxLayout="row" fxLayoutAlign="space-between center" style="height: 60px">
         <div fxLayout="row" fxLayoutAlign=" center">
             <h4 style="padding-right: 10px;">Date Range: </h4>
             <form>
-                <mat-form-field>
+                <mat-form-field class="date-picker">
                     <input matInput ngui-datetime-picker placeholder="From" [(ngModel)]="startDate">
                 </mat-form-field>
-                <mat-form-field>
+                <mat-form-field class="date-picker">
                     <input matInput ngui-datetime-picker placeholder="To" [(ngModel)]="endDate">
                 </mat-form-field>
             </form>
@@ -19,7 +19,7 @@
         <div fxLayout="row" fxLayoutAlign=" center">
             <h4 style="padding-right: 10px">Log Level: </h4>
             <mat-form-field>
-                <mat-select [(value)]="selectedLogLevel" (selectionChange)="logLevelSelection()" placeholder="">
+                <mat-select [(value)]="selectedLogLevel" (selectionChange)="logLevelSelection()" placeholder="" class="select2">
                     <mat-option value="ALL">All</mat-option>
                     <mat-option value="INFO">Info</mat-option>
                     <mat-option value="DEBUG">Debug</mat-option>
@@ -39,7 +39,6 @@
     </div>
 
     <div class="sp-blue-border" (scroll)="true">
-        <div>
             <mat-table class="logs-table" [dataSource]="dataSourceDisplay">
 
                 <ng-container matColumnDef="timestamp">
