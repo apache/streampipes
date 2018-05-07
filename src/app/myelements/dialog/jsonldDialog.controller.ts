@@ -3,11 +3,15 @@ export class JsonLdDialogController {
     $mdDialog: any;
     title: any;
     content: any;
+    loadingCompleted: any;
 
-    constructor($mdDialog, title, content) {
+    constructor($mdDialog, $timeout, title, content) {
         this.$mdDialog = $mdDialog;
         this.title = title;
         this.content = content;
+        $timeout(() => {
+            this.loadingCompleted = true;
+        });
     }
 
     hide() {
@@ -18,4 +22,4 @@ export class JsonLdDialogController {
     };
 }
 
-JsonLdDialogController.$inject = ['$mdDialog'];
+JsonLdDialogController.$inject = ['$mdDialog', '$timeout', 'title', 'content'];

@@ -490,8 +490,8 @@ export class RestApi {
         return this.$http.get(this.getServerUrl() + "/admin/logout");
     }
 
-    setupInstall(setup) {
-        return this.$http.post(this.getServerUrl() + "/setup/install", setup);
+    setupInstall(setup, installationStep) {
+        return this.$http.post(this.getServerUrl() + "/setup/install/" +installationStep, setup);
     }
 
     register(payload) {
@@ -506,6 +506,12 @@ export class RestApi {
     getApplicationLinks() {
         return this.$http.get(this.getServerUrl() + "/applink");
     };
+
+    getRuntimeInfo(dataStream) {
+        return this.$http.post(this.urlBase() +"/pipeline-element/runtime", dataStream, {
+            ignoreLoadingBar: true
+        });
+    }
 }
 
 //RestApi.$inject = ['$http', 'apiConstants', 'AuthStatusService'];

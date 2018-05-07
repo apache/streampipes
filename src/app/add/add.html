@@ -6,9 +6,10 @@
         </div>
         <div layout-fill>
             <md-tabs md-dynamic-height md-border-bottom>
-                <md-tab label="Available Data Sources" md-on-select="ctrl.setSelectedTab('source')"></md-tab>
-                <md-tab label="Available Data Processors" md-on-select="ctrl.setSelectedTab('sepa')"></md-tab>
-                <md-tab label="Available Data Sinks" md-on-select="ctrl.setSelectedTab('action')"></md-tab>
+                <md-tab label="All" md-on-select="ctrl.setSelectedTab('all')"></md-tab>
+                <md-tab label="Data Sources" md-on-select="ctrl.setSelectedTab('source')"></md-tab>
+                <md-tab label="Data Processors" md-on-select="ctrl.setSelectedTab('sepa')"></md-tab>
+                <md-tab label="Data Sinks" md-on-select="ctrl.setSelectedTab('action')"></md-tab>
             </md-tabs>
         </div>
     </div>
@@ -37,17 +38,23 @@
                                 &nbsp;Uninstall selected
                             </md-button>
                         </div>
-                        <div ng-repeat="endpointItem in ctrl.endpointItems | filter:{type:ctrl.selectedTab} |orderBy: '+name'">
+                        <div ng-if="ctrl.selectedTab != 'all'"
+                             ng-repeat="endpointItem in ctrl.endpointItems | filter:{type:ctrl.selectedTab} |orderBy: '+name'">
+                            <ng-include src="'endpoint-item.tmpl.html'"></ng-include>
+                        </div>
+                        <div ng-if="ctrl.selectedTab == 'all'"
+                             ng-repeat="endpointItem in ctrl.endpointItems |orderBy: '+name'">
                             <ng-include src="'endpoint-item.tmpl.html'"></ng-include>
                         </div>
                     </div>
                     <div ng-if="!ctrl.endpointItemsLoadingComplete">
                         <div flex="100" layout="row">
                             <md-progress-circular class="md-accent" md-mode="indeterminate"
-                                                  ></md-progress-circular>
+                            ></md-progress-circular>
                             <h4>&nbsp;&nbsp;Fetching data from endpoints, please wait...</h4>
                         </div>
                     </div>
+
                 </div>
             </md-content>
         </div>

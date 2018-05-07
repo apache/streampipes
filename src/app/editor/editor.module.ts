@@ -10,6 +10,7 @@ import 'legacy/jQuery.circleMenu';
 import 'jquery.panzoom';
 import 'npm/bootstrap';
 import 'npm/angular-trix';
+import 'npm/angular-datatables';
 
 import {EditorCtrl} from './editor.controller';
 import myDataBind from './my-data-bind.directive';
@@ -46,7 +47,7 @@ import selectFilter from './filter/select.filter';
 import elementNameFilter from './filter/element-name.filter';
 
 
-export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate'])
+export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate', 'datatables'])
     .controller('EditorCtrl', EditorCtrl)
     .directive('myDataBind', myDataBind)
     .directive('imageBind', imageBind)

@@ -14,88 +14,102 @@
                         alt="icon" src="assets/img/login/logo.png">
                 </div>
             </div>
-            <form name="setupForm" role="form">
+            <form name="ctrl.setupForm" role="form">
                 <md-card-title>
                     <div flex="100" layout="column">
 
                         <h1>Welcome!</h1>
-                        <h4>The setup of the system just takes a few seconds. Create a user and you are ready to go!</h4>
+                        <h4>The setup of the system just takes a few seconds. Create a user and you are ready to
+                            go!</h4>
                     </div>
                 </md-card-title>
-                <div ng-show="!ctrl.installationFinished">
+                <div ng-show="!ctrl.installationRunning">
 
 
                     <h3>Initial User</h3>
                     <div layout layout-sm="column">
                         <md-input-container flex>
                             <label>Email</label>
-                            <input ng-model="ctrl.setup.adminEmail">
+                            <input name="email" type="email" ng-model="ctrl.setup.adminEmail" required>
+                            <span ng-show="ctrl.setupForm.email.$touched && ctrl.setupForm.email.$error.required">The email field can't be blank.</span>
+                            <span ng-show="ctrl.setupForm.email.$error.email">This is not a valid email.</span>
                         </md-input-container>
                         <md-input-container flex>
                             <label>Password</label>
-                            <input type="password" ng-model="ctrl.setup.adminPassword">
+                            <input name="password" type="password" ng-model="ctrl.setup.adminPassword" required>
+                            <span ng-show="ctrl.setupForm.password.$touched && ctrl.setupForm.password.$error.required">The password field can't be blank.</span>
                         </md-input-container>
                     </div>
-
+                    <md-checkbox ng-model="ctrl.setup.installPipelineElements" aria-label="Install pipeline elements">
+                        Also install available data streams, processors and sinks.
+                    </md-checkbox>
 
                 </div>
                 <md-divider/>
                 <div>
-                    <div ng-show="ctrl.showAdvancedSettings">
+                    <div ng-show="ctrl.showAdvancedSettings && !ctrl.installationRunning">
                         <div flex layout="column">
                             <h3>Advanced Settings</h3>
                             <div layout layout-sm="column">
                                 <md-input-container flex>
                                     <label>CouchDB Host</label>
-                                    <input ng-model="ctrl.setup.couchDbHost">
+                                    <input name="couchDbHost" ng-model="ctrl.setup.couchDbHost">
                                 </md-input-container>
                                 <md-input-container flex>
                                     <label>Sesame Host</label>
-                                    <input ng-model="ctrl.setup.sesameHost">
+                                    <input name="sesameHost" ng-model="ctrl.setup.sesameHost">
                                 </md-input-container>
 
                             </div>
                             <div layout layout-sm="column">
                                 <md-input-container flex>
                                     <label>Kafka Host</label>
-                                    <input ng-model="ctrl.setup.kafkaHost">
+                                    <input name="kafkaHost" ng-model="ctrl.setup.kafkaHost">
                                 </md-input-container>
                                 <md-input-container flex>
                                     <label>Zookeeper Host</label>
-                                    <input ng-model="ctrl.setup.zookeeperHost">
+                                    <input name="zookeeperHost" ng-model="ctrl.setup.zookeeperHost">
                                 </md-input-container>
                             </div>
                             <div layout layout-sm="column">
                                 <md-input-container flex>
                                     <label>JMS Host</label>
-                                    <input ng-model="ctrl.setup.jmsHost">
+                                    <input name="jmsHost" ng-model="ctrl.setup.jmsHost">
                                 </md-input-container>
                             </div>
                         </div>
                     </div>
-                    <div ng-show="ctrl.installationFinished">
+                    <div ng-show="ctrl.installationRunning">
                         <h3>Installation Results</h3>
                         <div ng-repeat="msg in ctrl.installationResults">
                             <div flex layout layout-sm="row" style="width:80%" class="center center">
-                                <div style="width:50%"><h4>{{msg.notifications[0].title}}</h4></div>
+                                <div style="width:50%"><h4>{{msg.properties.notifications[0].title}}</h4></div>
                                 <div style="width:50%">
                                     <md-icon md-svg-icon="action:ic_done_24px" aria-label="Action"
                                              class="md-accent" style="width: 36px; height: 36px"
-                                             ng-show="msg.success"></md-icon>
+                                             ng-show="msg.properties.success"></md-icon>
                                     <md-icon md-svg-icon="alert:ic_error_24px" aria-label="Action"
                                              class="md-accent" style="width: 36px; height: 36px"
-                                             ng-show="!(msg.success)"></md-icon>
+                                             ng-show="!(msg.properties.success)"></md-icon>
                                 </div>
                             </div>
                         </div>
-                        <p/>
-                        <h3><a ui-sref="login" class="md-accent">
-                            <md-icon md-svg-icon="navigation:ic_arrow_forward_24px" aria-label="Action"
-                                     class="md-accent" style="width: 36px; height: 36px"></md-icon>
-                            Go to login page</a></h3>
+                        <div flex layout layout-sm="row" style="width:80%" class="center center" ng-if="ctrl.nextTaskTitle != ''">
+                            <div style="width:50%"><h4>{{ctrl.nextTaskTitle}}</h4></div>
+                            <div style="width:50%">
+                        <md-progress-circular class="md-accent" md-mode="indeterminate"
+                                              ng-show="ctrl.loading"></md-progress-circular>
+                            </div>
+                        </div>
+                        <div ng-show="ctrl.installationFinished">
+                            <h3><a ui-sref="login" class="md-accent">
+                                <md-icon md-svg-icon="navigation:ic_arrow_forward_24px" aria-label="Action"
+                                         class="md-accent" style="width: 36px; height: 36px"></md-icon>
+                                Go to login page</a></h3>
+                        </div>
                     </div>
 
-                    <md-card-actions layout="row" layout-align="center">
+                    <md-card-actions layout="row" layout-align="center" ng-show="!ctrl.installationRunning">
                         <div flex layout="column">
 
                             <div layout layout-sm="column">
@@ -110,13 +124,11 @@
                                            class="md-raised">Hide Advanced Settings
                                 </md-button>
                                 <md-button class="md-accent md-raised" type="submit"
-                                           ng-disabled="ctrl.setupForm.$pristine || ctrl.setupForm.$invalid || ctrl.loading || ctrl.installationFinished"
-                                           ng-click="ctrl.configure()">Install
+                                           ng-disabled="!(ctrl.setupForm.$valid) || ctrl.loading || ctrl.installationFinished"
+                                           ng-click="ctrl.configure(0)">Install
                                 </md-button>
-                                <md-progress-circular class="md-accent" md-mode="indeterminate"
-                                                      ng-show="ctrl.loading"></md-progress-circular>
-
                             </div>
+
                         </div>
                     </md-card-actions>
 

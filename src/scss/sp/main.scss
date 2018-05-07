@@ -741,22 +741,40 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
     text-align: center;
 }
 
+.pe-label {
+    color:white;
+    padding: 2px 5px;
+}
+
+.source-label {
+    background: $sp-color-stream;
+    color:black;
+}
+
+.processor-label {
+    background: $sp-color-processor;
+}
+
+.sink-label {
+    background: $sp-color-sink;
+}
+
 .stream {
     border-radius: 50%;
-    border: 2px solid #FFEB3B;
+    border: 2px solid $sp-color-stream;
 }
 
 .set {
     border-radius: 50%;
-    border: 2px solid #ffa23b;
+    border: 2px solid $sp-color-set;
 }
 
 .action {
-    border: 2px solid #3F51B5;
+    border: 2px solid $sp-color-sink;
 }
 
 .sepa {
-    border: 2px solid #009688;
+    border: 2px solid $sp-color-processor;
 }
 
 .draggable-img {
@@ -1029,6 +1047,22 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
     line-height: 1.6;
     text-align:center;
     padding:2px 0;
+
+}
+
+.help-button-icon-stand {
+    display:block;
+    cursor: pointer;
+    position: relative;
+    left: 20px;
+    top: 40px;
+    height: 40px;
+    width: 40px;
+    border-radius:50%;
+    background-color: #ffffff;
+    box-shadow: 0 0 2px #555;
+    line-height: 1.6;
+    text-align:center;
 
 }
 

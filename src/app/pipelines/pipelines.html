@@ -24,14 +24,11 @@
                     </md-button>
                 </div>
                 <md-list>
-                    <div class="assemblyOptions sp-blue-bg">
+                    <div class="assemblyOptions sp-blue-bg" style="padding:5px;">
                         <h4>My pipelines</h4>
                     </div>
                     <div class="sp-blue-border">
-                        <div layout="column"
-                             ng-repeat="pipeline in ctrl.pipelines | pipelineCategoryFilter: ctrl.activeCategory | orderBy:'+name'">
-                            <pipeline-details pipeline="pipeline" refresh-pipelines="ctrl.refreshPipelines()"></pipeline-details>
-                        </div>
+                        <pipeline-details active-category="ctrl.activeCategory" pipelines="ctrl.pipelines" refresh-pipelines="ctrl.refreshPipelines()" ng-if="ctrl.pipelines.length > 0"></pipeline-details>
                         <div layout="row" layout-align="center center" ng-if="ctrl.pipelines.length == 0">
                             <h5>(no pipelines available)</h5>
                         </div>
@@ -42,10 +39,7 @@
                         <h4>System-generated pipelines</h4>
                     </div>
                     <div class="sp-blue-border">
-                        <div layout="column"
-                             ng-repeat="pipeline in ctrl.systemPipelines | pipelineCategoryFilter: ctrl.activeCategory | orderBy:'+name'">
-                            <pipeline-details></pipeline-details>
-                        </div>
+                        <pipeline-details active-category="ctrl.activeCategory" pipelines="ctrl.systemPipelines" refresh-pipelines="ctrl.refreshPipelines()" ng-if="ctrl.pipelines.length > 0"></pipeline-details>
                         <div layout="row" layout-align="center center" ng-if="ctrl.systemPipelines.length == 0">
                             <h5>(no system pipelines available)</h5>
                         </div>

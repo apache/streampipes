@@ -222,7 +222,7 @@ export class MyElementsCtrl {
     showAlert(ev, title, content) {
         this.$mdDialog.show({
             controller: JsonLdDialogController,
-            controllerAs: '$ctrl',
+            controllerAs: 'ctrl',
             templateUrl: 'dialog/jsonldDialog.tmpl.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true,

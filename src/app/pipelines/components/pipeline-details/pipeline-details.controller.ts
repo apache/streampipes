@@ -1,10 +1,17 @@
 export class PipelineDetailsController {
 
-    pipeline: any;
+    pipelines: any;
     starting: any;
     stopping: any;
     refreshPipelines: any;
     PipelineOperationsService: any;
+    activeCategory: any;
+    dtOptions = {paging: false, searching: false,   "order": [], "columns": [
+            { "orderable": false },
+            null,
+            null,
+            { "orderable": false },
+        ]};
 
     constructor(PipelineOperationsService) {
         this.PipelineOperationsService = PipelineOperationsService;
@@ -12,11 +19,12 @@ export class PipelineDetailsController {
         this.stopping = false;
         this.toggleRunningOperation = this.toggleRunningOperation.bind(this);
 
-        if (this.pipeline.immediateStart) {
-            if (!this.pipeline.running) {
-                this.PipelineOperationsService.startPipeline(this.pipeline._id, this.toggleRunningOperation, this.refreshPipelines);
-            }
-        }
+
+        // if (this.pipeline.immediateStart) {
+        //     if (!this.pipeline.running) {
+        //         this.PipelineOperationsService.startPipeline(this.pipeline._id, this.toggleRunningOperation, this.refreshPipelines);
+        //     }
+        // }
     }
 
     toggleRunningOperation(currentOperation) {
