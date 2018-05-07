@@ -15,9 +15,6 @@ stages:
   - release
   - docker-hub
 
-before_script:
-  - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
-
     #before_script:
     #- echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     #- git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
@@ -26,6 +23,7 @@ build:
   image: maven:3-jdk-8
   stage: build
   script:
+    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - mvn clean package javadoc:aggregate gpg:sign -DskipTests
     - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
