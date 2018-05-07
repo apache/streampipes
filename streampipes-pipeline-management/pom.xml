@@ -61,11 +61,13 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-pe-processors-esper</artifactId>
+            <version>0.51.2-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-pe-sources-samples</artifactId>
+            <version>0.51.2-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
