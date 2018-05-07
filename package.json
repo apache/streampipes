@@ -13,7 +13,8 @@
   },
   "scripts": {
     "start": "webpack-dev-server -d",
-    "test": "karma start ./karma.conf.js",
+    "test": "karma start ./karma.conf.js --no-auto-watch --single-run",
+    "watchtest": "karma start ./karma.conf.js",
     "build": "webpack --display-modules --progress",
     "lint": "tslint -c tslint.json 'src/**/*.ts*"
   },
