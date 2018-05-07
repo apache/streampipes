@@ -45,14 +45,6 @@
     <description>StreamPipes</description>
     <url>https://streampipes.org</url>
 
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -597,38 +589,41 @@
     </build>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce-backend.git
+        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce.git
         </developerConnection>
+        <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce.git</connection>
+        <url>https://github.com/streampipes/streampipes-ce</url>
     </scm>
-    <repositories>
-        <repository>
-            <id>laus</id>
-            <name>nexus repository</name>
-            <url>http://laus.fzi.de/nexus/content/repositories/public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>apache</id>
-            <url>https://repository.apache.org/content/repositories/releases/</url>
-        </repository>
-    </repositories>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Dominik Riemer</name>
+            <email>riemer@fzi.de</email>
+        </developer>
+        <developer>
+            <name>Philipp Zehnder</name>
+            <email>zehnder@fzi.de</email>
+        </developer>
+    </developers>
 
     <distributionManagement>
         <repository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/releases/</url>
+            <id>sonatype</id>
+            <name>Releases</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
         <snapshotRepository>
-            <id>deployment</id>
-            <name>Internal Snapshots</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/snapshots/</url>
+            <id>sonatype</id>
+            <name>Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
