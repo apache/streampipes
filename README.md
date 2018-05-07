@@ -17,16 +17,15 @@ Run the script with `./streampipes <COMMAND>`. We provide three different comman
   * Removes all configuration files. This must be done when your computer has a new IP address.
 
 ## Windows 10 (Experimental)
-* Make sure you have installed the Git-bash (required for executing the bash script on Windows)
-* Open the PowerShell and navigate to the directory
+* Open the Command-Line / PowerShell and navigate to the directory
 * Start StreamPipes with the commands in the next section
 
 ### Commands
-Run the script with `sh ./streampipes <COMMAND>`. We provide three different commands
+Run the script with `./streampipes.bat <COMMAND>`. We provide three different commands
 
-* `sh ./streampipes start`:
+* `./streampipes.bat start`:
   * Downloads all Components and starts StreamPipes
-* `sh ./streampipes stop`:
+* `./streampipes.bat stop`:
   * Stops StreamPipes
-* `sh ./streampipes clean`:
+* `./streampipes.bat clean`:
   * Removes all configuration files. This must be done when your computer has a new IP address.
