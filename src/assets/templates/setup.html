@@ -83,8 +83,8 @@
                         <h3>Installation Results</h3>
                         <div ng-repeat="msg in ctrl.installationResults">
                             <div flex layout layout-sm="row" style="width:80%" class="center center">
-                                <div style="width:50%"><h4>{{msg.properties.notifications[0].title}}</h4></div>
-                                <div style="width:50%">
+                                <div flex="80" style="width:50%"><h4>{{msg.properties.notifications[0].title}}</h4></div>
+                                <div flex="20" style="width:50%">
                                     <md-icon md-svg-icon="action:ic_done_24px" aria-label="Action"
                                              class="md-accent" style="width: 36px; height: 36px"
                                              ng-show="msg.properties.success"></md-icon>
@@ -95,8 +95,8 @@
                             </div>
                         </div>
                         <div flex layout layout-sm="row" style="width:80%" class="center center" ng-if="ctrl.nextTaskTitle != ''">
-                            <div style="width:50%"><h4>{{ctrl.nextTaskTitle}}</h4></div>
-                            <div style="width:50%">
+                            <div flex="80" style="width:50%"><h4>{{ctrl.nextTaskTitle}}</h4></div>
+                            <div flex="20" style="width:50%">
                         <md-progress-circular class="md-accent" md-mode="indeterminate"
                                               ng-show="ctrl.loading"></md-progress-circular>
                             </div>

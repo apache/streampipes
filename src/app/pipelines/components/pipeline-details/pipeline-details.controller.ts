@@ -1,3 +1,5 @@
+import * as angular from "angular";
+
 export class PipelineDetailsController {
 
     pipelines: any;
@@ -19,12 +21,13 @@ export class PipelineDetailsController {
         this.stopping = false;
         this.toggleRunningOperation = this.toggleRunningOperation.bind(this);
 
-
-        // if (this.pipeline.immediateStart) {
-        //     if (!this.pipeline.running) {
-        //         this.PipelineOperationsService.startPipeline(this.pipeline._id, this.toggleRunningOperation, this.refreshPipelines);
-        //     }
-        // }
+        angular.forEach(this.pipelines, pipeline => {
+            if (pipeline.immediateStart) {
+                if (!pipeline.running) {
+                    this.PipelineOperationsService.startPipeline(pipeline._id, this.toggleRunningOperation, this.refreshPipelines);
+                }
+            }
+        });
     }
 
     toggleRunningOperation(currentOperation) {
