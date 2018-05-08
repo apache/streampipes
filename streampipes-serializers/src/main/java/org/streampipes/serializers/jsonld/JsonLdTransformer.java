@@ -1,3 +1,20 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.serializers.jsonld;
 
 import org.eclipse.rdf4j.model.Graph;
@@ -24,9 +41,33 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 public class JsonLdTransformer implements RdfTransformer {
+
+  private static final List<String> standardRootElements = Arrays.asList(StreamPipes.DATA_PROCESSOR_DESCRIPTION,
+          StreamPipes.DATA_SOURCE_DESCRIPTION,
+          StreamPipes.DATA_SINK_DESCRIPTION,
+          StreamPipes.DATA_PROCESSOR_INVOCATION,
+          StreamPipes.DATA_SINK_INVOCATION,
+          StreamPipes.ADAPTER_DESCRIPTION_LIST,
+          StreamPipes.FORMAT_DESCRIPTION_LIST,
+          StreamPipes.PROTOCOL_DESCRIPTION_LIST,
+          StreamPipes.GUESS_SCHEMA,
+          StreamPipes.DOMAIN_PROPERTY_PROBABILITY_LIST,
+          StreamPipes.ADAPTER_DESCRIPTION);
+
+  private List<String> selectedRootElements;
+
+  public JsonLdTransformer() {
+    this.selectedRootElements = standardRootElements;
+  }
+
+  public JsonLdTransformer(String rootElement) {
+    this.selectedRootElements = Collections.singletonList(rootElement);
+  }
 
   @Override
   public <T> Graph toJsonLd(T element) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException, ClassNotFoundException, InvalidRdfException {
@@ -72,12 +113,10 @@ public class JsonLdTransformer implements RdfTransformer {
     return null;
   }
 
-  private boolean isRootElement(Statement s)  {
-    return hasObject(s, StreamPipes.DATA_PROCESSOR_DESCRIPTION) ||
-            hasObject(s, StreamPipes.DATA_SOURCE_DESCRIPTION) ||
-            hasObject(s, StreamPipes.DATA_SINK_DESCRIPTION) ||
-            hasObject(s, StreamPipes.DATA_PROCESSOR_INVOCATION) ||
-            hasObject(s, StreamPipes.DATA_SINK_INVOCATION);
+  private boolean isRootElement(Statement s) {
+    return selectedRootElements
+            .stream()
+            .anyMatch(rootElement -> hasObject(s, rootElement));
   }
 
   private boolean hasObject(Statement statement, String voc) {

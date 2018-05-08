@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.51.1</version>
+		<version>0.55.1</version>
 	</parent>
 	<artifactId>streampipes-backend</artifactId>
 	<packaging>war</packaging>
@@ -35,6 +35,16 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-jaxrs2</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-jaxrs2-servlet-initializer</artifactId>
+			<version>2.0.0</version>
 		</dependency>
 	</dependencies>
 	<build>

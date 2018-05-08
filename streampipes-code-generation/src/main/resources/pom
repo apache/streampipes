@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>####name####</artifactId>
-	<groupId>de.fzi.cep.sepa</groupId>
+	<groupId>org.streampipes</groupId>
 	<version>####version####</version>
 	<packaging>war</packaging>
 
@@ -23,28 +23,28 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-container</artifactId>
 			<version>####version####</version>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-runtime-flat</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>semantic-container-standalone</artifactId>
 			<version>####version####</version>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-commons</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-commons</artifactId>
 			<version>####version####</version>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-flink</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-wrapper-flink</artifactId>
 			<version>####version####</version>
 		</dependency>
 		<dependency>
-        	<groupId>de.fzi.cep.sepa</groupId>
-        	<artifactId>semantic-epa-sdk</artifactId>
+        	<groupId>org.streampipes</groupId>
+        	<artifactId>streampipes-sdk</artifactId>
         	<version>####version####</version>
         </dependency>
 	</dependencies>

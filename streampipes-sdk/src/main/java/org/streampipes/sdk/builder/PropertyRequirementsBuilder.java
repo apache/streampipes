@@ -1,22 +1,24 @@
 /*
-Copyright 2018 FZI Forschungszentrum Informatik
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package org.streampipes.sdk.builder;
 
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.sdk.utils.Datatypes;
+import org.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -35,9 +37,22 @@ public class PropertyRequirementsBuilder {
     return new PropertyRequirementsBuilder(propertyDatatype);
   }
 
+  public static PropertyRequirementsBuilder create() {
+    return new PropertyRequirementsBuilder();
+  }
+
+  private PropertyRequirementsBuilder() {
+    this.propertyReq = new EventPropertyPrimitive();
+  }
+
   private PropertyRequirementsBuilder(Datatypes propertyDatatype) {
     this.propertyReq = new EventPropertyPrimitive();
     this.propertyReq.setRuntimeType(propertyDatatype.toString());
+  }
+
+  public PropertyRequirementsBuilder datatype(Datatypes propertyDatatype) {
+    this.propertyReq.setRuntimeType(propertyDatatype.toString());
+    return this;
   }
 
   public PropertyRequirementsBuilder domainPropertyReq(String... domainProperties) {
@@ -49,7 +64,18 @@ public class PropertyRequirementsBuilder {
     return this;
   }
 
-  public PropertyRequirementsBuilder measurementUnit() {
+  public PropertyRequirementsBuilder measurementUnitReq(String measurementUnit) {
+    this.propertyReq.setMeasurementUnit(URI.create(measurementUnit));
     return this;
+  }
+
+  public PropertyRequirementsBuilder measurementUnitPresence() {
+    this.propertyReq.setMeasurementUnit(URI.create(StreamPipes.ANYTHING));
+
+    return this;
+  }
+
+  public EventPropertyPrimitive build() {
+    return this.propertyReq;
   }
 }

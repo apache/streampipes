@@ -1,6 +1,24 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.model.util;
 
 import org.streampipes.model.ApplicationLink;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
@@ -12,12 +30,13 @@ import org.streampipes.model.grounding.WildcardTopicDefinition;
 import org.streampipes.model.grounding.WildcardTopicMapping;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.CustomTransformOutputStrategy;
 import org.streampipes.model.output.FixedOutputStrategy;
 import org.streampipes.model.output.KeepOutputStrategy;
 import org.streampipes.model.output.ListOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
-import org.streampipes.model.output.ReplaceOutputStrategy;
-import org.streampipes.model.output.UriPropertyMapping;
+import org.streampipes.model.output.TransformOperation;
+import org.streampipes.model.output.TransformOutputStrategy;
 import org.streampipes.model.quality.Accuracy;
 import org.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.streampipes.model.quality.EventPropertyQualityRequirement;
@@ -42,6 +61,8 @@ import org.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
+import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
 
@@ -60,8 +81,10 @@ public class Cloner {
       return new ListOutputStrategy((ListOutputStrategy) other);
     } else if (other instanceof CustomOutputStrategy) {
       return new CustomOutputStrategy((CustomOutputStrategy) other);
-    } else if (other instanceof ReplaceOutputStrategy) {
-      return new ReplaceOutputStrategy((ReplaceOutputStrategy) other);
+    } else if (other instanceof TransformOutputStrategy) {
+      return new TransformOutputStrategy((TransformOutputStrategy) other);
+    } else if (other instanceof CustomTransformOutputStrategy) {
+      return new CustomTransformOutputStrategy((CustomTransformOutputStrategy) other);
     } else {
       return new AppendOutputStrategy((AppendOutputStrategy) other);
     }
@@ -84,9 +107,14 @@ public class Cloner {
       return new CollectionStaticProperty((CollectionStaticProperty) o);
     } else if (o instanceof MatchingStaticProperty) {
       return new MatchingStaticProperty((MatchingStaticProperty) o);
+    } else if (o instanceof RuntimeResolvableOneOfStaticProperty) {
+      return new RuntimeResolvableOneOfStaticProperty((RuntimeResolvableOneOfStaticProperty) o);
+    } else if (o instanceof RuntimeResolvableAnyStaticProperty) {
+      return new RuntimeResolvableAnyStaticProperty((RuntimeResolvableAnyStaticProperty) o);
     } else {
       return new MappingPropertyUnary((MappingPropertyUnary) o);
     }
+
   }
 
   public List<TransportProtocol> protocols(List<TransportProtocol> protocols) {
@@ -142,8 +170,20 @@ public class Cloner {
     }
   }
 
+  public List<SpDataStream> seq(List<SpDataStream> spDataStreams) {
+    return spDataStreams.stream().map(s -> mapSequence(s)).collect(Collectors.toList());
+  }
+
   public List<SpDataStream> streams(List<SpDataStream> spDataStreams) {
     return spDataStreams.stream().map(s -> new SpDataStream(s)).collect(Collectors.toList());
+  }
+
+  public SpDataStream mapSequence(SpDataStream seq) {
+    if (seq instanceof SpDataSet) {
+      return new SpDataSet((SpDataSet) seq);
+    } else {
+      return new SpDataStream(seq);
+    }
   }
 
   public SpDataStream stream(SpDataStream other) {
@@ -154,7 +194,7 @@ public class Cloner {
     if (outputStrategies != null) {
       return outputStrategies.stream().map(o -> outputStrategy(o)).collect(Collectors.toList());
     } else {
-      return new ArrayList<OutputStrategy>();
+      return new ArrayList<>();
     }
   }
 
@@ -170,6 +210,10 @@ public class Cloner {
 
   public List<EventProperty> properties(List<EventProperty> eventProperties) {
     return eventProperties.stream().map(o -> new Cloner().property(o)).collect(Collectors.toList());
+  }
+
+  public List<TransformOperation> transformOperations(List<TransformOperation> transformOperations) {
+    return transformOperations.stream().map(o -> new TransformOperation(o)).collect(Collectors.toList());
   }
 
   public List<EventPropertyQualityRequirement> reqEpQualitities(
@@ -197,11 +241,6 @@ public class Cloner {
 
   public List<String> ecTypes(List<String> ecTypes) {
     return ecTypes;
-  }
-
-  public List<UriPropertyMapping> replaceStrategy(
-          List<UriPropertyMapping> replaceProperties) {
-    return replaceProperties.stream().map(s -> new UriPropertyMapping(s)).collect(Collectors.toList());
   }
 
   public List<MeasurementCapability> mc(

@@ -1,3 +1,20 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.manager.monitoring.runtime;
 
 import org.streampipes.commons.exceptions.NoMatchingFormatException;
@@ -6,15 +23,16 @@ import org.streampipes.commons.exceptions.NoMatchingSchemaException;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.manager.matching.PipelineVerificationHandler;
 import org.streampipes.manager.operations.Operations;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.pipeline.PipelineModificationMessage;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.graph.DataProcessorDescription;
-import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
@@ -61,7 +79,8 @@ public class SepStoppedMonitoringPipelineBuilder {
 	public Pipeline buildPipeline()
 			throws NoMatchingFormatException, NoMatchingSchemaException, NoMatchingProtocolException, Exception {
 		DataProcessorInvocation rateSepaClient = new DataProcessorInvocation(streamStoppedDataProcessorDescription);
-		SpDataStream streamClient = new SpDataStream(stream);
+		SpDataStream streamClient = stream instanceof SpDataStream ? new SpDataStream(stream) : new SpDataSet(
+						(SpDataSet) stream);
 		DataSinkInvocation kafkaActionClient = new DataSinkInvocation(kafkaDataSinkDescription);
 
 		List<NamedStreamPipesEntity> elements = new ArrayList<>();

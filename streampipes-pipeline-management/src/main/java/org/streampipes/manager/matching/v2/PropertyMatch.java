@@ -1,3 +1,20 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.manager.matching.v2;
 
 import org.streampipes.model.client.matching.MatchingResultMessage;
@@ -18,13 +35,27 @@ public class PropertyMatch extends AbstractMatcher<EventProperty, EventProperty>
 
 	@Override
 	public boolean match(EventProperty offer, EventProperty requirement, List<MatchingResultMessage> errorLog) {
-		if (!matchesType(offer, requirement)) return false; 
+		// return true if the requirement is an any property
+	    if (isAnyProperty(requirement)) {
+			return true;
+		}
+
+		if (!matchesType(offer, requirement)) {
+			return false;
+		}
 		else {
 			if (isPrimitive(requirement)) return new PrimitivePropertyMatch().match(toPrimitive(offer), toPrimitive(requirement), errorLog);
 			else if (isList(requirement)) return new ListPropertyMatch().match(toList(offer), toList(requirement), errorLog);
 			else if (isNested(requirement)) return new NestedPropertyMatch().match(toNested(offer), toNested(requirement), errorLog);
 			else return false;
 		}
+	}
+
+	private boolean isAnyProperty(EventProperty eventProperty) {
+		return eventProperty instanceof EventPropertyPrimitive &&
+				eventProperty.getDomainProperties() == null &&
+				((EventPropertyPrimitive) eventProperty).getMeasurementUnit() == null &&
+				((EventPropertyPrimitive) eventProperty).getRuntimeType() == null;
 	}
 	
 	private EventPropertyNested toNested(EventProperty property) {

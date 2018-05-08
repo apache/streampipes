@@ -1,5 +1,23 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.container.init;
 
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
@@ -13,109 +31,120 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeclarersSingleton {
-    private static DeclarersSingleton instance;
+  private static DeclarersSingleton instance;
 
-    private List<SemanticEventProcessingAgentDeclarer> epaDeclarers;
-    private List<SemanticEventProducerDeclarer> producerDeclarers;
-    private List<SemanticEventConsumerDeclarer> consumerDeclarers;
-    private int port;
-    private String route;
-    private String hostName;
+  private List<SemanticEventProcessingAgentDeclarer> epaDeclarers;
+  private List<SemanticEventProducerDeclarer> producerDeclarers;
+  private List<SemanticEventConsumerDeclarer> consumerDeclarers;
+  private List<DataStreamDeclarer> streamDeclarers;
+
+  private int port;
+  private String route;
+  private String hostName;
 
 
-    private DeclarersSingleton() {
-        this.epaDeclarers = new ArrayList<>();
-        this.producerDeclarers = new ArrayList<>();
-        this.consumerDeclarers = new ArrayList<>();
-        this.route = "/";
+  private DeclarersSingleton() {
+    this.epaDeclarers = new ArrayList<>();
+    this.producerDeclarers = new ArrayList<>();
+    this.consumerDeclarers = new ArrayList<>();
+    this.streamDeclarers = new ArrayList<>();
+    this.route = "/";
+  }
+
+  public static DeclarersSingleton getInstance() {
+    if (DeclarersSingleton.instance == null) {
+      DeclarersSingleton.instance = new DeclarersSingleton();
+    }
+    return DeclarersSingleton.instance;
+  }
+
+  public void addDeclarers(List<Declarer> allDeclarers) {
+    for (Declarer d : allDeclarers) {
+      add(d);
+    }
+  }
+
+  public DeclarersSingleton add(Declarer d) {
+    if (d instanceof SemanticEventProcessingAgentDeclarer) {
+      addEpaDeclarer((SemanticEventProcessingAgentDeclarer) d);
+    } else if (d instanceof SemanticEventProducerDeclarer) {
+      addProducerDeclarer((SemanticEventProducerDeclarer) d);
+    } else if (d instanceof SemanticEventConsumerDeclarer) {
+      addConsumerDeclarer((SemanticEventConsumerDeclarer) d);
     }
 
-    public static DeclarersSingleton getInstance() {
-        if (DeclarersSingleton.instance == null) {
-            DeclarersSingleton.instance = new DeclarersSingleton();
-        }
-        return DeclarersSingleton.instance;
-    }
+    return getInstance();
+  }
 
-    public void addDeclarers(List<Declarer> allDeclarers) {
-        for (Declarer d : allDeclarers) {
-            add(d);
-        }
-    }
+  public List<Declarer> getDeclarers() {
+    List<Declarer> result = new ArrayList<>();
+    result.addAll(epaDeclarers);
+    result.addAll(producerDeclarers);
+    result.addAll(consumerDeclarers);
+    return result;
+  }
 
-    public DeclarersSingleton add(Declarer d) {
-        if (d instanceof SemanticEventProcessingAgentDeclarer) {
-            addEpaDeclarer((SemanticEventProcessingAgentDeclarer) d);
-        } else if (d instanceof SemanticEventProducerDeclarer) {
-            addProducerDeclarer((SemanticEventProducerDeclarer) d);
-        } else if (d instanceof SemanticEventConsumerDeclarer) {
-            addConsumerDeclarer((SemanticEventConsumerDeclarer) d);
-        }
+  public void registerProtocol(SpProtocolDefinitionFactory<?> protocol) {
+    SpProtocolManager.INSTANCE.register(protocol);
+  }
 
-        return getInstance();
-    }
+  public void registerDataFormat(SpDataFormatFactory dataFormatDefinition) {
+    SpDataFormatManager.INSTANCE.register(dataFormatDefinition);
+  }
 
-    public List<Declarer> getDeclarers() {
-        List<Declarer> result = new ArrayList<>();
-        result.addAll(epaDeclarers);
-        result.addAll(producerDeclarers);
-        result.addAll(consumerDeclarers);
-        return result;
-    }
+  public void addEpaDeclarer(SemanticEventProcessingAgentDeclarer epaDeclarer) {
+    epaDeclarers.add(epaDeclarer);
+  }
 
-    public void registerProtocol(SpProtocolDefinitionFactory<?> protocol) {
-        SpProtocolManager.INSTANCE.register(protocol);
-    }
+  public void addProducerDeclarer(SemanticEventProducerDeclarer sourceDeclarer) {
+    checkAndStartExecutableStreams(sourceDeclarer);
+    producerDeclarers.add(sourceDeclarer);
+    streamDeclarers.addAll(sourceDeclarer.getEventStreams());
+  }
 
-    public void registerDataFormat(SpDataFormatFactory dataFormatDefinition) {
-        SpDataFormatManager.INSTANCE.register(dataFormatDefinition);
-    }
+  public void addConsumerDeclarer(SemanticEventConsumerDeclarer consumerDeclarer) {
+    consumerDeclarers.add(consumerDeclarer);
+  }
 
-    public void addEpaDeclarer(SemanticEventProcessingAgentDeclarer epaDeclarer) {
-        epaDeclarers.add(epaDeclarer);
-    }
+  public List<SemanticEventProcessingAgentDeclarer> getEpaDeclarers() {
+    return epaDeclarers;
+  }
 
-    public void addProducerDeclarer(SemanticEventProducerDeclarer sourceDeclarer) {
-    	checkAndStartExecutableStreams(sourceDeclarer);
-        producerDeclarers.add(sourceDeclarer);
-    }
+  public List<SemanticEventProducerDeclarer> getProducerDeclarers() {
+    return producerDeclarers;
+  }
 
-	public void addConsumerDeclarer(SemanticEventConsumerDeclarer consumerDeclarer) {
-        consumerDeclarers.add(consumerDeclarer);
-    }
+  public List<SemanticEventConsumerDeclarer> getConsumerDeclarers() {
+    return consumerDeclarers;
+  }
 
-    public List<SemanticEventProcessingAgentDeclarer> getEpaDeclarers() {
-        return epaDeclarers;
-    }
+  public List<DataStreamDeclarer> getStreamDeclarers() {
+    return streamDeclarers;
+  }
 
-    public List<SemanticEventProducerDeclarer> getProducerDeclarers() {
-        return producerDeclarers;
-    }
+  public void setPort(int port) {
+    this.port = port;
+  }
 
-    public List<SemanticEventConsumerDeclarer> getConsumerDeclarers() {
-        return consumerDeclarers;
-    }
+  public void setHostName(String host) {
+    this.hostName = host;
+  }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
+  public void setRoute(String route) {
+    this.route = "/" + route + "/";
+  }
 
-    public void setHostName(String host) {
-        this.hostName = host;
-    }
+  public String getBaseUri() {
+    return "http://" + hostName + ":" + port + route;
+  }
 
-    public void setRoute(String route) {
-        this.route = "/" + route + "/";
-    }
-
-    public String getBaseUri() {
-        return "http://" + hostName + ":" + port + route;
-    }
-    
-    private void checkAndStartExecutableStreams(SemanticEventProducerDeclarer sourceDeclarer) {
-		sourceDeclarer.getEventStreams()
-			.stream()
-			.filter(s -> s.isExecutable())
-			.forEach(es -> { es.declareModel(sourceDeclarer.declareModel()); es.executeStream(); });
-	}
+  private void checkAndStartExecutableStreams(SemanticEventProducerDeclarer sourceDeclarer) {
+    sourceDeclarer.getEventStreams()
+            .stream()
+            .filter(DataStreamDeclarer::isExecutable)
+            .forEach(es -> {
+              es.declareModel(sourceDeclarer.declareModel());
+              es.executeStream();
+            });
+  }
 }

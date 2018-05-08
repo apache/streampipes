@@ -1,14 +1,31 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.container.html.page;
 
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.Declarer;
-import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.InvocableDeclarer;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
-import org.streampipes.container.html.model.Description;
-import org.streampipes.container.html.model.DataSourceDescriptionHtml;
-import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
+import org.streampipes.container.html.model.DataSourceDescriptionHtml;
+import org.streampipes.container.html.model.Description;
+import org.streampipes.model.graph.DataSinkDescription;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -62,7 +79,7 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
         desc.setDescription(declarer.declareModel().getDescription());
         desc.setUri(URI.create(baseUri + "sep/" + declarer.declareModel().getUri()));
         desc.setType("source");
-        for (EventStreamDeclarer streamDeclarer : declarer.getEventStreams()) {
+        for (DataStreamDeclarer streamDeclarer : declarer.getEventStreams()) {
             Description ad = new Description();
             ad.setDescription(streamDeclarer.declareModel(declarer.declareModel()).getDescription());
             ad.setUri(URI.create(baseUri +"stream/" + streamDeclarer.declareModel(declarer.declareModel()).getUri()));

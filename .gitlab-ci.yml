@@ -9,6 +9,7 @@ variables:
 
 stages:
   - build
+  - github
   - docker
   - deploy
   - release
@@ -22,25 +23,34 @@ build:
   image: maven:3-jdk-8
   stage: build
   script:
+    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn clean package javadoc:aggregate -DskipTests
+    - mvn clean package javadoc:aggregate gpg:sign -DskipTests
     - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
     - "echo $MVN_VERSION >> ./target/mvn_version"
   artifacts:
     paths:
       - ./streampipes-backend/target/*.war
-      - ./streampipes-pe-sinks-standalone/target/*.jar
-      - ./streampipes-pe-sources-samples/target/*.jar
-      - ./streampipes-pe-processors-esper/target/*.jar
-      - ./streampipes-pe-sources-axoom-hmi/target/*.jar
-      - ./streampipes-pe-sources-mnist/target/*.jar
-      - ./streampipes-pe-mixed-flink/target/*.jar
-      - ./streampipes-pe-mixed-kafka-streams/target/*.jar
       - ./target/site/apidocs/**
       - ./target/mvn_version
     expire_in:  1 week
   except:
       - /release-.*$/
+      
+github:
+  image: maven:3-jdk-8
+  stage: github
+  script:
+    - git config --global user.email 'zehnder@fzi.de'
+    - git config --global user.name 'zehnder'
+    - git checkout $CI_COMMIT_REF_NAME
+    - git pull
+    - git remote add github https://$GITHUB_TOKEN:x-oauth-basic@github.com/streampipes/streampipes-ce.git
+    - git push github $CI_COMMIT_REF_NAME
+  only:
+    - dev
+    - master
+
 
 docker-backend:
    image: docker:17.06.0-ce
@@ -48,108 +58,49 @@ docker-backend:
    dependencies: 
      - build
    script: 
+     - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/backend:SNAPSHOT ./streampipes-backend/
-     - docker push $IMAGE_NAME/backend:SNAPSHOT
+     - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
+     - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION -t $HARBOR_IMAGE_NAME/backend:latest -t $HARBOR_IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
+     - docker push $IMAGE_NAME/backend:$MVN_VERSION
+     - docker push $IMAGE_NAME/backend:latest
+     - docker push $HARBOR_IMAGE_NAME/backend:$MVN_VERSION
+     - docker push $HARBOR_IMAGE_NAME/backend:latest
    only:
      - dev
 
-docker-pe-sinks:
-   image: docker:17.06.0-ce
-   stage: docker
-   dependencies: 
-     - build
-   script: 
-     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-sinks-standalone:SNAPSHOT ./streampipes-pe-sinks-standalone/
-     - docker push $IMAGE_NAME/pe-sinks-standalone:SNAPSHOT
-   only:
-     - dev
-    
-docker-pe-sources-samples:
-   image: docker:17.06.0-ce
-   stage: docker
-   dependencies: 
-     - build
-   script: 
-     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-sources-samples:SNAPSHOT ./streampipes-pe-sources-samples/
-     - docker push $IMAGE_NAME/pe-sources-samples:SNAPSHOT
-   only:
-     - dev
- 
-docker-pe-processors-esper:
-   image: docker:17.06.0-ce
-   stage: docker
-   dependencies: 
-     - build
-   script: 
-     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-processors-esper:SNAPSHOT ./streampipes-pe-processors-esper/
-     - docker push $IMAGE_NAME/pe-processors-esper:SNAPSHOT
-   only:
-     - dev
-
-docker-pe-sources-axoom-hmi:
-   image: docker:17.06.0-ce
-   stage: docker
-   dependencies: 
-     - build
-   script: 
-     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-sources-axoom-hmi:SNAPSHOT ./streampipes-pe-sources-axoom-hmi/
-     - docker push $IMAGE_NAME/pe-sources-axoom-hmi:SNAPSHOT
-   only:
-     - dev
-
-docker-pe-sources-mnist:
-   image: docker:17.06.0-ce
-   stage: docker
-   dependencies: 
-     - build
-   script: 
-     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-sources-mnist:SNAPSHOT ./streampipes-pe-sources-mnist/
-     - docker push $IMAGE_NAME/pe-sources-mnist:SNAPSHOT
-   only:
-     - dev
-
-docker-pe-mixed-flink:
-   image: docker:17.06.0-ce
-   stage: docker
-   dependencies: 
-     - build
-   script: 
-     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-mixed-flink:SNAPSHOT ./streampipes-pe-mixed-flink/
-     - docker push $IMAGE_NAME/pe-mixed-flink:SNAPSHOT
-   only:
-     - dev
-
-docker-pe-mixed-kafka:
-   image: docker:17.06.0-ce
-   stage: docker
-   dependencies:
-     - build
-   script:
-     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/pe-mixed-kafka:SNAPSHOT ./streampipes-pe-mixed-kafka-streams/
-     - docker push $IMAGE_NAME/pe-mixed-kafka:SNAPSHOT
-   only:
-     - dev
 
 deploy:
   image: maven:3-jdk-8
   stage: deploy
   script:
+    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - mvn deploy -DskipTests
   only:
     - dev
+    - master
   artifacts:
     paths:
       - ./**/*.jar
     expire_in:  1 hour
+    
+#deploy to test:
+#  image: maven:3-jdk-8
+#  stage: deploy
+#  before_script:
+#    - mkdir -p ~/.ssh
+#    - echo -e "$TESTSERVER_SSH" > ~/.ssh/id_rsa
+#    - chmod 600 ~/.ssh/id_rsa
+#    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+#  script:
+#    - ssh "$TESTSERVER_USER"@"$TESTSERVER_HOSTNAME" "cd ~/streampipes-cd && docker-compose pull backend && docker-compose up -d"
+#  environment:
+#    name: test
+#    url: http://$TESTSERVER_HOSTNAME
+#  only:
+#    - dev
+
 
 start release:
   image: maven:3-jdk-8
@@ -177,6 +128,7 @@ finish release:
   image: maven:3-jdk-8
   stage: release
   script:
+    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
     - eval $(ssh-agent -s)
@@ -202,7 +154,6 @@ docker hub:
   when: manual
   script:
     - export MVN_VERSION=$(cat ./target/mvn_version)
-    - echo $MVN_VERSION
     - docker login -u streampipesbuild -p $DOCKER_HUB_USER_PWD
     - docker build --pull -t streampipes/backend:$MVN_VERSION ./streampipes-backend/
     - docker push streampipes/backend:$MVN_VERSION

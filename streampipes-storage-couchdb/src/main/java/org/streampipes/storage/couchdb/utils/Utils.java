@@ -1,3 +1,20 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.storage.couchdb.utils;
 
 import org.streampipes.serializers.json.GsonSerializer;
@@ -7,7 +24,11 @@ import org.streampipes.storage.couchdb.utils.CouchDbConfig;
 
 public class Utils {
 
-
+	public static CouchDbClient getCouchDbAdapterClient() {
+		CouchDbClient dbClient = new CouchDbClient(props("adapter"));
+		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+		return dbClient;
+	}
 
 	public static CouchDbClient getCouchDbPipelineClient() {
 		CouchDbClient dbClient = new CouchDbClient(props("pipeline"));
@@ -68,6 +89,10 @@ public class Utils {
 
 	public static CouchDbClient getCouchDbElasticsearchFilesEndppointClient() {
 		return new CouchDbClient(props("file-export-endpoints-elasticsearch"));
+	}
+
+	public static CouchDbClient getCoucbDbClient(String table) {
+		return new CouchDbClient(props(table));
 	}
 	
 	private static CouchDbProperties props(String dbname)

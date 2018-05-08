@@ -1,18 +1,35 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.manager.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.base.NamedStreamPipesEntity;
-import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
-import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.staticproperty.MappingProperty;
 import org.streampipes.model.staticproperty.MatchingStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TreeUtils {
 
@@ -24,7 +41,8 @@ public class TreeUtils {
 	 * @return a SEPA-client element
 	 */
 	
-	public static NamedStreamPipesEntity findSEPAElement(String id, List<DataProcessorInvocation> sepas, List<SpDataStream> streams)
+	public static NamedStreamPipesEntity findSEPAElement(String id, List<DataProcessorInvocation> sepas, List<SpDataStream>
+					streams)
 	{ 
 		List<NamedStreamPipesEntity> allElements = new ArrayList<>();
 		allElements.addAll(sepas);

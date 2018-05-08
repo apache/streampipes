@@ -52,6 +52,19 @@
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 
+
+	<servlet>
+		<!-- use OpenApi servlet to serve spec -->
+		<servlet-name>OpenApi</servlet-name>
+		<servlet-class>io.swagger.v3.jaxrs2.integration.OpenApiServlet</servlet-class>
+		<init-param>
+			<param-name>openApi.configuration.resourcePackages</param-name>
+			<param-value>io.swagger.sample.resource</param-value>
+		</init-param>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+
+
 	<servlet-mapping>
 		<servlet-name>SemanticEPA-API</servlet-name>
 		<url-pattern>/api/*</url-pattern>
@@ -60,6 +73,12 @@
 	<servlet-mapping>
 		<servlet-name>Apps</servlet-name>
 		<url-pattern>/api/apps/*</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet-mapping>
+		<servlet-name>OpenApi</servlet-name>
+		<url-pattern>/api/docs/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>

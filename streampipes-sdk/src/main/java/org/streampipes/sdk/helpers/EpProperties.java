@@ -1,3 +1,20 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.sdk.helpers;
 
 import org.streampipes.commons.Utils;
@@ -117,6 +134,29 @@ public class EpProperties {
 										.toString(),
 						runtimeName,
 						domainProperty)));
+	}
+
+	/**
+	 * Creates a new list-based event property of the parameter type eventProperty
+	 * @param label A human-readable label of the property
+	 * @param runtimeName The field identifier of the event property at runtime.
+	 * @param eventProperty The complex type of data in the list
+	 * @return {@link org.streampipes.model.schema.EventPropertyList}
+	 */
+	public static EventPropertyList listEp(Label label, String runtimeName, EventProperty eventProperty) {
+		return getPreparedProperty(label, new EventPropertyList(runtimeName, eventProperty));
+	}
+
+	/**
+	 * Creates a new list-based event property of the parameter type eventProperty
+	 * @param label A human-readable label of the property
+	 * @param runtimeName The field identifier of the event property at runtime.
+	 * @param eventProperty The complex type of data in the list
+	 * @return {@link org.streampipes.model.schema.EventPropertyList}
+	 */
+	public static EventPropertyList listEp(Label label, String runtimeName, EventProperty eventProperty, String domainProperty) {
+		return getPreparedProperty(label, new EventPropertyList(runtimeName, eventProperty, Utils.createURI
+					(domainProperty)));
 	}
 
 	/**
