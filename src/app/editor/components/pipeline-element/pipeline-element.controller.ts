@@ -7,6 +7,7 @@ export class PipelineElementController {
     pipelineElement: any;
     preview: any;
     iconSize: any;
+    iconStandSize: any;
 
     constructor(ImageChecker, ElementIconText) {
         this.ImageChecker = ImageChecker;
@@ -30,6 +31,8 @@ export class PipelineElementController {
         }
         else if (this.preview) {
             return 'width:50px;height:50px;';
+        } else if (this.iconStandSize) {
+            return 'width:50px;height:50px;margin-top:-5px;'
         } else {
             return 'width:70px;height:70px;';
         }
