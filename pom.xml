@@ -31,7 +31,6 @@
         <logback-classic.version>1.1.9</logback-classic.version>
         <jackson.version>2.7.4</jackson.version>
         <type-parser.version>0.6.0</type-parser.version>
-        <simple-slack-api.version>0.5.1</simple-slack-api.version>
         <consul-client.version>1.1.1</consul-client.version>
         <persistence-api.version>1.0.2</persistence-api.version>
         <junit.version>4.12</junit.version>
@@ -61,11 +60,6 @@
                 <groupId>com.github.drapostolos</groupId>
                 <artifactId>type-parser</artifactId>
                 <version>${type-parser.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.Ullink</groupId>
-                <artifactId>simple-slack-api</artifactId>
-                <version>${simple-slack-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -195,22 +189,12 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-sinks-standalone</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-connect</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-processors-standalone</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -250,11 +234,6 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-processors-esper</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pipeline-management</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -275,27 +254,12 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-mixed-flink</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-wrapper-spark</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-mixed-spark</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-sources</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-slack</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -331,21 +295,6 @@
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-backend</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-sources-hella</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-sources-mhwirth</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-sources-samples</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
