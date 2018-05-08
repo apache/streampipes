@@ -5,6 +5,8 @@ export class PipelineElementController {
     showImage: any;
     iconText: any;
     pipelineElement: any;
+    preview: any;
+    iconSize: any;
 
     constructor(ImageChecker, ElementIconText) {
         this.ImageChecker = ImageChecker;
@@ -22,6 +24,16 @@ export class PipelineElementController {
         })
     }
 
+    iconSizeCss() {
+        if (this.iconSize) {
+            return 'width:35px;height:35px;';
+        }
+        else if (this.preview) {
+            return 'width:50px;height:50px;';
+        } else {
+            return 'width:80px;height:80px;';
+        }
+    }
 }
 
 PipelineElementController.$inject=['ImageChecker', 'ElementIconText']

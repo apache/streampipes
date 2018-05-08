@@ -19,7 +19,7 @@ export class ProtocolDescription {
   public uri: string;
 
   @RdfProperty('sp:config')
-  public config: StaticProperty[];
+  public config: StaticProperty[] = [];
 
   constructor(id: string) {
     this.id = id;

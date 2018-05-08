@@ -1,12 +1,14 @@
 const {AngularCompilerPlugin} = require('@ngtools/webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
 
 module.exports = {
     entry: {
         'polyfills': './src/polyfills.ts',
-        'main': './src/main.ts'
+        'main': './src/main.ts',
+        'style': './src/scss/main.scss'
     },
     output: {
         path: path.join(process.cwd(), "dist"),
@@ -31,6 +33,10 @@ module.exports = {
             {
                 test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
                 loader: 'file-loader?name=assets/[name].[hash].[ext]'
+            },
+            {
+                test: /\.(sass|scss)$/,
+                loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
             }
         ]
     },
@@ -50,6 +56,10 @@ module.exports = {
             "tsConfigPath": path.join(__dirname, 'src', 'tsconfig.app.json'),
             "skipCodeGeneration": true,
             "compilerOptions": {}
+        }),
+        new ExtractTextPlugin({ // define where to save the file
+            filename: '[name].bundle.css',
+            allChunks: true,
         }),
         new CopyWebpackPlugin([
             {
@@ -78,7 +88,7 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: 'src/index.html',
-            chunks: ['polyfills', 'main'],
+            chunks: ['polyfills', 'main', 'style'],
             chunksSortMode: 'manual'
         })
     ],

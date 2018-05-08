@@ -1,5 +1,7 @@
+declare const require: any;
+
 export let spHeatmapWidgetConfig = {
-    templateUrl: 'app/dashboard/templates/heatmap/heatmapConfig.html',
+    template: require('./heatmapConfig.html'),
     bindings: {
             wid: '='
     },

@@ -1,8 +1,8 @@
 import * as angular from 'angular';
 
-import { AddDialogController } from './add-dialog.controller';
-import { DialogController } from './dialog.controller';
-import { ContextController } from './context.controller';
+import {AddDialogController} from './add-dialog.controller';
+import {DialogController} from './dialog.controller';
+import {ContextController} from './context.controller';
 
 
 // export default function OntologyCtrl($scope, RestApi, $mdToast, $mdDialog) {
@@ -210,16 +210,13 @@ export class OntologyCtrl {
         this.propertyDetail.range = {};
         this.propertyDetail.range.rangeType = this.selectedRangeType;
         this.propertyDetail.rangeDefined = true;
-        if (this.selectedRangeType === 'PRIMITIVE')
-        {
+        if (this.selectedRangeType === 'PRIMITIVE') {
             this.propertyDetail.rdfsDatatype = "";
-        } else if (this.selectedRangeType === 'QUANTITATIVE_VALUE')
-        {
+        } else if (this.selectedRangeType === 'QUANTITATIVE_VALUE') {
             this.propertyDetail.range.minValue = -1;
             this.propertyDetail.range.maxValue = -1;
             this.propertyDetail.range.unitCode = "";
-        } else if (this.selectedRangeType === 'ENUMERATION')
-        {
+        } else if (this.selectedRangeType === 'ENUMERATION') {
             this.propertyDetail.range.minValue = -1;
             this.propertyDetail.range.maxValue = -1;
             this.propertyDetail.range.unitCode = "";
@@ -244,13 +241,13 @@ export class OntologyCtrl {
             });
     }
 
-    openNamespaceDialog(){
+    openNamespaceDialog() {
         this.$mdDialog.show({
             controller: DialogController,
             controllerAs: 'ctrl',
             templateUrl: 'templates/manageNamespacesDialog.tmpl.html',
             parent: angular.element(document.body),
-            clickOutsideToClose:true,
+            clickOutsideToClose: true,
         })
     };
 
@@ -294,7 +291,6 @@ export class OntologyCtrl {
     // });
 
 
-
     showToast(text) {
         this.$mdToast.show(
             this.$mdToast.simple()
@@ -310,33 +306,29 @@ export class OntologyCtrl {
             controllerAs: 'ctrl',
             templateUrl: 'templates/manageVocabulariesDialog.tmpl.html',
             parent: angular.element(document.body),
-            clickOutsideToClose:true,
+            clickOutsideToClose: true,
         })
     }
 
-    openAddElementDialog(elementType, conceptId?){
-        if(conceptId === undefined) {
-            this.openAddElementDialog(elementType, undefined);
-        } else {
-            this.$mdDialog.show({
-                controller: AddDialogController,
-                controllerAs: 'ctrl',
-                templateUrl: 'templates/createElementDialog.tmpl.html',
-                parent: angular.element(document.body),
-                clickOutsideToClose:true,
-                // scope: this,
-                locals : {
-                    elementType : elementType,
-                    conceptId : conceptId,
-                    loadConcepts: this.loadConcepts,
-                    loadConceptDetails: this.loadConceptDetails,
-                    loadProperties: this.loadProperties,
-                    loadPropertyDetails: this.loadPropertyDetails,
-                    loadInstanceDetails: this.loadInstanceDetails
+    openAddElementDialog(elementType, conceptId?) {
+        this.$mdDialog.show({
+            controller: AddDialogController,
+            controllerAs: 'ctrl',
+            templateUrl: 'templates/createElementDialog.tmpl.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: true,
+            // scope: this,
+            locals: {
+                elementType: elementType,
+                conceptId: conceptId,
+                loadConcepts: this.loadConcepts,
+                loadConceptDetails: this.loadConceptDetails,
+                loadProperties: this.loadProperties,
+                loadPropertyDetails: this.loadPropertyDetails,
+                loadInstanceDetails: this.loadInstanceDetails
 
-                }
-            })
-        }
+            }
+        })
     }
 
     // TODO: Duplicate Method

@@ -3,7 +3,7 @@
         <h5>{{ctrl.staticProperty.properties.description}}</h5>
         <h5>Possible placeholders: </h5>
         <div flex="100" layout="row" style="background:white;">
-            <div class="sp-accent-bg" style="color:white;padding:5px;margin:5px;"
+            <div ng-click="ctrl.applyPlaceholder(property.properties.runtimeName)" class="sp-accent-bg" style="color:white;padding:5px;margin:5px;"
                  ng-repeat="property in ctrl.inputStreams[0].eventSchema.eventProperties">
                 #{{property.properties.runtimeName}}#
             </div>

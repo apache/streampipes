@@ -1,11 +1,14 @@
 import {Component, DoCheck, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {EventProperty} from '../properties/EventProperty';
-import {DragulaService} from 'ng2-dragula';
-import {DragDropService} from '../drag-drop.service';
+import {EventProperty} from '../model/EventProperty';
+// import {DragulaService} from 'ng2-dragula';
+// import {DragDropService} from '../drag-drop.service';
 import {Subscription} from 'rxjs/Subscription';
-import {EventPropertyPrimitive} from '../properties/EventPropertyPrimitive';
+import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataTypesService} from '../data-type.service';
+import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
+
+// import {DataTypesService} from '../data-type.service';
 
 @Component({
   selector: 'app-event-property-primitive',
@@ -17,6 +20,8 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   @Input() property: EventPropertyPrimitive;
   @Input() index: number;
 
+  @Input() domainPropertyGuess: DomainPropertyProbabilityList;
+
 
   private propertyPrimitivForm: FormGroup;
   private runtimeDataTypes;
@@ -25,12 +30,15 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   @Output() addNested: EventEmitter<any> = new EventEmitter<any>();
 
 
-  constructor(private dragulaService: DragulaService, private formBuilder: FormBuilder, private dataTypesService: DataTypesService) {
-    this.propertyPrimitivForm = formBuilder.group({
-      dataType: ['', Validators.required]
-    });
+  constructor(private formBuilder: FormBuilder, private dataTypeService: DataTypesService) {
+      this.dataTypeService = dataTypeService;
+      // constructor(private dragulaService: DragulaService, private formBuilder: FormBuilder) {
+      // constructor(private dragulaService: DragulaService, private formBuilder: FormBuilder, private dataTypesService: DataTypesService) {
+    // this.propertyPrimitivForm = formBuilder.group({
+    //   dataType: ['', Validators.required]
+    // });
 
-    this.runtimeDataTypes = this.dataTypesService.getDataTypes();
+    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
   }
 
   protected open = false;
@@ -38,8 +46,8 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
 
   ngOnInit() {
-    this.dragulaService.drag.subscribe((value: any) => this.drag());
-    this.property.propertyNumber = this.index;
+  //   this.dragulaService.drag.subscribe((value: any) => this.drag());
+  //   this.property.propertyNumber = this.index;
   }
 
   ngDoCheck() {
@@ -48,11 +56,11 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
   // von Dragula-Service aufgerufen nach Drag dieses Elements
   private drag() {
-    const dragDropService: DragDropService = DragDropService.getInstance();
-    dragDropService.announceDrag(this.property);
-    dragDropService.nestConfirmed$.subscribe(result => {
-      this.property.parent = result;
-    });
+    // const dragDropService: DragDropService = DragDropService.getInstance();
+    // dragDropService.announceDrag(this.property);
+    // dragDropService.nestConfirmed$.subscribe(result => {
+    //   this.property.parent = result;
+    // });
   }
 
   private OnClickDeleteProperty(): void {
@@ -63,11 +71,14 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
     this.open = !this.open;
   }
 
+  // TODO this works not completely correct
   private getLabel(): string {
-    if (typeof this.property.getRuntimeName() !== 'undefined') {
-      return this.property.getRuntimeName();
+    if (typeof this.property.label !== 'undefined') {
+      return this.property.label;
+    } else if (typeof this.property.runTimeName !== 'undefined') {
+        return this.property.runTimeName;
     } else {
-      return 'Property ' + this.property.propertyID;
+      return 'Property';
     }
   }
 }

@@ -1,5 +1,7 @@
+declare const require: any;
+
 export let spRawWidgetConfig = {
-    templateUrl: 'app/dashboard/templates/raw/rawConfig.html',
+    template: require('./rawConfig.html'),
     bindings: {
         wid: '='
     },

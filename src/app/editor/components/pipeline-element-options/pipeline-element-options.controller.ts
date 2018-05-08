@@ -1,3 +1,5 @@
+import * as angular from 'angular';
+
 export class PipelineElementOptionsController {
 
     ObjectProvider: any;
@@ -13,6 +15,7 @@ export class PipelineElementOptionsController {
     pipelineElement: any;
     rawPipelineModel: any;
     allElements: any;
+    deleteFunction: any;
 
     constructor($rootScope, ObjectProvider, PipelineElementRecommendationService, InitTooltips, JsplumbBridge, EditorDialogManager, JsplumbService) {
         this.ObjectProvider = ObjectProvider;
@@ -38,13 +41,16 @@ export class PipelineElementOptionsController {
         }
     }
 
-    removeElement() {
-        // TODO: deleteFunction not implemented
-        //this.deleteFunction(this.pipelineElement.payload.DOM);
+    removeElement(pipelineElement) {
+        this.deleteFunction(pipelineElement);
     }
 
     openCustomizeDialog() {
         this.EditorDialogManager.showCustomizeDialog($("#" + this.pipelineElement.payload.DOM), "", this.pipelineElement.payload);
+    }
+
+    openHelpDialog() {
+        this.EditorDialogManager.openHelpDialog(this.pipelineElement.payload);
     }
 
     openCustomizeStreamDialog() {
@@ -52,12 +58,14 @@ export class PipelineElementOptionsController {
     }
 
     initRecs(elementId, currentPipelineElements) {
-        var currentPipeline = this.ObjectProvider.makePipeline(currentPipelineElements, elementId);
+        var currentPipeline = this.ObjectProvider.makePipeline(angular.copy(currentPipelineElements));
         this.PipelineElementRecommendationService.getRecommendations(this.allElements, currentPipeline).then((result) => {
-            this.possibleElements = result.possibleElements;
-            this.recommendedElements = result.recommendations;
-            this.recommendationsAvailable = true;
-            this.InitTooltips.initTooltips();
+            if (result.success) {
+                this.possibleElements = result.possibleElements;
+                this.recommendedElements = result.recommendations;
+                this.recommendationsAvailable = true;
+                this.InitTooltips.initTooltips();
+            }
         });
     }
 

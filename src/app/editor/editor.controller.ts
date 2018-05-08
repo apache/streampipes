@@ -42,7 +42,7 @@ export class EditorCtrl {
             this.currentModifiedPipelineId = $stateParams.pipeline;
         }
 
-        this.selectedTab = 0;
+        this.selectedTab = 1;
 
         this.minimizedEditorStand = false;
 
@@ -76,6 +76,10 @@ export class EditorCtrl {
 
         this.tabs = [
             {
+                title: 'Data Sets',
+                type: 'set',
+            },
+            {
                 title: 'Data Streams',
                 type: 'stream',
             },
@@ -94,6 +98,9 @@ export class EditorCtrl {
         this.loadActions();
     }
 
+    isActiveTab(elementType) {
+        return elementType === this.activeType;
+    }
 
     toggleEditorStand() {
         this.minimizedEditorStand = !this.minimizedEditorStand;
@@ -115,14 +122,21 @@ export class EditorCtrl {
 
     loadSources() {
         var tempStreams = [];
+        var tempSets = [];
         this.RestApi.getOwnSources()
             .then((sources) => {
                 sources.data.forEach((source, i, sources) => {
                     source.spDataStreams.forEach(stream => {
-                        stream.type = 'stream';
-                        tempStreams = tempStreams.concat(stream);
+                        if (stream.sourceType == 'org.streampipes.model.SpDataSet') {
+                            stream.type = "set";
+                            tempSets = tempSets.concat(stream);
+                        } else {
+                            stream.type = "stream";
+                            tempStreams = tempStreams.concat(stream);
+                        }
                     });
                     this.allElements["stream"] = tempStreams;
+                    this.allElements["set"] = tempSets;
                     this.currentElements = this.allElements["stream"];
                 });
             });
@@ -155,10 +169,10 @@ export class EditorCtrl {
             stack: '.draggable-icon',
             start: function (el, ui) {
                 ui.helper.appendTo('#content');
-                $('#outerAssemblyArea').css('border', '3px dashed rgb(255,64,129)');
+                $('#outerAssemblyArea').css('border', '3px dashed #39b54a');
             },
             stop: function (el, ui) {
-                $('#outerAssemblyArea').css('border', '1px solid rgb(63,81,181)');
+                $('#outerAssemblyArea').css('border', '1px solid #878787');
             }
         });
     };

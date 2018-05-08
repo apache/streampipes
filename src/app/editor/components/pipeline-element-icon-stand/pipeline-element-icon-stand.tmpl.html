@@ -3,37 +3,37 @@
 
         <div layout-align="start center" layout="row">
             <div layout="row" style="margin-right: 5px">
-                <md-icon md-svg-icon="action:ic_search_24px" class="sp-darkblue-text"></md-icon>
+                <md-icon md-svg-icon="action:ic_search_24px" class="sp-accent"></md-icon>
                 <input type="text" ng-model="ctrl.elName" placeholder="Find Element"
-                       style="background-color:#f6f6f6;border: none;border-bottom: solid 2px #304269;">&nbsp;
+                       style="background-color:#f6f6f6;border: none;border-bottom: solid 2px rgb(27, 20, 100);">&nbsp;
             </div>
             <div layout="row">
                 <md-menu-bar>
                     <md-menu>
-                        <button ng-click="$mdOpenMenu()" class="sp-darkblue-text">
+                        <button ng-click="$mdOpenMenu()" class="sp-accent">
                             <md-icon md-svg-icon="action:ic_view_list_24px"
-                                     class="sp-darkblue-text"></md-icon>
+                                     class="sp-accent"></md-icon>
                             Select categories
                         </button>
                         <md-menu-content>
                             <md-menu-item class="md-indent">
                                 <md-icon md-svg-icon="action:ic_done_24px"
-                                         class="sp-darkblue-text"></md-icon>
+                                         class="sp-accent"></md-icon>
                                 <md-button ng-click="ctrl.selectAllOptions()">&nbsp;Select all</md-button>
                             </md-menu-item>
                             <md-menu-item class="md-indent">
                                 <md-icon md-svg-icon="content:ic_clear_24px"
-                                         class="sp-darkblue-text"></md-icon>
+                                         class="sp-accent"></md-icon>
                                 <md-button ng-click="ctrl.deselectAllOptions()">&nbsp;Deselect all</md-button>
                             </md-menu-item>
                             <md-menu-divider></md-menu-divider>
                             <div ng-repeat="option in ctrl.availableOptions[ctrl.activeType] | orderBy: 'label'">
                                 <md-menu-item class="md-indent">
                                     <md-icon md-svg-icon="action:ic_visibility_24px"
-                                             class="sp-darkblue-text"
+                                             class="sp-accent"
                                              ng-if="ctrl.optionSelected(option)"></md-icon>
                                     <md-icon md-svg-icon="action:ic_visibility_off_24px"
-                                             class="sp-darkblue-text"
+                                             class="sp-accent"
                                              ng-if="!ctrl.optionSelected(option)"></md-icon>
                                     <md-button ng-click="ctrl.toggleFilter(option)">&nbsp;{{option.label}}
                                     </md-button>
@@ -47,11 +47,11 @@
     </div>
 </div>
 <div flex id="editor-icon-stand" class="icon-stand" ng-if="ctrl.currentElements">
+    <!-- selectFilter:ctrl.selectedOptions | -->
     <span
-          data-ng-repeat="element in ctrl.currentElements | elementNameFilter:ctrl.elName | selectFilter:ctrl.selectedOptions | orderBy: 'name'"
+          data-ng-repeat="element in ctrl.currentElements |  selectFilter:ctrl.selectedOptions | elementNameFilter:ctrl.elName | orderBy: 'name'"
           my-data-bind image-bind="draggable" class="draggable-icon tt" ng-class="element.type"
           data-target="testMenu" ng-if="element.type !== 'block'">
-
     </span>
 
 </div>

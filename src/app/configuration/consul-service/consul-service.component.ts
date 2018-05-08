@@ -14,6 +14,7 @@ export class ConsulServiceComponent {
     showConfiguration: boolean = false;
 
     constructor() {
+        console.log(this.consulService);
     }
 
     toggleConfiguration(): void {

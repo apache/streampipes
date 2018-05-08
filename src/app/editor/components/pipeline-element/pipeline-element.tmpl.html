@@ -1,4 +1,4 @@
-<img ng-src="ctrl.pipelineElement.iconUrl" ng-if="ctrl.showImage">
+<img ng-src="{{ctrl.pipelineElement.iconUrl}}" ng-if="ctrl.showImage" style="{{ctrl.iconSizeCss()}}">
 <span ng-if="!ctrl.showImage" class="element-text-icon">
             {{ctrl.iconText}}
 </span>

@@ -1,0 +1,73 @@
+@import '../_variables';
+
+.sp-darkblue {
+    background: $sp-color-primary;
+}
+
+.sp-darkblue-text {
+    color: $sp-color-primary;
+}
+
+.sp-darkblue-border {
+    border: 1px solid $sp-color-primary;
+}
+
+.sp-blue-100-border {
+    border: 2px solid rgb(63,81,181);
+}
+
+
+.sp-gray-border {
+    border: 1px solid #cccccc;
+}
+
+.sp-blue {
+    color: $sp-color-accent-light;
+}
+
+.sp-blue-bg {
+    background: $sp-color-accent-light;
+}
+
+.sp-blue-border {
+    border: 1px solid $sp-color-accent-light;
+    padding-top:20px;
+    padding-bottom:20px;
+    background: #FAFAFA;
+}
+
+.sp-blue-border-nopadding {
+    border: 1px solid $sp-color-accent-light;
+}
+
+.sp-lightblue {
+    color: #D9E8F5;
+}
+
+.sp-white {
+    color:#FFFFFF;
+}
+
+.sp-green {
+    color: $sp-color-accent;
+}
+
+.sp-darkgreen {
+    color: #007F54;
+}
+
+.sp-accent {
+    color: $sp-color-accent;
+}
+
+.sp-accent-bg {
+    background: $sp-color-accent;
+}
+
+.sp-accent-light {
+    color: $sp-color-accent-light;
+}
+
+.sp-primary-border-1px {
+    border:1px solid $sp-color-primary;
+}

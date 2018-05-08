@@ -1,0 +1,67 @@
+<div style="margin-right: 10vh; margin-left: 10vh;" fxLayout="column" fxLayoutAlign="center stretch">
+  <mat-horizontal-stepper [linear]="isLinear">
+
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Select Protocol</ng-template>
+
+        <div fxLayoutAlign="start">
+          <app-protocol-form fxLayout="column" fxFlex="100" [(selectedProtocol)]="newAdapterDescription.protocol" [allProtocols]="allProtocols"></app-protocol-form>
+        </div>
+        <div fxLayoutAlign="end">
+          <button color="primary" mat-raised-button matStepperNext>Next</button>
+        </div>
+      </form>
+
+    </mat-step>
+
+
+    <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Select Format</ng-template>
+
+        <div fxLayoutAlign="center">
+          <app-format-form fxLayout="column" fxFlex="100" [(selectedFormat)]="newAdapterDescription.format" [allFormats]="allFormats"></app-format-form>
+        </div>
+
+        <div fxLayoutAlign="end">
+          <button color="primary" mat-raised-button matStepperPrevious>Back</button>
+          <button color="primary" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+
+    <mat-step>
+      <ng-template matStepLabel>Define Event Schema</ng-template>
+      <app-event-schema fxLayout="column" fxFlex="100" [(adapterDescription)]="newAdapterDescription"></app-event-schema>
+
+        <div fxLayoutAlign="end">
+          <button color="primary" mat-raised-button matStepperPrevious>Back</button>
+          <button color="primary" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
+        </div>
+    </mat-step>
+
+    <mat-step>
+
+
+      <ng-template matStepLabel>Start Adapter</ng-template>
+      <div fxLayoutAlign="center" fxLayout="column" fxFlex="100" >
+          <mat-form-field>
+            <input matInput [(ngModel)]="newAdapterDescription.label" placeholder="Adapter Name">
+          </mat-form-field>
+      </div>
+      <div fxLayoutAlign="center">
+        <button mat-raised-button color="accent" (click)="startAdapter()" mat-button>Start Adapter</button>
+      </div>
+
+
+      <div fxLayoutAlign="end">
+          <button color="primary" mat-raised-button matStepperPrevious style="margin-left:10px;">Back</button>
+        </div>
+    </mat-step>
+
+  </mat-horizontal-stepper>
+
+</div>
+

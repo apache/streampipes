@@ -14,11 +14,14 @@ export class PipelineElementRecommendationService {
                 .success(data => {
                     if (data.success) {
                         var result = {};
+                        result["success"] = true;
                         result['recommendations'] = this.populateRecommendedList(allElements, data.recommendedElements);
                         result['possibleElements'] = this.collectPossibleElements(allElements, data.possibleElements);
                         resolve(result);
                     } else {
-                        reject(data);
+                        // TODO improve
+                        var noresult = {success: false};
+                        resolve(noresult);
                     }
                 });
         });

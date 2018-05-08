@@ -1,5 +1,7 @@
+declare const require: any;
+
 export let spMapWidgetConfig = {
-    templateUrl: 'app/dashboard/templates/map/mapConfig.html',
+    template: require('./mapConfig.html'),
     bindings: {
         wid: '='
     },

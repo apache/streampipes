@@ -1,45 +1,14 @@
 <button md-icon-button color="primary" mat-button (click)=guessSchema()>
-Guess Schema
+    Guess Schema
 </button>
 
-<div fxLayout="column" fxLayoutAlign="space-evenly stretched" >
-  <!--<mat-toolbar color="primary">-->
-    <!--<mat-toolbar-row>-->
-      <!--{{title}}-->
-    <!--</mat-toolbar-row>-->
-  <!--</mat-toolbar>-->
-  <ul [dragula]='"schema-bag"' [dragulaModel]='eventSchema.eventProperties'>
-    <div *ngFor="let property of eventSchema.eventProperties; let i=index">
-      <div class="schema"  *ngIf="isEventPropertyNested(property)">
-        <!-- placeholder for nested-properties-->
-        <app-event-property-nested [index]="i + 1"
-                                   [eventPropertyNested]="property"
-                                   (delete)=deleteProperty($event)></app-event-property-nested>
-      </div>
-      <div *ngIf="isEventPropertyPrimitive(property)">
-        <!-- placeholder for event-properties -->
-        <app-event-property-primitive (delete)=deleteProperty($event)
-                                      (addPrimitive)=addPrimitiveProperty($event)
-                                      [property]="property"
-                                      [index]="i + 1"></app-event-property-primitive>
-      </div>
-      <div *ngIf="isEventPropertyList(property)">
-        <app-event-propoerty-list (delete)=deleteProperty($event)
-                                  [eventPropertyList]="property"
-                                  [index]="i + 1"></app-event-propoerty-list>
-      </div>
-    </div>
-  </ul>
-  <div fxFlexAlign="start">
-    <button mat-button (click)=addNestedProperty()>
-      <mat-icon matTooltip="add nested property">queue</mat-icon>
-    </button>
-    <button mat-button (click)=addPrimitiveProperty()>
-      <mat-icon matTooltip="add primitive property">add</mat-icon>
-    </button>
-    <button mat-button (click)=addListProperty()>
-      <mat-icon matTooltip="add listproperty">save</mat-icon>
-    </button>
-
-  </div>
+<div fxLayoutAlign="center">
+<mat-spinner fxLayoutAlign="center" *ngIf="isLoading">Loading</mat-spinner>
 </div>
+
+<div fxLayout="column" fxLayoutAlign="space-evenly stretched" >
+    <app-event-property-bag [(eventProperties)]="adapterDescription.dataSet.eventSchema.eventProperties" [domainPropertyGuesses]="schemaGuess.eventProperties">
+    </app-event-property-bag>
+</div>
+
+

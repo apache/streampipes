@@ -1,12 +1,13 @@
 import {Component, DoCheck, EventEmitter, Injectable, Input, OnInit, Output} from '@angular/core';
-import {EventProperty} from '../properties/EventProperty';
-import {EventPropertyNested} from '../properties/EventPropertyNested';
+import {EventProperty} from '../model/EventProperty';
+import {EventPropertyNested} from '../model/EventPropertyNested';
 import {UUID} from 'angular2-uuid';
-import {EventPropertyList} from '../properties/EventPropertyList';
-import {DragulaService} from 'ng2-dragula';
-import {DragDropService} from '../drag-drop.service';
-import {WriteJsonService} from '../write-json.service';
-import {EventPropertyPrimitive} from '../properties/EventPropertyPrimitive';
+import {EventPropertyList} from '../model/EventPropertyList';
+// import {DragulaService} from 'ng2-dragula';
+// import {DragDropService} from '../drag-drop.service';
+// import {WriteJsonService} from '../write-json.service';
+import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
+import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
 
 @Component({
   selector: 'app-event-property-nested',
@@ -18,27 +19,32 @@ import {EventPropertyPrimitive} from '../properties/EventPropertyPrimitive';
 @Injectable()
 export class EventPropertyNestedComponent implements OnInit, DoCheck {
 
-  constructor(private dragulaService: DragulaService) {  }
+  // constructor(private dragulaService: DragulaService) {  }
+    constructor() {  }
 
   open = false;
 
   @Input() eventPropertyNested: EventPropertyNested;
   @Input() index: number;
 
+
+  @Input() domainPropertyGuesses: DomainPropertyProbabilityList[];
+  @Input() domainPropertyGuess: DomainPropertyProbabilityList;
+
   @Output()delete: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
 
   ngOnInit() {
     // this.addPrimitiveProperty();
-    const dragDropService: DragDropService = DragDropService.getInstance();
-    this.dragulaService.drag.subscribe((value: any) => { // wenn nested gedragt wird
-      console.log('drag at nested');
-      dragDropService.announceDrag(this.eventPropertyNested);
-    });
-
-    this.dragulaService.drop.subscribe((value: any) => { // von Dragula-Service aufgerufen, wenn Element hier gedroppt wird, um dies zu bestätigen
-      console.log('drop at nested' + this.eventPropertyNested.propertyID);
-      dragDropService.announceDrop(this.eventPropertyNested);
-    });
+    // const dragDropService: DragDropService = DragDropService.getInstance();
+    // this.dragulaService.drag.subscribe((value: any) => { // wenn nested gedragt wird
+    //   console.log('drag at nested');
+    //   dragDropService.announceDrag(this.eventPropertyNested);
+    // });
+    //
+    // this.dragulaService.drop.subscribe((value: any) => { // von Dragula-Service aufgerufen, wenn Element hier gedroppt wird, um dies zu bestätigen
+    //   console.log('drop at nested' + this.eventPropertyNested.propertyID);
+    //   dragDropService.announceDrop(this.eventPropertyNested);
+    // });
 
     this.eventPropertyNested.propertyNumber = this.index;
   }
@@ -56,15 +62,15 @@ export class EventPropertyNestedComponent implements OnInit, DoCheck {
   }
 
   public deleteProperty(property): void {
-    const writeJsonService: WriteJsonService = WriteJsonService.getInstance();
-    const dragDropService: DragDropService = DragDropService.getInstance();
+    // const writeJsonService: WriteJsonService = WriteJsonService.getInstance();
+    // const dragDropService: DragDropService = DragDropService.getInstance();
 
     const toDelete: number = this.eventPropertyNested.eventProperties.indexOf(property);
     this.eventPropertyNested.eventProperties.splice(toDelete, 1);
 
     if (property.label !== undefined) {
-      const path: string = dragDropService.buildPath(property);
-      writeJsonService.remove(path);
+      // const path: string = dragDropService.buildPath(property);
+      // writeJsonService.remove(path);
     }
   }
 
@@ -88,7 +94,7 @@ export class EventPropertyNestedComponent implements OnInit, DoCheck {
     if (typeof this.eventPropertyNested.getRuntimeName() !== 'undefined') {
       return this.eventPropertyNested.getRuntimeName();
     } else {
-      return this.eventPropertyNested.label;
+        return 'Nested Property';
     }
   }
 

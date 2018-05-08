@@ -1,9 +1,11 @@
+declare const require: any;
+
 export let spGaugeWidgetConfig = {
-    templateUrl: 'app/dashboard/templates/gauge/gaugeConfig.html',
+    template: require('./gaugeConfig.html'),
     bindings: {
         wid: '='
     },
-    controller: class LineConfigCtrl {
+    controller: class GaugeConfigCtrl {
         constructor() {}
     },
     controllerAs: 'ctrl'

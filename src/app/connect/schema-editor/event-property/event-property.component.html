@@ -1,38 +1,31 @@
-<h3>Basics</h3>
-<form [formGroup]="propertyForm" novalidate (keyup.enter)="submit(propertyForm.value)" (blur)="submit(propertyForm.value)">
+<form #propertyForm="ngForm">
   <div fxLayout="row" fxLayoutAlign="start">
     <div class="form-group" fxFlexAlign="center">
       <mat-form-field class="example-full-width">
-        <input matInput placeholder="Label" class="form-control" formControlName="label">
-        <mat-error *ngIf="propertyForm.controls['label'].errors?.required && propertyForm.controls['label'].touched">
-          Label is <strong>required</strong>
-        </mat-error>
+        <input matInput placeholder="Label" class="form-control" name="label" id="label" [(ngModel)]="property.label" >
       </mat-form-field>
     </div>
     <div class="form-group" fxFlexAlign="center">
       <mat-form-field class="example-full-width">
-        <input matInput placeholder="Description" class="form-control" formControlName="description">
-        <mat-error *ngIf="propertyForm.controls['description'].errors?.required && propertyForm.controls['description'].touched">
-          Description is <strong>required</strong>
-        </mat-error>
+        <input matInput placeholder="RuntimeName" class="form-control" name="runtimename" id="runtimename" [(ngModel)]="property.runTimeName">
       </mat-form-field>
     </div>
   </div>
 
-  <div class="form-group">
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="RuntimeName" class="form-control" formControlName="runtimeName">
-      <mat-error *ngIf="propertyForm.controls['runtimeName'].errors?.required && propertyForm.controls['runtimeName'].touched">
-        RuntimeName is <strong>required</strong>
-      </mat-error>
+  <div class="form-group" >
+    <mat-form-field class="example-full-width" style="width: 100%;">
+      <input matInput placeholder="Domain Property" class="form-control" name="domainproperty" id="domainproperty" [matAutocomplete]="auto" [(ngModel)]="property.domainProperty">
     </mat-form-field>
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let propertyGuess of domainPropertyGuess.list" [value]="propertyGuess.domainProperty">
+        {{ propertyGuess.domainProperty + propertyGuess.probability}}
+      </mat-option>
+    </mat-autocomplete>
   </div>
   <div class="form-group">
     <mat-form-field class="example-full-width">
-      <input matInput placeholder="Domain Property" class="form-control" formControlName="domainProperty">
-      <mat-error *ngIf="propertyForm.controls['domainProperty'].errors?.required && propertyForm.controls['domainProperty'].touched">
-        Domain Property is <strong>required</strong>
-      </mat-error>
+      <input matInput placeholder="Description" class="form-control" name="description" id="description" [(ngModel)]="property.description">
     </mat-form-field>
   </div>
+
 </form>

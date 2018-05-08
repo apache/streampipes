@@ -1,6 +1,8 @@
+declare const require: any;
+
 export let spVerticalbarWidgetConfig = {
     restrict: 'E',
-    templateUrl: 'app/dashboard/templates/verticalbar/verticalbarConfig.html',
+    template: require('./verticalbarConfig.html'),
     bindings: {
         wid: '='
     },

@@ -22,7 +22,10 @@ export class PipelineElementIconStandController {
 
     loadOptions(type?) {
         this.RestApi.getEpCategories()
-            .then(s => this.handleCategoriesSuccess("stream", s));
+            .then(s => {
+                this.handleCategoriesSuccess("stream", s);
+                this.handleCategoriesSuccess("set", s);
+            });
 
         this.RestApi.getEpaCategories()
             .then(s => this.handleCategoriesSuccess("sepa", s));

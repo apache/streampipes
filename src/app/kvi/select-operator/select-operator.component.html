@@ -1,0 +1,9 @@
+<p>Select the Operator</p>
+
+<mat-selection-list #operatorsList (selectionChange)="selectedOperatorChange(operatorsList)">
+    <mat-list-option #operatorOption *ngFor="let operator of operators"
+                     [disabled]="operatorsList.selectedOptions.selected.length > 0 && !operatorOption.selected"
+                     [value]="operator">
+        {{operator.label}} ({{operator.description}})
+    </mat-list-option>
+</mat-selection-list>

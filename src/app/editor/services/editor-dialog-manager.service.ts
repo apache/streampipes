@@ -1,5 +1,7 @@
 import * as angular from 'angular';
 
+declare const require: any;
+
 import {CustomizeController} from "../dialog/customize-pipeline-element/customize.controller";
 import {MatchingErrorController} from "../dialog/matching-error/matching-error.controller";
 import {TopicSelectionDialog} from "../dialog/topic/topic-selection-modal.controller";
@@ -19,7 +21,7 @@ export class EditorDialogManager {
     }
 
     showMatchingErrorDialog(elementData) {
-        var dialogContent = this.DialogBuilder.getDialogTemplate(MatchingErrorController, 'app/editor/dialog/matching-error/matching-error.tmpl.html');
+        var dialogContent = this.DialogBuilder.getDialogTemplate(MatchingErrorController, require('../dialog/matching-error/matching-error.tmpl.html'));
         dialogContent.locals = {
             elementData: elementData
         }
@@ -27,7 +29,7 @@ export class EditorDialogManager {
     }
 
     showCustomizeDialog(elementData, sourceEndpoint, sepa) {
-        var dialogContent = this.DialogBuilder.getDialogTemplate(CustomizeController, 'app/editor/dialog/customize-pipeline-element/customizeElementDialog.tmpl.html');
+        var dialogContent = this.DialogBuilder.getDialogTemplate(CustomizeController, require('../dialog/customize-pipeline-element/customizeElementDialog.tmpl.html'));
         dialogContent.locals = {
             elementData: elementData,
             sourceEndpoint: sourceEndpoint,
@@ -37,17 +39,18 @@ export class EditorDialogManager {
     };
 
     showCustomizeStreamDialog(streamDescription) {
-        var dialogContent = this.DialogBuilder.getDialogTemplate(TopicSelectionDialog, 'app/editor/dialog/topic/topic-selection-modal.tmpl.html');
+        var dialogContent = this.DialogBuilder.getDialogTemplate(TopicSelectionDialog, require('../dialog/topic/topic-selection-modal.tmpl.html'));
         dialogContent.locals = {
             streamDescription: streamDescription
         }
         this.$mdDialog.show(dialogContent);
     }
 
-    showSavePipelineDialog(pipelineNew) {
-        var dialogContent = this.DialogBuilder.getDialogTemplate(SavePipelineController, 'app/editor/dialog/save-pipeline/submitPipelineModal.tmpl.html');
+    showSavePipelineDialog(pipelineNew, modificationModeOn) {
+        var dialogContent = this.DialogBuilder.getDialogTemplate(SavePipelineController, require('../dialog/save-pipeline/submitPipelineModal.tmpl.html'));
         dialogContent.locals = {
-            pipeline: pipelineNew
+            pipeline: pipelineNew,
+            modificationMode: modificationModeOn
         }
         this.$mdDialog.show(dialogContent);
     }
@@ -108,6 +111,15 @@ export class EditorDialogManager {
             .targetEvent(ev)
             .ok('Clear assembly')
             .cancel('Cancel');
+        return this.$mdDialog.show(confirm);
+    }
+
+    showMixedStreamAlert(ev) {
+        var confirm = this.$mdDialog.confirm()
+            .title('Not allowed')
+            .textContent('Currently, it is not possible to mix data streams and data sets in a single pipeline.')
+            .targetEvent(ev)
+            .ok('Ok')
         return this.$mdDialog.show(confirm);
     }
 }

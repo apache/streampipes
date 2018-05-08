@@ -26,12 +26,18 @@ export class FreeTextController {
         var eventProperty;
         angular.forEach(this.inputStreams, stream => {
             angular.forEach(stream.eventSchema.eventProperties, property => {
-                console.log(this.mappingProperty);
                 if (this.mappingProperty.properties.mapsTo == property.properties.elementId) {
                     eventProperty = property;
                 }
             });
         });
         return eventProperty;
+    }
+
+    applyPlaceholder(runtimeName) {
+        if (!this.staticProperty.properties.value) {
+            this.staticProperty.properties.value = "";
+        }
+        this.staticProperty.properties.value = this.staticProperty.properties.value +"#" +runtimeName +"#" +" ";
     }
 }

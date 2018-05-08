@@ -7,13 +7,12 @@ export class DialogBuilder {
     }
 
     // TODO: Can't resolve
-/*
-    getDialogTemplate(controller, templateUrl) {
+    getDialogTemplate(controller, template) {
         return {
             controller: controller,
             controllerAs: "ctrl",
             bindToController: true,
-            templateUrl: templateUrl,
+            template: template,
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             //scope: this.$scope,
@@ -21,5 +20,4 @@ export class DialogBuilder {
             //preserveScope: true
         }
     }
-    */
 }

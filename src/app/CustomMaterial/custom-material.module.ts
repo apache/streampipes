@@ -1,22 +1,27 @@
-import {NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
 
 import {
-  MatButtonModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatDialogModule, MatExpansionModule,
-  MatIconModule,
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,
-  MatSelectModule,
-  MatSidenavModule,
-  MatSlideToggleModule,
-  MatTabsModule,
-  MatToolbarModule
+    MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatExpansionModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSlideToggleModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatPaginatorModule, MatSortModule,
+
 } from '@angular/material';
-import {MatStepperModule} from '@angular/material/stepper';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTableModule } from '@angular/material/table';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
@@ -36,7 +41,13 @@ import {MatRadioModule} from '@angular/material/radio';
     MatToolbarModule,
     MatStepperModule,
     MatRadioModule,
-    MatExpansionModule
+    MatTableModule,
+    MatAutocompleteModule,
+    MatExpansionModule,
+    MatExpansionModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
   exports: [
     MatButtonModule,
@@ -54,7 +65,11 @@ import {MatRadioModule} from '@angular/material/radio';
     MatToolbarModule,
     MatStepperModule,
     MatRadioModule,
-    MatExpansionModule
+    MatTableModule,
+    MatAutocompleteModule,
+    MatExpansionModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
 })
 export class CustomMaterialModule { }

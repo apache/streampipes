@@ -1,0 +1,41 @@
+<div class="page-container page-container-padding">
+    <mat-horizontal-stepper [linear]="true">
+
+        <mat-step [completed]="isValidDataSet" [editable]="false">
+            <ng-template matStepLabel>Data-Set</ng-template>
+            <select-dataset [dataSets]="dataSets" (selectDataSet)="selectDataSet($event)"></select-dataset>
+            <div fxLayout="row" fxLayoutAlign="end">
+                <button [disabled]="!isValidDataSet" color="primary" mat-raised-button matStepperNext>Next</button>
+            </div>
+        </mat-step>
+
+        <mat-step [completed]="isValidOperator" [editable]="false">
+            <ng-template matStepLabel>Operator</ng-template>
+            <select-operator [operators]="operators" (selectOperator)="selectOperator($event)"></select-operator>
+            <div fxLayout="row" fxLayoutAlign="end">
+                <button [disabled]="!isValidOperator" color="primary" mat-raised-button matStepperNext>Next</button>
+            </div>
+        </mat-step>
+
+        <mat-step [completed]="isValidConfiguration" [editable]="false">
+            <ng-template matStepLabel>Configuration</ng-template>
+            <kvi-configuration [configurations]="configurations" [dataSet]="selectedDataSet" (configuredOperators)="selectConfiguration($event)"></kvi-configuration>
+            <div fxLayout="row" fxLayoutAlign="end">
+                <button [disabled]="!isValidConfiguration" color="primary" mat-raised-button matStepperNext>Next</button>
+            </div>
+        </mat-step>
+
+        <mat-step>
+            <ng-template matStepLabel>Calculation</ng-template>
+            <p>Enter the name of the new KVI</p>
+            <mat-form-field class="example-full-width">
+                <input matInput type="text" placeholder="KVI Name" [formControl]="nameControl">
+            </mat-form-field>
+            <div fxLayout="row" fxLayoutAlign="end">
+                <button [disabled]="!isValidName" color="primary" mat-raised-button (click)="calculateKvi()">Calculate KVI</button>
+            </div>
+        </mat-step>
+
+    </mat-horizontal-stepper>
+
+</div>

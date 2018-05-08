@@ -17,6 +17,9 @@ import { SpConnectModule } from './connect/connect.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { AuthStatusService } from './services/auth-status.service';
 import { AppContainerModule } from './app-container/app-container.module';
+import { KviModule } from './kvi/kvi.module';
+import { KviVisualizationModule } from './kvi-visualization/kvi-visualization.module';
+import { PipelineLogsModule } from './pipeline-logs/pipeline-logs.module';
 
 @NgModule({
     imports: [
@@ -33,7 +36,11 @@ import { AppContainerModule } from './app-container/app-container.module';
         HomeModule,
         SpConnectModule,
         ConfigurationModule,
-        AppContainerModule
+        AppContainerModule,
+        KviModule,
+        KviVisualizationModule,
+        AppContainerModule,
+        PipelineLogsModule
     ],
     providers: [
         AuthStatusService

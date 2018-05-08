@@ -1,9 +1,9 @@
-<div ng-repeat="(index, pipelineElement) in ctrl.rawPipelineModel track by $index" style="width:100%;height:100%;">
+<div  ng-if="pipelineElement.settings.disabled == undefined || !pipelineElement.settings.disabled" ng-repeat="(index, pipelineElement) in ctrl.rawPipelineModel track by $index" style="width:100%;height:100%;">
     <span id="{{pipelineElement.payload.DOM}}" style="{{ctrl.getElementCss(pipelineElement.settings)}}"
-          ng-mouseover="ctrl.updateMouseover(pipelineElement.payload.DOM)" ng-mouseleave="ctrl.updateMouseover('')">
+          ng-click="ctrl.updateOptionsClick(pipelineElement.payload.DOM)" ng-mouseover="ctrl.updateMouseover(pipelineElement.payload.DOM)" ng-mouseleave="ctrl.updateMouseover('')">
         <span style="z-index:5"
               ng-class="ctrl.getElementCssClasses(pipelineElement)">
-            <pipeline-element pipeline-element="pipelineElement.payload"></pipeline-element>
+            <pipeline-element pipeline-element="pipelineElement.payload" preview="ctrl.preview"></pipeline-element>
         </span>
          <pipeline-element-options ng-if="!ctrl.preview" delete-function="ctrl.handleDeleteOption"
                                    current-mouse-over-element="ctrl.currentMouseOverElement"

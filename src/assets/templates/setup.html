@@ -1,20 +1,25 @@
 <div class="md-padding logo-production" layout-xs="column" layout="row" layout-align="center center"
      style="min-height:100vh !important;" ng-controller="SetupCtrl as ctrl">
     <div flex="60" layout-align="center center">
-        <div layout="column" flex="60" layout-align="center center" style="position:relative;top:-25px;margin-left:auto;margin-right:auto;">
-            <div flex="60" layout-align="center center" layout="row"
-                 style="padding:20px;color:white;" class="sp-darkblue"><img
-                    alt="icon" src="assets/img/login/logo.png">
-            </div>
-        </div>
+        <!--<div layout="column" flex="60" layout-align="center center" style="position:relative;top:-25px;margin-left:auto;margin-right:auto;">-->
+        <!--<div flex="60" layout-align="center center" layout="row"-->
+        <!--style="padding:20px;color:white;" class="sp-darkblue"><img-->
+        <!--alt="icon" src="assets/img/login/logo.png">-->
+        <!--</div>-->
+        <!--</div>-->
         <md-card class="card-100-center" style="padding:20px;position:relative;top:-25px;">
+            <div layout="column" flex="60" layout-align="center center" style="margin-left:auto;margin-right:auto;">
+                <div flex="60" layout-align="center center" layout="row"
+                     style="color:white;"><img
+                        alt="icon" src="assets/img/login/logo.png">
+                </div>
+            </div>
             <form name="setupForm" role="form">
                 <md-card-title>
                     <div flex="100" layout="column">
 
-                        <h1>StreamPipes Setup</h1>
-
-                        <h4><b>Welcome!</b><br/>From here, the installation takes just a few seconds.</h4>
+                        <h1>Welcome!</h1>
+                        <h4>The setup of the system just takes a few seconds. Create a user and you are ready to go!</h4>
                     </div>
                 </md-card-title>
                 <div ng-show="!ctrl.installationFinished">

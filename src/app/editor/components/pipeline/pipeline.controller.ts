@@ -1,4 +1,4 @@
-import * as angular from 'angular';
+import * as angular from "angular";
 
 export class PipelineController {
 
@@ -34,7 +34,6 @@ export class PipelineController {
         this.idCounter = 0;
 
         this.currentZoomLevel = 1;
-
     }
 
     $onInit() {
@@ -53,6 +52,14 @@ export class PipelineController {
         this.currentMouseOverElement = elementId;
     }
 
+    updateOptionsClick(elementId) {
+        if (this.currentMouseOverElement == elementId) {
+            this.currentMouseOverElement = "";
+        } else {
+            this.currentMouseOverElement = elementId;
+        }
+    }
+
     getElementCss(currentPipelineElementSettings) {
         return "position:absolute;"
             + (this.preview ? "width:75px;" : "width:110px;")
@@ -67,31 +74,56 @@ export class PipelineController {
             + currentPipelineElement.settings.displaySettings;
     }
 
+    isStreamInPipeline() {
+        return this.isInPipeline('stream');
+    }
+
+    isSetInPipeline() {
+        return this.isInPipeline('set');
+    }
+
+    isInPipeline(type) {
+        return this.rawPipelineModel.some(x => x.type == type);
+    }
+
+    showMixedStreamAlert() {
+        this.EditorDialogManager.showMixedStreamAlert();
+    }
+
     initAssembly() {
         ($('#assembly') as any).droppable({
             tolerance: "fit",
             drop: (element, ui) => {
-
                 if (ui.draggable.hasClass('draggable-icon')) {
                     var pipelineElementConfig = this.JsplumbService.createNewPipelineElementConfig(ui.draggable.data("JSON"), this.PipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false);
-                    this.rawPipelineModel.push(pipelineElementConfig);
-                    //Droppable Streams
-                    if (ui.draggable.hasClass('stream')) {
-                        this.checkTopicModel(pipelineElementConfig);
-                        //Droppable Sepas
-                    } else if (ui.draggable.hasClass('sepa')) {
-                        this.$timeout(() => {
+                    if ((this.isStreamInPipeline() && pipelineElementConfig.type == 'set') ||
+                        this.isSetInPipeline() && pipelineElementConfig.type == 'stream') {
+                        this.showMixedStreamAlert();
+                    } else {
+                        this.rawPipelineModel.push(pipelineElementConfig);
+                        if (ui.draggable.hasClass('set')) {
                             this.$timeout(() => {
-                                this.JsplumbService.sepaDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                                this.$timeout(() => {
+                                    this.JsplumbService.setDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                                });
                             });
-                        });
-                        //Droppable Actions
-                    } else if (ui.draggable.hasClass('action')) {
-                        this.$timeout(() => {
+                        }
+                        else if (ui.draggable.hasClass('stream')) {
+                            this.checkTopicModel(pipelineElementConfig);
+                        } else if (ui.draggable.hasClass('sepa')) {
                             this.$timeout(() => {
-                                this.JsplumbService.actionDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                                this.$timeout(() => {
+                                    this.JsplumbService.sepaDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                                });
                             });
-                        });
+                            //Droppable Actions
+                        } else if (ui.draggable.hasClass('action')) {
+                            this.$timeout(() => {
+                                this.$timeout(() => {
+                                    this.JsplumbService.actionDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
+                                });
+                            });
+                        }
                     }
                 }
                 this.JsplumbBridge.repaintEverything();
@@ -116,7 +148,7 @@ export class PipelineController {
             });
         });
 
-        var streamDescription = pipelineElementConfig.payload
+        var streamDescription = pipelineElementConfig.payload;
         if (streamDescription
                 .eventGrounding
                 .transportProtocols[0]
@@ -126,13 +158,15 @@ export class PipelineController {
         }
     }
 
-    handleDeleteOption(internalId) {
-        angular.forEach(this.rawPipelineModel, (pe, index) => {
-            if (pe.payload.DOM == internalId) {
-                this.rawPipelineModel.splice(index, 1);
-            }
+    handleDeleteOption(pipelineElement) {
+        this.JsplumbBridge.removeAllEndpoints(pipelineElement.payload.DOM);
+        //this.rawPipelineModel = this.rawPipelineModel.filter(item => !(item.payload.DOM == internalId));
+        angular.forEach(this.rawPipelineModel, pe => {
+           if (pe.payload.DOM == pipelineElement.payload.DOM) {
+               pe.settings.disabled = true;
+           }
         });
-        this.JsplumbBridge.removeAllEndpoints(internalId);
+        this.JsplumbBridge.repaintEverything();
     }
 
     initPlumb() {
@@ -168,23 +202,15 @@ export class PipelineController {
         this.JsplumbBridge.bind("connection", (info, originalEvent) => {
             var pe = this.objectProvider.findElement(info.target.id, this.rawPipelineModel);
             if (pe.settings.openCustomize) {
-                this.currentPipelineModel = this.objectProvider.makePipeline(this.rawPipelineModel, info.target.id);
+                this.currentPipelineModel = this.objectProvider.makePipeline(this.rawPipelineModel);
                 this.objectProvider.updatePipeline(this.currentPipelineModel)
                     .success(data => {
                         if (data.success) {
                             info.targetEndpoint.setType("token");
                             this.modifyPipeline(data.pipelineModifications);
-                            for (var i = 0, sepa; sepa = this.rawPipelineModel[i]; i++) {
-                                var id = "#" + sepa.payload.DOM;
-                                if ($(id).length > 0) {
-                                    if (sepa.payload.configured !== true) {
-                                        // if (!this.pipelineEditorService.isFullyConnected(id)) {
-                                        //     return;
-                                        // }
-                                        var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
-                                        this.EditorDialogManager.showCustomizeDialog($(id), sourceEndpoint, sepa.payload);
-                                    }
-                                }
+                            var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
+                            if (this.PipelineEditorService.isFullyConnected(pe)) {
+                                this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload);
                             }
                         } else {
                             this.JsplumbBridge.detach(info.connection);

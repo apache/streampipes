@@ -1,12 +1,14 @@
 FROM nginx
 
 COPY dist/assets/img/ /usr/share/nginx/html/assets/img/
-COPY dist/assets/lib/ /usr/share/nginx/html/assets/lib/
 COPY dist/assets/css/ /usr/share/nginx/html/assets/css/
+COPY dist/assets/lib/ /usr/share/nginx/html/assets/lib/
 COPY dist/assets/templates/ /usr/share/nginx/html/assets/templates/
+COPY dist/assets/fonts/ /usr/share/nginx/html/assets/fonts/
 COPY dist/index.html /usr/share/nginx/html/
 COPY dist/main.bundle.js /usr/share/nginx/html/
 COPY dist/polyfills.bundle.js /usr/share/nginx/html/
+COPY dist/style.bundle.css /usr/share/nginx/html/
 
 COPY site/ /usr/share/nginx/html/docs
 COPY javadoc/ /usr/share/nginx/html/javadoc

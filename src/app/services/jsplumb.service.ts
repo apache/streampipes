@@ -4,17 +4,18 @@ export class JsplumbService {
 
     objectProvider: any;
     apiConstants: any;
-    $compile: any;
     JsplumbConfigService: any;
     JsplumbBridge: any;
     $timeout: any;
     idCounter: any;
+    RestApi: any;
 
-    constructor(ObjectProvider, JsplumbConfigService, JsplumbBridge, $timeout) {
+    constructor(ObjectProvider, JsplumbConfigService, JsplumbBridge, $timeout, RestApi) {
         this.objectProvider = ObjectProvider;
         this.JsplumbConfigService = JsplumbConfigService;
         this.JsplumbBridge = JsplumbBridge;
         this.$timeout = $timeout;
+        this.RestApi = RestApi;
 
         this.idCounter = 0;
     }
@@ -119,10 +120,8 @@ export class JsplumbService {
     }
 
     createNewPipelineElementConfig(json, coordinates, isPreview) {
-
         var displaySettings = isPreview ? 'connectable-preview' : 'connectable-editor';
         var connectable = "connectable";
-
         var pipelineElementConfig = {
             type: json.type, settings: {
                 openCustomize: !json.configured,
@@ -135,13 +134,22 @@ export class JsplumbService {
                 }
             }, payload: angular.copy(json)
         };
-
         if (!pipelineElementConfig.payload.DOM) {
-            pipelineElementConfig.payload.DOM = "jsplumb_" + this.idCounter;
+            pipelineElementConfig.payload.DOM = "jsplumb_" + this.idCounter +"_" +this.makeId(4);
             this.idCounter++;
         }
 
         return pipelineElementConfig;
+    }
+
+    makeId(count) {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < count; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
     }
 
     streamDropped($newElement, json, endpoints, preview) {
@@ -154,6 +162,14 @@ export class JsplumbService {
         }
         return $newElement;
     };
+
+    setDropped($newElement, json, endpoints, preview) {
+        this.RestApi.updateDataSet(json).success(data => {
+            json.eventGrounding = data.eventGrounding;
+            json.datasetInvocationId = data.invocationId;
+            this.streamDropped($newElement, json, endpoints, preview);
+        });
+    }
 
     sepaDropped($newElement, json, endpoints, preview) {
         var jsplumbConfig = this.getJsplumbConfig(preview);

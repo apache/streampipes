@@ -1,121 +1,32 @@
-import * as angular from 'angular';
-
-import {PipelineStatusDialogController} from '../../dialog/pipeline-status-dialog.controller';
-
 export class PipelineDetailsController {
 
-    RestApi: any;
-    $mdDialog: any;
-    $rootScope: any;
-    $state: any;
     pipeline: any;
     starting: any;
     stopping: any;
+    refreshPipelines: any;
+    PipelineOperationsService: any;
 
-    constructor(RestApi, $mdDialog, $rootScope, $state) {
-        this.RestApi = RestApi;
-        this.$mdDialog = $mdDialog;
-        this.$rootScope = $rootScope;
-        this.$state = $state;
+    constructor(PipelineOperationsService) {
+        this.PipelineOperationsService = PipelineOperationsService;
+        this.starting = false;
+        this.stopping = false;
+        this.toggleRunningOperation = this.toggleRunningOperation.bind(this);
 
         if (this.pipeline.immediateStart) {
             if (!this.pipeline.running) {
-                this.startPipeline(this.pipeline._id);
+                this.PipelineOperationsService.startPipeline(this.pipeline._id, this.toggleRunningOperation, this.refreshPipelines);
             }
         }
     }
 
-    startPipeline(pipelineId) {
-        this.starting = true;
-        this.RestApi.startPipeline(pipelineId)
-            .success(data => {
-                this.showDialog(data);
-                // TODO: refreshPipelines not implemented
-                //this.refreshPipelines();
-                this.starting = false;
-
-            })
-            .error(data => {
-                this.starting = false;
-                this.showDialog({
-                    notifications: [{
-                        title: "Network Error",
-                        description: "Please check your Network."
-                    }]
-                });
-
-            });
-    };
-
-    stopPipeline(pipelineId) {
-        this.stopping = true;
-        this.RestApi.stopPipeline(pipelineId)
-            .success(data => {
-                this.stopping = false;
-                this.showDialog(data);
-                // TODO: refreshPipelines not implemented
-                //this.refreshPipelines();
-            })
-            .error(data => {
-                console.log(data);
-                this.stopping = false;
-                this.showDialog({
-                    notifications: [{
-                        title: "Network Error",
-                        description: "Please check your Network."
-                    }]
-                });
-
-            });
-    };
-
-    deletePipeline(ev, pipelineId) {
-        var confirm = this.$mdDialog.confirm()
-            .title('Delete pipeline?')
-            .textContent('The pipeline will be removed. ')
-            .targetEvent(ev)
-            .ok('Delete')
-            .cancel('Cancel');
-        this.$mdDialog.show(confirm).then(() => {
-            this.RestApi.deleteOwnPipeline(pipelineId)
-                .success(data => {
-                    // TODO: refreshPipelines not implemented
-                    //this.refreshPipelines();
-                })
-                .error(function (data) {
-                    console.log(data);
-                })
-        }, function () {
-
-        });
-    };
-
-    showDialog(data) {
-        this.$mdDialog.show({
-            controller: PipelineStatusDialogController,
-            controllerAs: 'ctrl',
-            templateUrl: '../../dialog/pipeline-status-dialog.tmpl.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false,
-            locals: {
-                data: data
-            },
-            bindToController: true
-        })
-    };
-
-    showPipelineInEditor(id) {
-        this.$state.go("streampipes.editor", {pipeline: id});
-    }
-
-    showPipelineDetails(id) {
-        this.$state.go("streampipes.pipelineDetails", {pipeline: id});
-    }
-
-    modifyPipeline(pipeline) {
-        this.showPipelineInEditor(pipeline);
+    toggleRunningOperation(currentOperation) {
+        if (currentOperation === 'starting') {
+            this.starting = !(this.starting);
+        } else {
+            this.stopping = !(this.stopping);
+        }
     }
 
 }
 
-PipelineDetailsController.$inject = ['RestApi', '$mdDialog', '$rootScope', '$state'];
+PipelineDetailsController.$inject = ['PipelineOperationsService'];

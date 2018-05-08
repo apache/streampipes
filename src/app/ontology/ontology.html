@@ -34,12 +34,12 @@
                                 <div class="md-list-item-text">
                                     <h3> {{ item.title }} </h3>
                                     <p>
-                                        <a ng-click="loadPropertyDetails(item.id)"
+                                        <a ng-click="ctrl.loadPropertyDetails(item.id)"
                                            aria-label="Delete">
                                             Show Details
                                         </a>
                                         |
-                                        <a ng-click="deleteProperty(item.id)"
+                                        <a ng-click="ctrl.deleteProperty(item.id)"
                                            aria-label="Delete">
                                             Delete Property
                                         </a>
@@ -59,10 +59,10 @@
                         <form name="propertyForm" ng-submit="ctrl.updateProperty()" role="form">
                             <div flex layout="column">
                                 <md-input-container><label>Label</label> <input
-                                        type="text" ng-model="propertyDetail.rdfsLabel" required>
+                                        type="text" ng-model="ctrl.propertyDetail.rdfsLabel" required>
                                 </md-input-container>
                                 <md-input-container flex><label>Description</label>
-                                    <input type="text" ng-model="propertyDetail.rdfsDescription" required>
+                                    <input type="text" ng-model="ctrl.propertyDetail.rdfsDescription" required>
                                 </md-input-container>
                             </div>
                             <md-divider></md-divider>
@@ -153,15 +153,15 @@
                                 <div class="md-list-item-text">
                                     <h3> {{ item.title }} </h3>
                                     <p>
-                                        <a ng-click="loadConceptDetails(item.id)" aria-label="Add">
+                                        <a ng-click="ctrl.loadConceptDetails(item.id)" aria-label="Add">
                                             Show Details
                                         </a>
                                         |
-                                        <a ng-click="openAddElementDialog('Instance', item.id)" aria-label="Add">
+                                        <a ng-click="ctrl.openAddElementDialog('Instance', item.id)" aria-label="Add">
                                             Create Instance
                                         </a>
                                         |
-                                        <a ng-click="deleteConcept(item.id)" aria-label="Delete">
+                                        <a ng-click="ctrl.deleteConcept(item.id)" aria-label="Delete">
                                             Delete Class
                                         </a>
                                     </p>
@@ -174,11 +174,11 @@
                                 <div class="md-list-item-text">
                                     <h3> {{ node.title }} </h3>
                                     <p>
-                                        <a ng-click="loadInstanceDetails(node.id)" aria-label="Add">
+                                        <a ng-click="ctrl.loadInstanceDetails(node.id)" aria-label="Add">
                                             Show Details
                                         </a>
                                         |
-                                        <a ng-click="deleteInstance(node.id)" aria-label="Add">
+                                        <a ng-click="ctrl.deleteInstance(node.id)" aria-label="Add">
                                             Delete Instance
                                         </a>
                                     </p>
@@ -227,7 +227,7 @@
                         <p/>
                         <h4>Add new Property</h4>
                         <div layout="row">
-                            <select ng-model="currentlySelectedClassProperty">
+                            <select ng-model="ctrl.currentlySelectedClassProperty">
                                 <option ng-repeat="property in ctrl.properties" value="{{property.id}}">
                                     {{property.title}}
                                 </option>

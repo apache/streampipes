@@ -1,5 +1,6 @@
 import * as angular from 'angular';
-declare const JSZip: any;
+import * as JSZip from 'jszip';
+import * as FileSaver from 'file-saver';
 
 export class GeneratedElementImplementationController {
 
@@ -20,16 +21,15 @@ export class GeneratedElementImplementationController {
         this.new_zip = new JSZip();
 
         this.new_zip.loadAsync(this.zipFile)
-            .then(function (zip) {
-
+            .then(zip => {
                 angular.forEach(zip.files, file => {
                     var filename = file.name;
-                    this.extractedFiles.push({
-                        "fileNameLabel": this.getFileName(filename),
-                        "fileNameDescription": this.getDirectory(filename),
-                        "fileName": filename,
-                        "fileContents": file
-                    });
+                     this.extractedFiles.push({
+                         "fileNameLabel": this.getFileName(filename),
+                         "fileNameDescription": this.getDirectory(filename),
+                         "fileName": filename,
+                         "fileContents": file
+                     });
                 })
             });
     }
@@ -78,8 +78,7 @@ export class GeneratedElementImplementationController {
 
     openSaveAsDialog(filename, content, mediaType) {
         var blob = new Blob([content], {type: mediaType})
-        // TODO: saveAs not implemented
-        //this.saveAs(blob, filename);
+        FileSaver.saveAs(blob, filename);
     }
 
 }

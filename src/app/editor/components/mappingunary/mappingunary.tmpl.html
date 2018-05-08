@@ -1,6 +1,6 @@
 <md-select ng-model="ctrl.staticProperty.properties.mapsTo"  placeholder="{{ctrl.staticProperty.properties.description}}">
     <md-option ng-repeat="option in ctrl.staticProperty.properties.mapsFromOptions | displayRecommendedFilter: ctrl.staticProperty.properties.propertyScope:displayRecommended" ng-value="option.properties.elementName" ng-selected="ctrl.selected(option, ctrl.staticProperty)">
-        <div ng-if="option.properties.label"><b>{{option.properties.label}}</b> <i>({{option.properties.description}})</i><br/></div>
+        <div ng-if="option.properties.label"><b>{{option.properties.label}}</b> <i>({{option.properties.description}}, field name: {{option.properties.runtimeName}})</i><br/></div>
         <div ng-if="!option.properties.label"> <b>{{option.properties.runtimeName}}</b><br/></div>
     </md-option>
 </md-select>

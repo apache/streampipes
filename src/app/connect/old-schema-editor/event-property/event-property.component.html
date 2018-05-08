@@ -1,0 +1,38 @@
+<h3>Basics</h3>
+<form [formGroup]="propertyForm" novalidate (keyup.enter)="submit(propertyForm.value)" (blur)="submit(propertyForm.value)">
+  <div fxLayout="row" fxLayoutAlign="start">
+    <div class="form-group" fxFlexAlign="center">
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Label" class="form-control" formControlName="label">
+        <mat-error *ngIf="propertyForm.controls['label'].errors?.required && propertyForm.controls['label'].touched">
+          Label is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="form-group" fxFlexAlign="center">
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Description" class="form-control" formControlName="description">
+        <mat-error *ngIf="propertyForm.controls['description'].errors?.required && propertyForm.controls['description'].touched">
+          Description is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="RuntimeName" class="form-control" formControlName="runtimeName">
+      <mat-error *ngIf="propertyForm.controls['runtimeName'].errors?.required && propertyForm.controls['runtimeName'].touched">
+        RuntimeName is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="form-group">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Domain Property" class="form-control" formControlName="domainProperty">
+      <mat-error *ngIf="propertyForm.controls['domainProperty'].errors?.required && propertyForm.controls['domainProperty'].touched">
+        Domain Property is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </div>
+</form>

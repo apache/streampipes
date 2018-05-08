@@ -3,7 +3,10 @@ import {FileDetailsController} from "./file-details.controller";
 export let FileDetails = {
     restrict: 'E',
     templateUrl: 'file-details.tmpl.html',
-    scope: {},
+    bindings: {
+        file: "=",
+        getFiles: "&"
+    },
     controller: FileDetailsController,
-    controllerAs: 'FileDetailsController'
+    controllerAs: 'ctrl'
 };
