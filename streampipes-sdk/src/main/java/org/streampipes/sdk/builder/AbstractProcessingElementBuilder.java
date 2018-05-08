@@ -404,7 +404,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
   }
 
   /**
-   * @dprecated use {@link #requiredIntegerParameter(Label, String)} instead
+   * @deprecated use {@link #requiredIntegerParameter(Label, String)} instead
    * @param internalId
    * @param label
    * @param description
