@@ -5,7 +5,7 @@ variables:
   IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH/$CI_COMMIT_REF_NAME
 
 stages:
-   - test
+  # - test
    - build
    - docker
    - docker-hub
