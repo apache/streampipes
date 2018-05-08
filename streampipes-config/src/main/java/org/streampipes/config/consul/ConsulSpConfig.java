@@ -126,6 +126,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
         Optional<String> i = kvClient.getValueAsString(addSn(key));
         // TODO this check does not work
         if (!i.isPresent()) {
+            // Set the value of environment variable as default
             String envVariable = System.getenv(key);
             if (envVariable != null) {
                 kvClient.putValue(addSn(key), envVariable);
