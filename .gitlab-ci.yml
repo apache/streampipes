@@ -79,7 +79,6 @@ deploy:
     - mvn deploy -DskipTests
   only:
     - dev
-    - master
   artifacts:
     paths:
       - ./**/*.jar
