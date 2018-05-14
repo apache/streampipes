@@ -7,42 +7,65 @@ fi
 
 if [ $1 = "start" ];
 then
-    if [ -z "$2" ] || [ $2 = "desktop" ];
-    then
+	if [ -z "$2" ] || [ $2 = "desktop" ];
+	then
 		curl https://raw.githubusercontent.com/streampipes/preview-docker/master/desktop/docker-compose.yml > ./tmpl-docker-compose.yml
 
 	else
-	    if [ $2 = "bigdata" ];
-        then
-            #TODO change url for the bigdata version
-		    curl https://raw.githubusercontent.com/streampipes/preview-docker/master/big-data/docker-compose.yml > ./tmpl-docker-compose.yml
+		if [ $2 = "bigdata" ];
+		then
+			curl https://raw.githubusercontent.com/streampipes/preview-docker/master/big-data/docker-compose.yml > ./tmpl-docker-compose.yml
 
 		else
-		    echo "Wrong starting command. Use 'streampipes start desktop' or 'streampipes start bigdata'"
-	        exit 1
-	    fi
-    fi
+			echo "Wrong starting command. Use 'streampipes start desktop' or 'streampipes start bigdata'"
+			exit 1
+		fi
+	fi
 
 
 	if [ ! -f ./tmpl-docker-compose.yml ]; then
 		curl https://raw.githubusercontent.com/streampipes/preview-docker/master/docker-compose.yml > ./tmpl-docker-compose.yml
 	fi
 
-    if command -v ifconfig;
-    then
-        # If Unix
-        ip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -1)
-    else
-        # If Windows
-        ip=$(ipconfig | grep -Eo '(IPv4.*)' | grep -Eo '([0-9]*\.){3}[0-9]*' | tail -1)
-        # Workaround for Kafka (https://github.com/docker/for-win/issues/1829)
-        export COMPOSE_CONVERT_WINDOWS_PATHS=1
-    fi
+	if command -v ifconfig;
+	then
+		# If Unix
+		#        ip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -1)
+		rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+
+		rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
+		IFS=' ' declare -a 'allips=($rawip)'
+
+		allips+=( 'Enter manually' )
+
+		PS3='Please select your IP adress or add one manually: '
+		select opt in "${allips[@]}"
+		do
+		if [ -z "${opt}" ];
+			then 
+				echo "Wrong input select one of the options"; 
+			else
+				ip="$opt"
+
+				if [ "$opt" == "Enter manually" ];
+				then
+					read -p "Enter Ip: " ip
+				fi
+				break
+			fi
+		done
+
+	else
+		# If Windows
+		ip=$(ipconfig | grep -Eo '(IPv4.*)' | grep -Eo '([0-9]*\.){3}[0-9]*' | tail -1)
+		# Workaround for Kafka (https://github.com/docker/for-win/issues/1829)
+		export COMPOSE_CONVERT_WINDOWS_PATHS=1
+	fi
 
 	sed "s/###TODO ADD HOSTNAME HERE ###/${ip}/g" ./tmpl-docker-compose.yml > ./docker-compose.yml
 
 
-    # Remove old containers
+	# Remove old containers
 	docker-compose stop
 	yes Y | docker-compose down -v
 
