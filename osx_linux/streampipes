@@ -39,7 +39,7 @@ then
 		allips+=( 'Enter IP manually' )
 
 		echo ''
-		echo 'Please select your IP adress or add one manually: '
+		echo 'Please select your IP address or add one manually: '
 		PS3='Select option: '
 		select opt in "${allips[@]}"
 		do
