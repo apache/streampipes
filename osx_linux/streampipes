@@ -36,9 +36,11 @@ then
 		rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
 		IFS=' ' declare -a 'allips=($rawip)'
 
-		allips+=( 'Enter manually' )
+		allips+=( 'Enter IP manually' )
 
-		PS3='Please select your IP adress or add one manually: '
+		echo ''
+		echo 'Please select your IP adress or add one manually: '
+		PS3='Select option: '
 		select opt in "${allips[@]}"
 		do
 		if [ -z "${opt}" ];
@@ -47,7 +49,7 @@ then
 			else
 				ip="$opt"
 
-				if [ "$opt" == "Enter manually" ];
+				if [ "$opt" == "Enter IP manually" ];
 				then
 					read -p "Enter Ip: " ip
 				fi
