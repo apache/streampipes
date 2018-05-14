@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
-import { ConsulService } from '../shared/consul-service.model';
+import { ConsulService } from './consul-service.model';
 
 @Injectable()
 export class ConfigurationMockService {

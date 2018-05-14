@@ -4,7 +4,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ConsulServiceComponent } from './consul-service.component';
 import { MatButtonModule, MatGridListModule, MatInputModule, MatIconModule, MatTooltipModule, MatCheckboxModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
-import { ConfigurationMockService } from '../test/configuration.mock.service';
 import { Component } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
