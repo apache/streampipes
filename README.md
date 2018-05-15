@@ -29,3 +29,14 @@ Run the script with `./streampipes.bat <COMMAND>`. We provide three different co
   * Stops StreamPipes
 * `./streampipes.bat clean`:
   * Removes all configuration files. This must be done when your computer has a new IP address.
+  
+### Optional Commands
+
+* `./streampipes.bat start bigdata`:
+  * Downloads all Components and starts StreamPipes using the bigdata setup (includes Flink, Flink-based pipeline elements, Elasticsearch and Kibana)
+  * Use one of the following commands: `bigdata` or `desktop`
+  * If none is specified, the system will default to `desktop`
+* `./streampipes.bat start bigdata HOSTNAME`:
+  * Specify the hostname manually
+  * If hostname is not set, the installer determines your current IP address.  
+ 
