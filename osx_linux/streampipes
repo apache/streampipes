@@ -71,6 +71,8 @@ then
 	docker-compose stop
 	yes Y | docker-compose down -v
 
+	docker-compose pull
+
 	docker-compose up -d
 
 	if [ $? -eq 0 ]; then

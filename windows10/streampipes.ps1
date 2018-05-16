@@ -26,6 +26,7 @@ if ($args[0] -eq "start")
     Invoke-Expression "docker-compose -f $dockerCompose stop"
     Invoke-Expression "echo y | docker-compose -f $dockerCompose down -v"
 
+    Invoke-Expression "docker-compose -f $dockerCompose pull"
     Invoke-Expression "docker-compose -f $dockerCompose up -d"
 
     if ($LASTEXITCODE -eq 0)
