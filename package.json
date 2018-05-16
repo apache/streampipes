@@ -12,10 +12,10 @@
     "url": "https://laus.fzi.de/gitlab/streampipes/streampipes-ui"
   },
   "scripts": {
-    "start": "webpack-dev-server -d",
-    "test": "karma start ./karma.conf.js --no-auto-watch --single-run",
-    "watchtest": "karma start ./karma.conf.js",
-    "build": "webpack --display-modules --progress",
+    "start": "node ./deployment/prebuild.js && webpack-dev-server -d",
+    "test": "node ./deployment/prebuild.js && karma start ./karma.conf.js --no-auto-watch --single-run",
+    "watchtest": "node ./deployment/prebuild.js && karma start ./karma.conf.js",
+    "build": "node ./deployment/prebuild.js && webpack --display-modules --progress",
     "lint": "tslint -c tslint.json 'src/**/*.ts*"
   },
   "dependencies": {

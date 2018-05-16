@@ -1,7 +1,11 @@
 spEditor:
+  ng5: False
+  ng1_templateUrl: '../editor/editor.html'
+  ng1_controller: 'EditorCtrl'
+  ng5_moduleName: ''
+  ng5_component: ''
+  ng5_componentPath: ''
   path: './editor/editor.module'
-  templateUrl: 'app/editor/editor.html'
-  controller: 'EditorCtrl'
   link: 'streampipes.editor'
   url: '/editor/:pipeline'
   title: 'Pipeline Editor'
@@ -9,10 +13,29 @@ spEditor:
   icon: 'action:ic_dashboard_24px'
   homeImage: '/img/home/editor.png'
   admin: False
+spConnect:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'ConnectModule'
+  ng5_component: 'MainComponent'
+  ng5_componentPath: '../connect/main/main.component'
+  path: './connect/connect.module'
+  link: 'streampipes.connect'
+  url: '/connect'
+  title: 'StreamPipes Connect'
+  description: 'Missing Description'
+  icon: 'notification:ic_power_24px'
+  homeImage: '/img/home/editor.png'
+  admin: False
 spPipelines:
+  ng5: False
+  ng1_templateUrl: '../pipelines/pipelines.html'
+  ng1_controller: 'PipelineCtrl'
+  ng5_moduleName: ''
+  ng5_component: ''
+  ng5_componentPath: ''
   path: './pipelines/pipelines.module'
-  templateUrl: 'app/pipelines/pipelines.html'
-  controller: 'PipelineCtrl'
   link: 'streampipes.pipelines'
   url: '/pipelines/:pipeline'
   title: 'Pipelines'
@@ -21,9 +44,13 @@ spPipelines:
   homeImage: '/img/home/pipelines.png'
   admin: False
 spDashboard:
+  ng5: False
+  ng1_templateUrl: '../dashboard/dashboard.html'
+  ng1_controller: 'DashboardCtrl'
+  ng5_moduleName: ''
+  ng5_component: ''
+  ng5_componentPath: ''
   path: './dashboard/dashboard.module'
-  templateUrl: 'app/dashboard/dashboard.html'
-  controller: 'DashboardCtrl'
   link: 'streampipes.dashboard'
   url: '/dashboard'
   title: 'Live Dashboard'
@@ -32,9 +59,13 @@ spDashboard:
   homeImage: '/img/home/dashboard.png'
   admin: False
 spAppFileDownload:
+  ng5: False
+  ng1_templateUrl: '../app-file-download/app-file-download.tmpl.html'
+  ng1_controller: 'AppFileDownloadCtrl'
+  ng5_moduleName: ''
+  ng5_component: ''
+  ng5_componentPath: ''
   path: './app-file-download/app-file-download.module'
-  templateUrl: 'app/app-file-download/app-file-download.tmpl.html'
-  controller: 'AppFileDownloadCtrl'
   link: 'streampipes.appfiledownload'
   url: '/appfiledownload'
   title: 'File Download'
@@ -43,9 +74,13 @@ spAppFileDownload:
   homeImage: '/img/home/appfiledownload.png'
   admin: False
 spOntology:
+  ng5: False
+  ng1_templateUrl: '../ontology/ontology.html'
+  ng1_controller: 'OntologyCtrl'
+  ng5_moduleName: ''
+  ng5_component: ''
+  ng5_componentPath: ''
   path: './ontology/ontology.module'
-  templateUrl: 'app/ontology/ontology.html'
-  controller: 'OntologyCtrl'
   link: 'streampipes.ontology'
   title: 'Knowledge Management'
   description: 'Knowledge Management'
@@ -53,19 +88,57 @@ spOntology:
   homeImage: '/img/home/ontology.png'
   admin: False
 spSensors:
+  ng5: False
+  ng1_templateUrl: '../sensors/sensors.html'
+  ng1_controller: 'SensorsCtrl'
+  ng5_moduleName: ''
+  ng5_component: ''
+  ng5_componentPath: ''
   path: './sensors/sensors.module'
-  templateUrl: 'app/sensors/sensors.html'
-  controller: 'SensorsCtrl'
   link: 'streampipes.sensors'
   title: 'Pipeline Element Generator'
   description: 'Pipeline Element Generator'
   icon: 'content:ic_add_24px'
   homeImage: '/img/home/sensors.png'
   admin: False
+spKvi:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'KviModule'
+  ng5_component: 'KviComponent'
+  ng5_componentPath: '../kvi/kvi.component'
+  path: './kvi/kvi.module'
+  link: 'streampipes.kvi'
+  url: '/kvi'
+  title: 'KVI Editor'
+  description: 'KVI Editor'
+  icon: 'action:ic_trending_up_24px'
+  homeImage: '/img/home/editor.png'
+  admin: False
+spKviVisualization:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'KviVisualizationModule'
+  ng5_component: 'KviVisualizationComponent'
+  ng5_componentPath: '../kvi-visualization/kvi-visualization.component'
+  path: './kvi-visualization/kvi-visualization.module'
+  link: 'streampipes.kvivisualization'
+  url: '/kvivisualization'
+  title: 'KVI Visualization'
+  description: 'KVI Visualization'
+  icon: 'editor:ic_format_list_numbered_24px'
+  homeImage: '/img/home/editor.png'
+  admin: False
 spAdd:
+  ng5: False
+  ng1_templateUrl: '../add/add.html'
+  ng1_controller: 'AddCtrl'
+  ng5_moduleName: ''
+  ng5_component: ''
+  ng5_componentPath: ''
   path: './add/add.module'
-  templateUrl: 'app/add/add.html'
-  controller: 'AddCtrl'
   link: 'streampipes.add'
   url: '/add'
   title: 'Install Pipeline Elements'
@@ -74,9 +147,13 @@ spAdd:
   homeImage: '/img/home/add.png'
   admin: True
 spMyElements:
+  ng5: False
+  ng1_templateUrl: '../myelements/myelements.html'
+  ng1_controller: 'MyElementsCtrl'
+  ng5_moduleName: ''
+  ng5_component: ''
+  ng5_componentPath: ''
   path: './myelements/my-elements.module'
-  templateUrl: 'app/myelements/myelements.html'
-  controller: 'MyElementsCtrl'
   link: 'streampipes.myelements'
   url: '/myelements'
   title: 'My Elements'
@@ -85,9 +162,13 @@ spMyElements:
   homeImage: '/img/home/myelements.png'
   admin: True
 spConfiguration:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'ConfigurationModule'
+  ng5_component: 'ConfigurationComponent'
+  ng5_componentPath: '../configuration/configuration.component'
   path: './configuration/configuration.module'
-  templateUrl: 'app/configuration/configuration.html'
-  controller: 'ConfigurationCtrl'
   link: 'streampipes.configuration'
   url: '/configuration'
   title: 'Configuration'

@@ -1,4 +1,12 @@
-stateConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
+//stateConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
+
+{{#modulesActive}}
+{{#ng5}}
+import { {{{ng5_component}}} } from '{{{ng5_componentPath}}}';
+{{/ng5}}
+{{/modulesActive}}
+import { HomeComponent } from '../home/home.component';
+import { PipelineLogsComponent } from '../pipeline-logs/pipeline-logs.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
@@ -7,59 +15,60 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
     //            $state.go("streampipes");
     //        });
 
-    $urlRouterProvider.otherwise("/streampipes");
+    $urlRouterProvider.otherwise('/streampipes');
 
     var spNavbar = {
-        templateUrl: "templates/navbar.html",
+        templateUrl: '../../assets/templates/navbar.html',
         controller: 'AppCtrl'
-    }
+    };
 
     var spIconBar = {
-        templateUrl: "templates/iconbar.html",
-        controller:'AppCtrl'
-    }
+        templateUrl: '../../assets/templates/iconbar.html',
+        controller: 'AppCtrl'
+    };
 
     var container = {
-        templateUrl: "templates/streampipes.html",
+        templateUrl: '../../assets/templates/streampipes.html',
         controller: 'AppCtrl'
-    }
+    };
 
     $stateProvider
         .state('streampipes', {
             url: '/streampipes',
             views: {
-                "container" : container,
-                "spNavbar@streampipes": spNavbar,
-                "spIconBar@streampipes" : spIconBar,
-                "spMain@streampipes": {
-                    templateUrl: 'app/home/home.html',
-                    controller: 'HomeCtrl',
-                    resolve: {
-                        'AuthData': function (AuthService) {
-                            return AuthService.authenticate();
-                        }
-                    }
+                'container': container,
+                'spNavbar@streampipes': spNavbar,
+                'spIconBar@streampipes': spIconBar,
+                'spMain@streampipes': {
+                    component: HomeComponent
+                }
+            },
+            resolve: {
+                "authData": function (AuthService) {
+                    return AuthService.authenticate();
                 }
             }
         })
         .state('streampipes.pipelineDetails', {
             url: '/pipelines/:pipeline/details',
             views: {
-                "spMain@streampipes": {
-                    templateUrl: "app/pipeline-details/pipeline-details.html",
+                'spMain@streampipes': {
+                    templateUrl: '../pipeline-details/pipeline-details.html',
                     controller: 'PipelineDetailsCtrl'
                 }
             }
         })
         .state('login', {
             url: '/login/:target?session',
+            params: {target: null},
             views: {
-                "container": {
-                    templateUrl: 'templates/login.html',
+                'container': {
+                    templateUrl: '../../assets/templates/login.html',
                     controller: 'LoginCtrl'
                 }
             }
         })
+        /*
         .state('streampipes.applinks', {
             url: '/applinks',
             views: {
@@ -69,11 +78,12 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        */
         .state('register', {
             url: '/register',
             views: {
-                "container": {
-                    templateUrl: 'templates/register.html',
+                'container': {
+                    templateUrl: '../../assets/templates/register.html',
                     controller: 'RegisterCtrl'
                 }
             }
@@ -81,8 +91,8 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         .state('setup', {
             url: '/setup',
             views: {
-                "container": {
-                    templateUrl: 'templates/setup.html',
+                'container': {
+                    templateUrl: '../../assets/templates/setup.html',
                     controller: 'SetupCtrl'
                 }
             }
@@ -90,8 +100,8 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         .state('streampipes.error', {
             url: '/error',
             views: {
-                "spMain@streampipes": {
-                    templateUrl: 'templates/error.html',
+                'spMain@streampipes': {
+                    templateUrl: '../../assets/templates/error.html',
                     controller: 'SetupCtrl'
                 }
             }
@@ -99,20 +109,35 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         .state('streampipes.notifications', {
             url: '/notifications',
             views: {
-                "spMain@streampipes": {
-                    templateUrl: 'app/notifications/notifications.html',
+                'spMain@streampipes': {
+                    templateUrl: '../notifications/notifications.html',
                     controller: 'NotificationsCtrl'
                 }
             }
         })
         {{#modulesActive}}
+        {{^ng5}}
         .state('{{{link}}}', {
             url: '{{{url}}}',
             views: {
                 "spMain@streampipes": {
-                    templateUrl: '{{{templateUrl}}}',
-                    controller: '{{{controller}}}'
+                    templateUrl: '{{{ng1_templateUrl}}}',
+                    controller: '{{{ng1_controller}}}'
                 }
             }
-        }){{/modulesActive}};
+        })
+        {{/ng5}}
+        {{/modulesActive}}
+        {{#modulesActive}}
+        {{#ng5}}
+        .state('{{{link}}}', {
+            url: '{{{url}}}',
+            views: {
+                "spMain@streampipes": {
+                    controller: {{{ng5_component}}}
+                }
+            }
+        })
+        {{/ng5}}
+        {{/modulesActive}};
 };
