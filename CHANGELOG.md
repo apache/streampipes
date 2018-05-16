@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The [installer](https://www.github.com/streampipes/streampipes-installer) makes it easy to install StreamPipes on Linux, MacOS and Windows
 - Live data preview for data streams in the pipeline editor
 - Initial support for data sets
+- Default for configurations can now be provided as environment variable, with the same name
 
 ### Changed
 - Pipeline elements can be directly installed at installation time
