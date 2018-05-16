@@ -30,6 +30,11 @@ You can easily add your own data streams, processors or sinks.
 
 Check our developer guide at [https://docs.streampipes.org/developer_guide/introduction](https://docs.streampipes.org/developer_guide/introduction)
 
+### Community
+
+- [Twitter](https://twitter.com/streampipes)
+- [Email](mailto:feedback@streampipes.org)
+
 ### Contributing
 
 We welcome contributions to StreamPipes. If you are interested in contributing to StreamPipes, let us know!
