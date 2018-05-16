@@ -2,7 +2,7 @@
 Clone this project or download the folder for your operating system.
 
 ## Linux and OSX
-* Open the terminal and navigate to the directory
+* Open the terminal and navigate to the directory `streampipes-installer/osx_linux`
 * Execute `chmod +x streampipes`to make it executable
 * Start StreamPipes with the commands in the next section
 
@@ -19,7 +19,7 @@ Run the script with `./streampipes <COMMAND>`. We provide three different comman
   * Removes all configuration files. This must be done when your computer has a new IP address.
 
 ## Windows 10
-* Open the Command-Line / PowerShell and navigate to the directory
+* Open the Command-Line / PowerShell and navigate to the directory `streampipes-installer/windows10`
 * Start StreamPipes with the commands in the next section
 
 ### Commands
