@@ -1,7 +1,11 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # prebuild
-
+src/app/app.module.ts
+src/app/appng5.module.ts
+src/app/core/state.config.ts
+src/app/layout/app.controller.ts
+src/app/home/home.service.ts
 
 # compiled output
 /dist
