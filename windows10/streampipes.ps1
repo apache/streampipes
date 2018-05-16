@@ -19,8 +19,15 @@ if ($args[0] -eq "start")
     {
         Invoke-RestMethod -Uri "https://raw.githubusercontent.com/streampipes/preview-docker/master/big-data/docker-compose.yml" -OutFile $dockerComposeTemp
     }
-
-    $ip = (Get-NetIPConfiguration | Where-Object { $_.IPv4DefaultGateway -ne $null -and $_.NetAdapter.Status -ne "Disconnected" }).IPv4Address.IPAddress
+	
+	if ($args[2] -eq "")
+	{
+		$ip = (Get-NetIPConfiguration | Where-Object { $_.IPv4DefaultGateway -ne $null -and $_.NetAdapter.Status -ne "Disconnected" }).IPv4Address.IPAddress
+	} 
+	else 
+	{
+		$ip = $args[2]
+	}
     (Get-Content $dockerComposeTemp).replace('###TODO ADD HOSTNAME HERE ###', $ip) | Set-Content $dockerCompose
 
     Invoke-Expression "docker-compose -f $dockerCompose stop"

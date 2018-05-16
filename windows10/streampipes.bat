@@ -10,13 +10,24 @@ SET PowerShellScriptPath=%ThisScriptsDirectory%streampipes.ps1
 
 if "%1"=="start" (
 if "%2"=="" (
-        PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& '%PowerShellScriptPath%' 'start' 'desktop'";
+        PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& '%PowerShellScriptPath%' 'start' 'desktop' ''";
     )
     if "%2"=="desktop" (
-        PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& '%PowerShellScriptPath%' 'start' 'desktop'";
+        if "%3"=="" (
+			PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& '%PowerShellScriptPath%' 'start' 'desktop' ''";
+		)
+		if not "%3"=="" (
+		echo Using %3
+			PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& '%PowerShellScriptPath%' 'start' 'desktop' '%3'";
+		)
     )
     if "%2"=="bigdata" (
-        PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& '%PowerShellScriptPath%' 'start' 'bigdata'";
+        if "%3"=="" (
+			PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& '%PowerShellScriptPath%' 'start' 'bigdata' ''";
+		)
+		if not "%3"=="" (
+			PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& '%PowerShellScriptPath%' 'start' 'desktop' '%3'";
+		)
     )
 )
 
