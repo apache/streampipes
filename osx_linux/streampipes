@@ -76,7 +76,7 @@ then
 	docker-compose up -d
 
 	if [ $? -eq 0 ]; then
-		echo "StreamPipes successfully started"
+		echo "StreamPipes successfully started. Open Browser and navigate to 'localhost'"
 	else
 		echo "ERROR: There was a problem while starting StreamPipes"
 	fi

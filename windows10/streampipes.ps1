@@ -38,7 +38,7 @@ if ($args[0] -eq "start")
 
     if ($LASTEXITCODE -eq 0)
     {
-        Write-Host "StreamPipes successfully started"
+        Write-Host "StreamPipes successfully started. Open Browser and navigate to 'localhost"
     }
     else
     {
