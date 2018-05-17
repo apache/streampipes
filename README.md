@@ -5,6 +5,7 @@ Clone this project or download the folder for your operating system.
 * Open the terminal and navigate to the directory `streampipes-installer/osx_linux`
 * Execute `chmod +x streampipes`to make it executable
 * Start StreamPipes with the commands in the next section
+* After starting navigate to `localhost` in your Browser
 
 ### Commands
 Run the script with `./streampipes <COMMAND>`. We provide three different commands
@@ -21,6 +22,7 @@ Run the script with `./streampipes <COMMAND>`. We provide three different comman
 ## Windows 10
 * Open the Command-Line / PowerShell and navigate to the directory `streampipes-installer/windows10`
 * Start StreamPipes with the commands in the next section
+* After starting navigate to `localhost` in your Browser
 
 ### Commands
 Run the script with `./streampipes.bat <COMMAND>`. We provide three different commands
