@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@Path("/v2/users/{username}/log-pipeline-templates")
+@Path("/v2/users/{username}/internal-pipelines")
 public class LogPipelineTemplates extends AbstractRestInterface implements LogPipelineTemplate {
     //TODO: Interface
 
