@@ -1,5 +1,5 @@
 # Install StreamPipes
-Clone this project or download the folder for your operating system.
+Clone this project or download the folder for your operating system. To download the ZIP of the installer click on the green button `Clone or download`on the top right. Then click on `download ZIP`.
 
 ## Linux and OSX
 * Open the terminal and navigate to the directory `streampipes-installer/osx_linux`
