@@ -12,6 +12,7 @@ Run the script with `./streampipes <COMMAND>`. We provide three different comman
 
 * `./streampipes start`:
   * Downloads all Components and starts StreamPipes (optimized for Laptops with less then 16 GB RAM)
+  * StreamPipes is a modular, easily extensible system consisting of several micro services. The installer automatically downloads all required services. Depending on your internet connection, the first installation may take some while.
 * `./streampipes start bigdata`:
   * Downloads all Components and starts StreamPipes (16GB of RAM recommended)
 * `./streampipes stop`:
@@ -29,6 +30,7 @@ Run the script with `./streampipes.bat <COMMAND>`. We provide three different co
 
 * `./streampipes.bat start`:
   * Downloads all Components and starts StreamPipes (optimized for Laptops with less then 16 GB RAM, less algorithms)
+   * StreamPipes is a modular, easily extensible system consisting of several micro services. The installer automatically downloads all required services. Depending on your internet connection, the first installation may take some while.
 * `./streampipes.bat start bigdata`:
   * Downloads all Components and starts StreamPipes (16 GB of RAM recommended)
 * `./streampipes.bat stop`:
