@@ -5,7 +5,8 @@ export let FreeTextComponent = {
     bindings: {
         staticProperty: "=",
         inputStreams : "=",
-        mappingProperty: "="
+        mappingProperty: "=",
+        customizeForm: "="
     },
     controller: FreeTextController,
     controllerAs: 'ctrl'

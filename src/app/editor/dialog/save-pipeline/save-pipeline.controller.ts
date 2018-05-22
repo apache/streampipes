@@ -10,6 +10,7 @@ export class SavePipelineController {
     startPipelineAfterStorage: any;
     modificationMode: any;
     updateMode: any;
+    submitPipelineForm: any;
 
     constructor($mdDialog, $state, RestApi, $mdToast, ObjectProvider, pipeline, modificationMode) {
         this.RestApi = RestApi;

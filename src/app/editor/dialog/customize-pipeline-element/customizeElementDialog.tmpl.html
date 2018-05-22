@@ -10,96 +10,104 @@
     </md-toolbar>
 
     <md-dialog-content flex="100" class="md-dialog-content" ng-if="ctrl.configVisible">
-        <div flex="100" layout="column" layout-align="end end">
-            <md-switch ng-model="ctrl.displayRecommended" aria-label="Switch 1">
-                Show only recommended settings
-            </md-switch>
-        </div>
-        <div flex="100" layout="column">
-            <div layout="column" class="customize-item-main-help">
-                <div class="customize-item-title-help" flex="100" layout="row">
-                    <div flex="70" layout="row" layout-align="start center" ng-click="ctrl.toggleHelpDialog()">
-                        <i class="material-icons" style="color: white;">help</i> &nbsp;What's this component doing?
+        <form name="ctrl.customizeForm">
+            <div flex="100" layout="column" layout-align="end end">
+                <md-switch ng-model="ctrl.displayRecommended" aria-label="Switch 1">
+                    Show only recommended settings
+                </md-switch>
+            </div>
+            <div flex="100" layout="column">
+                <div layout="column" class="customize-item-main-help">
+                    <div class="customize-item-title-help" flex="100" layout="row">
+                        <div flex="70" layout="row" layout-align="start center" ng-click="ctrl.toggleHelpDialog()">
+                            <i class="material-icons" style="color: white;">help</i> &nbsp;What's this component doing?
+                        </div>
+                        <div flex="30" layout="row" layout-align="end center" style="padding-left:10px;">
+                            <md-button class="md-icon-button" ng-if="ctrl.helpDialogVisible"
+                                       ng-click="ctrl.toggleHelpDialog()">
+                                <i class="material-icons" style="color: white;">arrow_drop_up</i>
+                            </md-button>
+                            <md-button class="md-icon-button" ng-if="!ctrl.helpDialogVisible"
+                                       ng-click="ctrl.toggleHelpDialog()">
+                                <i class="material-icons" style="color: white;">arrow_drop_down</i>
+                            </md-button>
+                        </div>
                     </div>
-                    <div flex="30" layout="row" layout-align="end center" style="padding-left:10px;">
-                        <md-button class="md-icon-button" ng-if="ctrl.helpDialogVisible" ng-click="ctrl.toggleHelpDialog()">
-                            <i class="material-icons" style="color: white;">arrow_drop_up</i>
-                        </md-button>
-                        <md-button class="md-icon-button" ng-if="!ctrl.helpDialogVisible" ng-click="ctrl.toggleHelpDialog()">
-                            <i class="material-icons" style="color: white;">arrow_drop_down</i>
-                        </md-button>
-                    </div>
-                </div>
-                <div class="customize-item-content" ng-if="ctrl.helpDialogVisible">
-                    The <i>{{ctrl.sepaName}}</i> component performs the following operation:<br/>
-                    <i>{{ctrl.selectedElement.description}}</i>
-                    <div ng-show="ctrl.elementData.description == ''">(Sorry, no further description available)</div>
+                    <div class="customize-item-content" ng-if="ctrl.helpDialogVisible">
+                        The <i>{{ctrl.sepaName}}</i> component performs the following operation:<br/>
+                        <i>{{ctrl.selectedElement.description}}</i>
+                        <div ng-show="ctrl.elementData.description == ''">(Sorry, no further description available)
+                        </div>
 
+                    </div>
                 </div>
             </div>
-        </div>
-        <div ng-repeat="staticProperty in ctrl.selectedElement.staticProperties">
-            <div layout="column" class="customize-item-main sp-blue-border-nopadding">
-                <div class="customize-item-title sp-blue-bg" layout="row" flex="100" layout-align="space-between center">
-                    <div>
-                        {{staticProperty.properties.label}}
-                    </div>
-                    <div style="padding-left:10px;">
-                        <!--
-                        <i class="material-icons" ng-click="setCurrentStaticProperty(staticProperty)"
-                           style="color: white;" popup-show="modules/editor/templates/popup.html"
-                           popup-placement="bottom">help</i>
-                        -->
-                        <md-icon md-svg-icon="action:ic_help_24px" aria-label="Description">
-                            <md-tooltip md-direction="left">{{staticProperty.properties.description}}</md-tooltip>
-                        </md-icon>
-                    </div>
-                </div>
-                <div class="customize-item-content">
-                    <customize-dialog selected-element="ctrl.selectedElement"
-                                      static-property="staticProperty" display-recommended="ctrl.displayRecommended"></customize-dialog>
-                </div>
-            </div>
-        </div>
-        <div ng-repeat="outputStrategy in ctrl.selectedElement.outputStrategies">
-            <div layout="column" class="customize-item-main sp-blue-border-nopadding">
-                <div ng-if="outputStrategy.type === 'org.streampipes.model.output.ReplaceOutputStrategy'">
-
-                    <div class="customize-item-title sp-blue-bg" layout="row" flex="100">
-                        <div flex="80" layout="row" layout-align="start center">
-                            Replace property
+            <div ng-repeat="staticProperty in ctrl.selectedElement.staticProperties">
+                <div layout="column" class="customize-item-main sp-blue-border-nopadding">
+                    <div class="customize-item-title sp-blue-bg" layout="row" flex="100"
+                         layout-align="space-between center">
+                        <div>
+                            {{staticProperty.properties.label}}
+                        </div>
+                        <div style="padding-left:10px;">
+                            <!--
+                            <i class="material-icons" ng-click="setCurrentStaticProperty(staticProperty)"
+                               style="color: white;" popup-show="modules/editor/templates/popup.html"
+                               popup-placement="bottom">help</i>
+                            -->
+                            <md-icon md-svg-icon="action:ic_help_24px" aria-label="Description">
+                                <md-tooltip md-direction="left">{{staticProperty.properties.description}}</md-tooltip>
+                            </md-icon>
                         </div>
                     </div>
                     <div class="customize-item-content">
-                        <replace-output output-strategy="outputStrategy"></replace-output>
-                    </div>
-
-                </div>
-                <div ng-if="outputStrategy.type === 'org.streampipes.model.output.CustomOutputStrategy'">
-
-                    <div class="customize-item-title sp-blue-bg" layout="row" flex="100">
-                        <div flex="80" layout="row" layout-align="start center">
-                            Select Output
-                        </div>
-                        <div flex="20" layout="row" layout-align="end center" style="padding-left:10px;">
-
-                        </div>
-                    </div>
-                    <div class="customize-item-content">
-                        <custom-output output-strategy="outputStrategy"></custom-output>
+                        <customize-dialog customize-form="ctrl.customizeForm"
+                                          selected-element="ctrl.selectedElement"
+                                          static-property="staticProperty"
+                                          display-recommended="ctrl.displayRecommended"></customize-dialog>
                     </div>
                 </div>
             </div>
-        </div>
-        <div ng-show="ctrl.invalid">
-            <h3>Please enter all required parameters.</h3>
-            <div ng-repeat="error in ctrl.validationErrors track by $index">
-                <h4>{{error}}</h4>
+            <div ng-repeat="outputStrategy in ctrl.selectedElement.outputStrategies">
+                <div layout="column" class="customize-item-main sp-blue-border-nopadding">
+                    <div ng-if="outputStrategy.type === 'org.streampipes.model.output.ReplaceOutputStrategy'">
+
+                        <div class="customize-item-title sp-blue-bg" layout="row" flex="100">
+                            <div flex="80" layout="row" layout-align="start center">
+                                Replace property
+                            </div>
+                        </div>
+                        <div class="customize-item-content">
+                            <replace-output output-strategy="outputStrategy"></replace-output>
+                        </div>
+
+                    </div>
+                    <div ng-if="outputStrategy.type === 'org.streampipes.model.output.CustomOutputStrategy'">
+
+                        <div class="customize-item-title sp-blue-bg" layout="row" flex="100">
+                            <div flex="80" layout="row" layout-align="start center">
+                                Select Output
+                            </div>
+                            <div flex="20" layout="row" layout-align="end center" style="padding-left:10px;">
+
+                            </div>
+                        </div>
+                        <div class="customize-item-content">
+                            <custom-output output-strategy="outputStrategy"></custom-output>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+            <div ng-show="ctrl.invalid">
+                <h3>Please enter all required parameters.</h3>
+                <div ng-repeat="error in ctrl.validationErrors track by $index">
+                    <h4>{{error}}</h4>
+                </div>
+            </div>
+        </form>
     </md-dialog-content>
     <div class="md-actions" layout="row" ng-if="ctrl.configVisible">
-        <md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="ctrl.saveProperties()">
+        <md-button class="md-accent" style="margin-right:20px;" ng-disabled="ctrl.customizeForm.$invalid" type="submit" ng-click="ctrl.saveProperties()">
             Save
         </md-button>
         <md-button ng-click="ctrl.hide()" style="margin-right:20px;">
