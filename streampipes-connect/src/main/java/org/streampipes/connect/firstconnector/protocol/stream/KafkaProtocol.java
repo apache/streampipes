@@ -105,8 +105,4 @@ public class KafkaProtocol extends Protocol {
         return ID;
     }
 
-    @Override
-    public void run() {
-
-    }
 }

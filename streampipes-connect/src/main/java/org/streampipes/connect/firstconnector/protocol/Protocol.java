@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public abstract class Protocol implements Runnable {
+public abstract class Protocol {
 
     public abstract Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format);
 

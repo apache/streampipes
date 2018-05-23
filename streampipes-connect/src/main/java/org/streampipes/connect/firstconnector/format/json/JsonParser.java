@@ -147,7 +147,7 @@ public class JsonParser extends Parser {
             resultProperty.setRuntimeName(key);
             ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._string.toString());
         }
-        else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)) {
+        else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)|| o.getClass().equals(Long.class)) {
             resultProperty = new EventPropertyPrimitive();
             resultProperty.setRuntimeName(key);
             ((EventPropertyPrimitive) resultProperty).setRuntimeType(SO.Number.toString());

@@ -57,6 +57,13 @@ public class FileProtocol extends Protocol {
     public void run(String broker, String topic) {
         FileReader fr = null;
 
+        // TODO fix this. Currently needed because it must be wait till the whole pipeline is up and running
+        try {
+            Thread.sleep(7000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         SendToKafka stk = new SendToKafka(format, broker, topic);
         try {
             fr = new FileReader(fileUri);
@@ -109,8 +116,4 @@ public class FileProtocol extends Protocol {
         return ID;
     }
 
-    @Override
-    public void run() {
-
-    }
 }

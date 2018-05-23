@@ -30,7 +30,7 @@ import java.util.*;
 
 public class CouchDbInstallationStep implements InstallationStep {
 
-    private static List<String> initRdfEndpointPorts = Arrays.asList();
+    private static List<String> initRdfEndpointPorts = Arrays.asList("8030/streampipes-backend/api/v2/adapter/all");
     private static final String initRdfEndpointHost = "http://localhost:";
 
     public CouchDbInstallationStep() {

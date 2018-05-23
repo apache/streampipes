@@ -65,6 +65,13 @@ public class HttpProtocol extends Protocol {
     @Override
     public void run(String broker, String topic) {
 
+        // TODO fix this. Currently needed because it must be wait till the whole pipeline is up and running
+        try {
+            Thread.sleep(7000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         SendToKafka stk = new SendToKafka(format, broker, topic);
 
         try {
@@ -199,10 +206,5 @@ public class HttpProtocol extends Protocol {
     @Override
     public String getId() {
         return ID;
-    }
-
-    @Override
-    public void run() {
-
     }
 }
