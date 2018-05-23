@@ -6,10 +6,10 @@
         <ng-template matStepLabel>Select Protocol</ng-template>
 
         <div fxLayoutAlign="start">
-          <app-protocol-form fxLayout="column" fxFlex="100" [(selectedProtocol)]="newAdapterDescription.protocol" [allProtocols]="allProtocols"></app-protocol-form>
+          <app-protocol-form fxLayout="column" fxFlex="100" [(selectedProtocol)]="selectedProtocol" [allProtocols]="allProtocols"></app-protocol-form>
         </div>
         <div fxLayoutAlign="end">
-          <button color="primary" mat-raised-button matStepperNext>Next</button>
+          <button color="primary" (click)="protocolSelected()" mat-raised-button matStepperNext>Next</button>
         </div>
       </form>
 

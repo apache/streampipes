@@ -29,6 +29,8 @@ export class NewComponent implements OnInit {
     // selectedFormat: FormatDescription = new FormatDescription('');
 
     public newAdapterDescription: AdapterDescription;
+    public selectedProtocol: ProtocolDescription;
+
     constructor(private restService: RestService, private _formBuilder: FormBuilder, public dialog: MatDialog) { }
 
     ngOnInit() {
@@ -57,10 +59,19 @@ export class NewComponent implements OnInit {
         const adapterDescription = new AdapterDescription('http://todo/ads1');
         adapterDescription.protocol = new ProtocolDescription('http://todo/p1');
         adapterDescription.format = new FormatDescription('http://todo/p2');
-        const dataSet: DataSetDescription = new DataSetDescription('http://todo/ds2');
-        dataSet.eventSchema = new EventSchema();
-        adapterDescription.dataSet = dataSet;
+
+        // const dataSet: DataSetDescription = new DataSetDescription('http://todo/ds2');
+        // dataSet.eventSchema = new EventSchema();
+        // adapterDescription.dataSet = dataSet;
+
         return adapterDescription;
+    }
+
+    public protocolSelected() {
+        // set newAdapterDescription
+
+        // use protocol from selectedProtocol
+
     }
 
     public startAdapter() {
