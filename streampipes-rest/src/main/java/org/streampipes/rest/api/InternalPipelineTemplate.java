@@ -1,5 +1,5 @@
 package org.streampipes.rest.api;
 
-public interface LogPipelineTemplate {
+public interface InternalPipelineTemplate {
     // TODO: Add Methods
 }

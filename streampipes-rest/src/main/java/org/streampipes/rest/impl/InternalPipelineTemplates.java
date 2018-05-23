@@ -7,7 +7,7 @@ import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.streampipes.model.template.PipelineTemplateInvocation;
-import org.streampipes.rest.api.LogPipelineTemplate;
+import org.streampipes.rest.api.InternalPipelineTemplate;
 import org.streampipes.sdk.builder.BoundPipelineElementBuilder;
 import org.streampipes.sdk.builder.PipelineTemplateBuilder;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
@@ -19,14 +19,13 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 @Path("/v2/users/{username}/internal-pipelines")
-public class LogPipelineTemplates extends AbstractRestInterface implements LogPipelineTemplate {
+public class InternalPipelineTemplates extends AbstractRestInterface implements InternalPipelineTemplate {
     //TODO: Interface
 
     @GET
