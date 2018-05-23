@@ -1,18 +1,10 @@
+import { Injectable } from '@angular/core';
+
+@Injectable()
 export class HomeService {
-    constructor($window, $location, $state) {
-        this.$location = $location;
-        this.$state = $state;
-        this.$window = $window;
+
+    constructor() {
     }
-
-    openLink(l) {
-        if (l.link.newWindow) {
-            this.$window.open(l.link.value);
-        } else {
-            this.$state.go(l.link.value);
-        }
-
-    };
 
     getServiceLinks() {
         return [
@@ -42,11 +34,9 @@ export class HomeService {
                imageUrl: "img/home/elastic.png",
                link: {
                    newWindow: true,
-                   value: this.$location.protocol() + "://" + this.$location.host() + ":5601"
+                   value: window.location.protocol + '//' + window.location.hostname + ':5601'
                }
            }
-       ]
+       ];
     }
 }
-
-HomeService.$inject = ['$window', '$location', '$state'];
