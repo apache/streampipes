@@ -31,7 +31,6 @@ export class TextValidatorDirective {
     }
 
     validateText(modelValue, viewValue) {
-        console.log("validating text");
         if (this.staticProperty.properties.requiredDatatype) {
             return this.typeCheck(modelValue, this.staticProperty.properties.requiredDatatype);
         } else if (this.staticProperty.properties.requiredDomainProperty) {
