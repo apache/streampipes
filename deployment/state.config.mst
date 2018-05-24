@@ -136,7 +136,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             url: '{{{url}}}',
             views: {
                 "spMain@streampipes": {
-                    controller: {{{ng5_component}}}
+                    component: {{{ng5_component}}}
                 }
             }
         })

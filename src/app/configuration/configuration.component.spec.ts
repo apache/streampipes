@@ -1,4 +1,4 @@
-import { TestBed, async, ComponentFixture, getTestBed } from '@angular/core/testing';
+import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { ConfigurationComponent } from './configuration.component';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';

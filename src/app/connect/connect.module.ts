@@ -73,5 +73,5 @@ import { AdapterStartedDialog } from './new-adapter/component/adapter-started-di
         AdapterStartedDialog,
     ]
 })
-export class SpConnectModule {
+export class ConnectModule {
 }

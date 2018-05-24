@@ -10,6 +10,7 @@ import {AdapterDataSource} from '../all-adapters/adapter-data-source.service';
 import {MatDialog} from '@angular/material';
 import {AdapterStartedDialog} from './component/adapter-started-dialog.component';
 
+
 @Component({
     selector: 'sp-new-adapter',
     templateUrl: './new.component.html',
@@ -31,11 +32,13 @@ export class NewComponent implements OnInit {
     public newAdapterDescription: AdapterDescription;
     public selectedProtocol: ProtocolDescription;
 
-    constructor(private restService: RestService, private _formBuilder: FormBuilder, public dialog: MatDialog) { }
+    constructor(private restService: RestService, private _formBuilder: FormBuilder, public dialog: MatDialog) {
+        console.log('constructor');
+    }
 
     ngOnInit() {
 
-
+        console.log('oninit');
         this.newAdapterDescription = this.getNewAdapterDescription();
 
 
@@ -45,7 +48,6 @@ export class NewComponent implements OnInit {
         this.secondFormGroup = this._formBuilder.group({
             secondCtrl: ['', Validators.required]
         });
-
         this.restService.getProtocols().subscribe(x => {
             this.allProtocols = x.list;
         });
@@ -67,8 +69,9 @@ export class NewComponent implements OnInit {
         return adapterDescription;
     }
 
-    public protocolSelected() {
+    public protocolSelected(): boolean {
         // set newAdapterDescription
+        return false;
 
         // use protocol from selectedProtocol
 
@@ -83,8 +86,7 @@ export class NewComponent implements OnInit {
         this.restService.addAdapter(this.newAdapterDescription);
 
         dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed');
-            // this.animal = result;
+           console.log('The dialog was closed');
         });
     }
 
