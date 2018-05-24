@@ -51,6 +51,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         })
         .state('streampipes.pipelineDetails', {
             url: '/pipelines/:pipeline/details',
+            params: {pipeline: null},
             views: {
                 'spMain@streampipes': {
                     templateUrl: '../pipeline-details/pipeline-details.html',
@@ -119,6 +120,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         {{^ng5}}
         .state('{{{link}}}', {
             url: '{{{url}}}',
+            {{#containsPipeline}}{{ng1_templateUrl}}{{/containsPipeline}}
             views: {
                 "spMain@streampipes": {
                     templateUrl: '{{{ng1_templateUrl}}}',

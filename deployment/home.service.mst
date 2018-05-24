@@ -22,7 +22,7 @@ export class HomeService {
            {
                name: "Notifications",
                description: "Integrated notification manager",
-               imageUrl: "img/home/notifications.png",
+               imageUrl: "assets/img/home/notifications.png",
                link: {
                    newWindow: false,
                    value: "streampipes.notifications"
@@ -31,7 +31,7 @@ export class HomeService {
            {
                name: "ElasticSearch",
                description: "Offline visual analytics of data",
-               imageUrl: "img/home/elastic.png",
+               imageUrl: "assets/img/home/elastic.png",
                link: {
                    newWindow: true,
                    value: window.location.protocol + '//' + window.location.hostname + ':5601'

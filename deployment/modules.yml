@@ -11,7 +11,7 @@ spEditor:
   title: 'Pipeline Editor'
   description: 'The editor can be used to model new pipelines'
   icon: 'action:ic_dashboard_24px'
-  homeImage: '/img/home/editor.png'
+  homeImage: '/assets/img/home/editor.png'
   admin: False
 spConnect:
   ng5: True
@@ -26,7 +26,7 @@ spConnect:
   title: 'StreamPipes Connect'
   description: 'Missing Description'
   icon: 'notification:ic_power_24px'
-  homeImage: '/img/home/editor.png'
+  homeImage: '/assets/img/home/editor.png'
   admin: False
 spPipelines:
   ng5: False
@@ -41,7 +41,7 @@ spPipelines:
   title: 'Pipelines'
   description: 'Pipelines'
   icon: 'av:ic_play_arrow_24px'
-  homeImage: '/img/home/pipelines.png'
+  homeImage: '/assets/img/home/pipelines.png'
   admin: False
 spDashboard:
   ng5: False
@@ -56,7 +56,7 @@ spDashboard:
   title: 'Live Dashboard'
   description: 'The live dashboard visualizes data in real-time'
   icon: 'editor:ic_insert_chart_24px'
-  homeImage: '/img/home/dashboard.png'
+  homeImage: '/assets/img/home/dashboard.png'
   admin: False
 spAppFileDownload:
   ng5: False
@@ -71,7 +71,7 @@ spAppFileDownload:
   title: 'File Download'
   description: 'File Download'
   icon: 'file:ic_file_download_24px'
-  homeImage: '/img/home/appfiledownload.png'
+  homeImage: '/assets/img/home/appfiledownload.png'
   admin: False
 spOntology:
   ng5: False
@@ -85,7 +85,7 @@ spOntology:
   title: 'Knowledge Management'
   description: 'Knowledge Management'
   icon: 'social:ic_share_24px'
-  homeImage: '/img/home/ontology.png'
+  homeImage: '/assets/img/home/ontology.png'
   admin: False
 spSensors:
   ng5: False
@@ -99,7 +99,7 @@ spSensors:
   title: 'Pipeline Element Generator'
   description: 'Pipeline Element Generator'
   icon: 'content:ic_add_24px'
-  homeImage: '/img/home/sensors.png'
+  homeImage: '/assets/img/home/sensors.png'
   admin: False
 spKvi:
   ng5: True
@@ -114,7 +114,7 @@ spKvi:
   title: 'KVI Editor'
   description: 'KVI Editor'
   icon: 'action:ic_trending_up_24px'
-  homeImage: '/img/home/editor.png'
+  homeImage: '/assets/img/home/editor.png'
   admin: False
 spKviVisualization:
   ng5: True
@@ -129,7 +129,7 @@ spKviVisualization:
   title: 'KVI Visualization'
   description: 'KVI Visualization'
   icon: 'editor:ic_format_list_numbered_24px'
-  homeImage: '/img/home/editor.png'
+  homeImage: '/assets/img/home/editor.png'
   admin: False
 spAdd:
   ng5: False
@@ -144,7 +144,7 @@ spAdd:
   title: 'Install Pipeline Elements'
   description: 'The marketplace can be used to extend StreamPipes with new algorithms and data sinks'
   icon: 'file:ic_cloud_download_24px'
-  homeImage: '/img/home/add.png'
+  homeImage: '/assets/img/home/add.png'
   admin: True
 spMyElements:
   ng5: False
@@ -159,7 +159,7 @@ spMyElements:
   title: 'My Elements'
   description: 'My Elements'
   icon: 'image:ic_portrait_24px'
-  homeImage: '/img/home/myelements.png'
+  homeImage: '/assets/img/home/myelements.png'
   admin: True
 spConfiguration:
   ng5: True
@@ -174,5 +174,5 @@ spConfiguration:
   title: 'Configuration'
   description: 'Configuration'
   icon: 'action:ic_settings_24px'
-  homeImage: '/img/home/configuration.png'
+  homeImage: '/assets/img/home/configuration.png'
   admin: True

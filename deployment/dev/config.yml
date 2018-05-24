@@ -12,3 +12,5 @@ modules:
   - spAdd
   - spMyElements
   - spConfiguration
+  - spKvi
+  - spKviVisualization

@@ -36,6 +36,7 @@ import { PipelineLogsModule } from './pipeline-logs/pipeline-logs.module';
         UIRouterUpgradeModule.forChild(),
         SpConnectModule,
         PipelineLogsModule,
+        HomeModule,
         {{#modulesActive}}
         {{#ng5}}
         {{{ng5_moduleName}}},

@@ -62,6 +62,16 @@ for (let module of config.modules) {
     console.log('Active Angular ' + (modules[module]['ng5']===true?5:1) + ' Module: ' + module);
 }
 
+modulesActive.containsPipeline = function() {
+    return function(cv, render) {
+        if (render(cv).includes(":pipeline") != -1) {
+            return "params: {pipeline: null},"
+        }
+
+        return "";
+    }
+};
+
 // Create necessary JavaScript-Files from Template and move to respective Directory
 fs.writeFileSync('src/app/app.module.ts', mustache.render(fs.readFileSync('deployment/app.module.mst', 'utf8').toString(), modulesActive));
 fs.writeFileSync('src/app/appng5.module.ts', mustache.render(fs.readFileSync('deployment/appng5.module.mst', 'utf8').toString(), modulesActive));
