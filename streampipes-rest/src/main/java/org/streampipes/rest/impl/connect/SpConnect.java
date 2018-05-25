@@ -4,7 +4,6 @@ package org.streampipes.rest.impl.connect;
 
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
-import org.streampipes.commons.Utils;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.connect.RunningAdapterInstances;
 import org.streampipes.connect.firstconnector.protocol.stream.KafkaProtocol;
@@ -25,7 +24,6 @@ import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.modelconnect.*;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.impl.AbstractRestInterface;
-import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -35,7 +33,6 @@ import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.rest.impl.DataStream;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
@@ -43,7 +40,6 @@ import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 import org.streampipes.vocabulary.StreamPipes;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -66,21 +62,7 @@ public class SpConnect extends AbstractRestInterface {
         pdl.addDesctiption(new FileProtocol().declareModel());
         pdl.addDesctiption(new KafkaProtocol().declareModel());
 
-        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
-        String result = null;
-        try {
-            result = Utils.asString(jsonLdTransformer.toJsonLd(pdl));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InvalidRdfException e) {
-            e.printStackTrace();
-        }
-
-        return ok(result);
+        return ok(JsonLdUtils.toJsonLD(pdl));
     }
 
     @GET
@@ -91,21 +73,7 @@ public class SpConnect extends AbstractRestInterface {
         fdl.addDesctiption(new JsonFormat().declareModel());
         fdl.addDesctiption(new CsvFormat().declareModel());
 
-        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
-        String result = null;
-        try {
-            result = Utils.asString(jsonLdTransformer.toJsonLd(fdl));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InvalidRdfException e) {
-            e.printStackTrace();
-        }
-
-        return ok(result);
+        return ok(JsonLdUtils.toJsonLD(fdl));
     }
 
     @GET
@@ -173,25 +141,7 @@ public class SpConnect extends AbstractRestInterface {
 
         dataSourceDescription.addEventStream(ds);
 
-
-//        return ok(toJsonLD(dataSourceDescription));
-
-        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
-        String result = null;
-        try {
-            result = Utils.asString(jsonLdTransformer.toJsonLd(dataSourceDescription));
-//            result = Utils.asString(jsonLdTransformer.toJsonLd(dataSet));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvalidRdfException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return ok(result);
+        return ok(JsonLdUtils.toJsonLD(dataSourceDescription));
     }
 
     @POST
@@ -310,40 +260,8 @@ public class SpConnect extends AbstractRestInterface {
             ad.setUri("https://www.streampipes.org/adapter/" + UUID.randomUUID());
         }
 
-        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
-        String result = null;
-        try {
-            result = Utils.asString(jsonLdTransformer.toJsonLd(adapterDescriptionList));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InvalidRdfException e) {
-            e.printStackTrace();
-        }
-
-        return ok(result);
+        return ok(JsonLdUtils.toJsonLD(adapterDescriptionList));
     }
 
 
-    private String toJsonLD(Object o) {
-        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
-        String result = null;
-        try {
-            result = Utils.asString(jsonLdTransformer.toJsonLd(o));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InvalidRdfException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-
-    }
 }

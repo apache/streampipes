@@ -70,21 +70,7 @@ public class GuessResource extends AbstractRestInterface {
 
         // TODO get domainproperty probabilities
 
-        String result = null;
-        try {
-            result = Utils.asString(jsonLdTransformer.toJsonLd(resultSchema));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InvalidRdfException e) {
-            e.printStackTrace();
-        }
-
-
-        return ok(result);
+        return ok(JsonLdUtils.toJsonLD(resultSchema));
     }
 
 
