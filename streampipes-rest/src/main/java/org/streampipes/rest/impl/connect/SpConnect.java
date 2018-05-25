@@ -6,13 +6,14 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.connect.RunningAdapterInstances;
+import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
 import org.streampipes.connect.firstconnector.protocol.stream.KafkaProtocol;
 import org.streampipes.container.html.JSONGenerator;
 import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.streampipes.container.html.model.Description;
 import org.streampipes.connect.firstconnector.Adapter;
 import org.streampipes.connect.firstconnector.format.csv.CsvFormat;
-import org.streampipes.connect.firstconnector.format.json.JsonFormat;
+import org.streampipes.connect.firstconnector.format.json.arraykey.JsonFormat;
 import org.streampipes.connect.firstconnector.protocol.set.FileProtocol;
 import org.streampipes.connect.firstconnector.protocol.set.HttpProtocol;
 import org.streampipes.container.transform.Transformer;
@@ -21,7 +22,9 @@ import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.modelconnect.*;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.impl.AbstractRestInterface;
 
@@ -33,8 +36,7 @@ import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.helpers.*;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 import org.streampipes.vocabulary.StreamPipes;
@@ -71,6 +73,7 @@ public class SpConnect extends AbstractRestInterface {
     public Response getAllFormats() {
         FormatDescriptionList fdl = new FormatDescriptionList();
         fdl.addDesctiption(new JsonFormat().declareModel());
+        fdl.addDesctiption(new JsonObjectFormat().declareModel());
         fdl.addDesctiption(new CsvFormat().declareModel());
 
         return ok(JsonLdUtils.toJsonLD(fdl));
@@ -124,6 +127,16 @@ public class SpConnect extends AbstractRestInterface {
             ((SpDataSet) ds).setSupportedGrounding(eg);
         } else {
             ds = ((AdapterStreamDescription) adapterDescription).getDataStream();
+
+            //TODO just for debugging remvove
+            TransportProtocol tp = Protocols.kafka("141.21.42.75", 9092, "test.topic");
+            EventGrounding eg = new EventGrounding();
+            eg.setTransportFormats(Arrays.asList(Formats.jsonFormat()));
+            eg.setTransportProtocol(tp);
+            EventSchema es = new EventSchema();
+            es.setEventProperties(Arrays.asList(EpProperties.timestampProperty("timestamp")));
+            ds.setEventSchema(es);
+            ds.setEventGrounding(eg);
         }
 
 
@@ -229,9 +242,24 @@ public class SpConnect extends AbstractRestInterface {
 
 
         //ADD HERE if Stream Adapter start it in a Thread
+        if (a instanceof AdapterStreamDescription) {
+            startStreamAdapter((AdapterStreamDescription) a);
 
+        }
+
+        // TODO Think about stopping a stream adapter
 
         return Response.ok().build();
+    }
+
+    private void startStreamAdapter(AdapterStreamDescription asd) {
+
+        String brokerUrl = "141.21.42.75:9092";
+        String topic = "test.topic";
+        Adapter adapter = new Adapter(brokerUrl, topic, false);
+//        RunningAdapterInstances.INSTANCE.addAdapter(dataSet.getDatasetInvocationId(), adapter);
+        // TODO execute a Thread
+        adapter.run(asd);
     }
 
 

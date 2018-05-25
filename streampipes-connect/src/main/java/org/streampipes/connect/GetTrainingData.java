@@ -2,8 +2,8 @@ package org.streampipes.connect;
 
 
 import org.apache.http.client.fluent.Request;
-import org.streampipes.connect.firstconnector.format.json.JsonFormat;
-import org.streampipes.connect.firstconnector.format.json.JsonParser;
+import org.streampipes.connect.firstconnector.format.json.arraykey.JsonFormat;
+import org.streampipes.connect.firstconnector.format.json.arraykey.JsonParser;
 import org.streampipes.connect.firstconnector.protocol.Protocol;
 import org.streampipes.connect.firstconnector.protocol.set.HttpProtocol;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;

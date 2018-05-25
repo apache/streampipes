@@ -1,27 +1,26 @@
-package org.streampipes.connect.firstconnector.format.json;
+package org.streampipes.connect.firstconnector.format.json.arraynokey;
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.connect.firstconnector.sdk.ParameterExtractor;
-import org.streampipes.model.modelconnect.FormatDescription;
-import org.streampipes.dataformat.json.JsonDataFormatDefinition;
-import org.streampipes.model.schema.*;
 import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.firstconnector.format.Parser;
+import org.streampipes.connect.firstconnector.sdk.ParameterExtractor;
+import org.streampipes.dataformat.json.JsonDataFormatDefinition;
+import org.streampipes.model.modelconnect.FormatDescription;
+import org.streampipes.model.schema.*;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.vocabulary.XSD;
 
-
-import javax.json.*;
+import javax.json.Json;
 import javax.json.stream.JsonParserFactory;
 import java.io.InputStream;
 import java.util.*;
 
-public class JsonParser extends Parser {
+public class JsonArrayParser extends Parser {
 
-    Logger logger = LoggerFactory.getLogger(JsonParser.class);
+    Logger logger = LoggerFactory.getLogger(JsonArrayParser.class);
     private boolean isArray;
     private String key = "";
 
@@ -31,7 +30,7 @@ public class JsonParser extends Parser {
         ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
         String key = extractor.singleValue("key");
 
-        return new JsonParser(true, key);
+        return new JsonArrayParser(true, key);
     }
 
     /**
@@ -39,12 +38,12 @@ public class JsonParser extends Parser {
      * @param isArray
      * @param key
      */
-    public JsonParser(boolean isArray, String key) {
+    public JsonArrayParser(boolean isArray, String key) {
         this.isArray = isArray;
         this.key = key;
     }
 
-    public JsonParser() {
+    public JsonArrayParser() {
     }
 
     @Override

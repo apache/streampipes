@@ -56,10 +56,15 @@ public class KafkaProtocol extends Protocol {
         FreeTextStaticProperty broker = new FreeTextStaticProperty("broker_url", "Broker URL",
                 "This property defines the URL of the Kafka broker.");
 
+
         pd.setSourceType("STREAM");
 
         FreeTextStaticProperty topic = new FreeTextStaticProperty("topic", "Topic",
                 "Topic in the broker");
+
+        //TODO remove, just for debugging
+        broker.setValue("141.21.42.75:9092");
+        topic.setValue("SEPA.SEP.Random.Number.Json");
 
         pd.addConfig(broker);
         pd.addConfig(topic);
@@ -68,7 +73,9 @@ public class KafkaProtocol extends Protocol {
 
     @Override
     public GuessSchema getSchema() {
-        return null;
+        GuessSchema result = new GuessSchema();
+        result.setEventSchema(parser.getSchema(null));
+        return result;
     }
 
     @Override
@@ -81,9 +88,13 @@ public class KafkaProtocol extends Protocol {
 
         SendToKafka stk = new SendToKafka(format, broker, topic);
 
-        SpKafkaConsumer kafkaConsumer = new SpKafkaConsumer(brokerUrl, topic, new EventProcessor(stk));
-        kafkaConsumer.run();
+//        SpKafkaConsumer kafkaConsumer = new SpKafkaConsumer(brokerUrl, topic, new EventProcessor(stk));
+//        kafkaConsumer.run();
 
+        Thread thread = new Thread(new SpKafkaConsumer(this.brokerUrl, this.topic, new EventProcessor(stk)));
+        thread.start();
+
+        System.out.println("bl");
     }
 
     private class EventProcessor implements InternalEventProcessor<byte[]> {

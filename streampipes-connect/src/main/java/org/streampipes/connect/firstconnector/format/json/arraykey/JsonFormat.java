@@ -1,4 +1,4 @@
-package org.streampipes.connect.firstconnector.format.json;
+package org.streampipes.connect.firstconnector.format.json.arraykey;
 
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class JsonFormat extends Format {
 
-    public static String ID = "https://streampipes.org/vocabulary/v1/format/json";
+    public static String ID = "https://streampipes.org/vocabulary/v1/format/json/arraykey";
 
     @Override
     public Format getInstance(FormatDescription formatDescription) {
@@ -42,13 +42,11 @@ public class JsonFormat extends Format {
 
     @Override
     public FormatDescription declareModel() {
-        FormatDescription fd = new FormatDescription(ID, "Json", "This is the description" +
+        FormatDescription fd = new FormatDescription(ID, "Json Array Key", "This is the description" +
                 "for json format");
         FreeTextStaticProperty keyProperty = new FreeTextStaticProperty("key",
                 "key", "Key of the json part that should be parsed");
 
-//        TODO remove just for testing
-//        keyProperty.setValue("elements");
         fd.addConfig(keyProperty);
 
         return fd;

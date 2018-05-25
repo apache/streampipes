@@ -115,7 +115,7 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
         props.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
         props.put("zookeeper.session.timeout.ms", "60000");
         props.put("zookeeper.sync.time.ms", "20000");
-        props.put("client.id",  UUID.randomUUID());
+        props.put("client.id",  UUID.randomUUID().toString());
         return props;
     }
 

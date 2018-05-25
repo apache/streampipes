@@ -2,15 +2,17 @@ package org.streampipes.connect.firstconnector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
+import org.streampipes.connect.firstconnector.format.json.object.JsonObjectParser;
+import org.streampipes.connect.firstconnector.protocol.stream.KafkaProtocol;
 import org.streampipes.model.modelconnect.AdapterDescription;
 import org.streampipes.model.modelconnect.GuessSchema;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.connect.firstconnector.format.Format;
 import org.streampipes.connect.firstconnector.format.Parser;
 import org.streampipes.connect.firstconnector.format.csv.CsvFormat;
 import org.streampipes.connect.firstconnector.format.csv.CsvParser;
-import org.streampipes.connect.firstconnector.format.json.JsonFormat;
-import org.streampipes.connect.firstconnector.format.json.JsonParser;
+import org.streampipes.connect.firstconnector.format.json.arraykey.JsonFormat;
+import org.streampipes.connect.firstconnector.format.json.arraykey.JsonParser;
 import org.streampipes.connect.firstconnector.protocol.set.FileProtocol;
 import org.streampipes.connect.firstconnector.protocol.set.HttpProtocol;
 import org.streampipes.connect.firstconnector.protocol.Protocol;
@@ -35,14 +37,17 @@ public class Adapter {
         this.topic = topic;
 
         allFormats.put(JsonFormat.ID, new JsonFormat());
+        allFormats.put(JsonObjectFormat.ID, new JsonObjectFormat());
 
         allFormats.put(CsvFormat.ID, new CsvFormat());
 
         allParsers.put(JsonFormat.ID, new JsonParser());
+        allParsers.put(JsonObjectFormat.ID, new JsonObjectParser());
         allParsers.put(CsvFormat.ID, new CsvParser());
 
         allProtocols.put(HttpProtocol.ID, new HttpProtocol());
         allProtocols.put(FileProtocol.ID, new FileProtocol());
+        allProtocols.put(KafkaProtocol.ID, new KafkaProtocol());
 
         this.debug = debug;
     }
