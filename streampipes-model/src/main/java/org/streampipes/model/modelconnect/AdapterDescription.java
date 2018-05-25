@@ -28,9 +28,6 @@ public class AdapterDescription extends NamedStreamPipesEntity {
     private ProtocolDescription protocolDescription;
 
 
-    @RdfProperty("sp:hasDataSet")
-    private SpDataSet dataSet;
-
     public AdapterDescription() {
     }
 
@@ -53,14 +50,6 @@ public class AdapterDescription extends NamedStreamPipesEntity {
 
     public void setProtocolDescription(ProtocolDescription protocolDescription) {
         this.protocolDescription = protocolDescription;
-    }
-
-    public SpDataSet getDataSet() {
-        return dataSet;
-    }
-
-    public void setDataSet(SpDataSet dataSet) {
-        this.dataSet = dataSet;
     }
 
     public String getId() {

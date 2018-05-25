@@ -51,10 +51,12 @@ public class KafkaProtocol extends Protocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        ProtocolDescription pd = new ProtocolDescription(ID,"Apache Kafka","This is the " +
+        ProtocolDescription pd = new ProtocolDescription(ID,"Apache Kafka (Stream)","This is the " +
                 "description for the Apache Kafka protocol");
         FreeTextStaticProperty broker = new FreeTextStaticProperty("broker_url", "Broker URL",
                 "This property defines the URL of the Kafka broker.");
+
+        pd.setSourceType("STREAM");
 
         FreeTextStaticProperty topic = new FreeTextStaticProperty("topic", "Topic",
                 "Topic in the broker");

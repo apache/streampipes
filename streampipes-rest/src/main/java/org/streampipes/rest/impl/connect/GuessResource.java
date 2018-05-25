@@ -6,6 +6,8 @@ import org.streampipes.commons.Utils;
 import org.streampipes.connect.firstconnector.Adapter;
 import org.streampipes.model.modelconnect.AdapterDescription;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
+import org.streampipes.model.modelconnect.AdapterSetDescription;
+import org.streampipes.model.modelconnect.AdapterStreamDescription;
 import org.streampipes.model.modelconnect.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.rest.impl.AbstractRestInterface;
@@ -48,14 +50,17 @@ public class GuessResource extends AbstractRestInterface {
     @Path("/schema")
     public Response guessSchema(String ar) {
 
-        System.out.println(ar);
-
 
         JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
 
         AdapterDescription a = null;
         try {
-            a = jsonLdTransformer.fromJsonLd(ar, AdapterDescription.class);
+            if (ar.contains("AdapterSetDescription")){
+                a = jsonLdTransformer.fromJsonLd(ar, AdapterSetDescription.class);
+            } else {
+                a = jsonLdTransformer.fromJsonLd(ar, AdapterStreamDescription.class);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

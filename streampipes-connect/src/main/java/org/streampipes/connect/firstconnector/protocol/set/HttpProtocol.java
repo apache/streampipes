@@ -42,11 +42,12 @@ public class HttpProtocol extends Protocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        ProtocolDescription pd = new ProtocolDescription(ID,"HTTP","This is the " +
+        ProtocolDescription pd = new ProtocolDescription(ID,"HTTP (Set)","This is the " +
                 "description for the http protocol");
         FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("url", "url",
                 "This property defines the URL for the http request.");
 
+        pd.setSourceType("SET");
         //TODO remove just for testing
 //        urlProperty.setValue("https://opendata.bonn.de/api/action/datastore/search.json?resource_id=0a41c514-f760-4a17-b0a8-e1b755204fee&limit=100");
 

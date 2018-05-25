@@ -19,6 +19,9 @@ import java.util.List;
 public class ProtocolDescription extends NamedStreamPipesEntity {
 
 
+    @RdfProperty("sp:sourceType")
+    String sourceType;
+
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
     @RdfProperty("sp:config")
@@ -47,5 +50,13 @@ public class ProtocolDescription extends NamedStreamPipesEntity {
 
     public void setConfig(List<StaticProperty> config) {
         this.config = config;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 }
