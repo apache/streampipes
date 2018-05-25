@@ -9,6 +9,10 @@ import {EventSchema} from '../schema-editor/model/EventSchema';
 import {AdapterDataSource} from '../all-adapters/adapter-data-source.service';
 import {MatDialog} from '@angular/material';
 import {AdapterStartedDialog} from './component/adapter-started-dialog.component';
+import {Logger} from '../../shared/logger/default-log.service';
+import {AdapterStreamDescription} from '../model/AdapterStreamDescription';
+import {AdapterSetDescription} from '../model/AdapterSetDescription';
+import {DataStreamDescription} from '../model/DataStreamDescription';
 
 
 @Component({
@@ -32,15 +36,13 @@ export class NewComponent implements OnInit {
     public newAdapterDescription: AdapterDescription;
     public selectedProtocol: ProtocolDescription;
 
-    constructor(private restService: RestService, private _formBuilder: FormBuilder, public dialog: MatDialog) {
+    constructor(private logger: Logger, private restService: RestService, private _formBuilder: FormBuilder, public dialog: MatDialog) {
         console.log('constructor');
     }
 
     ngOnInit() {
 
-        console.log('oninit');
         this.newAdapterDescription = this.getNewAdapterDescription();
-
 
         this.firstFormGroup = this._formBuilder.group({
             firstCtrl: ['', Validators.required]
@@ -58,22 +60,37 @@ export class NewComponent implements OnInit {
     }
 
     private getNewAdapterDescription(): AdapterDescription {
+        // TODO remove this is just that no errors occur on initila load of page
         const adapterDescription = new AdapterDescription('http://todo/ads1');
         adapterDescription.protocol = new ProtocolDescription('http://todo/p1');
         adapterDescription.format = new FormatDescription('http://todo/p2');
 
-        // const dataSet: DataSetDescription = new DataSetDescription('http://todo/ds2');
-        // dataSet.eventSchema = new EventSchema();
-        // adapterDescription.dataSet = dataSet;
+        const dataSet: DataSetDescription = new DataSetDescription('http://todo/ds2');
+        dataSet.eventSchema = new EventSchema();
+        adapterDescription['dataSet'] = dataSet;
 
         return adapterDescription;
     }
 
-    public protocolSelected(): boolean {
-        // set newAdapterDescription
-        return false;
+    public protocolSelected() {
+        var result: AdapterDescription;
 
-        // use protocol from selectedProtocol
+        if (this.selectedProtocol.sourceType == "STREAM") {
+            this.newAdapterDescription = new AdapterStreamDescription('http://todo/ads1');
+            const dataStream: DataStreamDescription = new DataStreamDescription('http://todo/ds2');
+            dataStream.eventSchema = new EventSchema();
+            (this.newAdapterDescription as AdapterStreamDescription).dataStream = dataStream;
+        } else if (this.selectedProtocol.sourceType == "SET") {
+            this.newAdapterDescription = new AdapterSetDescription('http://todo/ads1');
+            const dataSet: DataSetDescription = new DataSetDescription('http://todo/ds2');
+            dataSet.eventSchema = new EventSchema();
+            (this.newAdapterDescription as AdapterSetDescription).dataSet = dataSet;
+        } else {
+            this.logger.error('Currently just STREAM and SET are supported but the source type of the protocol was: ' +
+                this.selectedProtocol.sourceType);
+        }
+
+        this.newAdapterDescription.protocol = this.selectedProtocol;
 
     }
 
