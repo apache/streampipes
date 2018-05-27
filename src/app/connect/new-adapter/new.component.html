@@ -34,11 +34,11 @@
 
     <mat-step>
       <ng-template matStepLabel>Define Event Schema</ng-template>
-      <app-event-schema fxLayout="column" fxFlex="100" [(adapterDescription)]="newAdapterDescription"></app-event-schema>
+      <app-event-schema #eschema fxLayout="column" fxFlex="100" [(adapterDescription)]="newAdapterDescription"></app-event-schema>
 
         <div fxLayoutAlign="end">
           <button color="primary" mat-raised-button matStepperPrevious>Back</button>
-          <button color="primary" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
+          <button color="primary" (click)="eventSchemaComponent.onNext()" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
         </div>
     </mat-step>
 

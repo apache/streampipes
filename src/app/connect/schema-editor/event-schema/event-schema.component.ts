@@ -7,6 +7,7 @@ import {ProtocolDescription} from '../../model/ProtocolDescription';
 import {FormatDescription} from '../../model/FormatDescription';
 import {EventProperty} from '../model/EventProperty';
 import {GuessSchema} from '../model/GuessSchema';
+import {AdapterSetDescription} from '../../model/AdapterSetDescription';
 
 @Component({
     selector: 'app-event-schema',
@@ -34,15 +35,21 @@ export class EventSchemaComponent implements OnInit {
         this.isLoading = true;
         this.restService.getGuessSchema(this.adapterDescription).subscribe(x => {
             this.isLoading = false;
-            this.adapterDescription.dataSet.eventSchema  = x.eventSchema;
+            this.eventSchema  = x.eventSchema;
             this.schemaGuess = x;
         });
     }
 
     ngOnInit() {
-        if (this.adapterDescription.dataSet.eventSchema == null) {
-            this.adapterDescription.dataSet.eventSchema = new EventSchema();
-        }
+        this.eventSchema = new EventSchema();
+    }
+
+    onNext() {
+        if (this.adapterDescription.constructor.name == 'AdapterSetDescription') {
+             this.adapterDescription.dataSet.eventSchema = this.eventSchema;
+         } else {
+             this.adapterDescription.dataStream.eventSchema = this.eventSchema;
+         }
     }
 
 

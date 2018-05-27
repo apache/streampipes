@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import { ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {RestService} from '../rest.service';
 import {ProtocolDescription} from '../model/ProtocolDescription';
@@ -21,6 +22,7 @@ import {DataStreamDescription} from '../model/DataStreamDescription';
     styleUrls: ['./new.component.css']
 })
 export class NewComponent implements OnInit {
+    @ViewChild('eschema') eventSchemaComponent;
 
     isLinear = false;
     firstFormGroup: FormGroup;
