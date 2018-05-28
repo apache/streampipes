@@ -27,8 +27,9 @@ public class InitialSettings {
 	private String kafkaHost;
 	private String zookeeperHost;
 	private String jmsHost;
+	private Boolean installPipelineElements;
 
-	public InitialSettings(String adminEmail, String adminPassword, String couchDbHost, String sesameHost, String kafkaHost, String zookeeperHost, String jmsHost) {
+	public InitialSettings(String adminEmail, String adminPassword, String couchDbHost, String sesameHost, String kafkaHost, String zookeeperHost, String jmsHost, Boolean installPipelineElements) {
 		this.adminEmail = adminEmail;
 		this.adminPassword = adminPassword;
 		this.couchDbHost = couchDbHost;
@@ -36,6 +37,7 @@ public class InitialSettings {
 		this.kafkaHost = kafkaHost;
 		this.zookeeperHost = zookeeperHost;
 		this.jmsHost = jmsHost;
+		this.installPipelineElements = installPipelineElements;
 	}
 
 	public InitialSettings() {
@@ -95,5 +97,13 @@ public class InitialSettings {
 
 	public void setJmsHost(String jmsHost) {
 		this.jmsHost = jmsHost;
+	}
+
+	public Boolean getInstallPipelineElements() {
+		return installPipelineElements;
+	}
+
+	public void setInstallPipelineElements(Boolean installPipelineElements) {
+		this.installPipelineElements = installPipelineElements;
 	}
 }

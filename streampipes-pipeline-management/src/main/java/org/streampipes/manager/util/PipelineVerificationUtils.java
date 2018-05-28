@@ -17,21 +17,20 @@
 
 package org.streampipes.manager.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.streampipes.commons.exceptions.NoSepaInPipelineException;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.client.pipeline.Pipeline;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PipelineVerificationUtils {
 
 	/**
 	 * returns the root node of a partial pipeline (a pipeline without an action)
 	 * @param pipeline
-	 * @return @SEPAClient
-	 * @throws Exception
+	 * @return {@link org.streampipes.model.base.InvocableStreamPipesEntity}
 	 */
 
 	public static InvocableStreamPipesEntity getRootNode(Pipeline pipeline) throws NoSepaInPipelineException

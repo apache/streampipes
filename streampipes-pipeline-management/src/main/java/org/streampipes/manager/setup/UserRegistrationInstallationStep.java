@@ -52,12 +52,17 @@ public class UserRegistrationInstallationStep implements InstallationStep {
 			String encryptedPassword = PasswordUtil.encryptPassword(adminPassword);
 			StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().storeUser(new User(adminEmail,
 							encryptedPassword, roles));
-			return Arrays.asList(Notifications.success("Creating admin user..."));
+			return Arrays.asList(Notifications.success(getTitle()));
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 			e.printStackTrace();
 			return Arrays.asList(Notifications.error("Could not encrypt password"));
 		}
 
+	}
+
+	@Override
+	public String getTitle() {
+		return "Creating admin user...";
 	}
 
 }

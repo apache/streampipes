@@ -17,14 +17,13 @@
 
 package org.streampipes.manager.setup;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-
-
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.client.setup.InitialSettings;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 public class PropertiesFileInstallationStep implements InstallationStep {
 
@@ -43,11 +42,16 @@ public class PropertiesFileInstallationStep implements InstallationStep {
 //		try {
 //			ConfigurationManager.storeWebappConfigurationToProperties(file, pathToFile, settings);
 
-			return Arrays.asList(Notifications.success("Writing configuration to file..."));
+			return Arrays.asList(Notifications.success(getTitle()));
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //			return Arrays.asList(Notifications.error("Writing configuration to file..."));
 //		}
 	}
-	
+
+	@Override
+	public String getTitle() {
+		return "Writing configuration to file...";
+	}
+
 }

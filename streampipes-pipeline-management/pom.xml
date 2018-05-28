@@ -15,13 +15,12 @@
   ~
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.51.2-SNAPSHOT</version>
+        <version>0.55.3-SNAPSHOT</version>
     </parent>
     <artifactId>streampipes-pipeline-management</artifactId>
 
@@ -57,16 +56,6 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-pe-processors-esper</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-pe-sources-samples</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
@@ -108,7 +97,9 @@
             <artifactId>json</artifactId>
             <version>20180130</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-container</artifactId>
+        </dependency>
     </dependencies>
 </project>

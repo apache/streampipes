@@ -15,11 +15,7 @@
  *
  */
 
-package org.streampipes.rest.http;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.logging.Logger;
+package org.streampipes.manager.endpoint;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -27,6 +23,10 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.logging.Logger;
 
 
 @SuppressWarnings("deprecation")

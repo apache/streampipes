@@ -14,20 +14,13 @@
  * limitations under the License.
  *
  */
-
 package org.streampipes.rest.api;
 
-import org.streampipes.model.client.setup.InitialSettings;
+import org.streampipes.model.SpDataStream;
 
 import javax.ws.rs.core.Response;
 
-public interface ISetup {
+public interface IPipelineElementRuntimeInfo {
 
-	Response isConfigured();
-
-	Response configure(InitialSettings settings, Integer currentInstallationStep);
-
-	Response getConfiguration();
-
-	Response updateConfiguration(InitialSettings settings);
+  Response getRuntimeInfo(SpDataStream spDataStream);
 }
