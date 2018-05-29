@@ -1,0 +1,9 @@
+<section class="checkbox-field" fxLayout="row" fxLayoutAlign="space-between center">
+    <mat-checkbox matInput [(ngModel)]="configuration.value" type="checkbox"
+                  [ngModelOptions]="{standalone: true}">
+        {{configuration.key}}
+    </mat-checkbox>
+    <mat-icon [matTooltip]="configuration.description" matTooltipPosition="left" class="tooltip-icon">
+        help
+    </mat-icon>
+</section>

@@ -7,6 +7,14 @@ import { FormsModule } from '@angular/forms';
 import { ConfigurationComponent } from './configuration.component';
 import { ConfigurationService } from './shared/configuration.service';
 import { ConsulServiceComponent } from './consul-service/consul-service.component';
+import {PasswordFieldComponent} from './password-field/password-field.component';
+import {ConsulConfigsComponent} from './consul-configs/consul-configs.component';
+import {ConsulConfigsTextComponent} from './consul-configs-text/consul-configs-text.component';
+import {ConsulConfigsPasswordComponent} from './consul-configs-password/consul-configs-password.component';
+import {ConsulConfigsBooleanComponent} from './consul-configs-boolean/consul-configs-boolean.component';
+import {ConsulConfigsNumberComponent} from './consul-configs-number/consul-configs-number.component';
+
+
 
 @NgModule({
     imports: [
@@ -22,7 +30,13 @@ import { ConsulServiceComponent } from './consul-service/consul-service.componen
     ],
     declarations: [
         ConfigurationComponent,
-        ConsulServiceComponent
+        ConsulServiceComponent,
+        PasswordFieldComponent,
+        ConsulConfigsComponent,
+        ConsulConfigsTextComponent,
+        ConsulConfigsPasswordComponent,
+        ConsulConfigsBooleanComponent,
+        ConsulConfigsNumberComponent
     ],
     providers: [
         ConfigurationService

@@ -8,6 +8,7 @@ import { ConsulService } from './consul-service.model';
 @Injectable()
 export class ConfigurationService {
 
+    
     constructor(private http: HttpClient) {
     }
 
