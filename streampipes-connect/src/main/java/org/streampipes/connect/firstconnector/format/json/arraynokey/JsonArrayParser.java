@@ -21,26 +21,13 @@ import java.util.*;
 public class JsonArrayParser extends Parser {
 
     Logger logger = LoggerFactory.getLogger(JsonArrayParser.class);
-    private boolean isArray;
-    private String key = "";
 
 
     @Override
     public Parser getInstance(FormatDescription formatDescription) {
         ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
-        String key = extractor.singleValue("key");
 
-        return new JsonArrayParser(true, key);
-    }
-
-    /**
-     * Use this constructor when just a specific key of the object should be parsed
-     * @param isArray
-     * @param key
-     */
-    public JsonArrayParser(boolean isArray, String key) {
-        this.isArray = isArray;
-        this.key = key;
+        return new JsonArrayParser();
     }
 
     public JsonArrayParser() {
@@ -52,22 +39,11 @@ public class JsonArrayParser extends Parser {
         String s = data.toString();
         javax.json.stream.JsonParser jsonParser = factory.createParser(data);
 
-        //Find the array in the document by key
-        if (!key.equals("")) {
-            boolean found = false;
-            while (jsonParser.hasNext() && !found) {
-                javax.json.stream.JsonParser.Event event = jsonParser.next();
-                if (event.equals(javax.json.stream.JsonParser.Event.KEY_NAME) && jsonParser.getString().equals(key)) {
-                    found = true;
-                }
-            }
-        }
-
         // Find first event in array
         boolean foundBeginning = false;
         while (jsonParser.hasNext() && !foundBeginning ) {
             javax.json.stream.JsonParser.Event event = jsonParser.next();
-            if (isArray && event.equals(javax.json.stream.JsonParser.Event.START_ARRAY)) {
+            if (event.equals(javax.json.stream.JsonParser.Event.START_ARRAY)) {
                 foundBeginning = true;
             }
         }

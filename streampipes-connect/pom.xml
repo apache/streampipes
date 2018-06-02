@@ -59,6 +59,18 @@
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20180130</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 </project>

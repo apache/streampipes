@@ -16,6 +16,7 @@ import org.streampipes.vocabulary.XSD;
 
 import javax.json.Json;
 import javax.json.stream.JsonParserFactory;
+import javax.json.stream.JsonParsingException;
 import java.io.InputStream;
 import java.util.*;
 
@@ -45,23 +46,31 @@ public class JsonObjectParser extends Parser {
         boolean isEvent = true;
         boolean result = true;
         int objectCount = 0;
-        while (jsonParser.hasNext() && isEvent && result) {
-            Map<String, Object> objectMap = parseObject(jsonParser, true, 1);
-            if (objectMap != null) {
-                byte[] tmp = new byte[0];
-                try {
-                    tmp = jsonDefinition.fromMap(objectMap);
-                } catch (SpRuntimeException e) {
-                    e.printStackTrace();
-                }
+
+        try {
+            while (jsonParser.hasNext() && isEvent && result) {
+                Map<String, Object> objectMap = parseObject(jsonParser, true, 1);
+                if (objectMap != null) {
+                    byte[] tmp = new byte[0];
+                    try {
+                        tmp = jsonDefinition.fromMap(objectMap);
+                    } catch (SpRuntimeException e) {
+                        e.printStackTrace();
+                    }
 //                    handleEvent(new EventObjectEndEvent(parseObject(tmp)));
-                // TODO decide what happens id emit returns false
-                result = emitBinaryEvent.emit(tmp);
-            } else {
-                isEvent = false;
+                    // TODO decide what happens id emit returns false
+                    result = emitBinaryEvent.emit(tmp);
+                } else {
+                    isEvent = false;
+                }
             }
 
+        } catch(JsonParsingException e) {
+            logger.error("Error. Currently just one Object is supported in JSONObjectParser");
+
         }
+
+
     }
 
     @Override
@@ -127,14 +136,14 @@ public class JsonObjectParser extends Parser {
             resultProperty.setRuntimeName(key);
             List<EventProperty> all = new ArrayList<>();
             for (Map.Entry<String, Object> entry : ((Map<String, Object>) o).entrySet()) {
-               all.add(getEventProperty(entry.getKey(), entry.getValue()));
+                all.add(getEventProperty(entry.getKey(), entry.getValue()));
             }
 
             ((EventPropertyNested) resultProperty).setEventProperties(all);
 
         } else if (o.getClass().equals(ArrayList.class)) {
-           resultProperty = new EventPropertyList();
-           resultProperty.setRuntimeName(key);
+            resultProperty = new EventPropertyList();
+            resultProperty.setRuntimeName(key);
         }
 
         if (resultProperty == null) {

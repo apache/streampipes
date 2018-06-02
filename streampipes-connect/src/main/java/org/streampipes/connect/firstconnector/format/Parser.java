@@ -23,5 +23,10 @@ public abstract class Parser {
         return gne.getEvents();
     }
 
+    /**
+     * Get Schema should just assume that one element can be parsed
+     * @param data
+     * @return
+     */
     public abstract EventSchema getSchema(InputStream data);
 }

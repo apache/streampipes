@@ -116,33 +116,10 @@ public class HttpProtocol extends Protocol {
     private List<DomainPropertyProbabilityList> getDomainPropertyList(String data, EventSchema eventSchema) {
 
         List<DomainPropertyProbabilityList> allDomainPropertyProbabilities = new ArrayList<>();
-        List<byte[]> nEvents = null;
-        try {
-            nEvents = parser.parseNEvents(IOUtils.toInputStream(data, "UTF-8"), 20);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        List<Map<String, Object>> nEventsParsed = new ArrayList<>();
 
-        for (byte[] b : nEvents) {
-            nEventsParsed.add(format.parse(b));
-        }
-
+        List<Map<String, Object>> nEventsParsed = getNElements(20);
         allDomainPropertyProbabilities.addAll(getDomainPropertyProbabitlyList(eventSchema.getEventProperties(), nEventsParsed, new ArrayList<>()));
-//        for (EventProperty ep : eventSchema.getEventProperties()) {
-//            if (!ep.getRuntimeName().equals("tags")) {
-//                List<Object> tmp = new ArrayList<>();
-//                for (Map<String, Object> event : nEventsParsed) {
-//                    tmp.add(event.get(ep.getRuntimeName()));
-//
-//                }
-//
-//                DomainPropertyProbabilityList resultList = GetTrainingData.getDomainPropertyProbability(tmp.toArray());
-//                resultList.setRuntimeName(ep.getRuntimeName());
-//                allDomainPropertyProbabilities.add(resultList);
-//            }
-//
-//        }
+
 
         return allDomainPropertyProbabilities;
     }
@@ -180,6 +157,8 @@ public class HttpProtocol extends Protocol {
 
     @Override
     public List<Map<String, Object>> getNElements(int n) {
+
+
         //TODO just hot fix to test the system
         String s = "";
         List<Map<String, Object>> result = new ArrayList<>();
@@ -189,6 +168,9 @@ public class HttpProtocol extends Protocol {
                     .connectTimeout(1000)
                     .socketTimeout(100000)
                     .execute().returnContent().asString();
+
+
+            // TODO what happens when N is higher then the number of events in set
 
             List<byte[]> tmp = parser.parseNEvents(IOUtils.toInputStream(s, "UTF-8"), n);
 

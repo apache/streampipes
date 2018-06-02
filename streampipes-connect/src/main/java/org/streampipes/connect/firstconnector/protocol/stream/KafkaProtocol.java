@@ -63,8 +63,8 @@ public class KafkaProtocol extends Protocol {
                 "Topic in the broker");
 
         //TODO remove, just for debugging
-        broker.setValue("141.21.42.75:9092");
-        topic.setValue("SEPA.SEP.Random.Number.Json");
+//        broker.setValue("141.21.42.75:9092");
+//        topic.setValue("SEPA.SEP.Random.Number.Json");
 
         pd.addConfig(broker);
         pd.addConfig(topic);
@@ -80,6 +80,15 @@ public class KafkaProtocol extends Protocol {
 
     @Override
     public List<Map<String, Object>> getNElements(int n) {
+
+        // TODO it seems getNElements is not used in the HTTP Protocol and this is resolved by the parser
+        // Question why is getNElements in the parser and in the protocol??????
+
+
+        // TODO open a connection and wait for n elements
+
+        // TODO check if it is possible to get the last n elements of kafka
+
         return null;
     }
 
