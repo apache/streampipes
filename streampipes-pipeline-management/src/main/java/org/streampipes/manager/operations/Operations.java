@@ -19,6 +19,7 @@ package org.streampipes.manager.operations;
 
 import org.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
 import org.streampipes.commons.exceptions.SepaParseException;
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.manager.endpoint.EndpointItemFetcher;
 import org.streampipes.manager.execution.http.PipelineExecutor;
 import org.streampipes.manager.execution.http.PipelineStorageService;
@@ -26,6 +27,7 @@ import org.streampipes.manager.matching.DataSetGroundingSelector;
 import org.streampipes.manager.matching.PipelineVerificationHandler;
 import org.streampipes.manager.recommender.ElementRecommender;
 import org.streampipes.manager.remote.ContainerProvidedOptionsHandler;
+import org.streampipes.manager.runtime.PipelineElementRuntimeInfoFetcher;
 import org.streampipes.manager.template.PipelineTemplateGenerator;
 import org.streampipes.manager.template.PipelineTemplateInvocationGenerator;
 import org.streampipes.manager.template.PipelineTemplateInvocationHandler;
@@ -149,5 +151,9 @@ public class Operations {
 
   public static PipelineTemplateInvocation getPipelineInvocationTemplate(SpDataStream dataStream, PipelineTemplateDescription pipelineTemplateDescription) {
     return new PipelineTemplateInvocationGenerator(dataStream, pipelineTemplateDescription).generateInvocation();
+  }
+
+  public static String getRuntimeInfo(SpDataStream spDataStream) throws SpRuntimeException {
+    return new PipelineElementRuntimeInfoFetcher(spDataStream).getCurrentData();
   }
 }

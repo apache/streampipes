@@ -31,7 +31,7 @@ import org.streampipes.manager.storage.UserService;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.client.messages.*;
 import org.streampipes.model.client.messages.Notification;
-import org.streampipes.rest.http.HttpJsonParser;
+import org.streampipes.manager.endpoint.HttpJsonParser;
 import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.api.*;

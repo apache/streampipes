@@ -17,11 +17,13 @@
 
 package org.streampipes.manager.setup;
 
-import java.util.List;
-
 import org.streampipes.model.client.messages.Message;
+
+import java.util.List;
 
 public interface InstallationStep {
 
 	List<Message> install();
+
+	String getTitle();
 }

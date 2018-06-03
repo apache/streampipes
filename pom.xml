@@ -21,7 +21,7 @@
 
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.51.2-SNAPSHOT</version>
+    <version>0.55.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -31,7 +31,6 @@
         <logback-classic.version>1.1.9</logback-classic.version>
         <jackson.version>2.7.4</jackson.version>
         <type-parser.version>0.6.0</type-parser.version>
-        <simple-slack-api.version>0.5.1</simple-slack-api.version>
         <consul-client.version>1.1.1</consul-client.version>
         <persistence-api.version>1.0.2</persistence-api.version>
         <junit.version>4.12</junit.version>
@@ -44,14 +43,6 @@
     <name>StreamPipes Parent Pom</name>
     <description>StreamPipes</description>
     <url>https://streampipes.org</url>
-
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
 
     <dependencyManagement>
         <dependencies>
@@ -69,11 +60,6 @@
                 <groupId>com.github.drapostolos</groupId>
                 <artifactId>type-parser</artifactId>
                 <version>${type-parser.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.Ullink</groupId>
-                <artifactId>simple-slack-api</artifactId>
-                <version>${simple-slack-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -203,22 +189,12 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-sinks-standalone</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-connect</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-processors-standalone</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -258,11 +234,6 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-processors-esper</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pipeline-management</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -283,27 +254,12 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-mixed-flink</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-wrapper-spark</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-mixed-spark</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-sources</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-slack</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -339,21 +295,6 @@
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-backend</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-sources-hella</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-sources-mhwirth</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-sources-samples</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -501,6 +442,15 @@
 
     <!-- Build Settings -->
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -510,13 +460,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <additionalparam>${javadoc.opts}</additionalparam>
-                    <aggregate>true</aggregate>
-                    <excludePackageNames>org.streampipes.pe</excludePackageNames>
-                    <doclint>none</doclint>
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>external.atlassian.jgitflow</groupId>
@@ -592,42 +546,79 @@
                     <failOnViolation>false</failOnViolation>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <gpgArguments>
+                        <arg>--pinentry-mode</arg>
+                        <arg>loopback</arg>
+                    </gpgArguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
         </plugins>
 
     </build>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce-backend.git
+        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce.git
         </developerConnection>
+        <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce.git</connection>
+        <url>https://github.com/streampipes/streampipes-ce</url>
     </scm>
-    <repositories>
-        <repository>
-            <id>laus</id>
-            <name>nexus repository</name>
-            <url>http://laus.fzi.de/nexus/content/repositories/public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>apache</id>
-            <url>https://repository.apache.org/content/repositories/releases/</url>
-        </repository>
-    </repositories>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Dominik Riemer</name>
+            <email>riemer@fzi.de</email>
+        </developer>
+        <developer>
+            <name>Philipp Zehnder</name>
+            <email>zehnder@fzi.de</email>
+        </developer>
+    </developers>
 
     <distributionManagement>
         <repository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/releases/</url>
+            <id>sonatype</id>
+            <name>Releases</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
         <snapshotRepository>
             <id>deployment</id>
-            <name>Internal Snapshots</name>
+            <name>Internal Releases</name>
             <url>https://laus.fzi.de/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>

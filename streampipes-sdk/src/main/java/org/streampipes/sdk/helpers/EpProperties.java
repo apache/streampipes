@@ -242,7 +242,7 @@ public class EpProperties {
 	 * Creates a new primitive property of type integer and the provided domain property.
 	 * @param label A human-readable identifier of the property presented to users in the StreamPipes UI. If you do not
 	 *              want to have a label besides the runtime name, use
-	 *              {@link org.streampipes.sdk.helpers.Labels.empty()}
+	 *              {@link org.streampipes.sdk.helpers.Labels}
 	 * @param runtimeName The field identifier of the event property at runtime.
 	 * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
 	 *                        provided by a vocabulary. Use one of the vocabularies provided in

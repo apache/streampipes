@@ -59,7 +59,7 @@ public class SesameDbInstallationStep implements InstallationStep {
 				backendConfig = new ForwardChainingRDFSInferencerConfig(backendConfig);
 				config.setRepositoryImplConfig(new SailRepositoryConfig(backendConfig));
 				manager.addRepositoryConfig(config);
-				msgs.add(Notifications.success("Creating Sesame database..."));
+				msgs.add(Notifications.success(getTitle()));
 				boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().initialize();
 				if (success) msgs.add(Notifications.success("Adding schema..."));
 				else msgs.add(Notifications.error("Adding schema..."));
@@ -71,5 +71,10 @@ public class SesameDbInstallationStep implements InstallationStep {
 			return Arrays.asList(Notifications.error("Retrieving Sesame databases..."));
 		} 
 		return msgs;
+	}
+
+	@Override
+	public String getTitle() {
+		return "Creating Sesame database...";
 	}
 }

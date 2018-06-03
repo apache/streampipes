@@ -30,7 +30,7 @@ import java.util.*;
 
 public class CouchDbInstallationStep implements InstallationStep {
 
-    private static List<String> initRdfEndpointPorts = Arrays.asList("8089", "8090", "8091", "8094", "8030/sources-mhwirth", "8030/sources-hella");
+    private static List<String> initRdfEndpointPorts = Arrays.asList();
     private static final String initRdfEndpointHost = "http://localhost:";
 
     public CouchDbInstallationStep() {
@@ -44,6 +44,11 @@ public class CouchDbInstallationStep implements InstallationStep {
         msgs.addAll(createViews());
         msgs.add(addRdfEndpoints());
         return msgs;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Creating CouchDB databases...";
     }
 
     private List<Message> createDatabases() {
@@ -60,9 +65,9 @@ public class CouchDbInstallationStep implements InstallationStep {
             Utils.getCouchDbDashboardClient();
             Utils.getCouchDbVisualizablePipelineClient();
 
-            return Arrays.asList(Notifications.success("Creating CouchDB databases..."));
+            return Arrays.asList(Notifications.success(getTitle()));
         } catch (Exception e) {
-            return Arrays.asList(Notifications.error("Creating CouchDB databases..."));
+            return Arrays.asList(Notifications.error(getTitle()));
         }
     }
 

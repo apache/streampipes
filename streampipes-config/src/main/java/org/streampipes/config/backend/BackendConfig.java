@@ -36,6 +36,8 @@ public enum BackendConfig {
   private final static String ELASTICSEARCH_PORT ="elasticsearch_port";
   private final static String ELASTICSEARCH_PROTOCOL = "elasticsearch_protocol";
   private final static String IS_CONFIGURED = "is_configured";
+  private final static String KAFKA_REST_HOST = "kafka_rest_host";
+  private final static String KAFKA_REST_PORT = "kafka_rest_port";
 
   BackendConfig() {
     config = SpConfig.getSpConfig("backend");
@@ -54,6 +56,8 @@ public enum BackendConfig {
     config.register(ELASTICSEARCH_PROTOCOL, "http", "Protocol the elasticsearch service");
     config.register(IS_CONFIGURED, false, "Boolean that indicates whether streampipes is " +
             "already configured or not");
+    config.register(KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
+    config.register(KAFKA_REST_PORT, 8073, "The port of the kafka-rest module");
 
   }
 
@@ -128,6 +132,20 @@ public enum BackendConfig {
   public String getElasticsearchURL() {
     return getElasticsearchProtocol()+ "://" + getElasticsearchHost() + ":" + getElasticsearchPort();
   }
+
+  public String getKafkaRestHost() {
+    return config.getString(KAFKA_REST_HOST);
+  }
+
+  public Integer getKafkaRestPort() {
+    return config.getInteger(KAFKA_REST_PORT);
+  }
+
+  public String getKafkaRestUrl() {
+    return "http://" +getKafkaRestHost() +":" +getKafkaRestPort();
+  }
+
+
 
 
 

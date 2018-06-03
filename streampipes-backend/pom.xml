@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.51.2-SNAPSHOT</version>
+		<version>0.55.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>streampipes-backend</artifactId>
 	<packaging>war</packaging>
@@ -55,6 +55,12 @@
 				<version>2.4</version>
 				<configuration>
 					<webXml>src\main\webapp\WEB-INF\web.xml</webXml>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+					</archive>
 				</configuration>
 			</plugin>
 		</plugins>

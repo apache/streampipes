@@ -51,7 +51,7 @@ public class ProcessingElementBuilder extends AbstractProcessingElementBuilder<P
      * Assigns an output strategy to the element which defines the output the data processor produces.
      * @param outputStrategy An {@link org.streampipes.model.output.OutputStrategy}. Use
      * {@link org.streampipes.sdk.helpers.OutputStrategies} to assign the strategy.
-     * @return @link{{@link ProcessingElementBuilder}}
+     * @return {@link ProcessingElementBuilder}
      */
     public ProcessingElementBuilder outputStrategy(OutputStrategy outputStrategy) {
         this.outputStrategies.add(outputStrategy);
@@ -61,7 +61,7 @@ public class ProcessingElementBuilder extends AbstractProcessingElementBuilder<P
     /**
      * Assigns a category to the element which later serves to categorize data processors in the UI.
       * @param epaCategory The {@link org.streampipes.model.DataProcessorType} of the element.
-     * @return @link{{@link ProcessingElementBuilder}}
+     * @return {@link ProcessingElementBuilder}
      */
     public ProcessingElementBuilder category(DataProcessorType... epaCategory) {
         this.elementDescription.setCategory(Arrays
