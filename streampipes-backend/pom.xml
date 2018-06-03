@@ -55,6 +55,12 @@
 				<version>2.4</version>
 				<configuration>
 					<webXml>src\main\webapp\WEB-INF\web.xml</webXml>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+					</archive>
 				</configuration>
 			</plugin>
 		</plugins>

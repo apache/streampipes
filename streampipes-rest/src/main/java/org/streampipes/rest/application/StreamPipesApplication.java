@@ -65,6 +65,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(PipelineTemplate.class);
         apiClasses.add(Couchdb.class);
         apiClasses.add(PipelineElementRuntimeInfo.class);
+        apiClasses.add(Version.class);
 
 
         // Serializers
