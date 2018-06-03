@@ -9,6 +9,7 @@ import { NewComponent } from '../connect/new-adapter/new.component';
 import { KviComponent } from '../kvi/kvi.component';
 import { MainComponent } from '../connect/main/main.component';
 import { KviVisualizationComponent } from '../kvi-visualization/kvi-visualization.component';
+import { InfoComponent } from '../info/info.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
@@ -233,5 +234,13 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                     component: KviVisualizationComponent
                 }
             }
-        });
+        })
+        .state('streampipes.info', {
+        url: '/info',
+        views: {
+            'spMain@streampipes': {
+                component: InfoComponent
+            }
+        }
+    });
 };

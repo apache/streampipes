@@ -132,13 +132,16 @@ export class AppCtrl {
                     }
                 });
                 this.notificationCount = notificationCount;
-                console.log('count');
-                console.log(this.notificationCount);
             })
             .error(function (msg) {
                 console.log(msg);
             });
     };
+
+    openInfo() {
+        this.$state.go("streampipes.info");
+        this.activePage = "Info";
+    }
 
     // TODO: Function overloading?
     go(path, payload?) {

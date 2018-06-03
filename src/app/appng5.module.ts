@@ -20,6 +20,7 @@ import { AppContainerModule } from './app-container/app-container.module';
 import { KviModule } from './kvi/kvi.module';
 import { KviVisualizationModule } from './kvi-visualization/kvi-visualization.module';
 import { PipelineLogsModule } from './pipeline-logs/pipeline-logs.module';
+import { InfoModule } from "./info/info.module";
 
 @NgModule({
     imports: [
@@ -40,7 +41,8 @@ import { PipelineLogsModule } from './pipeline-logs/pipeline-logs.module';
         KviModule,
         KviVisualizationModule,
         AppContainerModule,
-        PipelineLogsModule
+        PipelineLogsModule,
+        InfoModule
     ],
     providers: [
         AuthStatusService
