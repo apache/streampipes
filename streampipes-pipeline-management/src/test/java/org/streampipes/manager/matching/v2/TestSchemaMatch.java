@@ -19,9 +19,14 @@ package org.streampipes.manager.matching.v2;
 
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.client.matching.MatchingResultMessage;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
+import org.streampipes.pe.sources.samples.random.RandomDataProducer;
+import org.streampipes.pe.sources.samples.random.RandomNumberStreamJson;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
@@ -108,15 +113,15 @@ public class TestSchemaMatch extends TestCase {
 	@Test
 	public void testPositiveSchemaMatchWithRealSchema() {
 
-//		DataProcessorDescription requiredSepa = new AggregationController().declareModel();
-//		SpDataStream offeredStream = new RandomNumberStreamJson().declareModel(new RandomDataProducer().declareModel());
-//
-//		EventSchema offeredSchema =  offeredStream.getEventSchema();
-//		EventSchema requiredSchema = requiredSepa.getSpDataStreams().get(0).getEventSchema();
-//
-//		List<MatchingResultMessage> errorLog = new ArrayList<>();
-//
-//		boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
-//		assertTrue(matches);
+		DataProcessorDescription requiredSepa = new AggregationController().declareModel();
+		SpDataStream offeredStream = new RandomNumberStreamJson().declareModel(new RandomDataProducer().declareModel());
+		
+		EventSchema offeredSchema =  offeredStream.getEventSchema();
+		EventSchema requiredSchema = requiredSepa.getSpDataStreams().get(0).getEventSchema();
+		
+		List<MatchingResultMessage> errorLog = new ArrayList<>();
+		
+		boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
+		assertTrue(matches);
 	}
 }

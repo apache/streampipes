@@ -1,9 +1,11 @@
 package org.streampipes.rest.impl;
 
 import org.streampipes.manager.operations.Operations;
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.streampipes.model.template.PipelineTemplateInvocation;
@@ -20,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -44,10 +47,13 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response generatePipeline(@PathParam("username") String username, String pipelineTemplateInvocationString) {
+    public Response generatePipeline(@PathParam("username") String username, String pipelineTemplateDescriptionString) {
         try {
-            PipelineTemplateInvocation pipelineTemplateInvocation = new JsonLdTransformer(StreamPipes.PIPELINE_TEMPLATE_INVOCATION).fromJsonLd(pipelineTemplateInvocationString, PipelineTemplateInvocation.class);
-            PipelineOperationStatus status = Operations.handlePipelineTemplateInvocation(username, pipelineTemplateInvocation);
+            PipelineTemplateDescription pipelineTemplateDescription = new JsonLdTransformer(StreamPipes.PIPELINE_TEMPLATE_DESCRIPTION)
+                    .fromJsonLd(pipelineTemplateDescriptionString, PipelineTemplateDescription.class);
+
+            PipelineTemplateInvocation invocation = Operations.getPipelineInvocationTemplate(getLogDataStream(), pipelineTemplateDescription);
+            PipelineOperationStatus status = Operations.handlePipelineTemplateInvocation(username, invocation);
 
             return ok(status);
         } catch (IOException e) {
@@ -60,14 +66,12 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
     private PipelineTemplateDescription makeSaveToElasticTemplate() throws URISyntaxException {
         return new PipelineTemplateDescription(PipelineTemplateBuilder.create("logs-to-Elastic", "Save Logs", "Save all logs in Elastic-Search")
                 .boundPipelineElementTemplate(BoundPipelineElementBuilder
-                    .create(getProcessor("http://localhost:8089/sep/log"))
-                .connectTo(BoundPipelineElementBuilder
-                    .create(getSink("http://pe-flink-samples:8090/sec/elasticsearch"))
+                  //  .create(getSink("http://pe-flink-samples:8090/sec/elasticsearch"))
+                    .create(getSink("http://192.168.0.17:8094/sec/elasticsearch"))
                         .withPredefinedFreeTextValue("index-name", "streampipes-log")
-                        .withPredefinedSelection("timestamp", Collections.singletonList("time"))
+                        .withPredefinedSelection("timestamp", Collections.singletonList("epochTime"))
                     .build())
-                .build())
-        .build());
+                .build());
     }
 
     private DataProcessorDescription getProcessor(String id) throws URISyntaxException {
@@ -85,6 +89,26 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
                 .INSTANCE
                 .getTripleStore()
                 .getStorageAPI();
+    }
+
+    private List<SpDataStream> getAllDataStreams() {
+        List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllSEPs();
+        List<SpDataStream> datasets = new ArrayList<>();
+        for(DataSourceDescription source : sources) {
+            datasets.addAll(source
+                    .getSpDataStreams());
+        }
+
+        return datasets;
+    }
+
+    private SpDataStream getLogDataStream() {
+        return getAllDataStreams()
+                .stream()
+                //.filter(sp -> sp.getElementId().equals("http://pe-sources-samples:8090/sep/source-log/log-source"))
+                .filter(sp -> sp.getElementId().equals("http://192.168.0.17:8089/sep/source-log/log-source"))
+                .findFirst()
+                .get();
     }
 
 
