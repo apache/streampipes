@@ -65,6 +65,7 @@ import org.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
 import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
+import org.streampipes.model.template.BoundPipelineElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -262,5 +263,9 @@ public class Cloner {
     } else {
       return new WildcardTopicDefinition((WildcardTopicDefinition) topicDefinition);
     }
+  }
+
+  public List<BoundPipelineElement> boundPipelineElements(List<BoundPipelineElement> boundPipelineElements) {
+    return boundPipelineElements.stream().map(BoundPipelineElement::new).collect(Collectors.toList());
   }
 }

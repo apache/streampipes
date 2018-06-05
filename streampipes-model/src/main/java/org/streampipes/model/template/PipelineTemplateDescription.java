@@ -20,10 +20,14 @@ import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.RDFS;
 import org.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,9 +44,9 @@ public class PipelineTemplateDescription extends UnnamedStreamPipesEntity {
   @RdfProperty(RDFS.DESCRIPTION)
   private String pipelineTemplateDescription;
 
-  //@OneToMany(fetch = FetchType.EAGER,
-  //        cascade = {CascadeType.ALL})
-  //@RdfProperty(StreamPipes.IS_CONNECTED_TO)
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.IS_CONNECTED_TO)
   private List<BoundPipelineElement> connectedTo;
 
   public PipelineTemplateDescription() {
@@ -58,7 +62,9 @@ public class PipelineTemplateDescription extends UnnamedStreamPipesEntity {
   public PipelineTemplateDescription(PipelineTemplateDescription other) {
     super(other);
     // TODO use cloner
-    this.connectedTo = other.getConnectedTo();
+    if (other.getConnectedTo() != null) {
+      this.connectedTo = new Cloner().boundPipelineElements(other.getConnectedTo());
+    }
     this.pipelineTemplateName = other.getPipelineTemplateName();
     this.pipelineTemplateDescription = other.getPipelineTemplateDescription();
     this.pipelineTemplateId = other.getPipelineTemplateId();

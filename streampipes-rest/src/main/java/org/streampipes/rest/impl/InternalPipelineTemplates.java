@@ -67,7 +67,7 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
         return new PipelineTemplateDescription(PipelineTemplateBuilder.create("logs-to-Elastic", "Save Logs", "Save all logs in Elastic-Search")
                 .boundPipelineElementTemplate(BoundPipelineElementBuilder
                   //  .create(getSink("http://pe-flink-samples:8090/sec/elasticsearch"))
-                    .create(getSink("http://192.168.0.17:8094/sec/elasticsearch"))
+                    .create(getSink("http://localhost:8091/sec/elasticsearch"))
                         .withPredefinedFreeTextValue("index-name", "streampipes-log")
                         .withPredefinedSelection("timestamp", Collections.singletonList("epochTime"))
                     .build())
@@ -106,7 +106,7 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
         return getAllDataStreams()
                 .stream()
                 //.filter(sp -> sp.getElementId().equals("http://pe-sources-samples:8090/sep/source-log/log-source"))
-                .filter(sp -> sp.getElementId().equals("http://192.168.0.17:8089/sep/source-log/log-source"))
+                .filter(sp -> sp.getElementId().equals("http://localhost:8090/sep/source-log/log-source"))
                 .findFirst()
                 .get();
     }
