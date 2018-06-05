@@ -98,17 +98,15 @@ public class JsonParser extends Parser {
     }
 
     @Override
-    public EventSchema getSchema(InputStream data) {
+    public EventSchema getEventSchema(byte[] oneEvent) {
         EventSchema resultSchema = new EventSchema();
-
-        List<byte[]> nEvents = parseNEvents(data, 1);
 
         JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
 
         Map<String, Object> exampleEvent = null;
 
         try {
-            exampleEvent = jsonDefinition.toMap(nEvents.get(0));
+            exampleEvent = jsonDefinition.toMap(oneEvent);
         } catch (SpRuntimeException e) {
             e.printStackTrace();
         }

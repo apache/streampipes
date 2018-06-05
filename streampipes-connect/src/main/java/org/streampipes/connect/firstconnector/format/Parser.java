@@ -24,9 +24,9 @@ public abstract class Parser {
     }
 
     /**
-     * Get Schema should just assume that one element can be parsed
-     * @param data
+     * Pass one event to Parser to get the event schema
+     * @param oneEvent
      * @return
      */
-    public abstract EventSchema getSchema(InputStream data);
+    public abstract EventSchema getEventSchema(byte[] oneEvent);
 }

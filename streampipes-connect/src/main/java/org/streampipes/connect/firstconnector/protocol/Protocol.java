@@ -16,7 +16,7 @@ public abstract class Protocol {
 
     public abstract ProtocolDescription declareModel();
 
-    public abstract GuessSchema getSchema();
+    public abstract GuessSchema getGuessSchema();
 
     public abstract List<Map<String, Object>> getNElements(int n);
 

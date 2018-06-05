@@ -83,7 +83,7 @@ public class FileProtocol extends Protocol {
 
 
     @Override
-    public GuessSchema getSchema() {
+    public GuessSchema getGuessSchema() {
         EventSchema result = null;
 
         FileReader fr = null;
@@ -93,7 +93,7 @@ public class FileProtocol extends Protocol {
             BufferedReader br = new BufferedReader(fr);
 
             InputStream inn = new FileInputStream(fileUri);
-            result = parser.getSchema(inn);
+            result = parser.getEventSchema(parser.parseNEvents(inn, 1).get(0));
 
             fr.close();
         } catch (FileNotFoundException e) {

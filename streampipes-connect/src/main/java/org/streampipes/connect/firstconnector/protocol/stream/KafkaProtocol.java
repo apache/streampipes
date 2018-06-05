@@ -12,7 +12,6 @@ import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.model.modelconnect.GuessSchema;
 import org.streampipes.model.modelconnect.ProtocolDescription;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 
 import java.io.IOException;
@@ -72,9 +71,9 @@ public class KafkaProtocol extends Protocol {
     }
 
     @Override
-    public GuessSchema getSchema() {
+    public GuessSchema getGuessSchema() {
         GuessSchema result = new GuessSchema();
-        result.setEventSchema(parser.getSchema(null));
+        result.setEventSchema(parser.getEventSchema(null));
         return result;
     }
 

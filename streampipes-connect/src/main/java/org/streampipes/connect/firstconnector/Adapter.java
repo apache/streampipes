@@ -78,7 +78,7 @@ public class Adapter {
 
         logger.debug("Extract schema with format: " + format.getId() + " and " + protocol.getId());
 
-        return protocol.getSchema();
+        return protocol.getGuessSchema();
     }
 
 

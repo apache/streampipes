@@ -74,32 +74,30 @@ public class JsonObjectParser extends Parser {
     }
 
     @Override
-    public EventSchema getSchema(InputStream data) {
+    public EventSchema getEventSchema(byte[] oneEvent) {
         EventSchema resultSchema = new EventSchema();
 
-        resultSchema.setEventProperties(Arrays.asList(EpProperties.timestampProperty("timestamp")));
+//        resultSchema.setEventProperties(Arrays.asList(EpProperties.timestampProperty("timestamp")));
 
-//        List<byte[]> nEvents = parseNEvents(data, 1);
-//
-//        JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
-//
-//
-//        Map<String, Object> exampleEvent = null;
-//
-//        try {
-//            exampleEvent = jsonDefinition.toMap(nEvents.get(0));
-//        } catch (SpRuntimeException e) {
-//            e.printStackTrace();
-//        }
-//
-//        for (Map.Entry<String, Object> entry : exampleEvent.entrySet())
-//        {
-////            System.out.println(entry.getKey() + "/" + entry.getValue());
-//            EventProperty p = getEventProperty(entry.getKey(), entry.getValue());
-//
-//            resultSchema.addEventProperty(p);
-//
-//        }
+        JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
+
+
+        Map<String, Object> exampleEvent = null;
+
+        try {
+            exampleEvent = jsonDefinition.toMap(oneEvent);
+        } catch (SpRuntimeException e) {
+            e.printStackTrace();
+        }
+
+        for (Map.Entry<String, Object> entry : exampleEvent.entrySet())
+        {
+//            System.out.println(entry.getKey() + "/" + entry.getValue());
+            EventProperty p = getEventProperty(entry.getKey(), entry.getValue());
+
+            resultSchema.addEventProperty(p);
+
+        }
 
         return resultSchema;
     }

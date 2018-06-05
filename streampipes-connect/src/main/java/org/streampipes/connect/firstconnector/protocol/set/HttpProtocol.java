@@ -2,28 +2,28 @@ package org.streampipes.connect.firstconnector.protocol.set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.fluent.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.connect.SendToKafka;
-import org.streampipes.connect.events.Event;
 import org.streampipes.connect.firstconnector.format.Format;
 import org.streampipes.connect.firstconnector.format.Parser;
+import org.streampipes.connect.firstconnector.guess.SchemaGuesser;
 import org.streampipes.connect.firstconnector.protocol.Protocol;
 import org.streampipes.connect.firstconnector.sdk.ParameterExtractor;
-import org.streampipes.model.modelconnect.DomainPropertyProbabilityList;
 import org.streampipes.model.modelconnect.GuessSchema;
 import org.streampipes.model.modelconnect.ProtocolDescription;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.streampipes.connect.GetTrainingData;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class HttpProtocol extends Protocol {
+
+    Logger logger = LoggerFactory.getLogger(Protocol.class);
 
     public static String ID = "https://streampipes.org/vocabulary/v1/protocol/set/http";
 
@@ -75,82 +75,23 @@ public class HttpProtocol extends Protocol {
 
         SendToKafka stk = new SendToKafka(format, broker, topic);
 
-        try {
-            String s = Request.Get(url)
-                    .connectTimeout(1000)
-                    .socketTimeout(10000)
-                    .execute().returnContent().asString();
+        InputStream data = getDataFromEndpoint();
 
-            parser.parse(IOUtils.toInputStream(s, "UTF-8"), stk);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        parser.parse(data, stk);
     }
 
 
     @Override
-    public GuessSchema getSchema() {
-
-        GuessSchema result = new GuessSchema();
-
-        try {
-            String s = Request.Get(url)
-                    .connectTimeout(1000)
-                    .socketTimeout(10000)
-                    .execute().returnContent().asString();
-
-            EventSchema eventSchema= parser.getSchema(IOUtils.toInputStream(s, "UTF-8"));
-
-            List<DomainPropertyProbabilityList> allDomainPropertyProbabilities = getDomainPropertyList(s, eventSchema);
-
-            result.setEventSchema(eventSchema);
-            result.setPropertyProbabilityList(allDomainPropertyProbabilities);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
-    private List<DomainPropertyProbabilityList> getDomainPropertyList(String data, EventSchema eventSchema) {
-
-        List<DomainPropertyProbabilityList> allDomainPropertyProbabilities = new ArrayList<>();
-
-        List<Map<String, Object>> nEventsParsed = getNElements(20);
-        allDomainPropertyProbabilities.addAll(getDomainPropertyProbabitlyList(eventSchema.getEventProperties(), nEventsParsed, new ArrayList<>()));
+    public GuessSchema getGuessSchema() {
 
 
-        return allDomainPropertyProbabilities;
-    }
+        InputStream dataInputStream = getDataFromEndpoint();
 
-    private List<DomainPropertyProbabilityList> getDomainPropertyProbabitlyList(List<EventProperty> eventProperties,
-                                                                                List<Map<String, Object>> nEventsParsed,
-                                                                                List<String> keys) {
+        byte[] dataByte = parser.parseNEvents(dataInputStream, 1).get(0);
 
-        List<DomainPropertyProbabilityList> result = new ArrayList<>();
-        for (EventProperty ep : eventProperties) {
-            if (ep instanceof EventPropertyNested) {
-                List<EventProperty> li = ((EventPropertyNested) ep).getEventProperties();
-                keys.add(ep.getRuntimeName());
-                result.addAll(getDomainPropertyProbabitlyList(li, nEventsParsed, keys));
-            } else {
-                List<Object> tmp = new ArrayList<>();
-                for (Map<String, Object> event : nEventsParsed) {
-                    Map<String, Object> subEvent = event;
-                    for (String k : keys) {
-                        subEvent = (Map<String, Object>) subEvent.get(k);
-                    }
+        EventSchema eventSchema= parser.getEventSchema(dataByte);
 
-                    tmp.add(subEvent.get(ep.getRuntimeName()));
-                }
-
-                DomainPropertyProbabilityList resultList = GetTrainingData.getDomainPropertyProbability(tmp.toArray());
-                resultList.setRuntimeName(ep.getRuntimeName());
-                result.add(resultList);
-            }
-
-        }
+        GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(20));
 
         return result;
     }
@@ -158,26 +99,35 @@ public class HttpProtocol extends Protocol {
     @Override
     public List<Map<String, Object>> getNElements(int n) {
 
-
-        //TODO just hot fix to test the system
-        String s = "";
         List<Map<String, Object>> result = new ArrayList<>();
 
+        InputStream dataInputStream = getDataFromEndpoint();
+
+        List<byte[]> dataByteArray = parser.parseNEvents(dataInputStream, n);
+
+        // Check that result size is n. Currently just an error is logged. Maybe change to an exception
+        if (dataByteArray.size() < n) {
+            logger.error("Error in HttpProtocol! User required: " + n + " elements but the resource just had: " +
+                    dataByteArray.size());
+        }
+
+        for (byte[] b : dataByteArray) {
+            result.add(format.parse(b));
+        }
+
+        return result;
+    }
+
+    public InputStream getDataFromEndpoint() {
+        InputStream result = null;
+
         try {
-            s = Request.Get(url)
+            String s = Request.Get(url)
                     .connectTimeout(1000)
                     .socketTimeout(100000)
                     .execute().returnContent().asString();
 
-
-            // TODO what happens when N is higher then the number of events in set
-
-            List<byte[]> tmp = parser.parseNEvents(IOUtils.toInputStream(s, "UTF-8"), n);
-
-
-            for (byte[] b : tmp) {
-                result.add(format.parse(b));
-            }
+            result = IOUtils.toInputStream(s, "UTF-8");
 
         } catch (IOException e) {
             e.printStackTrace();

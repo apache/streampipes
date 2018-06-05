@@ -58,11 +58,9 @@ public class CsvParser extends Parser {
     }
 
     @Override
-    public EventSchema getSchema(InputStream data) {
+    public EventSchema getEventSchema(byte[] oneEvent) {
 
-        List<byte[]> nEvents = parseNEvents(data, 1);
-
-        String header = new String (nEvents.get(0));
+        String header = new String (oneEvent);
         // TODO fix hard coded delimitter
         String[] keys = new String(header).split(delimiter);
 
