@@ -12,15 +12,12 @@ import org.streampipes.model.template.PipelineTemplateInvocation;
 import org.streampipes.rest.api.InternalPipelineTemplate;
 import org.streampipes.sdk.builder.BoundPipelineElementBuilder;
 import org.streampipes.sdk.builder.PipelineTemplateBuilder;
-import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.streampipes.storage.management.StorageDispatcher;
-import org.streampipes.vocabulary.StreamPipes;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,14 +46,16 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
     @Produces(MediaType.APPLICATION_JSON)
     public Response generatePipeline(@PathParam("username") String username, String pipelineTemplateDescriptionString) {
         try {
-            PipelineTemplateDescription pipelineTemplateDescription = new JsonLdTransformer(StreamPipes.PIPELINE_TEMPLATE_DESCRIPTION)
-                    .fromJsonLd(pipelineTemplateDescriptionString, PipelineTemplateDescription.class);
+            //PipelineTemplateDescription pipelineTemplateDescription = new JsonLdTransformer(StreamPipes.PIPELINE_TEMPLATE_DESCRIPTION)
+            //        .fromJsonLd(pipelineTemplateDescriptionString, PipelineTemplateDescription.class);
+
+            PipelineTemplateDescription pipelineTemplateDescription = makeSaveToElasticTemplate();
 
             PipelineTemplateInvocation invocation = Operations.getPipelineInvocationTemplate(getLogDataStream(), pipelineTemplateDescription);
-            PipelineOperationStatus status = Operations.handlePipelineTemplateInvocation(username, invocation);
+            PipelineOperationStatus status = Operations.handlePipelineTemplateInvocation(username, invocation, pipelineTemplateDescription);
 
             return ok(status);
-        } catch (IOException e) {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
             return fail();
         }
@@ -103,12 +102,12 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
     }
 
     private SpDataStream getLogDataStream() {
-        return getAllDataStreams()
+        return new SpDataStream(getAllDataStreams()
                 .stream()
                 //.filter(sp -> sp.getElementId().equals("http://pe-sources-samples:8090/sep/source-log/log-source"))
                 .filter(sp -> sp.getElementId().equals("http://localhost:8090/sep/source-log/log-source"))
                 .findFirst()
-                .get();
+                .get());
     }
 
 

@@ -31,16 +31,24 @@ import java.util.List;
 public class PipelineTemplateInvocationHandler {
 
   private PipelineTemplateInvocation pipelineTemplateInvocation;
+  private PipelineTemplateDescription pipelineTemplateDescription;
   private String username;
 
   public PipelineTemplateInvocationHandler(String username, PipelineTemplateInvocation pipelineTemplateInvocation) {
     this.username = username;
     this.pipelineTemplateInvocation = pipelineTemplateInvocation;
+    this.pipelineTemplateDescription = getTemplateById(pipelineTemplateInvocation.getPipelineTemplateId());
+  }
+
+  public PipelineTemplateInvocationHandler(String username, PipelineTemplateInvocation pipelineTemplateInvocation, PipelineTemplateDescription pipelineTemplateDescription) {
+    this.username = username;
+    this.pipelineTemplateInvocation = pipelineTemplateInvocation;
+    this.pipelineTemplateDescription = pipelineTemplateDescription;
   }
 
 
   public PipelineOperationStatus handlePipelineInvocation() {
-    Pipeline pipeline = new PipelineGenerator(pipelineTemplateInvocation.getDataSetId(), getTemplateById(pipelineTemplateInvocation.getPipelineTemplateId()), pipelineTemplateInvocation.getKviName()).makePipeline();
+    Pipeline pipeline = new PipelineGenerator(pipelineTemplateInvocation.getDataSetId(), pipelineTemplateDescription, pipelineTemplateInvocation.getKviName()).makePipeline();
     pipeline.setCreatedByUser(username);
     pipeline.setCreatedAt(System.currentTimeMillis());
     replaceStaticProperties(pipeline);

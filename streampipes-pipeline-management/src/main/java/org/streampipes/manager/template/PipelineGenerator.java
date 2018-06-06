@@ -73,7 +73,7 @@ public class PipelineGenerator {
       stream.setEventGrounding(message.getEventGrounding());
       ((SpDataSet) stream).setDatasetInvocationId(message.getInvocationId());
     } else {
-
+      stream = new SpDataStream(stream);
     }
     stream.setDOM(getDom());
     return stream;
