@@ -5,10 +5,13 @@ login:
 modules:
   - spEditor
   - spPipelines
+  - spConnect
   - spDashboard
   - spAppFileDownload
   - spOntology
   - spSensors
   - spAdd
   - spMyElements
+  - spKvi
+  - spKviVisualization
   - spConfiguration

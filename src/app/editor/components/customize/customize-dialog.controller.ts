@@ -4,6 +4,7 @@ export class CustomizeDialogController {
 
     selectedElement: any;
     staticProperty: any;
+    customizeForm: any;
 
     constructor() {
     }

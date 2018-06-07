@@ -6,10 +6,10 @@
         <ng-template matStepLabel>Select Protocol</ng-template>
 
         <div fxLayoutAlign="start">
-          <app-protocol-form fxLayout="column" fxFlex="100" [(selectedProtocol)]="newAdapterDescription.protocol" [allProtocols]="allProtocols"></app-protocol-form>
+          <app-protocol-form fxLayout="column" fxFlex="100" [(selectedProtocol)]="selectedProtocol" [allProtocols]="allProtocols"></app-protocol-form>
         </div>
         <div fxLayoutAlign="end">
-          <button color="primary" mat-raised-button matStepperNext>Next</button>
+          <button color="primary" (click)="protocolSelected()" mat-raised-button matStepperNext>Next</button>
         </div>
       </form>
 
@@ -34,11 +34,11 @@
 
     <mat-step>
       <ng-template matStepLabel>Define Event Schema</ng-template>
-      <app-event-schema fxLayout="column" fxFlex="100" [(adapterDescription)]="newAdapterDescription"></app-event-schema>
+      <app-event-schema #eschema fxLayout="column" fxFlex="100" [(adapterDescription)]="newAdapterDescription"></app-event-schema>
 
         <div fxLayoutAlign="end">
           <button color="primary" mat-raised-button matStepperPrevious>Back</button>
-          <button color="primary" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
+          <button color="primary" (click)="eventSchemaComponent.onNext()" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
         </div>
     </mat-step>
 

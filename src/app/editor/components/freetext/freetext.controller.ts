@@ -6,6 +6,14 @@ export class FreeTextController {
     mappingProperty: any;
     selectedEventProperty: any;
     inputStreams: any;
+    customizeForm: any;
+
+    primitiveClasses = [{"id": "http://www.w3.org/2001/XMLSchema#string"},
+        {"id": "http://www.w3.org/2001/XMLSchema#boolean"},
+        {"id": "http://www.w3.org/2001/XMLSchema#integer"},
+        {"id": "http://www.w3.org/2001/XMLSchema#long"},
+        {"id": "http://www.w3.org/2001/XMLSchema#double"},
+        {"id": "http://www.w3.org/2001/XMLSchema#float"}];
 
     constructor() {
         if (this.staticProperty.properties.valueSpecification) {
@@ -40,4 +48,17 @@ export class FreeTextController {
         }
         this.staticProperty.properties.value = this.staticProperty.properties.value +"#" +runtimeName +"#" +" ";
     }
+
+    getFriendlyDatatype() {
+        if (this.staticProperty.properties.requiredDatatype == this.primitiveClasses[2] ||
+            this.staticProperty.properties.requiredDatatype == this.primitiveClasses[3]) {
+            return "The value should be a number (e.g., '1', '10'";
+        } else if (this.staticProperty.properties.requiredDatatype == this.primitiveClasses[4] ||
+            this.staticProperty.properties.requiredDatatype == this.primitiveClasses[4]) {
+            return "The value should be a floating-point number (e.g., '1.0, '20.5')";
+        } else {
+            return "This value is not valid.";
+        }
+    }
+
 }

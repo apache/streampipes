@@ -11,7 +11,7 @@ import { KviService } from './shared/kvi.service';
 import { SelectDatasetComponent } from './select-dataset/select-dataset.component';
 import { SelectOperatorComponent } from './select-operator/select-operator.component';
 import { KviConfigurationComponent } from './kvi-configuration/kvi-configuration.component';
-import { SpConnectModule } from '../connect/connect.module';
+import { ConnectModule } from '../connect/connect.module';
 import { KviCreatedDialog } from './kvi-created/kvi-created.dialog';
 
 @NgModule({
@@ -22,7 +22,7 @@ import { KviCreatedDialog } from './kvi-created/kvi-created.dialog';
         ReactiveFormsModule,
         MatAutocompleteModule,
         MatProgressSpinnerModule,
-        SpConnectModule
+        ConnectModule
     ],
     declarations: [
         KviComponent,

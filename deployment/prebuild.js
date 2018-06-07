@@ -44,9 +44,13 @@ let modulesActive = {modulesActive: []};
 for (let module of config.modules) {
     modulesActive['modulesActive'].push({
         module: module,
+        ng5: modules[module]['ng5'],
+        ng1_templateUrl: modules[module]['ng1_templateUrl'],
+        ng1_controller: modules[module]['ng1_controller'],
+        ng5_moduleName: modules[module]['ng5_moduleName'],
+        ng5_component: modules[module]['ng5_component'],
+        ng5_componentPath: modules[module]['ng5_componentPath'],
         path: modules[module]['path'],
-        templateUrl: modules[module]['templateUrl'],
-        controller: modules[module]['controller'],
         link: modules[module]['link'],
         url: modules[module]['url'],
         title: modules[module]['title'],
@@ -55,21 +59,32 @@ for (let module of config.modules) {
         description: modules[module]['description'],
         homeImage: modules[module]['homeImage']
     });
-    console.log('Active Module: ' + module)
+    console.log('Active Angular ' + (modules[module]['ng5']===true?5:1) + ' Module: ' + module);
 }
 
+modulesActive.containsPipeline = function() {
+    return function(cv, render) {
+        if (render(cv).includes(":pipeline") != -1) {
+            return "params: {pipeline: null},"
+        }
+
+        return "";
+    }
+};
+
 // Create necessary JavaScript-Files from Template and move to respective Directory
-fs.writeFileSync('app/app.module.js', mustache.render(fs.readFileSync('deployment/app.module.mst', 'utf8').toString(), modulesActive));
-fs.writeFileSync('app/core/state.config.js', mustache.render(fs.readFileSync('deployment/state.config.mst', 'utf8').toString(), modulesActive));
-fs.writeFileSync('app/layout/app.controller.js', mustache.render(fs.readFileSync('deployment/app.controller.mst', 'utf8').toString(), modulesActive));
-fs.writeFileSync('app/home/home.service.js', mustache.render(fs.readFileSync('deployment/home.service.mst', 'utf8').toString(), modulesActive));
+fs.writeFileSync('src/app/app.module.ts', mustache.render(fs.readFileSync('deployment/app.module.mst', 'utf8').toString(), modulesActive));
+fs.writeFileSync('src/app/appng5.module.ts', mustache.render(fs.readFileSync('deployment/appng5.module.mst', 'utf8').toString(), modulesActive));
+fs.writeFileSync('src/app/core/state.config.ts', mustache.render(fs.readFileSync('deployment/state.config.mst', 'utf8').toString(), modulesActive));
+fs.writeFileSync('src/app/layout/app.controller.ts', mustache.render(fs.readFileSync('deployment/app.controller.mst', 'utf8').toString(), modulesActive));
+fs.writeFileSync('src/app/home/home.service.ts', mustache.render(fs.readFileSync('deployment/home.service.mst', 'utf8').toString(), modulesActive));
 
 // Move Images
-fs.writeFileSync('img/login/background.png', fs.readFileSync(config['login']['backgroundImage']));
+fs.writeFileSync('src/assets/img/login/background.png', fs.readFileSync(config['login']['backgroundImage']));
 console.log('Moved: background.png');
-fs.writeFileSync('img/login/logo.png', fs.readFileSync(config['login']['logo']));
+fs.writeFileSync('src/assets/img/login/logo.png', fs.readFileSync(config['login']['logo']));
 console.log('Moved: logo.png');
-fs.writeFileSync('img/sp/sp-logo-right-white.png', fs.readFileSync(config['login']['logo-right']));
+fs.writeFileSync('src/assets/img/sp/sp-logo-right-white.png', fs.readFileSync(config['login']['logo-right']));
 console.log('Moved: sp-logo-right-white.png');
 
 console.log('Pre-Build finished.');

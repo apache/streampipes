@@ -4,6 +4,7 @@ import { StaticProperty } from '../model/StaticProperty';
 import { MappingPropertyUnary } from '../model/MappingPropertyUnary';
 import { DataSetDescription } from '../model/DataSetDescription';
 import { FormControl } from '@angular/forms';
+import {Logger} from '../../shared/logger/default-log.service';
 
 @Component({
     selector: 'app-static-properties',
@@ -22,7 +23,8 @@ export class StaticPropertiesComponent implements OnInit {
 
     private doNotRender: boolean;
 
-    constructor() {
+    constructor(private logger: Logger) {
+        logger.log(this.staticProperties);
     }
 
     ngOnInit() {

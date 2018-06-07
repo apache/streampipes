@@ -43,6 +43,8 @@ import {PipelineElementIconStandComponent} from './components/pipeline-element-i
 import {PipelineValidationService} from "./services/pipeline-validation.service";
 import {OneOfRemoteComponent} from "./components/oneof-remote/oneof-remote.component";
 
+import {TextValidatorDirective} from "./validator/text/text-validator.directive";
+
 import selectFilter from './filter/select.filter';
 import elementNameFilter from './filter/element-name.filter';
 
@@ -51,6 +53,7 @@ export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimat
     .controller('EditorCtrl', EditorCtrl)
     .directive('myDataBind', myDataBind)
     .directive('imageBind', imageBind)
+    .directive("textValidator", () => new TextValidatorDirective())
     .filter('displayRecommendedFilter', displayRecommendedFilter)
     .filter('selectFilter', selectFilter)
     .filter('elementNameFilter', elementNameFilter)

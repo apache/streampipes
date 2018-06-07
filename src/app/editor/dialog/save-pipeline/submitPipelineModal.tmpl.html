@@ -10,52 +10,59 @@
     </md-toolbar>
 
     <md-dialog-content flex="100" class="md-dialog-content">
-        <div flex="100" layout="column">
-            <div id="overwriteCheckbox" class="checkbox" ng-show="ctrl.modificationMode">
-                <md-radio-group class="md-accent" ng-model="ctrl.updateMode">
-                    <md-radio-button ng-value="'update'">
-                        Update pipeline <b>{{ctrl.pipeline.name}}</b>
-                    </md-radio-button>
-                    <md-radio-button ng-value="'clone'">
-                        Create new pipeline
-                    </md-radio-button>
-                </md-radio-group>
-            </div>
-            <div flex="100" layout="column" ng-if="!ctrl.modificationMode || ctrl.updateMode=='clone'">
-                <md-input-container flex><label>Pipeline Name</label>
-                    <input name="{{staticProperty.elementId}}" ng-model="ctrl.pipeline.name"/>
-                </md-input-container>
-                <md-input-container flex><label>Description</label>
-                    <input name="{{staticProperty.elementId}}" ng-model="ctrl.pipeline.description"/>
-                </md-input-container>
-            </div>
-            <md-checkbox ng-disabled="false" aria-label="Start Pipeline" ng-model="ctrl.startPipelineAfterStorage">
-                Start pipeline immediately
-            </md-checkbox>
-            <!-- 			<div flex="100" layout="row"> -->
-            <!-- 				<md-checkbox ng-disabled="false" aria-label="Start Pipeline" ng-model="addToCategory"> -->
-            <!-- 				Add to Category -->
-            <!-- 				</md-checkbox> -->
-            <!-- 				<div ng-if="addToCategory"> -->
-            <!-- 					<md-select ng-model="state.currentPipeline.pipelineCategories[0]" placeholder="Select Pipeline"> -->
-            <!-- 			          <md-option ng-repeat="pipeline in pipelines | orderBy:'+name'" value="{{pipeline._id}}"> -->
-            <!-- 			            <b>{{pipeline.name}}</b><br/> -->
-            <!-- 			          </md-option> -->
-            <!-- 			        </md-select> -->
-            <!-- 				</div> -->
-            <!-- 			</div> -->
+        <form name="ctrl.submitPipelineForm">
+            <div flex="100" layout="column">
+                <div id="overwriteCheckbox" class="checkbox" ng-show="ctrl.modificationMode">
+                    <md-radio-group class="md-accent" ng-model="ctrl.updateMode">
+                        <md-radio-button ng-value="'update'">
+                            Update pipeline <b>{{ctrl.pipeline.name}}</b>
+                        </md-radio-button>
+                        <md-radio-button ng-value="'clone'">
+                            Create new pipeline
+                        </md-radio-button>
+                    </md-radio-group>
+                </div>
+                <div flex="100" layout="column" ng-if="!ctrl.modificationMode || ctrl.updateMode=='clone'">
+                    <md-input-container flex><label>Pipeline Name</label>
+                        <input name="pipelineName" ng-model="ctrl.pipeline.name" required ng-maxlength="20"/>
+                        <span ng-show="ctrl.submitPipelineForm.pipelineName.$touched && ctrl.submitPipelineForm.pipelineName.$error.required">Please provide a pipeline name.</span>
+                        <span ng-show="ctrl.submitPipelineForm.pipelineName.$error.maxlength">Please provide a shorter pipeline name.</span>
+                    </md-input-container>
+                    <md-input-container flex><label>Description</label>
+                        <input name="pipelineDescription" ng-model="ctrl.pipeline.description" ng-maxlength="60"/>
+                        <span ng-show="ctrl.submitPipelineForm.pipelineDescription.$error.maxlength">Please provide a shorter description.</span>
+                    </md-input-container>
+                </div>
+                <md-checkbox ng-disabled="false" aria-label="Start Pipeline" ng-model="ctrl.startPipelineAfterStorage">
+                    Start pipeline immediately
+                </md-checkbox>
+                <!-- 			<div flex="100" layout="row"> -->
+                <!-- 				<md-checkbox ng-disabled="false" aria-label="Start Pipeline" ng-model="addToCategory"> -->
+                <!-- 				Add to Category -->
+                <!-- 				</md-checkbox> -->
+                <!-- 				<div ng-if="addToCategory"> -->
+                <!-- 					<md-select ng-model="state.currentPipeline.pipelineCategories[0]" placeholder="Select Pipeline"> -->
+                <!-- 			          <md-option ng-repeat="pipeline in pipelines | orderBy:'+name'" value="{{pipeline._id}}"> -->
+                <!-- 			            <b>{{pipeline.name}}</b><br/> -->
+                <!-- 			          </md-option> -->
+                <!-- 			        </md-select> -->
+                <!-- 				</div> -->
+                <!-- 			</div> -->
 
-        </div>
+            </div>
+        </form>
     </md-dialog-content>
     <div class="md-actions" layout="row">
         <md-button ng-click="ctrl.hide()" style="margin-right:20px;">
             Close
         </md-button>
-        <md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="ctrl.savePipelineName(false)"
+        <md-button class="md-accent" style="margin-right:20px;" ng-disabled="ctrl.submitPipelineForm.$invalid"
+                   ng-click="ctrl.savePipelineName(false)"
                    ng-disabled="ctrl.startPipelineAfterStorage">
             Save
         </md-button>
-        <md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="ctrl.savePipelineName(true)">
+        <md-button class="md-accent" style="margin-right:20px;" ng-disabled="ctrl.submitPipelineForm.$invalid"
+                   ng-click="ctrl.savePipelineName(true)">
             Save and go to pipeline view
         </md-button>
     </div>

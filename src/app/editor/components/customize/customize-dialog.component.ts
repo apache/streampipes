@@ -5,7 +5,8 @@ export let CustomizeDialogComponent = {
     bindings: {
         staticProperty: "=",
         selectedElement: "=",
-        displayRecommended: "="
+        displayRecommended: "=",
+        customizeForm: "="
     },
     controller: CustomizeDialogController,
     controllerAs: 'ctrl'

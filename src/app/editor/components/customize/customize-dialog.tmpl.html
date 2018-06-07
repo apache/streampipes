@@ -2,7 +2,7 @@
     <oneof static-property="ctrl.staticProperty"></oneof>
 </div>
 <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'FreeTextStaticProperty'">
-    <freetext input-streams="ctrl.selectedElement.inputStreams"
+    <freetext customize-form="ctrl.customizeForm" input-streams="ctrl.selectedElement.inputStreams"
               static-property="ctrl.staticProperty" mapping-property="ctrl.getMappingProperty(ctrl.staticProperty.properties.mapsTo)"></freetext>
 </div>
 <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'AnyStaticProperty'">

@@ -18,6 +18,9 @@ export class ProtocolDescription {
   @RdfProperty('sp:hasUri')
   public uri: string;
 
+  @RdfProperty('sp:sourceType')
+  public sourceType: string;
+
   @RdfProperty('sp:config')
   public config: StaticProperty[] = [];
 

@@ -112,6 +112,8 @@ export class RestService {
         tsonld.addContext('spi', 'urn:streampipes.org:spi:');
         tsonld.addContext('foaf', 'http://xmlns.com/foaf/0.1/');
 
+        console.log(adapter.constructor.name);
+
         return Observable.fromPromise(new Promise(function(resolve, reject) {
             tsonld.toflattenJsonLd(adapter).subscribe(res => {
                 return self.http

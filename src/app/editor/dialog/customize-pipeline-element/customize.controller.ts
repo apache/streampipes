@@ -15,8 +15,8 @@ export class CustomizeController {
     sourceEndpoint: any;
     $mdDialog: any;
     $rootScope: any;
-    primitiveClasses: any;
     sepa: any;
+    customizeForm: any;
 
     constructor($rootScope, $mdDialog, elementData, sourceEndpoint, sepa) {
         this.selectedElement = sepa;
@@ -32,11 +32,7 @@ export class CustomizeController {
         this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
 
-        this.primitiveClasses = [{"id": "http://www.w3.org/2001/XMLSchema#string"},
-            {"id": "http://www.w3.org/2001/XMLSchema#boolean"},
-            {"id": "http://www.w3.org/2001/XMLSchema#integer"},
-            {"id": "http://www.w3.org/2001/XMLSchema#long"},
-            {"id": "http://www.w3.org/2001/XMLSchema#double"}];
+
 
         if ((this.selectedElement.staticProperties && this.selectedElement.staticProperties.length > 0) || this.isCustomOutput()) {
             this.configVisible = true;
@@ -127,13 +123,12 @@ export class CustomizeController {
                 if (!anyOccurrence) valid = false;
             } else if (staticProperty.properties.staticPropertyType === 'FreeTextStaticProperty') {
                 if (!staticProperty.properties.value) {
+                    console.log("value missing");
+                    console.log(staticProperty);
                     valid = false;
                 }
                 if (staticProperty.properties.requiredDatatype) {
-                    if (!this.typeCheck(staticProperty.properties.value, staticProperty.properties.requiredDatatype)) {
-                        valid = false;
-                        this.validationErrors.push(staticProperty.properties.label + " must be of type " + staticProperty.properties.requiredDatatype);
-                    }
+
                 }
             } else if (staticProperty.properties.staticPropertyType === 'MappingPropertyUnary') {
                 if (!staticProperty.properties.mapsTo) {
@@ -163,14 +158,7 @@ export class CustomizeController {
         return valid;
     }
 
-    typeCheck(property, datatype) {
-        if (datatype == this.primitiveClasses[0].id) return true;
-        if (datatype == this.primitiveClasses[1].id) return (property == 'true' || property == 'false');
-        if (datatype == this.primitiveClasses[2].id) return (!isNaN(property) && parseInt(Number(property)+'') == property && !isNaN(parseInt(property, 10)));
-        if (datatype == this.primitiveClasses[3].id) return (!isNaN(property) && parseInt(Number(property)+'') == property && !isNaN(parseInt(property, 10)));
-        if (datatype == this.primitiveClasses[4].id) return !isNaN(property);
-        return false;
-    }
+
 
     isCustomOutput() {
         var custom = false;

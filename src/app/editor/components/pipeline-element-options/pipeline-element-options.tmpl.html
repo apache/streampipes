@@ -37,7 +37,7 @@
 
 </md-icon></md-button>
     </span>
-    <span class="recommended-button" ng-show="ctrl.pipelineElement.type!='action'" style="z-index:10"><md-button
+    <span class="recommended-button" ng-show="ctrl.pipelineElement.type!='action' && (ctrl.recommendationsAvailable) && ctrl.recommendedElements.length > 0" style="z-index:10"><md-button
             ng-click="ctrl.showRecommendations($event)"
             ng-disabled="!ctrl.recommendationsAvailable || !ctrl.isConfigured()"
             class="md-icon-button" style="margin:0px;font-size:20px;"><md-icon
