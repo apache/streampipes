@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
-import { ConsulService } from './consul-service.model';
+import { StreampipesPeContainer } from './streampipes-pe-container.model';
 
 @Injectable()
 export class ConfigurationService {
@@ -16,7 +16,7 @@ export class ConfigurationService {
         return '/streampipes-backend';
     }
 
-    getConsulServices(): Observable<ConsulService[]> {
+    getConsulServices(): Observable<StreampipesPeContainer[]> {
         return this.http.get(this.getServerUrl() + '/api/v2/consul')
             .pipe(
                 map(response => {
@@ -31,12 +31,12 @@ export class ConfigurationService {
                             }
                         }
                     }
-                    return response as ConsulService[];
+                    return response as StreampipesPeContainer[];
                 })
             );
     }
 
-    updateConsulService(consulService: ConsulService): Observable<Object> {
+    updateConsulService(consulService: StreampipesPeContainer): Observable<Object> {
         return this.http.post(this.getServerUrl() + '/api/v2/consul', consulService);
     }
 

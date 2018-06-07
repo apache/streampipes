@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { ConfigurationComponent } from './configuration.component';
 import { ConfigurationService } from './shared/configuration.service';
 import { ConsulServiceComponent } from './consul-service/consul-service.component';
-import {PasswordFieldComponent} from './password-field/password-field.component';
 import {ConsulConfigsComponent} from './consul-configs/consul-configs.component';
 import {ConsulConfigsTextComponent} from './consul-configs-text/consul-configs-text.component';
 import {ConsulConfigsPasswordComponent} from './consul-configs-password/consul-configs-password.component';
@@ -31,7 +30,6 @@ import {ConsulConfigsNumberComponent} from './consul-configs-number/consul-confi
     declarations: [
         ConfigurationComponent,
         ConsulServiceComponent,
-        PasswordFieldComponent,
         ConsulConfigsComponent,
         ConsulConfigsTextComponent,
         ConsulConfigsPasswordComponent,

@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ConsulService } from '../shared/consul-service.model';
-import {ConsulServiceConfigs} from '../shared/consul-service-configs'
+import { StreampipesPeContainer } from "../shared/streampipes-pe-container.model";
+import { StreampipesPeContainerConifgs } from "../shared/streampipes-pe-container-configs";
 @Component({
     selector: 'consul-configs-number',
     templateUrl: './consul-configs-number.component.html',
     styleUrls: ['./consul-configs-number.component.css']
 })
 export class ConsulConfigsNumberComponent {
-    @Input() configuration: ConsulServiceConfigs
+    @Input() configuration: StreampipesPeContainerConifgs
     constructor() {
         
     }

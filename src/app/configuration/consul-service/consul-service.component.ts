@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ConsulService } from '../shared/consul-service.model';
-import {ConsulServiceConfigs} from '../shared/consul-service-configs'
+import { StreampipesPeContainer } from "../shared/streampipes-pe-container.model";
+import { StreampipesPeContainerConifgs } from "../shared/streampipes-pe-container-configs";
 @Component({
     selector: 'consul-service',
     templateUrl: './consul-service.component.html',
@@ -8,8 +8,8 @@ import {ConsulServiceConfigs} from '../shared/consul-service-configs'
 })
 export class ConsulServiceComponent {
 
-    @Input() consulService: ConsulService;
-    @Output() updateConsulService: EventEmitter<ConsulService> = new EventEmitter<ConsulService>();
+    @Input() consulService: StreampipesPeContainer;
+    @Output() updateConsulService: EventEmitter<StreampipesPeContainer> = new EventEmitter<StreampipesPeContainer>();
     showConfiguration: boolean = false;
 
     constructor() {
@@ -25,12 +25,14 @@ export class ConsulServiceComponent {
         this.updateConsulService.emit(this.consulService);
     }
 
-    adjustConfigurationKey(): void {
+    adjustConfigurationKey() {
         // nur auf der ui ändern configuration.key unverändert lassen
          this.consulService.configs.forEach((configuration) => {
-            var str = configuration.key;
-            str = str.replace(/SP/g,"");
-            configuration.key = str.replace(/_/g," ");  
+            var str1 = configuration.key;
+            str1 = str1.replace(/SP/g,"");
+            configuration.modifiedKey = str1.replace(/_/g," ");  
+            
+            
         } )
         this.updateConfiguration();
     }

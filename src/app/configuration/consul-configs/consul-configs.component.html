@@ -3,15 +3,15 @@
        <consul-configs-password *ngIf="configuration.isPassword" [configuration]="configuration" >
        </consul-configs-password >
 
-       <consul-configs-text *ngIf="configuration.valueType == 'xs:string' && !configuration.isPassword"
+       <consul-configs-text *ngIf="configuration.valueType == service.XS_STRING && !configuration.isPassword"
        [configuration]="configuration">
        </consul-configs-text>
 
-       <consul-configs-number *ngIf="configuration.valueType == 'xs:integer' || configuration.valueType == 'xs:double'"
+       <consul-configs-number *ngIf="configuration.valueType == service.XS_INTEGER || configuration.valueType == service.XS_DOUBLE"
        [configuration]="configuration">
        </consul-configs-number>
 
-       <consul-configs-boolean *ngIf="configuration.valueType == 'xs:boolean'"
+       <consul-configs-boolean *ngIf="configuration.valueType == service.XS_BOOLEAN"
        [configuration]="configuration">
        </consul-configs-boolean>
 
@@ -19,3 +19,5 @@
     <button mat-raised-button color="primary" type="submit" class="md-raised md-primary submit-button">Update
     </button>
 </form>
+
+<!-- xs:integer xs:string global auslagern ERLEDIGT -->
