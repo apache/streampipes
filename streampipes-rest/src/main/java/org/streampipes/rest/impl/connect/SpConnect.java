@@ -118,7 +118,7 @@ public class SpConnect extends AbstractRestInterface {
 
         AdapterDescription adapterDescription = new AdapterStorageImpl().getAdapter(id);
 
-        SpDataStream ds = null;
+        SpDataStream ds;
         if (adapterDescription instanceof AdapterSetDescription) {
             ds = ((AdapterSetDescription) adapterDescription).getDataSet();
             EventGrounding eg = new EventGrounding();
@@ -135,10 +135,6 @@ public class SpConnect extends AbstractRestInterface {
             eg.setTransportFormats(Arrays.asList(Formats.jsonFormat()));
             eg.setTransportProtocol(tp);
 
-            //TODO remove when frontend schema fixed
-            EventSchema es = new EventSchema();
-            es.setEventProperties(Arrays.asList(EpProperties.timestampProperty("timestamp")));
-            ds.setEventSchema(es);
             ds.setEventGrounding(eg);
         }
 
@@ -148,7 +144,6 @@ public class SpConnect extends AbstractRestInterface {
         ds.setName(adapterDescription.getName());
         ds.setDescription("Description");
 
-//        dataSet.setUri(url);
         ds.setUri(url + "/streams");
 
         DataSourceDescription dataSourceDescription = new DataSourceDescription(

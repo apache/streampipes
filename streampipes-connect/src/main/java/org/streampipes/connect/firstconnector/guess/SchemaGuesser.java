@@ -63,6 +63,11 @@ public class SchemaGuesser {
         return result;
     }
 
+    /**
+     * TODO replace this method, change python API to variables of DomainPropertyProbabilityList
+     * @param objects
+     * @return
+     */
     public static PropertyGuessResults requestProbabilitiesObject(Object[] objects) {
 
         String probabilitiesJsonString = requestProbabilitiesString(objects);
