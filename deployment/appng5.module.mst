@@ -59,5 +59,4 @@ export class AppModule {
     ngDoBootstrap() {
         this.upgrade.bootstrap(document.body, ['streamPipesApp']);
     }
-
 }

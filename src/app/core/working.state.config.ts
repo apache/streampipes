@@ -1,4 +1,3 @@
-
 import { HomeComponent } from '../home/home.component';
 import { ConfigurationComponent } from '../configuration/configuration.component';
 import { AppContainerModule } from '../app-container/app-container.module';
@@ -234,4 +233,3 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             }
         });
 };
-

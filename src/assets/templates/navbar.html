@@ -21,11 +21,23 @@
         </div>
         <span flex></span>
         <div flex="40" layout layout-align="end center" ng-show="appCtrl.authenticated">
+            <md-button ng-click="appCtrl.openInfo()" style="min-width:0px;">
+                <md-icon md-svg-icon="action:ic_help_24px" aria-label="Info" style="color:white;"></md-icon>
+                <md-tooltip md-direction="bottom">
+                    Info
+                </md-tooltip>
+            </md-button>
             <md-button ng-click="appCtrl.openDocumentation()" style="min-width:0px;">
-                <md-icon md-svg-icon="action:ic_help_24px" aria-label="Tutorial" style="color:white;"></md-icon>
+                <md-icon md-svg-icon="action:ic_description_24px" aria-label="Documentation" style="color:white;"></md-icon>
+                <md-tooltip md-direction="bottom">
+                    Documentation
+                </md-tooltip>
             </md-button>
             <md-button ng-click="appCtrl.logout()" style="min-width:0px;">
                 <md-icon md-svg-icon="action:ic_exit_to_app_24px" aria-label="Logout"></md-icon>
+                <md-tooltip md-direction="bottom">
+                    Logout
+                </md-tooltip>
             </md-button>
         </div>
     </div>
