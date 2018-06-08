@@ -1,18 +1,24 @@
 package org.streampipes.connect.firstconnector.guess;
 
-import org.streampipes.connect.GetTrainingData;
+import org.apache.http.client.fluent.Form;
+import org.apache.http.client.fluent.Request;
+import org.streampipes.model.modelconnect.DomainPropertyProbability;
 import org.streampipes.model.modelconnect.DomainPropertyProbabilityList;
 import org.streampipes.model.modelconnect.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.serializers.json.GsonSerializer;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class SchemaGuesser {
+
+    public static int port = 80;
 
     public static GuessSchema guessSchma(EventSchema eventSchema, List<Map<String, Object>> nElements) {
         GuessSchema result = new GuessSchema();
@@ -47,12 +53,80 @@ public class SchemaGuesser {
                     tmp.add(subEvent.get(ep.getRuntimeName()));
                 }
 
-                DomainPropertyProbabilityList resultList = GetTrainingData.getDomainPropertyProbability(tmp.toArray());
+                DomainPropertyProbabilityList resultList = getDomainPropertyProbability(tmp.toArray());
                 resultList.setRuntimeName(ep.getRuntimeName());
                 result.add(resultList);
             }
 
         }
+
+        return result;
+    }
+
+    public static PropertyGuessResults requestProbabilitiesObject(Object[] objects) {
+
+        String probabilitiesJsonString = requestProbabilitiesString(objects);
+        PropertyGuessResults res = GsonSerializer.getGsonWithIds().fromJson(probabilitiesJsonString,
+                PropertyGuessResults.class);
+        return res;
+    }
+
+    public static String requestProbabilitiesString(Object[] objects) {
+        String httpRequestBody = GsonSerializer.getGsonWithIds()
+                    .toJson(objects);
+
+        String httpResp = "{\"result\": []}";
+
+        try {
+            httpResp = Request.Post("http://localhost:" + port +"/predict")
+                        .addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                        .bodyForm(Form.form().add("X", httpRequestBody).build()).execute().returnContent().asString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return httpResp;
+    }
+
+    public static void main(String[] args) {
+
+        int[] n = {1, 2};
+        String[] st = {"f", "dd"};
+        String s = "[34292.0, 34292.0, 34292.0, 84155.0, 34466.0, 83352.0, 84503.0, 63916.0, 9456.0, 9456.0, 9456.0, 8359.0, 84371.0, 63743.0, 8280.0, 8280.0, 34454.0, 84364.0, 94081.0, 57334.0]";
+
+        SchemaGuesser schemaGuesser = new SchemaGuesser();
+        PropertyGuessResults prg = schemaGuesser.requestProbabilitiesObject(st);
+
+        for (PropertyGuesses pg : prg.getResult()) {
+            System.out.println("Class " + pg.getClazz());
+            System.out.println("Property " + pg.getProbability());
+            System.out.println("=========");
+
+        }
+
+        DomainPropertyProbabilityList dppl = SchemaGuesser.getDomainPropertyProbability(st);
+
+        for (DomainPropertyProbability pg: dppl.getList()) {
+            System.out.println("Class " + pg.getDomainProperty());
+            System.out.println("Property " + pg.getProbability());
+            System.out.println("=========");
+
+        }
+    }
+
+
+    public static DomainPropertyProbabilityList getDomainPropertyProbability(Object[] sampleData) {
+        PropertyGuessResults pgr = requestProbabilitiesObject(sampleData);
+
+        DomainPropertyProbabilityList result = new DomainPropertyProbabilityList();
+
+
+        for (PropertyGuesses pg : pgr.getResult()) {
+            Double d = pg.getProbability();
+            result.addDomainPropertyProbability(new DomainPropertyProbability(pg.getClazz(), d.toString()));
+        }
+
 
         return result;
     }

@@ -1,22 +1,31 @@
 package org.streampipes.connect.firstconnector.protocol.stream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.kafka.clients.consumer.*;
+import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.serialization.LongDeserializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.SendToKafka;
+import org.streampipes.connect.events.Event;
 import org.streampipes.connect.firstconnector.format.Format;
 import org.streampipes.connect.firstconnector.format.Parser;
+import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
+import org.streampipes.connect.firstconnector.format.json.object.JsonObjectParser;
+import org.streampipes.connect.firstconnector.guess.SchemaGuesser;
 import org.streampipes.connect.firstconnector.protocol.Protocol;
 import org.streampipes.connect.firstconnector.sdk.ParameterExtractor;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.model.modelconnect.GuessSchema;
 import org.streampipes.model.modelconnect.ProtocolDescription;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.io.InputStream;
+import java.util.*;
 
 public class KafkaProtocol extends Protocol {
 
@@ -72,24 +81,107 @@ public class KafkaProtocol extends Protocol {
 
     @Override
     public GuessSchema getGuessSchema() {
-        GuessSchema result = new GuessSchema();
-        result.setEventSchema(parser.getEventSchema(null));
+
+        byte[] eventByte = getNByteElements(1).get(0);
+        EventSchema eventSchema = parser.getEventSchema(eventByte);
+        GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(20));
+
         return result;
     }
 
     @Override
     public List<Map<String, Object>> getNElements(int n) {
+        List<byte[]> resultEventsByte = getNByteElements(n);
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (byte[] event : resultEventsByte) {
+            result.add(format.parse(event));
+        }
 
-        // TODO it seems getNElements is not used in the HTTP Protocol and this is resolved by the parser
-        // Question why is getNElements in the parser and in the protocol??????
-
-
-        // TODO open a connection and wait for n elements
-
-        // TODO check if it is possible to get the last n elements of kafka
-
-        return null;
+        return result;
     }
+
+    private List<byte[]> getNByteElements(int n) {
+        final Consumer<Long, String> consumer = createConsumer(this.brokerUrl, this.topic);
+
+        consumer.subscribe(Arrays.asList(this.topic), new ConsumerRebalanceListener() {
+            @Override
+            public void onPartitionsRevoked(Collection<TopicPartition> collection) {
+
+            }
+
+            @Override
+            public void onPartitionsAssigned(Collection<TopicPartition> collection) {
+                consumer.seekToBeginning(collection);
+            }
+        });
+
+        List<byte[]> nEventsByte = new ArrayList<>();
+        List<byte[]> resultEventsByte = new ArrayList<>();
+
+
+        while (true) {
+            final ConsumerRecords<Long, String> consumerRecords =
+                    consumer.poll(1000);
+
+            consumerRecords.forEach(record -> {
+                try {
+                    InputStream inputStream = IOUtils.toInputStream(record.value(), "UTF-8");
+
+                    nEventsByte.addAll(parser.parseNEvents(inputStream, n));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            if (nEventsByte.size() > n) {
+                resultEventsByte = nEventsByte.subList(0, n);
+                break;
+            } else if (nEventsByte.size() == n) {
+                resultEventsByte = nEventsByte;
+                break;
+            }
+
+            consumer.commitAsync();
+        }
+
+        consumer.close();
+
+        return resultEventsByte;
+    }
+
+    public static void main(String... args) {
+        Parser parser = new JsonObjectParser();
+        Format format = new JsonObjectFormat();
+        KafkaProtocol kp = new KafkaProtocol(parser, format, "localhost:9092", "org.streampipes.examples.flowrate-1");
+        GuessSchema gs = kp.getGuessSchema();
+
+        System.out.println(gs);
+
+    }
+
+
+    private static Consumer<Long, String> createConsumer(String broker, String topic) {
+        final Properties props = new Properties();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+                broker);
+
+        props.put(ConsumerConfig.GROUP_ID_CONFIG,
+                "KafkaExampleConsumer" + System.currentTimeMillis());
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+                LongDeserializer.class.getName());
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+                StringDeserializer.class.getName());
+
+        // Create the consumer using props.
+        final Consumer<Long, String> consumer =
+                new KafkaConsumer<>(props);
+
+        // Subscribe to the topic.
+        consumer.subscribe(Collections.singletonList(topic));
+
+        return consumer;
+    }
+
 
     @Override
     public void run(String broker, String topic) {
@@ -108,7 +200,7 @@ public class KafkaProtocol extends Protocol {
     private class EventProcessor implements InternalEventProcessor<byte[]> {
         private SendToKafka stk;
         public EventProcessor(SendToKafka stk) {
-           this.stk = stk;
+            this.stk = stk;
         }
 
         @Override
