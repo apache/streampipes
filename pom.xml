@@ -426,6 +426,7 @@
         <module>streampipes-logging</module>
         <module>archetypes/streampipes-archetype-pe-sources</module>
         <module>archetypes/streampipes-archetype-pe-jvm</module>
+        <module>streampipes-connect-container</module>
     </modules>
 
     <profiles>
