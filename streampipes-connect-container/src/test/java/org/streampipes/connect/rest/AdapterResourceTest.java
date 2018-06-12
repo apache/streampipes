@@ -50,7 +50,6 @@ public class AdapterResourceTest {
 
         adapterResource = new AdapterResource();
 
-        Map<String, Object> a = new HashMap<>();
         ResourceConfig config = new ResourceConfig().register(adapterResource);
 
         URI baseUri = UriBuilder
