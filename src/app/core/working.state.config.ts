@@ -1,8 +1,8 @@
+
 import { HomeComponent } from '../home/home.component';
 import { ConfigurationComponent } from '../configuration/configuration.component';
 import { AppContainerModule } from '../app-container/app-container.module';
 import { AppContainerComponent } from '../app-container/app-container.component';
-import { PipelineLogsComponent } from '../pipeline-logs/pipeline-logs.component';
 import { NewComponent } from '../connect/new-adapter/new.component';
 import { KviComponent } from '../kvi/kvi.component';
 import { MainComponent } from '../connect/main/main.component';
@@ -200,14 +200,6 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('streampipes.pipelinelogs', {
-            url: '/pipelines/:pipeline/logs',
-            views: {
-                'spMain@streampipes': {
-                    component: PipelineLogsComponent
-                }
-            }
-        })
         .state('streampipes.connect', {
             url: '/connect',
             views: {
@@ -233,3 +225,4 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             }
         });
 };
+

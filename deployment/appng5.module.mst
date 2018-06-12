@@ -19,7 +19,6 @@ import { HomeModule } from './home/home.module';
 import { {{{ng5_moduleName}}} } from '{{{path}}}';
 {{/ng5}}
 {{/modulesActive}}
-import { PipelineLogsModule } from './pipeline-logs/pipeline-logs.module';
 
 import {ConsoleLogService} from './shared/logger/log.service';
 import {Logger} from './shared/logger/default-log.service';
@@ -37,7 +36,6 @@ import {Logger} from './shared/logger/default-log.service';
         HttpClientModule,
         FormsModule,
         UIRouterUpgradeModule.forChild(),
-        PipelineLogsModule,
         HomeModule,
         ConfigurationModule,
         {{#modulesActive}}
