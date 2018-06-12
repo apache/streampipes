@@ -78,6 +78,8 @@ fs.writeFileSync('src/app/appng5.module.ts', mustache.render(fs.readFileSync('de
 fs.writeFileSync('src/app/core/state.config.ts', mustache.render(fs.readFileSync('deployment/state.config.mst', 'utf8').toString(), modulesActive));
 fs.writeFileSync('src/app/layout/app.controller.ts', mustache.render(fs.readFileSync('deployment/app.controller.mst', 'utf8').toString(), modulesActive));
 fs.writeFileSync('src/app/home/home.service.ts', mustache.render(fs.readFileSync('deployment/home.service.mst', 'utf8').toString(), modulesActive));
+fs.writeFileSync('src/app/services/version/version.service.ts', mustache.render(fs.readFileSync('deployment/version.service.mst', 'utf8').toString(), modulesActive));
+
 
 // Move Images
 fs.writeFileSync('src/assets/img/login/background.png', fs.readFileSync(config['login']['backgroundImage']));
