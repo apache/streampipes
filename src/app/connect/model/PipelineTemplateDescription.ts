@@ -1,6 +1,8 @@
 import { RdfId } from '../tsonld/RdfId';
 import { RdfProperty } from '../tsonld/RdfsProperty';
 import { RdfsClass } from '../tsonld/RdfsClass';
+import { BoundPipelineElement } from "./BoundPipelineElement";
+
 
 @RdfsClass('sp:PipelineTemplateDescription')
 export class PipelineTemplateDescription {
@@ -16,6 +18,10 @@ export class PipelineTemplateDescription {
 
     @RdfProperty('sp:internalName')
     public internalName: string;
+
+    @RdfProperty('sp:isConnectedTo')
+    public connectedTo: BoundPipelineElement[] = [];
+
 
     constructor(id: string) {
         this.id = id;
