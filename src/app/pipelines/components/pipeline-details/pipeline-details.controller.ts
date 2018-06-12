@@ -7,6 +7,7 @@ export class PipelineDetailsController {
     stopping: any;
     refreshPipelines: any;
     PipelineOperationsService: any;
+    VersionService: any;
     activeCategory: any;
     dtOptions = {paging: false, searching: false,   "order": [], "columns": [
             { "orderable": false },
@@ -15,8 +16,9 @@ export class PipelineDetailsController {
             { "orderable": false },
         ]};
 
-    constructor(PipelineOperationsService) {
+    constructor(PipelineOperationsService, VersionService) {
         this.PipelineOperationsService = PipelineOperationsService;
+        this.VersionService = VersionService;
         this.starting = false;
         this.stopping = false;
         this.toggleRunningOperation = this.toggleRunningOperation.bind(this);
@@ -40,4 +42,4 @@ export class PipelineDetailsController {
 
 }
 
-PipelineDetailsController.$inject = ['PipelineOperationsService'];
+PipelineDetailsController.$inject = ['PipelineOperationsService', 'VersionService'];

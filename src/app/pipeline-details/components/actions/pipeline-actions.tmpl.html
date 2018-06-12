@@ -49,7 +49,7 @@
                 </md-button>
             </div>
             <div flex="30">
-            <md-button ng-click="ctrl.PipelineOperationsService.showLogs(ctrl.pipeline._id)" class="md-button">
+            <md-button ng-if="!ctrl.VersionService.isEnterpriseEdition()" ng-click="ctrl.PipelineOperationsService.showLogs(ctrl.pipeline._id)" class="md-button">
                 <md-icon
                         md-svg-icon="action:ic_info_24px"
                         aria-label="Logs" class="md-accent"></md-icon>

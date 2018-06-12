@@ -73,7 +73,7 @@
             </md-button>
         </span>
                 <span flex flex-order="4" layout="row" layout-align="center center">
-            <md-button ng-click="ctrl.PipelineOperationsService.showLogs(pipeline._id)" class="md-icon-button"><md-icon
+            <md-button ng-if="ctrl.VersionService.isEnterpriseEdition()" ng-click="ctrl.PipelineOperationsService.showLogs(pipeline._id)" class="md-icon-button"><md-icon
                     md-svg-icon="action:ic_info_24px"
                     class="md-accent"
                     aria-label="Logs"></md-icon>

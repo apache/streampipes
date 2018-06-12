@@ -7,6 +7,8 @@ import {PipelineDetailsComponent} from './components/pipeline-details/pipeline-d
 import {PipelineCategoryFilter} from './pipeline-category.filter';
 import {CategoryAlreadyInPipelineFilter} from './category-already-in-pipeline.filter';
 import {PipelineOperationsService} from "./services/pipeline-operations.service";
+import {VersionService} from "../services/version/version.service";
+
 
 export default angular.module('sp.pipeline', [spServices])
 	.controller('PipelineCtrl', PipelineCtrl)
@@ -14,4 +16,5 @@ export default angular.module('sp.pipeline', [spServices])
 	.filter('pipelineCategoryFilter', PipelineCategoryFilter)
 	.filter('categoryAlreadyInPipelineFilter', CategoryAlreadyInPipelineFilter)
 	.service('PipelineOperationsService', PipelineOperationsService)
+	.service('VersionService', VersionService)
 	.name;
