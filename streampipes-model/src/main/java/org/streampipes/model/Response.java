@@ -17,9 +17,11 @@
 
 package org.streampipes.model;
 
+import com.google.gson.Gson;
+
 public class Response {
 
-	private boolean success;
+	private Boolean success;
 	
 	private String elementId;
 	
@@ -37,7 +39,7 @@ public class Response {
 		this.optionalMessage = optionalMessage;
 	}
 
-	public boolean isSuccess() {
+	public Boolean isSuccess() {
 		return success;
 	}
 
@@ -82,7 +84,11 @@ public class Response {
 			return false;
 		return true;
 	}
-	
-	
-	
+
+
+	@Override
+	public String toString() {
+		Gson gson = new Gson();
+		return gson.toJson(this);
+	}
 }

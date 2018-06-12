@@ -13,16 +13,19 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-serializers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-container</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-jetty-http</artifactId>
             <version>2.22.2</version>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
+       <dependency>
             <groupId>org.rendersnake</groupId>
             <artifactId>rendersnake</artifactId>
             <version>1.8</version>
@@ -37,12 +40,25 @@
             <artifactId>json-path</artifactId>
             <version>3.1.0</version>
         </dependency>
+                <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.18.3</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.jayway.restassured</groupId>
             <artifactId>rest-assured</artifactId>
             <version>2.3.2</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
 </project>

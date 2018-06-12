@@ -25,11 +25,7 @@ public class WelcomePageTest {
     public void before() {
         Config.PORT = 8019;
         RestAssured.port = 8019;
-    }
-
-    @Test
-    public void getWelcomePageHtmlTest() {
-        Set<Class<? extends Object>> allClasses = new HashSet<>();
+                Set<Class<? extends Object>> allClasses = new HashSet<>();
 
         allClasses.add(WelcomePage.class);
 
@@ -40,7 +36,10 @@ public class WelcomePageTest {
                 .build();
 
         Server server = JettyHttpContainerFactory.createServer(baseUri, config);
+    }
 
+    @Test
+    public void getWelcomePageHtmlTest() {
         get("/").then().body("html.head.title", equalTo("StreamPipes Connector Container"));
         get("/").then().body("html.body.h1", equalTo("Connector Container with ID MAIN_CONTAINER is running"));
     }
