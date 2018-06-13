@@ -19,7 +19,7 @@ package org.streampipes.rest.application;
 
 import org.streampipes.rest.impl.*;
 import org.streampipes.rest.impl.connect.GuessResource;
-import org.streampipes.rest.impl.connect.SpConnect;
+import org.streampipes.rest.impl.connect.SpConnectResource;
 import org.streampipes.rest.serializer.GsonClientModelProvider;
 import org.streampipes.rest.serializer.GsonWithIdProvider;
 import org.streampipes.rest.serializer.GsonWithoutIdProvider;
@@ -60,7 +60,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(DataStream.class);
         apiClasses.add(ContainerProvidedOptions.class);
         apiClasses.add(Logs.class);
-        apiClasses.add(SpConnect.class);
+        apiClasses.add(SpConnectResource.class);
         apiClasses.add(GuessResource.class);
         apiClasses.add(PipelineTemplate.class);
         apiClasses.add(Couchdb.class);
