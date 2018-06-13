@@ -5,6 +5,7 @@ import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.modelconnect.AdapterDescription;
 import org.streampipes.model.modelconnect.AdapterSetDescription;
 import org.streampipes.model.modelconnect.AdapterStreamDescription;
@@ -47,12 +48,20 @@ public class SpConnect {
     }
 
     public static <T extends AdapterDescription> T getAdapterDescription(String ads, Class<T> theClass) {
+        return getDescription(ads, theClass);
+    }
+
+    public static SpDataSet getDataSetDescritpion(String s) {
+        return getDescription(s, SpDataSet.class);
+    }
+
+    private static <T> T getDescription(String s, Class<T> theClass) {
         JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
 
         T a = null;
 
         try {
-            a = jsonLdTransformer.fromJsonLd(ads, theClass);
+            a = jsonLdTransformer.fromJsonLd(s, theClass);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,14 +72,28 @@ public class SpConnect {
 
     public static String startStreamAdapter(AdapterStreamDescription asd, String baseUrl) {
         String url = baseUrl + "/invoke/stream";
-        org.streampipes.model.Response response = new org.streampipes.model.Response("", false, "Adpater could not be reached");
 
+        return postStartAdapter(url, asd);
+    }
+
+    public  String invokeAdapter(String streamId, SpDataSet dataSet, String baseUrl, AdapterStorageImpl adapterStorage) {
+        String url = baseUrl + "/invoke/set";
+
+        AdapterSetDescription adapterDescription = (AdapterSetDescription) adapterStorage.getAdapter(streamId);
+        adapterDescription.setDataSet(dataSet);
+
+        return postStartAdapter(url, adapterDescription);
+    }
+
+    private static String postStartAdapter(String url, AdapterDescription ad) {
         try {
 
             logger.info("Trying to start adpater on endpoint: " + url);
 
+            String adapterDescription = toJsonLd(ad);
+
             String responseString = Request.Post(url)
-                    .bodyString(toJsonLd(asd), ContentType.APPLICATION_JSON)
+                    .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
                     .connectTimeout(1000)
                     .socketTimeout(100000)
                     .execute().returnContent().asString();
@@ -87,26 +110,26 @@ public class SpConnect {
     }
 
     private static <T> String toJsonLd(T object) {
-            JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
-            String s = null;
-            try {
-                s = jsonLdTransformer.toJsonLd(object).toString();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (InvalidRdfException e) {
-                e.printStackTrace();
-            }
+        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
+        String s = null;
+        try {
+            s = jsonLdTransformer.toJsonLd(object).toString();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvalidRdfException e) {
+            e.printStackTrace();
+        }
 
-            if (s == null) {
-                logger.error("Could not serialize Object " + object + " into json ld");
-            }
+        if (s == null) {
+            logger.error("Could not serialize Object " + object + " into json ld");
+        }
 
-            return s;
-   }
+        return s;
+    }
 
 
 }

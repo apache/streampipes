@@ -175,37 +175,11 @@ public class SpConnectResource extends AbstractRestInterface {
     public String invokeAdapter(@PathParam("streamId") String streamId, String
             payload) {
 
-        try {
-            SpDataSet dataSet = Transformer.fromJsonLd(SpDataSet.class, payload, StreamPipes.DATA_SET);
-            String runningInstanceId = dataSet.getDatasetInvocationId();
+            SpDataSet dataSet = SpConnect.getDataSetDescritpion(payload);
 
-            String brokerUrl = dataSet.getEventGrounding().getTransportProtocol().getBrokerHostname() + ":9092";
-            String topic = dataSet.getEventGrounding().getTransportProtocol().getTopicDefinition()
-                    .getActualTopicName();
+            String result = spConnect.invokeAdapter(streamId, dataSet, uri.getBaseUri().toString(), new AdapterStorageImpl());
 
-
-            AdapterDescription adapterDescription = new AdapterStorageImpl().getAdapter(streamId);
-            Adapter adapter = new Adapter(brokerUrl, topic, false);
-
-            RunningAdapterInstances.INSTANCE.addAdapter(dataSet.getDatasetInvocationId(), adapter);
-
-            adapter.run(adapterDescription);
-
-
-            // TODO think of what happens when finished
-//            RunningDatasetInstances.INSTANCE.add(runningInstanceId, dataSet, (DataSetDeclarer) streamDeclarer.get().getClass().newInstance());
-//            boolean success = RunningDatasetInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(dataSet, ()
-//                    -> {
-//               //  TODO notify
-//            });
-
-
-            return Util.toResponseString(new org.streampipes.model.Response(runningInstanceId, true));
-        } catch (RDFParseException | RepositoryException | IOException
-                e) {
-            e.printStackTrace();
-            return Util.toResponseString(new org.streampipes.model.Response("", false, e.getMessage()));
-        }
+            return getResponse(result, streamId);
     }
 
 
@@ -236,23 +210,8 @@ public class SpConnectResource extends AbstractRestInterface {
 
         String success = spConnect.addAdapter(a, uri.getBaseUri().toString());
 
-        if (success == SpConnectUtils.SUCCESS) {
-            return new org.streampipes.model.Response(a.getUri(), true).toString();
-        } else {
-            return new org.streampipes.model.Response(a.getUri(), false, success).toString();
-        }
+        return getResponse(success, a.getUri());
     }
-
-//    public void startStreamAdapter(AdapterStreamDescription asd) {
-//
-//        String brokerUrl = BackendConfig.INSTANCE.getKafkaUrl();
-//        String topic = getTopicPrefix() + asd.getName();
-//
-//        Adapter adapter = new Adapter(brokerUrl, topic, false);
-////        RunningAdapterInstances.INSTANCE.addAdapter(dataSet.getDatasetInvocationId(), adapter);
-//        // TODO execute a Thread
-//        adapter.run(asd);
-//    }
 
 
     @DELETE
@@ -289,5 +248,13 @@ public class SpConnectResource extends AbstractRestInterface {
 
     public void setSpConnect(SpConnect spConnect) {
         this.spConnect = spConnect;
+    }
+
+    private String getResponse(String result, String id) {
+        if (result == SpConnectUtils.SUCCESS) {
+            return new org.streampipes.model.Response(id, true).toString();
+        } else {
+            return new org.streampipes.model.Response(id, false, result).toString();
+        }
     }
 }
