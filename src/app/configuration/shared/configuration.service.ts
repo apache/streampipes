@@ -40,4 +40,13 @@ export class ConfigurationService {
         return this.http.post(this.getServerUrl() + '/api/v2/consul', consulService);
     }
 
+
+    adjustConfigurationKey(consulKey) {         
+            var str1 = consulKey.replace(/SP/g,"");
+            str1 = str1.replace(/_/g," "); 
+            if(str1.startsWith(" ")){
+                str1 = str1.slice(1,str1.length)
+            }
+            return str1 
+    }
 }

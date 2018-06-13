@@ -18,23 +18,11 @@ export class ConsulServiceComponent {
 
     toggleConfiguration(): void {
         this.showConfiguration = !this.showConfiguration;
-        this.adjustConfigurationKey();
+
     }
 
     updateConfiguration(): void {
         this.updateConsulService.emit(this.consulService);
-    }
-
-    adjustConfigurationKey() {
-        // nur auf der ui ändern configuration.key unverändert lassen
-         this.consulService.configs.forEach((configuration) => {
-            var str1 = configuration.key;
-            str1 = str1.replace(/SP/g,"");
-            configuration.modifiedKey = str1.replace(/_/g," ");  
-            
-            
-        } )
-        this.updateConfiguration();
     }
 
 }

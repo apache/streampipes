@@ -6,6 +6,8 @@ import { MatButtonModule, MatGridListModule, MatInputModule, MatIconModule, MatT
 import { FormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {StreampipesPeContainerConifgs} from '../shared/streampipes-pe-container-configs';
+import {StreampipesPeContainer} from '../shared/streampipes-pe-container.model';
 
 describe('ConsulServiceComponent', () => {
 
@@ -75,34 +77,58 @@ describe('ConsulServiceComponent', () => {
     template: '<consul-service [consulService]="consulService"></consul-service>'
 })
 class TestComponentWrapper {
-    consulService = {
-        mainKey: 'sp/test/1',
+    
+    consulService : [StreampipesPeContainer] = [
+    {
+        name: "TestName",
+        mainKey: "id",
         meta: {
-            status: 'passing'
+            status: "passing"
         },
-        name: 'test1',
-        configs: [
-            {
-                key: 'testint',
-                value: '80',
-                valueType: 'xs:integer',
-                isPassword: false,
-                description: 'test int'
-            },
-            {
-                key: 'teststring',
-                value: '765',
-                valueType: 'xs:string',
-                isPassword: false,
-                description: 'test string'
-            },
-            {
-                key: 'testbool',
-                value: 'true',
-                valueType: 'xs:boolean',
-                isPassword: false,
-                description: 'test boolean'
-            }
-        ]
+        configs:[{
+            key: "TECH ACTIVE",
+            description: "Source for nissatech data", 
+            value: "false", 
+            valueType: "xs:boolean",
+            isPassword: false,
+
+        }]
+
+        
+    }]
+   
+    // consulService = {
+    //     mainKey: 'sp/test/1',
+    //     meta: {
+    //         status: 'passing'
+    //     },
+    //     name: 'test1',
+    //     configs: [
+            
+            
+    //         {
+    //             key: 'testint',
+    //             value: '80',
+    //             valueType: 'xs:integer',
+    //             isPassword: false,
+    //             description: 'test int'
+    //         },
+    //         // {
+    //         //     key: 'teststring',
+    //         //     value: '765',
+    //         //     valueType: 'xs:string',
+    //         //     isPassword: false,
+    //         //     description: 'test string'
+    //         // },
+    //         // {
+    //         //     key: 'testbool',
+    //         //     value: 'true',
+    //         //     valueType: 'xs:boolean',
+    //         //     isPassword: false,
+    //         //     description: 'test boolean'
+    //         // }
+
+
+
+       // ]
     }
-}

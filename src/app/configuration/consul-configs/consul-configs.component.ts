@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { StreampipesPeContainer } from "../shared/streampipes-pe-container.model";
-import { StreampipesPeContainerConifgs } from "../shared/streampipes-pe-container-configs";
 import {xsService} from '../../NS/XS.service'
 @Component({
     selector: 'consul-configs',

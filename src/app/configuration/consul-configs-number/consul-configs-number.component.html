@@ -1,7 +1,7 @@
 <mat-form-field class="form-field">
 
 <input 
-        matInput [(ngModel)]="configuration.value" [placeholder]="configuration.key" type="number"
+        matInput [(ngModel)]="configuration.value" [placeholder]="configService.adjustConfigurationKey(configuration.key)" type="number"
         [ngModelOptions]="{standalone: true}">
 
 </mat-form-field>

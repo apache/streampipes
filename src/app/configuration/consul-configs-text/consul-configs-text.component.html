@@ -1,6 +1,6 @@
 <mat-form-field class="form-field">
 <input matInput [(ngModel)]="configuration.value"
-           [placeholder]="configuration.modifiedKey" type="text"
+           [placeholder]="configService.adjustConfigurationKey(configuration.key)" type="text"
            [ngModelOptions]="{standalone: true}">
     <mat-icon matSuffix [matTooltip]="configuration.description" matTooltipPosition="left"
               class="tooltip-icon">
