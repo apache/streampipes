@@ -7,6 +7,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.modelconnect.AdapterStreamDescription;
 import org.streampipes.rest.Mock;
@@ -29,7 +30,7 @@ public class SpConnectResourceTest {
     @Before
     public  void before() {
 
-        spConnectResource = new SpConnectResource();
+        spConnectResource = new SpConnectResource(new SpConnect(), "");
         RestAssured.port = Mock.PORT;
 
         ResourceConfig config = new ResourceConfig().register(spConnectResource);
@@ -77,6 +78,9 @@ public class SpConnectResourceTest {
         org.mockito.Mockito.when(spConnect.addAdapter(any(AdapterStreamDescription.class), any(String.class)))
                 .thenReturn(errorMessage);
         spConnectResource.setSpConnect(spConnect);
+        spConnectResource.setConnectContainerEndpoint(Mock.HOST);
+
+        SpConnect backendConfig = mock(SpConnect.class);
 
         String data = TestUtil.getMinimalStreamAdapterJsonLD();
         given().contentType("application/json").body(data).when()

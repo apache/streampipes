@@ -2,10 +2,6 @@ package org.streampipes.rest.impl.connect;
 
 
 
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.RDFParseException;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.connect.RunningAdapterInstances;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
@@ -18,7 +14,6 @@ import org.streampipes.connect.firstconnector.format.csv.CsvFormat;
 import org.streampipes.connect.firstconnector.format.json.arraykey.JsonFormat;
 import org.streampipes.connect.firstconnector.protocol.set.FileProtocol;
 import org.streampipes.connect.firstconnector.protocol.set.HttpProtocol;
-import org.streampipes.container.transform.Transformer;
 import org.streampipes.container.util.Util;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
@@ -56,16 +51,19 @@ public class SpConnectResource extends AbstractRestInterface {
 
     private static final Logger logger = LoggerFactory.getLogger(SpConnectResource.class);
     private SpConnect spConnect;
+    private String connectContainerEndpoint;
 
-    @Context
-    UriInfo uri;
+//    @Context
+//    UriInfo uri;
 
     public SpConnectResource() {
         spConnect = new SpConnect();
+        connectContainerEndpoint = BackendConfig.INSTANCE.getConnectContainerUrl();
     }
 
-    public SpConnectResource(SpConnect spConnect) {
+    public SpConnectResource(SpConnect spConnect, String connectContainerEndpoint) {
         this.spConnect = spConnect;
+        this.connectContainerEndpoint = connectContainerEndpoint;
     }
 
     @GET
@@ -179,7 +177,7 @@ public class SpConnectResource extends AbstractRestInterface {
 
             SpDataSet dataSet = SpConnect.getDescription(jsonLdTransformer, payload, SpDataSet.class);
 
-            String result = spConnect.invokeAdapter(streamId, dataSet, uri.getBaseUri().toString(), new AdapterStorageImpl());
+            String result = spConnect.invokeAdapter(streamId, dataSet, connectContainerEndpoint, new AdapterStorageImpl());
 
             return getResponse(result, streamId);
     }
@@ -190,16 +188,16 @@ public class SpConnectResource extends AbstractRestInterface {
     @Produces(MediaType.APPLICATION_JSON)
     public String detach(@PathParam("streamId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
 
-        Adapter adapter = RunningAdapterInstances.INSTANCE.removeAdapter(runningInstanceId);
+//        Adapter adapter = RunningAdapterInstances.INSTANCE.removeAdapter(runningInstanceId);
 
-        if (adapter != null) {
-            adapter.stop();
+//        if (adapter != null) {
+//            adapter.stop();
 
             org.streampipes.model.Response resp = new org.streampipes.model.Response("", true);
             return Util.toResponseString(resp);
-        }
+//        }
 
-        return Util.toResponseString(elementId, false, "Could not find the running instance with id: " + runningInstanceId);
+//        return Util.toResponseString(elementId, false, "Could not find the running instance with id: " + runningInstanceId);
     }
 
 
@@ -210,7 +208,8 @@ public class SpConnectResource extends AbstractRestInterface {
 
         AdapterDescription a = SpConnect.getAdapterDescription(ar);
 
-        String success = spConnect.addAdapter(a, uri.getBaseUri().toString());
+
+        String success = spConnect.addAdapter(a, connectContainerEndpoint);
 
         return getResponse(success, a.getUri());
     }
@@ -250,6 +249,10 @@ public class SpConnectResource extends AbstractRestInterface {
 
     public void setSpConnect(SpConnect spConnect) {
         this.spConnect = spConnect;
+    }
+
+    public void setConnectContainerEndpoint(String connectContainerEndpoint) {
+        this.connectContainerEndpoint = connectContainerEndpoint;
     }
 
     private String getResponse(String result, String id) {

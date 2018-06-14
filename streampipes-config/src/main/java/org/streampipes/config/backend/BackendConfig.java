@@ -38,6 +38,8 @@ public enum BackendConfig {
   private final static String IS_CONFIGURED = "is_configured";
   private final static String KAFKA_REST_HOST = "kafka_rest_host";
   private final static String KAFKA_REST_PORT = "kafka_rest_port";
+  private final static String CONNECT_CONTAINER_HOST = "connect_container_host";
+  private final static String CONNECT_CONTAINER_PORT = "connect_container_port";
 
   BackendConfig() {
     config = SpConfig.getSpConfig("backend");
@@ -58,6 +60,9 @@ public enum BackendConfig {
             "already configured or not");
     config.register(KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
     config.register(KAFKA_REST_PORT, 8073, "The port of the kafka-rest module");
+    config.register(KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
+    config.register(CONNECT_CONTAINER_PORT, 8099, "The port of the connect container");
+    config.register(CONNECT_CONTAINER_HOST, "localhost", "The hostname of the connect container");
 
   }
 
@@ -131,6 +136,18 @@ public enum BackendConfig {
 
   public String getElasticsearchURL() {
     return getElasticsearchProtocol()+ "://" + getElasticsearchHost() + ":" + getElasticsearchPort();
+  }
+
+  public String getConnectContainerHost() {
+    return config.getString(CONNECT_CONTAINER_HOST);
+  }
+
+  public Integer getConnectContainerPort() {
+    return config.getInteger(CONNECT_CONTAINER_PORT);
+  }
+
+  public String getConnectContainerUrl() {
+    return "http://" + getConnectContainerHost() + ":" + getConnectContainerPort() + "/";
   }
 
   public String getKafkaRestHost() {

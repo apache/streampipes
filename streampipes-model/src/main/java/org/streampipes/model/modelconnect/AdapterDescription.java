@@ -29,9 +29,11 @@ public class AdapterDescription extends NamedStreamPipesEntity {
 
 
     public AdapterDescription() {
+        super();
     }
 
     public AdapterDescription(FormatDescription formatDescription, ProtocolDescription protocolDescription) {
+        super();
         this.formatDescription = formatDescription;
         this.protocolDescription = protocolDescription;
     }

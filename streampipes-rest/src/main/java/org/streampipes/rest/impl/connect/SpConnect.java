@@ -44,7 +44,7 @@ public class SpConnect {
             a = getDescription(jsonLdTransformer, ads, AdapterStreamDescription.class);
         }
 
-        logger.info("Add Adapter Description " + a.getId());
+        logger.info("Add Adapter Description " + a.getUri());
 
         return a;
     }
@@ -64,13 +64,13 @@ public class SpConnect {
 
 
     public static String startStreamAdapter(AdapterStreamDescription asd, String baseUrl) {
-        String url = baseUrl + "invoke/stream";
+        String url = baseUrl + "api/v1/invoke/stream";
 
         return postStartAdapter(url, asd);
     }
 
     public  String invokeAdapter(String streamId, SpDataSet dataSet, String baseUrl, AdapterStorageImpl adapterStorage) {
-        String url = baseUrl + "invoke/set";
+        String url = baseUrl + "api/v1/invoke/set";
 //        String url = "http://localhost:8099/invoke/set";
 
         AdapterSetDescription adapterDescription = (AdapterSetDescription) adapterStorage.getAdapter(streamId);
@@ -82,8 +82,13 @@ public class SpConnect {
     private static String postStartAdapter(String url, AdapterDescription ad) {
         try {
 
+//            TODO just for testing
+//            url = "http://localhost:8099/api/v1/invoke/stream";
+
             logger.info("Trying to start adpater on endpoint: " + url);
 
+            // TODO quick fix because otherwise it is not serialized to json-ld
+            ad.setUri("http://test.adapter");
             String adapterDescription = toJsonLd(ad);
 
             String responseString = Request.Post(url)
