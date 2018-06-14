@@ -1,7 +1,9 @@
 package org.streampipes.connect.management;
 
+import org.streampipes.connect.RunningAdapterInstances;
 import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.firstconnector.Adapter;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.modelconnect.AdapterSetDescription;
 import org.streampipes.model.modelconnect.AdapterStreamDescription;
 
@@ -13,8 +15,7 @@ public class AdapterManagement implements IAdapterManagement {
         String topic = getTopicPrefix() + adapterStreamDescription.getName();
 
         Adapter adapter = new Adapter(brokerUrl, topic, false);
-//        RunningAdapterInstances.INSTANCE.addAdapter(dataSet.getDatasetInvocationId(), adapter);
-        // TODO execute a Thread
+        RunningAdapterInstances.INSTANCE.addAdapter(adapterStreamDescription.getUri(), adapter);
         adapter.run(adapterStreamDescription);
         return "";
     }
@@ -25,17 +26,16 @@ public class AdapterManagement implements IAdapterManagement {
     }
 
     public String invokeSetAdapter (AdapterSetDescription adapterSetDescription) {
+        SpDataSet dataSet = adapterSetDescription.getDataSet();
 
-//           String runningInstanceId = dataSet.getDatasetInvocationId();
-//            String brokerUrl = dataSet.getEventGrounding().getTransportProtocol().getBrokerHostname() + ":9092";
-//            String topic = dataSet.getEventGrounding().getTransportProtocol().getTopicDefinition()
-//                    .getActualTopicName();
-        //            Adapter adapter = new Adapter(brokerUrl, topic, false);
-//
-//            RunningAdapterInstances.INSTANCE.addAdapter(dataSet.getDatasetInvocationId(), adapter);
-//
-//            adapter.run(adapterDescription);
+        String brokerUrl = dataSet.getEventGrounding().getTransportProtocol().getBrokerHostname() + ":9092";
+        String topic = dataSet.getEventGrounding().getTransportProtocol().getTopicDefinition()
+                .getActualTopicName();
+        Adapter adapter = new Adapter(brokerUrl, topic, false);
 
+        RunningAdapterInstances.INSTANCE.addAdapter(dataSet.getDatasetInvocationId(), adapter);
+
+        adapter.run(adapterSetDescription);
 
         return "";
     }

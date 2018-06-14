@@ -28,15 +28,6 @@ public class SpConnectTest {
     public  void before() {
     }
 
-
-    @Test
-    public void getAdapterSetDescriptionWithType() {
-        AdapterSetDescription asd = SpConnect
-                .getAdapterDescription(TestUtil.getMinimalSetAdapterJsonLD(), AdapterSetDescription.class);
-
-        assertEquals("http://test.de/1", asd.getUri());
-    }
-
     @Test
     public void getAdapterStreamDescriptionWithoutType() {
         AdapterDescription asd = SpConnect
@@ -65,7 +56,7 @@ public class SpConnectTest {
         AdapterStreamDescription adapter = new AdapterStreamDescription();
         adapter.setUri("http://test.de/1");
 
-        String result = SpConnect.startStreamAdapter(adapter, Mock.HOST);
+        String result = SpConnect.startStreamAdapter(adapter, Mock.HOST + "/");
 
         assertEquals(SpConnectUtils.SUCCESS, result);
         verify(postRequestedFor(urlEqualTo("/invoke/stream"))
@@ -91,7 +82,7 @@ public class SpConnectTest {
         SpDataSet dataSet = new SpDataSet("http://one.de", "name", "desc", new EventSchema());
 
         SpConnect spConnect = new SpConnect();
-        String result = spConnect.invokeAdapter("1234", dataSet, Mock.HOST, adapterStorage);
+        String result = spConnect.invokeAdapter("1234", dataSet, Mock.HOST + "/", adapterStorage);
 
         assertEquals(SpConnectUtils.SUCCESS, result);
         verify(postRequestedFor(urlEqualTo("/invoke/set"))

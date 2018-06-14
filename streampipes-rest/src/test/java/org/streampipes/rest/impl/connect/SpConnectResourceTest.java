@@ -7,24 +7,18 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.streampipes.commons.Utils;
-import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.modelconnect.AdapterStreamDescription;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.rest.Mock;
 import org.streampipes.rest.TestUtil;
-import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import javax.ws.rs.core.UriBuilder;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 
 public class SpConnectResourceTest {

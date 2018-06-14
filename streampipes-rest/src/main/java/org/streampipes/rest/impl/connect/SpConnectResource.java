@@ -175,7 +175,9 @@ public class SpConnectResource extends AbstractRestInterface {
     public String invokeAdapter(@PathParam("streamId") String streamId, String
             payload) {
 
-            SpDataSet dataSet = SpConnect.getDataSetDescritpion(payload);
+            JsonLdTransformer jsonLdTransformer = new JsonLdTransformer(StreamPipes.DATA_SET);
+
+            SpDataSet dataSet = SpConnect.getDescription(jsonLdTransformer, payload, SpDataSet.class);
 
             String result = spConnect.invokeAdapter(streamId, dataSet, uri.getBaseUri().toString(), new AdapterStorageImpl());
 

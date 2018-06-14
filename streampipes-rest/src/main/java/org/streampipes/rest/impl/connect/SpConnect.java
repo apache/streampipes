@@ -11,6 +11,7 @@ import org.streampipes.model.modelconnect.AdapterSetDescription;
 import org.streampipes.model.modelconnect.AdapterStreamDescription;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.streampipes.vocabulary.StreamPipes;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -32,14 +33,15 @@ public class SpConnect {
 
     public static AdapterDescription getAdapterDescription(String ads) {
 
-        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
 
         AdapterDescription a = null;
 
         if (ads.contains("AdapterSetDescription")){
-            a = getAdapterDescription(ads, AdapterSetDescription.class);
+            JsonLdTransformer jsonLdTransformer = new JsonLdTransformer(StreamPipes.ADAPTER_SET_DESCRIPTION);
+            a = getDescription(jsonLdTransformer, ads, AdapterSetDescription.class);
         } else {
-            a = getAdapterDescription(ads, AdapterStreamDescription.class);
+            JsonLdTransformer jsonLdTransformer = new JsonLdTransformer(StreamPipes.ADAPTER_STREAM_DESCRIPTION);
+            a = getDescription(jsonLdTransformer, ads, AdapterStreamDescription.class);
         }
 
         logger.info("Add Adapter Description " + a.getId());
@@ -47,16 +49,7 @@ public class SpConnect {
         return a;
     }
 
-    public static <T extends AdapterDescription> T getAdapterDescription(String ads, Class<T> theClass) {
-        return getDescription(ads, theClass);
-    }
-
-    public static SpDataSet getDataSetDescritpion(String s) {
-        return getDescription(s, SpDataSet.class);
-    }
-
-    private static <T> T getDescription(String s, Class<T> theClass) {
-        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
+    public static <T> T getDescription(JsonLdTransformer jsonLdTransformer, String s, Class<T> theClass) {
 
         T a = null;
 
@@ -71,13 +64,14 @@ public class SpConnect {
 
 
     public static String startStreamAdapter(AdapterStreamDescription asd, String baseUrl) {
-        String url = baseUrl + "/invoke/stream";
+        String url = baseUrl + "invoke/stream";
 
         return postStartAdapter(url, asd);
     }
 
     public  String invokeAdapter(String streamId, SpDataSet dataSet, String baseUrl, AdapterStorageImpl adapterStorage) {
-        String url = baseUrl + "/invoke/set";
+        String url = baseUrl + "invoke/set";
+//        String url = "http://localhost:8099/invoke/set";
 
         AdapterSetDescription adapterDescription = (AdapterSetDescription) adapterStorage.getAdapter(streamId);
         adapterDescription.setDataSet(dataSet);
@@ -110,19 +104,8 @@ public class SpConnect {
     }
 
     private static <T> String toJsonLd(T object) {
-        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
-        String s = null;
-        try {
-            s = jsonLdTransformer.toJsonLd(object).toString();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InvalidRdfException e) {
-            e.printStackTrace();
-        }
+        JsonLdUtils.toJsonLD(object);
+        String s = JsonLdUtils.toJsonLD(object);
 
         if (s == null) {
             logger.error("Could not serialize Object " + object + " into json ld");
