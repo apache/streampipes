@@ -22,6 +22,16 @@ public class AdapterManagement implements IAdapterManagement {
 
     public String stopStreamAdapter(AdapterStreamDescription adapterStreamDescription) {
 
+        String adapterUri = adapterStreamDescription.getUri();
+
+        Adapter adapter = RunningAdapterInstances.INSTANCE.removeAdapter(adapterUri);
+
+        if (adapter == null) {
+            return "Adapter with id " + adapterUri + " was not found in this container and cannot be stopped.";
+        }
+
+        adapter.stop();
+
         return "";
     }
 
