@@ -59,7 +59,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(ConsulConfig.class);
         apiClasses.add(DataStream.class);
         apiClasses.add(ContainerProvidedOptions.class);
-        apiClasses.add(Logs.class);
+        apiClasses.add(StreamPipesLogs.class);
         apiClasses.add(SpConnect.class);
         apiClasses.add(GuessResource.class);
         apiClasses.add(PipelineTemplate.class);

@@ -55,9 +55,9 @@ import static org.elasticsearch.index.query.QueryBuilders.matchPhraseQuery;
 import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 
 @Path("/v2/logs")
-public class Logs extends AbstractRestInterface implements ILogs {
+public class StreamPipesLogs extends AbstractRestInterface implements ILogs {
 
-    static Logger LOG = LoggerFactory.getLogger(Logs.class);
+    static Logger LOG = LoggerFactory.getLogger(StreamPipesLogs.class);
 
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS");
 
