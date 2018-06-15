@@ -1,3 +1,20 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.rest.impl;
 
 import org.slf4j.Logger;
@@ -9,7 +26,6 @@ import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.template.PipelineTemplateDescription;
-import org.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.streampipes.model.template.PipelineTemplateInvocation;
 import org.streampipes.rest.api.InternalPipelineTemplate;
 import org.streampipes.sdk.builder.BoundPipelineElementBuilder;
@@ -25,7 +41,6 @@ import java.util.*;
 
 @Path("/v2/users/{username}/internal-pipelines")
 public class InternalPipelineTemplates extends AbstractRestInterface implements InternalPipelineTemplate {
-    //TODO: Interface
 
     static Logger LOG = LoggerFactory.getLogger(InternalPipelineTemplates.class);
 
@@ -52,30 +67,17 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
     @Produces(MediaType.APPLICATION_JSON)
     //Returns all log-pipeline Invocations
     public Response getPipelineTemplateInvocation() {
-        //try {
-        //    List<PipelineTemplateDescription> descriptions = Arrays.asList(makeSaveToElasticTemplate());
-        //    String jsonLd = toJsonLd(new PipelineTemplateDescriptionContainer(descriptions));
-        //    return ok(jsonLd);
-
         Object[] templateNames = templates.keySet().toArray();
         String templateJSON = toJson(templateNames);
         return ok(templateJSON);
 
-        //} catch (URISyntaxException e) {
-        //      e.printStackTrace();
-        //      return Response.serverError().build();
-        //}
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-  //  public Response generatePipeline(@PathParam("username") String username, String pipelineTemplateDescriptionString) {
     public Response generatePipeline(@PathParam("username") String username, String pipelineId) {
         try {
-            //PipelineTemplateDescription pipelineTemplateDescription = new JsonLdTransformer(StreamPipes.PIPELINE_TEMPLATE_DESCRIPTION)
-            //        .fromJsonLd(pipelineTemplateDescriptionString, PipelineTemplateDescription.class);
-
-            PipelineTemplateDescription pipelineTemplateDescription =  templates.get(pipelineId).makeTemplate();
+            PipelineTemplateDescription pipelineTemplateDescription = templates.get(pipelineId).makeTemplate();
 
             PipelineTemplateInvocation invocation = Operations.getPipelineInvocationTemplate(getLogDataStream(), pipelineTemplateDescription);
             PipelineOperationStatus status = Operations.handlePipelineTemplateInvocation(username, invocation, pipelineTemplateDescription);
@@ -87,18 +89,6 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
         }
     }
 
-/*
-    private PipelineTemplateDescription makeSaveToElasticTemplate() throws URISyntaxException {
-        return new PipelineTemplateDescription(PipelineTemplateBuilder.create("logs-to-Elastic", "Save Logs", "Save all logs in Elastic-Search")
-                .boundPipelineElementTemplate(BoundPipelineElementBuilder
-                  //  .create(getSink("http://pe-flink-samples:8090/sec/elasticsearch"))
-                    .create(getSink("http://localhost:8091/sec/elasticsearch"))
-                        .withPredefinedFreeTextValue("index-name", "streampipes-log")
-                        .withPredefinedSelection("timestamp", Collections.singletonList("epochTime"))
-                    .build())
-                .build());
-    }
-*/
     private DataProcessorDescription getProcessor(String id) throws URISyntaxException {
         return getStorage()
                 .getSEPAById(id);
@@ -119,7 +109,7 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
     private List<SpDataStream> getAllDataStreams() {
         List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllSEPs();
         List<SpDataStream> datasets = new ArrayList<>();
-        for(DataSourceDescription source : sources) {
+        for (DataSourceDescription source : sources) {
             datasets.addAll(source
                     .getSpDataStreams());
         }
