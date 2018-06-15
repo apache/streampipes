@@ -17,13 +17,11 @@
 
 package org.streampipes.manager.matching;
 
-import org.junit.Test;
-
 public class TestPipelineModification {
 
-    @Test
-    public void testPipelineModificationMessagePresent() {
-
+//    @Test
+//    public void testPipelineModificationMessagePresent() {
+//
 //        DataProcessorInvocation invocation = TestUtils.makeSepa(new AggregationController(), "B", "A");
 //        SpDataStream stream = TestUtils.makeStream(new RandomDataProducer(), new RandomNumberStreamJson(), "A");
 //
@@ -40,11 +38,11 @@ public class TestPipelineModification {
 //        }
 //
 //        assertNotNull(message);
-    }
+//    }
 
-    @Test
-    public void testPipelineMappingProperties() {
-
+//    @Test
+//    public void testPipelineMappingProperties() {
+//
 //        DataProcessorInvocation invocation = TestUtils.makeSepa(new AggregationController(), "B", "A");
 //        SpDataStream stream = TestUtils.makeStream(new RandomDataProducer(), new RandomNumberStreamJson(), "A");
 //
@@ -62,6 +60,6 @@ public class TestPipelineModification {
 //
 //        assertNotNull(message);
 //        assertTrue(message.getPipelineModifications().size() > 0);
-    }
+//    }
 
 }

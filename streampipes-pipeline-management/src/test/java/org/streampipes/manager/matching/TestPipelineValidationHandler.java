@@ -18,15 +18,14 @@
 package org.streampipes.manager.matching;
 
 import junit.framework.TestCase;
-import org.junit.Test;
 
 //import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestPipelineValidationHandler extends TestCase {
 
-	@Test
-	public void testPositivePipelineValidation() {
-
+//	@Test
+//	public void testPositivePipelineValidation() {
+//
 //		Pipeline pipeline = TestUtils.makePipeline(new RandomDataProducer(),
 //				new RandomNumberStreamJson(),
 //				new AggregationController());
@@ -40,11 +39,11 @@ public class TestPipelineValidationHandler extends TestCase {
 //		}
 //
 //		assertTrue(true);
-	}
+//	}
 
-	@Test
-	public void testNegativePipelineValidation() {
-
+//	@Test
+//	public void testNegativePipelineValidation() {
+//
 //		Pipeline pipeline = TestUtils.makePipeline(new RandomDataProducer(),
 //				new RandomNumberStreamJson(),
 //				new GeofencingController());
@@ -59,8 +58,8 @@ public class TestPipelineValidationHandler extends TestCase {
 //		}
 //
 //		Throwable actual = ThrowableCaptor.captureThrowable(handler::validateConnection);
-
-		//assertThat(actual).isInstanceOf(InvalidConnectionException.class);
-
-	}
+//
+//		//assertThat(actual).isInstanceOf(InvalidConnectionException.class);
+//
+//	}
 }

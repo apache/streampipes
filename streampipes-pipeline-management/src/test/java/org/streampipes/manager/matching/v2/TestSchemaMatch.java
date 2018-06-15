@@ -105,9 +105,9 @@ public class TestSchemaMatch extends TestCase {
 		assertTrue(matches);
 	}
 	
-	@Test
-	public void testPositiveSchemaMatchWithRealSchema() {
-
+//	@Test
+//	public void testPositiveSchemaMatchWithRealSchema() {
+//
 //		DataProcessorDescription requiredSepa = new AggregationController().declareModel();
 //		SpDataStream offeredStream = new RandomNumberStreamJson().declareModel(new RandomDataProducer().declareModel());
 //
@@ -118,5 +118,5 @@ public class TestSchemaMatch extends TestCase {
 //
 //		boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
 //		assertTrue(matches);
-	}
+//	}
 }

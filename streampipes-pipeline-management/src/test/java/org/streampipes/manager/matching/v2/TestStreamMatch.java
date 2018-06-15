@@ -18,13 +18,12 @@
 package org.streampipes.manager.matching.v2;
 
 import junit.framework.TestCase;
-import org.junit.Test;
 
 public class TestStreamMatch extends TestCase {
 
-	@Test
-	public void testPositiveStreamMatchWithIgnoredGrounding() {
-
+//	@Test
+//	public void testPositiveStreamMatchWithIgnoredGrounding() {
+//
 //		DataProcessorDescription requiredSepa = new AggregationController().declareModel();
 //		SpDataStream offeredStream = new RandomNumberStreamJson().declareModel(new RandomDataProducer().declareModel());
 //
@@ -34,11 +33,11 @@ public class TestStreamMatch extends TestCase {
 //
 //		boolean matches = new StreamMatch().matchIgnoreGrounding(offeredStream, requiredStream, errorLog);
 //		assertTrue(matches);
-	}
+//	}
 	
-	@Test
-	public void testPositiveStreamMatchWithoutRequirementsIgnoredGrounding() {
-
+//	@Test
+//	public void testPositiveStreamMatchWithoutRequirementsIgnoredGrounding() {
+//
 //		DataProcessorDescription requiredSepa = new ProjectController().declareModel();
 //		SpDataStream offeredStream = new RandomNumberStreamJson().declareModel(new RandomDataProducer().declareModel());
 //
@@ -48,5 +47,5 @@ public class TestStreamMatch extends TestCase {
 //
 //		boolean matches = new StreamMatch().matchIgnoreGrounding(offeredStream, requiredStream, errorLog);
 //		assertTrue(matches);
-	}
+//	}
 }
