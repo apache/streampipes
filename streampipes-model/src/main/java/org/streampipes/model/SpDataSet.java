@@ -66,6 +66,16 @@ public class SpDataSet extends SpDataStream {
     if (other.getSupportedGrounding() != null) this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
   }
 
+  public String getBrokerHostname() {
+    return getEventGrounding().getTransportProtocol().getBrokerHostname();
+  }
+
+  public String getActualTopicName() {
+    return getEventGrounding().getTransportProtocol().getTopicDefinition()
+                .getActualTopicName();
+  }
+
+
   public EventGrounding getSupportedGrounding() {
     return supportedGrounding;
   }
