@@ -65,14 +65,15 @@ public class PipelineGenerator {
     return pipeline;
   }
 
-  private SpDataStream prepareStream(String datasetId) {
-    SpDataSet stream = new SpDataSet((SpDataSet) getStream(datasetId));
+  private SpDataStream prepareStream(String streamId) {
+    SpDataStream stream = getStream(streamId);
     if (stream instanceof SpDataSet) {
+      stream = new SpDataSet((SpDataSet) stream);
       DataSetModificationMessage message = new DataSetGroundingSelector((SpDataSet) stream).selectGrounding();
       stream.setEventGrounding(message.getEventGrounding());
       ((SpDataSet) stream).setDatasetInvocationId(message.getInvocationId());
     } else {
-
+      stream = new SpDataStream(stream);
     }
     stream.setDOM(getDom());
     return stream;
