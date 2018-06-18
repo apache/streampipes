@@ -1,4 +1,4 @@
-package org.streampipes.connect.init;
+package org.streampipes.connect.init;;
 
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
