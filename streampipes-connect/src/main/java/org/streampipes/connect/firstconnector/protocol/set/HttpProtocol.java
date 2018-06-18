@@ -80,6 +80,11 @@ public class HttpProtocol extends Protocol {
         parser.parse(data, stk);
     }
 
+    @Override
+    public void stop() {
+
+    }
+
 
     @Override
     public GuessSchema getGuessSchema() {

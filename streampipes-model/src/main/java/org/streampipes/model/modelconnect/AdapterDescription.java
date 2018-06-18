@@ -7,6 +7,8 @@ import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.streampipes.model.util.Cloner;
 
 import javax.persistence.Entity;
 
@@ -30,6 +32,12 @@ public class AdapterDescription extends NamedStreamPipesEntity {
 
     public AdapterDescription() {
         super();
+    }
+
+    public AdapterDescription(AdapterDescription other) {
+        super(other);
+        if (other.getFormatDescription() != null) this.formatDescription = new FormatDescription(other.getFormatDescription());
+        if (other.getProtocolDescription() != null) this.protocolDescription = new ProtocolDescription(other.getProtocolDescription());
     }
 
     public AdapterDescription(FormatDescription formatDescription, ProtocolDescription protocolDescription) {
@@ -68,5 +76,17 @@ public class AdapterDescription extends NamedStreamPipesEntity {
 
     public void setRev(String rev) {
         this.rev = rev;
+    }
+
+    @Override
+    public String toString() {
+        return "AdapterDescription{" +
+                "id='" + id + '\'' +
+                ", rev='" + rev + '\'' +
+                ", formatDescription=" + formatDescription +
+                ", protocolDescription=" + protocolDescription +
+                ", elementId='" + elementId + '\'' +
+                ", DOM='" + DOM + '\'' +
+                '}';
     }
 }

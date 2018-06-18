@@ -81,6 +81,11 @@ public class FileProtocol extends Protocol {
         }
     }
 
+    @Override
+    public void stop() {
+
+    }
+
 
     @Override
     public GuessSchema getGuessSchema() {

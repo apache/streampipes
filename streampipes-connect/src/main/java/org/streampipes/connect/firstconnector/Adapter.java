@@ -28,6 +28,7 @@ public class Adapter {
 
     private String kafkaUrl;
     private String topic;
+    private Protocol protocol;
 
     Logger logger = LoggerFactory.getLogger(Adapter.class);
     private boolean debug;
@@ -62,7 +63,7 @@ public class Adapter {
         Parser parser = allParsers.get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
         Format format = allFormats.get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
 
-        Protocol protocol = allProtocols.get(adapterDescription.getProtocolDescription().getUri()).getInstance(adapterDescription.getProtocolDescription(), parser, format);
+        protocol = allProtocols.get(adapterDescription.getProtocolDescription().getUri()).getInstance(adapterDescription.getProtocolDescription(), parser, format);
 
         logger.debug("Start adatper with format: " + format.getId() + " and " + protocol.getId());
 
@@ -81,10 +82,8 @@ public class Adapter {
         return protocol.getGuessSchema();
     }
 
-
-
     public void stop() {
-        //TODO
+        protocol.stop();
     }
 
 }

@@ -25,5 +25,10 @@ public abstract class Protocol {
      */
     public abstract void run(String broker, String topic);
 
+    /*
+       Stops the running protocol. Mainly relevant for streaming protocols
+     */
+    public abstract void stop();
+
     public abstract String getId();
 }

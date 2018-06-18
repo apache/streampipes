@@ -173,13 +173,13 @@ public class SpConnectResource extends AbstractRestInterface {
     public String invokeAdapter(@PathParam("streamId") String streamId, String
             payload) {
 
-            JsonLdTransformer jsonLdTransformer = new JsonLdTransformer(StreamPipes.DATA_SET);
+        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer(StreamPipes.DATA_SET);
 
-            SpDataSet dataSet = SpConnect.getDescription(jsonLdTransformer, payload, SpDataSet.class);
+        SpDataSet dataSet = SpConnect.getDescription(jsonLdTransformer, payload, SpDataSet.class);
 
-            String result = spConnect.invokeAdapter(streamId, dataSet, connectContainerEndpoint, new AdapterStorageImpl());
+        String result = spConnect.invokeAdapter(streamId, dataSet, connectContainerEndpoint, new AdapterStorageImpl());
 
-            return getResponse(result, streamId);
+        return getResponse(result, streamId);
     }
 
 
@@ -187,17 +187,12 @@ public class SpConnectResource extends AbstractRestInterface {
     @Path("/all/{streamId}/streams/{runningInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
     public String detach(@PathParam("streamId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
+        String result = SpConnect.stopSetAdapter(elementId, connectContainerEndpoint, new AdapterStorageImpl());
 
-//        Adapter adapter = RunningAdapterInstances.INSTANCE.removeAdapter(runningInstanceId);
+        org.streampipes.model.Response resp = new org.streampipes.model.Response(runningInstanceId, true);
+        return Util.toResponseString(resp);
 
-//        if (adapter != null) {
-//            adapter.stop();
-
-            org.streampipes.model.Response resp = new org.streampipes.model.Response("", true);
-            return Util.toResponseString(resp);
-//        }
-
-//        return Util.toResponseString(elementId, false, "Could not find the running instance with id: " + runningInstanceId);
+//        return getResponse(result, runningInstanceId);
     }
 
 
@@ -207,7 +202,9 @@ public class SpConnectResource extends AbstractRestInterface {
         logger.info("Received request add adapter with json-ld: " + ar);
 
         AdapterDescription a = SpConnect.getAdapterDescription(ar);
-
+        if (a.getUri() == null) {
+            a.setUri("https://streampipes.org/adapter/" + UUID.randomUUID());
+        }
 
         String success = spConnect.addAdapter(a, connectContainerEndpoint);
 
@@ -218,11 +215,21 @@ public class SpConnectResource extends AbstractRestInterface {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{adapterId}")
-    public Response deleteAdapter(@PathParam("adapterId") String adapterId) {
+    public String deleteAdapter(@PathParam("adapterId") String couchDbadapterId) {
 
-        new AdapterStorageImpl().delete(adapterId);
+        String result = "";
 
-        return Response.ok().build();
+        // IF Stream adapter delete it
+        AdapterStorageImpl adapterStorage = new AdapterStorageImpl();
+        boolean isStreamAdapter = SpConnect.isStreamAdapter(couchDbadapterId, adapterStorage);
+
+        if (isStreamAdapter) {
+            result = SpConnect.stopStreamAdapter(couchDbadapterId, connectContainerEndpoint, adapterStorage);
+        }
+
+        adapterStorage.deleteAdapter(couchDbadapterId);
+
+        return getResponse(result, couchDbadapterId);
     }
 
     @GET

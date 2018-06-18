@@ -38,7 +38,7 @@ public class AdapterResource {
         return getResponse(adapterStreamDescription, resultString);
     }
 
-    @DELETE
+    @POST
     @Path("/stop/stream")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,7 +64,7 @@ public class AdapterResource {
        return getResponse(adapterSetDescription, resultString);
     }
 
-    @DELETE
+    @POST
     @Path("/stop/set")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

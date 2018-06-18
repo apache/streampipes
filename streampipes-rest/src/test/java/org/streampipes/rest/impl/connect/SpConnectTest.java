@@ -29,6 +29,26 @@ public class SpConnectTest {
     }
 
     @Test
+    public void isStreamAdapterSuccess() {
+        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
+        org.mockito.Mockito.when(adapterStorage.getAdapter(org.mockito.ArgumentMatchers.any(String.class)))
+                .thenReturn(new AdapterStreamDescription());
+
+
+        assertTrue(SpConnect.isStreamAdapter("", adapterStorage));
+    }
+
+    @Test
+    public void isStreamAdapterFail() {
+        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
+        org.mockito.Mockito.when(adapterStorage.getAdapter(org.mockito.ArgumentMatchers.any(String.class)))
+                .thenReturn(new AdapterSetDescription());
+
+        assertFalse(SpConnect.isStreamAdapter("", adapterStorage));
+    }
+
+
+    @Test
     public void getAdapterStreamDescriptionWithoutType() {
         AdapterDescription asd = SpConnect
                 .getAdapterDescription(TestUtil.getMinimalStreamAdapterJsonLD());
@@ -48,7 +68,7 @@ public class SpConnectTest {
     public void startStreamAdapterTest() {
        // expected http request to connect-container /invoke/stream
         Response expected = new Response("id",true);
-        stubFor(post(urlEqualTo("/invoke/stream"))
+        stubFor(post(urlEqualTo("/api/v1/invoke/stream"))
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withBody(expected.toString())));
@@ -59,15 +79,14 @@ public class SpConnectTest {
         String result = SpConnect.startStreamAdapter(adapter, Mock.HOST + "/");
 
         assertEquals(SpConnectUtils.SUCCESS, result);
-        verify(postRequestedFor(urlEqualTo("/invoke/stream"))
+        verify(postRequestedFor(urlEqualTo("/api/v1/invoke/stream"))
                 .withHeader("Content-Type", equalTo("application/json; charset=UTF-8")));
-
     }
 
     @Test
     public void invokeAdapterTest() {
         Response expected = new Response("id",true);
-        stubFor(post(urlEqualTo("/invoke/set"))
+        stubFor(post(urlEqualTo("/api/v1/invoke/set"))
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withBody(expected.toString())));
@@ -85,10 +104,55 @@ public class SpConnectTest {
         String result = spConnect.invokeAdapter("1234", dataSet, Mock.HOST + "/", adapterStorage);
 
         assertEquals(SpConnectUtils.SUCCESS, result);
-        verify(postRequestedFor(urlEqualTo("/invoke/set"))
+        verify(postRequestedFor(urlEqualTo("/api/v1/invoke/set"))
                 .withHeader("Content-Type", equalTo("application/json; charset=UTF-8")));
 
     }
 
+    @Test
+    public void stopStreamAdapterTest() {
+        Response expected = new Response("id",true);
+        stubFor(post(urlEqualTo("/api/v1/stop/stream"))
+                .willReturn(aResponse()
+                .withStatus(200)
+                .withBody(expected.toString())));
+
+        AdapterDescription adapterDescription = new AdapterSetDescription();
+        adapterDescription.setUri("http://test.adapter");
+        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
+        org.mockito.Mockito.when(adapterStorage.getAdapter(org.mockito.ArgumentMatchers.any(String.class)))
+                .thenReturn(adapterDescription);
+
+
+        SpConnect spConnect = new SpConnect();
+        String result = spConnect.stopStreamAdapter("1234",Mock.HOST + "/", adapterStorage);
+
+        assertEquals(SpConnectUtils.SUCCESS, result);
+        verify(postRequestedFor(urlEqualTo("/api/v1/stop/stream"))
+                .withHeader("Content-Type", equalTo("application/json; charset=UTF-8")));
+    }
+
+    @Test
+    public void stopSetAdapterTest() {
+        Response expected = new Response("id",true);
+        stubFor(post(urlEqualTo("/api/v1/stop/set"))
+                .willReturn(aResponse()
+                .withStatus(200)
+                .withBody(expected.toString())));
+
+        AdapterDescription adapterDescription = new AdapterSetDescription();
+        adapterDescription.setUri("http://test.adapter");
+        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
+        org.mockito.Mockito.when(adapterStorage.getAdapter(org.mockito.ArgumentMatchers.any(String.class)))
+                .thenReturn(adapterDescription);
+
+
+        SpConnect spConnect = new SpConnect();
+        String result = spConnect.stopSetAdapter("1234",Mock.HOST + "/", adapterStorage);
+
+        assertEquals(SpConnectUtils.SUCCESS, result);
+        verify(postRequestedFor(urlEqualTo("/api/v1/stop/set"))
+                .withHeader("Content-Type", equalTo("application/json; charset=UTF-8")));
+    }
 
 }

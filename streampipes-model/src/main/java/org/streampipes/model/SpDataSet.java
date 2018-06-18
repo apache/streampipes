@@ -46,8 +46,8 @@ public class SpDataSet extends SpDataStream {
 
   public SpDataSet(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition>
           hasEventStreamQualities,
-                      EventGrounding eventGrounding,
-                      EventSchema eventSchema) {
+                   EventGrounding eventGrounding,
+                   EventSchema eventSchema) {
     super(uri, name, description, iconUrl, hasEventStreamQualities, eventGrounding, eventSchema);
   }
 
@@ -67,12 +67,22 @@ public class SpDataSet extends SpDataStream {
   }
 
   public String getBrokerHostname() {
-    return getEventGrounding().getTransportProtocol().getBrokerHostname();
+    if (getEventGrounding() == null || getEventGrounding().getTransportProtocol() == null ||
+            getEventGrounding().getTransportProtocol().getBrokerHostname() == null) {
+      return "";
+    } else {
+      return getEventGrounding().getTransportProtocol().getBrokerHostname();
+    }
   }
 
   public String getActualTopicName() {
-    return getEventGrounding().getTransportProtocol().getTopicDefinition()
-                .getActualTopicName();
+    if (getEventGrounding() == null || getEventGrounding().getTransportProtocol() == null ||
+            getEventGrounding().getTransportProtocol().getTopicDefinition() == null) {
+      return "";
+    } else {
+      return getEventGrounding().getTransportProtocol().getTopicDefinition()
+              .getActualTopicName();
+    }
   }
 
 

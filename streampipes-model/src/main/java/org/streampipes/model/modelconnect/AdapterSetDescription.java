@@ -19,6 +19,11 @@ public class AdapterSetDescription extends AdapterDescription {
         super(formatDescription, protocolDescription);
     }
 
+    public AdapterSetDescription(AdapterSetDescription other) {
+        super(other);
+        if (other.getDataSet() != null) this.setDataSet(new SpDataSet(other.getDataSet()));
+    }
+
     @RdfProperty("sp:hasDataSet")
     private SpDataSet dataSet;
 

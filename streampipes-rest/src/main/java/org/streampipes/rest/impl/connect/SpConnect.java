@@ -4,6 +4,7 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.connect.firstconnector.Adapter;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.modelconnect.AdapterDescription;
@@ -15,6 +16,7 @@ import org.streampipes.vocabulary.StreamPipes;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
 
 public class SpConnect {
 
@@ -29,6 +31,12 @@ public class SpConnect {
         }
 
         return SpConnectUtils.SUCCESS;
+    }
+
+    public static boolean isStreamAdapter(String id, AdapterStorageImpl adapterStorage) {
+        AdapterDescription ad = adapterStorage.getAdapter(id);
+
+        return ad instanceof AdapterStreamDescription;
     }
 
     public static AdapterDescription getAdapterDescription(String ads) {
@@ -62,6 +70,52 @@ public class SpConnect {
         return a;
     }
 
+    public static String stopSetAdapter(String adapterId, String baseUrl, AdapterStorageImpl adapterStorage) {
+        String url = baseUrl + "api/v1/stop/set";
+
+        return stopAdapter(adapterId, adapterStorage, url);
+    }
+
+    public static String stopStreamAdapter(String adapterId, String baseUrl, AdapterStorageImpl adapterStorage) {
+        String url = baseUrl + "api/v1/stop/stream";
+
+        return stopAdapter(adapterId, adapterStorage, url);
+    }
+
+    private static String stopAdapter(String adapterId, AdapterStorageImpl adapterStorage, String url) {
+
+        //Delete from database
+        AdapterDescription ad = adapterStorage.getAdapter(adapterId);
+
+        // Stop execution of adatper
+         try {
+            logger.info("Trying to stop adpater on endpoint: " + url);
+
+            // TODO quick fix because otherwise it is not serialized to json-ld
+             if (ad.getUri() == null) {
+                 logger.error("Adapter uri is null this should not happen " + ad);
+             }
+
+            String adapterDescription = toJsonLd(ad);
+
+            // TODO change this to a delete request
+            String responseString = Request.Post(url)
+                    .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asString();
+
+            logger.info("Adapter stopped on endpoint: " + url + " with Response: " + responseString);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return "Adapter was not stopped successfully";
+        }
+
+        return SpConnectUtils.SUCCESS;
+    }
+
 
     public static String startStreamAdapter(AdapterStreamDescription asd, String baseUrl) {
         String url = baseUrl + "api/v1/invoke/stream";
@@ -71,7 +125,6 @@ public class SpConnect {
 
     public  String invokeAdapter(String streamId, SpDataSet dataSet, String baseUrl, AdapterStorageImpl adapterStorage) {
         String url = baseUrl + "api/v1/invoke/set";
-//        String url = "http://localhost:8099/invoke/set";
 
         AdapterSetDescription adapterDescription = (AdapterSetDescription) adapterStorage.getAdapter(streamId);
         adapterDescription.setDataSet(dataSet);
@@ -81,14 +134,12 @@ public class SpConnect {
 
     private static String postStartAdapter(String url, AdapterDescription ad) {
         try {
-
-//            TODO just for testing
-//            url = "http://localhost:8099/api/v1/invoke/stream";
-
             logger.info("Trying to start adpater on endpoint: " + url);
 
-            // TODO quick fix because otherwise it is not serialized to json-ld
-            ad.setUri("http://test.adapter");
+            // this ensures that all adapters have a valid uri otherwise the json-ld serializer fails
+            if (ad.getUri() == null) {
+                ad.setUri("https://streampipes.org/adapter/" + UUID.randomUUID());
+            }
             String adapterDescription = toJsonLd(ad);
 
             String responseString = Request.Post(url)
