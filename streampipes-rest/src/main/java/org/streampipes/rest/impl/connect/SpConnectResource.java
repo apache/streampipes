@@ -1,15 +1,30 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.rest.impl.connect;
 
 
 
 import org.streampipes.config.backend.BackendConfig;
-import org.streampipes.connect.RunningAdapterInstances;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
 import org.streampipes.connect.firstconnector.protocol.stream.KafkaProtocol;
 import org.streampipes.container.html.JSONGenerator;
 import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.streampipes.container.html.model.Description;
-import org.streampipes.connect.firstconnector.Adapter;
 import org.streampipes.connect.firstconnector.format.csv.CsvFormat;
 import org.streampipes.connect.firstconnector.format.json.arraykey.JsonFormat;
 import org.streampipes.connect.firstconnector.protocol.set.FileProtocol;
