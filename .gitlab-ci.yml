@@ -31,6 +31,7 @@ build:
   artifacts:
     paths:
       - ./streampipes-backend/target/*.war
+      - ./streampipes-connect-container/target/*.jar
       - ./target/site/apidocs/**
       - ./target/mvn_version
     expire_in:  1 week
@@ -68,6 +69,18 @@ docker-backend:
      - docker push $HARBOR_IMAGE_NAME/backend:latest
    only:
      - dev
+
+docker-connect-container:
+   image: docker:17.06.0-ce
+   stage: docker
+   dependencies:
+     - build
+   script:
+     - export MVN_VERSION=$(cat ./target/mvn_version)
+     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+     - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/connect-container:$MVN_VERSION ./streampipes-connect-container/
+     - docker push $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
+     - docker push $IMAGE_NAME/streampipes-connect-container:latest
 
 
 deploy:
