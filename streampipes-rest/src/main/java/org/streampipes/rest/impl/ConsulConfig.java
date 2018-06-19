@@ -64,7 +64,7 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
             PeConfig peConfig = new PeConfig();
 
             for(ConfigItem configItem: configItems) {
-                if(configItem.getKey().equals("service_name")) {
+                if(configItem.getKey().equals("SP_SERVICE_NAME")) {
                     configItems.remove(configItem);
                     peConfig.setName(configItem.getValue());
                     break;

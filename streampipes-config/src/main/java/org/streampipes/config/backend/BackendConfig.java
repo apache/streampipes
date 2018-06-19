@@ -24,70 +24,54 @@ public enum BackendConfig {
   INSTANCE;
 
   private SpConfig config;
-  private final static String BACKEND_HOST = "backend_host";
-  private final static String BACKEND_PORT = "backend_port";
-  private final static String JMS_HOST = "jms_host";
-  private final static String JMS_PORT = "jms_port";
-  private final static String KAFKA_HOST = "kafka_host";
-  private final static String KAFKA_PORT = "kafka_port";
-  private final static String ZOOKEEPER_HOST = "zookeeper_host";
-  private final static String ZOOKEEPER_PORT = "zookeeper_port";
-  private final static String ELASTICSEARCH_HOST ="elasticsearch_host";
-  private final static String ELASTICSEARCH_PORT ="elasticsearch_port";
-  private final static String ELASTICSEARCH_PROTOCOL = "elasticsearch_protocol";
-  private final static String IS_CONFIGURED = "is_configured";
-  private final static String KAFKA_REST_HOST = "kafka_rest_host";
-  private final static String KAFKA_REST_PORT = "kafka_rest_port";
-  private final static String CONNECT_CONTAINER_HOST = "connect_container_host";
-  private final static String CONNECT_CONTAINER_PORT = "connect_container_port";
 
   BackendConfig() {
     config = SpConfig.getSpConfig("backend");
 
-    config.register(BACKEND_HOST, "backend", "Hostname for backend");
-    config.register(BACKEND_PORT, 8082, "Port for backend");
+    config.register(BackendConfigKeys.BACKEND_HOST, "backend", "Hostname for backend");
+    config.register(BackendConfigKeys.BACKEND_PORT, 8082, "Port for backend");
 
-    config.register(JMS_HOST, "activemq", "Hostname for backend service for active mq");
-    config.register(JMS_PORT, 61616, "Port for backend service for active mq");
-    config.register(KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
-    config.register(KAFKA_PORT, 9092, "Port for backend service for kafka");
-    config.register(ZOOKEEPER_HOST, "zookeeper", "Hostname for backend service for zookeeper");
-    config.register(ZOOKEEPER_PORT, 2181, "Port for backend service for zookeeper");
-    config.register(ELASTICSEARCH_HOST, "elasticsearch", "Hostname for elasticsearch service");
-    config.register(ELASTICSEARCH_PORT, 9200, "Port for elasticsearch service");
-    config.register(ELASTICSEARCH_PROTOCOL, "http", "Protocol the elasticsearch service");
-    config.register(IS_CONFIGURED, false, "Boolean that indicates whether streampipes is " +
+    config.register(BackendConfigKeys.JMS_HOST, "activemq", "Hostname for backend service for active mq");
+    config.register(BackendConfigKeys.JMS_PORT, 61616, "Port for backend service for active mq");
+    config.register(BackendConfigKeys.KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
+    config.register(BackendConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");
+    config.register(BackendConfigKeys.ZOOKEEPER_HOST, "zookeeper", "Hostname for backend service for zookeeper");
+    config.register(BackendConfigKeys.ZOOKEEPER_PORT, 2181, "Port for backend service for zookeeper");
+    config.register(BackendConfigKeys.ELASTICSEARCH_HOST, "elasticsearch", "Hostname for elasticsearch service");
+    config.register(BackendConfigKeys.ELASTICSEARCH_PORT, 9200, "Port for elasticsearch service");
+    config.register(BackendConfigKeys.ELASTICSEARCH_PROTOCOL, "http", "Protocol the elasticsearch service");
+    config.register(BackendConfigKeys.IS_CONFIGURED, false, "Boolean that indicates whether streampipes is " +
             "already configured or not");
-    config.register(KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
-    config.register(KAFKA_REST_PORT, 8073, "The port of the kafka-rest module");
-    config.register(KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
-    config.register(CONNECT_CONTAINER_PORT, 8099, "The port of the connect container");
-    config.register(CONNECT_CONTAINER_HOST, "localhost", "The hostname of the connect container");
+    config.register(BackendConfigKeys.KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
+    config.register(BackendConfigKeys.KAFKA_REST_PORT, 8073, "The port of the kafka-rest module");
+    config.register(BackendConfigKeys.KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
+    config.register(BackendConfigKeys.CONNECT_CONTAINER_PORT, 8099, "The port of the connect container");
+    config.register(BackendConfigKeys.CONNECT_CONTAINER_HOST, "localhost", "The hostname of the connect container");
 
   }
 
   public String getBackendHost() {
-    return config.getString(BACKEND_HOST);
+    return config.getString(BackendConfigKeys.BACKEND_HOST);
   }
 
   public int getBackendPort() {
-    return config.getInteger(BACKEND_PORT);
+    return config.getInteger(BackendConfigKeys.BACKEND_PORT);
   }
 
   public String getJmsHost() {
-    return config.getString(JMS_HOST);
+    return config.getString(BackendConfigKeys.JMS_HOST);
   }
 
   public int getJmsPort() {
-    return config.getInteger(JMS_PORT);
+    return config.getInteger(BackendConfigKeys.JMS_PORT);
   }
 
   public String getKafkaHost() {
-    return config.getString(KAFKA_HOST);
+    return config.getString(BackendConfigKeys.KAFKA_HOST);
   }
 
   public int getKafkaPort() {
-    return config.getInteger(KAFKA_PORT);
+    return config.getInteger(BackendConfigKeys.KAFKA_PORT);
   }
 
   public String getKafkaUrl() {
@@ -95,43 +79,43 @@ public enum BackendConfig {
   }
 
   public String getZookeeperHost() {
-    return config.getString(ZOOKEEPER_HOST);
+    return config.getString(BackendConfigKeys.ZOOKEEPER_HOST);
   }
 
   public int getZookeeperPort() {
-    return config.getInteger(ZOOKEEPER_PORT);
+    return config.getInteger(BackendConfigKeys.ZOOKEEPER_PORT);
   }
 
   public boolean isConfigured() {
-    return config.getBoolean(IS_CONFIGURED);
+    return config.getBoolean(BackendConfigKeys.IS_CONFIGURED);
   }
 
   public void setKafkaHost(String s) {
-    config.setString(KAFKA_HOST, s);
+    config.setString(BackendConfigKeys.KAFKA_HOST, s);
   }
 
   public void setZookeeperHost(String s) {
-    config.setString(ZOOKEEPER_HOST, s);
+    config.setString(BackendConfigKeys.ZOOKEEPER_HOST, s);
   }
 
   public void setJmsHost(String s) {
-    config.setString(JMS_HOST, s);
+    config.setString(BackendConfigKeys.JMS_HOST, s);
   }
 
   public void setIsConfigured(boolean b) {
-    config.setBoolean(IS_CONFIGURED, b);
+    config.setBoolean(BackendConfigKeys.IS_CONFIGURED, b);
   }
 
   public String getElasticsearchHost() {
-    return config.getString(ELASTICSEARCH_HOST);
+    return config.getString(BackendConfigKeys.ELASTICSEARCH_HOST);
   }
 
   public int getElasticsearchPort() {
-    return config.getInteger(ELASTICSEARCH_PORT);
+    return config.getInteger(BackendConfigKeys.ELASTICSEARCH_PORT);
   }
 
   public String getElasticsearchProtocol() {
-    return config.getString(ELASTICSEARCH_PROTOCOL);
+    return config.getString(BackendConfigKeys.ELASTICSEARCH_PROTOCOL);
   }
 
   public String getElasticsearchURL() {
@@ -139,11 +123,11 @@ public enum BackendConfig {
   }
 
   public String getConnectContainerHost() {
-    return config.getString(CONNECT_CONTAINER_HOST);
+    return config.getString(BackendConfigKeys.CONNECT_CONTAINER_HOST);
   }
 
   public Integer getConnectContainerPort() {
-    return config.getInteger(CONNECT_CONTAINER_PORT);
+    return config.getInteger(BackendConfigKeys.CONNECT_CONTAINER_PORT);
   }
 
   public String getConnectContainerUrl() {
@@ -151,11 +135,11 @@ public enum BackendConfig {
   }
 
   public String getKafkaRestHost() {
-    return config.getString(KAFKA_REST_HOST);
+    return config.getString(BackendConfigKeys.KAFKA_REST_HOST);
   }
 
   public Integer getKafkaRestPort() {
-    return config.getInteger(KAFKA_REST_PORT);
+    return config.getInteger(BackendConfigKeys.KAFKA_REST_PORT);
   }
 
   public String getKafkaRestUrl() {
