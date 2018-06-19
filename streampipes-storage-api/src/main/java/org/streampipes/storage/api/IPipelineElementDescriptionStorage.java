@@ -41,16 +41,22 @@ public interface IPipelineElementDescriptionStorage {
 	boolean storeSEPA(String jsonld);
 	
 	DataSourceDescription getSEPById(URI rdfId);
+
+	DataSourceDescription getSEPByAppId(String appId);
 	
 	DataSourceDescription getSEPById(String rdfId) throws URISyntaxException;
 	
 	DataProcessorDescription getSEPAById(String rdfId) throws URISyntaxException;
 	
 	DataProcessorDescription getSEPAById(URI rdfId);
+
+	DataProcessorDescription getSEPAByAppId(String appId);
 	
 	DataSinkDescription getSECById(String rdfId) throws URISyntaxException;
 	
 	DataSinkDescription getSECById(URI rdfId);
+
+	DataSinkDescription getSECByAppId(String appId);
 	
 	List<DataSourceDescription> getAllSEPs();
 	
