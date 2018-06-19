@@ -53,7 +53,12 @@ public class CouchDbInstallationStep implements InstallationStep {
 
     private List<Message> createDatabases() {
         try {
+            // Set up couchdb internal databases
+            Utils.getCouchDbInternalUsersClient();
+            Utils.getCouchDbReplicatorClient();
+            Utils.getCouchDbGlobalChangesClient();
 
+            // Set up streampipes internal databases
             Utils.getCouchDbUserClient();
             Utils.getCouchDbMonitoringClient();
             Utils.getCouchDbPipelineClient();
@@ -64,11 +69,6 @@ public class CouchDbInstallationStep implements InstallationStep {
             Utils.getCouchDbRdfEndpointClient();
             Utils.getCouchDbDashboardClient();
             Utils.getCouchDbVisualizablePipelineClient();
-
-            //TODO create the tables here
-//            curl -X PUT http://127.0.0.1:5984/_users
-//            curl -X PUT http://127.0.0.1:5984/_replicator
-//            curl -X PUT http://127.0.0.1:5984/_global_changes
 
             return Arrays.asList(Notifications.success(getTitle()));
         } catch (Exception e) {
