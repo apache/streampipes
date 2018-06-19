@@ -45,7 +45,7 @@ public class PipelineTemplateBuilder {
   }
 
   public PipelineTemplateDescription build() {
-    this.pipelineTemplateDescription.setConnectedTo(boundPipelineElements);
+    this.pipelineTemplateDescription.setBoundTo(boundPipelineElements);
     return pipelineTemplateDescription;
   }
 

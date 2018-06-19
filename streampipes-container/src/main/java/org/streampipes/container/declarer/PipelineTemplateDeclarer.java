@@ -14,30 +14,11 @@
  * limitations under the License.
  *
  */
+package org.streampipes.container.declarer;
 
-package org.streampipes.container.html.page;
+import org.streampipes.model.template.PipelineTemplateDescription;
 
-import org.streampipes.container.html.model.Description;
+public interface PipelineTemplateDeclarer  extends Declarer<PipelineTemplateDescription> {
 
-import java.util.ArrayList;
-import java.util.List;
-
-
-public abstract class WelcomePageGenerator<T> {
-
-  protected List<Description> descriptions;
-  protected List<T> declarers;
-  protected String baseUri;
-
-  public WelcomePageGenerator(String baseUri, List<T> declarers) {
-    this.declarers = declarers;
-    this.baseUri = baseUri;
-    this.descriptions = new ArrayList<>();
-  }
-
-  public abstract List<Description> buildUris();
-
-  public List<Description> getDescriptions() {
-    return descriptions;
-  }
+  PipelineTemplateDescription declareModel();
 }

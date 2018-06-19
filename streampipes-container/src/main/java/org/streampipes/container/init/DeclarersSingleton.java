@@ -17,11 +17,7 @@
 
 package org.streampipes.container.init;
 
-import org.streampipes.container.declarer.DataStreamDeclarer;
-import org.streampipes.container.declarer.Declarer;
-import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
-import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
-import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
+import org.streampipes.container.declarer.*;
 import org.streampipes.dataformat.SpDataFormatFactory;
 import org.streampipes.dataformat.SpDataFormatManager;
 import org.streampipes.messaging.SpProtocolDefinitionFactory;
@@ -36,6 +32,7 @@ public class DeclarersSingleton {
   private List<SemanticEventProcessingAgentDeclarer> epaDeclarers;
   private List<SemanticEventProducerDeclarer> producerDeclarers;
   private List<SemanticEventConsumerDeclarer> consumerDeclarers;
+  private List<PipelineTemplateDeclarer> pipelineTemplateDeclarers;
   private List<DataStreamDeclarer> streamDeclarers;
 
   private int port;
@@ -48,6 +45,7 @@ public class DeclarersSingleton {
     this.producerDeclarers = new ArrayList<>();
     this.consumerDeclarers = new ArrayList<>();
     this.streamDeclarers = new ArrayList<>();
+    this.pipelineTemplateDeclarers = new ArrayList<>();
     this.route = "/";
   }
 
@@ -71,6 +69,8 @@ public class DeclarersSingleton {
       addProducerDeclarer((SemanticEventProducerDeclarer) d);
     } else if (d instanceof SemanticEventConsumerDeclarer) {
       addConsumerDeclarer((SemanticEventConsumerDeclarer) d);
+    } else if (d instanceof PipelineTemplateDeclarer) {
+      addPipelineTemplateDeclarer((PipelineTemplateDeclarer) d);
     }
 
     return getInstance();
@@ -81,6 +81,7 @@ public class DeclarersSingleton {
     result.addAll(epaDeclarers);
     result.addAll(producerDeclarers);
     result.addAll(consumerDeclarers);
+    result.addAll(pipelineTemplateDeclarers);
     return result;
   }
 
@@ -92,18 +93,22 @@ public class DeclarersSingleton {
     SpDataFormatManager.INSTANCE.register(dataFormatDefinition);
   }
 
-  public void addEpaDeclarer(SemanticEventProcessingAgentDeclarer epaDeclarer) {
+  private void addEpaDeclarer(SemanticEventProcessingAgentDeclarer epaDeclarer) {
     epaDeclarers.add(epaDeclarer);
   }
 
-  public void addProducerDeclarer(SemanticEventProducerDeclarer sourceDeclarer) {
+  private void addProducerDeclarer(SemanticEventProducerDeclarer sourceDeclarer) {
     checkAndStartExecutableStreams(sourceDeclarer);
     producerDeclarers.add(sourceDeclarer);
     streamDeclarers.addAll(sourceDeclarer.getEventStreams());
   }
 
-  public void addConsumerDeclarer(SemanticEventConsumerDeclarer consumerDeclarer) {
+  private void addConsumerDeclarer(SemanticEventConsumerDeclarer consumerDeclarer) {
     consumerDeclarers.add(consumerDeclarer);
+  }
+
+  private void addPipelineTemplateDeclarer(PipelineTemplateDeclarer pipelineTemplateDeclarer) {
+    pipelineTemplateDeclarers.add(pipelineTemplateDeclarer);
   }
 
   public List<SemanticEventProcessingAgentDeclarer> getEpaDeclarers() {
@@ -116,6 +121,10 @@ public class DeclarersSingleton {
 
   public List<SemanticEventConsumerDeclarer> getConsumerDeclarers() {
     return consumerDeclarers;
+  }
+
+  public List<PipelineTemplateDeclarer> getPipelineTemplateDeclarers() {
+    return pipelineTemplateDeclarers;
   }
 
   public List<DataStreamDeclarer> getStreamDeclarers() {

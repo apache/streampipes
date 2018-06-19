@@ -60,7 +60,7 @@ public class PipelineGenerator {
     pipeline.setStreams(Collections.singletonList(prepareStream(datasetId)));
     pipeline.setSepas(new ArrayList<>());
     pipeline.setActions(new ArrayList<>());
-    collectInvocations("domId" + count, pipelineTemplateDescription.getConnectedTo());
+    collectInvocations("domId" + count, pipelineTemplateDescription.getBoundTo());
 
     return pipeline;
   }
@@ -82,7 +82,7 @@ public class PipelineGenerator {
   private void collectInvocations(String currentDomId, List<BoundPipelineElement> boundPipelineElements) {
     for (BoundPipelineElement pipelineElement : boundPipelineElements) {
       InvocableStreamPipesEntity entity = clonePe(pipelineElement.getPipelineElementTemplate());
-      entity.setConnectedTo(Arrays.asList(currentDomId));
+      entity.setConnectedTo(Collections.singletonList(currentDomId));
       entity.setDOM(getDom());
       //entity.setConfigured(true);
       // TODO hack

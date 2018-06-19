@@ -20,6 +20,7 @@ package org.streampipes.storage.rdf4j.impl;
 import com.rits.cloning.Cloner;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
@@ -28,10 +29,7 @@ import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryStorage implements IPipelineElementDescriptionStorage {
 	
@@ -120,6 +118,11 @@ public class InMemoryStorage implements IPipelineElementDescriptionStorage {
 	}
 
 	@Override
+	public DataSourceDescription getSEPByAppId(String appId) {
+		return cloner.deepClone(getByAppId(inMemorySEPStorage, appId));
+	}
+
+	@Override
 	public DataSourceDescription getSEPById(String rdfId) throws URISyntaxException {
 		return cloner.deepClone(inMemorySEPStorage.get(rdfId));
 	}
@@ -135,6 +138,11 @@ public class InMemoryStorage implements IPipelineElementDescriptionStorage {
 	}
 
 	@Override
+	public DataProcessorDescription getSEPAByAppId(String appId) {
+		return cloner.deepClone(getByAppId(inMemorySEPAStorage, appId));
+	}
+
+	@Override
 	public DataSinkDescription getSECById(String rdfId) throws URISyntaxException {
 		return cloner.deepClone(inMemorySECStorage.get(rdfId));
 	}
@@ -142,6 +150,23 @@ public class InMemoryStorage implements IPipelineElementDescriptionStorage {
 	@Override
 	public DataSinkDescription getSECById(URI rdfId) {
 		return cloner.deepClone(inMemorySECStorage.get(rdfId.toString()));
+	}
+
+	@Override
+	public DataSinkDescription getSECByAppId(String appId) {
+		return cloner.deepClone(getByAppId(inMemorySECStorage, appId));
+	}
+
+	private <T extends NamedStreamPipesEntity> T getByAppId(Map<String,T> inMemoryStorage, String appId) {
+		Optional<T> entity = inMemoryStorage
+						.entrySet()
+						.stream()
+						.map(Map.Entry::getValue)
+						.filter(d -> d.getAppId() != null)
+						.filter(d -> d.getAppId().equals(appId))
+						.findFirst();
+
+		return entity.orElse(null);
 	}
 
 	@Override

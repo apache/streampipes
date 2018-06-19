@@ -25,12 +25,11 @@ import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.RDFS;
 import org.streampipes.vocabulary.StreamPipes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * named SEPA elements, can be accessed via the URI provided in @RdfId
@@ -51,6 +50,9 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
   @RdfProperty(StreamPipes.HAS_URI)
   @RdfId
   private String uri;
+
+  @RdfProperty(StreamPipes.HAS_APP_ID)
+  private String appId;
 
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
@@ -101,6 +103,7 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     if (other.getApplicationLinks() != null) {
       this.applicationLinks = new Cloner().al(other.getApplicationLinks());
     }
+    this.appId = other.getAppId();
   }
 
   public String getName() {
@@ -165,5 +168,13 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   public void setApplicationLinks(List<ApplicationLink> applicationLinks) {
     this.applicationLinks = applicationLinks;
+  }
+
+  public String getAppId() {
+    return appId;
+  }
+
+  public void setAppId(String appId) {
+    this.appId = appId;
   }
 }

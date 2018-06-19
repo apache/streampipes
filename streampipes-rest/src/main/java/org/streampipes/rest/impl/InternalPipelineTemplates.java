@@ -54,7 +54,7 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
             public PipelineTemplateDescription makeTemplate() throws URISyntaxException {
                 return new PipelineTemplateDescription(PipelineTemplateBuilder.create("logs-to-Elastic", "Save Logs", "Save all logs in Elastic-Search")
                         .boundPipelineElementTemplate(BoundPipelineElementBuilder
-                                .create(getSink("http://pe-flink-samples:8090/sec/elasticsearch"))
+                                .create(getSink("org.streampipes.pe.flink.elasticsearch"))
                                 .withPredefinedFreeTextValue("index-name", "streampipes-log")
                                 .withPredefinedSelection("timestamp", Collections.singletonList("epochTime"))
                                 .build())
@@ -96,7 +96,7 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
 
     private DataSinkDescription getSink(String id) throws URISyntaxException {
         return getStorage()
-                .getSECById(id);
+                .getSECByAppId(id);
     }
 
     private IPipelineElementDescriptionStorage getStorage() {
@@ -120,7 +120,8 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
     private SpDataStream getLogDataStream() {
         return new SpDataStream(getAllDataStreams()
                 .stream()
-                .filter(sp -> sp.getElementId().equals("http://pe-sources-samples:8090/sep/source-log/log-source"))
+                .filter(sp -> sp.getAppId() != null)
+                .filter(sp -> sp.getAppId().equals("org.streampipes.sources.log.stream"))
                 .findFirst()
                 .get());
     }
