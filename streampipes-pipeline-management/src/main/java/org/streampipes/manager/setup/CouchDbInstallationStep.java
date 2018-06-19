@@ -65,6 +65,11 @@ public class CouchDbInstallationStep implements InstallationStep {
             Utils.getCouchDbDashboardClient();
             Utils.getCouchDbVisualizablePipelineClient();
 
+            //TODO create the tables here
+//            curl -X PUT http://127.0.0.1:5984/_users
+//            curl -X PUT http://127.0.0.1:5984/_replicator
+//            curl -X PUT http://127.0.0.1:5984/_global_changes
+
             return Arrays.asList(Notifications.success(getTitle()));
         } catch (Exception e) {
             return Arrays.asList(Notifications.error(getTitle()));

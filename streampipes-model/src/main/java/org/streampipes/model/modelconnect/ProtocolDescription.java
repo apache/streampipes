@@ -5,6 +5,7 @@ import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.util.Cloner;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -38,6 +39,14 @@ public class ProtocolDescription extends NamedStreamPipesEntity {
     public ProtocolDescription(String uri, String name, String description, List<StaticProperty> config) {
         super(uri, name, description);
         this.config = config;
+    }
+
+    public ProtocolDescription(ProtocolDescription other) {
+        super(other);
+
+        this.config = new Cloner().staticProperties(other.getConfig());
+
+
     }
 
     public void addConfig(StaticProperty sp) {

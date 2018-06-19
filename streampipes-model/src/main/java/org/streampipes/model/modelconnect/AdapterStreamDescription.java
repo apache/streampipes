@@ -19,6 +19,11 @@ public class AdapterStreamDescription extends AdapterDescription {
         super(formatDescription, protocolDescription);
     }
 
+    public AdapterStreamDescription(AdapterStreamDescription other) {
+        super(other);
+        if (other.getDataStream() != null) this.setDataStream(new SpDataStream(other.getDataStream()));
+    }
+
     @RdfProperty("sp:hasDataStream")
     private SpDataStream dataStream;
 

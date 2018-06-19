@@ -10,6 +10,7 @@ import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.util.Cloner;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -44,6 +45,12 @@ public class FormatDescription extends NamedStreamPipesEntity {
         super(uri, name, description);
         this.config = config;
     }
+
+    public FormatDescription(FormatDescription other) {
+        super(other);
+        this.config = new Cloner().staticProperties(other.getConfig());
+    }
+
 
     public void addConfig(StaticProperty sp) {
         this.config.add(sp);
@@ -99,4 +106,12 @@ public class FormatDescription extends NamedStreamPipesEntity {
 //        }
 //
 //    }
+
+
+    @Override
+    public String toString() {
+        return "FormatDescription{" +
+                "config=" + config +
+                '}';
+    }
 }

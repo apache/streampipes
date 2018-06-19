@@ -1,3 +1,20 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.connect.firstconnector.protocol.stream;
 
 import org.apache.commons.io.IOUtils;
@@ -7,6 +24,7 @@ import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.SendToKafka;
 import org.streampipes.connect.events.Event;
 import org.streampipes.connect.firstconnector.format.Format;
@@ -37,6 +55,9 @@ public class KafkaProtocol extends Protocol {
     private Format format;
     private String brokerUrl;
     private String topic;
+
+    private Thread thread;
+    private SpKafkaConsumer kafkaConsumer;
 
     public KafkaProtocol() {
     }
@@ -185,17 +206,31 @@ public class KafkaProtocol extends Protocol {
 
     @Override
     public void run(String broker, String topic) {
-
         SendToKafka stk = new SendToKafka(format, broker, topic);
+        this.kafkaConsumer = new SpKafkaConsumer(this.brokerUrl, this.topic, new EventProcessor(stk));
 
-//        SpKafkaConsumer kafkaConsumer = new SpKafkaConsumer(brokerUrl, topic, new EventProcessor(stk));
-//        kafkaConsumer.run();
-
-        Thread thread = new Thread(new SpKafkaConsumer(this.brokerUrl, this.topic, new EventProcessor(stk)));
+        thread = new Thread(this.kafkaConsumer);
         thread.start();
-
-        System.out.println("bl");
     }
+
+    @Override
+    public void stop() {
+        try {
+            kafkaConsumer.disconnect();
+        } catch (SpRuntimeException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        logger.info("Kafka Adapter was sucessfully stopped");
+        thread.interrupt();
+    }
+
 
     private class EventProcessor implements InternalEventProcessor<byte[]> {
         private SendToKafka stk;
