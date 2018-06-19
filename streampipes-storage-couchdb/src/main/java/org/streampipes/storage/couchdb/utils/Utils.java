@@ -73,6 +73,11 @@ public class Utils {
 		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
 		return dbClient;
 	}
+	            //TODO create the tables here
+//            curl -X PUT http://127.0.0.1:5984/_users
+//            curl -X PUT http://127.0.0.1:5984/_replicator
+//            curl -X PUT http://127.0.0.1:5984/_global_changes
+
 	
 	public static CouchDbClient getCouchDbMonitoringClient() {
 		CouchDbClient dbClient = new CouchDbClient(props("monitoring"));
