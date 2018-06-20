@@ -34,4 +34,5 @@ public class BackendConfigKeys {
     final static String KAFKA_REST_PORT = "SP_KAFKA_REST_PORT";
     final static String CONNECT_CONTAINER_HOST = "SP_CONNECT_CONTAINER_HOST";
     final static String CONNECT_CONTAINER_PORT = "SP_CONNECT_CONTAINER_PORT";
+    final static String SERVICE_NAME = "SP_SERVICE_NAME";
 }

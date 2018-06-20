@@ -28,6 +28,8 @@ public enum BackendConfig {
   BackendConfig() {
     config = SpConfig.getSpConfig("backend");
 
+    config.register(BackendConfigKeys.SERVICE_NAME, "Backend", "Backend Configuration");
+
     config.register(BackendConfigKeys.BACKEND_HOST, "backend", "Hostname for backend");
     config.register(BackendConfigKeys.BACKEND_PORT, 8082, "Port for backend");
 
