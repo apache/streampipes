@@ -169,6 +169,9 @@ export class PipelineController {
                pe.settings.disabled = true;
            }
         });
+        if (this.rawPipelineModel.every(pe => pe.settings.disabled)) {
+            this.TransitionService.makePipelineAssemblyEmpty(true);
+        }
         this.JsplumbBridge.repaintEverything();
     }
 

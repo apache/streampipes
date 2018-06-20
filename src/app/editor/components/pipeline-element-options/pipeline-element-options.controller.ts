@@ -16,14 +16,16 @@ export class PipelineElementOptionsController {
     rawPipelineModel: any;
     allElements: any;
     deleteFunction: any;
+    TransitionService: any;
 
-    constructor($rootScope, ObjectProvider, PipelineElementRecommendationService, InitTooltips, JsplumbBridge, EditorDialogManager, JsplumbService) {
+    constructor($rootScope, ObjectProvider, PipelineElementRecommendationService, InitTooltips, JsplumbBridge, EditorDialogManager, JsplumbService, TransitionService) {
         this.ObjectProvider = ObjectProvider;
         this.PipelineElementRecommendationService = PipelineElementRecommendationService;
         this.InitTooltips = InitTooltips;
         this.JsplumbBridge = JsplumbBridge;
         this.EditorDialogManager = EditorDialogManager;
         this.JsplumbService = JsplumbService;
+        this.TransitionService = TransitionService;
 
         this.recommendationsAvailable = false;
         this.possibleElements = [];
@@ -97,4 +99,4 @@ export class PipelineElementOptionsController {
     }
 }
 
-PipelineElementOptionsController.$inject = ['$rootScope', 'ObjectProvider', 'PipelineElementRecommendationService', 'InitTooltips', 'JsplumbBridge', 'EditorDialogManager', 'JsplumbService'];
+PipelineElementOptionsController.$inject = ['$rootScope', 'ObjectProvider', 'PipelineElementRecommendationService', 'InitTooltips', 'JsplumbBridge', 'EditorDialogManager', 'JsplumbService', 'TransitionService'];
