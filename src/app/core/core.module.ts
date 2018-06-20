@@ -9,6 +9,9 @@ import httpProviderConfig from './http-provider.config'
 
 export default angular.module('sp.core', ['ui.router', 'ui.router.upgrade', 'ngMaterial', 'ngMdIcons', 'angular-loading-bar'])
     .config(stateConfig)
+    .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+        cfpLoadingBarProvider.latencyThreshold = 500;
+    }])
     .config(iconProviderConfig)
     .config(httpProviderConfig)
     .name;
