@@ -18,8 +18,9 @@ export class PipelineController {
     canvasId: any;
     preview: any;
     rawPipelineModel: any;
+    TransitionService: any;
 
-    constructor($timeout, JsplumbService, PipelineEditorService, JsplumbBridge, ObjectProvider, DialogBuilder, EditorDialogManager) {
+    constructor($timeout, JsplumbService, PipelineEditorService, JsplumbBridge, ObjectProvider, DialogBuilder, EditorDialogManager, TransitionService) {
         this.plumbReady = false;
         this.JsplumbBridge = JsplumbBridge;
         this.JsplumbService = JsplumbService;
@@ -29,6 +30,7 @@ export class PipelineController {
         this.DialogBuilder = DialogBuilder;
         this.EditorDialogManager = EditorDialogManager;
         this.currentMouseOverElement = "";
+        this.TransitionService = TransitionService;
 
         this.currentPipelineModel = {};
         this.idCounter = 0;
@@ -95,6 +97,7 @@ export class PipelineController {
             tolerance: "fit",
             drop: (element, ui) => {
                 if (ui.draggable.hasClass('draggable-icon')) {
+                    this.TransitionService.makePipelineAssemblyEmpty(false);
                     var pipelineElementConfig = this.JsplumbService.createNewPipelineElementConfig(ui.draggable.data("JSON"), this.PipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false);
                     if ((this.isStreamInPipeline() && pipelineElementConfig.type == 'set') ||
                         this.isSetInPipeline() && pipelineElementConfig.type == 'stream') {
@@ -244,4 +247,4 @@ export class PipelineController {
 
 }
 
-PipelineController.$inject = ['$timeout', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ObjectProvider', 'DialogBuilder', 'EditorDialogManager']
+PipelineController.$inject = ['$timeout', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ObjectProvider', 'DialogBuilder', 'EditorDialogManager', 'TransitionService']

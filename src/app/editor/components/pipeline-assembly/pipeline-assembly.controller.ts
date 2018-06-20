@@ -19,8 +19,18 @@ export class PipelineAssemblyController {
     currentPipelineName: any;
     currentPipelineDescription: any;
     currentModifiedPipelineId: any;
+    TransitionService: any;
 
-    constructor(JsplumbBridge, PipelinePositioningService, EditorDialogManager, PipelineValidationService, ObjectProvider, RestApi, JsplumbService, $timeout, $state) {
+    constructor(JsplumbBridge,
+                PipelinePositioningService,
+                EditorDialogManager,
+                PipelineValidationService,
+                ObjectProvider,
+                RestApi,
+                JsplumbService,
+                $timeout,
+                $state,
+                TransitionService) {
         this.JsplumbBridge = JsplumbBridge;
         this.PipelinePositioningService = PipelinePositioningService;
         this.EditorDialogManager = EditorDialogManager;
@@ -30,6 +40,7 @@ export class PipelineAssemblyController {
         this.JsplumbService = JsplumbService;
         this.$timeout = $timeout;
         this.$state = $state;
+        this.TransitionService = TransitionService;
 
         this.selectMode = true;
         this.currentZoomLevel = 1;
@@ -90,6 +101,8 @@ export class PipelineAssemblyController {
                 this.currentModifiedPipelineId = undefined;
             }
             this.clearAssembly();
+            this.TransitionService.makePipelineAssemblyEmpty(true);
+
         }, function () {
         });
     };
@@ -141,6 +154,7 @@ export class PipelineAssemblyController {
                 this.rawPipelineModel = this.JsplumbService.makeRawPipeline(pipeline, false);
                 this.$timeout(() => {
                     this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false);
+                    this.TransitionService.makePipelineAssemblyEmpty(false);
                 });
             })
     };
@@ -155,4 +169,5 @@ PipelineAssemblyController.$inject = ['JsplumbBridge',
     'RestApi',
     'JsplumbService',
     '$timeout',
-    '$state'];
+    '$state',
+    'TransitionService'];
