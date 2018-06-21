@@ -43,6 +43,8 @@ public class SpDataSet extends SpDataStream {
   @RdfProperty(StreamPipes.DATA_SET_INVOCATION_ID)
   private String datasetInvocationId;
 
+  @RdfProperty(StreamPipes.CORRESPONDING_PIPELINE)
+  private String correspondingPipeline;
 
   public SpDataSet(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition>
           hasEventStreamQualities,
@@ -100,5 +102,13 @@ public class SpDataSet extends SpDataStream {
 
   public void setDatasetInvocationId(String datasetInvocationId) {
     this.datasetInvocationId = datasetInvocationId;
+  }
+
+  public String getCorrespondingPipeline() {
+    return correspondingPipeline;
+  }
+
+  public void setCorrespondingPipeline(String correspondingPipeline) {
+    this.correspondingPipeline = correspondingPipeline;
   }
 }

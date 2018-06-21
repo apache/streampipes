@@ -24,24 +24,29 @@ public enum ConnectContainerConfig {
   INSTANCE;
 
   private SpConfig config;
-  private final static String KAFKA_HOST = "kafka_host";
-  private final static String KAFKA_PORT = "kafka_port";
 
   ConnectContainerConfig() {
     config = SpConfig.getSpConfig("connect-container");
 
-    config.register(KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
-    config.register(KAFKA_PORT, 9092, "Port for backend service for kafka");
+    config.register(ConfigKeys.BACKEND_HOST, "backend", "Hostname for backend");
+    config.register(ConfigKeys.BACKEND_PORT, 8030, "Port for backend");
 
+    config.register(ConfigKeys.KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
+    config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");
+
+  }
+
+  public String getBackendApiUrl() {
+    return config.getString(ConfigKeys.BACKEND_HOST) + ":" + config.getInteger(ConfigKeys.KAFKA_PORT) + "/streampipes-backend/";
   }
 
 
   public String getKafkaHost() {
-    return config.getString(KAFKA_HOST);
+    return config.getString(ConfigKeys.KAFKA_HOST);
   }
 
   public int getKafkaPort() {
-    return config.getInteger(KAFKA_PORT);
+    return config.getInteger(ConfigKeys.KAFKA_PORT);
   }
 
   public String getKafkaUrl() {
@@ -49,7 +54,7 @@ public enum ConnectContainerConfig {
   }
 
   public void setKafkaHost(String s) {
-    config.setString(KAFKA_HOST, s);
+    config.setString(ConfigKeys.KAFKA_HOST, s);
   }
 
 }

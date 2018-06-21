@@ -31,6 +31,7 @@ import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.client.messages.SuccessMessage;
+import org.streampipes.model.client.pipeline.PipelineModification;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IPipeline;
@@ -149,6 +150,10 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
     public Response stop(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
+        return stopPipeline(pipelineId);
+    }
+
+    public Response stopPipeline(String pipelineId) {
         try {
             org.streampipes.model.client.pipeline.Pipeline pipeline = getPipelineStorage().getPipeline(pipelineId);
             PipelineOperationStatus status = Operations.stopPipeline(pipeline);

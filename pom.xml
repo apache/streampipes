@@ -400,6 +400,21 @@
                 <version>2.3.2</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
+                <version>9.2.24.v20180105</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-util</artifactId>
+                <version>9.2.24.v20180105</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-continuation</artifactId>
+                <version>9.2.24.v20180105</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

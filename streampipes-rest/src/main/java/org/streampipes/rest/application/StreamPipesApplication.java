@@ -45,6 +45,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(OntologyMeasurementUnit.class);
         apiClasses.add(OntologyPipelineElement.class);
         apiClasses.add(Pipeline.class);
+        apiClasses.add(PipelineNoUser.class);
         apiClasses.add(PipelineCategory.class);
         apiClasses.add(PipelineElementImport.class);
         apiClasses.add(SemanticEventConsumer.class);

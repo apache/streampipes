@@ -54,6 +54,12 @@ public class AdapterManagement implements IAdapterManagement {
 
         adapter.run(adapterSetDescription);
 
+        String url = AdapterUtils.getUrl(ConnectContainerConfig.INSTANCE.getBackendApiUrl(), "riemer@fzi.de", dataSet.getDatasetInvocationId());
+        String result = AdapterUtils.stopPipeline(url);
+
+        System.out.println(result);
+
+
         return "";
     }
 

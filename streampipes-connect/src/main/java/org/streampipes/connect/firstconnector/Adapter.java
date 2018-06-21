@@ -47,6 +47,8 @@ public class Adapter {
     private String topic;
     private Protocol protocol;
 
+    private AdapterDescription adapterDescription;
+
     Logger logger = LoggerFactory.getLogger(Adapter.class);
     private boolean debug;
 
@@ -77,6 +79,8 @@ public class Adapter {
 
     public void run(AdapterDescription adapterDescription) {
 
+        this.adapterDescription = adapterDescription;
+
         Parser parser = allParsers.get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
         Format format = allFormats.get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
 
@@ -103,4 +107,7 @@ public class Adapter {
         protocol.stop();
     }
 
+    public AdapterDescription getAdapterDescription() {
+        return adapterDescription;
+    }
 }
