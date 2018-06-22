@@ -38,11 +38,16 @@ public class SpConnect {
 
     public String addAdapter(AdapterDescription ad, String baseUrl) {
 
+        // store in db
         new AdapterStorageImpl().storeAdapter(ad);
 
+        // start when stream adapter
         if (ad instanceof AdapterStreamDescription) {
             return SpConnect.startStreamAdapter((AdapterStreamDescription) ad, baseUrl);
         }
+
+        // TODO store data source in StreamPipes
+
 
         return SpConnectUtils.SUCCESS;
     }
