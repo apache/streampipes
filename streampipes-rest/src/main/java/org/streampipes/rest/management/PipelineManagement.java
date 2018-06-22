@@ -17,5 +17,27 @@
 
 package org.streampipes.rest.management;
 
-public class PipelineManagement {
+import org.streampipes.manager.operations.Operations;
+import org.streampipes.model.client.messages.Notification;
+import org.streampipes.model.client.messages.NotificationType;
+import org.streampipes.model.client.pipeline.Pipeline;
+import org.streampipes.model.client.pipeline.PipelineOperationStatus;
+import org.streampipes.rest.impl.AbstractRestInterface;
+
+import javax.ws.rs.core.Response;
+
+public class PipelineManagement extends AbstractRestInterface {
+
+    public Response stopPipeline(String pipelineId) {
+        try {
+            Pipeline pipeline = getPipelineStorage().getPipeline(pipelineId);
+            PipelineOperationStatus status = Operations.stopPipeline(pipeline);
+            return ok(status);
+        } catch
+                (Exception e) {
+            e.printStackTrace();
+            return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+        }
+    }
+
 }

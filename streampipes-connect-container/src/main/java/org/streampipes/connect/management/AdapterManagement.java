@@ -54,7 +54,13 @@ public class AdapterManagement implements IAdapterManagement {
 
         adapter.run(adapterSetDescription);
 
-        String url = AdapterUtils.getUrl(ConnectContainerConfig.INSTANCE.getBackendApiUrl(), "riemer@fzi.de", dataSet.getDatasetInvocationId());
+        // TODO wait till all components are done with their calculations
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String url = AdapterUtils.getUrl(ConnectContainerConfig.INSTANCE.getBackendApiUrl(), dataSet.getCorrespondingPipeline());
         String result = AdapterUtils.stopPipeline(url);
 
         System.out.println(result);

@@ -37,7 +37,7 @@ public enum ConnectContainerConfig {
   }
 
   public String getBackendApiUrl() {
-    return config.getString(ConfigKeys.BACKEND_HOST) + ":" + config.getInteger(ConfigKeys.KAFKA_PORT) + "/streampipes-backend/";
+    return config.getString(ConfigKeys.BACKEND_HOST) + ":" + config.getInteger(ConfigKeys.BACKEND_PORT) + "/streampipes-backend/";
   }
 
 

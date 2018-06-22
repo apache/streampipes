@@ -17,7 +17,11 @@
 
 package org.streampipes.rest.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.rest.annotation.GsonWithIds;
+import org.streampipes.rest.annotation.NoAuthenticationRequired;
+import org.streampipes.rest.management.PipelineManagement;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -27,14 +31,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/pipelines")
-public class PipelineNoUser extends AbstractRestInterface {
+public class PipelineNoUserResource extends AbstractRestInterface {
+
+    private static final Logger logger = LoggerFactory.getLogger(PipelineNoUserResource.class);
 
     @Path("/{pipelineId}/stop")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
+    @NoAuthenticationRequired
     public Response stop(@PathParam("pipelineId") String pipelineId) {
-        Pipeline p = new Pipeline();
-        return p.stopPipeline(pipelineId);
+        logger.info("Pipeline: " + pipelineId + " was stopped by the system");
+        PipelineManagement pm = new PipelineManagement();
+        return pm.stopPipeline(pipelineId);
     }
 }

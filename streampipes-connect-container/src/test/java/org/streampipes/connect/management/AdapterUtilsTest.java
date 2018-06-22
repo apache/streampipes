@@ -53,7 +53,7 @@ public class AdapterUtilsTest {
     public void getUrlTest() {
         String expected = "http://host:80/api/v2/pipelines/1/stop";
 
-        String result = AdapterUtils.getUrl("http://host:80/", "1");
+        String result = AdapterUtils.getUrl("host:80/", "1");
 
         assertEquals(expected, result);
     }
