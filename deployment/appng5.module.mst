@@ -14,6 +14,8 @@ import { CustomMaterialModule } from './CustomMaterial/custom-material.module';
 import { AuthStatusService } from './services/auth-status.service';
 
 import { HomeModule } from './home/home.module';
+import { InfoModule } from './info/info.module';
+
 {{#modulesActive}}
 {{#ng5}}
 import { {{{ng5_moduleName}}} } from '{{{path}}}';
@@ -38,6 +40,7 @@ import {Logger} from './shared/logger/default-log.service';
         UIRouterUpgradeModule.forChild(),
         HomeModule,
         ConfigurationModule,
+        InfoModule,
         {{#modulesActive}}
         {{#ng5}}
         {{{ng5_moduleName}}},

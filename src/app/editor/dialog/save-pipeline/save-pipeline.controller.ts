@@ -11,8 +11,9 @@ export class SavePipelineController {
     modificationMode: any;
     updateMode: any;
     submitPipelineForm: any;
+    TransitionService: any;
 
-    constructor($mdDialog, $state, RestApi, $mdToast, ObjectProvider, pipeline, modificationMode) {
+    constructor($mdDialog, $state, RestApi, $mdToast, ObjectProvider, pipeline, modificationMode, TransitionService) {
         this.RestApi = RestApi;
         this.$mdToast = $mdToast;
         this.$state = $state;
@@ -22,6 +23,7 @@ export class SavePipelineController {
         this.ObjectProvider = ObjectProvider;
         this.modificationMode = modificationMode;
         this.updateMode = "update";
+        this.TransitionService = TransitionService;
 
         this.getPipelineCategories();
     }
@@ -52,7 +54,6 @@ export class SavePipelineController {
 
 
     savePipelineName(switchTab) {
-
         if (this.pipeline.name == "") {
             this.showToast("error", "Please enter a name for your pipeline");
             return false;
@@ -71,6 +72,7 @@ export class SavePipelineController {
                     }
                     this.displaySuccess(data);
                     this.hide();
+                    this.TransitionService.makePipelineAssemblyEmpty(true);
                     if (switchTab) this.$state.go("streampipes.pipelines");
                     if (this.startPipelineAfterStorage) this.$state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
                     // TODO clear assembly
@@ -100,4 +102,4 @@ export class SavePipelineController {
     }
 }
 
-SavePipelineController.$inject = ['$mdDialog', '$state', 'RestApi', '$mdToast', 'ObjectProvider', 'pipeline', 'modificationMode'];
+SavePipelineController.$inject = ['$mdDialog', '$state', 'RestApi', '$mdToast', 'ObjectProvider', 'pipeline', 'modificationMode', 'TransitionService'];

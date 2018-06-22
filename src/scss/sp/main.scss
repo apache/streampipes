@@ -21,21 +21,6 @@ body {
     background-attachment: fixed;
 }
 
-#loading-bar {
-    pointer-events: all;
-    z-index: 99999;
-    border: none;
-    margin: 0px;
-    padding: 0px;
-    width: 100%;
-    height: 100%;
-    top: 0px;
-    left: 0px;
-    //cursor: wait;
-    position: fixed;
-    background-color: rgba(216, 216, 216, 0.6);
-}
-
 .cv-wrapper {
     font-size: 1em;
     width: 320px;
