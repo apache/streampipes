@@ -85,7 +85,7 @@ export class PipelineController {
     }
 
     isInPipeline(type) {
-        return this.rawPipelineModel.some(x => x.type == type);
+        return this.rawPipelineModel.some(x => (x.type == type && !(x.settings.disabled)));
     }
 
     showMixedStreamAlert() {
