@@ -66,12 +66,12 @@ public class SpConnectTest {
 
     @Test
     public void startStreamAdapterTest() {
-       // expected http request to connect-container /invoke/stream
+        // expected http request to connect-container /invoke/stream
         Response expected = new Response("id",true);
         stubFor(post(urlEqualTo("/api/v1/invoke/stream"))
                 .willReturn(aResponse()
-                .withStatus(200)
-                .withBody(expected.toString())));
+                        .withStatus(200)
+                        .withBody(expected.toString())));
 
         AdapterStreamDescription adapter = new AdapterStreamDescription();
         adapter.setUri("http://test.de/1");
@@ -88,8 +88,8 @@ public class SpConnectTest {
         Response expected = new Response("id",true);
         stubFor(post(urlEqualTo("/api/v1/invoke/set"))
                 .willReturn(aResponse()
-                .withStatus(200)
-                .withBody(expected.toString())));
+                        .withStatus(200)
+                        .withBody(expected.toString())));
 
         AdapterSetDescription adapterSetDescription = new AdapterSetDescription();
         adapterSetDescription.setUri("http://test.adapter");
@@ -114,8 +114,8 @@ public class SpConnectTest {
         Response expected = new Response("id",true);
         stubFor(post(urlEqualTo("/api/v1/stop/stream"))
                 .willReturn(aResponse()
-                .withStatus(200)
-                .withBody(expected.toString())));
+                        .withStatus(200)
+                        .withBody(expected.toString())));
 
         AdapterDescription adapterDescription = new AdapterSetDescription();
         adapterDescription.setUri("http://test.adapter");
@@ -137,8 +137,8 @@ public class SpConnectTest {
         Response expected = new Response("id",true);
         stubFor(post(urlEqualTo("/api/v1/stop/set"))
                 .willReturn(aResponse()
-                .withStatus(200)
-                .withBody(expected.toString())));
+                        .withStatus(200)
+                        .withBody(expected.toString())));
 
         AdapterDescription adapterDescription = new AdapterSetDescription();
         adapterDescription.setUri("http://test.adapter");
@@ -155,4 +155,17 @@ public class SpConnectTest {
                 .withHeader("Content-Type", equalTo("application/json; charset=UTF-8")));
     }
 
+//    @Test
+//    public void installDatasource() {
+////        stubFor(post(urlEqualTo("/api/v1/stop/set"))
+////                .willReturn(aResponse()
+////                        .withStatus(200)
+////                        .wit
+////                        .withBody(expected.toString())));
+//
+//        SpConnect spConnect = new SpConnect();
+//        boolean result = spConnect.installDatasource();
+//
+//        assertEquals(true, result);
+//    }
 }

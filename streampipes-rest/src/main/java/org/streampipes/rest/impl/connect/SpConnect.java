@@ -17,10 +17,12 @@
 
 package org.streampipes.rest.impl.connect;
 
+import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.modelconnect.AdapterDescription;
 import org.streampipes.model.modelconnect.AdapterSetDescription;
@@ -30,16 +32,19 @@ import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 import org.streampipes.vocabulary.StreamPipes;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 public class SpConnect {
 
     private static final Logger logger = LoggerFactory.getLogger(SpConnectResource.class);
 
-    public String addAdapter(AdapterDescription ad, String baseUrl) {
+    public String addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl adapterStorage) {
 
         // store in db
-        new AdapterStorageImpl().storeAdapter(ad);
+        adapterStorage.storeAdapter(ad);
+
+
 
         // start when stream adapter
         if (ad instanceof AdapterStreamDescription) {
@@ -47,9 +52,67 @@ public class SpConnect {
         }
 
         // TODO store data source in StreamPipes
+        List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
+        String adapterCouchdbId = "";
+        for (AdapterDescription a : allAdapters) {
+           if (a.getAdapterId().equals(ad.getAdapterId())) {
+               adapterCouchdbId = a.getId();
+           }
+        }
+        
+        String backendBaseUrl = "http://" + BackendConfig.INSTANCE.getBackendHost() + ":" + "8030" + "/streampipes-backend/api/v2/";
+        String requestUrl = backendBaseUrl +  "noauth/users/riemer@fzi.de/element";
+        logger.info("Request URL: " + requestUrl);
+
+        String elementUrl = backendBaseUrl + "adapter/all/" + adapterCouchdbId;
+        logger.info("Element URL: " + elementUrl);
+
+        installDataSource(requestUrl, elementUrl);
 
 
         return SpConnectUtils.SUCCESS;
+    }
+
+    public boolean installDataSource(String requestUrl, String elementIdUrl) {
+
+        // Request URL
+        // http://ipe-koi15.fzi.de/streampipes-backend/api/v2/users/riemer@fzi.de/element
+
+        // Element Id Url
+        // "http://ipe-koi15.fzi.de:8030/streampipes-backend/api/v2/adapter/all/0b3e3a5e58cf4322b269cd80b935ffdf"
+        try {
+            String responseString = Request.Post(requestUrl)
+                    .bodyForm(
+                            Form.form()
+                                    .add("uri", elementIdUrl)
+                                    .add("publicElement", "true").build())
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asString();
+
+            logger.info(responseString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+
+    public static boolean deleteDataSource(String requestUrl) {
+        String responseString = null;
+        logger.info(requestUrl);
+        try {
+            responseString = Request.Delete(requestUrl)
+                   .connectTimeout(1000)
+                   .socketTimeout(100000)
+                   .execute().returnContent().asString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        logger.info(responseString);
+        return false;
     }
 
     public static boolean isStreamAdapter(String id, AdapterStorageImpl adapterStorage) {

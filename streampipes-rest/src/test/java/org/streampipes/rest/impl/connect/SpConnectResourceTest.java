@@ -56,7 +56,7 @@ public class SpConnectResourceTest {
 
         // Mock adatper management
         SpConnect spConnect = mock(SpConnect.class);
-        org.mockito.Mockito.when(spConnect.addAdapter(any(AdapterStreamDescription.class), any(String.class)))
+        org.mockito.Mockito.when(spConnect.addAdapter(any(AdapterStreamDescription.class), any(String.class), any()))
                 .thenReturn(SpConnectUtils.SUCCESS);
         spConnectResource.setSpConnect(spConnect);
 
@@ -75,7 +75,7 @@ public class SpConnectResourceTest {
         String errorMessage = "ERROR";
 
         SpConnect spConnect = mock(SpConnect.class);
-        org.mockito.Mockito.when(spConnect.addAdapter(any(AdapterStreamDescription.class), any(String.class)))
+        org.mockito.Mockito.when(spConnect.addAdapter(any(AdapterStreamDescription.class), any(String.class), any()))
                 .thenReturn(errorMessage);
         spConnectResource.setSpConnect(spConnect);
         spConnectResource.setConnectContainerEndpoint(Mock.HOST);

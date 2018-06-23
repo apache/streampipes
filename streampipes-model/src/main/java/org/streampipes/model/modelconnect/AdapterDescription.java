@@ -22,6 +22,9 @@ public class AdapterDescription extends NamedStreamPipesEntity {
 
     private @SerializedName("_rev") String rev;
 
+    @RdfProperty("sp:adapterId")
+    private String adapterId;
+
     @RdfProperty("sp:hasFormat")
     private FormatDescription formatDescription;
 
@@ -76,6 +79,14 @@ public class AdapterDescription extends NamedStreamPipesEntity {
 
     public void setRev(String rev) {
         this.rev = rev;
+    }
+
+    public String getAdapterId() {
+        return adapterId;
+    }
+
+    public void setAdapterId(String adapterId) {
+        this.adapterId = adapterId;
     }
 
     @Override

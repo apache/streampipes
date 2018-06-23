@@ -217,11 +217,14 @@ public class SpConnectResource extends AbstractRestInterface {
         logger.info("Received request add adapter with json-ld: " + ar);
 
         AdapterDescription a = SpConnect.getAdapterDescription(ar);
+        UUID id = UUID.randomUUID();
         if (a.getUri() == null) {
-            a.setUri("https://streampipes.org/adapter/" + UUID.randomUUID());
+            a.setUri("https://streampipes.org/adapter/" + id);
         }
 
-        String success = spConnect.addAdapter(a, connectContainerEndpoint);
+        a.setAdapterId(id.toString());
+
+        String success = spConnect.addAdapter(a, connectContainerEndpoint, new AdapterStorageImpl());
 
         return getResponse(success, a.getUri());
     }
@@ -231,7 +234,6 @@ public class SpConnectResource extends AbstractRestInterface {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{adapterId}")
     public String deleteAdapter(@PathParam("adapterId") String couchDbadapterId) {
-
         String result = "";
 
         // IF Stream adapter delete it
@@ -243,6 +245,12 @@ public class SpConnectResource extends AbstractRestInterface {
         }
 
         adapterStorage.deleteAdapter(couchDbadapterId);
+
+        //TODO remove adapter from StreamPipes
+        String backendBaseUrl = "http://" + BackendConfig.INSTANCE.getBackendHost() + ":" + "8030" + "/streampipes-backend/api/v2/noauth/users/riemer@fzi.de/element/";
+        backendBaseUrl = backendBaseUrl + couchDbadapterId;
+        SpConnect.deleteDataSource(backendBaseUrl);
+
 
         return getResponse(result, couchDbadapterId);
     }

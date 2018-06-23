@@ -15,12 +15,13 @@
  *
  */
 
-package org.streampipes.rest.impl;
+package org.streampipes.rest.impl.nouser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.annotation.NoAuthenticationRequired;
+import org.streampipes.rest.impl.AbstractRestInterface;
 import org.streampipes.rest.management.PipelineManagement;
 
 import javax.ws.rs.GET;
