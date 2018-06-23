@@ -164,6 +164,11 @@ export class AppCtrl {
             this.$window.open('/docs', '_blank');
         };
 
+        openInfo() {
+                this.$state.go("streampipes.info");
+                this.activePage = "Info";
+        }
+
         isActivePage(path) {
             return (this.$state.current.name == path);
         }

@@ -6,6 +6,7 @@ import { {{{ng5_component}}} } from '{{{ng5_componentPath}}}';
 {{/ng5}}
 {{/modulesActive}}
 import { HomeComponent } from '../home/home.component';
+import { InfoComponent } from '../info/info.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
@@ -115,6 +116,14 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('streampipes.info', {
+                    url: '/info',
+                    views: {
+                        'spMain@streampipes': {
+                            component: InfoComponent
+                        }
+                    }
+                })
         {{#modulesActive}}
         {{^ng5}}
         .state('{{{link}}}', {
