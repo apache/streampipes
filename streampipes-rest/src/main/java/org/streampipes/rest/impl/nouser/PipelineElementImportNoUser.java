@@ -26,19 +26,23 @@ import org.streampipes.rest.impl.AbstractRestInterface;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.net.URISyntaxException;
 
 @Path("/v2/noauth/users/{username}/element")
 public class PipelineElementImportNoUser extends AbstractRestInterface {
+	@Context
+	UriInfo uri;
 
 	@Path("/")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response addElement(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement)
     {
-//        if (!authorized(username)) return ok(Notifications.error(NotificationType.UNAUTHORIZED));
         return ok(verifyAndAddElement(uri, username, publicElement));
     }
 
@@ -51,13 +55,17 @@ public class PipelineElementImportNoUser extends AbstractRestInterface {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteElement(@PathParam("username") String username, @PathParam("id") String elementId) {
 
+		URI myUri = uri.getBaseUri();
+		String id = myUri.toString()  + "v2/adapter/all/" + elementId;
+
+
 		UserService userService = getUserService();
 		IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
 		try {
-			if (requestor.getSEPById(elementId) != null)
+			if (requestor.getSEPById(id) != null)
 				{
-					requestor.deleteSEP(requestor.getSEPById(elementId));
-					userService.deleteOwnSource(username, elementId);
+					requestor.deleteSEP(requestor.getSEPById(id));
+					userService.deleteOwnSource(username, id);
 				}
 			else return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
 		} catch (URISyntaxException e) {

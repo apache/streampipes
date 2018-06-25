@@ -34,10 +34,10 @@ public class SchemaGuesserTest {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().port(Mock.PORT));
 
-//    @Before
-//    public void setPort() {
-//        SchemaGuesser.port = Mock.PORT;
-//    }
+    @Before
+    public void setPort() {
+        SchemaGuesser.port = Mock.PORT;
+    }
 
     @Test
     public void requestProbabilitiesStringTest() {

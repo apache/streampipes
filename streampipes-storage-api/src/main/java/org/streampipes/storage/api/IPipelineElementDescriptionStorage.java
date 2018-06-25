@@ -43,7 +43,7 @@ public interface IPipelineElementDescriptionStorage {
 	DataSourceDescription getSEPById(URI rdfId);
 
 	DataSourceDescription getSEPByAppId(String appId);
-	
+
 	DataSourceDescription getSEPById(String rdfId) throws URISyntaxException;
 	
 	DataProcessorDescription getSEPAById(String rdfId) throws URISyntaxException;

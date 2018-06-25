@@ -136,7 +136,7 @@ public class AdapterResourceTest {
         // perform test
         String data = getMinimalStreamAdapterJsonLD();
         given().contentType("application/json").body(data).when()
-                .delete(API_VERSION + "/stop/stream").then().assertThat()
+                .post(API_VERSION + "/stop/stream").then().assertThat()
                 .body("success", equalTo(true))
                 .body("optionalMessage", equalTo(""))
                 .body("elementId", equalTo("http://test.de/1"));
@@ -152,7 +152,7 @@ public class AdapterResourceTest {
 
         String data = getMinimalStreamAdapterJsonLD();
         given().contentType("application/json").body(data).when()
-                .delete(API_VERSION + "/stop/stream").then().assertThat()
+                .post(API_VERSION + "/stop/stream").then().assertThat()
                 .body("success", equalTo(false))
                 .body("optionalMessage", equalTo(ERROR_MESSAGE))
                 .body("elementId", equalTo("http://test.de/1"));
@@ -203,7 +203,7 @@ public class AdapterResourceTest {
         // perform test
         String data = getMinimalSetAdapterJsonLD();
         given().contentType("application/json").body(data).when()
-                .delete(API_VERSION + "/stop/set").then().assertThat()
+                .post(API_VERSION + "/stop/set").then().assertThat()
                 .body("success", equalTo(true))
                 .body("optionalMessage", equalTo(""))
                 .body("elementId", equalTo("http://test.de/1"));
@@ -219,7 +219,7 @@ public class AdapterResourceTest {
 
         String data = getMinimalSetAdapterJsonLD();
         given().contentType("application/json").body(data).when()
-                .delete(API_VERSION + "/stop/set").then().assertThat()
+                .post(API_VERSION + "/stop/set").then().assertThat()
                 .body("success", equalTo(false))
                 .body("optionalMessage", equalTo(ERROR_MESSAGE))
                 .body("elementId", equalTo("http://test.de/1"));

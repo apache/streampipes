@@ -100,8 +100,10 @@ public class SpConnect {
 
 
     public static boolean deleteDataSource(String requestUrl) {
+        boolean response = true;
+
         String responseString = null;
-        logger.info(requestUrl);
+        logger.info("Delete data source in backend with request URL: " + requestUrl);
         try {
             responseString = Request.Delete(requestUrl)
                    .connectTimeout(1000)
@@ -109,10 +111,12 @@ public class SpConnect {
                    .execute().returnContent().asString();
         } catch (IOException e) {
             e.printStackTrace();
+            responseString = e.toString();
+            response = false;
         }
 
-        logger.info(responseString);
-        return false;
+        logger.info("Response of the deletion request" + responseString);
+        return response;
     }
 
     public static boolean isStreamAdapter(String id, AdapterStorageImpl adapterStorage) {
