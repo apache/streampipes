@@ -161,7 +161,7 @@ export class AppCtrl {
         };
 
         openDocumentation() {
-            this.$window.open('/docs', '_blank');
+            this.$window.open('https://docs.streampipes.org', '_blank');
         };
 
         openInfo() {
