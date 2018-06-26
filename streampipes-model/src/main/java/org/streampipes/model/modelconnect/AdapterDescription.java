@@ -25,6 +25,9 @@ public class AdapterDescription extends NamedStreamPipesEntity {
     @RdfProperty("sp:adapterId")
     private String adapterId;
 
+    @RdfProperty("sp:userName")
+    private String userName;
+
     @RdfProperty("sp:hasFormat")
     private FormatDescription formatDescription;
 
@@ -39,6 +42,9 @@ public class AdapterDescription extends NamedStreamPipesEntity {
 
     public AdapterDescription(AdapterDescription other) {
         super(other);
+        this.adapterId = other.getAdapterId();
+        this.userName = other.getUserName();
+
         if (other.getFormatDescription() != null) this.formatDescription = new FormatDescription(other.getFormatDescription());
         if (other.getProtocolDescription() != null) this.protocolDescription = new ProtocolDescription(other.getProtocolDescription());
     }
@@ -87,6 +93,14 @@ public class AdapterDescription extends NamedStreamPipesEntity {
 
     public void setAdapterId(String adapterId) {
         this.adapterId = adapterId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     @Override

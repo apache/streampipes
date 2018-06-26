@@ -243,11 +243,13 @@ public class SpConnectResource extends AbstractRestInterface {
         if (isStreamAdapter) {
             result = SpConnect.stopStreamAdapter(couchDbadapterId, connectContainerEndpoint, adapterStorage);
         }
+        AdapterDescription ad = adapterStorage.getAdapter(couchDbadapterId);
+        String username = ad.getUserName();
 
         adapterStorage.deleteAdapter(couchDbadapterId);
 
-        //TODO remove adapter from StreamPipes
-        String backendBaseUrl = "http://" + BackendConfig.INSTANCE.getBackendHost() + ":" + "8030" + "/streampipes-backend/api/v2/noauth/users/riemer@fzi.de/element/";
+        String backendBaseUrl = "http://" + BackendConfig.INSTANCE.getBackendHost() + ":" + "8030" +
+                "/streampipes-backend/api/v2/noauth/users/"+ username + "/element/";
         backendBaseUrl = backendBaseUrl + couchDbadapterId;
         SpConnect.deleteDataSource(backendBaseUrl);
 

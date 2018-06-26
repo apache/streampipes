@@ -45,13 +45,11 @@ public class SpConnect {
         adapterStorage.storeAdapter(ad);
 
 
-
         // start when stream adapter
         if (ad instanceof AdapterStreamDescription) {
             return SpConnect.startStreamAdapter((AdapterStreamDescription) ad, baseUrl);
         }
 
-        // TODO store data source in StreamPipes
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
         String adapterCouchdbId = "";
         for (AdapterDescription a : allAdapters) {
@@ -61,7 +59,8 @@ public class SpConnect {
         }
         
         String backendBaseUrl = "http://" + BackendConfig.INSTANCE.getBackendHost() + ":" + "8030" + "/streampipes-backend/api/v2/";
-        String requestUrl = backendBaseUrl +  "noauth/users/riemer@fzi.de/element";
+        String userName = ad.getUserName();
+        String requestUrl = backendBaseUrl +  "noauth/users/" + userName + "/element";
         logger.info("Request URL: " + requestUrl);
 
         String elementUrl = backendBaseUrl + "adapter/all/" + adapterCouchdbId;
@@ -75,11 +74,6 @@ public class SpConnect {
 
     public boolean installDataSource(String requestUrl, String elementIdUrl) {
 
-        // Request URL
-        // http://ipe-koi15.fzi.de/streampipes-backend/api/v2/users/riemer@fzi.de/element
-
-        // Element Id Url
-        // "http://ipe-koi15.fzi.de:8030/streampipes-backend/api/v2/adapter/all/0b3e3a5e58cf4322b269cd80b935ffdf"
         try {
             String responseString = Request.Post(requestUrl)
                     .bodyForm(
