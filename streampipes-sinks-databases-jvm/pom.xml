@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>streampipes-sinks-databases</artifactId>
+    <artifactId>streampipes-sinks-databases-jvm</artifactId>
 
 
 </project>

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>streampipes-processors-filters</artifactId>
+    <artifactId>streampipes-processors-filters-jvm</artifactId>
 
 
 </project>
