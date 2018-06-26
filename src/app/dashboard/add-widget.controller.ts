@@ -103,6 +103,14 @@ export class AddWidgetCtrl {
         else return "md-fab md-accent wizard-inactive";
     }
 
+    back() {
+        if (this.page == 'select-type') {
+            this.page = 'select-viz';
+        } else if (this.page == 'select-scheme') {
+            this.page = 'select-type';
+        }
+    }
+
     next() {
         if (this.page == 'select-viz') {
             this.page = 'select-type';
