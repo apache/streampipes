@@ -23,6 +23,7 @@ public class ConfigItem {
     private String description;
     private String value;
     private String valueType;
+    private ConfigurationScope configurationScope;
     private boolean isPassword;
 
     public ConfigItem() {
@@ -67,5 +68,13 @@ public class ConfigItem {
 
     public void setPassword(boolean state) {
         isPassword = state;
+    }
+
+    public ConfigurationScope getConfigurationScope() {
+        return configurationScope;
+    }
+
+    public void setConfigurationScope(ConfigurationScope configurationScope) {
+        this.configurationScope = configurationScope;
     }
 }

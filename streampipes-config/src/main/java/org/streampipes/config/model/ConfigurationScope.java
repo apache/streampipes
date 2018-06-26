@@ -14,14 +14,10 @@
  * limitations under the License.
  *
  */
+package org.streampipes.config.model;
 
-package org.streampipes.container.model;
-
-public interface PeConfig {
-
-    String getId();
-    String getHost();
-    int getPort();
-    String getName();
-
+public enum ConfigurationScope {
+  CONTAINER_STARTUP_CONFIG,
+  CONTAINER_GLOBAL_CONFIG,
+  PIPELINE_ELEMENT_CONFIG;
 }

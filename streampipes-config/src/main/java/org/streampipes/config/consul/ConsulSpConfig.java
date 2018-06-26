@@ -17,11 +17,14 @@
 
 package org.streampipes.config.consul;
 
+import com.google.gson.Gson;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.KeyValueClient;
 import com.orbitz.consul.model.kv.Value;
 import org.streampipes.config.SpConfig;
 import org.streampipes.config.SpConfigChangeCallback;
+import org.streampipes.config.model.ConfigItem;
+import org.streampipes.config.model.ConfigurationScope;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,16 +33,14 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ConsulSpConfig extends SpConfig implements Runnable {
-//    final static Logger logger = LogUtil.getInstance(ConsulSpConfig.class);
 
-//public class ConsulSpConfig extends SpConfig {
     private static final String CONSUL_ENV_LOCATION = "CONSUL_LOCATION";
     public static final String SERVICE_ROUTE_PREFIX = "sp/v1/";
     private String serviceName;
     private  KeyValueClient kvClient;
 
 
-    // TODO Implement mechanism to update the client when some configutation parameters change in Consul
+    // TODO Implement mechanism to update the client when some configuration parameters change in Consul
     private SpConfigChangeCallback callback;
     private Map<String, Object> configProps;
 
@@ -96,48 +97,63 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
     }
 
     @Override
+    public <T> void register(String key, T defaultValue, String description, ConfigurationScope configurationScope) {
+        register(key, String.valueOf(defaultValue), getValueType(defaultValue), description, configurationScope, false);
+    }
+
+    private <T> String getValueType(T defaultValue) {
+        if (defaultValue instanceof Boolean) {
+          return "xs:boolean";
+        } else if (defaultValue instanceof Integer) {
+          return "xs:integer";
+        } else if (defaultValue instanceof Double) {
+          return "xs:double";
+        } else {
+          return "xs:string";
+        }
+    }
+
+    @Override
     public void register(String key, boolean defaultValue, String description) {
-        register(key, Boolean.toString(defaultValue), "xs:boolean", description, false);
+        register(key, Boolean.toString(defaultValue), "xs:boolean", description, ConfigurationScope.CONTAINER_STARTUP_CONFIG, false);
     }
 
     @Override
     public void register(String key, int defaultValue, String description) {
-        register(key, Integer.toString(defaultValue), "xs:integer", description, false);
+        register(key, Integer.toString(defaultValue), "xs:integer", description, ConfigurationScope.CONTAINER_STARTUP_CONFIG, false);
     }
 
     @Override
     public void register(String key, double defaultValue, String description) {
-        register(key, Double.toString(defaultValue), "xs:double", description, false);
+        register(key, Double.toString(defaultValue), "xs:double", description, ConfigurationScope.CONTAINER_STARTUP_CONFIG, false);
 
     }
 
     @Override
     public void register(String key, String defaultValue, String description) {
-        register(key, defaultValue, "xs:string", description, false);
+        register(key, defaultValue, "xs:string", description, ConfigurationScope.CONTAINER_STARTUP_CONFIG, false);
     }
 
     @Override
     public void registerPassword(String key, String defaultValue, String description) {
-        register(key, defaultValue, "xs:string", description, true);
+        register(key, defaultValue, "xs:string", description, ConfigurationScope.CONTAINER_STARTUP_CONFIG, true);
     }
 
-    private void register(String key, String defaultValue, String valueType, String description, boolean isPassword) {
+    private void register(String key, String defaultValue, String valueType, String description, ConfigurationScope configurationScope, boolean isPassword) {
 
         Optional<String> i = kvClient.getValueAsString(addSn(key));
+        ConfigItem configItem = prepareConfigItem(valueType, description, configurationScope, isPassword);
         // TODO this check does not work
         if (!i.isPresent()) {
             // Set the value of environment variable as default
             String envVariable = System.getenv(key);
             if (envVariable != null) {
-                kvClient.putValue(addSn(key), envVariable);
+                configItem.setValue(envVariable);
+                kvClient.putValue(addSn(key), toJson(configItem));
             } else {
-                kvClient.putValue(addSn(key), defaultValue);
+                configItem.setValue(defaultValue);
+                kvClient.putValue(addSn(key), toJson(configItem));
             }
-
-            kvClient.putValue(addSn(key) + "_description", description);
-            kvClient.putValue(addSn(key) + "_type", valueType);
-            if(isPassword)
-                kvClient.putValue(addSn(key) + "_isPassword", "true");
         }
 
         if (configProps != null) {
@@ -162,12 +178,14 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
 
     @Override
     public String getString(String key) {
-        Optional<String> os = kvClient.getValueAsString(addSn(key));
+      return getConfigItem(key).getValue();
+    }
 
-        String s = os.get();
-        return s;
+    @Override
+    public ConfigItem getConfigItem(String key) {
+      Optional<String> os = kvClient.getValueAsString(addSn(key));
 
-//        return kvClient.getValueAsString(addSn(key)).get();
+      return fromJson(os.get());
     }
 
     @Override
@@ -194,5 +212,28 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
        return SERVICE_ROUTE_PREFIX + serviceName + "/" + key;
     }
 
+    private ConfigItem fromJson(String content) {
+        try {
+          return new Gson().fromJson(content, ConfigItem.class);
+        } catch (Exception e) {
+          // if old config is used, this is a fallback
+          ConfigItem configItem = new ConfigItem();
+          configItem.setValue(content);
+          return configItem;
+        }
+    }
 
+    private ConfigItem prepareConfigItem(String valueType, String description, ConfigurationScope configurationScope, boolean password) {
+        ConfigItem configItem = new ConfigItem();
+        configItem.setValueType(valueType);
+        configItem.setDescription(description);
+        configItem.setPassword(password);
+        configItem.setConfigurationScope(configurationScope);
+
+        return configItem;
+    }
+
+    private String toJson(ConfigItem configItem) {
+        return new Gson().toJson(configItem);
+    }
 }
