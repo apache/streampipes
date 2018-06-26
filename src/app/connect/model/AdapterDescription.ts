@@ -16,6 +16,9 @@ export class AdapterDescription {
   @RdfProperty('sp:couchDBId')
   public couchDbId: string;
 
+  @RdfProperty('sp:userName')
+  public userName: string;
+
   @RdfProperty('sp:hasProtocol')
   public protocol: ProtocolDescription;
 

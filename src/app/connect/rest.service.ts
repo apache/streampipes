@@ -27,6 +27,7 @@ import {DomainPropertyProbability} from './schema-editor/model/DomainPropertyPro
 import {GuessSchema} from './schema-editor/model/GuessSchema';
 import {DomainPropertyProbabilityList} from './schema-editor/model/DomainPropertyProbabilityList';
 import {URI} from './model/URI';
+import {AuthStatusService} from '../services/auth-status.service';
 
 @Injectable()
 export class RestService {
@@ -57,7 +58,7 @@ export class RestService {
         return tsonld;
     }
 
-    constructor( private http: HttpClient) {
+    constructor( private http: HttpClient, private authStatusService: AuthStatusService) {
     }
 
     addAdapter(adapter: AdapterDescription ) {
@@ -66,6 +67,7 @@ export class RestService {
         tsonld.addContext('spi', 'urn:streampipes.org:spi:');
         tsonld.addContext('foaf', 'http://xmlns.com/foaf/0.1/');
 
+        adapter.userName = this.authStatusService.email;
 
         tsonld.toflattenJsonLd(adapter).subscribe(res => {
             console.log(JSON.stringify(res));
