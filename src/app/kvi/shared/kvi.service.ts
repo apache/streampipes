@@ -26,11 +26,12 @@ import { PipelineTemplateDescriptionContainer } from '../../connect/model/Pipeli
 import { StaticProperty } from '../../connect/model/StaticProperty';
 import { MappingPropertyUnary } from '../../connect/model/MappingPropertyUnary';
 import {URI} from '../../connect/model/URI';
+import {AuthStatusService} from '../../services/auth-status.service';
 
 @Injectable()
 export class KviService {
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private authStatusService: AuthStatusService) {
     }
 
     getServerUrl() {
@@ -74,7 +75,7 @@ export class KviService {
 
     getDataSets(): Observable<DataSetDescription[]> {
         return this.http
-            .get(this.getServerUrl() + '/api/v2/users/zehnder@fzi.de/pipeline-templates/sets')
+            .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates/sets')
             .map(response => {
 
 
@@ -98,7 +99,7 @@ export class KviService {
 
     getOperators(dataSet: DataSetDescription): Observable<PipelineTemplateDescription[]> {
         return this.http
-            .get(this.getServerUrl() + '/api/v2/users/zehnder@fzi.de/pipeline-templates?dataset=' + dataSet.id)
+            .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates?dataset=' + dataSet.id)
             .map(response => {
                 const tsonld = this.getTsonLd();
                 const res = tsonld.fromJsonLdType(response, 'sp:PipelineTemplateDescriptionContainer');
@@ -108,7 +109,7 @@ export class KviService {
 
     getStaticProperties(dataSet: DataSetDescription, operator: PipelineTemplateDescription): Observable<PipelineTemplateInvocation> {
         return this.http
-            .get(this.getServerUrl() + '/api/v2/users/zehnder@fzi.de/pipeline-templates/invocations?streamId=' + dataSet.id + '&templateId=' + operator.internalName)
+            .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates/invocations?streamId=' + dataSet.id + '&templateId=' + operator.internalName)
             .map(response => {
 
 
@@ -144,14 +145,14 @@ export class KviService {
 
         tsonld.toflattenJsonLd(invocation).subscribe(res => {
             this.http
-                .post(this.getServerUrl() + '/api/v2/users/zehnder@fzi.de/pipeline-templates', res)
+                .post(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates', res)
                 .subscribe();
         });
 
 
         // const res = tsonld.toJsonLd(invocation);
         // return this.http
-        //     .post(this.getServerUrl() + '/api/v2/users/zehnder@fzi.de/pipeline-templates', res)
+        //     .post(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates', res)
         //     .map(response => {
         //         return response;
         //     });
