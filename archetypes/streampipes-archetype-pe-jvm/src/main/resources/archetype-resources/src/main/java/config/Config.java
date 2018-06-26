@@ -52,7 +52,7 @@ public enum Config implements PeConfig {
 
   static {
     serverUrl = Config.INSTANCE.getHost() + ":" + Config.INSTANCE.getPort();
-    iconBaseUrl = Config.INSTANCE.getIconHost() + ":" + Config.INSTANCE.getIconPort() + "/img/pe_icons";
+    iconBaseUrl = "http://" + Config.INSTANCE.getIconHost() + ":" + Config.INSTANCE.getIconPort() + "/assets/img/pe_icons";
   }
 
   public static final String getIconUrl(String pictureName) {

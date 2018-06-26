@@ -61,6 +61,10 @@ public class PipelineExecutor {
 		List<SpDataSet> dataSets = pipeline.getStreams().stream().filter(s -> s instanceof SpDataSet).map(s -> new
 						SpDataSet((SpDataSet) s)).collect(Collectors.toList());
 
+		for (SpDataSet ds : dataSets) {
+			ds.setCorrespondingPipeline(pipeline.getPipelineId());
+		}
+
 		List<InvocableStreamPipesEntity> graphs = new ArrayList<>();
 		graphs.addAll(sepas);
 		graphs.addAll(secs);

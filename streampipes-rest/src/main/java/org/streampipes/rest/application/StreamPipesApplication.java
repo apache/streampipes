@@ -19,7 +19,9 @@ package org.streampipes.rest.application;
 
 import org.streampipes.rest.impl.*;
 import org.streampipes.rest.impl.connect.GuessResource;
-import org.streampipes.rest.impl.connect.SpConnect;
+import org.streampipes.rest.impl.connect.SpConnectResource;
+import org.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
+import org.streampipes.rest.impl.nouser.PipelineNoUserResource;
 import org.streampipes.rest.serializer.GsonClientModelProvider;
 import org.streampipes.rest.serializer.GsonWithIdProvider;
 import org.streampipes.rest.serializer.GsonWithoutIdProvider;
@@ -44,7 +46,9 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(OntologyKnowledge.class);
         apiClasses.add(OntologyMeasurementUnit.class);
         apiClasses.add(OntologyPipelineElement.class);
-        apiClasses.add(Pipeline.class);
+        apiClasses.add(PipelineWithUserResource.class);
+        apiClasses.add(PipelineNoUserResource.class);
+        apiClasses.add(PipelineElementImportNoUser.class);
         apiClasses.add(PipelineCategory.class);
         apiClasses.add(PipelineElementImport.class);
         apiClasses.add(SemanticEventConsumer.class);
@@ -59,8 +63,8 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(ConsulConfig.class);
         apiClasses.add(DataStream.class);
         apiClasses.add(ContainerProvidedOptions.class);
+        apiClasses.add(SpConnectResource.class);
         apiClasses.add(StreamPipesLogs.class);
-        apiClasses.add(SpConnect.class);
         apiClasses.add(GuessResource.class);
         apiClasses.add(PipelineTemplate.class);
         apiClasses.add(Couchdb.class);

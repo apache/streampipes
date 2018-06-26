@@ -53,7 +53,12 @@ public class CouchDbInstallationStep implements InstallationStep {
 
     private List<Message> createDatabases() {
         try {
+            // Set up couchdb internal databases
+            Utils.getCouchDbInternalUsersClient();
+            Utils.getCouchDbReplicatorClient();
+            Utils.getCouchDbGlobalChangesClient();
 
+            // Set up streampipes internal databases
             Utils.getCouchDbUserClient();
             Utils.getCouchDbMonitoringClient();
             Utils.getCouchDbPipelineClient();

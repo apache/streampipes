@@ -1,297 +1,254 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.rest.impl.connect;
 
-
-
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.RDFParseException;
-import org.streampipes.config.backend.BackendConfig;
-import org.streampipes.connect.RunningAdapterInstances;
-import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
-import org.streampipes.connect.firstconnector.protocol.stream.KafkaProtocol;
-import org.streampipes.container.html.JSONGenerator;
-import org.streampipes.container.html.model.DataSourceDescriptionHtml;
-import org.streampipes.container.html.model.Description;
-import org.streampipes.connect.firstconnector.Adapter;
-import org.streampipes.connect.firstconnector.format.csv.CsvFormat;
-import org.streampipes.connect.firstconnector.format.json.arraykey.JsonFormat;
-import org.streampipes.connect.firstconnector.protocol.set.FileProtocol;
-import org.streampipes.connect.firstconnector.protocol.set.HttpProtocol;
-import org.streampipes.container.transform.Transformer;
-import org.streampipes.container.util.Util;
-import org.streampipes.model.SpDataSet;
-import org.streampipes.model.SpDataStream;
-import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.model.grounding.TransportProtocol;
-import org.streampipes.model.modelconnect.*;
-import org.streampipes.model.schema.EventSchema;
-import org.streampipes.rest.annotation.GsonWithIds;
-import org.streampipes.rest.impl.AbstractRestInterface;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import org.apache.http.client.fluent.Form;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.model.SpDataSet;
+import org.streampipes.model.modelconnect.AdapterDescription;
+import org.streampipes.model.modelconnect.AdapterSetDescription;
+import org.streampipes.model.modelconnect.AdapterStreamDescription;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 import org.streampipes.vocabulary.StreamPipes;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-@Path("/v2/adapter")
-public class SpConnect extends AbstractRestInterface {
+public class SpConnect {
 
-    Logger logger = LoggerFactory.getLogger(SpConnect.class);
+    private static final Logger logger = LoggerFactory.getLogger(SpConnectResource.class);
+
+    public String addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl adapterStorage) {
+
+        // store in db
+        adapterStorage.storeAdapter(ad);
 
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/allProtocols")
-    public Response getAllProtocols() {
-        ProtocolDescriptionList pdl = new ProtocolDescriptionList();
-        pdl.addDesctiption(new HttpProtocol().declareModel());
-        pdl.addDesctiption(new FileProtocol().declareModel());
-        pdl.addDesctiption(new KafkaProtocol().declareModel());
-
-        return ok(JsonLdUtils.toJsonLD(pdl));
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/allFormats")
-    public Response getAllFormats() {
-        FormatDescriptionList fdl = new FormatDescriptionList();
-        fdl.addDesctiption(new JsonFormat().declareModel());
-        fdl.addDesctiption(new JsonObjectFormat().declareModel());
-        fdl.addDesctiption(new CsvFormat().declareModel());
-
-        return ok(JsonLdUtils.toJsonLD(fdl));
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
-    @Path("/all")
-    public Response getAllAdapters() {
-        String host = BackendConfig.INSTANCE.getBackendHost() + ":" + BackendConfig.INSTANCE.getBackendPort();
-
-        List<AdapterDescription> allAdapters = new AdapterStorageImpl().getAllAdapters();
-        List<Description> allAdapterDescriptions = new ArrayList<>();
-
-        for (AdapterDescription ad : allAdapters) {
-            URI uri = null;
-            try {
-                uri = new URI("http://" + host + "/streampipes-backend/api/v2/adapter/all/" + ad.getId());
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-            List<Description> streams = new ArrayList<>();
-            Description d = new Description(ad.getName(), "", uri);
-            d.setType("set");
-            streams.add(d);
-            DataSourceDescriptionHtml dsd = new DataSourceDescriptionHtml("Adapter Stream",
-                    "This stream is generated by an StreamPipes Connect adapter. ID of adapter: " + ad.getId(), uri, streams);
-            dsd.setType("source");
-            allAdapterDescriptions.add(dsd);
+        // start when stream adapter
+        if (ad instanceof AdapterStreamDescription) {
+            return SpConnect.startStreamAdapter((AdapterStreamDescription) ad, baseUrl);
         }
 
-        JSONGenerator json = new JSONGenerator(allAdapterDescriptions);
-
-        return ok(json.buildJson());
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/all/{id}")
-    public Response getAdapter(@Context HttpServletRequest request, @PathParam("id") String id) {
-
-        AdapterDescription adapterDescription = new AdapterStorageImpl().getAdapter(id);
-
-        SpDataStream ds;
-        if (adapterDescription instanceof AdapterSetDescription) {
-            ds = ((AdapterSetDescription) adapterDescription).getDataSet();
-            EventGrounding eg = new EventGrounding();
-            eg.setTransportProtocol(SupportedProtocols.kafka());
-            eg.setTransportFormats(Arrays.asList(SupportedFormats.jsonFormat()));
-            ((SpDataSet) ds).setSupportedGrounding(eg);
-        } else {
-            ds = ((AdapterStreamDescription) adapterDescription).getDataStream();
-
-            String topic = getTopicPrefix() + adapterDescription.getName();
-
-            TransportProtocol tp = Protocols.kafka(BackendConfig.INSTANCE.getKafkaHost(), BackendConfig.INSTANCE.getKafkaPort(), topic);
-            EventGrounding eg = new EventGrounding();
-            eg.setTransportFormats(Arrays.asList(Formats.jsonFormat()));
-            eg.setTransportProtocol(tp);
-
-            ds.setEventGrounding(eg);
+        List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
+        String adapterCouchdbId = "";
+        for (AdapterDescription a : allAdapters) {
+           if (a.getAdapterId().equals(ad.getAdapterId())) {
+               adapterCouchdbId = a.getId();
+           }
         }
+        
+        String backendBaseUrl = "http://" + BackendConfig.INSTANCE.getBackendHost() + ":" + "8030" + "/streampipes-backend/api/v2/";
+        String userName = ad.getUserName();
+        String requestUrl = backendBaseUrl +  "noauth/users/" + userName + "/element";
+        logger.info("Request URL: " + requestUrl);
+
+        String elementUrl = backendBaseUrl + "adapter/all/" + adapterCouchdbId;
+        logger.info("Element URL: " + elementUrl);
+
+        installDataSource(requestUrl, elementUrl);
 
 
-        String url = request.getRequestURL().toString();
-
-        ds.setName(adapterDescription.getName());
-        ds.setDescription("Description");
-
-        ds.setUri(url + "/streams");
-
-        DataSourceDescription dataSourceDescription = new DataSourceDescription(
-                url, "Adaper Data Source",
-                "This data source contains one data stream from the adapters");
-
-        dataSourceDescription.addEventStream(ds);
-
-        return ok(JsonLdUtils.toJsonLD(dataSourceDescription));
+        return SpConnectUtils.SUCCESS;
     }
 
-    @POST
-    @Path("/all/{streamId}/streams")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public String invokeAdapter(@PathParam("streamId") String streamId, String
-            payload) {
+    public boolean installDataSource(String requestUrl, String elementIdUrl) {
 
         try {
-            SpDataSet dataSet = Transformer.fromJsonLd(SpDataSet.class, payload, StreamPipes.DATA_SET);
-            String runningInstanceId = dataSet.getDatasetInvocationId();
+            String responseString = Request.Post(requestUrl)
+                    .bodyForm(
+                            Form.form()
+                                    .add("uri", elementIdUrl)
+                                    .add("publicElement", "true").build())
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asString();
 
-            String brokerUrl = dataSet.getEventGrounding().getTransportProtocol().getBrokerHostname() + ":9092";
-            String topic = dataSet.getEventGrounding().getTransportProtocol().getTopicDefinition()
-                    .getActualTopicName();
-
-
-            AdapterDescription adapterDescription = new AdapterStorageImpl().getAdapter(streamId);
-            Adapter adapter = new Adapter(brokerUrl, topic, false);
-
-            RunningAdapterInstances.INSTANCE.addAdapter(dataSet.getDatasetInvocationId(), adapter);
-
-            adapter.run(adapterDescription);
-
-
-            // TODO think of what happens when finished
-//            RunningDatasetInstances.INSTANCE.add(runningInstanceId, dataSet, (DataSetDeclarer) streamDeclarer.get().getClass().newInstance());
-//            boolean success = RunningDatasetInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(dataSet, ()
-//                    -> {
-//               //  TODO notify
-//            });
-
-
-            return Util.toResponseString(new org.streampipes.model.Response(runningInstanceId, true));
-        } catch (RDFParseException | RepositoryException | IOException
-                e) {
+            logger.info(responseString);
+        } catch (IOException e) {
             e.printStackTrace();
-            return Util.toResponseString(new org.streampipes.model.Response("", false, e.getMessage()));
         }
+
+        return true;
     }
 
 
-    @DELETE
-    @Path("/all/{streamId}/streams/{runningInstanceId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String detach(@PathParam("streamId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
+    public static boolean deleteDataSource(String requestUrl) {
+        boolean response = true;
 
-        Adapter adapter = RunningAdapterInstances.INSTANCE.removeAdapter(runningInstanceId);
-
-        if (adapter != null) {
-            adapter.stop();
-
-            org.streampipes.model.Response resp = new org.streampipes.model.Response("", true);
-            return Util.toResponseString(resp);
+        String responseString = null;
+        logger.info("Delete data source in backend with request URL: " + requestUrl);
+        try {
+            responseString = Request.Delete(requestUrl)
+                   .connectTimeout(1000)
+                   .socketTimeout(100000)
+                   .execute().returnContent().asString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            responseString = e.toString();
+            response = false;
         }
 
-        return Util.toResponseString(elementId, false, "Could not find the running instance with id: " + runningInstanceId);
+        logger.info("Response of the deletion request" + responseString);
+        return response;
     }
 
+    public static boolean isStreamAdapter(String id, AdapterStorageImpl adapterStorage) {
+        AdapterDescription ad = adapterStorage.getAdapter(id);
 
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addAdapter(String ar) {
+        return ad instanceof AdapterStreamDescription;
+    }
 
+    public static AdapterDescription getAdapterDescription(String ads) {
 
-        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
 
         AdapterDescription a = null;
 
-        try {
-            if (ar.contains("AdapterSetDescription")){
-                a = jsonLdTransformer.fromJsonLd(ar, AdapterSetDescription.class);
-            } else {
-                a = jsonLdTransformer.fromJsonLd(ar, AdapterStreamDescription.class);
-            }
+        if (ads.contains("AdapterSetDescription")){
+            JsonLdTransformer jsonLdTransformer = new JsonLdTransformer(StreamPipes.ADAPTER_SET_DESCRIPTION);
+            a = getDescription(jsonLdTransformer, ads, AdapterSetDescription.class);
+        } else {
+            JsonLdTransformer jsonLdTransformer = new JsonLdTransformer(StreamPipes.ADAPTER_STREAM_DESCRIPTION);
+            a = getDescription(jsonLdTransformer, ads, AdapterStreamDescription.class);
+        }
 
-            logger.info("Add Adapter Description " + a.getId());
+        logger.info("Add Adapter Description " + a.getUri());
+
+        return a;
+    }
+
+    public static <T> T getDescription(JsonLdTransformer jsonLdTransformer, String s, Class<T> theClass) {
+
+        T a = null;
+
+        try {
+            a = jsonLdTransformer.fromJsonLd(s, theClass);
         } catch (IOException e) {
-            logger.error("" + a.getId());
             e.printStackTrace();
         }
 
-        new AdapterStorageImpl().storeAdapter(a);
+        return a;
+    }
 
+    public static String stopSetAdapter(String adapterId, String baseUrl, AdapterStorageImpl adapterStorage) {
+        String url = baseUrl + "api/v1/stop/set";
 
-        //ADD HERE if Stream Adapter start it in a Thread
-        if (a instanceof AdapterStreamDescription) {
-            startStreamAdapter((AdapterStreamDescription) a);
+        return stopAdapter(adapterId, adapterStorage, url);
+    }
 
+    public static String stopStreamAdapter(String adapterId, String baseUrl, AdapterStorageImpl adapterStorage) {
+        String url = baseUrl + "api/v1/stop/stream";
+
+        return stopAdapter(adapterId, adapterStorage, url);
+    }
+
+    private static String stopAdapter(String adapterId, AdapterStorageImpl adapterStorage, String url) {
+
+        //Delete from database
+        AdapterDescription ad = adapterStorage.getAdapter(adapterId);
+
+        // Stop execution of adatper
+         try {
+            logger.info("Trying to stop adpater on endpoint: " + url);
+
+            // TODO quick fix because otherwise it is not serialized to json-ld
+             if (ad.getUri() == null) {
+                 logger.error("Adapter uri is null this should not happen " + ad);
+             }
+
+            String adapterDescription = toJsonLd(ad);
+
+            // TODO change this to a delete request
+            String responseString = Request.Post(url)
+                    .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asString();
+
+            logger.info("Adapter stopped on endpoint: " + url + " with Response: " + responseString);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return "Adapter was not stopped successfully";
         }
 
-        // TODO Think about stopping a stream adapter
-
-        return Response.ok().build();
-    }
-
-    private void startStreamAdapter(AdapterStreamDescription asd) {
-
-        String brokerUrl = BackendConfig.INSTANCE.getKafkaUrl();
-        String topic = getTopicPrefix() + asd.getName();
-
-        Adapter adapter = new Adapter(brokerUrl, topic, false);
-//        RunningAdapterInstances.INSTANCE.addAdapter(dataSet.getDatasetInvocationId(), adapter);
-        // TODO execute a Thread
-        adapter.run(asd);
+        return SpConnectUtils.SUCCESS;
     }
 
 
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("{adapterId}")
-    public Response deleteAdapter(@PathParam("adapterId") String adapterId) {
+    public static String startStreamAdapter(AdapterStreamDescription asd, String baseUrl) {
+        String url = baseUrl + "api/v1/invoke/stream";
 
-        new AdapterStorageImpl().delete(adapterId);
-
-        return Response.ok().build();
+        return postStartAdapter(url, asd);
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
-    @Path("/allrunning")
-    public Response getAllRunningAdapters() {
+    public  String invokeAdapter(String streamId, SpDataSet dataSet, String baseUrl, AdapterStorageImpl adapterStorage) {
+        String url = baseUrl + "api/v1/invoke/set";
 
-        AdapterDescriptionList adapterDescriptionList = new AdapterDescriptionList();
+        AdapterSetDescription adapterDescription = (AdapterSetDescription) adapterStorage.getAdapter(streamId);
+        adapterDescription.setDataSet(dataSet);
 
-        List<AdapterDescription> allAdapters = new AdapterStorageImpl().getAllAdapters();
-        adapterDescriptionList.setList(allAdapters);
+        return postStartAdapter(url, adapterDescription);
+    }
 
-        for(AdapterDescription ad : adapterDescriptionList.getList()) {
-            ad.setUri("https://www.streampipes.org/adapter/" + UUID.randomUUID());
+    private static String postStartAdapter(String url, AdapterDescription ad) {
+        try {
+            logger.info("Trying to start adpater on endpoint: " + url);
+
+            // this ensures that all adapters have a valid uri otherwise the json-ld serializer fails
+            if (ad.getUri() == null) {
+                ad.setUri("https://streampipes.org/adapter/" + UUID.randomUUID());
+            }
+            String adapterDescription = toJsonLd(ad);
+
+            String responseString = Request.Post(url)
+                    .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asString();
+
+            logger.info("Adapter started on endpoint: " + url + " with Response: " + responseString);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return "Adapter was not started successfully";
         }
 
-        return ok(JsonLdUtils.toJsonLD(adapterDescriptionList));
+        return SpConnectUtils.SUCCESS;
     }
 
-    private String getTopicPrefix() {
-        return "org.streampipes.autogenerated.adapters.";
+    private static <T> String toJsonLd(T object) {
+        JsonLdUtils.toJsonLD(object);
+        String s = JsonLdUtils.toJsonLD(object);
+
+        if (s == null) {
+            logger.error("Could not serialize Object " + object + " into json ld");
+        }
+
+        return s;
     }
+
 
 }

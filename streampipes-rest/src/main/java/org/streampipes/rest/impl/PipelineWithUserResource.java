@@ -18,6 +18,8 @@
 package org.streampipes.rest.impl;
 
 import com.google.gson.JsonSyntaxException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.NoMatchingFormatException;
 import org.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
 import org.streampipes.commons.exceptions.NoMatchingProtocolException;
@@ -31,9 +33,12 @@ import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.client.messages.SuccessMessage;
+import org.streampipes.model.client.pipeline.Pipeline;
+import org.streampipes.model.client.pipeline.PipelineModification;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IPipeline;
+import org.streampipes.rest.management.PipelineManagement;
 
 import java.util.Date;
 import java.util.UUID;
@@ -49,8 +54,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/pipelines")
-public class Pipeline extends AbstractRestInterface implements IPipeline {
+public class PipelineWithUserResource extends AbstractRestInterface implements IPipeline {
 
+    private static final Logger logger = LoggerFactory.getLogger(PipelineWithUserResource.class);
 
     @Override
     public Response getAvailable(String username) {
@@ -149,16 +155,12 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
     public Response stop(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
-        try {
-            org.streampipes.model.client.pipeline.Pipeline pipeline = getPipelineStorage().getPipeline(pipelineId);
-            PipelineOperationStatus status = Operations.stopPipeline(pipeline);
-            return ok(status);
-        } catch
-                (Exception e) {
-            e.printStackTrace();
-            return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
-        }
+        logger.info("User: " + username + " stopped pipeline: " + pipelineId);
+        PipelineManagement pm = new PipelineManagement();
+        return pm.stopPipeline(pipelineId);
     }
+
+
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)

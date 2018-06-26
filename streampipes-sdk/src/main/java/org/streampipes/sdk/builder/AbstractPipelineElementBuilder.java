@@ -25,9 +25,10 @@ public abstract class AbstractPipelineElementBuilder<BU extends AbstractPipeline
 
     protected T elementDescription;
 
-    protected AbstractPipelineElementBuilder(String id, String label, String description, T element) {
+    protected AbstractPipelineElementBuilder(String appId, String label, String description, T element) {
         this.elementDescription = element;
-        this.elementDescription.setElementId(id);
+        this.elementDescription.setElementId(appId);
+        this.elementDescription.setAppId(appId);
         this.elementDescription.setName(label);
         this.elementDescription.setDescription(description);
     }

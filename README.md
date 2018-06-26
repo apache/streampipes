@@ -20,15 +20,15 @@ Read the full documentation at [https://docs.streampipes.org](https://docs.strea
 ### Getting started
 
 It's easy to get started:
-* Download the `docker-compose.yml` file from [https://www.github.com/streampipes/preview-docker](https://www.github.com/streampipes/preview-docker)
-* Follow the installation guide at [https://docs.streampipes.org/quick_start/installation](https://docs.streampipes.org/quick_start/installation)
+* Clone the installer script from [https://www.github.com/streampipes/streampipes-installer](https://www.github.com/streampipes/streampipes-installer)
+* Follow the installation guide at [https://docs.streampipes.org/docs/user-guide-installation](https://docs.streampipes.org/docs/user-guide-installation)
 * Check the [tour](https://docs.streampipes.org/user_guide/features) and build your first pipeline!
 
 ### Extending StreamPipes
 
 You can easily add your own data streams, processors or sinks. 
 
-Check our developer guide at [https://docs.streampipes.org/developer_guide/introduction](https://docs.streampipes.org/developer_guide/introduction)
+Check our developer guide at [https://docs.streampipes.org/docs/dev-guide-introduction](https://docs.streampipes.org/docs/dev-guide-introduction)
 
 ### Community
 

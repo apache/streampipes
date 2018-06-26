@@ -38,7 +38,6 @@ import org.streampipes.storage.management.StorageDispatcher;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PipelineTemplateGenerator {
@@ -70,7 +69,7 @@ public class PipelineTemplateGenerator {
     if (streamOffer != null) {
       for(PipelineTemplateDescription pipelineTemplateDescription : makeExampleTemplates()) {
         // TODO make this work for 2+ input streams
-        InvocableStreamPipesEntity entity = cloneInvocation(pipelineTemplateDescription.getConnectedTo().get(0).getPipelineElementTemplate());
+        InvocableStreamPipesEntity entity = cloneInvocation(pipelineTemplateDescription.getBoundTo().get(0).getPipelineElementTemplate());
         if (verifier.verify(streamOffer, entity)) {
           compatibleTemplates.add(pipelineTemplateDescription);
         }

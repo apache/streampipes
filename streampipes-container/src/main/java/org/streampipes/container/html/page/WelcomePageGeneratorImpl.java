@@ -17,12 +17,7 @@
 
 package org.streampipes.container.html.page;
 
-import org.streampipes.container.declarer.DataStreamDeclarer;
-import org.streampipes.container.declarer.Declarer;
-import org.streampipes.container.declarer.InvocableDeclarer;
-import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
-import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
-import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
+import org.streampipes.container.declarer.*;
 import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.streampipes.container.html.model.Description;
 import org.streampipes.model.graph.DataSinkDescription;
@@ -47,6 +42,8 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
                 descriptions.add(getDescription((InvocableDeclarer) declarer));
             } else if (declarer instanceof SemanticEventProducerDeclarer) {
                 descriptions.add(getDescription((SemanticEventProducerDeclarer) declarer));
+            } else if (declarer instanceof PipelineTemplateDeclarer) {
+                descriptions.add(getDescription(declarer));
             }
         }
         return descriptions;
@@ -62,6 +59,8 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
             uri += "sec/";
         } else if (declarer instanceof SemanticEventProcessingAgentDeclarer) {
             uri += "sepa/";
+        } else if (declarer instanceof PipelineTemplateDeclarer) {
+            uri += "template/";
         }
         desc.setUri(URI.create(uri +declarer.declareModel().getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", "")));
         return desc;
