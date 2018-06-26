@@ -1,0 +1,76 @@
+#!/bin/sh
+
+getIp() {
+	rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+
+	rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
+	IFS=' ' declare -a 'allips=($rawip)'
+
+	allips+=( 'Enter IP manually' )
+
+	echo ''
+	echo 'Please select your IP address or add one manually: '
+	PS3='Select option: '
+	select opt in "${allips[@]}"
+	do
+		if [ -z "${opt}" ];
+		then 
+			echo "Wrong input select one of the options"; 
+		else
+			ip="$opt"
+
+			if [ "$opt" == "Enter IP manually" ];
+			then
+				bread -p "Enter Ip: " ip
+			fi
+			break
+		fi
+	done
+}
+
+startStreamPipesEnvironment() {
+	docker stop $(docker ps -a -q)
+	docker network prune -f
+	getIp
+	sed "s/##IP##/${ip}/g" ./env_template > .env
+	docker-compose up -d
+}
+
+stopStreamPipesEnvironment() {
+	docker-compose down
+}
+
+cleanStreamPipesEnvironment() {
+	rm -r config/
+}
+
+
+# Script starts here
+if [[ $1 = "environment" ]];
+then
+	if [[ $2 = "stop" ]];
+	then
+		stopStreamPipesEnvironment
+		echo ''
+		echo 'Stopped StreamPipes test environment successfully'
+
+	else
+		if [[ $2 = "clean" ]];
+		then
+			stopStreamPipesEnvironment
+			cleanStreamPipesEnvironment
+			echo ''
+			echo 'Cleaned all StreamPipes configuration successfully'
+		else
+			startStreamPipesEnvironment
+			echo ''
+			echo 'Started StreamPipes test environment successfully'
+		fi
+
+	fi
+else
+	echo 'StreamPipes command not supported'
+fi
+
+
+

@@ -1,0 +1,193 @@
+version: "2"
+services:
+  consul:
+    image: consul
+    environment:
+      - "CONSUL_LOCAL_CONFIG={\"disable_update_check\": true}"
+      - "CONSUL_BIND_INTERFACE=eth0"
+      - "CONSUL_HTTP_ADDR=0.0.0.0"
+    entrypoint:
+      - consul
+      - agent
+      - -server
+      - -bootstrap-expect=1
+      - -data-dir=/consul/data
+      - -node=consul-one
+      - -bind={{ GetInterfaceIP "eth0" }}
+      - -client=0.0.0.0
+      - -enable-script-checks=true
+      - -ui
+    volumes:
+      - ./config/consul:/consul/data
+    ports:
+      - "8500:8500"
+      - "8600:8600"
+    networks:
+      spnet:
+        ipv4_address: 172.30.0.9
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      spnet:
+
+  kafka:
+    image: wurstmeister/kafka:1.0.0
+    ports:
+      - "9092:9092"
+    depends_on:
+      - "zookeeper"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: ${SP_HOST}
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    networks:
+      spnet:
+
+  activemq:
+    image: ipe-wim-gitlab.fzi.de:5000/streampipes/services/activemq
+    ports:
+      - "61616:61616"
+      - "61614:61614"
+      - "8161:8161"
+    networks:
+      spnet:
+
+  couchdb:
+    image: couchdb:2.1.1
+    ports:
+      - "5984:5984"
+    volumes:
+      - ./config/couchdb/data:/opt/couchdb/data
+    networks:
+      spnet:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3
+    environment:
+      - cluster.name=streampipes-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    networks:
+      spnet:
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:6.2.3
+    environment:
+      SERVER_NAME: ${SP_HOST}
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    networks:
+      spnet:
+
+  jobmanager:
+    image: streampipes/flink:1.4
+    ports:
+      - "8081:8099"
+    command: jobmanager
+    networks:
+      spnet:
+        
+  taskmanager:
+    image: streampipes/flink:1.4
+    command: taskmanager
+    environment:
+     - FLINK_NUM_SLOTS=20
+    networks:
+     spnet:
+
+#  backend:
+#    image: streampipes/backend:0.55.2
+#    depends_on:
+#      - "consul"
+#    environment:
+#      - kafka_rest_host=localhost
+#    ports:
+#      - "8030:8030"
+#    volumes:
+#      - ./config:/root/.streampipes
+#      - ./config/RDF4J:/root/.RDF4J
+#    networks:
+#      spnet:
+
+  pe-examples-sources:
+    image: streampipes/pe-examples-sources:0.55.2
+    depends_on:
+      - "consul"
+    environment:
+      - icon_host=http://localhost
+      - icon_port=8082
+      - host=localhost
+      - port=8098
+    environment:
+            - STREAMPIPES_HOST=${SP_HOST}
+    ports:
+      - "8098:8098"
+    networks:
+      spnet:
+                                   
+  #pe-examples-jvm:
+  #  image: streampipes/pe-examples-jvm:0.55.2
+  #  depends_on:
+  #    - "consul"
+  #  environment:
+  #    - STREAMPIPES_HOST=localhost
+  #    - icon_host=http://localhost
+  #    - icon_port=8082
+  #    - host=localhost
+  #    - port=8096
+  #  ports:
+  #    - "8096:8096"
+  #  networks:
+  #      spnet:
+
+  kafka-rest:
+    image: confluentinc/cp-kafka-rest
+    ports:
+      - "8073:8082"
+    environment:
+      - ZK_CONNECTION_STRING=zookeeper:2181
+      - KAFKA_REST_HOST_NAME=${SP_HOST}
+      - KAFKA_REST_ZOOKEEPER_CONNECT=zookeeper:2181
+    networks:
+      spnet:
+
+
+# nginx:
+#    image: streampipes/ui:0.55.2
+#    ports:
+#      - "80:80"
+#    depends_on:
+#      - backend
+#      - couchdb
+#      - activemq
+#      - consul
+#    networks:
+#      spnet:
+
+                                  
+networks:
+  spnet:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.30.0.0/16
+         gateway: 172.30.0.1
+
+volumes:
+  esdata1:
+    driver: local
+
+    
