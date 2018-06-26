@@ -11,6 +11,7 @@
         <module>streampipes-sinks-internal-jvm</module>
         <module>streampipes-sinks-brokers-jvm</module>
         <module>streampipes-processors-filters-jvm</module>
+        <module>streampipes-sinks-databases-flink</module>
     </modules>
 
     <properties>

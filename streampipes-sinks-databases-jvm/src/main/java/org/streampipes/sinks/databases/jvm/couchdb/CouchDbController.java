@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.streampipes.sinks.internal.jvm;
+package org.streampipes.sinks.databases.jvm.couchdb;
 
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
