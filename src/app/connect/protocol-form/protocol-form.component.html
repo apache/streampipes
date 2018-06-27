@@ -2,12 +2,16 @@
 
   <div fxLayout="column" *ngFor="let protocolDescription of allProtocols; let i = index" >
 
-    <mat-radio-group name="selectedProtocol" [(ngModel)]="selectedProtocol">
-      <mat-radio-button [value]="protocolDescription"> {{protocolDescription.label}} </mat-radio-button>
+    <mat-radio-group name="selectedProtocol" [(ngModel)]="selectedProtocol" [required] = "true">
+      <mat-radio-button [value]="protocolDescription"> 
+        {{protocolDescription.label}}     
+      </mat-radio-button>
     </mat-radio-group>
 
-    <app-static-properties [hidden]="!isSelected(protocolDescription)" [staticProperties]="protocolDescription.config">
+    <app-static-properties [hidden]="!isSelected(protocolDescription)" [staticProperties] ="protocolDescription.config" (emitter1)="textValidation($event)">
     </app-static-properties>
+
+
     <!--<app-static-properties [hidden]="true" [staticProperties]="protocolDescription.config">-->
     <!--</app-static-properties>-->
 

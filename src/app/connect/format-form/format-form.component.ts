@@ -12,6 +12,7 @@ export class FormatFormComponent implements OnInit {
   @Input() selectedFormat: FormatDescription;
 
   @Output() selectedFormatChange = new EventEmitter<FormatDescription>();
+  @Output() inputValueChanged = new EventEmitter<Boolean>();
 
   @Input() allFormats: FormatDescription[];
 
@@ -30,5 +31,11 @@ export class FormatFormComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  textValidation(hasInput) {
+    this.inputValueChanged.emit(hasInput);
+  }
+
+
 
 }

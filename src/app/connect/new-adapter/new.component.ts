@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import {RestService} from '../rest.service';
 import {ProtocolDescription} from '../model/ProtocolDescription';
 import {FormatDescription} from '../model/FormatDescription';
@@ -28,6 +28,10 @@ export class NewComponent implements OnInit {
     firstFormGroup: FormGroup;
     secondFormGroup: FormGroup;
 
+    hasInputProtocol: Boolean;
+    hasInputFormat: Boolean;
+    hasInput: Boolean[];
+    inputValue="";
 
     allProtocols: ProtocolDescription[];
     allFormats: FormatDescription[];
@@ -47,11 +51,12 @@ export class NewComponent implements OnInit {
         this.newAdapterDescription = this.getNewAdapterDescription();
 
         this.firstFormGroup = this._formBuilder.group({
-            firstCtrl: ['', Validators.required]
+            firstCtrl: ["",Validators.required]
         });
         this.secondFormGroup = this._formBuilder.group({
             secondCtrl: ['', Validators.required]
         });
+
         this.restService.getProtocols().subscribe(x => {
             this.allProtocols = x.list;
         });
@@ -108,5 +113,15 @@ export class NewComponent implements OnInit {
            console.log('The dialog was closed');
         });
     }
+
+    inputValueChangedProtocol(hasInput) {
+        this.hasInputProtocol = hasInput;
+    }
+
+    inputValueChangedFormat(hasInput) {
+        this.hasInputFormat = hasInput;
+    }
+
+
 
 }

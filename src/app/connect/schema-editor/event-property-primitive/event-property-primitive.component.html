@@ -20,10 +20,10 @@
         </div>
     </div>
 </div>
-<div class="body" [hidden]=!open>
+<div class="divBorder" [hidden]=!open>
     <app-event-property [(property)]="property" [domainPropertyGuess]="domainPropertyGuess"></app-event-property>
 
-    <mat-form-field>
+    <mat-form-field class="doubleWidth">
         <mat-select placeholder="Runtime Type" [(ngModel)]="property.runtimeType">
             <mat-option *ngFor="let dataType of runtimeDataTypes" [value]="dataType.url">
                 {{ dataType.label }}

@@ -6,7 +6,8 @@
       <mat-radio-button [value]="formatDescription"> {{formatDescription.label}} </mat-radio-button>
     </mat-radio-group>
 
-    <app-static-properties [hidden]="!isSelected(formatDescription)" [staticProperties]="formatDescription.config">
+    <app-static-properties [hidden]="!isSelected(formatDescription)" [staticProperties]="formatDescription.config"
+    (emitter1)="textValidation($event)">
     </app-static-properties>
 
   </div>

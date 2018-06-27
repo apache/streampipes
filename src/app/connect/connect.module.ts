@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatGridListModule } from '@angular/material';
+import { MatGridListModule, MatFormField, MatFormFieldModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -32,6 +32,13 @@ import { RestService } from './rest.service';
 import { DragulaModule } from 'ng2-dragula';
 import { DataTypesService } from './schema-editor/data-type.service';
 import { AdapterStartedDialog } from './new-adapter/component/adapter-started-dialog.component';
+import {MatInputModule} from '@angular/material';
+
+import {StaticNumberInputComponent} from './static-properties/static-number-input/static-number-input.component';
+import {StaticUrlInputComponent} from './static-properties/static-url-input/static-url-input.component';
+import {StaticTextInputComponent} from './static-properties/static-text-input/static-text-input.component';
+import { StaticFreeInputComponent } from './static-properties/static-free-input/static-free-input.component';
+import { StaticPropertyUtilService } from './static-properties/static-property-util.service'
 
 @NgModule({
     imports: [
@@ -43,7 +50,9 @@ import { AdapterStartedDialog } from './new-adapter/component/adapter-started-di
         MatGridListModule,
         CustomMaterialModule,
         DragulaModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatInputModule,
+        MatFormFieldModule
     ],
     exports: [
         StaticPropertiesComponent
@@ -62,11 +71,16 @@ import { AdapterStartedDialog } from './new-adapter/component/adapter-started-di
         EventPropoertyListComponent,
         StaticPropertiesComponent,
         AdapterStartedDialog,
+        StaticNumberInputComponent,
+        StaticUrlInputComponent,
+        StaticTextInputComponent,
+        StaticFreeInputComponent
 
     ],
     providers: [
         RestService,
-        DataTypesService
+        DataTypesService,
+        StaticPropertyUtilService
     ],
     entryComponents: [
         MainComponent,

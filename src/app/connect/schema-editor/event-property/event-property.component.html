@@ -1,20 +1,20 @@
 <form #propertyForm="ngForm">
   <div fxLayout="row" fxLayoutAlign="start">
     <div class="form-group" fxFlexAlign="center">
-      <mat-form-field class="example-full-width">
-        <input matInput placeholder="Label" class="form-control" name="label" id="label" [(ngModel)]="property.label" >
+      <mat-form-field class="example-full-width" style="margin-right: 10px">
+        <input matInput placeholder="Label"  name="label" id="label" [(ngModel)]="property.label" >
       </mat-form-field>
     </div>
     <div class="form-group" fxFlexAlign="center">
       <mat-form-field class="example-full-width">
-        <input matInput placeholder="RuntimeName" class="form-control" name="runtimename" id="runtimename" [(ngModel)]="property.runTimeName">
+        <input matInput placeholder="RuntimeName" name="runtimename" id="runtimename" [(ngModel)]="property.runTimeName">
       </mat-form-field>
     </div>
   </div>
 
-  <div class="form-group" >
-    <mat-form-field class="example-full-width" style="width: 100%;">
-      <input matInput placeholder="Domain Property" class="form-control" name="domainproperty" id="domainproperty" [matAutocomplete]="auto" [(ngModel)]="property.domainProperty">
+  <div class="form-group">
+    <mat-form-field class="doubleWidth" >
+      <input matInput placeholder="Domain Property" class="dmainProperty" name="domainproperty" id="domainproperty" [matAutocomplete]="auto" [(ngModel)]="property.domainProperty">
     </mat-form-field>
     <mat-autocomplete #auto="matAutocomplete">
       <mat-option *ngFor="let propertyGuess of domainPropertyGuess.list" [value]="propertyGuess.domainProperty">
@@ -22,9 +22,12 @@
       </mat-option>
     </mat-autocomplete>
   </div>
+
   <div class="form-group">
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="Description" class="form-control" name="description" id="description" [(ngModel)]="property.description">
+    <mat-form-field class="doubleWidth" >
+      <!-- <input matInput placeholder="Description"  name="description" id="description" [(ngModel)]="property.description"> -->
+      <textarea matInput name="description" placeholder="Description"  id="description" [(ngModel)]="property.description" cols="20" rows="2"></textarea>
+
     </mat-form-field>
   </div>
 

@@ -2,6 +2,9 @@ import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {isUndefined} from 'util';
 import {ProtocolDescription} from '../model/ProtocolDescription';
 import {ProtocolDescriptionList} from '../model/ProtocolDescriptionList';
+import {ValidateUrl} from './input.validator';
+import { FormControl, FormGroup } from '@angular/forms';
+
 
 @Component({
   selector: 'app-protocol-form',
@@ -10,18 +13,21 @@ import {ProtocolDescriptionList} from '../model/ProtocolDescriptionList';
 })
 export class ProtocolFormComponent implements OnInit {
 
-  @Input() selectedProtocol: ProtocolDescription;
-
   @Output() selectedProtocolChange = new EventEmitter<ProtocolDescription>();
+  @Output() inputValueChanged = new EventEmitter<any>();
 
+  @Input() selectedProtocol: ProtocolDescription;
   @Input() allProtocols: ProtocolDescription[];
-
-
+  index: Number;
+  
+  hasInput: Boolean [];
   // onSubmit() {
   //   console.log(this.allProtocols);
   // }
 
-  constructor() { }
+  constructor() { 
+    
+   }
 
   isSelected(p: ProtocolDescription): boolean {
     if (isUndefined(this.selectedProtocol)) {
@@ -30,10 +36,16 @@ export class ProtocolFormComponent implements OnInit {
       this.selectedProtocolChange.emit(this.selectedProtocol);
       return p.label === this.selectedProtocol.label;
     }
+    
   }
 
+  textValidation(hasInput) {
+    this.hasInput = hasInput;
+    this.inputValueChanged.emit(hasInput);
+  }
 
   ngOnInit() {
+    
   }
 
 }

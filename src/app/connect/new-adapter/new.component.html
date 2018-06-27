@@ -1,15 +1,18 @@
 <div style="margin-right: 10vh; margin-left: 10vh;" fxLayout="column" fxLayoutAlign="center stretch">
-  <mat-horizontal-stepper [linear]="isLinear">
-
+  <mat-horizontal-stepper [linear]="isLinear"  #stepper>
+    
     <mat-step [stepControl]="firstFormGroup">
       <form [formGroup]="firstFormGroup">
         <ng-template matStepLabel>Select Protocol</ng-template>
 
         <div fxLayoutAlign="start">
-          <app-protocol-form fxLayout="column" fxFlex="100" [(selectedProtocol)]="selectedProtocol" [allProtocols]="allProtocols"></app-protocol-form>
+          
+          <app-protocol-form fxLayout="column" fxFlex="100" [(selectedProtocol)]="selectedProtocol" [allProtocols]="allProtocols" (inputValueChanged)="inputValueChangedProtocol($event)"
+          ></app-protocol-form>
+        
         </div>
         <div fxLayoutAlign="end">
-          <button color="primary" (click)="protocolSelected()" mat-raised-button matStepperNext>Next</button>
+          <button color="primary" (click)="protocolSelected()" mat-raised-button matStepperNext [disabled]="!hasInputProtocol">Next</button>
         </div>
       </form>
 
@@ -21,12 +24,16 @@
         <ng-template matStepLabel>Select Format</ng-template>
 
         <div fxLayoutAlign="center">
-          <app-format-form fxLayout="column" fxFlex="100" [(selectedFormat)]="newAdapterDescription.format" [allFormats]="allFormats"></app-format-form>
+          <app-format-form fxLayout="column" fxFlex="100" [(selectedFormat)]="newAdapterDescription.format" [allFormats]="allFormats"
+          (inputValueChanged)="inputValueChangedFormat($event)" ></app-format-form>
         </div>
 
         <div fxLayoutAlign="end">
           <button color="primary" mat-raised-button matStepperPrevious>Back</button>
-          <button color="primary" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
+          <button color="primary" mat-raised-button matStepperNext style="margin-left:10px;"
+          [disabled]="!hasInputFormat">
+            Next
+          </button>
         </div>
       </form>
     </mat-step>
@@ -64,4 +71,5 @@
   </mat-horizontal-stepper>
 
 </div>
+
 

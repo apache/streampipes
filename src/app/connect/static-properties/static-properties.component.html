@@ -1,18 +1,37 @@
 <div *ngFor="let staticProperty of staticProperties">
 
-    <mat-form-field *ngIf="isFreeTextStaticProperty(staticProperty) && asFreeTextStaticProperty(staticProperty).render" class="example-full-width">
-        <!--<mat-form-field class="example-full-width">-->
-        <input class="example-full-width" matInput [placeholder]="staticProperty.label"
-               [(ngModel)]="asFreeTextStaticProperty(staticProperty).value" [formControl]="freeTextFormControl">
-    </mat-form-field>
+    <!--<mat-form-field class="example-full-width">-->
+    <app-static-url-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).render && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).requiredDomainProperty == xsService.SO_URL " 
+    (inputEmitter) = "valueChange($event)"
+    [staticProperty]="staticProperty" > 
+    </app-static-url-input>
 
-    <mat-form-field *ngIf="isMappingPropertyUnary(staticProperty)" class="example-full-width">
-        <!--<mat-form-field class="example-full-width">-->
-        <mat-select [placeholder]="staticProperty.label" [formControl]="mappingFormControl">
-            <mat-option *ngFor="let eventProperty of dataSet.eventSchema.eventProperties" [value]="{'a': staticProperty, 'b': eventProperty}">
-                {{getName(eventProperty)}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+    <app-static-number-input
+    *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).render && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).requiredDomainProperty == xsService.XS_NUMBER" (inputEmitter) = "valueChange($event)"
+    [staticProperty]="staticProperty">
+    </app-static-number-input>
 
+    <app-static-text-input
+    *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).render && staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty == xsService.XS_STRING1"
+    (inputEmitter) = "valueChange($event)"
+    [staticProperty]="staticProperty">
+    </app-static-text-input>
+
+    <app-static-free-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).render && (staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty == '' || !staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty) "
+    (inputEmitter) = "valueChange($event)"
+    [staticProperty]="staticProperty" >
+
+    </app-static-free-input>
+
+    
+    <form>
+        <mat-form-field *ngIf="isMappingPropertyUnary(staticProperty)" class="example-full-width">
+            <!--<mat-form-field class="example-full-width">-->
+            <mat-select [placeholder]="staticProperty.label" [formControl]="mappingFormControl">
+                <mat-option *ngFor="let eventProperty of dataSet.eventSchema.eventProperties" [value]="{'a': staticProperty, 'b': eventProperty}">
+                    {{getName(eventProperty)}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
 </div>

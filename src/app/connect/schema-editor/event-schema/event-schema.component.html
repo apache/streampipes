@@ -1,9 +1,9 @@
-<button md-icon-button color="primary" mat-button (click)=guessSchema()>
-    Guess Schema
+<button md-icon-button  mat-button (click)=guessSchema() style="border: solid #ccc 0px; border-radius: 2px; width: 200px; margin: auto; background-color: #3F51B5; color: #f4f4f4" >
+    <span style="font-weight: bold;" > Guess Schema </span> 
 </button>
 
 <div fxLayoutAlign="center">
-<mat-spinner fxLayoutAlign="center" *ngIf="isLoading">Loading</mat-spinner>
+<mat-spinner fxLayoutAlign="center" style="margin: 10px 0 5px 0" *ngIf="isLoading">Loading</mat-spinner>
 </div>
 
 <div fxLayout="column" fxLayoutAlign="space-evenly stretched" >

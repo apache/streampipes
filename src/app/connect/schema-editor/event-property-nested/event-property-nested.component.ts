@@ -53,7 +53,7 @@ export class EventPropertyNestedComponent implements OnInit, DoCheck {
     this.eventPropertyNested.propertyNumber = this.index;
   }
 
-  private OnClickOpen(): void {
+  private onClickOpen(): void {
     this.open = !this.open;
   }
 
