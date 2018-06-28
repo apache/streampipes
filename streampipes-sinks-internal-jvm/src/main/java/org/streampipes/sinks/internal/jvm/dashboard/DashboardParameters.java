@@ -16,7 +16,6 @@
 
 package org.streampipes.sinks.internal.jvm.dashboard;
 
-import org.streampipes.examples.jvm.config.PeJvmConfig;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;

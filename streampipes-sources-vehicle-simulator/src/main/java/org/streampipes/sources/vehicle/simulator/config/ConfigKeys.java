@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package simulator.config;
+package org.streampipes.sources.vehicle.simulator.config;
 
 public class ConfigKeys {
 
     final static String HOST = "SP_HOST";
-    final static String PORT = "SP_HOST";
+    final static String PORT = "SP_PORT";
     final static String KAFKA_HOST = "SP_KAFKA_HOST";
     final static String KAFKA_PORT = "SP_KAFKA_PORT";
     final static String ZOOKEEPER_HOST = "SP_ZOOKEEPER_HOST";

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package simulator.vehicle.streams;
+package org.streampipes.sources.vehicle.simulator.vehicle.streams;
 
 
 import org.streampipes.model.SpDataStream;
@@ -25,8 +25,8 @@ import org.streampipes.sdk.helpers.Formats;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Protocols;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
+import org.streampipes.sources.vehicle.simulator.config.VehicleSimulatorConfig;
 import org.streampipes.vocabulary.Geo;
-import simulator.config.VehicleSimulatorConfig;
 
 public class VehicleStream extends AbstractAlreadyExistingStream {
 

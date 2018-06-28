@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package simulator.simulator;
+package org.streampipes.sources.watertank.simulator.utils;
 
 import net.acesinc.data.json.generator.DataSimulator;
 import net.acesinc.data.json.generator.JsonDataGenerator;

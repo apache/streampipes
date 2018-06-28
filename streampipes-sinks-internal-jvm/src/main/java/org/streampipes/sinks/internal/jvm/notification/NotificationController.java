@@ -16,7 +16,6 @@
 
 package org.streampipes.sinks.internal.jvm.notification;
 
-import org.streampipes.examples.jvm.config.PeJvmConfig;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;

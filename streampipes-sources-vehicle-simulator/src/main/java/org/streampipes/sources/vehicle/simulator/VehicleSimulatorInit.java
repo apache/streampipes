@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package org.streampipes.sinks.databases.flink;
+package org.streampipes.sources.vehicle.simulator;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
-import org.streampipes.sinks.databases.flink.config.DatabasesFlinkConfig;
-import org.streampipes.sinks.databases.flink.elasticsearch.ElasticSearchController;
+import org.streampipes.sources.vehicle.simulator.config.VehicleSimulatorConfig;
+import org.streampipes.sources.vehicle.simulator.vehicle.VehicleSource;
 
-public class ExamplesFlinkInit extends StandaloneModelSubmitter {
+public class VehicleSimulatorInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton.getInstance()
-            .add(new ElasticSearchController());
+    DeclarersSingleton.getInstance().add(new VehicleSource());
 
-    new ExamplesFlinkInit().init(DatabasesFlinkConfig.INSTANCE);
+    new VehicleSimulatorInit().init(VehicleSimulatorConfig.INSTANCE);
   }
-
 }

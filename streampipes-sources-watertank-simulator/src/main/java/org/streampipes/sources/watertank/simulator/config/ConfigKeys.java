@@ -19,7 +19,7 @@ package org.streampipes.sources.watertank.simulator.config;
 public class ConfigKeys {
 
     final static String HOST = "SP_HOST";
-    final static String PORT = "SP_HOST";
+    final static String PORT = "SP_PORT";
     final static String KAFKA_HOST = "SP_KAFKA_HOST";
     final static String KAFKA_PORT = "SP_KAFKA_PORT";
     final static String ZOOKEEPER_HOST = "SP_ZOOKEEPER_HOST";

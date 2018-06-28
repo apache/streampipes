@@ -23,19 +23,16 @@ public enum WatertankSimulatorConfig implements PeConfig {
   INSTANCE;
 
 
-  /*
-     TUTORIAL:
-     The service ID MUST be unique. As a convention use the package name with the prefix "pe/" for processing element.
-   */
-  private final static String SERVICE_ID = "pe/org.streampipes.pe.sources.examples";
-
+  private final static String service_id = "pe/org.streampipes.sources.watertank.simulator";
+  private final static String service_name = "Sources Watertank Simulator";
+  private final static String service_container_name = "sources-watertank-simulator";
 
   private SpConfig config;
   public static String serverUrl;
   public static String iconBaseUrl;
 
   WatertankSimulatorConfig() {
-    config = SpConfig.getSpConfig(SERVICE_ID);
+    config = SpConfig.getSpConfig(service_id);
 
     /*
       TUTORIAL:
@@ -44,7 +41,7 @@ public enum WatertankSimulatorConfig implements PeConfig {
       Important. Changes here are not effective if the configuration parameter is already set in consul. In
       such cases the value has to be changed in consul directly.
     */
-    config.register(ConfigKeys.HOST, "pe-examples-sources", "Hostname for the examples-sources project");
+    config.register(ConfigKeys.HOST, service_container_name, "Hostname for the examples-sources project");
     config.register(ConfigKeys.PORT, 8090, "Port of the sources project");
     config.register(ConfigKeys.KAFKA_HOST, "kafka", "Host for kafka of the pe demonstrator project");
     config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the pe demonstrator project");
@@ -52,7 +49,7 @@ public enum WatertankSimulatorConfig implements PeConfig {
     config.register(ConfigKeys.ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe demonstrator project");
     config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
-    config.register(ConfigKeys.SERVICE_NAME, "Example Sources", "StreamPipes example sources");
+    config.register(ConfigKeys.SERVICE_NAME, service_name, "StreamPipes example sources");
   }
 
   static {
@@ -101,7 +98,7 @@ public enum WatertankSimulatorConfig implements PeConfig {
 
   @Override
   public String getId() {
-    return SERVICE_ID;
+    return service_id;
   }
 
   @Override

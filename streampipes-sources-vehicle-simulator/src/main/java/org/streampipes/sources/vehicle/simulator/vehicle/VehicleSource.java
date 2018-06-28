@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package simulator.vehicle;
+package org.streampipes.sources.vehicle.simulator.vehicle;
 
 import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.sdk.builder.DataSourceBuilder;
-import simulator.vehicle.streams.VehicleStream;
+import org.streampipes.sources.vehicle.simulator.vehicle.streams.VehicleStream;
 
 import java.util.Arrays;
 import java.util.List;

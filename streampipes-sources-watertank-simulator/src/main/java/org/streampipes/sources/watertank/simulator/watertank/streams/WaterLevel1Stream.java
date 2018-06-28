@@ -16,9 +16,6 @@
 
 package org.streampipes.sources.watertank.simulator.watertank.streams;
 
-import org.streampipes.examples.sources.config.ExampleSourcesConfig;
-import org.streampipes.examples.sources.simulator.ExampleSourceDataSimulator;
-import org.streampipes.examples.sources.vocabulary.WaterTankVocabulary;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.schema.PropertyScope;
@@ -29,13 +26,16 @@ import org.streampipes.sdk.helpers.Formats;
 import org.streampipes.sdk.helpers.Protocols;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
+import org.streampipes.sources.watertank.simulator.config.WatertankSimulatorConfig;
+import org.streampipes.sources.watertank.simulator.utils.ExampleSourceDataSimulator;
+import org.streampipes.sources.watertank.simulator.vocabulary.WaterTankVocabulary;
 
 public class WaterLevel1Stream extends AbstractAlreadyExistingStream {
 
   @Override
   public SpDataStream declareModel(DataSourceDescription sep) {
     return DataStreamBuilder.create("water-level-1", "Water Level 1", "")
-            .iconUrl(ExampleSourcesConfig.iconBaseUrl + "/icon-water-level.png")
+            .iconUrl(WatertankSimulatorConfig.iconBaseUrl + "/icon-water-level.png")
             .property(EpProperties.timestampProperty("timestamp"))
             .property(PrimitivePropertyBuilder
                     .create(Datatypes.String, "sensorId")
@@ -66,7 +66,7 @@ public class WaterLevel1Stream extends AbstractAlreadyExistingStream {
                     .scope(PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
             .format(Formats.jsonFormat())
-            .protocol(Protocols.kafka(ExampleSourcesConfig.INSTANCE.getKafkaHost(), ExampleSourcesConfig.INSTANCE.getKafkaPort(),
+            .protocol(Protocols.kafka(WatertankSimulatorConfig.INSTANCE.getKafkaHost(), WatertankSimulatorConfig.INSTANCE.getKafkaPort(),
                     "org.streampipes.examples.waterlevel"))
             .build();
   }

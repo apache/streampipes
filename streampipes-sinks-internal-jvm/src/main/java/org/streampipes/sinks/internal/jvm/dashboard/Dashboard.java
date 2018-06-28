@@ -20,7 +20,6 @@ import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
-import org.streampipes.examples.jvm.config.PeJvmConfig;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;

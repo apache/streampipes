@@ -16,9 +16,6 @@
 
 package org.streampipes.sources.watertank.simulator.watertank.streams;
 
-import org.streampipes.examples.sources.config.ExampleSourcesConfig;
-import org.streampipes.examples.sources.simulator.ExampleSourceDataSimulator;
-import org.streampipes.examples.sources.vocabulary.WaterTankVocabulary;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.schema.PropertyScope;
@@ -29,6 +26,9 @@ import org.streampipes.sdk.helpers.Formats;
 import org.streampipes.sdk.helpers.Protocols;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.sources.AbstractAdapterIncludedStream;
+import org.streampipes.sources.watertank.simulator.config.WatertankSimulatorConfig;
+import org.streampipes.sources.watertank.simulator.utils.ExampleSourceDataSimulator;
+import org.streampipes.sources.watertank.simulator.vocabulary.WaterTankVocabulary;
 
 import java.net.URI;
 
@@ -37,7 +37,7 @@ public class FlowRate1Stream extends AbstractAdapterIncludedStream {
   @Override
   public SpDataStream declareModel(DataSourceDescription sep) {
     return DataStreamBuilder.create("flowrate-1", "Flow Rate Sensor 1", "")
-            .iconUrl(ExampleSourcesConfig.iconBaseUrl + "/Flowrate-Festo.png")
+            .iconUrl(WatertankSimulatorConfig.iconBaseUrl + "/Flowrate-Festo.png")
             .property(EpProperties.timestampProperty("timestamp"))
             .property(PrimitivePropertyBuilder
                     .create(Datatypes.String, "sensorId")
@@ -63,7 +63,7 @@ public class FlowRate1Stream extends AbstractAdapterIncludedStream {
                     .valueSpecification(0.0f, 100.0f, 0.1f)
                     .build())
             .format(Formats.jsonFormat())
-            .protocol(Protocols.kafka(ExampleSourcesConfig.INSTANCE.getKafkaHost(), ExampleSourcesConfig.INSTANCE.getKafkaPort(),
+            .protocol(Protocols.kafka(WatertankSimulatorConfig.INSTANCE.getKafkaHost(), WatertankSimulatorConfig.INSTANCE.getKafkaPort(),
                     "org.streampipes.examples.flowrate-1"))
             .build();
   }

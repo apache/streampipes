@@ -21,13 +21,13 @@ import org.streampipes.processors.enricher.flink.processor.timestamp.TimestampCo
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 
-public class ExamplesFlinkInit extends StandaloneModelSubmitter {
+public class EnricherFlinkInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton.getInstance()
             .add(new TimestampController());
 
-    new ExamplesFlinkInit().init(EnricherFlinkConfig.INSTANCE);
+    new EnricherFlinkInit().init(EnricherFlinkConfig.INSTANCE);
   }
 
 }
