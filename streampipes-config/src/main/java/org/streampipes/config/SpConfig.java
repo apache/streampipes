@@ -18,6 +18,8 @@
 package org.streampipes.config;
 
 import org.streampipes.config.consul.ConsulSpConfig;
+import org.streampipes.config.model.ConfigItem;
+import org.streampipes.config.model.ConfigurationScope;
 
 
 public abstract class SpConfig {
@@ -39,6 +41,8 @@ public abstract class SpConfig {
         return new ConsulSpConfig(serviceName, callback);
     }
 
+    public abstract <T> void register(String key, T defaultValue, String description, ConfigurationScope configurationScope);
+
     public abstract void register(String key, boolean defaultValue, String description);
 
     public abstract void register(String key, int defaultValue, String description);
@@ -56,6 +60,8 @@ public abstract class SpConfig {
     public abstract double getDouble(String key);
 
     public abstract String getString(String key);
+
+    public abstract ConfigItem getConfigItem(String key);
 
     public abstract void setBoolean(String key, Boolean value);
 
