@@ -45,6 +45,8 @@ public enum AggregationFlinkConfig implements PeConfig {
     config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
 
+    config.register(ConfigKeys.DEBUG, false, "When set to true programs are not deployed to cluster, but executed locally");
+
     config.register(ConfigKeys.SERVICE_NAME, service_name, "The name of the service");
 
   }
@@ -92,6 +94,11 @@ public enum AggregationFlinkConfig implements PeConfig {
 
   public int getElasticsearchPortRest() {
     return config.getInteger(ConfigKeys.ELASTIC_PORT_REST);
+  }
+
+
+  public boolean getDebug() {
+    return config.getBoolean(ConfigKeys.DEBUG);
   }
 
   @Override

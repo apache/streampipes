@@ -37,17 +37,17 @@ public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearch
 	@Override
 	public DataSinkDescription declareModel() {
 		return DataSinkBuilder.create("elasticsearch", "Elasticsearch", "Stores data in an elasticsearch cluster")
-						.category(DataSinkType.STORAGE)
-						.iconUrl(DatabasesFlinkConfig.getIconUrl("elasticsearch_icon"))
-						.requiredStream(StreamRequirementsBuilder
-										.create()
-										.requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.from("timestamp",
-														"Timestamp Property", "Timestamp Mapping"), PropertyScope.HEADER_PROPERTY)
-										.build())
-						.requiredTextParameter("index-name", "Index Name", "Elasticsearch index name property")
-						.supportedFormats(SupportedFormats.jsonFormat())
-						.supportedProtocols(SupportedProtocols.kafka())
-						.build();
+				.category(DataSinkType.STORAGE)
+				.iconUrl(DatabasesFlinkConfig.getIconUrl("elasticsearch_icon"))
+				.requiredStream(StreamRequirementsBuilder
+						.create()
+						.requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.from("timestamp",
+								"Timestamp Property", "Timestamp Mapping"), PropertyScope.HEADER_PROPERTY)
+						.build())
+				.requiredTextParameter("index-name", "Index Name", "Elasticsearch index name property")
+				.supportedFormats(SupportedFormats.jsonFormat())
+				.supportedProtocols(SupportedProtocols.kafka())
+				.build();
 	}
 
 	@Override
@@ -62,8 +62,8 @@ public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearch
 		if (DatabasesFlinkConfig.INSTANCE.getDebug()) {
 			return new ElasticSearchProgram(params);
 		} else {
-					return new ElasticSearchProgram(params, new FlinkDeploymentConfig(DatabasesFlinkConfig.JAR_FILE,
-						DatabasesFlinkConfig.INSTANCE.getFlinkHost(), DatabasesFlinkConfig.INSTANCE.getFlinkPort()));
+			return new ElasticSearchProgram(params, new FlinkDeploymentConfig(DatabasesFlinkConfig.JAR_FILE,
+					DatabasesFlinkConfig.INSTANCE.getFlinkHost(), DatabasesFlinkConfig.INSTANCE.getFlinkPort()));
 		}
 	}
 

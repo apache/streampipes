@@ -58,8 +58,12 @@ public class SequenceController extends FlinkDataProcessorDeclarer<SequenceParam
 
     SequenceParameters params = new SequenceParameters(graph, timeWindowSize, timeUnit);
 
-    //return new SequenceProgram(params);
-    return new SequenceProgram(params, new FlinkDeploymentConfig(PatternDetectionFlinkConfig.JAR_FILE,
-            PatternDetectionFlinkConfig.INSTANCE.getFlinkHost(), PatternDetectionFlinkConfig.INSTANCE.getFlinkPort()));
+    if (PatternDetectionFlinkConfig.INSTANCE.getDebug()) {
+      return new SequenceProgram(params);
+    } else {
+      return new SequenceProgram(params, new FlinkDeploymentConfig(PatternDetectionFlinkConfig.JAR_FILE,
+              PatternDetectionFlinkConfig.INSTANCE.getFlinkHost(), PatternDetectionFlinkConfig.INSTANCE.getFlinkPort()));
+    }
+
   }
 }

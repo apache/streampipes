@@ -76,8 +76,14 @@ public class IncreaseController extends FlinkDataProcessorDeclarer<IncreaseParam
     IncreaseParameters params = new IncreaseParameters(graph, getOperation(operation), increase, duration, mapping,
             groupBy, timestampField);
 
-    return new IncreaseProgram(params, new FlinkDeploymentConfig(PatternDetectionFlinkConfig.JAR_FILE,
+
+    if (PatternDetectionFlinkConfig.INSTANCE.getDebug()) {
+            return new IncreaseProgram(params);
+    } else {
+          return new IncreaseProgram(params, new FlinkDeploymentConfig(PatternDetectionFlinkConfig.JAR_FILE,
             PatternDetectionFlinkConfig.INSTANCE.getFlinkHost(), PatternDetectionFlinkConfig.INSTANCE.getFlinkPort()));
+    }
+
   }
 
   private Operation getOperation(String operation) {

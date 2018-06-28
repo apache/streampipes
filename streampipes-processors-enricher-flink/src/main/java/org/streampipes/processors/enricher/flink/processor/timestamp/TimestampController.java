@@ -53,8 +53,12 @@ public class TimestampController extends FlinkDataProcessorDeclarer<TimestampPar
             graph,
             APPEND_PROPERTY);
 
-    return new TimestampProgram(staticParam, new FlinkDeploymentConfig(EnricherFlinkConfig.JAR_FILE,
-            EnricherFlinkConfig.INSTANCE.getFlinkHost(), EnricherFlinkConfig.INSTANCE.getFlinkPort()));
+    if (EnricherFlinkConfig.INSTANCE.getDebug()) {
+      return new TimestampProgram(staticParam);
+    } else {
+       return new TimestampProgram(staticParam, new FlinkDeploymentConfig(EnricherFlinkConfig.JAR_FILE,
+              EnricherFlinkConfig.INSTANCE.getFlinkHost(), EnricherFlinkConfig.INSTANCE.getFlinkPort()));
+    }
   }
 
 }

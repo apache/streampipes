@@ -90,9 +90,13 @@ public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDete
     PeakDetectionParameters params = new PeakDetectionParameters(sepa,
             valueToObserve, timestampMapping, groupBy, countWindowSize, lag, threshold, influence);
 
-    //return new PeakDetectionProgram(params);
-    return new PeakDetectionProgram(params, new FlinkDeploymentConfig(PatternDetectionFlinkConfig.JAR_FILE,
-            PatternDetectionFlinkConfig.INSTANCE.getFlinkHost(), PatternDetectionFlinkConfig.INSTANCE.getFlinkPort()));
+    if (PatternDetectionFlinkConfig.INSTANCE.getDebug()) {
+      return new PeakDetectionProgram(params);
+    } else {
+      return new PeakDetectionProgram(params, new FlinkDeploymentConfig(PatternDetectionFlinkConfig.JAR_FILE,
+              PatternDetectionFlinkConfig.INSTANCE.getFlinkHost(), PatternDetectionFlinkConfig.INSTANCE.getFlinkPort()));
+    }
+
 
   }
 }

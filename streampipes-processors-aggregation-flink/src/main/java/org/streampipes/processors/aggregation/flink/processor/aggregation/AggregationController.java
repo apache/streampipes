@@ -89,8 +89,13 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
             outputEvery, groupBy,
             aggregate, timeWindowSize, selectProperties);
 
-    return new AggregationProgram(staticParam, new FlinkDeploymentConfig(AggregationFlinkConfig.JAR_FILE,
-            AggregationFlinkConfig.INSTANCE.getFlinkHost(), AggregationFlinkConfig.INSTANCE.getFlinkPort()));
+    if (AggregationFlinkConfig.INSTANCE.getDebug()) {
+      return new AggregationProgram(staticParam);
+    } else {
+      return new AggregationProgram(staticParam, new FlinkDeploymentConfig(AggregationFlinkConfig.JAR_FILE,
+              AggregationFlinkConfig.INSTANCE.getFlinkHost(), AggregationFlinkConfig.INSTANCE.getFlinkPort()));
+    }
+
   }
 
   private AggregationType convert(String aggregateOperation) {
