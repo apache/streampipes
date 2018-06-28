@@ -48,11 +48,6 @@
             <artifactId>streampipes-messaging-kafka</artifactId>
             <version>${streampipes.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.lightcouch</groupId>
-            <artifactId>lightcouch</artifactId>
-            <version>${lightcouch.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
