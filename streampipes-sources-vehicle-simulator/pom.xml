@@ -1,33 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>streampipes-pipeline-elements</artifactId>
+        <groupId>org.streampipes</groupId>
+        <version>0.55.3-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.streampipes</groupId>
-    <artifactId>streampipes-pipeline-elements</artifactId>
-    <packaging>pom</packaging>
-    <version>0.55.3-SNAPSHOT</version>
-    <modules>
-        <module>streampipes-sinks-databases-jvm</module>
-        <module>streampipes-sinks-internal-jvm</module>
-        <module>streampipes-sinks-brokers-jvm</module>
-        <module>streampipes-processors-filters-jvm</module>
-        <module>streampipes-sinks-databases-flink</module>
-        <module>streampipes-processors-aggregation-flink</module>
-        <module>streampipes-processors-pattern-detection-flink</module>
-        <module>streampipes-processors-enricher-flink</module>
-        <module>streampipes-sources-watertank-simulator</module>
-        <module>streampipes-sources-vehicle-simulator</module>
-    </modules>
+    <artifactId>streampipes-sources-vehicle-simulator</artifactId>
 
-    <properties>
+
+        <properties>
         <streampipes.version>0.55.3-SNAPSHOT</streampipes.version>
-        <lightcouch.version>0.1.8</lightcouch.version>
+        <data-generator.version>1.3.1</data-generator.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-wrapper-standalone</artifactId>
+            <artifactId>streampipes-sources</artifactId>
             <version>${streampipes.version}</version>
         </dependency>
         <dependency>
@@ -46,19 +39,9 @@
             <version>${streampipes.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-dataformat-json</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-messaging-kafka</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lightcouch</groupId>
-            <artifactId>lightcouch</artifactId>
-            <version>${lightcouch.version}</version>
+            <groupId>net.acesinc.data</groupId>
+            <artifactId>json-data-generator</artifactId>
+            <version>${data-generator.version}</version>
         </dependency>
     </dependencies>
 
@@ -80,29 +63,9 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>2.10.4</version>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -117,7 +80,7 @@
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.streampipes.examples.jvm.ExamplesJvmInit</mainClass>
+                                    <mainClass>org.streampipes.examples.org.streampipes.sources.watertank.simulator.VehicleSimulatorInit</mainClass>
                                 </transformer>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
                             </transformers>
@@ -161,56 +124,16 @@
                     <enableSshAgent>true</enableSshAgent>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <gpgArguments>
-                        <arg>--pinentry-mode</arg>
-                        <arg>loopback</arg>
-                    </gpgArguments>
-                </configuration>
-            </plugin>
         </plugins>
-        <finalName>streampipes-examples-jvm</finalName>
+        <finalName>streampipes-sources-vehicle-simulator</finalName>
 
     </build>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/pe-examples-jvm.git
+        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/pe-examples-sources.git
         </developerConnection>
-        <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/pe-examples-jvm.git</connection>
-        <url>https://github.com/streampipes/pe-examples-jvm</url>
     </scm>
 
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>Dominik Riemer</name>
-            <email>riemer@fzi.de</email>
-        </developer>
-        <developer>
-            <name>Philipp Zehnder</name>
-            <email>zehnder@fzi.de</email>
-        </developer>
-    </developers>
 
     <repositories>
         <repository>
@@ -230,9 +153,9 @@
 
     <distributionManagement>
         <repository>
-            <id>sonatype</id>
-            <name>Releases</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+            <id>deployment</id>
+            <name>Internal Releases</name>
+            <url>https://laus.fzi.de/nexus/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
             <id>deployment</id>
