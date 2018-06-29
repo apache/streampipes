@@ -1,31 +1,112 @@
 #!/bin/bash
 
+getIp() {
+	rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+
+	rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
+	IFS=' ' declare -a 'allips=($rawip)'
+
+	allips+=( 'Enter IP manually' )
+
+	echo ''
+	echo 'Please select your IP address or add one manually: '
+	PS3='Select option: '
+	select opt in "${allips[@]}"
+	do
+		if [ -z "${opt}" ];
+		then 
+			echo "Wrong input select one of the options"; 
+		else
+			ip="$opt"
+
+			if [ "$opt" == "Enter IP manually" ];
+			then
+				read -p "Enter Ip: " ip
+			fi
+			break
+		fi
+	done
+}
+
+
+getCommand() {
+	command="docker-compose -f docker-compose.yml"
+	while IFS='' read -r line || [[ -n "$line" ]]; do
+		command="$command -f ./services/$line/docker-compose.yml"
+	done < "./system"
+}
+
+startStreamPipes() {
+	docker stop $(docker ps -a -q)
+	docker network prune -f
+	getIp
+	sed "s/##IP##/${ip}/g" ./tmpl_env > .env
+	getCommand
+	$command up -d
+}
+
+updateStreamPipes() {
+	getCommand
+	$command up -d
+}
+
+stopStreamPipes() {
+	getCommand
+	$command down 
+}
+
+cleanStreamPipes() {
+	stopStreamPipes
+	rm -r ./config
+}
+
+#removeSercvice "zookeeper"
+removeSercvice() {
+	sed -i "" /$1/d ./system
+}
+
+#removeSercvice "zookeeper"
+addService() {
+	echo "$1" >> ./system
+	updateStreamPipes
+}
+
+print() {
+	echo ""
+	echo "$1"
+}
+
 if [[ $1 = "start" ]];
 then
-	echo 'Start StreamPipes'
+	startStreamPipes
+	print 'StreamPipes sucessfully started'
 fi
 
 if [[ $1 = "stop" ]];
 then
-	echo 'Stop StreamPipes'
+	stopStreamPipes
+	print 'StreamPipes sucessfully stopped'
 fi
 
 if [[ $1 = "clean" ]];
 then
-	echo 'Clean StreamPipes'
+	cleanStreamPipes
+	print 'All configurations of StreamPipes are deleted'
 fi
 
 if [[ $1 = "service" ]];
 then
 	if [[ $2 = "add" ]];
 	then
-		echo 'Add a service'
+		addService $3
+		print 'Added ' $3 ' and started service'
 	else
-
 		if [[ $2 = "remove" ]];
 		then
 
-			echo 'Remove a service'
+			#TODO how to stop the service firsr
+			removeService
+			print 'Removed service'
 		else 
 			echo "streampipes service does not support " $2
 
