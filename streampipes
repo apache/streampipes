@@ -53,7 +53,7 @@ cleanStreamPipesEnvironment() {
 # Script starts here
 goToScriptDirectory
 
-if [[ $1 = "environment" ]];
+if [[ $1 = "dev" ]];
 then
 	if [[ $2 = "stop" ]];
 	then
