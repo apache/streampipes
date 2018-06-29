@@ -1,0 +1,11 @@
+version: "2"
+services:
+  activemq:
+    image: streampipes/activemq
+    ports:
+      - "61616:61616"
+      - "61614:61614"
+      - "8161:8161"
+    networks:
+      spnet:
+

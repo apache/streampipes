@@ -1,82 +1,37 @@
-#!/bin/sh
+#!/bin/bash
 
-getIp() {
-	rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-
-	rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
-	IFS=' ' declare -a 'allips=($rawip)'
-
-	allips+=( 'Enter IP manually' )
-
-	echo ''
-	echo 'Please select your IP address or add one manually: '
-	PS3='Select option: '
-	select opt in "${allips[@]}"
-	do
-		if [ -z "${opt}" ];
-		then 
-			echo "Wrong input select one of the options"; 
-		else
-			ip="$opt"
-
-			if [ "$opt" == "Enter IP manually" ];
-			then
-				read -p "Enter Ip: " ip
-			fi
-			break
-		fi
-	done
-}
-
-goToScriptDirectory() {
-	script_path=$(dirname "$0")
-	cd ${script_path} 
-}
-
-startStreamPipesEnvironment() {
-	docker stop $(docker ps -a -q)
-	docker network prune -f
-	getIp
-	sed "s/##IP##/${ip}/g" ./env_template > .env
-	docker-compose up -d
-}
-
-stopStreamPipesEnvironment() {
-	docker-compose down
-}
-
-cleanStreamPipesEnvironment() {
-	rm -r config/
-}
-
-
-# Script starts here
-goToScriptDirectory
-
-if [[ $1 = "dev" ]];
+if [[ $1 = "start" ]];
 then
-	if [[ $2 = "stop" ]];
-	then
-		stopStreamPipesEnvironment
-		echo ''
-		echo 'Stopped StreamPipes test environment successfully'
+	echo 'Start StreamPipes'
+fi
 
+if [[ $1 = "stop" ]];
+then
+	echo 'Stop StreamPipes'
+fi
+
+if [[ $1 = "clean" ]];
+then
+	echo 'Clean StreamPipes'
+fi
+
+if [[ $1 = "service" ]];
+then
+	if [[ $2 = "add" ]];
+	then
+		echo 'Add a service'
 	else
-		if [[ $2 = "clean" ]];
+
+		if [[ $2 = "remove" ]];
 		then
-			stopStreamPipesEnvironment
-			cleanStreamPipesEnvironment
-			echo ''
-			echo 'Cleaned all StreamPipes configuration successfully'
-		else
-			startStreamPipesEnvironment
-			echo ''
-			echo 'Started StreamPipes test environment successfully'
+
+			echo 'Remove a service'
+		else 
+			echo "streampipes service does not support " $2
+
 		fi
 
 	fi
-else
-	echo 'StreamPipes command not supported'
 fi
 
 

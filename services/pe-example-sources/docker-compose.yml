@@ -1,0 +1,13 @@
+version: "2"
+services:
+  pe-examples-sources:
+    image: streampipes/pe-examples-sources:0.55.2
+    depends_on:
+      - "consul"
+    ports:
+      - "8098:8090"
+    environment:
+      - SP_ICON_HOST=${SP_ICON_HOST}
+    networks:
+      spnet:
+ 

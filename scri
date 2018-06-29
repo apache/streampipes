@@ -1,0 +1,31 @@
+#!/bin/bash
+
+startSelectedServices() {
+	command="docker-compose -f docker-compose.yml"
+	while IFS='' read -r line || [[ -n "$line" ]]; do
+		command="$command -f ./services/$line/docker-compose.yml"
+		echo "Text read from file: $line"
+	done < "./system"
+
+	$command up -d
+}
+
+#removeSercvice "zookeeper"
+removeSercvice() {
+	sed -i "" /$1/d ./system
+}
+
+#removeSercvice "zookeeper"
+addService() {
+echo "$1" >> ./system
+}
+
+addService "zookeeper"
+
+#docker-compose \
+	#	-f docker-compose.yml \
+	#	-f ./services/pe-example-sources/docker-compose.yml \
+	#down
+
+
+

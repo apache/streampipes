@@ -1,0 +1,13 @@
+version: "2"
+services:
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:6.2.3
+    environment:
+      SERVER_NAME: ${SP_HOST}
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    networks:
+      spnet:
+
+

@@ -1,0 +1,12 @@
+version: "2"
+services:
+  couchdb:
+    image: couchdb:2.1.1
+    ports:
+      - "5984:5984"
+    volumes:
+       - ./config/couchdb/data:/opt/couchdb/data
+    networks:
+      spnet:
+
+

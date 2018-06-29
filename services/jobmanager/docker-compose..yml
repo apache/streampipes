@@ -1,0 +1,9 @@
+version: "2"
+services:
+  jobmanager:
+    image: ipe-wim-gitlab.fzi.de:5000/streampipes/services/flink:1.4
+    ports:
+      - "8081:8099"
+    command: jobmanager
+    networks:
+      spnet:

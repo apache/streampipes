@@ -1,0 +1,15 @@
+version: "2"
+services:
+  backend:
+    image: streampipes/backend:0.55.2
+    depends_on:
+      - consul
+      - couchdb
+    ports:
+      - "8030:8030"
+    volumes:
+      - ./config:/root/.streampipes
+      - ./config/RDF4J:/root/.RDF4J
+    networks:
+      spnet:
+
