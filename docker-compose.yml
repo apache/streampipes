@@ -123,7 +123,7 @@ services:
 #      spnet:
 
   pe-examples-sources:
-    image: streampipes/pe-examples-sources:0.55.2
+    image: streampipes/pe-examples-sources:${SP_VERSION}
     depends_on:
       - "consul"
     environment:

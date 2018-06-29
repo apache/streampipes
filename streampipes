@@ -21,11 +21,16 @@ getIp() {
 
 			if [ "$opt" == "Enter IP manually" ];
 			then
-				bread -p "Enter Ip: " ip
+				read -p "Enter Ip: " ip
 			fi
 			break
 		fi
 	done
+}
+
+goToScriptDirectory() {
+	script_path=$(dirname "$0")
+	cd ${script_path} 
 }
 
 startStreamPipesEnvironment() {
@@ -46,6 +51,8 @@ cleanStreamPipesEnvironment() {
 
 
 # Script starts here
+goToScriptDirectory
+
 if [[ $1 = "environment" ]];
 then
 	if [[ $2 = "stop" ]];
