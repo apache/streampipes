@@ -16,16 +16,23 @@
  */
 package org.streampipes.processors.transformation.flink.processor.hasher;
 
-import org.streampipes.sdk.helpers.Tuple2;
+import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithm;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class TestFieldHasherUtils {
 
-  public static List<Tuple2<String, String>> testData = Arrays.asList(new Tuple2<>("test1", "cda160cc7c895bfcba6c9abc3c123747"),
-          new Tuple2<>("test2", ""),
-          new Tuple2<>("test3", ""),
-          new Tuple2<>("test4", ""));
+  public static List<String> testData = Arrays.asList("test1", "test2", "test3", "test4");
+
+  public static List<Map<String, Object>> makeTestData(boolean originalValue, HashAlgorithm hashAlgorithm) {
+    List<Map<String, Object>> data = new ArrayList<>();
+    for(int i = 0; i < 3; i++) {
+      Map<String, Object> testData = new HashMap<>();
+      testData.put("timestamp", i);
+      testData.put("field", originalValue ? testData.get(i) : hashAlgorithm.toHashValue(testData.get(i)));
+      data.add(testData);
+    }
+    return data;
+  }
 
 }

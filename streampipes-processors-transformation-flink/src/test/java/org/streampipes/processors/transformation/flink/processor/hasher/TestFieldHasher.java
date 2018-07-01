@@ -18,23 +18,27 @@ package org.streampipes.processors.transformation.flink.processor.hasher;
 
 import io.flinkspector.datastream.DataStreamTestBase;
 import org.junit.Test;
+import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.Md5HashAlgorithm;
+import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.Sha1HashAlgorithm;
+import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.Sha2HashAlgorithm;
 
 public class TestFieldHasher extends DataStreamTestBase {
 
   @Test
   public void testFieldHasherMd5() {
-
+    FieldHasher fieldHasher = new FieldHasher("test", new Md5HashAlgorithm());
   }
 
   @Test
   public void testFieldHasherSha1() {
+    FieldHasher fieldHasher = new FieldHasher("test", new Sha1HashAlgorithm());
 
   }
 
   @Test
   public void testFieldHasherSha2() {
+    FieldHasher fieldHasher = new FieldHasher("test", new Sha2HashAlgorithm());
 
   }
-
 
 }
