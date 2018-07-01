@@ -25,7 +25,6 @@ import org.streampipes.sdk.helpers.*;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
 public class TimestampController extends FlinkDataProcessorDeclarer<TimestampParameters> {
 
@@ -49,16 +48,12 @@ public class TimestampController extends FlinkDataProcessorDeclarer<TimestampPar
           DataProcessorInvocation graph,
           ProcessingElementParameterExtractor extractor) {
 
-       TimestampParameters staticParam = new TimestampParameters(
+    TimestampParameters staticParam = new TimestampParameters(
             graph,
             APPEND_PROPERTY);
 
-    if (EnricherFlinkConfig.INSTANCE.getDebug()) {
-      return new TimestampProgram(staticParam);
-    } else {
-       return new TimestampProgram(staticParam, new FlinkDeploymentConfig(EnricherFlinkConfig.JAR_FILE,
-              EnricherFlinkConfig.INSTANCE.getFlinkHost(), EnricherFlinkConfig.INSTANCE.getFlinkPort()));
-    }
+
+    return new TimestampProgram(staticParam, EnricherFlinkConfig.INSTANCE.getDebug());
   }
 
 }

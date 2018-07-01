@@ -1,5 +1,5 @@
 # Aggregation
 Performs different aggregation functions
 
-## Suffisticated
+## Quality
 new SDK [ ]; tested [ ]

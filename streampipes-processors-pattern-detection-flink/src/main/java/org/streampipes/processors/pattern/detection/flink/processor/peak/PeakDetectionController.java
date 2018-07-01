@@ -27,7 +27,6 @@ import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
 /**
  * Created by riemer on 20.04.2017.
@@ -90,13 +89,6 @@ public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDete
     PeakDetectionParameters params = new PeakDetectionParameters(sepa,
             valueToObserve, timestampMapping, groupBy, countWindowSize, lag, threshold, influence);
 
-    if (PatternDetectionFlinkConfig.INSTANCE.getDebug()) {
-      return new PeakDetectionProgram(params);
-    } else {
-      return new PeakDetectionProgram(params, new FlinkDeploymentConfig(PatternDetectionFlinkConfig.JAR_FILE,
-              PatternDetectionFlinkConfig.INSTANCE.getFlinkHost(), PatternDetectionFlinkConfig.INSTANCE.getFlinkPort()));
-    }
-
-
+    return new PeakDetectionProgram(params, PatternDetectionFlinkConfig.INSTANCE.getDebug());
   }
 }

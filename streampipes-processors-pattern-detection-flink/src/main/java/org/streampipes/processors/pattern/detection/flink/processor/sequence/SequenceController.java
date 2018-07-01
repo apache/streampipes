@@ -26,7 +26,6 @@ import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
 public class SequenceController extends FlinkDataProcessorDeclarer<SequenceParameters> {
 
@@ -58,12 +57,7 @@ public class SequenceController extends FlinkDataProcessorDeclarer<SequenceParam
 
     SequenceParameters params = new SequenceParameters(graph, timeWindowSize, timeUnit);
 
-    if (PatternDetectionFlinkConfig.INSTANCE.getDebug()) {
-      return new SequenceProgram(params);
-    } else {
-      return new SequenceProgram(params, new FlinkDeploymentConfig(PatternDetectionFlinkConfig.JAR_FILE,
-              PatternDetectionFlinkConfig.INSTANCE.getFlinkHost(), PatternDetectionFlinkConfig.INSTANCE.getFlinkPort()));
-    }
+    return new SequenceProgram(params, PatternDetectionFlinkConfig.INSTANCE.getDebug());
 
   }
 }

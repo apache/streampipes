@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 FZI Forschungszentrum Informatik
+ * Copyright 2018 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,13 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
-package org.streampipes.processors.aggregation.flink.processor.aggregation;
+package org.streampipes.processors.transformation.flink.config;
 
-public enum AggregationType {
-  AVG,
-  MIN,
-  MAX,
-  SUM
+public class ConfigKeys {
+    final static String HOST = "SP_HOST";
+    final static String PORT = "SP_PORT";
+    final static String FLINK_HOST = "SP_FLINK_HOST";
+    final static String FLINK_PORT = "SP_FLINK_PORT";
+    final static String ICON_HOST = "SP_ICON_HOST";
+    final static String ICON_PORT = "SP_ICON_PORT";
+    final static String SERVICE_NAME = "SP_SERVICE_NAME";
+    final static String DEBUG = "SP_FLINK_DEBUG";
 }

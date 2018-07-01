@@ -27,7 +27,6 @@ import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
 public class IncreaseController extends FlinkDataProcessorDeclarer<IncreaseParameters> {
 
@@ -42,8 +41,8 @@ public class IncreaseController extends FlinkDataProcessorDeclarer<IncreaseParam
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements
-                    .numberReq(), Labels.from("mapping", "Value to observe", "Specifies the value that should be " +
-                    "monitored."), PropertyScope.MEASUREMENT_PROPERTY)
+                            .numberReq(), Labels.from("mapping", "Value to observe", "Specifies the value that should be " +
+                            "monitored."), PropertyScope.MEASUREMENT_PROPERTY)
                     .requiredPropertyWithUnaryMapping(EpRequirements
                             .timestampReq(), Labels.from(TIMESTAMP, "Timestamp field", "The field that contains " +
                             "the event's timestamp"), PropertyScope.HEADER_PROPERTY)
@@ -76,18 +75,15 @@ public class IncreaseController extends FlinkDataProcessorDeclarer<IncreaseParam
     IncreaseParameters params = new IncreaseParameters(graph, getOperation(operation), increase, duration, mapping,
             groupBy, timestampField);
 
-
-    if (PatternDetectionFlinkConfig.INSTANCE.getDebug()) {
-            return new IncreaseProgram(params);
-    } else {
-          return new IncreaseProgram(params, new FlinkDeploymentConfig(PatternDetectionFlinkConfig.JAR_FILE,
-            PatternDetectionFlinkConfig.INSTANCE.getFlinkHost(), PatternDetectionFlinkConfig.INSTANCE.getFlinkPort()));
-    }
+    return new IncreaseProgram(params, PatternDetectionFlinkConfig.INSTANCE.getDebug());
 
   }
 
   private Operation getOperation(String operation) {
-    if (operation.equals("Increase")) return Operation.INCREASE;
-    else return Operation.DECREASE;
+    if (operation.equals("Increase")) {
+      return Operation.INCREASE;
+    } else {
+      return Operation.DECREASE;
+    }
   }
 }

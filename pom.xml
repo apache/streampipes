@@ -17,6 +17,9 @@
         <module>streampipes-processors-enricher-flink</module>
         <module>streampipes-sources-watertank-simulator</module>
         <module>streampipes-sources-vehicle-simulator</module>
+        <module>streampipes-processors-transformation-flink</module>
+        <module>streampipes-processors-geo-jvm</module>
+        <module>streampipes-processors-statistics-flink</module>
     </modules>
 
     <properties>

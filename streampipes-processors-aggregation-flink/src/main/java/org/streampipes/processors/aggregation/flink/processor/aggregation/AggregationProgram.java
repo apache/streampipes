@@ -21,20 +21,14 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
-import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
+import org.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
 
 import java.util.Map;
 
-public class AggregationProgram extends FlinkDataProcessorRuntime<AggregationParameters> {
+public class AggregationProgram extends AbstractAggregationProgram<AggregationParameters> {
 
-  public AggregationProgram(AggregationParameters params) {
-    super(params);
-    setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
-  }
-
-  public AggregationProgram(AggregationParameters params, FlinkDeploymentConfig config) {
-    super(params, config);
+  public AggregationProgram(AggregationParameters params, boolean debug) {
+    super(params, debug);
     setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
   }
 
