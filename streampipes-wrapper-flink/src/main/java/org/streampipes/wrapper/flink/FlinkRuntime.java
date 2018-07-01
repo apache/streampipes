@@ -48,12 +48,30 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
   private boolean debug;
   private StreamExecutionEnvironment env;
 
+  /**
+   * @deprecated Use {@link #FlinkRuntime(BindingParams, boolean)} instead
+   */
+  @Deprecated
   public FlinkRuntime(B bindingParams) {
-    this(bindingParams, new FlinkDeploymentConfig("", "localhost", 6123), true);
+    this(bindingParams,true);
   }
 
+  /**
+   * @deprecated Use {@link #FlinkRuntime(BindingParams, boolean)} instead
+   */
+  @Deprecated
   public FlinkRuntime(B bindingParams, FlinkDeploymentConfig config) {
     this(bindingParams, config, false);
+  }
+
+  public FlinkRuntime(B bindingParams, boolean debug) {
+    super(bindingParams);
+    if (!debug) {
+      this.config = getDeploymentConfig();
+    } else {
+      this.config = new FlinkDeploymentConfig("", "localhost", 6123);
+    }
+    this.debug = debug;
   }
 
   private FlinkRuntime(B bindingParams, FlinkDeploymentConfig config, boolean debug) {
@@ -61,6 +79,8 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
     this.config = config;
     this.debug = debug;
   }
+
+  protected abstract FlinkDeploymentConfig getDeploymentConfig();
 
   protected abstract void appendExecutionConfig(DataStream<Map<String, Object>>... convertedStream);
 

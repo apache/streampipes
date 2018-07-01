@@ -37,11 +37,23 @@ public abstract class FlinkDataProcessorRuntime<B extends EventProcessorBindingP
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * @deprecated Use {@link #FlinkDataProcessorRuntime(EventProcessorBindingParams, boolean)} instead
+	 */
+	@Deprecated
 	public FlinkDataProcessorRuntime(B params)
 	{
 		super(params);
 	}
 
+	public FlinkDataProcessorRuntime(B params, boolean debug)
+	{
+		super(params, debug);
+	}
+
+	/**
+	 * @deprecated Use {@link #FlinkDataProcessorRuntime(EventProcessorBindingParams, boolean)} instead
+	 */
 	public FlinkDataProcessorRuntime(B params, FlinkDeploymentConfig config)
 	{
 		super(params, config);
