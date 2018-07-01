@@ -61,7 +61,7 @@ cleanStreamPipes() {
 }
 
 #removeSercvice "zookeeper"
-removeSercvice() {
+removeService() {
 	sed -i "" /$1/d ./system
 }
 
@@ -105,7 +105,7 @@ then
 		then
 
 			#TODO how to stop the service firsr
-			removeService
+			removeService $3
 			print 'Removed service'
 		else 
 			echo "streampipes service does not support " $2
