@@ -34,6 +34,7 @@ public class Options {
     return Arrays.stream(optionLabel).map(Option::new).collect(Collectors.toList());
   }
 
+  @SafeVarargs
   public static List<Option> from(Tuple2<String, String>... options) {
     return Arrays.stream(options).map(o -> new Option(o.a, o.b)).collect(Collectors.toList());
   }

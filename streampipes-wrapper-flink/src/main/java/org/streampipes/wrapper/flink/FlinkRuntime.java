@@ -162,7 +162,7 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
     SourceFunction<String> source2 = getStream2Source();
     if (source2 != null) {
       messageStream2 = env
-              .addSource(source2).flatMap(new JsonToMapFormat()).flatMap(new StatisticLogger(getGraph()));;
+              .addSource(source2).flatMap(new JsonToMapFormat()).flatMap(new StatisticLogger(getGraph()));
 
       appendExecutionConfig(messageStream1, messageStream2);
     } else {

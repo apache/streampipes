@@ -179,7 +179,7 @@ public class ElementRecommender {
     }
 
     private void addPossibleElements(NamedStreamPipesEntity sepa) {
-        recommendationMessage.addPossibleElement(new PipelineElementRecommendation(sepa.getElementId().toString(), sepa.getName(), sepa.getDescription()));
+        recommendationMessage.addPossibleElement(new PipelineElementRecommendation(sepa.getElementId(), sepa.getName(), sepa.getDescription()));
     }
 
     private List<DataProcessorDescription> getAllSepas() {

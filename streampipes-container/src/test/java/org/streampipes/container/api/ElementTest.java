@@ -50,7 +50,7 @@ public class ElementTest {;
     @Test
     public void getByIdIsNullTest() {
         TestElementImpl elem = new TestElementImpl();
-        elem.setDeclarers(new ArrayList<Declarer>());
+        elem.setDeclarers(new ArrayList<>());
 
         NamedStreamPipesEntity actual = elem.getById("");
         assertNull(actual);

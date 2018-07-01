@@ -80,7 +80,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
         KeyValueClient kvClientThread = consulThread.keyValueClient();
         while (true) {
 
-            configProps.keySet().stream().forEach((s) -> {
+            configProps.keySet().forEach((s) -> {
                 Optional<Value> te = kvClientThread.getValue(addSn(s));
                 if (!te.get().getValueAsString().get().equals(configProps.get(s))) {
                     callback.onChange();

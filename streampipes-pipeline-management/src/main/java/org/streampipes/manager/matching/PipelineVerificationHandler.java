@@ -219,9 +219,9 @@ public class PipelineVerificationHandler {
                 .getStaticProperties()
                 .stream()
                 .filter(property -> property instanceof RemoteOneOfStaticProperty)
-                .collect(Collectors.toList());;
+                .collect(Collectors.toList());
 
-        for (StaticProperty property : allProperties) {
+      for (StaticProperty property : allProperties) {
             updateRemoteOneOfStaticProperty((RemoteOneOfStaticProperty) property, username);
         }
 

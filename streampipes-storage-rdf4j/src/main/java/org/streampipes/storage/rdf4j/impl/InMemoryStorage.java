@@ -62,13 +62,13 @@ public class InMemoryStorage implements IPipelineElementDescriptionStorage {
 	private void initializeSECStorage()	{
 		inMemorySECStorage.clear();
 		List<DataSinkDescription> secs = sesameStorage.getAllSECs();
-		secs.forEach(sec -> inMemorySECStorage.put(sec.getElementId().toString(), sec));
+		secs.forEach(sec -> inMemorySECStorage.put(sec.getElementId(), sec));
 	}
 	
 	private void initializeSEPAStorage() {
 		inMemorySEPAStorage.clear();
 		List<DataProcessorDescription> sepas = sesameStorage.getAllSEPAs();
-		sepas.forEach(sepa -> inMemorySEPAStorage.put(sepa.getElementId().toString(), sepa));
+		sepas.forEach(sepa -> inMemorySEPAStorage.put(sepa.getElementId(), sepa));
 	}
 	
 	private void initializeSEPStorage() {
@@ -171,12 +171,12 @@ public class InMemoryStorage implements IPipelineElementDescriptionStorage {
 
 	@Override
 	public List<DataSourceDescription> getAllSEPs() {
-		return new ArrayList<DataSourceDescription>(inMemorySEPStorage.values());
+		return new ArrayList<>(inMemorySEPStorage.values());
 	}
 
 	@Override
 	public List<DataProcessorDescription> getAllSEPAs() {
-		return new ArrayList<DataProcessorDescription>(inMemorySEPAStorage.values());
+		return new ArrayList<>(inMemorySEPAStorage.values());
 	}
 
 	@Override
@@ -292,7 +292,7 @@ public class InMemoryStorage implements IPipelineElementDescriptionStorage {
 
 	@Override
 	public List<DataSinkDescription> getAllSECs() {
-		return new ArrayList<DataSinkDescription>(inMemorySECStorage.values());
+		return new ArrayList<>(inMemorySECStorage.values());
 	}
 
 	@Override

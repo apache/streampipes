@@ -13,7 +13,7 @@ public abstract class AbstractQueueRunnable<T> extends Thread
     
     public AbstractQueueRunnable(int maxQueueSize, int closeAfter)
     {
-        queue = new ArrayBlockingQueue<T>(maxQueueSize);
+        queue = new ArrayBlockingQueue<>(maxQueueSize);
         this.autoClose = true;
         this.closeAfter = closeAfter * 1000;
         this.currentTimestamp = System.currentTimeMillis();

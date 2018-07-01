@@ -51,8 +51,8 @@ public class PipelineObserver {
 			System.out.println("Pipeline not replacable");
 			PipelineStatusManager.addPipelineStatus(pipelineId, makePipelineStatusMessage(PipelineStatusMessageType.PIPELINE_EXCHANGE_FAILURE));
 		}
-	};
-	
+	}
+
 	private PipelineStatusMessage makePipelineStatusMessage(PipelineStatusMessageType type) {
 		return new PipelineStatusMessage(pipelineId, System.currentTimeMillis(), type.title(), type.description());
 	}

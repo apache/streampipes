@@ -21,7 +21,7 @@ import com.github.jqudt.onto.UnitFactory;
 
 public class TemperatureUnit {
 
-	private TemperatureUnit() {};
+	private TemperatureUnit() {}
 
 	public static Unit KELVIN = UnitFactory.getInstance().getUnit("http://qudt.org/vocab/unit#Kelvin");
 	public static Unit CELSIUS = UnitFactory.getInstance().getUnit("http://qudt.org/vocab/unit#DegreeCelsius");

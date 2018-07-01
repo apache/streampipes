@@ -21,7 +21,7 @@ import com.github.jqudt.onto.UnitFactory;
 
 public class LengthUnit {
 
-	private LengthUnit() {};
+	private LengthUnit() {}
 
 	public static Unit NM = UnitFactory.getInstance().getUnit("http://www.openphacts.org/units/Nanometer");
 

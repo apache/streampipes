@@ -40,7 +40,7 @@ public class EventProducerWelcomePage extends WelcomePageGenerator<SemanticEvent
 	{
 		for(SemanticEventProducerDeclarer declarer : declarers)
 		{
-			List<Description> streams = new ArrayList<Description>();
+			List<Description> streams = new ArrayList<>();
 			DataSourceDescriptionHtml description = new DataSourceDescriptionHtml();
 			description.setName(declarer.declareModel().getName());
 			description.setDescription(declarer.declareModel().getDescription());

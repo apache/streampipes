@@ -95,7 +95,7 @@ public class UnitOntologyFactory {
 		// instead, it uses defined mappings in uo2qudt
 
 		// also make the reverse mapping table
-		qudt2uo = new HashMap<String, String>();
+		qudt2uo = new HashMap<>();
 		for (String keyURI : uo2qudt.keySet()) qudt2uo.put(uo2qudt.get(keyURI), keyURI);
 	}
 
@@ -139,7 +139,7 @@ public class UnitOntologyFactory {
 	}
 	
 	public List<String> getURIs(URI type) {
-		List<String> uris = new ArrayList<String>();
+		List<String> uris = new ArrayList<>();
 
 		List<String> qudtURIs = UnitFactory.getInstance().getURIs(type);
 		for (String qudtString : qudtURIs) {

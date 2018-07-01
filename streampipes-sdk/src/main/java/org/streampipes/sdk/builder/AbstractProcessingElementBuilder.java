@@ -45,6 +45,7 @@ import org.streampipes.vocabulary.XSD;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractProcessingElementBuilder<BU extends AbstractProcessingElementBuilder<BU, T>, T extends ConsumableStreamPipesEntity> extends AbstractPipelineElementBuilder<BU, T> {
@@ -244,7 +245,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
   public BU requiredParameterAsCollection(Label label, StaticProperty staticProperty) {
     CollectionStaticProperty collection = prepareStaticProperty(label, new
             CollectionStaticProperty());
-    collection.setMembers(Arrays.asList(staticProperty));
+    collection.setMembers(Collections.singletonList(staticProperty));
     this.staticProperties.add(collection);
 
     return me();

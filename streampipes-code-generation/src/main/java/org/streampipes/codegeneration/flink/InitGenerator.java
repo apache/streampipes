@@ -40,7 +40,7 @@ public class InitGenerator extends Generator {
 
 	@Override
 	public JavaFile build() {
-		List<ClassName> controllers = new ArrayList<ClassName>();
+		List<ClassName> controllers = new ArrayList<>();
 		controllers.add(ClassName.get("", name + "Controller"));
 
 		TypeSpec controllerClass = TypeSpec.classBuilder(name + "Init").addModifiers(Modifier.PUBLIC)

@@ -46,7 +46,7 @@ import java.util.*;
 @Path("/v1/elasticsearch")
 public class Elasticsearch implements IElasticsearch {
 
-  static String mainFilePath = ElasticsearchConfig.INSTANCE.getDataLocation();
+  private static String mainFilePath = ElasticsearchConfig.INSTANCE.getDataLocation();
   private static final List<String> excludedIndices = Collections.singletonList(".kibana");
 
   Logger LOG = LoggerFactory.getLogger(Elasticsearch.class);
@@ -98,11 +98,7 @@ public class Elasticsearch implements IElasticsearch {
 
       return Response.ok().build();
 
-    } catch (IOException e) {
-      e.printStackTrace();
-      LOG.error(e.getMessage());
-      return Response.status(500).entity(e).build();
-    } catch (UnirestException e) {
+    } catch (IOException | UnirestException e) {
       e.printStackTrace();
       LOG.error(e.getMessage());
       return Response.status(500).entity(e).build();

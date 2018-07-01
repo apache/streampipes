@@ -17,14 +17,8 @@
 
 package de.fzi.cep.sepa.html.page;
 
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Test;
 import org.streampipes.container.declarer.DataStreamDeclarer;
-import org.streampipes.container.declarer.Declarer;
-import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.container.html.model.DataSourceDescriptionHtml;
@@ -42,11 +36,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
 public class WelcomePageGeneratorImplTest {
 
     @Test
     public void buildUrisWithEmptyListTest() {
-        WelcomePageGenerator wpg = new WelcomePageGeneratorImpl("baseUri", new ArrayList<Declarer>());
+        WelcomePageGenerator wpg = new WelcomePageGeneratorImpl("baseUri", new ArrayList<>());
         List<Description> actual = wpg.buildUris();
 
         assertEquals(actual.size(), 0);
@@ -106,7 +104,7 @@ public class WelcomePageGeneratorImplTest {
         return new SemanticEventProducerDeclarer() {
             @Override
             public List<DataStreamDeclarer> getEventStreams() {
-                return Arrays.asList(new EventStreamDeclarer() {
+                return Arrays.asList(new DataStreamDeclarer() {
                     @Override
                     public SpDataStream declareModel(DataSourceDescription sep) {
                         return new SpDataStream("streampathName", "streamname", "streamdescription", null);

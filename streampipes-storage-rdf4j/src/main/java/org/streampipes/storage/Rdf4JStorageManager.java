@@ -101,7 +101,7 @@ public enum Rdf4JStorageManager implements ITripleStorage {
       empireCfg.setAnnotationProvider(CustomAnnotationProvider.class);
 
       Empire.init(empireCfg, new OpenRdfEmpireModule());
-      Map<Object, Object> map = new HashMap<Object, Object>();
+      Map<Object, Object> map = new HashMap<>();
 
       map.put(RepositoryFactoryKeys.REPO_HANDLE, repository);
       map.put(ConfigKeys.FACTORY, "sesame");

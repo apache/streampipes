@@ -61,8 +61,7 @@ public class SepaUtils {
 	public static DomainStaticProperty getDomainStaticPropertyBy(InvocableStreamPipesEntity sepa, String internalName)
 	{
 		Optional<StaticProperty> matchedProperty = sepa.getStaticProperties().stream().filter(sp -> (sp instanceof DomainStaticProperty) && (sp.getInternalName().equals(internalName))).findFirst();
-		if (matchedProperty.isPresent()) return (DomainStaticProperty) matchedProperty.get();
-		else return null;
+		return (DomainStaticProperty) matchedProperty.orElse(null);
 	}
 	
 	public static String getFreeTextStaticPropertyValue(InvocableStreamPipesEntity graph, String internalName)
@@ -110,7 +109,7 @@ public class SepaUtils {
 	{
 		List<URI> propertyUris = getMultipleURIsFromStaticProperty(sepa, staticPropertyName);
 		
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		for(URI propertyUri : propertyUris)
 		{
 			for(SpDataStream stream : sepa.getInputStreams())
@@ -125,7 +124,7 @@ public class SepaUtils {
 	//TODO fix return null
 	private static List<String> getMappingPropertyName(List<EventProperty> eventProperties, URI propertyURI, boolean completeNames, String prefix)
 	{
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		for(EventProperty p : eventProperties)
 		{
 			if (p instanceof EventPropertyPrimitive || p instanceof EventPropertyList)
@@ -140,7 +139,7 @@ public class SepaUtils {
 				{
 					for(EventProperty sp : ((EventPropertyList) p).getEventProperties())
 					{
-						if (sp.getElementId().toString().equals(propertyURI.toString()))
+						if (sp.getElementId().equals(propertyURI.toString()))
 						{
 							result.add(p.getRuntimeName() + "," +sp.getRuntimeName());
 						}

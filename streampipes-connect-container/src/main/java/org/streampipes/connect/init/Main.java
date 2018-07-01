@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.connect.init;;
+package org.streampipes.connect.init;
 
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
@@ -43,7 +43,7 @@ public class Main {
     }
 
     private static Set<Class<?>> getApiClasses() {
-        Set<Class<? extends Object>> allClasses = new HashSet<>();
+        Set<Class<?>> allClasses = new HashSet<>();
 
         allClasses.add(WelcomePage.class);
         allClasses.add(AdapterResource.class);

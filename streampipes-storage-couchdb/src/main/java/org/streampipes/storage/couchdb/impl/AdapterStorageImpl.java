@@ -1,9 +1,10 @@
 package org.streampipes.storage.couchdb.impl;
 
 
-import com.sun.org.apache.xerces.internal.impl.io.UTF8Reader;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.model.modelconnect.AdapterDescription;
 import org.streampipes.model.modelconnect.AdapterSetDescription;
 import org.streampipes.model.modelconnect.AdapterStreamDescription;
@@ -12,9 +13,6 @@ import org.streampipes.storage.couchdb.dao.AbstractDao;
 import org.streampipes.storage.couchdb.dao.DbCommand;
 import org.streampipes.storage.couchdb.dao.FindCommand;
 import org.streampipes.storage.couchdb.utils.Utils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,10 +59,10 @@ public class AdapterStorageImpl extends AbstractDao<AdapterDescription> implemen
         String theString = writer.toString();
 //        System.out.println(theString);
         if (theString.contains("dataSet")) {
-            DbCommand<Optional<AdapterSetDescription>, AdapterSetDescription> cmd = new FindCommand<AdapterSetDescription>(couchDbClientSupplier, adapterId, AdapterSetDescription.class);
+            DbCommand<Optional<AdapterSetDescription>, AdapterSetDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterSetDescription.class);
             return cmd.execute().get();
         } else {
-             DbCommand<Optional<AdapterStreamDescription>, AdapterStreamDescription> cmd = new FindCommand<AdapterStreamDescription>(couchDbClientSupplier, adapterId, AdapterStreamDescription.class);
+             DbCommand<Optional<AdapterStreamDescription>, AdapterStreamDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterStreamDescription.class);
             return cmd.execute().get();
         }
     }

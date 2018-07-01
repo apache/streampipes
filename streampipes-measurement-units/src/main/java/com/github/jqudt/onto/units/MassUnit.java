@@ -21,7 +21,7 @@ import com.github.jqudt.onto.UnitFactory;
 
 public class MassUnit {
 
-	private MassUnit() {};
+	private MassUnit() {}
 
 	public static Unit KILOGRAM = UnitFactory.getInstance().getUnit("http://qudt.org/vocab/unit#Kilogram");
 	public static Unit GRAM = UnitFactory.getInstance().getUnit("http://qudt.org/vocab/unit#Gram");

@@ -17,15 +17,15 @@
 
 package org.streampipes.sdk.builder;
 
-import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventSchema;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStreamBuilder, SpDataStream> {
@@ -83,7 +83,7 @@ public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStream
      * @return this
      */
     public DataStreamBuilder format(TransportFormat format) {
-        this.eventGrounding.setTransportFormats(Arrays.asList(format));
+        this.eventGrounding.setTransportFormats(Collections.singletonList(format));
         return this;
     }
 

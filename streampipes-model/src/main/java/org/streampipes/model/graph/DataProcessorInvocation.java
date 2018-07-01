@@ -19,22 +19,17 @@ package org.streampipes.model.graph;
 
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
-import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.DATA_PROCESSOR_INVOCATION)
 @Entity
@@ -70,7 +65,7 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
 		this.setSupportedGrounding(sepa.getSupportedGrounding());
 		this.setStaticProperties(sepa.getStaticProperties());
 		this.setOutputStrategies(sepa.getOutputStrategies());
-		this.setBelongsTo(sepa.getElementId().toString());
+		this.setBelongsTo(sepa.getElementId());
 		this.category = sepa.getCategory();
 		this.setStreamRequirements(sepa.getSpDataStreams());
 		//this.setUri(belongsTo +"/" +getElementId());		
@@ -94,7 +89,7 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
 	public DataProcessorInvocation()
 	{
 		super();
-		inputStreams = new ArrayList<SpDataStream>();
+		inputStreams = new ArrayList<>();
 	}
 	
 	public DataProcessorInvocation(String uri, String name, String description, String iconUrl, String pathName, List<SpDataStream> spDataStreams, List<StaticProperty> staticProperties)
@@ -109,8 +104,8 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
 	{
 		super(uri, name, description, iconUrl);
 		this.pathName = pathName;
-		inputStreams = new ArrayList<SpDataStream>();
-		staticProperties = new ArrayList<StaticProperty>();
+		inputStreams = new ArrayList<>();
+		staticProperties = new ArrayList<>();
 	}
 	
 	public boolean addInputStream(SpDataStream spDataStream)

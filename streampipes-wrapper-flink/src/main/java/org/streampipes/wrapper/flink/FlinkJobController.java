@@ -55,12 +55,12 @@ public class FlinkJobController {
 	public ActorGateway getJobManagerGateway() throws Exception {
 		
 		ActorSystem actorSystem;
-		scala.Tuple2<String, Object> systemEndpoint = new scala.Tuple2<String, Object>("", 0);
+		scala.Tuple2<String, Object> systemEndpoint = new scala.Tuple2<>("", 0);
 		
 		try {
 			actorSystem = AkkaUtils.createActorSystem(
 					config,
-					new Some<scala.Tuple2<String, Object>>(systemEndpoint));
+              new Some<>(systemEndpoint));
 		}
 		catch (Exception e) {
 			throw new IOException("Could not start actor system to communicate with JobManager", e);

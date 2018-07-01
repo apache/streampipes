@@ -31,7 +31,7 @@ public class StandardTransportFormat {
 
 	public static List<TransportFormat> standardFormat()
 	{
-		List<TransportFormat> formats = new ArrayList<TransportFormat>();
+		List<TransportFormat> formats = new ArrayList<>();
 		formats.add(new TransportFormat(MessageFormat.Json));
 		formats.add(new TransportFormat(MessageFormat.Thrift));
 		return formats;
@@ -39,7 +39,7 @@ public class StandardTransportFormat {
 	
 	public static List<TransportProtocol> standardProtocols()
 	{
-		List<TransportProtocol> protocols = new ArrayList<TransportProtocol>();
+		List<TransportProtocol> protocols = new ArrayList<>();
 		protocols.add(new JmsTransportProtocol());
 		protocols.add(new KafkaTransportProtocol());
 		return protocols;

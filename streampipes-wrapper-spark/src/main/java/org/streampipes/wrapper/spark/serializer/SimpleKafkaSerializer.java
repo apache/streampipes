@@ -54,7 +54,7 @@ public class SimpleKafkaSerializer implements VoidFunction<org.apache.spark.api.
             public void call(Map<String, Object> map) throws Exception {
                 KafkaProducer<String, String> producer = new KafkaProducer<String, String>(kafkaParams);
 
-                producer.send(new ProducerRecord<String, String>(topic, objectMapper.writeValueAsString(map)));
+                producer.send(new ProducerRecord<>(topic, objectMapper.writeValueAsString(map)));
             }
         });
     }

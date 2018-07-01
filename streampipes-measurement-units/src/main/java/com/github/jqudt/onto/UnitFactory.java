@@ -120,7 +120,7 @@ public class UnitFactory {
 		ValueFactory f = ValueFactoryImpl.getInstance();
 		Model statements = repos.filter(null, QUDT.ABBREVIATION, f.createLiteral(symbol, XMLSchema.STRING));
 		if (statements.isEmpty()) return Collections.emptyList();
-		List<Unit> foundUnits = new ArrayList<Unit>();
+		List<Unit> foundUnits = new ArrayList<>();
 		for (Statement statement : statements) {
 			Object type = statement.getSubject();
 			try {
@@ -156,7 +156,7 @@ public class UnitFactory {
 			if (statements.isEmpty())
 				return Collections.emptyList();
 
-			List<String> units = new ArrayList<String>();
+			List<String> units = new ArrayList<>();
 			for (Statement statement : statements) {
 				units.add(statement.getSubject().toString());
 			}

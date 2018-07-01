@@ -19,5 +19,5 @@ package org.streampipes.config.model;
 public enum ConfigurationScope {
   CONTAINER_STARTUP_CONFIG,
   CONTAINER_GLOBAL_CONFIG,
-  PIPELINE_ELEMENT_CONFIG;
+  PIPELINE_ELEMENT_CONFIG
 }

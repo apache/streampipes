@@ -40,7 +40,7 @@ import static org.streampipes.container.util.ConsulUtil.updateConfig;
 @Path("/v2/consul")
 public class ConsulConfig extends AbstractRestInterface implements IConsulConfig {
 
-    static Logger LOG = LoggerFactory.getLogger(ConsulConfig.class);
+    private static Logger LOG = LoggerFactory.getLogger(ConsulConfig.class);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,14 +50,14 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
         LOG.info("Request for all service configs");
         Map<String, String> peServices = ConsulUtil.getPEServices();
 
-        List peConfigs = new LinkedList<PeConfig>();
+        List<PeConfig> peConfigs = new LinkedList<>();
 
         for(Map.Entry<String, String> entry: peServices.entrySet()) {
             String serviceName = "";
             String serviceStatus = entry.getValue();
             String mainKey = ConsulSpConfig.SERVICE_ROUTE_PREFIX + entry.getKey();
 
-            Map meta = new HashMap<String, String>();
+            Map<String, String> meta = new HashMap<>();
             meta.put("status", serviceStatus);
             List<ConfigItem> configItems = getConfigForService(entry.getKey());
 

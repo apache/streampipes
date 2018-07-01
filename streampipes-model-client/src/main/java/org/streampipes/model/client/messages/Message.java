@@ -48,7 +48,7 @@ public abstract class Message {
 	public Message(boolean success, Notification...notifications)
 	{
 		this.success = success;
-		this.notifications = new ArrayList<Notification>();
+		this.notifications = new ArrayList<>();
 		this.notifications.addAll(Arrays.asList(notifications));
 	}
 
