@@ -18,6 +18,7 @@
 package org.streampipes.connect.firstconnector.protocol.set;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.BOMInputStream;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,6 +149,10 @@ public class HttpProtocol extends Protocol {
                     .connectTimeout(1000)
                     .socketTimeout(100000)
                     .execute().returnContent().asString();
+
+            if (s.startsWith("ï")) {
+                s = s.substring(3);
+            }
 
             result = IOUtils.toInputStream(s, "UTF-8");
 

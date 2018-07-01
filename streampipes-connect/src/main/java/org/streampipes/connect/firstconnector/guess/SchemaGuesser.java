@@ -67,7 +67,9 @@ public class SchemaGuesser {
                         subEvent = (Map<String, Object>) subEvent.get(k);
                     }
 
-                    tmp.add(subEvent.get(ep.getRuntimeName()));
+                    if (subEvent != null) {
+                        tmp.add(subEvent.get(ep.getRuntimeName()));
+                    }
                 }
 
                 DomainPropertyProbabilityList resultList = getDomainPropertyProbability(tmp.toArray());
