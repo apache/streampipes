@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 FZI Forschungszentrum Informatik
+ * Copyright 2018 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,10 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
+package org.streampipes.processors.transformation.flink.processor.hasher;
 
-package org.streampipes.processors.filters.jvm.processor.textfilter;
+import org.streampipes.sdk.helpers.Tuple2;
 
-public enum StringOperator {
-	CONTAINS, MATCHES
+import java.util.Arrays;
+import java.util.List;
+
+public class TestFieldHasherUtils {
+
+  public static List<Tuple2<String, String>> testData = Arrays.asList(new Tuple2<>("test1", "cda160cc7c895bfcba6c9abc3c123747"),
+          new Tuple2<>("test2", ""),
+          new Tuple2<>("test3", ""),
+          new Tuple2<>("test4", ""));
+
 }

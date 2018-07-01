@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.streampipes</groupId>
@@ -27,43 +28,75 @@
         <lightcouch.version>0.1.8</lightcouch.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-wrapper-standalone</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-sdk</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-container-standalone</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-config</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-dataformat-json</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-messaging-kafka</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lightcouch</groupId>
-            <artifactId>lightcouch</artifactId>
-            <version>${lightcouch.version}</version>
-        </dependency>
-    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-commons</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-sdk</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-container-standalone</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-standalone</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-flink</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-sdk</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-container-standalone</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-config</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-json</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-messaging-kafka</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.lightcouch</groupId>
+                <artifactId>lightcouch</artifactId>
+                <version>${lightcouch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-measurement-units</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-test-utils</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <pluginManagement>
@@ -119,10 +152,12 @@
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>org.streampipes.examples.jvm.ExamplesJvmInit</mainClass>
                                 </transformer>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                             </transformers>
                             <filters>
 

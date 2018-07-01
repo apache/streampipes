@@ -17,5 +17,5 @@
 package org.streampipes.processors.pattern.detection.flink.processor.increase;
 
 public enum Operation {
-INCREASE, DECREASE;
+INCREASE, DECREASE
 }

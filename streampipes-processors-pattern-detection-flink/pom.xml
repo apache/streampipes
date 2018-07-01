@@ -12,7 +12,6 @@
     <artifactId>streampipes-processors-pattern-detection-flink</artifactId>
 
     <properties>
-        <streampipes.version>0.55.3-SNAPSHOT</streampipes.version>
         <elasticsearch.version>5.2.2</elasticsearch.version>
     </properties>
 
@@ -20,7 +19,6 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container-standalone</artifactId>
-            <version>${streampipes.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.kafka</groupId>
@@ -35,7 +33,6 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-commons</artifactId>
-            <version>${streampipes.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.kafka</groupId>
@@ -50,7 +47,6 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-wrapper-flink</artifactId>
-            <version>${streampipes.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -70,33 +66,6 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sdk</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-filesystem_2.11</artifactId>
-            <version>1.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-math3</artifactId>
-            <version>3.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-high-level-client</artifactId>
-            <version>6.2.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch</artifactId>
-            <version>6.2.3</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.ow2.asm</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -111,7 +80,6 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
-            <version>${streampipes.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 FZI Forschungszentrum Informatik
+ * Copyright 2018 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,10 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
-package org.streampipes.processors.filters.jvm.processor.textfilter;
+package org.streampipes.processors.transformation.flink.processor.hasher.algorithm;
 
-public enum StringOperator {
-	CONTAINS, MATCHES
+public enum HashAlgorithmType {
+	MD5(new Md5HashAlgorithm()), SHA1(new Sha1HashAlgorithm()), SHA2(new Sha2HashAlgorithm());
+
+	private HashAlgorithm hashAlgorithm;
+	
+	HashAlgorithmType(HashAlgorithm hashAlgorithm) {
+		this.hashAlgorithm = hashAlgorithm;
+	}
+	
+	public HashAlgorithm hashAlgorithm() {
+		return hashAlgorithm;
+	}
 }
