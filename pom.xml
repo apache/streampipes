@@ -493,6 +493,7 @@
         <module>archetypes/streampipes-archetype-pe-sources</module>
         <module>archetypes/streampipes-archetype-pe-jvm</module>
         <module>streampipes-connect-container</module>
+        <module>streampipes-test-utils</module>
     </modules>
 
     <profiles>

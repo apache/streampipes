@@ -14,13 +14,21 @@
  * limitations under the License.
  *
  */
+package org.streampipes.test.generator.grounding;
 
-package org.streampipes.container.init;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.test.generator.grounding.protocol.ProtocolGenerator;
 
-import org.streampipes.container.model.PeConfig;
+import java.util.Arrays;
 
-public abstract class ModelSubmitter {
+public class EventGroundingGenerator {
 
-    public abstract void init(PeConfig peConfig);
+  public static EventGrounding makeDummyGrounding() {
+    EventGrounding grounding = new EventGrounding();
+    grounding.setTransportFormats(Arrays.asList(new TransportFormat()));
+    grounding.setTransportProtocol(ProtocolGenerator.makeDummyProtocol());
 
+    return grounding;
+  }
 }

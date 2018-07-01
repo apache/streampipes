@@ -47,9 +47,7 @@ private List<Description> description;
 			DataSourceDescriptionHtml producerDesc = (DataSourceDescriptionHtml) d;
 			JsonArray array = new JsonArray();
 
-			producerDesc.getStreams().forEach(s -> {
-				array.add(makeDescription(s));
-			});
+			producerDesc.getStreams().forEach(s -> array.add(makeDescription(s)));
 
 			obj.add("streams", array);
 		}

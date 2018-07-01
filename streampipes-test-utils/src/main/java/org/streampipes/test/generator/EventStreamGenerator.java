@@ -14,13 +14,19 @@
  * limitations under the License.
  *
  */
+package org.streampipes.test.generator;
 
-package org.streampipes.container.init;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.test.generator.grounding.EventGroundingGenerator;
 
-import org.streampipes.container.model.PeConfig;
+public class EventStreamGenerator {
 
-public abstract class ModelSubmitter {
+  public static SpDataStream makeEmptyStream() {
+    SpDataStream stream = new SpDataStream();
+    stream.setEventSchema(new EventSchema());
+    stream.setEventGrounding(EventGroundingGenerator.makeDummyGrounding());
 
-    public abstract void init(PeConfig peConfig);
-
+    return stream;
+  }
 }

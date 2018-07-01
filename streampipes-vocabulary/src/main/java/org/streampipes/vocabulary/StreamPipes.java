@@ -259,4 +259,6 @@ public class StreamPipes {
   public static final String PIPELINE_TEMPLATE_DESCRIPTION_CONTAINER = NS + "PipelineTemplateDescriptionContainer" ;
   public static final String MAPS_FROM_OPTIONS = NS + "hasMapsFromOptions";
   public static final String HAS_APP_ID = NS + "hasAppId";
+  public static final String HAS_PIPELINE_ELEMENTS = "hasPipelineElements";
+  public static final String PIPELINE_ELEMENT_CONTAINER = "PipelineElementContainer" ;
 }

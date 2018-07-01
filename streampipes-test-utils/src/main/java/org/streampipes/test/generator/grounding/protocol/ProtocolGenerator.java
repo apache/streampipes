@@ -14,13 +14,20 @@
  * limitations under the License.
  *
  */
+package org.streampipes.test.generator.grounding.protocol;
 
-package org.streampipes.container.init;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.SimpleTopicDefinition;
+import org.streampipes.model.grounding.TransportProtocol;
 
-import org.streampipes.container.model.PeConfig;
+public class ProtocolGenerator {
 
-public abstract class ModelSubmitter {
+  public static TransportProtocol makeDummyProtocol() {
+    KafkaTransportProtocol protocol = new KafkaTransportProtocol();
+    protocol.setKafkaPort(0);
+    protocol.setBrokerHostname("kafka");
+    protocol.setTopicDefinition(new SimpleTopicDefinition("test-topic"));
 
-    public abstract void init(PeConfig peConfig);
-
+    return protocol;
+  }
 }

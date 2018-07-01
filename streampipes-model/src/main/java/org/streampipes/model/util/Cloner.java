@@ -17,9 +17,14 @@
 
 package org.streampipes.model.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.model.ApplicationLink;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
@@ -72,6 +77,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Cloner {
+
+  private final Logger LOG = LoggerFactory.getLogger(Cloner.class);
 
   public OutputStrategy outputStrategy(OutputStrategy other) {
     if (other instanceof KeepOutputStrategy) {
@@ -266,6 +273,31 @@ public class Cloner {
   }
 
   public List<BoundPipelineElement> boundPipelineElements(List<BoundPipelineElement> boundPipelineElements) {
-    return boundPipelineElements.stream().map(BoundPipelineElement::new).collect(Collectors.toList());
+    return boundPipelineElements
+            .stream()
+            .map(BoundPipelineElement::new)
+            .collect(Collectors.toList());
+  }
+
+  public List<NamedStreamPipesEntity> cloneDescriptions(List<NamedStreamPipesEntity> pipelineElementDescriptions) {
+    return pipelineElementDescriptions
+            .stream()
+            .map(pe -> cloneDescription(pe))
+            .collect(Collectors.toList());
+  }
+
+  private NamedStreamPipesEntity cloneDescription(NamedStreamPipesEntity pe) {
+    if (pe instanceof SpDataSet) {
+      return new SpDataSet((SpDataSet) pe);
+    } else if (pe instanceof SpDataStream) {
+      return new SpDataStream((SpDataStream) pe);
+    } else if (pe instanceof DataProcessorDescription) {
+      return new DataProcessorDescription((DataProcessorDescription) pe);
+    } else if (pe instanceof DataSinkDescription) {
+      return new DataSinkDescription((DataSinkDescription) pe);
+    } else {
+      LOG.error("Description is of unknown type: " +pe.getClass().getCanonicalName());
+      return pe;
+    }
   }
 }

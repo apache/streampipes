@@ -14,13 +14,8 @@
  * limitations under the License.
  *
  */
+package org.streampipes.test.generator;
 
-package org.streampipes.container.init;
-
-import org.streampipes.container.model.PeConfig;
-
-public abstract class ModelSubmitter {
-
-    public abstract void init(PeConfig peConfig);
+public class EventSchemaGenerator {
 
 }

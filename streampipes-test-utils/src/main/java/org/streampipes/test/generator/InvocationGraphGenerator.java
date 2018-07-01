@@ -14,13 +14,22 @@
  * limitations under the License.
  *
  */
+package org.streampipes.test.generator;
 
-package org.streampipes.container.init;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 
-import org.streampipes.container.model.PeConfig;
+import java.util.Arrays;
 
-public abstract class ModelSubmitter {
+public class InvocationGraphGenerator {
 
-    public abstract void init(PeConfig peConfig);
+  public static DataProcessorInvocation makeEmptyInvocation(DataProcessorDescription description) {
+    DataProcessorInvocation invocation = new DataProcessorInvocation(description);
+
+    invocation.setOutputStream(EventStreamGenerator.makeEmptyStream());
+    invocation.setInputStreams(Arrays.asList(EventStreamGenerator.makeEmptyStream()));
+
+    return invocation;
+  }
 
 }
