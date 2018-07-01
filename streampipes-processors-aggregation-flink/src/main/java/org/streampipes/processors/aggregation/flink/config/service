@@ -1,0 +1,17 @@
+processors-aggregation-flink:
+  image: streampipes/processors-aggregation-flink:${SP_VERSION}
+  depends_on:
+    - "consul"
+#  environment:
+#    - SP_HOST=${SP_HOST}
+#    - SP_PORT=${SP_PORT}
+#    - SP_FLINK_HOST=${SP_FLINK_HOST}
+#    - SP_FLINK_PORT=${SP_FLINK_PORT}
+#    - SP_ELASTIC_HOST=${SP_ELASTIC_HOST}
+#    - SP_ELASTIC_PORT=${SP_ELASTIC_PORT}
+#    - SP_ELASTIC_PORT_REST=${SP_ELASTIC_PORT_REST}
+#    - SP_ICON_HOST=${SP_ICON_HOST}
+#    - SP_FLINK_DEBUG=${SP_FLINK_DEBUG}
+#  ports:
+#    - "8090:8090"
+
