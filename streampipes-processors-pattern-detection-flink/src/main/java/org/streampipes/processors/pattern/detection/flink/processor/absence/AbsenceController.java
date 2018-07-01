@@ -33,11 +33,11 @@ public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParamet
     desc.addEventStream(stream1);
     desc.addEventStream(stream2);
 
-    List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
+    List<OutputStrategy> strategies = new ArrayList<>();
     strategies.add(new CustomOutputStrategy(false));
     desc.setOutputStrategies(strategies);
 
-    List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
+    List<StaticProperty> staticProperties = new ArrayList<>();
 
     staticProperties.add(StaticProperties.integerFreeTextProperty("timeWindow", "Time Window Size", "Time window size (seconds)"));
     desc.setStaticProperties(staticProperties);

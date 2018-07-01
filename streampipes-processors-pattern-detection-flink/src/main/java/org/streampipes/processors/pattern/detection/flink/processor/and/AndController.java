@@ -2,7 +2,6 @@ package org.streampipes.processors.pattern.detection.flink.processor.and;
 
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.util.SepaUtils;
 import org.streampipes.processors.pattern.detection.flink.config.PatternDetectionFlinkConfig;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
@@ -21,7 +20,7 @@ public class AndController extends FlinkDataProcessorDeclarer<AndParameters> {
 
   @Override
   public FlinkDataProcessorRuntime<AndParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
-    String timeUnit = SepaUtils.getOneOfProperty(graph, "time-unit");
+    String timeUnit = extractor.selectedSingleValue("time-unit", String.class);
     //String matchingOperator = SepaUtils.getOneOfProperty(invocationGraph, "matching-operator");
     String matchingOperator = "";
     int duration = extractor.singleValueParameter("duration", Integer.class);
