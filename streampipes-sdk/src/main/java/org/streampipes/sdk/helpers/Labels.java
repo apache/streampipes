@@ -17,13 +17,26 @@
 
 package org.streampipes.sdk.helpers;
 
+import com.google.common.io.ByteSource;
+import com.google.common.io.Resources;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Properties;
+
 public class Labels {
+
+  private static final Logger LOG = LoggerFactory.getLogger(Labels.class);
 
   /**
    * Creates a new label with internalId, label and description. Fully-configured labels are required by static
    * properties and are mandatory for event properties.
-   * @param internalId The internal identifier of the element, e.g., "latitude-field-mapping"
-   * @param label A human-readable title
+   *
+   * @param internalId  The internal identifier of the element, e.g., "latitude-field-mapping"
+   * @param label       A human-readable title
    * @param description A human-readable brief summary of the element.
    * @return
    */
@@ -31,8 +44,18 @@ public class Labels {
     return new Label(internalId, label, description);
   }
 
+  public static Label fromResources(String resourceIdentifier, String resourceName) {
+    try {
+      return new Label(resourceName, findTitleLabel(resourceIdentifier, resourceName), findDescriptionLabel(resourceIdentifier, resourceName));
+    } catch (Exception e) {
+      LOG.error("Could not find resource " + resourceIdentifier);
+      return new Label(resourceName, "", "");
+    }
+  }
+
   /**
    * Creates a new label only with an internal id. Static properties require a fully-specified label, see {@link #from(String, String, String)}
+   *
    * @param internalId The internal identifier of the element, e.g., "latitude-field-mapping"
    * @return
    */
@@ -46,6 +69,30 @@ public class Labels {
 
   public static Label empty() {
     return new Label("", "", "");
+  }
+
+  private static String findTitleLabel(String resourceIdentifier, String resourceName) throws Exception {
+    return loadProperties(resourceIdentifier).getProperty(makeResourceId(resourceName, true));
+  }
+
+  private static String findDescriptionLabel(String resourceIdentifier, String resourceName) throws Exception {
+    return loadProperties(resourceIdentifier).getProperty(makeResourceId(resourceName, false));
+  }
+
+  private static String makeResourceId(String resourceName, Boolean titleType) {
+    return resourceName +"." +(titleType ? "title" : "description");
+  }
+
+  private static Properties loadProperties(String filename) throws IOException {
+    URL url = Resources.getResource(filename);
+    final Properties props = new Properties();
+
+    final ByteSource byteSource = Resources.asByteSource(url);
+    InputStream inputStream = null;
+
+    inputStream = byteSource.openBufferedStream();
+    props.load(inputStream);
+    return props;
   }
 
 }
