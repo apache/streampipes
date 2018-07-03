@@ -35,8 +35,8 @@ import java.util.List;
 
 public class AggregationController extends FlinkDataProcessorDeclarer<AggregationParameters> {
 
-  private static final String RESOURCE_IDENTIFIER = "strings";
-  private static final String PE_IDENTIFIER = "org.streampipes.processors.aggregation.flink.aggregation";
+  private static final String RESOURCE_ID = "strings";
+  private static final String PE_ID = "org.streampipes.processors.aggregation.flink.aggregation";
 
   private static final String AGGREGATE_KEY = "aggregate";
   private static final String AGGREGATED_VALUE_KEY = "aggregatedValue";
@@ -47,26 +47,26 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(Labels.fromResources(RESOURCE_IDENTIFIER, PE_IDENTIFIER))
+    return ProcessingElementBuilder.create(Labels.fromResources(RESOURCE_ID, PE_ID))
             .category(DataProcessorType.AGGREGATE)
             .iconUrl(AggregationFlinkConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png")
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(
                             EpRequirements.numberReq(),
-                            Labels.fromResources(RESOURCE_IDENTIFIER, AGGREGATE_KEY),
+                            Labels.fromResources(RESOURCE_ID, AGGREGATE_KEY),
                             PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
             .naryMappingPropertyWithoutRequirement(
-                    Labels.fromResources(RESOURCE_IDENTIFIER, GROUP_BY_KEY),
+                    Labels.fromResources(RESOURCE_ID, GROUP_BY_KEY),
                     PropertyScope.DIMENSION_PROPERTY)
             .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(
-                    Labels.fromResources(RESOURCE_IDENTIFIER, AGGREGATED_VALUE_KEY),
+                    Labels.fromResources(RESOURCE_ID, AGGREGATED_VALUE_KEY),
                     "aggregatedValue",
                     "http://schema.org/Number")))
-            .requiredIntegerParameter(Labels.fromResources(RESOURCE_IDENTIFIER, OUTPUT_EVERY_KEY))
-            .requiredIntegerParameter(Labels.fromResources(RESOURCE_IDENTIFIER, TIME_WINDOW_KEY))
-            .requiredSingleValueSelection(Labels.fromResources(RESOURCE_IDENTIFIER, OPERATION_KEY),
+            .requiredIntegerParameter(Labels.fromResources(RESOURCE_ID, OUTPUT_EVERY_KEY))
+            .requiredIntegerParameter(Labels.fromResources(RESOURCE_ID, TIME_WINDOW_KEY))
+            .requiredSingleValueSelection(Labels.fromResources(RESOURCE_ID, OPERATION_KEY),
                     Options.from(new Tuple2<>("Average", "AVG"),
                             new Tuple2<>("Sum", "SUM"),
                             new Tuple2<>("Min", "MIN"),
