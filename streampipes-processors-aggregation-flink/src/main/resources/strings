@@ -1,0 +1,21 @@
+aggregation.title=Aggregation
+aggregation.description=Performs different aggregation functions
+
+aggregateKey.title=Property Selection
+aggregateKey.description=Specifies the event property from your stream that should be aggregated.
+
+groupByKey.title=Group by
+groupByKey.description=Partitions the incoming stream by the selected event properties.
+
+outputEvery.title=Output Frequency
+outputEvery.description=Output values every (seconds)
+
+timeWindow.title=Time Window Size
+timeWindow.description=Size of the time window in seconds
+
+operation.title=Operation
+operation.description=Aggregation operation type
+
+aggregatedValue.title=Aggregated value
+aggregatedValue.description=The calculated aggregation value
+

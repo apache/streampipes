@@ -20,15 +20,33 @@ import io.flinkspector.core.collection.ExpectedRecords;
 import io.flinkspector.datastream.DataStreamTestBase;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.junit.Test;
-import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithmType;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.*;
 import org.streampipes.test.generator.InvocationGraphGenerator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 
+import static org.streampipes.processors.transformation.flink.processor.hasher.TestFieldHasherUtils.makeTestData;
+
+@RunWith(Parameterized.class)
 public class TestFieldHasherProgram extends DataStreamTestBase {
+
+  @Parameterized.Parameters
+  public static Iterable<Object[]> algorithm() {
+    return Arrays.asList(new Object[][] {
+            {new Md5HashAlgorithm(), HashAlgorithmType.MD5},
+            {new Sha1HashAlgorithm(), HashAlgorithmType.SHA1},
+            {new Sha2HashAlgorithm(), HashAlgorithmType.SHA2}
+    });
+  }
+
+  @Parameterized.Parameter()
+  public HashAlgorithm hashAlgorithm;
+
+  @Parameterized.Parameter(1)
+  public HashAlgorithmType hashAlgorithmType;
 
   @Test
   public void testFieldHasherProgram() {
@@ -36,34 +54,18 @@ public class TestFieldHasherProgram extends DataStreamTestBase {
     FieldHasherParameters params = makeParams();
     FieldHasherProgram program = new FieldHasherProgram(params);
 
-    DataStream<Map<String, Object>> dataSet = program.getApplicationLogic(createTestStream(makeTestData(true)));
+    DataStream<Map<String, Object>> stream = program.getApplicationLogic(createTestStream(makeTestData(true, hashAlgorithm)));
 
     ExpectedRecords<Map<String, Object>> expected =
-            new ExpectedRecords<Map<String, Object>>().expectAll(makeTestData(false));
+            new ExpectedRecords<Map<String, Object>>().expectAll(makeTestData(false, hashAlgorithm));
 
-    assertStream(dataSet, expected);
+    assertStream(stream, expected);
   }
 
   private FieldHasherParameters makeParams() {
-    return new FieldHasherParameters(InvocationGraphGenerator.makeEmptyInvocation(new FieldHasherController().declareModel()), "field", HashAlgorithmType.MD5);
+    return new FieldHasherParameters(InvocationGraphGenerator.makeEmptyInvocation(new FieldHasherController().declareModel()), "field", hashAlgorithmType);
   }
 
-  private List<Map<String, Object>> makeTestData(boolean originalValue) {
-    List<Map<String, Object>> data = new ArrayList<>();
-    for(int i = 0; i < 10; i++) {
-      Map<String, Object> testData = new HashMap<>();
-      testData.put("field", originalValue ? getOriginalFieldValue() : getHashedFieldValue());
-      data.add(testData);
-    }
-    return data;
-  }
 
-  public String getOriginalFieldValue() {
-    return "testValue";
-  }
-
-  public String getHashedFieldValue() {
-    return "cda160cc7c895bfcba6c9abc3c123747";
-  }
 
 }

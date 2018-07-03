@@ -30,6 +30,7 @@ public class EventRateProgram extends AbstractAggregationProgram<EventRateParame
 
   @Override
   protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
+    // TODO implement
     return null;
   }
 

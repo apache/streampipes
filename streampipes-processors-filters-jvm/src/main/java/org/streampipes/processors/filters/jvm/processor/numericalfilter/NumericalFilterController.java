@@ -41,14 +41,15 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
     return ProcessingElementBuilder.create("numericalfilter", "Numerical Filter", "Numerical Filter Description")
             .category(DataProcessorType.FILTER)
             .iconUrl(FiltersJvmConfig.getIconUrl("Numerical_Filter_Icon_HQ"))
-            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
-                    .numberReq(), Labels.from("number", "Specifies the field name where the filter operation should" +
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from("number", "Specifies the field name where the filter operation should" +
                     " be applied " +
                     "on.", ""), PropertyScope.NONE).build())
             .outputStrategy(OutputStrategies.keep())
-            .requiredSingleValueSelection("operation", "Filter Operation", "Specifies the filter " +
-                    "operation that should be applied on the field", Options.from("<", "<=", ">", ">=", "=="))
-            .requiredFloatParameter("value", "Threshold value", "Specifies a threshold value.", "number")
+            .requiredSingleValueSelection(Labels.from("operation", "Filter Operation", "Specifies the filter " +
+                    "operation that should be applied on the field"), Options.from("<", "<=", ">", ">=", "=="))
+            .requiredFloatParameter(Labels.from("value", "Threshold value", "Specifies a threshold value."), "number")
             .supportedProtocols(SupportedProtocols.kafka())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();

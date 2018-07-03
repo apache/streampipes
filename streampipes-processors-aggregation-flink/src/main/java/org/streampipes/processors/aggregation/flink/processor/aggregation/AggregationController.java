@@ -35,33 +35,38 @@ import java.util.List;
 
 public class AggregationController extends FlinkDataProcessorDeclarer<AggregationParameters> {
 
+  private static final String RESOURCE_ID = "strings";
+  private static final String PE_ID = "org.streampipes.processors.aggregation.flink.aggregation";
+
+  private static final String AGGREGATE_KEY = "aggregate";
+  private static final String AGGREGATED_VALUE_KEY = "aggregatedValue";
+  private static final String GROUP_BY_KEY = "groupBy";
+  private static final String OUTPUT_EVERY_KEY = "outputEvery";
+  private static final String TIME_WINDOW_KEY = "timeWindow";
+  private static final String OPERATION_KEY = "operation";
+
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.aggregation" +
-                    ".flink.aggregation",
-            "Aggregation", "Performs different " +
-                    "aggregation functions")
+    return ProcessingElementBuilder.create(Labels.fromResources(RESOURCE_ID, PE_ID))
             .category(DataProcessorType.AGGREGATE)
             .iconUrl(AggregationFlinkConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png")
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from("aggregate",
-                            "Property Selection", "Specifies the event property from your stream that should be aggregated" +
-                                    "."), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.numberReq(),
+                            Labels.fromResources(RESOURCE_ID, AGGREGATE_KEY),
+                            PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
-            .naryMappingPropertyWithoutRequirement(Labels.from("groupBy", "Group by", "Partitions the incoming stream" +
-                    " by the selected event " +
-                    "properties"), PropertyScope.DIMENSION_PROPERTY)
-            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.from("aggregated-value",
-                    "Aggregated Value", "The calculated aggregation value"),
+            .naryMappingPropertyWithoutRequirement(
+                    Labels.fromResources(RESOURCE_ID, GROUP_BY_KEY),
+                    PropertyScope.DIMENSION_PROPERTY)
+            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(
+                    Labels.fromResources(RESOURCE_ID, AGGREGATED_VALUE_KEY),
                     "aggregatedValue",
                     "http://schema.org/Number")))
-            .requiredIntegerParameter(Labels.from("outputEvery", "Output Frequency", "Output " +
-                    "values every (seconds)"))
-            .requiredIntegerParameter(Labels.from("timeWindow", "Time Window Size", "Size of the " +
-                    "time window in seconds"))
-            .requiredSingleValueSelection(Labels.from("operation", "Operation", "Aggregation " +
-                            "operation type"),
+            .requiredIntegerParameter(Labels.fromResources(RESOURCE_ID, OUTPUT_EVERY_KEY))
+            .requiredIntegerParameter(Labels.fromResources(RESOURCE_ID, TIME_WINDOW_KEY))
+            .requiredSingleValueSelection(Labels.fromResources(RESOURCE_ID, OPERATION_KEY),
                     Options.from(new Tuple2<>("Average", "AVG"),
                             new Tuple2<>("Sum", "SUM"),
                             new Tuple2<>("Min", "MIN"),
@@ -77,10 +82,10 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
 
     List<String> groupBy = new ArrayList<>();
 
-    String aggregate = extractor.mappingPropertyValue("aggregate");
-    Integer outputEvery = extractor.singleValueParameter("outputEvery", Integer.class);
-    Integer timeWindowSize = extractor.singleValueParameter("timeWindow", Integer.class);
-    String aggregateOperation = extractor.selectedSingleValueInternalName("operation", String.class);
+    String aggregate = extractor.mappingPropertyValue(AGGREGATE_KEY);
+    Integer outputEvery = extractor.singleValueParameter(OUTPUT_EVERY_KEY, Integer.class);
+    Integer timeWindowSize = extractor.singleValueParameter(TIME_WINDOW_KEY, Integer.class);
+    String aggregateOperation = extractor.selectedSingleValueInternalName(OPERATION_KEY, String.class);
 
     List<String> selectProperties = new ArrayList<>();
     for (EventProperty p : graph.getInputStreams().get(0).getEventSchema().getEventProperties()) {
