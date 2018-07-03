@@ -35,7 +35,11 @@ import java.util.List;
 
 public class AggregationController extends FlinkDataProcessorDeclarer<AggregationParameters> {
 
+  private static final String RESOURCE_IDENTIFIER = "strings";
+  private static final String PE_IDENTIFIER = "org.streampipes.processors.aggregation.flink.aggregation";
+
   private static final String AGGREGATE_KEY = "aggregate";
+  private static final String AGGREGATED_VALUE_KEY = "aggregatedValue";
   private static final String GROUP_BY_KEY = "groupBy";
   private static final String OUTPUT_EVERY_KEY = "outputEvery";
   private static final String TIME_WINDOW_KEY = "timeWindow";
@@ -43,31 +47,26 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.aggregation" +
-                    ".flink.aggregation",
-            "Aggregation", "Performs different " +
-                    "aggregation functions")
+    return ProcessingElementBuilder.create(Labels.fromResources(RESOURCE_IDENTIFIER, PE_IDENTIFIER))
             .category(DataProcessorType.AGGREGATE)
             .iconUrl(AggregationFlinkConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png")
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from(AGGREGATE_KEY,
-                            "Property Selection", "Specifies the event property from your stream that should be aggregated" +
-                                    "."), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.numberReq(),
+                            Labels.fromResources(RESOURCE_IDENTIFIER, AGGREGATE_KEY),
+                            PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
-            .naryMappingPropertyWithoutRequirement(Labels.from(GROUP_BY_KEY, "Group by", "Partitions the incoming stream" +
-                    " by the selected event " +
-                    "properties"), PropertyScope.DIMENSION_PROPERTY)
-            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.from("aggregated-value",
-                    "Aggregated Value", "The calculated aggregation value"),
+            .naryMappingPropertyWithoutRequirement(
+                    Labels.fromResources(RESOURCE_IDENTIFIER, GROUP_BY_KEY),
+                    PropertyScope.DIMENSION_PROPERTY)
+            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(
+                    Labels.fromResources(RESOURCE_IDENTIFIER, AGGREGATED_VALUE_KEY),
                     "aggregatedValue",
                     "http://schema.org/Number")))
-            .requiredIntegerParameter(Labels.from(OUTPUT_EVERY_KEY, "Output Frequency", "Output " +
-                    "values every (seconds)"))
-            .requiredIntegerParameter(Labels.from(TIME_WINDOW_KEY, "Time Window Size", "Size of the " +
-                    "time window in seconds"))
-            .requiredSingleValueSelection(Labels.from(OPERATION_KEY, "Operation", "Aggregation " +
-                            "operation type"),
+            .requiredIntegerParameter(Labels.fromResources(RESOURCE_IDENTIFIER, OUTPUT_EVERY_KEY))
+            .requiredIntegerParameter(Labels.fromResources(RESOURCE_IDENTIFIER, TIME_WINDOW_KEY))
+            .requiredSingleValueSelection(Labels.fromResources(RESOURCE_IDENTIFIER, OPERATION_KEY),
                     Options.from(new Tuple2<>("Average", "AVG"),
                             new Tuple2<>("Sum", "SUM"),
                             new Tuple2<>("Min", "MIN"),
