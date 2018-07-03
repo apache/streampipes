@@ -30,6 +30,7 @@ public class CountProgram extends AbstractAggregationProgram<CountParameters> {
 
   @Override
   protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
+    // TODO implement
     return null;
   }
 

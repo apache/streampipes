@@ -24,33 +24,16 @@ public class CountParameters extends EventProcessorBindingParams {
 		return timeWindow;
 	}
 
-	public void setTimeWindow(int timeWindow) {
-		this.timeWindow = timeWindow;
-	}
-
 	public List<String> getGroupBy() {
 		return groupBy;
-	}
-
-	public void setGroupBy(List<String> groupBy) {
-		this.groupBy = groupBy;
 	}
 
 	public TimeScale getTimeScale() {
 		return timeScale;
 	}
 
-	public void setTimeScale(TimeScale timeScale) {
-		this.timeScale = timeScale;
-	}
-
 	public List<String> getSelectProperties() {
 		return selectProperties;
 	}
-
-	public void setSelectProperties(List<String> selectProperties) {
-		this.selectProperties = selectProperties;
-	}
-	
 	
 }
