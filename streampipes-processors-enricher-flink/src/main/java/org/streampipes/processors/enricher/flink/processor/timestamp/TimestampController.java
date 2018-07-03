@@ -20,6 +20,7 @@ import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
 import org.streampipes.vocabulary.SO;
@@ -35,7 +36,10 @@ public class TimestampController extends FlinkDataProcessorDeclarer<TimestampPar
     return ProcessingElementBuilder.create("enrich_configurable_timestamp", "Configurable Flink Timestamp Enrichment",
             "Appends the current time in ms to the event payload using Flink")
             .iconUrl(EnricherFlinkConfig.getIconUrl("enrich-timestamp-icon"))
-            .requiredPropertyStream1(EpRequirements.anyProperty())
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredProperty(EpRequirements.anyProperty())
+                    .build())
             .outputStrategy(OutputStrategies.append(
                     EpProperties.longEp(Labels.empty(), APPEND_PROPERTY, SO.DateTime)))
             .supportedProtocols(SupportedProtocols.kafka())
