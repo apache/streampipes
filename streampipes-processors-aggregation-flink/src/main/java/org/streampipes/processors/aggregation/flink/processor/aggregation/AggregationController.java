@@ -47,26 +47,26 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(Labels.fromResources(RESOURCE_ID, PE_ID))
+    return ProcessingElementBuilder.create(getLabel(PE_ID))
             .category(DataProcessorType.AGGREGATE)
             .iconUrl(AggregationFlinkConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png")
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(
                             EpRequirements.numberReq(),
-                            Labels.fromResources(RESOURCE_ID, AGGREGATE_KEY),
+                            getLabel(AGGREGATE_KEY),
                             PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
             .naryMappingPropertyWithoutRequirement(
-                    Labels.fromResources(RESOURCE_ID, GROUP_BY_KEY),
+                    getLabel(GROUP_BY_KEY),
                     PropertyScope.DIMENSION_PROPERTY)
             .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(
-                    Labels.fromResources(RESOURCE_ID, AGGREGATED_VALUE_KEY),
+                    getLabel(AGGREGATED_VALUE_KEY),
                     "aggregatedValue",
                     "http://schema.org/Number")))
-            .requiredIntegerParameter(Labels.fromResources(RESOURCE_ID, OUTPUT_EVERY_KEY))
-            .requiredIntegerParameter(Labels.fromResources(RESOURCE_ID, TIME_WINDOW_KEY))
-            .requiredSingleValueSelection(Labels.fromResources(RESOURCE_ID, OPERATION_KEY),
+            .requiredIntegerParameter(getLabel(OUTPUT_EVERY_KEY))
+            .requiredIntegerParameter(getLabel(TIME_WINDOW_KEY))
+            .requiredSingleValueSelection(getLabel(OPERATION_KEY),
                     Options.from(new Tuple2<>("Average", "AVG"),
                             new Tuple2<>("Sum", "SUM"),
                             new Tuple2<>("Min", "MIN"),
@@ -74,6 +74,10 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
             .supportedFormats(StandardTransportFormat.standardFormat())
             .supportedProtocols(StandardTransportFormat.standardProtocols())
             .build();
+  }
+
+  public static Label getLabel(String id) {
+    return Labels.fromResources(RESOURCE_ID, id);
   }
 
   @Override
