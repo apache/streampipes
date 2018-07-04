@@ -21,6 +21,10 @@ describe('Install Streampipes', function () {
     it('Wait for Installation to finish', function () {
         cy.contains('a', 'Go to login page', {timeout: 1200000}).should('be.visible');
     });
+    it('Check if all Symbols are CheckIcons', function() {
+       // var checkIcons = cy.get("md-icon").its("md-svg-icon").should("ic_done_24px");
+       // checkIcons.its("ng-show").should("msg.properties.success")
+    });
     it('Scroll to Bottom', function () {
         cy.scrollTo('bottom');
     });
