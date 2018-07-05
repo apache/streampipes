@@ -86,6 +86,14 @@ if [[ $1 = "stop" ]];
 then
 	stopStreamPipes
 	print 'StreamPipes sucessfully stopped'
+
+	if [[ $2 = "start" ]];
+	then
+		startStreamPipes
+		print 'StreamPipes sucessfully started'
+	fi
+
+
 fi
 
 if [[ $1 = "clean" ]];
