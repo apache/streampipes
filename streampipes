@@ -92,6 +92,13 @@ if [[ $1 = "clean" ]];
 then
 	cleanStreamPipes
 	print 'All configurations of StreamPipes are deleted'
+
+	if [[ $2 = "start" ]];
+	then
+		startStreamPipes
+		print 'StreamPipes sucessfully started'
+	fi
+
 fi
 
 if [[ $1 = "service" ]];
