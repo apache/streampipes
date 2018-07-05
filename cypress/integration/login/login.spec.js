@@ -1,4 +1,9 @@
 describe('Login Streampipes', function () {
+
+    Cypress.Cookies.defaults({
+        whitelist: "JSESSIONID"
+    })
+
     it('Open Streampipes', function () {
         cy.visit('http://localhost');
     });
@@ -11,21 +16,16 @@ describe('Login Streampipes', function () {
     });
     it('Start Login', function () {
         cy.get('button').contains('Login').parent().click();
-        Cypress.Cookies.debug(true)
     });
     it('Go to Pipeline Editor', function() {
-        //cy.wait(10000);
-        Cypress.Cookies.debug(true)
         cy.get('#ic_dashboard_24px_cache14').parent().click();
     });
+
     it('Cancel User Guide', function() {
-        Cypress.Cookies.debug(true)
-        cy.wait(5000);  
         cy.get('.ng-binding.ng-scope').contains('Cancel').parent().click();
         
     });
     it('Drag n Drop', function() {
-        Cypress.Cookies.debug(true)
         // var images = Cypress.$("img[src$='http://141.21.12.190/assets/img/pe_icons/icon-flowrate-1.png']")
         // console.log(images);
         // images.parent().parent().parent().click();
