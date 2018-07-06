@@ -27,9 +27,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CsvFormat extends Format {
+
+    public static String HEADER_NAME = "header";
+    public static String DELIMITER_NAME = "delimiter";
+
     private String[] keyValues = null;
     private String delimiter;
-    private String offset;
+    private Boolean header;
 
     public static String ID = "https://streampipes.org/vocabulary/v1/format/csv";
 
@@ -37,18 +41,18 @@ public class CsvFormat extends Format {
 
     }
 
-    public CsvFormat(String delimiter, String offset) {
+    public CsvFormat(String delimiter, Boolean header) {
         this.delimiter = delimiter;
-        this.offset = offset;
+        this.header = header;
     }
 
     @Override
     public Format getInstance(FormatDescription formatDescription) {
         ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
-        String offset = extractor.singleValue("offset");
-        String delimiter = extractor.singleValue("delimiter");
+        boolean header = extractor.singleValue(HEADER_NAME) == null ? false : true;
+        String delimiter = extractor.singleValue(DELIMITER_NAME);
 
-        return new CsvFormat(delimiter, offset);
+        return new CsvFormat(delimiter, header);
     }
 
     @Override
@@ -56,7 +60,7 @@ public class CsvFormat extends Format {
         String[] arr = new String(object).split(delimiter);
         Map<String, Object> map =  new HashMap<>();
 
-        if (keyValues == null && offset.equals("0")) {
+        if (keyValues == null && !header) {
             keyValues = new String[arr.length];
             for (int i = 0; i < arr.length; i++) {
                 keyValues[i] = "key_" + i;
@@ -70,13 +74,17 @@ public class CsvFormat extends Format {
             }
 
         } else {
-            for (int i = 0; i < arr.length - 1; i++) {
+            for (int i = 0; i <= arr.length - 1; i++) {
                 map.put(keyValues[i], arr[i]);
             }
 
         }
 
-        return map;
+        if (map.keySet().size() == 0) {
+            return null;
+        } else {
+            return map;
+        }
     }
 
     @Override
@@ -85,8 +93,8 @@ public class CsvFormat extends Format {
                 "for csv format");
         FreeTextStaticProperty delimiterProperty = new FreeTextStaticProperty("delimiter",
                 "Delimiter", "Description");
-        FreeTextStaticProperty offset = new FreeTextStaticProperty("offset",
-                "Offset", "Description");
+        FreeTextStaticProperty offset = new FreeTextStaticProperty("header",
+                "Includes Header", "Description");
 
         fd.addConfig(delimiterProperty);
         fd.addConfig(offset);

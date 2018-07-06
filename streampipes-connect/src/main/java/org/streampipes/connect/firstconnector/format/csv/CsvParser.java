@@ -21,6 +21,7 @@ package org.streampipes.connect.firstconnector.format.csv;
 import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.firstconnector.format.Parser;
 import org.streampipes.connect.firstconnector.sdk.ParameterExtractor;
+import org.streampipes.empire.cp.common.utils.base.Bool;
 import org.streampipes.model.modelconnect.FormatDescription;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
@@ -35,23 +36,24 @@ import java.util.List;
 public class CsvParser extends Parser {
 
     private String delimiter;
-    private String offset;
+    private Boolean header;
 
     public CsvParser() {
     }
 
-    public CsvParser(String delimiter, String offset) {
+    public CsvParser(String delimiter, Boolean header) {
         this.delimiter = delimiter;
-        this.offset = offset;
+        this.header = header;
     }
 
     @Override
     public Parser getInstance(FormatDescription formatDescription) {
         ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
-        String offset = extractor.singleValue("offset");
-        String delimiter = extractor.singleValue("delimiter");
 
-        return new CsvParser(delimiter, offset);
+        boolean header = extractor.singleValue(CsvFormat.HEADER_NAME) == null ? false : true;
+        String delimiter = extractor.singleValue(CsvFormat.DELIMITER_NAME);
+
+        return new CsvParser(delimiter, header);
     }
 
     @Override
@@ -63,10 +65,10 @@ public class CsvParser extends Parser {
         try {
             while (reader.ready() && result) {
                 String s = reader.readLine();
-                    byte[] parseResult = s.getBytes();
-                    if (parseResult != null) {
-                        result = emitBinaryEvent.emit(parseResult);
-                    }
+                byte[] parseResult = s.getBytes();
+                if (parseResult != null) {
+                    result = emitBinaryEvent.emit(parseResult);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,15 +79,27 @@ public class CsvParser extends Parser {
     @Override
     public EventSchema getEventSchema(byte[] oneEvent) {
 
-        String header = new String (oneEvent);
-        // TODO fix hard coded delimitter
-        String[] keys = new String(header).split(delimiter);
+        String headerLine = new String (oneEvent);
+        String[] keys = new String(headerLine).split(delimiter);
 
         EventSchema resultSchema = new EventSchema();
-        for (String key : keys) {
-            EventPropertyPrimitive p = new EventPropertyPrimitive();
-            p.setRuntimeName(key);
-            resultSchema.addEventProperty(p);
+
+        // TODO add datatype
+
+        if (this.header) {
+
+            for (String key : keys) {
+                EventPropertyPrimitive p = new EventPropertyPrimitive();
+                p.setRuntimeName(key);
+                resultSchema.addEventProperty(p);
+            }
+        } else {
+            for (int i = 0; i < keys.length; i++) {
+                 EventPropertyPrimitive p = new EventPropertyPrimitive();
+                p.setRuntimeName("key_" + i);
+                resultSchema.addEventProperty(p);
+            }
+
         }
 
         return resultSchema;

@@ -44,10 +44,12 @@ public class SendToKafka implements EmitBinaryEvent {
     public Boolean emit(byte[] event) {
 
         Map<String, Object> result = format.parse(event);
-        System.out.println("send to kafka: " + result);
 
         try {
-            producer.publish(objectMapper.writeValueAsBytes(result));
+            if (result != null) {
+                producer.publish(objectMapper.writeValueAsBytes(result));
+                System.out.println("send to kafka: " + result);
+            }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
