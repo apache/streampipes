@@ -33,7 +33,7 @@ public class SchemaUtils {
 
   public static Map<String, Object> toUntypedRuntimeMap(List<EventProperty> eps)
   {
-    Map<String, Object> propertyMap = new HashMap<String, Object>();
+    Map<String, Object> propertyMap = new HashMap<>();
 
     for(EventProperty p : eps)
     {
@@ -44,7 +44,7 @@ public class SchemaUtils {
 
   public static List<String> toPropertyList(List<EventProperty> eps)
   {
-    List<String> properties = new ArrayList<String>();
+    List<String> properties = new ArrayList<>();
 
     for(EventProperty p : eps)
     {

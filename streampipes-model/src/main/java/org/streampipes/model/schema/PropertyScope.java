@@ -53,6 +53,6 @@ public enum PropertyScope {
    * processor's functionality does not require any specific property scope (e.g., a text filter that can filter any
    * text-based property).
    */
-  NONE;
+  NONE
 
 }

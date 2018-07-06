@@ -23,11 +23,9 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.firstconnector.format.Parser;
-import org.streampipes.connect.firstconnector.sdk.ParameterExtractor;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.model.modelconnect.FormatDescription;
 import org.streampipes.model.schema.*;
-import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.vocabulary.XSD;
 
@@ -144,7 +142,7 @@ public class JsonObjectParser extends Parser {
         else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)|| o.getClass().equals(Long.class)) {
             resultProperty = new EventPropertyPrimitive();
             resultProperty.setRuntimeName(key);
-            ((EventPropertyPrimitive) resultProperty).setRuntimeType(SO.Number.toString());
+            ((EventPropertyPrimitive) resultProperty).setRuntimeType(SO.Number);
         }
         else if (o.getClass().equals(LinkedHashMap.class)) {
             resultProperty = new EventPropertyNested();

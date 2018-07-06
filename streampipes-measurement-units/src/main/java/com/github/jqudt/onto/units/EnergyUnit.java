@@ -21,7 +21,7 @@ import com.github.jqudt.onto.UnitFactory;
 
 public class EnergyUnit {
 
-	private EnergyUnit() {};
+	private EnergyUnit() {}
 
 	public static Unit EV = UnitFactory.getInstance().getUnit("http://qudt.org/vocab/unit#ElectronVolt");
 

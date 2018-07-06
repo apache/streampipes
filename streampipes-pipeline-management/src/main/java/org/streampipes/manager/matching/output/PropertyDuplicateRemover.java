@@ -38,7 +38,7 @@ public class PropertyDuplicateRemover {
 
 	public List<EventProperty> rename() {
 		
-		List<EventProperty> newEventProperties = new ArrayList<EventProperty>();
+		List<EventProperty> newEventProperties = new ArrayList<>();
 		for(EventProperty p : newProperties)
 		{
 			int i = 1;

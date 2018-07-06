@@ -33,7 +33,7 @@ public enum MatchingResultType {
 	private String title;
 	private String description;
 	
-	private MatchingResultType(String title, String description) {
+	MatchingResultType(String title, String description) {
 		this.title = title;
 		this.description = description;
 	}

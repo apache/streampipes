@@ -49,7 +49,7 @@ public class DataSimulator implements Runnable {
 
   @Override
   public void run() {
-    Long eventCount = 0l;
+    Long eventCount = 0L;
     do {
       kafkaProducer.publish(nextEvent());
       eventCount++;

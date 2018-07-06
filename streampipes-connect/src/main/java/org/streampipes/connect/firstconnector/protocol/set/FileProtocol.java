@@ -59,7 +59,7 @@ public class FileProtocol extends Protocol {
     @Override
     public ProtocolDescription declareModel() {
         ProtocolDescription pd = new ProtocolDescription(ID,"File (Set)","This is the " +
-                "description for the File protocol");;
+                "description for the File protocol");
         FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("fileUri", "fileUri",
                 "This property defines the URL for the http request.");
         pd.setSourceType("SET");

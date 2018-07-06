@@ -25,6 +25,7 @@ import org.streampipes.sdk.utils.Datatypes;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class EpProperties {
@@ -43,7 +44,7 @@ public class EpProperties {
 
 		EventPropertyNested nested = new EventPropertyNested();
 		nested.setEventProperties(Arrays.asList(nestedProperties));
-		list.setEventProperties(Arrays.asList(nested));
+		list.setEventProperties(Collections.singletonList(nested));
 
 		return list;
 	}

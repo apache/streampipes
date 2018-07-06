@@ -60,7 +60,7 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> ex
 
 	private void checkAndRegisterEventType(String key, Map<String, Object> typeMap)
 	{
-		Map<String, Object> newTypeMap = new HashMap<String, Object>();
+		Map<String, Object> newTypeMap = new HashMap<>();
 		Iterator<String> it = typeMap.keySet().iterator();
 		while(it.hasNext())
 		{
@@ -159,8 +159,8 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> ex
 			@Override
 			public void update(EventBean[] newEvents, EventBean[] oldEvents) {
 				try {
-					if (newEvents != null) queue.add((EventBean[]) newEvents);
-					else queue.add((EventBean[]) oldEvents);
+					if (newEvents != null) queue.add(newEvents);
+					else queue.add(oldEvents);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

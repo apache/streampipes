@@ -66,7 +66,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 	
 	protected void collectValidators()
 	{
-		validators.add(new GeneralVerifier<T>(elementDescription));
+		validators.add(new GeneralVerifier<>(elementDescription));
 	}
 	
 	protected abstract StorageState store(String username, boolean publicElement);

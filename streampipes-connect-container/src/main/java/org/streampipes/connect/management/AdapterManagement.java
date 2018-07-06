@@ -56,23 +56,20 @@ public class AdapterManagement implements IAdapterManagement {
         RunningAdapterInstances.INSTANCE.addAdapter(dataSet.getDatasetInvocationId(), adapter);
 
 
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                adapter.run(adapterSetDescription);
+        Runnable r = () -> {
+            adapter.run(adapterSetDescription);
 
-                // TODO wait till all components are done with their calculations
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                String url = AdapterUtils.getUrl(ConnectContainerConfig.INSTANCE.getBackendApiUrl(), dataSet.getCorrespondingPipeline());
-                String result = AdapterUtils.stopPipeline(url);
-
-                System.out.println(result);
-
+            // TODO wait till all components are done with their calculations
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            String url = AdapterUtils.getUrl(ConnectContainerConfig.INSTANCE.getBackendApiUrl(), dataSet.getCorrespondingPipeline());
+            String result = AdapterUtils.stopPipeline(url);
+
+            System.out.println(result);
+
         };
 
         new Thread(r).start();

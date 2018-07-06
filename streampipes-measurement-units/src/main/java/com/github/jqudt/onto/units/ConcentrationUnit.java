@@ -21,7 +21,7 @@ import com.github.jqudt.onto.UnitFactory;
 
 public class ConcentrationUnit {
 
-	private ConcentrationUnit() {};
+	private ConcentrationUnit() {}
 
 	public static Unit MOLE_PER_CUBIC_METER = UnitFactory.getInstance().getUnit("http://qudt.org/vocab/unit#MolePerCubicMeter");
 

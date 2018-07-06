@@ -140,7 +140,7 @@ public class JsonArrayParser extends Parser {
         else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)|| o.getClass().equals(Long.class)) {
             resultProperty = new EventPropertyPrimitive();
             resultProperty.setRuntimeName(key);
-            ((EventPropertyPrimitive) resultProperty).setRuntimeType(SO.Number.toString());
+            ((EventPropertyPrimitive) resultProperty).setRuntimeType(SO.Number);
         }
         else if (o.getClass().equals(LinkedHashMap.class)) {
             resultProperty = new EventPropertyNested();

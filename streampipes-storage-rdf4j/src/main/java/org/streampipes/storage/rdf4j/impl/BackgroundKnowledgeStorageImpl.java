@@ -98,8 +98,8 @@ public class BackgroundKnowledgeStorageImpl implements
 		String label = "";
 		String description = "";
 		String range = "";
-		List<String> rangeTypes = new ArrayList<>();;
-			
+		List<String> rangeTypes = new ArrayList<>();
+
 		String queryString = QueryBuilder.getProperty(propertyId);
 		TupleQueryResult result = getQueryResult(queryString);
 		

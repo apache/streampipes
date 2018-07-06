@@ -33,7 +33,7 @@ public class ElasticsearchAppData {
     public ElasticsearchAppData(String index, long timestampFrom, long timeStampTo, String output) {
         this.index = index;
         this.timestampFrom = timestampFrom;
-        this.timestampTo = timestampTo;
+        this.timestampTo = timeStampTo;
         this.output = output;
     }
 

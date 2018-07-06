@@ -59,7 +59,7 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter {
     }
 
     private Set<Class<?>> getApiClasses() {
-        Set<Class<? extends Object>> allClasses = new HashSet<>();
+        Set<Class<?>> allClasses = new HashSet<>();
 
         allClasses.add(Element.class);
         allClasses.add(InvocableElement.class);

@@ -95,7 +95,7 @@ public class ConsulUtil {
         Map<String, Service> services = consul.agentClient().getServices();
         Map<String, HealthCheck> checks = agent.getChecks();
 
-        Map<String, String> peServices = new HashMap();
+        Map<String, String> peServices = new HashMap<>();
 
         for(Map.Entry<String, Service> entry : services.entrySet()) {
             if(entry.getValue().getTags().contains(PE_SERVICE_NAME)) {

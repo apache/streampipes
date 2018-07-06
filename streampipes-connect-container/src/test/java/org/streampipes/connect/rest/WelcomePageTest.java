@@ -19,7 +19,6 @@ package org.streampipes.connect.rest;
 
 
 import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.parsing.Parser;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -42,7 +41,7 @@ public class WelcomePageTest {
     public void before() {
         Config.PORT = 8019;
         RestAssured.port = 8019;
-                Set<Class<? extends Object>> allClasses = new HashSet<>();
+                Set<Class<?>> allClasses = new HashSet<>();
 
         allClasses.add(WelcomePage.class);
 

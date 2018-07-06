@@ -103,9 +103,7 @@ public class EpRequirements {
 		EventProperty ep = null;
 		try {
 			ep = eventProperty.newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
 		ep.setDomainProperties(Utils.createURI(domainProperty));
