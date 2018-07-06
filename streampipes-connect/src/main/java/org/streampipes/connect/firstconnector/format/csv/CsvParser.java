@@ -105,18 +105,25 @@ public class CsvParser extends Parser {
         return resultSchema;
     }
 
-    private String getTypeString(Object o) {
-         if (o.getClass().equals(Boolean.class)) {
+    public static void main(String... args) {
+        System.out.println(Boolean.parseBoolean("2"));
+        System.out.println(Integer.parseInt("dd"));
+    }
+
+    private String getTypeString(String o) {
+
+        try {
+            Double.parseDouble(o);
+            return SO.Number.toString();
+        } catch (NumberFormatException e) {
+
+        }
+
+        if (o.toLowerCase().equals("true") || o.toLowerCase().equals("false")) {
             return XSD._boolean.toString();
         }
-        else if (o.getClass().equals(String.class)) {
-            return XSD._string.toString();
-        }
-        else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)|| o.getClass().equals(Long.class)) {
-            return SO.Number.toString();
-        } else {
-             return XSD._string.toString();
-         }
+
+        return XSD._string.toString();
     }
 
 }
