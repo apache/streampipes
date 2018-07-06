@@ -25,6 +25,8 @@ import org.streampipes.empire.cp.common.utils.base.Bool;
 import org.streampipes.model.modelconnect.FormatDescription;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -77,32 +79,44 @@ public class CsvParser extends Parser {
     }
 
     @Override
-    public EventSchema getEventSchema(byte[] oneEvent) {
-
-        String headerLine = new String (oneEvent);
-        String[] keys = new String(headerLine).split(delimiter);
-
-        EventSchema resultSchema = new EventSchema();
-
-        // TODO add datatype
+    public EventSchema getEventSchema(List<byte[]> oneEvent) {
+        String[] keys;
+        String[] data;
 
         if (this.header) {
-
-            for (String key : keys) {
-                EventPropertyPrimitive p = new EventPropertyPrimitive();
-                p.setRuntimeName(key);
-                resultSchema.addEventProperty(p);
-            }
+            keys = new String (oneEvent.get(0)).split(delimiter);
+            data = new String (oneEvent.get(1)).split(delimiter);
         } else {
-            for (int i = 0; i < keys.length; i++) {
-                 EventPropertyPrimitive p = new EventPropertyPrimitive();
-                p.setRuntimeName("key_" + i);
-                resultSchema.addEventProperty(p);
+            data = new String (oneEvent.get(0)).split(delimiter);
+            keys = new String[data.length];
+            for (int i = 0; i < data.length; i++) {
+                keys[i] = "key_" + i;
             }
-
         }
 
+        EventSchema resultSchema = new EventSchema();
+        for (int i = 0; i < keys.length; i++) {
+                EventPropertyPrimitive p = new EventPropertyPrimitive();
+                p.setRuntimeName(keys[i]);
+                p.setRuntimeType(getTypeString(data[i]));
+                resultSchema.addEventProperty(p);
+            }
+
         return resultSchema;
+    }
+
+    private String getTypeString(Object o) {
+         if (o.getClass().equals(Boolean.class)) {
+            return XSD._boolean.toString();
+        }
+        else if (o.getClass().equals(String.class)) {
+            return XSD._string.toString();
+        }
+        else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)|| o.getClass().equals(Long.class)) {
+            return SO.Number.toString();
+        } else {
+             return XSD._string.toString();
+         }
     }
 
 }

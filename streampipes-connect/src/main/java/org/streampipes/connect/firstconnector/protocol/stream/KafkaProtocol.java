@@ -103,7 +103,7 @@ public class KafkaProtocol extends Protocol {
     @Override
     public GuessSchema getGuessSchema() {
 
-        byte[] eventByte = getNByteElements(1).get(0);
+        List<byte[]> eventByte = getNByteElements(20);
         EventSchema eventSchema = parser.getEventSchema(eventByte);
         GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(20));
 

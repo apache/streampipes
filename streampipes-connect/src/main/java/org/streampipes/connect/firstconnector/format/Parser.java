@@ -45,5 +45,5 @@ public abstract class Parser {
      * @param oneEvent
      * @return
      */
-    public abstract EventSchema getEventSchema(byte[] oneEvent);
+    public abstract EventSchema getEventSchema(List<byte[]> oneEvent);
 }

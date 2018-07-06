@@ -91,7 +91,7 @@ public class JsonObjectParser extends Parser {
     }
 
     @Override
-    public EventSchema getEventSchema(byte[] oneEvent) {
+    public EventSchema getEventSchema(List<byte[]> oneEvent) {
         EventSchema resultSchema = new EventSchema();
 
 //        resultSchema.setEventProperties(Arrays.asList(EpProperties.timestampProperty("timestamp")));
@@ -102,7 +102,7 @@ public class JsonObjectParser extends Parser {
         Map<String, Object> exampleEvent = null;
 
         try {
-            exampleEvent = jsonDefinition.toMap(oneEvent);
+            exampleEvent = jsonDefinition.toMap(oneEvent.get(0));
         } catch (SpRuntimeException e) {
             e.printStackTrace();
         }

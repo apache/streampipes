@@ -90,7 +90,7 @@ public class JsonArrayParser extends Parser {
     }
 
     @Override
-    public EventSchema getEventSchema(byte[] oneEvent) {
+    public EventSchema getEventSchema(List<byte[]> oneEvent) {
         EventSchema resultSchema = new EventSchema();
 
         JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
@@ -98,7 +98,7 @@ public class JsonArrayParser extends Parser {
         Map<String, Object> exampleEvent = null;
 
         try {
-            exampleEvent = jsonDefinition.toMap(oneEvent);
+            exampleEvent = jsonDefinition.toMap(oneEvent.get(0));
         } catch (SpRuntimeException e) {
             e.printStackTrace();
         }

@@ -109,7 +109,7 @@ public class HttpProtocolTest {
         }
 
         @Override
-        public EventSchema getEventSchema(byte[] oneEvent) {
+        public EventSchema getEventSchema(List<byte[]> oneEvent) {
             return null;
         }
     }

@@ -110,7 +110,7 @@ public class HttpProtocol extends Protocol {
 
         InputStream dataInputStream = getDataFromEndpoint();
 
-        byte[] dataByte = parser.parseNEvents(dataInputStream, 1).get(0);
+        List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 20);
 
         EventSchema eventSchema= parser.getEventSchema(dataByte);
 
