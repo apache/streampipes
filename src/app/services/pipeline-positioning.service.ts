@@ -1,4 +1,4 @@
-import _ from 'lodash';
+//import * from 'lodash';
 import * as dagre from "dagre";
 declare const jsPlumb: any;
 

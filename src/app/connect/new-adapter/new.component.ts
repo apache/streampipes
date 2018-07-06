@@ -25,8 +25,12 @@ export class NewComponent implements OnInit {
     @ViewChild('eschema') eventSchemaComponent;
 
     isLinear = false;
+    setStreamFormGroup: FormGroup;
     firstFormGroup: FormGroup;
     secondFormGroup: FormGroup;
+
+    setStreamSelected = false;
+    selectedType: String;
 
     hasInputProtocol: Boolean;
     hasInputFormat: Boolean;
@@ -35,6 +39,7 @@ export class NewComponent implements OnInit {
 
     allProtocols: ProtocolDescription[];
     allFormats: FormatDescription[];
+    
 
     // selectedProtocol: ProtocolDescription = new ProtocolDescription('');
     // selectedFormat: FormatDescription = new FormatDescription('');
@@ -50,8 +55,12 @@ export class NewComponent implements OnInit {
 
         this.newAdapterDescription = this.getNewAdapterDescription();
 
+        this.setStreamFormGroup = this._formBuilder.group({
+            condition: ["", Validators.required]
+        })
+
         this.firstFormGroup = this._formBuilder.group({
-            firstCtrl: ["",Validators.required]
+            firstCtrl: ["", Validators.required]
         });
         this.secondFormGroup = this._formBuilder.group({
             secondCtrl: ['', Validators.required]
@@ -122,6 +131,9 @@ export class NewComponent implements OnInit {
         this.hasInputFormat = hasInput;
     }
 
-
+    connectionSelected(selectedType) {
+        this.setStreamSelected = true;
+        this.selectedType = selectedType;
+    }
 
 }

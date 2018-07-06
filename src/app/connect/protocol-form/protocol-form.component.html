@@ -1,21 +1,11 @@
 <form class="example-form" fxLayout="column">
 
-  <div fxLayout="column" *ngFor="let protocolDescription of allProtocols; let i = index" >
-
-    <mat-radio-group name="selectedProtocol" [(ngModel)]="selectedProtocol" [required] = "true">
-      <mat-radio-button [value]="protocolDescription"> 
-        {{protocolDescription.label}}     
-      </mat-radio-button>
-    </mat-radio-group>
-
-    <app-static-properties [hidden]="!isSelected(protocolDescription)" [staticProperties] ="protocolDescription.config" (emitter1)="textValidation($event)">
-    </app-static-properties>
-
-
-    <!--<app-static-properties [hidden]="true" [staticProperties]="protocolDescription.config">-->
-    <!--</app-static-properties>-->
-
-  </div>
+  <mat-list id="protocolList">
+    <mat-list-item *ngFor="let protocolDescription of allProtocols; let i = index" (click)="clickedOption(i)" class="listItem">
+      <p [hidden]="showStaticProperty[i]">{{protocolDescription.label}}</p>
+      <app-static-properties [hidden]="!showStaticProperty[i]" [staticProperties]="protocolDescription.config" (emitter1)="textValidation($event, i)">
+      </app-static-properties>
+    </mat-list-item>
+  </mat-list>
 
 </form>
-

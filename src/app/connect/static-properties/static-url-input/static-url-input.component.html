@@ -1,5 +1,7 @@
 <form [formGroup]="freeTextForm">
     <mat-form-field>
+    <p style="margin-right: 5px;">Url: </p>
+
         <input class="example-full-width" matInput [placeholder]="staticProperty.label" [(ngModel)]="staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value"
             formControlName="freeStaticTextUrl" (ngModelChange)="valueChange(staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value)"
             required>

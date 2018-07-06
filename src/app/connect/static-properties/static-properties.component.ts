@@ -20,7 +20,6 @@ export class StaticPropertiesComponent implements OnInit {
 
     @Input() staticProperties: StaticProperty[];
     @Input() dataSet: DataSetDescription;
-    //@Input() firstCtrl: FormControl;
     @Output() emitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() emitter1:EventEmitter<any> = new EventEmitter<any>();
 
@@ -49,6 +48,7 @@ export class StaticPropertiesComponent implements OnInit {
             this.frTxt.requiredDomainProperty = "";
             
         }
+    
         
     }
 

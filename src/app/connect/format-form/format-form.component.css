@@ -1,0 +1,49 @@
+.example-full-width {
+    width: 100%;
+  }
+  
+  .example-form {
+    min-width: 300px;
+    max-width: 500px;
+    width: 100%;
+  }
+
+  p {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+  }  
+  
+  mat-list-item {
+    height: 100px !important;
+    border: solid #ccc 1px;
+    border-radius: 2px;
+    cursor: pointer;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    margin-bottom: 10px;
+  }
+  
+  .twoStaticProperties {
+    height: 180px !important;
+  }
+  
+  .threeStaticProperties {
+    height: 260px !important;
+  }
+  
+  mat-list-item:hover { 
+    animation-name: borderChange;
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
+  }
+  
+  @keyframes borderChange {
+    from{}
+    to{box-shadow: 2px 2px 2px #b4b4b4;}
+  }
+  
+  .selectedItem {
+    border-color: #b4b4b4 !important;
+    box-shadow: 2px 2px 2px #b4b4b4;
+  }

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+//import _ from 'lodash';
 
 
 export class RestApi {
@@ -197,17 +197,18 @@ export class RestApi {
     deleteOwnPipeline(pipelineId) {
 
         // delete all the widgets that use the pipeline results
-        this.$http.get("/dashboard/_all_docs?include_docs=true").then(function(data) {
-            var toDelete = _.chain(data.data.rows)
-                .filter(function(o) {
-                    return o.doc.visualisation.pipelineId == pipelineId;
-                }).value();
 
-            _.map(toDelete, function(o) {
-                this.$http.delete("/dashboard/" + o.doc._id + '?rev=' + o.doc._rev);
-            });
+        // this.$http.get("/dashboard/_all_docs?include_docs=true").then(function(data) {
+        //     var toDelete = _.chain(data.data.rows)
+        //         .filter(function(o) {
+        //             return o.doc.visualisation.pipelineId == pipelineId;
+        //         }).value();
 
-        });
+            // _.map(toDelete, function(o) {
+            //     this.$http.delete("/dashboard/" + o.doc._id + '?rev=' + o.doc._rev);
+            // });
+
+        // });
 
         return this.$http({
             method: 'DELETE',

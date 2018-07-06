@@ -39,6 +39,7 @@ import {StaticUrlInputComponent} from './static-properties/static-url-input/stat
 import {StaticTextInputComponent} from './static-properties/static-text-input/static-text-input.component';
 import { StaticFreeInputComponent } from './static-properties/static-free-input/static-free-input.component';
 import { StaticPropertyUtilService } from './static-properties/static-property-util.service'
+import { SetStreamComponent } from './set-stream/set-stream.component';
 
 @NgModule({
     imports: [
@@ -74,8 +75,8 @@ import { StaticPropertyUtilService } from './static-properties/static-property-u
         StaticNumberInputComponent,
         StaticUrlInputComponent,
         StaticTextInputComponent,
-        StaticFreeInputComponent
-
+        StaticFreeInputComponent,
+        SetStreamComponent
     ],
     providers: [
         RestService,
