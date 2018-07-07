@@ -17,12 +17,73 @@
 
 package org.streampipes.connect.firstconnector.transform;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MoveTransformationRule implements TransformationRule {
 
+    private List<String> oldKey;
+    private List<String> newKey;
+
+    public MoveTransformationRule(List<String> oldKey, List<String> newKey) {
+        this.oldKey = oldKey;
+        this.newKey = newKey;
+    }
+
     @Override
     public Map<String, Object> transform(Map<String, Object> event) {
-        return null;
+
+        Object objectToMove = ((HashMap<String, Object>) getItem(event, oldKey)).clone();
+        Map<String, Object>resultEvent = addItem(event, newKey, objectToMove);
+        resultEvent = deleteItem(event, oldKey);
+
+        return resultEvent;
+    }
+
+    private Map<String, Object> addItem(Map<String, Object> event, List<String> keys, Object movedObject) {
+        if (keys.size() == 1) {
+            event.put(keys.get(0), movedObject);
+            return event;
+        } else {
+            String key = keys.get(0);
+            List<String> newKeysTmpList = keys.subList(1, keys.size());
+
+            Map<String, Object> newSubEvent =
+                    addItem((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList, movedObject);
+
+            event.remove(key);
+            event.put(key, newSubEvent);
+            return event;
+        }
+    }
+
+
+    private Map<String, Object> getItem(Map<String, Object> event, List<String> keys) {
+        if (keys.size() == 1) {
+            return event;
+        } else {
+            List<String> newKeysTmpList = keys.subList(1, keys.size());
+
+            return getItem((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList);
+        }
+    }
+
+    private Map<String, Object> deleteItem(Map<String, Object> event, List<String> keys) {
+        if (keys.size() == 1) {
+
+            event.remove(keys.get(0));
+            return event;
+        } else {
+            String key = keys.get(0);
+            List<String> newKeysTmpList = keys.subList(1, keys.size());
+
+            Map<String, Object> newSubEvent =
+                    deleteItem((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList);
+
+            event.remove(key);
+            event.put(key, newSubEvent);
+            return event;
+        }
     }
 }
