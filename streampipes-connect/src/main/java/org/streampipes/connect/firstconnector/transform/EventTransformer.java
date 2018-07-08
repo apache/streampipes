@@ -17,6 +17,7 @@
 
 package org.streampipes.connect.firstconnector.transform;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,26 @@ public class EventTransformer implements TransformationRule {
     private List<CreateNestedTransformationRule> createNestedTransformationRules;
     private List<MoveTransformationRule> moveTransformationRules;
     private List<DeleteTransformationRule> deleteTransformationRules;
+
+    public  EventTransformer(List<TransformationRule> rules) {
+        this.renameTransformationRules = new ArrayList<>();
+        this.createNestedTransformationRules = new ArrayList<>();
+        this.moveTransformationRules = new ArrayList<>();
+        this.deleteTransformationRules = new ArrayList<>();
+
+        for (TransformationRule rule : rules) {
+            if (rule instanceof RenameTransformationRule) {
+                this.renameTransformationRules.add((RenameTransformationRule) rule);
+            } else if (rule instanceof CreateNestedTransformationRule) {
+                this.createNestedTransformationRules.add((CreateNestedTransformationRule) rule);
+            } else if (rule instanceof MoveTransformationRule) {
+                this.moveTransformationRules.add((MoveTransformationRule) rule);
+            } else if (rule instanceof DeleteTransformationRule) {
+                this.deleteTransformationRules.add((DeleteTransformationRule) rule);
+            }
+        }
+    }
+
 
     public EventTransformer(List<RenameTransformationRule> renameTransformationRules, List<CreateNestedTransformationRule> createNestedTransformationRules, List<MoveTransformationRule> moveTransformationRules, List<DeleteTransformationRule> deleteTransformationRules) {
         this.renameTransformationRules = renameTransformationRules;

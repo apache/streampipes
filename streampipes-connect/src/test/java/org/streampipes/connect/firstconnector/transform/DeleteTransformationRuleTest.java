@@ -19,10 +19,7 @@ package org.streampipes.connect.firstconnector.transform;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -33,9 +30,7 @@ public class DeleteTransformationRuleTest {
         Map<String, Object> event = new HashMap<>();
         event.put("key", "value");
 
-        List<String> key = new ArrayList<>();
-        key.add("key");
-        DeleteTransformationRule deleteRule = new DeleteTransformationRule(key);
+        DeleteTransformationRule deleteRule = new DeleteTransformationRule(Arrays.asList("key"));
 
         Map<String, Object> result = deleteRule.transform(event);
 
@@ -49,14 +44,10 @@ public class DeleteTransformationRuleTest {
         Map<String, Object> event = new HashMap<>();
         event.put("parent", child);
 
-        List<String> key = new ArrayList<>();
-        key.add("parent");
-        key.add("child");
-        DeleteTransformationRule deleteRule = new DeleteTransformationRule(key);
+        DeleteTransformationRule deleteRule = new DeleteTransformationRule(Arrays.asList("parent", "child"));
 
         Map<String, Object> result = deleteRule.transform(event);
 
         assertEquals(1, result.keySet().size());
-
     }
 }

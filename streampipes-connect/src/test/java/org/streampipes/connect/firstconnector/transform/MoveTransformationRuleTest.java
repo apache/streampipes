@@ -19,10 +19,7 @@ package org.streampipes.connect.firstconnector.transform;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -52,6 +49,20 @@ public class MoveTransformationRuleTest {
 
         assertEquals(2, result.keySet().size());
         assertEquals(0, ((Map<String, Object>) result.get("old_parent")).keySet().size());
+        assertEquals(1, ((Map<String, Object>) result.get("new_parent")).keySet().size());
+    }
+
+    @Test
+    public void transformTopLevelProperty() {
+        Map<String, Object> event = new HashMap<>();
+        event.put("new_parent", new HashMap<>());
+        event.put("toMove", "x");
+
+        MoveTransformationRule moveRule = new MoveTransformationRule(Arrays.asList("toMove"), Arrays.asList("new_parent"));
+
+        Map<String, Object> result = moveRule.transform(event);
+
+        assertEquals(1, result.keySet().size());
         assertEquals(1, ((Map<String, Object>) result.get("new_parent")).keySet().size());
     }
 }
