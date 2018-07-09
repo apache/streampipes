@@ -18,43 +18,18 @@
 package org.streampipes.connect.firstconnector.format.json.arraynokey;
 
 
-import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.firstconnector.format.Format;
-import org.streampipes.dataformat.json.JsonDataFormatDefinition;
+import org.streampipes.connect.firstconnector.format.json.AbstractJsonFormat;
 import org.streampipes.model.modelconnect.FormatDescription;
-import org.streampipes.model.schema.EventSchema;
 
-import java.util.Map;
+public class JsonArrayFormat extends AbstractJsonFormat {
 
-public class JsonArrayFormat extends Format {
-
-    public static String ID = "https://streampipes.org/vocabulary/v1/format/json/arraykey";
+    public static final String ID = "https://streampipes.org/vocabulary/v1/format/json/arraykey";
 
     @Override
     public Format getInstance(FormatDescription formatDescription) {
         return new JsonArrayFormat();
     }
-
-    @Override
-    public Map<String, Object> parse(byte[] object) {
-        EventSchema resultSchema = new EventSchema();
-
-        JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
-
-        Map<String, Object> result = null;
-
-        try {
-           result = jsonDefinition.toMap(object);
-        } catch (SpRuntimeException e) {
-            e.printStackTrace();
-        }
-
-
-        return  result;
-    }
-
-
-
 
     @Override
     public FormatDescription declareModel() {

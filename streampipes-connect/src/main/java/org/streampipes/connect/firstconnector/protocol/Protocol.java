@@ -17,17 +17,28 @@
 
 package org.streampipes.connect.firstconnector.protocol;
 
-import org.streampipes.model.modelconnect.GuessSchema;
-import org.streampipes.model.modelconnect.ProtocolDescription;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.connect.firstconnector.format.Format;
 import org.streampipes.connect.firstconnector.format.Parser;
+import org.streampipes.model.modelconnect.GuessSchema;
+import org.streampipes.model.modelconnect.ProtocolDescription;
 
 import java.util.List;
 import java.util.Map;
 
 
 public abstract class Protocol {
+
+    protected Parser parser;
+    protected Format format;
+
+    public Protocol() {
+
+    }
+
+    public Protocol(Parser parser, Format format) {
+        this.parser = parser;
+        this.format = format;
+    }
 
     public abstract Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format);
 

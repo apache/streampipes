@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.SendToKafka;
-import org.streampipes.connect.events.Event;
 import org.streampipes.connect.firstconnector.format.Format;
 import org.streampipes.connect.firstconnector.format.Parser;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
@@ -51,8 +50,6 @@ public class KafkaProtocol extends Protocol {
 
     public static String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/kafka";
 
-    private Parser parser;
-    private Format format;
     private String brokerUrl;
     private String topic;
 
@@ -63,8 +60,7 @@ public class KafkaProtocol extends Protocol {
     }
 
     public KafkaProtocol(Parser parser, Format format, String brokerUrl, String topic) {
-        this.parser = parser;
-        this.format = format;
+        super(parser, format);
         this.brokerUrl = brokerUrl;
         this.topic = topic;
     }

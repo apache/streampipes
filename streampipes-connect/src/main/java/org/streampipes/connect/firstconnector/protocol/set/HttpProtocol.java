@@ -18,7 +18,6 @@
 package org.streampipes.connect.firstconnector.protocol.set;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.BOMInputStream;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,16 +44,13 @@ public class HttpProtocol extends Protocol {
 
     public static String ID = "https://streampipes.org/vocabulary/v1/protocol/set/http";
 
-    private Parser parser;
-    private Format format;
     private String url;
 
     public HttpProtocol() {
     }
 
     public HttpProtocol(Parser parser, Format format, String url) {
-        this.parser = parser;
-        this.format = format;
+        super(parser, format);
         this.url = url;
     }
 

@@ -39,20 +39,17 @@ import java.util.Map;
 
 public class FileProtocol extends Protocol {
 
-    Logger logger = LoggerFactory.getLogger(FileProtocol.class);
+    private static Logger logger = LoggerFactory.getLogger(FileProtocol.class);
+
     public static String ID = "https://streampipes.org/vocabulary/v1/protocol/set/file";
 
-
-    private Parser parser;
-    private Format format;
     private String fileUri;
 
     public FileProtocol() {
     }
 
     public FileProtocol(Parser parser, Format format, String fileUri) {
-        this.parser = parser;
-        this.format = format;
+        super(parser, format);
         this.fileUri = fileUri;
     }
 
