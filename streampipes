@@ -76,6 +76,9 @@ print() {
 	echo "$1"
 }
 
+# go to directory of script
+cd "$(dirname "$0")"
+
 if [[ $1 = "start" ]];
 then
 	startStreamPipes
