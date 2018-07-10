@@ -45,6 +45,13 @@ public class SendToKafka implements EmitBinaryEvent {
 
         Map<String, Object> result = format.parse(event);
 
+
+        // TODO Get the rules
+
+        // TODO Apply on events
+
+
+
         try {
             if (result != null) {
                 producer.publish(objectMapper.writeValueAsBytes(result));

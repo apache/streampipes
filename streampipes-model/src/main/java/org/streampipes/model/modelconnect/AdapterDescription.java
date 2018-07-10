@@ -8,9 +8,14 @@ import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.Cloner;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:AdapterDescription")
@@ -35,6 +40,10 @@ public class AdapterDescription extends NamedStreamPipesEntity {
     @RdfProperty("sp:hasProtocol")
     private ProtocolDescription protocolDescription;
 
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty("sp:rules")
+    private List<TransformationRuleDescription> rules;
 
     public AdapterDescription() {
         super();
@@ -44,6 +53,7 @@ public class AdapterDescription extends NamedStreamPipesEntity {
         super(other);
         this.adapterId = other.getAdapterId();
         this.userName = other.getUserName();
+        this.rules = other.getRules();
 
         if (other.getFormatDescription() != null) this.formatDescription = new FormatDescription(other.getFormatDescription());
         if (other.getProtocolDescription() != null) this.protocolDescription = new ProtocolDescription(other.getProtocolDescription());
@@ -101,6 +111,14 @@ public class AdapterDescription extends NamedStreamPipesEntity {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public List<TransformationRuleDescription> getRules() {
+        return rules;
+    }
+
+    public void setRules(List<TransformationRuleDescription> rules) {
+        this.rules = rules;
     }
 
     @Override
