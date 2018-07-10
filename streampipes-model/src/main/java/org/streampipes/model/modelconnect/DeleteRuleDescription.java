@@ -25,16 +25,27 @@ import org.streampipes.model.base.UnnamedStreamPipesEntity;
 import javax.persistence.Entity;
 
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp:TransformationRuleDescription")
+@RdfsClass("sp:DeleteRuleDescription")
 @Entity
-public class TransformationRuleDescription extends UnnamedStreamPipesEntity {
+public class DeleteRuleDescription extends UnnamedStreamPipesEntity {
+    @RdfProperty("sp:runtimeKey")
+    private String runtimeKey;
 
-
-    public TransformationRuleDescription() {
+    public DeleteRuleDescription(String runtimeKey) {
         super();
+        this.runtimeKey = runtimeKey;
     }
 
-    public TransformationRuleDescription(TransformationRuleDescription other) {
-        super();
+    public DeleteRuleDescription(DeleteRuleDescription other) {
+        super(other);
+        this.runtimeKey = other.getRuntimeKey();
+    }
+
+    public String getRuntimeKey() {
+        return runtimeKey;
+    }
+
+    public void setRuntimeKey(String runtimeKey) {
+        this.runtimeKey = runtimeKey;
     }
 }

@@ -54,7 +54,9 @@ public class SendToPipeline implements EmitBinaryEvent {
 
         Map<String, Object> result = format.parse(event);
 
-        adapterPipeline.process(result);
+        if (result != null) {
+            adapterPipeline.process(result);
+        }
 
         // TODO Get the rules
 

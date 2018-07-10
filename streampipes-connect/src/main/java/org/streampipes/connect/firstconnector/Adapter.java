@@ -24,6 +24,7 @@ import org.streampipes.connect.firstconnector.format.json.object.JsonObjectParse
 import org.streampipes.connect.firstconnector.pipeline.AdapterPipeline;
 import org.streampipes.connect.firstconnector.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.firstconnector.pipeline.elements.SendToKafkaAdapterSink;
+import org.streampipes.connect.firstconnector.pipeline.elements.TransformSchemaAdapterPipelineElement;
 import org.streampipes.connect.firstconnector.protocol.stream.KafkaProtocol;
 import org.streampipes.model.modelconnect.AdapterDescription;
 import org.streampipes.model.modelconnect.GuessSchema;
@@ -95,6 +96,7 @@ public class Adapter {
 
 
         List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
+        pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getRules()));
         pipelineElements.add(new SendToKafkaAdapterSink(this.kafkaUrl, this.topic));
 
         AdapterPipeline adapterPipeline = new AdapterPipeline(pipelineElements);
