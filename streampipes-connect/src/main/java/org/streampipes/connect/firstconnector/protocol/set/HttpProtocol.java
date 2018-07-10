@@ -21,10 +21,11 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.SendToKafka;
+import org.streampipes.connect.SendToPipeline;
 import org.streampipes.connect.firstconnector.format.Format;
 import org.streampipes.connect.firstconnector.format.Parser;
 import org.streampipes.connect.firstconnector.guess.SchemaGuesser;
+import org.streampipes.connect.firstconnector.pipeline.AdapterPipeline;
 import org.streampipes.connect.firstconnector.protocol.Protocol;
 import org.streampipes.connect.firstconnector.sdk.ParameterExtractor;
 import org.streampipes.model.modelconnect.GuessSchema;
@@ -78,7 +79,7 @@ public class HttpProtocol extends Protocol {
     }
 
     @Override
-    public void run(String broker, String topic) {
+    public void run(AdapterPipeline adapterPipeline) {
 
         // TODO fix this. Currently needed because it must be wait till the whole pipeline is up and running
         try {
@@ -87,7 +88,7 @@ public class HttpProtocol extends Protocol {
             e.printStackTrace();
         }
 
-        SendToKafka stk = new SendToKafka(format, broker, topic);
+        SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
 
         InputStream data = getDataFromEndpoint();
 

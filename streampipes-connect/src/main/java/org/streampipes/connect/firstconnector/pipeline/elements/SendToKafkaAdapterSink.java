@@ -15,51 +15,35 @@
  *
  */
 
-package org.streampipes.connect;
+package org.streampipes.connect.firstconnector.pipeline.elements;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
-import org.streampipes.connect.firstconnector.format.Format;
+import org.streampipes.connect.firstconnector.pipeline.AdapterPipelineElement;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 
 import java.util.Map;
 
-public class SendToKafka implements EmitBinaryEvent {
-
-    private Format format;
-
+public class SendToKafkaAdapterSink implements AdapterPipelineElement  {
     private SpKafkaProducer producer;
     private ObjectMapper objectMapper;
 
-    public SendToKafka(Format format, String brokerUrl, String topic) {
-        this.format = format;
-
+    public SendToKafkaAdapterSink(String brokerUrl, String topic) {
         producer = new SpKafkaProducer(brokerUrl, topic);
         objectMapper = new ObjectMapper();
-
     }
 
     @Override
-    public Boolean emit(byte[] event) {
-
-        Map<String, Object> result = format.parse(event);
-
-
-        // TODO Get the rules
-
-        // TODO Apply on events
-
-
-
+    public Map<String, Object> process(Map<String, Object> event) {
         try {
-            if (result != null) {
-                producer.publish(objectMapper.writeValueAsBytes(result));
-                System.out.println("send to kafka: " + result);
+            if (event != null) {
+                producer.publish(objectMapper.writeValueAsBytes(event));
+                System.out.println("send to kafka: " + event);
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return true;
+
+        return null;
     }
 }

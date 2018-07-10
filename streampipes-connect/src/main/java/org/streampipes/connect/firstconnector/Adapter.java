@@ -21,6 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectParser;
+import org.streampipes.connect.firstconnector.pipeline.AdapterPipeline;
+import org.streampipes.connect.firstconnector.pipeline.AdapterPipelineElement;
+import org.streampipes.connect.firstconnector.pipeline.elements.SendToKafkaAdapterSink;
 import org.streampipes.connect.firstconnector.protocol.stream.KafkaProtocol;
 import org.streampipes.model.modelconnect.AdapterDescription;
 import org.streampipes.model.modelconnect.GuessSchema;
@@ -34,7 +37,9 @@ import org.streampipes.connect.firstconnector.protocol.set.FileProtocol;
 import org.streampipes.connect.firstconnector.protocol.set.HttpProtocol;
 import org.streampipes.connect.firstconnector.protocol.Protocol;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Adapter {
@@ -88,7 +93,15 @@ public class Adapter {
 
         logger.debug("Start adatper with format: " + format.getId() + " and " + protocol.getId());
 
-        protocol.run(this.kafkaUrl, this.topic);
+
+        List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
+        pipelineElements.add(new SendToKafkaAdapterSink(this.kafkaUrl, this.topic));
+
+        AdapterPipeline adapterPipeline = new AdapterPipeline(pipelineElements);
+
+        protocol.run(adapterPipeline);
+
+//        protocol.run(this.kafkaUrl, this.topic);
 
     }
 

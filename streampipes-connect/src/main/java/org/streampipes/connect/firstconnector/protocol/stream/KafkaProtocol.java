@@ -25,12 +25,13 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.connect.SendToKafka;
+import org.streampipes.connect.SendToPipeline;
 import org.streampipes.connect.firstconnector.format.Format;
 import org.streampipes.connect.firstconnector.format.Parser;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectParser;
 import org.streampipes.connect.firstconnector.guess.SchemaGuesser;
+import org.streampipes.connect.firstconnector.pipeline.AdapterPipeline;
 import org.streampipes.connect.firstconnector.protocol.Protocol;
 import org.streampipes.connect.firstconnector.sdk.ParameterExtractor;
 import org.streampipes.messaging.InternalEventProcessor;
@@ -201,8 +202,8 @@ public class KafkaProtocol extends Protocol {
 
 
     @Override
-    public void run(String broker, String topic) {
-        SendToKafka stk = new SendToKafka(format, broker, topic);
+    public void run(AdapterPipeline adapterPipeline) {
+        SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
         this.kafkaConsumer = new SpKafkaConsumer(this.brokerUrl, this.topic, new EventProcessor(stk));
 
         thread = new Thread(this.kafkaConsumer);
@@ -229,8 +230,8 @@ public class KafkaProtocol extends Protocol {
 
 
     private class EventProcessor implements InternalEventProcessor<byte[]> {
-        private SendToKafka stk;
-        public EventProcessor(SendToKafka stk) {
+        private SendToPipeline stk;
+        public EventProcessor(SendToPipeline stk) {
             this.stk = stk;
         }
 

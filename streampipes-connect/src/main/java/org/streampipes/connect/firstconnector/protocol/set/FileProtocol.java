@@ -21,9 +21,11 @@ package org.streampipes.connect.firstconnector.protocol.set;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
-import org.streampipes.connect.SendToKafka;
+import org.streampipes.connect.SendToPipeline;
+import org.streampipes.connect.firstconnector.Adapter;
 import org.streampipes.connect.firstconnector.format.Format;
 import org.streampipes.connect.firstconnector.guess.SchemaGuesser;
+import org.streampipes.connect.firstconnector.pipeline.AdapterPipeline;
 import org.streampipes.connect.firstconnector.protocol.Protocol;
 import org.streampipes.connect.firstconnector.sdk.ParameterExtractor;
 import org.streampipes.model.modelconnect.GuessSchema;
@@ -74,7 +76,7 @@ public class FileProtocol extends Protocol {
     }
 
     @Override
-    public void run(String broker, String topic) {
+    public void run(AdapterPipeline adapterPipeline) {
         FileReader fr = null;
 
         // TODO fix this. Currently needed because it must be wait till the whole pipeline is up and running
@@ -84,7 +86,7 @@ public class FileProtocol extends Protocol {
             e.printStackTrace();
         }
 
-        SendToKafka stk = new SendToKafka(format, broker, topic);
+        SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
         try {
             fr = new FileReader(fileUri);
             BufferedReader br = new BufferedReader(fr);

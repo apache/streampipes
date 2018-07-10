@@ -18,15 +18,12 @@
 package org.streampipes.connect.management;
 
 import org.streampipes.connect.RunningAdapterInstances;
-import org.streampipes.connect.SendToKafka;
 import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.firstconnector.Adapter;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.modelconnect.AdapterDescription;
 import org.streampipes.model.modelconnect.AdapterSetDescription;
 import org.streampipes.model.modelconnect.AdapterStreamDescription;
-
-import java.io.*;
 
 public class AdapterManagement implements IAdapterManagement {
 
