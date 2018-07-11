@@ -17,11 +17,12 @@
 
 package org.streampipes.connect.firstconnector.pipeline.elements;
 
+import org.eclipse.rdf4j.query.algebra.Move;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.connect.firstconnector.pipeline.AdapterPipelineElement;
-import org.streampipes.connect.firstconnector.transform.DeleteTransformationRule;
-import org.streampipes.connect.firstconnector.transform.EventTransformer;
-import org.streampipes.connect.firstconnector.transform.TransformationRule;
-import org.streampipes.model.modelconnect.TransformationRuleDescription;
+import org.streampipes.connect.firstconnector.transform.*;
+import org.streampipes.model.modelconnect.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,16 +32,40 @@ import java.util.Map;
 public class TransformSchemaAdapterPipelineElement implements AdapterPipelineElement {
 
     private EventTransformer eventTransformer;
+    Logger logger = LoggerFactory.getLogger(TransformSchemaAdapterPipelineElement.class);
 
     public TransformSchemaAdapterPipelineElement(List<TransformationRuleDescription> transformationRuleDescriptions) {
         List<TransformationRule> rules = new ArrayList<>();
 
+        // transforms description to actual rules
         for (TransformationRuleDescription ruleDescription : transformationRuleDescriptions) {
-            String key = ruleDescription.getToDelete();
-            rules.add(new DeleteTransformationRule(Arrays.asList(key)));
+            if (ruleDescription instanceof RenamRuleDescription) {
+                RenamRuleDescription tmp = (RenamRuleDescription) ruleDescription;
+                rules.add(new RenameTransformationRule(toKeyArray(tmp.getOldRuntimeKey()), getLastKey(tmp.getNewRuntimeKey())));
+            } else if (ruleDescription instanceof MoveRuleDescription) {
+                MoveRuleDescription tmp = (MoveRuleDescription) ruleDescription;
+                rules.add(new MoveTransformationRule(toKeyArray(tmp.getOldRuntimeKey()), toKeyArray(tmp.getNewRuntimeKey())));
+            } else if (ruleDescription instanceof CreateNestedRuleDescription) {
+                CreateNestedRuleDescription tmp = (CreateNestedRuleDescription) ruleDescription;
+                rules.add(new CreateNestedTransformationRule(toKeyArray(tmp.getRuntimeKey())));
+            } else if (ruleDescription instanceof DeleteRuleDescription) {
+                DeleteRuleDescription tmp = (DeleteRuleDescription) ruleDescription;
+                rules.add(new DeleteTransformationRule(toKeyArray(tmp.getRuntimeKey())));
+            } else {
+                logger.error("Could not find the class for the rule description. This should never happen. Talk to admins to extend the rule implementations to get rid of this error!");
+            }
         }
 
         eventTransformer = new EventTransformer(rules);
+    }
+
+    private String getLastKey(String s) {
+        String[] list = s.split(".");
+        return list[list.length - 1];
+    }
+
+    private List<String> toKeyArray(String s) {
+        return Arrays.asList(s.split("."));
     }
 
     @Override

@@ -27,7 +27,7 @@ import javax.persistence.Entity;
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:CreateNestedRuleDescription")
 @Entity
-public class CreateNestedRuleDescription extends UnnamedStreamPipesEntity {
+public class CreateNestedRuleDescription extends TransformationRuleDescription {
     @RdfProperty("sp:runtimeKey")
     private String runtimeKey;
 

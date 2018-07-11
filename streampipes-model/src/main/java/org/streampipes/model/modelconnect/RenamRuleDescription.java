@@ -27,7 +27,7 @@ import javax.persistence.Entity;
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:RenamRuleDescription")
 @Entity
-public class RenamRuleDescription extends UnnamedStreamPipesEntity {
+public class RenamRuleDescription extends TransformationRuleDescription {
 
     @RdfProperty("sp:oldRuntimeKey")
     private String oldRuntimeKey;

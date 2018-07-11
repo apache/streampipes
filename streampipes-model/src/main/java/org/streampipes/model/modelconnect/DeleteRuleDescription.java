@@ -27,7 +27,7 @@ import javax.persistence.Entity;
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:DeleteRuleDescription")
 @Entity
-public class DeleteRuleDescription extends UnnamedStreamPipesEntity {
+public class DeleteRuleDescription extends TransformationRuleDescription {
     @RdfProperty("sp:runtimeKey")
     private String runtimeKey;
 
