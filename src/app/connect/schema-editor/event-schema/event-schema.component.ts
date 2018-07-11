@@ -8,6 +8,8 @@ import {FormatDescription} from '../../model/FormatDescription';
 import {EventProperty} from '../model/EventProperty';
 import {GuessSchema} from '../model/GuessSchema';
 import {AdapterSetDescription} from '../../model/AdapterSetDescription';
+import {TransformationRuleService} from '../../transformation-rule.service';
+import {TransformationRuleDescription} from '../../model/rules/TransformationRuleDescription';
 
 @Component({
     selector: 'app-event-schema',
@@ -27,7 +29,8 @@ export class EventSchemaComponent implements OnInit {
     public isLoading: boolean = false;
 
     constructor(private restService: RestService,
-                private dragulaService: DragulaService) {
+                private dragulaService: DragulaService,
+                private transformationRuleService: TransformationRuleService) {
     }
 
 
@@ -37,6 +40,8 @@ export class EventSchemaComponent implements OnInit {
             this.isLoading = false;
             this.eventSchema  = x.eventSchema;
             this.schemaGuess = x;
+
+            this.transformationRuleService.setOldEventSchema(this.eventSchema);
         });
     }
 
@@ -50,6 +55,10 @@ export class EventSchemaComponent implements OnInit {
          } else {
              this.adapterDescription.dataStream.eventSchema = this.eventSchema;
          }
+
+        this.transformationRuleService.setNewEventSchema(this.eventSchema);
+        const transformationRules: TransformationRuleDescription[] = this.transformationRuleService.getTransformationRuleDescriptions();
+        this.adapterDescription.rules = transformationRules;
     }
 
 
