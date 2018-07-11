@@ -1,0 +1,12 @@
+version: "2"
+services:
+  pe-sinks:
+      image: ipe-wim-gitlab.fzi.de:5000/streampipes/streampipes-pe/pe-sinks-standalone
+      depends_on:
+        - "consul"
+      environment:
+        - STREAMPIPES_HOST=${SP_HOST}
+      ports:
+        - "8091:8090"
+      networks:
+        spnet:
