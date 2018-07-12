@@ -8,6 +8,8 @@ import {EventPropertyPrimitive} from './schema-editor/model/EventPropertyPrimiti
 import {EventPropertyNested} from './schema-editor/model/EventPropertyNested';
 import {AddNestedRuleDescription} from './model/rules/AddNestedRuleDescription';
 import {k} from '@angular/core/src/render3';
+import {MoveRuleDescription} from './model/rules/MoveRuleDesctiption';
+import {DeleteRuleDescription} from './model/rules/DeleteRuleDescription';
 
 @Injectable()
 export class TransformationRuleService {
@@ -42,18 +44,51 @@ export class TransformationRuleService {
             this.newEventSchema.eventProperties, this.newEventSchema, this.oldEventSchema));
 
         // Move []
-
+        transformationRuleDescription = transformationRuleDescription.concat(this.getMoveRules(
+            this.newEventSchema.eventProperties, this.newEventSchema, this.oldEventSchema));
 
         // Delete
-
+        transformationRuleDescription = transformationRuleDescription.concat(this.getDeleteRules(
+            this.newEventSchema.eventProperties, this.newEventSchema, this.oldEventSchema));
 
 
         return transformationRuleDescription;
     }
 
+    public getMoveRules(newEventProperties: EventProperty[],
+                        oldEventSchema: EventSchema,
+                        newEventSchema: EventSchema): MoveRuleDescription[] {
+
+        var result: MoveRuleDescription[] = [];
+
+        for (let eventProperty of newEventProperties) {
+
+            if (eventProperty instanceof EventPropertyNested) {
+
+                const tmpResults: MoveRuleDescription[] = this.getMoveRules((<EventPropertyNested> eventProperty).eventProperties, oldEventSchema, newEventSchema);
+                result = result.concat(tmpResults);
+
+            }
+            const keyOld: string = this.getCompleteRuntimeNameKey(oldEventSchema.eventProperties, eventProperty.id);
+            const keyNew: string = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventProperty.id);
+
+
+            // get prefix
+            const keyOldPrefix: string = keyOld.substr(0, keyOld.lastIndexOf("."));
+            const keyNewPrefix: string = keyNew.substr(0, keyNew.lastIndexOf("."));
+
+            if (keyOldPrefix != keyNewPrefix) {
+                result.push(new MoveRuleDescription(keyOld, keyNew));
+            }
+
+        }
+
+        return result;
+    }
+
     public getCreateNestedRules(newEventProperties: EventProperty[],
-                          oldEventSchema: EventSchema,
-                          newEventSchema: EventSchema): AddNestedRuleDescription[] {
+                                oldEventSchema: EventSchema,
+                                newEventSchema: EventSchema): AddNestedRuleDescription[] {
 
 
         var allNewIds: string[] = this.getAllIds(newEventSchema.eventProperties);
@@ -61,6 +96,7 @@ export class TransformationRuleService {
 
         const result: AddNestedRuleDescription[] = [];
         for (let id of allNewIds) {
+
             if (allOldIds.indexOf(id) === -1) {
                 const key = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, id);
                 result.push(new AddNestedRuleDescription(key));
@@ -78,8 +114,8 @@ export class TransformationRuleService {
         var result: RenameRuleDescription[] = [];
 
         for (let eventProperty of newEventProperties) {
-            var keyOld = this.getCompleteRuntimeNameKey(oldEventSchema.eventProperties, eventProperty.id);
-            var keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventProperty.id);
+            const keyOld = this.getCompleteRuntimeNameKey(oldEventSchema.eventProperties, eventProperty.id);
+            const keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventProperty.id);
 
             result.push(new RenameRuleDescription(keyOld, keyNew));
             if (eventProperty instanceof EventPropertyNested) {
@@ -99,6 +135,47 @@ export class TransformationRuleService {
 
         return filteredResult;
     }
+
+    public getDeleteRules(newEventProperties: EventProperty[],
+                          oldEventSchema: EventSchema,
+                          newEventSchema: EventSchema): DeleteRuleDescription[] {
+
+        var resultKeys: string[] = [];
+
+        var allNewIds: string[] = this.getAllIds(newEventSchema.eventProperties);
+        var allOldIds: string[] = this.getAllIds(oldEventSchema.eventProperties);
+
+        for (let id of allOldIds) {
+            // if not in new ids create delete rule
+            if (allNewIds.indexOf(id) == -1) {
+               const key = this.getCompleteRuntimeNameKey(oldEventSchema.eventProperties, id);
+               resultKeys.push(key);
+            }
+        }
+
+        var uniqEs6 = (arrArg) => {
+            return arrArg.filter((elem, pos, arr) => {
+                var r = true;
+                for (let a of arr) {
+                    if (elem.startsWith(a) && a != elem) {
+                        r = false;
+                    }
+                }
+
+                return r;
+            });
+        };
+
+        resultKeys = uniqEs6(resultKeys);
+
+        var resultRules: DeleteRuleDescription[] = [];
+        for (let key of resultKeys) {
+            resultRules.push(new DeleteRuleDescription(key));
+        }
+
+        return resultRules;
+    }
+
 
     public getCompleteRuntimeNameKey(eventProperties: EventProperty[], id: string): string {
         var result: string = '';

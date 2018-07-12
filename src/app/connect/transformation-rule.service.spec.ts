@@ -8,7 +8,9 @@ import {RenameRuleDescription} from './model/rules/RenameRuleDescription';
 import {EventProperty} from './schema-editor/model/EventProperty';
 import {EventPropertyNested} from './schema-editor/model/EventPropertyNested';
 import {AddNestedRuleDescription} from './model/rules/AddNestedRuleDescription';
-import {r} from '@angular/core/src/render3';
+import {e, r} from '@angular/core/src/render3';
+import {MoveRuleDescription} from './model/rules/MoveRuleDesctiption';
+import {DeleteRuleDescription} from './model/rules/DeleteRuleDescription';
 
 describe('TransformationRuleService', () => {
 
@@ -124,6 +126,84 @@ describe('TransformationRuleService', () => {
         expect(result.length).toBe(2);
         expect(result[0].runtimeKey).toBe('a');
         expect(result[1].runtimeKey).toBe('a.b');
+    });
+
+
+    it('Create Move Rules simple', () => {
+
+        const oldEventSchema: EventSchema = new EventSchema();
+        const oldPropertyToMove: EventPropertyPrimitive = new EventPropertyPrimitive("id_1", null);
+        oldPropertyToMove.runTimeName = "a";
+        const oldNestedProperty: EventPropertyNested = new EventPropertyNested("id_2", null);
+        oldNestedProperty.runTimeName = "b";
+        oldEventSchema.eventProperties.push(oldPropertyToMove);
+        oldEventSchema.eventProperties.push(oldNestedProperty);
+
+        const newEventSchema: EventSchema = new EventSchema();
+        const newPropertyToMove: EventPropertyPrimitive = new EventPropertyPrimitive("id_1", null);
+        newPropertyToMove.runTimeName = "a";
+        const newNestedProperty: EventPropertyNested = new EventPropertyNested("id_2", null);
+        newNestedProperty.runTimeName = "b";
+        newNestedProperty.eventProperties.push(newPropertyToMove);
+        newEventSchema.eventProperties.push(newNestedProperty);
+
+        var result: MoveRuleDescription[] = service.getMoveRules(newEventSchema.eventProperties,
+            oldEventSchema, newEventSchema);
+
+        expect(result.length).toBe(1);
+        expect(result[0].oldRuntimeKey).toBe('a');
+        expect(result[0].newRuntimeKey).toBe('b.a');
+
+        result = service.getMoveRules(oldEventSchema.eventProperties,
+            newEventSchema, oldEventSchema);
+
+        expect(result.length).toBe(1);
+        expect(result[0].newRuntimeKey).toBe('a');
+        expect(result[0].oldRuntimeKey).toBe('b.a');
+    });
+
+    it('Delete simple', () => {
+        const oldEventSchema: EventSchema = new EventSchema();
+        const eventProperty: EventPropertyPrimitive = new EventPropertyPrimitive("id", null);
+        eventProperty.runTimeName = "a";
+        oldEventSchema.eventProperties.push(eventProperty);
+
+        const newEventSchema: EventSchema = new EventSchema();
+
+        var result: DeleteRuleDescription[] = service.getDeleteRules(newEventSchema.eventProperties,
+            oldEventSchema, newEventSchema);
+
+        expect(result.length).toBe(1);
+        expect(result[0].runtimeKey).toBe("a");
+    });
+
+    it('Delete nested', () => {
+        const oldEventSchema: EventSchema = new EventSchema();
+        const eventProperty: EventPropertyPrimitive = new EventPropertyPrimitive("id_2", null);
+        eventProperty.runTimeName = "a";
+        const eventPropertyNested: EventPropertyNested = new EventPropertyNested("id_1", null);
+        eventPropertyNested.eventProperties.push(eventProperty);
+        eventPropertyNested.runTimeName = "b";
+        oldEventSchema.eventProperties.push(eventPropertyNested);
+
+        var newEventSchema: EventSchema = new EventSchema();
+        const newEventPropertyNested: EventPropertyNested = new EventPropertyNested("id_1", null);
+        newEventPropertyNested.runTimeName = "b";
+        newEventSchema.eventProperties.push(newEventPropertyNested);
+
+
+        var result: DeleteRuleDescription[] = service.getDeleteRules(newEventSchema.eventProperties,
+            oldEventSchema, newEventSchema);
+
+        expect(result.length).toBe(1);
+        expect(result[0].runtimeKey).toBe("b.a");
+
+        newEventSchema = new EventSchema();
+        result = service.getDeleteRules(newEventSchema.eventProperties,
+            oldEventSchema, newEventSchema);
+
+        expect(result.length).toBe(1);
+        expect(result[0].runtimeKey).toBe("b");
     });
 
     it('Rename simple', () => {
