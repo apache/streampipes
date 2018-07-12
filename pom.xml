@@ -21,6 +21,7 @@
         <module>streampipes-processors-transformation-flink</module>
         <module>streampipes-processors-geo-jvm</module>
         <module>streampipes-processors-statistics-flink</module>
+        <module>streampipes-processors-siddhi</module>
     </modules>
 
     <properties>
