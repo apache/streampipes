@@ -132,7 +132,7 @@ export class JsplumbService {
                     x: coordinates.x,
                     y: coordinates.y
                 }
-            }, payload: angular.copy(json)
+            }, payload: Object.assign({}, json)
         };
         if (!pipelineElementConfig.payload.DOM) {
             pipelineElementConfig.payload.DOM = "jsplumb_" + this.idCounter +"_" +this.makeId(4);

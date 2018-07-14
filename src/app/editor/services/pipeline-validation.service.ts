@@ -15,7 +15,7 @@ export class PipelineValidationService {
     }
 
     allElementsConnected(rawPipelineModel) {
-        var pipeline = this.ObjectProvider.makeFinalPipeline(rawPipelineModel);
+        var pipeline = this.ObjectProvider.makeFinalPipeline(angular.copy(rawPipelineModel));
         return pipeline.actions.every(a => a.connectedTo && a.connectedTo.length > 0) &&
             pipeline.sepas.every(s => s.connectedTo && s.connectedTo.length > 0);
     }
