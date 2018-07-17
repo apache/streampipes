@@ -17,8 +17,6 @@
 
 package org.streampipes.connect.firstconnector.pipeline;
 
-import org.streampipes.model.client.pipeline.PipelineElementRecommendation;
-
 import java.util.List;
 import java.util.Map;
 

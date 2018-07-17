@@ -15,6 +15,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
@@ -47,6 +48,7 @@ public class AdapterDescription extends NamedStreamPipesEntity {
 
     public AdapterDescription() {
         super();
+        this.rules = new ArrayList<>();
     }
 
     public AdapterDescription(AdapterDescription other) {

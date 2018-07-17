@@ -31,6 +31,10 @@ public class CreateNestedRuleDescription extends TransformationRuleDescription {
     @RdfProperty("sp:runtimeKey")
     private String runtimeKey;
 
+    public CreateNestedRuleDescription() {
+       super();
+    }
+
     public CreateNestedRuleDescription(String runtimeKey) {
         super();
         this.runtimeKey = runtimeKey;

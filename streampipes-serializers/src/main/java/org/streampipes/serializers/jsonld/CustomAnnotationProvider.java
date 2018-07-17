@@ -124,8 +124,11 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             PipelineTemplateInvocation.class,
             BoundPipelineElement.class,
             SpDataStreamContainer.class,
-            PipelineTemplateDescriptionContainer.class
-
+            PipelineTemplateDescriptionContainer.class,
+            DeleteRuleDescription.class,
+            CreateNestedRuleDescription.class,
+            MoveRuleDescription.class,
+            RenameRuleDescription.class
     );
   }
 }

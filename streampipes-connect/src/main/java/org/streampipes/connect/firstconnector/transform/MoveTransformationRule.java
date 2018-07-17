@@ -19,9 +19,7 @@ package org.streampipes.connect.firstconnector.transform;
 
 import org.omg.CORBA.OBJ_ADAPTER;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MoveTransformationRule implements TransformationRule {
 
@@ -30,13 +28,21 @@ public class MoveTransformationRule implements TransformationRule {
 
     public MoveTransformationRule(List<String> oldKey, List<String> newKey) {
         this.oldKey = oldKey;
-        this.newKey = newKey;
+
+        List<String> tmp = new ArrayList<>();
+        for (int i = 0; i < newKey.size() - 1; i++) {
+            tmp.add(newKey.get(i));
+        }
+
+        this.newKey = tmp;
     }
 
     @Override
     public Map<String, Object> transform(Map<String, Object> event) {
 
         Map<String, Object> objectToMove = (Map<String, Object>) ((HashMap<String, Object>) getItem(event, oldKey)).clone();
+
+
         Map<String, Object>resultEvent = addItem(event, newKey, objectToMove);
         resultEvent = deleteItem(event, oldKey);
 
@@ -44,7 +50,11 @@ public class MoveTransformationRule implements TransformationRule {
     }
 
     private Map<String, Object> addItem(Map<String, Object> event, List<String> keys, Map<String, Object> movedObject) {
-        if (keys.size() == 1) {
+        if (keys.size() == 0) {
+            String key = (String) movedObject.keySet().toArray()[0];
+            event.put(key, movedObject.get(key));
+            return event;
+        } else if (keys.size() == 1) {
             event.put(keys.get(0), movedObject);
             return event;
         } else {

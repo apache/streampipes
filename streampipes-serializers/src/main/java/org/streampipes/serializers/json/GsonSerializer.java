@@ -27,6 +27,7 @@ import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.grounding.TopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.model.modelconnect.*;
 import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.streampipes.model.quality.EventStreamQualityDefinition;
@@ -73,6 +74,11 @@ public class GsonSerializer {
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
             .registerSubtype(SpDataSet.class, "org.streampipes.model.SpDataSet")
             .registerSubtype(SpDataStream.class, "org.streampipes.model.SpDataStream"));
+    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(TransformationRuleDescription.class, "sourceType")
+            .registerSubtype(RenameRuleDescription.class, "org.streampipes.model.RenameRuleDescription")
+            .registerSubtype(MoveRuleDescription.class, "org.streampipes.model.MoveRuleDescription")
+            .registerSubtype(DeleteRuleDescription.class, "org.streampipes.model.DeleteRuleDescription")
+            .registerSubtype(CreateNestedRuleDescription.class, "org.streampipes.model.CreateNestedRuleDescription"));
 
     builder.setPrettyPrinting();
     return builder;

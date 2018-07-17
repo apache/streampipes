@@ -17,7 +17,6 @@
 
 package org.streampipes.connect.firstconnector.pipeline.elements;
 
-import org.eclipse.rdf4j.query.algebra.Move;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.firstconnector.pipeline.AdapterPipelineElement;
@@ -39,8 +38,8 @@ public class TransformSchemaAdapterPipelineElement implements AdapterPipelineEle
 
         // transforms description to actual rules
         for (TransformationRuleDescription ruleDescription : transformationRuleDescriptions) {
-            if (ruleDescription instanceof RenamRuleDescription) {
-                RenamRuleDescription tmp = (RenamRuleDescription) ruleDescription;
+            if (ruleDescription instanceof RenameRuleDescription) {
+                RenameRuleDescription tmp = (RenameRuleDescription) ruleDescription;
                 rules.add(new RenameTransformationRule(toKeyArray(tmp.getOldRuntimeKey()), getLastKey(tmp.getNewRuntimeKey())));
             } else if (ruleDescription instanceof MoveRuleDescription) {
                 MoveRuleDescription tmp = (MoveRuleDescription) ruleDescription;
@@ -60,12 +59,23 @@ public class TransformSchemaAdapterPipelineElement implements AdapterPipelineEle
     }
 
     private String getLastKey(String s) {
-        String[] list = s.split(".");
-        return list[list.length - 1];
+        String[] list = s.split("\\.");
+        if (list.length == 0) {
+            return s;
+        } else {
+            return list[list.length - 1];
+        }
     }
 
+
+
     private List<String> toKeyArray(String s) {
-        return Arrays.asList(s.split("."));
+        String[] split = s.split("\\.");
+        if (split.length == 0) {
+            return Arrays.asList(s);
+        } else {
+            return Arrays.asList(split);
+        }
     }
 
     @Override

@@ -27,7 +27,7 @@ import javax.persistence.Entity;
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:TransformationRuleDescription")
 @Entity
-public class TransformationRuleDescription extends UnnamedStreamPipesEntity {
+public abstract class TransformationRuleDescription extends UnnamedStreamPipesEntity {
 
 
     public TransformationRuleDescription() {

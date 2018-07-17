@@ -35,6 +35,10 @@ public class MoveRuleDescription extends TransformationRuleDescription {
     @RdfProperty("sp:newRuntimeKey")
     private String newRuntimeKey;
 
+    public MoveRuleDescription() {
+        super();
+    }
+
     public MoveRuleDescription(String oldRuntimeKey, String newRuntimeKey) {
         super();
         this.oldRuntimeKey = oldRuntimeKey;

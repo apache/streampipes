@@ -31,6 +31,11 @@ public class DeleteRuleDescription extends TransformationRuleDescription {
     @RdfProperty("sp:runtimeKey")
     private String runtimeKey;
 
+
+    public DeleteRuleDescription() {
+        super();
+    }
+
     public DeleteRuleDescription(String runtimeKey) {
         super();
         this.runtimeKey = runtimeKey;

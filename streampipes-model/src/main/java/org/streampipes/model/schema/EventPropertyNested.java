@@ -44,12 +44,17 @@ public class EventPropertyNested extends EventProperty {
 	public EventPropertyNested()
 	{
 		super();
+		this.eventProperties = new ArrayList<>();
 	}
-	
+
 	public EventPropertyNested(EventPropertyNested other)
 	{
 		super(other);
-		this.eventProperties = new Cloner().properties(other.getEventProperties());
+		if (other.eventProperties != null) {
+			this.eventProperties = new Cloner().properties(other.getEventProperties());
+		} else {
+			this.eventProperties = new ArrayList<>();
+		}
 	}
 	
 	public EventPropertyNested(String propertyName, List<EventProperty> eventProperties)
