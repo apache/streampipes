@@ -34,22 +34,22 @@ export class TransformationRuleService {
 
         var transformationRuleDescription: TransformationRuleDescription[] = [];
 
-        // Rename [implemented]
+        // Rename
         transformationRuleDescription = transformationRuleDescription.concat(this.getRenameRules(
-            this.newEventSchema.eventProperties, this.newEventSchema, this.oldEventSchema));
+            this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
 
-        // Create Nested [implemented]
+        // Create Nested
         transformationRuleDescription = transformationRuleDescription.concat(this.getCreateNestedRules(
-            this.newEventSchema.eventProperties, this.newEventSchema, this.oldEventSchema));
+            this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
-        // Move []
+        // Move
         transformationRuleDescription = transformationRuleDescription.concat(this.getMoveRules(
-            this.newEventSchema.eventProperties, this.newEventSchema, this.oldEventSchema));
+            this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
         // Delete
         transformationRuleDescription = transformationRuleDescription.concat(this.getDeleteRules(
-            this.newEventSchema.eventProperties, this.newEventSchema, this.oldEventSchema));
+            this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
 
         return transformationRuleDescription;
@@ -74,11 +74,14 @@ export class TransformationRuleService {
 
 
             // get prefix
-            const keyOldPrefix: string = keyOld.substr(0, keyOld.lastIndexOf("."));
-            const keyNewPrefix: string = keyNew.substr(0, keyNew.lastIndexOf("."));
+            if (keyOld && keyNew) {
 
-            if (keyOldPrefix != keyNewPrefix) {
-                result.push(new MoveRuleDescription(keyOld, keyNew));
+                const keyOldPrefix: string = keyOld.substr(0, keyOld.lastIndexOf("."));
+                const keyNewPrefix: string = keyNew.substr(0, keyNew.lastIndexOf("."));
+
+                if (keyOldPrefix != keyNewPrefix) {
+                    result.push(new MoveRuleDescription(keyOld, keyNew));
+                }
             }
 
         }
@@ -128,7 +131,7 @@ export class TransformationRuleService {
 
         var filteredResult: RenameRuleDescription[] = [];
         for (let res of result) {
-            if (res.newRuntimeKey != res.oldRuntimeKey) {
+            if (this.getRuntimeNameKey(res.newRuntimeKey) != this.getRuntimeNameKey(res.oldRuntimeKey) && res.oldRuntimeKey) {
                 filteredResult.push(res);
             }
         }
@@ -148,8 +151,8 @@ export class TransformationRuleService {
         for (let id of allOldIds) {
             // if not in new ids create delete rule
             if (allNewIds.indexOf(id) == -1) {
-               const key = this.getCompleteRuntimeNameKey(oldEventSchema.eventProperties, id);
-               resultKeys.push(key);
+                const key = this.getCompleteRuntimeNameKey(oldEventSchema.eventProperties, id);
+                resultKeys.push(key);
             }
         }
 
@@ -199,6 +202,19 @@ export class TransformationRuleService {
         } else {
             return result;
         }
+    }
+
+    public getRuntimeNameKey(completeKey: string): string {
+        if (completeKey) {
+            const keyElements = completeKey.split(".");
+
+            if (keyElements.length == 0) {
+                return completeKey;
+            } else {
+                return keyElements[keyElements.length - 1];
+            }
+        }
+
     }
 
 

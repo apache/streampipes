@@ -8,17 +8,28 @@ import {RdfId} from '../../tsonld/RdfId';
 @RdfsClass('sp:EventSchema')
 export class EventSchema {
 
-  private static serialVersionUID = -3994041794693686406;
+    private static serialVersionUID = -3994041794693686406;
 
-  @RdfId
-  public id: string;
+    @RdfId
+    public id: string;
 
-  @RdfProperty('sp:hasEventProperty')
-  public eventProperties: Array<EventProperty>;
+    @RdfProperty('sp:hasEventProperty')
+    public eventProperties: Array<EventProperty>;
 
 
-  constructor () {
-    this.eventProperties = new Array(0);
-  }
+    constructor () {
+        this.eventProperties = new Array(0);
+    }
+
+    public copy(): EventSchema {
+        const newEventSchema = new EventSchema();
+
+        for (let ep of this.eventProperties) {
+            newEventSchema.eventProperties.push(ep.copy());
+        }
+
+        return newEventSchema;
+    }
+
 }
 

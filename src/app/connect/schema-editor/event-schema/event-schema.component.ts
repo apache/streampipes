@@ -10,6 +10,7 @@ import {GuessSchema} from '../model/GuessSchema';
 import {AdapterSetDescription} from '../../model/AdapterSetDescription';
 import {TransformationRuleService} from '../../transformation-rule.service';
 import {TransformationRuleDescription} from '../../model/rules/TransformationRuleDescription';
+import {E} from '@angular/core/src/render3';
 
 @Component({
     selector: 'app-event-schema',
@@ -41,7 +42,9 @@ export class EventSchemaComponent implements OnInit {
             this.eventSchema  = x.eventSchema;
             this.schemaGuess = x;
 
-            this.transformationRuleService.setOldEventSchema(this.eventSchema);
+            const oldEventSchema = this.eventSchema.copy();
+
+            this.transformationRuleService.setOldEventSchema(oldEventSchema);
         });
     }
 
@@ -55,6 +58,7 @@ export class EventSchemaComponent implements OnInit {
          } else {
              this.adapterDescription.dataStream.eventSchema = this.eventSchema;
          }
+
 
         this.transformationRuleService.setNewEventSchema(this.eventSchema);
         const transformationRules: TransformationRuleDescription[] = this.transformationRuleService.getTransformationRuleDescriptions();

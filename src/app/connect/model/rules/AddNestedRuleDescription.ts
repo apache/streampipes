@@ -3,7 +3,7 @@ import {RdfId} from '../../tsonld/RdfId';
 import {RdfProperty} from '../../tsonld/RdfsProperty';
 import {TransformationRuleDescription} from './TransformationRuleDescription';
 
-@RdfsClass('sp:AddNestedRuleDescription')
+@RdfsClass('sp:CreateNestedRuleDescription')
 export class AddNestedRuleDescription extends TransformationRuleDescription {
 
   @RdfId
