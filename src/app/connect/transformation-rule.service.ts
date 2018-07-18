@@ -80,7 +80,16 @@ export class TransformationRuleService {
                 const keyNewPrefix: string = keyNew.substr(0, keyNew.lastIndexOf("."));
 
                 if (keyOldPrefix != keyNewPrefix) {
-                    result.push(new MoveRuleDescription(keyOld, keyNew));
+
+                    // old key is equals old route and new name
+                    var keyOfOldValue = "";
+                    if (keyOldPrefix === "") {
+                        keyOfOldValue = keyNew.substr(keyNew.lastIndexOf(".") + 1, keyNew.length)
+                    } else {
+                        keyOfOldValue = keyOldPrefix + keyNew.substr(keyNew.lastIndexOf("."), keyNew.length);
+                    }
+                    console.log("keyyy " + keyOfOldValue);
+                    result.push(new MoveRuleDescription(keyOfOldValue, keyNewPrefix));
                 }
             }
 
