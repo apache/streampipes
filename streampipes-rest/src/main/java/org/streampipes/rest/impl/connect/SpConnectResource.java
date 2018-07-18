@@ -19,16 +19,19 @@ package org.streampipes.rest.impl.connect;
 
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.connect.firstconnector.format.csv.CsvFormat;
+import org.streampipes.connect.firstconnector.format.json.arraykey.JsonFormat;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
+import org.streampipes.connect.firstconnector.protocol.set.FileProtocol;
+import org.streampipes.connect.firstconnector.protocol.set.HttpProtocol;
 import org.streampipes.connect.firstconnector.protocol.stream.KafkaProtocol;
+import org.streampipes.connect.firstconnector.protocol.stream.MqttProtocol;
 import org.streampipes.container.html.JSONGenerator;
 import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.streampipes.container.html.model.Description;
-import org.streampipes.connect.firstconnector.format.csv.CsvFormat;
-import org.streampipes.connect.firstconnector.format.json.arraykey.JsonFormat;
-import org.streampipes.connect.firstconnector.protocol.set.FileProtocol;
-import org.streampipes.connect.firstconnector.protocol.set.HttpProtocol;
 import org.streampipes.container.util.Util;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
@@ -38,22 +41,19 @@ import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.modelconnect.*;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.impl.AbstractRestInterface;
+import org.streampipes.sdk.helpers.Formats;
+import org.streampipes.sdk.helpers.Protocols;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.streampipes.vocabulary.StreamPipes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.streampipes.sdk.helpers.*;
-import org.streampipes.serializers.jsonld.JsonLdTransformer;
-import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
-import org.streampipes.vocabulary.StreamPipes;
-
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -89,6 +89,7 @@ public class SpConnectResource extends AbstractRestInterface {
         pdl.addDesctiption(new HttpProtocol().declareModel());
         pdl.addDesctiption(new FileProtocol().declareModel());
         pdl.addDesctiption(new KafkaProtocol().declareModel());
+        pdl.addDesctiption(new MqttProtocol().declareModel());
 
         return ok(JsonLdUtils.toJsonLD(pdl));
     }
