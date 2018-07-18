@@ -11,6 +11,7 @@ export class FormatListComponent {
     @Input() selectedFormat: FormatDescription;
     @Input() allFormats: FormatDescription[];    
     @Output() validateEmitter = new EventEmitter();
+    @Output() selectedFormatEmitter = new EventEmitter();
 
     constructor() {
       
@@ -24,6 +25,13 @@ export class FormatListComponent {
       });
 
     }
+
+    formatSelected(selectedFormat) {
+      this.selectedFormat = selectedFormat;
+      this.selectedFormatEmitter.emit(this.selectedFormat)
+
+    }
+
     validateAll(allValid) {
       this.validateEmitter.emit(allValid);
     }

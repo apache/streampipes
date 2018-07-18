@@ -46,6 +46,7 @@ export class NewComponent implements OnInit {
 
     public newAdapterDescription: AdapterDescription;
     public selectedProtocol: ProtocolDescription;
+    public selectedFormat: FormatDescription;
 
     constructor(private logger: Logger, private restService: RestService, private _formBuilder: FormBuilder, public dialog: MatDialog) {
         // console.log('constructor');
@@ -95,6 +96,9 @@ export class NewComponent implements OnInit {
 
         return adapterDescription;
     }
+    protocolValueChanged(selectedProtocol) {
+        this.selectedProtocol = selectedProtocol;
+      }
 
     public protocolSelected() {
         var result: AdapterDescription;
@@ -118,6 +122,10 @@ export class NewComponent implements OnInit {
 
     }
 
+    formatSelected(selectedFormat) {
+        this.newAdapterDescription.format = selectedFormat;
+      }
+
     public startAdapter() {
        let dialogRef = this.dialog.open(AdapterStartedDialog, {
             // width: '250px',
@@ -125,6 +133,7 @@ export class NewComponent implements OnInit {
         });
 
         // this.restService.addAdapter(this.newAdapterDescription);
+        console.log('start adapter aufgerufen')
         console.log(this.newAdapterDescription)
 
         dialogRef.afterClosed().subscribe(result => {

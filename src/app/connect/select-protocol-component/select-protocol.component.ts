@@ -15,6 +15,7 @@ export class SelectProtocolComponent implements OnInit {
 
   @Output() selectedProtocolChange = new EventEmitter<ProtocolDescription>();
   @Output() inputValueChanged = new EventEmitter<any>();
+  @Output() selectedProtocolEmitter = new EventEmitter();
 
   @Input() selectedProtocol: ProtocolDescription;
   @Input() allProtocols: ProtocolDescription[];
@@ -43,6 +44,11 @@ export class SelectProtocolComponent implements OnInit {
       return p.label === this.selectedProtocol.label;
     }
 
+  }
+
+  protocolSelected(selectedProtocol) {
+    this.selectedProtocol = selectedProtocol;
+    this.selectedProtocolEmitter.emit(selectedProtocol);
   }
 
   // textValidation1(hasInput, index) {

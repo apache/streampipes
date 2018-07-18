@@ -11,6 +11,8 @@ export class ProtocolListComponent {
     @Input() allProtocols: ProtocolDescription[];
     @Input() selectedProtocol: ProtocolDescription;
     @Input() allFormats: FormatDescription[];    @Output() validateEmitter = new EventEmitter();
+    @Output() selectedProtocolEmitter = new EventEmitter();
+
 
     constructor() {
       
@@ -27,6 +29,12 @@ export class ProtocolListComponent {
     validateAll(allValid) {
       this.validateEmitter.emit(allValid);
     }
+
+    protocolSelected(selectedProtocol) {
+      this.selectedProtocol = selectedProtocol;
+      this.selectedProtocolEmitter.emit(selectedProtocol);
+    }
+
     ngOnInit(){
       console.log("test4");
       

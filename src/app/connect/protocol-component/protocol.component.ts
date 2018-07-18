@@ -13,6 +13,7 @@ export class ProtocolComponent {
   @Input() selectedProtocol: ProtocolDescription;
   @Output() validateEmitter = new EventEmitter();
   @Output() editableEmitter = new EventEmitter();
+  @Output() selectedProtocolEmitter = new EventEmitter();
   protocolEditable() {
     this.protocol.edit = !this.protocol.edit;
     this.editableEmitter.emit(this.protocol);
@@ -21,6 +22,7 @@ export class ProtocolComponent {
     if(textValid && this.protocol.edit) {
       this.validateEmitter.emit(true);
       this.selectedProtocol = this.protocol;
+      this.selectedProtocolEmitter.emit(this.selectedProtocol);
     }
     else {
       this.validateEmitter.emit(false);

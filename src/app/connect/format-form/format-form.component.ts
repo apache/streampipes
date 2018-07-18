@@ -13,7 +13,7 @@ export class FormatFormComponent implements OnInit {
 
   @Output() selectedFormatChange = new EventEmitter<FormatDescription>();
   @Output() inputValueChanged = new EventEmitter<Boolean>();
-
+  @Output() selectedFormatEmitter = new EventEmitter();
   @Input() allFormats: FormatDescription[];
 
   showStaticProperty: Boolean[] = [false]
@@ -51,6 +51,13 @@ export class FormatFormComponent implements OnInit {
   validateAll(allValid) {
     this.inputValueChanged.emit(allValid);
   }
+
+  formatSelected(selectedFormat) {
+    this.selectedFormat = selectedFormat;
+    this.selectedFormatEmitter.emit(this.selectedFormat)
+
+  }
+
 
   // textValidation(hasInput, index) {
   //   this.hasInput[index] = hasInput;

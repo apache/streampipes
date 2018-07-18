@@ -10,7 +10,7 @@
 
 </form> -->
 
-<app-format-list [allFormats]="allFormats" [(selectedFormat)]="selectedFormat" (validateEmitter)="validateAll($event)">
+<app-format-list [allFormats]="allFormats" [(selectedFormat)]="selectedFormat" (selectedFormatEmitter)="formatSelected($event)" (validateEmitter)="validateAll($event)">
 
 </app-format-list>
 

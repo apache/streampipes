@@ -1,6 +1,7 @@
 <div *ngFor="let protocol of allProtocols" class="wrapping">
     <app-protocol [protocol]="protocol" (validateEmitter)="validateAll($event)"
     (editableEmitter)="protocolEditable($event)"
-    [(selectedProtocol)]="selectedProtocol">
+    [(selectedProtocol)]="selectedProtocol"
+    (selectedProtocolEmitter)="protocolSelected($event)">
     </app-protocol>
 </div>

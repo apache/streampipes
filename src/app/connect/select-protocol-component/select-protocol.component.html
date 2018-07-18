@@ -1,6 +1,7 @@
 <div id="protocolList" >
     <app-protocol-list [allProtocols]="allProtocols" (validateEmitter)=validateAll($event)
-    [(selectedProtocol)]="selectedProtocol" >
+    [(selectedProtocol)]="selectedProtocol" 
+    (selectedProtocolEmitter)="protocolSelected($event)">
     </app-protocol-list>
 </div>
 

@@ -6,10 +6,10 @@
         <ng-template matStepLabel>Select Connection-Type</ng-template>
 
         <div fxLayoutAlign="start">
-          <div id="noMouse">
+
           <set-stream-app (setStreamSelected)="connectionSelected($event)">
           </set-stream-app>
-        </div>
+        
         </div>
         <div fxLayoutAlign="end">
           <button color="primary" mat-raised-button matStepperNext [disabled]="!setStreamSelected">Next</button>
@@ -26,6 +26,7 @@
         <div fxLayoutAlign="start">
 
           <app-select-protocol fxLayout="column" fxFlex="100" [(selectedProtocol)]="selectedProtocol" [allProtocols]="allProtocols"
+          (selectedProtocolEmitter)="protocolValueChanged($event)"
             (inputValueChanged)="inputValueChangedProtocol($event)"></app-select-protocol>
 
         </div>
@@ -44,7 +45,8 @@
 
         <div fxLayoutAlign="center">
           <app-format-form fxLayout="column" fxFlex="100" [(selectedFormat)]="newAdapterDescription.format" [allFormats]="allFormats"
-            (inputValueChanged)="inputValueChangedFormat($event)"></app-format-form>
+            (inputValueChanged)="inputValueChangedFormat($event)
+            " (selectedFormatEmitter)="formatSelected($event)"></app-format-form>
         </div>
 
         <div fxLayoutAlign="end">
