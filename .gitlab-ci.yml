@@ -1,0 +1,45 @@
+variables:
+  REGISTRY_HOST: ipe-wim-gitlab.fzi.de:5000
+  IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH
+  MAVEN_CLI_OPTS: -DskipTests --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true
+
+stages:
+  - build
+  - docker
+  - deploy
+
+build:
+  image: maven:3-jdk-8
+  stage: build
+  script:
+    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    - mvn clean package javadoc:aggregate -U -DskipTests
+    - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
+    - "echo $MVN_VERSION >> ./target/mvn_version"
+  artifacts:
+    paths:
+      - ./*/target/*.jar
+      - ./target/mvn_version
+    expire_in:  1 week
+  except:
+      - /release-.*$/
+
+.docker_script: &docker_script
+   image: docker:17.06.0-ce
+   stage: docker
+   dependencies:
+     - build
+   script:
+     - export MVN_VERSION=$(cat ./target/mvn_version)
+     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+     - docker build --no-cache --pull  -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME/
+     - docker push $IMAGE_NAME/pe-jvm:$MVN_VERSION
+     - docker push $IMAGE_NAME/$CONTAINER_NAME:latest
+   only:
+     - dev
+
+docker-processors-aggregation-flink:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-aggregation-flink"
