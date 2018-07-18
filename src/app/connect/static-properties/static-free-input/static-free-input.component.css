@@ -1,7 +1,7 @@
-label {
- display: inline-block;
- text-align: right;
+#formWrapper {
+    height: 60px;
 }
+
 p {
     width: 100px;
     float: left;
@@ -10,3 +10,4 @@ p {
 form {
     float: left;
 }
+

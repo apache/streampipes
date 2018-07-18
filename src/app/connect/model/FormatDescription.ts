@@ -6,6 +6,8 @@ import {StaticProperty} from './StaticProperty';
 @RdfsClass('sp:FormatDescription')
 export class FormatDescription {
 
+  public edit: boolean;
+
   @RdfId
   public id: string;
 
@@ -23,5 +25,6 @@ export class FormatDescription {
 
   constructor(id: string) {
     this.id = id;
+    this.edit = false;
   }
 }

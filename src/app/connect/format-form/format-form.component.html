@@ -1,4 +1,4 @@
-<form class="example-form" fxLayout="column">
+<!-- <form class="example-form" fxLayout="column">
 
   <mat-list id="formList">
     <mat-list-item *ngFor="let formatDescription of allFormats; let i = index" (click)="clickedOption(i)" class="listItem">
@@ -8,6 +8,10 @@
     </mat-list-item>
   </mat-list>
 
-</form>
+</form> -->
+
+<app-format-list [allFormats]="allFormats" [(selectedFormat)]="selectedFormat" (validateEmitter)="validateAll($event)">
+
+</app-format-list>
 
 

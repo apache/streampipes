@@ -4,7 +4,7 @@ import {RdfsClass} from '../tsonld/RdfsClass';
 
 @RdfsClass('sp:StaticProperty')
 export class StaticProperty {
-
+  public isValid = false;
   // @RdfId
   // public id: string;
   //

@@ -48,7 +48,11 @@ export class NewComponent implements OnInit {
     public selectedProtocol: ProtocolDescription;
 
     constructor(private logger: Logger, private restService: RestService, private _formBuilder: FormBuilder, public dialog: MatDialog) {
-        console.log('constructor');
+        // console.log('constructor');
+        // var protocol = new ProtocolDescription("id123456789");
+        // protocol.description = "test"
+        // this.allProtocols = [protocol];
+
     }
 
     ngOnInit() {
@@ -68,10 +72,14 @@ export class NewComponent implements OnInit {
 
         this.restService.getProtocols().subscribe(x => {
             this.allProtocols = x.list;
-        });
 
+            this.allProtocols;
+        });
+        
+        this.allFormats = [];
         this.restService.getFormats().subscribe(x => {
             this.allFormats = x.list;
+            this.allFormats;
         });
     }
 
@@ -116,7 +124,8 @@ export class NewComponent implements OnInit {
             // data: { name: this.name, animal: this.animal }
         });
 
-        this.restService.addAdapter(this.newAdapterDescription);
+        // this.restService.addAdapter(this.newAdapterDescription);
+        console.log(this.newAdapterDescription)
 
         dialogRef.afterClosed().subscribe(result => {
            console.log('The dialog was closed');

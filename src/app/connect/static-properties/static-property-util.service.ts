@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { StaticProperty } from '..//model/StaticProperty';
+import { StaticProperty } from '../model/StaticProperty';
 import { FreeTextStaticProperty } from '../model/FreeTextStaticProperty';
 @Injectable()
 

@@ -1,13 +1,14 @@
-<p>{{staticProperty.label}}: </p>
-<form [formGroup]="freeTextForm">
-    <mat-form-field>
-        <!-- <label >Value: </label> -->
-        <input class="example-full-width" matInput [placeholder]="staticProperty.label" [(ngModel)]="staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value"
-            formControlName="freeStaticText" (ngModelChange)="valueChange(staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value)"
-            required>
+<div id="formWrapper">
+    <p>{{staticProperty.label}}: </p>
+    <form [formGroup]="freeTextForm">
+        <mat-form-field>
+            <input class="example-full-width" matInput [placeholder]="staticProperty.label" [(ngModel)]="staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value"
+                formControlName="freeStaticText" (ngModelChange)="valueChange(staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value)"
+                required>
 
-        <mat-error *ngIf="!hasInput">
-            {{errorMessage}}
-        </mat-error>
-    </mat-form-field>
-</form>
+            <mat-error *ngIf="!hasInput">
+                {{errorMessage}}
+            </mat-error>
+        </mat-form-field>
+    </form>
+</div>

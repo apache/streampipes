@@ -11,7 +11,7 @@ import { NewComponent } from './new-adapter/new.component';
 import { MainComponent } from './main/main.component';
 import { AllAdaptersComponent } from './all-adapters/all.component';
 
-import { ProtocolFormComponent } from './protocol-form/protocol-form.component';
+import { SelectProtocolComponent } from './select-protocol-component/select-protocol.component';
 import { FormatFormComponent } from './format-form/format-form.component';
 
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
@@ -22,7 +22,7 @@ import { EventPropoertyListComponent } from './schema-editor/event-propoerty-lis
 
 import { EventPropertyBagComponent } from './schema-editor/event-property-bag/event-property-bag.component';
 
-import { StaticPropertiesComponent } from './static-properties/static-properties.component';
+import { StaticPropertyComponent } from './static-properties/static-property.component';
 
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
@@ -41,6 +41,16 @@ import { StaticFreeInputComponent } from './static-properties/static-free-input/
 import { StaticPropertyUtilService } from './static-properties/static-property-util.service'
 import { SetStreamComponent } from './set-stream/set-stream.component';
 
+import {SelectStaticPropertyComponent} from './select-static-property-component/select-static-property.component'
+
+import {SelectStaticPropertiesComponent} from './select-static-properties-component/select-static-properties.component'
+
+import {ProtocolComponent} from './protocol-component/protocol.component'
+
+import {ProtocolListComponent} from './protocol-list-component/protocol-list.component'
+import { FormatListComponent } from './format-list-component/format-list.component';
+import { FormatComponent } from './format-component/format.component';
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -56,13 +66,13 @@ import { SetStreamComponent } from './set-stream/set-stream.component';
         MatFormFieldModule
     ],
     exports: [
-        StaticPropertiesComponent
+        StaticPropertyComponent
     ],
     declarations: [
         NewComponent,
         MainComponent,
         AllAdaptersComponent,
-        ProtocolFormComponent,
+        SelectProtocolComponent,
         FormatFormComponent,
         EventSchemaComponent,
         EventPropertyBagComponent,
@@ -70,13 +80,21 @@ import { SetStreamComponent } from './set-stream/set-stream.component';
         EventPropertyComponent,
         EventPropertyNestedComponent,
         EventPropoertyListComponent,
-        StaticPropertiesComponent,
+        StaticPropertyComponent,
         AdapterStartedDialog,
         StaticNumberInputComponent,
         StaticUrlInputComponent,
         StaticTextInputComponent,
         StaticFreeInputComponent,
-        SetStreamComponent
+        SetStreamComponent,
+        SelectStaticPropertyComponent,
+        SelectStaticPropertiesComponent,
+        ProtocolComponent,
+        ProtocolListComponent,
+        FormatListComponent,
+        FormatComponent
+
+
     ],
     providers: [
         RestService,

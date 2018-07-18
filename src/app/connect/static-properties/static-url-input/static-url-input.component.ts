@@ -6,7 +6,7 @@ import { DataSetDescription } from '../../model/DataSetDescription';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import {Logger} from '../../../shared/logger/default-log.service';
 import { ifError } from 'assert';
-import { ValidateUrl} from '../../protocol-form/input.validator';
+import { ValidateUrl} from '../../select-protocol-component/input.validator';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 
 @Component({
