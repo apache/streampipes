@@ -1,7 +1,7 @@
 version: "2"
 services:
   sinks-databases-flink:
-    image: streampipes/sinks-databases-flink:${SP_PE_VERSION}
+    image: ${SP_DOCKER_REGISTRY}/sinks-databases-flink:${SP_PE_VERSION}
     depends_on:
       - "consul"
 #    ports:

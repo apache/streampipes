@@ -1,7 +1,7 @@
 version: "2"
 services:
-  sources-vehicle-simulator:
-    image: ${SP_DOCKER_REGISTRY}/sources-vehicle-simulator:${SP_PE_VERSION}
+  processors-pattern-detection-flink:
+    image: ${SP_DOCKER_REGISTRY}/processors-siddhi:${SP_PE_VERSION}
     depends_on:
       - "consul"
 #    ports:
