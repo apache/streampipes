@@ -1,0 +1,7 @@
+<div *ngFor="let format of allFormats" class="fullWidth">
+        <app-format [format]="format" (validateEmitter)="validateAll($event)"
+        (editableEmitter)="formatEditable($event)"
+        [(selectedFormat)]="selectedFormat" 
+        (selectedFormatEmitter)="formatSelected($event)" class="fullWidth">
+        </app-format>
+    </div>

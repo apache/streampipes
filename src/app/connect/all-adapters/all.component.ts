@@ -28,7 +28,6 @@ export class AllAdaptersComponent implements OnInit {
 
         this.allAdapters = [adapter];
         this.dataSource = new AdapterDataSource(this.restService);
-
     }
 
 

@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import {RestService} from '../rest.service';
 import {ProtocolDescription} from '../model/ProtocolDescription';
 import {FormatDescription} from '../model/FormatDescription';
@@ -25,39 +25,62 @@ export class NewComponent implements OnInit {
     @ViewChild('eschema') eventSchemaComponent;
 
     isLinear = false;
+    setStreamFormGroup: FormGroup;
     firstFormGroup: FormGroup;
     secondFormGroup: FormGroup;
 
+    setStreamSelected = false;
+    selectedType: String;
+
+    hasInputProtocol: Boolean;
+    hasInputFormat: Boolean;
+    hasInput: Boolean[];
+    inputValue="";
 
     allProtocols: ProtocolDescription[];
     allFormats: FormatDescription[];
+    
 
     // selectedProtocol: ProtocolDescription = new ProtocolDescription('');
     // selectedFormat: FormatDescription = new FormatDescription('');
 
     public newAdapterDescription: AdapterDescription;
     public selectedProtocol: ProtocolDescription;
+    public selectedFormat: FormatDescription;
 
     constructor(private logger: Logger, private restService: RestService, private _formBuilder: FormBuilder, public dialog: MatDialog) {
-        console.log('constructor');
+        // console.log('constructor');
+        // var protocol = new ProtocolDescription("id123456789");
+        // protocol.description = "test"
+        // this.allProtocols = [protocol];
+
     }
 
     ngOnInit() {
 
         this.newAdapterDescription = this.getNewAdapterDescription();
 
+        this.setStreamFormGroup = this._formBuilder.group({
+            condition: ["", Validators.required]
+        })
+
         this.firstFormGroup = this._formBuilder.group({
-            firstCtrl: ['', Validators.required]
+            firstCtrl: ["", Validators.required]
         });
         this.secondFormGroup = this._formBuilder.group({
             secondCtrl: ['', Validators.required]
         });
+
         this.restService.getProtocols().subscribe(x => {
             this.allProtocols = x.list;
-        });
 
+            this.allProtocols;
+        });
+        
+        this.allFormats = [];
         this.restService.getFormats().subscribe(x => {
             this.allFormats = x.list;
+            this.allFormats;
         });
     }
 
@@ -73,6 +96,9 @@ export class NewComponent implements OnInit {
 
         return adapterDescription;
     }
+    protocolValueChanged(selectedProtocol) {
+        this.selectedProtocol = selectedProtocol;
+      }
 
     public protocolSelected() {
         var result: AdapterDescription;
@@ -96,17 +122,36 @@ export class NewComponent implements OnInit {
 
     }
 
+    formatSelected(selectedFormat) {
+        this.newAdapterDescription.format = selectedFormat;
+      }
+
     public startAdapter() {
        let dialogRef = this.dialog.open(AdapterStartedDialog, {
             // width: '250px',
             // data: { name: this.name, animal: this.animal }
         });
 
-        this.restService.addAdapter(this.newAdapterDescription);
+        // this.restService.addAdapter(this.newAdapterDescription);
+        console.log('start adapter aufgerufen')
+        console.log(this.newAdapterDescription)
 
         dialogRef.afterClosed().subscribe(result => {
            console.log('The dialog was closed');
         });
+    }
+
+    inputValueChangedProtocol(hasInput) {
+        this.hasInputProtocol = hasInput;
+    }
+
+    inputValueChangedFormat(hasInput) {
+        this.hasInputFormat = hasInput;
+    }
+
+    connectionSelected(selectedType) {
+        this.setStreamSelected = true;
+        this.selectedType = selectedType;
     }
 
 }

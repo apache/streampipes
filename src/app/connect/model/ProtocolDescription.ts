@@ -9,6 +9,8 @@ export class ProtocolDescription {
   @RdfId
   public id: string;
 
+  public edit: boolean;
+
   @RdfProperty('http://www.w3.org/2000/01/rdf-schema#label')
   public label: string;
 
@@ -26,6 +28,7 @@ export class ProtocolDescription {
 
   constructor(id: string) {
     this.id = id;
+    this.edit = false;
   }
 
 }

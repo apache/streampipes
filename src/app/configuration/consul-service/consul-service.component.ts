@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-
-import { ConsulService } from '../shared/consul-service.model';
-
+import { StreampipesPeContainer } from "../shared/streampipes-pe-container.model";
+import { StreampipesPeContainerConifgs } from "../shared/streampipes-pe-container-configs";
 @Component({
     selector: 'consul-service',
     templateUrl: './consul-service.component.html',
@@ -9,15 +8,17 @@ import { ConsulService } from '../shared/consul-service.model';
 })
 export class ConsulServiceComponent {
 
-    @Input() consulService: ConsulService;
-    @Output() updateConsulService: EventEmitter<ConsulService> = new EventEmitter<ConsulService>();
+    @Input() consulService: StreampipesPeContainer;
+    @Output() updateConsulService: EventEmitter<StreampipesPeContainer> = new EventEmitter<StreampipesPeContainer>();
     showConfiguration: boolean = false;
 
     constructor() {
+        
     }
 
     toggleConfiguration(): void {
         this.showConfiguration = !this.showConfiguration;
+
     }
 
     updateConfiguration(): void {

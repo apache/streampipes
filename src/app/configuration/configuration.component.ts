@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 
 import { ConfigurationService } from './shared/configuration.service';
-import { ConsulService } from './shared/consul-service.model';
-
+import { StreampipesPeContainer } from "./shared/streampipes-pe-container.model";
+import { StreampipesPeContainerConifgs } from "./shared/streampipes-pe-container-configs";
 @Component({
     templateUrl: './configuration.component.html',
     styleUrls: ['./configuration.component.css']
 })
 export class ConfigurationComponent {
 
-    consulServices: ConsulService[];
+    consulServices: StreampipesPeContainer[];
 
     constructor(private configurationService: ConfigurationService) {
         this.getConsulServices();
@@ -17,14 +17,18 @@ export class ConfigurationComponent {
 
     getConsulServices(): void {
         this.configurationService.getConsulServices()
-            .subscribe(response => {
+            .subscribe( response => {
                 this.consulServices = response;
             }, error => {
                 console.error(error);
             });
+
+            
     }
 
-    updateConsulService(consulService: ConsulService): void {
+    updateConsulService(consulService: StreampipesPeContainer): void {
+        console.log(consulService.configs[3].value);
+        
         this.configurationService.updateConsulService(consulService)
             .subscribe(response => {
 
@@ -32,5 +36,5 @@ export class ConfigurationComponent {
                 console.error(error);
             });
     }
-
+    
 }

@@ -24,6 +24,9 @@ export class FreeTextStaticProperty extends StaticProperty {
   @RdfProperty('sp:internalName')
   public internalName: string;
 
+  @RdfProperty('sp:requiredDomainProperty')
+  public requiredDomainProperty: string;
+
   //TODO find better solution
   public render: boolean;
 

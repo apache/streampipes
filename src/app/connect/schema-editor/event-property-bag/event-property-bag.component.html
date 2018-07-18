@@ -7,7 +7,7 @@
                                    [eventPropertyNested]="property"
                                    [domainPropertyGuess]="getDomainProbability(property.runTimeName)"
                                    [domainPropertyGuesses]="domainPropertyGuesses"
-                                   (delete)=deleteProperty($event)></app-event-property-nested>
+                                   (delete)=deletePropertyNested($event)></app-event-property-nested>
       </div>
       <div *ngIf="isEventPropertyPrimitive(property)">
         <!-- placeholder for event-properties -->
@@ -24,16 +24,16 @@
       <!--</div>-->
     </div>
   </ul>
-  <div fxFlexAlign="start">
+  <div fxFlexAlign="start" class="addSchema">
     <button mat-button (click)=addNestedProperty()>
       <mat-icon matTooltip="add nested property">queue</mat-icon>
     </button>
     <button mat-button (click)=addPrimitiveProperty()>
       <mat-icon matTooltip="add primitive property">add</mat-icon>
     </button>
-    <button mat-button (click)=addListProperty()>
+    <!-- <button mat-button (click)=addListProperty()>
       <mat-icon matTooltip="add listproperty">save</mat-icon>
-    </button>
+    </button> -->
 
   </div>
 </div>

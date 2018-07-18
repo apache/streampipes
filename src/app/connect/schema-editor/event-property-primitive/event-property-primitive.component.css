@@ -4,3 +4,12 @@
 .container {
   border: dotted;
 }
+.doubleWidth {
+  width: 370px !important;
+}
+.divBorder {
+  /* margin: auto; */
+  width: 380px;
+  /* border: solid #ccc 2px;
+  border-radius: 5px; */
+}

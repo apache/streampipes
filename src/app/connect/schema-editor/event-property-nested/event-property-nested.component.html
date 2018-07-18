@@ -7,7 +7,10 @@
             </b>
         </div>
         <div fxFlex="20" fxLayoutAlign="end">
-            <button mat-button (click)=OnClickOpen()>
+                <button mat-button (click)=OnClickDeleteProperty()>
+                        <mat-icon>delete</mat-icon>
+                    </button>
+            <button mat-button (click)=onClickOpen()>
                 <div *ngIf=open>
                     <mat-icon>expand_less</mat-icon>
                 </div>

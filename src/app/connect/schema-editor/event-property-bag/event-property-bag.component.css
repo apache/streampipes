@@ -2,3 +2,8 @@ ul {
   list-style-type: none;
 }
 
+.addSchema{
+  margin: auto;
+  padding-left: 10px;
+  padding-bottom: 20px;
+}

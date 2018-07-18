@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
-import { ConsulService } from './consul-service.model';
+import { StreampipesPeContainer } from './streampipes-pe-container.model';
+import { StreampipesPeContainerConifgs } from './streampipes-pe-container-configs';
 
 @Injectable()
 export class ConfigurationMockService {
@@ -14,7 +15,17 @@ export class ConfigurationMockService {
         return '/streampipes-backend';
     }
 
-    getConsulServices(): Observable<ConsulService[]> {
+    getConsulServices(): Observable<StreampipesPeContainer[]> {
+
+        let config: StreampipesPeContainerConifgs []
+        config[0] = new StreampipesPeContainerConifgs
+        config[0].description = "test int"
+        config[0].key = 'testint'
+        config[0].value = '80'
+        config[0].valueType = 'xs:integer'
+        config[0].isPassword = false
+
+        
         return of([
             {
                 mainKey: 'sp/test/1',
@@ -23,13 +34,7 @@ export class ConfigurationMockService {
                 },
                 name: 'test1',
                 configs: [
-                    {
-                        key: 'testint',
-                        value: '80',
-                        valueType: 'xs:integer',
-                        isPassword: false,
-                        description: 'test int'
-                    },
+                    config[0],
                     {
                         key: 'teststring',
                         value: '765',
@@ -55,10 +60,10 @@ export class ConfigurationMockService {
                     }
                 ]
             }
-        ] as ConsulService[]);
+        ] as StreampipesPeContainer[]);
     }
 
-    updateConsulService(consulService: ConsulService): Observable<Object> {
+    updateConsulService(consulService: StreampipesPeContainer): Observable<Object> {
         return of({});
     }
 

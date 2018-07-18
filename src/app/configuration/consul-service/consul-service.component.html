@@ -15,34 +15,5 @@
 </div>
 
 <div class="sp-blue-border" *ngIf="showConfiguration" style="padding:5px">
-    <form (ngSubmit)="updateConfiguration()">
-        <section *ngFor="let configuration of consulService.configs">
-            <!-- If Input is Text or Number -->
-            <mat-form-field class="form-field" *ngIf="configuration.valueType != 'xs:boolean'">
-                <input *ngIf="configuration.valueType == 'xs:integer' || configuration.valueType == 'xs:double'"
-                       matInput [(ngModel)]="configuration.value" [placeholder]="configuration.key" type="number"
-                       [ngModelOptions]="{standalone: true}">
-                <input *ngIf="configuration.valueType == 'xs:string'" matInput [(ngModel)]="configuration.value"
-                       [placeholder]="configuration.key" type="text"
-                       [ngModelOptions]="{standalone: true}">
-                <mat-icon matSuffix [matTooltip]="configuration.description" matTooltipPosition="left"
-                          class="tooltip-icon">
-                    help
-                </mat-icon>
-            </mat-form-field>
-            <!-- If Input is Boolean -->
-            <section class="checkbox-field" fxLayout="row" fxLayoutAlign="space-between center"
-                     *ngIf="configuration.valueType == 'xs:boolean'">
-                <mat-checkbox matInput [(ngModel)]="configuration.value" type="checkbox"
-                              [ngModelOptions]="{standalone: true}">
-                    {{configuration.key}}
-                </mat-checkbox>
-                <mat-icon [matTooltip]="configuration.description" matTooltipPosition="left" class="tooltip-icon">
-                    help
-                </mat-icon>
-            </section>
-        </section>
-        <button mat-raised-button color="primary" type="submit" class="md-raised md-primary submit-button">Update
-        </button>
-    </form>
+    <consul-configs [consulService]="consulService" (updateConsulService)="updateConfiguration()" ></consul-configs>
 </div>
