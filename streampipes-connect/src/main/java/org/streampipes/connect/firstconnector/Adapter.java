@@ -26,6 +26,7 @@ import org.streampipes.connect.firstconnector.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.firstconnector.pipeline.elements.SendToKafkaAdapterSink;
 import org.streampipes.connect.firstconnector.pipeline.elements.TransformSchemaAdapterPipelineElement;
 import org.streampipes.connect.firstconnector.protocol.stream.KafkaProtocol;
+import org.streampipes.connect.firstconnector.protocol.stream.MqttProtocol;
 import org.streampipes.model.modelconnect.AdapterDescription;
 import org.streampipes.model.modelconnect.GuessSchema;
 import org.streampipes.connect.firstconnector.format.Format;
@@ -74,6 +75,7 @@ public class Adapter {
         allProtocols.put(HttpProtocol.ID, new HttpProtocol());
         allProtocols.put(FileProtocol.ID, new FileProtocol());
         allProtocols.put(KafkaProtocol.ID, new KafkaProtocol());
+        allProtocols.put(MqttProtocol.ID, new MqttProtocol());
 
         this.debug = debug;
     }

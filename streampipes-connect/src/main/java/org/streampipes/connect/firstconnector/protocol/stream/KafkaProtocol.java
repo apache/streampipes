@@ -38,21 +38,17 @@ import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.model.modelconnect.GuessSchema;
 import org.streampipes.model.modelconnect.ProtocolDescription;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-public class KafkaProtocol extends Protocol {
+public class KafkaProtocol extends BrokerProtocol {
 
     Logger logger = LoggerFactory.getLogger(KafkaProtocol.class);
 
     public static String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/kafka";
-
-    private String brokerUrl;
-    private String topic;
 
     private Thread thread;
     private SpKafkaConsumer kafkaConsumer;
@@ -61,9 +57,7 @@ public class KafkaProtocol extends Protocol {
     }
 
     public KafkaProtocol(Parser parser, Format format, String brokerUrl, String topic) {
-        super(parser, format);
-        this.brokerUrl = brokerUrl;
-        this.topic = topic;
+        super(parser, format, brokerUrl, topic);
     }
 
     @Override
@@ -98,27 +92,7 @@ public class KafkaProtocol extends Protocol {
     }
 
     @Override
-    public GuessSchema getGuessSchema() {
-
-        List<byte[]> eventByte = getNByteElements(20);
-        EventSchema eventSchema = parser.getEventSchema(eventByte);
-        GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(20));
-
-        return result;
-    }
-
-    @Override
-    public List<Map<String, Object>> getNElements(int n) {
-        List<byte[]> resultEventsByte = getNByteElements(n);
-        List<Map<String, Object>> result = new ArrayList<>();
-        for (byte[] event : resultEventsByte) {
-            result.add(format.parse(event));
-        }
-
-        return result;
-    }
-
-    private List<byte[]> getNByteElements(int n) {
+    protected List<byte[]> getNByteElements(int n) {
         final Consumer<Long, String> consumer = createConsumer(this.brokerUrl, this.topic);
 
         consumer.subscribe(Arrays.asList(this.topic), new ConsumerRebalanceListener() {
