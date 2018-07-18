@@ -32,6 +32,7 @@ import { RestService } from './rest.service';
 import { DragulaModule } from 'ng2-dragula';
 import { DataTypesService } from './schema-editor/data-type.service';
 import { AdapterStartedDialog } from './new-adapter/component/adapter-started-dialog.component';
+import {TransformationRuleService} from './transformation-rule.service';
 
 @NgModule({
     imports: [
@@ -66,7 +67,8 @@ import { AdapterStartedDialog } from './new-adapter/component/adapter-started-di
     ],
     providers: [
         RestService,
-        DataTypesService
+        DataTypesService,
+        TransformationRuleService,
     ],
     entryComponents: [
         MainComponent,

@@ -65,6 +65,6 @@ export abstract class EventProperty {
     this.description = humanReadableDescription;
   }
 
-
+  public abstract copy(): EventProperty;
 
 }

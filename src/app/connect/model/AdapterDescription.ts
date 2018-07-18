@@ -3,6 +3,7 @@ import {RdfProperty} from '../tsonld/RdfsProperty';
 import {RdfsClass} from '../tsonld/RdfsClass';
 import {FormatDescription} from './FormatDescription';
 import {ProtocolDescription} from './ProtocolDescription';
+import {TransformationRuleDescription} from './rules/TransformationRuleDescription';
 
 @RdfsClass('sp:AdapterDescription')
 export class AdapterDescription {
@@ -24,6 +25,9 @@ export class AdapterDescription {
 
   @RdfProperty('sp:hasFormat')
   public format: FormatDescription;
+
+  @RdfProperty('sp:rules')
+  public rules: TransformationRuleDescription[];
 
   constructor(id: string) {
     this.id = id;

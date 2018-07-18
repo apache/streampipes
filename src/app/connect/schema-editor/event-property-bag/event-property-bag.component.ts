@@ -1,13 +1,13 @@
-import {Component, Input, EventEmitter, OnInit, Output, OnChanges} from '@angular/core';
-import {UUID} from 'angular2-uuid';
-import {RestService} from '../../rest.service';
-import {DragulaService} from 'ng2-dragula';
-import {EventProperty} from '../model/EventProperty';
-import {EventPropertyNested} from '../model/EventPropertyNested';
-import {EventPropertyList} from '../model/EventPropertyList';
-import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
-import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
-import {DomainPropertyProbability} from '../model/DomainPropertyProbability';
+import { Component, Input, EventEmitter, OnInit, Output, OnChanges } from '@angular/core';
+import { UUID } from 'angular2-uuid';
+import { RestService } from '../../rest.service';
+import { DragulaService } from 'ng2-dragula';
+import { EventProperty } from '../model/EventProperty';
+import { EventPropertyNested } from '../model/EventPropertyNested';
+import { EventPropertyList } from '../model/EventPropertyList';
+import { EventPropertyPrimitive } from '../model/EventPropertyPrimitive';
+import { DomainPropertyProbabilityList } from '../model/DomainPropertyProbabilityList';
+import { DomainPropertyProbability } from '../model/DomainPropertyProbability';
 
 
 @Component({
@@ -28,7 +28,7 @@ export class EventPropertyBagComponent implements OnInit {
     };
 
     constructor(private restService: RestService,
-                private dragulaService: DragulaService) {
+        private dragulaService: DragulaService) {
     }
 
     ngOnInit() {
@@ -40,7 +40,6 @@ export class EventPropertyBagComponent implements OnInit {
     public getDomainProbability(name: string) {
         var result: DomainPropertyProbabilityList;
 
-        console.log(this.domainPropertyGuesses);
         for (let entry of this.domainPropertyGuesses) {
             if (entry.runtimeName == name) {
                 result = entry;
@@ -77,6 +76,31 @@ export class EventPropertyBagComponent implements OnInit {
     private isEventPropertyList(instance): boolean {
         return instance instanceof EventPropertyList;
     }
+
+    public deletePropertyPrimitive(e) {
+
+        var property: EventPropertyPrimitive = <EventPropertyPrimitive> e;
+
+        var index = this.eventProperties.indexOf(property, 0);
+        if (index > -1) {
+            this.eventProperties.splice(index, 1);
+        }
+
+    }
+
+    public deletePropertyNested(e) {
+
+        var property: EventPropertyNested = <EventPropertyNested> e;
+
+        var index = this.eventProperties.indexOf(property, 0);
+        if (index > -1) {
+            this.eventProperties.splice(index, 1);
+        }
+
+    }
+
+
+
 
 
 }
