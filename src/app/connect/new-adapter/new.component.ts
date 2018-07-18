@@ -132,9 +132,7 @@ export class NewComponent implements OnInit {
             // data: { name: this.name, animal: this.animal }
         });
 
-        // this.restService.addAdapter(this.newAdapterDescription);
-        console.log('start adapter aufgerufen')
-        console.log(this.newAdapterDescription)
+        this.restService.addAdapter(this.newAdapterDescription);
 
         dialogRef.afterClosed().subscribe(result => {
            console.log('The dialog was closed');
