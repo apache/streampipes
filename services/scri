@@ -1,6 +1,0 @@
-#!/bin/bash
-
-for d in */ ; do
-	echo "$d"
-	mv "$d*" "./""$d""docker-compose.yml"
-done

@@ -1,7 +1,7 @@
 version: "2"
 services:
   taskmanager:
-    image: ipe-wim-gitlab.fzi.de:5000/streampipes/services/flink:1.4
+    image: streampipes/flink:1.4
     command: taskmanager
     environment:
       - FLINK_NUM_SLOTS=20

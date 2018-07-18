@@ -1,7 +1,7 @@
 version: "2"
 services:
   backend:
-    image: ${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}
+    image: ${SP_BACKEND_VERSION}
     depends_on:
       - consul
       - couchdb
