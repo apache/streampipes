@@ -1,7 +1,7 @@
 version: "2"
 services:
   backend:
-    image: streampipes/backend:0.55.2
+    image: ${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}
     depends_on:
       - consul
       - couchdb

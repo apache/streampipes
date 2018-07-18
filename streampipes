@@ -1,5 +1,14 @@
 #!/bin/bash
 
+defaultIp=false
+start=false
+stop=false
+clean=false
+restart=false
+cleanstart=false
+
+
+
 getIp() {
 	rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
@@ -8,24 +17,33 @@ getIp() {
 
 	allips+=( 'Enter IP manually' )
 
-	echo ''
-	echo 'Please select your IP address or add one manually: '
-	PS3='Select option: '
-	select opt in "${allips[@]}"
-	do
-		if [ -z "${opt}" ];
-		then 
-			echo "Wrong input select one of the options"; 
-		else
-			ip="$opt"
+	# if default selected do not show promt
 
-			if [ "$opt" == "Enter IP manually" ];
-			then
-				read -p "Enter Ip: " ip
+	if [ $defaultIp ] ; 
+	then
+		ip=${allips[0]}
+		echo 'Default IP was selected: '${ip}
+	else 
+		echo ''
+		echo 'Please select your IP address or add one manually: '
+		PS3='Select option: '
+		select opt in "${allips[@]}"
+		do
+			if [ -z "${opt}" ];
+			then 
+				echo "Wrong input select one of the options"; 
+			else
+				ip="$opt"
+
+				if [ "$opt" == "Enter IP manually" ];
+				then
+					read -p "Enter Ip: " ip
+				fi
+				break
 			fi
-			break
-		fi
-	done
+		done
+	fi
+
 }
 
 
@@ -79,59 +97,88 @@ print() {
 # go to directory of script
 cd "$(dirname "$0")"
 
-if [[ $1 = "start" ]];
+while [ ! $# -eq 0 ]
+do
+	case "$1" in
+		--defaultIp | -i)
+			defaultIp=true
+			;;
+		start)
+			start=true
+			;;
+		stop)
+			stop=true
+			;;
+		clean)
+			clean=true
+			;;
+		restart)
+			restart=true
+			;;
+		cleanstart)
+			cleanstart=true
+			;;
+
+	esac
+	shift
+done
+
+if $start ;
 then
 	startStreamPipes
 	print 'StreamPipes sucessfully started'
 fi
 
-if [[ $1 = "stop" ]];
+if  $stop ;
 then
 	stopStreamPipes
 	print 'StreamPipes sucessfully stopped'
 
-	if [[ $2 = "start" ]];
-	then
-		startStreamPipes
-		print 'StreamPipes sucessfully started'
-	fi
+fi
 
+if  $restart ;
+then
+	stopStreamPipes
+	startStreamPipes
+	print 'StreamPipes sucessfully restarted'
 
 fi
 
-if [[ $1 = "clean" ]];
+if  $clean ;
 then
 	cleanStreamPipes
 	print 'All configurations of StreamPipes are deleted'
-
-	if [[ $2 = "start" ]];
-	then
-		startStreamPipes
-		print 'StreamPipes sucessfully started'
-	fi
-
 fi
 
-if [[ $1 = "service" ]];
+if  $cleanstart ;
 then
-	if [[ $2 = "add" ]];
-	then
-		addService $3
-		print 'Added ' $3 ' and started service'
-	else
-		if [[ $2 = "remove" ]];
-		then
+	cleanStreamPipes
+	startStreamPipes
 
-			#TODO how to stop the service firsr
-			removeService $3
-			print 'Removed service'
-		else 
-			echo "streampipes service does not support " $2
-
-		fi
-
-	fi
+	print 'All configurations of StreamPipes are deleted and StreamPipes is restarted'
 fi
+
+
+#if [[ $1 = "service" ]];
+#then
+#	if [[ $2 = "add" ]];
+#	then
+#		addService $3
+#		print 'Added ' $3 ' and started service'
+#	else
+#		if [[ $2 = "remove" ]];
+#		then
+#
+#			#TODO how to stop the service firsr
+#			removeService $3
+#			print 'Removed service'
+#		else 
+#			echo "streampipes service does not support " $2
+#
+#		fi
+#
+#	fi
+#fi
 
 
 
