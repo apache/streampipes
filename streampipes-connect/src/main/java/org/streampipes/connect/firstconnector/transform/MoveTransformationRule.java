@@ -29,12 +29,12 @@ public class MoveTransformationRule implements TransformationRule {
     public MoveTransformationRule(List<String> oldKey, List<String> newKey) {
         this.oldKey = oldKey;
 
-        List<String> tmp = new ArrayList<>();
-        for (int i = 0; i < newKey.size() - 1; i++) {
-            tmp.add(newKey.get(i));
-        }
+//        List<String> tmp = new ArrayList<>();
+//        for (int i = 0; i < newKey.size() - 1; i++) {
+//            tmp.add(newKey.get(i));
+//        }
 
-        this.newKey = tmp;
+        this.newKey = newKey;
     }
 
     @Override

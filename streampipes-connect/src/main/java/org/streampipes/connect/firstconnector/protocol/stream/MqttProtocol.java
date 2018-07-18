@@ -17,12 +17,14 @@
 package org.streampipes.connect.firstconnector.protocol.stream;
 
 import org.apache.commons.io.IOUtils;
-import org.streampipes.connect.SendToKafka;
+import org.streampipes.connect.SendToPipeline;
 import org.streampipes.connect.firstconnector.format.Format;
 import org.streampipes.connect.firstconnector.format.Parser;
+import org.streampipes.connect.firstconnector.pipeline.AdapterPipeline;
 import org.streampipes.connect.firstconnector.protocol.Protocol;
 import org.streampipes.connect.firstconnector.sdk.ParameterExtractor;
 import org.streampipes.messaging.InternalEventProcessor;
+import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.model.modelconnect.ProtocolDescription;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 
@@ -70,6 +72,8 @@ public class MqttProtocol extends BrokerProtocol {
     return pd;
   }
 
+
+
   @Override
   protected List<byte[]> getNByteElements(int n) {
     List<byte[]> elements = new ArrayList<>();
@@ -94,8 +98,8 @@ public class MqttProtocol extends BrokerProtocol {
   }
 
   @Override
-  public void run(String broker, String topic) {
-    SendToKafka stk = new SendToKafka(format, broker, topic);
+  public void run(AdapterPipeline adapterPipeline) {
+    SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
     this.mqttConsumer = new MqttConsumer(this.brokerUrl, this.topic, new MqttProtocol.EventProcessor(stk));
 
     thread = new Thread(this.mqttConsumer);
@@ -113,9 +117,9 @@ public class MqttProtocol extends BrokerProtocol {
   }
 
   private class EventProcessor implements InternalEventProcessor<byte[]> {
-    private SendToKafka stk;
+    private SendToPipeline stk;
 
-    public EventProcessor(SendToKafka stk) {
+    public EventProcessor(SendToPipeline stk) {
       this.stk = stk;
     }
 
