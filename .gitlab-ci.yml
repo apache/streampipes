@@ -21,7 +21,7 @@ build:
     paths:
       - ./*/target/*.jar
       - ./target/mvn_version
-    expire_in:  1 week
+    expire_in:  1 hour
   except:
       - /release-.*$/
 
@@ -33,7 +33,7 @@ build:
    script:
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --no-cache --pull  -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME/deployment
+     - docker build --no-cache --pull  -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME/
      - docker push $IMAGE_NAME/pe-jvm:$MVN_VERSION
      - docker push $IMAGE_NAME/$CONTAINER_NAME:latest
    only:
