@@ -1,0 +1,10 @@
+wordcount.title=Word Count
+wordcount.description=Counts words on continuous text-based streams
+
+wordcountField.title=Property Selection
+wordcountField.description=Specifies the event property from your stream that should be counted.
+
+timeWindow.title=Time Window Size
+timeWindow.description=Size of the time window in seconds
+
+

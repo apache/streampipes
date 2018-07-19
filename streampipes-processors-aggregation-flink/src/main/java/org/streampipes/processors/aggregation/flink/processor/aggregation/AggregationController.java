@@ -76,7 +76,7 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
             .build();
   }
 
-  public static Label getLabel(String id) {
+  private Label getLabel(String id) {
     return Labels.fromResources(RESOURCE_ID, id);
   }
 
