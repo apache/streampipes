@@ -1,7 +1,7 @@
 version: "2"
 services:
   sinks-databases-jvm:
-    image: streampipes/sinks-databases-jvm:${SP_PE_VERSION}
+    image: ${SP_DOCKER_REGISTRY}/sinks-databases-jvm:${SP_PE_VERSION}
     depends_on:
       - "consul"
 #    ports:

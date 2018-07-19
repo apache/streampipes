@@ -1,7 +1,7 @@
 version: "2"
 services:
   processors-enricher-flink:
-    image: streampipes/processors-enricher-flink:${SP_PE_VERSION}
+    image: ${SP_DOCKER_REGISTRY}/processors-enricher-flink:${SP_PE_VERSION}
     depends_on:
       - "consul"
 #    ports:
