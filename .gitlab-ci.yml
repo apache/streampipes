@@ -33,7 +33,7 @@ build:
    script:
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --no-cache --pull  -t $IMAGE_NAME/streampipes-$CONTAINER_NAME:latest -t $IMAGE_NAME/streampipes-$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME/deployment
+     - docker build --no-cache --pull  -t $IMAGE_NAME/streampipes-$CONTAINER_NAME:latest -t $IMAGE_NAME/streampipes-$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
      - docker push $IMAGE_NAME/streampipes-$CONTAINER_NAME:$MVN_VERSION
      - docker push $IMAGE_NAME/streampipes-$CONTAINER_NAME:latest
    only:
