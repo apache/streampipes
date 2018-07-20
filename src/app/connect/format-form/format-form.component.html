@@ -1,17 +1,4 @@
-<!-- <form class="example-form" fxLayout="column">
-
-  <mat-list id="formList">
-    <mat-list-item *ngFor="let formatDescription of allFormats; let i = index" (click)="clickedOption(i)" class="listItem">
-      <p [hidden]="showStaticProperty[i]">{{formatDescription.label}}</p>
-      <app-static-properties [hidden]="!showStaticProperty[i]" [staticProperties]="formatDescription.config" (emitter1)="textValidation($event, i)">
-      </app-static-properties>
-    </mat-list-item>
-  </mat-list>
-
-</form> -->
-
 <app-format-list [allFormats]="allFormats" [(selectedFormat)]="selectedFormat" (selectedFormatEmitter)="formatSelected($event)" (validateEmitter)="validateAll($event)">
-
 </app-format-list>
 
 

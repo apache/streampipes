@@ -9,7 +9,7 @@ export class AdapterDataSource extends DataSource<AdapterDescription> {
 
     private allAdaptersObservable: BehaviorSubject<AdapterDescription[]>;
     private allAdapters: AdapterDescription[];
-
+    private restService;
     connect(collectionViewer: CollectionViewer): Observable<AdapterDescription[]> {
 
         this.allAdaptersObservable = new BehaviorSubject<AdapterDescription[]>([]);
@@ -21,8 +21,9 @@ export class AdapterDataSource extends DataSource<AdapterDescription> {
         return this.allAdaptersObservable;
     }
 
-    constructor(private restService: RestService) {
+    constructor(restService: RestService) {
         super();
+        this.restService = restService;
     }
 
     reload(): void {

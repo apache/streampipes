@@ -52,6 +52,7 @@ import {ProtocolListComponent} from './protocol-list-component/protocol-list.com
 import { FormatListComponent } from './format-list-component/format-list.component';
 import { FormatComponent } from './format-component/format.component';
 
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -101,7 +102,8 @@ import { FormatComponent } from './format-component/format.component';
         RestService,
         DataTypesService,
         TransformationRuleService,
-        StaticPropertyUtilService
+        StaticPropertyUtilService,
+        
     ],
     entryComponents: [
         MainComponent,

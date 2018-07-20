@@ -2,18 +2,20 @@ import {Component, Input, OnInit} from '@angular/core';
 import {RestService} from '../rest.service';
 import {AdapterDescription} from '../model/AdapterDescription';
 import {AdapterDataSource} from './adapter-data-source.service';
-
+import {Subscription} from'rxjs';
 @Component({
     selector: 'sp-all-adapters',
     templateUrl: './all.component.html',
     styleUrls: ['./all.component.css']
 })
 export class AllAdaptersComponent implements OnInit {
-
+    
 
     private restService: RestService;
 
     private allAdapters: AdapterDescription[];
+
+    subscription: Subscription;
 
     displayedColumns = ['id', 'protocol','format', 'delete'];
 
@@ -21,6 +23,8 @@ export class AllAdaptersComponent implements OnInit {
 
     constructor(restService: RestService) {
         this.restService = restService;
+
+
     }
 
     ngOnInit() {
@@ -28,6 +32,11 @@ export class AllAdaptersComponent implements OnInit {
 
         this.allAdapters = [adapter];
         this.dataSource = new AdapterDataSource(this.restService);
+    }
+
+    newAdapterStarted() {
+        this.dataSource.reload();
+
     }
 
 

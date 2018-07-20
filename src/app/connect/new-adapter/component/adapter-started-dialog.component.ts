@@ -14,7 +14,7 @@ export class AdapterStartedDialog {
     onCloseConfirm() {
         this.dialogRef.close('Confirm');
         // TODO refresh page
-        window.location.reload();
+        //window.location.reload();
     }
 
     // onCloseCancel() {

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Output, OnInit, EventEmitter} from '@angular/core';
 import { ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import {RestService} from '../rest.service';
@@ -22,8 +22,9 @@ import {DataStreamDescription} from '../model/DataStreamDescription';
     styleUrls: ['./new.component.css']
 })
 export class NewComponent implements OnInit {
-    @ViewChild('eschema') eventSchemaComponent;
-
+    @ViewChild('eschema') 
+    eventSchemaComponent;
+    @Output() newAdapterCreated = new EventEmitter();
     isLinear = false;
     setStreamFormGroup: FormGroup;
     firstFormGroup: FormGroup;
@@ -136,6 +137,9 @@ export class NewComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
            console.log('The dialog was closed');
+            this.newAdapterCreated.emit()
+
+
         });
     }
 
