@@ -1,7 +1,7 @@
-<div *ngIf="!format.edit" class="wrapper" (click)="formatEditable()">
+<div *ngIf="!format.edit || !hasConfig" class="wrapper" (click)="formatEditable()" [ngClass]="{selectedItem: format.edit}" >
     <p> {{format.label}} </p>
 </div>
-<div *ngIf="format.edit" class="wrapper selectedItem">
+<div *ngIf="format.edit && hasConfig" class="wrapper selectedItem">
     <app-select-static-properties [staticProperties]="format.config" (validateEmitter)="validateText($event)" class="fullWidth">
     </app-select-static-properties>
 </div>
