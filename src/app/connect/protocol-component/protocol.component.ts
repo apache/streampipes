@@ -43,7 +43,9 @@ export class ProtocolComponent {
     }
   }
   ngOnInit() {
-
+    console.log("test1234")
+    console.log(this.protocol);
+    
   }
 
 

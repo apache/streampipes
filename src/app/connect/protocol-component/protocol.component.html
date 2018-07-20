@@ -1,4 +1,4 @@
-<div *ngIf="!protocol.edit || !hasConfig" class="wrapping" (click)="protocolEditable()" [ngClass]="{selectedItem: format.edit}">
+<div *ngIf="!protocol.edit || !hasConfig" class="wrapping" (click)="protocolEditable()" [ngClass]="{selectedItem: protocol.edit}">
     <p> {{protocol.label}} </p>
 </div>
 <div *ngIf="protocol.edit" class="wrapping selectedItem  && hasConfig">

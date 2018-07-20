@@ -72,9 +72,10 @@ export class NewComponent implements OnInit {
             secondCtrl: ['', Validators.required]
         });
 
+        this.allProtocols = [];
+
         this.restService.getProtocols().subscribe(x => {
             this.allProtocols = x.list;
-
             this.allProtocols;
         });
         
