@@ -1,7 +1,7 @@
-<div *ngIf="!protocol.edit" class="wrapping" (click)="protocolEditable()">
+<div *ngIf="!protocol.edit || !hasConfig" class="wrapping" (click)="protocolEditable()" [ngClass]="{selectedItem: format.edit}">
     <p> {{protocol.label}} </p>
 </div>
-<div *ngIf="protocol.edit" class="wrapping selectedItem ">
+<div *ngIf="protocol.edit" class="wrapping selectedItem  && hasConfig">
     <app-select-static-properties [staticProperties]="protocol.config" (validateEmitter)="validateText($event)" id="test">
     </app-select-static-properties>
 </div>

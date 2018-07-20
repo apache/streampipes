@@ -14,9 +14,22 @@ export class ProtocolComponent {
   @Output() validateEmitter = new EventEmitter();
   @Output() editableEmitter = new EventEmitter();
   @Output() selectedProtocolEmitter = new EventEmitter();
+  private hasConfig: Boolean;
+
+  constructor() {
+    this.hasConfig=true;
+  }
+
   protocolEditable() {
     this.protocol.edit = !this.protocol.edit;
     this.editableEmitter.emit(this.protocol);
+    if (this.protocol.config.length == 0) {
+      console.log(this.protocol.config);
+      this.hasConfig = false;
+      this.validateEmitter.emit(true);
+      this.selectedProtocol = this.protocol;
+      this.selectedProtocolEmitter.emit(this.selectedProtocol);
+    }
   }
   validateText(textValid) {
     if(textValid && this.protocol.edit) {
