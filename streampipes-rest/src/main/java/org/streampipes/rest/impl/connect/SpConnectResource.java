@@ -27,6 +27,7 @@ import org.streampipes.connect.firstconnector.format.json.arraykey.JsonFormat;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
 import org.streampipes.connect.firstconnector.protocol.set.FileProtocol;
 import org.streampipes.connect.firstconnector.protocol.set.HttpProtocol;
+import org.streampipes.connect.firstconnector.protocol.stream.HttpStreamProtocol;
 import org.streampipes.connect.firstconnector.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.firstconnector.protocol.stream.MqttProtocol;
 import org.streampipes.container.html.JSONGenerator;
@@ -90,6 +91,7 @@ public class SpConnectResource extends AbstractRestInterface {
         pdl.addDesctiption(new FileProtocol().declareModel());
         pdl.addDesctiption(new KafkaProtocol().declareModel());
         pdl.addDesctiption(new MqttProtocol().declareModel());
+        pdl.addDesctiption(new HttpStreamProtocol().declareModel());
 
         return ok(JsonLdUtils.toJsonLD(pdl));
     }
