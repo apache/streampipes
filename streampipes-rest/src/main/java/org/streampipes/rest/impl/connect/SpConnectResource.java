@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.connect.firstconnector.format.csv.CsvFormat;
+import org.streampipes.connect.firstconnector.format.geojson.GeoJsonFormat;
 import org.streampipes.connect.firstconnector.format.json.arraykey.JsonFormat;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
 import org.streampipes.connect.firstconnector.protocol.set.FileProtocol;
@@ -104,6 +105,7 @@ public class SpConnectResource extends AbstractRestInterface {
         fdl.addDesctiption(new JsonFormat().declareModel());
         fdl.addDesctiption(new JsonObjectFormat().declareModel());
         fdl.addDesctiption(new CsvFormat().declareModel());
+        fdl.addDesctiption(new GeoJsonFormat().declareModel());
 
         return ok(JsonLdUtils.toJsonLD(fdl));
     }

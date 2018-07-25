@@ -19,6 +19,8 @@ package org.streampipes.connect.firstconnector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.connect.firstconnector.format.geojson.GeoJsonFormat;
+import org.streampipes.connect.firstconnector.format.geojson.GeoJsonParser;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectParser;
 import org.streampipes.connect.firstconnector.pipeline.AdapterPipeline;
@@ -68,10 +70,12 @@ public class Adapter {
         allFormats.put(JsonObjectFormat.ID, new JsonObjectFormat());
 
         allFormats.put(CsvFormat.ID, new CsvFormat());
+        allFormats.put(GeoJsonFormat.ID, new GeoJsonFormat());
 
         allParsers.put(JsonFormat.ID, new JsonParser());
         allParsers.put(JsonObjectFormat.ID, new JsonObjectParser());
         allParsers.put(CsvFormat.ID, new CsvParser());
+        allParsers.put(GeoJsonFormat.ID, new GeoJsonParser());
 
         allProtocols.put(HttpProtocol.ID, new HttpProtocol());
         allProtocols.put(FileProtocol.ID, new FileProtocol());

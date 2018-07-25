@@ -71,5 +71,10 @@
             <artifactId>mqtt-client</artifactId>
             <version>1.12</version>
         </dependency>
+        <dependency>
+            <groupId>de.grundid.opendatalab</groupId>
+            <artifactId>geojson-jackson</artifactId>
+            <version>1.8</version>
+        </dependency>
     </dependencies>
 </project>
