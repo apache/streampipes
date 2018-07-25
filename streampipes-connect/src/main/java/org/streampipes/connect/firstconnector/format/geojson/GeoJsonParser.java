@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.firstconnector.format.Parser;
+import org.streampipes.connect.firstconnector.format.util.JsonEventProperty;
 import org.streampipes.model.modelconnect.FormatDescription;
 import org.streampipes.model.schema.*;
 import org.streampipes.vocabulary.SO;
@@ -40,8 +41,6 @@ import java.util.*;
 public class GeoJsonParser extends Parser {
 
     Logger logger = LoggerFactory.getLogger(GeoJsonParser.class);
-    private static String KEY = "features";
-
 
     @Override
     public Parser getInstance(FormatDescription formatDescription) {
@@ -80,7 +79,7 @@ public class GeoJsonParser extends Parser {
         }
 
         for (Map.Entry<String, Object> entry : geoFeature.getProperties().entrySet()) {
-            EventProperty p = getEventProperty(entry.getKey(), entry.getValue());
+            EventProperty p = JsonEventProperty.getEventProperty(entry.getKey(), entry.getValue());
             resultSchema.addEventProperty(p);
         }
 
@@ -103,23 +102,23 @@ public class GeoJsonParser extends Parser {
 
         } else if (geoFeature.getGeometry() instanceof LineString) {
             LineString lineString = (LineString) geoFeature.getGeometry();
-            eventProperties.add(getEventProperty("coorindatesLineString", lineString.getCoordinates()));
+            eventProperties.add(JsonEventProperty.getEventProperty("coorindatesLineString", lineString.getCoordinates()));
 
         } else if (geoFeature.getGeometry() instanceof Polygon) {
             Polygon polygon = (Polygon) geoFeature.getGeometry();
-            eventProperties.add(getEventProperty("coorindatesPolygon", polygon.getCoordinates()));
+            eventProperties.add(JsonEventProperty.getEventProperty("coorindatesPolygon", polygon.getCoordinates()));
 
         } else if (geoFeature.getGeometry() instanceof MultiPoint) {
             MultiPoint multiPoint = (MultiPoint) geoFeature.getGeometry();
-            eventProperties.add(getEventProperty("coorindatesMultiPoint", multiPoint.getCoordinates()));
+            eventProperties.add(JsonEventProperty.getEventProperty("coorindatesMultiPoint", multiPoint.getCoordinates()));
 
         } else if (geoFeature.getGeometry() instanceof MultiLineString) {
             MultiLineString multiLineString = (MultiLineString) geoFeature.getGeometry();
-            eventProperties.add(getEventProperty("coorindatesMultiLineString", multiLineString.getCoordinates()));
+            eventProperties.add(JsonEventProperty.getEventProperty("coorindatesMultiLineString", multiLineString.getCoordinates()));
 
         } else if (geoFeature.getGeometry() instanceof MultiPolygon) {
             MultiPolygon multiPolygon = (MultiPolygon) geoFeature.getGeometry();
-            eventProperties.add(getEventProperty("coorindatesMultiPolygon", multiPolygon.getCoordinates()));
+            eventProperties.add(JsonEventProperty.getEventProperty("coorindatesMultiPolygon", multiPolygon.getCoordinates()));
         } else {
             logger.error("No geometry field found in geofeature: " + geoFeature.toString());
         }
@@ -129,7 +128,7 @@ public class GeoJsonParser extends Parser {
     }
 
     private EventProperty getEventPropertyGeoJson(String name, Object value, String domain) {
-        EventProperty eventProperty = getEventProperty(name, value);
+        EventProperty eventProperty = JsonEventProperty.getEventProperty(name, value);
         try {
             ((EventPropertyPrimitive) eventProperty).setDomainProperties(Arrays.asList(new URI(domain)));
 
@@ -140,53 +139,6 @@ public class GeoJsonParser extends Parser {
     }
 
 
-    private EventProperty getEventProperty(String key, Object o) {
-        EventProperty resultProperty = null;
 
-        System.out.println("Key: " + key);
-        System.out.println("Class: " + o.getClass());
-        System.out.println("Primitive: " + o.getClass().isPrimitive());
-        System.out.println("Array: " + o.getClass().isArray());
-        System.out.println("TypeName: " + o.getClass().getTypeName());
-
-
-        System.out.println("=======================");
-
-        if (o.getClass().equals(Boolean.class)) {
-            resultProperty = new EventPropertyPrimitive();
-            resultProperty.setRuntimeName(key);
-            ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._boolean.toString());
-        }
-        else if (o.getClass().equals(String.class)) {
-            resultProperty = new EventPropertyPrimitive();
-            resultProperty.setRuntimeName(key);
-            ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._string.toString());
-        }
-        else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)|| o.getClass().equals(Long.class)) {
-            resultProperty = new EventPropertyPrimitive();
-            resultProperty.setRuntimeName(key);
-            ((EventPropertyPrimitive) resultProperty).setRuntimeType(SO.Number);
-        }
-        else if (o.getClass().equals(LinkedHashMap.class)) {
-            resultProperty = new EventPropertyNested();
-            resultProperty.setRuntimeName(key);
-            List<EventProperty> all = new ArrayList<>();
-            for (Map.Entry<String, Object> entry : ((Map<String, Object>) o).entrySet()) {
-                all.add(getEventProperty(entry.getKey(), entry.getValue()));
-            }
-
-            ((EventPropertyNested) resultProperty).setEventProperties(all);
-
-        } else if (o.getClass().equals(ArrayList.class)) {
-            resultProperty = new EventPropertyList();
-            resultProperty.setRuntimeName(key);
-        }
-
-        if (resultProperty == null) {
-            logger.error("Property Type was not detected in JsonParser for the schema detection. This should never happen!");
-        }
-
-        return resultProperty;
-    }
 
 }

@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.firstconnector.format.Parser;
+import org.streampipes.connect.firstconnector.format.util.JsonEventProperty;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.model.modelconnect.FormatDescription;
 import org.streampipes.model.schema.*;
@@ -108,62 +109,13 @@ public class JsonObjectParser extends Parser {
         for (Map.Entry<String, Object> entry : exampleEvent.entrySet())
         {
 //            System.out.println(entry.getKey() + "/" + entry.getValue());
-            EventProperty p = getEventProperty(entry.getKey(), entry.getValue());
+            EventProperty p = JsonEventProperty.getEventProperty(entry.getKey(), entry.getValue());
 
             resultSchema.addEventProperty(p);
 
         }
 
         return resultSchema;
-    }
-
-    private EventProperty getEventProperty(String key, Object o) {
-        EventProperty resultProperty = null;
-
-        System.out.println("Key: " + key);
-        System.out.println("Class: " + o.getClass());
-        System.out.println("Primitive: " + o.getClass().isPrimitive());
-        System.out.println("Array: " + o.getClass().isArray());
-        System.out.println("TypeName: " + o.getClass().getTypeName());
-
-
-        System.out.println("=======================");
-
-        if (o.getClass().equals(Boolean.class)) {
-            resultProperty = new EventPropertyPrimitive();
-            resultProperty.setRuntimeName(key);
-            ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._boolean.toString());
-        }
-        else if (o.getClass().equals(String.class)) {
-            resultProperty = new EventPropertyPrimitive();
-            resultProperty.setRuntimeName(key);
-            ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._string.toString());
-        }
-        else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)|| o.getClass().equals(Long.class)) {
-            resultProperty = new EventPropertyPrimitive();
-            resultProperty.setRuntimeName(key);
-            ((EventPropertyPrimitive) resultProperty).setRuntimeType(SO.Number);
-        }
-        else if (o.getClass().equals(LinkedHashMap.class)) {
-            resultProperty = new EventPropertyNested();
-            resultProperty.setRuntimeName(key);
-            List<EventProperty> all = new ArrayList<>();
-            for (Map.Entry<String, Object> entry : ((Map<String, Object>) o).entrySet()) {
-                all.add(getEventProperty(entry.getKey(), entry.getValue()));
-            }
-
-            ((EventPropertyNested) resultProperty).setEventProperties(all);
-
-        } else if (o.getClass().equals(ArrayList.class)) {
-            resultProperty = new EventPropertyList();
-            resultProperty.setRuntimeName(key);
-        }
-
-        if (resultProperty == null) {
-            logger.error("Property Type was not detected in JsonParser for the schema detection. This should never happen!");
-        }
-
-        return resultProperty;
     }
 
     public Map<String, Object> parseObject(javax.json.stream.JsonParser jsonParser, boolean root, int start) {
