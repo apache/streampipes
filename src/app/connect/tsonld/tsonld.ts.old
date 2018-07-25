@@ -4,7 +4,6 @@ import 'rxjs/add/observable/fromPromise';
 import * as jsonld from 'jsonld';
 
 import {isUndefined} from 'util';
-import {publicDecrypt} from 'crypto';
 
 export class TsonLd {
 
@@ -155,7 +154,7 @@ export class TsonLd {
   fromJsonLd(obj: Object, ids: {}= {}, id?: string) {
 
     const context = obj['@context'];
-    const graph = obj['@graph'];
+    let graph = obj['@graph'];
 
 
     // Get rdfs type of p
@@ -214,8 +213,8 @@ export class TsonLd {
 
           // check if object or array
           if (Array.isArray(jsonObject[property])) {
-            // TODO check if needed
-            result[objectProp] = [];
+            //TODO check if needed
+             result[objectProp] = [];
             // ARRAY
             if (jsonObject[property].length > 0 && typeof jsonObject[property][0] === 'object') {
 
@@ -260,54 +259,42 @@ export class TsonLd {
 
             // if (Array.isArray(result[objectProp])) {
 
-            // check if already deserialized
-            if (!isUndefined(ids[jsonObject[property]['@id']])) {
-              // when already desirialized use object from stored array
+              // check if already deserialized
+              if (!isUndefined(ids[jsonObject[property]['@id']])) {
+                // when already desirialized use object from stored array
 
-              // case where array just has one element (this is serialized as an object)
+                // case where array just has one element (this is serialized as an object)
 
-              if (Array.isArray(result[objectProp])) {
-                result[objectProp] = [ids[jsonObject[property]['@id']]];
-                // result[objectProp] = ids[jsonObject[property]['@id']];
-              } else {
-                result[objectProp] = ids[jsonObject[property]['@id']];
-              }
-            } else {
-              // if not recursion and add to ids array
-              const index = graph.indexOf(jsonObject, 0);
-              if (index > -1) {
-                graph.splice(index, 1);
-              }
-              const newObj = {'@context': context, '@graph': graph};
-              ids[jsonObject['@id']] = result;
-
-              // console.log('ddddd: ' + JSON.stringify(ids,null, 2));
-              const current_id = jsonObject[property]['@id'];
-
-              if (!isUndefined(current_id)) {
-
-                // TODO last statement either 0 or now graph does not contain object id with more
-                if (Object.keys(jsonObject[property]).length === 1 && isUndefined(ids[current_id]) && !this.containsIdObject(newObj['@graph'], current_id)) {
-
-                  // ids does not contain
-                  result[objectProp] = jsonObject[property]['@id'];
-
+                if (Array.isArray(result[objectProp])) {
+                  result[objectProp] = [ids[jsonObject[property]['@id']]];
+                  // result[objectProp] = ids[jsonObject[property]['@id']];
                 } else {
-                  // if object just contains an @id initialize it as a string
+                  result[objectProp] = ids[jsonObject[property]['@id']];
+                }
+              } else {
+                // if not recursion and add to ids array
+                const index = graph.indexOf(jsonObject, 0);
+                if (index > -1) {
+                  graph.splice(index, 1);
+                }
+                const newObj = {'@context': context, '@graph': graph};
+                ids[jsonObject['@id']] = result;
 
+                // console.log('ddddd: ' + JSON.stringify(ids,null, 2));
+
+                if (!isUndefined(jsonObject[property]['@id'])) {
                   const nestedResult = this.fromJsonLd(newObj, ids, jsonObject[property]['@id']);
-                  // case where array just has one element (this is serialized as an object)
+                                  // case where array just has one element (this is serialized as an object)
 
                   console.log(JSON.stringify(result, null, 2));
                   console.log(objectProp);
-                  if (Array.isArray(result[objectProp])) {
+                if (Array.isArray(result[objectProp])) {
 
-                    result[objectProp] = [nestedResult];
-                  } else {
-                    result[objectProp] = nestedResult;
-                  }
+                  result[objectProp] = [nestedResult];
+                } else {
+                  result[objectProp] = nestedResult;
                 }
-              }
+                }
             }
           }
         } else {
@@ -325,22 +312,8 @@ export class TsonLd {
   }
   // }
 
-  public containsIdObject(array: any[], id: string): boolean {
-    let result = false;
-
-    for (const entry of array) {
-      if (entry['@id'] === id && Object.keys(entry).length > 1) {
-       result = true;
-      }
-
-    }
-
-    return result;
-  }
 }
 
 function prop<T, K extends keyof T>(obj: T, key: K) {
   return obj[key];
 }
-
-

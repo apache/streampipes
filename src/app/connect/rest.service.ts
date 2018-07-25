@@ -28,6 +28,11 @@ import {GuessSchema} from './schema-editor/model/GuessSchema';
 import {DomainPropertyProbabilityList} from './schema-editor/model/DomainPropertyProbabilityList';
 import {URI} from './model/URI';
 import {AuthStatusService} from '../services/auth-status.service';
+import {RenameRuleDescription} from './model/rules/RenameRuleDescription';
+import {DeleteRuleDescription} from './model/rules/DeleteRuleDescription';
+import {AddNestedRuleDescription} from './model/rules/AddNestedRuleDescription';
+import {MoveRuleDescription} from './model/rules/MoveRuleDesctiption';
+import {TransformationRuleDescription} from './model/rules/TransformationRuleDescription';
 
 @Injectable()
 export class RestService {
@@ -54,6 +59,11 @@ export class RestService {
         tsonld.addClassMapping(DomainPropertyProbabilityList);
         tsonld.addClassMapping(GuessSchema);
         tsonld.addClassMapping(URI);
+        tsonld.addClassMapping(RenameRuleDescription);
+        tsonld.addClassMapping(DeleteRuleDescription);
+        tsonld.addClassMapping(AddNestedRuleDescription);
+        tsonld.addClassMapping(MoveRuleDescription);
+        tsonld.addClassMapping(TransformationRuleDescription);
 
         return tsonld;
     }
@@ -130,6 +140,11 @@ export class RestService {
                         tsonld.addClassMapping(GuessSchema);
                         tsonld.addClassMapping(DomainPropertyProbability);
                         tsonld.addClassMapping(DomainPropertyProbabilityList);
+                        tsonld.addClassMapping(RenameRuleDescription);
+                        tsonld.addClassMapping(DeleteRuleDescription);
+                        tsonld.addClassMapping(AddNestedRuleDescription);
+                        tsonld.addClassMapping(MoveRuleDescription);
+                        tsonld.addClassMapping(TransformationRuleDescription);
 
                         const r = tsonld.fromJsonLdType(response, 'sp:GuessSchema');
                         resolve(r);
