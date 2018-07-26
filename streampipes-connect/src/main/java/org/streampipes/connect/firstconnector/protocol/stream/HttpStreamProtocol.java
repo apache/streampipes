@@ -153,7 +153,7 @@ public class HttpStreamProtocol extends PullProtocoll {
 
             result = IOUtils.toInputStream(s, "UTF-8");
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
