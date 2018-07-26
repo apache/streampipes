@@ -19,44 +19,20 @@ package org.streampipes.connect.firstconnector.format.json.xml;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.streampipes.connect.firstconnector.format.xml.XmlParser;
+import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventSchema;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public class XmlTest {
-/*
-    @Test
-    public void getSchema1() throws UnsupportedEncodingException {
-        GeoJsonParser parser = new GeoJsonParser();
-
-        byte[] event = getOneEventExampleMultiPolygon().getBytes("UTF-8");
-
-        EventSchema eventSchema = parser.getEventSchema(Collections.singletonList(event));
-
-        assertEquals(11, eventSchema.getEventProperties().size());
-
-    }
-*/
-/*
-    @Test
-    public void getSchema2() throws UnsupportedEncodingException {
-        GeoJsonParser parser = new GeoJsonParser();
-
-        byte[] event = getOneEventExample().getBytes("UTF-8");
-
-        EventSchema eventSchema = parser.getEventSchema(Collections.singletonList(event));
-
-        assertEquals(12, eventSchema.getEventProperties().size());
-
-    }
-*/
 
     @Test
     public void parseEventCarPark() {
@@ -110,10 +86,35 @@ public class XmlTest {
 
         EventSchema eventSchema = parser.getEventSchema(Collections.singletonList(event));
 
-        assertEquals(12, eventSchema.getEventProperties().size());
+        assertEquals(8, eventSchema.getEventProperties().size());
 
     }
 
+    @Test
+    public void getSchemaDatex2TrafficData1() throws UnsupportedEncodingException {
+        XmlParser parser = new XmlParser("elaboratedData");
+
+        List<byte[]> event = getEventSchemaTest2();
+
+        EventSchema eventSchema = parser.getEventSchema(event);
+
+        assertEquals(7, ((EventPropertyNested) ((EventPropertyNested) eventSchema.getEventProperties().get(0))
+                .getEventProperties().get(0)).getEventProperties().size());
+
+    }
+
+    @Test
+    public void getSchemaDatex2TrafficData2() throws UnsupportedEncodingException {
+        XmlParser parser = new XmlParser("elaboratedData");
+
+        List<byte[]> event = getEventSchemaTest3();
+
+        EventSchema eventSchema = parser.getEventSchema(event);
+
+        assertEquals(5, ((EventPropertyNested) ((EventPropertyNested) eventSchema.getEventProperties().get(0))
+                .getEventProperties().get(0)).getEventProperties().size());
+
+    }
 
     private InputStream getInputStream(String s) {
 
@@ -125,7 +126,6 @@ public class XmlTest {
 
         return null;
     }
-
 
     private String getCarParkExample() {
         return "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n" +
@@ -337,5 +337,41 @@ public class XmlTest {
                 "\"totalNumberOfOccupiedParkingSpaces\":123,\"totalNumberOfVacantParkingSpaces\":97," +
                 "\"totalParkingCapacityShortTermOverride\":220,\"totalParkingCapacityOverride\":220," +
                 "\"parkingFacilityStatusTime\":\"2018-07-25T13:17:00.087+02:00\",\"parkingFacilityOccupancy\":0.5590909}";
+    }
+
+    private List<byte[]> getEventSchemaTest2() throws UnsupportedEncodingException {
+        List<byte[]> list = new ArrayList();
+
+        String dataone = "{\"elaboratedData\":{\"basicData\":{\"measurementOrCalculationTime\":\"2018-07-25T16:21:27.365+02:00\",\"xsi:type\":\"TrafficFlow\",\"vehicleFlow\":{\"vehicleFlowRate\":12},\"pertinentLocation\":{\"xsi:type\":\"LocationByReference\",\"predefinedLocationReference\":{\"targetClass\":\"PredefinedLocation\",\"id\":\"fs.MQ_555.050_AB_SW_R_1\",\"version\":201610261425}},\"forVehiclesWithCharacteristicsOf\":{\"vehicleType\":\"car\"}}}}";
+        String datatwo = "{\"elaboratedData\":{\"basicData\":{\"measurementOrCalculationTime\":\"2018-07-25T16:21:27.365+02:00\",\"xsi:type\":\"TrafficFlow\",\"vehicleFlow\":{\"vehicleFlowRate\":1},\"pertinentLocation\":{\"xsi:type\":\"LocationByReference\",\"predefinedLocationReference\":{\"targetClass\":\"PredefinedLocation\",\"id\":\"fs.MQ_555.050_AB_SW_R_1\",\"version\":201610261425}},\"forVehiclesWithCharacteristicsOf\":{\"vehicleType\":\"lorry\"}}}}";
+        String datathree = "{\"elaboratedData\":{\"basicData\":{\"measurementOrCalculationTime\":\"2018-07-25T16:21:27.365+02:00\",\"percentageLongVehicles\":{\"percentage\":7},\"xsi:type\":\"TrafficFlow\",\"vehicleFlow\":{\"vehicleFlowRate\":13},\"pertinentLocation\":{\"xsi:type\":\"LocationByReference\",\"predefinedLocationReference\":{\"targetClass\":\"PredefinedLocation\",\"id\":\"fs.MQ_555.050_AB_SW_R_1\",\"version\":201610261425}},\"forVehiclesWithCharacteristicsOf\":{\"vehicleType\":\"anyVehicle\"}}}}";
+        String datafour = "{\"elaboratedData\":{\"basicData\":{\"measurementOrCalculationTime\":\"2018-07-25T16:21:27.365+02:00\",\"averageVehicleSpeed\":{\"speed\":44},\"xsi:type\":\"TrafficSpeed\",\"pertinentLocation\":{\"xsi:type\":\"LocationByReference\",\"predefinedLocationReference\":{\"targetClass\":\"PredefinedLocation\",\"id\":\"fs.MQ_555.050_AB_SW_R_1\",\"version\":201610261425}},\"forVehiclesWithCharacteristicsOf\":{\"vehicleType\":\"car\"}}}}\"\n";
+        String datafive = "{\"elaboratedData\":{\"basicData\":{\"measurementOrCalculationTime\":\"2018-07-25T16:21:27.365+02:00\",\"averageVehicleSpeed\":{\"speed\":29},\"xsi:type\":\"TrafficSpeed\",\"pertinentLocation\":{\"xsi:type\":\"LocationByReference\",\"predefinedLocationReference\":{\"targetClass\":\"PredefinedLocation\",\"id\":\"fs.MQ_555.050_AB_SW_R_1\",\"version\":201610261425}},\"forVehiclesWithCharacteristicsOf\":{\"vehicleType\":\"lorry\"}}}}";
+
+        list.add(dataone.getBytes("UTF-8"));
+        list.add(datatwo.getBytes("UTF-8"));
+        list.add(datathree.getBytes("UTF-8"));
+        list.add(datafour.getBytes("UTF-8"));
+        list.add(datafive.getBytes("UTF-8"));
+
+        return list;
+    }
+
+    private List<byte[]> getEventSchemaTest3() throws UnsupportedEncodingException {
+        List<byte[]> list = new ArrayList();
+
+        String dataone = "{\"elaboratedData\":{\"basicData\":{\"measurementOrCalculationTime\":\"2018-07-25T16:21:27.365+02:00\",\"xsi:type\":\"TrafficFlow\",\"vehicleFlow\":{\"vehicleFlowRate\":12},\"pertinentLocation\":{\"xsi:type\":\"LocationByReference\",\"predefinedLocationReference\":{\"targetClass\":\"PredefinedLocation\",\"id\":\"fs.MQ_555.050_AB_SW_R_1\",\"version\":201610261425}},\"forVehiclesWithCharacteristicsOf\":{\"vehicleType\":\"car\"}}}}";
+        String datatwo = "{\"elaboratedData\":{\"basicData\":{\"measurementOrCalculationTime\":\"2018-07-25T16:21:27.365+02:00\",\"xsi:type\":\"TrafficFlow\",\"vehicleFlow\":{\"vehicleFlowRate\":12},\"pertinentLocation\":{\"xsi:type\":\"LocationByReference\",\"predefinedLocationReference\":{\"targetClass\":\"PredefinedLocation\",\"id\":\"fs.MQ_555.050_AB_SW_R_1\",\"version\":201610261425}},\"forVehiclesWithCharacteristicsOf\":{\"vehicleType\":\"car\"}}}}";
+        String datathree = "{\"elaboratedData\":{\"basicData\":{\"measurementOrCalculationTime\":\"2018-07-25T16:21:27.365+02:00\",\"xsi:type\":\"TrafficFlow\",\"vehicleFlow\":{\"vehicleFlowRate\":12},\"pertinentLocation\":{\"xsi:type\":\"LocationByReference\",\"predefinedLocationReference\":{\"targetClass\":\"PredefinedLocation\",\"id\":\"fs.MQ_555.050_AB_SW_R_1\",\"version\":201610261425}},\"forVehiclesWithCharacteristicsOf\":{\"vehicleType\":\"car\"}}}}";
+        String datafour = "{\"elaboratedData\":{\"basicData\":{\"measurementOrCalculationTime\":\"2018-07-25T16:21:27.365+02:00\",\"xsi:type\":\"TrafficFlow\",\"vehicleFlow\":{\"vehicleFlowRate\":12},\"pertinentLocation\":{\"xsi:type\":\"LocationByReference\",\"predefinedLocationReference\":{\"targetClass\":\"PredefinedLocation\",\"id\":\"fs.MQ_555.050_AB_SW_R_1\",\"version\":201610261425}},\"forVehiclesWithCharacteristicsOf\":{\"vehicleType\":\"car\"}}}}";
+        String datafive = "{\"elaboratedData\":{\"basicData\":{\"measurementOrCalculationTime\":\"2018-07-25T16:21:27.365+02:00\",\"xsi:type\":\"TrafficFlow\",\"vehicleFlow\":{\"vehicleFlowRate\":12},\"pertinentLocation\":{\"xsi:type\":\"LocationByReference\",\"predefinedLocationReference\":{\"targetClass\":\"PredefinedLocation\",\"id\":\"fs.MQ_555.050_AB_SW_R_1\",\"version\":201610261425}},\"forVehiclesWithCharacteristicsOf\":{\"vehicleType\":\"car\"}}}}";
+
+        list.add(dataone.getBytes("UTF-8"));
+        list.add(datatwo.getBytes("UTF-8"));
+        list.add(datathree.getBytes("UTF-8"));
+        list.add(datafour.getBytes("UTF-8"));
+        list.add(datafive.getBytes("UTF-8"));
+
+        return list;
     }
 }

@@ -37,12 +37,12 @@ import org.streampipes.model.schema.EventSchema;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class XmlParser extends Parser {
 
     Logger logger = LoggerFactory.getLogger(XmlParser.class);
+    private static int MAX_NUM_EVENTS_SCHEMA_GUESS = 20;
 
     private String tag;
 
@@ -84,16 +84,28 @@ public class XmlParser extends Parser {
         EventSchema resultSchema = new EventSchema();
 
         JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
-
-        Map<String, Object> exampleEvent = null;
+        List<Map<String, Object>> exampleEvents= new LinkedList<>();
+        Map<String, Object> result = new HashMap<>();
 
         try {
-            exampleEvent = jsonDefinition.toMap(oneEvent.get(0));
+            int i = 1;
+            for (Iterator<byte[]> it = oneEvent.iterator(); it.hasNext(); i++) {
+                byte[] bytes = it.next();
+                Map exampleEvent = jsonDefinition.toMap(bytes);
+                exampleEvents.add(exampleEvent);
+                if(i >= MAX_NUM_EVENTS_SCHEMA_GUESS ) break;
+            }
+
+
+            for (Iterator<Map<String, Object>> it = exampleEvents.iterator(); it.hasNext(); ) {
+                result = mergeEventMaps(result, it.next());
+            }
+
         } catch (SpRuntimeException e) {
             e.printStackTrace();
         }
 
-        for (Map.Entry<String, Object> entry : exampleEvent.entrySet())
+        for (Map.Entry<String, Object> entry : result.entrySet())
         { EventProperty p = JsonEventProperty.getEventProperty(entry.getKey(), entry.getValue());
             resultSchema.addEventProperty(p);
         }
@@ -122,9 +134,28 @@ public class XmlParser extends Parser {
 
             } else if (entry.getValue() instanceof Map) {
                 searchAndEmitEvents((Map)entry.getValue(), key, emitBinaryEvent);
+            } else if (entry.getValue() instanceof List) {
+                List list = (List)entry.getValue();
+                list.forEach(listEntry -> searchAndEmitEvents((Map)listEntry, key, emitBinaryEvent));
             }
         }
     }
+
+    private Map mergeEventMaps(Map map1, Map map2) {
+        Map result = map1;
+        for (Object key : map2.keySet()) {
+            if (map2.get(key) instanceof Map && result.get(key) instanceof Map) {
+                Map originalChild = (Map) result.get(key);
+                Map newChild = (Map) map2.get(key);
+                result.put(key, mergeEventMaps(originalChild, newChild));
+            } else {
+                result.put(key, map2.get(key));
+            }
+        }
+        return result;
+
+    }
+
 
 
 }
