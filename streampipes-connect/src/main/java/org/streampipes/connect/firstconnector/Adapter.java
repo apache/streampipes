@@ -23,8 +23,11 @@ import org.streampipes.connect.firstconnector.format.geojson.GeoJsonFormat;
 import org.streampipes.connect.firstconnector.format.geojson.GeoJsonParser;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectParser;
+import org.streampipes.connect.firstconnector.format.xml.XmlFormat;
+import org.streampipes.connect.firstconnector.format.xml.XmlParser;
 import org.streampipes.connect.firstconnector.pipeline.AdapterPipeline;
 import org.streampipes.connect.firstconnector.pipeline.AdapterPipelineElement;
+import org.streampipes.connect.firstconnector.pipeline.elements.DuplicateFilter;
 import org.streampipes.connect.firstconnector.pipeline.elements.SendToKafkaAdapterSink;
 import org.streampipes.connect.firstconnector.pipeline.elements.TransformSchemaAdapterPipelineElement;
 import org.streampipes.connect.firstconnector.protocol.stream.HttpStreamProtocol;
@@ -77,6 +80,7 @@ public class Adapter {
         allParsers.put(JsonObjectFormat.ID, new JsonObjectParser());
         allParsers.put(CsvFormat.ID, new CsvParser());
         allParsers.put(GeoJsonFormat.ID, new GeoJsonParser());
+        allParsers.put(XmlFormat.ID, new XmlParser());
 
         allProtocols.put(HttpProtocol.ID, new HttpProtocol());
         allProtocols.put(FileProtocol.ID, new FileProtocol());
@@ -107,6 +111,7 @@ public class Adapter {
 
         List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
         pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getRules()));
+        pipelineElements.add(new DuplicateFilter());
         pipelineElements.add(new SendToKafkaAdapterSink(this.kafkaUrl, this.topic));
 
         AdapterPipeline adapterPipeline = new AdapterPipeline(pipelineElements);

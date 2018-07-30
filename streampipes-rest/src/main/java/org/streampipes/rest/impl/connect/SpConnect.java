@@ -47,7 +47,7 @@ public class SpConnect {
 
         // start when stream adapter
         if (ad instanceof AdapterStreamDescription) {
-            return SpConnect.startStreamAdapter((AdapterStreamDescription) ad, baseUrl);
+            SpConnect.startStreamAdapter((AdapterStreamDescription) ad, baseUrl);
         }
 
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
