@@ -16,7 +16,8 @@
     "watchtest": "node ./deployment/prebuild.js && karma start ./karma.conf.js --no-auto-watch --single-run",
     "test": "node ./deployment/prebuild.js && karma start ./karma.conf.js",
     "build": "node ./deployment/prebuild.js && webpack --display-modules --progress",
-    "lint": "tslint -c tslint.json 'src/**/*.ts*"
+    "lint": "tslint -c tslint.json 'src/**/*.ts*",
+    "test-e2e": "cypress open"
   },
   "dependencies": {
     "@angular/animations": "^5.2.5",
@@ -87,6 +88,7 @@
     "codelyzer": "^4.1.0",
     "copy-webpack-plugin": "^4.4.1",
     "css-loader": "^0.28.11",
+    "cypress": "^3.0.2",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
     "html-webpack-plugin": "^2.30.1",
