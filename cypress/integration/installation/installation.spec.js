@@ -1,6 +1,6 @@
 describe('Install Streampipes', function () {
     it('Open Streampipes', function () {
-        cy.visit('http://localhost');
+        cy.visit('');
     });
     it('Should open Setup Page', function () {
         cy.url({timeout: 60000}).should('contain', '#/setup');

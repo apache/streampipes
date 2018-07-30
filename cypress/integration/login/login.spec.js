@@ -5,7 +5,7 @@ describe('Login Streampipes', function () {
     })
 
     it('Open Streampipes', function () {
-        cy.visit('http://localhost');
+        cy.visit('');
     });
     it('Should open Login Page', function () {
         cy.url({timeout: 60000}).should('contain', '#/login');

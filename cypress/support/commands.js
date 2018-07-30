@@ -23,3 +23,21 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+
+
+Cypress.Commands.add('login', (options = {}) => {
+    Cypress.Cookies.defaults({
+        whitelist: "JSESSIONID"
+    });
+
+    cy.visit('');
+
+    cy.url({timeout: 60000}).should('contain', '#/login');
+
+    cy.get('input[type="email"]').type('abt@fzi.de');
+    cy.get('input[type="password"]').type('1234');
+
+    cy.get('button').contains('Login').parent().click();
+
+});
