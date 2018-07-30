@@ -48,7 +48,7 @@
 </div>
 <div flex id="editor-icon-stand" class="icon-stand" ng-if="ctrl.currentElements">
     <!-- selectFilter:ctrl.selectedOptions | -->
-    <span ng-mouseover="ctrl.updateMouseOver(element.name)" ng-mouseleave="ctrl.updateMouseOver('')"
+    <span id="{{ element.name }}" ng-mouseover="ctrl.updateMouseOver(element.name)" ng-mouseleave="ctrl.updateMouseOver('')"
           ng-repeat="element in ctrl.currentElements |  selectFilter:ctrl.selectedOptions | elementNameFilter:ctrl.elName | orderBy: 'name'" my-data-bind class="draggable-icon tt"
           ng-class="element.type">
         <span id="container" style="position:relative;display:block;width:80px;height:80px;">
