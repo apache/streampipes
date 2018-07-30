@@ -75,6 +75,7 @@ public class Adapter {
 
         allFormats.put(CsvFormat.ID, new CsvFormat());
         allFormats.put(GeoJsonFormat.ID, new GeoJsonFormat());
+        allFormats.put(XmlFormat.ID, new XmlFormat());
 
         allParsers.put(JsonFormat.ID, new JsonParser());
         allParsers.put(JsonObjectFormat.ID, new JsonObjectParser());
@@ -111,7 +112,6 @@ public class Adapter {
 
         List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
         pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getRules()));
-        pipelineElements.add(new DuplicateFilter());
         pipelineElements.add(new SendToKafkaAdapterSink(this.kafkaUrl, this.topic));
 
         AdapterPipeline adapterPipeline = new AdapterPipeline(pipelineElements);

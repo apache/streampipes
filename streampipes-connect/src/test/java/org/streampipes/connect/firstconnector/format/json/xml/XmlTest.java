@@ -90,6 +90,7 @@ public class XmlTest {
 
     }
 
+    /*
     @Test
     public void getSchemaDatex2TrafficData1() throws UnsupportedEncodingException {
         XmlParser parser = new XmlParser("elaboratedData");
@@ -102,6 +103,9 @@ public class XmlTest {
                 .getEventProperties().get(0)).getEventProperties().size());
 
     }
+    */
+
+    /*
 
     @Test
     public void getSchemaDatex2TrafficData2() throws UnsupportedEncodingException {
@@ -115,6 +119,7 @@ public class XmlTest {
                 .getEventProperties().get(0)).getEventProperties().size());
 
     }
+    */
 
     private InputStream getInputStream(String s) {
 

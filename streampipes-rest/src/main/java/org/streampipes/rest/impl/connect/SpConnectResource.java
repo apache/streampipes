@@ -26,6 +26,7 @@ import org.streampipes.connect.firstconnector.format.csv.CsvFormat;
 import org.streampipes.connect.firstconnector.format.geojson.GeoJsonFormat;
 import org.streampipes.connect.firstconnector.format.json.arraykey.JsonFormat;
 import org.streampipes.connect.firstconnector.format.json.object.JsonObjectFormat;
+import org.streampipes.connect.firstconnector.format.xml.XmlFormat;
 import org.streampipes.connect.firstconnector.protocol.set.FileProtocol;
 import org.streampipes.connect.firstconnector.protocol.set.HttpProtocol;
 import org.streampipes.connect.firstconnector.protocol.stream.HttpStreamProtocol;
@@ -108,6 +109,7 @@ public class SpConnectResource extends AbstractRestInterface {
         fdl.addDesctiption(new JsonObjectFormat().declareModel());
         fdl.addDesctiption(new CsvFormat().declareModel());
         fdl.addDesctiption(new GeoJsonFormat().declareModel());
+        fdl.addDesctiption(new XmlFormat().declareModel());
 
         return ok(JsonLdUtils.toJsonLD(fdl));
     }
