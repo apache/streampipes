@@ -63,7 +63,6 @@ export class RestService {
         tsonld.addClassMapping(DeleteRuleDescription);
         tsonld.addClassMapping(AddNestedRuleDescription);
         tsonld.addClassMapping(MoveRuleDescription);
-        tsonld.addClassMapping(TransformationRuleDescription);
 
         return tsonld;
     }

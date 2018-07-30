@@ -4,7 +4,6 @@ import 'rxjs/add/observable/fromPromise';
 import * as jsonld from 'jsonld';
 
 import {isUndefined} from 'util';
-import {publicDecrypt} from 'crypto';
 
 export class TsonLd {
 
