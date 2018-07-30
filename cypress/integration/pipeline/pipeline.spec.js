@@ -1,5 +1,8 @@
 describe('Adapter Installation 1', function () {
 
+    Cypress.Cookies.defaults({
+        whitelist: "JSESSIONID"
+    });
 
     it('Login', function () {
         cy.login();
@@ -15,10 +18,8 @@ describe('Adapter Installation 1', function () {
     // TODO: Is not moving the pipeline-element, 'mousedown' is not trigger the element
     it('Move', function () {
         cy.get("#CouchDB")
-            .trigger('mousedown')
-            .trigger('pointerup')
-            .trigger('mousemove', { clientX: 0, clientY: 100 })
-
+            .trigger('mousedown', {which: 1})
+            .trigger('mousemove', {pageX: 118, pageY: 400})
             .trigger('mouseup', {force: true})
     });
 
@@ -27,7 +28,10 @@ describe('Adapter Installation 1', function () {
 
     });
 
+    it('Logout', function () {
+        cy.logout();
 
+    });
 
 });
 
