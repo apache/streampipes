@@ -30,6 +30,7 @@ import org.streampipes.connect.firstconnector.pipeline.elements.TransformSchemaA
 import org.streampipes.connect.firstconnector.protocol.stream.HttpStreamProtocol;
 import org.streampipes.connect.firstconnector.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.firstconnector.protocol.stream.MqttProtocol;
+import org.streampipes.connect.firstconnector.protocol.stream.TwitterProtocol;
 import org.streampipes.model.modelconnect.AdapterDescription;
 import org.streampipes.model.modelconnect.GuessSchema;
 import org.streampipes.connect.firstconnector.format.Format;
@@ -81,8 +82,8 @@ public class Adapter {
         allProtocols.put(FileProtocol.ID, new FileProtocol());
         allProtocols.put(KafkaProtocol.ID, new KafkaProtocol());
         allProtocols.put(MqttProtocol.ID, new MqttProtocol());
-        allProtocols.put(HttpStreamProtocol.ID,
-                new HttpStreamProtocol());
+        allProtocols.put(HttpStreamProtocol.ID, new HttpStreamProtocol());
+        allProtocols.put(TwitterProtocol.ID, new TwitterProtocol());
 
         this.debug = debug;
     }

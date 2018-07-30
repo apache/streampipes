@@ -31,6 +31,7 @@ import org.streampipes.connect.firstconnector.protocol.set.HttpProtocol;
 import org.streampipes.connect.firstconnector.protocol.stream.HttpStreamProtocol;
 import org.streampipes.connect.firstconnector.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.firstconnector.protocol.stream.MqttProtocol;
+import org.streampipes.connect.firstconnector.protocol.stream.TwitterProtocol;
 import org.streampipes.container.html.JSONGenerator;
 import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.streampipes.container.html.model.Description;
@@ -93,6 +94,7 @@ public class SpConnectResource extends AbstractRestInterface {
         pdl.addDesctiption(new KafkaProtocol().declareModel());
         pdl.addDesctiption(new MqttProtocol().declareModel());
         pdl.addDesctiption(new HttpStreamProtocol().declareModel());
+        pdl.addDesctiption(new TwitterProtocol().declareModel());
 
         return ok(JsonLdUtils.toJsonLD(pdl));
     }
