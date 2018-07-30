@@ -35,9 +35,18 @@ Cypress.Commands.add('login', (options = {}) => {
 
     cy.url({timeout: 60000}).should('contain', '#/login');
 
-    cy.get('input[type="email"]').type('abt@fzi.de');
+    //TODO change again
+    cy.get('input[type="email"]').type('riemer@fzi.de');
     cy.get('input[type="password"]').type('1234');
 
     cy.get('button').contains('Login').parent().click();
 
+});
+
+Cypress.Commands.add('logout', (options = {}) => {
+    Cypress.Cookies.defaults({
+        whitelist: "JSESSIONID"
+    });
+
+    cy.get('#sp_logout').click();
 });
