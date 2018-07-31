@@ -7,6 +7,7 @@ stages:
   - build
   - docker
   - deploy
+  - release
 
 build:
   image: maven:3-jdk-8
@@ -38,6 +39,61 @@ build:
      - docker push $IMAGE_NAME/$CONTAINER_NAME:latest
    only:
      - dev
+
+deploy:
+  image: maven:3-jdk-8
+  stage: deploy
+  script:
+    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    - mvn deploy -DskipTests
+  only:
+    - dev
+
+start release:
+  image: maven:3-jdk-8
+  stage: release
+  script:
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH")
+    - mkdir ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - ssh-keyscan -p 2222 -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
+    - git config --global user.email 'zehnder@fzi.de'
+    - git config --global user.name 'zehnder'
+    - git fetch
+    - git checkout master
+    - git checkout dev
+    - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS
+    - git push origin --all
+  only:
+    - dev
+  when: manual
+
+finish release:
+  image: maven:3-jdk-8
+  stage: release
+  script:
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH")
+    - mkdir ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - ssh-keyscan -p 2222 -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
+    - git config --global user.email 'zehnder@fzi.de'
+    - git config --global user.name 'zehnder'
+    - git checkout master
+    - git checkout dev
+    - git checkout $CI_BUILD_REF_NAME
+    - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS
+    - git push origin --all
+    - git push origin --tags
+  when: manual
+  except:
+    - master
 
 docker-processors-aggregation-flink:
     <<: *docker_script
