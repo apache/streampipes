@@ -62,7 +62,7 @@ docker-processors-geo-jvm:
 docker-processors-pattern-detection-flink:
     <<: *docker_script
     variables:
-      CONTAINER_NAME: "processors-detection-flink"
+      CONTAINER_NAME: "processors-pattern-detection-flink"
 
 docker-processors-siddhi:
     <<: *docker_script
