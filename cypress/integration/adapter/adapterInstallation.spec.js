@@ -13,7 +13,7 @@ describe('Adapter Installation 1', function () {
         {"fieldName": 'key', "value": 'fields'}
     ];
 
-    var adaterName = 'Parking';
+    var adapterName = 'Parking';
     var gueesSchemaWait = 10000;
 
     it('Login', function () {
@@ -68,10 +68,16 @@ describe('Adapter Installation 1', function () {
     //Start Adapter Step
     pressNext();
     it('Write Adapter Name', function () {
-        cy.get('#input-AdapterName').type(adaterName);
+        cy.get('#input-AdapterName').type(adapterName);
     });
     it('Start Adapter', function () {
         cy.get('#button-startAdapter').parent().click();
+    });
+
+
+    it('Logout', function () {
+        cy.logout();
+
     });
 
 
@@ -87,4 +93,6 @@ function select(selectAt) {
     it('Select ' + selectAt, function () {
         cy.contains(selectAt).click();
     });
+
+
 }

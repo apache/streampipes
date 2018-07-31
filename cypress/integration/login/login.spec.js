@@ -2,7 +2,7 @@ describe('Login Streampipes', function () {
 
     Cypress.Cookies.defaults({
         whitelist: "JSESSIONID"
-    })
+    });
 
     it('Open Streampipes', function () {
         cy.visit('');
