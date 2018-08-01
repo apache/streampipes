@@ -1,0 +1,26 @@
+variables:
+  REGISTRY_HOST: ipe-wim-gitlab.fzi.de:5000
+  IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH
+  MAVEN_CLI_OPTS: -DskipTests --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true
+
+stages:
+  - gen-script
+
+generate bash script:
+  image: matejak/argbash:2.7.0-1
+  stage: gen-script
+  script:
+    - apk add git
+    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH")
+    - mkdir ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - ssh-keyscan -p 2222 -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
+    - git config --global user.email 'zehnder@fzi.de'
+    - git config --global user.name 'zehnder'
+    - argbash -o sp.sh sp.m4
+    - git commit -m "[skip-ci] Generate script"
+    - git push origin arguments
+  only:
+    - arguments
