@@ -148,44 +148,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.streampipes.examples.jvm.ExamplesJvmInit</mainClass>
-                                </transformer>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                            </transformers>
-                            <filters>
-
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                        <exclude>META-INF/maven/com.github.jsonld-java/jsonld-java/pom.xml</exclude>
-                                        <exclude>META-INF/maven/com.github.jsonld-java/jsonld-java-sesame/pom.xml
-                                        </exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>external.atlassian.jgitflow</groupId>
                 <artifactId>jgitflow-maven-plugin</artifactId>
                 <version>1.0-m5.1</version>
@@ -228,15 +190,13 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>streampipes-examples-jvm</finalName>
-
     </build>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/pe-examples-jvm.git
+        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-pipeline-elements.git
         </developerConnection>
-        <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/pe-examples-jvm.git</connection>
-        <url>https://github.com/streampipes/pe-examples-jvm</url>
+        <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-pipeline-elements.git</connection>
+        <url>https://github.com/streampipes/streampipes-pipeline-elements</url>
     </scm>
 
     <licenses>
