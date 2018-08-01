@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # ARG_OPTIONAL_SINGLE([hostname],[],[The default hostname of your server],[])
-# ARG_POSITIONAL_MULTI([operation],[The StreamPipes operation (start|stop|restart|clean|add|remove|cleanstart)],[2],[start],[nil])
+# ARG_OPTIONAL_BOOLEAN([prune],[p],[Prune docker networks])
+# ARG_OPTIONAL_BOOLEAN([clean],[p],[Start from a clean StreamPipes session])
+# ARG_POSITIONAL_MULTI([operation],[The StreamPipes operation (start|stop|restart|clean|add|remove|cleanstart) (service-name)],[2],[start],[nil])
 # ARG_DEFAULTS_POS()
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -25,7 +27,7 @@ die()
 
 begins_with_short_option()
 {
-  local first_option all_short_options='hv'
+  local first_option all_short_options='pphv'
   first_option="${1:0:1}"
   test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
 }
@@ -35,14 +37,18 @@ _positionals=()
 _arg_operation=("start" "nil")
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_hostname=
+_arg_prune="off"
+_arg_clean="off"
 
 
 print_help()
 {
   printf '%s\n' "This script provides advanced features to run StreamPipes on your server"
-  printf 'Usage: %s [--hostname <arg>] [-h|--help] [-v|--version] [<operation-1>] [<operation-2>]\n' "$0"
-  printf '\t%s\n' "<operation>: The StreamPipes operation (start|stop|restart|clean|add|remove|cleanstart) (defaults for <operation-1> to <operation-2> respectively: 'start' and 'nil')"
+  printf 'Usage: %s [--hostname <arg>] [-p|--(no-)prune] [-p|--(no-)clean] [-h|--help] [-v|--version] [<operation-1>] [<operation-2>]\n' "$0"
+  printf '\t%s\n' "<operation>: The StreamPipes operation (start|stop|restart|clean|add|remove|cleanstart) (service-name) (defaults for <operation-1> to <operation-2> respectively: 'start' and 'nil')"
   printf '\t%s\n' "--hostname: The default hostname of your server (no default)"
+  printf '\t%s\n' "-p, --prune, --no-prune: Prune docker networks (off by default)"
+  printf '\t%s\n' "-p, --clean, --no-clean: Start from a clean StreamPipes session (off by default)"
   printf '\t%s\n' "-h, --help: Prints help"
   printf '\t%s\n' "-v, --version: Prints version"
 }
@@ -62,6 +68,30 @@ parse_commandline()
         ;;
       --hostname=*)
         _arg_hostname="${_key##--hostname=}"
+        ;;
+      -p|--no-prune|--prune)
+        _arg_prune="on"
+        test "${1:0:5}" = "--no-" && _arg_prune="off"
+        ;;
+      -p*)
+        _arg_prune="on"
+        _next="${_key##-p}"
+        if test -n "$_next" -a "$_next" != "$_key"
+        then
+          begins_with_short_option "$_next" && shift && set -- "-p" "-${_next}" "$@" || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
+        fi
+        ;;
+      -p|--no-clean|--clean)
+        _arg_clean="on"
+        test "${1:0:5}" = "--no-" && _arg_clean="off"
+        ;;
+      -p*)
+        _arg_clean="on"
+        _next="${_key##-p}"
+        if test -n "$_next" -a "$_next" != "$_key"
+        then
+          begins_with_short_option "$_next" && shift && set -- "-p" "-${_next}" "$@" || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
+        fi
         ;;
       -h|--help)
         print_help
@@ -120,7 +150,7 @@ assign_positional_args 1 "${_positionals[@]}"
 # [ <-- needed because of Argbash
 
 
-echo "'$_arg_operation'"
+echo ${_arg_operation[@]}
 getIp() {
 	rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
@@ -131,9 +161,9 @@ getIp() {
 
 	# if default selected do not show promt
 
-	if [ $defaultIp ] ;
+	if [ $_arg_hostname ] ;
 	then
-		ip=${allips[0]}
+		ip=$_arg_hostname
 		echo 'Default IP was selected: '${ip}
 	else
 		echo ''
@@ -191,6 +221,16 @@ cleanStreamPipes() {
     echo 'StreamPipes clean'
 }
 
+removeService() {
+	sed -i "" /$1/d ./system
+}
+
+#removeSercvice "zookeeper"
+addService() {
+	echo "$1" >> ./system
+	updateStreamPipes
+}
+
 if [ "$_arg_operation" = "start" ];
 then
 #	startStreamPipes
@@ -215,7 +255,19 @@ fi
 if [ "$_arg_operation" = "clean" ];
 then
 #	cleanStreamPipes
-	echo 'All configurations of StreamPipes are deleted'
+	echo All configurations of StreamPipes are deleted
+fi
+
+if [ "$_arg_operation" = "add" ];
+then
+#	cleanStreamPipes
+	echo Add Service ${_arg_operation[1]}
+fi
+
+if [ "$_arg_operation" = "remove" ];
+then
+#	cleanStreamPipes
+	echo Remove service ${_arg_operation[1]}
 fi
 
 if [ "$_arg_operation" = "cleanstart" ];

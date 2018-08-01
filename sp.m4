@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # ARG_OPTIONAL_SINGLE([hostname], , [The default hostname of your server], )
-# ARG_POSITIONAL_MULTI([operation], [The StreamPipes operation (start|stop|restart|clean|add|remove|cleanstart) (service-name)], 2, [start], [nil])
+# ARG_OPTIONAL_BOOLEAN([prune],p, [Prune docker networks])
+# ARG_OPTIONAL_BOOLEAN([clean],c, [Start from a clean StreamPipes session])
+# ARG_POSITIONAL_MULTI([operation], [The StreamPipes operation (start|stop|restart|clean|add|remove|cleanstart|update) (service-name)], 2, [nil], [nil])
 # ARG_DEFAULTS_POS
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -10,7 +12,6 @@
 
 # [ <-- needed because of Argbash
 
-echo "'$_arg_operation'"
 getIp() {
 	rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
@@ -21,9 +22,9 @@ getIp() {
 
 	# if default selected do not show promt
 
-	if [ $defaultIp ] ; 
+	if [ $_arg_hostname ] ; 
 	then
-		ip=${allips[0]}
+		ip=$_arg_hostname
 		echo 'Default IP was selected: '${ip}
 	else 
 		echo ''
@@ -81,6 +82,16 @@ cleanStreamPipes() {
     echo 'StreamPipes clean'
 }
 
+removeService() {
+	sed -i "" /$1/d ./system
+}
+
+#removeSercvice "zookeeper"
+addService() {
+	echo "$1" >> ./system
+	updateStreamPipes
+}
+
 if [ "$_arg_operation" = "start" ];
 then
 #	startStreamPipes
@@ -105,7 +116,19 @@ fi
 if [ "$_arg_operation" = "clean" ];
 then
 #	cleanStreamPipes
-	echo 'All configurations of StreamPipes are deleted'
+	echo All configurations of StreamPipes are deleted
+fi
+
+if [ "$_arg_operation" = "add" ];
+then
+#	cleanStreamPipes
+	echo Add Service ${_arg_operation[1]}
+fi
+
+if [ "$_arg_operation" = "remove" ];
+then
+#	cleanStreamPipes
+	echo Remove service ${_arg_operation[1]}
 fi
 
 if [ "$_arg_operation" = "cleanstart" ];
@@ -114,6 +137,11 @@ then
 #	startStreamPipes
 
 	echo 'All configurations of StreamPipes are deleted and StreamPipes is restarted'
+fi
+
+if [ "$_arg_operation" = "nil" ];
+then
+	print_help
 fi
 
 # ] <-- needed because of Argbash

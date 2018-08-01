@@ -7,10 +7,11 @@ stages:
   - gen-script
 
 generate bash script:
-  image: matejak/argbash:2.7.0-1
+  image: docker:17.06.0-ce
   stage: gen-script
   script:
     - apk add git
+    - docker run -it --rm -e PROGRAM=argbash -v "$(pwd):/work" matejak/argbash:2.7.0-1 "$@ -o sp sp.m4"
     - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH")
@@ -19,8 +20,9 @@ generate bash script:
     - ssh-keyscan -p 2222 -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
     - git config --global user.email 'zehnder@fzi.de'
     - git config --global user.name 'zehnder'
-    - argbash -o sp.sh sp.m4
-    - git commit -m "[skip-ci] Generate script"
-    - git push origin arguments
+    - argbash 
+    - git status
+#    - git commit -m "[skip-ci] Generate script"
+#    - git push origin arguments
   only:
     - arguments
