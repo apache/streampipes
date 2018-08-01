@@ -47,6 +47,9 @@ deploy:
     - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - mvn deploy -DskipTests
+  artifacts:
+    paths:
+      - ./**/*.jar
   only:
     - dev
 

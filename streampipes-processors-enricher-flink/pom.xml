@@ -13,7 +13,6 @@
 
 
     <properties>
-        <streampipes.version>0.55.3-SNAPSHOT</streampipes.version>
         <elasticsearch.version>5.2.2</elasticsearch.version>
     </properties>
 
@@ -21,7 +20,6 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container-standalone</artifactId>
-            <version>${streampipes.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.kafka</groupId>
@@ -36,7 +34,6 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-commons</artifactId>
-            <version>${streampipes.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.kafka</groupId>
@@ -51,7 +48,6 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-wrapper-flink</artifactId>
-            <version>${streampipes.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -71,7 +67,6 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sdk</artifactId>
-            <version>${streampipes.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
@@ -82,22 +77,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
             <version>3.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-high-level-client</artifactId>
-            <version>6.2.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch</artifactId>
-            <version>6.2.3</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.ow2.asm</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -122,46 +101,7 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                        <encoding>UTF-8</encoding>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.4</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -201,85 +141,8 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>external.atlassian.jgitflow</groupId>
-                <artifactId>jgitflow-maven-plugin</artifactId>
-                <version>1.0-m5.1</version>
-                <configuration>
-                    <flowInitContext>
-                        <masterBranchName>master</masterBranchName>
-                        <developBranchName>dev</developBranchName>
-                        <featureBranchPrefix>feature-</featureBranchPrefix>
-                        <releaseBranchPrefix>release-</releaseBranchPrefix>
-                        <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
-                        <versionTagPrefix>version-</versionTagPrefix>
-                    </flowInitContext>
-                    <noDeploy>false</noDeploy>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <pushReleases>false</pushReleases>
-                    <localOnly>true</localOnly>
-                    <squash>false</squash>
-                    <scmCommentPrefix>[RELEASE] [skip-ci]</scmCommentPrefix>
-                    <enableSshAgent>true</enableSshAgent>
-                </configuration>
-            </plugin>
         </plugins>
         <finalName>streampipes-processors-enricher-flink</finalName>
 
     </build>
-
-    <scm>
-        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/pe-examples-flink.git
-        </developerConnection>
-        <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/pe-examples-flink.git</connection>
-        <url>https://github.com/streampipes/pe-examples-flink</url>
-    </scm>
-
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>Dominik Riemer</name>
-            <email>riemer@fzi.de</email>
-        </developer>
-        <developer>
-            <name>Philipp Zehnder</name>
-            <email>zehnder@fzi.de</email>
-        </developer>
-    </developers>
-
-    <repositories>
-        <repository>
-            <id>laus</id>
-            <name>nexus repository</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>sonatype</id>
-            <name>Releases</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
-        <snapshotRepository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>
