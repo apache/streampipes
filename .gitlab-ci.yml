@@ -11,7 +11,7 @@ generate bash script:
   stage: gen-script
   script:
     - apk update && apk add git
-    - docker run -it --rm -e PROGRAM=argbash -v "$(pwd):/work" matejak/argbash:2.7.0-1 "$@ -o sp sp.m4"
+    - docker run --rm -e PROGRAM=argbash -v "$(pwd):/work" matejak/argbash:2.7.0-1 "$@ -o sp sp.m4"
     - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH")
