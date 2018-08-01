@@ -1,0 +1,11 @@
+version: "2"
+services:
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "8080:8080"
+    environment:
+      - "API_URL=http://${SP_HOST}/streampipes-backend/api/docs/swagger.json"
+    networks:
+      spnet:
+
