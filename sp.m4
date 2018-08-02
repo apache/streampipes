@@ -34,7 +34,7 @@ getIp() {
 		do
 			if [ -z "${opt}" ];
 			then 
-				echo "Wrong input select one of the options"; 
+				echo "Wrong input, select one of the options"; 
 			else
 				ip="$opt"
 
@@ -77,64 +77,63 @@ stopStreamPipes() {
 }
 
 cleanStreamPipes() {
-#	stopStreamPipes
-#	rm -r ./config
+	stopStreamPipes
+	rm -r ./config
     echo 'StreamPipes clean'
 }
 
 removeService() {
-	sed -i "" /$1/d ./system
+	sed -i "" /${_arg_operation[1]}/d ./system
 }
 
-#removeSercvice "zookeeper"
 addService() {
-	echo "$1" >> ./system
+	echo ${_arg_operation[1]} >> ./system
 	updateStreamPipes
 }
 
 if [ "$_arg_operation" = "start" ];
 then
-#	startStreamPipes
+	startStreamPipes
 	echo 'StreamPipes sucessfully started'
 fi
 
 if [ "$_arg_operation" = "stop" ];
 then
-#	stopStreamPipes
+	stopStreamPipes
 	echo 'StreamPipes sucessfully stopped'
 
 fi
 
 if [ "$_arg_operation" = "restart" ];
 then
-#	stopStreamPipes
-#	startStreamPipes
+	stopStreamPipes
+	startStreamPipes
 	echo 'StreamPipes sucessfully restarted'
 
 fi
 
 if [ "$_arg_operation" = "clean" ];
 then
-#	cleanStreamPipes
+	cleanStreamPipes
 	echo All configurations of StreamPipes are deleted
 fi
 
 if [ "$_arg_operation" = "add" ];
 then
-#	cleanStreamPipes
+	cleanStreamPipes
 	echo Add Service ${_arg_operation[1]}
 fi
 
 if [ "$_arg_operation" = "remove" ];
 then
-#	cleanStreamPipes
+	cleanStreamPipes
 	echo Remove service ${_arg_operation[1]}
 fi
 
 if [ "$_arg_operation" = "cleanstart" ];
 then
-#	cleanStreamPipes
-#	startStreamPipes
+	cleanStreamPipes
+	startStreamPipes
 
 	echo 'All configurations of StreamPipes are deleted and StreamPipes is restarted'
 fi
