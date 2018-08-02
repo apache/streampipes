@@ -128,13 +128,13 @@ fi
 
 if [ "$_arg_operation" = "add" ];
 then
-	cleanStreamPipes
+	addService
 	echo Add Service ${_arg_operation[1]}
 fi
 
 if [ "$_arg_operation" = "remove" ];
 then
-	cleanStreamPipes
+	removeService
 	echo Remove service ${_arg_operation[1]}
 fi
 
