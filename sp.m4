@@ -3,7 +3,7 @@
 # ARG_OPTIONAL_SINGLE([hostname], , [The default hostname of your server], )
 # ARG_OPTIONAL_BOOLEAN([prune],p, [Prune docker networks])
 # ARG_OPTIONAL_BOOLEAN([clean],c, [Start from a clean StreamPipes session])
-# ARG_POSITIONAL_MULTI([operation], [The StreamPipes operation (start|stop|restart|clean|add|remove|cleanstart|update) (service-name)], 2, [nil], [nil])
+# ARG_POSITIONAL_MULTI([operation], [The StreamPipes operation (start|stop|restart|clean|add|remove|cleanstart|update|list) (service-name)], 2, [nil], [nil])
 # ARG_DEFAULTS_POS
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -82,6 +82,14 @@ cleanStreamPipes() {
     echo 'StreamPipes clean'
 }
 
+listServices() {
+cd services
+for dir in */ ; do
+  echo $dir | sed "s/\///g" 
+done
+cd ..
+}
+
 removeService() {
 	sed -i "" /${_arg_operation[1]}/d ./system
 }
@@ -136,6 +144,11 @@ then
 	startStreamPipes
 
 	echo 'All configurations of StreamPipes are deleted and StreamPipes is restarted'
+fi
+
+if [ "$_arg_operation" = "list" ];
+then
+	listServices
 fi
 
 if [ "$_arg_operation" = "nil" ];
