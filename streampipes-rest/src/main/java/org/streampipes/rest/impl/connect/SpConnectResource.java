@@ -18,7 +18,6 @@
 package org.streampipes.rest.impl.connect;
 
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.config.backend.BackendConfig;
@@ -44,7 +43,9 @@ import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.modelconnect.*;
 import org.streampipes.rest.annotation.GsonWithIds;
+import org.streampipes.rest.annotation.JsonLdSerialized;
 import org.streampipes.rest.impl.AbstractRestInterface;
+import org.streampipes.rest.util.SpMediaType;
 import org.streampipes.sdk.helpers.Formats;
 import org.streampipes.sdk.helpers.Protocols;
 import org.streampipes.sdk.helpers.SupportedFormats;
@@ -86,7 +87,8 @@ public class SpConnectResource extends AbstractRestInterface {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @JsonLdSerialized
+    @Produces(SpMediaType.JSONLD)
     @Path("/allProtocols")
     public Response getAllProtocols() {
         ProtocolDescriptionList pdl = new ProtocolDescriptionList();
@@ -97,7 +99,7 @@ public class SpConnectResource extends AbstractRestInterface {
         pdl.addDesctiption(new HttpStreamProtocol().declareModel());
         pdl.addDesctiption(new TwitterProtocol().declareModel());
 
-        return ok(JsonLdUtils.toJsonLD(pdl));
+        return ok(pdl);
     }
 
     @GET
@@ -221,11 +223,13 @@ public class SpConnectResource extends AbstractRestInterface {
 
 
     @POST
+    @JsonLdSerialized
     @Produces(MediaType.APPLICATION_JSON)
-    public String addAdapter(String ar) {
-        logger.info("Received request add adapter with json-ld: " + ar);
+    @Consumes(SpMediaType.JSONLD)
+    public String addAdapter(AdapterDescription a) {
+        //logger.info("Received request add adapter with json-ld: " + ar);
 
-        AdapterDescription a = SpConnect.getAdapterDescription(ar);
+        //AdapterDescription a = SpConnect.getAdapterDescription(ar);
         UUID id = UUID.randomUUID();
         if (a.getUri() == null) {
             a.setUri("https://streampipes.org/adapter/" + id);

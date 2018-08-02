@@ -25,6 +25,7 @@ import org.streampipes.rest.impl.nouser.PipelineNoUserResource;
 import org.streampipes.rest.serializer.GsonClientModelProvider;
 import org.streampipes.rest.serializer.GsonWithIdProvider;
 import org.streampipes.rest.serializer.GsonWithoutIdProvider;
+import org.streampipes.rest.serializer.JsonLdProvider;
 
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
@@ -77,6 +78,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(GsonWithIdProvider.class);
         apiClasses.add(GsonWithoutIdProvider.class);
         apiClasses.add(GsonClientModelProvider.class);
+        apiClasses.add(JsonLdProvider.class);
 
         return apiClasses;
 
