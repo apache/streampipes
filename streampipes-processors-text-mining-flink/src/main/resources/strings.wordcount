@@ -1,5 +1,5 @@
-wordcount.title=Word Count
-wordcount.description=Counts words on continuous text-based streams
+org.streampipes.processors.textmining.flink.wordcount.title=Word Count
+org.streampipes.processors.textmining.flink.wordcount.description=Counts words on continuous text-based streams
 
 wordcountField.title=Property Selection
 wordcountField.description=Specifies the event property from your stream that should be counted.

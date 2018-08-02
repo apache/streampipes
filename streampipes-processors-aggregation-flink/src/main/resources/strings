@@ -1,5 +1,5 @@
-aggregation.title=Aggregation
-aggregation.description=Performs different aggregation functions
+org.streampipes.processors.aggregation.flink.aggregation.title=Aggregation
+org.streampipes.processors.aggregation.flink.aggregation.description=Performs different aggregation functions
 
 aggregateKey.title=Property Selection
 aggregateKey.description=Specifies the event property from your stream that should be aggregated.
