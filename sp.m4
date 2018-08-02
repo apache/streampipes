@@ -71,6 +71,12 @@ updateStreamPipes() {
 	$command up -d
 }
 
+updateServices() {
+	getCommand
+	$command pull
+	$command up -d
+}
+
 stopStreamPipes() {
 	getCommand
 	$command down 
@@ -149,6 +155,11 @@ fi
 if [ "$_arg_operation" = "list" ];
 then
 	listServices
+fi
+
+if [ "$_arg_operation" = "update" ];
+then
+	updateServices
 fi
 
 if [ "$_arg_operation" = "nil" ];
