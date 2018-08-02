@@ -3,7 +3,7 @@
 # ARG_OPTIONAL_SINGLE([hostname],[],[The default hostname of your server],[])
 # ARG_OPTIONAL_BOOLEAN([prune],[p],[Prune docker networks])
 # ARG_OPTIONAL_BOOLEAN([clean],[c],[Start from a clean StreamPipes session])
-# ARG_POSITIONAL_MULTI([operation],[The StreamPipes operation (start|stop|restart|clean|add|remove|cleanstart|update|list) (service-name)],[2],[nil],[nil])
+# ARG_POSITIONAL_MULTI([operation],[The StreamPipes operation (start|stop|restart|clean|add|remove|cleanstart|update|list|logs) (service-name)],[2],[],[])
 # ARG_DEFAULTS_POS()
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -34,7 +34,7 @@ begins_with_short_option()
 
 # THE DEFAULTS INITIALIZATION - POSITIONALS
 _positionals=()
-_arg_operation=("nil" "nil")
+_arg_operation=()
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_hostname=
 _arg_prune="off"
@@ -45,7 +45,7 @@ print_help()
 {
   printf '%s\n' "This script provides advanced features to run StreamPipes on your server"
   printf 'Usage: %s [--hostname <arg>] [-p|--(no-)prune] [-c|--(no-)clean] [-h|--help] [-v|--version] [<operation-1>] [<operation-2>]\n' "$0"
-  printf '\t%s\n' "<operation>: The StreamPipes operation (start|stop|restart|clean|add|remove|cleanstart|update|list) (service-name) (defaults for <operation-1> to <operation-2> respectively: 'nil' and 'nil')"
+  printf '\t%s\n' "<operation>: The StreamPipes operation (start|stop|restart|clean|add|remove|cleanstart|update|list|logs) (service-name) (defaults for <operation-1> to <operation-2> respectively: '' and '')"
   printf '\t%s\n' "--hostname: The default hostname of your server (no default)"
   printf '\t%s\n' "-p, --prune, --no-prune: Prune docker networks (off by default)"
   printf '\t%s\n' "-c, --clean, --no-clean: Start from a clean StreamPipes session (off by default)"
@@ -201,23 +201,28 @@ startStreamPipes() {
 	getIp
 	sed "s/##IP##/${ip}/g" ./tmpl_env > .env
 	getCommand
-	$command up -d
+	$command up -d ${_arg_operation[1]}
 }
 
 updateStreamPipes() {
 	getCommand
-	$command up -d
+	$command up -d ${_arg_operation[1]}
 }
 
 updateServices() {
 	getCommand
-	$command pull
-	$command up -d
+	$command pull ${_arg_operation[1]}
+	$command up -d ${_arg_operation[1]}
 }
 
 stopStreamPipes() {
 	getCommand
 	$command down
+}
+
+logServices() {
+	getCommand
+	$command logs ${_arg_operation[1]}
 }
 
 cleanStreamPipes() {
@@ -298,6 +303,11 @@ fi
 if [ "$_arg_operation" = "update" ];
 then
 	updateServices
+fi
+
+if [ "$_arg_operation" = "logs" ];
+then
+	logServices
 fi
 
 if [ "$_arg_operation" = "nil" ];
