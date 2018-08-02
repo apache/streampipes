@@ -1,0 +1,13 @@
+version: "2"
+services:
+  sinks-brokers-jvm:
+    image: ${SP_DOCKER_REGISTRY}/sinks-brokers-jvm:${SP_PE_VERSION}
+    depends_on:
+      - "consul"
+#    ports:
+#      - "8098:8090"
+    environment:
+      - SP_ICON_HOST=${SP_ICON_HOST}
+    networks:
+      spnet:
+

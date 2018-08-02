@@ -1,0 +1,13 @@
+version: "2"
+services:
+  processors-enricher-flink:
+    image: ${SP_DOCKER_REGISTRY}/processors-enricher-flink:${SP_PE_VERSION}
+    depends_on:
+      - "consul"
+#    ports:
+#      - "8098:8090"
+    environment:
+      - SP_ICON_HOST=${SP_ICON_HOST}
+    networks:
+      spnet:
+
