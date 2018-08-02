@@ -1,7 +1,7 @@
 version: "2"
 services:
   processors-pattern-detection-flink:
-    image: ${SP_DOCKER_REGISTRY}/processors-pattern-detection-flink:${SP_PE_VERSION}
+    image: ${SP_PE_DOCKER_REGISTRY}/processors-pattern-detection-flink:${SP_PE_VERSION}
     depends_on:
       - "consul"
 #    ports:
