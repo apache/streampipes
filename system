@@ -4,3 +4,4 @@ couchdb
 kafka
 zookeeper
 swagger-ui
+nginx
