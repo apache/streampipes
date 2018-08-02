@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 import {Observable, Subscribable} from 'rxjs/Observable';
 
@@ -79,8 +79,13 @@ export class RestService {
         adapter.userName = this.authStatusService.email;
 
         tsonld.toflattenJsonLd(adapter).subscribe(res => {
+            const httpOptions = {
+                headers: new HttpHeaders({
+                    'Content-Type':  'application/ld+json'
+                })
+            };
             console.log(JSON.stringify(res));
-            this.http.post('/streampipes-backend/api/v2/adapter', res).subscribe();
+            this.http.post('/streampipes-backend/api/v2/adapter', res, httpOptions).subscribe();
         });
 
     }
