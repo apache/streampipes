@@ -91,7 +91,7 @@ cd ..
 }
 
 removeService() {
-	sed -i "" /${_arg_operation[1]}/d ./system
+	sed -i "/${_arg_operation[1]}/d" ./system
 }
 
 addService() {
