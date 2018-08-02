@@ -3,3 +3,4 @@ activemq
 couchdb
 kafka
 zookeeper
+swagger-ui
