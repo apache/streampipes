@@ -23,6 +23,7 @@
         <module>streampipes-processors-statistics-flink</module>
         <module>streampipes-processors-siddhi</module>
         <module>streampipes-processors-text-mining-flink</module>
+        <module>streampipes-sources-random-data-generator</module>
     </modules>
 
     <properties>
@@ -39,7 +40,7 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-sdk</artifactId>
+                <artifactId>streampipes-sources</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
@@ -64,11 +65,6 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-container-standalone</artifactId>
-                <version>${streampipes.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-config</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
@@ -80,6 +76,11 @@
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-messaging-kafka</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-messaging-jms</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>

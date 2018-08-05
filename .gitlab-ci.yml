@@ -163,7 +163,12 @@ docker-sources-vehicle-simulator:
     variables:
       CONTAINER_NAME: "sources-vehicle-simulator"
 
-docker-sources-:
+docker-sources-random:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "sources-random-data-generator"
+
+docker-sources-watertank-simulator:
     <<: *docker_script
     variables:
       CONTAINER_NAME: "sources-watertank-simulator"
