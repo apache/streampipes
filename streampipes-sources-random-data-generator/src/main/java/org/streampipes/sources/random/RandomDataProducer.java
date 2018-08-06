@@ -17,12 +17,9 @@
 
 package org.streampipes.sources.random;
 
-import com.google.gson.Gson;
 import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.serializers.json.GsonSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,15 +48,4 @@ public class RandomDataProducer implements SemanticEventProducerDeclarer {
 
     return streams;
   }
-
-  public static void main(String[] args) {
-    DataSourceDescription desc = new RandomDataProducer().declareModel();
-    SpDataStream stream = new RandomNumberStreamWildcard().declareModel(desc);
-
-    Gson gson = GsonSerializer.getGsonWithIds();
-    System.out.println(gson.toJson(stream));
-
-
-  }
-
 }

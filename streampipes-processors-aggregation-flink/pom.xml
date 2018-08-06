@@ -12,7 +12,6 @@
     <artifactId>streampipes-processors-aggregation-flink</artifactId>
 
     <properties>
-        <streampipes.version>0.55.3-SNAPSHOT</streampipes.version>
         <elasticsearch.version>5.2.2</elasticsearch.version>
     </properties>
 
