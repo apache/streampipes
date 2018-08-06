@@ -1,0 +1,12 @@
+version: "2"
+services:
+  sources-random-data-generator:
+    image: ${SP_PE_DOCKER_REGISTRY}/sources-random-data-generator:${SP_PE_VERSION}
+    depends_on:
+      - "consul"
+#    ports:
+#      - "8098:8090"
+    environment:
+      - SP_ICON_HOST=${SP_ICON_HOST}
+    networks:
+      spnet:
