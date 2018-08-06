@@ -20,7 +20,7 @@ package org.streampipes.processors.statistics.flink.processor.stat.window;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
-import org.streampipes.pe.mixed.flink.samples.statistics.StatisticsSummaryController;
+import org.streampipes.processors.statistics.flink.processor.stat.StatisticsSummaryController;
 
 import java.io.Serializable;
 import java.util.HashMap;
