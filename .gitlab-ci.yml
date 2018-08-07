@@ -2,6 +2,7 @@ variables:
   REGISTRY_HOST: ipe-wim-gitlab.fzi.de:5000
   IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH
   MAVEN_CLI_OPTS: -DskipTests --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true
+  GIT_STRATEGY: clone
 
 stages:
   - build
