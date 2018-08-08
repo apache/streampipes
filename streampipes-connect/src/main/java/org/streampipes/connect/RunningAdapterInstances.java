@@ -17,7 +17,7 @@
 
 package org.streampipes.connect;
 
-import org.streampipes.connect.firstconnector.Adapter;
+import org.streampipes.connect.adapter.Adapter;
 
 import java.util.HashMap;
 import java.util.Map;

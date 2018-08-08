@@ -33,31 +33,23 @@
             <artifactId>streampipes-connect</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-storage-couchdb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-rest-shared</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-jetty-http</artifactId>
             <version>${jersey.version}</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>org.glassfish.jersey.containers</groupId>-->
-            <!--<artifactId>jersey-container-jetty-http</artifactId>-->
-            <!--<version>${jersey.version}</version>-->
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.eclipse.jetty</groupId>-->
-                    <!--<artifactId>jetty-server</artifactId>-->
-                <!--</exclusion>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.eclipse.jetty</groupId>-->
-                    <!--<artifactId>jetty-util</artifactId>-->
-                <!--</exclusion>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.eclipse.jetty</groupId>-->
-                    <!--<artifactId>jetty-continuation</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
        <dependency>
             <groupId>org.rendersnake</groupId>
             <artifactId>rendersnake</artifactId>
@@ -73,6 +65,8 @@
             <artifactId>json-path</artifactId>
             <version>3.1.0</version>
         </dependency>
+
+
     </dependencies>
 
     <build>

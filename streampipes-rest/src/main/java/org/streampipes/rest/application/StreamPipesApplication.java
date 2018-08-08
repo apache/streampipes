@@ -18,14 +18,12 @@
 package org.streampipes.rest.application;
 
 import org.streampipes.rest.impl.*;
-import org.streampipes.rest.impl.connect.GuessResource;
-import org.streampipes.rest.impl.connect.SpConnectResource;
 import org.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
 import org.streampipes.rest.impl.nouser.PipelineNoUserResource;
-import org.streampipes.rest.serializer.GsonClientModelProvider;
-import org.streampipes.rest.serializer.GsonWithIdProvider;
-import org.streampipes.rest.serializer.GsonWithoutIdProvider;
-import org.streampipes.rest.serializer.JsonLdProvider;
+import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
+import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
+import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
+import org.streampipes.rest.shared.serializer.JsonLdProvider;
 
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
@@ -64,9 +62,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(ConsulConfig.class);
         apiClasses.add(DataStream.class);
         apiClasses.add(ContainerProvidedOptions.class);
-        apiClasses.add(SpConnectResource.class);
         apiClasses.add(StreamPipesLogs.class);
-        apiClasses.add(GuessResource.class);
         apiClasses.add(PipelineTemplate.class);
         apiClasses.add(Couchdb.class);
         apiClasses.add(InternalPipelineTemplates.class);

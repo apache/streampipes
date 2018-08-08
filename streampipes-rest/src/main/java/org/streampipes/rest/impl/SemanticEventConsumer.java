@@ -32,7 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.streampipes.model.graph.DataSinkInvocation;
-import org.streampipes.rest.annotation.GsonWithIds;
+import org.streampipes.rest.shared.serializer.annotation.GsonWithIds;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 

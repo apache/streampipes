@@ -19,8 +19,8 @@ package org.streampipes.rest.impl.nouser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.rest.annotation.GsonWithIds;
-import org.streampipes.rest.annotation.NoAuthenticationRequired;
+import org.streampipes.rest.shared.serializer.annotation.GsonWithIds;
+import org.streampipes.rest.shared.serializer.annotation.NoAuthenticationRequired;
 import org.streampipes.rest.impl.AbstractRestInterface;
 import org.streampipes.rest.management.PipelineManagement;
 
@@ -36,7 +36,7 @@ public class PipelineNoUserResource extends AbstractRestInterface {
 
     private static final Logger logger = LoggerFactory.getLogger(PipelineNoUserResource.class);
 
-    @Path("/{pipelineId}/stop")
+    @Path("/{pipelineId}/stopAdapter")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds

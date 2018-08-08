@@ -51,7 +51,7 @@ public class AdapterUtilsTest {
 
     @Test
     public void getUrlTest() {
-        String expected = "http://host:80/api/v2/pipelines/1/stop";
+        String expected = "http://host:80/api/v2/pipelines/1/stopAdapter";
 
         String result = AdapterUtils.getUrl("host:80/", "1");
 

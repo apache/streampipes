@@ -18,7 +18,7 @@
 package org.streampipes.rest.impl;
 
 import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.rest.annotation.GsonWithIds;
+import org.streampipes.rest.shared.serializer.annotation.GsonWithIds;
 import org.streampipes.rest.api.INotification;
 
 import javax.ws.rs.DELETE;

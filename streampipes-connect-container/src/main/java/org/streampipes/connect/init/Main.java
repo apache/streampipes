@@ -20,8 +20,14 @@ package org.streampipes.connect.init;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.streampipes.connect.rest.AdapterResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.streampipes.connect.rest.worker.WorkerResource;
 import org.streampipes.connect.rest.WelcomePage;
+import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
+import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
+import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
+import org.streampipes.rest.shared.serializer.JsonLdProvider;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
@@ -30,7 +36,25 @@ import java.util.Set;
 
 public class Main {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+
     public static void main(String... args) {
+
+        // TODO Two different execution modes
+
+        String executionMode = Config.getEnv(Config.EXECUTION_MODE);
+
+        switch (executionMode) {
+            case Config.MASTER:
+                LOG.info("Master mode selected");
+                break;
+            case Config.WORKER:
+                LOG.info("Wo mode selected");
+                break;
+
+        }
+
+
         ResourceConfig config = new ResourceConfig(getApiClasses());
 
 
@@ -46,7 +70,13 @@ public class Main {
         Set<Class<?>> allClasses = new HashSet<>();
 
         allClasses.add(WelcomePage.class);
-        allClasses.add(AdapterResource.class);
+        allClasses.add(WorkerResource.class);
+
+        // Serializers
+        allClasses.add(GsonWithIdProvider.class);
+        allClasses.add(GsonWithoutIdProvider.class);
+        allClasses.add(GsonClientModelProvider.class);
+        allClasses.add(JsonLdProvider.class);
 
         return allClasses;
     }

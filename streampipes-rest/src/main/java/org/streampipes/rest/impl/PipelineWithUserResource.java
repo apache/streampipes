@@ -33,10 +33,8 @@ import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.client.messages.SuccessMessage;
-import org.streampipes.model.client.pipeline.Pipeline;
-import org.streampipes.model.client.pipeline.PipelineModification;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
-import org.streampipes.rest.annotation.GsonWithIds;
+import org.streampipes.rest.shared.serializer.annotation.GsonWithIds;
 import org.streampipes.rest.api.IPipeline;
 import org.streampipes.rest.management.PipelineManagement;
 
@@ -150,7 +148,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
         }
     }
 
-    @Path("/{pipelineId}/stop")
+    @Path("/{pipelineId}/stopAdapter")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds

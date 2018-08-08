@@ -17,9 +17,21 @@
 
 package org.streampipes.connect.init;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Config {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Config.class);
+
+    public static final String EXECUTION_MODE = "EXECUTION_MODE";
+    public static final String MASTER = "MASTER";
+    public static final String WORKER = "WORKER";
+
+
     public static String CONNECTOR_CONTAINER_ID = "MAIN_CONTAINER";
+
+
 
     public static int PORT = 8099;
     public static String HOST = "localhost";
@@ -28,4 +40,14 @@ public class Config {
         return "http://" + HOST + ":" + PORT + "/";
     }
 
+    public static String getEnv(String envName) {
+
+        String envVarianble = System.getenv(envName);
+        if (envVarianble == null) {
+            LOG.error("Environment variable " + envName + " is not set");
+            return "";
+        } else {
+            return envVarianble;
+        }
+    }
 }

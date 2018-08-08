@@ -18,7 +18,7 @@ package org.streampipes.rest.impl;
 
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.client.runtime.ContainerProvidedOptionsParameterRequest;
-import org.streampipes.rest.annotation.GsonWithIds;
+import org.streampipes.rest.shared.serializer.annotation.GsonWithIds;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

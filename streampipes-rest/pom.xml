@@ -25,9 +25,7 @@
 	<name>StreamPipes REST API</name>
 	<artifactId>streampipes-rest</artifactId>
 	<packaging>jar</packaging>
-	<properties>
-		<jersey.version>2.22.2</jersey.version>
-	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.streampipes</groupId>
@@ -55,41 +53,7 @@
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-measurement-units</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-servlet</artifactId>
-			<version>${jersey.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-json-jackson</artifactId>
-			<version>${jersey.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-multipart</artifactId>
-			<version>${jersey.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-jetty-http</artifactId>
-			<version>${jersey.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-server</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-util</artifactId>
-				</exclusion>
-               	<exclusion>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-continuation</artifactId>
-				</exclusion>
-			</exclusions>
-			<scope>test</scope>
-		</dependency>
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -107,6 +71,10 @@
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-messaging-jms</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-rest-shared</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>

@@ -32,7 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.rest.annotation.GsonWithIds;
+import org.streampipes.rest.shared.serializer.annotation.GsonWithIds;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 
 import org.streampipes.model.client.messages.NotificationType;

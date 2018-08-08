@@ -1,0 +1,89 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.streampipes.connect.adapter;
+
+import org.streampipes.connect.adapter.generic.format.Format;
+import org.streampipes.connect.adapter.generic.format.Parser;
+import org.streampipes.connect.adapter.generic.format.csv.CsvFormat;
+import org.streampipes.connect.adapter.generic.format.csv.CsvParser;
+import org.streampipes.connect.adapter.generic.format.geojson.GeoJsonFormat;
+import org.streampipes.connect.adapter.generic.format.geojson.GeoJsonParser;
+import org.streampipes.connect.adapter.generic.format.json.arraykey.JsonFormat;
+import org.streampipes.connect.adapter.generic.format.json.arraykey.JsonParser;
+import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectFormat;
+import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectParser;
+import org.streampipes.connect.adapter.generic.format.xml.XmlFormat;
+import org.streampipes.connect.adapter.generic.format.xml.XmlParser;
+import org.streampipes.connect.adapter.generic.protocol.Protocol;
+import org.streampipes.connect.adapter.generic.protocol.set.FileProtocol;
+import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
+import org.streampipes.connect.adapter.generic.protocol.stream.HttpStreamProtocol;
+import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
+import org.streampipes.connect.adapter.generic.protocol.stream.MqttProtocol;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Contains all implemented adapters
+ */
+public class AdapterRegistry {
+
+    public static Map<String, Adapter> getAllAdapters() {
+
+        return null;
+    }
+
+    public static Map<String, Format> getAllFormats() {
+        Map<String, Format> allFormats = new HashMap<>();
+
+        allFormats.put(JsonFormat.ID, new JsonFormat());
+        allFormats.put(JsonObjectFormat.ID, new JsonObjectFormat());
+        allFormats.put(CsvFormat.ID, new CsvFormat());
+        allFormats.put(GeoJsonFormat.ID, new GeoJsonFormat());
+        allFormats.put(XmlFormat.ID, new XmlFormat());
+
+        return allFormats;
+    }
+
+    public static Map<String, Parser> getAllParsers() {
+        Map<String, Parser> allParsers = new HashMap<>();
+
+        allParsers.put(JsonFormat.ID, new JsonParser());
+        allParsers.put(JsonObjectFormat.ID, new JsonObjectParser());
+        allParsers.put(CsvFormat.ID, new CsvParser());
+        allParsers.put(GeoJsonFormat.ID, new GeoJsonParser());
+        allParsers.put(XmlFormat.ID, new XmlParser());
+
+        return allParsers;
+    }
+
+    public static Map<String, Protocol> getAllProtocols() {
+        Map<String, Protocol> allProtocols = new HashMap<>();
+
+        allProtocols.put(HttpProtocol.ID, new HttpProtocol());
+        allProtocols.put(FileProtocol.ID, new FileProtocol());
+        allProtocols.put(KafkaProtocol.ID, new KafkaProtocol());
+        allProtocols.put(MqttProtocol.ID, new MqttProtocol());
+        allProtocols.put(HttpStreamProtocol.ID, new HttpStreamProtocol());
+
+        return allProtocols;
+    }
+
+}

@@ -17,11 +17,9 @@
 
 package org.streampipes.connect;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
-import org.streampipes.connect.firstconnector.format.Format;
-import org.streampipes.connect.firstconnector.pipeline.AdapterPipeline;
+import org.streampipes.connect.adapter.generic.format.Format;
+import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 
 import java.util.Map;

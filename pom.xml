@@ -344,7 +344,7 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-vocabulary</artifactId>
+                <artifactId>streampipes-rest-shared</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -370,6 +370,11 @@
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-storage-rdf4j</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-vocabulary</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -495,6 +500,7 @@
         <module>streampipes-connect-container</module>
         <module>streampipes-test-utils</module>
         <module>streampipes-wrapper-siddhi</module>
+        <module>streampipes-rest-shared</module>
     </modules>
 
     <profiles>

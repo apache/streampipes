@@ -28,7 +28,7 @@ public class AdapterUtils {
     private static final Logger logger = LoggerFactory.getLogger(AdapterUtils .class);
 
     public static String stopPipeline(String url) {
-        logger.info("Send stop pipeline request on URL: " + url);
+        logger.info("Send stopAdapter pipeline request on URL: " + url);
 
         String result = "";
         try {
@@ -47,6 +47,6 @@ public class AdapterUtils {
     }
 
     public static String getUrl(String baseUrl, String pipelineId) {
-        return "http://" +baseUrl + "api/v2/pipelines/" + pipelineId + "/stop";
+        return "http://" +baseUrl + "api/v2/pipelines/" + pipelineId + "/stopAdapter";
     }
 }
