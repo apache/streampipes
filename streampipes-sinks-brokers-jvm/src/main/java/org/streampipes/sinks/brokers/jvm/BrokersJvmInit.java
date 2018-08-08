@@ -21,14 +21,18 @@ import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.sinks.brokers.jvm.config.BrokersJvmConfig;
+import org.streampipes.sinks.brokers.jvm.jms.JmsController;
 import org.streampipes.sinks.brokers.jvm.kafka.KafkaController;
+import org.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqController;
 
 public class BrokersJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton
             .getInstance()
-            .add(new KafkaController());
+            .add(new KafkaController())
+            .add(new JmsController())
+            .add(new RabbitMqController());
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());

@@ -28,7 +28,7 @@ public abstract class AbstractFlinkTransformationProgram<B extends EventProcesso
   }
 
   public AbstractFlinkTransformationProgram(B params) {
-    super(params, false);
+    super(params, TransformationFlinkConfig.INSTANCE.getDebug());
   }
 
   @Override

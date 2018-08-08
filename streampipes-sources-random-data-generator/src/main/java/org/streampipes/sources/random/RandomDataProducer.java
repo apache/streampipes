@@ -28,7 +28,7 @@ public class RandomDataProducer implements SemanticEventProducerDeclarer {
 
   @Override
   public DataSourceDescription declareModel() {
-    DataSourceDescription sep = new DataSourceDescription("source_random", "Random", "Random Event Producer");
+    DataSourceDescription sep = new DataSourceDescription("org.streampipes.sources.random", "Random", "Random Event Producer");
     return sep;
   }
 
