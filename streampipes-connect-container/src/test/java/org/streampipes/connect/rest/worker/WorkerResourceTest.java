@@ -102,7 +102,7 @@ public class WorkerResourceTest {
     public void invokeStreamAdapterSuccess() {
 
         String data = getMinimalStreamAdapterJsonLD();
-        getSuccessRequest(data, "/stream/invoke", "Stream adapter successfully started");
+        getSuccessRequest(data, "/stream/invoke", "Stream adapter with id http://t.de/ successfully started");
 
     }
 
@@ -122,7 +122,7 @@ public class WorkerResourceTest {
     public void stopStreamAdapterSuccess() {
 
         String data = getMinimalStreamAdapterJsonLD();
-        getSuccessRequest(data, "/stream/stop", "Stream adapter successfully stopped");
+        getSuccessRequest(data, "/stream/stop", "Stream adapter with id http://t.de/ successfully stopped");
 
     }
 
@@ -142,7 +142,7 @@ public class WorkerResourceTest {
     @Test
     public void invokeSetAdapterSuccess() {
         String data = getMinimalStreamAdapterJsonLD();
-        getSuccessRequest(data, "/set/invoke", "Set adapter successfully started");
+        getSuccessRequest(data, "/set/invoke", "Set adapter with id http://t.de/ successfully started");
     }
 
     @Test
@@ -160,7 +160,7 @@ public class WorkerResourceTest {
     public void stopSetAdapterSuccess() {
 
         String data = getMinimalStreamAdapterJsonLD();
-        getSuccessRequest(data, "/set/stop", "Set adapter successfully stopped");
+        getSuccessRequest(data, "/set/stop", "Set adapter with id http://t.de/ successfully stopped");
     }
 
     @Test
@@ -184,7 +184,7 @@ public class WorkerResourceTest {
     }
 
     private String getMinimalAdapterJsonLD(AdapterDescription asd) {
-        String id = "http://tt.de/2";
+        String id = "http://t.de/";
         asd.setUri(id);
         asd.setId(id);
 

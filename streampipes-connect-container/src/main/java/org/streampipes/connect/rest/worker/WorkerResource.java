@@ -57,17 +57,17 @@ public class WorkerResource extends AbstractContainerResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) {
 
-        logger.info("yea");
-
 
         try {
             adapterManagement.invokeStreamAdapter(adapterStreamDescription);
         } catch (AdapterException e) {
-            e.printStackTrace();
+            logger.error("Error while starting adapter with id " + adapterStreamDescription.getUri(), e);
             return ok(Notifications.error(e.getMessage()));
         }
+        String responseMessage = "Stream adapter with id " + adapterStreamDescription.getUri() + " successfully started";
 
-        return ok(Notifications.success("Stream adapter successfully started"));
+        logger.info(responseMessage);
+        return ok(Notifications.success(responseMessage));
     }
 
     @POST
@@ -80,11 +80,14 @@ public class WorkerResource extends AbstractContainerResource {
         try {
             adapterManagement.stopStreamAdapter(adapterStreamDescription);
         } catch (AdapterException e) {
-            e.printStackTrace();
+            logger.error("Error while stopping adapter with id " + adapterStreamDescription.getUri(), e);
             return ok(Notifications.error(e.getMessage()));
         }
 
-        return ok(Notifications.success("Stream adapter successfully stopped"));
+        String responseMessage = "Stream adapter with id " + adapterStreamDescription.getUri() + " successfully stopped";
+
+        logger.info(responseMessage);
+        return ok(Notifications.success(responseMessage));
     }
 
     @POST
@@ -97,11 +100,14 @@ public class WorkerResource extends AbstractContainerResource {
         try {
             adapterManagement.invokeSetAdapter(adapterSetDescription);
         } catch (AdapterException e) {
-            e.printStackTrace();
+            logger.error("Error while starting adapter with id " + adapterSetDescription.getUri(), e);
             return ok(Notifications.error(e.getMessage()));
         }
 
-        return ok(Notifications.success("Set adapter successfully started"));
+        String responseMessage = "Set adapter with id " + adapterSetDescription.getUri() + " successfully started";
+
+        logger.info(responseMessage);
+        return ok(Notifications.success(responseMessage));
     }
 
     @POST
@@ -113,11 +119,14 @@ public class WorkerResource extends AbstractContainerResource {
          try {
              adapterManagement.stopSetAdapter(adapterSetDescription);
         } catch (AdapterException e) {
-            e.printStackTrace();
+            logger.error("Error while stopping adapter with id " + adapterSetDescription.getUri(), e);
             return ok(Notifications.error(e.getMessage()));
         }
 
-        return ok(Notifications.success("Set adapter successfully stopped"));
+        String responseMessage = "Set adapter with id " + adapterSetDescription.getUri() + " successfully stopped";
+
+        logger.info(responseMessage);
+        return ok(Notifications.success(responseMessage));
     }
 
     public void setAdapterManagement(IAdapterWorkerManagement adapterManagement) {
