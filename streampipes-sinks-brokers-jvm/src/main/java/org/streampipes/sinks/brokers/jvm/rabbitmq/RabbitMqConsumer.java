@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
-import org.streampipes.pe.sinks.standalone.samples.util.PlaceholderExtractor;
+import org.streampipes.pe.shared.PlaceholderExtractor;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Map;

@@ -25,6 +25,7 @@
         <module>streampipes-processors-text-mining-flink</module>
         <module>streampipes-sources-random-data-generator</module>
         <module>streampipes-sinks-thirdparty-jvm</module>
+        <module>streampipes-pipeline-elements-shared</module>
     </modules>
 
     <properties>
@@ -96,8 +97,18 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pipeline-elements-shared</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-test-utils</artifactId>
                 <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.8.5</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
