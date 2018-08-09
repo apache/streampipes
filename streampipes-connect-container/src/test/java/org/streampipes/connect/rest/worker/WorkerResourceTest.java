@@ -19,74 +19,56 @@ package org.streampipes.connect.rest.worker;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.ValidatableResponseOptions;
-import com.jayway.restassured.specification.RequestSpecification;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.streampipes.commons.Utils;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.init.Config;
 import org.streampipes.connect.management.AdapterWorkerManagement;
 import org.streampipes.connect.management.IAdapterWorkerManagement;
-import org.streampipes.connect.rest.worker.WorkerResource;
+import org.streampipes.connect.utils.ConnectContainerResourceTest;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
-import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
-import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
-import org.streampipes.rest.shared.serializer.JsonLdProvider;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 
-import javax.ws.rs.core.UriBuilder;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
 
-public class WorkerResourceTest {
-    private static final String API_VERSION = "/api/v1/riemer@fzi.de/worker";
-    private static final String ERROR_MESSAGE = "error";
+public class WorkerResourceTest extends ConnectContainerResourceTest {
 
-    private WorkerResource adapterResource;
+    @Override
+    protected String getApi() {
+        return "/api/v1/riemer@fzi.de/worker";
+    }
+
+    private WorkerResource workerResource;
 
     private Server server;
+
+    private IAdapterWorkerManagement adapterManagement;
 
     @Before
     public  void before() {
         Config.PORT = 8019;
         RestAssured.port = 8019;
 
-        adapterResource = new WorkerResource();
+        workerResource = new WorkerResource();
+        server = getServer(workerResource);
 
-        // TODO put somewhere else
-        ResourceConfig config = new ResourceConfig().register(adapterResource)
-                .register(GsonWithIdProvider.class)
-                .register(GsonWithoutIdProvider.class)
-                .register(GsonClientModelProvider.class)
-                .register(JsonLdProvider.class);
-
-        URI baseUri = UriBuilder
-                .fromUri(Config.getBaseUrl())
-                .build();
-
-        server = JettyHttpContainerFactory.createServer(baseUri, config);
-
-        IAdapterWorkerManagement adapterManagement = mock(AdapterWorkerManagement.class);
-        adapterResource.setAdapterManagement(adapterManagement);
-
+        adapterManagement = mock(AdapterWorkerManagement.class);
+        workerResource.setAdapterManagement(adapterManagement);
     }
 
     @After
@@ -109,12 +91,11 @@ public class WorkerResourceTest {
     @Test
     public void invokeStreamAdapterFail() throws AdapterException {
 
-        IAdapterWorkerManagement adapterManagement = mock(AdapterWorkerManagement.class);
         doThrow(new AdapterException(ERROR_MESSAGE)).when(adapterManagement).invokeStreamAdapter(any(AdapterStreamDescription.class));
-        adapterResource.setAdapterManagement(adapterManagement);
+        workerResource.setAdapterManagement(adapterManagement);
 
         String data = getMinimalStreamAdapterJsonLD();
-        getFailRequest(data, "/stream/invoke");
+        getFailRequest(data,"/stream/invoke");
 
     }
 
@@ -122,55 +103,52 @@ public class WorkerResourceTest {
     public void stopStreamAdapterSuccess() {
 
         String data = getMinimalStreamAdapterJsonLD();
-        getSuccessRequest(data, "/stream/stop", "Stream adapter with id http://t.de/ successfully stopped");
+        getSuccessRequest(data,"/stream/stop", "Stream adapter with id http://t.de/ successfully stopped");
 
     }
 
     @Test
     public void stopStreamAdapterFail() throws AdapterException {
 
-        IAdapterWorkerManagement adapterManagement = mock(AdapterWorkerManagement.class);
         doThrow(new AdapterException(ERROR_MESSAGE)).when(adapterManagement).stopStreamAdapter(any(AdapterStreamDescription.class));
-        adapterResource.setAdapterManagement(adapterManagement);
+        workerResource.setAdapterManagement(adapterManagement);
 
         String data = getMinimalStreamAdapterJsonLD();
-        getFailRequest(data, "/stream/stop");
+        getFailRequest(data,"/stream/stop");
 
     }
 
 
     @Test
     public void invokeSetAdapterSuccess() {
-        String data = getMinimalStreamAdapterJsonLD();
-        getSuccessRequest(data, "/set/invoke", "Set adapter with id http://t.de/ successfully started");
+        String data = getMinimalSetAdapterJsonLD();
+        getSuccessRequest(data,"/set/invoke", "Set adapter with id http://t.de/ successfully started");
     }
 
     @Test
     public void invokeSetAdapterFail() throws AdapterException {
 
-        IAdapterWorkerManagement adapterManagement = mock(AdapterWorkerManagement.class);
         doThrow(new AdapterException(ERROR_MESSAGE)).when(adapterManagement).invokeSetAdapter(any(AdapterSetDescription.class));
-        adapterResource.setAdapterManagement(adapterManagement);
+        workerResource.setAdapterManagement(adapterManagement);
 
-        String data = getMinimalStreamAdapterJsonLD();
+        String data = getMinimalSetAdapterJsonLD();
         getFailRequest(data, "/set/invoke");
     }
 
     @Test
     public void stopSetAdapterSuccess() {
 
-        String data = getMinimalStreamAdapterJsonLD();
+        String data = getMinimalSetAdapterJsonLD();
         getSuccessRequest(data, "/set/stop", "Set adapter with id http://t.de/ successfully stopped");
     }
 
     @Test
     public void stopSetAdapterFail() throws AdapterException {
 
-        IAdapterWorkerManagement adapterManagement = mock(AdapterWorkerManagement.class);
         doThrow(new AdapterException(ERROR_MESSAGE)).when(adapterManagement).stopSetAdapter(any(AdapterSetDescription.class));
-        adapterResource.setAdapterManagement(adapterManagement);
+        workerResource.setAdapterManagement(adapterManagement);
 
-        String data = getMinimalStreamAdapterJsonLD();
+        String data = getMinimalSetAdapterJsonLD();
         getFailRequest(data, "/set/stop");
     }
 
@@ -202,24 +180,5 @@ public class WorkerResourceTest {
         return "";
     }
 
-    private ValidatableResponseOptions getSuccessRequest(String data, String route, String responseMessage) {
-        return  getRequest(data, route)
-                .body("success", equalTo(true))
-                .body("notifications[0].title", equalTo(responseMessage));
-    }
-
-    private ValidatableResponseOptions getFailRequest(String data, String route) {
-        return  getRequest(data, route)
-                .body("success", equalTo(false))
-                .body("notifications[0].title", equalTo(ERROR_MESSAGE));
-    }
-    private ValidatableResponseOptions getRequest(String data, String route) {
-        return given().contentType("application/ld+json")
-                .body(data)
-                .when()
-                .post(API_VERSION + route)
-                .then()
-                .assertThat();
-    }
 
 }
