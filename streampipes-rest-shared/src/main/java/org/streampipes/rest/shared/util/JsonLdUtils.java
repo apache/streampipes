@@ -17,29 +17,39 @@
 
 package org.streampipes.rest.shared.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.commons.Utils;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 public class JsonLdUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(JsonLdUtils.class);
 
     public static String toJsonLD(Object o) {
         JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
         String result = null;
         try {
             result = Utils.asString(jsonLdTransformer.toJsonLd(o));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InvalidRdfException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException | InvalidRdfException | ClassNotFoundException e) {
+            logger.error("Could not serialize JsonLd", e);
         }
 
         return result;
+    }
+
+    public static <T> T fromJsonLd(String json, Class<T> clazz) {
+        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
+
+        try {
+            return jsonLdTransformer.fromJsonLd(json, clazz);
+        } catch (IOException e) {
+            logger.error("Could not deserialize JsonLd", e);
+        }
+        return null;
     }
 }

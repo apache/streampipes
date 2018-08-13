@@ -17,6 +17,8 @@
 
 package org.streampipes.connect.adapter;
 
+import org.streampipes.connect.adapter.generic.GenericDataSetAdapter;
+import org.streampipes.connect.adapter.generic.GenericDataStreamAdapter;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.format.csv.CsvFormat;
@@ -35,6 +37,9 @@ import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.HttpStreamProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.MqttProtocol;
+import org.streampipes.connect.adapter.specific.twitter.TwitterAdapter;
+import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,8 +51,13 @@ import java.util.Map;
 public class AdapterRegistry {
 
     public static Map<String, Adapter> getAllAdapters() {
+        Map<String, Adapter> allAdapters = new HashMap<>();
 
-        return null;
+        allAdapters.put(GenericDataSetAdapter.ID, new GenericDataSetAdapter());
+        allAdapters.put(GenericDataStreamAdapter.ID, new GenericDataStreamAdapter());
+        allAdapters.put(TwitterAdapter.ID, new TwitterAdapter());
+
+        return allAdapters;
     }
 
     public static Map<String, Format> getAllFormats() {
@@ -84,6 +94,16 @@ public class AdapterRegistry {
         allProtocols.put(HttpStreamProtocol.ID, new HttpStreamProtocol());
 
         return allProtocols;
+    }
+
+    public static Adapter getAdapter(AdapterDescription adapterDescription) {
+        if (adapterDescription != null) {
+            Map<String, Adapter> adapterMap = AdapterRegistry.getAllAdapters();
+
+            return adapterMap.get(adapterDescription.getAdapterId());
+        } else {
+            return null;
+        }
     }
 
 }

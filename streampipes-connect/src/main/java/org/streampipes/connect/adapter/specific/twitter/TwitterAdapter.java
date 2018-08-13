@@ -19,8 +19,10 @@ package org.streampipes.connect.adapter.specific.twitter;
 
 
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.specific.SpecificAdapter;
+import org.streampipes.connect.adapter.specific.SpecificDataStreamAdapter;
+import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
@@ -30,25 +32,32 @@ import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.Arrays;
 
-public class TwitterAdapter extends SpecificAdapter {
+public class TwitterAdapter extends SpecificDataStreamAdapter {
+    public static final String ID = "org.streampipes.adapter.specific.twitter";
+
     private TwitterStream twitterStream;
 
-    public TwitterAdapter(String kafkaUrl, String topic, boolean debug) {
-        super(kafkaUrl, topic, debug);
+    public TwitterAdapter() {
+        super();
     }
 
-    public TwitterAdapter(String kafkaUrl, String topic) {
-        super(kafkaUrl, topic);
+    public TwitterAdapter(AdapterDescription adapterDescription, boolean debug) {
+        super(adapterDescription, debug);
+    }
+
+    public TwitterAdapter(AdapterDescription adapterDescription) {
+        super(adapterDescription);
     }
 
     @Override
     public AdapterDescription declareModel() {
-        // TODO
-        return null;
+        AdapterDescription adapterDescription = new AdapterStreamDescription();
+        adapterDescription.setAdapterId(ID);
+        return adapterDescription;
     }
 
     @Override
-    public void startAdapter() throws Exception {
+    public void startAdapter() throws AdapterException {
 
     }
 
@@ -100,6 +109,11 @@ public class TwitterAdapter extends SpecificAdapter {
         guessSchema.setEventSchema(eventSchema);
 
         return guessSchema;
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

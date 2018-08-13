@@ -25,7 +25,10 @@ import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
 import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
+import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.AdapterSetDescription;
+import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.connect.adapter.generic.format.Format;
@@ -35,27 +38,36 @@ import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenericSetAdapter extends Adapter {
+public class GenericDataSetAdapter extends Adapter {
+
+    public static final String ID = "org.streampipes.adapter.generic.dataset";
+
     private Protocol protocol;
 
     private GenericAdapterSetDescription adapterDescription;
 
     Logger logger = LoggerFactory.getLogger(Adapter.class);
 
-
-    public GenericSetAdapter(String kafkaUrl, String topic, boolean debug) {
-        super(kafkaUrl, topic, debug);
+    public GenericDataSetAdapter() {
+        super();
     }
 
-    public GenericSetAdapter(String kafkaUrl, String topic) {
-        this(kafkaUrl, topic, false);
+
+    public GenericDataSetAdapter(AdapterDescription adapterDescription, boolean debug) {
+        super(adapterDescription, debug);
+    }
+
+    public GenericDataSetAdapter(AdapterDescription adapterDescription) {
+        this(adapterDescription, false);
     }
 
 
 
     @Override
     public AdapterDescription declareModel() {
-        return null;
+        AdapterDescription adapterDescription = new AdapterSetDescription();
+        adapterDescription.setAdapterId(ID);
+        return adapterDescription;
     }
 
     @Override
@@ -66,7 +78,8 @@ public class GenericSetAdapter extends Adapter {
         return  null;
     }
 
-    public void startAdapter() {
+    @Override
+    public void startAdapter()  throws AdapterException {
 
         this.adapterDescription = adapterDescription;
 
@@ -101,6 +114,11 @@ public class GenericSetAdapter extends Adapter {
 //
 //        return protocol.getGuessSchema();
         return null;
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     public void stopAdapter() {

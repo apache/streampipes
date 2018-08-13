@@ -49,12 +49,13 @@ public class ProtocolDescriptionList extends NamedStreamPipesEntity {
         list = new ArrayList<>();
     }
 
-    public void addDesctiption(ProtocolDescription protocolDescription) {
-        list.add(protocolDescription);
+    public ProtocolDescriptionList(List<ProtocolDescription> protocolDescriptions) {
+        super("http://bla.de#1", "", "");
+        list = protocolDescriptions;
     }
 
-    public ProtocolDescriptionList(List<ProtocolDescription> list) {
-        this.list = list;
+    public void addDesctiption(ProtocolDescription protocolDescription) {
+        list.add(protocolDescription);
     }
 
     public List<ProtocolDescription> getList() {

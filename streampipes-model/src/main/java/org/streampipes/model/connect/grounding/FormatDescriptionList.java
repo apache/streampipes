@@ -45,13 +45,23 @@ public class FormatDescriptionList extends NamedStreamPipesEntity {
         list = new ArrayList<>();
     }
 
+    public FormatDescriptionList(List<FormatDescription> formatDescriptions) {
+        super("http://bla.de#2", "", "");
+        list = formatDescriptions;
+    }
+
+    public FormatDescriptionList(FormatDescriptionList other) {
+        super(other.getUri(), other.getName(), other.getName());
+        if (other.getList() != null) {
+            for (FormatDescription fd : other.getList()) {
+                this.list.add(new FormatDescription(fd));
+            }
+
+        }
+    }
 
     public void addDesctiption(FormatDescription formatDescription) {
         list.add(formatDescription);
-    }
-
-    public FormatDescriptionList(List<FormatDescription> list) {
-        this.list = list;
     }
 
     public List<FormatDescription> getList() {

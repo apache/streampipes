@@ -15,7 +15,20 @@
  *
  */
 
-package org.streampipes.connect.adapter.generic;
+package org.streampipes.connect.management;
 
-public class GenericStreamAdapter {
+import org.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.streampipes.model.connect.grounding.FormatDescriptionList;
+import org.streampipes.model.connect.grounding.ProtocolDescriptionList;
+
+import java.util.List;
+
+public interface IDescriptionManagement {
+
+    public ProtocolDescriptionList getProtocols();
+
+    public FormatDescriptionList getFormats();
+
+    public AdapterDescriptionList getAdapters();
+
 }

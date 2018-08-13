@@ -18,14 +18,19 @@
 package org.streampipes.connect.adapter.specific;
 
 import org.streampipes.connect.adapter.Adapter;
+import org.streampipes.model.connect.adapter.AdapterDescription;
 
-public abstract class SpecificAdapter extends Adapter {
+public abstract class SpecificDataStreamAdapter extends Adapter {
 
-    public SpecificAdapter(String kafkaUrl, String topic, boolean debug) {
-        super(kafkaUrl, topic, debug);
+    public SpecificDataStreamAdapter() {
+        super();
     }
 
-    public SpecificAdapter(String kafkaUrl, String topic) {
-        super(kafkaUrl, topic);
+    public SpecificDataStreamAdapter(AdapterDescription adapterDescription, boolean debug) {
+        super(adapterDescription, debug);
+    }
+
+    public SpecificDataStreamAdapter(AdapterDescription adapterDescription) {
+        super(adapterDescription);
     }
 }

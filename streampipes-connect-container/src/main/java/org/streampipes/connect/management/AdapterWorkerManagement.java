@@ -17,7 +17,10 @@
 
 package org.streampipes.connect.management;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.connect.RunningAdapterInstances;
+import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.exception.AdapterException;
@@ -28,62 +31,63 @@ import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 
 public class AdapterWorkerManagement implements IAdapterWorkerManagement {
 
+    Logger logger = LoggerFactory.getLogger(AdapterWorkerManagement.class);
+
     public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
 
-        String brokerUrl = ConnectContainerConfig.INSTANCE.getKafkaUrl();
-        String topic = getTopicPrefix() + adapterStreamDescription.getName();
+        Adapter adapter = AdapterRegistry.getAdapter(adapterStreamDescription);
 
-//        Adapter adapter = new Adapter(brokerUrl, topic, false);
-//        RunningAdapterInstances.INSTANCE.addAdapter(adapterStreamDescription.getUri(), adapter);
-//        adapter.startAdapter(adapterStreamDescription);
+        RunningAdapterInstances.INSTANCE.addAdapter(adapterStreamDescription.getUri(), adapter);
+        adapter.startAdapter();
+
     }
 
     public void stopStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
-//        stopAdapter(adapterStreamDescription);
+        stopAdapter(adapterStreamDescription);
 
     }
 
     public void invokeSetAdapter (AdapterSetDescription adapterSetDescription) throws AdapterException {
         SpDataSet dataSet = adapterSetDescription.getDataSet();
 
-//        String brokerUrl = dataSet.getBrokerHostname() + ":9092";
-//        String topic = dataSet.getActualTopicName();
-//        Adapter adapter = new Adapter(brokerUrl, topic, false);
-//
-//        RunningAdapterInstances.INSTANCE.addAdapter(dataSet.getDatasetInvocationId(), adapter);
+        Adapter adapter = AdapterRegistry.getAdapter(adapterSetDescription);
+        RunningAdapterInstances.INSTANCE.addAdapter(dataSet.getDatasetInvocationId(), adapter);
 
 
-//        Runnable r = () -> {
-//            adapter.startAdapter(adapterSetDescription);
-//
-//             TODO wait till all components are done with their calculations
-//            try {
-//                Thread.sleep(5000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            String url = AdapterUtils.getUrl(ConnectContainerConfig.INSTANCE.getBackendApiUrl(), dataSet.getCorrespondingPipeline());
-//            String result = AdapterUtils.stopPipeline(url);
-//
-//            System.out.println(result);
-//
-//        };
-//
-//        new Thread(r).start();
+        // Set adapters run the whole set in one thread, once all data is processed the corresponding pipeline is stopped
+        Runnable r = () -> {
+            try {
+                adapter.startAdapter();
+            } catch (AdapterException e) {
+                e.printStackTrace();
+            }
+
+            // TODO wait till all components are done with their calculations
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            String url = AdapterUtils.getUrl(ConnectContainerConfig.INSTANCE.getBackendApiUrl(), dataSet.getCorrespondingPipeline());
+            String result = AdapterUtils.stopPipeline(url);
+            logger.info(result);
+        };
+
+        new Thread(r).start();
     }
 
     public void stopSetAdapter (AdapterSetDescription adapterSetDescription) throws AdapterException {
-//        stopAdapter(adapterSetDescription);
+        stopAdapter(adapterSetDescription);
     }
 
-    private void stopAdapter(AdapterDescription adapterDescription) throws Exception{
+    private void stopAdapter(AdapterDescription adapterDescription) throws AdapterException {
 
         String adapterUri = adapterDescription.getUri();
 
         Adapter adapter = RunningAdapterInstances.INSTANCE.removeAdapter(adapterUri);
 
         if (adapter == null) {
-            throw new Exception("Adapter with id " + adapterUri + " was not found in this container and cannot be stopped.");
+            throw new AdapterException("Adapter with id " + adapterUri + " was not found in this container and cannot be stopped.");
         }
 
         adapter.stopAdapter();

@@ -43,6 +43,11 @@ public class AdapterDescriptionList extends UnnamedStreamPipesEntity {
         list = new ArrayList<>();
     }
 
+    public AdapterDescriptionList(List<AdapterDescription> adapterDescriptions) {
+        super();
+        list = adapterDescriptions;
+    }
+
     public List<AdapterDescription> getList() {
         return list;
     }

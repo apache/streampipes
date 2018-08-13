@@ -77,6 +77,11 @@ public class AdapterDescription extends NamedStreamPipesEntity {
 
     }
 
+    public AdapterDescription(String uri, String name, String description) {
+        super(uri, name, description);
+    }
+
+
     public AdapterDescription(AdapterDescription other) {
         super(other);
         this.adapterId = other.getAdapterId();

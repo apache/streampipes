@@ -19,6 +19,7 @@ package org.streampipes.connect.utils;
 
 import java.net.URI;
 
+import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ValidatableResponseOptions;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
@@ -29,6 +30,7 @@ import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
 import org.streampipes.rest.shared.serializer.JsonLdProvider;
+import org.streampipes.rest.shared.util.JsonLdUtils;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static com.jayway.restassured.RestAssured.given;
@@ -55,23 +57,40 @@ public abstract class ConnectContainerResourceTest {
 
     protected abstract String getApi();
 
-    protected ValidatableResponseOptions getSuccessRequest(String data, String route, String responseMessage) {
-        return  getRequest(data, route)
+    protected <T> T getJsonLdSucessRequest(String route, Class<T> clazz) {
+        Response response = given().contentType("application/ld+json")
+                .when()
+                .get(getApi() + route);
+
+        response.then()
+                .statusCode(200);
+
+        String resultString = response.body().print();
+
+        T resultObject = JsonLdUtils.fromJsonLd(resultString, clazz);
+
+        return resultObject;
+
+    }
+
+    protected ValidatableResponseOptions postJsonLdSuccessRequest(String data, String route, String responseMessage) {
+        return  postJsonLdRequest(data, route)
                 .body("success", equalTo(true))
                 .body("notifications[0].title", equalTo(responseMessage));
     }
 
-    protected ValidatableResponseOptions getFailRequest(String data, String route) {
-        return  getRequest(data, route)
+    protected ValidatableResponseOptions postJsonLdFailRequest(String data, String route) {
+        return  postJsonLdRequest(data, route)
                 .body("success", equalTo(false))
                 .body("notifications[0].title", equalTo(ERROR_MESSAGE));
     }
-    protected ValidatableResponseOptions getRequest(String data, String route) {
+    protected ValidatableResponseOptions postJsonLdRequest(String data, String route) {
         return given().contentType("application/ld+json")
                 .body(data)
                 .when()
                 .post(getApi() + route)
                 .then()
-                .assertThat();
+                .assertThat()
+                .statusCode(200);
     }
 }
