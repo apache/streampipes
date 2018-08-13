@@ -29,7 +29,7 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/\""})
+@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:FormatDescriptionList")
 @Entity
 public class FormatDescriptionList extends NamedStreamPipesEntity {
