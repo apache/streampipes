@@ -101,10 +101,10 @@ public class DecriptionResourceTest extends ConnectContainerResourceTest {
         assertEquals(resultObject.getUri(), "http://bla.de#2");
         assertNotNull(resultObject.getList());
         assertEquals(2, resultObject.getList().size());
-        assertEquals("http://id.1", resultObject.getList().get(0).getUri());
+        assertEquals("http://id/1", resultObject.getList().get(0).getUri());
         assertEquals("name1", resultObject.getList().get(0).getName());
-        assertEquals("http://id.2", resultObject.getList().get(0).getUri());
-        assertEquals("name2", resultObject.getList().get(0).getName());
+        assertEquals("http://id/2", resultObject.getList().get(1).getUri());
+        assertEquals("name2", resultObject.getList().get(1).getName());
     }
 
     @Test
@@ -130,10 +130,10 @@ public class DecriptionResourceTest extends ConnectContainerResourceTest {
         assertEquals(resultObject.getUri(), "http://bla.de#1");
         assertNotNull(resultObject.getList());
         assertEquals(2, resultObject.getList().size());
-        assertEquals("http://id.1", resultObject.getList().get(0).getUri());
+        assertEquals("http://id/1", resultObject.getList().get(0).getUri());
         assertEquals("name1", resultObject.getList().get(0).getName());
-        assertEquals("http://id.2", resultObject.getList().get(0).getUri());
-        assertEquals("name2", resultObject.getList().get(0).getName());
+        assertEquals("http://id/2", resultObject.getList().get(1).getUri());
+        assertEquals("name2", resultObject.getList().get(1).getName());
     }
 
     @Test
@@ -142,7 +142,6 @@ public class DecriptionResourceTest extends ConnectContainerResourceTest {
 
         AdapterDescriptionList resultObject = getJsonLdSucessRequest("/adapters", AdapterDescriptionList.class);
 
-//        assertEquals(resultObject.getUri(), "http://bla.de#2");
         assertNotNull(resultObject.getList());
         assertEquals(resultObject.getList().size(), 0);
     }
@@ -159,10 +158,10 @@ public class DecriptionResourceTest extends ConnectContainerResourceTest {
 //        assertEquals(resultObject.getUri(), "http://bla.de#2");
         assertNotNull(resultObject.getList());
         assertEquals(2, resultObject.getList().size());
-        assertEquals("http://id.1", resultObject.getList().get(0).getUri());
+        assertEquals("http://id/1", resultObject.getList().get(0).getUri());
         assertEquals("name1", resultObject.getList().get(0).getName());
-        assertEquals("http://id.2", resultObject.getList().get(0).getUri());
-        assertEquals("name2", resultObject.getList().get(0).getName());
+        assertEquals("http://id/2", resultObject.getList().get(1).getUri());
+        assertEquals("name2", resultObject.getList().get(1).getName());
     }
 
     private void mockDescriptionManagerFormats(FormatDescriptionList formatDescriptionList){

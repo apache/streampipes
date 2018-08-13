@@ -29,7 +29,7 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/\""})
+@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:AdapterDescriptionList")
 @Entity
 public class AdapterDescriptionList extends UnnamedStreamPipesEntity {
