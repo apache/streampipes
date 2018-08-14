@@ -19,7 +19,6 @@ package org.streampipes.processors.geo.jvm.processor.geocode;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.model.util.SepaUtils;
 import org.streampipes.processors.geo.jvm.config.GeoJvmConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -31,19 +30,18 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDecl
 
 public class GeocodingController extends StandaloneEventProcessingDeclarer<GeocodingParameters> {
 
+  private static final String CITY_MAPPING = "city";
+  private static final String STREET_MAPPING = "street";
+  private static final String STREET_NUMBER_MAPPING = "street-number";
+
   @Override
   public ConfiguredEventProcessor<GeocodingParameters> onInvocation(DataProcessorInvocation
                                                                                   graph) {
-    ProcessingElementParameterExtractor extractor = getExtractor(graph);
+    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(graph);
 
-    String city = SepaUtils.getMappingPropertyName(graph,
-            "city", true);
-
-    String street = SepaUtils.getMappingPropertyName(graph,
-            "street", true);
-
-    String number = SepaUtils.getMappingPropertyName(graph,
-            "number", true);
+    String city = extractor.mappingPropertyValue(CITY_MAPPING);
+    String street = extractor.mappingPropertyValue(STREET_MAPPING);
+    String number = extractor.mappingPropertyValue(STREET_NUMBER_MAPPING);
 
     GeocodingParameters params = new GeocodingParameters(graph, city, street, number);
     return new ConfiguredEventProcessor<>(params, () -> new Geocoder(params));
@@ -60,19 +58,19 @@ public class GeocodingController extends StandaloneEventProcessingDeclarer<Geoco
                             .requiredPropertyWithUnaryMapping(
                                     EpRequirements
                                             .domainPropertyReq("http://schema.org/city"),
-                                    Labels.from("city", "Stadt", ""),
+                                    Labels.from(CITY_MAPPING, "City", ""),
                                     PropertyScope.NONE)
                             .requiredPropertyWithUnaryMapping(
                                     EpRequirements
                                             .domainPropertyReq("http://schema" +
                                                     ".org/streetAddress"),
-                                    Labels.from("street", "Straße", ""),
+                                    Labels.from(STREET_MAPPING, "Street", ""),
                                     PropertyScope.NONE)
                             .requiredPropertyWithUnaryMapping(
                                     EpRequirements
                                             .domainPropertyReq("http://schema" +
                                                     ".org/streetNumber"),
-                                    Labels.from("number", "Hausnummer", ""),
+                                    Labels.from(STREET_NUMBER_MAPPING, "Street number", ""),
                                     PropertyScope.NONE)
                             .build())
             .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.from("latitude",
