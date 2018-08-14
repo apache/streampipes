@@ -3,7 +3,10 @@
 # ARG_OPTIONAL_SINGLE([hostname], , [The default hostname of your server], )
 # ARG_OPTIONAL_BOOLEAN([prune],p, [Prune docker networks])
 # ARG_OPTIONAL_BOOLEAN([clean],c, [Start from a clean StreamPipes session])
-# ARG_POSITIONAL_MULTI([operation], [The StreamPipes operation (start|stop|restart|clean|add|remove|cleanstart|update|list|logs) (service-name)], 2, [], [])
+# ARG_OPTIONAL_BOOLEAN([current],u, [Show only currently registered services])
+# ARG_OPTIONAL_BOOLEAN([all],a, [Select all available StreamPipes services])
+# ARG_POSITIONAL_MULTI([operation], [The StreamPipes operation (operation-name) (service-name (optional))], 2, [], [])
+# ARG_TYPE_GROUP_SET([operation], [type string], [operation], [test,start,stop,restart,clean,add,remove,update,list,logs,reset,set-template])
 # ARG_DEFAULTS_POS
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -20,7 +23,7 @@ getIp() {
 
 	allips+=( 'Enter IP manually' )
 
-	# if default selected do not show promt
+	# if default selected do not show prompt
 
 	if [ $_arg_hostname ] ; 
 	then
@@ -64,6 +67,7 @@ startStreamPipes() {
 	sed "s/##IP##/${ip}/g" ./tmpl_env > .env
 	getCommand
 	$command up -d ${_arg_operation[1]}
+	echo 'StreamPipes sucessfully started'
 }
 
 updateStreamPipes() {
@@ -80,6 +84,7 @@ updateServices() {
 stopStreamPipes() {
 	getCommand
 	$command down 
+	echo 'StreamPipes sucessfully stopped'
 }
 
 logServices() {
@@ -90,37 +95,91 @@ logServices() {
 cleanStreamPipes() {
 	stopStreamPipes
 	rm -r ./config
-    echo 'StreamPipes clean'
+    echo "All configurations of StreamPipes have been deleted."
+}
+
+resetStreamPipes() {
+	cleanStreamPipes
+	rm .env
+	echo "All configurations of StreamPipes have been deleted."
 }
 
 listServices() {
-cd services
-for dir in */ ; do
-  echo $dir | sed "s/\///g" 
-done
-cd ..
+	if [ "$_arg_current" = "on" ]; 
+	then
+		echo "Currently registered services:"
+		cat system
+	else 
+		echo "Available services:"
+		cd services
+		for dir in */ ; do
+		  echo $dir | sed "s/\///g" 
+		done
+		cd ..
+	fi
 }
 
 removeService() {
-	sed -i "/${_arg_operation[1]}/d" ./system
+	if [ "$_arg_all" = "on" ]; 
+	then
+		removeAllServices
+	else
+		if grep -iq "${_arg_operation[1]}" system;then 
+			sed -i "/${_arg_operation[1]}/d" ./system
+			echo "Service ${_arg_operation[1]} removed"
+			else
+			echo "Service ${_arg_operation[1]} is currently not running"
+		fi	
+	fi
 }
 
 addService() {
-	echo ${_arg_operation[1]} >> ./system
+	if [ "$_arg_all" = "on" ]; 
+	then
+		addAllServices
+	else
+		if grep -iq "${_arg_operation[1]}" system;then 
+			echo "Service ${_arg_operation[1]} already exists"
+		else
+			echo ${_arg_operation[1]} >> ./system
+			updateStreamPipes
+		fi
+	fi
+	
+}
+
+removeAllServices() {
+	stopStreamPipes
+	> system
+}
+
+setTemplate() {
+# bigdata|desktop|ui-developer|pe-developer|backend-developer
+	echo "Set-Template is currently not yet implemented."
+}
+
+addAllServices() {
+	cd services
+	for dir in */ ; do
+		service_name=`echo $dir | sed "s/\///g"` 
+		if grep -iq "$service_name" ../system;then 
+			echo "Service $service_name already exists"
+		else
+			echo $service_name >> ../system
+		fi
+	done
+	cd ..
 	updateStreamPipes
 }
 
 if [ "$_arg_operation" = "start" ];
 then
 	startStreamPipes
-	echo 'StreamPipes sucessfully started'
 fi
 
 if [ "$_arg_operation" = "stop" ];
 then
 	stopStreamPipes
-	echo 'StreamPipes sucessfully stopped'
-
 fi
 
 if [ "$_arg_operation" = "restart" ];
@@ -134,26 +193,22 @@ fi
 if [ "$_arg_operation" = "clean" ];
 then
 	cleanStreamPipes
-	echo All configurations of StreamPipes are deleted
 fi
 
 if [ "$_arg_operation" = "add" ];
 then
 	addService
-	echo Add Service ${_arg_operation[1]}
 fi
 
 if [ "$_arg_operation" = "remove" ];
 then
 	removeService
-	echo Remove service ${_arg_operation[1]}
 fi
 
 if [ "$_arg_operation" = "cleanstart" ];
 then
 	cleanStreamPipes
 	startStreamPipes
-
 	echo 'All configurations of StreamPipes are deleted and StreamPipes is restarted'
 fi
 
@@ -170,6 +225,16 @@ fi
 if [ "$_arg_operation" = "logs" ];
 then
 	logServices
+fi
+
+if [ "$_arg_operation" = "reset" ];
+then
+	resetStreamPipes
+fi
+
+if [ "$_arg_operation" = "set-template" ];
+then
+	setTemplate
 fi
 
 if [ "$_arg_operation" = "nil" ];
