@@ -20,6 +20,7 @@ package org.streampipes.model.connect.adapter;
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.base.UnnamedStreamPipesEntity;
 
 import javax.persistence.CascadeType;
@@ -32,19 +33,19 @@ import java.util.List;
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:AdapterDescriptionList")
 @Entity
-public class AdapterDescriptionList extends UnnamedStreamPipesEntity {
+public class AdapterDescriptionList extends NamedStreamPipesEntity {
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
     @RdfProperty("sp:list")
     private List<AdapterDescription> list;
 
     public AdapterDescriptionList() {
-        super();
+        super("http://streampipes.org/adapterlist", "", "");
         list = new ArrayList<>();
     }
 
     public AdapterDescriptionList(List<AdapterDescription> adapterDescriptions) {
-        super();
+        super("http://streampipes.org/adapterlist", "", "");
         list = adapterDescriptions;
     }
 

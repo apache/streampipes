@@ -18,8 +18,11 @@
 package org.streampipes.rest.shared.util;
 
 import org.junit.Test;
+import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.FormatDescriptionList;
+import org.streampipes.vocabulary.StreamPipes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,6 +41,26 @@ public class JsonLdUtilsTest {
         assertEquals(result.getUri(), "http://bla.de#2");
         assertNotNull(result.getList());
         assertEquals(result.getList().size(), 0);
+    }
+
+    @Test
+    public void fromToJsonLdSimpleComplexTopElement() {
+        List<AdapterDescription> list = Arrays.asList(
+                new AdapterDescription("http://id.de#3", "name1", ""),
+                new AdapterDescription("http://id.de#4", "name2", ""));
+
+        AdapterDescriptionList object = new AdapterDescriptionList(list);
+        String jsonLD = JsonLdUtils.toJsonLD(object);
+
+        AdapterDescriptionList result = JsonLdUtils.fromJsonLd(jsonLD, AdapterDescriptionList.class, StreamPipes.ADAPTER_DESCRIPTION_LIST);
+
+        assertEquals(result.getUri(), "http://streampipes.org/adapterlist");
+        assertNotNull(result.getList());
+        assertEquals(2, result.getList().size());
+        assertEquals("http://id.de#3", result.getList().get(0).getUri());
+        assertEquals("name1", result.getList().get(0).getName());
+        assertEquals("http://id.de#4", result.getList().get(1).getUri());
+        assertEquals("name2", result.getList().get(1).getName());
     }
 
     @Test

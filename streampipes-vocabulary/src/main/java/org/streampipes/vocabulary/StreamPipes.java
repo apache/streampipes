@@ -261,4 +261,5 @@ public class StreamPipes {
   public static final String HAS_APP_ID = NS + "hasAppId";
   public static final String HAS_PIPELINE_ELEMENTS = "hasPipelineElements";
   public static final String PIPELINE_ELEMENT_CONTAINER = "PipelineElementContainer" ;
+
 }

@@ -58,6 +58,11 @@ public abstract class ConnectContainerResourceTest {
     protected abstract String getApi();
 
     protected <T> T getJsonLdSucessRequest(String route, Class<T> clazz) {
+        return getJsonLdSucessRequest(route, clazz, "");
+
+    }
+
+    protected <T> T getJsonLdSucessRequest(String route, Class<T> clazz, String rootElement) {
         Response response = given().contentType("application/ld+json")
                 .when()
                 .get(getApi() + route);
@@ -67,7 +72,12 @@ public abstract class ConnectContainerResourceTest {
 
         String resultString = response.body().print();
 
-        T resultObject = JsonLdUtils.fromJsonLd(resultString, clazz);
+        T resultObject;
+        if (rootElement.equals("")) {
+            resultObject = JsonLdUtils.fromJsonLd(resultString, clazz);
+        } else {
+            resultObject = JsonLdUtils.fromJsonLd(resultString, clazz, rootElement);
+        }
 
         return resultObject;
 

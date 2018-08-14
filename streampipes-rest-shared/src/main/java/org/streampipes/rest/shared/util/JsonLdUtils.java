@@ -52,4 +52,15 @@ public class JsonLdUtils {
         }
         return null;
     }
+
+    public static <T> T fromJsonLd(String json, Class<T> clazz, String topElement) {
+        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer(topElement);
+
+        try {
+            return jsonLdTransformer.fromJsonLd(json, clazz);
+        } catch (IOException e) {
+            logger.error("Could not deserialize JsonLd", e);
+        }
+        return null;
+    }
 }

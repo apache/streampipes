@@ -27,12 +27,15 @@ import org.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.streampipes.model.connect.grounding.FormatDescriptionList;
 import org.streampipes.model.connect.grounding.ProtocolDescriptionList;
 import org.streampipes.rest.shared.annotation.JsonLdSerialized;
+import org.streampipes.rest.shared.annotation.RdfRootElement;
 import org.streampipes.rest.shared.util.SpMediaType;
+import org.streampipes.vocabulary.StreamPipes;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import java.util.stream.Stream;
 
 @Path("/api/v1/{username}/master/description")
 public class DescriptionResource extends AbstractContainerResource {

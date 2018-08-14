@@ -52,7 +52,6 @@ public class JsonLdTransformer implements RdfTransformer {
           StreamPipes.DATA_SINK_DESCRIPTION,
           StreamPipes.DATA_PROCESSOR_INVOCATION,
           StreamPipes.DATA_SINK_INVOCATION,
-          StreamPipes.ADAPTER_DESCRIPTION_LIST,
           StreamPipes.FORMAT_DESCRIPTION_LIST,
           StreamPipes.PROTOCOL_DESCRIPTION_LIST,
           StreamPipes.GUESS_SCHEMA,

@@ -34,6 +34,7 @@ import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.FormatDescriptionList;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescriptionList;
+import org.streampipes.vocabulary.StreamPipes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -153,7 +154,7 @@ public class DecriptionResourceTest extends ConnectContainerResourceTest {
                 new AdapterDescription("http://id/2", "name2", ""));
         mockDescriptionManagerAdapters(new AdapterDescriptionList(list));
 
-        AdapterDescriptionList resultObject = getJsonLdSucessRequest("/adapters", AdapterDescriptionList.class);
+        AdapterDescriptionList resultObject = getJsonLdSucessRequest("/adapters", AdapterDescriptionList.class, StreamPipes.ADAPTER_DESCRIPTION_LIST);
 
 //        assertEquals(resultObject.getUri(), "http://bla.de#2");
         assertNotNull(resultObject.getList());
