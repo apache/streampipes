@@ -22,8 +22,8 @@ import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.rest.shared.serializer.annotation.GsonWithIds;
 import org.streampipes.rest.api.IPipelineElement;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 import org.streampipes.storage.rdf4j.filter.Filter;
 
 import javax.ws.rs.*;

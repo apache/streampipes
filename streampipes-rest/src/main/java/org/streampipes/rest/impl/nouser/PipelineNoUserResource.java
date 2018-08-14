@@ -19,10 +19,10 @@ package org.streampipes.rest.impl.nouser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.rest.shared.serializer.annotation.GsonWithIds;
-import org.streampipes.rest.shared.serializer.annotation.NoAuthenticationRequired;
 import org.streampipes.rest.impl.AbstractRestInterface;
 import org.streampipes.rest.management.PipelineManagement;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
+import org.streampipes.rest.shared.annotation.NoAuthenticationRequired;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

@@ -16,8 +16,8 @@
  */
 package org.streampipes.rest.interceptor;
 
-import org.streampipes.rest.shared.serializer.annotation.NoAuthenticationRequired;
 import org.streampipes.rest.authentication.StreamPipesFilter;
+import org.streampipes.rest.shared.annotation.NoAuthenticationRequired;
 
 import javax.ws.rs.container.DynamicFeature;
 import javax.ws.rs.container.ResourceInfo;

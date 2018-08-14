@@ -3,8 +3,8 @@ package org.streampipes.rest.impl;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.lightcouch.CouchDbClient;
-import org.streampipes.rest.shared.serializer.annotation.GsonWithIds;
 import org.streampipes.rest.api.ICouchdb;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 import org.streampipes.storage.couchdb.utils.Utils;
 
 import javax.ws.rs.GET;

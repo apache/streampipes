@@ -25,7 +25,7 @@ import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.graph.DataProcessorDescription;
-import org.streampipes.rest.shared.serializer.annotation.GsonWithIds;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 import org.streampipes.rest.api.IOntologyPipelineElement;
 import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.storage.management.StorageManager;

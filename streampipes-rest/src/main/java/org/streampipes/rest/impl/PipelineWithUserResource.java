@@ -34,9 +34,9 @@ import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.client.messages.SuccessMessage;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
-import org.streampipes.rest.shared.serializer.annotation.GsonWithIds;
 import org.streampipes.rest.api.IPipeline;
 import org.streampipes.rest.management.PipelineManagement;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 
 import java.util.Date;
 import java.util.UUID;

@@ -24,8 +24,8 @@ import org.streampipes.config.consul.ConsulSpConfig;
 import org.streampipes.config.model.ConfigItem;
 import org.streampipes.config.model.PeConfig;
 import org.streampipes.container.util.ConsulUtil;
-import org.streampipes.rest.shared.serializer.annotation.GsonWithIds;
 import org.streampipes.rest.api.IConsulConfig;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

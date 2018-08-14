@@ -36,8 +36,8 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.logging.model.Log;
 import org.streampipes.logging.model.LogRequest;
-import org.streampipes.rest.shared.serializer.annotation.GsonWithIds;
 import org.streampipes.rest.api.ILogs;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
