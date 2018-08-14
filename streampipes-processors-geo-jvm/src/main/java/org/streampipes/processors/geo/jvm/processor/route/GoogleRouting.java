@@ -17,24 +17,19 @@
 
 package org.streampipes.processors.geo.jvm.processor.route;
 
-import com.google.maps.DirectionsApi;
 import com.google.maps.DistanceMatrixApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.errors.ApiException;
-import com.google.maps.model.DirectionsResult;
-import com.google.maps.model.DirectionsStep;
 import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.LatLng;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.pe.jvm.config.PeJvmConfig;
+import org.streampipes.processors.geo.jvm.config.GeoJvmConfig;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class GoogleRouting extends StandaloneEventProcessorEngine<GoogleRoutingParameters> {
@@ -54,7 +49,7 @@ public class GoogleRouting extends StandaloneEventProcessorEngine<GoogleRoutingP
 
         this.googleRoutingParameters = googleRoutingParameters;
         context = new GeoApiContext.Builder()
-                .apiKey(PeJvmConfig.INSTANCE.getGoogleApiKey())
+                .apiKey(GeoJvmConfig.INSTANCE.getGoogleApiKey())
                 .build();
     }
 
@@ -100,44 +95,6 @@ public class GoogleRouting extends StandaloneEventProcessorEngine<GoogleRoutingP
         result.put("longitude", latLng.lng);
 
         return result;
-
-    }
-
-    public static void main(String... args) {
-        GeoApiContext context = new GeoApiContext.Builder()
-                .apiKey("AIzaSyBe1WX1CkwYtM2R4Bv40wpPvjfiOukOmuo")
-                .build();
-
-        try {
-
-
-            DirectionsResult dr = DirectionsApi.getDirections(context, "Karlsruhe","Stuttgart").await();
-            String[] origin = {"Karlsruhe"};
-            String[] destination = {"Stuttgart"};
-            DistanceMatrix rest = DistanceMatrixApi.getDistanceMatrix(context, origin, destination).await();
-
-            long l = rest.rows[0].elements[0].distance.inMeters;
-
-            List<Map<String, Object>> allCooardinates = new ArrayList<>();
-
-            for (DirectionsStep ds : dr.routes[0].legs[0].steps) {
-
-                allCooardinates.add(getGeoObject(ds.startLocation));
-                allCooardinates.add(getGeoObject(ds.startLocation));
-
-            }
-            System.out.println(allCooardinates.toString());
-
-        } catch (ApiException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-
 
     }
 
