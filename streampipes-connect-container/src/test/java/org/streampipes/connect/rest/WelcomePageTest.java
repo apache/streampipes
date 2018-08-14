@@ -22,9 +22,11 @@ import com.jayway.restassured.RestAssured;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.streampipes.connect.init.Config;
+import org.streampipes.connect.utils.ConnectContainerResourceTest;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
@@ -35,28 +37,46 @@ import static com.jayway.restassured.RestAssured.get;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 
-public class WelcomePageTest {
+public class WelcomePageTest extends ConnectContainerResourceTest {
+    private Server server;
 
     @Before
     public void before() {
         Config.PORT = 8019;
         RestAssured.port = 8019;
-                Set<Class<?>> allClasses = new HashSet<>();
+//                Set<Class<?>> allClasses = new HashSet<>();
+//
+//        allClasses.add(WelcomePage.class);
+//
+//        ResourceConfig config = new ResourceConfig(allClasses);
+//
+//        URI baseUri = UriBuilder
+//                .fromUri(Config.getBaseUrl())
+//                .build();
+//
+//        server = JettyHttpContainerFactory.createServer(baseUri, config);
 
-        allClasses.add(WelcomePage.class);
+        WelcomePage welcomePage = new WelcomePage();
+        server = getServer(welcomePage);
+    }
 
-        ResourceConfig config = new ResourceConfig(allClasses);
-
-        URI baseUri = UriBuilder
-                .fromUri(Config.getBaseUrl())
-                .build();
-
-        Server server = JettyHttpContainerFactory.createServer(baseUri, config);
+    @After
+    public void after() {
+        try {
+            server.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void getWelcomePageHtmlTest() {
         get("/").then().body("html.head.title", equalTo("StreamPipes Connector Container"));
         get("/").then().body("html.body.h1", equalTo("Connector Container with ID MAIN_CONTAINER is running"));
+    }
+
+    @Override
+    protected String getApi() {
+        return "";
     }
 }

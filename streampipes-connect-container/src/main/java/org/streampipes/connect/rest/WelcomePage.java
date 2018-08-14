@@ -31,7 +31,9 @@ import static org.rendersnake.HtmlAttributesFactory.class_;
 import static org.rendersnake.HtmlAttributesFactory.name;
 
 @Path("/")
-public class WelcomePage {
+public class WelcomePage extends AbstractContainerResource {
+
+	public WelcomePage() {}
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
