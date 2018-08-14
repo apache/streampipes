@@ -18,21 +18,20 @@
 package org.streampipes.sinks.notifications.jvm.slack;
 
 import com.ullink.slack.simpleslackapi.SlackSession;
+import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-import java.util.List;
-
-public class SlackNotificationParameters {
+public class SlackNotificationParameters extends EventSinkBindingParams {
     private String authToken;
     private boolean sendToUser;
     private String userChannel;
-    private List<String> properties;
+    private String message;
     private SlackSession session;
 
-    public SlackNotificationParameters(String authToken, boolean sendToUser, String userChannel, List<String> properties, SlackSession session) {
+    public SlackNotificationParameters(String authToken, boolean sendToUser, String userChannel, String message, SlackSession session) {
         this.authToken = authToken;
         this.sendToUser = sendToUser;
         this.userChannel = userChannel;
-        this.properties = properties;
+        this.message = message;
         this.session = session;
     }
 
@@ -60,12 +59,8 @@ public class SlackNotificationParameters {
         this.userChannel = userChannel;
     }
 
-    public List<String> getProperties() {
-        return properties;
-    }
-
-    public void setProperties(List<String> properties) {
-        this.properties = properties;
+    public String getMessage() {
+        return message;
     }
 
     public SlackSession getSession() {

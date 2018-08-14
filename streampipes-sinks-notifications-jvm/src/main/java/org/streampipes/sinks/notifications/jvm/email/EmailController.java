@@ -40,7 +40,7 @@ public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("email_sink", "Email Notification", "Email bot to send notifications emails")
+    return DataSinkBuilder.create("org.streampipes.sinks.notifications.email", "Email Notification", "Email bot to send notifications emails")
             .category(DataSinkType.NOTIFICATION)
             .iconUrl(SinksNotificationsJvmConfig.getIconUrl("email"))
             .requiredTextParameter(Labels.from(TO_EMAIL_ADRESS, "To", "Receiver E-mail address"))

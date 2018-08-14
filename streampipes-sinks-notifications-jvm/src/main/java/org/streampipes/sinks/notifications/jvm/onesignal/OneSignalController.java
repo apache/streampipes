@@ -21,11 +21,9 @@ import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sdk.builder.DataSinkBuilder;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.helpers.*;
 import org.streampipes.sinks.notifications.jvm.config.SinksNotificationsJvmConfig;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
@@ -38,15 +36,18 @@ public class OneSignalController extends StandaloneEventSinkDeclarer<OneSignalPa
 
     @Override
     public DataSinkDescription declareModel() {
-        return DataSinkBuilder.create("onesignal", "OneSignal", "Send Push Message to OneSignal-Application")
+        return DataSinkBuilder.create("org.streampipes.sinks.notifications.onesignal", "OneSignal", "Send Push Message to OneSignal-Application")
                 .category(DataSinkType.NOTIFICATION)
                 .iconUrl(SinksNotificationsJvmConfig.getIconUrl("one_signal"))
-                .requiredPropertyStream1(EpRequirements.anyProperty())
+                .requiredStream(StreamRequirementsBuilder
+                        .create()
+                        .requiredProperty(EpRequirements.anyProperty())
+                        .build())
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .supportedProtocols(SupportedProtocols.kafka())
                 .requiredHtmlInputParameter(Labels.from(CONTENT_KEY, "Content", "Push Message"))
-                .requiredTextParameter(APP_ID, "App-ID", "OneSignal App ID")
-                .requiredTextParameter(REST_API_KEY, "API-Key", "REST API Key")
+                .requiredTextParameter(Labels.from(APP_ID, "App-ID", "OneSignal App ID"))
+                .requiredTextParameter(Labels.from(REST_API_KEY, "API-Key", "REST API Key"))
                 .build();
     }
 
