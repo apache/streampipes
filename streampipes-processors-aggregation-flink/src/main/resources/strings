@@ -1,11 +1,11 @@
 org.streampipes.processors.aggregation.flink.aggregation.title=Aggregation
 org.streampipes.processors.aggregation.flink.aggregation.description=Performs different aggregation functions
 
-aggregateKey.title=Property Selection
-aggregateKey.description=Specifies the event property from your stream that should be aggregated.
+aggregate.title=Property Selection
+aggregate.description=Specifies the event property from your stream that should be aggregated.
 
-groupByKey.title=Group by
-groupByKey.description=Partitions the incoming stream by the selected event properties.
+groupBy.title=Group by
+groupBy.description=Partitions the incoming stream by the selected event properties.
 
 outputEvery.title=Output Frequency
 outputEvery.description=Output values every (seconds)
