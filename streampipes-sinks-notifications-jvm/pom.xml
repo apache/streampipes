@@ -115,7 +115,7 @@
                 </executions>
             </plugin>
         </plugins>
-        <finalName>streampipes-sinks-thirdparty-jvm</finalName>
+        <finalName>streampipes-sinks-notifications-jvm</finalName>
 
     </build>
 </project>
