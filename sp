@@ -198,9 +198,7 @@ _arg_operation="$(operation "$_arg_operation" "operation")" || exit 1
 getIp() {
 	if [ -x "$(command -v ifconfig)" ]; then
 		rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-	fi
-
-	if [ -x "$(command -v ipconfig)" ]; then
+	elif [ -x "$(command -v ipconfig)" ]; then
 		rawip=$(ipconfig | grep -Eo 'IPv4.*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	fi
 
