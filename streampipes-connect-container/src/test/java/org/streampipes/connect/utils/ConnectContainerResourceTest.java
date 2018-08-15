@@ -83,6 +83,33 @@ public abstract class ConnectContainerResourceTest {
 
     }
 
+    protected void getJsonLdFailRequest(String route) {
+        given().contentType("application/ld+json")
+                .when()
+                .get(getApi() + route)
+                .then()
+                .statusCode(500);
+
+    }
+
+    protected  void deleteJsonLdSucessRequest(String route) {
+        Response response = given().contentType("application/ld+json")
+                .when()
+                .delete(getApi() + route);
+
+        response.then()
+                .statusCode(200);
+    }
+
+    protected  void deleteJsonLdFailRequest(String route) {
+        Response response = given().contentType("application/ld+json")
+                .when()
+                .delete(getApi() + route);
+
+        response.then()
+                .statusCode(500);
+    }
+
     protected ValidatableResponseOptions postJsonLdSuccessRequest(String data, String route, String responseMessage) {
         return  postJsonLdRequest(data, route)
                 .body("success", equalTo(true))

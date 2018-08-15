@@ -90,34 +90,34 @@ public class SpConnectResource extends AbstractContainerResource {
         this.connectContainerEndpoint = connectContainerEndpoint;
     }
 
-    @GET
-    @JsonLdSerialized
-    @Produces(SpMediaType.JSONLD)
-    @Path("/allProtocols")
-    public Response getAllProtocols() {
-        ProtocolDescriptionList pdl = new ProtocolDescriptionList();
-        pdl.addDesctiption(new HttpProtocol().declareModel());
-        pdl.addDesctiption(new FileProtocol().declareModel());
-        pdl.addDesctiption(new KafkaProtocol().declareModel());
-        pdl.addDesctiption(new MqttProtocol().declareModel());
-        pdl.addDesctiption(new HttpStreamProtocol().declareModel());
-
-        return ok(pdl);
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/allFormats")
-    public Response getAllFormats() {
-        FormatDescriptionList fdl = new FormatDescriptionList();
-        fdl.addDesctiption(new JsonFormat().declareModel());
-        fdl.addDesctiption(new JsonObjectFormat().declareModel());
-        fdl.addDesctiption(new CsvFormat().declareModel());
-        fdl.addDesctiption(new GeoJsonFormat().declareModel());
-        fdl.addDesctiption(new XmlFormat().declareModel());
-
-        return ok(JsonLdUtils.toJsonLD(fdl));
-    }
+//    @GET
+//    @JsonLdSerialized
+//    @Produces(SpMediaType.JSONLD)
+//    @Path("/allProtocols")
+//    public Response getAllProtocols() {
+//        ProtocolDescriptionList pdl = new ProtocolDescriptionList();
+//        pdl.addDesctiption(new HttpProtocol().declareModel());
+//        pdl.addDesctiption(new FileProtocol().declareModel());
+//        pdl.addDesctiption(new KafkaProtocol().declareModel());
+//        pdl.addDesctiption(new MqttProtocol().declareModel());
+//        pdl.addDesctiption(new HttpStreamProtocol().declareModel());
+//
+//        return ok(pdl);
+//    }
+//
+//    @GET
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Path("/allFormats")
+//    public Response getAllFormats() {
+//        FormatDescriptionList fdl = new FormatDescriptionList();
+//        fdl.addDesctiption(new JsonFormat().declareModel());
+//        fdl.addDesctiption(new JsonObjectFormat().declareModel());
+//        fdl.addDesctiption(new CsvFormat().declareModel());
+//        fdl.addDesctiption(new GeoJsonFormat().declareModel());
+//        fdl.addDesctiption(new XmlFormat().declareModel());
+//
+//        return ok(JsonLdUtils.toJsonLD(fdl));
+//    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -225,25 +225,25 @@ public class SpConnectResource extends AbstractContainerResource {
     }
 
 
-    @POST
-    @JsonLdSerialized
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(SpMediaType.JSONLD)
-    public String addAdapter(AdapterDescription a) {
-        //logger.info("Received request add adapter with json-ld: " + ar);
-
-        //AdapterDescription a = SpConnect.getAdapterDescription(ar);
-        UUID id = UUID.randomUUID();
-        if (a.getUri() == null) {
-            a.setUri("https://streampipes.org/adapter/" + id);
-        }
-
-        a.setAdapterId(id.toString());
-
-        String success = spConnect.addAdapter(a, connectContainerEndpoint, new AdapterStorageImpl());
-
-        return getResponse(success, a.getUri());
-    }
+//    @POST
+//    @JsonLdSerialized
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(SpMediaType.JSONLD)
+//    public String addAdapter(AdapterDescription a) {
+//        //logger.info("Received request add adapter with json-ld: " + ar);
+//
+//        //AdapterDescription a = SpConnect.getAdapterDescription(ar);
+//        UUID id = UUID.randomUUID();
+//        if (a.getUri() == null) {
+//            a.setUri("https://streampipes.org/adapter/" + id);
+//        }
+//
+//        a.setAdapterId(id.toString());
+//
+//        String success = spConnect.addAdapter(a, connectContainerEndpoint, new AdapterStorageImpl());
+//
+//        return getResponse(success, a.getUri());
+//    }
 
 
     @DELETE

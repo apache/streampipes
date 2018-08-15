@@ -34,7 +34,7 @@ public abstract class AbstractContainerResource {
         return ok(message);
     }
 
-    protected <T> Response fail(T entity) {
+    protected Response fail() {
        return Response.serverError().build();
     }
 }
