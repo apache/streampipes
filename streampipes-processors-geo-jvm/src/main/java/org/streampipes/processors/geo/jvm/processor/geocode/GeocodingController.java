@@ -49,7 +49,7 @@ public class GeocodingController extends StandaloneEventProcessingDeclarer<Geoco
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("geocoder", "Geocoder", "Geocodes a location based " +
+    return ProcessingElementBuilder.create("org.streampipes.processors.geo.jvm.geocoder", "Geocoder", "Geocodes a location based " +
             "on given street, address and street number")
             .iconUrl(GeoJvmConfig.iconBaseUrl + "Location_Icon_HQ.png")
 

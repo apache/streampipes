@@ -35,7 +35,7 @@ public class FieldRenamerController extends FlinkDataProcessorDeclarer<FieldRena
 
 	@Override
 	public DataProcessorDescription declareModel() {
-		return ProcessingElementBuilder.create("rename", "Field Renamer", "Replaces the runtime name of an event property with a custom defined name. Useful for data ingestion purposes where a specific event schema is needed.")
+		return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.field-renamer", "Field Renamer", "Replaces the runtime name of an event property with a custom defined name. Useful for data ingestion purposes where a specific event schema is needed.")
 						.iconUrl(TransformationFlinkConfig.getIconUrl("field_renamer"))
 						.requiredStream(StreamRequirementsBuilder
 										.create()

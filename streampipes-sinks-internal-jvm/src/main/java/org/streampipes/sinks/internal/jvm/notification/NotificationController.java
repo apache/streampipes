@@ -19,6 +19,7 @@ package org.streampipes.sinks.internal.jvm.notification;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -36,13 +37,16 @@ public class NotificationController extends StandaloneEventSinkDeclarer<Notifica
 
 	@Override
 	public DataSinkDescription declareModel() {
-		return DataSinkBuilder.create("notification", "Notification", "Displays a notification in the UI panel")
+		return DataSinkBuilder.create("org.streampipes.sinks.internal.jvm.notification", "Notification", "Displays a notification in the UI panel")
 						.category(DataSinkType.NOTIFICATION)
 						.iconUrl(SinksInternalJvmConfig.getIconUrl("notification_icon"))
-						.requiredPropertyStream1(EpRequirements.anyProperty())
+						.requiredStream(StreamRequirementsBuilder
+										.create()
+										.requiredProperty(EpRequirements.anyProperty())
+										.build())
 						.supportedFormats(SupportedFormats.jsonFormat())
 						.supportedProtocols(SupportedProtocols.kafka())
-						.requiredTextParameter(TITLE_KEY, "Notification title", "Notification title")
+						.requiredTextParameter(Labels.from(TITLE_KEY, "Notification title", "Notification title"))
 						.requiredHtmlInputParameter(Labels.from(CONTENT_KEY, "Content", "Enter the notification text. You can " +
 										"use place holders like #fieldName# to add the value of a stream variable."))
 						.build();

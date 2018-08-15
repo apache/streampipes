@@ -41,7 +41,7 @@ public class TextFilterController extends StandaloneEventProcessingDeclarer<Text
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("textfilter", "Text Filter", "Text Filter Description")
+    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.textfilter", "Text Filter", "Text Filter Description")
             .iconUrl(FiltersJvmConfig.getIconUrl("Textual_Filter_Icon_HQ"))
             .category(DataProcessorType.FILTER)
             .requiredStream(StreamRequirementsBuilder

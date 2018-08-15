@@ -19,9 +19,11 @@ package org.streampipes.processors.statistics.flink.processor.stat;
 
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.processors.statistics.flink.config.StatisticsFlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
 import org.streampipes.sdk.utils.Datatypes;
@@ -43,11 +45,14 @@ public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<Stat
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("statistics-summary", "Statistics Summary", "Calculate" +
+    return ProcessingElementBuilder.create("org.streampipes.processors.statistics.flink.statistics-summary", "Statistics Summary", "Calculate" +
             " simple descriptive summary statistics")
             .iconUrl(StatisticsFlinkConfig.getIconUrl("statistical_summary"))
-            .requiredPropertyStream1WithUnaryMapping(EpRequirements.listRequirement(Datatypes
-                    .Number), listPropertyMappingName, "Property", "Select a list property")
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(Datatypes
+                    .Number), Labels.from(listPropertyMappingName, "Property", "Select a list property"), PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
             .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), MEAN, Statistics
                             .MEAN),
                     EpProperties.doubleEp(Labels.empty(), MIN, Statistics.MIN),

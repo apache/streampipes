@@ -44,7 +44,7 @@ public class SlackNotificationController extends StandaloneEventSinkDeclarer<Sla
   @Override
   public DataSinkDescription declareModel() {
 
-    return DataSinkBuilder.create("org.streampipes.sinks.notifications.slack", "Slack Notification", "Slack bot to send notifications directly into your slack")
+    return DataSinkBuilder.create("org.streampipes.sinks.notifications.jvm.slack", "Slack Notification", "Slack bot to send notifications directly into your slack")
             .category(DataSinkType.NOTIFICATION)
             .iconUrl(SinksNotificationsJvmConfig.getIconUrl("slack_icon"))
             .requiredStream(StreamRequirementsBuilder

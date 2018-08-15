@@ -18,6 +18,7 @@ package org.streampipes.sinks.brokers.jvm.kafka;
 
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sinks.brokers.jvm.config.BrokersJvmConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -39,9 +40,12 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
 
 	@Override
 	public DataSinkDescription declareModel() {
-		return DataSinkBuilder.create("kafka", "Kafka Publisher", "Forwards an event to a Kafka Broker")
+		return DataSinkBuilder.create("org.streampipes.sinks.brokers.jvm.kafka", "Kafka Publisher", "Forwards an event to a Kafka Broker")
 						.iconUrl(BrokersJvmConfig.getIconUrl("kafka_logo"))
-						.requiredPropertyStream1(EpRequirements.anyProperty())
+						.requiredStream(StreamRequirementsBuilder
+										.create()
+										.requiredProperty(EpRequirements.anyProperty())
+										.build())
 						.requiredTextParameter(Labels.from(TOPIC_KEY, "Kafka Topic", "Select a Kafka " +
 										"topic"), false, false)
 						.requiredOntologyConcept(Labels.from(KAFKA_BROKER_SETTINGS_KEY, "Kafka Broker Settings", "Provide" +
@@ -56,8 +60,7 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
 	@Override
 	public ConfiguredEventSink<KafkaParameters> onInvocation(DataSinkInvocation graph,
 																													 DataSinkParameterExtractor extractor) {
-		String topic = extractor.singleValueParameter(TOPIC_KEY,
-						String.class);
+		String topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
 
 		String kafkaHost = extractor.supportedOntologyPropertyValue(KAFKA_BROKER_SETTINGS_KEY, KAFKA_HOST_URI,
 						String.class);

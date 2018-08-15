@@ -21,6 +21,7 @@ package org.streampipes.sinks.brokers.jvm.jms;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sdk.builder.DataSinkBuilder;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.*;
 import org.streampipes.sinks.brokers.jvm.config.BrokersJvmConfig;
@@ -37,9 +38,12 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
 	
 	@Override
 	public DataSinkDescription declareModel() {
-		return DataSinkBuilder.create("jms", "JMS Publisher", "Publishes events to a JMS topic")
+		return DataSinkBuilder.create("org.streampipes.sinks.brokers.jvm.jms", "JMS Publisher", "Publishes events to a JMS topic")
 						.iconUrl(BrokersJvmConfig.getIconUrl("jms_logo"))
-						.requiredPropertyStream1(EpRequirements.anyProperty())
+						.requiredStream(StreamRequirementsBuilder
+										.create()
+										.requiredProperty(EpRequirements.anyProperty())
+										.build())
 						.requiredTextParameter(Labels.from(TOPIC_KEY, "JMS Topic", "Select a JMS " +
 										"topic"), false, false)
 						.requiredOntologyConcept(Labels.from(JMS_BROKER_SETTINGS_KEY, "JMS Broker Settings", "Provide" +
@@ -54,8 +58,7 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
 	@Override
 	public ConfiguredEventSink<JmsParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
 
-		String topic = extractor.singleValueParameter(TOPIC_KEY,
-						String.class);
+		String topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
 
 		String jmsHost = extractor.supportedOntologyPropertyValue(JMS_BROKER_SETTINGS_KEY, JMS_HOST_URI,
 						String.class);

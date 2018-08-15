@@ -20,6 +20,7 @@ package org.streampipes.sinks.brokers.jvm.rabbitmq;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sdk.builder.DataSinkBuilder;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.*;
 import org.streampipes.sinks.brokers.jvm.config.BrokersJvmConfig;
@@ -39,10 +40,13 @@ public class RabbitMqController extends StandaloneEventSinkDeclarer<RabbitMqPara
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("rabbitmq", "RabbitMQ Publisher", "Forwards events to a " +
+    return DataSinkBuilder.create("org.streampipes.sinks.brokers.jvm.rabbitmq", "RabbitMQ Publisher", "Forwards events to a " +
             "RabbitMQ broker")
             .iconUrl(BrokersJvmConfig.getIconUrl("rabbitmq-icon"))
-            .requiredPropertyStream1(EpRequirements.anyProperty())
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredProperty(EpRequirements.anyProperty())
+                    .build())
             .requiredTextParameter(Labels.from(TOPIC_KEY, "RabbitMQ Topic", "Select a RabbitMQ " +
                     "topic"), false, true)
             .requiredOntologyConcept(Labels.from(RABBITMQ_BROKER_SETTINGS_KEY, "RabbitMQ Broker Settings", "Provide" +

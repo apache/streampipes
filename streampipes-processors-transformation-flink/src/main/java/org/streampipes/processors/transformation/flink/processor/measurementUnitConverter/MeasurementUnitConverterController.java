@@ -51,7 +51,7 @@ public class MeasurementUnitConverterController extends
   public DataProcessorDescription declareModel() {
 
 
-    return ProcessingElementBuilder.create("measurement-unit-converter", "Measurement Unit " +
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.measurement-unit-converter", "Measurement Unit " +
                     "Converter",
             "Converts a unit of measurement to another one")
             .iconUrl(TransformationFlinkConfig.getIconUrl("unit_conversion"))

@@ -1,48 +1,41 @@
 package org.streampipes.processors.pattern.detection.flink.processor.absence;
 
-import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.DataProcessorType;
-import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.output.CustomOutputStrategy;
-import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.processors.pattern.detection.flink.config.PatternDetectionFlinkConfig;
-import org.streampipes.sdk.StaticProperties;
+import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.streampipes.sdk.helpers.*;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParameters> {
 
+  private static final String TIME_WINDOW = "time-window";
+
   @Override
   public DataProcessorDescription declareModel() {
-
-    SpDataStream stream1 = new SpDataStream();
-    SpDataStream stream2 = new SpDataStream();
-
-    DataProcessorDescription desc = new DataProcessorDescription("absence", "Absence", "Detects whether an event does not arrive within a specified time after the occurrence of another event.");
-    desc.setCategory(Arrays.asList(DataProcessorType.PATTERN_DETECT.name()));
-
-    desc.addEventStream(stream1);
-    desc.addEventStream(stream2);
-
-    List<OutputStrategy> strategies = new ArrayList<>();
-    strategies.add(new CustomOutputStrategy(false));
-    desc.setOutputStrategies(strategies);
-
-    List<StaticProperty> staticProperties = new ArrayList<>();
-
-    staticProperties.add(StaticProperties.integerFreeTextProperty("timeWindow", "Time Window Size", "Time window size (seconds)"));
-    desc.setStaticProperties(staticProperties);
-    desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
-    return desc;
+    return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.absence", "Absence", "Detects whether an event does not arrive within a specified time after the occurrence of another event.")
+            .category(DataProcessorType.PATTERN_DETECT)
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredProperty(EpRequirements.anyProperty())
+                    .build())
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredProperty(EpRequirements.anyProperty())
+                    .build())
+            .requiredIntegerParameter(Labels.from(TIME_WINDOW, "Time Window Size", "Time window size (seconds)"))
+            .outputStrategy(OutputStrategies.custom(true))
+            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .build();
   }
 
   @Override
@@ -52,7 +45,7 @@ public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParamet
       selectProperties.add(p.getRuntimeName());
     }
 
-    Integer timeWindowSize = extractor.singleValueParameter("timeWindow", Integer.class);
+    Integer timeWindowSize = extractor.singleValueParameter(TIME_WINDOW, Integer.class);
 
     AbsenceParameters params = new AbsenceParameters(graph, selectProperties, timeWindowSize);
 

@@ -19,10 +19,11 @@ package org.streampipes.processors.statistics.flink.processor.stat.window;
 
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.util.SepaUtils;
+import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.processors.statistics.flink.config.StatisticsFlinkConfig;
 import org.streampipes.processors.statistics.flink.processor.stat.StatisticsSummaryController;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
 import org.streampipes.vocabulary.Statistics;
@@ -42,20 +43,23 @@ public class StatisticsSummaryControllerWindow extends
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("statistics-summary-window", "Sliding Descriptive " +
+    return ProcessingElementBuilder.create("org.streampipes.processors.statistics.flink.statistics-summary-window", "Sliding Descriptive " +
                     "Statistics",
             "Calculate" +
                     " simple descriptive summary statistics based on a configurable time window")
             .iconUrl(StatisticsFlinkConfig.getIconUrl("statistics-icon"))
-            .requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(),
-                    VALUE_TO_OBSERVE, "Value to " +
-                            "observe", "Provide a value where statistics are calculated upon")
-            .requiredPropertyStream1WithUnaryMapping(EpRequirements.timestampReq(),
-                    TIMESTAMP_MAPPING, "Time", "Provide a time parameter")
-            .requiredPropertyStream1WithUnaryMapping(EpRequirements.stringReq(),
-                    PARTITION_BY, "Group by", "Partition the stream by a given id")
-            .requiredIntegerParameter(TIME_WINDOW, "Time Window Size", "Size of the time window")
-            .requiredSingleValueSelection(TIME_SCALE, "Time Window Scale", "",
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                            Labels.from(VALUE_TO_OBSERVE, "Value to " +
+                                    "observe", "Provide a value where statistics are calculated upon"), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                            Labels.from(TIMESTAMP_MAPPING, "Time", "Provide a time parameter"), PropertyScope.HEADER_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
+                            Labels.from(PARTITION_BY, "Group by", "Partition the stream by a given id"), PropertyScope.DIMENSION_PROPERTY)
+                    .build())
+            .requiredIntegerParameter(Labels.from(TIME_WINDOW, "Time Window Size", "Size of the time window"))
+            .requiredSingleValueSelection(Labels.from(TIME_SCALE, "Time Window Scale", ""),
                     Options.from("Hours", "Minutes", "Seconds"))
             .outputStrategy(OutputStrategies.fixed(
                     EpProperties.timestampProperty("timestamp"),
@@ -81,7 +85,7 @@ public class StatisticsSummaryControllerWindow extends
     String groupBy = extractor.mappingPropertyValue(PARTITION_BY);
 
     int timeWindowSize = extractor.singleValueParameter(TIME_WINDOW, Integer.class);
-    String scale = SepaUtils.getOneOfProperty(sepa, TIME_SCALE);
+    String scale = extractor.selectedSingleValue(TIME_SCALE, String.class);
 
     TimeUnit timeUnit;
 

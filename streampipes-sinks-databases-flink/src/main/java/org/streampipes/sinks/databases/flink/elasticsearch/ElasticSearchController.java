@@ -33,17 +33,20 @@ import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
 
 public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearchParameters> {
 
+  private static final String INDEX_NAME = "index-name";
+  private static final String TIMESTAMP_MAPPING = "timestamp-mapping";
+
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("elasticsearch", "Elasticsearch", "Stores data in an elasticsearch cluster")
+    return DataSinkBuilder.create("org.streampipes.sinks.databases.flink.elasticsearch", "Elasticsearch", "Stores data in an elasticsearch cluster")
             .category(DataSinkType.STORAGE)
             .iconUrl(DatabasesFlinkConfig.getIconUrl("elasticsearch_icon"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.from("timestamp",
+                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.from(TIMESTAMP_MAPPING,
                             "Timestamp Property", "Timestamp Mapping"), PropertyScope.HEADER_PROPERTY)
                     .build())
-            .requiredTextParameter("index-name", "Index Name", "Elasticsearch index name property")
+            .requiredTextParameter(Labels.from(INDEX_NAME, "Index Name", "Elasticsearch index name property"))
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka())
             .build();
@@ -52,8 +55,8 @@ public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearch
   @Override
   public FlinkDataSinkRuntime<ElasticSearchParameters> getRuntime(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
 
-    String timestampField = extractor.mappingPropertyValue("timestamp");
-    String indexName = extractor.singleValueParameter("index-name", String.class);
+    String timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING);
+    String indexName = extractor.singleValueParameter(INDEX_NAME, String.class);
 
     ElasticSearchParameters params = new ElasticSearchParameters(graph, timestampField, indexName);
 

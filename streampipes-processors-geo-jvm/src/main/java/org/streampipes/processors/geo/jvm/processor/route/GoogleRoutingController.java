@@ -37,7 +37,7 @@ public class GoogleRoutingController extends StandaloneEventProcessingDeclarer<G
 
     @Override
     public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("google-routing", "Google Routing", "Uses the Google" +
+        return ProcessingElementBuilder.create("org.streampipes.processors.geo.jvm.google-routing", "Google Routing", "Uses the Google" +
                 "routing service to calculate a route from start to destination")
                 .iconUrl(GeoJvmConfig.iconBaseUrl + "Map_Icon_HQ.png")
                 .requiredStream(

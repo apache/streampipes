@@ -36,7 +36,7 @@ public class FieldConverterController extends
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("field-converter", "Field Converter",
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.field-converter", "Field Converter",
             "Converts a string value to a number data type")
             .iconUrl(TransformationFlinkConfig.getIconUrl("field_converter"))
             .requiredStream(StreamRequirementsBuilder

@@ -43,7 +43,7 @@ public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDete
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("peak-detection", "Peak Detection",
+    return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.peak-detection", "Peak Detection",
             "Detect peaks in time series data")
             .category(DataProcessorType.ALGORITHM)
             .iconUrl(PatternDetectionFlinkConfig.getIconUrl("peak-detection-icon"))
@@ -56,13 +56,13 @@ public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDete
                     .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
                             Labels.from(PARTITION_BY, "Group by", "Partition the stream by a given id"), PropertyScope
                                     .DIMENSION_PROPERTY).build())
-            .requiredIntegerParameter(COUNT_WINDOW_SIZE, "Count Window Size", "Defines " +
-                    "the size of the count window", 60)
-            .requiredIntegerParameter(LAG_KEY, "Lag", "Defines the lag of the smoothing " +
-                    "function", 5)
-            .requiredFloatParameter(THRESHOLD_KEY, "Threshold", "Defines the standard deviation " +
-                    "threshold", 2.0f)
-            .requiredFloatParameter(INFLUENCE_KEY, "Influence", "Defines the influence", 0.5f)
+            .requiredIntegerParameter(Labels.from(COUNT_WINDOW_SIZE, "Count Window Size", "Defines " +
+                    "the size of the count window"), 60)
+            .requiredIntegerParameter(Labels.from(LAG_KEY, "Lag", "Defines the lag of the smoothing " +
+                    "function"), 5)
+            .requiredFloatParameter(Labels.from(THRESHOLD_KEY, "Threshold", "Defines the standard deviation " +
+                    "threshold"), 2.0f)
+            .requiredFloatParameter(Labels.from(INFLUENCE_KEY, "Influence", "Defines the influence"), 0.5f)
             .outputStrategy(OutputStrategies.fixed(
                     EpProperties.timestampProperty("timestamp"),
                     EpProperties.stringEp(Labels.empty(), "id", "http://schema.org/id"),

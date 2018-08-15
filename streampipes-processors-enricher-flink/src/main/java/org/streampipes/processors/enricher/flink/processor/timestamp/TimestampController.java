@@ -33,7 +33,7 @@ public class TimestampController extends FlinkDataProcessorDeclarer<TimestampPar
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("enrich_configurable_timestamp", "Configurable Flink Timestamp Enrichment",
+    return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.enrich-configurable-timestamp", "Configurable Flink Timestamp Enrichment",
             "Appends the current time in ms to the event payload using Flink")
             .iconUrl(EnricherFlinkConfig.getIconUrl("enrich-timestamp-icon"))
             .requiredStream(StreamRequirementsBuilder

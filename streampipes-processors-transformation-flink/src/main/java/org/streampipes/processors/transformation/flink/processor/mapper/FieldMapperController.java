@@ -43,7 +43,7 @@ public class FieldMapperController extends
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("field-mapper", "Field Mapper",
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.field-mapper", "Field Mapper",
             "Replaces one or more field with a new field and computes a hash value of these fields")
             .requiredStream(StreamRequirementsBuilder
                     .create()

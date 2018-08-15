@@ -19,7 +19,6 @@ import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.model.util.SepaUtils;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -29,12 +28,16 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDecl
 
 public class NumericalFilterController extends StandaloneEventProcessingDeclarer<NumericalFilterParameters> {
 
+  private static final String NUMBER_MAPPING = "number-mapping";
+  private static final String VALUE = "value";
+  private static final String OPERATION = "operation";
+
   @Override
   public ConfiguredEventProcessor<NumericalFilterParameters> onInvocation(DataProcessorInvocation graph) {
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(graph);
 
-    Double threshold = extractor.singleValueParameter("value", Double.class);
-    String stringOperation = extractor.selectedSingleValue("operation", String.class);
+    Double threshold = extractor.singleValueParameter(VALUE, Double.class);
+    String stringOperation = extractor.selectedSingleValue(OPERATION, String.class);
 
     String operation = "GT";
 
@@ -48,8 +51,7 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
       operation = "EQ";
     }
 
-    String filterProperty = SepaUtils.getMappingPropertyName(graph,
-            "number", true);
+    String filterProperty = extractor.mappingPropertyValue(NUMBER_MAPPING);
 
     NumericalFilterParameters staticParam = new NumericalFilterParameters(graph, threshold, NumericalOperator.valueOf
             (operation)
@@ -65,13 +67,13 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
             .iconUrl("Numerical_Filter_Icon_HQ")
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from("number", "Specifies the field name where the filter operation should" +
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from(NUMBER_MAPPING, "Specifies the field name where the filter operation should" +
                             " be applied " +
                             "on.", ""), PropertyScope.NONE).build())
             .outputStrategy(OutputStrategies.keep())
-            .requiredSingleValueSelection(Labels.from("operation", "Filter Operation", "Specifies the filter " +
+            .requiredSingleValueSelection(Labels.from(OPERATION, "Filter Operation", "Specifies the filter " +
                     "operation that should be applied on the field"), Options.from("<", "<=", ">", ">=", "=="))
-            .requiredFloatParameter(Labels.from("value", "Threshold value", "Specifies a threshold value."), "number")
+            .requiredFloatParameter(Labels.from(VALUE, "Threshold value", "Specifies a threshold value."), NUMBER_MAPPING)
             .supportedProtocols(SupportedProtocols.kafka())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();

@@ -19,6 +19,7 @@ package org.streampipes.sinks.internal.jvm.dashboard;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -32,11 +33,14 @@ public class DashboardController extends StandaloneEventSinkDeclarer<DashboardPa
 
     @Override
     public DataSinkDescription declareModel() {
-        return DataSinkBuilder.create("dashboard_sink", "Dashboard Sink", "This sink will be used to visualize data" +
+        return DataSinkBuilder.create("org.streampipes.sinks.internal.jvm.dashboard", "Dashboard Sink", "This sink will be used to visualize data" +
                 " " +
                 "streams in the StreamPipes dashboard")
                 .category(DataSinkType.VISUALIZATION_CHART)
-                .requiredPropertyStream1(EpRequirements.anyProperty())
+                .requiredStream(StreamRequirementsBuilder
+                        .create()
+                        .requiredProperty(EpRequirements.anyProperty())
+                        .build())
                 .iconUrl(SinksInternalJvmConfig.getIconUrl("dashboard-icon"))
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .supportedProtocols(SupportedProtocols.kafka())

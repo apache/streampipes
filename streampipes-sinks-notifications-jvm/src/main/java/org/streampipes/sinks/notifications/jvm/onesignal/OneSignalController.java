@@ -36,7 +36,7 @@ public class OneSignalController extends StandaloneEventSinkDeclarer<OneSignalPa
 
     @Override
     public DataSinkDescription declareModel() {
-        return DataSinkBuilder.create("org.streampipes.sinks.notifications.onesignal", "OneSignal", "Send Push Message to OneSignal-Application")
+        return DataSinkBuilder.create("org.streampipes.sinks.notifications.jvm.onesignal", "OneSignal", "Send Push Message to OneSignal-Application")
                 .category(DataSinkType.NOTIFICATION)
                 .iconUrl(SinksNotificationsJvmConfig.getIconUrl("one_signal"))
                 .requiredStream(StreamRequirementsBuilder
