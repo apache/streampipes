@@ -1,9 +1,5 @@
 # CLI tool for StreamPipes
 
-* Start StreamPipes with `streampipes start`
-* Stop StreamPipes with `streampipes stop [start]`
-* Clean StreamPipes with `streampipes clean [start]`
-* Edit the file `system` to add or remove modules. Alternatively use the command `streampipes service add SERVICE_NAME` or `streampipes service remove SERVICE_NAME`
 
 ## Features
 
@@ -18,3 +14,8 @@
 * clean: Clean SP installation, remove networks
 * reset: Delete all .env files and everything else
 * template (template-name:bigdata|desktop|ui-developer|pe-developer|backend-developer)
+
+
+## Usage
+
+~/argbash/argbash-2.7.0/bin/argbash sp.m4 -o sp
