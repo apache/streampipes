@@ -21,6 +21,7 @@ import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.streampipes.processors.filters.jvm.config.FiltersJvmConfig;
 import org.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterController;
+import org.streampipes.processors.filters.jvm.processor.projection.ProjectionController;
 import org.streampipes.processors.filters.jvm.processor.textfilter.TextFilterController;
 
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
@@ -31,7 +32,8 @@ public class FiltersJvmInit extends StandaloneModelSubmitter {
     DeclarersSingleton
             .getInstance()
             .add(new NumericalFilterController())
-            .add(new TextFilterController());
+            .add(new TextFilterController())
+            .add(new ProjectionController());
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
