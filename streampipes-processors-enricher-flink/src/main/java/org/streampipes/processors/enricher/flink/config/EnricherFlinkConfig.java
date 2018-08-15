@@ -23,7 +23,7 @@ public enum EnricherFlinkConfig implements PeConfig {
   INSTANCE;
 
   private SpConfig config;
-  public static final String JAR_FILE = "./streampipes-examples-flink.jar";
+  public static final String JAR_FILE = "./streampipes-processing-element-container.jar";
 
   private final static String service_id = "pe/org.streampipes.processors.enricher.flink";
   private final static String service_name = "Processors Enricher Flink";
