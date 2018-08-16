@@ -1,6 +1,6 @@
 version: "2"
 services:
-  sinks-internal-jvm:
+  sinks-notifications-jvm:
     image: ${SP_DOCKER_REGISTRY}/streampipes/streampipes-pipeline-elements/sinks-notifications-jvm:${SP_PE_VERSION}
     depends_on:
       - "consul"

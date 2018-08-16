@@ -29,14 +29,14 @@ public enum SinksNotificationsJvmConfig implements PeConfig {
   public final static String serverUrl;
   public final static String iconBaseUrl;
 
-  private final static String service_id = "pe/org.streampipes.sinks.thirdparty.jvm";
-  private final static String service_name = "Sinks Thirdparty JVM";
-  private final static String service_container_name = "sinks-thirdparty-jvm";
+  private final static String service_id = "pe/org.streampipes.sinks.notifications.jvm";
+  private final static String service_name = "Sinks Notifications JVM";
+  private final static String service_container_name = "sinks-notifications-jvm";
 
 
   SinksNotificationsJvmConfig() {
     config = SpConfig.getSpConfig(service_id);
-    config.register(ConfigKeys.HOST, service_container_name, "Hostname for the pe esper");
+    config.register(ConfigKeys.HOST, service_container_name, "Hostname for the notifications module");
     config.register(ConfigKeys.PORT, 8090, "Port for the pe esper");
 
     config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");

@@ -141,10 +141,10 @@ docker-processors-pattern-detection-flink:
     variables:
       CONTAINER_NAME: "processors-pattern-detection-flink"
 
-docker-processors-siddhi:
+docker-processors-filters-siddhi:
     <<: *docker_script
     variables:
-      CONTAINER_NAME: "processors-siddhi"
+      CONTAINER_NAME: "processors-filters-siddhi"
 
 docker-processors-statistics-flink:
     <<: *docker_script

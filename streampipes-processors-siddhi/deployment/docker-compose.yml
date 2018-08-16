@@ -1,6 +1,6 @@
 version: "2"
 services:
-  processors-siddhi:
+  processors-filters-siddhi:
     image: ${SP_DOCKER_REGISTRY}/streampipes/streampipes-pipeline-elements/processors-siddhi:${SP_PE_VERSION}
     depends_on:
       - "consul"
