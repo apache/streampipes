@@ -171,7 +171,7 @@ docker-sinks-databases-jvm:
     variables:
       CONTAINER_NAME: "sinks-databases-jvm"
 
-docker-sinks-databases-jvm:
+docker-sinks-notifications-jvm:
     <<: *docker_script
     variables:
       CONTAINER_NAME: "sinks-notifications-jvm"
