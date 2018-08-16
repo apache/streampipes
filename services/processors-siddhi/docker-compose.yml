@@ -1,7 +1,7 @@
 version: "2"
 services:
-  processors-siddhi:
-    image: ${SP_PE_DOCKER_REGISTRY}/processors-siddhi:${SP_PE_VERSION}
+  processors-filters-siddhi:
+    image: ${SP_PE_DOCKER_REGISTRY}/processors-filters-siddhi:${SP_PE_VERSION}
     depends_on:
       - "consul"
 #    ports:
