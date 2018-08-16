@@ -84,7 +84,7 @@ public class AdapterResource extends AbstractContainerResource {
     public Response getAdapter(String id) {
 
         try {
-            AdapterDescription adapterDescription = adapterMasterManagement.getAdapter(id);
+            AdapterDescription adapterDescription = adapterMasterManagement.getAdapter(id, new AdapterStorageImpl());
             return ok(adapterDescription);
         } catch (AdapterException e) {
             logger.error("Error while getting adapter with id " + id, e);
@@ -114,7 +114,7 @@ public class AdapterResource extends AbstractContainerResource {
     @Produces(SpMediaType.JSONLD)
     public Response getAllAdapters(String id) {
         try {
-            List<AdapterDescription> allAdapterDescription = adapterMasterManagement.getAllAdapters();
+            List<AdapterDescription> allAdapterDescription = adapterMasterManagement.getAllAdapters(new AdapterStorageImpl());
             AdapterDescriptionList result = new AdapterDescriptionList();
             result.setList(allAdapterDescription);
 

@@ -96,7 +96,7 @@ public class AdapterResourceTest extends ConnectContainerResourceTest {
     @Test
     public void getAdapterSuccess() throws AdapterException {
         IAdapterMasterManagement adapterMasterManagement  = mock(AdapterMasterManagement.class);
-        when(adapterMasterManagement.getAdapter(any())).thenReturn(new AdapterDescription("http://t.id", "n", ""));
+        when(adapterMasterManagement.getAdapter(any(), any())).thenReturn(new AdapterDescription("http://t.id", "n", ""));
         adapterResource.setAdapterMasterManagement(adapterMasterManagement);
 
         AdapterDescription result = getJsonLdSucessRequest("/testid", AdapterDescription.class);
@@ -106,7 +106,7 @@ public class AdapterResourceTest extends ConnectContainerResourceTest {
 
     @Test
     public void getAdapterFail() throws AdapterException {
-        doThrow(new AdapterException(ERROR_MESSAGE)).when(adapterMasterManagement).getAdapter(anyString());
+        doThrow(new AdapterException(ERROR_MESSAGE)).when(adapterMasterManagement).getAdapter(anyString(), any());
         adapterResource.setAdapterMasterManagement(adapterMasterManagement);
 
         getJsonLdFailRequest("/testid");
@@ -133,7 +133,7 @@ public class AdapterResourceTest extends ConnectContainerResourceTest {
     public void getAllAdaptersSuccess() throws AdapterException {
         List<AdapterDescription> adapterDescriptions = Arrays.asList(new AdapterDescription("http://t.id", "n", ""));
         IAdapterMasterManagement adapterMasterManagement  = mock(AdapterMasterManagement.class);
-        when(adapterMasterManagement.getAllAdapters()).thenReturn(adapterDescriptions);
+        when(adapterMasterManagement.getAllAdapters(any())).thenReturn(adapterDescriptions);
         adapterResource.setAdapterMasterManagement(adapterMasterManagement);
 
         AdapterDescriptionList result = getJsonLdSucessRequest("/", AdapterDescriptionList.class, StreamPipes.ADAPTER_DESCRIPTION_LIST);
@@ -146,7 +146,7 @@ public class AdapterResourceTest extends ConnectContainerResourceTest {
 
     @Test
     public void getAllAdaptersFail() throws AdapterException {
-        doThrow(new AdapterException(ERROR_MESSAGE)).when(adapterMasterManagement).getAllAdapters();
+        doThrow(new AdapterException(ERROR_MESSAGE)).when(adapterMasterManagement).getAllAdapters(any());
         adapterResource.setAdapterMasterManagement(adapterMasterManagement);
 
         getJsonLdFailRequest("/");

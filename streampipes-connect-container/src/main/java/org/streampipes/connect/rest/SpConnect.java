@@ -40,58 +40,58 @@ public class SpConnect {
 
     private static final Logger logger = LoggerFactory.getLogger(SpConnectResource.class);
 
-    public String addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl adapterStorage) {
+//    public String addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl adapterStorage) {
+//
+//        // store in db
+//        adapterStorage.storeAdapter(ad);
+//
+//
+//        // start when stream adapter
+//        if (ad instanceof AdapterStreamDescription) {
+//            SpConnect.startStreamAdapter((AdapterStreamDescription) ad, baseUrl);
+//        }
+//
+//        List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
+//        String adapterCouchdbId = "";
+//        for (AdapterDescription a : allAdapters) {
+//           if (a.getAdapterId().equals(ad.getAdapterId())) {
+//               adapterCouchdbId = a.getId();
+//           }
+//        }
+//
+//        String backendBaseUrl = "http://" + BackendConfig.INSTANCE.getBackendHost() + ":" + "8030" + "/streampipes-backend/api/v2/";
+//        String userName = ad.getUserName();
+//        String requestUrl = backendBaseUrl +  "noauth/users/" + userName + "/element";
+//        logger.info("Request URL: " + requestUrl);
+//
+//        String elementUrl = backendBaseUrl + "adapter/all/" + adapterCouchdbId;
+//        logger.info("Element URL: " + elementUrl);
+//
+//        installDataSource(requestUrl, elementUrl);
+//
+//
+//        return SpConnectUtils.SUCCESS;
+//    }
 
-        // store in db
-        adapterStorage.storeAdapter(ad);
-
-
-        // start when stream adapter
-        if (ad instanceof AdapterStreamDescription) {
-            SpConnect.startStreamAdapter((AdapterStreamDescription) ad, baseUrl);
-        }
-
-        List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
-        String adapterCouchdbId = "";
-        for (AdapterDescription a : allAdapters) {
-           if (a.getAdapterId().equals(ad.getAdapterId())) {
-               adapterCouchdbId = a.getId();
-           }
-        }
-        
-        String backendBaseUrl = "http://" + BackendConfig.INSTANCE.getBackendHost() + ":" + "8030" + "/streampipes-backend/api/v2/";
-        String userName = ad.getUserName();
-        String requestUrl = backendBaseUrl +  "noauth/users/" + userName + "/element";
-        logger.info("Request URL: " + requestUrl);
-
-        String elementUrl = backendBaseUrl + "adapter/all/" + adapterCouchdbId;
-        logger.info("Element URL: " + elementUrl);
-
-        installDataSource(requestUrl, elementUrl);
-
-
-        return SpConnectUtils.SUCCESS;
-    }
-
-    public boolean installDataSource(String requestUrl, String elementIdUrl) {
-
-        try {
-            String responseString = Request.Post(requestUrl)
-                    .bodyForm(
-                            Form.form()
-                                    .add("uri", elementIdUrl)
-                                    .add("publicElement", "true").build())
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnContent().asString();
-
-            logger.info(responseString);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return true;
-    }
+//    public boolean installDataSource(String requestUrl, String elementIdUrl) {
+//
+//        try {
+//            String responseString = Request.Post(requestUrl)
+//                    .bodyForm(
+//                            Form.form()
+//                                    .add("uri", elementIdUrl)
+//                                    .add("publicElement", "true").build())
+//                    .connectTimeout(1000)
+//                    .socketTimeout(100000)
+//                    .execute().returnContent().asString();
+//
+//            logger.info(responseString);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return true;
+//    }
 
 
     public static boolean deleteDataSource(String requestUrl) {

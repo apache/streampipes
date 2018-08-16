@@ -27,9 +27,9 @@ public interface IAdapterMasterManagement {
 
     void addAdapter(AdapterDescription adapterDescription, String baseUrl, AdapterStorageImpl adapterStorage) throws AdapterException;
 
-    AdapterDescription getAdapter(String id) throws AdapterException;
+    AdapterDescription getAdapter(String id, AdapterStorageImpl adapterStorage) throws AdapterException;
 
     void deleteAdapter(String id) throws AdapterException;
 
-    List<AdapterDescription> getAllAdapters() throws AdapterException;
+    List<AdapterDescription> getAllAdapters(AdapterStorageImpl adapterStorage) throws AdapterException;
 }
