@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormatDescription } from '../model/FormatDescription';
+import { FormatDescription } from '../model/connect/grounding/FormatDescription';
 import { isUndefined } from 'util';
 
 @Component({

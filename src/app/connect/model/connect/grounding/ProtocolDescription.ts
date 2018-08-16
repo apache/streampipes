@@ -1,15 +1,15 @@
-import {RdfId} from '../tsonld/RdfId';
-import {RdfProperty} from '../tsonld/RdfsProperty';
-import {RdfsClass} from '../tsonld/RdfsClass';
-import {StaticProperty} from './StaticProperty';
+import {RdfId} from '../../../tsonld/RdfId';
+import {RdfProperty} from '../../../tsonld/RdfsProperty';
+import {RdfsClass} from '../../../tsonld/RdfsClass';
+import {StaticProperty} from '../../StaticProperty';
 
-@RdfsClass('sp:FormatDescription')
-export class FormatDescription {
-
-  public edit: boolean;
+@RdfsClass('sp:ProtocolDescription')
+export class ProtocolDescription {
 
   @RdfId
   public id: string;
+
+  public edit: boolean;
 
   @RdfProperty('http://www.w3.org/2000/01/rdf-schema#label')
   public label: string;
@@ -20,6 +20,9 @@ export class FormatDescription {
   @RdfProperty('sp:hasUri')
   public uri: string;
 
+  @RdfProperty('sp:sourceType')
+  public sourceType: string;
+
   @RdfProperty('sp:config')
   public config: StaticProperty[] = [];
 
@@ -27,4 +30,5 @@ export class FormatDescription {
     this.id = id;
     this.edit = false;
   }
+
 }

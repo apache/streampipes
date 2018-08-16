@@ -2,14 +2,14 @@ import {Component, Input, EventEmitter, OnInit, Output} from '@angular/core';
 import {DragulaService} from 'ng2-dragula/ng2-dragula';
 import {RestService} from '../../rest.service';
 import {EventSchema} from '../model/EventSchema';
-import {AdapterDescription} from '../../model/AdapterDescription';
-import {ProtocolDescription} from '../../model/ProtocolDescription';
-import {FormatDescription} from '../../model/FormatDescription';
+import {AdapterDescription} from '../../model/connect/AdapterDescription';
+import {ProtocolDescription} from '../../model/connect/grounding/ProtocolDescription';
+import {FormatDescription} from '../../model/connect/grounding/FormatDescription';
 import {EventProperty} from '../model/EventProperty';
 import {GuessSchema} from '../model/GuessSchema';
-import {AdapterSetDescription} from '../../model/AdapterSetDescription';
+import {AdapterSetDescription} from '../../model/connect/AdapterSetDescription';
 import {TransformationRuleService} from '../../transformation-rule.service';
-import {TransformationRuleDescription} from '../../model/rules/TransformationRuleDescription';
+import {TransformationRuleDescription} from '../../model/connect/rules/TransformationRuleDescription';
 import {E} from '@angular/core/src/render3';
 
 @Component({

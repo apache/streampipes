@@ -10,29 +10,29 @@ import { TsonLd } from './tsonld';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/fromPromise';
 
-import {ProtocolDescriptionList} from './model/ProtocolDescriptionList';
-import {AdapterDescription} from './model/AdapterDescription';
-import {ProtocolDescription} from './model/ProtocolDescription';
-import {FormatDescriptionList} from './model/FormatDescriptionList';
-import {FormatDescription} from './model/FormatDescription';
+import {ProtocolDescriptionList} from './model/connect/grounding/ProtocolDescriptionList';
+import {AdapterDescription} from './model/connect/AdapterDescription';
+import {ProtocolDescription} from './model/connect/grounding/ProtocolDescription';
+import {FormatDescriptionList} from './model/connect/grounding/FormatDescriptionList';
+import {FormatDescription} from './model/connect/grounding/FormatDescription';
 import {FreeTextStaticProperty} from './model/FreeTextStaticProperty';
 import {EventSchema} from './schema-editor/model/EventSchema';
 import {EventProperty} from './schema-editor/model/EventProperty';
 import {EventPropertyNested} from './schema-editor/model/EventPropertyNested';
 import {EventPropertyPrimitive} from './schema-editor/model/EventPropertyPrimitive';
 import {EventPropertyList} from './schema-editor/model/EventPropertyList';
-import {AdapterDescriptionList} from './model/AdapterDescriptionList';
+import {AdapterDescriptionList} from './model/connect/AdapterDescriptionList';
 import {DataSetDescription} from './model/DataSetDescription';
 import {DomainPropertyProbability} from './schema-editor/model/DomainPropertyProbability';
 import {GuessSchema} from './schema-editor/model/GuessSchema';
 import {DomainPropertyProbabilityList} from './schema-editor/model/DomainPropertyProbabilityList';
 import {URI} from './model/URI';
 import {AuthStatusService} from '../services/auth-status.service';
-import {RenameRuleDescription} from './model/rules/RenameRuleDescription';
-import {DeleteRuleDescription} from './model/rules/DeleteRuleDescription';
-import {AddNestedRuleDescription} from './model/rules/AddNestedRuleDescription';
-import {MoveRuleDescription} from './model/rules/MoveRuleDesctiption';
-import {TransformationRuleDescription} from './model/rules/TransformationRuleDescription';
+import {RenameRuleDescription} from './model/connect/rules/RenameRuleDescription';
+import {DeleteRuleDescription} from './model/connect/rules/DeleteRuleDescription';
+import {AddNestedRuleDescription} from './model/connect/rules/AddNestedRuleDescription';
+import {MoveRuleDescription} from './model/connect/rules/MoveRuleDesctiption';
+import {TransformationRuleDescription} from './model/connect/rules/TransformationRuleDescription';
 
 @Injectable()
 export class RestService {

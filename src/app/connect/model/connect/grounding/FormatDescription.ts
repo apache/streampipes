@@ -1,15 +1,15 @@
-import {RdfId} from '../tsonld/RdfId';
-import {RdfProperty} from '../tsonld/RdfsProperty';
-import {RdfsClass} from '../tsonld/RdfsClass';
-import {StaticProperty} from './StaticProperty';
+import {RdfId} from '../../../tsonld/RdfId';
+import {RdfProperty} from '../../../tsonld/RdfsProperty';
+import {RdfsClass} from '../../../tsonld/RdfsClass';
+import {StaticProperty} from '../../StaticProperty';
 
-@RdfsClass('sp:ProtocolDescription')
-export class ProtocolDescription {
+@RdfsClass('sp:FormatDescription')
+export class FormatDescription {
+
+  public edit: boolean;
 
   @RdfId
   public id: string;
-
-  public edit: boolean;
 
   @RdfProperty('http://www.w3.org/2000/01/rdf-schema#label')
   public label: string;
@@ -20,9 +20,6 @@ export class ProtocolDescription {
   @RdfProperty('sp:hasUri')
   public uri: string;
 
-  @RdfProperty('sp:sourceType')
-  public sourceType: string;
-
   @RdfProperty('sp:config')
   public config: StaticProperty[] = [];
 
@@ -30,5 +27,4 @@ export class ProtocolDescription {
     this.id = id;
     this.edit = false;
   }
-
 }

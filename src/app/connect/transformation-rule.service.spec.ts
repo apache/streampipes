@@ -4,13 +4,13 @@ import {TransformationRuleService} from './transformation-rule.service';
 import {Logger} from '../shared/logger/default-log.service';
 import {EventSchema} from './schema-editor/model/EventSchema';
 import {EventPropertyPrimitive} from './schema-editor/model/EventPropertyPrimitive';
-import {RenameRuleDescription} from './model/rules/RenameRuleDescription';
+import {RenameRuleDescription} from './model/connect/rules/RenameRuleDescription';
 import {EventProperty} from './schema-editor/model/EventProperty';
 import {EventPropertyNested} from './schema-editor/model/EventPropertyNested';
-import {AddNestedRuleDescription} from './model/rules/AddNestedRuleDescription';
+import {AddNestedRuleDescription} from './model/connect/rules/AddNestedRuleDescription';
 import {e, r} from '@angular/core/src/render3';
-import {MoveRuleDescription} from './model/rules/MoveRuleDesctiption';
-import {DeleteRuleDescription} from './model/rules/DeleteRuleDescription';
+import {MoveRuleDescription} from './model/connect/rules/MoveRuleDesctiption';
+import {DeleteRuleDescription} from './model/connect/rules/DeleteRuleDescription';
 
 describe('TransformationRuleService', () => {
 

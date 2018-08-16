@@ -1,8 +1,8 @@
 import {RdfId} from '../tsonld/RdfId';
 import {RdfProperty} from '../tsonld/RdfsProperty';
 import {RdfsClass} from '../tsonld/RdfsClass';
-import {FormatDescription} from './FormatDescription';
-import {ProtocolDescription} from './ProtocolDescription';
+import {FormatDescription} from './connect/grounding/FormatDescription';
+import {ProtocolDescription} from './connect/grounding/ProtocolDescription';
 import {EventSchema} from '../schema-editor/model/EventSchema';
 
 @RdfsClass('sp:DataSet')

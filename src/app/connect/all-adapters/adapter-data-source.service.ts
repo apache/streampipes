@@ -1,7 +1,7 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {RestService} from '../rest.service';
 import {Observable} from 'rxjs/Observable';
-import {AdapterDescription} from '../model/AdapterDescription';
+import {AdapterDescription} from '../model/connect/AdapterDescription';
 
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 

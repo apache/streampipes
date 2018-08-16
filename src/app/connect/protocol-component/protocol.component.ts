@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ProtocolDescription } from '../model/ProtocolDescription';
+import { ProtocolDescription } from '../model/connect/grounding/ProtocolDescription';
 
 @Component({
   selector: 'app-protocol',

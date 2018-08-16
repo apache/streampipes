@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {RestService} from '../rest.service';
-import {AdapterDescription} from '../model/AdapterDescription';
+import {AdapterDescription} from '../model/connect/AdapterDescription';
 import {AdapterDataSource} from './adapter-data-source.service';
 import {Subscription} from'rxjs';
 @Component({

@@ -1,6 +1,6 @@
-import {RdfId} from '../tsonld/RdfId';
-import {RdfProperty} from '../tsonld/RdfsProperty';
-import {RdfsClass} from '../tsonld/RdfsClass';
+import {RdfId} from '../../../tsonld/RdfId';
+import {RdfProperty} from '../../../tsonld/RdfsProperty';
+import {RdfsClass} from '../../../tsonld/RdfsClass';
 import {FormatDescription} from './FormatDescription';
 
 @RdfsClass('sp:FormatDescriptionList')

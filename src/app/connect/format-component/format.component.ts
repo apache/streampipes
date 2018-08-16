@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormatDescription } from '../model/FormatDescription';
+import { FormatDescription } from '../model/connect/grounding/FormatDescription';
 
 @Component({
   selector: 'app-format',

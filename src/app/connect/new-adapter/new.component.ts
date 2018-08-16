@@ -2,17 +2,17 @@ import {Component, Output, OnInit, EventEmitter} from '@angular/core';
 import { ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import {RestService} from '../rest.service';
-import {ProtocolDescription} from '../model/ProtocolDescription';
-import {FormatDescription} from '../model/FormatDescription';
-import {AdapterDescription} from '../model/AdapterDescription';
+import {ProtocolDescription} from '../model/connect/grounding/ProtocolDescription';
+import {FormatDescription} from '../model/connect/grounding/FormatDescription';
+import {AdapterDescription} from '../model/connect/AdapterDescription';
 import {DataSetDescription} from '../model/DataSetDescription';
 import {EventSchema} from '../schema-editor/model/EventSchema';
 import {AdapterDataSource} from '../all-adapters/adapter-data-source.service';
 import {MatDialog} from '@angular/material';
 import {AdapterStartedDialog} from './component/adapter-started-dialog.component';
 import {Logger} from '../../shared/logger/default-log.service';
-import {AdapterStreamDescription} from '../model/AdapterStreamDescription';
-import {AdapterSetDescription} from '../model/AdapterSetDescription';
+import {AdapterStreamDescription} from '../model/connect/AdapterStreamDescription';
+import {AdapterSetDescription} from '../model/connect/AdapterSetDescription';
 import {DataStreamDescription} from '../model/DataStreamDescription';
 
 

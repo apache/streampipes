@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { isUndefined } from 'util';
-import { ProtocolDescription } from '../model/ProtocolDescription';
-import { ProtocolDescriptionList } from '../model/ProtocolDescriptionList';
+import { ProtocolDescription } from '../model/connect/grounding/ProtocolDescription';
+import { ProtocolDescriptionList } from '../model/connect/grounding/ProtocolDescriptionList';
 import { ValidateUrl } from './input.validator';
 import { FormControl, FormGroup } from '@angular/forms';
 
