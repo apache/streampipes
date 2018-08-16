@@ -1,0 +1,13 @@
+version: "2"
+services:
+  sinks-databases-jvm:
+    image: ${SP_PE_DOCKER_REGISTRY}/sinks-notifications-jvm:${SP_PE_VERSION}
+    depends_on:
+      - "consul"
+#    ports:
+#      - "8098:8090"
+    environment:
+      - SP_ICON_HOST=${SP_ICON_HOST}
+    networks:
+      spnet:
+
