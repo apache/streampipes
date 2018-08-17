@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+@Deprecated
 public class SpConnect {
 
     private static final Logger logger = LoggerFactory.getLogger(SpConnectResource.class);

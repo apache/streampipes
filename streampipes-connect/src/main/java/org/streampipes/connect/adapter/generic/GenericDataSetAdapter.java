@@ -67,6 +67,7 @@ public class GenericDataSetAdapter extends Adapter {
     public AdapterDescription declareModel() {
         AdapterDescription adapterDescription = new AdapterSetDescription();
         adapterDescription.setAdapterId(ID);
+        adapterDescription.setUri("http://streampipes.org/adapter/generic/dataset");
         return adapterDescription;
     }
 

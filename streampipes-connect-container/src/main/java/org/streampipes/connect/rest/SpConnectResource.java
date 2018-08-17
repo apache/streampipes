@@ -71,6 +71,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Path("/v2/adapter")
+@Deprecated
 public class SpConnectResource extends AbstractContainerResource {
 
     private static final Logger logger = LoggerFactory.getLogger(SpConnectResource.class);

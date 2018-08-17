@@ -63,6 +63,7 @@ public class GenericDataStreamAdapter extends Adapter {
     public AdapterDescription declareModel() {
         AdapterDescription adapterDescription = new AdapterStreamDescription();
         adapterDescription.setAdapterId(ID);
+        adapterDescription.setUri("http://streampipes.org/adapter/generic/datastream");
         return adapterDescription;
     }
 

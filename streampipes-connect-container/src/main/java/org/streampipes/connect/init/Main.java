@@ -22,6 +22,8 @@ import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.connect.rest.master.AdapterResource;
+import org.streampipes.connect.rest.master.DescriptionResource;
 import org.streampipes.connect.rest.worker.WorkerResource;
 import org.streampipes.connect.rest.WelcomePage;
 import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
@@ -71,6 +73,10 @@ public class Main {
 
         allClasses.add(WelcomePage.class);
         allClasses.add(WorkerResource.class);
+        allClasses.add(DescriptionResource.class);
+        allClasses.add(AdapterResource.class);
+
+
 
         // Serializers
         allClasses.add(GsonWithIdProvider.class);

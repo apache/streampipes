@@ -53,6 +53,8 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
     public AdapterDescription declareModel() {
         AdapterDescription adapterDescription = new AdapterStreamDescription();
         adapterDescription.setAdapterId(ID);
+        adapterDescription.setUri("http://streampipes.org/adapter/specific/twitter");
+
         return adapterDescription;
     }
 
