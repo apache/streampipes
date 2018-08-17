@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import {Observable, Subscribable} from 'rxjs/Observable';
+import { Observable, Subscribable } from 'rxjs/Observable';
 
 import { TsonLd } from './tsonld';
 
@@ -10,29 +10,31 @@ import { TsonLd } from './tsonld';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/fromPromise';
 
-import {ProtocolDescriptionList} from './model/connect/grounding/ProtocolDescriptionList';
-import {AdapterDescription} from './model/connect/AdapterDescription';
-import {ProtocolDescription} from './model/connect/grounding/ProtocolDescription';
-import {FormatDescriptionList} from './model/connect/grounding/FormatDescriptionList';
-import {FormatDescription} from './model/connect/grounding/FormatDescription';
-import {FreeTextStaticProperty} from './model/FreeTextStaticProperty';
-import {EventSchema} from './schema-editor/model/EventSchema';
-import {EventProperty} from './schema-editor/model/EventProperty';
-import {EventPropertyNested} from './schema-editor/model/EventPropertyNested';
-import {EventPropertyPrimitive} from './schema-editor/model/EventPropertyPrimitive';
-import {EventPropertyList} from './schema-editor/model/EventPropertyList';
-import {AdapterDescriptionList} from './model/connect/AdapterDescriptionList';
-import {DataSetDescription} from './model/DataSetDescription';
-import {DomainPropertyProbability} from './schema-editor/model/DomainPropertyProbability';
-import {GuessSchema} from './schema-editor/model/GuessSchema';
-import {DomainPropertyProbabilityList} from './schema-editor/model/DomainPropertyProbabilityList';
-import {URI} from './model/URI';
-import {AuthStatusService} from '../services/auth-status.service';
-import {RenameRuleDescription} from './model/connect/rules/RenameRuleDescription';
-import {DeleteRuleDescription} from './model/connect/rules/DeleteRuleDescription';
-import {AddNestedRuleDescription} from './model/connect/rules/AddNestedRuleDescription';
-import {MoveRuleDescription} from './model/connect/rules/MoveRuleDesctiption';
-import {TransformationRuleDescription} from './model/connect/rules/TransformationRuleDescription';
+import { ProtocolDescriptionList } from './model/connect/grounding/ProtocolDescriptionList';
+import { AdapterDescription } from './model/connect/AdapterDescription';
+import { AdapterSetDescription } from './model/connect/AdapterSetDescription';
+import { AdapterStreamDescription } from './model/connect/AdapterStreamDescription';
+import { ProtocolDescription } from './model/connect/grounding/ProtocolDescription';
+import { FormatDescriptionList } from './model/connect/grounding/FormatDescriptionList';
+import { FormatDescription } from './model/connect/grounding/FormatDescription';
+import { FreeTextStaticProperty } from './model/FreeTextStaticProperty';
+import { EventSchema } from './schema-editor/model/EventSchema';
+import { EventProperty } from './schema-editor/model/EventProperty';
+import { EventPropertyNested } from './schema-editor/model/EventPropertyNested';
+import { EventPropertyPrimitive } from './schema-editor/model/EventPropertyPrimitive';
+import { EventPropertyList } from './schema-editor/model/EventPropertyList';
+import { AdapterDescriptionList } from './model/connect/AdapterDescriptionList';
+import { DataSetDescription } from './model/DataSetDescription';
+import { DomainPropertyProbability } from './schema-editor/model/DomainPropertyProbability';
+import { GuessSchema } from './schema-editor/model/GuessSchema';
+import { DomainPropertyProbabilityList } from './schema-editor/model/DomainPropertyProbabilityList';
+import { URI } from './model/URI';
+import { AuthStatusService } from '../services/auth-status.service';
+import { RenameRuleDescription } from './model/connect/rules/RenameRuleDescription';
+import { DeleteRuleDescription } from './model/connect/rules/DeleteRuleDescription';
+import { AddNestedRuleDescription } from './model/connect/rules/AddNestedRuleDescription';
+import { MoveRuleDescription } from './model/connect/rules/MoveRuleDesctiption';
+import { TransformationRuleDescription } from './model/connect/rules/TransformationRuleDescription';
 
 @Injectable()
 export class RestService {
@@ -49,6 +51,8 @@ export class RestService {
         tsonld.addClassMapping(FormatDescription);
         tsonld.addClassMapping(AdapterDescriptionList);
         tsonld.addClassMapping(AdapterDescription);
+        tsonld.addClassMapping(AdapterSetDescription);
+        tsonld.addClassMapping(AdapterStreamDescription);
         tsonld.addClassMapping(DataSetDescription);
         tsonld.addClassMapping(EventSchema);
         tsonld.addClassMapping(EventProperty);
@@ -67,10 +71,10 @@ export class RestService {
         return tsonld;
     }
 
-    constructor( private http: HttpClient, private authStatusService: AuthStatusService) {
+    constructor(private http: HttpClient, private authStatusService: AuthStatusService) {
     }
 
-    addAdapter(adapter: AdapterDescription ) {
+    addAdapter(adapter: AdapterDescription) {
         const tsonld = new TsonLd();
         tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
         tsonld.addContext('spi', 'urn:streampipes.org:spi:');
@@ -81,7 +85,7 @@ export class RestService {
         tsonld.toflattenJsonLd(adapter).subscribe(res => {
             const httpOptions = {
                 headers: new HttpHeaders({
-                    'Content-Type':  'application/ld+json'
+                    'Content-Type': 'application/ld+json'
                 })
             };
             console.log(JSON.stringify(res));
@@ -99,11 +103,11 @@ export class RestService {
                 // TODO remove this
                 // quick fix to deserialize URIs
                 response['@graph'].forEach(function (object) {
-                   if (object['sp:domainProperty'] != undefined) {
-                       // object['sp:domainProperty']['@type'] = "sp:URI";
-                       object['sp:domainProperty'] = object['sp:domainProperty']['@id'];
-                       delete object['sp:domainProperty']['@id'];
-                   }
+                    if (object['sp:domainProperty'] != undefined) {
+                        // object['sp:domainProperty']['@type'] = "sp:URI";
+                        object['sp:domainProperty'] = object['sp:domainProperty']['@id'];
+                        delete object['sp:domainProperty']['@id'];
+                    }
                 })
                 const tsonld = this.getTsonLd();
 
@@ -115,8 +119,27 @@ export class RestService {
             });
     }
 
+    getAdaptersNew(): Observable<AdapterDescription[]> {
+        return this.http
+            .get('http://localhost:8082/streampipes-connect/api/v1/abt@fzi.de/master/description/adapters')
+            .map(response => {
+
+                response['@graph'].forEach(function (object) {
+                    if (object['sp:domainProperty'] != undefined) {
+                        // object['sp:domainProperty']['@type'] = "sp:URI";
+                        object['sp:domainProperty'] = object['sp:domainProperty']['@id'];
+                        delete object['sp:domainProperty']['@id'];
+                    }
+                })
+                const tsonld = this.getTsonLd();
+                const res = tsonld.fromJsonLdType(response, 'sp:AdapterDescriptionList');
+
+                return res.list;
+            });
+    }
+
     deleteAdapter(adapter: AdapterDescription): Observable<any> {
-         return this.http
+        return this.http
             .delete(this.host + 'api/v2/adapter/' + adapter.couchDbId);
     }
 
@@ -130,7 +153,7 @@ export class RestService {
 
         console.log(adapter.constructor.name);
 
-        return Observable.fromPromise(new Promise(function(resolve, reject) {
+        return Observable.fromPromise(new Promise(function (resolve, reject) {
             tsonld.toflattenJsonLd(adapter).subscribe(res => {
                 return self.http
                     .post(self.host + 'api/v2/guess/schema', res)

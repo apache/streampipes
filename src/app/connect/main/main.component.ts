@@ -22,7 +22,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
 
     newAdapterCreated() {
-            this.allAdapter.newAdapterStarted(); 
+        this.allAdapter.newAdapterStarted(); 
     }
     ngAfterViewInit() {
         

@@ -95,6 +95,11 @@ module.exports = {
     devServer: {
         port: 8082,
         proxy: {
+            '/streampipes-connect': {
+                target: 'http://localhost:8099',
+                pathRewrite: {'^/streampipes-connect' : ''},
+                secure: false
+            },
             '/streampipes-backend': {
                 target: 'http://localhost:8030',
                 secure: false
