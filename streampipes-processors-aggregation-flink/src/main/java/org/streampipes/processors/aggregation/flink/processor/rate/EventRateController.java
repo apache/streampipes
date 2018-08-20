@@ -18,7 +18,6 @@ import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 public class EventRateController extends FlinkDataProcessorDeclarer<EventRateParameter> {
 
   private static final String RATE_KEY = "rate";
-  private static final String OUTPUT_KEY = "output";
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -32,9 +31,8 @@ public class EventRateController extends FlinkDataProcessorDeclarer<EventRatePar
                     .build())
             .outputStrategy(OutputStrategies.fixed(EpProperties.doubleEp(Labels.empty(), "rate",
                     "http://schema.org/Number")))
-            .requiredIntegerParameter(Labels.from(RATE_KEY, "Average/Sec", "" +
-                    "in seconds"))
-            .requiredIntegerParameter(Labels.from(OUTPUT_KEY, "Output Every (seconds)", ""))
+            .requiredIntegerParameter(Labels.from(RATE_KEY, "Time Baseline", "Time window size used for calculating the rate" +
+                    "in seconds, also defines the output rate"))
             .supportedFormats(StandardTransportFormat.standardFormat())
             .supportedProtocols(StandardTransportFormat.standardProtocols())
             .build();
@@ -44,13 +42,8 @@ public class EventRateController extends FlinkDataProcessorDeclarer<EventRatePar
   public FlinkDataProcessorRuntime<EventRateParameter> getRuntime(DataProcessorInvocation graph,
                                                                   ProcessingElementParameterExtractor extractor) {
     Integer avgRate = extractor.singleValueParameter(RATE_KEY, Integer.class);
-    Integer outputRate = extractor.singleValueParameter(OUTPUT_KEY, Integer.class);
 
-    String topicPrefix = "topic://";
-    EventRateParameter staticParam = new EventRateParameter(graph, avgRate, outputRate
-            , topicPrefix + graph.getOutputStream().getEventGrounding().getTransportProtocol()
-            .getTopicDefinition()
-            .getActualTopicName());
+    EventRateParameter staticParam = new EventRateParameter(graph, avgRate);
 
     return new EventRateProgram(staticParam, AggregationFlinkConfig.INSTANCE.getDebug());
 

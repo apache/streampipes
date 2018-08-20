@@ -15,8 +15,13 @@ limitations under the License.
 */
 package org.streampipes.processors.aggregation.flink.processor.count;
 
+import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.windowing.triggers.Trigger;
+import org.apache.flink.streaming.api.windowing.triggers.TriggerResult;
+import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
 
 import java.util.Map;
@@ -30,8 +35,65 @@ public class CountProgram extends AbstractAggregationProgram<CountParameters> {
 
   @Override
   protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
-    // TODO implement
-    return null;
+    return dataStreams[0]
+            .map(new CountMapper(params.getFieldToCount()))
+            .keyBy(1)
+            .timeWindow(params.getTime())
+            .trigger(new Trigger<Tuple3<String, String, Integer>, TimeWindow>() {
+              @Override
+              public TriggerResult onElement(Tuple3<String, String, Integer> stringStringIntegerTuple3, long l, TimeWindow timeWindow, TriggerContext triggerContext) throws Exception {
+                return TriggerResult.FIRE;
+              }
+
+              @Override
+              public TriggerResult onProcessingTime(long l, TimeWindow timeWindow, TriggerContext triggerContext) throws Exception {
+                return TriggerResult.CONTINUE;
+              }
+
+              @Override
+              public TriggerResult onEventTime(long l, TimeWindow timeWindow, TriggerContext triggerContext) throws Exception {
+                return TriggerResult.CONTINUE;
+              }
+
+              @Override
+              public void clear(TimeWindow timeWindow, TriggerContext triggerContext) throws Exception {
+
+              }
+            })
+            .sum(2)
+            .map(new Tuple2MapMapper());
+//            .map()
+//            .map(new MapFunction<Map<String, Object>, Map<String, Object>>() {
+//              @Override
+//              public Map<String, Object> map(Map<String, Object> stringObjectMap) throws Exception {
+//                Map<String, Object> outMap = new HashMap<>();
+//              outMap.put("value", params.getFieldToCount());
+//              outMap.put("count", "");
+//              return outMap;
+//              }
+//            });
+//            .apply((WindowFunction<String, Map<String, Object>, Map<String, Object>, TimeWindow>) (map, timeWindow, iterable, collector) -> {
+//              Integer count = 0;
+//              Iterator<String> it = iterable.iterator();
+//              while(it.hasNext()) {
+//                String next = it.next();
+//                if (next.equals(map.get(params.getFieldToCount()))) {
+//                  count++;
+//                }
+//              }
+//
+//              Map<String, Object> outMap = new HashMap<>();
+//              outMap.put("value", map.get(params.getFieldToCount()));
+//              outMap.put("count", count);
+//              collector.collect(outMap);
+//            });
+
+
+  }
+
+  @Override
+  public void appendEnvironmentConfig(StreamExecutionEnvironment env) {
+    env.setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
   }
 
 }

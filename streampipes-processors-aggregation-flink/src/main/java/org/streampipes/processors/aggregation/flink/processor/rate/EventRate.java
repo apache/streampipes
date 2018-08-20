@@ -15,5 +15,23 @@ limitations under the License.
 */
 package org.streampipes.processors.aggregation.flink.processor.rate;
 
-public class EventRate {
+import org.apache.flink.shaded.guava18.com.google.common.collect.Iterables;
+import org.apache.flink.streaming.api.functions.windowing.AllWindowFunction;
+import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
+import org.apache.flink.util.Collector;
+
+import java.util.Map;
+
+public class EventRate implements AllWindowFunction<Map<String, Object>, Float, TimeWindow>{
+
+  private Integer timeWindowSize;
+
+  public EventRate(Integer timeWindowSize) {
+    this.timeWindowSize = timeWindowSize;
+  }
+
+  @Override
+  public void apply(TimeWindow timeWindow, Iterable<Map<String, Object>> iterable, Collector<Float> collector) throws Exception {
+    collector.collect((float) Iterables.size(iterable) / timeWindowSize);
+  }
 }

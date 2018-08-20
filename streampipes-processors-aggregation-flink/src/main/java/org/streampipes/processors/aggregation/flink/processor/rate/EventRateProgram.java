@@ -15,10 +15,14 @@ limitations under the License.
 */
 package org.streampipes.processors.aggregation.flink.processor.rate;
 
+import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.util.Collector;
 import org.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class EventRateProgram extends AbstractAggregationProgram<EventRateParameter> {
@@ -30,8 +34,17 @@ public class EventRateProgram extends AbstractAggregationProgram<EventRateParame
 
   @Override
   protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
-    // TODO implement
-    return null;
+    return dataStreams[0]
+            .timeWindowAll(Time.seconds(params.getAvgRate()))
+            .apply(new EventRate(params.getAvgRate()))
+            .flatMap(new FlatMapFunction<Float, Map<String, Object>>() {
+              @Override
+              public void flatMap(Float rate, Collector<Map<String, Object>> out) throws Exception {
+                Map<String, Object> outMap = new HashMap<>();
+                outMap.put("rate", rate);
+                out.collect(outMap);
+              }
+            });
   }
 
 }

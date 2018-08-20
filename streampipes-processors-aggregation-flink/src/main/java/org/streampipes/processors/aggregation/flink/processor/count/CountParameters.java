@@ -1,39 +1,25 @@
 package org.streampipes.processors.aggregation.flink.processor.count;
 
+import org.apache.flink.streaming.api.windowing.time.Time;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-import java.util.List;
-
 public class CountParameters extends EventProcessorBindingParams {
 
-	private int timeWindow;
-	private List<String> groupBy;
-	private TimeScale timeScale;
-	private List<String> selectProperties;
-	
-	public CountParameters(DataProcessorInvocation graph, int timeWindow, List<String> groupBy, TimeScale timeScale, List<String> selectProperties) {
-		super(graph);
-		this.timeScale = timeScale;
-		this.groupBy = groupBy;
-		this.timeWindow = timeWindow;
-		this.selectProperties = selectProperties;
-	}
+  private Time time;
+  private String fieldToCount;
 
-	public int getTimeWindow() {
-		return timeWindow;
-	}
+  public CountParameters(DataProcessorInvocation graph, Time time, String fieldToCount) {
+    super(graph);
+    this.time = time;
+    this.fieldToCount = fieldToCount;
+  }
 
-	public List<String> getGroupBy() {
-		return groupBy;
-	}
+  public Time getTime() {
+    return time;
+  }
 
-	public TimeScale getTimeScale() {
-		return timeScale;
-	}
-
-	public List<String> getSelectProperties() {
-		return selectProperties;
-	}
-	
+  public String getFieldToCount() {
+    return fieldToCount;
+  }
 }
