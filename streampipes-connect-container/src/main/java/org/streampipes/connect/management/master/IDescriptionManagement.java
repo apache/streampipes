@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.connect.management;
+package org.streampipes.connect.management.master;
 
 import org.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.streampipes.model.connect.grounding.FormatDescriptionList;
@@ -25,10 +25,10 @@ import java.util.List;
 
 public interface IDescriptionManagement {
 
-    public ProtocolDescriptionList getProtocols();
+    ProtocolDescriptionList getProtocols();
 
-    public FormatDescriptionList getFormats();
+    FormatDescriptionList getFormats();
 
-    public AdapterDescriptionList getAdapters();
+    AdapterDescriptionList getAdapters();
 
 }

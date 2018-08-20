@@ -47,8 +47,7 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
     config.register(BackendConfigKeys.KAFKA_REST_PORT, 8073, "The port of the kafka-rest module");
     config.register(BackendConfigKeys.KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
-    config.register(BackendConfigKeys.CONNECT_CONTAINER_PORT, 8099, "The port of the connect container");
-    config.register(BackendConfigKeys.CONNECT_CONTAINER_HOST, "localhost", "The hostname of the connect container");
+
 
   }
 
@@ -122,18 +121,6 @@ public enum BackendConfig {
 
   public String getElasticsearchURL() {
     return getElasticsearchProtocol()+ "://" + getElasticsearchHost() + ":" + getElasticsearchPort();
-  }
-
-  public String getConnectContainerHost() {
-    return config.getString(BackendConfigKeys.CONNECT_CONTAINER_HOST);
-  }
-
-  public Integer getConnectContainerPort() {
-    return config.getInteger(BackendConfigKeys.CONNECT_CONTAINER_PORT);
-  }
-
-  public String getConnectContainerUrl() {
-    return "http://" + getConnectContainerHost() + ":" + getConnectContainerPort() + "/";
   }
 
   public String getKafkaRestHost() {

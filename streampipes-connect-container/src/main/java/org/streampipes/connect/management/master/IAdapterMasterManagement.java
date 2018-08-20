@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.connect.management;
+package org.streampipes.connect.management.master;
 
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;

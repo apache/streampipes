@@ -20,10 +20,10 @@ package org.streampipes.connect.rest.master;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.config.backend.BackendConfig;
-import org.streampipes.connect.adapter.Adapter;
+import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.connect.management.AdapterMasterManagement;
-import org.streampipes.connect.management.IAdapterMasterManagement;
+import org.streampipes.connect.management.master.AdapterMasterManagement;
+import org.streampipes.connect.management.master.IAdapterMasterManagement;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.connect.adapter.AdapterDescription;
@@ -37,7 +37,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.UUID;
 
 @Path("/api/v1/{username}/master/adapters")
 public class AdapterResource extends AbstractContainerResource {
@@ -50,7 +49,7 @@ public class AdapterResource extends AbstractContainerResource {
 
     public AdapterResource() {
         this.adapterMasterManagement = new AdapterMasterManagement();
-        this.connectContainerEndpoint = BackendConfig.INSTANCE.getConnectContainerUrl();
+        this.connectContainerEndpoint = ConnectContainerConfig.INSTANCE.getConnectContainerUrl();
     }
 
     public AdapterResource(String connectContainerEndpoint) {

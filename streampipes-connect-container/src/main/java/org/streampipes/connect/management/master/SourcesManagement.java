@@ -15,15 +15,20 @@
  *
  */
 
-package org.streampipes.connect.config;
+package org.streampipes.connect.management.master;
 
-public class ConfigKeys {
-    final static String BACKEND_HOST = "SP_BACKEND_HOST";
-    final static String BACKEND_PORT = "SP_BACKEND_PORT";
+import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.model.SpDataSet;
 
-    final static String KAFKA_HOST = "SP_KAFKA_HOST";
-    final static String KAFKA_PORT = "SP_KAFKA_PORT";
+public class SourcesManagement implements ISourcesManagement {
 
-    final static String CONNECT_CONTAINER_HOST = "SP_CONNECT_CONTAINER_HOST";
-    final static String CONNECT_CONTAINER_PORT = "SP_CONNECT_CONTAINER_PORT";
+    @Override
+    public void addAdapter(SpDataSet dataSet) throws AdapterException {
+
+    }
+
+    @Override
+    public void detachAdapter(String streamId, String runningInstanceId) throws AdapterException {
+
+    }
 }
