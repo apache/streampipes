@@ -19,20 +19,18 @@ package org.streampipes.model.connect.adapter;
 
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfsClass;
-import org.streampipes.model.connect.grounding.FormatDescription;
-import org.streampipes.model.connect.grounding.ProtocolDescription;
 
 import javax.persistence.Entity;
 
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:SpecificAdapterSetDescription")
 @Entity
-public class SpecificAdapterSetDescription extends AdapterStreamDescription {
+public class SpecificAdapterSetDescription extends AdapterSetDescription {
 
     public SpecificAdapterSetDescription() {
     }
 
-    public SpecificAdapterSetDescription(AdapterStreamDescription other) {
+    public SpecificAdapterSetDescription(AdapterSetDescription other) {
         super(other);
     }
 }

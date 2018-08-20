@@ -29,7 +29,7 @@ import javax.persistence.Entity;
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:GenericAdapterSetDescription")
 @Entity
-public class GenericAdapterSetDescription extends AdapterStreamDescription {
+public class GenericAdapterSetDescription extends AdapterSetDescription {
 
     @RdfProperty("sp:hasFormat")
     private FormatDescription formatDescription;
