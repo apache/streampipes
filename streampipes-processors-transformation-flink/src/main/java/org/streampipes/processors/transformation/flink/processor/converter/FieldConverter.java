@@ -36,7 +36,7 @@ public class FieldConverter implements FlatMapFunction<Map<String, Object>, Map<
   @Override
   public void flatMap(Map<String, Object> in, Collector<Map<String, Object>> out) throws Exception {
       String value = String.valueOf(in.get(convertProperty));
-      if (targetDatatype == XSD._float.toString()) {
+      if (targetDatatype.equals(XSD._float.toString())) {
         in.put(convertProperty, Float.parseFloat(value));
       } else {
         in.put(convertProperty, Integer.parseInt(value));
