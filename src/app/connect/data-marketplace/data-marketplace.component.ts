@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { DataMarketplaceService } from './data-marketplace.service';
 import { AdapterDescription } from '../model/connect/AdapterDescription';
 
@@ -10,6 +10,7 @@ import { AdapterDescription } from '../model/connect/AdapterDescription';
 export class DataMarketplaceComponent implements OnInit {
 
     private adapters: AdapterDescription[];
+    @Output() selectAdapterEmitter: EventEmitter<AdapterDescription> = new EventEmitter<AdapterDescription>();
 
     constructor(private dataMarketplaceService: DataMarketplaceService) {
     }
@@ -17,8 +18,11 @@ export class DataMarketplaceComponent implements OnInit {
     ngOnInit() {
         this.dataMarketplaceService.getAdapters().subscribe(res => {
             this.adapters = res;
-            console.log(this.adapters);
         });
+    }
+
+    selectAdapter(adapter: AdapterDescription) {
+        this.selectAdapterEmitter.emit(adapter);
     }
 
 }

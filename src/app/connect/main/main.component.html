@@ -1,6 +1,7 @@
 <mat-tab-group>
     <mat-tab label="Data Marketplace">
-        <sp-data-marketplace></sp-data-marketplace>
+        <sp-data-marketplace *ngIf="selectedAdapter===undefined" (selectAdapterEmitter)="selectAdapter($event)"></sp-data-marketplace>
+        <sp-new-adapter *ngIf="selectedAdapter!==undefined">/</sp-new-adapter>
     </mat-tab>
     <mat-tab label="All Adapters">
         <sp-all-adapters [dataSource]="dataSource"></sp-all-adapters>

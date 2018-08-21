@@ -5,6 +5,7 @@
     height: 100%;
     border: 3px solid grey;
     padding: 5px;
+    cursor: pointer;
 }
 .header {
     display: flex;

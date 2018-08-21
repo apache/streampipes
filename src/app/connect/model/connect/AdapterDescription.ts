@@ -12,6 +12,9 @@ export class AdapterDescription {
   @RdfProperty('http://www.w3.org/2000/01/rdf-schema#label')
   public label: string;
 
+  @RdfProperty('http://www.w3.org/2000/01/rdf-schema#description')
+  public description: string;
+
   @RdfProperty('sp:couchDBId')
   public couchDbId: string;
 
