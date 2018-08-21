@@ -1,61 +1,14 @@
 <div style="margin-right: 10vh; margin-left: 10vh;" fxLayout="column" fxLayoutAlign="center stretch">
+  <h1>Start Adapter: {{adapter.label}}</h1>
+
   <mat-horizontal-stepper [linear]="isLinear" #stepper>
 
-    <mat-step [stepControl]="setStreamFormGroup">
-      <form [formGroup]="setStreamFormGroup">
-        <ng-template matStepLabel>Select Connection-Type</ng-template>
-
-        <div fxLayoutAlign="start">
-
-          <set-stream-app (setStreamSelected)="connectionSelected($event)">
-          </set-stream-app>
-        
-        </div>
-        <div fxLayoutAlign="end">
-          <button color="primary" mat-raised-button matStepperNext [disabled]="!setStreamSelected">Next</button>
-        </div>
-      </form>
-
-    </mat-step>
-
-
-    <mat-step [stepControl]="firstFormGroup">
-      <form [formGroup]="firstFormGroup">
-        <ng-template matStepLabel>Select Protocol</ng-template>
-
-        <div fxLayoutAlign="start">
-
-          <app-select-protocol fxLayout="column" fxFlex="100" [(selectedProtocol)]="selectedProtocol" [allProtocols]="allProtocols"
-          (selectedProtocolEmitter)="protocolValueChanged($event)"
-            (inputValueChanged)="inputValueChangedProtocol($event)"></app-select-protocol>
-
-        </div>
-        <div fxLayoutAlign="end">
-          <button color="primary" mat-raised-button matStepperPrevious>Back</button>
-          <button color="primary" (click)="protocolSelected()" mat-raised-button matStepperNext [disabled]="!hasInputProtocol" style="margin-left:10px;">Next</button>
-        </div>
-      </form>
-
-    </mat-step>
-
-
     <mat-step [stepControl]="secondFormGroup">
-      <form [formGroup]="secondFormGroup">
-        <ng-template matStepLabel>Select Format</ng-template>
-
-        <div fxLayoutAlign="center">
-          <app-format-form fxLayout="column" fxFlex="100" [(selectedFormat)]="newAdapterDescription.format" [allFormats]="allFormats"
-            (inputValueChanged)="inputValueChangedFormat($event)
-            " (selectedFormatEmitter)="formatSelected($event)"></app-format-form>
-        </div>
-
-        <div fxLayoutAlign="end">
-          <button color="primary" mat-raised-button matStepperPrevious>Back</button>
-          <button color="primary" mat-raised-button matStepperNext style="margin-left:10px;" [disabled]="!hasInputFormat">
-            Next
-          </button>
-        </div>
-      </form>
+      <ng-template matStepLabel>Settings</ng-template>
+      <app-static-free-input *ngFor="let config of adapter.config" [staticProperty]="config"></app-static-free-input>
+      <div fxLayoutAlign="end">
+        <button color="primary" (click)="test()" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
+      </div>
     </mat-step>
 
 
@@ -75,7 +28,7 @@
       <ng-template matStepLabel>Start Adapter</ng-template>
       <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
         <mat-form-field>
-          <input matInput id="input-AdapterName"[(ngModel)]="newAdapterDescription.label" placeholder="Adapter Name">
+          <input matInput id="input-AdapterName" placeholder="Adapter Name">
         </mat-form-field>
       </div>
       <div fxLayoutAlign="center">

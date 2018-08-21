@@ -31,7 +31,9 @@ export class DataMarketplaceComponent implements OnInit {
                     }
                     newAdapter.label = protocol.label;
                     newAdapter.description = protocol.description;
-                    newAdapter.config = protocol.config;
+                    if(newAdapter.hasOwnProperty("protocol")) {
+                        newAdapter.protocol = protocol;
+                    }
                     this.adapters.push(newAdapter);
                 }
             });
