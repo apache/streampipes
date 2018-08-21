@@ -98,7 +98,7 @@ import { AdapterDescriptionComponent } from './data-marketplace/adapter-descript
         ProtocolListComponent,
         FormatListComponent,
         FormatComponent,
-        DataMarketplaceComponent
+        DataMarketplaceComponent,
         AdapterDescriptionComponent
     ],
     providers: [
