@@ -89,8 +89,8 @@ export class NewComponent implements OnInit {
     private getNewAdapterDescription(): AdapterDescription {
         // TODO remove this is just that no errors occur on initila load of page
         const adapterDescription = new AdapterDescription('http://todo/ads1');
-        adapterDescription.protocol = new ProtocolDescription('http://todo/p1');
-        adapterDescription.format = new FormatDescription('http://todo/p2');
+        //adapterDescription.protocol = new ProtocolDescription('http://todo/p1');
+        //adapterDescription.format = new FormatDescription('http://todo/p2');
 
         const dataSet: DataSetDescription = new DataSetDescription('http://todo/ds2');
         dataSet.eventSchema = new EventSchema();
@@ -120,12 +120,12 @@ export class NewComponent implements OnInit {
                 this.selectedProtocol.sourceType);
         }
 
-        this.newAdapterDescription.protocol = this.selectedProtocol;
+        //this.newAdapterDescription.protocol = this.selectedProtocol;
 
     }
 
     formatSelected(selectedFormat) {
-        this.newAdapterDescription.format = selectedFormat;
+        //this.newAdapterDescription.format = selectedFormat;
       }
 
     public startAdapter() {

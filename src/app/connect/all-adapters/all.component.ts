@@ -23,8 +23,11 @@ export class AllAdaptersComponent implements OnInit {
 
     constructor(restService: RestService) {
         this.restService = restService;
-
-
+        this.restService.getAdaptersNew().subscribe(res => {
+            console.log('+++++')
+            console.log(res)
+            console.log('+++++')
+        });
     }
 
     ngOnInit() {

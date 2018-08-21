@@ -121,7 +121,7 @@ export class RestService {
 
     getAdaptersNew(): Observable<AdapterDescription[]> {
         return this.http
-            .get('http://localhost:8082/streampipes-connect/api/v1/abt@fzi.de/master/description/adapters')
+            .get('/streampipes-connect/api/v1/abt@fzi.de/master/description/adapters')
             .map(response => {
 
                 response['@graph'].forEach(function (object) {

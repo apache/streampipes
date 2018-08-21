@@ -1,8 +1,6 @@
 import {RdfId} from '../../tsonld/RdfId';
 import {RdfProperty} from '../../tsonld/RdfsProperty';
 import {RdfsClass} from '../../tsonld/RdfsClass';
-import {FormatDescription} from './grounding/FormatDescription';
-import {ProtocolDescription} from './grounding/ProtocolDescription';
 import {TransformationRuleDescription} from './rules/TransformationRuleDescription';
 
 @RdfsClass('sp:AdapterDescription')
@@ -19,12 +17,6 @@ export class AdapterDescription {
 
   @RdfProperty('sp:userName')
   public userName: string;
-
-  @RdfProperty('sp:hasProtocol')
-  public protocol: ProtocolDescription;
-
-  @RdfProperty('sp:hasFormat')
-  public format: FormatDescription;
 
   @RdfProperty('sp:rules')
   public rules: TransformationRuleDescription[];
