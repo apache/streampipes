@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.connect.management;
+package org.streampipes.connect.management.master;
 
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;

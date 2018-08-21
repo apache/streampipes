@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.connect.management;
+package org.streampipes.connect.management.master;
 
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
@@ -23,7 +23,7 @@ import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.config.backend.BackendConfig;
-import org.streampipes.connect.adapter.Adapter;
+import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
@@ -117,7 +117,7 @@ public class AdapterMasterManagement implements IAdapterMasterManagement {
         boolean isStreamAdapter = isStreamAdapter(id, adapterStorage);
 
         if (isStreamAdapter) {
-            stopStreamAdapter(id, BackendConfig.INSTANCE.getConnectContainerUrl(), adapterStorage);
+            stopStreamAdapter(id, ConnectContainerConfig.INSTANCE.getConnectContainerUrl(), adapterStorage);
         }
         AdapterDescription ad = adapterStorage.getAdapter(id);
         String username = ad.getUserName();

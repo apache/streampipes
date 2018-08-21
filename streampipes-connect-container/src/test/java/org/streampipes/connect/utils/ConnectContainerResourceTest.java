@@ -117,9 +117,13 @@ public abstract class ConnectContainerResourceTest {
     }
 
     protected ValidatableResponseOptions postJsonLdFailRequest(String data, String route) {
+        return  postJsonLdFailRequest(data, route, ERROR_MESSAGE);
+    }
+
+    protected ValidatableResponseOptions postJsonLdFailRequest(String data, String route, String errorMessage) {
         return  postJsonLdRequest(data, route)
                 .body("success", equalTo(false))
-                .body("notifications[0].title", equalTo(ERROR_MESSAGE));
+                .body("notifications[0].title", equalTo(errorMessage));
     }
     protected ValidatableResponseOptions postJsonLdRequest(String data, String route) {
         return given().contentType("application/ld+json")

@@ -83,7 +83,7 @@ public class SpConnectResource extends AbstractContainerResource {
 
     public SpConnectResource() {
         spConnect = new SpConnect();
-        connectContainerEndpoint = BackendConfig.INSTANCE.getConnectContainerUrl();
+//        connectContainerEndpoint = BackendConfig.INSTANCE.getConnectContainerUrl();
     }
 
     public SpConnectResource(SpConnect spConnect, String connectContainerEndpoint) {

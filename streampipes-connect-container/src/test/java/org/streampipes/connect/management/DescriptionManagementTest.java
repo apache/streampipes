@@ -30,9 +30,9 @@ import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.json.arraykey.JsonFormat;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
+import org.streampipes.connect.management.master.DescriptionManagement;
 import org.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.streampipes.model.connect.grounding.FormatDescriptionList;
-import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescriptionList;
 
 import java.util.HashMap;
