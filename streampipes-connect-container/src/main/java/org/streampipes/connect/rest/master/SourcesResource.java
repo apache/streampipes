@@ -56,12 +56,12 @@ public class SourcesResource extends AbstractContainerResource {
     @Consumes(SpMediaType.JSONLD)
     @Path("/{streamId}/streams")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAdapter(SpDataSet dataSet) {
+    public Response addAdapter(@PathParam("streamId") String elementId, SpDataSet dataSet) {
 
         String responseMessage = "Instance of data set " + dataSet.getUri() + " successfully started";
 
         try {
-            this.sourcesManagement.addAdapter(dataSet);
+            this.sourcesManagement.addAdapter(elementId, this.connectContainerBaseUrl, dataSet);
         } catch (AdapterException e) {
             logger.error("Could not set data set instance: " + dataSet.getUri(), e);
             return ok(Notifications.error("Could not set data set instance: " + dataSet.getUri()));
@@ -78,7 +78,7 @@ public class SourcesResource extends AbstractContainerResource {
         String responseMessage = "Instance of set id: " + elementId  + " with instance id: "+ runningInstanceId + " successfully started";
 
         try {
-            this.sourcesManagement.detachAdapter(elementId, runningInstanceId);
+            this.sourcesManagement.detachAdapter(this.connectContainerBaseUrl, elementId, runningInstanceId);
         } catch (AdapterException e) {
             logger.error("Could not set set id "+ elementId  + " with instance id: "+ runningInstanceId, e);
             return fail();

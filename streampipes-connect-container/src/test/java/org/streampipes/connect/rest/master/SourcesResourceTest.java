@@ -73,19 +73,19 @@ public class SourcesResourceTest extends ConnectContainerResourceTest {
     @Test
     public void addAdapterSuccess() throws Exception {
         ISourcesManagement sourcesManagement = mock(SourcesManagement.class);
-        doNothing().when(sourcesManagement).addAdapter(any());
+        doNothing().when(sourcesManagement).addAdapter(anyString(), anyString(), any());
         sourcesResource.setSourcesManagement(sourcesManagement);
 
         String data = getMinimalDataSetJsonLd();
         postJsonLdSuccessRequest(data, "/id/streams", "Instance of data set http://dataset.de/1 successfully started");
 
-        verify(sourcesManagement, times(1)).addAdapter(any());
+        verify(sourcesManagement, times(1)).addAdapter(anyString(), anyString(), any());
     }
 
     @Test
     public void addAdapterFail() throws AdapterException {
         ISourcesManagement sourcesManagement = mock(SourcesManagement.class);
-        doThrow(AdapterException.class).when(sourcesManagement).addAdapter(any());
+        doThrow(AdapterException.class).when(sourcesManagement).addAdapter(anyString(), anyString(), any());
         sourcesResource.setSourcesManagement(sourcesManagement);
 
         String data = getMinimalDataSetJsonLd();
@@ -96,18 +96,18 @@ public class SourcesResourceTest extends ConnectContainerResourceTest {
     @Test
     public void detachSuccess() throws AdapterException {
         ISourcesManagement sourcesManagement = mock(SourcesManagement.class);
-        doNothing().when(sourcesManagement).detachAdapter(anyString(), anyString());
+        doNothing().when(sourcesManagement).detachAdapter(anyString(), anyString(), anyString());
         sourcesResource.setSourcesManagement(sourcesManagement);
 
         deleteJsonLdSucessRequest("/id0/streams/id1");
 
-        verify(sourcesManagement, times(1)).detachAdapter(anyString(), anyString());
+        verify(sourcesManagement, times(1)).detachAdapter(anyString(), anyString(), anyString());
     }
 
     @Test
     public void detachFail() throws AdapterException {
         ISourcesManagement sourcesManagement = mock(SourcesManagement.class);
-        doThrow(AdapterException.class).when(sourcesManagement).detachAdapter(anyString(), anyString());
+        doThrow(AdapterException.class).when(sourcesManagement).detachAdapter(anyString(), anyString(), anyString());
         sourcesResource.setSourcesManagement(sourcesManagement);
 
         deleteJsonLdFailRequest("/id0/streams/id1");

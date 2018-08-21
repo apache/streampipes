@@ -22,8 +22,8 @@ import org.streampipes.model.SpDataSet;
 
 public interface ISourcesManagement {
 
-    void addAdapter(SpDataSet dataSet) throws AdapterException;
+    void addAdapter(String baseUrl, String streamId, SpDataSet dataSet) throws AdapterException;
 
-    void detachAdapter(String streamId, String runningInstanceId) throws AdapterException;
+    void detachAdapter(String baseUrl, String streamId, String runningInstanceId) throws AdapterException;
 
 }
