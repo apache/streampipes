@@ -54,11 +54,11 @@ public class SourcesResourceTest extends ConnectContainerResourceTest {
     @Before
     public  void before() {
 //        PowerMockito.mockStatic(WorkerRestClient.class);
-        Config.PORT = 8019;
+        Config.MASTER_PORT = 8019;
         RestAssured.port = 8019;
 
         sourcesResource = new SourcesResource("");
-        server = getServer(sourcesResource);
+        server = getMasterServer(sourcesResource);
     }
 
     @After

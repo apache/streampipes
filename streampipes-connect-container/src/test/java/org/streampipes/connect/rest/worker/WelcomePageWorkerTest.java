@@ -15,49 +15,31 @@
  *
  */
 
-package org.streampipes.connect.rest;
-
+package org.streampipes.connect.rest.worker;
 
 import com.jayway.restassured.RestAssured;
 import org.eclipse.jetty.server.Server;
-import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
-import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.streampipes.connect.init.Config;
 import org.streampipes.connect.utils.ConnectContainerResourceTest;
 
-import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
-import java.util.HashSet;
-import java.util.Set;
-
 import static com.jayway.restassured.RestAssured.get;
 import static org.hamcrest.core.IsEqual.equalTo;
 
+public class WelcomePageWorkerTest extends ConnectContainerResourceTest {
 
-public class WelcomePageTest extends ConnectContainerResourceTest {
+
     private Server server;
 
     @Before
     public void before() {
-        Config.PORT = 8019;
+        Config.WORKER_PORT = 8019;
         RestAssured.port = 8019;
-//                Set<Class<?>> allClasses = new HashSet<>();
-//
-//        allClasses.add(WelcomePage.class);
-//
-//        ResourceConfig config = new ResourceConfig(allClasses);
-//
-//        URI baseUri = UriBuilder
-//                .fromUri(Config.getBaseUrl())
-//                .build();
-//
-//        server = JettyHttpContainerFactory.createServer(baseUri, config);
 
-        WelcomePage welcomePage = new WelcomePage();
-        server = getServer(welcomePage);
+        WelcomePageWorker welcomePage = new WelcomePageWorker("WORKER_01");
+        server = getWorkerServer(welcomePage);
     }
 
     @After
@@ -71,8 +53,8 @@ public class WelcomePageTest extends ConnectContainerResourceTest {
 
     @Test
     public void getWelcomePageHtmlTest() {
-        get("/").then().body("html.head.title", equalTo("StreamPipes Connector Container"));
-        get("/").then().body("html.body.h1", equalTo("Connector Container with ID MAIN_CONTAINER is running"));
+        get("/").then().body("html.head.title", equalTo("StreamPipes Connector Worker Container"));
+        get("/").then().body("html.body.h1", equalTo("Worker Connector Container with ID: WORKER_01"));
     }
 
     @Override

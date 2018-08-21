@@ -55,11 +55,11 @@ public class AdapterResourceTest extends ConnectContainerResourceTest {
 
     @Before
     public  void before() {
-        Config.PORT = 8019;
+        Config.MASTER_PORT = 8019;
         RestAssured.port = 8019;
 
         adapterResource = new AdapterResource("");
-        server = getServer(adapterResource);
+        server = getMasterServer(adapterResource);
 
         adapterMasterManagement = mock(AdapterMasterManagement.class);
         adapterResource.setAdapterMasterManagement(adapterMasterManagement);

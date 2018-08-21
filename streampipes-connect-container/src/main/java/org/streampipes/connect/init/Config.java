@@ -33,11 +33,16 @@ public class Config {
 
 
 
-    public static int PORT = 8099;
+    public static int MASTER_PORT = 8099;
+    public static int WORKER_PORT = 8098;
     public static String HOST = "localhost";
 
-    public static String getBaseUrl() {
-        return "http://" + HOST + ":" + PORT + "/";
+    public static String getMasterBaseUrl() {
+        return "http://" + HOST + ":" + MASTER_PORT + "/";
+    }
+
+    public static String getWorkerBaseUrl() {
+        return "http://" + HOST + ":" + WORKER_PORT + "/";
     }
 
     public static String getEnv(String envName) {

@@ -51,11 +51,11 @@ public class WorkerResourceTest extends ConnectContainerResourceTest {
 
     @Before
     public  void before() {
-        Config.PORT = 8019;
+        Config.WORKER_PORT = 8019;
         RestAssured.port = 8019;
 
         workerResource = new WorkerResource();
-        server = getServer(workerResource);
+        server = getWorkerServer(workerResource);
 
         adapterManagement = mock(AdapterWorkerManagement.class);
         workerResource.setAdapterManagement(adapterManagement);

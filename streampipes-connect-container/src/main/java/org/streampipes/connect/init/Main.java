@@ -24,8 +24,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.rest.master.AdapterResource;
 import org.streampipes.connect.rest.master.DescriptionResource;
+import org.streampipes.connect.rest.master.SourcesResource;
+import org.streampipes.connect.rest.worker.WelcomePageWorker;
 import org.streampipes.connect.rest.worker.WorkerResource;
-import org.streampipes.connect.rest.WelcomePage;
+import org.streampipes.connect.rest.master.WelcomePageMaster;
 import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
@@ -46,37 +48,62 @@ public class Main {
 
         String executionMode = Config.getEnv(Config.EXECUTION_MODE);
 
+        ResourceConfig config = null;
+        URI baseUri = null;
+
         switch (executionMode) {
             case Config.MASTER:
-                LOG.info("Master mode selected");
+                LOG.info("Started StreamPipes Connect Resource in MASTER mode");
+                config = new ResourceConfig(getMasterApiClasses());
+                baseUri = UriBuilder
+                    .fromUri(Config.getMasterBaseUrl())
+                    .build();
+
                 break;
             case Config.WORKER:
-                LOG.info("Wo mode selected");
-                break;
+                LOG.info("Started StreamPipes Connect Resource in WORKER mode");
+                config = new ResourceConfig(getWorkerApiClasses());
+                baseUri = UriBuilder
+                    .fromUri(Config.getWorkerBaseUrl())
+                    .build();
 
+                break;
+            default:
+                LOG.error("Environment Variable EXECUTION_MODE is not set correctly. Must be " + Config.MASTER + " or " + Config.WORKER);
+                System.exit(0);
         }
 
-
-        ResourceConfig config = new ResourceConfig(getApiClasses());
-
-
-        URI baseUri = UriBuilder
-                .fromUri(Config.getBaseUrl())
-                .build();
 
         Server server = JettyHttpContainerFactory.createServer(baseUri, config);
 
     }
 
-    private static Set<Class<?>> getApiClasses() {
+    private static Set<Class<?>> getMasterApiClasses() {
         Set<Class<?>> allClasses = new HashSet<>();
 
-        allClasses.add(WelcomePage.class);
-        allClasses.add(WorkerResource.class);
-        allClasses.add(DescriptionResource.class);
+        allClasses.add(WelcomePageMaster.class);
         allClasses.add(AdapterResource.class);
+        allClasses.add(DescriptionResource.class);
+        allClasses.add(SourcesResource.class);
 
+        allClasses.addAll(getApiClasses());
 
+        return allClasses;
+    }
+
+    private static Set<Class<?>> getWorkerApiClasses() {
+        Set<Class<?>> allClasses = new HashSet<>();
+
+        allClasses.add(WelcomePageWorker.class);
+        allClasses.add(WorkerResource.class);
+
+        allClasses.addAll(getApiClasses());
+
+        return allClasses;
+    }
+
+    private static Set<Class<?>> getApiClasses() {
+        Set<Class<?>> allClasses = new HashSet<>();
 
         // Serializers
         allClasses.add(GsonWithIdProvider.class);

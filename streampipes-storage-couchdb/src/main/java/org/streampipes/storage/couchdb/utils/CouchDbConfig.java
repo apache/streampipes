@@ -35,26 +35,26 @@ public enum CouchDbConfig {
 
 
     private SpConfig config;
-    private final static String HOST = "host";
-    private final static String PORT = "port";
-    private final static String PROTOCOL = "protocol";
+    private final static String COUCHDB_HOST = "SP_COUCHDB_HOST";
+    private final static String COUCHDB_PORT = "SP_COUCHDB_PORT";
+    private final static String PROTOCOL = "PROTOCOL";
 
     CouchDbConfig() {
 //        config = SpConfig.getSpConfig("storage/couchdb", new TestOnChange());
         config = SpConfig.getSpConfig("storage/couchdb");
 //
-        config.register(HOST, "couchdb", "Hostname for the couch db service");
-        config.register(PORT, 5984, "Port for the couch db service");
+        config.register(COUCHDB_HOST, "couchdb", "Hostname for the couch db service");
+        config.register(COUCHDB_PORT, 5984, "Port for the couch db service");
         config.register(PROTOCOL, "http", "Protocol the couch db service");
 
     }
 
     public String getHost() {
-        return config.getString(HOST);
+        return config.getString(COUCHDB_HOST);
     }
 
     public int getPort() {
-        return config.getInteger(PORT);
+        return config.getInteger(COUCHDB_PORT);
     }
 
     public String getProtocol() {
@@ -62,6 +62,6 @@ public enum CouchDbConfig {
     }
 
     public void setHost(String host) {
-        config.setString(HOST, host);
+        config.setString(COUCHDB_HOST, host);
     }
 }

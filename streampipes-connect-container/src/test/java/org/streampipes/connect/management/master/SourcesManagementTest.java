@@ -70,7 +70,7 @@ public class SourcesManagementTest {
 
         sourcesManagement.detachAdapter("/", "id0", "id1");
     }
-    
+
     @Test
     public void detachAdapterSuccess() throws Exception {
         AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);

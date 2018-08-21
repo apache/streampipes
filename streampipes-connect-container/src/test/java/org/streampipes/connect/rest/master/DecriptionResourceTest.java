@@ -60,11 +60,11 @@ public class DecriptionResourceTest extends ConnectContainerResourceTest {
 
     @Before
     public  void before() {
-        Config.PORT = 8019;
+        Config.MASTER_PORT = 8019;
         RestAssured.port = 8019;
 
         descriptionResource = new DescriptionResource();
-        server = getServer(descriptionResource);
+        server = getMasterServer(descriptionResource);
     }
 
     @After

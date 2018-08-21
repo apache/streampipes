@@ -40,8 +40,19 @@ import javax.ws.rs.core.UriBuilder;
 public abstract class ConnectContainerResourceTest {
 
     protected static final String ERROR_MESSAGE = "error";
-    protected Server getServer(AbstractContainerResource resource) {
-        ResourceConfig config = new ResourceConfig()
+
+    protected Server getMasterServer(AbstractContainerResource resource) {
+        return getServer(resource, Config.getMasterBaseUrl());
+    }
+
+    protected Server getWorkerServer(AbstractContainerResource resource) {
+        return getServer(resource, Config.getWorkerBaseUrl());
+
+    }
+
+    private Server getServer(AbstractContainerResource resource, String url) {
+
+         ResourceConfig config = new ResourceConfig()
                 .register(GsonWithIdProvider.class)
                 .register(GsonWithoutIdProvider.class)
                 .register(GsonClientModelProvider.class)
@@ -49,11 +60,12 @@ public abstract class ConnectContainerResourceTest {
                 .register(resource);
 
         URI baseUri = UriBuilder
-                .fromUri(Config.getBaseUrl())
+                .fromUri(url)
                 .build();
 
         return JettyHttpContainerFactory.createServer(baseUri, config);
     }
+
 
     protected abstract String getApi();
 
