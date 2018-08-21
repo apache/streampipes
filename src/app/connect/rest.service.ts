@@ -119,25 +119,6 @@ export class RestService {
             });
     }
 
-    getAdaptersNew(): Observable<AdapterDescription[]> {
-        return this.http
-            .get('/streampipes-connect/api/v1/abt@fzi.de/master/description/adapters')
-            .map(response => {
-
-                response['@graph'].forEach(function (object) {
-                    if (object['sp:domainProperty'] != undefined) {
-                        // object['sp:domainProperty']['@type'] = "sp:URI";
-                        object['sp:domainProperty'] = object['sp:domainProperty']['@id'];
-                        delete object['sp:domainProperty']['@id'];
-                    }
-                })
-                const tsonld = this.getTsonLd();
-                const res = tsonld.fromJsonLdType(response, 'sp:AdapterDescriptionList');
-
-                return res.list;
-            });
-    }
-
     deleteAdapter(adapter: AdapterDescription): Observable<any> {
         return this.http
             .delete(this.host + 'api/v2/adapter/' + adapter.couchDbId);

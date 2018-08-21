@@ -51,6 +51,9 @@ import {ProtocolComponent} from './protocol-component/protocol.component'
 import {ProtocolListComponent} from './protocol-list-component/protocol-list.component'
 import { FormatListComponent } from './format-list-component/format-list.component';
 import { FormatComponent } from './format-component/format.component';
+import {DataMarketplaceComponent} from './data-marketplace/data-marketplace.component';
+import { DataMarketplaceService } from './data-marketplace/data-marketplace.service';
+import { AdapterDescriptionComponent } from './data-marketplace/adapter-description/adapter-description.component';
 
 
 @NgModule({
@@ -94,15 +97,16 @@ import { FormatComponent } from './format-component/format.component';
         ProtocolComponent,
         ProtocolListComponent,
         FormatListComponent,
-        FormatComponent
-
-
+        FormatComponent,
+        DataMarketplaceComponent
+        AdapterDescriptionComponent
     ],
     providers: [
         RestService,
         DataTypesService,
         TransformationRuleService,
         StaticPropertyUtilService,
+        DataMarketplaceService,
         
     ],
     entryComponents: [
