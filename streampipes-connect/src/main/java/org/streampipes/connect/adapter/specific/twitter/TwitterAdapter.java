@@ -54,7 +54,7 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
         AdapterDescription adapterDescription = new AdapterStreamDescription();
         adapterDescription.setAdapterId(ID);
         adapterDescription.setUri("http://streampipes.org/adapter/specific/twitter");
-
+        adapterDescription.setIconUrl("https://upload.wikimedia.org/wikipedia/de/thumb/9/9f/Twitter_bird_logo_2012.svg/1200px-Twitter_bird_logo_2012.svg.png");
         return adapterDescription;
     }
 
