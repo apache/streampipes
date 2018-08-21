@@ -1,0 +1,32 @@
+.outer-box {
+    flex-direction: column;
+    flex: 1;
+    display: flex;
+    height: 100%;
+    border: 3px solid grey;
+    padding: 5px;
+}
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.type {
+    flex-direction: column;
+}
+.iconImg {
+    width: 40px;
+    height: 40px;
+}
+.historic {
+    background-color: orange;
+}
+.real-time {
+    background-color: yellow;
+}
+.description {
+    display: flex;
+    flex: 1 0 auto;
+
+}

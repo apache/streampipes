@@ -10,6 +10,9 @@ export class AdapterStreamDescription extends AdapterDescription {
     @RdfProperty("sp:hasDataStream")
     public dataStream: DataStreamDescription;
 
+    @RdfProperty('sp:iconUrl')
+    public iconUrl: string;
+
     constructor(id: string) {
         super(id)
     }

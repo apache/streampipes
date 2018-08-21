@@ -1,1 +1,15 @@
-<p>{{adapter.id}}</p>
+<div class="outer-box">
+    <div class="header">
+        <div class="type">
+            <p *ngIf="isDataSetDescription()" class="historic">Historic</p>
+            <p *ngIf="isDataStreamDescription()" class="real-time">Real-Time</p>
+            <h3>{{adapter.label}}</h3>
+        </div>
+        <div class="icon">
+            <img *ngIf="isSpecificDescription()" [src]="adapter.iconUrl" class="iconImg" />
+        </div>
+    </div>
+    <div class="description">
+        <p>Test</p>
+    </div>
+</div>

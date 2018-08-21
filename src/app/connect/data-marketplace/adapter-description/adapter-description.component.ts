@@ -10,4 +10,20 @@ export class AdapterDescriptionComponent {
 
     @Input() adapter: AdapterDescription;
 
+    isDataStreamDescription(): boolean {
+        return this.adapter.constructor.name === "AdapterStreamDescription";
+    }
+
+    isDataSetDescription(): boolean {
+        return this.adapter.constructor.name === "AdapterSetDescription";
+    }
+
+    isGenericDescription(): boolean {
+        return this.adapter.id.includes('generic');
+    }
+
+    isSpecificDescription(): boolean {
+        return this.adapter.id.includes('specific');
+    }
+
 }
