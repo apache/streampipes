@@ -177,6 +177,7 @@ addAllServices() {
 }
 
 export COMPOSE_CONVERT_WINDOWS_PATHS=1
+cd "$(dirname "$0")"
 
 if [ "$_arg_operation" = "start" ];
 then

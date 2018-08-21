@@ -4,5 +4,3 @@ SP_DOCKER_REGISTRY=ipe-wim-gitlab.fzi.de:5000
 SP_PE_DOCKER_REGISTRY=ipe-wim-gitlab.fzi.de:5000/streampipes/streampipes-pipeline-elements
 SP_PE_VERSION=0.55.3-SNAPSHOT
 SP_BACKEND_VERSION=0.55.3-SNAPSHOT
-
-

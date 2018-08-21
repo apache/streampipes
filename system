@@ -1,7 +1,7 @@
 activemq
-backend
-couchdb
 kafka
-nginx
-swagger-ui
 zookeeper
+swagger-ui
+couchdb
+backend
+nginx
