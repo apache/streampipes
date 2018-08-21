@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {AdapterDataSource} from '../all-adapters/adapter-data-source.service';
 import {RestService} from '../rest.service';
 import {AllAdaptersComponent} from '../all-adapters/all.component'
@@ -8,7 +8,7 @@ import { AdapterDescription } from '../model/connect/AdapterDescription';
     templateUrl: './main.component.html',
     styleUrls: ['./main.component.css']
 })
-export class MainComponent implements OnInit, AfterViewInit {
+export class MainComponent implements OnInit {
 
     @ViewChild(AllAdaptersComponent) allAdapter: AllAdaptersComponent;
     private dataSource: AdapterDataSource;
@@ -25,9 +25,6 @@ export class MainComponent implements OnInit, AfterViewInit {
 
     newAdapterCreated() {
         this.allAdapter.newAdapterStarted(); 
-    }
-    ngAfterViewInit() {
-        
     }
 
     selectAdapter(adapter: AdapterDescription) {

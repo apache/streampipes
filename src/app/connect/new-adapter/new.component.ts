@@ -1,4 +1,4 @@
-import {Component, Output, OnInit, EventEmitter} from '@angular/core';
+import {Component, Output, OnInit, EventEmitter, Input} from '@angular/core';
 import { ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import {RestService} from '../rest.service';
@@ -25,6 +25,7 @@ export class NewComponent implements OnInit {
     @ViewChild('eschema') 
     eventSchemaComponent;
     @Output() newAdapterCreated = new EventEmitter();
+    @Input() adapter: AdapterDescription;
     isLinear = false;
     setStreamFormGroup: FormGroup;
     firstFormGroup: FormGroup;

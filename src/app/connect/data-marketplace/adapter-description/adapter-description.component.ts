@@ -11,11 +11,11 @@ export class AdapterDescriptionComponent {
     @Input() adapter: AdapterDescription;
 
     isDataStreamDescription(): boolean {
-        return this.adapter.constructor.name === "AdapterStreamDescription";
+        return this.adapter.constructor.name.includes("AdapterStreamDescription");
     }
 
     isDataSetDescription(): boolean {
-        return this.adapter.constructor.name === "AdapterSetDescription";
+        return this.adapter.constructor.name.includes("AdapterSetDescription");
     }
 
     isGenericDescription(): boolean {

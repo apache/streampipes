@@ -13,6 +13,9 @@ import { SpecificAdapterSetDescription } from '../model/connect/SpecificAdapterS
 import { AdapterStreamDescription } from '../model/connect/AdapterStreamDescription';
 import { GenericAdapterStreamDescription } from '../model/connect/GenericAdapterStreamDescription';
 import { SpecificAdapterStreamDescription } from '../model/connect/SpecificAdapterStreamDescription';
+import { FreeTextStaticProperty } from '../model/FreeTextStaticProperty';
+import { ProtocolDescription } from '../model/connect/grounding/ProtocolDescription';
+import { ProtocolDescriptionList } from '../model/connect/grounding/ProtocolDescriptionList';
 
 @Injectable()
 export class DataMarketplaceService {
@@ -34,6 +37,11 @@ export class DataMarketplaceService {
         tsonld.addClassMapping(GenericAdapterStreamDescription);
         tsonld.addClassMapping(SpecificAdapterStreamDescription);
 
+        tsonld.addClassMapping(FreeTextStaticProperty);
+
+        tsonld.addClassMapping(ProtocolDescriptionList);
+        tsonld.addClassMapping(ProtocolDescription);
+
         return tsonld;
     }
 
@@ -49,6 +57,17 @@ export class DataMarketplaceService {
                 })
                 const tsonld = this.getTsonLd();
                 const res = tsonld.fromJsonLdType(response, 'sp:AdapterDescriptionList');
+
+                return res.list;
+            });
+    }
+
+    getProtocols(): Observable<ProtocolDescription[]> {
+        return this.http
+            .get(this.host + 'api/v1/' + this.authStatusService.email + '/master/description/protocols')
+            .map(response => {
+                const tsonld = this.getTsonLd();
+                const res = tsonld.fromJsonLdType(response, 'sp:ProtocolDescriptionList');
 
                 return res.list;
             });
