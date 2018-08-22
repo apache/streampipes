@@ -137,7 +137,7 @@ export class RestService {
         return Observable.fromPromise(new Promise(function (resolve, reject) {
             tsonld.toflattenJsonLd(adapter).subscribe(res => {
                 return self.http
-                    .post(self.host + 'api/v2/guess/schema', res)
+                    .post('/streampipes-connect/v2/guess/schema', res)
                     .map(response => {
 
                         tsonld.addClassMapping(EventSchema);

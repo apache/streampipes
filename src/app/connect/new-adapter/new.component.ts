@@ -14,6 +14,8 @@ import {Logger} from '../../shared/logger/default-log.service';
 import {AdapterStreamDescription} from '../model/connect/AdapterStreamDescription';
 import {AdapterSetDescription} from '../model/connect/AdapterSetDescription';
 import {DataStreamDescription} from '../model/DataStreamDescription';
+import { GenericAdapterSetDescription } from '../model/connect/GenericAdapterSetDescription';
+import { GenericAdapterStreamDescription } from '../model/connect/GenericAdapterStreamDescription';
 
 
 @Component({
@@ -26,6 +28,7 @@ export class NewComponent implements OnInit {
     eventSchemaComponent;
     @Output() newAdapterCreated = new EventEmitter();
     @Input() adapter: AdapterDescription;
+    allFormats: FormatDescription[];
     isLinear = true;
 
     hasInputProtocol: Boolean;
@@ -38,7 +41,11 @@ export class NewComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.adapter);
+        this.allFormats = [];
+        this.restService.getFormats().subscribe(x => {
+            this.allFormats = x.list;
+            this.allFormats;
+        });
     }
 
     public startAdapter() {
@@ -60,4 +67,11 @@ export class NewComponent implements OnInit {
     test() {
         console.log(this.adapter);
     }
+
+    formatSelected(selectedFormat) {
+        if(this.adapter instanceof GenericAdapterSetDescription || this.adapter instanceof GenericAdapterStreamDescription) {
+            this.adapter.format = selectedFormat;
+        }
+      }
+
 }

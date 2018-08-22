@@ -3,18 +3,43 @@
 
   <mat-horizontal-stepper [linear]="isLinear" #stepper>
 
-    <mat-step [stepControl]="secondFormGroup">
+    <mat-step>
       <ng-template matStepLabel>Settings</ng-template>
       <app-static-free-input *ngFor="let config of adapter.config" [staticProperty]="config"></app-static-free-input>
+      <app-protocol [protocol]="adapter.protocol" *ngIf="adapter.id.includes('generic')"></app-protocol>
       <div fxLayoutAlign="end">
         <button color="primary" (click)="test()" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
       </div>
     </mat-step>
 
+    <mat-step *ngIf="adapter.id.includes('generic')">
+        <form>
+            <ng-template matStepLabel>Select Format</ng-template>
+    
+
+            <div fxLayout="row">
+                <div fxLayoutAlign="center">
+                    <app-format-form (selectedFormatEmitter)="formatSelected($event)" fxLayout="column" fxFlex="100" (click)="test()" [(selectedFormat)]="adapter.format" [allFormats]="allFormats"></app-format-form>
+                </div>
+    
+                <div *ngIf="adapter.format && adapter.format.edit" class="wrapper selectedItem">
+                    <app-select-static-properties [staticProperties]="adapter.format.config" class="fullWidth"></app-select-static-properties>
+                </div>
+            </div>
+    
+            <div fxLayoutAlign="end">
+              <button color="primary" mat-raised-button matStepperPrevious>Back</button>
+              <button color="primary" mat-raised-button matStepperNext style="margin-left:10px;">
+                Next
+              </button>
+            </div>
+          </form>
+    
+      </mat-step>
 
     <mat-step>
       <ng-template matStepLabel>Define Event Schema</ng-template>
-      <app-event-schema #eschema fxLayout="column" fxFlex="100" [(adapterDescription)]="newAdapterDescription"></app-event-schema>
+      <app-event-schema #eschema fxLayout="column" fxFlex="100" [(adapterDescription)]="adapter"></app-event-schema>
 
       <div fxLayoutAlign="end">
         <button color="primary" mat-raised-button matStepperPrevious>Back</button>

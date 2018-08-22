@@ -21,6 +21,7 @@ export class FormatComponent {
   }
 
   formatEditable() {
+    /*
     this.format.edit = !this.format.edit;
     this.editableEmitter.emit(this.format);
     if (this.format.config.length == 0) {
@@ -30,6 +31,9 @@ export class FormatComponent {
       this.selectedFormat = this.format;
       this.selectedFormatEmitter.emit(this.selectedFormat);
     }
+    */
+   this.selectedFormat = this.format;
+   this.selectedFormatEmitter.emit(this.selectedFormat);
   }
   validateText(textValid) {
     if (textValid && this.format.edit) {
