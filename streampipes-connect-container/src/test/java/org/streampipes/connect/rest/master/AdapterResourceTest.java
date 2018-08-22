@@ -30,6 +30,9 @@ import org.streampipes.connect.utils.ConnectContainerResourceTest;
 import org.streampipes.connect.utils.Utils;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.vocabulary.StreamPipes;
 
 import java.util.Arrays;
@@ -79,7 +82,6 @@ public class AdapterResourceTest extends ConnectContainerResourceTest {
         doNothing().when(adapterMasterManagement).addAdapter(any(), any(), any());
         String data = Utils.getMinimalStreamAdapterJsonLD();
         postJsonLdSuccessRequest(data, "/", "Stream adapter with id http://t.de/ successfully added");
-
     }
 
     @Test
@@ -94,12 +96,12 @@ public class AdapterResourceTest extends ConnectContainerResourceTest {
     @Test
     public void getAdapterSuccess() throws AdapterException {
         IAdapterMasterManagement adapterMasterManagement  = mock(AdapterMasterManagement.class);
-        when(adapterMasterManagement.getAdapter(any(), any())).thenReturn(new AdapterDescription("http://t.id", "n", ""));
+        when(adapterMasterManagement.getAdapter(any(), any())).thenReturn(new GenericAdapterStreamDescription());
         adapterResource.setAdapterMasterManagement(adapterMasterManagement);
 
-        AdapterDescription result = getJsonLdSucessRequest("/testid", AdapterDescription.class);
+        AdapterDescription result = getJsonLdSucessRequest("/testid", GenericAdapterStreamDescription.class);
 
-        assertEquals("http://t.id", result.getUri());
+        assertEquals(GenericAdapterStreamDescription.ID, result.getUri());
     }
 
     @Test
@@ -129,13 +131,15 @@ public class AdapterResourceTest extends ConnectContainerResourceTest {
 
     @Test
     public void getAllAdaptersSuccess() throws AdapterException {
-        List<AdapterDescription> adapterDescriptions = Arrays.asList(new AdapterDescription("http://t.id", "n", ""));
+        List<AdapterDescription> adapterDescriptions = Arrays.asList(new GenericAdapterStreamDescription());
         IAdapterMasterManagement adapterMasterManagement  = mock(AdapterMasterManagement.class);
         when(adapterMasterManagement.getAllAdapters(any())).thenReturn(adapterDescriptions);
         adapterResource.setAdapterMasterManagement(adapterMasterManagement);
 
-        AdapterDescriptionList result = getJsonLdSucessRequest("/", AdapterDescriptionList.class, StreamPipes.ADAPTER_DESCRIPTION_LIST);
+//        AdapterDescriptionList result = getJsonLdSucessRequest("/", AdapterDescriptionList.class, StreamPipes.ADAPTER_DESCRIPTION_LIST);
+        AdapterDescriptionList result = getJsonLdSucessRequest("/", AdapterDescriptionList.class);
 
+        // TODO not sure how to fix
         assertEquals("http://streampipes.org/adapterlist", result.getUri());
         assertEquals(1, result.getList().size());
         assertEquals("http://t.id", result.getList().get(0).getUri());

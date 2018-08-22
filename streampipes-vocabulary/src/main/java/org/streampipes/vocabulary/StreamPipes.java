@@ -35,6 +35,13 @@ public class StreamPipes {
   public static final String ADAPTER_SET_DESCRIPTION = NS + "AdapterSetDescription";
   public static final String ADAPTER_STREAM_DESCRIPTION = NS + "AdapterStreamDescription";
   public static final String ADAPTER_DESCRIPTION_LIST = NS + "AdapterDescriptionList";
+
+  public static final String GENERIC_ADAPTER_STREAM_DESCRIPTION = NS + "GenericAdapterStreamDescription";
+  public static final String GENERIC_ADAPTER_SET_DESCRIPTION = NS + "GenericAdapterSetDescription";
+  public static final String SPECIFIC_ADAPTER_STREAM_DESCRIPTION = NS + "SpecificAdapterStreamDescription";
+  public static final String SPECIFIC_ADAPTER_SET_DESCRIPTION = NS + "SpecificAdapterSetDescription";
+
+
   public static final String FORMAT_DESCRIPTION_LIST = NS + "FormatDescriptionList";
   public static final String PROTOCOL_DESCRIPTION_LIST = NS + "ProtocolDescriptionList";
   public static final String DOMAIN_PROPERTY_PROBABILITY_LIST = NS + "DomainPropertyProbabilityList";

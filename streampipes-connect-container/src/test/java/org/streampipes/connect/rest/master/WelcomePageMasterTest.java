@@ -37,6 +37,7 @@ import org.streampipes.connect.rest.master.WelcomePageMaster;
 import org.streampipes.connect.utils.ConnectContainerResourceTest;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.streampipes.storage.couchdb.utils.CouchDbConfig;
 
 import java.util.Arrays;
@@ -73,26 +74,19 @@ public class WelcomePageMasterTest extends ConnectContainerResourceTest {
     }
 
     @Test
-    public void getWelcomePageHtmlNoAdaptersTest() {
-        testMainPart();
-    }
-
-    @Test
     public void getWelcomePageHtmlWithAdaptersSucessTest() throws AdapterException {
-        String id = "testId";
-
-        AdapterDescription adapterDescription = new AdapterDescription();
-        adapterDescription.setAdapterId(id);
-        AdapterMasterManagement adapterManagement = mock(AdapterMasterManagement.class);
-        when(adapterManagement.getAllAdapters(any())).thenReturn(Arrays.asList(adapterDescription));
-        welcomePage.setAdapterMasterManagement(adapterManagement);
-
         testMainPart();
         get("/").then().body("html.body.ol.size()", equalTo(1));
-        get("/").then().body("html.body.ol[0].toString()", equalTo(id));
+        get("/").then().body("html.body.ol[0].toString()", equalTo("testId"));
     }
 
-    private void testMainPart() {
+    private void testMainPart() throws AdapterException {
+        String id = "testId";
+        AdapterDescription adapterDescription = new GenericAdapterStreamDescription();
+        adapterDescription.setAdapterId(id);
+        AdapterMasterManagement adapterManagement = mock(AdapterMasterManagement.class);
+        welcomePage.setAdapterMasterManagement(adapterManagement);
+        when(adapterManagement.getAllAdapters(any())).thenReturn(Arrays.asList(adapterDescription));
         get("/").then().body("html.head.title", equalTo("StreamPipes Connector Master Container"));
         get("/").then().body("html.body.h1", equalTo("Connector Master Container"));
         get("/").then().body("html.body.h2", equalTo("All Running Adapters"));

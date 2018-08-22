@@ -41,7 +41,7 @@ import java.util.List;
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:AdapterDescription")
 @Entity
-public class AdapterDescription extends NamedStreamPipesEntity {
+public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     @RdfProperty("sp:couchDBId")
     private @SerializedName("_id") String id;

@@ -24,6 +24,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.streampipes.connect.adapter.generic.GenericDataSetAdapter;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterSetDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 
 
 import static org.junit.Assert.*;
@@ -34,7 +35,7 @@ public class AdapterRegistryTest {
 
     @Test
     public void getAdapterSuccess() {
-        AdapterDescription adapterDescription = new AdapterSetDescription();
+        AdapterDescription adapterDescription = new GenericAdapterSetDescription();
         adapterDescription.setAdapterId(GenericDataSetAdapter.ID);
         Adapter adapter = AdapterRegistry.getAdapter(adapterDescription);
 

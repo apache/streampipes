@@ -21,6 +21,8 @@ import org.junit.Test;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
 import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import java.util.Arrays;
@@ -33,8 +35,8 @@ import static org.mockito.Mockito.when;
 public class AdapterMasterManagementTest {
     @Test
     public void getAdapterSuccess() throws AdapterException {
-        String id = "http://t.id";
-        List<AdapterDescription> adapterDescriptions = Arrays.asList(new AdapterDescription(id, "n", ""));
+        String id = GenericAdapterStreamDescription.ID;
+        List<AdapterDescription> adapterDescriptions = Arrays.asList(new GenericAdapterStreamDescription());
         AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
 
@@ -57,11 +59,11 @@ public class AdapterMasterManagementTest {
 
     @Test(expected = AdapterException.class)
     public void getAdapterFail() throws AdapterException {
-                String id = "http://t.id";
-        List<AdapterDescription> adapterDescriptions = Arrays.asList(new AdapterDescription(id, "n", ""));
+        List<AdapterDescription> adapterDescriptions = Arrays.asList(new GenericAdapterStreamDescription());
         AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
 
+        String id = "http://t.id";
         AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement();
 
         adapterMasterManagement.getAdapter("id2", adapterStorage);
@@ -69,7 +71,7 @@ public class AdapterMasterManagementTest {
 
     @Test
     public void getAllAdaptersSuccess() throws AdapterException {
-        List<AdapterDescription> adapterDescriptions = Arrays.asList(new AdapterDescription("http://t.id", "n", ""));
+        List<AdapterDescription> adapterDescriptions = Arrays.asList(new GenericAdapterStreamDescription());
         AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
 
@@ -78,7 +80,7 @@ public class AdapterMasterManagementTest {
         List<AdapterDescription> result = adapterMasterManagement.getAllAdapters(adapterStorage);
 
         assertEquals(1, result.size());
-        assertEquals("http://t.id", result.get(0).getUri());
+        assertEquals(GenericAdapterStreamDescription.ID, result.get(0).getUri());
     }
 
     @Test(expected = AdapterException.class)

@@ -30,6 +30,7 @@ import javax.persistence.Entity;
 @RdfsClass("sp:GenericAdapterSetDescription")
 @Entity
 public class GenericAdapterSetDescription extends AdapterSetDescription {
+    public static final String ID = "http://streampipes.org/genericadaptersetdescription";
 
     @RdfProperty("sp:hasFormat")
     private FormatDescription formatDescription;
@@ -38,6 +39,8 @@ public class GenericAdapterSetDescription extends AdapterSetDescription {
     private ProtocolSetDescription protocolDescription;
 
     public GenericAdapterSetDescription() {
+        super(ID, "GenericAdapterSetDescription", "");
+        setAdapterId(ID);
     }
 
     public GenericAdapterSetDescription(FormatDescription formatDescription, ProtocolSetDescription protocolDescription) {

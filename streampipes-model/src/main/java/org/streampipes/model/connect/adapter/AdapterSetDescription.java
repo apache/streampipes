@@ -29,9 +29,13 @@ import javax.persistence.Entity;
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:AdapterSetDescription")
 @Entity
-public class AdapterSetDescription extends AdapterDescription {
+public abstract class AdapterSetDescription extends AdapterDescription {
 
     public AdapterSetDescription() {
+    }
+
+    public AdapterSetDescription(String uri, String name, String description) {
+        super(uri, name, description);
     }
 
     public AdapterSetDescription(AdapterSetDescription other) {

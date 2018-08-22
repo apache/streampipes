@@ -26,9 +26,9 @@ import org.streampipes.connect.management.master.AdapterMasterManagement;
 import org.streampipes.connect.management.master.IAdapterMasterManagement;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.rest.shared.annotation.JsonLdSerialized;
+import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.rest.shared.util.SpMediaType;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
@@ -58,10 +58,17 @@ public class AdapterResource extends AbstractContainerResource {
     }
 
     @POST
-    @JsonLdSerialized
+//    @JsonLdSerialized
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAdapter(AdapterDescription adapterDescription) {
+    public Response addAdapter(String s) {
+
+        AdapterDescription adapterDescription = null;
+        if (s.contains("GenericAdapterStreamDescription")) {
+            adapterDescription = JsonLdUtils.fromJsonLd(s, GenericAdapterStreamDescription.class);
+        } else if (s.contains("GenericAdapterSetDescription")){
+            adapterDescription = JsonLdUtils.fromJsonLd(s, GenericAdapterSetDescription.class);
+        }
 
         try {
             adapterMasterManagement.addAdapter(adapterDescription, connectContainerEndpoint, new AdapterStorageImpl());
@@ -84,6 +91,7 @@ public class AdapterResource extends AbstractContainerResource {
 
         try {
             AdapterDescription adapterDescription = adapterMasterManagement.getAdapter(id, new AdapterStorageImpl());
+
             return ok(adapterDescription);
         } catch (AdapterException e) {
             logger.error("Error while getting adapter with id " + id, e);

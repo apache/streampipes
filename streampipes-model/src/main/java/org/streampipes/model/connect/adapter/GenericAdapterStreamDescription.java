@@ -21,22 +21,27 @@ import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.connect.grounding.FormatDescription;
+import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.grounding.ProtocolStreamDescription;
+import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
 
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp:GenericAdapterStreamDescription")
+@RdfsClass(StreamPipes.GENERIC_ADAPTER_STREAM_DESCRIPTION)
 @Entity
 public class GenericAdapterStreamDescription extends AdapterStreamDescription {
+    public static final String ID = "http://streampipes.org/genericadapterstreamdescription";
 
     @RdfProperty("sp:hasFormat")
     private FormatDescription formatDescription;
 
     @RdfProperty("sp:hasProtocol")
-    private ProtocolStreamDescription protocolDescription;
+    private ProtocolDescription protocolDescription;
 
     public GenericAdapterStreamDescription() {
+        super(ID, "GenericAdapterStreamDescription", "");
+        setAdapterId(ID);
     }
 
     public GenericAdapterStreamDescription(FormatDescription formatDescription, ProtocolStreamDescription protocolDescription) {
@@ -59,11 +64,11 @@ public class GenericAdapterStreamDescription extends AdapterStreamDescription {
         this.formatDescription = formatDescription;
     }
 
-    public ProtocolStreamDescription getProtocolDescription() {
+    public ProtocolDescription getProtocolDescription() {
         return protocolDescription;
     }
 
-    public void setProtocolDescription(ProtocolStreamDescription protocolDescription) {
+    public void setProtocolDescription(ProtocolDescription protocolDescription) {
         this.protocolDescription = protocolDescription;
     }
 }

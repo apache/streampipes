@@ -23,6 +23,8 @@ import org.streampipes.connect.adapter.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
@@ -33,7 +35,7 @@ import twitter4j.conf.ConfigurationBuilder;
 import java.util.Arrays;
 
 public class TwitterAdapter extends SpecificDataStreamAdapter {
-    public static final String ID = "org.streampipes.adapter.specific.twitter";
+    public static final String ID = "http://streampipes.org/adapter/specific/twitter";
 
     private TwitterStream twitterStream;
 
@@ -51,9 +53,9 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public AdapterDescription declareModel() {
-        AdapterDescription adapterDescription = new AdapterStreamDescription();
+        AdapterDescription adapterDescription = new SpecificAdapterStreamDescription();
         adapterDescription.setAdapterId(ID);
-        adapterDescription.setUri("http://streampipes.org/adapter/specific/twitter");
+        adapterDescription.setUri(ID);
         adapterDescription.setIconUrl("https://upload.wikimedia.org/wikipedia/de/thumb/9/9f/Twitter_bird_logo_2012.svg/1200px-Twitter_bird_logo_2012.svg.png");
         return adapterDescription;
     }

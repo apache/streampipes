@@ -40,7 +40,7 @@ import java.util.List;
 
 public class GenericDataSetAdapter extends Adapter {
 
-    public static final String ID = "org.streampipes.adapter.generic.dataset";
+    public static final String ID = GenericAdapterSetDescription.ID;
 
     private Protocol protocol;
 
@@ -65,9 +65,9 @@ public class GenericDataSetAdapter extends Adapter {
 
     @Override
     public AdapterDescription declareModel() {
-        AdapterDescription adapterDescription = new AdapterSetDescription();
-        adapterDescription.setAdapterId(ID);
-        adapterDescription.setUri("http://streampipes.org/adapter/generic/dataset");
+        AdapterDescription adapterDescription = new GenericAdapterSetDescription();
+        adapterDescription.setAdapterId(GenericAdapterSetDescription.ID);
+        adapterDescription.setUri(GenericAdapterSetDescription.ID);
         return adapterDescription;
     }
 

@@ -18,8 +18,7 @@
 package org.streampipes.rest.shared.util;
 
 import org.junit.Test;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.FormatDescriptionList;
 import org.streampipes.vocabulary.StreamPipes;
@@ -46,8 +45,8 @@ public class JsonLdUtilsTest {
     @Test
     public void fromToJsonLdSimpleComplexTopElement() {
         List<AdapterDescription> list = Arrays.asList(
-                new AdapterDescription("http://id.de#3", "name1", ""),
-                new AdapterDescription("http://id.de#4", "name2", ""));
+                new GenericAdapterStreamDescription(),
+                new GenericAdapterSetDescription());
 
         AdapterDescriptionList object = new AdapterDescriptionList(list);
         String jsonLD = JsonLdUtils.toJsonLD(object);

@@ -30,9 +30,7 @@ import org.streampipes.connect.adapter.specific.SpecificDataSetAdapter;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.management.worker.AdapterWorkerManagement;
 import org.streampipes.connect.utils.Utils;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.model.connect.guess.GuessSchema;
 
 import static org.junit.Assert.*;
@@ -60,7 +58,7 @@ public class AdapterWorkerManagementTest {
     @Test
     public void stopStreamAdapterFail() {
         String expected = "Adapter with id http://test.de was not found in this container and cannot be stopped.";
-        AdapterStreamDescription asd = new AdapterStreamDescription();
+        AdapterStreamDescription asd = new GenericAdapterStreamDescription();
         asd.setUri("http://test.de");
 
         AdapterWorkerManagement adapterManagement = new AdapterWorkerManagement();
@@ -87,7 +85,7 @@ public class AdapterWorkerManagementTest {
     @Test
     public void stopSetAdapterFail() {
         String expected = "Adapter with id http://test.de was not found in this container and cannot be stopped.";
-        AdapterSetDescription asd = new AdapterSetDescription();
+        AdapterSetDescription asd = new GenericAdapterSetDescription();
         asd.setUri("http://test.de");
 
         AdapterWorkerManagement adapterManagement = new AdapterWorkerManagement();

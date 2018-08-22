@@ -22,15 +22,20 @@ import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
+import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
 
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp:AdapterStreamDescription")
+@RdfsClass(StreamPipes.ADAPTER_STREAM_DESCRIPTION)
 @Entity
-public class AdapterStreamDescription extends AdapterDescription {
+public abstract class AdapterStreamDescription extends AdapterDescription {
 
     public AdapterStreamDescription() {
+    }
+
+    public AdapterStreamDescription(String uri, String name, String description) {
+        super(uri, name, description);
     }
 
     public AdapterStreamDescription(AdapterStreamDescription other) {

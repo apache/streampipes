@@ -19,19 +19,25 @@ package org.streampipes.connect.rest.worker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.connect.adapter.Adapter;
+import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.management.AdapterDeserializer;
 import org.streampipes.connect.management.worker.AdapterWorkerManagement;
 import org.streampipes.connect.management.worker.IAdapterWorkerManagement;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.client.messages.Notifications;
+import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.streampipes.rest.shared.annotation.JsonLdSerialized;
+import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.rest.shared.util.SpMediaType;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Map;
 
 @Path("/api/v1/{username}/worker")
 public class WorkerResource extends AbstractContainerResource {
@@ -51,12 +57,16 @@ public class WorkerResource extends AbstractContainerResource {
     @POST
     @JsonLdSerialized
     @Path("/stream/invoke")
-    @Consumes(SpMediaType.JSONLD)
+//    @Consumes(SpMediaType.JSONLD)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) {
+    public Response invokeStreamAdapter(String adapterDescription) {
 
+        AdapterStreamDescription adapterStreamDescription = null;
 
         try {
+            adapterStreamDescription = (AdapterStreamDescription)
+                    AdapterDeserializer.getAdapterDescription(adapterDescription);
+
             adapterManagement.invokeStreamAdapter(adapterStreamDescription);
         } catch (AdapterException e) {
             logger.error("Error while starting adapter with id " + adapterStreamDescription.getUri(), e);
@@ -71,11 +81,16 @@ public class WorkerResource extends AbstractContainerResource {
     @POST
     @JsonLdSerialized
     @Path("/stream/stop")
-    @Consumes(SpMediaType.JSONLD)
+//    @Consumes(SpMediaType.JSONLD)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response stopStreamAdapter(AdapterStreamDescription adapterStreamDescription) {
+    public Response stopStreamAdapter(String adapterDescription) {
+
+        AdapterStreamDescription adapterStreamDescription = null;
 
         try {
+            adapterStreamDescription = (AdapterStreamDescription)
+                    AdapterDeserializer.getAdapterDescription(adapterDescription);
+
             adapterManagement.stopStreamAdapter(adapterStreamDescription);
         } catch (AdapterException e) {
             logger.error("Error while stopping adapter with id " + adapterStreamDescription.getUri(), e);
@@ -91,11 +106,16 @@ public class WorkerResource extends AbstractContainerResource {
     @POST
     @JsonLdSerialized
     @Path("/set/invoke")
-    @Consumes(SpMediaType.JSONLD)
+//    @Consumes(SpMediaType.JSONLD)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response invokeSetAdapter(AdapterSetDescription adapterSetDescription) {
+    public Response invokeSetAdapter(String adapterDescription) {
+
+        AdapterSetDescription adapterSetDescription = null;
 
         try {
+            adapterSetDescription = (AdapterSetDescription)
+                    AdapterDeserializer.getAdapterDescription(adapterDescription);
+
             adapterManagement.invokeSetAdapter(adapterSetDescription);
         } catch (AdapterException e) {
             logger.error("Error while starting adapter with id " + adapterSetDescription.getUri(), e);
@@ -111,10 +131,16 @@ public class WorkerResource extends AbstractContainerResource {
     @POST
     @JsonLdSerialized
     @Path("/set/stop")
-    @Consumes(SpMediaType.JSONLD)
+//    @Consumes(SpMediaType.JSONLD)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response stopSetAdapter(AdapterSetDescription adapterSetDescription){
-         try {
+    public Response stopSetAdapter(String adapterDescription){
+
+        AdapterSetDescription adapterSetDescription = null;
+
+        try {
+            adapterSetDescription = (AdapterSetDescription)
+                    AdapterDeserializer.getAdapterDescription(adapterDescription);
+
              adapterManagement.stopSetAdapter(adapterSetDescription);
         } catch (AdapterException e) {
             logger.error("Error while stopping adapter with id " + adapterSetDescription.getUri(), e);

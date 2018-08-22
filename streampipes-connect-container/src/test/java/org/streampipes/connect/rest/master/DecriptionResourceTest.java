@@ -26,8 +26,7 @@ import org.streampipes.connect.init.Config;
 import org.streampipes.connect.management.master.DescriptionManagement;
 import org.streampipes.connect.management.master.IDescriptionManagement;
 import org.streampipes.connect.utils.ConnectContainerResourceTest;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.FormatDescriptionList;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
@@ -148,10 +147,11 @@ public class DecriptionResourceTest extends ConnectContainerResourceTest {
     @Test
     public void getAdaptersSucess() {
         List<AdapterDescription> list = Arrays.asList(
-                new AdapterDescription("http://id/1", "name1", ""),
-                new AdapterDescription("http://id/2", "name2", ""));
+                new GenericAdapterStreamDescription(),
+                new GenericAdapterSetDescription());
         mockDescriptionManagerAdapters(new AdapterDescriptionList(list));
 
+        // TODO not sure how to fix
         AdapterDescriptionList resultObject = getJsonLdSucessRequest("/adapters", AdapterDescriptionList.class, StreamPipes.ADAPTER_DESCRIPTION_LIST);
 
 //        assertEquals(resultObject.getUri(), "http://bla.de#2");

@@ -51,6 +51,8 @@ public class AdapterMasterManagement implements IAdapterMasterManagement {
         // start when stream adapter
         if (ad instanceof AdapterStreamDescription) {
             // TODO
+            WorkerRestClient.invokeStreamAdapter(baseUrl, (AdapterStreamDescription) ad);
+            System.out.println("Start adapter");
 //            SpConnect.startStreamAdapter((AdapterStreamDescription) ad, baseUrl);
         }
 

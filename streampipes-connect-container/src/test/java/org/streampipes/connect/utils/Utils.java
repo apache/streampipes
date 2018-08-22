@@ -18,29 +18,28 @@
 package org.streampipes.connect.utils;
 
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.streampipes.vocabulary.StreamPipes;
 
 import java.lang.reflect.InvocationTargetException;
 
 public class Utils {
 
     public static String getMinimalStreamAdapterJsonLD() {
-        return getMinimalAdapterJsonLD(new AdapterStreamDescription());
+        return getMinimalAdapterJsonLD(new GenericAdapterStreamDescription(), StreamPipes.GENERIC_ADAPTER_SET_DESCRIPTION);
     }
 
     public static String getMinimalSetAdapterJsonLD() {
-        return getMinimalAdapterJsonLD(new AdapterSetDescription());
+        return getMinimalAdapterJsonLD(new GenericAdapterSetDescription(), StreamPipes.GENERIC_ADAPTER_SET_DESCRIPTION);
     }
 
-    private static String getMinimalAdapterJsonLD(AdapterDescription asd) {
+    private static String getMinimalAdapterJsonLD(AdapterDescription asd, String rootElement) {
         String id = "http://t.de/";
         asd.setUri(id);
         asd.setId(id);
 
-        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
+        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer(rootElement);
 
         try {
             return org.streampipes.commons.Utils.asString(jsonLdTransformer.toJsonLd(asd));
@@ -56,7 +55,7 @@ public class Utils {
 
 
     public static AdapterStreamDescription getMinimalStreamAdapter() {
-        AdapterStreamDescription result = new AdapterStreamDescription();
+        AdapterStreamDescription result = new GenericAdapterStreamDescription();
         String id = "http://t.de/";
         result.setUri(id);
         result.setId(id);
@@ -65,7 +64,7 @@ public class Utils {
     }
 
     public static AdapterSetDescription getMinimalSetAdapter() {
-        AdapterSetDescription result = new AdapterSetDescription();
+        AdapterSetDescription result = new GenericAdapterSetDescription();
         String id = "http://t.de/";
         result.setUri(id);
         result.setId(id);

@@ -29,6 +29,7 @@ import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
@@ -39,7 +40,7 @@ import java.util.List;
 
 public class GenericDataStreamAdapter extends Adapter {
 
-    public static final String ID = "org.streampipes.adapter.generic.datastream";
+    public static final String ID = GenericAdapterStreamDescription.ID;
 
     private Protocol protocol;
 
@@ -61,9 +62,9 @@ public class GenericDataStreamAdapter extends Adapter {
 
     @Override
     public AdapterDescription declareModel() {
-        AdapterDescription adapterDescription = new AdapterStreamDescription();
-        adapterDescription.setAdapterId(ID);
-        adapterDescription.setUri("http://streampipes.org/adapter/generic/datastream");
+        AdapterDescription adapterDescription = new GenericAdapterStreamDescription();
+        adapterDescription.setAdapterId(GenericAdapterStreamDescription.ID);
+        adapterDescription.setUri(GenericAdapterStreamDescription.ID);
         return adapterDescription;
     }
 
