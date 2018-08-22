@@ -89,7 +89,7 @@ export class RestService {
                 })
             };
             console.log(JSON.stringify(res));
-            this.http.post('/streampipes-backend/api/v2/adapter', res, httpOptions).subscribe();
+            this.http.post('/streampipes-connect/api/v1/a@a.de/master/adapters', res, httpOptions).subscribe();
         });
 
     }
@@ -137,7 +137,7 @@ export class RestService {
         return Observable.fromPromise(new Promise(function (resolve, reject) {
             tsonld.toflattenJsonLd(adapter).subscribe(res => {
                 return self.http
-                    .post('/streampipes-connect/v2/guess/schema', res)
+                    .post('/streampipes-connect/api/v1/a@a.de/master/guess/schema', res)
                     .map(response => {
 
                         tsonld.addClassMapping(EventSchema);

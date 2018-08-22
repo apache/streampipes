@@ -22,6 +22,9 @@ export class AdapterDescription {
   @RdfProperty('sp:userName')
   public userName: string;
 
+  @RdfProperty('sp:hasUri')
+  public uri: string;
+
   @RdfProperty('sp:rules')
   public rules: TransformationRuleDescription[];
 

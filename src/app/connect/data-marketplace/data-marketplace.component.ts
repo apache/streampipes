@@ -24,12 +24,13 @@ export class DataMarketplaceComponent implements OnInit {
                 for(let protocol of protocols) {
                     let newAdapter: AdapterDescription;
                     if(protocol.id.includes('sp:protocol/set')) {
-                        newAdapter = new GenericAdapterSetDescription("http://streampipes.org/adapter/generic/dataset");
+                        newAdapter = new GenericAdapterSetDescription("http://streampipes.org/genericadaptersetdescription");
                     } else if(protocol.id.includes('sp:protocol/stream')) {
-                        newAdapter = new GenericAdapterStreamDescription("http://streampipes.org/adapter/generic/datastream");
+                        newAdapter = new GenericAdapterStreamDescription("http://streampipes.org/genericadapterstreamdescription");
                     }
                     newAdapter.label = protocol.label;
                     newAdapter.description = protocol.description;
+                    newAdapter.uri = newAdapter.id;
                     if(newAdapter instanceof GenericAdapterSetDescription || newAdapter instanceof GenericAdapterStreamDescription) {
                         newAdapter.protocol = protocol;
                     }
