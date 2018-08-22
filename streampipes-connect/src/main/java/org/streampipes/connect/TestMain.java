@@ -101,12 +101,14 @@ public class TestMain {
 //                .socketTimeout(100000)
 //                .execute().returnContent().asString();
 
+        String tmp = "{\"@context\":{\"sp\":\"https://streampipes.org/vocabulary/v1/\",\"spi\":\"urn:streampipes.org:spi:\",\"foaf\":\"http://xmlns.com/foaf/0.1/\"},\"@graph\":[{\"@id\":\"http://streampipes.org/genericadapterstreamdescription\",\"@type\":\"sp:GenericAdapterStreamDescription\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"This is the description for the Apache Kafka protocol\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Apache Kafka (Stream)\",\"sp:config\":[],\"sp:hasFormat\":{\"@id\":\"sp:format/json/object\"},\"sp:hasProtocol\":{\"@id\":\"sp:protocol/stream/kafka\"},\"sp:hasUri\":\"http://streampipes.org/genericadapterstreamdescription\",\"sp:userName\":\"riemer@fzi.de\"},{\"@id\":\"sp:format/json/object\",\"@type\":\"sp:FormatDescription\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"This is the descriptionfor json format\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Json Object\",\"sp:config\":[],\"sp:hasUri\":\"https://streampipes.org/vocabulary/v1/format/json/object\"},{\"@id\":\"sp:protocol/stream/kafka\",\"@type\":\"sp:ProtocolDescription\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"This is the description for the Apache Kafka protocol\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Apache Kafka (Stream)\",\"sp:config\":[{\"@id\":\"spi:freetextstaticproperty:EMjdqQ\"},{\"@id\":\"spi:freetextstaticproperty:nHqyCU\"}],\"sp:hasUri\":\"https://streampipes.org/vocabulary/v1/protocol/stream/kafka\",\"sp:sourceType\":\"STREAM\"},{\"@id\":\"spi:freetextstaticproperty:EMjdqQ\",\"@type\":\"sp:FreeTextStaticProperty\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"Topic in the broker\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Topic\",\"sp:hasValue\":\"org.streampipes.examples.waterlevel\",\"sp:internalName\":\"topic\",\"sp:requiredDomainProperty\":\"\"},{\"@id\":\"spi:freetextstaticproperty:nHqyCU\",\"@type\":\"sp:FreeTextStaticProperty\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"This property defines the URL of the Kafka broker.\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Broker URL\",\"sp:hasValue\":\"ipe-koi04.fzi.de:9092\",\"sp:internalName\":\"broker_url\",\"sp:requiredDomainProperty\":\"\"}]}";
+
         HttpPost post = new HttpPost("http://localhost:8099/api/v1/riemer@fzi.de/master/adapters/");
         Header headers[] = {
                 new BasicHeader("Content-type", "application/ld+json"),
         };
         post.setHeaders(headers);
-        post.setEntity(new StringEntity(jsonld));
+        post.setEntity(new StringEntity(tmp));
 
         HttpClient client = HttpClients.custom().build();
         HttpResponse response = client.execute(post);
