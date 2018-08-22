@@ -29,6 +29,7 @@ import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.model.staticproperty.StaticProperty;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -57,6 +58,10 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     @RdfProperty("sp:grounding")
     private EventGrounding eventGrounding;
 
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty("sp:config")
+    List<StaticProperty> config;
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
@@ -67,6 +72,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         super();
         this.rules = new ArrayList<>();
         this.eventGrounding = new EventGrounding();
+        this.config = new ArrayList<>();
 
         // TODO move to another place
         TransportProtocol tp = new KafkaTransportProtocol();
@@ -138,6 +144,18 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     public void setEventGrounding(EventGrounding eventGrounding) {
         this.eventGrounding = eventGrounding;
+    }
+
+    public List<StaticProperty> getConfig() {
+        return config;
+    }
+
+    public void addConfig(StaticProperty sp) {
+        this.config.add(sp);
+    }
+
+    public void setConfig(List<StaticProperty> config) {
+        this.config = config;
     }
 
     @Override

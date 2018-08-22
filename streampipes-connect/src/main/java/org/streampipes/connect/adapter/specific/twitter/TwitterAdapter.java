@@ -22,12 +22,11 @@ import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.vocabulary.XSD;
 import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
@@ -56,7 +55,18 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
         AdapterDescription adapterDescription = new SpecificAdapterStreamDescription();
         adapterDescription.setAdapterId(ID);
         adapterDescription.setUri(ID);
+        adapterDescription.setName("Twitter");
+        adapterDescription.setDescription("Follow Hashtag");
         adapterDescription.setIconUrl("https://upload.wikimedia.org/wikipedia/de/thumb/9/9f/Twitter_bird_logo_2012.svg/1200px-Twitter_bird_logo_2012.svg.png");
+        FreeTextStaticProperty accessToken = new FreeTextStaticProperty("access_token", "Access Token",
+                "Access Token for Twitter Rest API.");
+        FreeTextStaticProperty accessTokenSecret = new FreeTextStaticProperty("access_token_secret", "Access Token Secret",
+                "Access Token Secret for Twitter Rest API.");
+        FreeTextStaticProperty hashtag = new FreeTextStaticProperty("hashtag", "Hashtag",
+                "Follow this Hashtag.");
+        adapterDescription.addConfig(accessToken);
+        adapterDescription.addConfig(accessTokenSecret);
+        adapterDescription.addConfig(hashtag);
         return adapterDescription;
     }
 
