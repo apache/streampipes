@@ -22,12 +22,10 @@ import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.rest.master.AdapterResource;
-import org.streampipes.connect.rest.master.DescriptionResource;
-import org.streampipes.connect.rest.master.SourcesResource;
+import org.streampipes.connect.rest.master.*;
 import org.streampipes.connect.rest.worker.WelcomePageWorker;
 import org.streampipes.connect.rest.worker.WorkerResource;
-import org.streampipes.connect.rest.master.WelcomePageMaster;
+import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
@@ -85,6 +83,7 @@ public class Main {
         allClasses.add(AdapterResource.class);
         allClasses.add(DescriptionResource.class);
         allClasses.add(SourcesResource.class);
+        allClasses.add(GuessResource.class);
 
         allClasses.addAll(getApiClasses());
 
