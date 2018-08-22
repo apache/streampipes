@@ -21,9 +21,9 @@ package org.streampipes.connect.rest.master;
 import org.rendersnake.HtmlCanvas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.connect.adapter.GroundingService;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
-import org.streampipes.connect.management.master.IAdapterMasterManagement;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
@@ -42,13 +42,13 @@ public class WelcomePageMaster extends AbstractContainerResource {
 
 	private Logger logger = LoggerFactory.getLogger(WelcomePageMaster.class);
 
-	private IAdapterMasterManagement adapterMasterManagement;
+	private AdapterMasterManagement adapterMasterManagement;
 
 	public WelcomePageMaster() {
 		this.adapterMasterManagement = new AdapterMasterManagement();
 	}
 
-	public WelcomePageMaster(IAdapterMasterManagement adapterMasterManagement) {
+	public WelcomePageMaster(AdapterMasterManagement adapterMasterManagement) {
 		this.adapterMasterManagement = adapterMasterManagement;
 	}
 	@GET
@@ -94,12 +94,13 @@ public class WelcomePageMaster extends AbstractContainerResource {
 
 		for (AdapterDescription ad : allAdapterDescriptions) {
 			canvas.li().write(ad.getAdapterId())._li();
+			canvas.ul().li().write("Kafka Topic: " + GroundingService.extractTopic(ad))._li()._ul();
 		}
 
 		return canvas;
 	}
 
-	public void setAdapterMasterManagement(IAdapterMasterManagement adapterMasterManagement) {
+	public void setAdapterMasterManagement(AdapterMasterManagement adapterMasterManagement) {
 		this.adapterMasterManagement = adapterMasterManagement;
 	}
 }

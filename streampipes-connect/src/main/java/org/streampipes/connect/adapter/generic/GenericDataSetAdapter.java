@@ -53,12 +53,14 @@ public class GenericDataSetAdapter extends Adapter {
     }
 
 
-    public GenericDataSetAdapter(AdapterDescription adapterDescription, boolean debug) {
-        super(adapterDescription, debug);
+    public GenericDataSetAdapter(GenericAdapterSetDescription adapterDescription, boolean debug) {
+        super(debug);
+        this.adapterDescription = adapterDescription;
     }
 
-    public GenericDataSetAdapter(AdapterDescription adapterDescription) {
-        this(adapterDescription, false);
+    public GenericDataSetAdapter(GenericAdapterSetDescription adapterDescription) {
+        super();
+        this.adapterDescription = adapterDescription;
     }
 
 
@@ -73,16 +75,12 @@ public class GenericDataSetAdapter extends Adapter {
 
     @Override
     public Adapter getInstance(AdapterDescription adapterDescription) {
-//        GenericSetAdapter result = new GenericAdapterSetDescription(adapterDescription);
-//
-//        this.adapterDescription = adapterDescription;
-        return  null;
+        return  new GenericDataSetAdapter((GenericAdapterSetDescription) adapterDescription);
     }
 
     @Override
     public void startAdapter()  throws AdapterException {
 
-        this.adapterDescription = adapterDescription;
 
         Parser parser = AdapterRegistry.getAllParsers().get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
         Format format = AdapterRegistry.getAllFormats().get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
@@ -94,14 +92,11 @@ public class GenericDataSetAdapter extends Adapter {
 
         List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
         pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getRules()));
-        pipelineElements.add(new SendToKafkaAdapterSink(this.kafkaUrl, this.topic));
+        pipelineElements.add(new SendToKafkaAdapterSink(this.adapterDescription));
 
         AdapterPipeline adapterPipeline = new AdapterPipeline(pipelineElements);
 
         protocol.run(adapterPipeline);
-
-//        protocol.run(this.kafkaUrl, this.topic);
-
     }
 
 

@@ -27,9 +27,8 @@ import org.streampipes.model.connect.grounding.ProtocolDescriptionList;
 
 import java.util.Map;
 
-public class DescriptionManagement implements IDescriptionManagement {
+public class DescriptionManagement {
 
-    @Override
     public ProtocolDescriptionList getProtocols() {
         Map<String, Protocol> allProtocols = AdapterRegistry.getAllProtocols();
 
@@ -42,7 +41,6 @@ public class DescriptionManagement implements IDescriptionManagement {
         return result;
     }
 
-    @Override
     public FormatDescriptionList getFormats() {
         Map<String, Format> allFormats = AdapterRegistry.getAllFormats();
 
@@ -55,7 +53,6 @@ public class DescriptionManagement implements IDescriptionManagement {
         return result;
     }
 
-    @Override
     public AdapterDescriptionList getAdapters() {
         Map<String, Adapter> allAdapters = AdapterRegistry.getAllAdapters();
 

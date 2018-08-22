@@ -23,10 +23,12 @@ import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.connect.adapter.GroundingService;
 import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
@@ -35,14 +37,17 @@ import java.util.List;
 
 import static org.streampipes.connect.rest.SpConnect.deleteDataSource;
 
-public class AdapterMasterManagement implements IAdapterMasterManagement {
+public class AdapterMasterManagement {
 
     private static final Logger logger = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
-    @Override
     public void addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl adapterStorage)
             throws AdapterException {
 
+        // Add EventGrounding to AdapterDescription
+        EventGrounding eventGrounding = GroundingService.createEventGrounding(
+                ConnectContainerConfig.INSTANCE.getKafkaHost(), ConnectContainerConfig.INSTANCE.getKafkaPort(), null);
+        ad.setEventGrounding(eventGrounding);
 
         // store in db
         adapterStorage.storeAdapter(ad);
@@ -96,7 +101,7 @@ public class AdapterMasterManagement implements IAdapterMasterManagement {
 
         return true;
     }
-    @Override
+
     public AdapterDescription getAdapter(String id, AdapterStorageImpl adapterStorage) throws AdapterException {
 
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
@@ -112,7 +117,6 @@ public class AdapterMasterManagement implements IAdapterMasterManagement {
         throw new AdapterException("Could not find adapter with id: " + id);
     }
 
-    @Override
     public void deleteAdapter(String id) throws AdapterException {
         //        // IF Stream adapter delete it
         AdapterStorageImpl adapterStorage = new AdapterStorageImpl();
@@ -150,7 +154,6 @@ public class AdapterMasterManagement implements IAdapterMasterManagement {
         logger.info("Response of the deletion request" + responseString);
     }
 
-    @Override
     public List<AdapterDescription> getAllAdapters(AdapterStorageImpl adapterStorage) throws AdapterException {
 
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();

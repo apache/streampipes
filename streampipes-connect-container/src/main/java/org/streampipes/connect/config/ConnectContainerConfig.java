@@ -19,6 +19,7 @@ package org.streampipes.connect.config;
 
 
 import org.streampipes.config.SpConfig;
+import org.streampipes.connect.init.Config;
 
 public enum ConnectContainerConfig {
   INSTANCE;
@@ -34,7 +35,7 @@ public enum ConnectContainerConfig {
     config.register(ConfigKeys.KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
     config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");
 
-    config.register(ConfigKeys.CONNECT_CONTAINER_PORT, 8099, "The port of the connect container");
+    config.register(ConfigKeys.CONNECT_CONTAINER_PORT, Config.WORKER_PORT, "The port of the connect container");
     config.register(ConfigKeys.CONNECT_CONTAINER_HOST, "localhost", "The hostname of the connect container");
   }
 

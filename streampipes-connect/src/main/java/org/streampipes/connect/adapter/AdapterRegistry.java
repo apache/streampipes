@@ -100,7 +100,7 @@ public class AdapterRegistry {
         if (adapterDescription != null) {
             Map<String, Adapter> adapterMap = AdapterRegistry.getAllAdapters();
 
-            return adapterMap.get(adapterDescription.getAdapterId());
+            return adapterMap.get(adapterDescription.getAdapterId()).getInstance(adapterDescription);
         } else {
             return null;
         }

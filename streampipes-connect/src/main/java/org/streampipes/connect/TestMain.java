@@ -22,6 +22,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.fluent.Request;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -38,10 +39,35 @@ import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class TestMain {
 
     public static void main(String... args) throws IOException {
+
+        addAdapter();
+//        deleteAdapter("5fbd9f277c2a4be9bc7bf276ca4d1705");
+
+
+
+    }
+
+    private static void deleteAdapter(String id) throws IOException {
+        HttpDelete delete = new HttpDelete("http://localhost:8099/api/v1/riemer@fzi.de/master/adapters/" + id);
+        Header headers[] = {
+                new BasicHeader("Content-type", "application/ld+json"),
+        };
+        delete.setHeaders(headers);
+//        post.setEntity(new StringEntity(jsonld));
+
+        HttpClient client = HttpClients.custom().build();
+        HttpResponse response = client.execute(delete);
+
+        System.out.println(response);
+    }
+
+    private static void addAdapter() throws IOException {
+
         ProtocolDescription protocolDescription = new KafkaProtocol().declareModel();
 
 
@@ -85,6 +111,8 @@ public class TestMain {
         HttpClient client = HttpClients.custom().build();
         HttpResponse response = client.execute(post);
 
-        System.out.println(jsonld);
+        System.out.println(response);
     }
+
+
 }

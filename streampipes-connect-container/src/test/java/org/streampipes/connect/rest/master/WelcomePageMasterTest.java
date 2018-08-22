@@ -23,22 +23,13 @@ import org.eclipse.jetty.server.Server;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.init.Config;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
-import org.streampipes.connect.management.master.IAdapterMasterManagement;
-import org.streampipes.connect.management.master.WorkerRestClient;
-import org.streampipes.connect.management.worker.AdapterWorkerManagement;
-import org.streampipes.connect.rest.master.WelcomePageMaster;
 import org.streampipes.connect.utils.ConnectContainerResourceTest;
 import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.streampipes.storage.couchdb.utils.CouchDbConfig;
+import org.streampipes.model.grounding.*;
 
 import java.util.Arrays;
 
@@ -46,7 +37,6 @@ import static com.jayway.restassured.RestAssured.get;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -84,6 +74,13 @@ public class WelcomePageMasterTest extends ConnectContainerResourceTest {
         String id = "testId";
         AdapterDescription adapterDescription = new GenericAdapterStreamDescription();
         adapterDescription.setAdapterId(id);
+        EventGrounding eventGrounding = new EventGrounding();
+        //TODO add eeventGrounding
+        TransportProtocol transportProtocol = new KafkaTransportProtocol();
+        TopicDefinition topicDefinition = new SimpleTopicDefinition("test");
+        transportProtocol.setTopicDefinition(topicDefinition);
+        eventGrounding.setTransportProtocol(transportProtocol);
+        adapterDescription.setEventGrounding(eventGrounding);
         AdapterMasterManagement adapterManagement = mock(AdapterMasterManagement.class);
         welcomePage.setAdapterMasterManagement(adapterManagement);
         when(adapterManagement.getAllAdapters(any())).thenReturn(Arrays.asList(adapterDescription));

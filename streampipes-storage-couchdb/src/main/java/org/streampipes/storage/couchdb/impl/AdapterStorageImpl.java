@@ -5,9 +5,7 @@ import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.storage.api.IAdapterStorage;
 import org.streampipes.storage.couchdb.dao.AbstractDao;
 import org.streampipes.storage.couchdb.dao.DbCommand;
@@ -58,13 +56,28 @@ public class AdapterStorageImpl extends AbstractDao<AdapterDescription> implemen
         }
         String theString = writer.toString();
 //        System.out.println(theString);
-        if (theString.contains("dataSet")) {
-            DbCommand<Optional<AdapterSetDescription>, AdapterSetDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterSetDescription.class);
+//        if (theString.contains("dataSet")) {
+//            DbCommand<Optional<AdapterSetDescription>, AdapterSetDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterSetDescription.class);
+//            return cmd.execute().get();
+//        } else {
+//             DbCommand<Optional<AdapterStreamDescription>, AdapterStreamDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterStreamDescription.class);
+//            return cmd.execute().get();
+//        }
+        if (theString.contains("GenericAdapterStreamDescription")) {
+            DbCommand<Optional<GenericAdapterStreamDescription>, GenericAdapterStreamDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, GenericAdapterStreamDescription.class);
             return cmd.execute().get();
-        } else {
-             DbCommand<Optional<AdapterStreamDescription>, AdapterStreamDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterStreamDescription.class);
+        } else  if (theString.contains("GenericAdapterSetDescription")) {
+            DbCommand<Optional<GenericAdapterSetDescription>, GenericAdapterSetDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, GenericAdapterSetDescription.class);
+            return cmd.execute().get();
+        } if (theString.contains("SpecificAdapterStreamDescription")) {
+            DbCommand<Optional<SpecificAdapterStreamDescription>, SpecificAdapterStreamDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, SpecificAdapterStreamDescription.class);
+            return cmd.execute().get();
+        } else if (theString.contains("SpecificAdapterSetDescription")) {
+             DbCommand<Optional<SpecificAdapterSetDescription>, SpecificAdapterSetDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, SpecificAdapterSetDescription.class);
             return cmd.execute().get();
         }
+
+        return null;
     }
 
     @Override

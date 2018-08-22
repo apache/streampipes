@@ -42,11 +42,11 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
         super();
     }
 
-    public TwitterAdapter(AdapterDescription adapterDescription, boolean debug) {
+    public TwitterAdapter(SpecificAdapterStreamDescription adapterDescription, boolean debug) {
         super(adapterDescription, debug);
     }
 
-    public TwitterAdapter(AdapterDescription adapterDescription) {
+    public TwitterAdapter(SpecificAdapterStreamDescription adapterDescription) {
         super(adapterDescription);
     }
 
@@ -77,7 +77,7 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public Adapter getInstance(AdapterDescription adapterDescription) {
-        return null;
+        return new TwitterAdapter((SpecificAdapterStreamDescription) adapterDescription);
     }
 
 //    @Override

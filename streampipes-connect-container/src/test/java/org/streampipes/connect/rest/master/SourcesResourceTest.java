@@ -25,7 +25,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.init.Config;
-import org.streampipes.connect.management.master.ISourcesManagement;
 import org.streampipes.connect.management.master.SourcesManagement;
 import org.streampipes.connect.utils.ConnectContainerResourceTest;
 import org.streampipes.model.SpDataSet;
@@ -48,7 +47,7 @@ public class SourcesResourceTest extends ConnectContainerResourceTest {
 
     private SourcesResource sourcesResource;
 
-    private ISourcesManagement sourcesManagement;
+    private SourcesManagement sourcesManagement;
 
 
     @Before
@@ -72,7 +71,7 @@ public class SourcesResourceTest extends ConnectContainerResourceTest {
 
     @Test
     public void addAdapterSuccess() throws Exception {
-        ISourcesManagement sourcesManagement = mock(SourcesManagement.class);
+        SourcesManagement sourcesManagement = mock(SourcesManagement.class);
         doNothing().when(sourcesManagement).addAdapter(anyString(), anyString(), any());
         sourcesResource.setSourcesManagement(sourcesManagement);
 
@@ -84,7 +83,7 @@ public class SourcesResourceTest extends ConnectContainerResourceTest {
 
     @Test
     public void addAdapterFail() throws AdapterException {
-        ISourcesManagement sourcesManagement = mock(SourcesManagement.class);
+        SourcesManagement sourcesManagement = mock(SourcesManagement.class);
         doThrow(AdapterException.class).when(sourcesManagement).addAdapter(anyString(), anyString(), any());
         sourcesResource.setSourcesManagement(sourcesManagement);
 
@@ -95,7 +94,7 @@ public class SourcesResourceTest extends ConnectContainerResourceTest {
 
     @Test
     public void detachSuccess() throws AdapterException {
-        ISourcesManagement sourcesManagement = mock(SourcesManagement.class);
+        SourcesManagement sourcesManagement = mock(SourcesManagement.class);
         doNothing().when(sourcesManagement).detachAdapter(anyString(), anyString(), anyString());
         sourcesResource.setSourcesManagement(sourcesManagement);
 
@@ -106,7 +105,7 @@ public class SourcesResourceTest extends ConnectContainerResourceTest {
 
     @Test
     public void detachFail() throws AdapterException {
-        ISourcesManagement sourcesManagement = mock(SourcesManagement.class);
+        SourcesManagement sourcesManagement = mock(SourcesManagement.class);
         doThrow(AdapterException.class).when(sourcesManagement).detachAdapter(anyString(), anyString(), anyString());
         sourcesResource.setSourcesManagement(sourcesManagement);
 

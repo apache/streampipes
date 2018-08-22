@@ -19,11 +19,10 @@ package org.streampipes.connect.rest.master;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.management.AdapterDeserializer;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
-import org.streampipes.connect.management.master.IAdapterMasterManagement;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.connect.adapter.*;
@@ -43,7 +42,7 @@ public class AdapterResource extends AbstractContainerResource {
 
     private Logger logger = LoggerFactory.getLogger(AdapterResource.class);
 
-    private IAdapterMasterManagement adapterMasterManagement;
+    private AdapterMasterManagement adapterMasterManagement;
 
     private String connectContainerEndpoint;
 
@@ -61,17 +60,27 @@ public class AdapterResource extends AbstractContainerResource {
 //    @JsonLdSerialized
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAdapter(String s) {
+    public Response addAdapter(String s, @PathParam("username") String userName) {
 
         AdapterDescription adapterDescription = null;
-        if (s.contains("GenericAdapterStreamDescription")) {
-            adapterDescription = JsonLdUtils.fromJsonLd(s, GenericAdapterStreamDescription.class);
-        } else if (s.contains("GenericAdapterSetDescription")){
-            adapterDescription = JsonLdUtils.fromJsonLd(s, GenericAdapterSetDescription.class);
-        }
+
 
         try {
-            adapterMasterManagement.addAdapter(adapterDescription, connectContainerEndpoint, new AdapterStorageImpl());
+            adapterDescription = AdapterDeserializer.getAdapterDescription(s);
+        } catch (AdapterException e) {
+            logger.error("Could not deserialize AdapterDescription: " + s, e);
+            e.printStackTrace();
+        }
+//        if (s.contains("GenericAdapterStreamDescription")) {
+//            adapterDescription = JsonLdUtils.fromJsonLd(s, GenericAdapterStreamDescription.class);
+//        } else if (s.contains("GenericAdapterSetDescription")){
+//            adapterDescription = JsonLdUtils.fromJsonLd(s, GenericAdapterSetDescription.class);
+//        }
+
+        String newUrl = addUserNameToApi(connectContainerEndpoint, userName);
+
+        try {
+            adapterMasterManagement.addAdapter(adapterDescription, newUrl, new AdapterStorageImpl());
         } catch (AdapterException e) {
             logger.error("Error while starting adapter with id " + adapterDescription.getUri(), e);
             return ok(Notifications.error(e.getMessage()));
@@ -87,7 +96,7 @@ public class AdapterResource extends AbstractContainerResource {
     @JsonLdSerialized
     @Path("/{id}")
     @Produces(SpMediaType.JSONLD)
-    public Response getAdapter(String id) {
+    public Response getAdapter(@PathParam("id") String id, @PathParam("username") String userName) {
 
         try {
             AdapterDescription adapterDescription = adapterMasterManagement.getAdapter(id, new AdapterStorageImpl());
@@ -104,7 +113,7 @@ public class AdapterResource extends AbstractContainerResource {
     @JsonLdSerialized
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteAdapter(String id) {
+    public Response deleteAdapter(@PathParam("id") String id, @PathParam("username") String userName) {
 
         try {
             adapterMasterManagement.deleteAdapter(id);
@@ -119,7 +128,7 @@ public class AdapterResource extends AbstractContainerResource {
     @JsonLdSerialized
     @Path("/")
     @Produces(SpMediaType.JSONLD)
-    public Response getAllAdapters(String id) {
+    public Response getAllAdapters(String id, @PathParam("username") String userName) {
         try {
             List<AdapterDescription> allAdapterDescription = adapterMasterManagement.getAllAdapters(new AdapterStorageImpl());
             AdapterDescriptionList result = new AdapterDescriptionList();
@@ -133,7 +142,11 @@ public class AdapterResource extends AbstractContainerResource {
 
     }
 
-    public void setAdapterMasterManagement(IAdapterMasterManagement adapterMasterManagement) {
+    public void setAdapterMasterManagement(AdapterMasterManagement adapterMasterManagement) {
         this.adapterMasterManagement = adapterMasterManagement;
+    }
+
+    private String addUserNameToApi(String url, String userName) {
+        return  url + "api/v1/" + userName + "/";
     }
 }

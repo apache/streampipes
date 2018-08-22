@@ -22,7 +22,7 @@ import org.streampipes.model.SpDataSet;
 import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
-public class SourcesManagement implements ISourcesManagement {
+public class SourcesManagement {
 
 
     private AdapterStorageImpl adapterStorage;
@@ -35,7 +35,6 @@ public class SourcesManagement implements ISourcesManagement {
         this.adapterStorage = new AdapterStorageImpl();
     }
 
-    @Override
     public void addAdapter(String baseUrl, String streamId, SpDataSet dataSet) throws AdapterException {
         AdapterSetDescription adapterDescription = (AdapterSetDescription) this.adapterStorage.getAdapter(streamId);
         adapterDescription.setDataSet(dataSet);
@@ -43,7 +42,6 @@ public class SourcesManagement implements ISourcesManagement {
         WorkerRestClient.invokeSetAdapter(baseUrl, adapterDescription);
     }
 
-    @Override
     public void detachAdapter(String baseUrl, String streamId, String runningInstanceId) throws AdapterException {
         AdapterSetDescription adapterDescription = (AdapterSetDescription) this.adapterStorage.getAdapter(streamId);
 

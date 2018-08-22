@@ -25,6 +25,7 @@ import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.model.connect.rules.*;
 import org.streampipes.model.grounding.TopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
@@ -52,6 +53,13 @@ public class GsonSerializer {
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
             .registerSubtype(SpDataSet.class, "org.streampipes.model.SpDataSet")
             .registerSubtype(SpDataStream.class, "org.streampipes.model.SpDataStream"));
+
+    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "sourceType")
+            .registerSubtype(GenericAdapterStreamDescription.class, "org.streampipes.model.GenericAdapterStreamDescription")
+            .registerSubtype(GenericAdapterSetDescription.class, "org.streampipes.model.GenericAdapterSetDescription")
+            .registerSubtype(SpecificAdapterStreamDescription.class, "org.streampipes.model.SpecificAdapterStreamDescription")
+            .registerSubtype(SpecificAdapterSetDescription.class, "org.streampipes.model.SpecificAdapterSetDescription"));
+
     builder.setPrettyPrinting();
     return builder.create();
   }
@@ -79,6 +87,12 @@ public class GsonSerializer {
             .registerSubtype(MoveRuleDescription.class, "org.streampipes.model.MoveRuleDescription")
             .registerSubtype(DeleteRuleDescription.class, "org.streampipes.model.DeleteRuleDescription")
             .registerSubtype(CreateNestedRuleDescription.class, "org.streampipes.model.CreateNestedRuleDescription"));
+
+    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "sourceType")
+            .registerSubtype(GenericAdapterStreamDescription.class, "org.streampipes.model.GenericAdapterStreamDescription")
+            .registerSubtype(GenericAdapterSetDescription.class, "org.streampipes.model.GenericAdapterSetDescription")
+            .registerSubtype(SpecificAdapterStreamDescription.class, "org.streampipes.model.SpecificAdapterStreamDescription")
+            .registerSubtype(SpecificAdapterSetDescription.class, "org.streampipes.model.SpecificAdapterSetDescription"));
 
     builder.setPrettyPrinting();
     return builder;

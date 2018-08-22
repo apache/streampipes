@@ -33,21 +33,16 @@ public abstract class Adapter {
     @Deprecated
     protected String topic;
 
-    private AdapterDescription adapterDescription;
 
     private boolean debug;
 
 
-    public Adapter() {
-    }
-
-    public Adapter(AdapterDescription adapterDescription, boolean debug) {
-        this.adapterDescription = adapterDescription;
+    public Adapter(boolean debug) {
         this.debug = debug;
     }
 
-    public Adapter(AdapterDescription adapterDescription) {
-        this(adapterDescription,false);
+    public Adapter() {
+        this(false);
     }
 
     @Deprecated

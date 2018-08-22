@@ -19,38 +19,31 @@ package org.streampipes.connect.rest.worker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.management.AdapterDeserializer;
 import org.streampipes.connect.management.worker.AdapterWorkerManagement;
-import org.streampipes.connect.management.worker.IAdapterWorkerManagement;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.streampipes.rest.shared.util.JsonLdUtils;
-import org.streampipes.rest.shared.util.SpMediaType;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Map;
 
 @Path("/api/v1/{username}/worker")
 public class WorkerResource extends AbstractContainerResource {
 
     Logger logger = LoggerFactory.getLogger(WorkerResource.class);
 
-    private IAdapterWorkerManagement adapterManagement;
+    private AdapterWorkerManagement adapterManagement;
 
     public WorkerResource() {
         adapterManagement = new AdapterWorkerManagement();
     }
 
-    public WorkerResource(IAdapterWorkerManagement adapterManagement) {
+    public WorkerResource(AdapterWorkerManagement adapterManagement) {
         this.adapterManagement = adapterManagement;
     }
 
@@ -153,7 +146,7 @@ public class WorkerResource extends AbstractContainerResource {
         return ok(Notifications.success(responseMessage));
     }
 
-    public void setAdapterManagement(IAdapterWorkerManagement adapterManagement) {
+    public void setAdapterManagement(AdapterWorkerManagement adapterManagement) {
         this.adapterManagement = adapterManagement;
     }
 

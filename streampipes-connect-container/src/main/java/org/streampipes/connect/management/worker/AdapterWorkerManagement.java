@@ -30,7 +30,7 @@ import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 
-public class AdapterWorkerManagement implements IAdapterWorkerManagement {
+public class AdapterWorkerManagement {
 
     Logger logger = LoggerFactory.getLogger(AdapterWorkerManagement.class);
 

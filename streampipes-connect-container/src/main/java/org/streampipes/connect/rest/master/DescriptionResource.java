@@ -20,7 +20,6 @@ package org.streampipes.connect.rest.master;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.management.master.DescriptionManagement;
-import org.streampipes.connect.management.master.IDescriptionManagement;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.streampipes.model.connect.grounding.FormatDescriptionList;
@@ -38,13 +37,13 @@ public class DescriptionResource extends AbstractContainerResource {
 
     private Logger logger = LoggerFactory.getLogger(DescriptionResource.class);
 
-    private IDescriptionManagement descriptionManagement;
+    private DescriptionManagement descriptionManagement;
 
     public DescriptionResource() {
         descriptionManagement = new DescriptionManagement();
     }
 
-    public DescriptionResource(IDescriptionManagement descriptionManagement) {
+    public DescriptionResource(DescriptionManagement descriptionManagement) {
         this.descriptionManagement = descriptionManagement;
     }
 
@@ -78,7 +77,7 @@ public class DescriptionResource extends AbstractContainerResource {
         return ok(result);
     }
 
-    public void setDescriptionManagement(IDescriptionManagement descriptionManagement) {
+    public void setDescriptionManagement(DescriptionManagement descriptionManagement) {
         this.descriptionManagement = descriptionManagement;
     }
 }

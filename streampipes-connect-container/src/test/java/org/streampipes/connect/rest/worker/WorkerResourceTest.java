@@ -25,7 +25,6 @@ import org.junit.Test;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.init.Config;
 import org.streampipes.connect.management.worker.AdapterWorkerManagement;
-import org.streampipes.connect.management.worker.IAdapterWorkerManagement;
 import org.streampipes.connect.utils.ConnectContainerResourceTest;
 import org.streampipes.connect.utils.Utils;
 import org.streampipes.model.connect.adapter.AdapterSetDescription;
@@ -47,7 +46,7 @@ public class WorkerResourceTest extends ConnectContainerResourceTest {
 
     private Server server;
 
-    private IAdapterWorkerManagement adapterManagement;
+    private AdapterWorkerManagement adapterManagement;
 
     @Before
     public  void before() {

@@ -19,8 +19,11 @@ package org.streampipes.connect.adapter.generic.pipeline.elements;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.eclipse.rdf4j.query.algebra.Str;
+import org.streampipes.connect.adapter.GroundingService;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
+import org.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.Map;
 
@@ -28,7 +31,10 @@ public class SendToKafkaAdapterSink implements AdapterPipelineElement  {
     private SpKafkaProducer producer;
     private ObjectMapper objectMapper;
 
-    public SendToKafkaAdapterSink(String brokerUrl, String topic) {
+    public SendToKafkaAdapterSink(AdapterDescription adapterDescription) {
+        String brokerUrl = GroundingService.extractBroker(adapterDescription);
+        String topic = GroundingService.extractTopic(adapterDescription);
+
         producer = new SpKafkaProducer(brokerUrl, topic);
         objectMapper = new ObjectMapper();
     }

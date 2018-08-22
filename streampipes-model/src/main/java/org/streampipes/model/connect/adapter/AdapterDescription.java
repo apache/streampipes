@@ -85,6 +85,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     public AdapterDescription(String uri, String name, String description) {
         super(uri, name, description);
+        this.rules = new ArrayList<>();
     }
 
 

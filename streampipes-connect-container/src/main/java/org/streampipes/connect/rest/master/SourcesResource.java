@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.connect.management.master.ISourcesManagement;
 import org.streampipes.connect.management.master.SourcesManagement;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.SpDataSet;
@@ -40,7 +39,7 @@ public class SourcesResource extends AbstractContainerResource {
 
     private String connectContainerBaseUrl;
 
-    private ISourcesManagement sourcesManagement;
+    private SourcesManagement sourcesManagement;
 
     public SourcesResource() {
         this.connectContainerBaseUrl = ConnectContainerConfig.INSTANCE.getConnectContainerUrl();
@@ -88,7 +87,7 @@ public class SourcesResource extends AbstractContainerResource {
         return ok(Notifications.success(responseMessage));
     }
 
-    public void setSourcesManagement(ISourcesManagement sourcesManagement) {
+    public void setSourcesManagement(SourcesManagement sourcesManagement) {
         this.sourcesManagement = sourcesManagement;
     }
 }
