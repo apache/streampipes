@@ -1,7 +1,6 @@
 import {Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { DataMarketplaceService } from './data-marketplace.service';
 import { AdapterDescription } from '../model/connect/AdapterDescription';
-import { ProtocolDescription } from '../model/connect/grounding/ProtocolDescription';
 import { GenericAdapterSetDescription } from '../model/connect/GenericAdapterSetDescription';
 import { GenericAdapterStreamDescription } from '../model/connect/GenericAdapterStreamDescription';
 
@@ -31,7 +30,7 @@ export class DataMarketplaceComponent implements OnInit {
                     }
                     newAdapter.label = protocol.label;
                     newAdapter.description = protocol.description;
-                    if(newAdapter.hasOwnProperty("protocol")) {
+                    if(newAdapter instanceof GenericAdapterSetDescription || newAdapter instanceof GenericAdapterStreamDescription) {
                         newAdapter.protocol = protocol;
                     }
                     this.adapters.push(newAdapter);
