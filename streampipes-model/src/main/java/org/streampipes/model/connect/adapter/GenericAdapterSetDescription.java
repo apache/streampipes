@@ -32,16 +32,20 @@ import javax.persistence.Entity;
 public class GenericAdapterSetDescription extends AdapterSetDescription {
     public static final String ID = "http://streampipes.org/genericadaptersetdescription";
 
+    private String sourceType = "org.streampipes.model.connect.adapter.GenericAdapterSetDescription";
+
     @RdfProperty("sp:hasFormat")
     private FormatDescription formatDescription;
 
     @RdfProperty("sp:hasProtocol")
     private ProtocolSetDescription protocolDescription;
 
+
     public GenericAdapterSetDescription() {
         super(ID, "GenericAdapterSetDescription", "");
         setAdapterId(ID);
     }
+
 
     public GenericAdapterSetDescription(FormatDescription formatDescription, ProtocolSetDescription protocolDescription) {
         this.formatDescription = formatDescription;
@@ -69,5 +73,13 @@ public class GenericAdapterSetDescription extends AdapterSetDescription {
 
     public void setProtocolDescription(ProtocolSetDescription protocolDescription) {
         this.protocolDescription = protocolDescription;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 }

@@ -107,7 +107,7 @@ public class AdapterResourceTest extends ConnectContainerResourceTest {
     @Test
     public void deleteAdapterSuccess() throws AdapterException {
         AdapterMasterManagement adapterMasterManagement  = mock(AdapterMasterManagement.class);
-        doNothing().when(adapterMasterManagement).deleteAdapter(anyString());
+        doNothing().when(adapterMasterManagement).deleteAdapter(anyString(), anyString());
         adapterResource.setAdapterMasterManagement(adapterMasterManagement);
 
         deleteJsonLdSucessRequest("/testid");
@@ -115,7 +115,7 @@ public class AdapterResourceTest extends ConnectContainerResourceTest {
 
     @Test
     public void deleteAdapterFail() throws AdapterException {
-        doThrow(new AdapterException(ERROR_MESSAGE)).when(adapterMasterManagement).deleteAdapter(anyString());
+        doThrow(new AdapterException(ERROR_MESSAGE)).when(adapterMasterManagement).deleteAdapter(anyString(), anyString());
         adapterResource.setAdapterMasterManagement(adapterMasterManagement);
 
         deleteJsonLdFailRequest("/testid");

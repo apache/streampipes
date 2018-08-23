@@ -71,11 +71,8 @@ public class AdapterResource extends AbstractContainerResource {
             logger.error("Could not deserialize AdapterDescription: " + s, e);
             e.printStackTrace();
         }
-//        if (s.contains("GenericAdapterStreamDescription")) {
-//            adapterDescription = JsonLdUtils.fromJsonLd(s, GenericAdapterStreamDescription.class);
-//        } else if (s.contains("GenericAdapterSetDescription")){
-//            adapterDescription = JsonLdUtils.fromJsonLd(s, GenericAdapterSetDescription.class);
-//        }
+
+        logger.info("User: " + userName + " starts adapter " + adapterDescription.getAdapterId());
 
         String newUrl = addUserNameToApi(connectContainerEndpoint, userName);
 
@@ -116,7 +113,9 @@ public class AdapterResource extends AbstractContainerResource {
     public Response deleteAdapter(@PathParam("id") String id, @PathParam("username") String userName) {
 
         try {
-            adapterMasterManagement.deleteAdapter(id);
+
+            String newUrl = addUserNameToApi(connectContainerEndpoint, userName);
+            adapterMasterManagement.deleteAdapter(id, newUrl);
             return ok(true);
         } catch (AdapterException e) {
             logger.error("Error while deleting adapter with id " + id, e);

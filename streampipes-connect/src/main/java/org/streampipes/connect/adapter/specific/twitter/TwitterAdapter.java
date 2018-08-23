@@ -80,6 +80,12 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
         return new TwitterAdapter((SpecificAdapterStreamDescription) adapterDescription);
     }
 
+    public static void main(String... args) {
+        TwitterAdapter twitterAdapter = new TwitterAdapter();
+
+        twitterAdapter.run(null);
+    }
+
 //    @Override
     public void run(AdapterDescription adapterDescription) {
 
@@ -90,22 +96,22 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
         cb.setJSONStoreEnabled(true);
         twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
 //        twitterStream.setOAuthAccessToken(new AccessToken("", ""));
-
+//
 
         twitterStream.addListener(listener);
+//
+        twitterStream.sample();
 
-//        twitterStream.sample();
 
-
-        FilterQuery tweetFilterQuery = new FilterQuery(); // See
-        tweetFilterQuery.track(new String[]{"Bieber", "Teletubbies"}); // OR on keywords
-        tweetFilterQuery.locations(new double[][]{new double[]{-126.562500,30.448674},
-                new double[]{-61.171875,44.087585
-                }}); // See https://dev.twitter.com/docs/streaming-apis/parameters#locations for proper location doc.
+//        FilterQuery tweetFilterQuery = new FilterQuery(); // See
+//        tweetFilterQuery.track(new String[]{"Bieber", "Teletubbies"}); // OR on keywords
+//        tweetFilterQuery.locations(new double[][]{new double[]{-126.562500,30.448674},
+//                new double[]{-61.171875,44.087585
+//                }}); // See https://dev.twitter.com/docs/streaming-apis/parameters#locations for proper location doc.
 //Note that not all tweets have location metadata set.
-        tweetFilterQuery.language(new String[]{"en"}); //
-
-        twitterStream.filter(tweetFilterQuery);
+//        tweetFilterQuery.language(new String[]{"en"}); //
+//
+//        twitterStream.filter(tweetFilterQuery);
 
 
     }

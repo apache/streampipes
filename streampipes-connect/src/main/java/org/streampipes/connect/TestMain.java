@@ -17,14 +17,11 @@
 
 package org.streampipes.connect;
 
-import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.fluent.Request;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
@@ -33,7 +30,6 @@ import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
 import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
-import org.streampipes.model.connect.grounding.ProtocolStreamDescription;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.rest.shared.util.JsonLdUtils;
@@ -45,8 +41,8 @@ public class TestMain {
 
     public static void main(String... args) throws IOException {
 
-        addAdapter();
-//        deleteAdapter("5fbd9f277c2a4be9bc7bf276ca4d1705");
+//        addAdapter();
+        deleteAdapter("4a1423b2e8184934b2fd2a5070fd4a6c");
 
 
 
@@ -101,14 +97,14 @@ public class TestMain {
 //                .socketTimeout(100000)
 //                .execute().returnContent().asString();
 
-        String tmp = "{\"@context\":{\"sp\":\"https://streampipes.org/vocabulary/v1/\",\"spi\":\"urn:streampipes.org:spi:\",\"foaf\":\"http://xmlns.com/foaf/0.1/\"},\"@graph\":[{\"@id\":\"http://streampipes.org/genericadapterstreamdescription\",\"@type\":\"sp:GenericAdapterStreamDescription\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"This is the description for the Apache Kafka protocol\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Apache Kafka (Stream)\",\"sp:config\":[],\"sp:hasFormat\":{\"@id\":\"sp:format/json/object\"},\"sp:hasProtocol\":{\"@id\":\"sp:protocol/stream/kafka\"},\"sp:hasUri\":\"http://streampipes.org/genericadapterstreamdescription\",\"sp:userName\":\"riemer@fzi.de\"},{\"@id\":\"sp:format/json/object\",\"@type\":\"sp:FormatDescription\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"This is the descriptionfor json format\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Json Object\",\"sp:config\":[],\"sp:hasUri\":\"https://streampipes.org/vocabulary/v1/format/json/object\"},{\"@id\":\"sp:protocol/stream/kafka\",\"@type\":\"sp:ProtocolDescription\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"This is the description for the Apache Kafka protocol\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Apache Kafka (Stream)\",\"sp:config\":[{\"@id\":\"spi:freetextstaticproperty:EMjdqQ\"},{\"@id\":\"spi:freetextstaticproperty:nHqyCU\"}],\"sp:hasUri\":\"https://streampipes.org/vocabulary/v1/protocol/stream/kafka\",\"sp:sourceType\":\"STREAM\"},{\"@id\":\"spi:freetextstaticproperty:EMjdqQ\",\"@type\":\"sp:FreeTextStaticProperty\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"Topic in the broker\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Topic\",\"sp:hasValue\":\"org.streampipes.examples.waterlevel\",\"sp:internalName\":\"topic\",\"sp:requiredDomainProperty\":\"\"},{\"@id\":\"spi:freetextstaticproperty:nHqyCU\",\"@type\":\"sp:FreeTextStaticProperty\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"This property defines the URL of the Kafka broker.\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Broker URL\",\"sp:hasValue\":\"ipe-koi04.fzi.de:9092\",\"sp:internalName\":\"broker_url\",\"sp:requiredDomainProperty\":\"\"}]}";
+//        String tmp = "{\"@context\":{\"sp\":\"https://streampipes.org/vocabulary/v1/\",\"spi\":\"urn:streampipes.org:spi:\",\"foaf\":\"http://xmlns.com/foaf/0.1/\"},\"@graph\":[{\"@id\":\"http://streampipes.org/genericadapterstreamdescription\",\"@type\":\"sp:GenericAdapterStreamDescription\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"This is the description for the Apache Kafka protocol\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Apache Kafka (Stream)\",\"sp:config\":[],\"sp:hasFormat\":{\"@id\":\"sp:format/json/object\"},\"sp:hasProtocol\":{\"@id\":\"sp:protocol/stream/kafka\"},\"sp:hasUri\":\"http://streampipes.org/genericadapterstreamdescription\",\"sp:userName\":\"riemer@fzi.de\"},{\"@id\":\"sp:format/json/object\",\"@type\":\"sp:FormatDescription\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"This is the descriptionfor json format\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Json Object\",\"sp:config\":[],\"sp:hasUri\":\"https://streampipes.org/vocabulary/v1/format/json/object\"},{\"@id\":\"sp:protocol/stream/kafka\",\"@type\":\"sp:ProtocolDescription\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"This is the description for the Apache Kafka protocol\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Apache Kafka (Stream)\",\"sp:config\":[{\"@id\":\"spi:freetextstaticproperty:EMjdqQ\"},{\"@id\":\"spi:freetextstaticproperty:nHqyCU\"}],\"sp:hasUri\":\"https://streampipes.org/vocabulary/v1/protocol/stream/kafka\",\"sp:sourceType\":\"STREAM\"},{\"@id\":\"spi:freetextstaticproperty:EMjdqQ\",\"@type\":\"sp:FreeTextStaticProperty\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"Topic in the broker\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Topic\",\"sp:hasValue\":\"org.streampipes.examples.waterlevel\",\"sp:internalName\":\"topic\",\"sp:requiredDomainProperty\":\"\"},{\"@id\":\"spi:freetextstaticproperty:nHqyCU\",\"@type\":\"sp:FreeTextStaticProperty\",\"http://www.w3.org/2000/01/rdf-schema#description\":\"This property defines the URL of the Kafka broker.\",\"http://www.w3.org/2000/01/rdf-schema#label\":\"Broker URL\",\"sp:hasValue\":\"ipe-koi04.fzi.de:9092\",\"sp:internalName\":\"broker_url\",\"sp:requiredDomainProperty\":\"\"}]}";
 
         HttpPost post = new HttpPost("http://localhost:8099/api/v1/riemer@fzi.de/master/adapters/");
         Header headers[] = {
                 new BasicHeader("Content-type", "application/ld+json"),
         };
         post.setHeaders(headers);
-        post.setEntity(new StringEntity(tmp));
+        post.setEntity(new StringEntity(jsonld));
 
         HttpClient client = HttpClients.custom().build();
         HttpResponse response = client.execute(post);

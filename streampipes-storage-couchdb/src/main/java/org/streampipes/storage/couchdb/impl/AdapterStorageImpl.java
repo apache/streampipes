@@ -6,6 +6,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.model.connect.adapter.*;
+import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.storage.api.IAdapterStorage;
 import org.streampipes.storage.couchdb.dao.AbstractDao;
 import org.streampipes.storage.couchdb.dao.DbCommand;
@@ -45,6 +46,7 @@ public class AdapterStorageImpl extends AbstractDao<AdapterDescription> implemen
 
     @Override
     public AdapterDescription getAdapter(String adapterId) {
+
         InputStream in = couchDbClientSupplier.get().find(adapterId);
 
         // TODO find better solution
@@ -55,6 +57,10 @@ public class AdapterStorageImpl extends AbstractDao<AdapterDescription> implemen
             e.printStackTrace();
         }
         String theString = writer.toString();
+
+
+        return GsonSerializer.getGson().fromJson(theString, AdapterDescription.class);
+
 //        System.out.println(theString);
 //        if (theString.contains("dataSet")) {
 //            DbCommand<Optional<AdapterSetDescription>, AdapterSetDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterSetDescription.class);
@@ -63,21 +69,21 @@ public class AdapterStorageImpl extends AbstractDao<AdapterDescription> implemen
 //             DbCommand<Optional<AdapterStreamDescription>, AdapterStreamDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterStreamDescription.class);
 //            return cmd.execute().get();
 //        }
-        if (theString.contains("GenericAdapterStreamDescription")) {
-            DbCommand<Optional<GenericAdapterStreamDescription>, GenericAdapterStreamDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, GenericAdapterStreamDescription.class);
-            return cmd.execute().get();
-        } else  if (theString.contains("GenericAdapterSetDescription")) {
-            DbCommand<Optional<GenericAdapterSetDescription>, GenericAdapterSetDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, GenericAdapterSetDescription.class);
-            return cmd.execute().get();
-        } if (theString.contains("SpecificAdapterStreamDescription")) {
-            DbCommand<Optional<SpecificAdapterStreamDescription>, SpecificAdapterStreamDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, SpecificAdapterStreamDescription.class);
-            return cmd.execute().get();
-        } else if (theString.contains("SpecificAdapterSetDescription")) {
-             DbCommand<Optional<SpecificAdapterSetDescription>, SpecificAdapterSetDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, SpecificAdapterSetDescription.class);
-            return cmd.execute().get();
-        }
+//        if (theString.contains("GenericAdapterStreamDescription")) {
+//            DbCommand<Optional<GenericAdapterStreamDescription>, GenericAdapterStreamDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, GenericAdapterStreamDescription.class);
+//            return cmd.execute().get();
+//        } else  if (theString.contains("GenericAdapterSetDescription")) {
+//            DbCommand<Optional<GenericAdapterSetDescription>, GenericAdapterSetDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, GenericAdapterSetDescription.class);
+//            return cmd.execute().get();
+//        } if (theString.contains("SpecificAdapterStreamDescription")) {
+//            DbCommand<Optional<SpecificAdapterStreamDescription>, SpecificAdapterStreamDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, SpecificAdapterStreamDescription.class);
+//            return cmd.execute().get();
+//        } else if (theString.contains("SpecificAdapterSetDescription")) {
+//             DbCommand<Optional<SpecificAdapterSetDescription>, SpecificAdapterSetDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, SpecificAdapterSetDescription.class);
+//            return cmd.execute().get();
+//        }
 
-        return null;
+//        return null;
     }
 
     @Override

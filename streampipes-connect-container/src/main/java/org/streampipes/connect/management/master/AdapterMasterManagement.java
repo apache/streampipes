@@ -118,21 +118,20 @@ public class AdapterMasterManagement {
         throw new AdapterException("Could not find adapter with id: " + id);
     }
 
-    public void deleteAdapter(String id) throws AdapterException {
+    public void deleteAdapter(String id, String baseUrl) throws AdapterException {
         //        // IF Stream adapter delete it
         AdapterStorageImpl adapterStorage = new AdapterStorageImpl();
         boolean isStreamAdapter = isStreamAdapter(id, adapterStorage);
 
         if (isStreamAdapter) {
-            stopStreamAdapter(id, ConnectContainerConfig.INSTANCE.getConnectContainerUrl(), adapterStorage);
+            stopStreamAdapter(id, baseUrl, adapterStorage);
         }
         AdapterDescription ad = adapterStorage.getAdapter(id);
         String username = ad.getUserName();
 
         adapterStorage.deleteAdapter(id);
 
-        String backendBaseUrl = "http://" + BackendConfig.INSTANCE.getBackendHost() + ":" + "8030" +
-                "/streampipes-backend/api/v2/noauth/users/"+ username + "/element/";
+        String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "/api/v2/noauth/users/"+ username + "/element/";
         backendBaseUrl = backendBaseUrl + id;
         deleteDataSource(backendBaseUrl);
 

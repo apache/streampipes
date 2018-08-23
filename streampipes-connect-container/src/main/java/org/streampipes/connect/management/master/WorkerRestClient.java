@@ -45,7 +45,7 @@ public class WorkerRestClient {
     public static void stopStreamAdapter(String baseUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
         String url = baseUrl + "worker/stream/stop";
 
-        stopAdapter(url, new AdapterStorageImpl(), "");
+        stopAdapter(adapterStreamDescription.getId(), new AdapterStorageImpl(), url);
     }
 
     public static void invokeSetAdapter(String baseUrl, AdapterSetDescription adapterSetDescription) throws AdapterException {
@@ -57,7 +57,7 @@ public class WorkerRestClient {
     public static void stopSetAdapter(String baseUrl, AdapterSetDescription adapterSetDescription) throws AdapterException {
         String url = baseUrl + "worker/set/stop";
 
-        stopAdapter(url, new AdapterStorageImpl(), "");
+        stopAdapter(adapterSetDescription.getAdapterId(), new AdapterStorageImpl(), url);
     }
 
     public static void startAdapter(String url, AdapterDescription ad) throws AdapterException {
