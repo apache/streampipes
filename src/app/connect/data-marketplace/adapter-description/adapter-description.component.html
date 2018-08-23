@@ -1,12 +1,20 @@
 <div class="outer-box">
     <div class="header">
         <div class="type">
-            <p *ngIf="isDataSetDescription()" class="historic">Historic</p>
-            <p *ngIf="isDataStreamDescription()" class="real-time">Real-Time</p>
+            <div class="type-data">
+                <mat-icon *ngIf="isDataSetDescription()" class="historic">lens</mat-icon>
+                <mat-icon *ngIf="isDataStreamDescription()" class="real-time">lens</mat-icon>
+                <p *ngIf="isDataSetDescription()">Historic</p>
+                <p *ngIf="isDataStreamDescription()">Real-Time</p>
+            </div>
             <h3>{{adapter.label}}</h3>
         </div>
         <div class="icon">
             <img *ngIf="isSpecificDescription()" [src]="adapter.iconUrl" class="iconImg" />
+            <img *ngIf="isGenericDescription() && adapter.label.includes('Kafka')" src="https://pbs.twimg.com/profile_images/781633389577195521/kazUJooF_400x400.jpg"
+                class="iconImg" />
+            <img *ngIf="isGenericDescription() && adapter.label.includes('MQTT')" src="https://www.penninkhof.com/wp-content/uploads/2015/03/MQTT.png"
+                class="iconImg" />
         </div>
     </div>
     <div class="description">
