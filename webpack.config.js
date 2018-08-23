@@ -107,23 +107,23 @@ module.exports = {
         secure: false,
       },
       '/streampipes-backend': {
-        target: 'http://ipe-koi04.fzi.de',
+        target: 'http://localhost:8030',
         secure: false,
       },
       '/visualizablepipeline': {
-        target: 'http://ipe-koi04.fzi.de:5984',
+        target: 'http://localhost:5984',
         secure: false,
       },
       '/dashboard': {
-        target: 'http://ipe-koi04.fzi.de:5984',
+        target: 'http://localhost:5984',
         secure: false,
       },
       '/pipeline': {
-        target: 'http://ipe-koi04.fzi.de:5984',
+        target: 'http://localhost:5984',
         secure: false,
       },
       '/streampipes/ws': {
-        target: 'ws://ipe-koi04.fzi.de',
+        target: 'ws://localhost:61614',
         ws: true,
         secure: false,
       },
