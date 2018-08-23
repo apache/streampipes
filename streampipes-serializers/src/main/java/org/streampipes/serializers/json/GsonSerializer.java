@@ -55,10 +55,12 @@ public class GsonSerializer {
             .registerSubtype(SpDataStream.class, "org.streampipes.model.SpDataStream"));
 
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "sourceType")
-            .registerSubtype(GenericAdapterStreamDescription.class, "org.streampipes.model.GenericAdapterStreamDescription")
-            .registerSubtype(GenericAdapterSetDescription.class, "org.streampipes.model.GenericAdapterSetDescription")
-            .registerSubtype(SpecificAdapterStreamDescription.class, "org.streampipes.model.SpecificAdapterStreamDescription")
-            .registerSubtype(SpecificAdapterSetDescription.class, "org.streampipes.model.SpecificAdapterSetDescription"));
+            .registerSubtype(AdapterStreamDescription.class, "org.streampipes.model.connect.adapter.AdapterStreamDescription")
+            .registerSubtype(AdapterSetDescription.class, "org.streampipes.model.connect.adapter.AdapterSetDescription")
+            .registerSubtype(GenericAdapterStreamDescription.class, "org.streampipes.model.connect.adapter.GenericAdapterStreamDescription")
+            .registerSubtype(GenericAdapterSetDescription.class, "org.streampipes.model.connect.adapter.GenericAdapterSetDescription")
+            .registerSubtype(SpecificAdapterStreamDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription")
+            .registerSubtype(SpecificAdapterSetDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterSetDescription"));
 
     builder.setPrettyPrinting();
     return builder.create();
@@ -88,11 +90,13 @@ public class GsonSerializer {
             .registerSubtype(DeleteRuleDescription.class, "org.streampipes.model.DeleteRuleDescription")
             .registerSubtype(CreateNestedRuleDescription.class, "org.streampipes.model.CreateNestedRuleDescription"));
 
-    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "sourceType")
-            .registerSubtype(GenericAdapterStreamDescription.class, "org.streampipes.model.GenericAdapterStreamDescription")
-            .registerSubtype(GenericAdapterSetDescription.class, "org.streampipes.model.GenericAdapterSetDescription")
-            .registerSubtype(SpecificAdapterStreamDescription.class, "org.streampipes.model.SpecificAdapterStreamDescription")
-            .registerSubtype(SpecificAdapterSetDescription.class, "org.streampipes.model.SpecificAdapterSetDescription"));
+        builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "sourceType")
+            .registerSubtype(AdapterStreamDescription.class, "org.streampipes.model.connect.adapter.AdapterStreamDescription")
+            .registerSubtype(AdapterSetDescription.class, "org.streampipes.model.connect.adapter.AdapterSetDescription")
+            .registerSubtype(GenericAdapterStreamDescription.class, "org.streampipes.model.connect.adapter.GenericAdapterStreamDescription")
+            .registerSubtype(GenericAdapterSetDescription.class, "org.streampipes.model.connect.adapter.GenericAdapterSetDescription")
+            .registerSubtype(SpecificAdapterStreamDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription")
+            .registerSubtype(SpecificAdapterSetDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterSetDescription"));
 
     builder.setPrettyPrinting();
     return builder;

@@ -27,6 +27,7 @@ import org.streampipes.connect.adapter.GroundingService;
 import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.rest.shared.util.JsonLdUtils;
@@ -166,47 +167,16 @@ public class AdapterMasterManagement {
     }
 
     public static void stopSetAdapter(String adapterId, String baseUrl, AdapterStorageImpl adapterStorage) throws AdapterException {
-        String url = baseUrl + "api/v1/stopAdapter/set";
 
-        stopAdapter(adapterId, adapterStorage, url);
+        AdapterSetDescription ad = (AdapterSetDescription) adapterStorage.getAdapter(adapterId);
+
+        WorkerRestClient.stopSetAdapter(baseUrl, ad);
     }
 
     public static void stopStreamAdapter(String adapterId, String baseUrl, AdapterStorageImpl adapterStorage) throws AdapterException {
-        String url = baseUrl + "api/v1/stopAdapter/stream";
+        AdapterStreamDescription ad = (AdapterStreamDescription) adapterStorage.getAdapter(adapterId);
 
-        stopAdapter(adapterId, adapterStorage, url);
-    }
-
-    private static void stopAdapter(String adapterId, AdapterStorageImpl adapterStorage, String url) throws AdapterException {
-
-        //Delete from database
-        AdapterDescription ad = adapterStorage.getAdapter(adapterId);
-
-        // Stop execution of adatper
-         try {
-            logger.info("Trying to stopAdapter adpater on endpoint: " + url);
-
-            // TODO quick fix because otherwise it is not serialized to json-ld
-             if (ad.getUri() == null) {
-                 logger.error("Adapter uri is null this should not happen " + ad);
-             }
-
-            String adapterDescription = toJsonLd(ad);
-
-            // TODO change this to a delete request
-            String responseString = Request.Post(url)
-                    .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnContent().asString();
-
-            logger.info("Adapter stopped on endpoint: " + url + " with Response: " + responseString);
-
-        } catch (IOException e) {
-            logger.error("Error while stopping adapter with id: " + adapterId, e);
-            throw new AdapterException();
-        }
-
+        WorkerRestClient.stopStreamAdapter(baseUrl, ad);
     }
 
     public static boolean isStreamAdapter(String id, AdapterStorageImpl adapterStorage) {

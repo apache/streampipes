@@ -25,26 +25,30 @@ import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.rest.shared.util.JsonLdUtils;
+import org.streampipes.rest.shared.util.SpMediaType;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
+import java.util.Arrays;
 
 
-@Path("/v2/guess")
+@Path("/api/v1/{username}/master/guess")
 public class GuessResource extends AbstractContainerResource {
 
     Logger logger = LoggerFactory.getLogger(GuessResource.class);
 
 
+    public GuessResource() {
+
+    }
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(SpMediaType.JSONLD)
     @Path("/format")
     public Response guessFormat() {
         //TODO
@@ -53,7 +57,7 @@ public class GuessResource extends AbstractContainerResource {
 
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(SpMediaType.JSONLD)
     @Path("/formatdescription")
     public Response guessFormatDescription() {
         //TODO
@@ -61,24 +65,25 @@ public class GuessResource extends AbstractContainerResource {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(SpMediaType.JSONLD)
     @Path("/schema")
-    public Response guessSchema(String ar) {
+//    public Response guessSchema(String ar, @PathParam("username") String userName) {
+        public Response guessSchema(@PathParam("username") String userName) {
 
 
-        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
-
-        AdapterDescription a = null;
-        try {
-            if (ar.contains("AdapterSetDescription")){
-                a = jsonLdTransformer.fromJsonLd(ar, AdapterSetDescription.class);
-            } else {
-                a = jsonLdTransformer.fromJsonLd(ar, AdapterStreamDescription.class);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
+//
+//        AdapterDescription a = null;
+//        try {
+//            if (ar.contains("AdapterSetDescription")){
+//                a = jsonLdTransformer.fromJsonLd(ar, AdapterSetDescription.class);
+//            } else {
+//                a = jsonLdTransformer.fromJsonLd(ar, AdapterStreamDescription.class);
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
 //        Adapter adapter = new Adapter("ipe-koi06.fzi.de:9092", "org.streampipes.streamconnect", true);
 //        GuessSchema resultSchema = adapter.getSchema(a);
@@ -86,7 +91,19 @@ public class GuessResource extends AbstractContainerResource {
         // TODO get domainproperty probabilities
 
 //        return ok(JsonLdUtils.toJsonLD(resultSchema));
-        return ok(JsonLdUtils.toJsonLD(null));
+
+        EventSchema eventSchema = new EventSchema();
+        EventPropertyPrimitive eventPropertyPrimitive = new EventPropertyPrimitive();
+        eventPropertyPrimitive.setRuntimeType("http://schema.org/Number");
+        eventPropertyPrimitive.setRuntimeName("id");
+
+
+        eventSchema.setEventProperties(Arrays.asList(eventPropertyPrimitive));
+        GuessSchema guessSchema = new GuessSchema();
+        guessSchema.setEventSchema(eventSchema);
+
+
+        return ok(JsonLdUtils.toJsonLD(guessSchema));
     }
 
 
