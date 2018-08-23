@@ -58,17 +58,9 @@ public class TestConverterProgram extends DataStreamTestBase {
     DataStream<Map<String, Object>> stream = program.getApplicationLogic(createTestStream(makeInputData(inputValue)));
 
     ExpectedRecords<Map<String, Object>> expected =
-            new ExpectedRecords<Map<String, Object>>().expectAll(getOutput(expectedValue));
+            new ExpectedRecords<Map<String, Object>>().expect(makeTestData(expectedValue).get(0));
 
     assertStream(stream, expected);
-  }
-
-  private Collection<Map<String, Object>> getOutput(Object expectedValue) {
-    List<Map<String, Object>> allEvents = new ArrayList<>();
-    Map<String, Object> outMap = new HashMap<>();
-    outMap.put("field", expectedValue);
-
-    return allEvents;
   }
 
   private EventTimeInput<Map<String, Object>> makeInputData(String inputValue) {
@@ -78,7 +70,7 @@ public class TestConverterProgram extends DataStreamTestBase {
     return builder;
   }
 
-  private List<Map<String, Object>> makeTestData(String inputValue) {
+  private List<Map<String, Object>> makeTestData(Object inputValue) {
     List<Map<String, Object>> allEvents = new ArrayList<>();
     Map<String, Object> event = new HashMap<>();
     event.put("field", inputValue);

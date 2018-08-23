@@ -7,41 +7,34 @@ import java.util.List;
 
 public class AndParameters extends EventProcessorBindingParams {
 
-	private String timeUnit;
-	private String matchingOperator;
-	private int duration;
-	private List<String> matchingProperties;
-	
-	
-	public AndParameters(DataProcessorInvocation invocationGraph, String timeUnit,
-                       String matchingOperator, int duration, List<String> matchingProperties) {
-		super(invocationGraph);
-		this.timeUnit = timeUnit;
-		this.matchingOperator = matchingOperator;
-		this.duration = duration;
-		this.matchingProperties = matchingProperties;
-	}
+  private TimeUnit timeUnit;
+  private Integer timeWindow;
+
+  private List<String> leftMappings;
+  private List<String> rightMappings;
 
 
-	public String getTimeUnit() {
-		return timeUnit;
-	}
+  public AndParameters(DataProcessorInvocation invocationGraph, TimeUnit timeUnit, Integer timeWindow, List<String> leftMappings, List<String> rightMappings) {
+    super(invocationGraph);
+    this.timeUnit = timeUnit;
+    this.timeWindow = timeWindow;
+    this.leftMappings = leftMappings;
+    this.rightMappings = rightMappings;
+  }
 
+  public TimeUnit getTimeUnit() {
+    return timeUnit;
+  }
 
-	public String getMatchingOperator() {
-		return matchingOperator;
-	}
+  public Integer getTimeWindow() {
+    return timeWindow;
+  }
 
+  public List<String> getLeftMappings() {
+    return leftMappings;
+  }
 
-	public int getDuration() {
-		return duration;
-	}
-
-
-	public List<String> getMatchingProperties() {
-		return matchingProperties;
-	}
-	
-	
-
+  public List<String> getRightMappings() {
+    return rightMappings;
+  }
 }
