@@ -1,11 +1,9 @@
 .fullWidth {
-   height: 100%;
-    width: 100%;
+  width: 100%;
 }
 .blockElement {
-    margin-top: 15px;
-    margin-left: 30px;
-    clear: both;
-    display: block;
-
+  margin-top: 15px;
+  margin-left: 30px;
+  clear: both;
+  display: block;
 }

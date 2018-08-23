@@ -1,8 +1,8 @@
 <div class="example-container mat-elevation-z8">
     <!--<div class="example-header">-->
-        <!--<mat-form-field>-->
-            <!--<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">-->
-        <!--</mat-form-field>-->
+    <!--<mat-form-field>-->
+    <!--<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">-->
+    <!--</mat-form-field>-->
     <!--</div>-->
 
     <mat-table #table [dataSource]="dataSource">
@@ -14,17 +14,17 @@
 
         <ng-container matColumnDef="protocol">
             <mat-header-cell *matHeaderCellDef> Protocol </mat-header-cell>
-            <mat-cell *matCellDef="let adapter"> {{adapter.protocol.label}} </mat-cell>
+            <mat-cell *matCellDef="let adapter"> {{adapter.protol ? adapter.protocol.label : ''}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="format">
             <mat-header-cell *matHeaderCellDef> Format </mat-header-cell>
-            <mat-cell *matCellDef="let adapter"> {{adapter.format.label}} </mat-cell>
+            <mat-cell *matCellDef="let adapter"> {{adapter.format ? adapter.format.label : ''}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="delete">
             <mat-header-cell *matHeaderCellDef> Remove </mat-header-cell>
-            <mat-cell  onmouseover="" style="cursor: pointer;" (click)="deleteAdapter(adapter)" *matCellDef="let adapter">
+            <mat-cell onmouseover="" style="cursor: pointer;" (click)="deleteAdapter(adapter)" *matCellDef="let adapter">
                 <mat-icon>
                     delete
                 </mat-icon>

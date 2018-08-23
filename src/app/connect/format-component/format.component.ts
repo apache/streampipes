@@ -4,20 +4,23 @@ import { FormatDescription } from '../model/connect/grounding/FormatDescription'
 @Component({
   selector: 'app-format',
   templateUrl: './format.component.html',
-  styleUrls: ['./format.component.css']
+  styleUrls: ['./format.component.css'],
 })
-
 export class FormatComponent {
-
-  @Input() format: FormatDescription;
-  @Input() selectedFormat: FormatDescription;
-  @Output() validateEmitter = new EventEmitter();
-  @Output() editableEmitter = new EventEmitter();
-  @Output() selectedFormatEmitter = new EventEmitter();
+  @Input()
+  format: FormatDescription;
+  @Input()
+  selectedFormat: FormatDescription;
+  @Output()
+  validateEmitter = new EventEmitter();
+  @Output()
+  editableEmitter = new EventEmitter();
+  @Output()
+  selectedFormatEmitter = new EventEmitter();
   private hasConfig: Boolean;
 
   constructor() {
-    this.hasConfig=true;
+    this.hasConfig = true;
   }
 
   formatEditable() {
@@ -32,26 +35,18 @@ export class FormatComponent {
       this.selectedFormatEmitter.emit(this.selectedFormat);
     }
     */
-   this.selectedFormat = this.format;
-   this.selectedFormatEmitter.emit(this.selectedFormat);
+    this.selectedFormat = this.format;
+    this.selectedFormatEmitter.emit(this.selectedFormat);
   }
   validateText(textValid) {
     if (textValid && this.format.edit) {
       this.validateEmitter.emit(true);
       this.selectedFormat = this.format;
       this.selectedFormatEmitter.emit(this.selectedFormat);
-    }
-    else {
+    } else {
       this.validateEmitter.emit(false);
       this.selectedFormat = null;
     }
   }
-  ngOnInit() {
-
-  }
-
-
-
-
-
+  ngOnInit() {}
 }
