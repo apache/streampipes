@@ -58,6 +58,11 @@ public class GuessSchema extends UnnamedStreamPipesEntity {
         this.propertyProbabilityList = propertyProbabilityList;
     }
 
+	public GuessSchema(GuessSchema other) {
+		super(other);
+		this.eventSchema = other.getEventSchema() != null ? new EventSchema(other.getEventSchema()) : null;
+	}
+
 
 
     public EventSchema getEventSchema() {

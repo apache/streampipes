@@ -92,7 +92,7 @@ public class GuessResourceTest extends ConnectContainerResourceTest {
 
         String resultString = res.body().print();
 
-        GuessSchema resultObject = JsonLdUtils.fromJsonLd(resultString, GuessSchema.class, StreamPipes.GUESS_SCHEMA);
+        GuessSchema resultObject = JsonLdUtils.fromJsonLd(resultString, GuessSchema.class);
 
         assertNotNull(resultObject);
         assertNotNull(resultObject.propertyProbabilityList);
