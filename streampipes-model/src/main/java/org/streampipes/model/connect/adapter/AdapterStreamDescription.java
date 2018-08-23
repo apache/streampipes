@@ -20,8 +20,6 @@ import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.connect.grounding.FormatDescription;
-import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
@@ -32,6 +30,7 @@ import javax.persistence.Entity;
 public abstract class AdapterStreamDescription extends AdapterDescription {
 
     public AdapterStreamDescription() {
+        super();
     }
 
     public AdapterStreamDescription(String uri, String name, String description) {
