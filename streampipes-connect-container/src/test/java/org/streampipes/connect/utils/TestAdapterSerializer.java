@@ -29,7 +29,7 @@ public class TestAdapterSerializer {
   public void testGenericAdapterStreamSerialization() {
     GenericAdapterStreamDescription desc = new GenericAdapterStreamDescription();
 
-    String serialized = (GsonSerializer.getGson().toJson(desc, AdapterDescription.class));
+    String serialized = (GsonSerializer.getGsonBuilder().create().toJson(desc, AdapterDescription.class));
 
     AdapterDescription deserialized = GsonSerializer.getGson().fromJson(serialized, AdapterDescription.class);
     assertEquals(deserialized.getAdapterId(), "http://streampipes.org/genericadapterstreamdescription");

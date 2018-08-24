@@ -73,4 +73,12 @@ public class GenericAdapterStreamDescription extends AdapterStreamDescription {
     public void setProtocolDescription(ProtocolDescription protocolDescription) {
         this.protocolDescription = protocolDescription;
     }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
+    }
 }

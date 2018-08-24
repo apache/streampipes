@@ -32,7 +32,7 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/\""})
+@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass(StreamPipes.GUESS_SCHEMA)
 @Entity
 public class GuessSchema extends UnnamedStreamPipesEntity {
