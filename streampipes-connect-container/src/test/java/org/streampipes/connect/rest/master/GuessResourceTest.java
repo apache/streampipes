@@ -23,6 +23,7 @@ import org.eclipse.jetty.server.Server;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.init.Config;
 import org.streampipes.connect.management.master.GuessManagement;
 import org.streampipes.connect.utils.ConnectContainerResourceTest;
@@ -39,6 +40,7 @@ import java.util.Arrays;
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -76,7 +78,7 @@ public class GuessResourceTest extends ConnectContainerResourceTest {
 
 
     @Test
-    public void guessSchemaSuccess() {
+    public void guessSchemaSuccess() throws AdapterException {
         GuessSchema guessSchema = getGuessSchema();
         when(guessManagement.guessSchema(any())).thenReturn(guessSchema);
         String data = Utils.getMinimalStreamAdapterJsonLD();
@@ -92,7 +94,7 @@ public class GuessResourceTest extends ConnectContainerResourceTest {
 
         String resultString = res.body().print();
 
-        GuessSchema resultObject = JsonLdUtils.fromJsonLd(resultString, GuessSchema.class);
+        GuessSchema resultObject = JsonLdUtils.fromJsonLd(resultString, GuessSchema.class, StreamPipes.GUESS_SCHEMA);
 
         assertNotNull(resultObject);
         assertNotNull(resultObject.propertyProbabilityList);
@@ -103,18 +105,30 @@ public class GuessResourceTest extends ConnectContainerResourceTest {
         assertEquals("id", resultObject.eventSchema.getEventProperties().get(0).getRuntimeName());
     }
 
+    @Test
+    public void guessSchemaFail() throws AdapterException {
+        doThrow(new AdapterException()).when(guessManagement).guessSchema(any());
+        String data = Utils.getMinimalStreamAdapterJsonLD();
+
+         Response res = given()
+                .body(data)
+                .when()
+                .post(getApi() + "/schema");
+
+            res.then()
+                .statusCode(500);
+
+    }
+
     private GuessSchema getGuessSchema() {
         EventSchema eventSchema = new EventSchema();
         EventPropertyPrimitive eventPropertyPrimitive = new EventPropertyPrimitive();
         eventPropertyPrimitive.setRuntimeType("http://schema.org/Number");
         eventPropertyPrimitive.setRuntimeName("id");
 
-
-
         eventSchema.setEventProperties(Arrays.asList(eventPropertyPrimitive));
         GuessSchema guessSchema = new GuessSchema();
         guessSchema.setEventSchema(eventSchema);
-        guessSchema.setPropertyProbabilityList(Arrays.asList(new DomainPropertyProbabilityList()));
 
         return guessSchema;
 

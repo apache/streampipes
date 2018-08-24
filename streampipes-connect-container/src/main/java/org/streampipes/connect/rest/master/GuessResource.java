@@ -59,24 +59,23 @@ public class GuessResource extends AbstractContainerResource {
         this.guessManagement = guessManagement;
     }
 
-//    @POST
-//    @JsonLdSerialized
-//    @Path("/schema")
-//    @Produces(SpMediaType.JSONLD)
-//    public Response guessSchema(String s, @PathParam("username") String userName) {
-//        AdapterDescription adapterDescription = null;
-//
-//        try {
-//            adapterDescription = AdapterDeserializer.getAdapterDescription(s);
-//        } catch (AdapterException e) {
-//            logger.error("Could not deserialize AdapterDescription: " + s, e);
-//        }
-//
-//        GuessSchema result = guessManagement.guessSchema(adapterDescription);
-//
-//
-//        return ok(result);
-//    }
+    @POST
+    @JsonLdSerialized
+    @Path("/schema")
+    @Produces(SpMediaType.JSONLD)
+    public Response guessSchema(String s, @PathParam("username") String userName) {
+
+        try {
+         AdapterDescription  adapterDescription = AdapterDeserializer.getAdapterDescription(s);
+            GuessSchema result = guessManagement.guessSchema(adapterDescription);
+
+            return ok(result);
+        } catch (AdapterException e) {
+            logger.error("Could not deserialize AdapterDescription: " + s, e);
+            return fail();
+        }
+
+    }
 
     @GET
     @Produces(SpMediaType.JSONLD)
@@ -98,47 +97,6 @@ public class GuessResource extends AbstractContainerResource {
     public void setGuessManagement(GuessManagement guessManagement) {
         this.guessManagement = guessManagement;
     }
-
-    @POST
-    @Produces(SpMediaType.JSONLD)
-    @Path("/schema")
-    public Response guessSchema(String ar, @PathParam("username") String userName) {
-
-//        return ok(true);
-
-//        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
-//
-//        AdapterDescription a = null;
-//        try {
-//            if (ar.contains("AdapterSetDescription")){
-//                a = jsonLdTransformer.fromJsonLd(ar, AdapterSetDescription.class);
-//            } else {
-//                a = jsonLdTransformer.fromJsonLd(ar, AdapterStreamDescription.class);
-//            }
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        Adapter adapter = new Adapter("ipe-koi06.fzi.de:9092", "org.streampipes.streamconnect", true);
-//        GuessSchema resultSchema = adapter.getSchema(a);
-
-//         TODO get domainproperty probabilities
-
-
-            EventSchema eventSchema = new EventSchema();
-            EventPropertyPrimitive eventPropertyPrimitive = new EventPropertyPrimitive();
-            eventPropertyPrimitive.setRuntimeType("http://schema.org/Number");
-            eventPropertyPrimitive.setRuntimeName("id");
-
-
-            eventSchema.setEventProperties(Arrays.asList(eventPropertyPrimitive));
-            GuessSchema guessSchema = new GuessSchema();
-            guessSchema.setEventSchema(eventSchema);
-            return ok(guessSchema);
-        }
-//
-//
 
 }
 
