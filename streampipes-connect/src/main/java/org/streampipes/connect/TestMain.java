@@ -42,7 +42,7 @@ public class TestMain {
     public static void main(String... args) throws IOException {
 
 //        addAdapter();
-        deleteAdapter("4a1423b2e8184934b2fd2a5070fd4a6c");
+        deleteAdapter("77932edb92be4a06bd8386d23e3f9f9d");
 
 
 

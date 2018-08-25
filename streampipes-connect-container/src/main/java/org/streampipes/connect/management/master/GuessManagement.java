@@ -17,6 +17,8 @@
 
 package org.streampipes.connect.management.master;
 
+import org.streampipes.connect.adapter.Adapter;
+import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
@@ -28,14 +30,11 @@ import java.util.Arrays;
 public class GuessManagement {
 
     public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException {
-        EventSchema eventSchema = new EventSchema();
-        EventPropertyPrimitive eventPropertyPrimitive = new EventPropertyPrimitive();
-        eventPropertyPrimitive.setRuntimeType("http://schema.org/Number");
-        eventPropertyPrimitive.setRuntimeName("id");
 
-        eventSchema.setEventProperties(Arrays.asList(eventPropertyPrimitive));
-        GuessSchema guessSchema = new GuessSchema();
-        guessSchema.setEventSchema(eventSchema);
+        Adapter adapter = AdapterRegistry.getAdapter(adapterDescription);
+
+        GuessSchema guessSchema = adapter.getSchema(adapterDescription);
+
         return guessSchema;
 
     }
