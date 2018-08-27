@@ -12,7 +12,7 @@ export class GuessSchema {
     @RdfId
     public id: string;
 
-    @RdfProperty('sp:eventSchema')
+    @RdfProperty('sp:hasEventSchema')
     public eventSchema: EventSchema;
 
     @RdfProperty('sp:propertyProbabilityList')

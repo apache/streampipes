@@ -53,7 +53,7 @@ export class EventSchemaComponent implements OnInit {
     }
 
     onNext() {
-        if (this.adapterDescription.constructor.name == 'AdapterSetDescription') {
+        if (this.adapterDescription.constructor.name == 'GenericAdapterSetDescription' || this.adapterDescription.constructor.name == 'SpecificAdapterSetDescription') {
              this.adapterDescription.dataSet.eventSchema = this.eventSchema;
          } else {
              this.adapterDescription.dataStream.eventSchema = this.eventSchema;

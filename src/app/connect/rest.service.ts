@@ -121,7 +121,8 @@ export class RestService {
 
     deleteAdapter(adapter: AdapterDescription): Observable<any> {
         return this.http
-            .delete(this.host + 'api/v2/adapter/' + adapter.couchDbId);
+            // .delete(this.host + 'api/v2/adapter/' + adapter.couchDbId);
+            .delete('/streampipes-connect/api/v1/a@a.de/master/adapters/' + adapter.couchDbId);
     }
 
 
@@ -185,7 +186,7 @@ export class RestService {
     getFormats(): Observable<FormatDescriptionList> {
 
         return this.http
-            .get(this.host + 'api/v2/adapter/allFormats')
+            .get('/streampipes-connect/api/v1/riemer@fzi.de/master/description/formats')
             .map(response => {
 
                 const tsonld = new TsonLd();
