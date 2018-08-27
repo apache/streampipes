@@ -27,6 +27,7 @@
         <module>streampipes-sinks-notifications-jvm</module>
         <module>streampipes-pipeline-elements-shared</module>
         <module>streampipes-processors-geo-flink</module>
+        <module>streampipes-processors-image-processing-jvm</module>
     </modules>
 
     <properties>
