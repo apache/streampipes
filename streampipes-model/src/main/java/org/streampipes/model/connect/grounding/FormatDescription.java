@@ -46,6 +46,8 @@ public class FormatDescription extends NamedStreamPipesEntity {
     List<StaticProperty> config;
 
     public FormatDescription() {
+        super();
+        this.config = new ArrayList<>();
     }
 
     public FormatDescription(String uri, String name, String description) {

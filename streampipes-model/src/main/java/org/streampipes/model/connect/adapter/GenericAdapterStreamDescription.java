@@ -33,7 +33,7 @@ import javax.persistence.Entity;
 public class GenericAdapterStreamDescription extends AdapterStreamDescription {
     public static final String ID = "http://streampipes.org/genericadapterstreamdescription";
 
-    private String sourceType = "org.streampipes.model.connect.adapter.GenericAdapterStreamDescription";
+    //private String sourceType = "org.streampipes.model.connect.adapter.GenericAdapterStreamDescription";
 
     @RdfProperty("sp:hasFormat")
     private FormatDescription formatDescription;

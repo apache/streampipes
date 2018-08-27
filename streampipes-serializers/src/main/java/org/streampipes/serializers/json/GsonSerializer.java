@@ -25,7 +25,7 @@ import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.connect.adapter.*;
+import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.rules.*;
 import org.streampipes.model.grounding.TopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
@@ -42,6 +42,15 @@ import java.net.URI;
 
 public class GsonSerializer {
 
+  public static Gson getAdapterGson() {
+    GsonBuilder builder = getGsonBuilder();
+    builder.registerTypeHierarchyAdapter(AdapterDescription.class, new AdapterSerializer());
+
+    return builder.create();
+
+  }
+
+  // TODO reuse getGsonBuilder
   public static Gson getGson() {
     GsonBuilder builder = new GsonBuilder();
     builder.registerTypeAdapter(EventProperty.class, new JsonLdSerializer<EventProperty>());
@@ -53,14 +62,6 @@ public class GsonSerializer {
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
             .registerSubtype(SpDataSet.class, "org.streampipes.model.SpDataSet")
             .registerSubtype(SpDataStream.class, "org.streampipes.model.SpDataStream"));
-
-    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "sourceType")
-            .registerSubtype(AdapterStreamDescription.class, "org.streampipes.model.connect.adapter.AdapterStreamDescription")
-            .registerSubtype(AdapterSetDescription.class, "org.streampipes.model.connect.adapter.AdapterSetDescription")
-            .registerSubtype(GenericAdapterStreamDescription.class, "org.streampipes.model.connect.adapter.GenericAdapterStreamDescription")
-            .registerSubtype(GenericAdapterSetDescription.class, "org.streampipes.model.connect.adapter.GenericAdapterSetDescription")
-            .registerSubtype(SpecificAdapterStreamDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription")
-            .registerSubtype(SpecificAdapterSetDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterSetDescription"));
 
     builder.setPrettyPrinting();
     return builder.create();
@@ -84,19 +85,12 @@ public class GsonSerializer {
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
             .registerSubtype(SpDataSet.class, "org.streampipes.model.SpDataSet")
             .registerSubtype(SpDataStream.class, "org.streampipes.model.SpDataStream"));
+
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(TransformationRuleDescription.class, "sourceType")
             .registerSubtype(RenameRuleDescription.class, "org.streampipes.model.RenameRuleDescription")
             .registerSubtype(MoveRuleDescription.class, "org.streampipes.model.MoveRuleDescription")
             .registerSubtype(DeleteRuleDescription.class, "org.streampipes.model.DeleteRuleDescription")
             .registerSubtype(CreateNestedRuleDescription.class, "org.streampipes.model.CreateNestedRuleDescription"));
-
-        builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "sourceType")
-            .registerSubtype(AdapterStreamDescription.class, "org.streampipes.model.connect.adapter.AdapterStreamDescription")
-            .registerSubtype(AdapterSetDescription.class, "org.streampipes.model.connect.adapter.AdapterSetDescription")
-            .registerSubtype(GenericAdapterStreamDescription.class, "org.streampipes.model.connect.adapter.GenericAdapterStreamDescription")
-            .registerSubtype(GenericAdapterSetDescription.class, "org.streampipes.model.connect.adapter.GenericAdapterSetDescription")
-            .registerSubtype(SpecificAdapterStreamDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription")
-            .registerSubtype(SpecificAdapterSetDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterSetDescription"));
 
     builder.setPrettyPrinting();
     return builder;
