@@ -5,6 +5,7 @@ import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.processors.pattern.detection.flink.config.PatternDetectionFlinkConfig;
+import org.streampipes.processors.pattern.detection.flink.processor.and.TimeUnit;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -18,6 +19,7 @@ import java.util.List;
 public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParameters> {
 
   private static final String TIME_WINDOW = "time-window";
+  private static final String TIME_UNIT = "time-unit";
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -31,8 +33,9 @@ public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParamet
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
+            .requiredSingleValueSelection(Labels.from(TIME_UNIT, "Time Unit", "The time unit used for detecting the co-occurrence."), Options.from("Seconds", "Minutes", "Hours"))
             .requiredIntegerParameter(Labels.from(TIME_WINDOW, "Time Window Size", "Time window size (seconds)"))
-            .outputStrategy(OutputStrategies.custom(true))
+            .outputStrategy(OutputStrategies.custom(false))
             .supportedProtocols(SupportedProtocols.kafka())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
@@ -45,9 +48,10 @@ public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParamet
       selectProperties.add(p.getRuntimeName());
     }
 
-    Integer timeWindowSize = extractor.singleValueParameter(TIME_WINDOW, Integer.class);
+    TimeUnit timeUnit = TimeUnit.valueOf(extractor.selectedSingleValue(TIME_UNIT, String.class));
+    Integer timeWindow = extractor.singleValueParameter(TIME_WINDOW, Integer.class);
 
-    AbsenceParameters params = new AbsenceParameters(graph, selectProperties, timeWindowSize);
+    AbsenceParameters params = new AbsenceParameters(graph, selectProperties, timeWindow, timeUnit);
 
     return new AbsenceProgram(params, PatternDetectionFlinkConfig.INSTANCE.getDebug());
   }

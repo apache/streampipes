@@ -15,9 +15,23 @@ limitations under the License.
 */
 package org.streampipes.processors.pattern.detection.flink.processor.absence;
 
+import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.cep.CEP;
+import org.apache.flink.cep.PatternFlatSelectFunction;
+import org.apache.flink.cep.PatternFlatTimeoutFunction;
+import org.apache.flink.cep.PatternStream;
+import org.apache.flink.cep.pattern.Pattern;
+import org.apache.flink.cep.pattern.conditions.SimpleCondition;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
+import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.util.Collector;
+import org.apache.flink.util.OutputTag;
 import org.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
+import org.streampipes.processors.pattern.detection.flink.processor.and.TimeUnitConverter;
 
+import java.util.List;
 import java.util.Map;
 
 public class AbsenceProgram extends AbstractPatternDetectionProgram<AbsenceParameters> {
@@ -27,7 +41,73 @@ public class AbsenceProgram extends AbstractPatternDetectionProgram<AbsenceParam
   }
 
   @Override
-  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
-    return null;
+  public DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
+
+    Time time = TimeUnitConverter.toTime(params.getTimeUnit(), params.getTimeWindowSize());
+
+    DataStream<Tuple2<Boolean, Map<String, Object>>> stream1 = messageStream[0].flatMap(new FlatMapFunction<Map<String, Object>, Tuple2<Boolean, Map<String, Object>>>() {
+      @Override
+      public void flatMap(Map<String, Object> in, Collector<Tuple2<Boolean, Map<String, Object>>> out) throws Exception {
+        out.collect(new Tuple2<>(true, in));
+      }
+    });
+
+    DataStream<Tuple2<Boolean, Map<String, Object>>> stream2 = messageStream[1].flatMap(new FlatMapFunction<Map<String, Object>, Tuple2<Boolean, Map<String, Object>>>() {
+      @Override
+      public void flatMap(Map<String, Object> in, Collector<Tuple2<Boolean, Map<String, Object>>> out) throws Exception {
+        out.collect(new Tuple2<>(false, in));
+      }
+    });
+
+    DataStream<Tuple2<Boolean, Map<String, Object>>> joinedStreams = stream2.union(stream1);
+
+
+    Pattern<Tuple2<Boolean, Map<String, Object>>, Tuple2<Boolean, Map<String, Object>>> matchedEvents =
+            Pattern.<Tuple2<Boolean, Map<String, Object>>>begin("start")
+                    .where(new SimpleCondition<Tuple2<Boolean, Map<String, Object>>>() {
+                      @Override
+                      public boolean filter(Tuple2<Boolean, Map<String, Object>> ride) throws Exception {
+                        return ride.f0;
+                      }
+                    })
+                    .next("end")
+                    .where(new SimpleCondition<Tuple2<Boolean, Map<String, Object>>>() {
+                      @Override
+                      public boolean filter(Tuple2<Boolean, Map<String, Object>> ride) throws Exception {
+                        return !ride.f0;
+                      }
+                    });
+
+    PatternStream<Tuple2<Boolean, Map<String, Object>>> patternStream = CEP.pattern(joinedStreams, matchedEvents.within(time));
+
+    OutputTag<Tuple2<Boolean, Map<String, Object>>> timedout = new OutputTag<Tuple2<Boolean, Map<String, Object>>>("timedout"){};
+
+    SingleOutputStreamOperator<Tuple2<Boolean, Map<String, Object>>> matched = patternStream.flatSelect(
+            timedout,
+            new TimedOut(),
+            new FlatSelectNothing<>()
+    );
+
+    return matched.getSideOutput(timedout).flatMap(new FlatMapFunction<Tuple2<Boolean, Map<String, Object>>, Map<String, Object>>() {
+      @Override
+      public void flatMap(Tuple2<Boolean, Map<String, Object>> in, Collector<Map<String, Object>> out) throws Exception {
+       out.collect(in.f1);
+      }
+    });
+  }
+
+  public static class TimedOut implements PatternFlatTimeoutFunction<Tuple2<Boolean, Map<String, Object>>, Tuple2<Boolean, Map<String, Object>>> {
+    @Override
+    public void timeout(Map<String, List<Tuple2<Boolean, Map<String, Object>>>> map, long l, Collector<Tuple2<Boolean, Map<String, Object>>> collector) throws Exception {
+      Tuple2<Boolean, Map<String, Object>> rideStarted = map.get("start").get(0);
+      collector.collect(rideStarted);
+    }
+  }
+
+  public static class FlatSelectNothing<T> implements PatternFlatSelectFunction<T, T> {
+    @Override
+    public void flatSelect(Map<String, List<T>> pattern, Collector<T> collector) {
+
+    }
   }
 }
