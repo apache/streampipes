@@ -16,11 +16,11 @@
  */
 package org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment;
 
-import org.streampipes.hmi.jvm.config.HmiJvmConfig;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
+import org.streampipes.processors.imageprocessing.jvm.config.ImageProcessingJvmConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -28,7 +28,7 @@ import org.streampipes.sdk.helpers.*;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-import static org.streampipes.hmi.jvm.processor.commons.RequiredBoxStream.IMAGE_PROPERTY;
+import static org.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.IMAGE_PROPERTY;
 
 public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer<ImageEnrichmentParameters> {
 
@@ -39,11 +39,8 @@ public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer
     return ProcessingElementBuilder.create("image-enricher", "Image Enricher", "Image Enrichment: Enriches an " +
             "image with " +
             "given bounding box coordinates")
-            .iconUrl(HmiJvmConfig.iconBaseUrl + "/image_enrich.png")
+            .iconUrl(ImageProcessingJvmConfig.iconBaseUrl + "/image_enrich.png")
             .category(DataProcessorType.FILTER)
-//            .iconUrl(PeJvmConfig.getIconUrl("Numerical_Filter_Icon_HQ")) //Hier?
-
-//            .requiredStream(RequiredBoxStream.getBoxStream())
             .requiredStream(getStreamRequirements())
 
             .outputStrategy(OutputStrategies.fixed(
