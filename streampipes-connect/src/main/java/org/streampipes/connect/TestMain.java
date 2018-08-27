@@ -48,6 +48,11 @@ public class TestMain {
 
     }
 
+
+    // http://localhost:8099/api/v1/riemer@fzi.de/master/adapters/
+
+    // http://localhost:8099/api/v1/master/adpaters/8d8dc565cf694dd78913df920d3023f4
+
     private static void deleteAdapter(String id) throws IOException {
         HttpDelete delete = new HttpDelete("http://localhost:8099/api/v1/riemer@fzi.de/master/adapters/" + id);
         Header headers[] = {
@@ -71,7 +76,7 @@ public class TestMain {
         for (StaticProperty property: protocolDescription.getConfig()) {
             if (property.getInternalName().equals("broker_url")) {
                 ((FreeTextStaticProperty)property).setValue("ipe-koi04.fzi.de:9092");
-            }
+        }
 
             if (property.getInternalName().equals("topic")) {
                 ((FreeTextStaticProperty)property).setValue("org.streampipes.examples.waterlevel");

@@ -25,9 +25,10 @@ import org.streampipes.connect.management.master.SourcesManagement;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.client.messages.Notifications;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 import org.streampipes.rest.shared.annotation.JsonLdSerialized;
 import org.streampipes.rest.shared.util.SpMediaType;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -49,6 +50,41 @@ public class SourcesResource extends AbstractContainerResource {
     public SourcesResource(String connectContainerBaseUrl) {
         this.connectContainerBaseUrl = connectContainerBaseUrl;
     }
+
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @GsonWithIds
+    @Path("/")
+    public Response getAllAdaptersInstallDescription(@PathParam("username") String username) {
+
+        try {
+            String resultingJson = this.sourcesManagement.getAllAdaptersInstallDescription(username);
+            return ok(resultingJson);
+        } catch (AdapterException e) {
+            logger.error("Error while getting all adapter descriptions", e);
+            return fail();
+        }
+    }
+
+
+
+    @GET
+    @Path("/{id}")
+    @JsonLdSerialized
+    @Produces(SpMediaType.JSONLD)
+    public Response getAdapterDataSource(@PathParam("id") String id) {
+
+        try {
+            DataSourceDescription result = this.sourcesManagement.getAdapterDataSource(id);
+            return ok(result);
+        } catch (AdapterException e) {
+            logger.error("Error while retrieving DataSourceDescription with id: " + id);
+            return fail();
+        }
+    }
+
+
 
     @POST
     @JsonLdSerialized

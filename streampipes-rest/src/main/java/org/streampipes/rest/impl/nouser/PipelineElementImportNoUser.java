@@ -17,6 +17,8 @@
 
 package org.streampipes.rest.impl.nouser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.manager.endpoint.EndpointItemParser;
 import org.streampipes.manager.storage.UserService;
 import org.streampipes.model.client.messages.Message;
@@ -35,6 +37,9 @@ import java.net.URISyntaxException;
 
 @Path("/v2/noauth/users/{username}/element")
 public class PipelineElementImportNoUser extends AbstractRestInterface {
+
+	private static final Logger logger = LoggerFactory.getLogger(PipelineElementImportNoUser.class);
+
 	@Context
 	UriInfo uri;
 
@@ -43,6 +48,7 @@ public class PipelineElementImportNoUser extends AbstractRestInterface {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addElement(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement)
     {
+    	logger.info("User " + username + " adds element with URI: " + uri);
         return ok(verifyAndAddElement(uri, username, publicElement));
     }
 

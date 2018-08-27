@@ -48,7 +48,7 @@ public class AdapterResource extends AbstractContainerResource {
 
     public AdapterResource() {
         this.adapterMasterManagement = new AdapterMasterManagement();
-        this.connectContainerEndpoint = ConnectContainerConfig.INSTANCE.getConnectContainerUrl();
+        this.connectContainerEndpoint = ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl();
     }
 
     public AdapterResource(String connectContainerEndpoint) {
