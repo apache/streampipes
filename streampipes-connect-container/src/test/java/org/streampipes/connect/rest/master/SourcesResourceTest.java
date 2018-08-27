@@ -19,6 +19,7 @@ package org.streampipes.connect.rest.master;
 
 
 import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.response.Response;
 import org.eclipse.jetty.server.Server;
 import org.junit.After;
 import org.junit.Before;
@@ -28,14 +29,17 @@ import org.streampipes.connect.init.Config;
 import org.streampipes.connect.management.master.SourcesManagement;
 import org.streampipes.connect.utils.ConnectContainerResourceTest;
 import org.streampipes.model.SpDataSet;
+import org.streampipes.model.connect.grounding.FormatDescriptionList;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 
-//@RunWith(PowerMockRunner.class)
-//@PrepareForTest({ WorkerRestClient.class })
 public class SourcesResourceTest extends ConnectContainerResourceTest {
 
     @Override
@@ -52,7 +56,6 @@ public class SourcesResourceTest extends ConnectContainerResourceTest {
 
     @Before
     public  void before() {
-//        PowerMockito.mockStatic(WorkerRestClient.class);
         Config.MASTER_PORT = 8019;
         RestAssured.port = 8019;
 
@@ -68,6 +71,76 @@ public class SourcesResourceTest extends ConnectContainerResourceTest {
             e.printStackTrace();
         }
     }
+
+
+    @Test
+    public void getAllAdaptersInstallDescriptionSuccess() throws Exception {
+        SourcesManagement sourcesManagement = mock(SourcesManagement.class);
+        when(sourcesManagement.getAllAdaptersInstallDescription(anyString())).thenReturn("test");
+        sourcesResource.setSourcesManagement(sourcesManagement);
+
+        Response response = given().contentType("application/json")
+                .when()
+                .get(getApi() + "/");
+
+        response.then()
+                .statusCode(200);
+
+        String resultString = response.body().print();
+
+
+        assertEquals("test", resultString);
+
+    }
+
+    @Test
+    public void getAllAdaptersInstallDescriptionFail() throws Exception {
+        SourcesManagement sourcesManagement = mock(SourcesManagement.class);
+        doThrow(new AdapterException()).when(sourcesManagement).getAllAdaptersInstallDescription(anyString());
+        sourcesResource.setSourcesManagement(sourcesManagement);
+
+        given().contentType("application/json")
+                .when()
+                .get(getApi() + "/")
+                .then()
+                .statusCode(500);
+    }
+
+    @Test
+    public void getAdapterDataSourceSuccess() throws AdapterException {
+        DataSourceDescription dataSourceDescription = new DataSourceDescription("http://a.d", "a", "");
+        SourcesManagement sourcesManagement = mock(SourcesManagement.class);
+        when(sourcesManagement.getAdapterDataSource(anyString())).thenReturn(dataSourceDescription);
+        sourcesResource.setSourcesManagement(sourcesManagement);
+
+        Response response = given().contentType("application/json")
+                .when()
+                .get(getApi() + "/1234");
+
+        response.then()
+                .statusCode(200);
+
+        String resultString = response.body().print();
+
+        DataSourceDescription result = JsonLdUtils.fromJsonLd(resultString, DataSourceDescription.class);
+
+        assertEquals(dataSourceDescription.getUri(), result.getUri());
+        assertEquals(dataSourceDescription.getName(), result.getName());
+    }
+
+    @Test
+    public void getAdapterDataSourceFail() throws AdapterException {
+        SourcesManagement sourcesManagement = mock(SourcesManagement.class);
+        doThrow(new AdapterException()).when(sourcesManagement).getAdapterDataSource(anyString());
+        sourcesResource.setSourcesManagement(sourcesManagement);
+
+        given().contentType("application/json")
+                .when()
+                .get(getApi() + "/1234")
+                .then()
+                .statusCode(500);
+    }
+
 
     @Test
     public void addAdapterSuccess() throws Exception {

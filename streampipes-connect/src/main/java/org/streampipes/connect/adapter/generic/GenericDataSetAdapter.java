@@ -26,10 +26,7 @@ import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
 import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
 import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
@@ -38,7 +35,7 @@ import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenericDataSetAdapter extends Adapter {
+public class GenericDataSetAdapter extends GenericAdapter {
 
     public static final String ID = GenericAdapterSetDescription.ID;
 
@@ -79,40 +76,6 @@ public class GenericDataSetAdapter extends Adapter {
     }
 
     @Override
-    public void startAdapter()  throws AdapterException {
-
-
-        Parser parser = AdapterRegistry.getAllParsers().get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
-        Format format = AdapterRegistry.getAllFormats().get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
-
-        protocol = AdapterRegistry.getAllProtocols().get(adapterDescription.getProtocolDescription().getUri()).getInstance(adapterDescription.getProtocolDescription(), parser, format);
-
-        logger.debug("Start adatper with format: " + format.getId() + " and " + protocol.getId());
-
-
-        List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
-        pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getRules()));
-        pipelineElements.add(new SendToKafkaAdapterSink(this.adapterDescription));
-
-        AdapterPipeline adapterPipeline = new AdapterPipeline(pipelineElements);
-
-        protocol.run(adapterPipeline);
-    }
-
-
-    public GuessSchema getSchema(AdapterDescription adapterDescription) {
-//        Parser parser = AdapterRegistry.getAllParsers().get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
-//        Format format = AdapterRegistry.getAllFormats().get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
-//
-//        Protocol protocol = AdapterRegistry.getAllProtocols().get(adapterDescription.getProtocolDescription().getUri()).getInstance(adapterDescription.getProtocolDescription(), parser, format);
-//
-//        logger.debug("Extract schema with format: " + format.getId() + " and " + protocol.getId());
-//
-//        return protocol.getGuessSchema();
-        return null;
-    }
-
-    @Override
     public String getId() {
         return ID;
     }
@@ -121,7 +84,13 @@ public class GenericDataSetAdapter extends Adapter {
         protocol.stop();
     }
 
-    public AdapterDescription getAdapterDescription() {
+    @Override
+    public GenericAdapterDescription getAdapterDescription() {
         return adapterDescription;
+    }
+
+    @Override
+    public void setProtocol(Protocol protocol) {
+       this.protocol = protocol;
     }
 }

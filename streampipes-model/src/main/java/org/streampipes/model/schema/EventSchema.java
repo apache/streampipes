@@ -17,6 +17,7 @@
 
 package org.streampipes.model.schema;
 
+import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.UnnamedStreamPipesEntity;
@@ -31,6 +32,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
+@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass(StreamPipes.EVENT_SCHEMA)
 @Entity
 public class EventSchema extends UnnamedStreamPipesEntity {

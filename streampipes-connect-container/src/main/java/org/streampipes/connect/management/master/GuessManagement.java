@@ -17,13 +17,26 @@
 
 package org.streampipes.connect.management.master;
 
+import org.streampipes.connect.adapter.Adapter;
+import org.streampipes.connect.adapter.AdapterRegistry;
+import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
+
+import java.util.Arrays;
 
 public class GuessManagement {
 
-    public GuessSchema guessSchema(AdapterDescription adapterDescription) {
-        return null;
+    public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException {
+
+        Adapter adapter = AdapterRegistry.getAdapter(adapterDescription);
+
+        GuessSchema guessSchema = adapter.getSchema(adapterDescription);
+
+        return guessSchema;
+
     }
 
     public void guessFormat() {

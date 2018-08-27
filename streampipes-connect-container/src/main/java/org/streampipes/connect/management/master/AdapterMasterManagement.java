@@ -70,13 +70,15 @@ public class AdapterMasterManagement {
            }
         }
 
-        String backendBaseUrl = "http://" + BackendConfig.INSTANCE.getBackendHost() + ":" + "8030" + "/streampipes-backend/api/v2/";
+        // TODO improve logging messages
+        // Fix element URL
+
+        String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() +"api/v2/";
         String userName = ad.getUserName();
         String requestUrl = backendBaseUrl +  "noauth/users/" + userName + "/element";
-        logger.info("Request URL: " + requestUrl);
+        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerUrl() + "api/v1/" + userName + "/master/sources/" + adapterCouchdbId;
 
-        String elementUrl = backendBaseUrl + "adapter/all/" + adapterCouchdbId;
-        logger.info("Element URL: " + elementUrl);
+        logger.info("Install source (source URL: " + elementUrl +" in backend over URL: " + requestUrl);
 
         installDataSource(requestUrl, elementUrl);
 
@@ -109,7 +111,7 @@ public class AdapterMasterManagement {
 
         if (allAdapters != null) {
             for (AdapterDescription ad : allAdapters) {
-                if (ad.getUri().equals(id)) {
+                if (ad.getId().equals(id)) {
                     return ad;
                 }
             }
@@ -131,7 +133,7 @@ public class AdapterMasterManagement {
 
         adapterStorage.deleteAdapter(id);
 
-        String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "/api/v2/noauth/users/"+ username + "/element/";
+        String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/noauth/users/"+ username + "/element/";
         backendBaseUrl = backendBaseUrl + id;
         deleteDataSource(backendBaseUrl);
 

@@ -35,14 +35,28 @@ public enum ConnectContainerConfig {
     config.register(ConfigKeys.KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
     config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");
 
-    config.register(ConfigKeys.CONNECT_CONTAINER_PORT, Config.WORKER_PORT, "The port of the connect container");
+    config.register(ConfigKeys.CONNECT_CONTAINER_PORT, Config.MASTER_PORT, "The port of the connect container");
     config.register(ConfigKeys.CONNECT_CONTAINER_HOST, "localhost", "The hostname of the connect container");
+
+    config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT, Config.WORKER_PORT, "The port of the connect container");
+    config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST, "localhost", "The hostname of the connect container");
   }
 
   public String getBackendApiUrl() {
     return config.getString(ConfigKeys.BACKEND_HOST) + ":" + config.getInteger(ConfigKeys.BACKEND_PORT) + "/streampipes-backend/";
   }
 
+  public String getConnectContainerWorkerUrl() {
+    return "http://" + config.getString(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST) + ":" + config.getInteger(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT) + "/";
+  }
+
+  public String getBackendHost() {
+    return config.getString(ConfigKeys.BACKEND_HOST);
+  }
+
+  public int getBackendPort() {
+    return config.getInteger(ConfigKeys.BACKEND_PORT);
+  }
 
   public String getKafkaHost() {
     return config.getString(ConfigKeys.KAFKA_HOST);
