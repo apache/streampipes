@@ -26,6 +26,7 @@
         <module>streampipes-sources-random-data-generator</module>
         <module>streampipes-sinks-notifications-jvm</module>
         <module>streampipes-pipeline-elements-shared</module>
+        <module>streampipes-processors-geo-flink</module>
     </modules>
 
     <properties>

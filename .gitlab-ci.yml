@@ -151,6 +151,11 @@ docker-processors-statistics-flink:
     variables:
       CONTAINER_NAME: "processors-statistics-flink"
 
+docker-processors-geo-flink:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-geo-flink"
+
 docker-processors-transformation-flink:
     <<: *docker_script
     variables:
