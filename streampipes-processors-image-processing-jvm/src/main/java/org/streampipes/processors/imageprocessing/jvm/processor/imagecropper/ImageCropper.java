@@ -16,9 +16,9 @@
  */
 package org.streampipes.processors.imageprocessing.jvm.processor.imagecropper;
 
-import org.streampipes.hmi.jvm.processor.commons.ImageTransformer;
-import org.streampipes.hmi.jvm.processor.imageenrichment.BoxCoordinates;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.processors.imageprocessing.jvm.processor.commons.ImageTransformer;
+import org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.BoxCoordinates;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
 
