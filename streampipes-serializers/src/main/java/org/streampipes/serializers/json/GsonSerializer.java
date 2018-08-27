@@ -42,12 +42,15 @@ import java.net.URI;
 
 public class GsonSerializer {
 
-  public static Gson getAdapterGson() {
+  public static GsonBuilder getAdapterGsonBuilder() {
     GsonBuilder builder = getGsonBuilder();
     builder.registerTypeHierarchyAdapter(AdapterDescription.class, new AdapterSerializer());
 
-    return builder.create();
+    return builder;
+  }
 
+  public static Gson getAdapterGson() {
+    return getAdapterGsonBuilder().create();
   }
 
   // TODO reuse getGsonBuilder
