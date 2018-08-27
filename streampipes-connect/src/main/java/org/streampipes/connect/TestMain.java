@@ -35,7 +35,6 @@ import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 public class TestMain {
 
