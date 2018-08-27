@@ -1,39 +1,45 @@
 .outer-box {
-    flex-direction: column;
-    flex: 1;
-    display: flex;
-    height: 100%;
-    border: 3px solid grey;
-    padding: 5px;
-    cursor: pointer;
+  flex-direction: column;
+  flex: 1;
+  display: flex;
+  height: 100%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  cursor: pointer;
+  padding: 10px;
 }
 .header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 .type {
-    flex-direction: column;
+  flex-direction: column;
 }
 .type p {
-    display: inline-block;
-    padding: 4px;
-    border-radius: 40%;
-    margin: 0;
+  display: inline-block;
+  padding: 4px;
+  border-radius: 40%;
+  margin: 0;
 }
 .iconImg {
-    width: 40px;
-    height: 40px;
+  height: 40px;
+  margin-right: 15px;
 }
 .historic {
-    background-color: orange;
+  cursor: pointer;
+  color: orange;
 }
 .real-time {
-    background-color: yellow;
+  cursor: pointer;
+  color: yellow;
 }
 .description {
-    display: flex;
-    flex: 1 0 auto;
-
+  display: flex;
+  flex: 1 0 auto;
+}
+.type-data {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
