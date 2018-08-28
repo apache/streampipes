@@ -64,7 +64,7 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
             PeConfig peConfig = new PeConfig();
 
             for(ConfigItem configItem: configItems) {
-                if(configItem.getKey().equals("SP_SERVICE_NAME")) {
+                if(configItem.getKey().endsWith("SP_SERVICE_NAME")) {
                     configItems.remove(configItem);
                     peConfig.setName(configItem.getValue());
                     break;
@@ -87,8 +87,8 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
     @GsonWithIds
     @Override
     public Response saveServiceConfig(PeConfig peConfig) {
-         LOG.info("Request to update a service config");
-         for (ConfigItem configItem: peConfig.getConfigs()) {
+        LOG.info("Request to update a service config");
+        for (ConfigItem configItem: peConfig.getConfigs()) {
             String value = configItem.getValue();
             switch (configItem.getValueType()) {
                 case "xs:boolean":
@@ -127,10 +127,10 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
 
         for (ConfigItem configItem: peConfig.getConfigs()) {
             updateConfig(prefix + "/" + configItem.getKey(),
-                            configItem.getValue(),
-                            configItem.getValueType(),
-                            configItem.getDescription(),
-                            configItem.isPassword());
+                    configItem.getValue(),
+                    configItem.getValueType(),
+                    configItem.getDescription(),
+                    configItem.isPassword());
         }
         return Response.status(Response.Status.OK).build();
     }
@@ -145,43 +145,16 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
         return Response.status(Response.Status.OK).build();
     }
 
-    private List<ConfigItem> getConfigForService(String serviceId) {
+    public List<ConfigItem> getConfigForService(String serviceId) {
         Map<String, String> keyValues = ConsulUtil.getKeyValue(ConsulSpConfig.SERVICE_ROUTE_PREFIX + serviceId);
 
         List<ConfigItem> configItems = new LinkedList<>();
 
         for(Map.Entry<String, String> entry : keyValues.entrySet()) {
-            String key = entry.getKey();
-            if(!key.endsWith("_description") && !key.endsWith("_type") && !key.endsWith("_isPassword")) {
-                ConfigItem configItem = new ConfigItem();
+            ConfigItem configItem = new Gson().fromJson(entry.getValue(), ConfigItem.class);
+            configItem.setKey(entry.getKey());
 
-                String[] splittedKey = entry.getKey().split("/");
-                String shortKey = splittedKey[splittedKey.length - 1];
-
-                configItem.setKey(shortKey);
-
-                String isPasswordKey = key + "_isPassword";
-                if(keyValues.containsKey(isPasswordKey)) {
-                    if(keyValues.get(isPasswordKey).equals("true")) {
-                        configItem.setPassword(true);
-                        configItem.setValue("");
-                    }
-                }
-                if(!configItem.isPassword())
-                    configItem.setValue(entry.getValue());
-
-                String descriptionKey = key + "_description";
-                if(keyValues.containsKey(descriptionKey)) {
-                    configItem.setDescription(keyValues.get(descriptionKey));
-                }
-
-                String typeKey = key + "_type";
-                if(keyValues.containsKey(typeKey)) {
-                    configItem.setValueType(keyValues.get(typeKey));
-                }
-
-                configItems.add(configItem);
-            }
+            configItems.add(configItem);
         }
         return configItems;
     }
