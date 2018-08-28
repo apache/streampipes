@@ -27,4 +27,8 @@ public class ImageRectificationParameters extends EventProcessorBindingParams {
     super(graph);
     this.imageProperty = imageProperty;
   }
+
+  public String getImageProperty() {
+    return imageProperty;
+  }
 }

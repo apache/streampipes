@@ -36,7 +36,7 @@ public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("image-enricher", "Image Enricher", "Image Enrichment: Enriches an " +
+    return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.jvm.image-enricher", "Image Enricher", "Image Enrichment: Enriches an " +
             "image with " +
             "given bounding box coordinates")
             .iconUrl(ImageProcessingJvmConfig.iconBaseUrl + "/image_enrich.png")

@@ -36,10 +36,12 @@ public class GenericImageClassificationController extends StandaloneEventProcess
     return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.jvm.generic-image-classification", "Generic Image Classification", "Image " +
             "Classification Description (Generic Model)")
             .category(DataProcessorType.FILTER)
-            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
-                            .domainPropertyReq("https://image.com"), Labels.from(IMAGE, "Image Classification", ""),
-                    PropertyScope.NONE).build())
-
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements
+                                    .domainPropertyReq("https://image.com"), Labels.from(IMAGE, "Image Classification", ""),
+                            PropertyScope.NONE)
+                    .build())
             .outputStrategy(OutputStrategies.fixed(
                     EpProperties.doubleEp(Labels.empty(), "score", "https://schema.org/score"),
                     EpProperties.stringEp(Labels.empty(), "category", "https://schema.org/category")

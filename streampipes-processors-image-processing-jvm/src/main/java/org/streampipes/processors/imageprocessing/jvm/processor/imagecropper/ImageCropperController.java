@@ -33,6 +33,22 @@ import static org.streampipes.processors.imageprocessing.jvm.processor.commons.R
 
 public class ImageCropperController extends StandaloneEventProcessingDeclarer<ImageCropperParameters> {
 
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.jvm.image-cropper", "Image Cropper", "Image Enrichment: Crops an " +
+            "image based on " +
+            "given bounding box coordinates")
+            .iconUrl(ImageProcessingJvmConfig.iconBaseUrl + "/crop.png")
+            .category(DataProcessorType.FILTER)
+            .requiredStream(RequiredBoxStream.getBoxStream())
+            .outputStrategy(OutputStrategies.fixed(
+                    EpProperties.stringEp(Labels.empty(), "image", "https://image.com")
+
+            ))
+            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .build();
+  }
 
   @Override
   public ConfiguredEventProcessor<ImageCropperParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation) {
@@ -50,20 +66,4 @@ public class ImageCropperController extends StandaloneEventProcessingDeclarer<Im
     return new ConfiguredEventProcessor<>(params, () -> new ImageCropper(params));
   }
 
-  @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("image-cropper", "Image Cropper", "Image Enrichment: Crops an " +
-            "image based on " +
-            "given bounding box coordinates")
-            .iconUrl(ImageProcessingJvmConfig.iconBaseUrl + "/crop.png")
-            .category(DataProcessorType.FILTER)
-            .requiredStream(RequiredBoxStream.getBoxStream())
-            .outputStrategy(OutputStrategies.fixed(
-                    EpProperties.stringEp(Labels.empty(), "image", "https://image.com")
-
-            ))
-            .supportedProtocols(SupportedProtocols.kafka())
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .build();
-  }
 }

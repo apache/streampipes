@@ -32,19 +32,8 @@ import static org.streampipes.processors.imageprocessing.jvm.processor.commons.R
 public class ImageRectificationController extends StandaloneEventProcessingDeclarer<ImageRectificationParameters> {
 
   @Override
-  public ConfiguredEventProcessor<ImageRectificationParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(dataProcessorInvocation);
-
-    String imagePropertyName = extractor.mappingPropertyValue(IMAGE_PROPERTY);
-
-    ImageRectificationParameters params = new ImageRectificationParameters(dataProcessorInvocation, imagePropertyName);
-
-    return new ConfiguredEventProcessor<>(params, () -> new ImageRectifier(params));
-  }
-
-  @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("image-rectifier", "Image Rectifier", "Image Rectification: Rectifies " +
+    return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.image-rectifier", "Image Rectifier", "Image Rectification: Rectifies " +
             "an image")
             .category(DataProcessorType.FILTER)
             .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
@@ -56,4 +45,16 @@ public class ImageRectificationController extends StandaloneEventProcessingDecla
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }
+
+  @Override
+  public ConfiguredEventProcessor<ImageRectificationParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation) {
+    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(dataProcessorInvocation);
+
+    String imagePropertyName = extractor.mappingPropertyValue(IMAGE_PROPERTY);
+
+    ImageRectificationParameters params = new ImageRectificationParameters(dataProcessorInvocation, imagePropertyName);
+
+    return new ConfiguredEventProcessor<>(params, () -> new ImageRectifier(params));
+  }
+
 }

@@ -33,17 +33,6 @@ import static org.streampipes.processors.imageprocessing.jvm.processor.commons.R
 public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<QrCodeReaderParameters> {
 
   @Override
-  public ConfiguredEventProcessor<QrCodeReaderParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(dataProcessorInvocation);
-
-    String imagePropertyName = extractor.mappingPropertyValue(IMAGE_PROPERTY);
-
-    QrCodeReaderParameters params = new QrCodeReaderParameters(dataProcessorInvocation, imagePropertyName);
-
-    return new ConfiguredEventProcessor<>(params, () -> new QrCodeReader(params));
-  }
-
-  @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("qr-code-reader", "QR Code Reader", ("QR Code Reader: Detects a QR Code " +
             "in an image"))
@@ -62,4 +51,16 @@ public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<Qr
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }
+
+  @Override
+  public ConfiguredEventProcessor<QrCodeReaderParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation) {
+    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(dataProcessorInvocation);
+
+    String imagePropertyName = extractor.mappingPropertyValue(IMAGE_PROPERTY);
+
+    QrCodeReaderParameters params = new QrCodeReaderParameters(dataProcessorInvocation, imagePropertyName);
+
+    return new ConfiguredEventProcessor<>(params, () -> new QrCodeReader(params));
+  }
+
 }

@@ -57,43 +57,20 @@ public class ImageEnrichmentParameters extends EventProcessorBindingParams {
     return boxArray;
   }
 
-  public void setImageProperty(String imageProperty) {
-    this.imageProperty = imageProperty;
-  }
-
-  public void setBoxArray(String boxArray) {
-    this.boxArray = boxArray;
-  }
-
   public String getBoxWidth() {
     return boxWidth;
-  }
-
-  public void setBoxWidth(String boxWidth) {
-    this.boxWidth = boxWidth;
   }
 
   public String getBoxHeight() {
     return boxHeight;
   }
 
-  public void setBoxHeight(String boxHeight) {
-    this.boxHeight = boxHeight;
-  }
-
   public String getBoxX() {
     return boxX;
-  }
-
-  public void setBoxX(String boxX) {
-    this.boxX = boxX;
   }
 
   public String getBoxY() {
     return boxY;
   }
 
-  public void setBoxY(String boxY) {
-    this.boxY = boxY;
-  }
 }
