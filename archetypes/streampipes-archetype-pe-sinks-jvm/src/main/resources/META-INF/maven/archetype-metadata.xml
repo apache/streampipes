@@ -28,7 +28,7 @@
         <requiredProperty key="classNamePrefix">
             <defaultValue>Example</defaultValue>
         </requiredProperty>
-        <requiredProperty key="elementName">
+        <requiredProperty key="packageName">
             <defaultValue>example</defaultValue>
         </requiredProperty>
     </requiredProperties>

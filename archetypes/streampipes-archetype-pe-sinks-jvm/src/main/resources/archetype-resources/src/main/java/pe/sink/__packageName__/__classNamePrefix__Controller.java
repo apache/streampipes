@@ -1,19 +1,19 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
-package ${package}.pe.${elementName};
+package ${package}.pe.sink.${packageName};
 
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sdk.builder.DataSinkBuilder;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
-import org.streampipes.wrapper.runtime.EventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class ${classNamePrefix}Controller extends StandaloneEventSinkDeclarer<${classNamePrefix}Parameters> {
@@ -22,12 +22,16 @@ public class ${classNamePrefix}Controller extends StandaloneEventSinkDeclarer<${
 
 	@Override
 	public DataSinkDescription declareModel() {
-		return DataSinkBuilder.create("${package}-${elementName}", "${classNamePrefix}", "Description")
+		return DataSinkBuilder.create("${package}-${packageName}", "${classNamePrefix}", "Description")
 						.category(DataSinkType.NOTIFICATION)
-						.requiredPropertyStream1(EpRequirements.anyProperty())
+						.requiredStream(StreamRequirementsBuilder
+							.create()
+							.requiredProperty(EpRequirements.anyProperty())
+							.build())
 						.supportedFormats(SupportedFormats.jsonFormat())
 						.supportedProtocols(SupportedProtocols.kafka())
-						.requiredTextParameter(EXAMPLE_KEY, "Example Text Parameter", "Example Text Parameter Description")
+						.requiredTextParameter(Labels.from(EXAMPLE_KEY, "Example Text Parameter", "Example " +
+				"Text Parameter Description"))
 						.build();
 	}
 
@@ -39,7 +43,7 @@ public class ${classNamePrefix}Controller extends StandaloneEventSinkDeclarer<${
 
 		${classNamePrefix}Parameters params = new ${classNamePrefix}Parameters(graph, exampleString);
 
-		return new ConfiguredEventSink<>(params, ${classNamePrefix}::new);
+		return new ConfiguredEventSink<>(params, () -> new ${classNamePrefix}:(params));
 	}
 
 }

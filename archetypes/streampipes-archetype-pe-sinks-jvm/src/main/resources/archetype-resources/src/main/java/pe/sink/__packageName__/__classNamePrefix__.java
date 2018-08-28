@@ -2,15 +2,22 @@
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
 
-package ${package}.pe.${elementName};
+package ${package}.pe.sink.${packageName};
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.wrapper.runtime.EventSink;
 
-import java.util.Date;
+import org.slf4j.Logger;
+
 import java.util.Map;
 
-public class ${classNamePrefix} implements EventSink<${classNamePrefix}Parameters> {
+public class ${classNamePrefix} extends EventSink<${classNamePrefix}Parameters> {
+
+private static Logger LOG;
+
+  public ${classNamePrefix}(${classNamePrefix}Parameters params) {
+        super(params);
+  }
 
   @Override
   public void bind(${classNamePrefix}Parameters parameters) throws SpRuntimeException {

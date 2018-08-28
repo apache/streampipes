@@ -7,13 +7,33 @@
     <version>${version}</version>
 
     <properties>
-        <sp.version>0.51.2-SNAPSHOT</sp.version>
+        <sp.version>0.55.3-SNAPSHOT</sp.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-commons</artifactId>
+            <artifactId>streampipes-wrapper-standalone</artifactId>
+            <version>${sp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-sdk</artifactId>
+            <version>${sp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-container-standalone</artifactId>
+            <version>${sp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-config</artifactId>
+            <version>${sp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-json</artifactId>
             <version>${sp.version}</version>
         </dependency>
         <dependency>
@@ -24,31 +44,6 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-jms</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-dataformat-json</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-wrapper-standalone</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-container-standalone</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-sdk</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-config</artifactId>
             <version>${sp.version}</version>
         </dependency>
     </dependencies>

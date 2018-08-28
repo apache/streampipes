@@ -3,34 +3,21 @@
 #set( $symbol_escape = '\' )
 package ${package}.config;
 
-
 import org.streampipes.config.SpConfig;
 import org.streampipes.container.model.PeConfig;
+
+import static ${package}.config.ConfigKeys.*;
 
 public enum Config implements PeConfig {
 
   INSTANCE;
 
   private SpConfig config;
-  private final static String HOST = "host";
-  private final static String PORT = "port";
-  private final static String KAFKA_HOST = "kafka_host";
-  private final static String KAFKA_PORT = "kafka_port";
-  private final static String ZOOKEEPER_HOST = "zookeeper_host";
-  private final static String ZOOKEEPER_PORT = "zookeeper_port";
-  private final static String JMS_HOST = "jms_host";
-  private final static String JMS_PORT = "jms_port";
-  private final static String NGINX_HOST = "nginx_host";
-  private final static String NGINX_PORT = "nginx_port";
-  private final static String ICON_HOST = "icon_host";
-  private final static String ICON_PORT = "icon_port";
-
 
   public final static String serverUrl;
   public final static String iconBaseUrl;
 
   private final static String SERVICE_ID= "pe/${package}";
-  private final static String SERVICE_NAME = "service_name";
 
   Config() {
     config = SpConfig.getSpConfig("pe/${package}");
