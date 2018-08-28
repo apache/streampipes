@@ -492,6 +492,7 @@
         <module>streampipes-logging</module>
         <module>archetypes/streampipes-archetype-pe-sources</module>
         <module>archetypes/streampipes-archetype-pe-sinks-jvm</module>
+        <module>archetypes/streampipes-archetype-pe-processors-jvm</module>
         <module>streampipes-connect-container</module>
         <module>streampipes-test-utils</module>
         <module>streampipes-wrapper-siddhi</module>

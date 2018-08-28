@@ -7,10 +7,10 @@
         <version>0.55.3-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>streampipes-archetype-pe-sinks-jvm</artifactId>
+    <artifactId>streampipes-archetype-pe-processors-jvm</artifactId>
     <packaging>maven-archetype</packaging>
 
-    <name>streampipes-archetype-pe-sinks-jvm</name>
+    <name>streampipes-archetype-pe-processors-jvm</name>
 
     <build>
         <extensions>
@@ -33,7 +33,7 @@
 
     <scm>
         <developerConnection>
-            scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce-backend.git/archetypes/streampipes-archetype-pe-sinks-jvm
+            scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce-backend.git/archetypes/streampipes-archetype-pe-processors-jvm
         </developerConnection>
     </scm>
 
