@@ -126,10 +126,7 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
         String prefix = peConfig.getMainKey();
 
         for (ConfigItem configItem: peConfig.getConfigs()) {
-            updateConfig(prefix + "/" + configItem.getKey(),
-                    configItem.getValue(),
-                    configItem.getValueType(),
-                    configItem.getDescription(),
+            updateConfig(configItem.getKey(), new Gson().toJson(configItem),
                     configItem.isPassword());
         }
         return Response.status(Response.Status.OK).build();
