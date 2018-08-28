@@ -1,14 +1,14 @@
-## StreamPipes Maven Archetype for Standalone Sinks
+## StreamPipes Maven Archetype for Flink-based Data Processors
 
 ### Usage
 
 mvn archetype:generate                                  \
 			-DarchetypeGroupId=org.streampipes                \
-			-DarchetypeArtifactId=streampipes-archetype-pe-sinks-jvm          \
+			-DarchetypeArtifactId=streampipes-archetype-pe-processors-flink          \
 			-DarchetypeVersion=0.55.3-SNAPSHOT                \
 			-DgroupId=my.test.groupId \
 			-DartifactId=my-test-artifact-id
-			-DclassNamePrefix=MySink
+			-DclassNamePrefix=MyProcessor
 			-DpackageName=mypackagename
 			
 ### Variables

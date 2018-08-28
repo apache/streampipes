@@ -5,7 +5,7 @@
 mvn archetype:generate                                  \
 			-DarchetypeGroupId=org.streampipes                \
 			-DarchetypeArtifactId=streampipes-archetype-pe-processors-jvm          \
-			-DarchetypeVersion=0.0.1-SNAPSHOT                \
+			-DarchetypeVersion=0.55.3-SNAPSHOT               \
 			-DgroupId=my.test.groupId \
 			-DartifactId=my-test-artifact-id
 			-DclassNamePrefix=MyProcessor
