@@ -28,6 +28,7 @@
         <module>streampipes-pipeline-elements-shared</module>
         <module>streampipes-processors-geo-flink</module>
         <module>streampipes-processors-image-processing-jvm</module>
+        <module>streampipes-processors-transformation-jvm</module>
     </modules>
 
     <properties>

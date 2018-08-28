@@ -166,6 +166,11 @@ docker-processors-transformation-flink:
     variables:
       CONTAINER_NAME: "processors-transformation-flink"
 
+docker-processors-transformation-jvm:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-transformation-jvm"
+
 docker-sinks-brokers-jvm:
     <<: *docker_script
     variables:
