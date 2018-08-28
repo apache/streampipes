@@ -18,17 +18,15 @@
 package org.streampipes.processors.imageprocessing.jvm.config;
 
 
+import static org.streampipes.processors.imageprocessing.jvm.config.ConfigKeys.*;
+
 import org.streampipes.config.SpConfig;
 import org.streampipes.container.model.PeConfig;
-
-import static org.apache.kafka.common.security.JaasUtils.SERVICE_NAME;
-import static org.streampipes.processors.imageprocessing.jvm.config.ConfigKeys.*;
 
 public enum ImageProcessingJvmConfig implements PeConfig {
 	INSTANCE;
 
 	private SpConfig config;
-
 
 	public final static String serverUrl;
 	public final static String iconBaseUrl;
@@ -138,7 +136,7 @@ public enum ImageProcessingJvmConfig implements PeConfig {
 
 	@Override
 	public String getName() {
-		return config.getString(SERVICE_NAME);
+		return config.getString(SERVICE_NAME_KEY);
 	}
 
 
