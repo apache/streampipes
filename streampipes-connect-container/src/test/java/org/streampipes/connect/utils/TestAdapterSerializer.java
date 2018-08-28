@@ -57,14 +57,14 @@ public class TestAdapterSerializer {
     System.out.println(serialized);
   }
 
-  @Test
-  public void testCouchDbSerialization() {
-    GenericAdapterStreamDescription desc = new GenericAdapterStreamDescription();
-
-    new AdapterStorageImpl().storeAdapter(desc);
-
-    AdapterDescription deserialized = new AdapterStorageImpl().getAllAdapters().get(0);
-    System.out.println(deserialized.getAdapterId());
-  }
+//  @Test
+//  public void testCouchDbSerialization() {
+//    GenericAdapterStreamDescription desc = new GenericAdapterStreamDescription();
+//
+//    new AdapterStorageImpl().storeAdapter(desc);
+//
+//    AdapterDescription deserialized = new AdapterStorageImpl().getAllAdapters().get(0);
+//    System.out.println(deserialized.getAdapterId());
+//  }
   
 }

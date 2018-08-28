@@ -109,9 +109,9 @@ public class AdapterMasterManagement {
 
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
 
-        if (allAdapters != null) {
+        if (allAdapters != null && id != null) {
             for (AdapterDescription ad : allAdapters) {
-                if (ad.getId().equals(id)) {
+                if (id.equals(ad.getAdapterId())) {
                     return ad;
                 }
             }

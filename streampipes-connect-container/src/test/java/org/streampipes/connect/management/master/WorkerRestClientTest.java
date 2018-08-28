@@ -24,6 +24,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -69,10 +71,10 @@ public class WorkerRestClientTest {
 
         doNothing().when(WorkerRestClient.class, "stopAdapter", anyString(), any(), anyString());
         when(WorkerRestClient.class, "stopStreamAdapter", anyString(), any()).thenCallRealMethod();
-        WorkerRestClient.stopStreamAdapter("", null);
+        WorkerRestClient.stopStreamAdapter("", new GenericAdapterStreamDescription());
 
         verifyStatic(WorkerRestClient.class, times(1));
-        WorkerRestClient.stopAdapter(eq("worker/stream/stop"), any(), anyString());
+        WorkerRestClient.stopAdapter(anyString(), any(), eq("worker/stream/stop"));
 
     }
 
@@ -81,7 +83,7 @@ public class WorkerRestClientTest {
         doThrow(new AdapterException()).when(WorkerRestClient.class, "stopAdapter", anyString(), any(), anyString());
         when(WorkerRestClient.class, "stopStreamAdapter", anyString(), any()).thenCallRealMethod();
 
-        WorkerRestClient.stopStreamAdapter("", null);
+        WorkerRestClient.stopStreamAdapter("", new GenericAdapterStreamDescription());
 
     }
 
@@ -91,7 +93,7 @@ public class WorkerRestClientTest {
         doNothing().when(WorkerRestClient.class, "startAdapter", anyString(), any());
         when(WorkerRestClient.class, "invokeSetAdapter", anyString(), any()).thenCallRealMethod();
 
-        WorkerRestClient.invokeSetAdapter("", null);
+        WorkerRestClient.invokeSetAdapter("", new GenericAdapterSetDescription());
 
         verifyStatic(WorkerRestClient.class, times(1));
         WorkerRestClient.startAdapter(eq("worker/set/invoke"), any());
@@ -111,10 +113,10 @@ public class WorkerRestClientTest {
 
         doNothing().when(WorkerRestClient.class, "stopAdapter", anyString(), any(), anyString());
         when(WorkerRestClient.class, "stopSetAdapter", anyString(), any()).thenCallRealMethod();
-        WorkerRestClient.stopSetAdapter("", null);
+        WorkerRestClient.stopSetAdapter("", new GenericAdapterSetDescription());
 
         verifyStatic(WorkerRestClient.class, times(1));
-        WorkerRestClient.stopAdapter(eq("worker/set/stop"), any(), anyString());
+        WorkerRestClient.stopAdapter(anyString(), any(), eq("worker/set/stop"));
 
     }
 
@@ -122,7 +124,7 @@ public class WorkerRestClientTest {
     public void stopSetAdapterFail() throws Exception {
         doThrow(new AdapterException()).when(WorkerRestClient.class, "stopAdapter", anyString(), any(), anyString());
         when(WorkerRestClient.class, "stopSetAdapter", anyString(), any()).thenCallRealMethod();
-        WorkerRestClient.stopSetAdapter("", null);
+        WorkerRestClient.stopSetAdapter("", new GenericAdapterSetDescription());
 
     }
 
