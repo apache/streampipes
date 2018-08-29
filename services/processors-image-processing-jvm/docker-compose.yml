@@ -1,0 +1,13 @@
+version: "2"
+services:
+  processors-image-processing-jvm:
+    image: ${SP_PE_DOCKER_REGISTRY}/processors-image-processing-jvm:${SP_PE_VERSION}
+    depends_on:
+      - "consul"
+#    ports:
+#      - "8098:8090"
+    environment:
+      - SP_ICON_HOST=${SP_ICON_HOST}
+    networks:
+      spnet:
+
