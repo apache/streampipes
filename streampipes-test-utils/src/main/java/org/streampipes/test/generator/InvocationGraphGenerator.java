@@ -20,6 +20,7 @@ import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class InvocationGraphGenerator {
 
@@ -28,6 +29,13 @@ public class InvocationGraphGenerator {
 
     invocation.setOutputStream(EventStreamGenerator.makeEmptyStream());
     invocation.setInputStreams(Arrays.asList(EventStreamGenerator.makeEmptyStream()));
+
+    return invocation;
+  }
+
+  public static DataProcessorInvocation makeInvocationWithOutputProperties(DataProcessorDescription description, List<String> runtimeNames) {
+    DataProcessorInvocation invocation = makeEmptyInvocation(description);
+    invocation.setOutputStream(EventStreamGenerator.makeStreamWithProperties(runtimeNames));
 
     return invocation;
   }

@@ -483,41 +483,49 @@
     </dependencies>
 
     <modules>
+        <module>archetypes/streampipes-archetype-pe-sources</module>
+        <module>archetypes/streampipes-archetype-pe-sinks-jvm</module>
+        <module>archetypes/streampipes-archetype-pe-processors-jvm</module>
+        <module>archetypes/streampipes-archetype-pe-sinks-flink</module>
+        <module>archetypes/streampipes-archetype-pe-processors-flink</module>
+        <module>streampipes-app-file-export</module>
         <module>streampipes-backend</module>
         <module>streampipes-code-generation</module>
         <module>streampipes-commons</module>
         <module>streampipes-config</module>
         <module>streampipes-connect</module>
+        <module>streampipes-connect-container</module>
         <module>streampipes-container</module>
         <module>streampipes-container-embedded</module>
         <module>streampipes-container-standalone</module>
         <module>streampipes-dataformat</module>
         <module>streampipes-dataformat-json</module>
-        <module>streampipes-pipeline-management</module>
+        <module>streampipes-logging</module>
         <module>streampipes-measurement-units</module>
         <module>streampipes-messaging-kafka</module>
         <module>streampipes-messaging</module>
         <module>streampipes-messaging-jms</module>
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
+        <module>streampipes-performance-tests</module>
+        <module>streampipes-pipeline-management</module>
         <module>streampipes-sources</module>
         <module>streampipes-rest</module>
         <module>streampipes-sdk</module>
+        <module>streampipes-serializers</module>
         <module>streampipes-storage-api</module>
+        <module>streampipes-test-utils</module>
         <module>streampipes-user-management</module>
+        <module>streampipes-vocabulary</module>
         <module>streampipes-wrapper</module>
+        <module>streampipes-wrapper-distributed</module>
         <module>streampipes-wrapper-esper</module>
         <module>streampipes-wrapper-flink</module>
+        <module>streampipes-wrapper-kafka-streams</module>
+        <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-spark</module>
         <module>streampipes-wrapper-standalone</module>
-        <module>streampipes-performance-tests</module>
-        <module>streampipes-storage-rdf4j</module>
         <module>streampipes-storage-couchdb</module>
-        <module>streampipes-app-file-export</module>
-        <module>streampipes-vocabulary</module>
-        <module>streampipes-serializers</module>
-        <module>streampipes-wrapper-kafka-streams</module>
-        <module>streampipes-wrapper-distributed</module>
         <module>streampipes-storage-management</module>
         <module>streampipes-logging</module>
         <module>archetypes/streampipes-archetype-pe-sources</module>
@@ -526,6 +534,7 @@
         <module>streampipes-test-utils</module>
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-rest-shared</module>
+        <module>streampipes-storage-rdf4j</module>
     </modules>
 
     <profiles>
