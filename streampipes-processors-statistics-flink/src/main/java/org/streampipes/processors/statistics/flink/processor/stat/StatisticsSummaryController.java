@@ -20,7 +20,6 @@ package org.streampipes.processors.statistics.flink.processor.stat;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.model.util.SepaUtils;
 import org.streampipes.processors.statistics.flink.config.StatisticsFlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -68,7 +67,7 @@ public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<Stat
 
   @Override
   public FlinkDataProcessorRuntime<StatisticsSummaryParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
-    String listPropertyMapping = SepaUtils.getMappingPropertyName(graph, listPropertyMappingName);
+    String listPropertyMapping = extractor.mappingPropertyValue(listPropertyMappingName);
 
     StatisticsSummaryParameters params = new StatisticsSummaryParameters(graph, listPropertyMapping);
 

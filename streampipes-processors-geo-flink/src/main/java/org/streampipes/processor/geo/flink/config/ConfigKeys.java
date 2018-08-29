@@ -15,19 +15,15 @@
  *
  */
 
-package org.streampipes.processors.geo.jvm.config;
+package org.streampipes.processor.geo.flink.config;
 
 public class ConfigKeys {
     final static String HOST = "SP_HOST";
     final static String PORT = "SP_PORT";
+    final static String FLINK_HOST = "SP_FLINK_HOST";
+    final static String FLINK_PORT = "SP_FLINK_PORT";
     final static String ICON_HOST = "SP_ICON_HOST";
     final static String ICON_PORT = "SP_ICON_PORT";
-    final static String KAFKA_HOST = "SP_KAFKA_HOST";
-    final static String KAFKA_PORT = "SP_KAFKA_PORT";
-    final static String ZOOKEEPER_HOST = "SP_ZOOKEEPER_HOST";
-    final static String ZOOKEEPER_PORT = "SP_ZOOKEEPER_PORT";
-    final static String NGINX_HOST = "SP_NGINX_HOST";
-    final static String NGINX_PORT = "SP_NGINX_PORT";
-    final static String SERVICE_NAME_KEY = "SP_SERVICE_NAME";
-    final static String GOOGLE_API_KEY = "SP_GOOGLE_API_KEY";
+    final static String SERVICE_NAME = "SP_SERVICE_NAME";
+    final static String DEBUG = "SP_FLINK_DEBUG";
 }
