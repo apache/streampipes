@@ -1,7 +1,7 @@
 version: "2"
 services:
-  processors-geo-jvm:
-    image: ${SP_DOCKER_REGISTRY}/streampipes/streampipes-pipeline-elements/processors-imageprocessing-jvm:${SP_PE_VERSION}
+  processors-image-processing-jvm:
+    image: ${SP_DOCKER_REGISTRY}/streampipes/streampipes-pipeline-elements/processors-image-processing-jvm:${SP_PE_VERSION}
     depends_on:
       - "consul"
 #    ports:

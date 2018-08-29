@@ -102,7 +102,7 @@
                 </executions>
             </plugin>
         </plugins>
-        <finalName>streampipes-processors-imageprocessing-jvm</finalName>
+        <finalName>streampipes-processors-image-processing-jvm</finalName>
     </build>
 
 </project>

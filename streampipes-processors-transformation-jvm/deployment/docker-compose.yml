@@ -1,6 +1,6 @@
 version: "2"
 services:
-  processors-filters-jvm:
+  processors-transformation-jvm:
     image: ${SP_DOCKER_REGISTRY}/streampipes/streampipes-pipeline-elements/processors-transformation-jvm:${SP_PE_VERSION}
     depends_on:
       - "consul"

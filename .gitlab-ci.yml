@@ -136,10 +136,10 @@ docker-processors-geo-jvm:
     variables:
       CONTAINER_NAME: "processors-geo-jvm"
 
-docker-processors-imageprocessing-jvm:
+docker-processors-image-processing-jvm:
     <<: *docker_script
     variables:
-      CONTAINER_NAME: "processors-imageprocessing-jvm"
+      CONTAINER_NAME: "processors-image-processing-jvm"
 
 docker-processors-pattern-detection-flink:
     <<: *docker_script
