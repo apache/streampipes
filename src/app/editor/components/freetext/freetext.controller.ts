@@ -23,10 +23,6 @@ export class FreeTextController {
         if (this.mappingProperty) {
             this.selectedEventProperty = this.updateCurrentEventProperty(this.mappingProperty.properties.mapsTo);
         }
-
-        // this.$watchCollection('mappingProperty.properties', (newValue, oldValue) => {
-        //     this.selectedEventProperty = this.updateCurrentEventProperty(this.mappingProperty.properties.mapsTo);
-        // });
     }
 
 
@@ -50,11 +46,14 @@ export class FreeTextController {
     }
 
     getFriendlyDatatype() {
-        if (this.staticProperty.properties.requiredDatatype == this.primitiveClasses[2] ||
-            this.staticProperty.properties.requiredDatatype == this.primitiveClasses[3]) {
+        if (this.staticProperty.properties.requiredDatatype == this.primitiveClasses[2].id ||
+            this.staticProperty.properties.requiredDatatype == this.primitiveClasses[3].id ||
+            this.staticProperty.properties.requiredDomainProperty == this.primitiveClasses[2].id ||
+            this.staticProperty.properties.requiredDomainProperty == this.primitiveClasses[3].id) {
             return "The value should be a number (e.g., '1', '10'";
-        } else if (this.staticProperty.properties.requiredDatatype == this.primitiveClasses[4] ||
-            this.staticProperty.properties.requiredDatatype == this.primitiveClasses[4]) {
+        } else if (this.staticProperty.properties.requiredDatatype == this.primitiveClasses[4].id ||
+            this.staticProperty.properties.requiredDatatype == this.primitiveClasses[4].id ||
+            this.staticProperty.properties.requiredDomainProperty == this.primitiveClasses[4].id) {
             return "The value should be a floating-point number (e.g., '1.0, '20.5')";
         } else {
             return "This value is not valid.";
