@@ -49,17 +49,21 @@ public class AdapterStorageImpl extends AbstractDao<AdapterDescription> implemen
 
         InputStream in = couchDbClientSupplier.get().find(adapterId);
 
-        // TODO find better solution
-        StringWriter writer = new StringWriter();
-        try {
-            IOUtils.copy(in, writer, Charsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String theString = writer.toString();
+        DbCommand<Optional<AdapterDescription>, AdapterDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterDescription.class);
+        return cmd.execute().get();
 
 
-        return GsonSerializer.getGson().fromJson(theString, AdapterDescription.class);
+//         TODO find better solution
+//        StringWriter writer = new StringWriter();
+//        try {
+//            IOUtils.copy(in, writer, Charsets.UTF_8);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        String theString = writer.toString();
+//
+//
+//        return GsonSerializer.getGson().fromJson(theString, AdapterDescription.class);
 
 //        System.out.println(theString);
 //        if (theString.contains("dataSet")) {

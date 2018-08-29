@@ -70,9 +70,6 @@ public class AdapterMasterManagement {
            }
         }
 
-        // TODO improve logging messages
-        // Fix element URL
-
         String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() +"api/v2/";
         String userName = ad.getUserName();
         String requestUrl = backendBaseUrl +  "noauth/users/" + userName + "/element";

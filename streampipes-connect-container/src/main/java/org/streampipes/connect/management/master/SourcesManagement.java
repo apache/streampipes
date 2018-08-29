@@ -134,7 +134,7 @@ public class SourcesManagement {
         }
 
 
-        String url = adapterDescription.getUri().toString();
+        String url = adapterDescription.getUri().toString() + "/" + adapterDescription.getId();
 
         ds.setName(adapterDescription.getName());
         ds.setDescription("Description");
