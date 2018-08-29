@@ -23,16 +23,17 @@ import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.grounding.ProtocolSetDescription;
+import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
 
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp:GenericAdapterSetDescription")
+@RdfsClass(StreamPipes.GENERIC_ADAPTER_SET_DESCRIPTION)
 @Entity
 public class GenericAdapterSetDescription extends AdapterSetDescription implements GenericAdapterDescription {
     public static final String ID = "http://streampipes.org/genericadaptersetdescription";
 
-    private String sourceType = "org.streampipes.model.connect.adapter.GenericAdapterSetDescription";
+//    private String sourceType = "org.streampipes.model.connect.adapter.GenericAdapterSetDescription";
 
     @RdfProperty("sp:hasFormat")
     private FormatDescription formatDescription;
@@ -75,11 +76,11 @@ public class GenericAdapterSetDescription extends AdapterSetDescription implemen
         this.protocolDescription = protocolDescription;
     }
 
-    public String getSourceType() {
-        return sourceType;
-    }
-
-    public void setSourceType(String sourceType) {
-        this.sourceType = sourceType;
-    }
+//    public String getSourceType() {
+//        return sourceType;
+//    }
+//
+//    public void setSourceType(String sourceType) {
+//        this.sourceType = sourceType;
+//    }
 }
