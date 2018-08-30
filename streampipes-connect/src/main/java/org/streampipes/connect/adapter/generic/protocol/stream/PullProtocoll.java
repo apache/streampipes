@@ -16,20 +16,23 @@ limitations under the License.
 
 package org.streampipes.connect.adapter.generic.protocol.stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.connect.SendToPipeline;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
+import org.streampipes.connect.adapter.specific.sensemap.OpenSenseMapAdapter;
 
 import java.io.InputStream;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public abstract class PullProtocoll extends Protocol {
 
     private ScheduledExecutorService scheduler;
+
+    private Logger logger = LoggerFactory.getLogger(PullProtocoll.class);
 
     private long interval;
 
@@ -52,7 +55,14 @@ public abstract class PullProtocoll extends Protocol {
         };
 
         scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(task, 1, interval, TimeUnit.SECONDS);
+        ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1, interval, TimeUnit.SECONDS);
+        try {
+            handle.get();
+        } catch (ExecutionException e ) {
+            logger.error("Error", e);
+        } catch (InterruptedException e) {
+            logger.error("Error", e);
+        }
     }
 
     @Override

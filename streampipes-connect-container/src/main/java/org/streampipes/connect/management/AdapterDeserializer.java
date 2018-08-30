@@ -39,6 +39,10 @@ public class AdapterDeserializer {
 
                 result = JsonLdUtils.fromJsonLd(jsonld, resultDescription.getClass());
 
+                if (result.getAdapterId() == null) {
+                    result.setAdapterId(result.getUri());
+                }
+
             }
         }
 

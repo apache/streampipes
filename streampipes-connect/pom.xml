@@ -33,6 +33,10 @@
 			<artifactId>streampipes-rest-shared</artifactId>
 		</dependency>
         <dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-measurement-units</artifactId>
+		</dependency>
+        <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.json</artifactId>
             <version>1.0.2</version>
