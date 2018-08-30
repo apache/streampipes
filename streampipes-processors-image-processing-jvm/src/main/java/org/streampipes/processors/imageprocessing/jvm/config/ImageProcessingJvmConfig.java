@@ -33,11 +33,11 @@ public enum ImageProcessingJvmConfig implements PeConfig {
 
 	private final static String service_id = "pe/org.streampipes.processors.imageprocessing.jvm";
 	private final static String service_name = "Processors Image Processing JVM";
-	private final static String service_container_name = "processors-imageprocessing-jvm";
+	private final static String service_container_name = "processors-image-processing-jvm";
 
 	ImageProcessingJvmConfig() {
 		config = SpConfig.getSpConfig(service_id);
-		config.register(ConfigKeys.HOST, "pe-jvm-hmi", "Hostname for the pe image processing");
+		config.register(ConfigKeys.HOST, service_container_name, "Hostname for the pe image processing");
 		config.register(ConfigKeys.PORT, 8090, "Port for the pe image processing");
 
 		config.register(ICON_HOST, "backend", "Hostname for the icon host");
@@ -54,7 +54,7 @@ public enum ImageProcessingJvmConfig implements PeConfig {
 
 		config.register(MODEL_DIRECTORY, "/model-repository/", "The directory location for the folders of the image classification models");
 
-		config.register(ConfigKeys.SERVICE_NAME_KEY, "HMI JVM", "The name of the service");
+		config.register(ConfigKeys.SERVICE_NAME_KEY, service_name, "The name of the service");
 
 	}
 	
