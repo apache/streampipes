@@ -60,7 +60,8 @@ public enum ImageProcessingJvmConfig implements PeConfig {
 	
 	static {
 		serverUrl = ImageProcessingJvmConfig.INSTANCE.getHost() + ":" + ImageProcessingJvmConfig.INSTANCE.getPort();
-		iconBaseUrl = ImageProcessingJvmConfig.INSTANCE.getIconHost() + ":" + ImageProcessingJvmConfig.INSTANCE.getIconPort() +"/assets/img/pe_icons";
+		iconBaseUrl = "http://" +ImageProcessingJvmConfig.INSTANCE.getIconHost() + ":" +
+						ImageProcessingJvmConfig.INSTANCE.getIconPort() +"/assets/img/pe_icons";
 	}
 
 	public static final String getIconUrl(String pictureName) {

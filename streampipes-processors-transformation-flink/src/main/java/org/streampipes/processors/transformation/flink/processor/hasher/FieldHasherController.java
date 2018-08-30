@@ -20,6 +20,7 @@ package org.streampipes.processors.transformation.flink.processor.hasher;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
+import org.streampipes.processors.transformation.flink.config.TransformationFlinkConfig;
 import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithmType;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -42,7 +43,7 @@ public class FieldHasherController extends FlinkDataProcessorDeclarer<FieldHashe
 										.requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.from
 														(HASH_PROPERTIES, "Field", "The field the hash function should be applied on"), PropertyScope.NONE)
 										.build())
-						.iconUrl("field-hasher-icon")
+						.iconUrl(TransformationFlinkConfig.getIconUrl("field-hasher-icon"))
 						.requiredSingleValueSelection(Labels.from("hash-algorithm", "Hash Algorithm", "The hash algorithm that should be used."),
 										Options.from("SHA1", "SHA2", "MD5"))
 						.outputStrategy(OutputStrategies.keep())

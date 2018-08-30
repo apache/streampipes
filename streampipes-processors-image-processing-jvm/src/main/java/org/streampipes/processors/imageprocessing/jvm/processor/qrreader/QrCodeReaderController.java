@@ -16,6 +16,8 @@
  */
 package org.streampipes.processors.imageprocessing.jvm.processor.qrreader;
 
+import static org.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.IMAGE_PROPERTY;
+
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -24,11 +26,14 @@ import org.streampipes.processors.imageprocessing.jvm.config.ImageProcessingJvmC
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.helpers.TransformOperations;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
-
-import static org.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.IMAGE_PROPERTY;
 
 public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<QrCodeReaderParameters> {
 
@@ -37,7 +42,7 @@ public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<Qr
     return ProcessingElementBuilder.create("qr-code-reader", "QR Code Reader", ("QR Code Reader: Detects a QR Code " +
             "in an image"))
             .category(DataProcessorType.FILTER)
-            .iconUrl(ImageProcessingJvmConfig.iconBaseUrl + "/qrcode.png")
+            .iconUrl(ImageProcessingJvmConfig.getIconUrl("qrcode"))
 
             .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
                             .domainPropertyReq("https://image.com"), Labels
