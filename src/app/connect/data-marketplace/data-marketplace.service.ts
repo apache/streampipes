@@ -16,61 +16,149 @@ import { SpecificAdapterStreamDescription } from '../model/connect/SpecificAdapt
 import { FreeTextStaticProperty } from '../model/FreeTextStaticProperty';
 import { ProtocolDescription } from '../model/connect/grounding/ProtocolDescription';
 import { ProtocolDescriptionList } from '../model/connect/grounding/ProtocolDescriptionList';
+import { FormatDescription } from '../model/connect/grounding/FormatDescription';
 
 @Injectable()
 export class DataMarketplaceService {
+  private host = '/streampipes-connect/';
 
-    private host = '/streampipes-connect/';
+  constructor(
+    private http: HttpClient,
+    private authStatusService: AuthStatusService
+  ) {}
 
-    constructor(private http: HttpClient, private authStatusService: AuthStatusService) {
-    }
+  private getTsonLd(): TsonLd {
+    const tsonld = new TsonLd();
+    tsonld.addClassMapping(AdapterDescriptionList);
+    tsonld.addClassMapping(AdapterDescription);
+    tsonld.addClassMapping(AdapterSetDescription);
+    tsonld.addClassMapping(GenericAdapterSetDescription);
+    tsonld.addClassMapping(SpecificAdapterSetDescription);
+    tsonld.addClassMapping(AdapterStreamDescription);
+    tsonld.addClassMapping(GenericAdapterStreamDescription);
+    tsonld.addClassMapping(SpecificAdapterStreamDescription);
 
-    private getTsonLd(): any {
+    tsonld.addClassMapping(FreeTextStaticProperty);
 
-        const tsonld = new TsonLd();
-        tsonld.addClassMapping(AdapterDescriptionList);
-        tsonld.addClassMapping(AdapterDescription);
-        tsonld.addClassMapping(AdapterSetDescription);
-        tsonld.addClassMapping(GenericAdapterSetDescription);
-        tsonld.addClassMapping(SpecificAdapterSetDescription);
-        tsonld.addClassMapping(AdapterStreamDescription);
-        tsonld.addClassMapping(GenericAdapterStreamDescription);
-        tsonld.addClassMapping(SpecificAdapterStreamDescription);
+    tsonld.addClassMapping(ProtocolDescriptionList);
+    tsonld.addClassMapping(ProtocolDescription);
+    tsonld.addClassMapping(FormatDescription);
 
-        tsonld.addClassMapping(FreeTextStaticProperty);
+    return tsonld;
+  }
 
-        tsonld.addClassMapping(ProtocolDescriptionList);
-        tsonld.addClassMapping(ProtocolDescription);
+  getAdapterDescriptions(): Observable<AdapterDescription[]> {
+    return this.http
+      .get(
+        this.host +
+          'api/v1/' +
+          this.authStatusService.email +
+          '/master/description/adapters'
+      )
+      .map(response => {
+        const res = this.getTsonLd().fromJsonLdType(
+          response,
+          'sp:AdapterDescriptionList'
+        );
 
-        return tsonld;
-    }
+        return res.list;
+      });
+  }
 
-    getAdapters(): Observable<AdapterDescription[]> {
-        return this.http
-            .get(this.host + 'api/v1/' + this.authStatusService.email + '/master/description/adapters')
-            .map(response => {
-                response['@graph'].forEach(function (object) {
-                    if (object['sp:domainProperty'] != undefined) {
-                        object['sp:domainProperty'] = object['sp:domainProperty']['@id'];
-                        delete object['sp:domainProperty']['@id'];
-                    }
-                })
-                const tsonld = this.getTsonLd();
-                const res = tsonld.fromJsonLdType(response, 'sp:AdapterDescriptionList');
+  getAdapters(): Observable<AdapterDescription[]> {
+    return this.http
+      .get(
+        this.host +
+          'api/v1/' +
+          this.authStatusService.email +
+          '/master/adapters'
+      )
+      .map(response => {
+        const res = this.getTsonLd().fromJsonLdType(
+          response,
+          'sp:AdapterDescriptionList'
+        );
 
-                return res.list;
-            });
-    }
+        return res.list;
+      });
+  }
 
-    getProtocols(): Observable<ProtocolDescription[]> {
-        return this.http
-            .get(this.host + 'api/v1/' + this.authStatusService.email + '/master/description/protocols')
-            .map(response => {
-                const tsonld = this.getTsonLd();
-                const res = tsonld.fromJsonLdType(response, 'sp:ProtocolDescriptionList');
+  deleteAdapter(adapter: AdapterDescription): Observable<Object> {
+    return this.http.delete(
+      this.host +
+        'api/v1/' +
+        this.authStatusService.email +
+        '/master/adapters/' +
+        adapter.couchDbId
+    );
+  }
 
-                return res.list;
-            });
-    }
+  getProtocols(): Observable<ProtocolDescription[]> {
+    return this.http
+      .get(
+        this.host +
+          'api/v1/' +
+          this.authStatusService.email +
+          '/master/description/protocols'
+      )
+      .map(response => {
+        const res = this.getTsonLd().fromJsonLdType(
+          response,
+          'sp:ProtocolDescriptionList'
+        );
 
+        return res.list;
+      });
+  }
+
+  getGenericAndSpecifigAdapterDescriptions(): Observable<
+    Observable<AdapterDescription[]>
+  > {
+    return this.getAdapterDescriptions().map(adapterDescriptions => {
+      adapterDescriptions = adapterDescriptions.filter(
+        this.isSpecificDescription
+      );
+      return this.getProtocols().map(protocols => {
+        for (let protocol of protocols) {
+          let newAdapterDescription: AdapterDescription;
+          if (protocol.id.includes('sp:protocol/set')) {
+            newAdapterDescription = new GenericAdapterSetDescription(
+              'http://streampipes.org/genericadaptersetdescription'
+            );
+          } else if (protocol.id.includes('sp:protocol/stream')) {
+            newAdapterDescription = new GenericAdapterStreamDescription(
+              'http://streampipes.org/genericadapterstreamdescription'
+            );
+          }
+          newAdapterDescription.label = protocol.label;
+          newAdapterDescription.description = protocol.description;
+          newAdapterDescription.uri = newAdapterDescription.id;
+          if (
+            newAdapterDescription instanceof GenericAdapterSetDescription ||
+            newAdapterDescription instanceof GenericAdapterStreamDescription
+          ) {
+            newAdapterDescription.protocol = protocol;
+          }
+          adapterDescriptions.push(newAdapterDescription);
+        }
+        return adapterDescriptions;
+      });
+    });
+  }
+
+  isDataStreamDescription(adapter: AdapterDescription): boolean {
+    return adapter.constructor.name.includes('AdapterStreamDescription');
+  }
+
+  isDataSetDescription(adapter: AdapterDescription): boolean {
+    return adapter.constructor.name.includes('AdapterSetDescription');
+  }
+
+  isGenericDescription(adapter: AdapterDescription): boolean {
+    return adapter.id.includes('generic');
+  }
+
+  isSpecificDescription(adapter: AdapterDescription): boolean {
+    return adapter.id.includes('specific');
+  }
 }

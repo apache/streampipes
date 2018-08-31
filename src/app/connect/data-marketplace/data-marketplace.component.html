@@ -1,4 +1,13 @@
-<div fxLayout="row wrap" fxLayoutAlign="start stretch" class="data-marketplace-box">
-    <sp-adapter-description class="adapter-description" fxFlex="33" (click)="selectAdapter(adapter)" *ngFor="let adapter of adapters"
-        [adapter]="adapter"></sp-adapter-description>
-</div>
+<mat-tab-group>
+    <mat-tab label="Data Marketplace">
+        <div fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-description-container">
+            <sp-adapter-description class="adapter-description" fxFlex="33" (click)="selectAdapter(adapterDescription)" *ngFor="let adapterDescription of adapterDescriptions"
+                [adapter]="adapterDescription"></sp-adapter-description>
+        </div>
+    </mat-tab>
+    <mat-tab label="All Adapters">
+        <div fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-container">
+            <sp-adapter-description class="adapter-description" fxFlex="33" *ngFor="let adapter of adapters" [adapter]="adapter" (deleteAdapterEmitter)="deleteAdapter($event)"></sp-adapter-description>
+        </div>
+    </mat-tab>
+</mat-tab-group>

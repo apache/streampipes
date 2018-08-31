@@ -1,7 +1,7 @@
-<div class="outer-box">
-    <div class="header">
-        <div class="type">
-            <div class="type-data">
+<div [className]="adapter.couchDbId ? 'adapter-box' : 'adapter-description-box'" fxFlex fxLayout="column">
+    <div class="header" fxLayout="row" fxLayoutAlign="space-between center">
+        <div class="type" fxLayout="column">
+            <div class="type-data" fxLayout="row" fxLayoutAlign="start center">
                 <mat-icon *ngIf="isDataSetDescription()" class="historic">lens</mat-icon>
                 <mat-icon *ngIf="isDataStreamDescription()" class="real-time">lens</mat-icon>
                 <p *ngIf="isDataSetDescription()">Historic</p>
@@ -17,7 +17,12 @@
                 class="iconImg" />
         </div>
     </div>
-    <div class="description">
-        <p>{{adapter.description}}</p>
+    <div class="footer" fxLayout="row" fxLayoutAlign="space-between end">
+        <div class="description">
+            <p>{{adapter.description}}</p>
+        </div>
+        <div *ngIf="adapter.couchDbId" class="delete" (click)="deleteAdapter(adapter)">
+            <mat-icon>delete</mat-icon>
+        </div>
     </div>
 </div>

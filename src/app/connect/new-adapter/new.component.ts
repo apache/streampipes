@@ -12,7 +12,6 @@ import { FormatDescription } from '../model/connect/grounding/FormatDescription'
 import { AdapterDescription } from '../model/connect/AdapterDescription';
 import { DataSetDescription } from '../model/DataSetDescription';
 import { EventSchema } from '../schema-editor/model/EventSchema';
-import { AdapterDataSource } from '../all-adapters/adapter-data-source.service';
 import { MatDialog } from '@angular/material';
 import { AdapterStartedDialog } from './component/adapter-started-dialog.component';
 import { Logger } from '../../shared/logger/default-log.service';

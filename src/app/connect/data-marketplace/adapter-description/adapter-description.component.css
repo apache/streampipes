@@ -1,25 +1,19 @@
-.outer-box {
-  flex-direction: column;
-  flex: 1;
-  display: flex;
+.adapter-box {
+  height: 100%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding: 10px;
+}
+.adapter-description-box {
   height: 100%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   cursor: pointer;
   padding: 10px;
 }
-.header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-.type {
-  flex-direction: column;
+.delete {
+  cursor: pointer;
 }
 .type p {
-  display: inline-block;
   padding: 4px;
-  border-radius: 40%;
   margin: 0;
 }
 .iconImg {
@@ -33,13 +27,4 @@
 .real-time {
   cursor: pointer;
   color: yellow;
-}
-.description {
-  display: flex;
-  flex: 1 0 auto;
-}
-.type-data {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 }

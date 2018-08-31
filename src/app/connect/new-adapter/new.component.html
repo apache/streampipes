@@ -52,7 +52,7 @@
       <ng-template matStepLabel>Start Adapter</ng-template>
       <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
         <mat-form-field>
-          <input matInput id="input-AdapterName" placeholder="Adapter Name">
+          <input matInput id="input-AdapterName" placeholder="Adapter Name" [(ngModel)]="adapter.label">
         </mat-form-field>
       </div>
       <div fxLayoutAlign="center">
