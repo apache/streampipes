@@ -3,6 +3,7 @@ import {RdfsClass} from '../../tsonld/RdfsClass';
 import {DataSetDescription} from '../DataSetDescription';
 import {AdapterDescription} from './AdapterDescription';
 import {DataStreamDescription} from '../DataStreamDescription';
+import {UUID} from 'angular2-uuid';
 
 @RdfsClass('sp:AdapterStreamDescription')
 export class AdapterStreamDescription extends AdapterDescription {
@@ -15,5 +16,6 @@ export class AdapterStreamDescription extends AdapterDescription {
 
     constructor(id: string) {
         super(id)
+        this.dataStream = new DataStreamDescription('http://streampipes.org/dataset/' + UUID.UUID().toString());
     }
 }

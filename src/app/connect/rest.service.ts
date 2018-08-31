@@ -68,11 +68,6 @@ export class RestService {
     return tsonld;
   }
 
-  constructor(
-    private http: HttpClient,
-    private authStatusService: AuthStatusService
-  ) {}
-
   addAdapter(adapter: AdapterDescription) {
     const tsonld = new TsonLd();
     tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
@@ -96,10 +91,6 @@ export class RestService {
         )
         .subscribe();
     });
-  }
-
-  deleteAdapter(adapter: AdapterDescription): Observable<any> {
-    return this.http.delete(this.host + 'api/v2/adapter/' + adapter.couchDbId);
   }
 
   getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
@@ -141,6 +132,67 @@ export class RestService {
     );
   }
 
+  constructor(
+    private http: HttpClient,
+    private authStatusService: AuthStatusService
+  ) {}
+
+  getAdapters(): Observable<AdapterDescription[]> {
+    return this.http
+      .get(this.host + 'api/v2/adapter/allrunning')
+      .map(response => {
+        // TODO remove this
+        // quick fix to deserialize URIs
+        response['@graph'].forEach(function(object) {
+          if (object['sp:domainProperty'] != undefined) {
+            // object['sp:domainProperty']['@type'] = "sp:URI";
+            object['sp:domainProperty'] = object['sp:domainProperty']['@id'];
+            delete object['sp:domainProperty']['@id'];
+          }
+        });
+        const tsonld = this.getTsonLd();
+
+        // console.log(JSON.stringify(response, null, 2));
+        const res = tsonld.fromJsonLdType(
+          response,
+          'sp:AdapterDescriptionList'
+        );
+        // console.log(JSON.stringify(res, null, 2));
+
+        return res.list;
+      });
+  }
+
+  deleteAdapter(adapter: AdapterDescription): Observable<any> {
+    return (
+      this.http
+        // .delete(this.host + 'api/v2/adapter/' + adapter.couchDbId);
+        .delete(
+          '/streampipes-connect/api/v1/a@a.de/master/adapters/' +
+            adapter.couchDbId
+        )
+    );
+  }
+
+  getFormats(): Observable<FormatDescriptionList> {
+    return this.http
+      .get(
+        '/streampipes-connect/api/v1/riemer@fzi.de/master/description/formats'
+      )
+      .map(response => {
+        const tsonld = new TsonLd();
+        tsonld.addClassMapping(FreeTextStaticProperty);
+        tsonld.addClassMapping(FormatDescription);
+        tsonld.addClassMapping(FormatDescriptionList);
+
+        // console.log(JSON.stringify(jsonResponse, null, 2));
+        const res = tsonld.fromJsonLdType(response, 'sp:FormatDescriptionList');
+        // console.log(JSON.stringify(res, null, 2));
+
+        return res;
+      });
+  }
+
   getProtocols(): Observable<ProtocolDescriptionList> {
     return this.http
       .get(this.host + 'api/v2/adapter/allProtocols')
@@ -155,23 +207,6 @@ export class RestService {
           response,
           'sp:ProtocolDescriptionList'
         );
-        // console.log(JSON.stringify(res, null, 2));
-
-        return res;
-      });
-  }
-
-  getFormats(): Observable<FormatDescriptionList> {
-    return this.http
-      .get(this.host + 'api/v2/adapter/allFormats')
-      .map(response => {
-        const tsonld = new TsonLd();
-        tsonld.addClassMapping(FreeTextStaticProperty);
-        tsonld.addClassMapping(FormatDescription);
-        tsonld.addClassMapping(FormatDescriptionList);
-
-        // console.log(JSON.stringify(jsonResponse, null, 2));
-        const res = tsonld.fromJsonLdType(response, 'sp:FormatDescriptionList');
         // console.log(JSON.stringify(res, null, 2));
 
         return res;

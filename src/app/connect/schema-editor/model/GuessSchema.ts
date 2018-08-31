@@ -14,8 +14,13 @@ export class GuessSchema {
   @RdfProperty('sp:hasEventSchema')
   public eventSchema: EventSchema;
 
+<<<<<<< HEAD
   @RdfProperty('sp:propertyProbabilityList')
   public eventProperties: Array<DomainPropertyProbabilityList>;
+=======
+    @RdfProperty('sp:hasEventSchema')
+    public eventSchema: EventSchema;
+>>>>>>> 22ef7584943045541de093918562793fec36adb4
 
   constructor() {}
 }

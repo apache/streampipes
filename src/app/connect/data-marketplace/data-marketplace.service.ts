@@ -17,6 +17,9 @@ import { FreeTextStaticProperty } from '../model/FreeTextStaticProperty';
 import { ProtocolDescription } from '../model/connect/grounding/ProtocolDescription';
 import { ProtocolDescriptionList } from '../model/connect/grounding/ProtocolDescriptionList';
 import { FormatDescription } from '../model/connect/grounding/FormatDescription';
+import { DataStreamDescription } from '../model/DataStreamDescription';
+import { EventSchema } from '../schema-editor/model/EventSchema';
+import { EventPropertyPrimitive } from '../schema-editor/model/EventPropertyPrimitive';
 
 @Injectable()
 export class DataMarketplaceService {
@@ -43,6 +46,10 @@ export class DataMarketplaceService {
     tsonld.addClassMapping(ProtocolDescriptionList);
     tsonld.addClassMapping(ProtocolDescription);
     tsonld.addClassMapping(FormatDescription);
+
+    tsonld.addClassMapping(DataStreamDescription);
+    tsonld.addClassMapping(EventSchema);
+    tsonld.addClassMapping(EventPropertyPrimitive);
 
     return tsonld;
   }
