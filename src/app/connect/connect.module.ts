@@ -10,7 +10,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { NewComponent } from './new-adapter/new.component';
+import { NewAdapterComponent } from './new-adapter/new-adapter.component';
 import { ConnectComponent } from './connect.component';
 
 import { SelectProtocolComponent } from './select-protocol-component/select-protocol.component';
@@ -72,7 +72,7 @@ import { AdapterDescriptionComponent } from './data-marketplace/adapter-descript
   ],
   exports: [StaticPropertyComponent],
   declarations: [
-    NewComponent,
+    NewAdapterComponent,
     SelectProtocolComponent,
     FormatFormComponent,
     EventSchemaComponent,

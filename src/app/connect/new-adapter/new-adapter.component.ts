@@ -23,10 +23,10 @@ import { GenericAdapterStreamDescription } from '../model/connect/GenericAdapter
 
 @Component({
   selector: 'sp-new-adapter',
-  templateUrl: './new.component.html',
-  styleUrls: ['./new.component.css'],
+  templateUrl: './new-adapter.component.html',
+  styleUrls: ['./new-adapter.component.css'],
 })
-export class NewComponent implements OnInit {
+export class NewAdapterComponent implements OnInit {
   @ViewChild('eschema')
   eventSchemaComponent;
   @Output()
