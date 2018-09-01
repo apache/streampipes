@@ -1,5 +1,6 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { AdapterDescription } from '../../model/connect/AdapterDescription';
+import { ConnectService } from '../../connect.service';
 
 @Component({
   selector: 'sp-adapter-description',
@@ -7,6 +8,8 @@ import { AdapterDescription } from '../../model/connect/AdapterDescription';
   styleUrls: ['./adapter-description.component.css'],
 })
 export class AdapterDescriptionComponent {
+  constructor(private connectService: ConnectService) {}
+
   @Input()
   adapter: AdapterDescription;
   @Output()
@@ -15,19 +18,19 @@ export class AdapterDescriptionComponent {
   >();
 
   isDataStreamDescription(): boolean {
-    return this.adapter.constructor.name.includes('AdapterStreamDescription');
+    return this.connectService.isDataStreamDescription(this.adapter);
   }
 
   isDataSetDescription(): boolean {
-    return this.adapter.constructor.name.includes('AdapterSetDescription');
+    return this.connectService.isDataSetDescription(this.adapter);
   }
 
   isGenericDescription(): boolean {
-    return this.adapter.id.includes('generic');
+    return this.connectService.isGenericDescription(this.adapter);
   }
 
   isSpecificDescription(): boolean {
-    return this.adapter.id.includes('specific');
+    return this.connectService.isSpecificDescription(this.adapter);
   }
 
   deleteAdapter(adapter: AdapterDescription): void {

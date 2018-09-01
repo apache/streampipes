@@ -41,11 +41,6 @@ import { StaticUrlInputComponent } from './static-properties/static-url-input/st
 import { StaticTextInputComponent } from './static-properties/static-text-input/static-text-input.component';
 import { StaticFreeInputComponent } from './static-properties/static-free-input/static-free-input.component';
 import { StaticPropertyUtilService } from './static-properties/static-property-util.service';
-import { SetStreamComponent } from './set-stream/set-stream.component';
-
-import { SelectStaticPropertyComponent } from './select-static-property-component/select-static-property.component';
-
-import { SelectStaticPropertiesComponent } from './select-static-properties-component/select-static-properties.component';
 
 import { ProtocolComponent } from './protocol-component/protocol.component';
 
@@ -55,6 +50,8 @@ import { FormatComponent } from './format-component/format.component';
 import { DataMarketplaceComponent } from './data-marketplace/data-marketplace.component';
 import { DataMarketplaceService } from './data-marketplace/data-marketplace.service';
 import { AdapterDescriptionComponent } from './data-marketplace/adapter-description/adapter-description.component';
+import { ConnectService } from './connect.service';
+import { SelectStaticPropertiesComponent } from './select-static-properties-component/select-static-properties.component';
 
 @NgModule({
   imports: [
@@ -87,9 +84,6 @@ import { AdapterDescriptionComponent } from './data-marketplace/adapter-descript
     StaticUrlInputComponent,
     StaticTextInputComponent,
     StaticFreeInputComponent,
-    SetStreamComponent,
-    SelectStaticPropertyComponent,
-    SelectStaticPropertiesComponent,
     ProtocolComponent,
     ProtocolListComponent,
     FormatListComponent,
@@ -97,9 +91,11 @@ import { AdapterDescriptionComponent } from './data-marketplace/adapter-descript
     DataMarketplaceComponent,
     AdapterDescriptionComponent,
     ConnectComponent,
+    SelectStaticPropertiesComponent,
   ],
   providers: [
     RestService,
+    ConnectService,
     DataTypesService,
     TransformationRuleService,
     StaticPropertyUtilService,

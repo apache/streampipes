@@ -20,6 +20,7 @@ import { FormatDescription } from '../model/connect/grounding/FormatDescription'
 import { DataStreamDescription } from '../model/DataStreamDescription';
 import { EventSchema } from '../schema-editor/model/EventSchema';
 import { EventPropertyPrimitive } from '../schema-editor/model/EventPropertyPrimitive';
+import { ConnectService } from '../connect.service';
 
 @Injectable()
 export class DataMarketplaceService {
@@ -27,7 +28,8 @@ export class DataMarketplaceService {
 
   constructor(
     private http: HttpClient,
-    private authStatusService: AuthStatusService
+    private authStatusService: AuthStatusService,
+    private connectService: ConnectService
   ) {}
 
   private getTsonLd(): TsonLd {
@@ -123,7 +125,7 @@ export class DataMarketplaceService {
   > {
     return this.getAdapterDescriptions().map(adapterDescriptions => {
       adapterDescriptions = adapterDescriptions.filter(
-        this.isSpecificDescription
+        this.connectService.isSpecificDescription
       );
       return this.getProtocols().map(protocols => {
         for (let protocol of protocols) {
@@ -151,21 +153,5 @@ export class DataMarketplaceService {
         return adapterDescriptions;
       });
     });
-  }
-
-  isDataStreamDescription(adapter: AdapterDescription): boolean {
-    return adapter.constructor.name.includes('AdapterStreamDescription');
-  }
-
-  isDataSetDescription(adapter: AdapterDescription): boolean {
-    return adapter.constructor.name.includes('AdapterSetDescription');
-  }
-
-  isGenericDescription(adapter: AdapterDescription): boolean {
-    return adapter.id.includes('generic');
-  }
-
-  isSpecificDescription(adapter: AdapterDescription): boolean {
-    return adapter.id.includes('specific');
   }
 }

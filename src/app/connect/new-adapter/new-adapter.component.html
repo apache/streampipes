@@ -1,11 +1,11 @@
 <div style="margin-right: 10vh; margin-left: 10vh;" fxLayout="column" fxLayoutAlign="center stretch">
   <h1>Start Adapter: {{adapter.label}}</h1>
 
-  <mat-horizontal-stepper [linear]="isLinear" #stepper>
+  <mat-horizontal-stepper [linear]="isLinearStepper" #stepper>
 
     <mat-step>
       <ng-template matStepLabel>Settings</ng-template>
-      <app-static-free-input *ngFor="let config of adapter.config" [staticProperty]="config"></app-static-free-input>
+      <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"></app-static-property>
       <app-protocol [protocol]="adapter.protocol" *ngIf="adapter.id.includes('generic')"></app-protocol>
       <div fxLayoutAlign="end">
         <button color="primary" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>

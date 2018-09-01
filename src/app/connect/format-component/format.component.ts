@@ -37,6 +37,7 @@ export class FormatComponent {
     */
     this.selectedFormat = this.format;
     this.selectedFormatEmitter.emit(this.selectedFormat);
+    console.log(this.isSelected());
   }
   validateText(textValid) {
     if (textValid && this.format.edit) {
@@ -47,6 +48,9 @@ export class FormatComponent {
       this.validateEmitter.emit(false);
       this.selectedFormat = null;
     }
+  }
+  isSelected(): boolean {
+    return this.selectedFormat === this.format;
   }
   ngOnInit() {}
 }
