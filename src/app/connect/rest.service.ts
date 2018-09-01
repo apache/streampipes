@@ -123,7 +123,6 @@ export class RestService {
               tsonld.addClassMapping(TransformationRuleDescription);
 
               const r = tsonld.fromJsonLdType(response, 'sp:GuessSchema');
-              console.log('üüüüüüüü' + r);
               resolve(r);
             })
             .subscribe();

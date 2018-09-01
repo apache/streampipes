@@ -50,54 +50,22 @@ export class EventSchemaComponent implements OnInit {
 
   ngOnInit() {
     this.eventSchema = new EventSchema();
-    console.log(this.adapterDescription);
   }
 
   onNext() {
-    if (this.adapterDescription.constructor.name == 'AdapterSetDescription') {
+    if (
+      this.adapterDescription.constructor.name ==
+        'GenericAdapterSetDescription' ||
+      this.adapterDescription.constructor.name ==
+        'SpecificAdapterSetDescription'
+    ) {
       this.adapterDescription.dataSet.eventSchema = this.eventSchema;
     } else {
       this.adapterDescription.dataStream.eventSchema = this.eventSchema;
     }
 
-<<<<<<< HEAD
     this.transformationRuleService.setNewEventSchema(this.eventSchema);
     const transformationRules: TransformationRuleDescription[] = this.transformationRuleService.getTransformationRuleDescriptions();
     this.adapterDescription.rules = transformationRules;
   }
-=======
-
-    public guessSchema(): void {
-        this.isLoading = true;
-        this.restService.getGuessSchema(this.adapterDescription).subscribe(x => {
-            this.isLoading = false;
-            this.eventSchema  = x.eventSchema;
-            this.schemaGuess = x;
-
-            const oldEventSchema = this.eventSchema.copy();
-
-            this.transformationRuleService.setOldEventSchema(oldEventSchema);
-        });
-    }
-
-    ngOnInit() {
-        this.eventSchema = new EventSchema();
-    }
-
-    onNext() {
-        if (this.adapterDescription.constructor.name == 'GenericAdapterSetDescription' || this.adapterDescription.constructor.name == 'SpecificAdapterSetDescription') {
-             this.adapterDescription.dataSet.eventSchema = this.eventSchema;
-         } else {
-             this.adapterDescription.dataStream.eventSchema = this.eventSchema;
-         }
-
-
-        this.transformationRuleService.setNewEventSchema(this.eventSchema);
-        const transformationRules: TransformationRuleDescription[] = this.transformationRuleService.getTransformationRuleDescriptions();
-        this.adapterDescription.rules = transformationRules;
-    }
-
-
-
->>>>>>> 22ef7584943045541de093918562793fec36adb4
 }
