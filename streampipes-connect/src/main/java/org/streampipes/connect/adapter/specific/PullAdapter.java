@@ -17,6 +17,8 @@
 
 package org.streampipes.connect.adapter.specific;
 
+import com.google.gson.Gson;
+import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
@@ -24,17 +26,19 @@ import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
 import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
 import org.streampipes.connect.adapter.specific.sensemap.OpenSenseMapAdapter;
+import org.streampipes.connect.adapter.specific.sensemap.model.SenseBox;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-public abstract class PullAdapter extends SpecificDataStreamAdapter {
+public abstract class  PullAdapter extends SpecificDataStreamAdapter {
 
-    Logger logger = LoggerFactory.getLogger(PullAdapter.class);
+    protected static Logger logger = LoggerFactory.getLogger(PullAdapter.class);
     private ScheduledExecutorService scheduler;
     private ScheduledExecutorService errorThreadscheduler;
 
@@ -83,9 +87,7 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
 
         try {
             handle.get();
-        } catch (ExecutionException e ) {
-            logger.error("Error", e);
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e  ) {
             logger.error("Error", e);
         }
     }
@@ -93,5 +95,39 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
     @Override
     public void stopAdapter() throws AdapterException {
         scheduler.shutdownNow();
+    }
+
+    protected static String getDataFromEndpointString(String url) throws AdapterException{
+        String result = null;
+
+
+        logger.info("Started Request to endpoint: " + url);
+        try {
+            result = Request.Get(url)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asString();
+
+            if (result.startsWith("ï")) {
+                result = result.substring(3);
+            }
+
+            logger.info("Received data from request");
+
+        } catch (Exception e) {
+            String errorMessage = "Error while connecting to the open sensemap api";
+            logger.error(errorMessage, e);
+            throw new AdapterException(errorMessage);
+        }
+
+        return result;
+    }
+
+    protected static <T> T getDataFromEndpoint(String url, Class<T> clazz) throws AdapterException{
+
+        String rawJson = getDataFromEndpointString(url);
+        T all = new Gson().fromJson(rawJson, clazz);
+
+        return all;
     }
 }

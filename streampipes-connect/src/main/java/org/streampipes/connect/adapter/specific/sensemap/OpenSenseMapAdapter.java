@@ -17,11 +17,7 @@
 
 package org.streampipes.connect.adapter.specific.sensemap;
 
-import com.github.jqudt.onto.units.CountingUnit;
-import com.github.jqudt.onto.units.PressureOrStressUnit;
 import com.github.jqudt.onto.units.TemperatureUnit;
-import com.google.gson.Gson;
-import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.Adapter;
@@ -133,7 +129,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
                     .create(Datatypes.Double, SensorNames.KEY_TEMPERATURE)
                     .label(SensorNames.LABEL_TEMPERATURE)
                     .description("Measurement for the temperature")
-//                    .measurementUnit(TemperatureUnit.CELSIUS.getResource())
+                    .measurementUnit(TemperatureUnit.CELSIUS.getResource())
                     .build());
         }
         if (selected(SensorNames.KEY_HUMIDITY)) {
@@ -203,22 +199,18 @@ public class OpenSenseMapAdapter extends PullAdapter {
     @Override
     protected void pullData() {
 
-        String rawJson = "n";
-
-
+        SenseBox[] result = {};
         try {
-            rawJson = getDataFromEndpoint();
+            String url = "https://api.opensensemap.org/boxes";
+            result = getDataFromEndpoint(url, SenseBox[].class);
         } catch (AdapterException e) {
             e.printStackTrace();
         }
 
-
-        SenseBox[] all = new Gson().fromJson(rawJson, SenseBox[].class);
-
-        logger.info("Number of all detected SenseBoxes: " + all.length);
+        logger.info("Number of all detected SenseBoxes: " + result.length);
 
         int count = 0;
-        for (SenseBox senseBox : all) {
+        for (SenseBox senseBox : result) {
             Map<String, Object> event = new HashMap<>();
 
             if (senseBox.getCreatedAt() != null) {
@@ -279,30 +271,5 @@ public class OpenSenseMapAdapter extends PullAdapter {
 
 
 
-    private String getDataFromEndpoint() throws AdapterException{
-        String result = null;
 
-        String url = "https://api.opensensemap.org/boxes";
-
-        logger.info("Started Request to endpoint: " + url);
-        try {
-            result = Request.Get("https://api.opensensemap.org/boxes")
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnContent().asString();
-
-            if (result.startsWith("ï")) {
-                result = result.substring(3);
-            }
-
-            logger.info("Received data from request");
-
-        } catch (Exception e) {
-            String errorMessage = "Error while connecting to the open sensemap api";
-            logger.error(errorMessage, e);
-            throw new AdapterException(errorMessage);
-        }
-
-        return result;
-    }
 }
