@@ -40,7 +40,10 @@ public class TestAdapterSerializer {
     formatDescription.addConfig(new FreeTextStaticProperty("internal-id", "test", "test"));
     desc.setFormatDescription(formatDescription);
 
+    // Add _id field to json, probably there is a cleaner solution
     String serialized = (GsonSerializer.getAdapterGson().toJson(desc));
+    serialized = serialized.substring(1);
+    serialized = "{\"_id\": \"1\", " + serialized;
 
     AdapterDescription deserialized = GsonSerializer.getAdapterGson().fromJson(serialized, AdapterDescription.class);
     assertEquals(deserialized.getAdapterId(), "http://streampipes.org/genericadapterstreamdescription");

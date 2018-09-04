@@ -101,12 +101,13 @@ public abstract class  PullAdapter extends SpecificDataStreamAdapter {
         String result = null;
 
 
-        logger.info("Started Request to endpoint: " + url);
+        logger.info("Started Request to open sensemap endpoint: " + url);
         try {
             result = Request.Get(url)
                     .connectTimeout(1000)
                     .socketTimeout(100000)
                     .execute().returnContent().asString();
+
 
             if (result.startsWith("ï")) {
                 result = result.substring(3);
