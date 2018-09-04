@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.specific.PullAdapter;
+import org.streampipes.connect.adapter.specific.sensemap.model.CurrentLocation;
 import org.streampipes.connect.adapter.specific.sensemap.model.SenseBox;
 import org.streampipes.connect.adapter.specific.sensemap.model.Sensor;
 import org.streampipes.connect.exception.AdapterException;
@@ -39,6 +40,9 @@ import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.vocabulary.XSD;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 
 public class OpenSenseMapAdapter extends PullAdapter {
@@ -51,6 +55,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
 
     private String standartKeys[] = {"id", "timestamp", "model", "latitude", "longitude"};
 
+    private String url = "https://api.opensensemap.org/boxes";
 
     public OpenSenseMapAdapter() {
         super();
@@ -104,25 +109,39 @@ public class OpenSenseMapAdapter extends PullAdapter {
         List<EventProperty> allProperties = new ArrayList<>();
 
         // Set basic properties
-        allProperties.add(EpProperties.timestampProperty("timestamp"));
+        allProperties.add(EpProperties.timestampProperty(SensorNames.KEY_TIMESTAMP));
         allProperties.add(
                 PrimitivePropertyBuilder
-                        .create(Datatypes.Integer, "id")
+                        .create(Datatypes.Integer, SensorNames.KEY_ID)
                         .label(SensorNames.LABEL_ID)
                         .description("The unique identifier of a SenseBox")
                         .build());
         allProperties.add(
                 PrimitivePropertyBuilder
-                        .create(Datatypes.String, "name")
+                        .create(Datatypes.String, SensorNames.KEY_NAME)
                         .label(SensorNames.LABEL_NAME)
                         .description("The name of the SenseBox")
                         .build());
         allProperties.add(
                 PrimitivePropertyBuilder
-                        .create(Datatypes.String, "model")
+                        .create(Datatypes.String, SensorNames.KEY_MODEL)
                         .label(SensorNames.LABEL_MODEL)
                         .description("Model of the SenseBox")
                         .build());
+
+        allProperties.add(
+                PrimitivePropertyBuilder
+                        .create(Datatypes.String, SensorNames.KEY_LATITUDE)
+                        .label(SensorNames.LABEL_LATITUDE)
+                        .description("Latitude value of box location")
+                        .build());
+         allProperties.add(
+                PrimitivePropertyBuilder
+                        .create(Datatypes.String, SensorNames.KEY_LONGITUDE)
+                        .label(SensorNames.KEY_LONGITUDE)
+                        .description("Longitude value of box location")
+                        .build());
+
 
         if (selected(SensorNames.KEY_TEMPERATURE)) {
             allProperties.add(PrimitivePropertyBuilder
@@ -196,49 +215,77 @@ public class OpenSenseMapAdapter extends PullAdapter {
         return ID;
     }
 
-    @Override
-    protected void pullData() {
+    public List<Map<String, Object>> getEvents() {
 
-        SenseBox[] result = {};
+        List<Map<String, Object>> eventResults = new ArrayList<>();
+
+        SenseBox[] senseBoxResult = {};
         try {
-            String url = "https://api.opensensemap.org/boxes";
-            result = getDataFromEndpoint(url, SenseBox[].class);
+            senseBoxResult = getDataFromEndpoint(url, SenseBox[].class);
         } catch (AdapterException e) {
             e.printStackTrace();
         }
 
-        logger.info("Number of all detected SenseBoxes: " + result.length);
+        logger.info("Number of all detected SenseBoxes: " + senseBoxResult.length);
 
-        int count = 0;
-        for (SenseBox senseBox : result) {
+        for (SenseBox senseBox : senseBoxResult) {
             Map<String, Object> event = new HashMap<>();
 
             if (senseBox.getCreatedAt() != null) {
 
                 event.put(SensorNames.KEY_ID, senseBox.get_id());
                 // TODO change timestamp
-                event.put(SensorNames.KEY_TIMESTAMP, System.currentTimeMillis());
+                Long timestamp = getDateMillis(senseBox.getUpdatedAt());
+                event.put(SensorNames.KEY_TIMESTAMP, timestamp);
                 event.put(SensorNames.KEY_NAME, senseBox.getName());
                 event.put(SensorNames.KEY_MODEL, senseBox.getModel());
+
+                double latitude = getLatitude(senseBox);
+                double longitude = getLongitude(senseBox);
+                if (latitude != Double.MIN_VALUE && longitude != Double.MIN_VALUE) {
+                    event.put(SensorNames.KEY_LATITUDE, getLatitude(senseBox));
+                    event.put(SensorNames.KEY_LONGITUDE, getLongitude(senseBox));
+                } else {
+                    logger.info("Sense box id: " + senseBox.get_id() + " does not contain correct latitude or longitude values");
+                }
 
 //                Add Sensor values
                 for (Sensor s : senseBox.getSensors()) {
                     if (s.getLastMeasurement() != null) {
                         String key = SensorNames.getKey(s.getTitle());
                         if (key != SensorNames.KEY_NOT_FOUND) {
-                            event.put(key, s.getLastMeasurement().getValue());
+                            double value = getDoubleSensorValue(s.getLastMeasurement().getValue());
+                            if (value != Double.MIN_VALUE) {
+                                event.put(key, value);
+                            } else {
+                                logger.info("Sensor value " +s.getLastMeasurement().getValue() + " of sensor id: " +
+                                        s.get_id() + " in sense box id: " + senseBox.get_id() +
+                                        " is not correctly formatted");
+                            }
                         }
                     }
                 }
 
                 if (checkEvent(event)) {
-                    adapterPipeline.process(filterSensors(event));
-                    count++;
+                    eventResults.add(filterSensors(event));
                 }
             }
         }
 
-        logger.info("All data sucessfully processed and " + count + " events sent to Kafka");
+        logger.info("All data sucessfully processed and " + eventResults.size() + " events will be send to Kafka");
+
+        return eventResults;
+    }
+
+    @Override
+    protected void pullData() {
+
+        List<Map<String, Object>> events = getEvents();
+
+        for (Map<String, Object> event : events) {
+           adapterPipeline.process(event);
+        }
+
     }
 
     private Map<String, Object> filterSensors(Map<String, Object> event) {
@@ -262,6 +309,12 @@ public class OpenSenseMapAdapter extends PullAdapter {
             }
         }
 
+        for (String key : SensorNames.ALL_META_KEYS) {
+            if (!event.keySet().contains(key)) {
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -269,7 +322,62 @@ public class OpenSenseMapAdapter extends PullAdapter {
         return this.selectedSensors.contains(value);
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
+    public void setSelectedSensors(List<String> selectedSensors) {
+        this.selectedSensors = selectedSensors;
+    }
 
+    private Long getDateMillis(String date) {
 
+        if (date != null) {
+            Date result = Date.from(Instant.parse(date));
+            return result.getTime();
+        }
+        return Long.MIN_VALUE;
+    }
+
+    private double getDoubleSensorValue(String sensorValue) {
+        try {
+            return Double.parseDouble(sensorValue);
+        } catch (NumberFormatException e) {
+            return Double.MIN_VALUE;
+        }
+    }
+
+    private double getLatitude(SenseBox box) {
+       List<Double> latlong = getLatLong(box);
+
+       if (latlong != null) {
+           return latlong.get(1);
+       } else {
+           return Double.MIN_VALUE;
+       }
+
+    }
+
+    private double getLongitude(SenseBox box) {
+       List<Double> latlong = getLatLong(box);
+
+       if (latlong != null) {
+           return latlong.get(0);
+       } else {
+           return Double.MIN_VALUE;
+       }
+    }
+
+    private List<Double> getLatLong(SenseBox box) {
+        CurrentLocation currentLocation = box.getCurrentLocation();
+
+        if (currentLocation == null) {
+            return null;
+        }
+
+        List<Double> latlong = currentLocation.getCoordinates();
+
+        return latlong;
+
+    }
 }

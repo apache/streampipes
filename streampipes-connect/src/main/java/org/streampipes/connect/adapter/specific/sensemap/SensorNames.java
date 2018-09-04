@@ -27,6 +27,10 @@ public class SensorNames {
     public final static String KEY_TIMESTAMP = "timestamp";
     public final static String KEY_NAME = "name";
     public final static String KEY_MODEL = "model";
+    public final static String KEY_LATITUDE = "latitude";
+    public final static String KEY_LONGITUDE = "longitude";
+
+
     public final static String KEY_TEMPERATURE = "temperature";
     public final static String KEY_HUMIDITY = "humidity";
     public final static String KEY_PRESSURE = "pressure";
@@ -39,6 +43,11 @@ public class SensorNames {
     public final static String LABEL_ID = "Id";
     public final static String LABEL_NAME = "Name";
     public final static String LABEL_MODEL = "Model";
+    public final static String LABEL_LATITUDE = "latitude";
+    public final static String LABEL_LONGITUDE = "longitude";
+
+
+
     public final static String LABEL_TEMPERATURE = "Temperature";
     public final static String LABEL_HUMIDITY = "Humidity";
     public final static String LABEL_PRESSURE = "Pressure";
@@ -76,7 +85,7 @@ public class SensorNames {
             LABEL_PM2_5
     };
     public final static List<String> ALL_META_KEYS = Arrays.asList(
-            KEY_ID, KEY_NAME, KEY_TIMESTAMP, KEY_MODEL
+            KEY_ID, KEY_NAME, KEY_TIMESTAMP, KEY_MODEL, KEY_LONGITUDE, KEY_LATITUDE
     );
 
 
