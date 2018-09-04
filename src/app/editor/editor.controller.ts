@@ -18,6 +18,7 @@ export class EditorCtrl {
     activeType: any;
     tabs: any;
     currentlyFocusedElement: any;
+    ShepherdService: any;
 
     constructor($rootScope,
                 RestApi,
@@ -25,7 +26,8 @@ export class EditorCtrl {
                 $window,
                 JsplumbBridge,
                 EditorDialogManager,
-                AuthStatusService) {
+                AuthStatusService,
+                ShepherdService) {
 
         this.$rootScope = $rootScope;
         this.RestApi = RestApi;
@@ -34,6 +36,7 @@ export class EditorCtrl {
         this.JsplumbBridge = JsplumbBridge;
         this.EditorDialogManager = EditorDialogManager;
         this.AuthStatusService = AuthStatusService;
+        this.ShepherdService = ShepherdService;
 
         this.currentElements = [];
         this.allElements = {};
@@ -56,6 +59,7 @@ export class EditorCtrl {
                     if (!user.hideTutorial || user.hideTutorial == undefined) {
                         this.EditorDialogManager.showTutorialDialog().then(() => {
                             user.hideTutorial = true;
+                            this.ShepherdService.startTour();
                             this.RestApi.updateUserDetails(user).success(data => {
                                 this.$window.open('https://docs.streampipes.org', '_blank');
                             });
@@ -118,6 +122,7 @@ export class EditorCtrl {
     loadCurrentElements(type) {
         this.currentElements = this.allElements[type];
         this.activeType = type;
+        this.ShepherdService.trigger(type);
     }
 
     loadSources() {
@@ -186,4 +191,5 @@ EditorCtrl.$inject = ['$rootScope',
     '$window',
     'JsplumbBridge',
     'EditorDialogManager',
-    'AuthStatusService'];
+    'AuthStatusService',
+    'ShepherdService'];

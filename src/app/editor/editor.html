@@ -2,7 +2,7 @@
     <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
 
         <div layout-fill>
-            <md-tabs md-dynamic-height md-border-bottom md-selected="ctrl.selectedTab">
+            <md-tabs id="pe-type" md-dynamic-height md-border-bottom md-selected="ctrl.selectedTab">
 
                 <md-tab ng-repeat="tab in ctrl.tabs"
                         label="{{tab.title}}"
@@ -30,7 +30,7 @@
             </md-button>
         </div>
     </div>
-    <div ng-show="!ctrl.minimizedEditorStand" style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ccc">
+    <div id="shepherd-test" ng-show="!ctrl.minimizedEditorStand" style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ccc">
         <pipeline-element-icon-stand active-type="ctrl.activeType" current-elements="ctrl.currentElements"></pipeline-element-icon-stand>
     </div>
     <pipeline-assembly raw-pipeline-model="ctrl.rawPipelineModel" all-elements="ctrl.allElements" current-modified-pipeline-id="ctrl.currentModifiedPipelineId"></pipeline-assembly>

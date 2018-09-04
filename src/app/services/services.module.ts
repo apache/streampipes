@@ -22,6 +22,7 @@ import { PipelineElementIconService } from './pipeline-icon.service'
 import { ObjectProvider } from './object-provider.service'
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { TransitionService } from "./transition.service";
+import { ShepherdService } from "./shepherd.service";
 
 export default angular.module('sp.services', [spConstants])
 	.service('ImageChecker', ImageChecker)
@@ -42,4 +43,5 @@ export default angular.module('sp.services', [spConstants])
     .service('JsplumbConfigService', JsplumbConfigService)
     .service('PipelineElementIconService', PipelineElementIconService)
 	.service('TransitionService', TransitionService)
+	.service('ShepherdService', ShepherdService)
 	.name;
