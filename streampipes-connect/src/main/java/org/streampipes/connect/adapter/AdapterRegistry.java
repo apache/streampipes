@@ -37,6 +37,7 @@ import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.HttpStreamProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.MqttProtocol;
+import org.streampipes.connect.adapter.specific.gdelt.GdeltAdapter;
 import org.streampipes.connect.adapter.specific.sensemap.OpenSenseMapAdapter;
 import org.streampipes.connect.adapter.specific.twitter.TwitterAdapter;
 import org.streampipes.model.connect.adapter.AdapterDescription;
@@ -58,6 +59,7 @@ public class AdapterRegistry {
         allAdapters.put(GenericDataStreamAdapter.ID, new GenericDataStreamAdapter());
         allAdapters.put(TwitterAdapter.ID, new TwitterAdapter());
         allAdapters.put(OpenSenseMapAdapter.ID, new OpenSenseMapAdapter());
+        allAdapters.put(GdeltAdapter.ID, new GdeltAdapter());
 
         return allAdapters;
     }
