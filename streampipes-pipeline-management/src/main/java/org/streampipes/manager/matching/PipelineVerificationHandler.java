@@ -342,7 +342,8 @@ public class PipelineVerificationHandler {
     }
 
 
-    private List<InvocableStreamPipesEntity> makeInvocationGraphs(NamedStreamPipesEntity rootElement) {
+    public List<InvocableStreamPipesEntity> makeInvocationGraphs(NamedStreamPipesEntity
+                                                                        rootElement) {
         PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
         return new InvocationGraphBuilder(pipelineGraph, null).buildGraphs();
     }
