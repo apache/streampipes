@@ -21,6 +21,8 @@ import { DataStreamDescription } from '../model/DataStreamDescription';
 import { EventSchema } from '../schema-editor/model/EventSchema';
 import { EventPropertyPrimitive } from '../schema-editor/model/EventPropertyPrimitive';
 import { ConnectService } from '../connect.service';
+import { AnyStaticProperty } from '../model/AnyStaticProperty';
+import { Option } from '../model/Option';
 
 @Injectable()
 export class DataMarketplaceService {
@@ -44,6 +46,8 @@ export class DataMarketplaceService {
     tsonld.addClassMapping(SpecificAdapterStreamDescription);
 
     tsonld.addClassMapping(FreeTextStaticProperty);
+    tsonld.addClassMapping(AnyStaticProperty);
+    tsonld.addClassMapping(Option);
 
     tsonld.addClassMapping(ProtocolDescriptionList);
     tsonld.addClassMapping(ProtocolDescription);

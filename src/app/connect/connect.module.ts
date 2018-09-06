@@ -52,6 +52,7 @@ import { DataMarketplaceService } from './data-marketplace/data-marketplace.serv
 import { AdapterDescriptionComponent } from './data-marketplace/adapter-description/adapter-description.component';
 import { ConnectService } from './connect.service';
 import { SelectStaticPropertiesComponent } from './select-static-properties-component/select-static-properties.component';
+import { StaticAnyInput } from './static-properties/static-any-input/static-any-input.component';
 
 @NgModule({
   imports: [
@@ -84,6 +85,7 @@ import { SelectStaticPropertiesComponent } from './select-static-properties-comp
     StaticUrlInputComponent,
     StaticTextInputComponent,
     StaticFreeInputComponent,
+    StaticAnyInput,
     ProtocolComponent,
     ProtocolListComponent,
     FormatListComponent,
