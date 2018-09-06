@@ -87,9 +87,9 @@ public class OpenSenseMapAdapter extends PullAdapter {
 
         FreeTextStaticProperty sensorType = new FreeTextStaticProperty("sensortype", "Sensor Type",
                 "Follow this Hashtag.");
-//        adapterDescription.addConfig(possibleSensors);
+        adapterDescription.addConfig(possibleSensors);
 
-        adapterDescription.addConfig(sensorType);
+//        adapterDescription.addConfig(sensorType);
 
         return adapterDescription;
     }
