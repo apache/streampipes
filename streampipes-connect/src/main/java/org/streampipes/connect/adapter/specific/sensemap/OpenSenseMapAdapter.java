@@ -84,6 +84,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
         }
         AnyStaticProperty possibleSensors = new AnyStaticProperty("sensors", "Sensors", "Select the sensors that are included in the data stream");
         possibleSensors.setOptions(options);
+
         FreeTextStaticProperty sensorType = new FreeTextStaticProperty("sensortype", "Sensor Type",
                 "Follow this Hashtag.");
 //        adapterDescription.addConfig(possibleSensors);
