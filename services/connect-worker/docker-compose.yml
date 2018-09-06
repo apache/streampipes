@@ -4,8 +4,9 @@ services:
     image: ${SP_DOCKER_REGISTRY}/streampipes/ce/streampipes-connect-container:${SP_BACKEND_VERSION}
     depends_on:
       - consul
+      - couchdb
     ports:
-      - "8099:8099"
+      - "8098:8099"
     environment:
       - EXECUTION_MODE=WORKER
       - SP_CONNECT_CONTAINER_HOST=connect-master      
