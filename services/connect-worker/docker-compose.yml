@@ -1,0 +1,15 @@
+version: "2"
+services:
+  connect-worker:
+    image: ${SP_DOCKER_REGISTRY}/streampipes/ce/streampipes-connect-container:${SP_BACKEND_VERSION}
+    depends_on:
+      - consul
+    ports:
+      - "8099:8099"
+    environment:
+      - EXECUTION_MODE=WORKER
+      - SP_CONNECT_CONTAINER_HOST=connect-master      
+      - SP_CONNECT_CONTAINER_WORKER=connect-worker
+    networks:
+      spnet:
+
