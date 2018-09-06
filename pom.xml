@@ -527,12 +527,6 @@
         <module>streampipes-wrapper-standalone</module>
         <module>streampipes-storage-couchdb</module>
         <module>streampipes-storage-management</module>
-        <module>streampipes-logging</module>
-        <module>archetypes/streampipes-archetype-pe-sources</module>
-        <module>archetypes/streampipes-archetype-pe-jvm</module>
-        <module>streampipes-connect-container</module>
-        <module>streampipes-test-utils</module>
-        <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-rest-shared</module>
         <module>streampipes-storage-rdf4j</module>
     </modules>

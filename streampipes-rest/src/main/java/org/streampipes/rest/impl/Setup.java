@@ -23,9 +23,9 @@ import org.streampipes.manager.setup.Installer;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.client.messages.SetupStatusMessage;
 import org.streampipes.model.client.setup.InitialSettings;
-import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.ISetup;
 import org.streampipes.rest.notifications.NotificationListener;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
