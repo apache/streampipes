@@ -6,7 +6,7 @@ services:
       - consul
       - couchdb
     ports:
-      - "8098:8099"
+      - "8098:8098"
     environment:
       - EXECUTION_MODE=WORKER
       - SP_CONNECT_CONTAINER_HOST=connect-master      
