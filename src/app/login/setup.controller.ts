@@ -36,9 +36,6 @@ export class SetupCtrl {
         };
     }
 
-
-
-
     configure(currentInstallationStep) {
         this.installationRunning = true;
         this.loading = true;
