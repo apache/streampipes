@@ -104,6 +104,7 @@
     "karma-verbose-reporter": "0.0.6",
     "mustache": "^2.3.0",
     "node-sass": "^4.8.3",
+    "prettier": "1.14.2",
     "raw-loader": "^0.5.1",
     "sass-loader": "^6.0.7",
     "to-string-loader": "^1.1.5",

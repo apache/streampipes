@@ -1,0 +1,30 @@
+<div [className]="adapter.couchDbId ? 'adapter-box' : 'adapter-description-box'" fxFlex fxLayout="column">
+    <div class="header" fxLayout="row" fxLayoutAlign="space-between center">
+        <div class="type" fxLayout="column">
+            <div class="type-data" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon *ngIf="isDataSetDescription()" class="historic">lens</mat-icon>
+                <mat-icon *ngIf="isDataStreamDescription()" class="real-time">lens</mat-icon>
+                <p *ngIf="isDataSetDescription()">Historic</p>
+                <p *ngIf="isDataStreamDescription()">Real-Time</p>
+            </div>
+            <h3>{{adapter.label}}</h3>
+        </div>
+        <div class="icon">
+            <img *ngIf="isSpecificDescription()" [src]="adapter.iconUrl" class="iconImg" />
+            <img *ngIf="isGenericDescription() && adapter.label.includes('Kafka')" src="https://pbs.twimg.com/profile_images/781633389577195521/kazUJooF_400x400.jpg"
+                class="iconImg" />
+            <img *ngIf="isGenericDescription() && adapter.label.includes('MQTT')" src="https://www.penninkhof.com/wp-content/uploads/2015/03/MQTT.png"
+                class="iconImg" />
+            <img *ngIf="isGenericDescription() && adapter.label.includes('HTTP')" src="https://cdn0.iconfinder.com/data/icons/seo-smart-pack/128/grey_new_seo2-04-512.png"
+                class="iconImg" />
+        </div>
+    </div>
+    <div class="footer" fxLayout="row" fxLayoutAlign="space-between end">
+        <div class="description">
+            <p>{{adapter.description}}</p>
+        </div>
+        <div *ngIf="adapter.couchDbId" class="delete" (click)="deleteAdapter(adapter)">
+            <mat-icon>delete</mat-icon>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,4 @@
+<div fxLayout="column">
+    <p>{{staticProperty.label}}: </p>
+    <mat-checkbox *ngFor="let option of staticProperty.options" [(ngModel)]="option.selected">{{option.name}}</mat-checkbox>
+</div>

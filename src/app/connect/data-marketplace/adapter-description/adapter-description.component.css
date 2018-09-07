@@ -1,0 +1,34 @@
+.adapter-box {
+  height: 100%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding: 10px;
+}
+.adapter-description-box {
+  height: 100%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  cursor: pointer;
+  padding: 10px;
+  opacity: 0.8;
+}
+.adapter-description-box:hover {
+  opacity: 1;
+}
+.delete {
+  cursor: pointer;
+}
+.type p {
+  padding: 4px;
+  margin: 0;
+}
+.iconImg {
+  height: 40px;
+  margin-right: 15px;
+}
+.historic {
+  cursor: pointer;
+  color: orange;
+}
+.real-time {
+  cursor: pointer;
+  color: yellow;
+}
