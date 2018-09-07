@@ -20,14 +20,16 @@ import org.streampipes.connect.adapter.specific.PullAdapter;
 import org.streampipes.connect.adapter.specific.nswaustralia.trafficcamera.model.Feature;
 import org.streampipes.connect.adapter.specific.nswaustralia.trafficcamera.model.FeatureCollection;
 import org.streampipes.connect.adapter.specific.sensemap.SensorNames;
+import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
+import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.utils.Datatypes;
 
 import java.io.IOException;
@@ -35,10 +37,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class NswTrafficCameraAdapter extends PullAdapter {
 
-  public static final String ID = "http://streampipes.org/adapter/specific/opensensemap";
+  public static final String ID = "http://streampipes.org/adapter/specific/nswtrafficcamera";
   private static final String API_KEY = "";
 
   public NswTrafficCameraAdapter() {
@@ -56,6 +59,11 @@ public class NswTrafficCameraAdapter extends PullAdapter {
     for (Map<String, Object> event : events) {
       adapterPipeline.process(event);
     }
+  }
+
+  @Override
+  protected PollingSettings getPollingIntervalInSeconds() {
+    return PollingSettings.from(TimeUnit.MINUTES, 5);
   }
 
   private List<Map<String, Object>> getEvents() {
@@ -76,18 +84,11 @@ public class NswTrafficCameraAdapter extends PullAdapter {
 
   @Override
   public AdapterDescription declareModel() {
-    AdapterDescription adapterDescription = new SpecificAdapterStreamDescription();
-    adapterDescription.setAdapterId(ID);
-    adapterDescription.setUri(ID);
-    adapterDescription.setName("NSW Traffic Cameras");
-    adapterDescription.setDescription("Traffic camera images produced by NSW Australia");
-
-    FreeTextStaticProperty apiKey = new FreeTextStaticProperty("api-key", "API Key", "The TfNSW " +
-            "API key");
-
-    adapterDescription.addConfig(apiKey);
-
-    return adapterDescription;
+    return SpecificDataStreamAdapterBuilder.create(ID, "NSW Traffic Cameras", "Traffic camera " +
+            "images produced by NSW Australia")
+            .requiredTextParameter(Labels.from("api-key", "API Key", "The TfNSW " +
+                    "API key"))
+            .build();
   }
 
   @Override

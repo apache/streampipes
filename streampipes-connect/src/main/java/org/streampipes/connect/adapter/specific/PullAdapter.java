@@ -25,6 +25,7 @@ import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
 import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
+import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
@@ -37,13 +38,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public abstract class  PullAdapter extends SpecificDataStreamAdapter {
+public abstract class PullAdapter extends SpecificDataStreamAdapter {
 
     protected static Logger logger = LoggerFactory.getLogger(PullAdapter.class);
     private ScheduledExecutorService scheduler;
     private ScheduledExecutorService errorThreadscheduler;
-
-    private long interval = 60;
 
     protected AdapterPipeline adapterPipeline;
 
@@ -56,7 +55,9 @@ public abstract class  PullAdapter extends SpecificDataStreamAdapter {
     }
 
     protected abstract void pullData();
-    
+
+    protected abstract PollingSettings getPollingIntervalInSeconds();
+
     @Override
     public void startAdapter() throws AdapterException {
 
@@ -84,7 +85,8 @@ public abstract class  PullAdapter extends SpecificDataStreamAdapter {
         };
 
         scheduler = Executors.newScheduledThreadPool(1);
-        ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1, interval, TimeUnit.SECONDS);
+        ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1,
+                getPollingIntervalInSeconds().getValue(), getPollingIntervalInSeconds().getTimeUnit());
 
         try {
             handle.get();
