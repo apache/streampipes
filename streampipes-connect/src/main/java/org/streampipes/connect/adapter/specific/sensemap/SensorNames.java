@@ -88,7 +88,6 @@ public class SensorNames {
             KEY_ID, KEY_NAME, KEY_TIMESTAMP, KEY_MODEL, KEY_LONGITUDE, KEY_LATITUDE
     );
 
-
     public static String getKey(String germanKeyValue) {
         if (check(germanKeyValue, GERMAN_TEMPERATURE)) {
             return KEY_TEMPERATURE;

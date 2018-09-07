@@ -41,7 +41,12 @@ import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.vocabulary.XSD;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OpenSenseMapAdapter extends PullAdapter {
 
@@ -94,7 +99,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
 
     @Override
     public Adapter getInstance(AdapterDescription adapterDescription) {
-        return  new OpenSenseMapAdapter((SpecificAdapterStreamDescription) adapterDescription);
+        return new OpenSenseMapAdapter((SpecificAdapterStreamDescription) adapterDescription);
     }
 
     @Override
