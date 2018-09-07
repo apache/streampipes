@@ -25,16 +25,17 @@ import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
 import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
-import org.streampipes.connect.adapter.specific.sensemap.OpenSenseMapAdapter;
-import org.streampipes.connect.adapter.specific.sensemap.model.SenseBox;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public abstract class  PullAdapter extends SpecificDataStreamAdapter {
 
@@ -55,7 +56,7 @@ public abstract class  PullAdapter extends SpecificDataStreamAdapter {
     }
 
     protected abstract void pullData();
-
+    
     @Override
     public void startAdapter() throws AdapterException {
 

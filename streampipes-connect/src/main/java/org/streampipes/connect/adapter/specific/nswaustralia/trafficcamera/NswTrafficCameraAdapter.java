@@ -39,7 +39,11 @@ import java.util.Map;
 public class NswTrafficCameraAdapter extends PullAdapter {
 
   public static final String ID = "http://streampipes.org/adapter/specific/opensensemap";
+  private static final String API_KEY = "";
 
+  public NswTrafficCameraAdapter() {
+    super();
+  }
 
   public NswTrafficCameraAdapter(SpecificAdapterStreamDescription adapterDescription) {
     super(adapterDescription);
@@ -54,13 +58,13 @@ public class NswTrafficCameraAdapter extends PullAdapter {
     }
   }
 
-  private List<Map<String,Object>> getEvents() {
+  private List<Map<String, Object>> getEvents() {
     List<Map<String, Object>> events = new ArrayList<>();
 
     try {
-      FeatureCollection cameras = new CameraInfoHttpExecutor(null).getCameraData();
+      FeatureCollection cameras = new CameraInfoHttpExecutor(API_KEY).getCameraData();
 
-      for(Feature cameraInfo : cameras.getFeatures()) {
+      for (Feature cameraInfo : cameras.getFeatures()) {
         events.add(new CameraFeatureTransformer(cameraInfo).toMap());
       }
     } catch (IOException e) {

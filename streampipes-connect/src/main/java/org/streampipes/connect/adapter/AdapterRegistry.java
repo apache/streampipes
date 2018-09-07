@@ -38,13 +38,12 @@ import org.streampipes.connect.adapter.generic.protocol.stream.HttpStreamProtoco
 import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.MqttProtocol;
 import org.streampipes.connect.adapter.specific.gdelt.GdeltAdapter;
+import org.streampipes.connect.adapter.specific.nswaustralia.trafficcamera.NswTrafficCameraAdapter;
 import org.streampipes.connect.adapter.specific.sensemap.OpenSenseMapAdapter;
 import org.streampipes.connect.adapter.specific.twitter.TwitterAdapter;
 import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -60,6 +59,7 @@ public class AdapterRegistry {
         allAdapters.put(TwitterAdapter.ID, new TwitterAdapter());
         allAdapters.put(OpenSenseMapAdapter.ID, new OpenSenseMapAdapter());
         allAdapters.put(GdeltAdapter.ID, new GdeltAdapter());
+        allAdapters.put(NswTrafficCameraAdapter.ID, new NswTrafficCameraAdapter());
 
         return allAdapters;
     }
