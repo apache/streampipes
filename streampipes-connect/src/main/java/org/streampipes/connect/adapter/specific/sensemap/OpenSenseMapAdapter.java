@@ -40,8 +40,6 @@ import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.vocabulary.XSD;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
 

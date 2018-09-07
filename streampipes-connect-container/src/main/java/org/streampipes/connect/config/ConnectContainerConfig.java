@@ -36,10 +36,10 @@ public enum ConnectContainerConfig {
     config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");
 
     config.register(ConfigKeys.CONNECT_CONTAINER_PORT, Config.MASTER_PORT, "The port of the connect container");
-    config.register(ConfigKeys.CONNECT_CONTAINER_HOST, "connect-container-master", "The hostname of the connect container");
+    config.register(ConfigKeys.CONNECT_CONTAINER_HOST, "connect-master", "The hostname of the connect container");
 
     config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT, Config.WORKER_PORT, "The port of the connect container");
-    config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST, "connect-container-worker", "The hostname of the connect container");
+    config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST, "connect-worker", "The hostname of the connect container");
   }
 
   public String getBackendApiUrl() {
