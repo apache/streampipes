@@ -66,7 +66,7 @@ public abstract class Adapter {
 
     public abstract Adapter getInstance(AdapterDescription adapterDescription);
 
-    public abstract GuessSchema getSchema(AdapterDescription adapterDescription);
+    public abstract GuessSchema getSchema(AdapterDescription adapterDescription) throws AdapterException;
 
     public abstract String getId();
 

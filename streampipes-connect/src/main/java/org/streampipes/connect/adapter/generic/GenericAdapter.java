@@ -78,7 +78,7 @@ public abstract class GenericAdapter extends Adapter {
 
 
     @Override
-    public GuessSchema getSchema(AdapterDescription adapterDescription) {
+    public GuessSchema getSchema(AdapterDescription adapterDescription) throws AdapterException {
         Parser parser = getParser((GenericAdapterDescription) adapterDescription);
         Format format = getFormat((GenericAdapterDescription) adapterDescription);
 
@@ -89,7 +89,8 @@ public abstract class GenericAdapter extends Adapter {
         return protocol.getGuessSchema();
     }
 
-    private Parser getParser(GenericAdapterDescription adapterDescription) {
+    private Parser getParser(GenericAdapterDescription adapterDescription) throws AdapterException {
+         if (adapterDescription.getFormatDescription() == null) throw new AdapterException("Format description of Adapter ist empty");
          return AdapterRegistry.getAllParsers().get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
     }
 
