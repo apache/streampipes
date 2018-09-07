@@ -18,12 +18,20 @@
 package org.streampipes.connect.management;
 
 import org.junit.Test;
+import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectFormat;
+import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectParser;
+import org.streampipes.connect.adapter.generic.format.xml.XmlFormat;
+import org.streampipes.connect.adapter.generic.format.xml.XmlParser;
+import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
+import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.adapter.specific.twitter.TwitterAdapter;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
+import org.streampipes.model.connect.grounding.FormatDescription;
+import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 
 import static org.junit.Assert.*;
@@ -61,5 +69,129 @@ public class AdapterDeserializerTest {
 
         assertTrue(a instanceof SpecificAdapterStreamDescription);
         assertEquals(TwitterAdapter.ID, a.getUri());
+    }
+
+    @Test
+    public void getFormatDescriptionHttpProtocolXmlFormat() throws AdapterException {
+        AdapterDescription genericAdapterStreamDescription = new GenericAdapterStreamDescription();
+
+        XmlFormat xmlFormat = new XmlFormat("row");
+        HttpProtocol httpProtocol = new HttpProtocol(new XmlParser("row"), xmlFormat, "URL");
+
+        FormatDescription formatDescription = xmlFormat.declareModel();
+        ProtocolDescription protocolDescription = httpProtocol.declareModel();
+
+
+        ((GenericAdapterStreamDescription) genericAdapterStreamDescription).setProtocolDescription(protocolDescription);
+        ((GenericAdapterStreamDescription) genericAdapterStreamDescription).setFormatDescription(formatDescription);
+
+        String jsonLd = JsonLdUtils.toJsonLD(genericAdapterStreamDescription);
+
+        AdapterDescription a = AdapterDeserializer.getAdapterDescription(jsonLd);
+
+        assertNotNull(((GenericAdapterStreamDescription) a).getFormatDescription());
+    }
+
+    @Test
+    public void getFormatDescriptionKafkaProtocolJsobObjectFormat() throws AdapterException {
+        AdapterDescription genericAdapterStreamDescription = new GenericAdapterStreamDescription();
+
+        JsonObjectFormat jsonObjectFormat = new JsonObjectFormat();
+        KafkaProtocol kafkaProtocol = new KafkaProtocol(new JsonObjectParser(), jsonObjectFormat, "URL", "broker");
+
+        FormatDescription formatDescription = jsonObjectFormat.declareModel();
+        ProtocolDescription protocolDescription = kafkaProtocol.declareModel();
+
+        ((GenericAdapterStreamDescription) genericAdapterStreamDescription).setProtocolDescription(protocolDescription);
+        ((GenericAdapterStreamDescription) genericAdapterStreamDescription).setFormatDescription(formatDescription);
+
+        String jsonLd = JsonLdUtils.toJsonLD(genericAdapterStreamDescription);
+
+        AdapterDescription a = AdapterDeserializer.getAdapterDescription(jsonLd);
+
+        assertNotNull(((GenericAdapterStreamDescription) a).getFormatDescription());
+    }
+
+    @Test
+    public void asdf12() throws AdapterException {
+
+        AdapterDescription a = AdapterDeserializer.getAdapterDescription(
+
+                "{  \n" +
+                        "    \"@context\":{  \n" +
+                        "        \"sp\":\"https://streampipes.org/vocabulary/v1/\",\n" +
+                        "        \"spi\":\"urn:streampipes.org:spi:\",\n" +
+                        "        \"foaf\":\"http://xmlns.com/foaf/0.1/\"\n" +
+                        "    },\n" +
+                        "    \"@graph\":[  \n" +
+                        "        {  \n" +
+                        "            \"@id\":\"http://streampipes.org/dataset/69165e7e-e837-2b48-455b-909be67abb7e\",\n" +
+                        "            \"@type\":\"sp:DataSet\"\n" +
+                        "        },\n" +
+                        "        {  \n" +
+                        "            \"@id\":\"http://streampipes.org/genericadaptersetdescription\",\n" +
+                        "            \"@type\":\"sp:GenericAdapterSetDescription\",\n" +
+                        "            \"http://www.w3.org/2000/01/rdf-schema#description\":\"This is the description for the http protocol\",\n" +
+                        "            \"http://www.w3.org/2000/01/rdf-schema#label\":\"HTTP (Set)\",\n" +
+                        "            \"sp:config\":[  \n" +
+                        "\n" +
+                        "            ],\n" +
+                        "            \"sp:hasDataSet\":{  \n" +
+                        "                \"@id\":\"http://streampipes.org/dataset/69165e7e-e837-2b48-455b-909be67abb7e\"\n" +
+                        "            },\n" +
+                        "            \"sp:hasFormat\":{  \n" +
+                        "                \"@id\":\"sp:format/xml\"\n" +
+                        "            },\n" +
+                        "            \"sp:hasProtocol\":{  \n" +
+                        "                \"@id\":\"sp:protocol/set/http\"\n" +
+                        "            },\n" +
+                        "            \"sp:hasUri\":\"http://streampipes.org/genericadaptersetdescription\"\n" +
+                        "        },\n" +
+                        "        {  \n" +
+                        "            \"@id\":\"sp:format/xml\",\n" +
+                        "            \"@type\":\"sp:FormatDescription\",\n" +
+                        "            \"http://www.w3.org/2000/01/rdf-schema#description\":\"This is the description for the XML format\",\n" +
+                        "            \"http://www.w3.org/2000/01/rdf-schema#label\":\"XML\",\n" +
+                        "            \"sp:config\":{  \n" +
+                        "                \"@id\":\"spi:freetextstaticproperty:CEVrUb\"\n" +
+                        "            },\n" +
+                        "            \"sp:hasUri\":\"https://streampipes.org/vocabulary/v1/format/xml\"\n" +
+                        "        },\n" +
+                        "        {  \n" +
+                        "            \"@id\":\"sp:protocol/set/http\",\n" +
+                        "            \"@type\":\"sp:ProtocolDescription\",\n" +
+                        "            \"http://www.w3.org/2000/01/rdf-schema#description\":\"This is the description for the http protocol\",\n" +
+                        "            \"http://www.w3.org/2000/01/rdf-schema#label\":\"HTTP (Set)\",\n" +
+                        "            \"sp:config\":{  \n" +
+                        "                \"@id\":\"spi:freetextstaticproperty:dbiWfF\"\n" +
+                        "            },\n" +
+                        "            \"sp:hasUri\":\"https://streampipes.org/vocabulary/v1/protocol/set/http\",\n" +
+                        "            \"sp:sourceType\":\"SET\"\n" +
+                        "        },\n" +
+                        "        {  \n" +
+                        "            \"@id\":\"spi:freetextstaticproperty:CEVrUb\",\n" +
+                        "            \"@type\":\"sp:FreeTextStaticProperty\",\n" +
+                        "            \"http://www.w3.org/2000/01/rdf-schema#description\":\"The Tag name of the events\",\n" +
+                        "            \"http://www.w3.org/2000/01/rdf-schema#label\":\"Tag\",\n" +
+                        "            \"sp:hasValue\":\"asd\",\n" +
+                        "            \"sp:internalName\":\"tag\",\n" +
+                        "            \"sp:requiredDomainProperty\":\"\"\n" +
+                        "        },\n" +
+                        "        {  \n" +
+                        "            \"@id\":\"spi:freetextstaticproperty:dbiWfF\",\n" +
+                        "            \"@type\":\"sp:FreeTextStaticProperty\",\n" +
+                        "            \"http://www.w3.org/2000/01/rdf-schema#description\":\"This property defines the URL for the http request.\",\n" +
+                        "            \"http://www.w3.org/2000/01/rdf-schema#label\":\"url\",\n" +
+                        "            \"sp:hasValue\":\"sdf\",\n" +
+                        "            \"sp:internalName\":\"url\",\n" +
+                        "            \"sp:requiredDomainProperty\":\"\"\n" +
+                        "        }\n" +
+                        "    ]\n" +
+                        "}"
+
+        );
+
+        assertNotNull(((GenericAdapterStreamDescription) a).getFormatDescription());
+
     }
 }
