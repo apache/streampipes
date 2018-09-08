@@ -12,8 +12,17 @@ export class SavePipelineController {
     updateMode: any;
     submitPipelineForm: any;
     TransitionService: any;
+    ShepherdService: any;
 
-    constructor($mdDialog, $state, RestApi, $mdToast, ObjectProvider, pipeline, modificationMode, TransitionService) {
+    constructor($mdDialog,
+                $state,
+                RestApi,
+                $mdToast,
+                ObjectProvider,
+                pipeline,
+                modificationMode,
+                TransitionService,
+                ShepherdService) {
         this.RestApi = RestApi;
         this.$mdToast = $mdToast;
         this.$state = $state;
@@ -24,6 +33,7 @@ export class SavePipelineController {
         this.modificationMode = modificationMode;
         this.updateMode = "update";
         this.TransitionService = TransitionService;
+        this.ShepherdService = ShepherdService;
 
         this.getPipelineCategories();
     }
@@ -73,8 +83,13 @@ export class SavePipelineController {
                     this.displaySuccess(data);
                     this.hide();
                     this.TransitionService.makePipelineAssemblyEmpty(true);
-                    if (switchTab) this.$state.go("streampipes.pipelines");
-                    if (this.startPipelineAfterStorage) this.$state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
+                    this.ShepherdService.hideCurrentStep();
+                    if (switchTab) {
+                        this.$state.go("streampipes.pipelines");
+                    }
+                    if (this.startPipelineAfterStorage) {
+                        this.$state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
+                    }
                     // TODO clear assembly
                     //this.clearAssembly();
 
@@ -102,4 +117,4 @@ export class SavePipelineController {
     }
 }
 
-SavePipelineController.$inject = ['$mdDialog', '$state', 'RestApi', '$mdToast', 'ObjectProvider', 'pipeline', 'modificationMode', 'TransitionService'];
+SavePipelineController.$inject = ['$mdDialog', '$state', 'RestApi', '$mdToast', 'ObjectProvider', 'pipeline', 'modificationMode', 'TransitionService', 'ShepherdService'];

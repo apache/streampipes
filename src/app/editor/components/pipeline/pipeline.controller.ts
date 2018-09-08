@@ -129,8 +129,8 @@ export class PipelineController {
                                 });
                             });
                         }
-                        if (this.ShepherdService.isTourActive) {
-                            this.ShepherdService.trigger(pipelineElementConfig);
+                        if (this.ShepherdService.isTourActive()) {
+                            this.ShepherdService.trigger("drop-" +pipelineElementConfig.type);
                         }
                     }
                 }
@@ -222,6 +222,9 @@ export class PipelineController {
                             var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
                             if (this.PipelineEditorService.isFullyConnected(pe)) {
                                 this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload);
+                                if (this.ShepherdService.isTourActive()) {
+                                    this.ShepherdService.trigger("customize-" +pe.type);
+                                }
                             }
                         } else {
                             this.JsplumbBridge.detach(info.connection);
