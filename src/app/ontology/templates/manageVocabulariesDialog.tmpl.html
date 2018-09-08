@@ -23,7 +23,10 @@
 	    		</div>
 	    	</md-list-item>
 	    	<p/>
-    	</div>  
+    	</div>
+		<div ng-if="ctrl.contexts.length === 0">
+			<i>(no vocabularies present)</i>
+		</div>
     	<div ng-show="ctrl.addSelected">
     	<md-divider></md-divider>
     	<h4>Add Vocabulary</h4>
@@ -51,15 +54,16 @@
 		    </div>
 		    </form>
 	    </div>
-    	<md-button ng-click="ctrl.showAddInput()" class="md-accent" ng-show="!ctrl.addSelected">Add Vocabulary</md-button>
-	    		    
+		<div style="margin-top:10px;">
+    		<sp-button sp-button-blue ng-click="ctrl.showAddInput()" ng-show="!ctrl.addSelected">Add Vocabulary</sp-button>
+		</div>
     </div>
     </form>
   </md-dialog-content>
   <div class="md-actions" layout="row">
-    <md-button ng-click="ctrl.hide()" style="margin-right:20px;" >
+    <sp-button sp-button-gray ng-click="ctrl.hide()">
       Close
-    </md-button>
+    </sp-button>
   </div>
   
 </md-dialog>

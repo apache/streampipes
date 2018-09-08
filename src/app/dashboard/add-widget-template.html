@@ -1,4 +1,4 @@
-<md-dialog aria-label="Pipeline Status">
+<md-dialog aria-label="Add Widget">
     <form>
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -85,15 +85,15 @@
             </div>
             <md-divider/>
             <div class="md-actions" layout="row">
-                <md-button ng-click="ctrl.cancel()" style="margin-right:20px;">
+                <sp-button sp-button-gray ng-click="ctrl.cancel()" style="margin-right:20px;">
                     Cancel
-                </md-button>
-                <md-button ng-click="ctrl.back()" style="margin-right:20px;" ng-if="!('select-viz'===ctrl.page)">
+                </sp-button>
+                <sp-button sp-button-gray ng-click="ctrl.back()" style="margin-right:20px;" ng-if="!('select-viz'===ctrl.page)">
                     Back
-                </md-button>
-                <md-button ng-click="ctrl.next()" class="md-raised md-accent" style="margin-right:20px;">
+                </sp-button>
+                <sp-button sp-button-blue ng-click="ctrl.next()" style="margin-right:20px;">
                     Next
-                </md-button>
+                </sp-button>
             </div>
         </div>
     </form>

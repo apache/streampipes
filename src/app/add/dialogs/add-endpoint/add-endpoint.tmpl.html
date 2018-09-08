@@ -3,9 +3,9 @@
         <div class="md-toolbar-tools">
             <h2>Endpoint Settings</h2>
             <span flex></span>
-            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+            <sp-button sp-button-flat class="md-icon-button" ng-click="ctrl.cancel()">
                 <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
-            </md-button>
+            </sp-button>
         </div>
     </md-toolbar>
 
@@ -18,7 +18,7 @@
                     {{rdfEndpoint.endpointUrl}}
                 </div>
                 <div class="md-list-item-text" flex="20" layout="column">
-                    <md-button  ng-click="ctrl.removeRdfEndpoint(rdfEndpoint._id)" class="md-icon-button"><md-icon md-svg-icon="action:ic_delete_24px" aria-label="Delete"></md-icon></md-button>
+                    <sp-button sp-button-flat ng-click="ctrl.removeRdfEndpoint(rdfEndpoint._id)" class="md-icon-button"><md-icon md-svg-icon="action:ic_delete_24px" aria-label="Delete"></md-icon></sp-button>
                 </div>
             </md-list-item>
             <p/>
@@ -32,17 +32,18 @@
                         </md-input-container>
                     </div>
                     <div class="md-list-item-text" flex="20" layout="column">
-                        <md-button  ng-click="ctrl.addRdfEndpoint(ctrl.newEndpoint)" class="md-icon-button"><md-icon md-svg-icon="content:ic_save_24px" aria-label="Delete"></md-icon></md-button>
+                        <sp-button sp-button-flat ng-click="ctrl.addRdfEndpoint(ctrl.newEndpoint)" class="md-icon-button"><md-icon md-svg-icon="content:ic_save_24px" aria-label="Delete"></md-icon></sp-button>
                     </div>
                 </md-list-item>
             </div>
-            <md-button ng-click="ctrl.showAddInput()" class="md-accent">Add RDF Endpoint</md-button>
         </md-list>
-
+        <div style="margin-top:10px;">
+            <sp-button sp-button-blue ng-click="ctrl.showAddInput()" sp-button-flat>Add RDF Endpoint</sp-button>
+        </div>
     </md-dialog-content>
     <div class="md-actions" layout="row">
-        <md-button ng-click="ctrl.hide()" style="margin-right:20px;">
+        <sp-button sp-button-gray ng-click="ctrl.hide()">
             Close
-        </md-button>
+        </sp-button>
     </div>
 </md-dialog>

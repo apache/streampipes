@@ -60,9 +60,9 @@ export class EditorCtrl {
                         this.EditorDialogManager.showTutorialDialog().then(() => {
                             user.hideTutorial = true;
                             this.ShepherdService.startTour();
-                            // this.RestApi.updateUserDetails(user).success(data => {
-                            //     this.$window.open('https://docs.streampipes.org', '_blank');
-                            // });
+                            this.RestApi.updateUserDetails(user).success(data => {
+                                this.$window.open('https://docs.streampipes.org', '_blank');
+                            });
                         }, function () {
                         });
                     }

@@ -2,8 +2,8 @@
     <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
         <div flex="none" layout-wrap layout="row" layout-align="start center"
              style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <md-button class="md-accent" ng-click="ctrl.openNamespaceDialog()">Manage Namespaces</md-button>
-            <md-button class="md-accent" ng-click="ctrl.openImportDialog()">Manage Vocabularies</md-button>
+            <sp-button sp-button-flat ng-click="ctrl.openNamespaceDialog()">Manage Namespaces</sp-button>
+            <sp-button sp-button-flat ng-click="ctrl.openImportDialog()">Manage Vocabularies</sp-button>
         </div>
         <div layout-fill>
             <md-tabs md-border-bottom>
@@ -16,10 +16,12 @@
     <div flex="100" layout="row" class="md-padding">
         <div layout="column" flex="100" ng-if="ctrl.selectedTab === 'PROPERTIES'">
             <div layout="row">
-                <md-button class="md-accent" ng-click="ctrl.openAddElementDialog('Property')">
-                    <md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Property"></md-icon>
+                <sp-button sp-button-blue ng-click="ctrl.openAddElementDialog('Property')">
+                    <i class="material-icons">
+                        add_circle_outline
+                    </i>
                     Create Property
-                </md-button>
+                </sp-button>
             </div>
             <div flex layout="row">
                 <div flex="30" layout="column" class="ontology-panel-main ontology-panel-property"
@@ -105,18 +107,18 @@
                                             {{rt.description}}
                                         </md-radio-button>
                                     </md-radio-group>
-                                    <md-button class="md-accent" ng-click="ctrl.addTypeDefinition()" type="button">Add
+                                    <sp-button sp-button-flat ng-click="ctrl.addTypeDefinition()" type="button">Add
                                         Type
                                         Definition
-                                    </md-button>
+                                    </sp-button>
                                 </div>
                             </div>
                             <md-divider></md-divider>
                             <div class="form-actions">
-                                <md-button class="md-accent md-raised" type="submit"
+                                <sp-button sp-button-blue type="submit"
                                            ng-disabled="ctrl.propertyForm.$pristine || ctrl.propertyForm.$invalid || ctrl.loading">
                                     Save
-                                </md-button>
+                                </sp-button>
                                 <md-progress-circular class="md-accent" md-mode="indeterminate"
                                                       ng-show="ctrl.loading"></md-progress-circular>
                                 <div class="md-warn" ng-show="errorMessagePresent">
@@ -130,14 +132,18 @@
         </div>
         <div layout="column" flex="100" ng-if="ctrl.selectedTab === 'CONCEPTS'">
             <div layout="row">
-                <md-button class="md-accent" ng-click="ctrl.openAddElementDialog('Concept')">
-                    <md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Concept"></md-icon>
+                <sp-button sp-button-blue ng-click="ctrl.openAddElementDialog('Concept')">
+                    <i class="material-icons">
+                        add_circle_outline
+                    </i>
                     Create Concept
-                </md-button>
-                <md-button class="md-accent" ng-click="ctrl.openAddElementDialog('Instance')">
-                    <md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Instance"></md-icon>
+                </sp-button>
+                <sp-button sp-button-blue ng-click="ctrl.openAddElementDialog('Instance')">
+                    <i class="material-icons">
+                        add_circle_outline
+                    </i>
                     Create Instance
-                </md-button>
+                </sp-button>
 
             </div>
             <div flex layout="row">

@@ -11,7 +11,7 @@
         </md-toolbar>
         <md-dialog-content class="md-dialog-content">
             <div>
-                <h4>These elements can't be connected.<h4/>
+                <h4>These elements can't be connected.</h4>
                     <h4>The input data stream does not satisfy the requirements specified by the data processor.</h4>
                     <md-button ng-click="ctrl.toggleStatusDetailsVisible()" type="button" class="md-accent">
                         <div ng-if="!ctrl.statusDetailsVisible">Show Details</div>
@@ -38,9 +38,9 @@
             </div>
         </md-dialog-content>
         <div class="md-actions" layout="row">
-            <md-button ng-click="ctrl.hide()" style="margin-right:20px;">
+            <sp-button sp-button-gray ng-click="ctrl.hide()">
                 Close
-            </md-button>
+            </sp-button>
         </div>
     </form>
 </md-dialog>

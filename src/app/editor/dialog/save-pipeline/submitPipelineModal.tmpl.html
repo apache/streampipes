@@ -53,17 +53,17 @@
         </form>
     </md-dialog-content>
     <div class="md-actions" layout="row">
-        <md-button ng-click="ctrl.hide()" style="margin-right:20px;">
+        <sp-button sp-button-gray ng-click="ctrl.hide()">
             Close
-        </md-button>
-        <md-button class="md-accent" style="margin-right:20px;" ng-disabled="ctrl.submitPipelineForm.$invalid"
+        </sp-button>
+        <sp-button sp-button-blue ng-disabled="ctrl.submitPipelineForm.$invalid"
                    ng-click="ctrl.savePipelineName(false)"
                    ng-disabled="ctrl.startPipelineAfterStorage">
             Save
-        </md-button>
-        <md-button class="md-accent" style="margin-right:20px;" ng-disabled="ctrl.submitPipelineForm.$invalid"
+        </sp-button>
+        <sp-button sp-button-blue ng-disabled="ctrl.submitPipelineForm.$invalid"
                    ng-click="ctrl.savePipelineName(true)">
             Save and go to pipeline view
-        </md-button>
+        </sp-button>
     </div>
 </md-dialog>

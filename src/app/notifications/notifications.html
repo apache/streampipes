@@ -7,12 +7,12 @@
                 <md-subheader class="md-primary">Unread Messages</md-subheader>
                 <md-list layout-padding>
                     <md-list-item class="md-3-line" ng-repeat="notification in ctrl.unreadNotifications">
-                        <md-button class="md-icon-button" ng-click="changeNotificationStatus(notification._id)">
+                        <sp-button sp-button-flat class="md-icon-button" ng-click="changeNotificationStatus(notification._id)">
                             <i class="material-icons" style="color: rgb(63,81,181);">markunread</i>
                             <md-tooltip md-direction="top">
                                 Mark as unread
                             </md-tooltip>
-                        </md-button>
+                        </sp-button>
                         <div class="md-list-item-text" style="margin-bottom:10px;margin-top:10px;">
                             <h3><b>{{notification.title}}</b></h3>
                             <div layout="row" layout-align="start center" style="margin-bottom:5px;">

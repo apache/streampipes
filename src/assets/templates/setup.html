@@ -113,20 +113,18 @@
                         <div flex layout="column">
 
                             <div layout layout-sm="column">
-                                <md-button ng-show="!ctrl.showAdvancedSettings"
+                                <sp-button sp-button-gray ng-show="!ctrl.showAdvancedSettings"
                                            ng-click="ctrl.showAdvancedSettings = !ctrl.showAdvancedSettings"
-                                           ng-disabled="ctrl.installationFinished"
-                                           class="md-raised">Show Advanced Settings
-                                </md-button>
-                                <md-button ng-show="ctrl.showAdvancedSettings"
+                                           ng-disabled="ctrl.installationFinished">Show Advanced Settings
+                                </sp-button>
+                                <sp-button sp-button-gray ng-show="ctrl.showAdvancedSettings"
                                            ng-click="ctrl.showAdvancedSettings = !ctrl.showAdvancedSettings"
-                                           ng-disabled="ctrl.installationFinished"
-                                           class="md-raised">Hide Advanced Settings
-                                </md-button>
-                                <md-button class="md-accent md-raised" type="submit"
+                                           ng-disabled="ctrl.installationFinished">Hide Advanced Settings
+                                </sp-button>
+                                <sp-button sp-button-blue type="submit"
                                            ng-disabled="!(ctrl.setupForm.$valid) || ctrl.loading || ctrl.installationFinished"
                                            ng-click="ctrl.configure(0)">Install
-                                </md-button>
+                                </sp-button>
                             </div>
 
                         </div>
