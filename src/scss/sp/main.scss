@@ -155,6 +155,34 @@ md-toolbar:not(.md-menu-toolbar) {
     background: $sp-color-primary;
 }
 
+.sp-navbar-item {
+    background: $sp-color-primary;
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
+}
+
+.sp-navbar-item-selected {
+    background: white;
+}
+
+.sp-navbar-item:hover {
+    background: $sp-color-primary-light;
+}
+
+.sp-navbar-icon {
+    color: white;
+}
+
+.sp-navbar-icon-selected {
+    color: $sp-color-primary
+}
+
+.sp-icon-button:hover {
+    background: $sp-color-primary-light !important;
+}
+
+
+
 .sp-button {
     display: inline-block ;
     vertical-align: middle;

@@ -171,6 +171,14 @@ export class AppCtrl {
             return (this.$state.current.name == path);
         }
 
+        getListItemClassName(path) {
+            return this.isActivePage(path) ? "sp-navbar-item-selected" : "sp-navbar-item";
+        }
+
+        getIconClassName(path) {
+            return this.isActivePage(path) ? "sp-navbar-icon-selected" : "sp-navbar-icon";
+        }
+
         getPageTitle(path) {
             var allMenuItems = this.menu.concat(this.admin);
             var currentTitle = 'Notifications';
