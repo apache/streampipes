@@ -132,8 +132,6 @@ export class AppCtrl {
                         }
                     });
                     this.notificationCount = notificationCount;
-                    console.log('count');
-                    console.log(this.notificationCount);
                 })
                 .error(function (msg) {
                     console.log(msg);

@@ -20,7 +20,6 @@ export class ShepherdService {
     ];
 
     constructor($window, $timeout) {
-        console.log("new tour");
         this.$window = $window;
         this.$timeout = $timeout;
         this.makeTour();
@@ -215,7 +214,6 @@ export class ShepherdService {
     }
 
     trigger(actionId) {
-        console.log(actionId);
         if (Shepherd.activeTour) {
             if (this.shouldTrigger(actionId, this.tour.getCurrentStep().id)) {
                 this.$timeout(() => this.tour.next(), 500);

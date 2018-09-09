@@ -105,12 +105,12 @@
             </div>
         </form>
     </md-dialog-content>
-    <div class="md-actions" layout="row" ng-if="ctrl.configVisible">
+    <md-dialog-actions layout="row" ng-if="ctrl.configVisible">
         <sp-button sp-button-gray ng-click="ctrl.hide()">
             Close
         </sp-button>
         <sp-button sp-button-blue ng-disabled="ctrl.customizeForm.$invalid" type="submit" ng-click="ctrl.saveProperties()">
             Save
         </sp-button>
-    </div>
+    </md-dialog-actions>
 </md-dialog>

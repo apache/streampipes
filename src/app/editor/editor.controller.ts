@@ -52,31 +52,24 @@ export class EditorCtrl {
         this.rawPipelineModel = [];
         this.activeType = "stream";
 
-        if (this.AuthStatusService.email != undefined) {
-            this.RestApi
-                .getUserDetails()
-                .success(user => {
-                    if (!user.hideTutorial || user.hideTutorial == undefined) {
-                        this.EditorDialogManager.showTutorialDialog().then(() => {
-                            user.hideTutorial = true;
-                            this.ShepherdService.startTour();
-                            this.RestApi.updateUserDetails(user).success(data => {
-                                this.$window.open('https://docs.streampipes.org', '_blank');
-                            });
-                        }, function () {
-                        });
-                    }
-                })
-        }
-
         angular.element($window).on('scroll', () => {
             JsplumbBridge.repaintEverything();
         });
 
-
         $rootScope.$on("elements.loaded", () => {
             this.makeDraggable();
         });
+
+        if (this.AuthStatusService.email != undefined) {
+            this.RestApi
+                .getUserDetails()
+                .success(user => {
+
+                    if (!user.hideTutorial || user.hideTutorial == undefined) {
+                        this.EditorDialogManager.showWelcomeDialog(user);
+                    }
+                })
+        }
 
         this.tabs = [
             {
@@ -168,7 +161,6 @@ export class EditorCtrl {
     };
 
     makeDraggable() {
-        console.log("making draggable");
         (<any>$('.draggable-icon')).draggable({
             revert: 'invalid',
             helper: 'clone',

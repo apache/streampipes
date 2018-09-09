@@ -1,4 +1,6 @@
 @import '../_variables';
+@-webkit-keyframes typing { from { width: 0; } }
+@-webkit-keyframes blink-caret { 50% { border-color: transparent; } }
 
 .gu-mirror {
     display: none; /* This fixes a bug with the dragular framework */
@@ -19,6 +21,21 @@ body {
     height: auto !important;
     width: 100%;
     background-attachment: fixed;
+}
+
+md-dialog-actions {
+    border-top: 1px solid #cccccc;
+}
+
+.welcome-animation {
+    font-family: Arial;
+    border-right: .1em solid black;
+    width: 16.5em;
+    width: 5ch;
+    white-space: nowrap;
+    overflow: hidden;
+    -webkit-animation: typing 1s steps(5, end),
+    blink-caret .5s step-end infinite alternate;
 }
 
 .cv-wrapper {

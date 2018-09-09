@@ -35,8 +35,6 @@ export class SpButtonDirective {
     }
 
     link(scope, element, attr) {
-        console.log(element);
-        console.log(attr);
         this.$mdTheming(element);
 
         if ('spButtonBlue' in attr) {

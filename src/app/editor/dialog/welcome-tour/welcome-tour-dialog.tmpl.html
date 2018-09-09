@@ -1,0 +1,36 @@
+<md-dialog aria-label="Welcome" flex="70" style="height:80%;">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Welcome to StreamPipes</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content layout-align="center center" flex="100" class="md-dialog-content">
+        <div flex="100" layout-align="center center" layout="column">
+            <b><h2 class="welcome-animation">Hello!</h2></b>
+            <b><h3>Thank you for using StreamPipes.</h3></b>
+        </div>
+        <div><img src="assets/img/sp-pipeline-white-small.png"
+                  style="margin-left:auto;margin-right:auto;display:block;">
+        </div>
+        <div flex="100" layout-align="center center" layout="column">
+            <div flex="100" layout-align="center center" layout="column">
+                <b>StreamPipes is your self-service toolbox for real-time analytics.</b>
+                <p>If you are using StreamPipes for the first time, we recommend taking the interactive tour!</p>
+            </div>
+            <sp-button sp-button-blue ng-click="ctrl.startTour()">Start Tour</sp-button>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <sp-button sp-button-gray ng-click="ctrl.hideTourForever()">
+            Do not show again
+        </sp-button>
+        <sp-button sp-button-gray ng-click="ctrl.hide()">
+            Close
+        </sp-button>
+    </md-dialog-actions>
+</md-dialog>
