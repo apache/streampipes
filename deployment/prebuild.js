@@ -46,7 +46,6 @@ for (let module of config.modules) {
         module: module,
         ng5: modules[module]['ng5'],
         ng1_templateUrl: modules[module]['ng1_templateUrl'],
-        ng1_controller: modules[module]['ng1_controller'],
         ng5_moduleName: modules[module]['ng5_moduleName'],
         ng5_component: modules[module]['ng5_component'],
         ng5_componentPath: modules[module]['ng5_componentPath'],

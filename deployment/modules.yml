@@ -1,7 +1,6 @@
 spEditor:
   ng5: False
   ng1_templateUrl: '../editor/editor.html'
-  ng1_controller: 'EditorCtrl'
   ng5_moduleName: ''
   ng5_component: ''
   ng5_componentPath: ''
@@ -16,7 +15,6 @@ spEditor:
 spConnect:
   ng5: True
   ng1_templateUrl: ''
-  ng1_controller: ''
   ng5_moduleName: 'ConnectModule'
   ng5_component: 'ConnectComponent'
   ng5_componentPath: '../connect/connect.component'
@@ -31,7 +29,6 @@ spConnect:
 spPipelines:
   ng5: False
   ng1_templateUrl: '../pipelines/pipelines.html'
-  ng1_controller: 'PipelineCtrl'
   ng5_moduleName: ''
   ng5_component: ''
   ng5_componentPath: ''
@@ -46,7 +43,6 @@ spPipelines:
 spDashboard:
   ng5: False
   ng1_templateUrl: '../dashboard/dashboard.html'
-  ng1_controller: 'DashboardCtrl'
   ng5_moduleName: ''
   ng5_component: ''
   ng5_componentPath: ''
@@ -61,7 +57,6 @@ spDashboard:
 spAppFileDownload:
   ng5: False
   ng1_templateUrl: '../app-file-download/app-file-download.tmpl.html'
-  ng1_controller: 'AppFileDownloadCtrl'
   ng5_moduleName: ''
   ng5_component: ''
   ng5_componentPath: ''
@@ -76,7 +71,6 @@ spAppFileDownload:
 spOntology:
   ng5: False
   ng1_templateUrl: '../ontology/ontology.html'
-  ng1_controller: 'OntologyCtrl'
   ng5_moduleName: ''
   ng5_component: ''
   ng5_componentPath: ''
@@ -90,7 +84,6 @@ spOntology:
 spSensors:
   ng5: False
   ng1_templateUrl: '../sensors/sensors.html'
-  ng1_controller: 'SensorsCtrl'
   ng5_moduleName: ''
   ng5_component: ''
   ng5_componentPath: ''
@@ -134,7 +127,6 @@ spKviVisualization:
 spAdd:
   ng5: False
   ng1_templateUrl: '../add/add.html'
-  ng1_controller: 'AddCtrl'
   ng5_moduleName: ''
   ng5_component: ''
   ng5_componentPath: ''
@@ -149,7 +141,6 @@ spAdd:
 spMyElements:
   ng5: False
   ng1_templateUrl: '../myelements/myelements.html'
-  ng1_controller: 'MyElementsCtrl'
   ng5_moduleName: ''
   ng5_component: ''
   ng5_componentPath: ''
