@@ -26,11 +26,11 @@
 
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="ctrl.save()">
-            Save
-        </md-button>
-        <md-button ng-click="ctrl.hide()" style="margin-right:20px;">
+        <sp-button sp-button-gray ng-click="ctrl.hide()">
             Close
-        </md-button>
+        </sp-button>
+        <sp-button sp-button-blue type="submit" ng-click="ctrl.save()">
+            Save
+        </sp-button>
     </md-dialog-actions>
 </md-dialog>

@@ -84,7 +84,7 @@ export class SavePipelineController {
                     this.hide();
                     this.TransitionService.makePipelineAssemblyEmpty(true);
                     this.ShepherdService.hideCurrentStep();
-                    if (switchTab) {
+                    if (switchTab && !this.startPipelineAfterStorage) {
                         this.$state.go("streampipes.pipelines");
                     }
                     if (this.startPipelineAfterStorage) {

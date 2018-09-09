@@ -5,6 +5,7 @@ export class ShepherdService {
 
     $window: any;
     $timeout: any;
+    $state: any;
     tour: any;
 
     matchingSteps:any = [
@@ -19,9 +20,10 @@ export class ShepherdService {
         {actionId: "pipeline-started", currentStep: "step-12"},
     ];
 
-    constructor($window, $timeout) {
+    constructor($window, $timeout, $state) {
         this.$window = $window;
         this.$timeout = $timeout;
+        this.$state = $state;
         this.makeTour();
 
     }
@@ -34,27 +36,16 @@ export class ShepherdService {
             }
         });
 
-        // let step0 = {
-        //     title: 'Selecting data streams',
-        //     text: 'To select a stream, click the stream marked above and move it to the assembly area.',
-        //     attachTo: {
-        //         element: '#editor-icon-stand span:nth-child(3)>span>pipeline-element',
-        //         on: 'left'
-        //     },
-        //     buttons: this.makeBackButton()
-        // };
-        // this.tour.addStep('step-0', step0);
-
         this.tour.addStep('step-1', {
             title: 'Welcome to StreamPipes!',
-            text: 'This tour will teach you how to create your first pipeline. Click <i>next</i> to continue.',
+            text: '<p>This tour will teach you how to create your first pipeline. You will learn how to select streams, how to connect data processors and sinks and how to start a pipeline.</p> Click <b>next</b> to continue.',
             classes: 'shepherd shepherd-welcome',
             buttons: this.makeStandardButtons()
         });
 
         let step2 = {
             title: 'Pipeline Element Selection',
-            text: 'Here you can select pipeline element types. The current panel, data streams, shows a list of currently available streams.<br/>Select <i>Data Processor</i> to see currently available processors.',
+            text: '<p>Let\' start!</p> <p>This is the <b>Pipeline Element Selection</b> panel. Here you can select pipeline element types. The current panel, data streams, shows a list of currently available streams.</p>',
             attachTo: {
                 element: '#pe-type>md-tabs-wrapper>md-tabs-canvas>md-pagination-wrapper md-tab-item:nth-child(2)',
                 on: 'bottom'
@@ -64,9 +55,9 @@ export class ShepherdService {
 
         let step3 = {
             title: 'Selecting data streams',
-            text: 'To select a stream, click the stream marked above and move it to the assembly area.',
+            text: 'The first element of a pipeline is a data stream, which produces data you\'d like to transform. <p>To select a stream, click the stream named <b>Random Number Stream</b> and drop it in the assembly area below.</p>',
             attachTo: {
-                element: '#editor-icon-stand span:nth-child(2)>span>pipeline-element',
+                element: '#editor-icon-stand span:last-child>span>pipeline-element',
                 on: 'left'
             },
             buttons: this.makeBackButton()
@@ -74,7 +65,7 @@ export class ShepherdService {
 
         let step4 = {
             title: 'Creating pipelines',
-            text: 'Cool!<br/> That is how you create pipelines. Select a pipeline element and drop it to the assembly area.',
+            text: '<p>Cool!</p> <p>Dragging and dropping elements is the basic principle you need to know to create pipelines. You only need to select a pipeline element and drop it to the assembly area.</p><p>Click <b>Next</b> to continue.</p>',
             attachTo: {
                 element: '#assembly>pipeline>div>span:nth-child(1)',
                 on: 'left'
@@ -94,17 +85,17 @@ export class ShepherdService {
 
         let step6 = {
             title: 'Selecting data processors',
-            text: '</p>',
+            text: '<p>Now you can see a variety of available data processors.</p><p>Processors can provide simple capabilities such as filters or aggregations, but can also provide more advanced capabilities such as trend and pattern detection or even pre-trained neural networks.</p><p>Select the processor called <b>Field Hasher</b> and move it to the assembly area.</p>',
             attachTo: {
-                element: '#editor-icon-stand span:nth-child(2)>span>pipeline-element',
-                on: 'left'
+                element: '#editor-icon-stand span:last-child>span>pipeline-element',
+                on: 'right'
             },
             buttons: this.makeBackButton()
         };
 
         let step7 = {
             title: 'Connecting elements',
-            text: 'Now connect elements.</p>',
+            text: '<p>Now it\'s time to connect the first elements of your pipeline!</p> <p>Click the gray output port of the stream and connect it with the Field Hasher component.</p>',
             attachTo: {
                 element: '#assembly>div.jsplumb-endpoint:nth-of-type(1)',
                 on: 'bottom'
@@ -113,18 +104,18 @@ export class ShepherdService {
         };
 
         let step8 = {
-            title: 'Customize element',
-            text: 'Now customize elements.</p>',
+            title: 'Customize elements',
+            text: '<p>Most pipeline elements can be customized according to your needs. Whenever you connect two elements with each other, a configuration dialog pops up.</p><p>Select a <b>Hash Algorithm</b> and a field of the stream you\'d like to hash and click <b>Save</b>.</p>',
             attachTo: {
-                element: 'md-dialog>md-toolbar',
-                on: 'left'
+                element: 'md-dialog>md-dialog-actions>button:last-of-type',
+                on: 'top'
             },
             buttons: this.makeBackButton()
         };
 
         let step9 = {
             title: 'Selecting data sinks',
-            text: 'Now select a sink.</p>',
+            text: '<p>What\'s missing?</p><p>Every pipeline needs a data sink. Sinks define what to do with the output of your pipeline and can be visualizations, notifications, or can trigger third party components or even actuators.</p><p>Click the tab above to see available data sinks.</p>',
             attachTo: {
                 element: '#pe-type>md-tabs-wrapper>md-tabs-canvas>md-pagination-wrapper md-tab-item:nth-child(4)',
                 on: 'bottom'
@@ -134,9 +125,9 @@ export class ShepherdService {
 
         let step10 = {
             title: 'Finish Pipeline',
-            text: 'Select and connect last element.</p>',
+            text: '<p>Almost there!</p>Select the <b>Dashboard</b> sink and connect the <b>Field Hasher</b> to the Dashboard.</p>',
             attachTo: {
-                element: '#editor-icon-stand span:nth-child(2)>span>pipeline-element',
+                element: '#editor-icon-stand span:last-of-type>span>pipeline-element',
                 on: 'left'
             },
             buttons: this.makeBackButton()
@@ -144,7 +135,7 @@ export class ShepherdService {
 
         let step11 = {
             title: 'Save Pipeline',
-            text: 'Click to save</p>',
+            text: '<p>Great!</p><p>Your first pipeline is complete. No we\'re ready to start the pipeline.</p><p>Click the <b>Save</b> icon to open the save dialog.</p>',
             attachTo: {
                 element: '.assemblyOptions>div>button:nth-of-type(1)',
                 on: 'left'
@@ -154,22 +145,22 @@ export class ShepherdService {
 
         let step12 = {
             title: 'Save Pipeline Dialog',
-            text: 'Click to save</p>',
+            text: '<p>Enter a name and an optional description of your pipeline.</p><p>Afterwards, make sure that <b>Start pipeline immediately</b> is checked.</p><p>Click on <b>Save and go to pipeline view</b> to start the pipeline.</p>',
             attachTo: {
-                element: 'md-dialog>div.md-actions>button:nth-of-type(3)',
-                on: 'right'
+                element: 'md-dialog>md-dialog-actions>button:nth-of-type(3)',
+                on: 'bottom'
             },
             buttons: this.makeBackButton()
         };
 
         let step13 = {
             title: 'Pipeline Started',
-            text: 'Congratulations!</p>',
+            text: '<p>Congratulations!</p><p>You\'ve completed the first tutorial. The next step would be to add a visualization in the <b>Dashboard</b>. If you wish to see how it works, start the second tutorial.</p>',
             attachTo: {
-                element: 'md-dialog>form>md-toolbar',
+                element: 'md-dialog>form>md-dialog-actions>button:nth-of-type(1)',
                 on: 'bottom'
             },
-            buttons: this.makeBackButton()
+            buttons: this.makeNextTutorialButton()
         };
 
         this.tour.addStep('step-2', step2);
@@ -193,9 +184,9 @@ export class ShepherdService {
     makeStandardButtons() {
         return [
             {
-                action: this.tour.back,
+                action: this.tour.cancel,
                 classes: 'shepherd-button-secondary',
-                text: 'Back'
+                text: 'Exit Tour'
             }, {
                 action: this.tour.next,
                 text: 'Next'
@@ -206,9 +197,22 @@ export class ShepherdService {
     makeBackButton() {
         return [
             {
-                action: this.tour.back,
+                action: this.tour.cancel,
                 classes: 'shepherd-button-secondary',
-                text: 'Back'
+                text: 'Exit Tour'
+            }
+        ]
+    }
+
+    makeNextTutorialButton() {
+        return [
+            {
+                action: this.tour.cancel,
+                classes: 'shepherd-button-secondary',
+                text: 'Exit Tour'
+            }, {
+                action: this.startDashboardTutorial,
+                text: 'Dashboard Tutorial'
             }
         ]
     }
@@ -232,7 +236,10 @@ export class ShepherdService {
     }
 
     hideCurrentStep() {
-        Shepherd.activeTour.getCurrentStep().cancel();
+        Shepherd.activeTour.getCurrentStep().hide();
     }
 
+    startDashboardTutorial() {
+
+    }
 }

@@ -14,8 +14,7 @@
                     ng-click="ctrl.PipelineOperationsService.startPipeline(pipeline._id, ctrl.toggleRunningOperation, ctrl.refreshPipelines)"
                     class="md-icon-button"
                     ng-disabled="ctrl.starting" ng-if="!pipeline.running">
-                <md-icon md-svg-icon="av:ic_play_arrow_24px" aria-label="Start"
-                         class="md-accent"></md-icon>
+                <i class="material-icons">play_arrow</i>
                 <md-tooltip md-direction="top">
                     Start Pipeline
                 </md-tooltip>
@@ -24,7 +23,7 @@
                     ng-click="ctrl.PipelineOperationsService.stopPipeline(pipeline._id, ctrl.toggleRunningOperation, ctrl.refreshPipelines)"
                     class="md-icon-button"
                     ng-disabled="ctrl.stopping" ng-if="pipeline.running">
-                <md-icon md-svg-icon="av:ic_stop_24px" aria-label="Stop" class="md-accent"></md-icon>
+                <i class="material-icons">stop</i>
                 <md-tooltip md-direction="top">
                     Stop Pipeline
                 </md-tooltip>
@@ -41,9 +40,7 @@
             <div layout="row">
             <span flex flex-order="1" layout="row" layout-align="center center">
             <sp-button sp-button-flat ng-click="ctrl.PipelineOperationsService.showPipelineDetails(pipeline._id)"
-                       class="md-icon-button"><md-icon
-                    md-svg-icon="action:ic_search_24px" aria-label="Inspect"
-                    class="md-accent"></md-icon>
+                       class="md-icon-button"><i class="material-icons">search</i>
             <md-tooltip md-direction="top">
                 Show Pipeline
             </md-tooltip>
@@ -51,10 +48,7 @@
         </span>
                 <span flex flex-order="2" layout="row" layout-align="center center">
             <sp-button sp-button-flat ng-click="ctrl.PipelineOperationsService.modifyPipeline(pipeline._id)" class="md-icon-button">
-                <md-icon
-                        md-svg-icon="editor:ic_mode_edit_24px" aria-label="Modify"
-                        class="md-accent">
-                </md-icon>
+               <i class="material-icons">mode_edit</i>
                 <md-tooltip md-direction="top">
                 Modify Pipeline
             </md-tooltip>
@@ -63,20 +57,14 @@
                 <span flex flex-order="4" layout="row" layout-align="center center">
             <sp-button sp-button-flat
                     ng-click="ctrl.PipelineOperationsService.deletePipeline($event, pipeline._id, ctrl.refreshPipelines)"
-                    ng-disabled="ctrl.pipeline.running" class="md-icon-button"><md-icon
-                    md-svg-icon="action:ic_delete_24px"
-                    class="md-accent"
-                    aria-label="Delete"></md-icon>
+                    ng-disabled="ctrl.pipeline.running" class="md-icon-button"><i class="material-icons">delete</i>
                 <md-tooltip md-direction="top">
                 Delete Pipeline
             </md-tooltip>
             </sp-button>
         </span>
                 <span flex flex-order="4" layout="row" layout-align="center center">
-            <sp-button sp-button-flat ng-if="ctrl.VersionService.isEnterpriseEdition()" ng-click="ctrl.PipelineOperationsService.showLogs(pipeline._id)" class="md-icon-button"><md-icon
-                    md-svg-icon="action:ic_info_24px"
-                    class="md-accent"
-                    aria-label="Logs"></md-icon>
+            <sp-button sp-button-flat ng-if="ctrl.VersionService.isEnterpriseEdition()" ng-click="ctrl.PipelineOperationsService.showLogs(pipeline._id)" class="md-icon-button"><i class="material-icons">info</i>
                 <md-tooltip md-direction="top">
                 Show Logs
             </md-tooltip>

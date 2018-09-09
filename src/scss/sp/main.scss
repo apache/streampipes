@@ -239,9 +239,19 @@ md-toolbar:not(.md-menu-toolbar) {
     background: $sp-color-accent-light-blue;
 }
 
-.sp-button:disabled {
+.sp-button.sp-button-blue:disabled {
     background: #ebebeb;
     color: #cdcdcd;
+}
+
+.sp-button.sp-button-gray:disabled {
+    background: #ebebeb;
+    color: #cdcdcd;
+}
+
+.sp-button-flat:disabled {
+    color: #cdcdcd;
+    background: rgba(0,0,0,0);
 }
 
 
