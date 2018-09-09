@@ -30,13 +30,13 @@
             </div>
 
         </div>
-        <div class="md-actions" layout="row">
+        <md-dialog-actions layout="row">
             <sp-button sp-button-gray ng-click="ctrl.cancel()">
                 Cancel
             </sp-button>
             <sp-button sp-button-blue ng-disabled="ctrl.installationRunning" ng-click="ctrl.next()">
                 {{ctrl.nextButton}}
             </sp-button>
-        </div>
+        </md-dialog-actions>
     </form>
 </md-dialog>

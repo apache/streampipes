@@ -3,9 +3,9 @@
         <div class="md-toolbar-tools">
             <h2>Endpoint Settings</h2>
             <span flex></span>
-            <sp-button sp-button-flat class="md-icon-button" ng-click="ctrl.cancel()">
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
                 <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
-            </sp-button>
+            </md-button>
         </div>
     </md-toolbar>
 
@@ -41,9 +41,9 @@
             <sp-button sp-button-blue ng-click="ctrl.showAddInput()" sp-button-flat>Add RDF Endpoint</sp-button>
         </div>
     </md-dialog-content>
-    <div class="md-actions" layout="row">
+    <md-dialog-actions layout="row">
         <sp-button sp-button-gray ng-click="ctrl.hide()">
             Close
         </sp-button>
-    </div>
+    </md-dialog-actions>
 </md-dialog>

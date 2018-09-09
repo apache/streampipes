@@ -1,24 +1,25 @@
 <md-dialog aria-label="Pipeline Status">
-  <form>
-  <md-toolbar>
-    <div class="md-toolbar-tools">
-      <h2>{{ctrl.title}}</h2>
-      <span flex></span>
-      <md-button class="md-icon-button" ng-click="ctrl.cancel()">
-        <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
-      </md-button>
-    </div>
-  </md-toolbar>
-  <md-dialog-content flex="100" class="md-dialog-content">
-    <div>
-      <pre nag-prism source="{{ctrl.content}}" class="language-json line-numbers" ng-if="ctrl.loadingCompleted"></pre>
-      <!--<pre pretty-json="content"></pre>-->
-    </div>
-  </md-dialog-content>
-  <div class="md-actions" layout="row">
-    <sp-button sp-button-gray ng-click="ctrl.hide()">
-      Close
-    </sp-button>
-  </div>
-  </form>
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{ctrl.title}}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                    <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content flex="100" class="md-dialog-content">
+            <div>
+                <pre nag-prism source="{{ctrl.content}}" class="language-json line-numbers"
+                     ng-if="ctrl.loadingCompleted"></pre>
+                <!--<pre pretty-json="content"></pre>-->
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <sp-button sp-button-gray ng-click="ctrl.hide()">
+                Close
+            </sp-button>
+        </md-dialog-actions>
+    </form>
 </md-dialog>
