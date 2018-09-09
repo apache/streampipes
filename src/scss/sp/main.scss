@@ -196,8 +196,6 @@ md-toolbar:not(.md-menu-toolbar) {
     letter-spacing: 0.1em;
     line-height: 1em;
     padding: 0.75em 1.25em;
-    -webkit-transition: all 0.75s ease;
-    transition: all 0.75s ease;
     margin-right:0.25em;
     margin-left: 0.25em;
     margin-top:0px;
@@ -220,11 +218,15 @@ md-toolbar:not(.md-menu-toolbar) {
 .sp-button.sp-button-gray:enabled {
     background: #e5e5e5;
     color: rgba(0, 0, 0, 0.75);
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
 }
 
 .sp-button.sp-button-blue:enabled {
     background: $sp-color-accent;
     color: rgba(255, 255, 255, 0.75);
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
 }
 
 .sp-button.sp-button-gray:hover:enabled {

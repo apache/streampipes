@@ -16,18 +16,26 @@
         </div>
         <div flex="30" layout="row" layout-align="end center"
              style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <md-button class="md-icon-button" ng-show="!ctrl.minimizedEditorStand" ng-click="ctrl.toggleEditorStand()">
-                <i class="material-icons" style="color: rgb(63,81,181);">arrow_drop_up</i>
+            <sp-button sp-button-flat class="md-icon-button" ng-click="ctrl.startTutorial()">
+                <i class="material-icons">
+                    school
+                </i>
+                <md-tooltip md-direction="top">
+                    Tutorial
+                </md-tooltip>
+            </sp-button>
+            <sp-button sp-button-flat class="md-icon-button" ng-show="!ctrl.minimizedEditorStand" ng-click="ctrl.toggleEditorStand()">
+                <i class="material-icons">arrow_drop_up</i>
                 <md-tooltip md-direction="top">
                     Hide
                 </md-tooltip>
-            </md-button>
-            <md-button class="md-icon-button" ng-show="ctrl.minimizedEditorStand" ng-click="ctrl.toggleEditorStand()">
-                <i class="material-icons" style="color: rgb(63,81,181);">arrow_drop_down</i>
+            </sp-button>
+            <sp-button sp-button-flat class="md-icon-button" ng-show="ctrl.minimizedEditorStand" ng-click="ctrl.toggleEditorStand()">
+                <i class="material-icons">arrow_drop_down</i>
                 <md-tooltip md-direction="top">
                     Show
                 </md-tooltip>
-            </md-button>
+            </sp-button>
         </div>
     </div>
     <div id="shepherd-test" ng-show="!ctrl.minimizedEditorStand" style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ccc">

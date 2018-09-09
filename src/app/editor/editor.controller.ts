@@ -64,7 +64,6 @@ export class EditorCtrl {
             this.RestApi
                 .getUserDetails()
                 .success(user => {
-
                     if (!user.hideTutorial || user.hideTutorial == undefined) {
                         this.EditorDialogManager.showWelcomeDialog(user);
                     }
@@ -93,6 +92,10 @@ export class EditorCtrl {
         this.loadSources();
         this.loadSepas();
         this.loadActions();
+    }
+
+    startTutorial() {
+        this.ShepherdService.startTour();
     }
 
     isActiveTab(elementType) {

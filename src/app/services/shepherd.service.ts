@@ -6,7 +6,7 @@ export class ShepherdService {
     $window: any;
     $timeout: any;
     $state: any;
-    tour: any;
+    createPipelineTour: any;
 
     matchingSteps:any = [
         {actionId: "drop-stream", currentStep: "step-3"},
@@ -24,24 +24,24 @@ export class ShepherdService {
         this.$window = $window;
         this.$timeout = $timeout;
         this.$state = $state;
-        this.makeTour();
+        this.makeCreatePipelineTour();
 
     }
 
-    makeTour() {
-        this.tour = new Shepherd.Tour({
+    makeCreatePipelineTour() {
+        this.createPipelineTour = new Shepherd.Tour({
             defaults: {
                 classes: 'shepherd-theme-arrows',
                 showCancelLink: true
             }
         });
 
-        this.tour.addStep('step-1', {
+        let step1 = {
             title: 'Welcome to StreamPipes!',
             text: '<p>This tour will teach you how to create your first pipeline. You will learn how to select streams, how to connect data processors and sinks and how to start a pipeline.</p> Click <b>next</b> to continue.',
             classes: 'shepherd shepherd-welcome',
             buttons: this.makeStandardButtons()
-        });
+        };
 
         let step2 = {
             title: 'Pipeline Element Selection',
@@ -163,32 +163,33 @@ export class ShepherdService {
             buttons: this.makeNextTutorialButton()
         };
 
-        this.tour.addStep('step-2', step2);
-        this.tour.addStep('step-3', step3);
-        this.tour.addStep('step-4', step4);
-        this.tour.addStep('step-5', step5);
-        this.tour.addStep('step-6', step6);
-        this.tour.addStep('step-7', step7);
-        this.tour.addStep('step-8', step8);
-        this.tour.addStep('step-9', step9);
-        this.tour.addStep('step-10', step10);
-        this.tour.addStep('step-11', step11);
-        this.tour.addStep('step-12', step12);
-        this.tour.addStep('step-13', step13);
+        this.createPipelineTour.addStep('step-1', step1);
+        this.createPipelineTour.addStep('step-2', step2);
+        this.createPipelineTour.addStep('step-3', step3);
+        this.createPipelineTour.addStep('step-4', step4);
+        this.createPipelineTour.addStep('step-5', step5);
+        this.createPipelineTour.addStep('step-6', step6);
+        this.createPipelineTour.addStep('step-7', step7);
+        this.createPipelineTour.addStep('step-8', step8);
+        this.createPipelineTour.addStep('step-9', step9);
+        this.createPipelineTour.addStep('step-10', step10);
+        this.createPipelineTour.addStep('step-11', step11);
+        this.createPipelineTour.addStep('step-12', step12);
+        this.createPipelineTour.addStep('step-13', step13);
     }
 
     startTour() {
-        this.tour.start();
+        this.createPipelineTour.start();
     }
 
     makeStandardButtons() {
         return [
             {
-                action: this.tour.cancel,
+                action: this.createPipelineTour.cancel,
                 classes: 'shepherd-button-secondary',
                 text: 'Exit Tour'
             }, {
-                action: this.tour.next,
+                action: this.createPipelineTour.next,
                 text: 'Next'
             }
         ]
@@ -197,7 +198,7 @@ export class ShepherdService {
     makeBackButton() {
         return [
             {
-                action: this.tour.cancel,
+                action: this.createPipelineTour.cancel,
                 classes: 'shepherd-button-secondary',
                 text: 'Exit Tour'
             }
@@ -207,7 +208,7 @@ export class ShepherdService {
     makeNextTutorialButton() {
         return [
             {
-                action: this.tour.cancel,
+                action: this.createPipelineTour.cancel,
                 classes: 'shepherd-button-secondary',
                 text: 'Exit Tour'
             }, {
@@ -219,8 +220,8 @@ export class ShepherdService {
 
     trigger(actionId) {
         if (Shepherd.activeTour) {
-            if (this.shouldTrigger(actionId, this.tour.getCurrentStep().id)) {
-                this.$timeout(() => this.tour.next(), 500);
+            if (this.shouldTrigger(actionId, this.createPipelineTour.getCurrentStep().id)) {
+                this.$timeout(() => this.createPipelineTour.next(), 500);
             }
         }
     }
@@ -240,6 +241,6 @@ export class ShepherdService {
     }
 
     startDashboardTutorial() {
-
+        this.$state.go("streampipes.dashboard");
     }
 }
