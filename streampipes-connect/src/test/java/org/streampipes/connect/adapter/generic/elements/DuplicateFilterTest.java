@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package org.streampipes.connect.adapter.generic.filter;
+package org.streampipes.connect.adapter.generic.elements;
 
 import org.junit.Test;
 import org.streampipes.connect.adapter.generic.pipeline.elements.DuplicateFilter;
