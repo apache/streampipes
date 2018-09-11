@@ -93,7 +93,8 @@ public class GsonSerializer {
             .registerSubtype(RenameRuleDescription.class, "org.streampipes.model.RenameRuleDescription")
             .registerSubtype(MoveRuleDescription.class, "org.streampipes.model.MoveRuleDescription")
             .registerSubtype(DeleteRuleDescription.class, "org.streampipes.model.DeleteRuleDescription")
-            .registerSubtype(CreateNestedRuleDescription.class, "org.streampipes.model.CreateNestedRuleDescription"));
+            .registerSubtype(CreateNestedRuleDescription.class, "org.streampipes.model.CreateNestedRuleDescription")
+            .registerSubtype(UnitTransformRuleDescription.class, "org.streampipes.model.UnitTransformRuleDescription"));
 
     builder.setPrettyPrinting();
     return builder;

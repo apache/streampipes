@@ -27,12 +27,14 @@ public class EventTransformer implements TransformationRule {
     private List<CreateNestedTransformationRule> createNestedTransformationRules;
     private List<MoveTransformationRule> moveTransformationRules;
     private List<DeleteTransformationRule> deleteTransformationRules;
+    private List<UnitTransformationRule> unitTransformationRules;
 
     public  EventTransformer(List<TransformationRule> rules) {
         this.renameTransformationRules = new ArrayList<>();
         this.createNestedTransformationRules = new ArrayList<>();
         this.moveTransformationRules = new ArrayList<>();
         this.deleteTransformationRules = new ArrayList<>();
+        this.unitTransformationRules = new ArrayList<>();
 
         for (TransformationRule rule : rules) {
             if (rule instanceof RenameTransformationRule) {
@@ -43,16 +45,23 @@ public class EventTransformer implements TransformationRule {
                 this.moveTransformationRules.add((MoveTransformationRule) rule);
             } else if (rule instanceof DeleteTransformationRule) {
                 this.deleteTransformationRules.add((DeleteTransformationRule) rule);
+            } else if (rule instanceof UnitTransformationRule) {
+                this.unitTransformationRules.add((UnitTransformationRule) rule);
             }
         }
     }
 
 
-    public EventTransformer(List<RenameTransformationRule> renameTransformationRules, List<CreateNestedTransformationRule> createNestedTransformationRules, List<MoveTransformationRule> moveTransformationRules, List<DeleteTransformationRule> deleteTransformationRules) {
+    public EventTransformer(List<RenameTransformationRule> renameTransformationRules,
+                            List<CreateNestedTransformationRule> createNestedTransformationRules,
+                            List<MoveTransformationRule> moveTransformationRules,
+                            List<DeleteTransformationRule> deleteTransformationRules,
+                            List<UnitTransformationRule> unitTransformationRules) {
         this.renameTransformationRules = renameTransformationRules;
         this.createNestedTransformationRules = createNestedTransformationRules;
         this.moveTransformationRules = moveTransformationRules;
         this.deleteTransformationRules = deleteTransformationRules;
+        this.unitTransformationRules = unitTransformationRules;
     }
 
 
@@ -73,6 +82,10 @@ public class EventTransformer implements TransformationRule {
 
         for (DeleteTransformationRule deleteRule : deleteTransformationRules) {
             event = deleteRule.transform(event);
+        }
+
+        for (UnitTransformationRule unitRule : unitTransformationRules) {
+            event = unitRule.transform(event);
         }
 
         return event;
@@ -112,5 +125,11 @@ public class EventTransformer implements TransformationRule {
         this.deleteTransformationRules = deleteTransformationRules;
     }
 
+    public List<UnitTransformationRule> getUnitTransformationRules() {
+        return unitTransformationRules;
+    }
 
+    public void setUnitTransformationRules(List<UnitTransformationRule> unitTransformationRules) {
+        this.unitTransformationRules = unitTransformationRules;
+    }
 }

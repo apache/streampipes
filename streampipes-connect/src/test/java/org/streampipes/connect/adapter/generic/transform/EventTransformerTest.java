@@ -37,13 +37,14 @@ public class EventTransformerTest {
         rules.add(new CreateNestedTransformationRule(Arrays.asList("c1", "f")));
         rules.add(new MoveTransformationRule(Arrays.asList("b1"), Arrays.asList("c1", "f")));
         rules.add(new DeleteTransformationRule(Arrays.asList("e")));
+        rules.add(new UnitTransformationRule(Arrays.asList("f"), "Kelvin", "Degree Celsius"));
 
         EventTransformer eventTransformer = new EventTransformer(rules);
 
         Map<String, Object> result = eventTransformer.transform(event);
 
 
-        assertEquals(2, result.keySet().size());
+        assertEquals(3, result.keySet().size());
         assertTrue(result.containsKey("a1"));
         assertTrue(result.containsKey("c1"));
 
@@ -55,6 +56,8 @@ public class EventTransformerTest {
         nested = (Map<String, Object>) nested.get("f");
         assertEquals(1, nested.keySet().size());
         assertEquals("z", nested.get("b1"));
+
+        assertEquals(0.0, result.get("f"));
 
     }
 
@@ -68,6 +71,7 @@ public class EventTransformerTest {
         event.put("b", "z");
         event.put("e", "z");
         event.put("c", nested);
+        event.put("f", 273.15);
 
         return event;
     }
