@@ -1,13 +1,37 @@
-<mat-tab-group>
-    <mat-tab label="Data Marketplace">
-        <div fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-description-container">
-            <sp-adapter-description class="adapter-description" fxFlex="33" (click)="selectAdapter(adapterDescription)" *ngFor="let adapterDescription of adapterDescriptions"
-                [adapter]="adapterDescription"></sp-adapter-description>
+<div fxLayout="column" fxFlex="100" class="page-container page-container-padding">
+    <div fxFlex="100" fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
+        <div fxLayout="fill" style="line-height:24px;border-bottom:1px solid #ccc">
+            <mat-tab-group (selectedIndexChange)="selectedIndexChange($event)">
+                <mat-tab label="Data Marketplace">
+                </mat-tab>
+                <mat-tab label="All Adapters">
+                </mat-tab>
+            </mat-tab-group>
         </div>
-    </mat-tab>
-    <mat-tab label="All Adapters">
-        <div fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-container">
-            <sp-adapter-description class="adapter-description" fxFlex="33" *ngFor="let adapter of adapters" [adapter]="adapter" (deleteAdapterEmitter)="deleteAdapter($event)"></sp-adapter-description>
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center"
+             style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+            <button mat-icon-button (click)="startAdapterTutorial()" matTooltip="Tutorial">
+                <i class="material-icons">
+                    school
+                </i>
+            </button>
         </div>
-    </mat-tab>
-</mat-tab-group>
+    </div>
+    <div class="container-fluid">
+        <div *ngIf="selectedIndex === 0">
+            <div fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-description-container">
+                <sp-adapter-description class="adapter-description" fxFlex="33"
+                                        (click)="selectAdapter(adapterDescription)"
+                                        *ngFor="let adapterDescription of adapterDescriptions"
+                                        [adapter]="adapterDescription"></sp-adapter-description>
+            </div>
+        </div>
+        <div *ngIf="selectedIndex === 1">
+            <div fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-container">
+                <sp-adapter-description class="adapter-description" fxFlex="33" *ngFor="let adapter of adapters"
+                                        [adapter]="adapter"
+                                        (deleteAdapterEmitter)="deleteAdapter($event)"></sp-adapter-description>
+            </div>
+        </div>
+    </div>
+</div>

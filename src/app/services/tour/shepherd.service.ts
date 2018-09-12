@@ -1,17 +1,17 @@
 import Shepherd from 'shepherd.js';
 import "shepherd.js/dist/css/shepherd-theme-arrows.css";
+import {Inject, Injectable} from "@angular/core";
 
+@Injectable()
 export class ShepherdService {
 
-    $window: any;
     $timeout: any;
     $state: any;
     TourProviderService: any;
     currentTour: any;
     currentTourSettings: any;
 
-    constructor($window, $timeout, $state, TourProviderService) {
-        this.$window = $window;
+    constructor(@Inject('$timeout') $timeout, @Inject('$state') $state, @Inject('TourProviderService') TourProviderService) {
         this.$timeout = $timeout;
         this.$state = $state;
         this.TourProviderService = TourProviderService;
@@ -141,5 +141,9 @@ export class ShepherdService {
 
     startDashboardTour() {
         this.startTour(this.TourProviderService.getTourById("dashboard"));
+    }
+
+    startAdapterTour() {
+        this.startTour(this.TourProviderService.getTourById("adapter"));
     }
 }
