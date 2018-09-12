@@ -511,9 +511,13 @@
         <module>streampipes-pipeline-management</module>
         <module>streampipes-sources</module>
         <module>streampipes-rest</module>
+        <module>streampipes-rest-shared</module>
         <module>streampipes-sdk</module>
         <module>streampipes-serializers</module>
         <module>streampipes-storage-api</module>
+        <module>streampipes-storage-management</module>
+        <module>streampipes-storage-couchdb</module>
+        <module>streampipes-storage-rdf4j</module>
         <module>streampipes-test-utils</module>
         <module>streampipes-user-management</module>
         <module>streampipes-vocabulary</module>
@@ -525,10 +529,6 @@
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-spark</module>
         <module>streampipes-wrapper-standalone</module>
-        <module>streampipes-storage-couchdb</module>
-        <module>streampipes-storage-management</module>
-        <module>streampipes-rest-shared</module>
-        <module>streampipes-storage-rdf4j</module>
     </modules>
 
     <profiles>

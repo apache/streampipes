@@ -25,6 +25,7 @@ import org.streampipes.connect.adapter.specific.PullAdapter;
 import org.streampipes.connect.adapter.specific.sensemap.model.CurrentLocation;
 import org.streampipes.connect.adapter.specific.sensemap.model.SenseBox;
 import org.streampipes.connect.adapter.specific.sensemap.model.Sensor;
+import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
@@ -41,7 +42,13 @@ import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.vocabulary.XSD;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class OpenSenseMapAdapter extends PullAdapter {
 
@@ -94,7 +101,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
 
     @Override
     public Adapter getInstance(AdapterDescription adapterDescription) {
-        return  new OpenSenseMapAdapter((SpecificAdapterStreamDescription) adapterDescription);
+        return new OpenSenseMapAdapter((SpecificAdapterStreamDescription) adapterDescription);
     }
 
     @Override
@@ -285,6 +292,11 @@ public class OpenSenseMapAdapter extends PullAdapter {
            adapterPipeline.process(event);
         }
 
+    }
+
+    @Override
+    protected PollingSettings getPollingIntervalInSeconds() {
+        return PollingSettings.from(TimeUnit.SECONDS, 60);
     }
 
     private Map<String, Object> filterSensors(Map<String, Object> event) {
