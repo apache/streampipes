@@ -12,12 +12,14 @@ export class DashboardCtrl {
     $scope: any;
     layoutOptions: any;
     rerender: any;
+    ShepherdService: any;
 
-    constructor($http, $mdDialog, WidgetInstances, $scope, $templateCache) {
+    constructor($http, $mdDialog, WidgetInstances, $scope, $templateCache, ShepherdService) {
         this.$http = $http;
         this.$mdDialog = $mdDialog;
         this.WidgetInstances = WidgetInstances;
         this.$scope = $scope;
+        this.ShepherdService = ShepherdService;
 
         $templateCache.put('dashboard-frame.html', require('./dashboard-frame.html'));
         $templateCache.put('dashboard-layout-frame.html', require('./dashboard-layout-frame.html'));
@@ -98,7 +100,7 @@ export class DashboardCtrl {
     getLayouts(widgets) {
         var result = [
             { title: 'Layout 1', id: 'Layout 1', active: true , defaultWidgets: this.getLayoutWidgets('Layout 1', widgets)},
-            { title: 'Layout 2', id: 'Layout 2', active: false, defaultWidgets: this.getLayoutWidgets('Layout 2', widgets)},
+            // { title: 'Layout 2', id: 'Layout 2', active: false, defaultWidgets: this.getLayoutWidgets('Layout 2', widgets)},
         ];
 
         return result;
@@ -116,6 +118,10 @@ export class DashboardCtrl {
             }
         });
     }
+
+    startDashboardTour() {
+        this.ShepherdService.startDashboardTour();
+    }
 }
 
-DashboardCtrl.$inject = ['$http', '$mdDialog', 'WidgetInstances', '$scope', '$templateCache'];
+DashboardCtrl.$inject = ['$http', '$mdDialog', 'WidgetInstances', '$scope', '$templateCache', 'ShepherdService'];

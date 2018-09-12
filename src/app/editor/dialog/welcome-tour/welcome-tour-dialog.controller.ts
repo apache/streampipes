@@ -12,9 +12,9 @@ export class WelcomeTourDialogController {
         this.user = user;
     }
 
-    startTour() {
+    startCreatePipelineTour() {
         this.$mdDialog.hide();
-        this.ShepherdService.startTour();
+        this.ShepherdService.startCreatePipelineTour();
     }
 
     hideTourForever() {

@@ -94,8 +94,8 @@ export class EditorCtrl {
         this.loadActions();
     }
 
-    startTutorial() {
-        this.ShepherdService.startTour();
+    startCreatePipelineTour() {
+        this.ShepherdService.startCreatePipelineTour();
     }
 
     isActiveTab(elementType) {
