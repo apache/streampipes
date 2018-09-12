@@ -31,15 +31,14 @@ public class UnitTransformationRule implements TransformationRule {
 
     private static Logger logger = LoggerFactory.getLogger(Adapter.class);
 
-
     private List<String> key;
-    private  String fromUnit;
-    private  String toUnit;
+    private Unit unitTypeFrom;
+    private Unit unitTypeTo;
 
     public UnitTransformationRule(List<String> key, String fromUnit, String toUnit) {
         this.key = key;
-        this.fromUnit = fromUnit;
-        this.toUnit = toUnit;
+        this.unitTypeFrom = UnitProvider.INSTANCE.getUnitByLabel(fromUnit);
+        this.unitTypeTo = UnitProvider.INSTANCE.getUnitByLabel(toUnit);
     }
 
     @Override
@@ -51,11 +50,7 @@ public class UnitTransformationRule implements TransformationRule {
 
         if (keys.size() == 1) {
             try {
-
                 double value = (double) event.get(keys.get(0));
-
-                Unit unitTypeFrom = UnitProvider.INSTANCE.getUnitByLabel(fromUnit);
-                Unit unitTypeTo = UnitProvider.INSTANCE.getUnitByLabel(toUnit);
 
                 Quantity obs = new Quantity(value, unitTypeFrom);
                 double newValue = obs.convertTo(unitTypeTo).getValue();

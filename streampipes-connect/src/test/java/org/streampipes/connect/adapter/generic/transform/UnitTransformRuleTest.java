@@ -31,8 +31,7 @@ public class UnitTransformRuleTest {
     public void transformSimple() {
         Map<String, Object> event = new HashMap<>();
         event.put("value1", 0.0);
-        event.put("value2", 10);
-
+        event.put("value2", 10.0);
 
         List<String> keys = new ArrayList<>();
         keys.add("value1");
@@ -42,8 +41,7 @@ public class UnitTransformRuleTest {
         Map result = unitTransformationRule.transform(event);
 
         assertEquals(2, result.keySet().size());
-        assertEquals(273.15, result.get(keys.get(0))) ;
-
+        assertEquals(273.15, result.get(keys.get(0)));
     }
 
 
@@ -66,6 +64,40 @@ public class UnitTransformRuleTest {
 
         assertEquals(1, result.keySet().size());
         assertEquals(283.15, ((Map) result.get(keys.get(0))).get(keys.get(1))) ;
-
     }
+
+
+    @Test
+    public void transformMulti() {
+        List<String> keys = new ArrayList<>();
+        keys.add("value1");
+        UnitTransformationRule unitTransformationRule = new UnitTransformationRule(keys, "Degree Celsius", "Kelvin");
+
+        Map<String, Object> event = new HashMap<>();
+        event.put("value1", 0.0);
+        event.put("value2", 10.0);
+
+        Map result = unitTransformationRule.transform(event);
+        assertEquals(2, result.keySet().size());
+        assertEquals(273.15, result.get(keys.get(0)));
+
+
+        event = new HashMap<>();
+        event.put("value1", 20.0);
+        event.put("value2", 20.0);
+
+        result = unitTransformationRule.transform(event);
+        assertEquals(2, result.keySet().size());
+        assertEquals(293.15, result.get(keys.get(0)));
+
+
+        event = new HashMap<>();
+        event.put("value1", 0.0);
+        event.put("value2", 10.0);
+
+        result = unitTransformationRule.transform(event);
+        assertEquals(2, result.keySet().size());
+        assertEquals(273.15, result.get(keys.get(0)));
+    }
+
 }
