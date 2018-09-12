@@ -28,6 +28,7 @@ import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.model.connect.grounding.ProtocolSetDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.schema.EventSchema;

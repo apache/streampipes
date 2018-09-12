@@ -26,15 +26,15 @@ import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.adapter.specific.twitter.TwitterAdapter;
 import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
+import org.streampipes.model.SpDataSet;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.rest.shared.util.JsonLdUtils;
+import org.streampipes.sdk.builder.DataSetBuilder;
 
 import static org.junit.Assert.*;
+import static org.reflections.util.ConfigurationBuilder.build;
 
 public class AdapterDeserializerTest {
 
@@ -107,17 +107,25 @@ public class AdapterDeserializerTest {
 
         String jsonLd = JsonLdUtils.toJsonLD(genericAdapterStreamDescription);
 
+        System.out.println(jsonLd);
         AdapterDescription a = AdapterDeserializer.getAdapterDescription(jsonLd);
 
         assertNotNull(((GenericAdapterStreamDescription) a).getFormatDescription());
     }
 
     @Test
-    public void asdf12() throws AdapterException {
+    public void testAdapterSetDeserialization() throws AdapterException {
+        String jsonld = getGenericAdapterSetDescripionGeneratedByFrontend();
+        AdapterDescription a = AdapterDeserializer.getAdapterDescription(jsonld);
 
-        AdapterDescription a = AdapterDeserializer.getAdapterDescription(
 
-                "{  \n" +
+        assertNotNull(((GenericAdapterSetDescription) a).getFormatDescription());
+        assertNotNull(((GenericAdapterSetDescription) a).getProtocolDescription());
+
+    }
+
+    private String getGenericAdapterSetDescripionGeneratedByFrontend() {
+        return "{  \n" +
                         "    \"@context\":{  \n" +
                         "        \"sp\":\"https://streampipes.org/vocabulary/v1/\",\n" +
                         "        \"spi\":\"urn:streampipes.org:spi:\",\n" +
@@ -187,11 +195,6 @@ public class AdapterDeserializerTest {
                         "            \"sp:requiredDomainProperty\":\"\"\n" +
                         "        }\n" +
                         "    ]\n" +
-                        "}"
-
-        );
-
-        assertNotNull(((GenericAdapterStreamDescription) a).getFormatDescription());
-
+                        "}";
     }
 }
