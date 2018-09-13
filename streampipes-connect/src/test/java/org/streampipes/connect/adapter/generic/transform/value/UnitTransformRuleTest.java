@@ -16,9 +16,7 @@ limitations under the License.
 
 package org.streampipes.connect.adapter.generic.transform.value;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 import org.junit.Test;
-import org.streampipes.connect.adapter.generic.transform.value.UnitTransformationRule;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventPropertyPrimitive;
