@@ -6,6 +6,7 @@ import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
 import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
+import org.streampipes.connect.adapter.generic.pipeline.elements.TransformValueAdapterPipelineElement;
 import org.streampipes.connect.adapter.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
@@ -55,7 +56,9 @@ public class GdeltAdapter extends SpecificDataStreamAdapter {
     @Override
     public void startAdapter() throws AdapterException {
         List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
-        pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getRules()));
+        pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getSchemaRules()));
+        pipelineElements.add(new TransformValueAdapterPipelineElement(adapterDescription.getDataStream().getEventSchema(),
+                adapterDescription.getValueRules()));
         pipelineElements.add(new SendToKafkaAdapterSink((AdapterDescription) adapterDescription));
 
         adapterPipeline = new AdapterPipeline(pipelineElements);
@@ -165,4 +168,5 @@ public class GdeltAdapter extends SpecificDataStreamAdapter {
     public String getId() {
         return ID;
     }
+
 }

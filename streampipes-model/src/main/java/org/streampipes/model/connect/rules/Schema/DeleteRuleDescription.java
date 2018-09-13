@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.model.connect.rules;
+package org.streampipes.model.connect.rules.Schema;
 
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
@@ -27,7 +27,7 @@ import javax.persistence.Entity;
 @Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
 @RdfsClass(StreamPipes.DELETE_RULE_DESCRIPTION)
 @Entity
-public class DeleteRuleDescription extends TransformationRuleDescription {
+public class DeleteRuleDescription extends SchemaTransformationRuleDescription {
     @RdfProperty(StreamPipes.RUNTIME_KEY)
     private String runtimeKey;
 

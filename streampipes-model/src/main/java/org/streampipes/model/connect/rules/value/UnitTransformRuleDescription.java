@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package org.streampipes.model.connect.rules;
+package org.streampipes.model.connect.rules.value;
 
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
@@ -26,7 +26,7 @@ import javax.persistence.Entity;
 @Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
 @RdfsClass(StreamPipes.UNIT_TRANSFORM_RULE_DESCRIPTION)
 @Entity
-public class UnitTransformRuleDescription extends TransformationRuleDescription {
+public class UnitTransformRuleDescription extends ValueTransformationRuleDescription {
 
     @RdfProperty(StreamPipes.EVENT_PROPERTY_ID)
     private String eventPropertyId;

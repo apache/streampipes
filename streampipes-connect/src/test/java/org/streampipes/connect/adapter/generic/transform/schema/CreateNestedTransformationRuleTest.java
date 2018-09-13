@@ -15,9 +15,10 @@
  *
  */
 
-package org.streampipes.connect.adapter.generic.transform;
+package org.streampipes.connect.adapter.generic.transform.schema;
 
 import org.junit.Test;
+import org.streampipes.connect.adapter.generic.transform.schema.CreateNestedTransformationRule;
 
 import java.util.ArrayList;
 import java.util.HashMap;

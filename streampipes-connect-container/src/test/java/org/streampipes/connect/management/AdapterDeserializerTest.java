@@ -32,10 +32,9 @@ import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
-import org.streampipes.model.connect.rules.UnitTransformRuleDescription;
+import org.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 
-import java.util.ArrayList;
 import java.util.Collections;
 
 import static org.junit.Assert.*;

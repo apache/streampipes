@@ -27,6 +27,7 @@ import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
 import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
+import org.streampipes.connect.adapter.generic.pipeline.elements.TransformValueAdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
@@ -68,7 +69,9 @@ public abstract class GenericAdapter extends Adapter {
 
 
         List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
-        pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getRules()));
+        pipelineElements.add(new TransformSchemaAdapterPipelineElement(((AdapterDescription) adapterDescription).getSchemaRules()));
+        pipelineElements.add(new TransformValueAdapterPipelineElement(Util.getEventSchema(adapterDescription),
+                ((AdapterDescription) adapterDescription).getValueRules()));
         pipelineElements.add(new SendToKafkaAdapterSink((AdapterDescription) adapterDescription));
 
         AdapterPipeline adapterPipeline = new AdapterPipeline(pipelineElements);
@@ -101,4 +104,5 @@ public abstract class GenericAdapter extends Adapter {
     private Protocol getProtocol(GenericAdapterDescription adapterDescription, Format format, Parser parser) {
         return AdapterRegistry.getAllProtocols().get(adapterDescription.getProtocolDescription().getUri()).getInstance(adapterDescription.getProtocolDescription(), parser, format);
     }
+
 }

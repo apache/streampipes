@@ -15,15 +15,16 @@
  *
  */
 
-package org.streampipes.connect.adapter.generic.transform;
+package org.streampipes.connect.adapter.generic.transform.schema;
 
 import org.junit.Test;
+import org.streampipes.connect.adapter.generic.transform.TransformationRule;
 
 import java.util.*;
 
 import static org.junit.Assert.*;
 
-public class EventTransformerTest {
+public class SchemaEventTransformerTest {
 
     @Test
     public void transform() {
@@ -37,14 +38,13 @@ public class EventTransformerTest {
         rules.add(new CreateNestedTransformationRule(Arrays.asList("c1", "f")));
         rules.add(new MoveTransformationRule(Arrays.asList("b1"), Arrays.asList("c1", "f")));
         rules.add(new DeleteTransformationRule(Arrays.asList("e")));
-        rules.add(new UnitTransformationRule(Arrays.asList("f"), "Kelvin", "Degree Celsius"));
 
-        EventTransformer eventTransformer = new EventTransformer(rules);
+        SchemaEventTransformer eventTransformer = new SchemaEventTransformer(rules);
 
         Map<String, Object> result = eventTransformer.transform(event);
 
 
-        assertEquals(3, result.keySet().size());
+        assertEquals(2, result.keySet().size());
         assertTrue(result.containsKey("a1"));
         assertTrue(result.containsKey("c1"));
 
@@ -56,8 +56,6 @@ public class EventTransformerTest {
         nested = (Map<String, Object>) nested.get("f");
         assertEquals(1, nested.keySet().size());
         assertEquals("z", nested.get("b1"));
-
-        assertEquals(0.0, result.get("f"));
 
     }
 
@@ -71,7 +69,6 @@ public class EventTransformerTest {
         event.put("b", "z");
         event.put("e", "z");
         event.put("c", nested);
-        event.put("f", 273.15);
 
         return event;
     }
