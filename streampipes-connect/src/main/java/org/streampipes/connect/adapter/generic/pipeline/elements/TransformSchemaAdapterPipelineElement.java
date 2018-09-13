@@ -52,7 +52,7 @@ public class TransformSchemaAdapterPipelineElement implements AdapterPipelineEle
                 rules.add(new DeleteTransformationRule(toKeyArray(tmp.getRuntimeKey())));
              } else if (ruleDescription instanceof UnitTransformRuleDescription) {
                 UnitTransformRuleDescription tmp = (UnitTransformRuleDescription) ruleDescription;
-                rules.add(new UnitTransformationRule(toKeyArray(tmp.getRuntimeKey()), tmp.getFromUnit(), tmp.getToUnit()));
+                rules.add(new UnitTransformationRule(toKeyArray(tmp.getEventPropertyId()), tmp.getFromUnit(), tmp.getToUnit()));
             } else {
                 logger.error("Could not find the class for the rule description. This should never happen. Talk to admins to extend the rule implementations to get rid of this error!");
             }

@@ -20,14 +20,15 @@ package org.streampipes.model.connect.rules;
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
 
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp:DeleteRuleDescription")
+@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
+@RdfsClass(StreamPipes.DELETE_RULE_DESCRIPTION)
 @Entity
 public class DeleteRuleDescription extends TransformationRuleDescription {
-    @RdfProperty("sp:runtimeKey")
+    @RdfProperty(StreamPipes.RUNTIME_KEY)
     private String runtimeKey;
 
 

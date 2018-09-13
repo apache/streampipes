@@ -20,18 +20,19 @@ package org.streampipes.model.connect.rules;
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
 
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp:MoveRuleDescription")
+@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
+@RdfsClass(StreamPipes.MOVE_RULE_DESCRIPTION)
 @Entity
 public class MoveRuleDescription extends TransformationRuleDescription {
 
-    @RdfProperty("sp:oldRuntimeKey")
+    @RdfProperty(StreamPipes.OLD_RUNTIME_NAME)
     private String oldRuntimeKey;
 
-    @RdfProperty("sp:newRuntimeKey")
+    @RdfProperty(StreamPipes.NEW_RUNTIME_NAME)
     private String newRuntimeKey;
 
     public MoveRuleDescription() {

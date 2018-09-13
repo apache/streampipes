@@ -19,35 +19,40 @@ package org.streampipes.model.connect.rules;
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
 
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp.UnitTransformRuleDescription")
+@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
+@RdfsClass(StreamPipes.UNIT_TRANSFORM_RULE_DESCRIPTION)
 @Entity
 public class UnitTransformRuleDescription extends TransformationRuleDescription {
 
-    @RdfProperty("sp:runtimeKey")
-    private String runtimeKey;
+    @RdfProperty(StreamPipes.EVENT_PROPERTY_ID)
+    private String eventPropertyId;
 
-    @RdfProperty("sp:fromUnit")
+    @RdfProperty(StreamPipes.FROM_UNIT)
     private String fromUnit;
 
-    @RdfProperty("sp:toUnit")
+    @RdfProperty(StreamPipes.TO_UNIT)
     private String toUnit;
 
     public UnitTransformRuleDescription() {
         super();
     }
 
-    public UnitTransformRuleDescription(String fromUnit, String toUnit) {
+    public UnitTransformRuleDescription(String eventPropertyId, String fromUnit, String toUnit) {
         super();
+        this.eventPropertyId = eventPropertyId;
         this.fromUnit = fromUnit;
         this.toUnit = toUnit;
     }
 
     public UnitTransformRuleDescription(UnitTransformRuleDescription other) {
         super(other);
+        this.eventPropertyId = other.getEventPropertyId();
+        this.fromUnit = other.getFromUnit();
+        this.toUnit = other.getToUnit();
     }
 
     public String getFromUnit() {
@@ -66,12 +71,12 @@ public class UnitTransformRuleDescription extends TransformationRuleDescription 
         this.toUnit = toUnit;
     }
 
-    public String getRuntimeKey() {
-        return runtimeKey;
+    public String getEventPropertyId() {
+        return eventPropertyId;
     }
 
-    public void setRuntimeKey(String runtimeKey) {
-        this.runtimeKey = runtimeKey;
+    public void setEventPropertyId(String runtimeKey) {
+        this.eventPropertyId = runtimeKey;
     }
 
 }

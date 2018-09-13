@@ -31,32 +31,32 @@ public class UnitTransformationRule implements TransformationRule {
 
     private static Logger logger = LoggerFactory.getLogger(Adapter.class);
 
-    private List<String> key;
+    private List<String> eventPropertyId;
     private Unit unitTypeFrom;
     private Unit unitTypeTo;
 
-    public UnitTransformationRule(List<String> key, String fromUnit, String toUnit) {
-        this.key = key;
+    public UnitTransformationRule(List<String> eventPropertyId, String fromUnit, String toUnit) {
+        this.eventPropertyId = eventPropertyId;
         this.unitTypeFrom = UnitProvider.INSTANCE.getUnitByLabel(fromUnit);
         this.unitTypeTo = UnitProvider.INSTANCE.getUnitByLabel(toUnit);
     }
 
     @Override
     public Map<String, Object> transform(Map<String, Object> event) {
-        return transform(event, key);
+        return transform(event, eventPropertyId);
     }
 
-    private Map<String, Object> transform(Map<String, Object> event, List<String> keys) {
+    private Map<String, Object> transform(Map<String, Object> event, List<String> eventPropertyIds) {
 
-        if (keys.size() == 1) {
+        if (eventPropertyIds.size() == 1) {
             try {
-                double value = (double) event.get(keys.get(0));
+                double value = (double) event.get(eventPropertyIds.get(0));
 
                 Quantity obs = new Quantity(value, unitTypeFrom);
                 double newValue = obs.convertTo(unitTypeTo).getValue();
 
-                event.put(keys.get(0), newValue);
-                logger.info(String.valueOf( event.get(keys.get(0))));
+                event.put(eventPropertyIds.get(0), newValue);
+                logger.info(String.valueOf( event.get(eventPropertyIds.get(0))));
             } catch (ClassCastException e) {
                 logger.error(e.toString());
             } catch (IllegalAccessException e) {
@@ -65,11 +65,11 @@ public class UnitTransformationRule implements TransformationRule {
             return event;
 
         } else {
-            String key = keys.get(0);
-            List<String> newKeysTmpList = keys.subList(1, keys.size());
+            String key = eventPropertyIds.get(0);
+            List<String> newKeysTmpList = eventPropertyIds.subList(1, eventPropertyIds.size());
 
             Map<String, Object> newSubEvent =
-                    transform((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList);
+                    transform((Map<String, Object>) event.get(eventPropertyIds.get(0)), newKeysTmpList);
 
             event.remove(key);
             event.put(key, newSubEvent);
