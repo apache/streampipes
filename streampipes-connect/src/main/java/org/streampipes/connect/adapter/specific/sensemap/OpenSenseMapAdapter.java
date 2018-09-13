@@ -69,7 +69,6 @@ public class OpenSenseMapAdapter extends PullAdapter {
     public OpenSenseMapAdapter(SpecificAdapterStreamDescription adapterDescription) {
         super(adapterDescription);
 
-        this.selectedSensors = Arrays.asList(SensorNames.ALL_SENSOR_KEYS);
 
     }
 
@@ -82,19 +81,13 @@ public class OpenSenseMapAdapter extends PullAdapter {
         adapterDescription.setDescription("Environment Sensors");
         adapterDescription.setIconUrl("https://raw.githubusercontent.com/sensebox/resources/master/images/openSenseMap_API_github.png");
 
-        // TODO once any properties are developed in ui change the static properties to possible Sensors
         List<Option> options = new ArrayList<>();
         for (String s : SensorNames.ALL_SENSOR_LABELS) {
-            options.add(new Option(s));
+            options.add(new Option(s, SensorNames.getKeyFromLabel(s)));
         }
         AnyStaticProperty possibleSensors = new AnyStaticProperty("sensors", "Sensors", "Select the sensors that are included in the data stream");
         possibleSensors.setOptions(options);
-
-        FreeTextStaticProperty sensorType = new FreeTextStaticProperty("sensortype", "Sensor Type",
-                "Follow this Hashtag.");
         adapterDescription.addConfig(possibleSensors);
-
-//        adapterDescription.addConfig(sensorType);
 
         return adapterDescription;
     }
@@ -113,6 +106,9 @@ public class OpenSenseMapAdapter extends PullAdapter {
         eventPropertyPrimitive.setRuntimeType(XSD._double.toString());
 
         List<EventProperty> allProperties = new ArrayList<>();
+
+        List<Option> allOptions = ((AnyStaticProperty) (adapterDescription.getConfig().get(0))).getOptions();
+        activateSensors(allOptions);
 
         // Set basic properties
         allProperties.add(EpProperties.timestampProperty(SensorNames.KEY_TIMESTAMP));
@@ -297,6 +293,18 @@ public class OpenSenseMapAdapter extends PullAdapter {
     @Override
     protected PollingSettings getPollingIntervalInSeconds() {
         return PollingSettings.from(TimeUnit.SECONDS, 60);
+    }
+
+    private void activateSensors(List<Option> config) {
+//        this.selectedSensors = Arrays.asList(SensorNames.ALL_SENSOR_KEYS);
+        this.selectedSensors = new ArrayList<>();
+
+        for (Option option : config) {
+
+            if (option.isSelected()) {
+                this.selectedSensors.add(option.getInternalName());
+            }
+        }
     }
 
     private Map<String, Object> filterSensors(Map<String, Object> event) {
