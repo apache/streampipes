@@ -48,7 +48,19 @@ public abstract class PullProtocoll extends Protocol {
 
     @Override
     public void run(AdapterPipeline adapterPipeline) {
-        final Runnable task = () -> {
+        final Runnable errorThread = () -> {
+            executeProtocolLogic(adapterPipeline);
+        };
+
+
+        scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.schedule(errorThread, 0, TimeUnit.MILLISECONDS);
+
+    }
+
+
+    private void executeProtocolLogic(AdapterPipeline adapterPipeline) {
+         final Runnable task = () -> {
             SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
             InputStream data = getDataFromEndpoint();
 

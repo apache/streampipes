@@ -143,6 +143,7 @@ public class HttpStreamProtocol extends PullProtocoll {
 
         try {
             String s = Request.Get(url)
+                    .setHeader("Authorization", "Bearer AQAAANCMnd8BFdERjHoAwE_Cl-sBAAAAJPZMcAsSSE2WztXm7QlZ-AAAAAACAAAAAAAQZgAAAAEAACAAAACU8wqObelSdgO1WopFPbgh1h-H85NZlLfxxWe9K-1XNAAAAAAOgAAAAAIAACAAAADogZg7b8oqEYbFmi2unBhsUFZt2Cfk_Fe3iWFkLBgIw0ABAADB36aoeOsfsJ8IgMHxnEis-pPPIFQaO9vpKfiEP9sP3xIQL3CclvkWC8xtYmcvmEKldey8pYUU7TxJpjDaKVEj6aquJNCgpUYa7GPYXmY2wpgwr36tGkEPrF5HyEcxQ09vju0B6_ZoFI2Yb13NaOy1lab5sTTu2XcqVnYOSB1_sXuL9-bt1thaD-sxm-CpwQhTg0u_SAfy35IO7j8ilDwryeAyAENT99vzfhyJq4xrd0IGIZZOKg2RBvggVWghMzO-RaxCKn6UK3LzOZx38SSCEGKDiH6D3TmKUXvq1U80mu12k6l3xLZKtG9lMopCj6aduhiz7CaA_vxaYbvg_MyzD6y_Z7VaNkVeYfkT-Bu2mEdKBG7IoHctVFQRyH2HmcGNekTILxWk3V80g8xpS6E3---CDKc9A2v6ZEfTU7NHcEAAAAA8AHKro7LT3Z5vF59CPB3hALuMQUUg6_eSCgFYZAD73CcS9pqLHw1flKGc5QR_8SP0YZUr1Ti7GBOAI_qyYEed")
                     .connectTimeout(1000)
                     .socketTimeout(100000)
                     .execute().returnContent().asString();
