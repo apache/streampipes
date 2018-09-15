@@ -86,9 +86,8 @@ export class TransformationRuleService {
                     if (keyOldPrefix === "") {
                         keyOfOldValue = keyNew.substr(keyNew.lastIndexOf(".") + 1, keyNew.length)
                     } else {
-                        keyOfOldValue = keyOldPrefix + keyNew.substr(keyNew.lastIndexOf("."), keyNew.length);
+                        keyOfOldValue = keyOldPrefix + "." + keyNew.substr(keyNew.lastIndexOf(".") + 1, keyNew.length);
                     }
-                    console.log("keyyy " + keyOfOldValue);
                     result.push(new MoveRuleDescription(keyOfOldValue, keyNewPrefix));
                 }
             }
