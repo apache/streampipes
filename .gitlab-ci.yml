@@ -78,9 +78,11 @@ docker-connect-container:
    script:
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/streampipes-connect-container:latest -t $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container/
+     - docker build --pull -t $IMAGE_NAME/streampipes-connect-container:latest -t $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION -t $HARBOR_IMAGE_NAME/streampipes-connect-container:latest -t $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container/
      - docker push $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
      - docker push $IMAGE_NAME/streampipes-connect-container:latest
+     - docker push $HARBOR_IMAGE_NAME/backend:$MVN_VERSION
+     - docker push $HARBOR_IMAGE_NAME/backend:latest
 
 
 deploy:
