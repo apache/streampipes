@@ -48,7 +48,12 @@ public class PipelineElementImportNoUser extends AbstractRestInterface {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addElement(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement)
     {
-    	logger.info("User " + username + " adds element with URI: " + uri);
+
+//		URI myUri = uri.getBaseUri();
+//		String id = myUri.toString()  + "v2/adapter/all/" + elementId;
+
+		logger.info("User " + username + " adds element with URI: " + uri + " to triplestore");
+
         return ok(verifyAndAddElement(uri, username, publicElement));
     }
 
@@ -56,22 +61,25 @@ public class PipelineElementImportNoUser extends AbstractRestInterface {
         return new EndpointItemParser().parseAndAddEndpointItem(uri, username, publicElement);
     }
 
-    @Path("/{id}")
-    @DELETE
+    @Path("/delete")
+    @POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteElement(@PathParam("username") String username, @PathParam("id") String elementId) {
+	public Response deleteElement(@PathParam("username") String username, @FormParam("uri") String uri) {
 
-		URI myUri = uri.getBaseUri();
-		String id = myUri.toString()  + "v2/adapter/all/" + elementId;
+//		URI myUri = uri.getBaseUri();
+//		String id = myUri.toString()  + "v2/adapter/all/" + elementId;
 
 
 		UserService userService = getUserService();
 		IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
+
+		logger.info("User " + username + " deletes element with URI: " + uri + " from triplestore");
+
 		try {
-			if (requestor.getSEPById(id) != null)
+			if (requestor.getSEPById(uri) != null)
 				{
-					requestor.deleteSEP(requestor.getSEPById(id));
-					userService.deleteOwnSource(username, id);
+					requestor.deleteSEP(requestor.getSEPById(uri));
+					userService.deleteOwnSource(username, uri);
 				}
 			else return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
 		} catch (URISyntaxException e) {

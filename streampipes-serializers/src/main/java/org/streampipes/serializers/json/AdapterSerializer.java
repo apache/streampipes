@@ -32,6 +32,7 @@ public class AdapterSerializer implements JsonSerializer<AdapterDescription>, Js
     JsonElement element = jsonObject.get("properties");
     JsonObject tmp = element.getAsJsonObject();
     tmp.addProperty("_id", jsonObject.get("_id").getAsString());
+    tmp.addProperty("_rev", jsonObject.get("_rev").getAsString());
 
     try {
       return (AdapterDescription) GsonSerializer.getGson().fromJson(element, Class.forName(type));

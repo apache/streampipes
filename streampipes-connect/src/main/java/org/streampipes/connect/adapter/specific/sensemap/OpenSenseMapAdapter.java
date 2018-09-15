@@ -150,7 +150,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
                     .create(Datatypes.Double, SensorNames.KEY_TEMPERATURE)
                     .label(SensorNames.LABEL_TEMPERATURE)
                     .description("Measurement for the temperature")
-                    .measurementUnit(TemperatureUnit.CELSIUS.getResource())
+//                    .measurementUnit(TemperatureUnit.CELSIUS.getResource())
                     .build());
         }
         if (selected(SensorNames.KEY_HUMIDITY)) {
@@ -281,6 +281,8 @@ public class OpenSenseMapAdapter extends PullAdapter {
 
     @Override
     protected void pullData() {
+        List<Option> allOptions = ((AnyStaticProperty) (adapterDescription.getConfig().get(0))).getOptions();
+        activateSensors(allOptions);
 
         List<Map<String, Object>> events = getEvents();
 

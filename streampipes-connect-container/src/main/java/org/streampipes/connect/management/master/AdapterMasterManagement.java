@@ -19,10 +19,8 @@ package org.streampipes.connect.management.master;
 
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.connect.adapter.GroundingService;
 import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.exception.AdapterException;
@@ -36,13 +34,12 @@ import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 import java.io.IOException;
 import java.util.List;
 
-import static org.streampipes.connect.rest.SpConnect.deleteDataSource;
 
 public class AdapterMasterManagement {
 
     private static final Logger logger = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
-    public void addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl adapterStorage)
+    public void addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl adapterStorage, String username)
             throws AdapterException {
 
         // Add EventGrounding to AdapterDescription
@@ -71,9 +68,9 @@ public class AdapterMasterManagement {
         }
 
         String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() +"api/v2/";
-        String userName = ad.getUserName();
-        String requestUrl = backendBaseUrl +  "noauth/users/" + userName + "/element";
-        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerUrl() + "api/v1/" + userName + "/master/sources/" + adapterCouchdbId;
+//        String userName = ad.getUserName();
+        String requestUrl = backendBaseUrl +  "noauth/users/" + username + "/element";
+        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerUrl() + "api/v1/" + username + "/master/sources/" + adapterCouchdbId;
 
         logger.info("Install source (source URL: " + elementUrl +" in backend over URL: " + requestUrl);
 
@@ -130,9 +127,11 @@ public class AdapterMasterManagement {
 
         adapterStorage.deleteAdapter(id);
 
-        String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/noauth/users/"+ username + "/element/";
-        backendBaseUrl = backendBaseUrl + id;
-        deleteDataSource(backendBaseUrl);
+        String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/noauth/users/"+ username + "/element/delete";
+
+        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerUrl() + "api/v1/" + username + "/master/sources/";
+
+//        deleteDataSource(backendBaseUrl, elementUrl);
 
 
         boolean response = true;
@@ -140,10 +139,12 @@ public class AdapterMasterManagement {
         String responseString = null;
         logger.info("Delete data source in backend with request URL: " + backendBaseUrl);
         try {
-            responseString = Request.Delete(backendBaseUrl)
-                   .connectTimeout(1000)
-                   .socketTimeout(100000)
-                   .execute().returnContent().asString();
+            responseString = Request.Post(backendBaseUrl)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .bodyForm(Form.form()
+                            .add("uri", elementUrl).build())
+                    .execute().returnContent().asString();
         } catch (IOException e) {
             e.printStackTrace();
             responseString = e.toString();

@@ -71,14 +71,14 @@ public class AdapterResourceTest extends ConnectContainerResourceTest {
 
     @Test
     public void addAdapterSuccess() throws AdapterException {
-        doNothing().when(adapterMasterManagement).addAdapter(any(), any(), any());
+        doNothing().when(adapterMasterManagement).addAdapter(any(), any(), any(), anyString());
         String data = Utils.getMinimalStreamAdapterJsonLD();
         postJsonLdSuccessRequest(data, "/", "Stream adapter with id http://t.de/ successfully added");
     }
 
     @Test
     public void addAdapterFail() throws AdapterException {
-        doThrow(new AdapterException(ERROR_MESSAGE)).when(adapterMasterManagement).addAdapter(any(), any(), any());
+        doThrow(new AdapterException(ERROR_MESSAGE)).when(adapterMasterManagement).addAdapter(any(), any(), any(), anyString());
         adapterResource.setAdapterMasterManagement(adapterMasterManagement);
 
         String data = Utils.getMinimalStreamAdapterJsonLD();

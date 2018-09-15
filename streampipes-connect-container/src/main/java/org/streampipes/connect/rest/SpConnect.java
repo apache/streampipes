@@ -38,219 +38,221 @@ import java.util.UUID;
 
 @Deprecated
 public class SpConnect {
-
-    private static final Logger logger = LoggerFactory.getLogger(SpConnectResource.class);
-
-//    public String addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl adapterStorage) {
 //
-//        // store in db
-//        adapterStorage.storeAdapter(ad);
+//    private static final Logger logger = LoggerFactory.getLogger(SpConnectResource.class);
+//
+////    public String addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl adapterStorage) {
+////
+////        // store in db
+////        adapterStorage.storeAdapter(ad);
+////
+////
+////        // start when stream adapter
+////        if (ad instanceof AdapterStreamDescription) {
+////            SpConnect.startStreamAdapter((AdapterStreamDescription) ad, baseUrl);
+////        }
+////
+////        List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
+////        String adapterCouchdbId = "";
+////        for (AdapterDescription a : allAdapters) {
+////           if (a.getAdapterId().equals(ad.getAdapterId())) {
+////               adapterCouchdbId = a.getId();
+////           }
+////        }
+////
+////        String backendBaseUrl = "http://" + BackendConfig.INSTANCE.getBackendHost() + ":" + "8030" + "/streampipes-backend/api/v2/";
+////        String userName = ad.getUserName();
+////        String requestUrl = backendBaseUrl +  "noauth/users/" + userName + "/element";
+////        logger.info("Request URL: " + requestUrl);
+////
+////        String elementUrl = backendBaseUrl + "adapter/all/" + adapterCouchdbId;
+////        logger.info("Element URL: " + elementUrl);
+////
+////        installDataSource(requestUrl, elementUrl);
+////
+////
+////        return SpConnectUtils.SUCCESS;
+////    }
+//
+////    public boolean installDataSource(String requestUrl, String elementIdUrl) {
+////
+////        try {
+////            String responseString = Request.Post(requestUrl)
+////                    .bodyForm(
+////                            Form.form()
+////                                    .add("uri", elementIdUrl)
+////                                    .add("publicElement", "true").build())
+////                    .connectTimeout(1000)
+////                    .socketTimeout(100000)
+////                    .execute().returnContent().asString();
+////
+////            logger.info(responseString);
+////        } catch (IOException e) {
+////            e.printStackTrace();
+////        }
+////
+////        return true;
+////    }
 //
 //
-//        // start when stream adapter
-//        if (ad instanceof AdapterStreamDescription) {
-//            SpConnect.startStreamAdapter((AdapterStreamDescription) ad, baseUrl);
-//        }
+//    public static boolean deleteDataSource(String requestUrl, String elementUri) {
+//        boolean response = true;
 //
-//        List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
-//        String adapterCouchdbId = "";
-//        for (AdapterDescription a : allAdapters) {
-//           if (a.getAdapterId().equals(ad.getAdapterId())) {
-//               adapterCouchdbId = a.getId();
-//           }
-//        }
-//
-//        String backendBaseUrl = "http://" + BackendConfig.INSTANCE.getBackendHost() + ":" + "8030" + "/streampipes-backend/api/v2/";
-//        String userName = ad.getUserName();
-//        String requestUrl = backendBaseUrl +  "noauth/users/" + userName + "/element";
-//        logger.info("Request URL: " + requestUrl);
-//
-//        String elementUrl = backendBaseUrl + "adapter/all/" + adapterCouchdbId;
-//        logger.info("Element URL: " + elementUrl);
-//
-//        installDataSource(requestUrl, elementUrl);
-//
-//
-//        return SpConnectUtils.SUCCESS;
-//    }
-
-//    public boolean installDataSource(String requestUrl, String elementIdUrl) {
-//
+//        String responseString = null;
+//        logger.info("Delete data source in backend with request URL: " + requestUrl);
 //        try {
-//            String responseString = Request.Post(requestUrl)
-//                    .bodyForm(
-//                            Form.form()
-//                                    .add("uri", elementIdUrl)
-//                                    .add("publicElement", "true").build())
+//            responseString = Request.Post(requestUrl)
 //                    .connectTimeout(1000)
 //                    .socketTimeout(100000)
+//                    .bodyForm(Form.form()
+//                            .add("uri", elementUri).build())
 //                    .execute().returnContent().asString();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            responseString = e.toString();
+//            response = false;
+//        }
 //
-//            logger.info(responseString);
+//        logger.info("Response of the deletion request" + responseString);
+//        return response;
+//    }
+//
+//    public static boolean isStreamAdapter(String id, AdapterStorageImpl adapterStorage) {
+//        AdapterDescription ad = adapterStorage.getAdapter(id);
+//
+//        return ad instanceof AdapterStreamDescription;
+//    }
+//
+//    public static AdapterDescription getAdapterDescription(String ads) {
+//
+//
+//        AdapterDescription a = null;
+//
+//        if (ads.contains("AdapterSetDescription")){
+//            JsonLdTransformer jsonLdTransformer = new JsonLdTransformer(StreamPipes.ADAPTER_SET_DESCRIPTION);
+//            a = getDescription(jsonLdTransformer, ads, AdapterSetDescription.class);
+//        } else {
+//            JsonLdTransformer jsonLdTransformer = new JsonLdTransformer(StreamPipes.ADAPTER_STREAM_DESCRIPTION);
+//            a = getDescription(jsonLdTransformer, ads, AdapterStreamDescription.class);
+//        }
+//
+//        logger.info("Add Adapter Description " + a.getUri());
+//
+//        return a;
+//    }
+//
+//    public static <T> T getDescription(JsonLdTransformer jsonLdTransformer, String s, Class<T> theClass) {
+//
+//        T a = null;
+//
+//        try {
+//            a = jsonLdTransformer.fromJsonLd(s, theClass);
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
 //
-//        return true;
+//        return a;
 //    }
-
-
-    public static boolean deleteDataSource(String requestUrl) {
-        boolean response = true;
-
-        String responseString = null;
-        logger.info("Delete data source in backend with request URL: " + requestUrl);
-        try {
-            responseString = Request.Delete(requestUrl)
-                   .connectTimeout(1000)
-                   .socketTimeout(100000)
-                   .execute().returnContent().asString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            responseString = e.toString();
-            response = false;
-        }
-
-        logger.info("Response of the deletion request" + responseString);
-        return response;
-    }
-
-    public static boolean isStreamAdapter(String id, AdapterStorageImpl adapterStorage) {
-        AdapterDescription ad = adapterStorage.getAdapter(id);
-
-        return ad instanceof AdapterStreamDescription;
-    }
-
-    public static AdapterDescription getAdapterDescription(String ads) {
-
-
-        AdapterDescription a = null;
-
-        if (ads.contains("AdapterSetDescription")){
-            JsonLdTransformer jsonLdTransformer = new JsonLdTransformer(StreamPipes.ADAPTER_SET_DESCRIPTION);
-            a = getDescription(jsonLdTransformer, ads, AdapterSetDescription.class);
-        } else {
-            JsonLdTransformer jsonLdTransformer = new JsonLdTransformer(StreamPipes.ADAPTER_STREAM_DESCRIPTION);
-            a = getDescription(jsonLdTransformer, ads, AdapterStreamDescription.class);
-        }
-
-        logger.info("Add Adapter Description " + a.getUri());
-
-        return a;
-    }
-
-    public static <T> T getDescription(JsonLdTransformer jsonLdTransformer, String s, Class<T> theClass) {
-
-        T a = null;
-
-        try {
-            a = jsonLdTransformer.fromJsonLd(s, theClass);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return a;
-    }
-
-    public static String stopSetAdapter(String adapterId, String baseUrl, AdapterStorageImpl adapterStorage) {
-        String url = baseUrl + "api/v1/stopAdapter/set";
-
-        return stopAdapter(adapterId, adapterStorage, url);
-    }
-
-    public static String stopStreamAdapter(String adapterId, String baseUrl, AdapterStorageImpl adapterStorage) {
-        String url = baseUrl + "api/v1/stopAdapter/stream";
-
-        return stopAdapter(adapterId, adapterStorage, url);
-    }
-
-    private static String stopAdapter(String adapterId, AdapterStorageImpl adapterStorage, String url) {
-
-        //Delete from database
-        AdapterDescription ad = adapterStorage.getAdapter(adapterId);
-
-        // Stop execution of adatper
-         try {
-            logger.info("Trying to stopAdapter adpater on endpoint: " + url);
-
-            // TODO quick fix because otherwise it is not serialized to json-ld
-             if (ad.getUri() == null) {
-                 logger.error("Adapter uri is null this should not happen " + ad);
-             }
-
-            String adapterDescription = toJsonLd(ad);
-
-            // TODO change this to a delete request
-            String responseString = Request.Post(url)
-                    .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnContent().asString();
-
-            logger.info("Adapter stopped on endpoint: " + url + " with Response: " + responseString);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-            return "Adapter was not stopped successfully";
-        }
-
-        return SpConnectUtils.SUCCESS;
-    }
-
-
-    public static String startStreamAdapter(AdapterStreamDescription asd, String baseUrl) {
-        String url = baseUrl + "api/v1/invoke/stream";
-
-        return postStartAdapter(url, asd);
-    }
-
-    public  String invokeAdapter(String streamId, SpDataSet dataSet, String baseUrl, AdapterStorageImpl adapterStorage) {
-        String url = baseUrl + "api/v1/invoke/set";
-
-        AdapterSetDescription adapterDescription = (AdapterSetDescription) adapterStorage.getAdapter(streamId);
-        adapterDescription.setDataSet(dataSet);
-
-        return postStartAdapter(url, adapterDescription);
-    }
-
-    private static String postStartAdapter(String url, AdapterDescription ad) {
-        try {
-            logger.info("Trying to start adpater on endpoint: " + url);
-
-            // this ensures that all adapters have a valid uri otherwise the json-ld serializer fails
-            if (ad.getUri() == null) {
-                ad.setUri("https://streampipes.org/adapter/" + UUID.randomUUID());
-            }
-            String adapterDescription = toJsonLd(ad);
-
-            String responseString = Request.Post(url)
-                    .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnContent().asString();
-
-            logger.info("Adapter started on endpoint: " + url + " with Response: " + responseString);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-            return "Adapter was not started successfully";
-        }
-
-        return SpConnectUtils.SUCCESS;
-    }
-
-    private static <T> String toJsonLd(T object) {
-        JsonLdUtils.toJsonLD(object);
-        String s = JsonLdUtils.toJsonLD(object);
-
-        if (s == null) {
-            logger.error("Could not serialize Object " + object + " into json ld");
-        }
-
-        return s;
-    }
+//
+//    public static String stopSetAdapter(String adapterId, String baseUrl, AdapterStorageImpl adapterStorage) {
+//        String url = baseUrl + "api/v1/stopAdapter/set";
+//
+//        return stopAdapter(adapterId, adapterStorage, url);
+//    }
+//
+//    public static String stopStreamAdapter(String adapterId, String baseUrl, AdapterStorageImpl adapterStorage) {
+//        String url = baseUrl + "api/v1/stopAdapter/stream";
+//
+//        return stopAdapter(adapterId, adapterStorage, url);
+//    }
+//
+//    private static String stopAdapter(String adapterId, AdapterStorageImpl adapterStorage, String url) {
+//
+//        //Delete from database
+//        AdapterDescription ad = adapterStorage.getAdapter(adapterId);
+//
+//        // Stop execution of adatper
+//        try {
+//            logger.info("Trying to stopAdapter adpater on endpoint: " + url);
+//
+//            // TODO quick fix because otherwise it is not serialized to json-ld
+//            if (ad.getUri() == null) {
+//                logger.error("Adapter uri is null this should not happen " + ad);
+//            }
+//
+//            String adapterDescription = toJsonLd(ad);
+//
+//            // TODO change this to a delete request
+//            String responseString = Request.Post(url)
+//                    .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
+//                    .connectTimeout(1000)
+//                    .socketTimeout(100000)
+//                    .execute().returnContent().asString();
+//
+//            logger.info("Adapter stopped on endpoint: " + url + " with Response: " + responseString);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//
+//            return "Adapter was not stopped successfully";
+//        }
+//
+//        return SpConnectUtils.SUCCESS;
+//    }
+//
+//
+//    public static String startStreamAdapter(AdapterStreamDescription asd, String baseUrl) {
+//        String url = baseUrl + "api/v1/invoke/stream";
+//
+//        return postStartAdapter(url, asd);
+//    }
+//
+//    public  String invokeAdapter(String streamId, SpDataSet dataSet, String baseUrl, AdapterStorageImpl adapterStorage) {
+//        String url = baseUrl + "api/v1/invoke/set";
+//
+//        AdapterSetDescription adapterDescription = (AdapterSetDescription) adapterStorage.getAdapter(streamId);
+//        adapterDescription.setDataSet(dataSet);
+//
+//        return postStartAdapter(url, adapterDescription);
+//    }
+//
+//    private static String postStartAdapter(String url, AdapterDescription ad) {
+//        try {
+//            logger.info("Trying to start adpater on endpoint: " + url);
+//
+//            // this ensures that all adapters have a valid uri otherwise the json-ld serializer fails
+//            if (ad.getUri() == null) {
+//                ad.setUri("https://streampipes.org/adapter/" + UUID.randomUUID());
+//            }
+//            String adapterDescription = toJsonLd(ad);
+//
+//            String responseString = Request.Post(url)
+//                    .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
+//                    .connectTimeout(1000)
+//                    .socketTimeout(100000)
+//                    .execute().returnContent().asString();
+//
+//            logger.info("Adapter started on endpoint: " + url + " with Response: " + responseString);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//
+//            return "Adapter was not started successfully";
+//        }
+//
+//        return SpConnectUtils.SUCCESS;
+//    }
+//
+//    private static <T> String toJsonLd(T object) {
+//        JsonLdUtils.toJsonLD(object);
+//        String s = JsonLdUtils.toJsonLD(object);
+//
+//        if (s == null) {
+//            logger.error("Could not serialize Object " + object + " into json ld");
+//        }
+//
+//        return s;
+//    }
 
 
 }

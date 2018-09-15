@@ -25,6 +25,7 @@ import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.schema.EventSchema;
@@ -37,7 +38,7 @@ import java.util.Map;
 
 public class HttpStreamProtocol extends PullProtocoll {
 
-    Logger LOG = LoggerFactory.getLogger(HttpStreamProtocol.class);
+    Logger logger = LoggerFactory.getLogger(HttpStreamProtocol.class);
 
     public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/http";
     private static String URL_PROPERTY ="url";
@@ -64,7 +65,7 @@ public class HttpStreamProtocol extends PullProtocoll {
             long intervalProperty = Long.parseLong(extractor.singleValue(INTERVAL_PROPERTY));
             return new HttpStreamProtocol(parser, format, urlProperty, intervalProperty);
         } catch (NumberFormatException e) {
-            LOG.error("Could not parse" + extractor.singleValue(INTERVAL_PROPERTY) + "to int");
+            logger.error("Could not parse" + extractor.singleValue(INTERVAL_PROPERTY) + "to int");
             return null;
         }
 
@@ -92,13 +93,13 @@ public class HttpStreamProtocol extends PullProtocoll {
 
     @Override
     public GuessSchema getGuessSchema() {
-        int n = 20;
+        int n = 1;
 
         InputStream dataInputStream = getDataFromEndpoint();
 
         List<byte[]> dataByte = parser.parseNEvents(dataInputStream, n);
         if (dataByte.size() < n) {
-            LOG.error("Error in HttpStreamProtocol! Required: " + n + " elements but the resource just had: " +
+            logger.error("Error in HttpStreamProtocol! Required: " + n + " elements but the resource just had: " +
                     dataByte.size());
 
             dataByte.addAll(dataByte);
@@ -113,13 +114,13 @@ public class HttpStreamProtocol extends PullProtocoll {
     public List<Map<String, Object>> getNElements(int n) {
         List<Map<String, Object>> result = new ArrayList<>();
 
-        InputStream dataInputStream = getDataFromEndpoint();
+         InputStream   dataInputStream = getDataFromEndpoint();
 
         List<byte[]> dataByte = parser.parseNEvents(dataInputStream, n);
 
         // Check that result size is n. Currently just an error is logged. Maybe change to an exception
         if (dataByte.size() < n) {
-            LOG.error("Error in HttpStreamProtocol! User required: " + n + " elements but the resource just had: " +
+            logger.error("Error in HttpStreamProtocol! User required: " + n + " elements but the resource just had: " +
                     dataByte.size());
         }
 
@@ -153,7 +154,9 @@ public class HttpStreamProtocol extends PullProtocoll {
             result = IOUtils.toInputStream(s, "UTF-8");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error while fetching data from URL: " + url, e);
+
+//            throw new AdapterException();
         }
 
         return result;

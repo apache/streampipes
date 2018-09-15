@@ -24,6 +24,7 @@ import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.specific.sensemap.OpenSenseMapAdapter;
+import org.streampipes.connect.exception.AdapterException;
 
 import java.io.InputStream;
 import java.util.concurrent.*;

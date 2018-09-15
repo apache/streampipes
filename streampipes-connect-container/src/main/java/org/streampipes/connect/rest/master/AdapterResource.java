@@ -77,7 +77,7 @@ public class AdapterResource extends AbstractContainerResource {
         String newUrl = addUserNameToApi(connectContainerEndpoint, userName);
 
         try {
-            adapterMasterManagement.addAdapter(adapterDescription, newUrl, new AdapterStorageImpl());
+            adapterMasterManagement.addAdapter(adapterDescription, newUrl, new AdapterStorageImpl(), userName);
         } catch (AdapterException e) {
             logger.error("Error while starting adapter with id " + adapterDescription.getUri(), e);
             return ok(Notifications.error(e.getMessage()));
