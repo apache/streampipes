@@ -43,17 +43,20 @@ public class HttpStreamProtocol extends PullProtocoll {
     public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/http";
     private static String URL_PROPERTY ="url";
     private static String INTERVAL_PROPERTY ="interval";
+    private static String ACCESS_TOKEN_PROPERTY ="access_token";
 
     private String url;
+    private String accessToken;
 
     public HttpStreamProtocol() {
     }
 
 
 
-    public HttpStreamProtocol(Parser parser, Format format, String url, long interval) {
+    public HttpStreamProtocol(Parser parser, Format format, String url, long interval, String accessToken) {
         super(parser, format, interval);
         this.url = url;
+        this.accessToken = accessToken;
     }
 
     @Override
@@ -63,7 +66,8 @@ public class HttpStreamProtocol extends PullProtocoll {
         String urlProperty = extractor.singleValue(URL_PROPERTY);
         try {
             long intervalProperty = Long.parseLong(extractor.singleValue(INTERVAL_PROPERTY));
-            return new HttpStreamProtocol(parser, format, urlProperty, intervalProperty);
+            String accessToken = extractor.singleValue(ACCESS_TOKEN_PROPERTY);
+            return new HttpStreamProtocol(parser, format, urlProperty, intervalProperty, accessToken);
         } catch (NumberFormatException e) {
             logger.error("Could not parse" + extractor.singleValue(INTERVAL_PROPERTY) + "to int");
             return null;
@@ -83,10 +87,12 @@ public class HttpStreamProtocol extends PullProtocoll {
         FreeTextStaticProperty intervalProperty = new FreeTextStaticProperty(INTERVAL_PROPERTY, "Interval [Sec]", "This property " +
                 "defines the pull interval in seconds.");
 
+        FreeTextStaticProperty accessToken = new FreeTextStaticProperty(ACCESS_TOKEN_PROPERTY, "Access Token", "Http Access Token");
 
         description.setSourceType("STREAM");
         description.addConfig(urlProperty);
         description.addConfig(intervalProperty);
+        description.addConfig(accessToken);
 
         return description;
     }
@@ -142,10 +148,15 @@ public class HttpStreamProtocol extends PullProtocoll {
         InputStream result = null;
 
         try {
-            String s = Request.Get(url)
-                    .setHeader("Authorization", "Bearer AQAAANCMnd8BFdERjHoAwE_Cl-sBAAAAJPZMcAsSSE2WztXm7QlZ-AAAAAACAAAAAAAQZgAAAAEAACAAAAC-VPDG0IiBSCHDXuH_6Gbd0ezdy8sDwYsfihROt5HhlgAAAAAOgAAAAAIAACAAAADuIfZWYSBvra57wJhcx_Fzq8w4bxEKaRPAN_Y5DU4JCUABAABGWKuC4qPdf3OJLQqJouJvPZ-al45xp-7g3R7d7OI3DMcKnuJ4hgOw45SfEAxyuYMXmh2nuKBNlCcAI0HX7HheZ3xAVlZg3HOAy1LjY1PwtBQ2NpnmsQYupMINomfLs-ExW3h5DR7iQp9hrIDtFWeIGbKgaca945CiYNDydOMtwSwWmM_F8gznB7nzSYI75FWS7fpG4a2eS6w62w5mMe0P-r8G5HIvid0BAe8GSqE9y1ClpS2JbQh1yaRgmz3cK-Lctj0fFUUioolsxrsPTTokcSToZzrRBHNZAoYEvWFL8Lt2267SSwdkXAFBicw_IvF_r52dPJC-8-FdGpM-0ECchi0Tm-Ti0Myuiz9wUkc1iDE-bk4Knm1Lt9DCm1pHrppP1aluEAcfm9eFCUzrk6JhDgVBOTv2YFdRErYR2ta0CUAAAAA8vLD3mh23IyN1cjaXzuO6w0i7CVruV0QI4Ga5jv-APDq06dGXJIqIvwJXcGUIFXJ0_Wk9cuDRP7Jh63GiU2A9")
+            Request request = Request.Get(url)
                     .connectTimeout(1000)
-                    .socketTimeout(100000)
+                    .socketTimeout(100000);
+
+            if (this.accessToken != null && !this.accessToken.equals("")) {
+                request.setHeader("Authorization", "Bearer " + this.accessToken);
+            }
+
+            String s = request
                     .execute().returnContent().asString();
 
             if (s.startsWith("ï")) {
