@@ -53,7 +53,7 @@ public class MoveTransformationRuleTest {
     }
 
     @Test
-    public void transformTopLevelProperty() {
+    public void transFormTopLevelProperty() {
         Map<String, Object> event = new HashMap<>();
         event.put("new_parent", new HashMap<>());
         event.put("toMove", "x");
@@ -64,5 +64,22 @@ public class MoveTransformationRuleTest {
 
         assertEquals(1, result.keySet().size());
         assertEquals(1, ((Map<String, Object>) result.get("new_parent")).keySet().size());
+    }
+
+    @Test
+    public void transToTopLevelProperty() {
+        Map<String, Object> child = new HashMap<>();
+        child.put("child", "value");
+
+        Map<String, Object> parent = new HashMap<>();
+        parent.put("parent", child);
+
+        MoveTransformationRule moveRule = new MoveTransformationRule(Arrays.asList("parent", "child"), Arrays.asList(""));
+
+        Map<String, Object> result = moveRule.transform(parent);
+
+        assertEquals(2, result.keySet().size());
+        assertEquals(0, ((Map<String, Object>) result.get("parent")).keySet().size());
+        assertEquals("value", result.get("child"));
     }
 }

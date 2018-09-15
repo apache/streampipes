@@ -33,6 +33,7 @@ import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 
 public class AdapterMasterManagement {
@@ -47,8 +48,11 @@ public class AdapterMasterManagement {
                 ConnectContainerConfig.INSTANCE.getKafkaHost(), ConnectContainerConfig.INSTANCE.getKafkaPort(), null);
         ad.setEventGrounding(eventGrounding);
 
+        ad.setElementId(ad.getElementId() + UUID.randomUUID().toString());
+
         // store in db
         adapterStorage.storeAdapter(ad);
+
 
 
         // start when stream adapter

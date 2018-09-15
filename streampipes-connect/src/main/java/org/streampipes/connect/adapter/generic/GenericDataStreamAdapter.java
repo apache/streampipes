@@ -36,6 +36,7 @@ import org.streampipes.connect.adapter.generic.protocol.Protocol;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class GenericDataStreamAdapter extends GenericAdapter {
 

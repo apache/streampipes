@@ -48,7 +48,7 @@ public class MoveTransformationRule implements TransformationRule {
     }
 
     private Map<String, Object> addItem(Map<String, Object> event, List<String> keys, Map<String, Object> movedObject) {
-        if (keys.size() == 0) {
+        if (keys.size() == 0 || (keys.size() == 1 && keys.get(0).equals(""))) {
             String key = (String) movedObject.keySet().toArray()[0];
             event.put(key, movedObject.get(key));
             return event;

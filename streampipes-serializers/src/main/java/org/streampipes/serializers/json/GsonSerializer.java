@@ -45,6 +45,8 @@ public class GsonSerializer {
   public static GsonBuilder getAdapterGsonBuilder() {
     GsonBuilder builder = getGsonBuilder();
     builder.registerTypeHierarchyAdapter(AdapterDescription.class, new AdapterSerializer());
+    builder.registerTypeAdapter(TransformationRuleDescription.class, new JsonLdSerializer<TransformationRuleDescription>());
+//    builder.registerTypeHierarchyAdapter(TransformationRuleDescription.class, new AdapterSerializer());
 
     return builder;
   }
@@ -62,6 +64,7 @@ public class GsonSerializer {
     builder.registerTypeAdapter(TransportProtocol.class, new JsonLdSerializer<TransportProtocol>());
     builder.registerTypeAdapter(ValueSpecification.class, new JsonLdSerializer<ValueSpecification>());
     builder.registerTypeAdapter(TopicDefinition.class, new JsonLdSerializer<TopicDefinition>());
+    builder.registerTypeAdapter(TransformationRuleDescription.class, new JsonLdSerializer<TransformationRuleDescription>());
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
             .registerSubtype(SpDataSet.class, "org.streampipes.model.SpDataSet")
             .registerSubtype(SpDataStream.class, "org.streampipes.model.SpDataStream"));
@@ -85,6 +88,7 @@ public class GsonSerializer {
     builder.registerTypeAdapter(EventPropertyQualityDefinition.class, new JsonLdSerializer<EventPropertyQualityDefinition>());
     builder.registerTypeAdapter(EventStreamQualityDefinition.class, new JsonLdSerializer<EventStreamQualityDefinition>());
     builder.registerTypeAdapter(TopicDefinition.class, new JsonLdSerializer<TopicDefinition>());
+    builder.registerTypeAdapter(TransformationRuleDescription.class, new JsonLdSerializer<TransformationRuleDescription>());
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
             .registerSubtype(SpDataSet.class, "org.streampipes.model.SpDataSet")
             .registerSubtype(SpDataStream.class, "org.streampipes.model.SpDataStream"));
