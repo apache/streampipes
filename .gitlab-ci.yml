@@ -58,8 +58,8 @@ github:
      - docker build --no-cache --pull  -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
      - docker push $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
      - docker push $IMAGE_NAME/$CONTAINER_NAME:latest
-     - docker push $HARBOR_IMAGE_NAME/backend:$MVN_VERSION
-     - docker push $HARBOR_IMAGE_NAME/backend:latest
+     - docker push $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
+     - docker push $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest
    only:
      - dev
 
