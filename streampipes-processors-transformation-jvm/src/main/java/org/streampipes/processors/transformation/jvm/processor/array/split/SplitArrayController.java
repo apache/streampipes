@@ -50,7 +50,7 @@ public class SplitArrayController extends StandaloneEventProcessingDeclarer<Spli
         return ProcessingElementBuilder.create("org.streampipes.processors" +
                 ".transformation.jvm.split-array", "Split Array", "This processor takes " +
                 "an array of event properties and creates an event for each of them. Further property of the events can be added to each element")
-                .iconUrl(TransformationJvmConfig.iconBaseUrl + "splitarray.png")
+                .iconUrl(TransformationJvmConfig.getIconUrl("splitarray"))
 
                 .requiredStream(StreamRequirementsBuilder.create()
                         .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),

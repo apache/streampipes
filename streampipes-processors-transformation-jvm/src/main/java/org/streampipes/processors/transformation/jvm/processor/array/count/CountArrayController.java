@@ -45,7 +45,7 @@ public class CountArrayController extends StandaloneEventProcessingDeclarer<Coun
                 ".transformation.jvm.count-array", "Count Array", "This processor takes " +
                 "an array of event properties counts them and appends the result to the event")
 
-                .iconUrl(TransformationJvmConfig.iconBaseUrl + "countarray.png")
+                .iconUrl(TransformationJvmConfig.getIconUrl( "countarray"))
                 .requiredStream(
                         StreamRequirementsBuilder.create()
                                             .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(),

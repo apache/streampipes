@@ -25,6 +25,7 @@ public class AndController extends FlinkDataProcessorDeclarer<AndParameters> {
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.and", "And", "Detects whether an event co-occurs with another event within a given time..")
             .category(DataProcessorType.PATTERN_DETECT)
+            .iconUrl(PatternDetectionFlinkConfig.getIconUrl("And_Icon"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.from("left-mapping", "Left Mapping", ""), PropertyScope.DIMENSION_PROPERTY)
