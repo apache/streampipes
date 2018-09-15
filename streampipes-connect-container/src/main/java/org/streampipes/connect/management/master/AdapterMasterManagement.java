@@ -48,7 +48,9 @@ public class AdapterMasterManagement {
                 ConnectContainerConfig.INSTANCE.getKafkaHost(), ConnectContainerConfig.INSTANCE.getKafkaPort(), null);
         ad.setEventGrounding(eventGrounding);
 
-        ad.setElementId(ad.getElementId() + UUID.randomUUID().toString());
+        String newId = ad.getElementId() + UUID.randomUUID().toString();
+        ad.changeElementId(newId);
+        ad.setElementId(newId);
 
         // store in db
         adapterStorage.storeAdapter(ad);
