@@ -17,7 +17,13 @@
 
 package org.streampipes.connect.rest.master.hackathon;
 
+import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.connect.rest.AbstractContainerResource;
+import org.streampipes.connect.rest.master.DescriptionResource;
+import org.streampipes.connect.rest.master.hackathon.model.Prediction;
+import org.streampipes.connect.rest.master.hackathon.model.ResultObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -26,13 +32,33 @@ import javax.ws.rs.core.Response;
 @Path("/api/v1/hackathon")
 public class Hackathon extends AbstractContainerResource {
 
+    private Logger logger = LoggerFactory.getLogger(DescriptionResource.class);
+
     @GET
     @Path("/what/{item}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response what(@PathParam("item") String item) {
+
+        logger.info("/what: endpoint with item : " + item + " was called");
+
+        if (HackathonState.INSTANCE.getState() != null) {
+            for (Prediction p : HackathonState.INSTANCE.getState().getPredictions()) {
+                if (p.getTagName().equals(item)) {
+                    logger.info("/what: found item : " + item + " in state with probablility: " + p.getProbability());
+
+                    if (p.getProbability() > 0.1) {
+                        return ok("{\"result\": \" " + item +" is in the living room\"}");
+                    }
+                }
+
+            }
+        } else {
+            logger.error("/what: oh noes state is null. This should not happen");
+        }
+
         // is in the living room
         // is not in the living room
-        return ok("{\"result\": \"is in the living room\"}");
+        return ok("{\"result\": \"" + item + " not found\"}");
     }
 
     @POST
@@ -40,7 +66,16 @@ public class Hackathon extends AbstractContainerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response where(String s) {
-        System.out.println(s);
+        logger.info("/where: endpoint with event : " + s + " was called");
+
+        ResultObject targetObject = new Gson().fromJson(s, ResultObject.class);
+        if (targetObject == null) {
+            logger.error("/where: could not deserialize request payload");
+        }
+        HackathonState.INSTANCE.setState(targetObject);
+
+        logger.info("/where: update state");
+
         return ok("{\"result\": " + s + "}");
     }
 
