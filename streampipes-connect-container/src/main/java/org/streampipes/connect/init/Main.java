@@ -23,9 +23,9 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.rest.master.*;
+import org.streampipes.connect.rest.master.hackathon.Hackathon;
 import org.streampipes.connect.rest.worker.WelcomePageWorker;
 import org.streampipes.connect.rest.worker.WorkerResource;
-import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
@@ -84,6 +84,7 @@ public class Main {
         allClasses.add(DescriptionResource.class);
         allClasses.add(SourcesResource.class);
         allClasses.add(GuessResource.class);
+        allClasses.add(Hackathon.class);
 
         allClasses.addAll(getApiClasses());
 
