@@ -46,7 +46,7 @@ public class Hackathon extends AbstractContainerResource {
                 if (p.getTagName().equals(item)) {
                     logger.info("/what: found item : " + item + " in state with probablility: " + p.getProbability());
 
-                    if (p.getProbability() > 0.1) {
+                    if (p.getProbability() > 0.49) {
                         return ok("{\"result\": \" " + item +" is in the living room\"}");
                     }
                 }
@@ -66,7 +66,6 @@ public class Hackathon extends AbstractContainerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response where(String s) {
-        logger.info("/where: endpoint with event : " + s + " was called");
 
         ResultObject targetObject = new Gson().fromJson(s, ResultObject.class);
         if (targetObject == null) {
