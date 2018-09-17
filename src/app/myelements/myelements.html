@@ -21,69 +21,68 @@
         <md-list>
             <md-list-item ng-repeat="item in ctrl.currentElements | orderBy:'+name'">
 
-                <div flex="100" layout="row" style="border:1px solid darkblue;margin-bottom:10px;background:white;margin-left:30px;margin-right:30px;">
+                <div flex="100" layout="row"
+                     style="border:1px solid darkblue;margin-bottom:10px;background:white;margin-left:30px;margin-right:30px;">
                     <div flex="20" layout="row" layout-align="start center" style="margin:10px;">
-                        <img ng-src="{{item.iconUrl}}" class="md-card-image draggable-icon {{ctrl.currentTabType}}" alt="{{item.name}}"
+                        <img ng-src="{{item.iconUrl}}" class="md-card-image draggable-icon {{ctrl.currentTabType}}"
+                             alt="{{item.name}}"
                              ng-show="(item.iconUrl != null && item.iconUrl != 'http://localhost:8080/img')"/>
-						<span class="draggable-icon {{ctrl.currentTabType}}"
+                        <span class="draggable-icon {{ctrl.currentTabType}}"
                               ng-show="(item.iconUrl == null || item.iconUrl == 'http://localhost:8080/img')">{{ctrl.elementTextIcon(item.name)}}</span>
                         </span>
                     </div>
                     <div flex="80" layout="row">
                         <div flex="100" layout="column" layout-align="left">
-                            <div layout="row">
-                                <div flex layout="column">
+                            <div flex="70" layout="row">
+                                <div flex="100" layout="column">
                                     <h2 class="md-title">{{item.name}}</h2>
                                     <p>{{item.description}}</p>
                                 </div>
-                                <div flex layout="column" layout-algin="end top">
+                                <div flex="100" layout="column" layout-align="end top">
                                     <div ng-show="item.favorite" class="top right">
                                         <md-icon md-svg-icon="action:ic_favorite_24px" aria-label="Action"
                                                  class="md-accent" style="width: 36px; height: 36px"></md-icon>
                                     </div>
                                 </div>
                             </div>
-                            <div flex layout="row">
-								<span flex flex-order="1" layout="row" layout-align="center center">
-									<md-button aria-label="As Favorite" class="md-accent"
+                            <div flex="30" layout="row" layout-align="right" style="margin-top:10px;">
+                                <div>
+                                    <sp-button aria-label="As Favorite" sp-button-blue
                                                ng-click="ctrl.toggleFavorite(ctrl.getElementId(item), ctrl.currentTabType)">
-										<md-icon md-svg-icon="toggle:ic_star_24px" aria-label="Action"></md-icon> As Favorite 
-									</md-button> 
-								</span>								
-								<span flex flex-order="2" layout="row" layout-align="center center">
-									<md-button aria-label="JSON-LD" class="md-accent"
+                                        <i class="material-icons">star</i> As Favorite
+                                    </sp-button>
+                                </div>
+                                <div>
+                                    <sp-button aria-label="JSON-LD" sp-button-blue
                                                ng-click="ctrl.jsonld($event, ctrl.getElementId(item))">
-										<md-icon md-svg-icon="action:ic_search_24px"></md-icon> View Json-LD 
-									</md-button>
-								</span>
-								<span flex flex-order="3" layout="row" layout-align="center center">
-									<md-button aria-label="Refresh" class="md-accent"
+                                        <i class="material-icons">search</i> View Json-LD
+                                    </sp-button>
+                                </div>
+                                <div>
+                                    <sp-button aria-label="Refresh" sp-button-blue
                                                ng-click="ctrl.refresh(ctrl.getElementId(item), ctrl.currentTabType)">
-										<md-icon md-svg-icon="action:ic_autorenew_24px" aria-label="Action"></md-icon> Reload Description
-									</md-button> 
-								</span>
-                                <div flex flex-order="4" layout="row" layout-align="center center">
-                                    <div ng-show="ctrl.currentTabType == 'source'">
-                                        <md-button aria-label="Remove" class="md-accent"
-                                                   ng-click="ctrl.remove(item.uri, ctrl.currentTabType)">
-                                            <md-icon md-svg-icon="content:ic_clear_24px"></md-icon>
-                                            Delete
-                                        </md-button>
-                                    </div>
-                                    <div ng-show="(ctrl.currentTabType == 'sepa') || (ctrl.currentTabType == 'action')">
-                                        <md-button aria-label="Remove" class="md-accent"
-                                                   ng-click="ctrl.remove(item.belongsTo, ctrl.currentTabType)">
-                                            <md-icon md-svg-icon="content:ic_clear_24px"></md-icon>
-                                            Delete
-                                        </md-button>
-                                    </div>
-                                    </span>
+                                        <i class="material-icons">autorenew</i> Update
+                                    </sp-button>
+                                </div>
+                                <div ng-show="ctrl.currentTabType == 'source'">
+                                    <sp-button aria-label="Remove" sp-button-blue
+                                               ng-click="ctrl.remove(item.uri, ctrl.currentTabType)">
+                                        <i class="material-icons">clear</i>
+                                        Delete
+                                    </sp-button>
+                                </div>
+                                <div ng-show="(ctrl.currentTabType == 'sepa') || (ctrl.currentTabType == 'action')">
+                                    <sp-button aria-label="Remove" sp-button-blue
+                                               ng-click="ctrl.remove(item.belongsTo, ctrl.currentTabType)">
+                                        <i class="material-icons">clear</i>
+                                        Delete
+                                    </sp-button>
                                 </div>
                             </div>
                         </div>
-
                     </div>
-                    <md-divider/>
+                </div>
+                <md-divider/>
             </md-list-item>
         </md-list>
     </div>

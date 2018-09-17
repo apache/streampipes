@@ -8,6 +8,7 @@ import {TopicSelectionDialog} from "../dialog/topic/topic-selection-modal.contro
 import {PossibleElementsController} from "../dialog/possible-elements/possible-elements-dialog.controller";
 import {HelpDialogController} from "../dialog/help/help-dialog.controller";
 import {SavePipelineController} from "../dialog/save-pipeline/save-pipeline.controller";
+import {WelcomeTourDialogController} from "../dialog/welcome-tour/welcome-tour-dialog.controller";
 
 export class EditorDialogManager {
 
@@ -92,6 +93,20 @@ export class EditorDialogManager {
                 .position("top right")
                 .hideDelay(3000)
         );
+    }
+
+    showWelcomeDialog(user) {
+        this.$mdDialog.show({
+            controller: WelcomeTourDialogController,
+            controllerAs: 'ctrl',
+            templateUrl: '../dialog/welcome-tour/welcome-tour-dialog.tmpl.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false,
+            bindToController: true,
+            locals: {
+                user: user
+            }
+        })
     }
 
     showTutorialDialog() {

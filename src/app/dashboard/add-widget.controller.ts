@@ -76,10 +76,12 @@ export class AddWidgetCtrl {
 
     selectPipeline(vis) {
         this.selectedVisualisation = vis;
+        this.next();
     }
 
     selectVisType(type) {
         this.selectedType = type;
+        this.next();
     }
 
     getSelectedPipelineCss(vis) {

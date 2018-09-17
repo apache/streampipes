@@ -14,6 +14,7 @@ import spLogin from './login/login.module';
 import spNotifications from './notifications/notifications.module';
 import spAppLinks from './applinks/applinks.module';
 import spPipelineDetails from './pipeline-details/pipeline-details.module';
+import { SpButtonDirective } from "./core/button/button.directive";
 {{#modulesActive}}
 {{^ng5}}
 import {{module}} from '{{{path}}}';
@@ -125,4 +126,4 @@ export const Ng1AppModule = angular
             .primaryPalette('streamPipesPrimary')
             .accentPalette('streamPipesAccent')
 
-    });
+    }).directive("spButton", ['$mdButtonInkRipple', '$mdTheming', '$mdAria', '$mdInteraction', ($mdButtonInkRipple, $mdTheming, $mdAria, $mdInteraction) => new SpButtonDirective($mdButtonInkRipple, $mdTheming, $mdAria, $mdInteraction)]);

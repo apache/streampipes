@@ -4,7 +4,7 @@
     </div>
     <div flex layout="row">
         <span flex flex-order="2" layout="row" layout-align="center center">
-            <md-button ng-click="ctrl.downloadFile(ctrl.file.fileName)" class="md-icon-button">
+            <sp-button sp-button-flat ng-click="ctrl.downloadFile(ctrl.file.fileName)" class="md-icon-button">
                 <md-icon
                     md-svg-icon="file:ic_file_download_24px" aria-label="Modify"
                     class="md-accent">
@@ -12,16 +12,16 @@
                 <md-tooltip md-direction="top">
                 Download File
             </md-tooltip>
-            </md-button>
+            </sp-button>
         </span>
         <span flex flex-order="4" layout="row" layout-align="center center">
-            <md-button ng-click="ctrl.deleteFile(ctrl.file.fileName)" class="md-icon-button"><md-icon
+            <sp-button sp-button-flat ng-click="ctrl.deleteFile(ctrl.file.fileName)" class="md-icon-button"><md-icon
                     md-svg-icon="action:ic_delete_24px"
                     aria-label="Delete"></md-icon>
                 <md-tooltip md-direction="top">
                 Delete File
             </md-tooltip>
-            </md-button>
+            </sp-button>
         </span>
     </div>
 </md-list-item>

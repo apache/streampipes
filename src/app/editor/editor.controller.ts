@@ -18,6 +18,7 @@ export class EditorCtrl {
     activeType: any;
     tabs: any;
     currentlyFocusedElement: any;
+    ShepherdService: any;
 
     constructor($rootScope,
                 RestApi,
@@ -25,7 +26,8 @@ export class EditorCtrl {
                 $window,
                 JsplumbBridge,
                 EditorDialogManager,
-                AuthStatusService) {
+                AuthStatusService,
+                ShepherdService) {
 
         this.$rootScope = $rootScope;
         this.RestApi = RestApi;
@@ -34,6 +36,7 @@ export class EditorCtrl {
         this.JsplumbBridge = JsplumbBridge;
         this.EditorDialogManager = EditorDialogManager;
         this.AuthStatusService = AuthStatusService;
+        this.ShepherdService = ShepherdService;
 
         this.currentElements = [];
         this.allElements = {};
@@ -49,30 +52,23 @@ export class EditorCtrl {
         this.rawPipelineModel = [];
         this.activeType = "stream";
 
+        angular.element($window).on('scroll', () => {
+            JsplumbBridge.repaintEverything();
+        });
+
+        $rootScope.$on("elements.loaded", () => {
+            this.makeDraggable();
+        });
+
         if (this.AuthStatusService.email != undefined) {
             this.RestApi
                 .getUserDetails()
                 .success(user => {
                     if (!user.hideTutorial || user.hideTutorial == undefined) {
-                        this.EditorDialogManager.showTutorialDialog().then(() => {
-                            user.hideTutorial = true;
-                            this.RestApi.updateUserDetails(user).success(data => {
-                                this.$window.open('https://docs.streampipes.org', '_blank');
-                            });
-                        }, function () {
-                        });
+                        this.EditorDialogManager.showWelcomeDialog(user);
                     }
                 })
         }
-
-        angular.element($window).on('scroll', () => {
-            JsplumbBridge.repaintEverything();
-        });
-
-
-        $rootScope.$on("elements.loaded", () => {
-            this.makeDraggable();
-        });
 
         this.tabs = [
             {
@@ -98,6 +94,10 @@ export class EditorCtrl {
         this.loadActions();
     }
 
+    startCreatePipelineTour() {
+        this.ShepherdService.startCreatePipelineTour();
+    }
+
     isActiveTab(elementType) {
         return elementType === this.activeType;
     }
@@ -118,6 +118,7 @@ export class EditorCtrl {
     loadCurrentElements(type) {
         this.currentElements = this.allElements[type];
         this.activeType = type;
+        this.ShepherdService.trigger("select-" +type);
     }
 
     loadSources() {
@@ -163,7 +164,6 @@ export class EditorCtrl {
     };
 
     makeDraggable() {
-        console.log("making draggable");
         (<any>$('.draggable-icon')).draggable({
             revert: 'invalid',
             helper: 'clone',
@@ -186,4 +186,5 @@ EditorCtrl.$inject = ['$rootScope',
     '$window',
     'JsplumbBridge',
     'EditorDialogManager',
-    'AuthStatusService'];
+    'AuthStatusService',
+    'ShepherdService'];

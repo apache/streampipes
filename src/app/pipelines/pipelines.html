@@ -2,7 +2,7 @@
     <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6;">
         <div flex="none" layout-wrap layout="row" layout-align="start center"
              style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <md-button ng-click="ctrl.showPipelineCategoriesDialog()" class="md-accent">Manage Categories</md-button>
+            <sp-button sp-button-flat ng-click="ctrl.showPipelineCategoriesDialog()">Manage Categories</sp-button>
         </div>
         <div layout-fill style="line-height:24px;border-bottom:1px solid #ccc">
             <md-tabs md-dynamic-height md-border-bottom>
@@ -17,11 +17,11 @@
     <div class="container-fluid">
         <div>
             <md-content layout-padding>
-                <div flayout="row">
-                    <md-button ng-click="ctrl.startAllPipelines(true)" ng-disabled="ctrl.checkCurrentSelectionStatus(false)" type="button" class="md-raised md-accent">Start all pipelines
-                    </md-button>
-                    <md-button ng-click="ctrl.startAllPipelines(false)" ng-disabled="ctrl.checkCurrentSelectionStatus(true)" type="button" class="md-raised md-accent">Stop all pipelines
-                    </md-button>
+                <div layout="row">
+                    <sp-button sp-button-blue ng-click="ctrl.startAllPipelines(true)" ng-disabled="ctrl.checkCurrentSelectionStatus(false)" type="button">Start all pipelines
+                    </sp-button>
+                    <sp-button sp-button-blue ng-click="ctrl.startAllPipelines(false)" ng-disabled="ctrl.checkCurrentSelectionStatus(true)" type="button">Stop all pipelines
+                    </sp-button>
                 </div>
                 <md-list>
                     <div class="assemblyOptions sp-blue-bg" style="padding:5px;">

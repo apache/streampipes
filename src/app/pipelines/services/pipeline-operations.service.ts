@@ -9,11 +9,13 @@ export class PipelineOperationsService {
     $state: any;
     starting: any;
     stopping: any;
+    ShepherdService: any;
 
-    constructor($mdDialog, RestApi, $state) {
+    constructor($mdDialog, RestApi, $state, ShepherdService) {
         this.$mdDialog = $mdDialog;
         this.RestApi = RestApi;
         this.$state = $state;
+        this.ShepherdService = ShepherdService;
     }
 
     startPipeline(pipelineId, toggleRunningOperation, refreshPipelines) {
@@ -23,7 +25,9 @@ export class PipelineOperationsService {
                 this.showDialog(data);
                 refreshPipelines();
                 toggleRunningOperation('starting');
-
+                if (this.ShepherdService.isTourActive()) {
+                    this.ShepherdService.trigger("pipeline-started");
+                }
             })
             .error(data => {
                 toggleRunningOperation('starting');
@@ -33,7 +37,6 @@ export class PipelineOperationsService {
                         description: "Please check your Network."
                     }]
                 });
-
             });
     };
 
@@ -106,4 +109,4 @@ export class PipelineOperationsService {
     }
 }
 
-PipelineOperationsService.$inject = ['$mdDialog', 'RestApi', '$state'];
+PipelineOperationsService.$inject = ['$mdDialog', 'RestApi', '$state', 'ShepherdService'];

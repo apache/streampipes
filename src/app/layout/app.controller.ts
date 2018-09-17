@@ -132,8 +132,6 @@ export class AppCtrl {
                         }
                     });
                     this.notificationCount = notificationCount;
-                    console.log('count');
-                    console.log(this.notificationCount);
                 })
                 .error(function (msg) {
                     console.log(msg);
@@ -171,6 +169,14 @@ export class AppCtrl {
 
         isActivePage(path) {
             return (this.$state.current.name == path);
+        }
+
+        getListItemClassName(path) {
+                    return this.isActivePage(path) ? "sp-navbar-item-selected" : "sp-navbar-item";
+                }
+
+        getIconClassName(path) {
+            return this.isActivePage(path) ? "sp-navbar-icon-selected" : "sp-navbar-icon";
         }
 
         getPageTitle(path) {

@@ -34,7 +34,6 @@
                         </div>
                     </div>
                     <div class="customize-item-content" ng-if="ctrl.helpDialogVisible">
-                        The <i>{{ctrl.sepaName}}</i> component performs the following operation:<br/>
                         <i>{{ctrl.selectedElement.description}}</i>
                         <div ng-show="ctrl.elementData.description == ''">(Sorry, no further description available)
                         </div>
@@ -106,12 +105,12 @@
             </div>
         </form>
     </md-dialog-content>
-    <div class="md-actions" layout="row" ng-if="ctrl.configVisible">
-        <md-button class="md-accent" style="margin-right:20px;" ng-disabled="ctrl.customizeForm.$invalid" type="submit" ng-click="ctrl.saveProperties()">
-            Save
-        </md-button>
-        <md-button ng-click="ctrl.hide()" style="margin-right:20px;">
+    <md-dialog-actions layout="row" ng-if="ctrl.configVisible">
+        <sp-button sp-button-gray ng-click="ctrl.hide()">
             Close
-        </md-button>
-    </div>
+        </sp-button>
+        <sp-button sp-button-blue ng-disabled="ctrl.customizeForm.$invalid" type="submit" ng-click="ctrl.saveProperties()">
+            Save
+        </sp-button>
+    </md-dialog-actions>
 </md-dialog>

@@ -139,13 +139,14 @@
                     </div>
                 </md-list-item>
             </div>
-            <md-button ng-click="ctrl.showAddInput()" class="md-accent">Add Category</md-button>
-
+            <div style="margin-top:10px;">
+                <sp-button sp-button-blue ng-click="ctrl.showAddInput()">Add Category</sp-button>
+            </div>
         </md-dialog-content>
-        <div class="md-actions" layout="row">
-            <md-button ng-click="ctrl.hide()" style="margin-right:20px;">
+        <md-dialog-actions layout="row">
+            <sp-button sp-button-gray ng-click="ctrl.hide()">
                 Close
-            </md-button>
-        </div>
+            </sp-button>
+        </md-dialog-actions>
     </form>
 </md-dialog>

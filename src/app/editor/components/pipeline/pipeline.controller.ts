@@ -19,8 +19,9 @@ export class PipelineController {
     preview: any;
     rawPipelineModel: any;
     TransitionService: any;
+    ShepherdService: any;
 
-    constructor($timeout, JsplumbService, PipelineEditorService, JsplumbBridge, ObjectProvider, DialogBuilder, EditorDialogManager, TransitionService) {
+    constructor($timeout, JsplumbService, PipelineEditorService, JsplumbBridge, ObjectProvider, DialogBuilder, EditorDialogManager, TransitionService, ShepherdService) {
         this.plumbReady = false;
         this.JsplumbBridge = JsplumbBridge;
         this.JsplumbService = JsplumbService;
@@ -31,6 +32,7 @@ export class PipelineController {
         this.EditorDialogManager = EditorDialogManager;
         this.currentMouseOverElement = "";
         this.TransitionService = TransitionService;
+        this.ShepherdService = ShepherdService;
 
         this.currentPipelineModel = {};
         this.idCounter = 0;
@@ -127,6 +129,9 @@ export class PipelineController {
                                 });
                             });
                         }
+                        if (this.ShepherdService.isTourActive()) {
+                            this.ShepherdService.trigger("drop-" +pipelineElementConfig.type);
+                        }
                     }
                 }
                 this.JsplumbBridge.repaintEverything();
@@ -217,6 +222,9 @@ export class PipelineController {
                             var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
                             if (this.PipelineEditorService.isFullyConnected(pe)) {
                                 this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload);
+                                if (this.ShepherdService.isTourActive()) {
+                                    this.ShepherdService.trigger("customize-" +pe.type);
+                                }
                             }
                         } else {
                             this.JsplumbBridge.detach(info.connection);
@@ -250,4 +258,4 @@ export class PipelineController {
 
 }
 
-PipelineController.$inject = ['$timeout', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ObjectProvider', 'DialogBuilder', 'EditorDialogManager', 'TransitionService']
+PipelineController.$inject = ['$timeout', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ObjectProvider', 'DialogBuilder', 'EditorDialogManager', 'TransitionService', 'ShepherdService']

@@ -20,6 +20,7 @@ export class PipelineAssemblyController {
     currentPipelineDescription: any;
     currentModifiedPipelineId: any;
     TransitionService: any;
+    ShepherdService: any;
 
     constructor(JsplumbBridge,
                 PipelinePositioningService,
@@ -30,7 +31,8 @@ export class PipelineAssemblyController {
                 JsplumbService,
                 $timeout,
                 $state,
-                TransitionService) {
+                TransitionService,
+                ShepherdService) {
         this.JsplumbBridge = JsplumbBridge;
         this.PipelinePositioningService = PipelinePositioningService;
         this.EditorDialogManager = EditorDialogManager;
@@ -41,6 +43,7 @@ export class PipelineAssemblyController {
         this.$timeout = $timeout;
         this.$state = $state;
         this.TransitionService = TransitionService;
+        this.ShepherdService = ShepherdService;
 
         this.selectMode = true;
         this.currentZoomLevel = 1;
@@ -139,6 +142,9 @@ export class PipelineAssemblyController {
         }
 
         this.openPipelineNameModal(pipeline, (!!this.currentModifiedPipelineId));
+        if (this.ShepherdService.isTourActive()) {
+            this.ShepherdService.trigger("save-pipeline-dialog");
+        }
     }
 
 
@@ -170,4 +176,5 @@ PipelineAssemblyController.$inject = ['JsplumbBridge',
     'JsplumbService',
     '$timeout',
     '$state',
-    'TransitionService'];
+    'TransitionService',
+    'ShepherdService'];

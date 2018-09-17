@@ -3,6 +3,7 @@ import { DataMarketplaceService } from './data-marketplace.service';
 import { AdapterDescription } from '../model/connect/AdapterDescription';
 import { GenericAdapterSetDescription } from '../model/connect/GenericAdapterSetDescription';
 import { GenericAdapterStreamDescription } from '../model/connect/GenericAdapterStreamDescription';
+import {ShepherdService} from "../../services/tour/shepherd.service";
 
 @Component({
   selector: 'sp-data-marketplace',
@@ -17,7 +18,9 @@ export class DataMarketplaceComponent implements OnInit {
     AdapterDescription
   >();
 
-  constructor(private dataMarketplaceService: DataMarketplaceService) {}
+  selectedIndex: number=0;
+
+  constructor(private dataMarketplaceService: DataMarketplaceService, private ShepherdService: ShepherdService) {}
 
   ngOnInit() {
     this.dataMarketplaceService
@@ -32,6 +35,10 @@ export class DataMarketplaceComponent implements OnInit {
     });
   }
 
+  selectedIndexChange(index: number) {
+    this.selectedIndex = index;
+  }
+
   selectAdapter(adapter: AdapterDescription): void {
     this.selectAdapterEmitter.emit(adapter);
   }
@@ -42,5 +49,9 @@ export class DataMarketplaceComponent implements OnInit {
         this.adapters = adapters;
       });
     });
+  }
+
+  startAdapterTutorial() {
+    this.ShepherdService.startAdapterTour();
   }
 }

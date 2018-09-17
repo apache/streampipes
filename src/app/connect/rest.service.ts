@@ -75,6 +75,7 @@ export class RestService {
     tsonld.addContext('foaf', 'http://xmlns.com/foaf/0.1/');
 
     adapter.userName = this.authStatusService.email;
+    var self = this;
 
     tsonld.toflattenJsonLd(adapter).subscribe(res => {
       const httpOptions = {
@@ -85,7 +86,7 @@ export class RestService {
       console.log(JSON.stringify(res));
       this.http
         .post(
-          '/streampipes-connect/api/v1/a@a.de/master/adapters',
+          '/streampipes-connect/api/v1/' + self.authStatusService.email + '/master/adapters',
           res,
           httpOptions
         )
@@ -106,7 +107,7 @@ export class RestService {
       new Promise(function(resolve, reject) {
         tsonld.toflattenJsonLd(adapter).subscribe(res => {
           return self.http
-            .post('/streampipes-connect/api/v1/a@a.de/master/guess/schema', res)
+            .post('/streampipes-connect/api/v1/' + self.authStatusService.email + '/master/guess/schema', res)
             .map(response => {
               tsonld.addClassMapping(EventSchema);
               tsonld.addClassMapping(EventProperty);
@@ -136,42 +137,44 @@ export class RestService {
     private authStatusService: AuthStatusService
   ) {}
 
-  getAdapters(): Observable<AdapterDescription[]> {
-    return this.http
-      .get(this.host + 'api/v2/adapter/allrunning')
-      .map(response => {
-        // TODO remove this
-        // quick fix to deserialize URIs
-        response['@graph'].forEach(function(object) {
-          if (object['sp:domainProperty'] != undefined) {
-            // object['sp:domainProperty']['@type'] = "sp:URI";
-            object['sp:domainProperty'] = object['sp:domainProperty']['@id'];
-            delete object['sp:domainProperty']['@id'];
-          }
-        });
-        const tsonld = this.getTsonLd();
+  // getAdapters(): Observable<AdapterDescription[]> {
+  //   return this.http
+  //     .get(this.host + 'api/v2/adapter/allrunning')
+  //     .map(response => {
+  //       // TODO remove this
+  //       // quick fix to deserialize URIs
+  //       response['@graph'].forEach(function(object) {
+  //         if (object['sp:domainProperty'] != undefined) {
+  //           // object['sp:domainProperty']['@type'] = "sp:URI";
+  //           object['sp:domainProperty'] = object['sp:domainProperty']['@id'];
+  //           delete object['sp:domainProperty']['@id'];
+  //         }
+  //       });
+  //       const tsonld = this.getTsonLd();
+  //
+  //       // console.log(JSON.stringify(response, null, 2));
+  //       const res = tsonld.fromJsonLdType(
+  //         response,
+  //         'sp:AdapterDescriptionList'
+  //       );
+  //       // console.log(JSON.stringify(res, null, 2));
+  //
+  //       return res.list;
+  //     });
+  // }
 
-        // console.log(JSON.stringify(response, null, 2));
-        const res = tsonld.fromJsonLdType(
-          response,
-          'sp:AdapterDescriptionList'
-        );
-        // console.log(JSON.stringify(res, null, 2));
-
-        return res.list;
-      });
-  }
-
-  deleteAdapter(adapter: AdapterDescription): Observable<any> {
-    return (
-      this.http
-        // .delete(this.host + 'api/v2/adapter/' + adapter.couchDbId);
-        .delete(
-          '/streampipes-connect/api/v1/a@a.de/master/adapters/' +
-            adapter.couchDbId
-        )
-    );
-  }
+  // deleteAdapter(adapter: AdapterDescription): Observable<any> {
+  //   var self = this;
+  //
+  //   return (
+  //     this.http
+  //       // .delete(this.host + 'api/v2/adapter/' + adapter.couchDbId);
+  //       .delete(
+  //         '/streampipes-connect/api/v1/' + self.authStatusService.email + '/master/adapters/' +
+  //           adapter.couchDbId
+  //       )
+  //   );
+  // }
 
   getFormats(): Observable<FormatDescriptionList> {
     return this.http

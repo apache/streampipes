@@ -17,8 +17,9 @@ export class CustomizeController {
     $rootScope: any;
     sepa: any;
     customizeForm: any;
+    ShepherdService: any;
 
-    constructor($rootScope, $mdDialog, elementData, sourceEndpoint, sepa) {
+    constructor($rootScope, $mdDialog, elementData, sourceEndpoint, sepa, ShepherdService) {
         this.selectedElement = sepa;
         this.selection = [];
         this.matchingSelectionLeft = [];
@@ -31,6 +32,7 @@ export class CustomizeController {
         this.sourceEndpoint = sourceEndpoint;
         this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
+        this.ShepherdService = ShepherdService;
 
 
 
@@ -103,7 +105,12 @@ export class CustomizeController {
             this.$rootScope.$broadcast("SepaElementConfigured", this.sepa.DOM);
             this.selectedElement.configured = true;
             this.hide();
-            if (this.sourceEndpoint) this.sourceEndpoint.setType("token");
+            if (this.sourceEndpoint) {
+                this.sourceEndpoint.setType("token");
+            }
+            if (this.ShepherdService.isTourActive()) {
+                this.ShepherdService.trigger("save-" +this.sepa.type);
+            }
         }
         else this.invalid = true;
 
@@ -172,4 +179,4 @@ export class CustomizeController {
 
 }
 
-CustomizeController.$inject = ['$rootScope', '$mdDialog', 'elementData', 'sourceEndpoint', 'sepa'];
+CustomizeController.$inject = ['$rootScope', '$mdDialog', 'elementData', 'sourceEndpoint', 'sepa', 'ShepherdService'];

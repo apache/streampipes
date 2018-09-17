@@ -1,4 +1,6 @@
 @import '../_variables';
+@-webkit-keyframes typing { from { width: 0; } }
+@-webkit-keyframes blink-caret { 50% { border-color: transparent; } }
 
 .gu-mirror {
     display: none; /* This fixes a bug with the dragular framework */
@@ -19,6 +21,21 @@ body {
     height: auto !important;
     width: 100%;
     background-attachment: fixed;
+}
+
+md-dialog-actions {
+    border-top: 1px solid #cccccc;
+}
+
+.welcome-animation {
+    font-family: Arial;
+    border-right: .1em solid black;
+    width: 16.5em;
+    width: 5ch;
+    white-space: nowrap;
+    overflow: hidden;
+    -webkit-animation: typing 1s steps(5, end),
+    blink-caret .5s step-end infinite alternate;
 }
 
 .cv-wrapper {
@@ -137,6 +154,108 @@ position: fixed; /* fix the "displacement" bug in webkit browsers when using tab
 md-toolbar:not(.md-menu-toolbar) {
     background: $sp-color-primary;
 }
+
+.sp-navbar-item {
+    background: $sp-color-primary;
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
+}
+
+.sp-navbar-item-selected {
+    background: white;
+}
+
+.sp-navbar-item:hover {
+    background: $sp-color-primary-light;
+}
+
+.sp-navbar-icon {
+    color: white;
+}
+
+.sp-navbar-icon-selected {
+    color: $sp-color-primary
+}
+
+.sp-icon-button:hover {
+    background: $sp-color-primary-light !important;
+}
+
+
+
+.sp-button {
+    display: inline-block ;
+    vertical-align: middle;
+    border: 0;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.1em;
+    line-height: 1em;
+    padding: 0.75em 1.25em;
+    margin-right:0.25em;
+    margin-left: 0.25em;
+    margin-top:0px;
+}
+
+.sp-button>i {
+    vertical-align:middle;
+    line-height: inherit;
+}
+
+.sp-button>span {
+    vertical-align:middle;
+}
+
+.sp-button.sp-button-flat:enabled {
+    color: $sp-color-accent;
+    background: rgba(0, 0, 0, 0);
+}
+
+.sp-button.sp-button-gray:enabled {
+    background: #e5e5e5;
+    color: rgba(0, 0, 0, 0.75);
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
+}
+
+.sp-button.sp-button-blue:enabled {
+    background: $sp-color-accent;
+    color: rgba(255, 255, 255, 0.75);
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
+}
+
+.sp-button.sp-button-gray:hover:enabled {
+    background: #cbcbcb;
+}
+
+.sp-button.sp-button-flat:hover:enabled {
+    background: #d9d9d9;
+}
+
+.sp-button.sp-button-blue:hover:enabled {
+    background: $sp-color-accent-light-blue;
+}
+
+.sp-button.sp-button-blue:disabled {
+    background: #ebebeb;
+    color: #cdcdcd;
+}
+
+.sp-button.sp-button-gray:disabled {
+    background: #ebebeb;
+    color: #cdcdcd;
+}
+
+.sp-button-flat:disabled {
+    color: #cdcdcd;
+    background: rgba(0,0,0,0);
+}
+
 
 .md-button {
     line-height: 0px !important;
@@ -274,11 +393,6 @@ md-content {
     white-space: nowrap;
     align-items: end;
     margin-top:1px;
-}
-
-.md-toolbar-tools {
-    height: 50px;
-    max-height: 50px;
 }
 
 .current-nav-page-content {

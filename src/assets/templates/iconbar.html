@@ -1,20 +1,20 @@
 <md-list style="padding-top:0px;">
-    <md-list-item class="md-1-line" style="background:{{appCtrl.isActivePage(item.link) ? 'white' : '#39b54a'}};"
+    <md-list-item class="md-1-line" ng-class="appCtrl.getListItemClassName(item.link)"
                   ng-repeat="item in appCtrl.menu" role="link" style="min-width:0px;padding:0px;">
         <md-button class="md-icon-button button-margin-iconbar" ng-click="appCtrl.go(item.link)">
             <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"
-                     style="color:{{appCtrl.isActivePage(item.link) ? '#39b54a' : 'white'}};"></md-icon>
+                     ng-class="appCtrl.getIconClassName(item.link)"></md-icon>
             <md-tooltip md-direction="right">
                 {{item.title}}
             </md-tooltip>
         </md-button>
     </md-list-item>
     <md-list-item class="md-1-line" role="link"
-                  style="background:{{appCtrl.isActivePage('streampipes.notifications') ? 'white' : '#39b54a'}};">
+                  ng-class="appCtrl.getListItemClassName(item.link)">
         <notification-icon count='notificationCount'>
             <md-button class="md-icon-button button-margin-iconbar" ng-click="appCtrl.go('streampipes.notifications')">
                 <md-icon md-svg-icon="communication:ic_chat_24px" aria-label="Notifications"
-                         style="color:{{appCtrl.isActivePage('streampipes.notifications') ? '#39b54a' : 'white'}};"></md-icon>
+                         ng-class="appCtrl.getIconClassName(item.link)"></md-icon>
                 <md-tooltip md-direction="right">
                     Notifications
                 </md-tooltip>
@@ -22,11 +22,11 @@
         </notification-icon>
     </md-list-item>
     <md-divider style="border-top-color:white;"></md-divider>
-    <md-list-item class="md-1-line" style="background:{{appCtrl.isActivePage(item.link) ? 'white' : '#39b54a'}};"
+    <md-list-item class="md-1-line" ng-class="appCtrl.getListItemClassName(item.link)"
                   ng-repeat="item in appCtrl.admin" role="link">
         <md-button class="md-icon-button button-margin-iconbar" ng-click="appCtrl.go(item.link)">
             <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"
-                     style="color:{{appCtrl.isActivePage(item.link) ? '#39b54a' : 'white'}};"></md-icon>
+                     ng-class="appCtrl.getIconClassName(item.link)"></md-icon>
             <md-tooltip md-direction="right">
                 {{item.title}}
             </md-tooltip>

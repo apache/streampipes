@@ -9,7 +9,7 @@
                 </md-button>
             </div>
         </md-toolbar>
-        <div>
+        <md-dialog-content>
             <div flex="100" class="md-dialog-content" style="padding:20px;" ng-show="ctrl.page == 'preview'">
                 <h4>You are about to {{ctrl.action ? 'start' : 'stop'}} the following pipelines:</h4>
                 <div ng-repeat="pipeline in ctrl.pipelinesToModify">
@@ -19,21 +19,21 @@
             </div>
             <div flex="100" class="md-dialog-content" style="padding:20px;" ng-show="ctrl.page == 'installation'">
                 <div ng-repeat="status in ctrl.installationStatus">
-                    <h4>{{ctrl.action ? 'Starting pipeline ' : 'Stopping pipeline'}} {{status.id+1}} of {{ctrl.pipelinesToModify.length}} ({{status.name}})...{{status.status}}</h4>
+                    <h4>{{ctrl.action ? 'Starting pipeline ' : 'Stopping pipeline'}} {{status.id+1}} of
+                        {{ctrl.pipelinesToModify.length}} ({{status.name}})...{{status.status}}</h4>
                 </div>
                 <div ng-if="ctrl.pipelinesToModify.length == 0">
                     <h4>Sorry, there are no pipelines that are currently {{action ? "idle." : "running."}}</h4>
                 </div>
             </div>
-
-        </div>
-        <div class="md-actions" layout="row">
-            <md-button ng-click="ctrl.cancel()" style="margin-right:20px;">
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <sp-button sp-button-gray ng-click="ctrl.cancel()">
                 Cancel
-            </md-button>
-            <md-button ng-disabled="ctrl.installationRunning" ng-click="ctrl.next()" class="md-raised md-accent" style="margin-right:20px;">
+            </sp-button>
+            <sp-button sp-button-blue ng-disabled="ctrl.installationRunning" ng-click="ctrl.next()">
                 {{ctrl.nextButton}}
-            </md-button>
-        </div>
+            </sp-button>
+        </md-dialog-actions>
     </form>
 </md-dialog>

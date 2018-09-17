@@ -22,6 +22,12 @@ import { PipelineElementIconService } from './pipeline-icon.service'
 import { ObjectProvider } from './object-provider.service'
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { TransitionService } from "./transition.service";
+import { ShepherdService } from "./tour/shepherd.service";
+import { TourProviderService } from "./tour/tour-provider.service";
+
+import CreatePipelineTour from './tour/create-pipeline-tour.constants';
+import DashboardTour from './tour/dashboard-tour.constants';
+import AdapterTour from './tour/adapter-tour.constants';
 
 export default angular.module('sp.services', [spConstants])
 	.service('ImageChecker', ImageChecker)
@@ -42,4 +48,9 @@ export default angular.module('sp.services', [spConstants])
     .service('JsplumbConfigService', JsplumbConfigService)
     .service('PipelineElementIconService', PipelineElementIconService)
 	.service('TransitionService', TransitionService)
+	.service('ShepherdService', ShepherdService)
+	.service('TourProviderService', TourProviderService)
+	.constant('createPipelineTourConstants', CreatePipelineTour)
+	.constant('dashboardTourConstants', DashboardTour)
+	.constant('adapterTourConstants', AdapterTour)
 	.name;

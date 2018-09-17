@@ -1,4 +1,4 @@
-<md-dialog aria-label="Pipeline Element Info" flex="80" style="min-height:80%;">
+<md-dialog aria-label="Pipeline Element Info" flex="80" style="height:80%;">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Pipeline Element Information</h2>
@@ -75,9 +75,9 @@
             <h5 ng-if="ctrl.error">Runtime information is currently not available.</h5>
         </div>
     </md-dialog-content>
-    <div class="md-actions" layout="row">
-        <md-button ng-click="ctrl.hide()" style="margin-right:20px;">
+    <md-dialog-actions layout="row">
+        <sp-button sp-button-gray ng-click="ctrl.hide()" >
             Close
-        </md-button>
-    </div>
+        </sp-button>
+    </md-dialog-actions>
 </md-dialog>

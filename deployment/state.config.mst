@@ -54,8 +54,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             params: {pipeline: null},
             views: {
                 'spMain@streampipes': {
-                    templateUrl: '../pipeline-details/pipeline-details.html',
-                    controller: 'PipelineDetailsCtrl'
+                    templateUrl: '../pipeline-details/pipeline-details.html'
                 }
             }
         })
@@ -64,8 +63,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             params: {target: null},
             views: {
                 'container': {
-                    templateUrl: '../../assets/templates/login.html',
-                    controller: 'LoginCtrl'
+                    templateUrl: '../../assets/templates/login.html'
                 }
             }
         })
@@ -74,8 +72,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             url: '/applinks',
             views: {
                 "spMain@streampipes": {
-                    templateUrl: 'app/applinks/applinks.tmpl.html',
-                    controller: 'AppLinksCtrl'
+                    templateUrl: 'app/applinks/applinks.tmpl.html'
                 }
             }
         })
@@ -84,8 +81,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             url: '/register',
             views: {
                 'container': {
-                    templateUrl: '../../assets/templates/register.html',
-                    controller: 'RegisterCtrl'
+                    templateUrl: '../../assets/templates/register.html'
                 }
             }
         })
@@ -93,8 +89,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             url: '/setup',
             views: {
                 'container': {
-                    templateUrl: '../../assets/templates/setup.html',
-                    controller: 'SetupCtrl'
+                    templateUrl: '../../assets/templates/setup.html'
                 }
             }
         })
@@ -102,8 +97,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             url: '/error',
             views: {
                 'spMain@streampipes': {
-                    templateUrl: '../../assets/templates/error.html',
-                    controller: 'SetupCtrl'
+                    templateUrl: '../../assets/templates/error.html'
                 }
             }
         })
@@ -111,8 +105,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             url: '/notifications',
             views: {
                 'spMain@streampipes': {
-                    templateUrl: '../notifications/notifications.html',
-                    controller: 'NotificationsCtrl'
+                    templateUrl: '../notifications/notifications.html'
                 }
             }
         })
@@ -131,8 +124,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             {{#containsPipeline}}{{ng1_templateUrl}}{{/containsPipeline}}
             views: {
                 "spMain@streampipes": {
-                    templateUrl: '{{{ng1_templateUrl}}}',
-                    controller: '{{{ng1_controller}}}'
+                    templateUrl: '{{{ng1_templateUrl}}}'
                 }
             }
         })
