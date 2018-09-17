@@ -10,7 +10,7 @@ import 'legacy/stomp';
 import 'npm/angular-sanitize';
 import 'legacy/mlhr-table';
 import 'legacy/malhar-angular-dashboard';
-import 'npm/epoch-charting';
+//import 'npm/epoch-charting';
 import 'npm/ngmap'
 
 
