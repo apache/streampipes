@@ -43,7 +43,7 @@ public class SourcesResource extends AbstractContainerResource {
     private SourcesManagement sourcesManagement;
 
     public SourcesResource() {
-        this.connectContainerBaseUrl = ConnectContainerConfig.INSTANCE.getConnectContainerUrl();
+        this.connectContainerBaseUrl = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl();
         this.sourcesManagement = new SourcesManagement();
     }
 

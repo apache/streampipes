@@ -35,8 +35,8 @@ public enum ConnectContainerConfig {
     config.register(ConfigKeys.KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
     config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");
 
-    config.register(ConfigKeys.CONNECT_CONTAINER_PORT, Config.MASTER_PORT, "The port of the connect container");
-    config.register(ConfigKeys.CONNECT_CONTAINER_HOST, "connect-master", "The hostname of the connect container");
+    config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT, Config.MASTER_PORT, "The port of the connect container");
+    config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST, "connect-master", "The hostname of the connect container");
 
     config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT, Config.WORKER_PORT, "The port of the connect container");
     config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST, "connect-worker", "The hostname of the connect container");
@@ -48,6 +48,10 @@ public enum ConnectContainerConfig {
 
   public String getConnectContainerWorkerUrl() {
     return "http://" + config.getString(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST) + ":" + config.getInteger(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT) + "/";
+  }
+
+  public String getConnectContainerMasterUrl() {
+    return "http://" + getConnectContainerMasterHost() + ":" + getConnectContainerMasterPort() + "/";
   }
 
   public String getBackendHost() {
@@ -74,17 +78,22 @@ public enum ConnectContainerConfig {
     config.setString(ConfigKeys.KAFKA_HOST, s);
   }
 
-
-
-  public String getConnectContainerHost() {
-    return config.getString(ConfigKeys.CONNECT_CONTAINER_HOST);
+  public String getConnectContainerMasterHost() {
+    return config.getString(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST);
   }
 
-  public Integer getConnectContainerPort() {
-    return config.getInteger(ConfigKeys.CONNECT_CONTAINER_PORT);
+  public Integer getConnectContainerMasterPort() {
+    return config.getInteger(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT);
   }
 
-  public String getConnectContainerUrl() {
-    return "http://" + getConnectContainerHost() + ":" + getConnectContainerPort() + "/";
+
+
+  public String getConnectContainerWorkerHost() {
+    return config.getString(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST);
   }
+
+  public Integer getConnectContainerWorkerPort() {
+    return config.getInteger(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT);
+  }
+
 }

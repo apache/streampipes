@@ -42,6 +42,7 @@ public class AdapterStorageImpl extends AbstractDao<AdapterDescription> implemen
 
     @Override
     public void updateAdapter(AdapterDescription adapter) {
+        couchDbClientSupplier.get().
         update(adapter);
     }
 
