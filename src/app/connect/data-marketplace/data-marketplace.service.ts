@@ -23,6 +23,13 @@ import { EventPropertyPrimitive } from '../schema-editor/model/EventPropertyPrim
 import { ConnectService } from '../connect.service';
 import { AnyStaticProperty } from '../model/AnyStaticProperty';
 import { Option } from '../model/Option';
+import {RenameRuleDescription} from '../model/connect/rules/RenameRuleDescription';
+import {DeleteRuleDescription} from '../model/connect/rules/DeleteRuleDescription';
+import {AddNestedRuleDescription} from '../model/connect/rules/AddNestedRuleDescription';
+import {MoveRuleDescription} from '../model/connect/rules/MoveRuleDesctiption';
+import {EventPropertyNested} from '../schema-editor/model/EventPropertyNested';
+import {EventPropertyList} from '../schema-editor/model/EventPropertyList';
+import {UUID} from 'angular2-uuid';
 
 @Injectable()
 export class DataMarketplaceService {
@@ -56,6 +63,13 @@ export class DataMarketplaceService {
     tsonld.addClassMapping(DataStreamDescription);
     tsonld.addClassMapping(EventSchema);
     tsonld.addClassMapping(EventPropertyPrimitive);
+    tsonld.addClassMapping(EventPropertyNested);
+    tsonld.addClassMapping(EventPropertyList);
+
+    tsonld.addClassMapping(RenameRuleDescription);
+    tsonld.addClassMapping(DeleteRuleDescription);
+    tsonld.addClassMapping(AddNestedRuleDescription);
+    tsonld.addClassMapping(MoveRuleDescription);
 
     return tsonld;
   }
@@ -87,6 +101,7 @@ export class DataMarketplaceService {
           '/master/adapters'
       )
       .map(response => {
+        if(response['@graph'] === undefined) return [];
         const res = this.getTsonLd().fromJsonLdType(
           response,
           'sp:AdapterDescriptionList'
@@ -131,6 +146,7 @@ export class DataMarketplaceService {
       adapterDescriptions = adapterDescriptions.filter(
         this.connectService.isSpecificDescription
       );
+
       return this.getProtocols().map(protocols => {
         for (let protocol of protocols) {
           let newAdapterDescription: AdapterDescription;

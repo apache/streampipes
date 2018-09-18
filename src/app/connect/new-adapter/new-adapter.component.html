@@ -8,6 +8,7 @@
       <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"></app-static-property>
       <app-protocol [protocol]="adapter.protocol" *ngIf="adapter.id.includes('generic')"></app-protocol>
       <div fxLayoutAlign="end">
+        <button color="primary" mat-raised-button (click)="removeSelection()">Back</button>
         <button color="primary" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
       </div>
     </mat-step>
@@ -38,11 +39,11 @@
 
     <mat-step>
       <ng-template matStepLabel>Define Event Schema</ng-template>
-      <app-event-schema #eschema fxLayout="column" fxFlex="100" [(adapterDescription)]="adapter"></app-event-schema>
+      <app-event-schema #eschema fxLayout="column" fxFlex="100" [(adapterDescription)]="adapter" [(eventSchema)]="eventSchema" [(oldEventSchema)]="oldEventSchema"></app-event-schema>
 
       <div fxLayoutAlign="end">
         <button color="primary" mat-raised-button matStepperPrevious>Back</button>
-        <button color="primary" (click)="eventSchemaComponent.onNext()" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
+        <button color="primary" (click)="setSchema()"  mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
       </div>
     </mat-step>
 

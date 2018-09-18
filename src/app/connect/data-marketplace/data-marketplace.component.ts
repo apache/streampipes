@@ -1,8 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { DataMarketplaceService } from './data-marketplace.service';
 import { AdapterDescription } from '../model/connect/AdapterDescription';
-import { GenericAdapterSetDescription } from '../model/connect/GenericAdapterSetDescription';
-import { GenericAdapterStreamDescription } from '../model/connect/GenericAdapterStreamDescription';
 import {ShepherdService} from "../../services/tour/shepherd.service";
 
 @Component({
