@@ -83,7 +83,7 @@ public class SpConnectResource {
 //
 //    public SpConnectResource() {
 //        spConnect = new SpConnect();
-////        connectContainerEndpoint = BackendConfig.INSTANCE.getConnectContainerUrl();
+////        connectContainerEndpoint = BackendConfig.INSTANCE.getConnectContainerMasterUrl();
 //    }
 //
 //    public SpConnectResource(SpConnect spConnect, String connectContainerEndpoint) {

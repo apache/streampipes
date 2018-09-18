@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.connect.rest.master.*;
 import org.streampipes.connect.rest.worker.WelcomePageWorker;
 import org.streampipes.connect.rest.worker.WorkerResource;
-import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;

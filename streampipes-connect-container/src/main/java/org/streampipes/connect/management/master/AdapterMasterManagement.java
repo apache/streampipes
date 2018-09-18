@@ -55,8 +55,6 @@ public class AdapterMasterManagement {
         // store in db
         adapterStorage.storeAdapter(ad);
 
-
-
         // start when stream adapter
         if (ad instanceof AdapterStreamDescription) {
             // TODO
@@ -76,7 +74,7 @@ public class AdapterMasterManagement {
         String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() +"api/v2/";
 //        String userName = ad.getUserName();
         String requestUrl = backendBaseUrl +  "noauth/users/" + username + "/element";
-        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerUrl() + "api/v1/" + username + "/master/sources/" + adapterCouchdbId;
+        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() + "api/v1/" + username + "/master/sources/" + adapterCouchdbId;
 
         logger.info("Install source (source URL: " + elementUrl +" in backend over URL: " + requestUrl);
 
@@ -135,7 +133,8 @@ public class AdapterMasterManagement {
 
         String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/noauth/users/"+ username + "/element/delete";
 
-        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerUrl() + "api/v1/" + username + "/master/sources/";
+//        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() + "api/v1/" + username + "/master/sources/" + id;
+        String elementUrl = ad.getUri() + "/" + ad.getId();
 
 //        deleteDataSource(backendBaseUrl, elementUrl);
 
