@@ -148,7 +148,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
         }
     }
 
-    @Path("/{pipelineId}/stopAdapter")
+    @Path("/{pipelineId}/stop")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
@@ -157,8 +157,6 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
         PipelineManagement pm = new PipelineManagement();
         return pm.stopPipeline(pipelineId);
     }
-
-
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
