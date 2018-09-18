@@ -18,6 +18,7 @@ package org.streampipes.connect.adapter.generic.transform.value;
 
 import org.streampipes.connect.adapter.generic.transform.TransformationRule;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,8 @@ public class ValueEventTransformer implements ValueTransformationRule {
     private List<UnitTransformationRule> unitTransformationRules;
 
     public ValueEventTransformer(List<ValueTransformationRule> rules) {
+        this.unitTransformationRules = new ArrayList<>();
+
         for (TransformationRule rule : rules) {
             if (rule instanceof UnitTransformationRule) {
                 this.unitTransformationRules.add((UnitTransformationRule) rule);

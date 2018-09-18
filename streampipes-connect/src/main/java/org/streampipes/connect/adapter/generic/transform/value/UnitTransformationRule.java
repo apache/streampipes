@@ -21,11 +21,11 @@ import com.github.jqudt.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.streampipes.model.schema.*;
 import org.streampipes.units.UnitProvider;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -41,35 +41,28 @@ public class UnitTransformationRule implements ValueTransformationRule {
         this.unitTypeFrom = UnitProvider.INSTANCE.getUnitByLabel(fromUnit);
         this.unitTypeTo = UnitProvider.INSTANCE.getUnitByLabel(toUnit);
 
-      //  eventKey = new ArrayList<String>();
-        eventKey = eventPropertyId;
-/*
+        eventKey = new ArrayList<String>();
+
+        List<EventProperty> eventProperties = eventSchema.getEventProperties();
+
         for(String id : eventPropertyId) {
-            EventProperty  property = eventSchema.getEventProperties()
+            EventProperty  property = eventProperties
                     .stream()
                     .filter(d -> d.getPropertyId().equals(id))
                     .findFirst()
                     .get();
             eventKey.add(property.getRuntimeName());
-        }
-        */
-    }
 
-/*
-    private void sdf(EventSchema eventSchema) {
-        for(EventProperty property : eventSchema.getEventProperties()) {
-            if(property instanceof  EventPropertyPrimitive) {
-
-            } else if(property instanceof EventPropertyNested) {
-
-            } else if(property instanceof EventPropertyNested) {
-
+            if(property instanceof EventPropertyNested) {
+                EventPropertyNested propertyNested = ((EventPropertyNested) property);
+                eventProperties = propertyNested.getEventProperties();
+            } else if(property instanceof EventPropertyList) {
+                EventPropertyList  propertyList = ((EventPropertyList) property);
+                eventProperties = Collections.singletonList(propertyList.getEventProperty());
             }
         }
-
-
     }
-*/
+
     @Override
     public Map<String, Object> transform(Map<String, Object> event) {
         return transform(event, eventKey);

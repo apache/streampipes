@@ -19,6 +19,8 @@ package org.streampipes.connect.adapter.generic.transform.value;
 import org.junit.Test;
 import org.streampipes.connect.adapter.generic.transform.TransformationRule;
 import org.streampipes.connect.adapter.generic.transform.schema.*;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
 
 import java.util.*;
@@ -30,35 +32,27 @@ public class ValueEventTransformerTest {
 
     @Test
     public void transform() {
-        Map<String, Object> event = getFirstEvent();
         EventSchema eventSchema = new EventSchema();
-
-        List<ValueTransformationRule> rules = new ArrayList<>();
-
-        rules.add(new UnitTransformationRule(eventSchema, Arrays.asList("f"), "Kelvin", "Degree Celsius"));
-
-        ValueEventTransformer eventTransformer = new ValueEventTransformer(rules);
-
-        Map<String, Object> result = eventTransformer.transform(event);
-
-
-        assertEquals(0.0, result.get("f"));
-
-    }
-
-
-    private Map<String, Object> getFirstEvent() {
-        Map<String, Object> nested = new HashMap<>();
-        nested.put("d", "z");
+        EventProperty eventPropertyf = new EventPropertyPrimitive();
+        eventPropertyf.setLabel("a");
+        eventPropertyf.setRuntimeName("a");
+        eventSchema.addEventProperty(eventPropertyf);
 
         Map<String, Object> event = new HashMap<>();
-        event.put("a", 1);
-        event.put("b", "z");
-        event.put("e", "z");
-        event.put("c", nested);
-        event.put("f", 273.15);
+        event.put("a", 273.15);
 
-        return event;
+        List<String> keys = new ArrayList<>();
+        keys.add(eventPropertyf.getPropertyId());
+
+        List<ValueTransformationRule> rules = new ArrayList<>();
+        rules.add(new UnitTransformationRule(eventSchema, keys, "Kelvin", "Degree Celsius"));
+
+        ValueEventTransformer eventTransformer = new ValueEventTransformer(rules);
+        Map<String, Object> result = eventTransformer.transform(event);
+
+        assertEquals(0.0, result.get(eventPropertyf.getRuntimeName()));
+
     }
+
 
 }
