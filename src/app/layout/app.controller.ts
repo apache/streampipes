@@ -172,8 +172,8 @@ export class AppCtrl {
         }
 
         getListItemClassName(path) {
-            return this.isActivePage(path) ? "sp-navbar-item-selected" : "sp-navbar-item";
-        }
+                    return this.isActivePage(path) ? "sp-navbar-item-selected" : "sp-navbar-item";
+                }
 
         getIconClassName(path) {
             return this.isActivePage(path) ? "sp-navbar-icon-selected" : "sp-navbar-icon";
