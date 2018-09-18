@@ -8,6 +8,7 @@
       <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"></app-static-property>
       <app-protocol [protocol]="adapter.protocol" *ngIf="adapter.id.includes('generic')"></app-protocol>
       <div fxLayoutAlign="end">
+        <button color="primary" mat-raised-button (click)="removeSelection()">Back</button>
         <button color="primary" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
       </div>
     </mat-step>

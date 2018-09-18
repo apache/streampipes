@@ -102,7 +102,6 @@ export class DataMarketplaceService {
       )
       .map(response => {
         if(response['@graph'] === undefined) return [];
-        if(response == []) return response;
         const res = this.getTsonLd().fromJsonLdType(
           response,
           'sp:AdapterDescriptionList'

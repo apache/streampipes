@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { RestService } from '../rest.service';
 import { FormatDescription } from '../model/connect/grounding/FormatDescription';
@@ -22,6 +22,8 @@ import {TransformationRuleService} from '../transformation-rule.service';
 export class NewAdapterComponent implements OnInit {
   @Input()
   adapter: AdapterDescription;
+  @Output()
+  removeSelectionEmitter: EventEmitter<void> = new EventEmitter<void>();
   allFormats: FormatDescription[] = [];
   isLinearStepper: boolean = true;
 
@@ -43,7 +45,6 @@ export class NewAdapterComponent implements OnInit {
   ngOnInit() {
     this.restService.getFormats().subscribe(x => {
       this.allFormats = x.list;
-      this.allFormats;
     });
 
     this.eventSchema = new EventSchema();
@@ -57,7 +58,13 @@ export class NewAdapterComponent implements OnInit {
 
     this.restService.addAdapter(this.adapter);
 
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(result => {
+        this.removeSelectionEmitter.emit();
+    });
+  }
+
+  removeSelection() {
+      this.removeSelectionEmitter.emit();
   }
 
   public setSchema() {

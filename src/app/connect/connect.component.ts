@@ -11,4 +11,8 @@ export class ConnectComponent {
   selectAdapter(adapterDescription: AdapterDescription) {
     this.newAdapterFromDescription = adapterDescription;
   }
+
+  removeSelection() {
+    this.newAdapterFromDescription = undefined;
+  }
 }
