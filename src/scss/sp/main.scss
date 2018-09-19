@@ -218,27 +218,29 @@ md-toolbar:not(.md-menu-toolbar) {
 .sp-button.sp-button-gray:enabled {
     background: #e5e5e5;
     color: rgba(0, 0, 0, 0.75);
-    -webkit-transition: all 0.75s ease;
-    transition: all 0.75s ease;
 }
 
 .sp-button.sp-button-blue:enabled {
     background: $sp-color-accent;
     color: rgba(255, 255, 255, 0.75);
-    -webkit-transition: all 0.75s ease;
-    transition: all 0.75s ease;
 }
 
 .sp-button.sp-button-gray:hover:enabled {
     background: #cbcbcb;
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
 }
 
 .sp-button.sp-button-flat:hover:enabled {
     background: #d9d9d9;
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
 }
 
 .sp-button.sp-button-blue:hover:enabled {
     background: $sp-color-accent-light-blue;
+    -webkit-transition: all 0.75s ease;
+    transition: all 0.75s ease;
 }
 
 .sp-button.sp-button-blue:disabled {
