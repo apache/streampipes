@@ -1,9 +1,20 @@
-<button md-icon-button  mat-button (click)=guessSchema() style="border: solid #ccc 0px; border-radius: 2px; width: 200px; margin: auto; background-color: #3F51B5; color: #f4f4f4" >
-    <span style="font-weight: bold;" > Guess Schema </span> 
-</button>
 
-<div fxLayoutAlign="center">
-<mat-spinner fxLayoutAlign="center" style="margin: 10px 0 5px 0" *ngIf="isLoading">Loading</mat-spinner>
+<div fxFlex="100" fxLayout="row" fxLayoutAlign="end center" >
+    <button md-icon-button  mat-button (click)=guessSchema() style="border: solid #ccc 0px; border-radius: 2px; background-color: #3F51B5; color: #f4f4f4" >
+        <i class="material-icons">
+           refresh
+        </i>
+        <!--<span style="font-weight: bold;" > Guess Schema </span>-->
+    </button>
+</div>
+
+<div fxLayout="column"  *ngIf="isLoading">
+    <div fxLayoutAlign="center" >
+        <mat-spinner fxLayoutAlign="center" style="margin: 10px 0 5px 0" >Loading</mat-spinner>
+    </div>
+    <div fxLayoutAlign="center" >
+        <h3>The system tries to guess the schema of the data</h3>
+    </div>
 </div>
 
 <div fxLayout="column" fxLayoutAlign="space-evenly stretched" >

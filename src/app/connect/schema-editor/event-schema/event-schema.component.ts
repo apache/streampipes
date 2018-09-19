@@ -47,24 +47,7 @@ export class EventSchemaComponent implements OnInit {
   }
 
   ngOnInit() {
+      this.guessSchema();
 
   }
-
-  // onNext() {
-  //   console.log('bla bla ');
-  //   if (
-  //     this.adapterDescription.constructor.name ==
-  //       'GenericAdapterSetDescription' ||
-  //     this.adapterDescription.constructor.name ==
-  //       'SpecificAdapterSetDescription'
-  //   ) {
-  //     this.adapterDescription.dataSet.eventSchema = this.eventSchema;
-  //   } else {
-  //     this.adapterDescription.dataStream.eventSchema = this.eventSchema;
-  //   }
-  //
-  //   this.transformationRuleService.setNewEventSchema(this.eventSchema);
-  //   const transformationRules: TransformationRuleDescription[] = this.transformationRuleService.getTransformationRuleDescriptions();
-  //   this.adapterDescription.rules = transformationRules;
-  // }
 }
