@@ -25,6 +25,7 @@ import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.rules.*;
 import org.streampipes.model.grounding.TopicDefinition;
@@ -82,6 +83,7 @@ public class GsonSerializer {
     builder.registerTypeAdapter(MappingProperty.class, new JsonLdSerializer<MappingProperty>());
     builder.registerTypeAdapter(ValueSpecification.class, new JsonLdSerializer<ValueSpecification>());
     builder.registerTypeAdapter(DataSinkType.class, new EcTypeAdapter());
+    builder.registerTypeAdapter(Message.class, new JsonLdSerializer<Message>());
     builder.registerTypeAdapter(DataProcessorType.class, new EpaTypeAdapter());
     builder.registerTypeAdapter(URI.class, new UriSerializer());
     builder.registerTypeAdapter(Frequency.class, new JsonLdSerializer<Frequency>());
