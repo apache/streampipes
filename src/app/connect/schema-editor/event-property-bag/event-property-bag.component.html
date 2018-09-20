@@ -1,6 +1,6 @@
 <div fxLayout="column" fxLayoutAlign="space-evenly stretched" >
   <ul style="min-height: 50px;" [dragula]='"event-property-bag"'[dragulaModel]='eventProperties' [dragulaOptions]="dragularOptions">
-    <div *ngFor="let property of eventProperties; let i=index">
+    <div attr.id="{{property.runTimeName}}" *ngFor="let property of eventProperties; let i=index">
       <div class="schema"  *ngIf="isEventPropertyNested(property)">
          <!--placeholder for nested-properties-->
         <app-event-property-nested [index]="i + 1"

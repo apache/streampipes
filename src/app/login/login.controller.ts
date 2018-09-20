@@ -12,8 +12,9 @@ export class LoginCtrl {
     loading: any;
     authenticationFailed: any;
     credentials: any;
+    ShepherdService: any;
 
-    constructor($timeout, $log, $location, $state, $stateParams, RestApi, $window, AuthStatusService) {
+    constructor($timeout, $log, $location, $state, $stateParams, RestApi, $window, AuthStatusService, ShepherdService) {
         this.$timeout = $timeout;
         this.$log = $log;
         this.$location = $location;
@@ -22,6 +23,8 @@ export class LoginCtrl {
         this.$window = $window;
         this.RestApi = RestApi;
         this.AuthStatusService = AuthStatusService;
+
+        this.ShepherdService = ShepherdService;
 
         this.loading = false;
         this.authenticationFailed = false;
@@ -58,6 +61,11 @@ export class LoginCtrl {
                 }
             )
     };
+
+    setSheperdServiceDelay() {
+        console.log('yeah button was pressed');
+        this.ShepherdService.setTimeWaitMillies(100);
+    }
 };
 
 //LoginCtrl.$inject = ['$timeout', '$log', '$location', '$state', '$stateParams', 'RestApi', '$window', 'AuthStatusService'];

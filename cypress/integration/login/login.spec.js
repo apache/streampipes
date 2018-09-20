@@ -10,8 +10,12 @@ describe('Login Streampipes', function () {
     it('Should open Login Page', function () {
         cy.url({timeout: 60000}).should('contain', '#/login');
     });
+
+
+
+
     it('Fill in Username and Password', function () {
-        cy.get('input[type="email"]').type('abt@fzi.de');
+        cy.get('input[type="email"]').type('riemer@fzi.de');
         cy.get('input[type="password"]').type('1234');
     });
     it('Start Login', function () {

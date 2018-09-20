@@ -1,5 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {ShepherdService} from '../../../services/tour/shepherd.service';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -9,16 +10,12 @@ export class AdapterStartedDialog {
 
     constructor(
         public dialogRef: MatDialogRef<AdapterStartedDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: any) { }
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        private ShepherdService: ShepherdService) { }
 
     onCloseConfirm() {
         this.dialogRef.close('Confirm');
-        // TODO refresh page
-        //window.location.reload();
+        this.ShepherdService.trigger("confirm_adapter_started_button");
     }
-
-    // onCloseCancel() {
-    //     this.dialogRef.close('Cancel');
-    // }
 
 }

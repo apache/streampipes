@@ -7,7 +7,7 @@
         <div fxFlex="100">
             <div class="md-padding">
                 <mat-grid-list cols="3" gutterSize="1em" rowHeight="30:9">
-                    <mat-grid-tile (click)="openLink(link)" *ngFor="let link of serviceLinks"
+                    <mat-grid-tile attr.id="{{link.name.replace(' ', '-')}}-link"(click)="openLink(link)" *ngFor="let link of serviceLinks"
                                    class="sp-darkblue-border home-image-wrapper">
                         <div class="home-image" [style.background-image]="getBackground(link.imageUrl)"></div>
                         <h4 class="sp-darkblue-border home-image-caption">{{link.name}}</h4>

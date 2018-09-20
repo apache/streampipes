@@ -10,11 +10,13 @@ export class ShepherdService {
     TourProviderService: any;
     currentTour: any;
     currentTourSettings: any;
+    timeWaitMillis: number;
 
     constructor(@Inject('$timeout') $timeout, @Inject('$state') $state, @Inject('TourProviderService') TourProviderService) {
         this.$timeout = $timeout;
         this.$state = $state;
         this.TourProviderService = TourProviderService;
+        this.timeWaitMillis = TourProviderService.getTime();
     }
 
     makeTour(currentTourSettings) {
@@ -112,7 +114,7 @@ export class ShepherdService {
     trigger(actionId) {
         if (Shepherd.activeTour) {
             if (this.shouldTrigger(actionId, this.currentTour.getCurrentStep().id)) {
-                this.$timeout(() => this.currentTour.next(), 500);
+                 this.$timeout(() => this.currentTour.next(), this.TourProviderService.getTime());
             }
         }
     }
@@ -145,5 +147,13 @@ export class ShepherdService {
 
     startAdapterTour() {
         this.startTour(this.TourProviderService.getTourById("adapter"));
+    }
+
+    setTimeWaitMillies(value) {
+        this.TourProviderService.setTime(value);
+    }
+
+    getTimeWaitMillies() {
+       return this.TourProviderService.getTime();
     }
 }

@@ -7,6 +7,7 @@ import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataTypesService} from '../data-type.service';
 import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
+import {ShepherdService} from '../../../services/tour/shepherd.service';
 
 // import {DataTypesService} from '../data-type.service';
 
@@ -30,7 +31,10 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   @Output() addNested: EventEmitter<any> = new EventEmitter<any>();
 
 
-  constructor(private formBuilder: FormBuilder, private dataTypeService: DataTypesService) {
+  constructor(private formBuilder: FormBuilder,
+              private dataTypeService: DataTypesService,
+              private ShepherdService: ShepherdService
+  ) {
       this.dataTypeService = dataTypeService;
       // constructor(private dragulaService: DragulaService, private formBuilder: FormBuilder) {
       // constructor(private dragulaService: DragulaService, private formBuilder: FormBuilder, private dataTypesService: DataTypesService) {
@@ -69,6 +73,7 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
   private OnClickOpen(): void {
     this.open = !this.open;
+      this.ShepherdService.trigger("open-event-property-primitve");
   }
 
   // TODO this works not completely correct

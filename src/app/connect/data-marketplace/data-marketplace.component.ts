@@ -18,7 +18,9 @@ export class DataMarketplaceComponent implements OnInit {
 
   selectedIndex: number=0;
 
-  constructor(private dataMarketplaceService: DataMarketplaceService, private ShepherdService: ShepherdService) {}
+  constructor(private dataMarketplaceService: DataMarketplaceService, private ShepherdService: ShepherdService) {
+    console.log('DataMarketplaceComponent' + ShepherdService.getTimeWaitMillies());
+  }
 
   ngOnInit() {
     this.dataMarketplaceService
@@ -39,6 +41,8 @@ export class DataMarketplaceComponent implements OnInit {
 
   selectAdapter(adapter: AdapterDescription): void {
     this.selectAdapterEmitter.emit(adapter);
+    this.ShepherdService.trigger("select-adapter");
+
   }
 
   deleteAdapter(adapter: AdapterDescription): void {

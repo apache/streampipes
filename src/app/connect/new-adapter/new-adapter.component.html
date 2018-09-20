@@ -9,7 +9,7 @@
       <app-protocol [protocol]="adapter.protocol" *ngIf="adapter.id.includes('generic')"></app-protocol>
       <div fxLayoutAlign="end">
         <button color="primary" mat-raised-button (click)="removeSelection()">Back</button>
-        <button color="primary" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
+        <button id="specific-settings-next-button" (click)="clickSpecificSettingsNextButton()" color="primary" mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
       </div>
     </mat-step>
 
@@ -29,7 +29,7 @@
 
         <div fxLayoutAlign="end">
           <button color="primary" mat-raised-button matStepperPrevious>Back</button>
-          <button color="primary" mat-raised-button matStepperNext style="margin-left:10px;">
+          <button  id="format-selection-next-button" color="primary" mat-raised-button matStepperNext style="margin-left:10px;">
             Next
           </button>
         </div>
@@ -43,7 +43,7 @@
 
       <div fxLayoutAlign="end">
         <button color="primary" mat-raised-button matStepperPrevious>Back</button>
-        <button color="primary" (click)="setSchema()"  mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
+        <button id="event-schema-next-button" (click)="clickEventSchemaNextButtonButton()" ncolor="primary" (click)="setSchema()"  mat-raised-button matStepperNext style="margin-left:10px;">Next</button>
       </div>
     </mat-step>
 

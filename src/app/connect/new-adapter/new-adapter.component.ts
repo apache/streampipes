@@ -13,6 +13,7 @@ import {SpecificAdapterSetDescription} from '../model/connect/SpecificAdapterSet
 import {SpecificAdapterStreamDescription} from '../model/connect/SpecificAdapterStreamDescription';
 import {TransformationRuleDescription} from '../model/connect/rules/TransformationRuleDescription';
 import {TransformationRuleService} from '../transformation-rule.service';
+import {ShepherdService} from '../../services/tour/shepherd.service';
 
 @Component({
   selector: 'sp-new-adapter',
@@ -39,7 +40,8 @@ export class NewAdapterComponent implements OnInit {
     private logger: Logger,
     private restService: RestService,
     private transformationRuleService: TransformationRuleService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private ShepherdService: ShepherdService
   ) {}
 
   ngOnInit() {
@@ -56,6 +58,9 @@ export class NewAdapterComponent implements OnInit {
       // data: { name: this.name, animal: this.animal }
     });
 
+
+    this.ShepherdService.trigger("button-startAdapter");
+
     this.restService.addAdapter(this.adapter);
 
     dialogRef.afterClosed().subscribe(result => {
@@ -65,6 +70,14 @@ export class NewAdapterComponent implements OnInit {
 
   removeSelection() {
       this.removeSelectionEmitter.emit();
+  }
+
+  clickSpecificSettingsNextButton() {
+      this.ShepherdService.trigger("specific-settings-next-button");
+  }
+
+  clickEventSchemaNextButtonButton() {
+      this.ShepherdService.trigger("event-schema-next-button");
   }
 
   public setSchema() {

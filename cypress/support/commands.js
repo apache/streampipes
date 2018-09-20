@@ -35,6 +35,8 @@ Cypress.Commands.add('login', (options = {}) => {
 
     cy.url({timeout: 60000}).should('contain', '#/login');
 
+    cy.get('#shepherd-delay').click({ force: true });
+
     //TODO change again
     cy.get('input[type="email"]').type('riemer@fzi.de');
     cy.get('input[type="password"]').type('1234');
