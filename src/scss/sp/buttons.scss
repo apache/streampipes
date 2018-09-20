@@ -1,0 +1,36 @@
+@import '../_variables';
+
+.mat-button, .mat-raised-button {
+  display: inline-block ;
+  vertical-align: middle;
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.9em;
+  letter-spacing: 0.1em;
+  line-height: 1em;
+  padding: 0.75em 1.25em;
+  margin-right:0.25em;
+  margin-left: 0.25em;
+  margin-top:0;
+}
+.mat-raised-button>i {
+  vertical-align:middle;
+  line-height: inherit;
+}
+
+.mat-raised-button>span {
+  vertical-align:middle;
+}
+.mat-raised-button.mat-primary:enabled {
+  background: $sp-color-accent;
+  color: rgba(255, 255, 255, 0.75);
+}
+.mat-raised-button.mat-primary:hover:enabled {
+  background: $sp-color-accent-light-blue;
+  -webkit-transition: all 0.75s ease;
+  transition: all 0.75s ease;
+}
