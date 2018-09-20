@@ -16,8 +16,9 @@ export class AddWidgetCtrl {
     selectedVisualisationType: any;
     visualizablePipelines: any;
     selectedType: any;
+    ShepherdService: any;
 
-    constructor($mdDialog, WidgetTemplates, WidgetInstances, ElementIconText, $http, rerenderDashboard, dashboard, layoutId) {
+    constructor($mdDialog, WidgetTemplates, WidgetInstances, ElementIconText, $http, rerenderDashboard, dashboard, layoutId, ShepherdService) {
         this.page = 'select-viz';
         this.$mdDialog = $mdDialog;
         this.ElementIconText = ElementIconText;
@@ -25,21 +26,22 @@ export class AddWidgetCtrl {
         this.rerenderDashboard = rerenderDashboard;
         this.dashboard = dashboard;
         this.layoutId = layoutId;
+        this.ShepherdService = ShepherdService;
 
         this.WidgetInstaces = WidgetInstances;
 
         this.pages = [{
-            type : "select-viz",
-            title : "Data Stream",
-            description : "Select a data stream you'd like to visualize"
-        },{
-            type : "select-type",
-            title : "Visualization Type",
-            description : "Select a visualization type"
-        },{
-            type : "select-scheme",
-            title : "Visualization Settings",
-            description : "Customize your visualization"
+            type: "select-viz",
+            title: "Data Stream",
+            description: "Select a data stream you'd like to visualize"
+        }, {
+            type: "select-type",
+            title: "Visualization Type",
+            description: "Select a visualization type"
+        }, {
+            type: "select-scheme",
+            title: "Visualization Settings",
+            description: "Customize your visualization"
         }];
 
         // this.visualizablePipelines = angular.copy(visualizablePipelines);
@@ -64,6 +66,7 @@ export class AddWidgetCtrl {
                             this.visualizablePipelines.push(vis);
                         });
                 });
+                this.ShepherdService.trigger("add-viz");
             });
 
 
@@ -77,11 +80,15 @@ export class AddWidgetCtrl {
     selectPipeline(vis) {
         this.selectedVisualisation = vis;
         this.next();
+        this.ShepherdService.trigger("select-pipeline");
+
     }
 
     selectVisType(type) {
         this.selectedType = type;
         this.next();
+        this.ShepherdService.trigger("select-viz");
+
     }
 
     getSelectedPipelineCss(vis) {
@@ -138,6 +145,7 @@ export class AddWidgetCtrl {
             this.WidgetInstaces.add(widget);
             this.rerenderDashboard(this.dashboard);
             this.$mdDialog.cancel();
+            this.ShepherdService.trigger("save-viz");
 
         }
     }
@@ -147,4 +155,4 @@ export class AddWidgetCtrl {
     };
 }
 
-AddWidgetCtrl.$inject = ['$mdDialog', 'WidgetTemplates', 'WidgetInstances', 'ElementIconText', '$http', 'rerenderDashboard', 'dashboard', 'layoutId'];
+AddWidgetCtrl.$inject = ['$mdDialog', 'WidgetTemplates', 'WidgetInstances', 'ElementIconText', '$http', 'rerenderDashboard', 'dashboard', 'layoutId', 'ShepherdService'];

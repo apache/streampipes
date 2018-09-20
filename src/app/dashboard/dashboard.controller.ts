@@ -1,4 +1,4 @@
-import { AddWidgetCtrl } from './add-widget.controller';
+import {AddWidgetCtrl} from './add-widget.controller';
 import * as angular from 'angular';
 import * as _ from 'lodash';
 
@@ -56,9 +56,9 @@ export class DashboardCtrl {
             controllerAs: 'ctrl',
             templateUrl: 'add-widget-template.html',
             parent: angular.element(document.body),
-            clickOutsideToClose:false,
+            clickOutsideToClose: false,
             bindToController: true,
-            locals : {
+            locals: {
                 // visualizablePipelines: this.visualizablePipelines,
                 rerenderDashboard: this.rerenderDashboard,
                 dashboard: this,
@@ -68,7 +68,7 @@ export class DashboardCtrl {
     };
 
     removeSpWidget(widget) {
-        this.WidgetInstances.get(widget.attrs['widget-id']).then(w =>  {
+        this.WidgetInstances.get(widget.attrs['widget-id']).then(w => {
             this.WidgetInstances.remove(w).then(res => {
                 this.rerenderDashboard(this);
             });
@@ -99,7 +99,12 @@ export class DashboardCtrl {
     //TODO Add support here to add more Layouts
     getLayouts(widgets) {
         var result = [
-            { title: 'Layout 1', id: 'Layout 1', active: true , defaultWidgets: this.getLayoutWidgets('Layout 1', widgets)},
+            {
+                title: 'Layout 1',
+                id: 'Layout 1',
+                active: true,
+                defaultWidgets: this.getLayoutWidgets('Layout 1', widgets)
+            },
             // { title: 'Layout 2', id: 'Layout 2', active: false, defaultWidgets: this.getLayoutWidgets('Layout 2', widgets)},
         ];
 
@@ -111,7 +116,7 @@ export class DashboardCtrl {
         return this.WidgetInstances.getAllWidgetDefinitions().then(widgets => {
 
             this.getLayouts(widgets);
-            return 	{
+            return {
                 widgetDefinitions: widgets,
                 widgetButtons: false,
                 defaultLayouts: this.getLayouts(widgets)

@@ -8,13 +8,18 @@ export let spTableWidgetConfig = {
     controller: class TableConfigCtrl {
 
         wid: any;
+        ShepherdService: any;
 
-        constructor() {}
+        constructor(ShepherdService) {
+            this.ShepherdService = ShepherdService;
+        }
 
         selectAll() {
             this.wid.schema.eventProperties.forEach(ep => {
                 ep.isSelected = true;
             });
+            this.ShepherdService.trigger("customize-viz")
+
         }
 
         deselectAll() {
