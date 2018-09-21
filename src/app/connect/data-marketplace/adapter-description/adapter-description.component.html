@@ -26,8 +26,12 @@
         <div fxFlex="70" class="description" fxLayoutAlign="start start">
             <p>{{adapter.description}}</p>
         </div>
-        <div *ngIf="adapter.couchDbId" class="delete" (click)="deleteAdapter(adapter)">
-            <mat-icon>delete</mat-icon>
+        <div fxFlex="30" fxLayout="row" fxLayoutAlign="end end" *ngIf="adapter.couchDbId" class="delete">
+            <button color="primary" mat-fab (click)="deleteAdapter(adapter)">
+                <i class="material-icons">
+                    delete
+                </i>
+            </button>
         </div>
         <div fxFlex="30" *ngIf="!adapter.couchDbId" fxLayout="row" fxLayoutAlign="end end">
             <button color="primary" mat-fab>

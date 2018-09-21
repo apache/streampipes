@@ -1,0 +1,12 @@
+.historic {
+    cursor: pointer;
+    color: #ffa23b;
+}
+.real-time {
+    cursor: pointer;
+    color: #FFEB3B;
+}
+
+.new-adapter-title {
+    margin-top:5px;
+}

@@ -15,6 +15,7 @@ import {TransformationRuleDescription} from '../model/connect/rules/Transformati
 import {TransformationRuleService} from '../transformation-rule.service';
 import {ShepherdService} from '../../services/tour/shepherd.service';
 import {EventSchemaComponent} from '../schema-editor/event-schema/event-schema.component';
+import {ConnectService} from "../connect.service";
 
 @Component({
   selector: 'sp-new-adapter',
@@ -43,7 +44,8 @@ export class NewAdapterComponent implements OnInit {
     private restService: RestService,
     private transformationRuleService: TransformationRuleService,
     public dialog: MatDialog,
-    private ShepherdService: ShepherdService
+    private ShepherdService: ShepherdService,
+    private connectService: ConnectService
   ) {}
 
   ngOnInit() {

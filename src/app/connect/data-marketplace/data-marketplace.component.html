@@ -1,5 +1,5 @@
-<div fxLayout="column" fxFlex="100" class="page-container page-container-padding">
-    <div fxFlex="100" fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
+<div fxLayout="column" fxFlex="100" class="page-container page-container-padding page-container-connect">
+    <div fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
         <div fxLayout="fill" style="line-height:24px;border-bottom:1px solid #ccc">
             <mat-tab-group (selectedIndexChange)="selectedIndexChange($event)">
                 <mat-tab label="Data Marketplace">
@@ -9,7 +9,7 @@
             </mat-tab-group>
         </div>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center"
-             style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+             style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc" *ngIf="selectedIndex === 0 && newAdapterFromDescription === undefined">
             <button mat-icon-button id="startAdapterTutorial1"(click)="startAdapterTutorial()" matTooltip="Tutorial">
                 <i class="material-icons">
                     school
@@ -22,13 +22,16 @@
             </button>
         </div>
     </div>
-    <div class="container-fluid">
+    <div class="container-fluid marketplace-container">
         <div *ngIf="selectedIndex === 0">
-            <div fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-description-container">
-                <sp-adapter-description  attr.id="{{adapterDescription.label.replace(' ', '_')}}" class="adapter-description" fxFlex="33"
+            <div *ngIf="newAdapterFromDescription===undefined" fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-description-container">
+                <sp-adapter-description attr.id="{{adapterDescription.label.replace(' ', '_')}}" class="adapter-description" fxFlex="33"
                                         (click)="selectAdapter(adapterDescription)"
                                         *ngFor="let adapterDescription of adapterDescriptions"
                                         [adapter]="adapterDescription"></sp-adapter-description>
+            </div>
+            <div class="new-adapter-container" fxFlex="100" fxLayout="row" fxLayoutAlign="start start" *ngIf="newAdapterFromDescription!==undefined">
+                <sp-new-adapter fxFlex="100" (removeSelectionEmitter)="removeSelection($event)" [adapter]="newAdapterFromDescription"></sp-new-adapter>
             </div>
         </div>
         <div *ngIf="selectedIndex === 1">
