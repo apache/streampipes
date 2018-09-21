@@ -50,38 +50,11 @@ export default {
             {
                 stepId: "step-5",
                 title: "Finish Format configuration",
-                text: "TODO",
+                text: "After selecting GeoJson as a format go to the next step",
                 attachPosition: "top",
                 attachToElement: "#format-selection-next-button",
                 buttons: [
                     "cancel",
-                ]
-            },
-
-
-
-
-
-
-            {
-                stepId: "step-4",
-                title: "Transform schema",
-                text: "TODO",
-                attachToElement: "#id button:last-of-type",
-                buttons: [
-                    "cancel",
-                ]
-            },
-            {
-                stepId: "step-5",
-                title: "Change the id runtime name",
-                text: " Change the value of the runtime name to 'new_id'. Then click the next button.",
-                attachToElement: "#input-runtime-name-Id",
-                attachPosition: "bottom",
-                classes: "shepherd shepherd-welcome",
-                buttons: [
-                    "cancel",
-                    "next"
                 ]
             },
             {
@@ -130,6 +103,7 @@ export default {
             {actionId: "select-geojson", currentStep: "step-4"},
             {actionId: "format-selection-next-button", currentStep: "step-5"},
 
+            {actionId: "event-schema-next-button", currentStep: "step-6"},
 
             {actionId: "button-startAdapter", currentStep: "step-7"},
             {actionId: "confirm_adapter_started_button", currentStep: "step-8"},

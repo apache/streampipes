@@ -36,34 +36,25 @@ describe('Adapter Tutorial 2', function () {
         cy.get('#format-selection-next-button').click();
     });
 
-    //
-    // it('Open schema of id property', function () {
-    //     cy.get('#id button:last-of-type').click();
-    // });
-    //
-    // it('Go to next step of tutorial', function () {
-    //     cy.get('[data-id=step-5] > div > footer > ul > li:last-of-type > a ').click();
-    // });
-    //
-    // it('Leave schema editor tab', function () {
-    //     cy.get('#event-schema-next-button').click();
-    // });
-    //
-    // it('Start the adapter', function () {
-    //     cy.get('#button-startAdapter').click();
-    // });
-    //
-    // it('Start Adapter', function () {
-    //     cy.get('#confirm_adapter_started_button').click();
-    //     cy.wait(300);
-    // });
-    //
-    // it('Confirm Adapter sucessully started', function () {
-    //     cy.get('[data-id=step-9] > div > footer > ul > li > a').click();
-    // });
+    it('Leave schema editor tab', function () {
+        cy.get('#event-schema-next-button').click();
+    });
 
-    // it('Logout', function () {
-    //     cy.logout();
-    // });
+    it('Start the adapter', function () {
+        cy.get('#button-startAdapter').click();
+    });
+
+    it('Start Adapter', function () {
+        cy.get('#confirm_adapter_started_button').click();
+        cy.wait(300);
+    });
+
+    it('Confirm Adapter sucessully started', function () {
+        cy.get('[data-id=step-9] > div > footer > ul > li > a').click();
+    });
+
+    it('Logout', function () {
+        cy.logout();
+    });
 
 });
