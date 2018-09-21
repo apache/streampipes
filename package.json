@@ -108,6 +108,7 @@
     "sass-loader": "^6.0.7",
     "to-string-loader": "^1.1.5",
     "tslint": "^5.9.1",
+    "tslint-config-prettier": "^1.15.0",
     "typescript": "~2.5.3",
     "webpack": "^3.11.0",
     "webpack-dev-server": "^2.9.7"
