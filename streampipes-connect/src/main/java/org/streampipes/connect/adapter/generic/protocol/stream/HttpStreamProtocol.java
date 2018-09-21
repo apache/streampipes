@@ -77,14 +77,14 @@ public class HttpStreamProtocol extends PullProtocoll {
 
     @Override
     public ProtocolDescription declareModel() {
-        ProtocolDescription description = new ProtocolDescription(ID, "HTTP (Stream)", "This is the " +
+        ProtocolDescription description = new ProtocolDescription(ID, "HTTP Stream", "This is the " +
                 "description for the http stream protocol");
 
         FreeTextStaticProperty urlProperty = new FreeTextStaticProperty(URL_PROPERTY, "URL", "This property " +
                 "defines the URL for the http request.");
 
 
-        FreeTextStaticProperty intervalProperty = new FreeTextStaticProperty(INTERVAL_PROPERTY, "Interval [Sec]", "This property " +
+        FreeTextStaticProperty intervalProperty = new FreeTextStaticProperty(INTERVAL_PROPERTY, "Interval", "This property " +
                 "defines the pull interval in seconds.");
 
         FreeTextStaticProperty accessToken = new FreeTextStaticProperty(ACCESS_TOKEN_PROPERTY, "Access Token", "Http Access Token");

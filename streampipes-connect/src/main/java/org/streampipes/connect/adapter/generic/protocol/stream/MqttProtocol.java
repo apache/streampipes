@@ -56,7 +56,7 @@ public class MqttProtocol extends BrokerProtocol {
 
   @Override
   public ProtocolDescription declareModel() {
-    ProtocolDescription pd = new ProtocolDescription(ID, "MQTT (Stream)", "This is the " +
+    ProtocolDescription pd = new ProtocolDescription(ID, "MQTT", "This is the " +
             "description for the MQTT protocol");
     FreeTextStaticProperty broker = new FreeTextStaticProperty("broker_url", "Broker URL",
             "This property defines the URL of the MQTT broker.");

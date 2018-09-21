@@ -70,7 +70,7 @@ public class KafkaProtocol extends BrokerProtocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        ProtocolDescription pd = new ProtocolDescription(ID,"Apache Kafka (Stream)","This is the " +
+        ProtocolDescription pd = new ProtocolDescription(ID,"Apache Kafka","This is the " +
                 "description for the Apache Kafka protocol");
         FreeTextStaticProperty broker = new FreeTextStaticProperty("broker_url", "Broker URL",
                 "This property defines the URL of the Kafka broker.");
