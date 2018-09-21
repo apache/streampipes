@@ -51,11 +51,12 @@ export default {
                 stepId: "step-5",
                 title: "Finish Format configuration",
                 text: "TODO",
-                attachToElement: "format-selection-next-button",
+                attachPosition: "top",
+                attachToElement: "#format-selection-next-button",
                 buttons: [
                     "cancel",
                 ]
-            },,
+            },
 
 
 
@@ -127,9 +128,9 @@ export default {
             {actionId: "select-adapter", currentStep: "step-2"},
             {actionId: "specific-settings-next-button", currentStep: "step-3"},
             {actionId: "select-geojson", currentStep: "step-4"},
+            {actionId: "format-selection-next-button", currentStep: "step-5"},
 
 
-            {actionId: "event-schema-next-button", currentStep: "step-6"},
             {actionId: "button-startAdapter", currentStep: "step-7"},
             {actionId: "confirm_adapter_started_button", currentStep: "step-8"},
         ]

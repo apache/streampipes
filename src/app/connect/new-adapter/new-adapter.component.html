@@ -29,7 +29,7 @@
 
         <div fxLayoutAlign="end">
           <button color="primary" mat-raised-button matStepperPrevious>Back</button>
-          <button  id="format-selection-next-button" color="primary" mat-raised-button matStepperNext style="margin-left:10px;">
+          <button  id="format-selection-next-button" (click)="clickFormatSelectionNextButton()" color="primary" mat-raised-button matStepperNext style="margin-left:10px;">
             Next
           </button>
         </div>

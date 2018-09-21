@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { RestService } from '../rest.service';
 import { FormatDescription } from '../model/connect/grounding/FormatDescription';
@@ -14,6 +14,7 @@ import {SpecificAdapterStreamDescription} from '../model/connect/SpecificAdapter
 import {TransformationRuleDescription} from '../model/connect/rules/TransformationRuleDescription';
 import {TransformationRuleService} from '../transformation-rule.service';
 import {ShepherdService} from '../../services/tour/shepherd.service';
+import {EventSchemaComponent} from '../schema-editor/event-schema/event-schema.component';
 
 @Component({
   selector: 'sp-new-adapter',
@@ -31,10 +32,11 @@ export class NewAdapterComponent implements OnInit {
   eventSchema: EventSchema;
   oldEventSchema: EventSchema;
 
-  hasInputProtocol: Boolean;
-  hasInputFormat: Boolean;
   hasInput: Boolean[];
-  inputValue = '';
+
+  @ViewChild(EventSchemaComponent)
+  private eventSchemaComponent: EventSchemaComponent;
+
 
   constructor(
     private logger: Logger,
@@ -74,10 +76,16 @@ export class NewAdapterComponent implements OnInit {
 
   clickSpecificSettingsNextButton() {
       this.ShepherdService.trigger("specific-settings-next-button");
+      this.eventSchemaComponent.guessSchema();
   }
 
   clickEventSchemaNextButtonButton() {
       this.ShepherdService.trigger("event-schema-next-button");
+  }
+
+  clickFormatSelectionNextButton() {
+      this.ShepherdService.trigger("format-selection-next-button");
+      this.eventSchemaComponent.guessSchema();
   }
 
   public setSchema() {

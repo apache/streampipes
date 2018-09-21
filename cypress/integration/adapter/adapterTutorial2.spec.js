@@ -21,12 +21,21 @@ describe('Adapter Tutorial 2', function () {
     });
 
     it('After configuring adapter click next', function () {
+
+        cy.get('#input-URL').type("http://lupo-messwerte.appspot.com/lupo_luft_query?land=bw&limit=500&format=gme");
+        cy.get('#input-Interval').type("60");
+        // TODO add configs
         cy.get('#specific-settings-next-button').click();
     });
 
     it('Select GeoJson Format', function () {
         cy.get('#GeoJSON').click();
     });
+
+    it('Finish Format Selection', function () {
+        cy.get('#format-selection-next-button').click();
+    });
+
     //
     // it('Open schema of id property', function () {
     //     cy.get('#id button:last-of-type').click();
