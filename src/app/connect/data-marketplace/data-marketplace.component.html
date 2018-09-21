@@ -10,17 +10,22 @@
         </div>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center"
              style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <button mat-icon-button id="startAdapterTutorial"(click)="startAdapterTutorial()" matTooltip="Tutorial">
+            <button mat-icon-button id="startAdapterTutorial1"(click)="startAdapterTutorial()" matTooltip="Tutorial">
                 <i class="material-icons">
                     school
-                </i>
+                </i> 1
+            </button>
+            <button mat-icon-button id="startAdapterTutorial2"(click)="startAdapterTutorial2()" matTooltip="Tutorial">
+                <i class="material-icons">
+                    school
+                </i> 2
             </button>
         </div>
     </div>
     <div class="container-fluid">
         <div *ngIf="selectedIndex === 0">
             <div fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-description-container">
-                <sp-adapter-description  attr.id="{{adapterDescription.label}}" class="adapter-description" fxFlex="33"
+                <sp-adapter-description  attr.id="{{adapterDescription.label.replace(' ', '_')}}" class="adapter-description" fxFlex="33"
                                         (click)="selectAdapter(adapterDescription)"
                                         *ngFor="let adapterDescription of adapterDescriptions"
                                         [adapter]="adapterDescription"></sp-adapter-description>

@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormatDescription } from '../model/connect/grounding/FormatDescription';
+import {ShepherdService} from '../../services/tour/shepherd.service';
 
 @Component({
   selector: 'app-format',
@@ -19,7 +20,9 @@ export class FormatComponent {
   selectedFormatEmitter = new EventEmitter();
   private hasConfig: Boolean;
 
-  constructor() {
+
+
+  constructor(private ShepherdService: ShepherdService) {
     this.hasConfig = true;
   }
 
@@ -37,7 +40,9 @@ export class FormatComponent {
     */
     this.selectedFormat = this.format;
     this.selectedFormatEmitter.emit(this.selectedFormat);
-    console.log(this.isSelected());
+
+    this.ShepherdService.trigger("select-" + this.selectedFormat.label.toLocaleLowerCase());
+
   }
   validateText(textValid) {
     if (textValid && this.format.edit) {

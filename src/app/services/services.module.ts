@@ -28,6 +28,7 @@ import { TourProviderService } from "./tour/tour-provider.service";
 import CreatePipelineTour from './tour/create-pipeline-tour.constants';
 import DashboardTour from './tour/dashboard-tour.constants';
 import AdapterTour from './tour/adapter-tour.constants';
+import AdapterTour2 from './tour/adapter-tour-2.constants';
 
 export default angular.module('sp.services', [spConstants])
 	.service('ImageChecker', ImageChecker)
@@ -53,4 +54,5 @@ export default angular.module('sp.services', [spConstants])
 	.constant('createPipelineTourConstants', CreatePipelineTour)
 	.constant('dashboardTourConstants', DashboardTour)
 	.constant('adapterTourConstants', AdapterTour)
+    .constant('adapterTour2Constants', AdapterTour2)
 	.name;

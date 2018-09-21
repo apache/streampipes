@@ -63,7 +63,6 @@ export class LoginCtrl {
     };
 
     setSheperdServiceDelay() {
-        console.log('yeah button was pressed');
         this.ShepherdService.setTimeWaitMillies(100);
     }
 };

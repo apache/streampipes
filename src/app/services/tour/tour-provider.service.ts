@@ -6,11 +6,12 @@ export class TourProviderService {
     // This is needed to configure the time in cypress test cases
     time: any;
 
-    constructor(createPipelineTourConstants, dashboardTourConstants, adapterTourConstants) {
+    constructor(createPipelineTourConstants, dashboardTourConstants, adapterTourConstants, adapterTour2Constants) {
         this.guidedTours = [];
         this.guidedTours.push(createPipelineTourConstants.createPipelineTour);
         this.guidedTours.push(dashboardTourConstants.dashboardTour);
         this.guidedTours.push(adapterTourConstants.adapterTour);
+        this.guidedTours.push(adapterTour2Constants.adapterTour);
         this.time = 500;
     }
 
