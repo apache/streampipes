@@ -13,7 +13,7 @@
       "test": "test.ts",
       "tsconfig": "tsconfig.app.json",
       "testTsconfig": "tsconfig.spec.json",
-      "prefix": "app",
+      "prefix": "sp",
       "styles": [
         "styles.css"
       ],
