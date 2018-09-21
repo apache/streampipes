@@ -1,7 +1,7 @@
 @import '../_variables';
 
-.mat-button, .mat-raised-button {
-  display: inline-block ;
+.mat-button, .mat-raised-button, .mat-flat-button {
+  display: inline-block;
   vertical-align: middle;
   border: 0;
   border-radius: 3px;
@@ -13,41 +13,80 @@
   letter-spacing: 0.1em;
   line-height: 1em;
   padding: 0.75em 1.25em;
-  margin-right:0.25em;
+  margin-right: 0.25em;
   margin-left: 0.25em;
-  margin-top:0;
+  margin-top: 0;
 }
-.mat-button>i, .mat-raised-button>i {
-  vertical-align:middle;
+
+.mat-button > i, .mat-raised-button > i, .mat-flat-button > i {
+  vertical-align: middle;
   line-height: inherit;
 }
 
-.mat-button>span, .mat-raised-button>span {
-  vertical-align:middle;
+.mat-button > span, .mat-raised-button > span, .mat-flat-button > span {
+  vertical-align: middle;
 }
-.mat-accent:enabled {
+
+.mat-raised-button.mat-accent:enabled {
   background: $sp-color-primary;
   color: rgba(255, 255, 255, 0.75);
 }
-.mat-accent:hover:enabled {
+
+.mat-raised-button.mat-accent:hover:enabled {
   background: $sp-color-primary-light;
   -webkit-transition: all 0.75s ease;
   transition: all 0.75s ease;
 }
-.mat-accent:disabled {
+
+.mat-raised-button.mat-accent:disabled {
   background: #ebebeb;
   color: #cdcdcd;
 }
-.mat-primary:enabled {
+
+.mat-raised-button.mat-primary:enabled {
   background: $sp-color-accent;
   color: rgba(255, 255, 255, 0.75);
 }
-.mat-primary:hover:enabled {
+
+.mat-raised-button.mat-primary:hover:enabled {
   background: $sp-color-accent-light-blue;
   -webkit-transition: all 0.75s ease;
   transition: all 0.75s ease;
 }
-.mat-primary:disabled {
+
+.mat-raised-button.mat-primary:disabled {
   background: #ebebeb;
   color: #cdcdcd;
+}
+
+.mat-raised-button.mat-basic:enabled {
+  background: #e5e5e5;
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.mat-raised-button.mat-basic:hover:enabled {
+  background: #cbcbcb;
+  -webkit-transition: all 0.75s ease;
+  transition: all 0.75s ease;
+}
+
+.mat-raised-button.mat-basic:disabled {
+  background: #ebebeb;
+  color: #cdcdcd;
+}
+
+.mat-flat-button.mat-primary:enabled {
+  color: $sp-color-accent;
+  background: rgba(0, 0, 0, 0);
+}
+
+.mat-flat-button.mat-primary:hover:enabled {
+  background: #d9d9d9;
+  -webkit-transition: all 0.75s ease;
+  transition: all 0.75s ease;
+}
+
+.mat-flat-button.mat-primary:disabled {
+  color: #cdcdcd;
+  background: rgba(0, 0, 0, 0);
 }
