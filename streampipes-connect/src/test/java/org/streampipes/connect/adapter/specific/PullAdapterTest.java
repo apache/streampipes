@@ -49,7 +49,7 @@ public class PullAdapterTest {
                         .withStatus(200)
                         .withBody(expected)));
 
-        String result = PullAdapter.getDataFromEndpointString("http://localhost:" + port + "/");
+        String result = PullRestAdapter.getDataFromEndpointString("http://localhost:" + port + "/");
 
         assertEquals(expected, result);
 
@@ -62,7 +62,7 @@ public class PullAdapterTest {
                         .withStatus(404)
                         .withBody("")));
 
-        PullAdapter.getDataFromEndpointString("http://localhost:" + port + "/");
+        PullRestAdapter.getDataFromEndpointString("http://localhost:" + port + "/");
 
     }
 }

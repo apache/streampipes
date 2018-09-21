@@ -17,11 +17,10 @@
 
 package org.streampipes.connect.adapter.specific.sensemap;
 
-import com.github.jqudt.onto.units.TemperatureUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.specific.PullAdapter;
+import org.streampipes.connect.adapter.specific.PullRestAdapter;
 import org.streampipes.connect.adapter.specific.sensemap.model.CurrentLocation;
 import org.streampipes.connect.adapter.specific.sensemap.model.SenseBox;
 import org.streampipes.connect.adapter.specific.sensemap.model.Sensor;
@@ -34,7 +33,6 @@ import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.AnyStaticProperty;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
@@ -43,14 +41,13 @@ import org.streampipes.vocabulary.XSD;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class OpenSenseMapAdapter extends PullAdapter {
+public class OpenSenseMapAdapter extends PullRestAdapter {
 
     private Logger logger = LoggerFactory.getLogger(OpenSenseMapAdapter.class);
 
@@ -137,7 +134,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
                         .label(SensorNames.LABEL_LATITUDE)
                         .description("Latitude value of box location")
                         .build());
-         allProperties.add(
+        allProperties.add(
                 PrimitivePropertyBuilder
                         .create(Datatypes.String, SensorNames.KEY_LONGITUDE)
                         .label(SensorNames.KEY_LONGITUDE)
@@ -260,7 +257,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
                             if (value != Double.MIN_VALUE) {
                                 event.put(key, value);
                             } else {
-                                logger.info("Sensor value " +s.getLastMeasurement().getValue() + " of sensor id: " +
+                                logger.info("Sensor value " + s.getLastMeasurement().getValue() + " of sensor id: " +
                                         s.get_id() + " in sense box id: " + senseBox.get_id() +
                                         " is not correctly formatted");
                             }
@@ -287,7 +284,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
         List<Map<String, Object>> events = getEvents();
 
         for (Map<String, Object> event : events) {
-           adapterPipeline.process(event);
+            adapterPipeline.process(event);
         }
 
     }
@@ -324,7 +321,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
     }
 
     private boolean checkEvent(Map<String, Object> event) {
-        for(String key : selectedSensors) {
+        for (String key : selectedSensors) {
             if (!event.keySet().contains(key)) {
                 return false;
             }
@@ -369,24 +366,24 @@ public class OpenSenseMapAdapter extends PullAdapter {
     }
 
     private double getLatitude(SenseBox box) {
-       List<Double> latlong = getLatLong(box);
+        List<Double> latlong = getLatLong(box);
 
-       if (latlong != null) {
-           return latlong.get(1);
-       } else {
-           return Double.MIN_VALUE;
-       }
+        if (latlong != null) {
+            return latlong.get(1);
+        } else {
+            return Double.MIN_VALUE;
+        }
 
     }
 
     private double getLongitude(SenseBox box) {
-       List<Double> latlong = getLatLong(box);
+        List<Double> latlong = getLatLong(box);
 
-       if (latlong != null) {
-           return latlong.get(0);
-       } else {
-           return Double.MIN_VALUE;
-       }
+        if (latlong != null) {
+            return latlong.get(0);
+        } else {
+            return Double.MIN_VALUE;
+        }
     }
 
     private List<Double> getLatLong(SenseBox box) {

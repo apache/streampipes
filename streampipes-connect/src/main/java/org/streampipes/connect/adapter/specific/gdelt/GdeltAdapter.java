@@ -6,13 +6,17 @@ import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
 import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
+import org.streampipes.connect.adapter.specific.PullAdapter;
 import org.streampipes.connect.adapter.specific.SpecificDataStreamAdapter;
+import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.staticproperty.AnyStaticProperty;
+import org.streampipes.model.staticproperty.Option;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.streampipes.sdk.utils.Datatypes;
 
@@ -23,14 +27,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipInputStream;
 
-public class GdeltAdapter extends SpecificDataStreamAdapter {
+public class GdeltAdapter extends PullAdapter {
 
     public static final String ID = "http://streampipes.org/adapter/specific/gdelt";
     private String url = "http://data.gdeltproject.org/gdeltv2/lastupdate.txt";
-
-    protected AdapterPipeline adapterPipeline;
 
     public GdeltAdapter() {
         super();
@@ -38,6 +41,11 @@ public class GdeltAdapter extends SpecificDataStreamAdapter {
 
     public GdeltAdapter(SpecificAdapterStreamDescription adapterDescription) {
         super(adapterDescription);
+    }
+
+    @Override
+    protected PollingSettings getPollingIntervalInSeconds() {
+        return PollingSettings.from(TimeUnit.MINUTES, 15);
     }
 
     @Override
@@ -52,14 +60,14 @@ public class GdeltAdapter extends SpecificDataStreamAdapter {
         return adapterDescription;
     }
 
+    public List<Map<String, Object>> getEvents() {
+
+        List<Map<String, Object>> eventResults = new ArrayList<>();
+        return eventResults;
+    }
+
     @Override
-    public void startAdapter() throws AdapterException {
-        List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
-        pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getRules()));
-        pipelineElements.add(new SendToKafkaAdapterSink((AdapterDescription) adapterDescription));
-
-        adapterPipeline = new AdapterPipeline(pipelineElements);
-
+    protected void pullData() {
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
             String firstLine = bufferedReader.readLine();
@@ -71,7 +79,7 @@ public class GdeltAdapter extends SpecificDataStreamAdapter {
             zipInputStream.getNextEntry();
             CSVReader csvReader = new CSVReader(zipBufferedReader, '\t', '"');
             String[] nextRecord;
-            while((nextRecord = csvReader.readNext()) != null) {
+            while ((nextRecord = csvReader.readNext()) != null) {
 
                 Map<String, Object> event = new HashMap<>();
 
@@ -109,6 +117,7 @@ public class GdeltAdapter extends SpecificDataStreamAdapter {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     @Override

@@ -90,7 +90,7 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
 
         try {
             handle.get();
-        } catch (ExecutionException | InterruptedException e  ) {
+        } catch (ExecutionException | InterruptedException e) {
             logger.error("Error", e);
         }
     }
@@ -98,40 +98,5 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
     @Override
     public void stopAdapter() throws AdapterException {
         scheduler.shutdownNow();
-    }
-
-    protected static String getDataFromEndpointString(String url) throws AdapterException{
-        String result = null;
-
-
-        logger.info("Started Request to open sensemap endpoint: " + url);
-        try {
-            result = Request.Get(url)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnContent().asString();
-
-
-            if (result.startsWith("ï")) {
-                result = result.substring(3);
-            }
-
-            logger.info("Received data from request");
-
-        } catch (Exception e) {
-            String errorMessage = "Error while connecting to the open sensemap api";
-            logger.error(errorMessage, e);
-            throw new AdapterException(errorMessage);
-        }
-
-        return result;
-    }
-
-    protected static <T> T getDataFromEndpoint(String url, Class<T> clazz) throws AdapterException{
-
-        String rawJson = getDataFromEndpointString(url);
-        T all = new Gson().fromJson(rawJson, clazz);
-
-        return all;
     }
 }
