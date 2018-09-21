@@ -84,7 +84,7 @@ public class HttpStreamProtocol extends PullProtocoll {
                 "defines the URL for the http request.");
 
 
-        FreeTextStaticProperty intervalProperty = new FreeTextStaticProperty(INTERVAL_PROPERTY, "Interval [Sec]", "This property " +
+        FreeTextStaticProperty intervalProperty = new FreeTextStaticProperty(INTERVAL_PROPERTY, "Interval", "This property " +
                 "defines the pull interval in seconds.");
 
         FreeTextStaticProperty accessToken = new FreeTextStaticProperty(ACCESS_TOKEN_PROPERTY, "Access Token", "Http Access Token");
