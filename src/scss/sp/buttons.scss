@@ -27,6 +27,11 @@
   vertical-align: middle;
 }
 
+.mat-fab.mat-primary {
+  background: $sp-color-accent;
+  color: rgba(255, 255, 255, 0.75);
+}
+
 .mat-raised-button.mat-accent:enabled {
   background: $sp-color-primary;
   color: rgba(255, 255, 255, 0.75);

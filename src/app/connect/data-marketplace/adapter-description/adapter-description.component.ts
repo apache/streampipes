@@ -36,4 +36,16 @@ export class AdapterDescriptionComponent {
   deleteAdapter(adapter: AdapterDescription): void {
     this.deleteAdapterEmitter.emit(adapter);
   }
+
+  getClassName() {
+    let className = this.adapter.couchDbId ? "adapter-box" : "adapter-description-box";
+
+    if (this.isDataSetDescription()) {
+      className += " adapter-box-set";
+    } else {
+      className +=" adapter-box-stream";
+    }
+
+    return className;
+  }
 }
