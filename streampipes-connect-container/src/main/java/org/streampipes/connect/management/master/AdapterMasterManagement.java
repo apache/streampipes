@@ -66,7 +66,7 @@ public class AdapterMasterManagement {
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
         String adapterCouchdbId = "";
         for (AdapterDescription a : allAdapters) {
-           if (a.getAdapterId().equals(ad.getAdapterId())) {
+           if (a.getElementId().equals(ad.getElementId())) {
                adapterCouchdbId = a.getId();
            }
         }
@@ -74,7 +74,8 @@ public class AdapterMasterManagement {
         String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() +"api/v2/";
 //        String userName = ad.getUserName();
         String requestUrl = backendBaseUrl +  "noauth/users/" + username + "/element";
-        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() + "api/v1/" + username + "/master/sources/" + adapterCouchdbId;
+        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() +
+                "api/v1/" + username + "/master/sources/" + adapterCouchdbId;
 
         logger.info("Install source (source URL: " + elementUrl +" in backend over URL: " + requestUrl);
 
