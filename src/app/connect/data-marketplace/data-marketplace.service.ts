@@ -30,6 +30,7 @@ import {MoveRuleDescription} from '../model/connect/rules/MoveRuleDesctiption';
 import {EventPropertyNested} from '../schema-editor/model/EventPropertyNested';
 import {EventPropertyList} from '../schema-editor/model/EventPropertyList';
 import {UUID} from 'angular2-uuid';
+import {DataSetDescription} from '../model/DataSetDescription';
 
 @Injectable()
 export class DataMarketplaceService {
@@ -52,7 +53,7 @@ export class DataMarketplaceService {
     tsonld.addClassMapping(GenericAdapterStreamDescription);
     tsonld.addClassMapping(SpecificAdapterStreamDescription);
 
-    tsonld.addClassMapping(FreeTextStaticProperty);
+
     tsonld.addClassMapping(AnyStaticProperty);
     tsonld.addClassMapping(Option);
 
@@ -61,10 +62,13 @@ export class DataMarketplaceService {
     tsonld.addClassMapping(FormatDescription);
 
     tsonld.addClassMapping(DataStreamDescription);
+    tsonld.addClassMapping(DataSetDescription);
     tsonld.addClassMapping(EventSchema);
     tsonld.addClassMapping(EventPropertyPrimitive);
     tsonld.addClassMapping(EventPropertyNested);
     tsonld.addClassMapping(EventPropertyList);
+
+    tsonld.addClassMapping(FreeTextStaticProperty);
 
     tsonld.addClassMapping(RenameRuleDescription);
     tsonld.addClassMapping(DeleteRuleDescription);
