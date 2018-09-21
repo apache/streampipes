@@ -77,7 +77,7 @@ public class HttpStreamProtocol extends PullProtocoll {
 
     @Override
     public ProtocolDescription declareModel() {
-        ProtocolDescription description = new ProtocolDescription(ID, "HTTP (Stream)", "This is the " +
+        ProtocolDescription description = new ProtocolDescription(ID, "HTTP Stream", "This is the " +
                 "description for the http stream protocol");
 
         FreeTextStaticProperty urlProperty = new FreeTextStaticProperty(URL_PROPERTY, "URL", "This property " +

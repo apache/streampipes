@@ -58,7 +58,7 @@ public class HttpProtocol extends Protocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        ProtocolDescription pd = new ProtocolDescription(ID,"HTTP (Set)","This is the " +
+        ProtocolDescription pd = new ProtocolDescription(ID,"HTTP Set","This is the " +
                 "description for the http protocol");
         FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("url", "url",
                 "This property defines the URL for the http request.");
