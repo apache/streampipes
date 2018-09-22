@@ -46,7 +46,8 @@
                                      [(selectedFormat)]="adapter.format"
                                      [allFormats]="allFormats"></app-format-form>
 
-                    <div fxFlex="66" *ngIf="adapter.format" class="wrapper selectedItem">
+                    <div fxFlex="66" *ngIf="adapter.format" class="configuration-box">
+                        <h3>Configure {{adapter.format.label}} format</h3>
                         <app-select-static-properties [staticProperties]="adapter.format.config"
                                                       class="fullWidth"></app-select-static-properties>
                     </div>

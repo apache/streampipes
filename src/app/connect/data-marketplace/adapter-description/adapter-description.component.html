@@ -11,13 +11,13 @@
         <div fxLayoutAlign="start center" fxLayout="column" class="icon">
             <img *ngIf="isSpecificDescription()" [src]="adapter.iconUrl" class="iconImg"/>
             <img *ngIf="isGenericDescription() && adapter.label.includes('Kafka')"
-                 src="https://pbs.twimg.com/profile_images/781633389577195521/kazUJooF_400x400.jpg"
+                 src="assets/img/connect/kafka.jpg"
                  class="iconImg"/>
             <img *ngIf="isGenericDescription() && adapter.label.includes('MQTT')"
-                 src="https://www.penninkhof.com/wp-content/uploads/2015/03/MQTT.png"
+                 src="assets/img/connect/mqtt.png"
                  class="iconImg"/>
             <img *ngIf="isGenericDescription() && adapter.label.includes('HTTP')"
-                 src="https://cdn0.iconfinder.com/data/icons/seo-smart-pack/128/grey_new_seo2-04-512.png"
+                 src="assets/img/connect/rest.png"
                  class="iconImg"/>
         </div>
         <h3>{{adapter.label}}</h3>

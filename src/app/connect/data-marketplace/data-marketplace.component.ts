@@ -37,12 +37,6 @@ export class DataMarketplaceComponent implements OnInit {
         this.selectedIndex = index;
     }
 
-    // selectAdapter(adapter: AdapterDescription): void {
-    //   this.selectAdapterEmitter.emit(adapter);
-    //   this.ShepherdService.trigger("select-adapter");
-    //
-    // }
-
     deleteAdapter(adapter: AdapterDescription): void {
         this.dataMarketplaceService.deleteAdapter(adapter).subscribe(res => {
             this.dataMarketplaceService.getAdapters().subscribe(adapters => {
