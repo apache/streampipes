@@ -34,6 +34,7 @@ import { DeleteRuleDescription } from './model/connect/rules/DeleteRuleDescripti
 import { AddNestedRuleDescription } from './model/connect/rules/AddNestedRuleDescription';
 import { MoveRuleDescription } from './model/connect/rules/MoveRuleDesctiption';
 import { TransformationRuleDescription } from './model/connect/rules/TransformationRuleDescription';
+import {StatusMessage} from "./model/message/StatusMessage";
 
 @Injectable()
 export class RestService {
@@ -68,7 +69,7 @@ export class RestService {
     return tsonld;
   }
 
-  addAdapter(adapter: AdapterDescription) {
+  addAdapter(adapter: AdapterDescription): Observable<StatusMessage> {
     const tsonld = new TsonLd();
     tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
     tsonld.addContext('spi', 'urn:streampipes.org:spi:');
@@ -77,21 +78,30 @@ export class RestService {
     adapter.userName = this.authStatusService.email;
     var self = this;
 
-    tsonld.toflattenJsonLd(adapter).subscribe(res => {
-      const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/ld+json',
-        }),
-      };
-      console.log(JSON.stringify(res));
-      this.http
-        .post(
-          '/streampipes-connect/api/v1/' + self.authStatusService.email + '/master/adapters',
-          res,
-          httpOptions
-        )
-        .subscribe();
-    });
+
+      return Observable.fromPromise(
+          new Promise(function(resolve, reject) {
+              tsonld.toflattenJsonLd(adapter).subscribe(res => {
+                  const httpOptions = {
+                      headers: new HttpHeaders({
+                          'Content-Type': 'application/ld+json',
+                      }),
+                  };
+                  console.log(JSON.stringify(res));
+                  self.http
+                      .post(
+                          '/streampipes-connect/api/v1/' + self.authStatusService.email + '/master/adapters',
+                          res,
+                          httpOptions
+                      )
+                      .map(response => {
+                          var statusMessage = response as StatusMessage;
+                          resolve(statusMessage);
+                      })
+                      .subscribe();
+              });
+          })
+      );
   }
 
   getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {

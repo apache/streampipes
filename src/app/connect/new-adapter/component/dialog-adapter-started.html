@@ -10,7 +10,22 @@
     </div>
 
     <div class="md-dialog-content">
-        The Adapter was created successfully and can now be installed.
+        <div fxLayout="column" *ngIf="!adapterInstalled">
+            <div fxLayoutAlign="center" >
+                <mat-spinner fxLayoutAlign="center" style="margin: 10px 0 5px 0" >Loading</mat-spinner>
+            </div>
+            <div fxLayoutAlign="center">
+                <h3>Please wait while your new adapter is being generated!</h3>
+            </div>
+        </div>
+        <div fxLayout="column" *ngIf="adapterInstalled">
+            <div *ngIf="adapterStatus.success">
+                The Adapter was created successfully. You can now switch to the pipeline editor to create a pipeline based on your new element!
+            </div>
+            <div *ngIf="!adapterStatus.success">
+                Something went wrong during the adapter installation.
+            </div>
+        </div>
     </div>
 
     <div class="md-dialog-actions">

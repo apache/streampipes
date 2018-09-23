@@ -1,6 +1,8 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {ShepherdService} from '../../../services/tour/shepherd.service';
+import {RestService} from "../../rest.service";
+import {StatusMessage} from "../../model/message/StatusMessage";
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -9,10 +11,25 @@ import {ShepherdService} from '../../../services/tour/shepherd.service';
 })
 export class AdapterStartedDialog {
 
+    private adapterInstalled: boolean = false;
+    private adapterStatus: StatusMessage;
+
     constructor(
         public dialogRef: MatDialogRef<AdapterStartedDialog>,
+        private restService: RestService,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private ShepherdService: ShepherdService) { }
+
+    ngOnInit() {
+        this.startAdapter();
+    }
+
+    startAdapter() {
+        this.restService.addAdapter(this.data.adapter).subscribe(x => {
+            this.adapterInstalled = true;
+            this.adapterStatus = x;
+        });
+    }
 
     onCloseConfirm() {
         this.dialogRef.close('Confirm');
