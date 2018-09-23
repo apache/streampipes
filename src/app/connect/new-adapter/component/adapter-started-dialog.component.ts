@@ -5,6 +5,7 @@ import {ShepherdService} from '../../../services/tour/shepherd.service';
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
     templateUrl: './dialog-adapter-started.html',
+    styleUrls: ['./adapter-started-dialog.component.css'],
 })
 export class AdapterStartedDialog {
 

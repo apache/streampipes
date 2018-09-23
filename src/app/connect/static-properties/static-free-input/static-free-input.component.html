@@ -1,14 +1,18 @@
-<div id="formWrapper">
+<div id="formWrapper" fxFlex="90" fxLayout="row">
+    <div fxFlex="20">
     <p>{{staticProperty.label}}: </p>
-    <form [formGroup]="freeTextForm">
-        <mat-form-field>
-            <input class="example-full-width" id="{{ 'input-' + staticProperty.label }}" matInput [placeholder]="staticProperty.label" [(ngModel)]="staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value"
-                formControlName="freeStaticText" (ngModelChange)="valueChange(staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value)"
-                required>
+    </div>
+    <div fxFlex fxLayout="row">
+        <form fxFlex [formGroup]="freeTextForm">
+            <mat-form-field fxFlex>
+                <input fxFlex id="{{ 'input-' + staticProperty.label }}" matInput [placeholder]="staticProperty.label" [(ngModel)]="staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value"
+                    formControlName="freeStaticText" (ngModelChange)="valueChange(staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value)"
+                    required>
 
-            <mat-error *ngIf="!hasInput">
-                {{errorMessage}}
-            </mat-error>
-        </mat-form-field>
-    </form>
+                <mat-error *ngIf="!hasInput">
+                    {{errorMessage}}
+                </mat-error>
+            </mat-form-field>
+        </form>
+    </div>
 </div>

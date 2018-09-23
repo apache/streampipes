@@ -58,18 +58,19 @@ export class NewAdapterComponent implements OnInit {
 
   public startAdapter() {
     let dialogRef = this.dialog.open(AdapterStartedDialog, {
-      // width: '250px',
+       width: '70%',
       // data: { name: this.name, animal: this.animal }
+        panelClass: 'sp-no-padding-dialog'
     });
 
 
     this.ShepherdService.trigger("button-startAdapter");
-
     this.restService.addAdapter(this.adapter);
 
     dialogRef.afterClosed().subscribe(result => {
         this.removeSelectionEmitter.emit();
     });
+
   }
 
   removeSelection() {

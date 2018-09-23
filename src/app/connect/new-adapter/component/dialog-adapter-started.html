@@ -1,10 +1,21 @@
-<div>
-    <h4 md-dialog-title>The Adapter was created successfully and can now be installed.</h4>
-
-    <div fxLayoutAlign="end">
-
-        <mat-dialog-actions>
-            <button id="confirm_adapter_started_button" color="accent" mat-button (click)="onCloseConfirm()">DONE</button>
-        </mat-dialog-actions>
+<div class="md-dialog">
+    <div class="md-toolbar">
+        <div class="md-toolbar-tools">
+            <h2>Adapter Generation</h2>
+            <span fxFlex></span>
+            <button mat-icon-button (click)="onCloseConfirm()">
+                <i class="material-icons">close</i>
+            </button>
+        </div>
     </div>
+
+    <div class="md-dialog-content">
+        The Adapter was created successfully and can now be installed.
+    </div>
+
+    <div class="md-dialog-actions">
+        <button id="confirm_adapter_started_button" class="mat-basic" mat-raised-button (click)="onCloseConfirm()">Close
+        </button>
+    </div>
+
 </div>
