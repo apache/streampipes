@@ -40,7 +40,8 @@ public class AdapterMasterManagement {
 
     private static final Logger logger = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
-    public void addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl adapterStorage, String username)
+    public String addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl
+            adapterStorage, String username)
             throws AdapterException {
 
         // Add EventGrounding to AdapterDescription
@@ -81,6 +82,7 @@ public class AdapterMasterManagement {
 
         installDataSource(requestUrl, elementUrl);
 
+        return new SourcesManagement().getAdapterDataSource(adapterCouchdbId).getElementId();
     }
 
     public boolean installDataSource(String requestUrl, String elementIdUrl) throws AdapterException {
