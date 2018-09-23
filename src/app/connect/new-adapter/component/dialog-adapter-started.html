@@ -20,7 +20,35 @@
         </div>
         <div fxLayout="column" *ngIf="adapterInstalled">
             <div *ngIf="adapterStatus.success">
-                The Adapter was created successfully. You can now switch to the pipeline editor to create a pipeline based on your new element!
+                The adapter was created successfully. You can now switch to the pipeline editor to create a pipeline based on your new element!
+
+                <div *ngIf="runtimeData === undefined">
+                    <div fxLayout="column">
+                        <div fxLayoutAlign="center" >
+                            <mat-spinner [diameter]="40" fxLayoutAlign="center" style="margin: 10px 0 5px 0" >Loading</mat-spinner>
+                        </div>
+                        <div fxLayoutAlign="center">
+                            <h3>Gathering data for live preview...</h3>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="runtimeData !== undefined">
+                    <p>Here is a preview of your data:</p>
+                    <table class="dataTable row-border hover">
+                        <thead>
+                        <tr>
+                            <th>Runtime Name</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let property of streamDescription.eventSchema.eventProperties">
+                            <td>{{property.properties.runtimeName}}</td>
+                            <td>{{runtimeData[property.properties.runtimeName]}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div *ngIf="!adapterStatus.success">
                 Something went wrong during the adapter installation.

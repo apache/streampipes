@@ -142,6 +142,19 @@ export class RestService {
     );
   }
 
+  getSourceDetails(sourceElementId): Observable<any> {
+      return this.http
+          .get(this.makeUserDependentBaseUrl() +"/sources/" +encodeURIComponent(sourceElementId));
+  }
+
+  getRuntimeInfo(sourceDescription): Observable<any> {
+      return this.http.post(this.makeUserDependentBaseUrl() +"/pipeline-element/runtime", sourceDescription);
+  }
+
+  makeUserDependentBaseUrl() {
+      return this.host  +'/api/v2/users/' + this.authStatusService.email;
+  }
+
   constructor(
     private http: HttpClient,
     private authStatusService: AuthStatusService
