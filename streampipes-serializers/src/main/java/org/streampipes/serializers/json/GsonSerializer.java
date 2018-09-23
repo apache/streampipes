@@ -56,22 +56,8 @@ public class GsonSerializer {
     return getAdapterGsonBuilder().create();
   }
 
-  // TODO reuse getGsonBuilder
   public static Gson getGson() {
-    GsonBuilder builder = new GsonBuilder();
-    builder.registerTypeAdapter(EventProperty.class, new JsonLdSerializer<EventProperty>());
-    builder.registerTypeAdapter(StaticProperty.class, new JsonLdSerializer<StaticProperty>());
-    builder.registerTypeAdapter(OutputStrategy.class, new JsonLdSerializer<OutputStrategy>());
-    builder.registerTypeAdapter(TransportProtocol.class, new JsonLdSerializer<TransportProtocol>());
-    builder.registerTypeAdapter(ValueSpecification.class, new JsonLdSerializer<ValueSpecification>());
-    builder.registerTypeAdapter(TopicDefinition.class, new JsonLdSerializer<TopicDefinition>());
-    builder.registerTypeAdapter(TransformationRuleDescription.class, new JsonLdSerializer<TransformationRuleDescription>());
-    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
-            .registerSubtype(SpDataSet.class, "org.streampipes.model.SpDataSet")
-            .registerSubtype(SpDataStream.class, "org.streampipes.model.SpDataStream"));
-
-    builder.setPrettyPrinting();
-    return builder.create();
+    return getGsonBuilder().create();
   }
 
   public static GsonBuilder getGsonBuilder() {
