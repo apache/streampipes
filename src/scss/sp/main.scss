@@ -1152,6 +1152,43 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 
 }
 
+.editor-pe-info {
+    position: absolute;
+    left: 0%;
+    top: 50%;
+    width: 100%;
+    padding: 70px 10px 10px;
+    font-size: smaller;
+    text-align: center;
+    box-shadow: 0 0 2px #555;
+    -webkit-animation: slidein 0.5s;
+}
+
+@keyframes slidein{
+    0%{top:0;border-top-left-radius:50%;border-top-right-radius:50%;}
+    100%{top:50%;border-top-left-radius:0;border-top-right-radius:0;}
+}
+
+.pe-info-action {
+    background: $sp-color-sink;
+    color: white;
+}
+
+.pe-info-sepa {
+    background: $sp-color-processor;
+    color: white;
+}
+
+.pe-info-stream {
+    background: $sp-color-stream;
+    color: #343434;
+}
+
+.pe-info-set {
+    background: $sp-color-set;
+    color: white;
+}
+
 .help-button {
     cursor: pointer;
     position: absolute;

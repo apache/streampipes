@@ -56,6 +56,7 @@
                 </md-tooltip></md-icon>
     </md-button>
 </span>
+    <div class="editor-pe-info" ng-class="'pe-info-' + ctrl.pipelineElement.type">{{ctrl.pipelineElement.payload.name}}</div>
 </div>
 <pipeline-element-recommendation raw-pipeline-model="ctrl.rawPipelineModel" pipeline-element-dom-id="ctrl.pipelineElement.payload.DOM" recommended-elements="ctrl.recommendedElements" recommendations-shown="ctrl.recommendationsShown"></pipeline-element-recommendation>
 
