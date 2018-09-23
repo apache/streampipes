@@ -212,7 +212,7 @@ export class AppCtrl {
 
             var client = Stomp.client(brokerUrl + inputTopic);
 
-            var onConnect = function (frame) {
+            var onConnect = (frame) => {
 
                 client.subscribe(inputTopic, message => {
                     this.notificationCount++;

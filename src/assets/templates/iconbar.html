@@ -11,7 +11,7 @@
     </md-list-item>
     <md-list-item class="md-1-line" role="link"
                   ng-class="appCtrl.getListItemClassName(item.link)">
-        <notification-icon count='notificationCount'>
+        <notification-icon count='appCtrl.notificationCount'>
             <md-button class="md-icon-button button-margin-iconbar" ng-click="appCtrl.go('streampipes.notifications')">
                 <md-icon md-svg-icon="communication:ic_chat_24px" aria-label="Notifications"
                          ng-class="appCtrl.getIconClassName(item.link)"></md-icon>
