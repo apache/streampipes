@@ -28,8 +28,10 @@ export class NotificationsCtrl {
     };
 
     getUnreadNotifications() {
-        angular.forEach(this.notifications, function (value) {
-            if (!value.read) this.unreadNotifications.push(value);
+        angular.forEach(this.notifications, (value) => {
+            if (!value.read) {
+                this.unreadNotifications.push(value);
+            }
         });
     }
 
