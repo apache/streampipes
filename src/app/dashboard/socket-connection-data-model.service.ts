@@ -27,11 +27,10 @@ export class SocketConnectionDataModel extends WidgetDataModel {
 		this.$http.get('/dashboard/_all_docs?include_docs=true')
 			.success(function(data) {
 
-				var element = _.find(data.rows, function(elem) {
+				var element = _.find(data.rows, elem => {
 					return elem.doc.visualisation._id == self.visualisationId;
 				});
-
-				//var brokerUrl = 'ws://' + element.doc.visualisation['broker'];
+				
 				var brokerUrl = element.doc.visualisation['broker'];
 				var inputTopic = '/topic/' + element.doc.visualisation['pipelineId'];
 
@@ -55,9 +54,11 @@ export class SocketConnectionDataModel extends WidgetDataModel {
 	};
 
 	destroy() {
-		this.WidgetDataModel.prototype.destroy.call(this);
+		if (this.WidgetDataModel) {
+			this.WidgetDataModel.prototype.destroy.call(this);
+        }
 
-		this.client.disconnect(function() {
+		this.client.disconnect(() => {
 			console.log("Disconnected websocket connection");
 		});
 	};
@@ -65,7 +66,7 @@ export class SocketConnectionDataModel extends WidgetDataModel {
 
 	updateScope(data) {
 		this.widgetScope.widgetData = data;
-		this.widgetScope.$apply(function () {
+		this.widgetScope.$apply(() => {
 		});
 	}
 

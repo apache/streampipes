@@ -96,11 +96,11 @@ angular.module('ui.dashboard')
         scope.addWidget = function (widgetToInstantiate, doNotSave) {
 
           if (typeof widgetToInstantiate === 'string') {
-            widgetToInstantiate = {
-              name: widgetToInstantiate
-            };
+              widgetToInstantiate = {
+                  name: widgetToInstantiate
+              };
           }
-
+          scope.widgetDefs = new WidgetDefCollection(scope.options.widgetDefinitions);
           var defaultWidgetDefinition = scope.widgetDefs.getByName(widgetToInstantiate.name);
           if (!defaultWidgetDefinition) {
             throw 'Widget ' + widgetToInstantiate.name + ' is not found.';
@@ -129,8 +129,10 @@ angular.module('ui.dashboard')
          * @param  {Object} widget The widget instance object (not a definition object)
          */
         scope.removeWidget = function (widget) {
+          console.log("remove");
           scope.widgets.splice(_.indexOf(scope.widgets, widget), 1);
           scope.saveDashboard();
+          scope.widgetDefs = new WidgetDefCollection(scope.options.widgetDefinitions);
         };
 
         /**
@@ -739,6 +741,12 @@ angular.module('ui.dashboard')
             if (layout) {
               layout.dashboard.addWidget.apply(layout.dashboard, arguments);
             }
+          };
+          scope.options.removeWidget = function() {
+              var layout = layoutStorage.getActiveLayout();
+              if (layout) {
+                  layout.dashboard.removeWidget.apply(layout.dashboard, arguments);
+              }
           };
           scope.options.loadWidgets = function() {
             var layout = layoutStorage.getActiveLayout();

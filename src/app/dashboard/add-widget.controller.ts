@@ -143,7 +143,8 @@ export class AddWidgetCtrl {
 
             widget['visualisationId'] = this.selectedVisualisation._id;
             this.WidgetInstaces.add(widget);
-            this.rerenderDashboard(this.dashboard);
+            //this.rerenderDashboard(this.dashboard);
+            this.dashboard.addWidget(widget);
             this.$mdDialog.cancel();
             this.ShepherdService.trigger("save-viz");
 

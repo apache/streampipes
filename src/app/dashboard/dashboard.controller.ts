@@ -68,9 +68,10 @@ export class DashboardCtrl {
     };
 
     removeSpWidget(widget) {
+        var self = this;
         this.WidgetInstances.get(widget.attrs['widget-id']).then(w => {
             this.WidgetInstances.remove(w).then(res => {
-                this.rerenderDashboard(this);
+                this.layoutOptions.removeWidget(widget);
             });
         });
     };
@@ -126,6 +127,13 @@ export class DashboardCtrl {
 
     startDashboardTour() {
         this.ShepherdService.startDashboardTour();
+    }
+
+    addWidget(widget) {
+        setTimeout(() => {
+            this.layoutOptions.widgetDefinitions.push(this.WidgetInstances.getWidgetDashboardDefinition(widget));
+            this.layoutOptions.addWidget(this.WidgetInstances.getWidgetDashboardDefinition(widget));
+        }, 100);
     }
 }
 
