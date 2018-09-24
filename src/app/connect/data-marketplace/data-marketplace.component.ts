@@ -28,6 +28,10 @@ export class DataMarketplaceComponent implements OnInit {
                     this.adapterDescriptions = adapterDescriptions;
                 });
             });
+        this.getAdapters();
+    }
+
+    getAdapters(): void {
         this.dataMarketplaceService.getAdapters().subscribe(adapters => {
             this.adapters = adapters;
         });
@@ -35,14 +39,6 @@ export class DataMarketplaceComponent implements OnInit {
 
     selectedIndexChange(index: number) {
         this.selectedIndex = index;
-    }
-
-    deleteAdapter(adapter: AdapterDescription): void {
-        this.dataMarketplaceService.deleteAdapter(adapter).subscribe(res => {
-            this.dataMarketplaceService.getAdapters().subscribe(adapters => {
-                this.adapters = adapters;
-            });
-        });
     }
 
     startAdapterTutorial() {

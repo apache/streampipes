@@ -1,6 +1,7 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { AdapterDescription } from '../../model/connect/AdapterDescription';
 import { ConnectService } from '../../connect.service';
+import {DataMarketplaceService} from "../data-marketplace.service";
 
 @Component({
   selector: 'sp-adapter-description',
@@ -8,14 +9,17 @@ import { ConnectService } from '../../connect.service';
   styleUrls: ['./adapter-description.component.css'],
 })
 export class AdapterDescriptionComponent {
-  constructor(private connectService: ConnectService) {}
 
   @Input()
   adapter: AdapterDescription;
+
   @Output()
-  deleteAdapterEmitter: EventEmitter<AdapterDescription> = new EventEmitter<
-    AdapterDescription
-  >();
+  updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
+
+  adapterToDelete: string;
+  deleting: boolean = false;
+
+  constructor(private connectService: ConnectService, private dataMarketplaceService: DataMarketplaceService) {}
 
   isDataStreamDescription(): boolean {
     return this.connectService.isDataStreamDescription(this.adapter);
@@ -34,7 +38,13 @@ export class AdapterDescriptionComponent {
   }
 
   deleteAdapter(adapter: AdapterDescription): void {
-    this.deleteAdapterEmitter.emit(adapter);
+  this.deleting = true;
+      this.adapterToDelete = adapter.couchDbId;
+      this.dataMarketplaceService.deleteAdapter(adapter).subscribe(res => {
+          this.adapterToDelete = undefined;
+          this.updateAdapterEmitter.emit();
+          this.deleting = false;
+      });
   }
 
   getClassName() {
@@ -47,5 +57,9 @@ export class AdapterDescriptionComponent {
     }
 
     return className;
+  }
+
+  deleteInProgress(adapterCouchDbId) {
+    return this.deleting && (adapterCouchDbId === this.adapterToDelete);
   }
 }

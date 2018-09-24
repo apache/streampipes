@@ -27,10 +27,11 @@
             <p>{{adapter.description}}</p>
         </div>
         <div fxFlex="30" fxLayout="row" fxLayoutAlign="end end" *ngIf="adapter.couchDbId" class="delete">
-            <button color="primary" mat-fab (click)="deleteAdapter(adapter)">
-                <i class="material-icons">
+            <button color="primary" mat-fab (click)="deleteAdapter(adapter)" [disabled]="deleteInProgress(adapter.couchDbId)">
+                <i class="material-icons" *ngIf="!deleteInProgress(adapter.couchDbId)">
                     delete
                 </i>
+                <mat-spinner *ngIf="deleteInProgress(adapter.couchDbId)" [diameter]="20" fxLayoutAlign="center"></mat-spinner>
             </button>
         </div>
         <div fxFlex="30" *ngIf="!adapter.couchDbId" fxLayout="row" fxLayoutAlign="end end">

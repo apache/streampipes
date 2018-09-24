@@ -25,8 +25,13 @@ import {ConnectService} from "../connect.service";
 export class NewAdapterComponent implements OnInit {
   @Input()
   adapter: AdapterDescription;
+
   @Output()
   removeSelectionEmitter: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output()
+  updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
+
   allFormats: FormatDescription[] = [];
   isLinearStepper: boolean = true;
 
@@ -66,6 +71,7 @@ export class NewAdapterComponent implements OnInit {
     this.ShepherdService.trigger("button-startAdapter");
 
     dialogRef.afterClosed().subscribe(result => {
+        this.updateAdapterEmitter.emit();
         this.removeSelectionEmitter.emit();
     });
 
