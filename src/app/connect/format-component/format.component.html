@@ -1,3 +1,3 @@
-<div id="{{format.label}}" *ngIf="!format.edit || !hasConfig" class="format-box" (click)="formatEditable()" [ngClass]="{selectedItem: isSelected()}">
+<div id="{{format.label}}" *ngIf="!format.edit || !hasConfig" class="format-box" (click)="formatEditable()" [ngClass]="{selectedItem: isSelected()}" fxFlex="100" fxLayout="column">
     <div class="format-label"> {{format.label}} </div>
 </div>

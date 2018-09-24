@@ -26,8 +26,15 @@
 
         <mat-step>
             <ng-template matStepLabel>Settings</ng-template>
-            <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"></app-static-property>
-            <app-protocol [protocol]="adapter.protocol" *ngIf="adapter.id.includes('generic')"></app-protocol>
+            <div class="assemblyOptions sp-blue-bg">
+                <h4 *ngIf="!adapter.id.includes('generic')">Basic settings</h4>
+                <h4 *ngIf="adapter.id.includes('generic')">Protocol settings</h4>
+            </div>
+            <div class="sp-blue-border padding">
+                <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"></app-static-property>
+                <app-protocol [protocol]="adapter.protocol" *ngIf="adapter.id.includes('generic')"></app-protocol>
+            </div>
+
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                 <button id="specific-settings-next-button" (click)="clickSpecificSettingsNextButton()" color="primary"
@@ -40,18 +47,25 @@
             <form>
                 <ng-template matStepLabel>Select Format</ng-template>
 
-
-                <div fxLayout="row">
-                    <app-format-form fxFlex="33" (selectedFormatEmitter)="formatSelected($event)" fxLayout="column"
-                                     [(selectedFormat)]="adapter.format"
-                                     [allFormats]="allFormats"></app-format-form>
-
-                    <div fxFlex="66" *ngIf="adapter.format" class="configuration-box">
-                        <h3>Configure {{adapter.format.label}} format</h3>
-                        <app-select-static-properties [staticProperties]="adapter.format.config"
-                                                      class="fullWidth"></app-select-static-properties>
+                    <div class="assemblyOptions sp-blue-bg">
+                        <h4>Select format</h4>
                     </div>
-                </div>
+                    <div class="sp-blue-border padding">
+                        <app-format-form fxFlex="100" (selectedFormatEmitter)="formatSelected($event)"
+                                         [(selectedFormat)]="adapter.format"
+                                         [allFormats]="allFormats"></app-format-form>
+                    </div>
+
+                    <div class="assemblyOptions sp-blue-bg">
+                        <h4>Configure format</h4>
+                    </div>
+                    <div class="sp-blue-border padding">
+                        <div fxFlex="100" *ngIf="adapter.format">
+                            <app-select-static-properties [staticProperties]="adapter.format.config"
+                                                          class="fullWidth"></app-select-static-properties>
+                            <h5 *ngIf="adapter.format.config.length === 0" style="text-align:center;">(no further configuration needed)</h5>
+                        </div>
+                    </div>
 
                 <div fxLayoutAlign="end">
                     <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
@@ -67,8 +81,13 @@
 
         <mat-step>
             <ng-template matStepLabel>Define Event Schema</ng-template>
+            <div class="assemblyOptions sp-blue-bg">
+                <h4>Edit schema</h4>
+            </div>
+            <div class="sp-blue-border padding">
             <app-event-schema #eschema fxLayout="column" fxFlex="100" [(adapterDescription)]="adapter"
                               [(eventSchema)]="eventSchema" [(oldEventSchema)]="oldEventSchema"></app-event-schema>
+            </div>
 
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
@@ -83,10 +102,15 @@
 
 
             <ng-template matStepLabel>Start Adapter</ng-template>
-            <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
-                <mat-form-field>
-                    <input matInput id="input-AdapterName" placeholder="Adapter Name" [(ngModel)]="adapter.label">
-                </mat-form-field>
+            <div class="assemblyOptions sp-blue-bg">
+                <h4>Adapter settings</h4>
+            </div>
+            <div class="sp-blue-border padding">
+                <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
+                    <mat-form-field>
+                        <input matInput id="input-AdapterName" placeholder="Adapter Name" [(ngModel)]="adapter.label">
+                    </mat-form-field>
+                </div>
             </div>
 
             <div fxLayoutAlign="end">

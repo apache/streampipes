@@ -1,5 +1,9 @@
 @import '../_variables';
 
+.mat-button.mat-primary, .mat-icon-button.mat-primary, .mat-stroked-button.mat-primary {
+  color:$sp-color-accent;
+}
+
 .mat-button, .mat-raised-button, .mat-flat-button {
   display: inline-block;
   vertical-align: middle;

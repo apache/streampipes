@@ -30,7 +30,7 @@ export class SocketConnectionDataModel extends WidgetDataModel {
 				var element = _.find(data.rows, elem => {
 					return elem.doc.visualisation._id == self.visualisationId;
 				});
-				
+
 				var brokerUrl = element.doc.visualisation['broker'];
 				var inputTopic = '/topic/' + element.doc.visualisation['pipelineId'];
 

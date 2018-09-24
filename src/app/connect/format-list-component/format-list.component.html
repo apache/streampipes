@@ -1,7 +1,9 @@
-<div *ngFor="let format of allFormats" class="fullWidth">
+<div fxLayout="row wrap" fxLayoutAlign="start stretch">
+    <div fxFlex="33" *ngFor="let format of allFormats">
         <app-format [format]="format" (validateEmitter)="validateAll($event)"
         (editableEmitter)="formatEditable($event)"
         [(selectedFormat)]="selectedFormat" 
-        (selectedFormatEmitter)="formatSelected($event)" class="fullWidth">
+        (selectedFormatEmitter)="formatSelected($event)">
         </app-format>
     </div>
+</div>
