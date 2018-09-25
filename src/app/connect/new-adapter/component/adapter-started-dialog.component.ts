@@ -43,7 +43,10 @@ export class AdapterStartedDialog {
 
     getLatestRuntimeInfo() {
         this.restService.getRuntimeInfo(this.streamDescription).subscribe(data => {
-            this.runtimeData = data;
+            if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
+                this.runtimeData = data;
+            }
+            
             if (this.pollingActive) {
                 setTimeout(() => {
                     this.getLatestRuntimeInfo();
