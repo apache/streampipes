@@ -20,28 +20,15 @@ package org.streampipes.connect.adapter.generic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.AdapterRegistry;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
-import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
-import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
-import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.model.connect.adapter.*;
-import org.streampipes.model.connect.guess.GuessSchema;
-import org.streampipes.connect.adapter.generic.format.Format;
-import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
+import org.streampipes.model.connect.adapter.GenericAdapterDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class GenericDataSetAdapter extends GenericAdapter {
+public class GenericDataSetAdapter extends GenericAdapter<GenericAdapterSetDescription> {
 
     public static final String ID = GenericAdapterSetDescription.ID;
 
     private Protocol protocol;
-
-    private GenericAdapterSetDescription adapterDescription;
 
     Logger logger = LoggerFactory.getLogger(Adapter.class);
 
@@ -51,28 +38,24 @@ public class GenericDataSetAdapter extends GenericAdapter {
 
 
     public GenericDataSetAdapter(GenericAdapterSetDescription adapterDescription, boolean debug) {
-        super(debug);
-        this.adapterDescription = adapterDescription;
+        super(adapterDescription, debug);
     }
 
     public GenericDataSetAdapter(GenericAdapterSetDescription adapterDescription) {
-        super();
-        this.adapterDescription = adapterDescription;
+        super(adapterDescription);
     }
 
-
-
     @Override
-    public AdapterDescription declareModel() {
-        AdapterDescription adapterDescription = new GenericAdapterSetDescription();
+    public GenericAdapterSetDescription declareModel() {
+        GenericAdapterSetDescription adapterDescription = new GenericAdapterSetDescription();
         adapterDescription.setAdapterId(GenericAdapterSetDescription.ID);
         adapterDescription.setUri(GenericAdapterSetDescription.ID);
         return adapterDescription;
     }
 
     @Override
-    public Adapter getInstance(AdapterDescription adapterDescription) {
-        return  new GenericDataSetAdapter((GenericAdapterSetDescription) adapterDescription);
+    public Adapter getInstance(GenericAdapterSetDescription adapterDescription) {
+        return  new GenericDataSetAdapter(adapterDescription);
     }
 
     @Override

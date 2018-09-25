@@ -24,7 +24,7 @@ import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 
-public abstract class Adapter {
+public abstract class Adapter<T extends AdapterDescription> {
     Logger logger = LoggerFactory.getLogger(Adapter.class);
 
     @Deprecated
@@ -33,9 +33,18 @@ public abstract class Adapter {
     @Deprecated
     protected String topic;
 
-
     private boolean debug;
 
+    protected T adapterDescription;
+
+    public Adapter(T adapterDescription, boolean debug) {
+        this.adapterDescription = adapterDescription;
+        this.debug = debug;
+    }
+
+    public Adapter(T adapterDescription) {
+        this(adapterDescription, false);
+    }
 
     public Adapter(boolean debug) {
         this.debug = debug;
@@ -57,16 +66,16 @@ public abstract class Adapter {
         this(kafkaUrl, topic, false);
     }
 
-    public abstract AdapterDescription declareModel();
+    public abstract T declareModel();
 
     // Decide which adapter to call
     public abstract void startAdapter() throws AdapterException;
 
     public abstract void stopAdapter() throws AdapterException;
 
-    public abstract Adapter getInstance(AdapterDescription adapterDescription);
+    public abstract Adapter getInstance(T adapterDescription);
 
-    public abstract GuessSchema getSchema(AdapterDescription adapterDescription) throws AdapterException;
+    public abstract GuessSchema getSchema(T adapterDescription) throws AdapterException;
 
     public abstract String getId();
 

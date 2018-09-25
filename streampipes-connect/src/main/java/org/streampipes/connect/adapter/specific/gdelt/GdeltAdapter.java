@@ -5,7 +5,6 @@ import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.specific.PullAdapter;
 import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
@@ -42,8 +41,8 @@ public class GdeltAdapter extends PullAdapter {
     }
 
     @Override
-    public AdapterDescription declareModel() {
-        AdapterDescription adapterDescription = new SpecificAdapterStreamDescription();
+    public SpecificAdapterStreamDescription declareModel() {
+        SpecificAdapterStreamDescription adapterDescription = new SpecificAdapterStreamDescription();
         adapterDescription.setAdapterId(ID);
         adapterDescription.setUri(ID);
         adapterDescription.setName("GDELT");
@@ -119,12 +118,12 @@ public class GdeltAdapter extends PullAdapter {
     }
 
     @Override
-    public Adapter getInstance(AdapterDescription adapterDescription) {
-        return new GdeltAdapter((SpecificAdapterStreamDescription) adapterDescription);
+    public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
+        return new GdeltAdapter(adapterDescription);
     }
 
     @Override
-    public GuessSchema getSchema(AdapterDescription adapterDescription) {
+    public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) {
         GuessSchema guessSchema = new GuessSchema();
         EventSchema eventSchema = new EventSchema();
 

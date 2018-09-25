@@ -51,8 +51,8 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
     }
 
     @Override
-    public AdapterDescription declareModel() {
-        AdapterDescription adapterDescription = new SpecificAdapterStreamDescription();
+    public SpecificAdapterStreamDescription declareModel() {
+        SpecificAdapterStreamDescription adapterDescription = new SpecificAdapterStreamDescription();
         adapterDescription.setAdapterId(ID);
         adapterDescription.setUri(ID);
         adapterDescription.setName("Twitter");
@@ -76,8 +76,8 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
     }
 
     @Override
-    public Adapter getInstance(AdapterDescription adapterDescription) {
-        return new TwitterAdapter((SpecificAdapterStreamDescription) adapterDescription);
+    public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
+        return new TwitterAdapter(adapterDescription);
     }
 
     public static void main(String... args) {
@@ -117,7 +117,7 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
     }
 
     @Override
-    public GuessSchema getSchema(AdapterDescription adapterDescription) {
+    public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) {
         //TODO not needed or return fixed schema
         GuessSchema guessSchema = new GuessSchema();
         EventPropertyPrimitive eventPropertyPrimitive = new EventPropertyPrimitive();

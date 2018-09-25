@@ -26,7 +26,6 @@ import org.streampipes.connect.adapter.specific.sensemap.model.SenseBox;
 import org.streampipes.connect.adapter.specific.sensemap.model.Sensor;
 import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
@@ -70,8 +69,8 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
     }
 
     @Override
-    public AdapterDescription declareModel() {
-        AdapterDescription adapterDescription = new SpecificAdapterStreamDescription();
+    public SpecificAdapterStreamDescription declareModel() {
+        SpecificAdapterStreamDescription adapterDescription = new SpecificAdapterStreamDescription();
         adapterDescription.setAdapterId(ID);
         adapterDescription.setUri(ID);
         adapterDescription.setName("OpenSenseMap");
@@ -90,12 +89,12 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
     }
 
     @Override
-    public Adapter getInstance(AdapterDescription adapterDescription) {
-        return new OpenSenseMapAdapter((SpecificAdapterStreamDescription) adapterDescription);
+    public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
+        return new OpenSenseMapAdapter(adapterDescription);
     }
 
     @Override
-    public GuessSchema getSchema(AdapterDescription adapterDescription) {
+    public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) {
         GuessSchema guessSchema = new GuessSchema();
 
         EventSchema eventSchema = new EventSchema();
