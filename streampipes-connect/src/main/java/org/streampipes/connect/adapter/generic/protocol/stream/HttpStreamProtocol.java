@@ -18,16 +18,15 @@ package org.streampipes.connect.adapter.generic.protocol.stream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.fluent.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
-import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
+import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 
@@ -36,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class HttpStreamProtocol extends PullProtocoll {
+public class HttpStreamProtocol extends PullProtocol {
 
     Logger logger = LoggerFactory.getLogger(HttpStreamProtocol.class);
 
@@ -91,6 +90,7 @@ public class HttpStreamProtocol extends PullProtocoll {
 
         description.setSourceType("STREAM");
         description.addConfig(urlProperty);
+        description.setIconUrl("rest.png");
         description.addConfig(intervalProperty);
         description.addConfig(accessToken);
 

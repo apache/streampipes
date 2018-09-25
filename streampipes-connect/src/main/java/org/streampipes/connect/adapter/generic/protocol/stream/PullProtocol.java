@@ -23,25 +23,23 @@ import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
-import org.streampipes.connect.adapter.specific.sensemap.OpenSenseMapAdapter;
-import org.streampipes.connect.exception.AdapterException;
 
 import java.io.InputStream;
 import java.util.concurrent.*;
 
-public abstract class PullProtocoll extends Protocol {
+public abstract class PullProtocol extends Protocol {
 
     private ScheduledExecutorService scheduler;
 
-    private Logger logger = LoggerFactory.getLogger(PullProtocoll.class);
+    private Logger logger = LoggerFactory.getLogger(PullProtocol.class);
 
     private long interval;
 
 
-    public PullProtocoll() {
+    public PullProtocol() {
     }
 
-    public PullProtocoll(Parser parser, Format format, long interval) {
+    public PullProtocol(Parser parser, Format format, long interval) {
         super(parser, format);
         this.interval = interval;
     }

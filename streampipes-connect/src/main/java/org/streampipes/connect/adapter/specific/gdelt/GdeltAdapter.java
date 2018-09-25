@@ -2,12 +2,7 @@ package org.streampipes.connect.adapter.specific.gdelt;
 
 import com.opencsv.CSVReader;
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
-import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
-import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
 import org.streampipes.connect.adapter.specific.PullAdapter;
-import org.streampipes.connect.adapter.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
@@ -15,8 +10,6 @@ import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.staticproperty.AnyStaticProperty;
-import org.streampipes.model.staticproperty.Option;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.streampipes.sdk.utils.Datatypes;
 
@@ -55,7 +48,7 @@ public class GdeltAdapter extends PullAdapter {
         adapterDescription.setUri(ID);
         adapterDescription.setName("GDELT");
         adapterDescription.setDescription("Global Database of Society");
-        adapterDescription.setIconUrl("https://lh3.googleusercontent.com/Q1PTxVzxr96yKEJyq3AV9ZviIxGjn_yz2PA7kz4CQAeQb4Iat49qrbrY3aE78M3G_iLb92Xf1IoFQcQCVp-X");
+        adapterDescription.setIconUrl("gdelt.png");
 
         return adapterDescription;
     }

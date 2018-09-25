@@ -76,7 +76,7 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
         adapterDescription.setUri(ID);
         adapterDescription.setName("OpenSenseMap");
         adapterDescription.setDescription("Environment Sensors");
-        adapterDescription.setIconUrl("https://raw.githubusercontent.com/sensebox/resources/master/images/openSenseMap_API_github.png");
+        adapterDescription.setIconUrl("openSenseMap.png");
 
         List<Option> options = new ArrayList<>();
         for (String s : SensorNames.ALL_SENSOR_LABELS) {

@@ -62,6 +62,7 @@ public class MqttProtocol extends BrokerProtocol {
             "This property defines the URL of the MQTT broker.");
 
     pd.setSourceType("STREAM");
+    pd.setIconUrl("mqtt.png");
 
     FreeTextStaticProperty topic = new FreeTextStaticProperty("topic", "Topic",
             "Topic in the broker");

@@ -88,6 +88,7 @@ public class NswTrafficCameraAdapter extends PullAdapter {
             "images produced by NSW Australia")
             .requiredTextParameter(Labels.from("api-key", "API Key", "The TfNSW " +
                     "API key"))
+            .iconUrl("nsw.png")
             .build();
   }
 

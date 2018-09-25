@@ -57,7 +57,7 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
         adapterDescription.setUri(ID);
         adapterDescription.setName("Twitter");
         adapterDescription.setDescription("Follow Hashtag");
-        adapterDescription.setIconUrl("https://upload.wikimedia.org/wikipedia/de/thumb/9/9f/Twitter_bird_logo_2012.svg/1200px-Twitter_bird_logo_2012.svg.png");
+        adapterDescription.setIconUrl("twitter.png");
         FreeTextStaticProperty accessToken = new FreeTextStaticProperty("access_token", "Access Token",
                 "Access Token for Twitter Rest API.");
         FreeTextStaticProperty accessTokenSecret = new FreeTextStaticProperty("access_token_secret", "Access Token Secret",
