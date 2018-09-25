@@ -25,6 +25,9 @@ export class AdapterDescription {
   @RdfProperty('sp:hasUri')
   public uri: string;
 
+  @RdfProperty('sp:iconUrl')
+  public iconUrl: string;
+
   @RdfProperty('sp:rules')
   public rules: TransformationRuleDescription[];
 

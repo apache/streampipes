@@ -167,11 +167,6 @@ export class AppCtrl {
                 this.activePage = "Info";
         }
 
-        getActivePage() {
-            return this.activePage;
-        }
-
-
         isActivePage(path) {
             return (this.$state.current.name == path);
         }
@@ -186,7 +181,7 @@ export class AppCtrl {
 
         getPageTitle(path) {
             var allMenuItems = this.menu.concat(this.admin);
-            var currentTitle = 'StreamPipes';
+            var currentTitle = 'Notifications';
             angular.forEach(allMenuItems, m => {
                 if (m.link === path) {
                     currentTitle = m.title;
