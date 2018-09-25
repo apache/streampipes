@@ -152,7 +152,7 @@ export class RestService {
   }
 
   makeUserDependentBaseUrl() {
-      return this.host  +'/api/v2/users/' + this.authStatusService.email;
+      return this.host  +'api/v2/users/' + this.authStatusService.email;
   }
 
   constructor(

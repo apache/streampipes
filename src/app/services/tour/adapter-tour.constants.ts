@@ -25,8 +25,8 @@ export default {
             },
             {
                 stepId: "step-3",
-                title: "Select all sensors and click next",
-                text: "Select all sensors in the menu. With the selection you just get the values of the sensorboxes containing all sensors.",
+                title: "Select the sensors you are interested in",
+                text: "Select all sensors in the menu. With the selection you just get the values of the sensor boxes containing all sensors.",
                 attachToElement: "#specific-settings-next-button",
                 attachPosition: "top",
                 buttons: [
@@ -35,8 +35,9 @@ export default {
             },
             {
                 stepId: "step-4",
-                title: "Open the schema editor and change Id",
-                text: "Open the schmema editor for the id property.",
+                title: "Configure the schema of the data",
+                text: "In this editor it is possible to change the schema of the sensebox data. Each entry describes a property. For example the <b>id</b> property contains the unique id of the sensebox. " +
+                "Open the configuration menu by clicking on the arrow!",
                 attachToElement: "#id button:last-of-type",
                 attachPosition: "top",
                 buttons: [
@@ -46,7 +47,8 @@ export default {
             {
                 stepId: "step-5",
                 title: "Change the id runtime name",
-                text: " Change the value of the runtime name to 'new_id'. Then click the next button.",
+                text: "The runtime name represents the key in our Json data objects. Change the value of the runtime name to 'new_id'. This will also change all the keys later in the real data stream. " +
+                "Then click the next button.",
                 attachToElement: "#input-runtime-name-Id",
                 attachPosition: "bottom",
                 buttons: [
