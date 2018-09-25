@@ -40,6 +40,19 @@ public class AdapterMasterManagement {
 
     private static final Logger logger = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
+    public static void startAllStreamAdapters() throws AdapterException {
+        AdapterStorageImpl adapterStorage = new AdapterStorageImpl();
+        List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
+
+        for (AdapterDescription ad : allAdapters) {
+            if (ad instanceof AdapterStreamDescription) {
+                String url = Utils.addUserNameToApi(ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl(), ad.getUserName());
+
+                WorkerRestClient.invokeStreamAdapter(url, (AdapterStreamDescription) ad);
+            }
+        }
+    }
+
     public String addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl
             adapterStorage, String username)
             throws AdapterException {

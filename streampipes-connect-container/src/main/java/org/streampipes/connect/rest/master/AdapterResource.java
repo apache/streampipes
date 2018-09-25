@@ -23,6 +23,7 @@ import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.management.AdapterDeserializer;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
+import org.streampipes.connect.management.master.Utils;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.connect.adapter.AdapterDescription;
@@ -81,7 +82,7 @@ public class AdapterResource extends AbstractContainerResource {
 
         logger.info("User: " + userName + " starts adapter " + adapterDescription.getAdapterId());
 
-        String newUrl = addUserNameToApi(connectContainerEndpoint, userName);
+        String newUrl = Utils.addUserNameToApi(connectContainerEndpoint, userName);
 
         try {
             adapterId = adapterMasterManagement.addAdapter(adapterDescription, newUrl, new
@@ -122,7 +123,7 @@ public class AdapterResource extends AbstractContainerResource {
 
         try {
 
-            String newUrl = addUserNameToApi(connectContainerEndpoint, userName);
+            String newUrl = Utils.addUserNameToApi(connectContainerEndpoint, userName);
             adapterMasterManagement.deleteAdapter(id, newUrl);
             return ok(true);
         } catch (AdapterException e) {
@@ -153,7 +154,4 @@ public class AdapterResource extends AbstractContainerResource {
         this.adapterMasterManagement = adapterMasterManagement;
     }
 
-    private String addUserNameToApi(String url, String userName) {
-        return  url + "api/v1/" + userName + "/";
-    }
 }

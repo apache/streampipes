@@ -22,6 +22,8 @@ import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.management.master.AdapterMasterManagement;
 import org.streampipes.connect.rest.master.*;
 import org.streampipes.connect.rest.worker.WelcomePageWorker;
 import org.streampipes.connect.rest.worker.WorkerResource;
@@ -29,6 +31,7 @@ import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
 import org.streampipes.rest.shared.serializer.JsonLdProvider;
+import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
@@ -55,6 +58,13 @@ public class Main {
                 baseUri = UriBuilder
                     .fromUri(Config.getMasterBaseUrl())
                     .build();
+
+                // Start all installed adapters on restart of master
+                try {
+                    AdapterMasterManagement.startAllStreamAdapters();
+                } catch (AdapterException e) {
+                    LOG.error("Could not start all installed stream adapters", e);
+                }
 
                 break;
             case Config.WORKER:
