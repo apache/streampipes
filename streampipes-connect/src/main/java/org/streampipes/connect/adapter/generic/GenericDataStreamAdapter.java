@@ -54,7 +54,7 @@ public class GenericDataStreamAdapter extends GenericAdapter<GenericAdapterStrea
 
     @Override
     public Adapter getInstance(GenericAdapterStreamDescription adapterDescription) {
-        return  new GenericDataStreamAdapter(adapterDescription);
+        return new GenericDataStreamAdapter(adapterDescription);
     }
 
     @Override

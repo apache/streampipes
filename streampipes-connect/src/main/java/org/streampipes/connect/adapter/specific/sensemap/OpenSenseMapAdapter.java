@@ -34,7 +34,9 @@ import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.AnyStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
+import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.vocabulary.XSD;
 
@@ -45,6 +47,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class OpenSenseMapAdapter extends PullRestAdapter {
 
@@ -70,22 +74,14 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
 
     @Override
     public SpecificAdapterStreamDescription declareModel() {
-        SpecificAdapterStreamDescription adapterDescription = new SpecificAdapterStreamDescription();
-        adapterDescription.setAdapterId(ID);
-        adapterDescription.setUri(ID);
-        adapterDescription.setName("OpenSenseMap");
-        adapterDescription.setDescription("Environment Sensors");
-        adapterDescription.setIconUrl("openSenseMap.png");
-
-        List<Option> options = new ArrayList<>();
-        for (String s : SensorNames.ALL_SENSOR_LABELS) {
-            options.add(new Option(s, SensorNames.getKeyFromLabel(s)));
-        }
-        AnyStaticProperty possibleSensors = new AnyStaticProperty("sensors", "Sensors", "Select the sensors that are included in the data stream");
-        possibleSensors.setOptions(options);
-        adapterDescription.addConfig(possibleSensors);
-
-        return adapterDescription;
+          return SpecificDataStreamAdapterBuilder.create(ID, "OpenSenseMap", "Environment Sensors")
+                .iconUrl("openSenseMap.png")
+                .requiredMultiValueSelection(Labels.from("sensors", "Sensors", "Select the " +
+                        "sensors that are included in the data stream"), Stream
+                        .of(SensorNames.ALL_SENSOR_LABELS)
+                        .map(s -> new Option(s, SensorNames.getKeyFromLabel(s)))
+                        .collect(Collectors.toList()))
+                .build();
     }
 
     @Override
@@ -289,7 +285,7 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
     }
 
     @Override
-    protected PollingSettings getPollingIntervalInSeconds() {
+    protected PollingSettings getPollingInterval() {
         return PollingSettings.from(TimeUnit.SECONDS, 60);
     }
 

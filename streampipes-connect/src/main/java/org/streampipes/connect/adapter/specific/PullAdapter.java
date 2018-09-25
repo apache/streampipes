@@ -17,8 +17,6 @@
 
 package org.streampipes.connect.adapter.specific;
 
-import com.google.gson.Gson;
-import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
@@ -56,7 +54,7 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
 
     protected abstract void pullData();
 
-    protected abstract PollingSettings getPollingIntervalInSeconds();
+    protected abstract PollingSettings getPollingInterval();
 
     @Override
     public void startAdapter() throws AdapterException {
@@ -86,7 +84,7 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
 
         scheduler = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1,
-                getPollingIntervalInSeconds().getValue(), getPollingIntervalInSeconds().getTimeUnit());
+                getPollingInterval().getValue(), getPollingInterval().getTimeUnit());
 
         try {
             handle.get();

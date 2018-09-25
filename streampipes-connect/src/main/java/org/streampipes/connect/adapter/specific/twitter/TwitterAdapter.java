@@ -26,9 +26,16 @@ import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.vocabulary.XSD;
-import twitter4j.*;
+import twitter4j.StallWarning;
+import twitter4j.Status;
+import twitter4j.StatusDeletionNotice;
+import twitter4j.StatusListener;
+import twitter4j.TwitterObjectFactory;
+import twitter4j.TwitterStream;
+import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.Arrays;
@@ -52,22 +59,15 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public SpecificAdapterStreamDescription declareModel() {
-        SpecificAdapterStreamDescription adapterDescription = new SpecificAdapterStreamDescription();
-        adapterDescription.setAdapterId(ID);
-        adapterDescription.setUri(ID);
-        adapterDescription.setName("Twitter");
-        adapterDescription.setDescription("Follow Hashtag");
-        adapterDescription.setIconUrl("twitter.png");
-        FreeTextStaticProperty accessToken = new FreeTextStaticProperty("access_token", "Access Token",
-                "Access Token for Twitter Rest API.");
-        FreeTextStaticProperty accessTokenSecret = new FreeTextStaticProperty("access_token_secret", "Access Token Secret",
-                "Access Token Secret for Twitter Rest API.");
-        FreeTextStaticProperty hashtag = new FreeTextStaticProperty("hashtag", "Hashtag",
-                "Follow this Hashtag.");
-        adapterDescription.addConfig(accessToken);
-        adapterDescription.addConfig(accessTokenSecret);
-        adapterDescription.addConfig(hashtag);
-        return adapterDescription;
+        return SpecificDataStreamAdapterBuilder.create(ID, "Twitter", "Follow Hashtag")
+                .iconUrl("twitter.png")
+                .requiredTextParameter(Labels.from("access_token", "Access Token",
+                        "Access Token for Twitter Rest API."))
+                .requiredTextParameter(Labels.from("access_token_secret", "Access Token Secret",
+                        "Access Token Secret for Twitter Rest API."))
+                .requiredTextParameter(Labels.from("hashtag", "Hashtag",
+                        "Follow this Hashtag."))
+                .build();
     }
 
     @Override

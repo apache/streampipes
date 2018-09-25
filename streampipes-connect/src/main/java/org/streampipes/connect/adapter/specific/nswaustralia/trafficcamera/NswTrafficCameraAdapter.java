@@ -61,7 +61,7 @@ public class NswTrafficCameraAdapter extends PullAdapter {
   }
 
   @Override
-  protected PollingSettings getPollingIntervalInSeconds() {
+  protected PollingSettings getPollingInterval() {
     return PollingSettings.from(TimeUnit.MINUTES, 5);
   }
 

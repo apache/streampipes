@@ -10,6 +10,7 @@ import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
+import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.streampipes.sdk.utils.Datatypes;
 
 import java.io.BufferedReader;
@@ -36,20 +37,15 @@ public class GdeltAdapter extends PullAdapter {
     }
 
     @Override
-    protected PollingSettings getPollingIntervalInSeconds() {
+    protected PollingSettings getPollingInterval() {
         return PollingSettings.from(TimeUnit.MINUTES, 15);
     }
 
     @Override
     public SpecificAdapterStreamDescription declareModel() {
-        SpecificAdapterStreamDescription adapterDescription = new SpecificAdapterStreamDescription();
-        adapterDescription.setAdapterId(ID);
-        adapterDescription.setUri(ID);
-        adapterDescription.setName("GDELT");
-        adapterDescription.setDescription("Global Database of Society");
-        adapterDescription.setIconUrl("gdelt.png");
-
-        return adapterDescription;
+        return SpecificDataStreamAdapterBuilder.create(ID, "GDELT", "Global Database of Society")
+                .iconUrl("gdelt.png")
+                .build();
     }
 
     public List<Map<String, Object>> getEvents() {
