@@ -167,11 +167,6 @@ export class AppCtrl {
                 this.activePage = "Info";
         }
 
-        getActivePage() {
-            return this.activePage;
-        }
-
-
         isActivePage(path) {
             return (this.$state.current.name == path);
         }
@@ -206,6 +201,10 @@ export class AppCtrl {
                     .toggle();
             }, 300);
             return debounceFn;
+        }
+
+        getActivePage() {
+          return this.activePage;
         }
 
         connectToBroker() {
