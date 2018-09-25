@@ -140,12 +140,12 @@ public class AdapterWorkerManagementTest {
         }
 
         @Override
-        public Adapter getInstance(AdapterDescription adapterDescription) {
+        public Adapter getInstance(SpecificAdapterSetDescription adapterDescription) {
             return null;
         }
 
         @Override
-        public GuessSchema getSchema(AdapterDescription adapterDescription) {
+        public GuessSchema getSchema(SpecificAdapterSetDescription adapterDescription) {
             return null;
         }
 
