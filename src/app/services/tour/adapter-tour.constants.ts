@@ -16,7 +16,8 @@ export default {
                 title: "Select a new adapter",
                 text: "<p>Let's start!</p>" +
                 "<p>This is the <b>OpenSenseMap</b> adapter. OpenSenseMap is an online service where everybody can publish environment data. </p>" +
-                "<div><img src=\"https://sensebox.de/images/senseBox_home_circle_500.png\" alt=\"Sensebox\" height=\"200\" width=\"200\"></div>",
+                "<div><img src=\"https://sensebox.de/images/senseBox_home_circle_500.png\" alt=\"Sensebox\" height=\"200\" width=\"200\"></div>" +
+                "Click on <b>OpenSenseMap Adapter</b> to continue.",
                 attachToElement: "#OpenSenseMap",
                 attachPosition: "bottom",
                 buttons: [
@@ -26,7 +27,8 @@ export default {
             {
                 stepId: "step-3",
                 title: "Select the sensors you are interested in",
-                text: "Select all sensors in the menu. With the selection you just get the values of the sensor boxes containing all sensors.",
+                text: "<p>Select all sensors in the menu. With the selection you just get the values of the sensor boxes containing all sensors.<p>" +
+                "After selecting all Sensors click on <b>next</b> to continue.",
                 attachToElement: "#specific-settings-next-button",
                 attachPosition: "top",
                 buttons: [
@@ -37,7 +39,7 @@ export default {
                 stepId: "step-4",
                 title: "Configure the schema of the data",
                 text: "In this editor it is possible to change the schema of the sensebox data. Each entry describes a property. For example the <b>id</b> property contains the unique id of the sensebox. " +
-                "Open the configuration menu by clicking on the arrow!",
+                "Open the configuration menu by <b>clicking on the arrow</b>!",
                 attachToElement: "#id button:last-of-type",
                 attachPosition: "top",
                 buttons: [
@@ -48,7 +50,7 @@ export default {
                 stepId: "step-5",
                 title: "Change the id runtime name",
                 text: "The runtime name represents the key in our Json data objects. Change the value of the runtime name to 'new_id'. This will also change all the keys later in the real data stream. " +
-                "Then click the next button.",
+                "Then click the <b>next button of the user guide</b>.",
                 attachToElement: "#input-runtime-name-Id",
                 attachPosition: "bottom",
                 buttons: [
@@ -59,7 +61,7 @@ export default {
              {
                 stepId: "step-6",
                 title: "Go to next Step",
-                text: "Finish the modelling and go to next step to start the adapter",
+                text: "Finish the modelling and go to next step to start the adapter. Click <b>next</b> to continue.",
                 attachToElement: "#event-schema-next-button",
                 attachPosition: "bottom",
                 buttons: [
@@ -69,7 +71,7 @@ export default {
             {
                 stepId: "step-7",
                 title: "Start Adapter",
-                text: "Change the name of the adapter and click on button 'Start Adapter'",
+                text: "Change the name of the adapter and click on <b>button 'Start Adapter'</b>",
                 attachToElement: "#button-startAdapter",
                 attachPosition: "bottom",
                 buttons: [
@@ -79,9 +81,11 @@ export default {
             {
                 stepId: "step-8",
                 title: "Adapter was started successfully",
-                text: "Confirm the start up by clicking on the button",
+                text: "<p>The adpater is now deployed in the background and the data is fetched and processed from the OpenSenseMap endpoint. Here you will see some example data, which is coming directly " +
+                "the data source. This might take a minute. On the left you can see the runtime names of the properties you defined before. On the right side the values are shown. After having a look at " +
+                "the data <b>click on Close</b> to continue.</p>",
                 attachToElement: "#confirm_adapter_started_button",
-                attachPosition: "right",
+                attachPosition: "bottom",
                 buttons: [
                     "cancel"
                 ]

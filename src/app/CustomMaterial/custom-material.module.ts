@@ -22,6 +22,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatTableModule} from '@angular/material/table';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import {MatDialogModule} from '@angular/material/dialog';
         MatTableModule,
         MatPaginatorModule,
         MatSortModule,
-        MatDividerModule
+        MatDividerModule,
+        MatTooltipModule
     ],
     exports: [
         MatButtonModule,
@@ -71,7 +73,8 @@ import {MatDialogModule} from '@angular/material/dialog';
         MatExpansionModule,
         MatPaginatorModule,
         MatSortModule,
-        MatDividerModule
+        MatDividerModule,
+        MatTooltipModule
     ],
 })
 export class CustomMaterialModule {

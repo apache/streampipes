@@ -9,7 +9,7 @@ describe('Adapter Tutorial 1', function () {
     });
 
     it('Start tutorial', function () {
-        cy.get('#startAdapterTutorial').click();
+        cy.get('#startAdapterTutorial1').click();
     });
 
     it('Go to first step', function () {

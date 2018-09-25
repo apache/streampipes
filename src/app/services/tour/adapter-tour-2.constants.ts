@@ -42,7 +42,7 @@ export default {
                 text: "The data is provided in the form of geo Json. This is a Json format optimized for geospatiol data. To process this data select the <b>GeoJson</b> format. This format needs no further configuration." +
                 "Go to the next step",
                 attachToElement: "#GeoJSON",
-                attachPosition: "left",
+                attachPosition: "right",
                 buttons: [
                     "cancel",
                 ]
