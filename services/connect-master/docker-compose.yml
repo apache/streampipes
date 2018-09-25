@@ -5,6 +5,7 @@ services:
     depends_on:
       - consul
       - couchdb
+      - connect-worker
     ports:
       - "8099:8099"
     environment:
