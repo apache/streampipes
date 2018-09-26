@@ -9,16 +9,7 @@
             </div>
         </div>
         <div fxLayoutAlign="start center" fxLayout="column" class="icon">
-            <img *ngIf="isSpecificDescription()" [src]="adapter.iconUrl" class="iconImg"/>
-            <img *ngIf="isGenericDescription() && adapter.label.includes('Kafka')"
-                 src="assets/img/connect/kafka.jpg"
-                 class="iconImg"/>
-            <img *ngIf="isGenericDescription() && adapter.label.includes('MQTT')"
-                 src="assets/img/connect/mqtt.png"
-                 class="iconImg"/>
-            <img *ngIf="isGenericDescription() && adapter.label.includes('HTTP')"
-                 src="assets/img/connect/rest.png"
-                 class="iconImg"/>
+            <img *ngIf="adapter.iconUrl" [src]="'assets/img/connect/' +adapter.iconUrl" class="iconImg"/>
         </div>
         <h3>{{adapter.label}}</h3>
     </div>
@@ -34,13 +25,12 @@
                 <mat-spinner *ngIf="deleteInProgress(adapter.couchDbId)" [diameter]="20" fxLayoutAlign="center"></mat-spinner>
             </button>
         </div>
-        <div fxFlex="30" *ngIf="!adapter.couchDbId" fxLayout="row" fxLayoutAlign="end end">
-            <button color="primary" mat-fab>
-                <i class="material-icons">
-                    add
-                </i>
-            </button>
-        </div>
+        <!--<div fxFlex="30" *ngIf="!adapter.couchDbId" fxLayout="row" fxLayoutAlign="end end">-->
+            <!--<button color="primary" mat-fab>-->
+                <!--<i class="material-icons">-->
+                    <!--add-->
+                <!--</i>-->
+            <!--</button>-->
+        <!--</div>-->
     </div>
-
 </div>
