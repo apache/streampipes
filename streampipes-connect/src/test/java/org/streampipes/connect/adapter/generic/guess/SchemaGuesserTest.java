@@ -114,7 +114,8 @@ public class SchemaGuesserTest {
         stubFor(post(urlEqualTo("/predict"))
                         .willReturn(aResponse()
                         .withStatus(200)
-                        .withBody(payload)));
+                        .withBody(payload)
+                                ));
 
 
         SchemaGuesser schemaGuesser = new SchemaGuesser();

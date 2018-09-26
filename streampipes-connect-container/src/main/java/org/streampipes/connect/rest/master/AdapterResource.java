@@ -92,9 +92,7 @@ public class AdapterResource extends AbstractContainerResource {
             return ok(Notifications.error(e.getMessage()));
         }
 
-        String responseMessage = "Stream adapter with id " + adapterId + " successfully added";
-
-        logger.info(responseMessage);
+        logger.info("Stream adapter with id " + adapterId + " successfully added");
         return ok(Notifications.success(adapterId));
     }
 

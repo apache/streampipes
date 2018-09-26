@@ -60,7 +60,9 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
 
     private String standartKeys[] = {"id", "timestamp", "model", "latitude", "longitude"};
 
-    private String url = "https://api.opensensemap.org/boxes";
+//    private String url = "https://api.opensensemap.org/boxes";
+    private String url = "http://localhost:8100/opensensemap";
+
 
     public OpenSenseMapAdapter() {
         super();
