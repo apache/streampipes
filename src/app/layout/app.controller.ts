@@ -181,7 +181,7 @@ export class AppCtrl {
 
         getPageTitle(path) {
             var allMenuItems = this.menu.concat(this.admin);
-            var currentTitle = 'Notifications';
+            var currentTitle = 'StreamPipes';
             angular.forEach(allMenuItems, m => {
                 if (m.link === path) {
                     currentTitle = m.title;

@@ -46,7 +46,7 @@ export class AdapterStartedDialog {
             if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
                 this.runtimeData = data;
             }
-            
+
             if (this.pollingActive) {
                 setTimeout(() => {
                     this.getLatestRuntimeInfo();
