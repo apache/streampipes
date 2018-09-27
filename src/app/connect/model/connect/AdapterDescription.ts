@@ -34,6 +34,8 @@ export class AdapterDescription {
   @RdfProperty('sp:config')
   public config: StaticProperty[] = [];
 
+  public templateTitle: String;
+
   constructor(id: string) {
     this.id = id;
   }

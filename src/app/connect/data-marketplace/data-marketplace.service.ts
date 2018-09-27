@@ -179,4 +179,24 @@ export class DataMarketplaceService {
       });
     });
   }
+
+  cloneAdapterDescription(toClone: AdapterDescription): AdapterDescription {
+    var result: AdapterDescription;
+
+      if (this.connectService.isGenericDescription(toClone)) {
+          if (this.connectService.isDataStreamDescription(toClone)) {
+              result = Object.assign(new GenericAdapterStreamDescription(toClone.id), toClone);
+          } else {
+              result = Object.assign(new GenericAdapterSetDescription(toClone.id), toClone);
+          }
+      } else {
+          if (this.connectService.isDataStreamDescription(toClone)) {
+              result = Object.assign(new SpecificAdapterStreamDescription(toClone.id), toClone);
+          } else {
+              result = Object.assign(new SpecificAdapterSetDescription(toClone.id), toClone);
+          }
+      }
+
+    return result;
+  }
 }
