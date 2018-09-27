@@ -86,13 +86,13 @@ public class HttpStreamProtocol extends PullProtocol {
         FreeTextStaticProperty intervalProperty = new FreeTextStaticProperty(INTERVAL_PROPERTY, "Interval", "This property " +
                 "defines the pull interval in seconds.");
 
-        FreeTextStaticProperty accessToken = new FreeTextStaticProperty(ACCESS_TOKEN_PROPERTY, "Access Token", "Http Access Token");
+//        FreeTextStaticProperty accessToken = new FreeTextStaticProperty(ACCESS_TOKEN_PROPERTY, "Access Token", "Http Access Token");
 
         description.setSourceType("STREAM");
         description.addConfig(urlProperty);
         description.setIconUrl("rest.png");
         description.addConfig(intervalProperty);
-        description.addConfig(accessToken);
+//        description.addConfig(accessToken);
 
         return description;
     }
