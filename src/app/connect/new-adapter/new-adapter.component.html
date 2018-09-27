@@ -7,8 +7,8 @@
                         <mat-icon *ngIf="connectService.isDataSetDescription(adapter)" class="historic">lens</mat-icon>
                         <mat-icon *ngIf="connectService.isDataStreamDescription(adapter)" class="real-time">lens</mat-icon>
                         <div fxLayoutAlign="start center">
-                        <p *ngIf="connectService.isDataSetDescription(adapter)">&nbsp;Data Set</p>
-                        <p *ngIf="connectService.isDataStreamDescription(adapter)">&nbsp;Data Stream</p>
+                            <p *ngIf="connectService.isDataSetDescription(adapter)">&nbsp;Data Set</p>
+                            <p *ngIf="connectService.isDataStreamDescription(adapter)">&nbsp;Data Stream</p>
                         </div>
                     </div>
                 </div>
@@ -47,25 +47,25 @@
             <form>
                 <ng-template matStepLabel>Select Format</ng-template>
 
-                    <div class="assemblyOptions sp-blue-bg">
-                        <h4>Select format</h4>
-                    </div>
-                    <div class="sp-blue-border padding">
-                        <app-format-form fxFlex="100" (selectedFormatEmitter)="formatSelected($event)"
-                                         [(selectedFormat)]="adapter.format"
-                                         [allFormats]="allFormats"></app-format-form>
-                    </div>
+                <div class="assemblyOptions sp-blue-bg">
+                    <h4>Select format</h4>
+                </div>
+                <div class="sp-blue-border padding">
+                    <app-format-form fxFlex="100" (selectedFormatEmitter)="formatSelected($event)"
+                                     [(selectedFormat)]="adapter.format"
+                                     [allFormats]="allFormats"></app-format-form>
+                </div>
 
-                    <div class="assemblyOptions sp-blue-bg">
-                        <h4>Configure format</h4>
+                <div class="assemblyOptions sp-blue-bg">
+                    <h4>Configure format</h4>
+                </div>
+                <div class="sp-blue-border padding">
+                    <div fxFlex="100" *ngIf="adapter.format">
+                        <app-select-static-properties [staticProperties]="adapter.format.config"
+                                                      class="fullWidth"></app-select-static-properties>
+                        <h5 *ngIf="adapter.format.config.length === 0" style="text-align:center;">(no further configuration needed)</h5>
                     </div>
-                    <div class="sp-blue-border padding">
-                        <div fxFlex="100" *ngIf="adapter.format">
-                            <app-select-static-properties [staticProperties]="adapter.format.config"
-                                                          class="fullWidth"></app-select-static-properties>
-                            <h5 *ngIf="adapter.format.config.length === 0" style="text-align:center;">(no further configuration needed)</h5>
-                        </div>
-                    </div>
+                </div>
 
                 <div fxLayoutAlign="end">
                     <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
@@ -85,8 +85,8 @@
                 <h4>Edit schema</h4>
             </div>
             <div class="sp-blue-border padding">
-            <app-event-schema #eschema fxLayout="column" fxFlex="100" [(adapterDescription)]="adapter"
-                              [(eventSchema)]="eventSchema" [(oldEventSchema)]="oldEventSchema"></app-event-schema>
+                <app-event-schema #eschema fxLayout="column" fxFlex="100" [(adapterDescription)]="adapter"
+                                  [(eventSchema)]="eventSchema" [(oldEventSchema)]="oldEventSchema"></app-event-schema>
             </div>
 
             <div fxLayoutAlign="end">
@@ -99,27 +99,29 @@
         </mat-step>
 
         <mat-step>
-            <ng-template matStepLabel>Start Adapter</ng-template>
-            <div class="assemblyOptions sp-blue-bg">
-                <h4>Adapter settings</h4>
-            </div>
-            <div class="sp-blue-border padding">
-                <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
-                    <mat-form-field>
-                        <input matInput id="input-AdapterName" placeholder="Adapter Name" [(ngModel)]="adapter.label">
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput id="input-AdapterDescription" placeholder="Adapter Description" [(ngModel)]="adapter.description">
-                    </mat-form-field>
+            <div [formGroup]="startAdapterFormGroup">
+                <ng-template matStepLabel>Start Adapter</ng-template>
+                <div class="assemblyOptions sp-blue-bg">
+                    <h4>Adapter settings</h4>
                 </div>
-            </div>
+                <div class="sp-blue-border padding">
+                    <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
+                        <mat-form-field>
+                            <input matInput id="input-AdapterName" placeholder="Adapter Name" formControlName="startAdapterFormCtrl"  [(ngModel)]="adapter.label">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput id="input-AdapterDescription" [ngModelOptions]="{standalone: true}" placeholder="Adapter Description" [(ngModel)]="adapter.description">
+                        </mat-form-field>
+                    </div>
+                </div>
 
-            <div fxLayoutAlign="end">
-                <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
-                <button class="mat-basic" mat-raised-button matStepperPrevious style="margin-left:10px;">Back</button>
-                <button mat-raised-button id="button-startAdapter" color="primary" (click)="startAdapter()" mat-button style="margin-left:10px;">
-                    Start Adapter
-                </button>
+                <div fxLayoutAlign="end">
+                    <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
+                    <button class="mat-basic" mat-raised-button matStepperPrevious style="margin-left:10px;">Back</button>
+                    <button [disabled]="startAdapterFormGroup.invalid" mat-raised-button id="button-startAdapter" color="primary" (click)="startAdapter()" mat-button style="margin-left:10px;">
+                        Start Adapter
+                    </button>
+                </div>
             </div>
         </mat-step>
 

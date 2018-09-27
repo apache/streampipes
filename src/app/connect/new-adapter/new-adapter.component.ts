@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { RestService } from '../rest.service';
 import { FormatDescription } from '../model/connect/grounding/FormatDescription';
 import { AdapterDescription } from '../model/connect/AdapterDescription';
@@ -35,6 +35,8 @@ export class NewAdapterComponent implements OnInit {
   allFormats: FormatDescription[] = [];
   isLinearStepper: boolean = true;
 
+  startAdapterFormGroup: FormGroup;
+
   eventSchema: EventSchema;
   oldEventSchema: EventSchema;
 
@@ -50,13 +52,18 @@ export class NewAdapterComponent implements OnInit {
     private transformationRuleService: TransformationRuleService,
     public dialog: MatDialog,
     private ShepherdService: ShepherdService,
-    private connectService: ConnectService
+    private connectService: ConnectService,
+    private _formBuilder: FormBuilder
   ) {}
 
   ngOnInit() {
     this.restService.getFormats().subscribe(x => {
       this.allFormats = x.list;
     });
+
+      this.startAdapterFormGroup = this._formBuilder.group({
+          startAdapterFormCtrl: ['', Validators.required]
+      });
 
     this.eventSchema = new EventSchema();
   }

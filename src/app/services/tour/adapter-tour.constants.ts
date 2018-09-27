@@ -72,8 +72,8 @@ export default {
                 stepId: "step-7",
                 title: "Start Adapter",
                 text: "Change the name of the adapter to <b>OpenSenseMap</b> and click on <b>button 'Start Adapter'</b>",
-                attachToElement: "#button-startAdapter",
-                attachPosition: "bottom",
+                attachToElement: "#input-AdapterName",
+                attachPosition: "top",
                 buttons: [
                     "cancel"
                 ]

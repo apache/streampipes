@@ -37,6 +37,7 @@ describe('Adapter Tutorial 1', function () {
     });
 
     it('Start the adapter', function () {
+        cy.get('#input-AdapterName').type("Adapter Tutorial 1");
         cy.get('#button-startAdapter').click();
     });
 
