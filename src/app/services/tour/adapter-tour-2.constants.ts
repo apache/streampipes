@@ -28,7 +28,7 @@ export default {
             {
                 stepId: "step-3",
                 title: "Configure the protocol",
-                text: "The data is provided through a REST endpoint, which has to be polled regularly. To do this set the <b>Interval [Sec]</b> to 60. This means the endpoint is accessed every minute." +
+                text: "The data is provided through a REST endpoint, which has to be polled regularly. To do this set the <b>Interval [Sec]</b> to <b>60</b>. This means the endpoint is accessed every minute." +
                 "The <b>URL of the endpoint is: http://lupo-messwerte.appspot.com/lupo_luft_query?land=bw&limit=500&format=gme</b>, copy this URL into the URL field",
                 attachToElement: "#formWrapper:last-of-type",
                 attachPosition: "top",
@@ -58,7 +58,29 @@ export default {
                 ]
             },
             {
-                stepId: "step-6",
+                stepId: "step-6.0",
+                title: "Change the schema of the data",
+                text: "The data source of LUWB provices a lot of information and we do not need all of this. Therefore first delete all properties, except the following." +
+                "<ul>" +
+                    "<li><b>no2kont</b> (NO2)</li>" +
+                    "<li><b>ozon</b> (Ozon)</li>" +
+                    "<li><b>pm10grav</b> (Particulate Matter)</li>" +
+                    "<li><b>latitude</b> (Location Latitude)</li>" +
+                    "<li><b>longitude</b> (Location Longitude)</li>" +
+                    "<li><b>timestamp</b> (Timestemp of data point)</li>" +
+                    "<li><b>id</b> (Id of the station)</li>" +
+                "</ul>" +
+                "When you make any errors during the editing you can reset the the schema on the reload button.",
+                attachToElement: "#schema_reload_button",
+                attachPosition: "top",
+                buttons: [
+                    "cancel",
+                    "next"
+
+                ]
+            },
+            {
+                stepId: "step-6.1",
                 title: "Go to next Step",
                 text: "Finish the modelling and go to next step to start the adapter",
                 attachToElement: "#event-schema-next-button",
@@ -70,7 +92,7 @@ export default {
             {
                 stepId: "step-7",
                 title: "Start Adapter",
-                text: "Change the name of the adapter and click on button 'Start Adapter'",
+                text: "Change the name of the adapter to <b>LUBW</b> and click on button <b>Start Adapter</b>",
                 attachToElement: "#button-startAdapter",
                 attachPosition: "bottom",
                 buttons: [
@@ -103,7 +125,7 @@ export default {
             {actionId: "select-geojson", currentStep: "step-4"},
             {actionId: "format-selection-next-button", currentStep: "step-5"},
 
-            {actionId: "event-schema-next-button", currentStep: "step-6"},
+            {actionId: "event-schema-next-button", currentStep: "step-6.1"},
 
             {actionId: "button-startAdapter", currentStep: "step-7"},
             {actionId: "confirm_adapter_started_button", currentStep: "step-8"},

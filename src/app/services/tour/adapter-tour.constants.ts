@@ -27,7 +27,7 @@ export default {
             {
                 stepId: "step-3",
                 title: "Select the sensors you are interested in",
-                text: "<p>Select all sensors in the menu. With the selection you just get the values of the sensor boxes containing all sensors.<p>" +
+                text: "<p><b>Select all sensors</b> in the menu on the left. With the selection you just get the values of the sensor boxes containing all sensors.<p>" +
                 "After selecting all Sensors click on <b>next</b> to continue.",
                 attachToElement: "#specific-settings-next-button",
                 attachPosition: "top",
@@ -49,7 +49,7 @@ export default {
             {
                 stepId: "step-5",
                 title: "Change the id runtime name",
-                text: "The runtime name represents the key in our Json data objects. Change the value of the runtime name to 'new_id'. This will also change all the keys later in the real data stream. " +
+                text: "The runtime name represents the key in our Json data objects. Change the value of the runtime name to <b>new_id</b>. This will also change all the keys later in the real data stream. " +
                 "Then click the <b>next button of the user guide</b>.",
                 attachToElement: "#input-runtime-name-Id",
                 attachPosition: "bottom",
@@ -71,7 +71,7 @@ export default {
             {
                 stepId: "step-7",
                 title: "Start Adapter",
-                text: "Change the name of the adapter and click on <b>button 'Start Adapter'</b>",
+                text: "Change the name of the adapter to <b>OpenSenseMap</b> and click on <b>button 'Start Adapter'</b>",
                 attachToElement: "#button-startAdapter",
                 attachPosition: "bottom",
                 buttons: [
@@ -93,7 +93,7 @@ export default {
             {
                 stepId: "step-9",
                 title: "Congratulation",
-                text: "Congratulation you have created your first adapter and finished the tutorial. Go to the pipeline editor to see the new data source",
+                text: "<b></b>Congratulation!</b> You have created your first adapter and finished the tutorial. Go to the pipeline editor to see the new data source",
                 classes: "shepherd shepherd-welcome",
                 buttons: [
                     "cancel"
