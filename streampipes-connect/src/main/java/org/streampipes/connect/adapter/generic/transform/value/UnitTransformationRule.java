@@ -45,6 +45,8 @@ public class UnitTransformationRule implements ValueTransformationRule {
 
         List<EventProperty> eventProperties = eventSchema.getEventProperties();
 
+        // Get the eventKeys (Runtime Name from the event) by the given EventPropertiesId
+        // e.g. mainKey (nestedEvent) -> Key (EventPrimitive)
         for(String id : eventPropertyId) {
             EventProperty  property = eventProperties
                     .stream()
