@@ -17,8 +17,6 @@ limitations under the License.
 package org.streampipes.connect.adapter.generic.transform.value;
 
 import org.junit.Test;
-import org.streampipes.connect.adapter.generic.transform.TransformationRule;
-import org.streampipes.connect.adapter.generic.transform.schema.*;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
@@ -45,7 +43,8 @@ public class ValueEventTransformerTest {
         keys.add(eventPropertyf.getPropertyId());
 
         List<ValueTransformationRule> rules = new ArrayList<>();
-        rules.add(new UnitTransformationRule(eventSchema, keys, "Kelvin", "Degree Celsius"));
+        rules.add(new UnitTransformationRule(eventSchema, keys,
+               "http://qudt.org/vocab/unit#Kelvin","http://qudt.org/vocab/unit#DegreeCelsius"));
 
         ValueEventTransformer eventTransformer = new ValueEventTransformer(rules);
         Map<String, Object> result = eventTransformer.transform(event);
@@ -53,6 +52,5 @@ public class ValueEventTransformerTest {
         assertEquals(0.0, result.get(eventPropertyf.getRuntimeName()));
 
     }
-
 
 }

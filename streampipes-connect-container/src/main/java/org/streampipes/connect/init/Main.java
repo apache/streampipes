@@ -84,6 +84,7 @@ public class Main {
         allClasses.add(DescriptionResource.class);
         allClasses.add(SourcesResource.class);
         allClasses.add(GuessResource.class);
+        allClasses.add(UnitResource.class);
 
         allClasses.addAll(getApiClasses());
 

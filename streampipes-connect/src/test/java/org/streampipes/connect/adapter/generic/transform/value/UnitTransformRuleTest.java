@@ -17,6 +17,7 @@ limitations under the License.
 package org.streampipes.connect.adapter.generic.transform.value;
 
 import org.junit.Test;
+import org.streampipes.model.connect.unit.UnitDescription;
 import org.streampipes.model.schema.*;
 
 import java.util.*;
@@ -45,7 +46,8 @@ public class UnitTransformRuleTest {
         keys.add(eventPropertyList.getPropertyId());
         keys.add(eventPropertyValue.getPropertyId());
 
-        UnitTransformationRule unitTransformationRule = new UnitTransformationRule(eventSchema, keys, "Degree Celsius", "Kelvin");
+        UnitTransformationRule unitTransformationRule = new UnitTransformationRule(eventSchema, keys,
+                "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
 
         Map result = unitTransformationRule.transform(event);
 
@@ -75,7 +77,8 @@ public class UnitTransformRuleTest {
         keys.add(eventPropertyMainKey.getPropertyId());
         keys.add(eventPropertyValue.getPropertyId());
 
-        UnitTransformationRule unitTransformationRule = new UnitTransformationRule(eventSchema, keys, "Degree Celsius", "Kelvin");
+        UnitTransformationRule unitTransformationRule = new UnitTransformationRule(eventSchema, keys,
+                "http://qudt.org/vocab/unit#DegreeCelsius",          "http://qudt.org/vocab/unit#Kelvin");
 
         Map result = unitTransformationRule.transform(event);
 
@@ -99,8 +102,8 @@ public class UnitTransformRuleTest {
         List<String> keys = new ArrayList<>();
         keys.add(eventPropertyValue2.getPropertyId());
 
-        UnitTransformationRule unitTransformationRule = new UnitTransformationRule(eventSchema, keys, "Degree Celsius", "Kelvin");
-
+        UnitTransformationRule unitTransformationRule = new UnitTransformationRule(eventSchema, keys,
+                "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
         Map<String, Object> event = new HashMap<>();
         event.put("value1", 0.0);
         event.put("value2", 10.0);

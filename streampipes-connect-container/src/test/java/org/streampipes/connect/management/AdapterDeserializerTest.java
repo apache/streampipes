@@ -136,8 +136,8 @@ public class AdapterDeserializerTest {
         AdapterDescription a = AdapterDeserializer.getAdapterDescription(jsonLd);
 
         assertEquals(1, (a.getRules().size()));
-        assertEquals("Degree Celsius", ((UnitTransformRuleDescription) (a).getRules().get(0)).getFromUnit());
-        assertEquals("Kelvin", ((UnitTransformRuleDescription) (a).getRules().get(0)).getToUnit());
+        assertEquals("Degree Celsius", ((UnitTransformRuleDescription) (a).getRules().get(0)).getFromUnitRessourceURL());
+        assertEquals("Kelvin", ((UnitTransformRuleDescription) (a).getRules().get(0)).getToUnitRessourceURL());
     }
 
 

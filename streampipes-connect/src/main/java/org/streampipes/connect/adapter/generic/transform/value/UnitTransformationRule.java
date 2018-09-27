@@ -37,9 +37,10 @@ public class UnitTransformationRule implements ValueTransformationRule {
     private Unit unitTypeFrom;
     private Unit unitTypeTo;
 
-    public UnitTransformationRule(EventSchema eventSchema, List<String> eventPropertyId, String fromUnit, String toUnit) {
-        this.unitTypeFrom = UnitProvider.INSTANCE.getUnitByLabel(fromUnit);
-        this.unitTypeTo = UnitProvider.INSTANCE.getUnitByLabel(toUnit);
+    public UnitTransformationRule(EventSchema eventSchema, List<String> eventPropertyId,
+                                  String fromUnitRessourceURL, String toUnitRessourceURL) {
+        this.unitTypeFrom = UnitProvider.INSTANCE.getUnit(fromUnitRessourceURL);
+        this.unitTypeTo = UnitProvider.INSTANCE.getUnit(toUnitRessourceURL);
 
         eventKey = new ArrayList<String>();
 

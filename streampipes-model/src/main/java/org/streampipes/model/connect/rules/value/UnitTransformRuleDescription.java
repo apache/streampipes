@@ -32,51 +32,50 @@ public class UnitTransformRuleDescription extends ValueTransformationRuleDescrip
     private String eventPropertyId;
 
     @RdfProperty(StreamPipes.FROM_UNIT)
-    private String fromUnit;
+    private String fromUnitRessourceURL;
 
     @RdfProperty(StreamPipes.TO_UNIT)
-    private String toUnit;
+    private String toUnitRessourceURL;
 
     public UnitTransformRuleDescription() {
         super();
     }
 
-    public UnitTransformRuleDescription(String eventPropertyId, String fromUnit, String toUnit) {
+    public UnitTransformRuleDescription(String eventPropertyId, String fromUnitRessourceURL, String toUnit) {
         super();
         this.eventPropertyId = eventPropertyId;
-        this.fromUnit = fromUnit;
-        this.toUnit = toUnit;
+        this.fromUnitRessourceURL = fromUnitRessourceURL;
+        this.toUnitRessourceURL = toUnit;
     }
 
     public UnitTransformRuleDescription(UnitTransformRuleDescription other) {
         super(other);
         this.eventPropertyId = other.getEventPropertyId();
-        this.fromUnit = other.getFromUnit();
-        this.toUnit = other.getToUnit();
-    }
-
-    public String getFromUnit() {
-        return fromUnit;
-    }
-
-    public void setFromUnit(String fromUnit) {
-        this.fromUnit = fromUnit;
-    }
-
-    public String getToUnit() {
-        return toUnit;
-    }
-
-    public void setToUnit(String toUnit) {
-        this.toUnit = toUnit;
+        this.fromUnitRessourceURL = other.getFromUnitRessourceURL();
+        this.toUnitRessourceURL = other.getToUnitRessourceURL();
     }
 
     public String getEventPropertyId() {
         return eventPropertyId;
     }
 
-    public void setEventPropertyId(String runtimeKey) {
-        this.eventPropertyId = runtimeKey;
+    public void setEventPropertyId(String eventPropertyId) {
+        this.eventPropertyId = eventPropertyId;
     }
 
+    public String getFromUnitRessourceURL() {
+        return fromUnitRessourceURL;
+    }
+
+    public void setFromUnitRessourceURL(String fromUnitRessourceURL) {
+        this.fromUnitRessourceURL = fromUnitRessourceURL;
+    }
+
+    public String getToUnitRessourceURL() {
+        return toUnitRessourceURL;
+    }
+
+    public void setToUnitRessourceURL(String toUnitRessourceURL) {
+        this.toUnitRessourceURL = toUnitRessourceURL;
+    }
 }

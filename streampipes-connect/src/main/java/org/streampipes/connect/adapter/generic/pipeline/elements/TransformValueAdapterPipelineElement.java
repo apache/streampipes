@@ -45,7 +45,8 @@ public class TransformValueAdapterPipelineElement implements AdapterPipelineElem
         for (TransformationRuleDescription ruleDescription : transformationRuleDescriptions) {
             if (ruleDescription instanceof UnitTransformRuleDescription) {
                 UnitTransformRuleDescription tmp = (UnitTransformRuleDescription) ruleDescription;
-                rules.add(new UnitTransformationRule(eventSchema, Util.toKeyArray(tmp.getEventPropertyId()), tmp.getFromUnit(), tmp.getToUnit()));
+                rules.add(new UnitTransformationRule(eventSchema, Util.toKeyArray(tmp.getEventPropertyId()),
+                        tmp.getFromUnitRessourceURL(), tmp.getToUnitRessourceURL()));
             } else {
                 logger.error("Could not find the class for the rule description. This should never happen. Talk to admins to extend the rule implementations to get rid of this error!");
             }
