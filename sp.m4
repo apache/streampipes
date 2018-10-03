@@ -65,10 +65,13 @@ getCommand() {
 }
 
 startStreamPipes() {
-    docker stop $(docker ps -a -q)
-    docker network prune -f
-    getIp
-    sed "s/##IP##/${ip}/g" ./tmpl_env > .env
+#    docker stop $(docker ps -a -q)
+#    docker network prune -f
+	if [ -f ./env ]; 
+    then
+		getIp
+		sed "s/##IP##/${ip}/g" ./tmpl_env > .env
+	fi
     getCommand
     $command up -d ${_arg_operation[1]}
     echo 'StreamPipes sucessfully started'
@@ -82,13 +85,18 @@ updateStreamPipes() {
 updateServices() {
     getCommand
     $command pull ${_arg_operation[1]}
-    $command up -d ${_arg_operation[1]}
+    echo "Service updated. Execute sp restart ${_arg_operation[1]} to restart service"
 }
 
 stopStreamPipes() {
     getCommand
     $command down 
     echo 'StreamPipes sucessfully stopped'
+}
+
+restartStreamPipes() {
+	getCommand
+	$command restart ${_arg_operation[1]}
 }
 
 logServices() {
@@ -191,8 +199,7 @@ fi
 
 if [ "$_arg_operation" = "restart" ];
 then
-    stopStreamPipes
-    startStreamPipes
+    restartStreamPipes
     echo 'StreamPipes sucessfully restarted'
 
 fi
