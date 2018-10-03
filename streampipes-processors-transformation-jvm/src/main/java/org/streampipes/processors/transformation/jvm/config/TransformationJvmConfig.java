@@ -29,9 +29,9 @@ public enum TransformationJvmConfig implements PeConfig {
 	public final static String serverUrl;
 	public final static String iconBaseUrl;
 
-	private final static String service_id = "pe/org.streampipes.processors.filters.jvm";
-	private final static String service_name = "Processors Filters JVM";
-    private final static String service_container_name = "processors-filters-jvm";
+	private final static String service_id = "pe/org.streampipes.processors.transformation.jvm";
+	private final static String service_name = "Processors Transformation JVM";
+    private final static String service_container_name = "processors-transformation-jvm";
 
 	TransformationJvmConfig() {
 		config = SpConfig.getSpConfig(service_id);

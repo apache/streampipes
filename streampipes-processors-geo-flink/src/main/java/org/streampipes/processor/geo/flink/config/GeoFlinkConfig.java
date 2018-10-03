@@ -28,7 +28,7 @@ public enum GeoFlinkConfig implements PeConfig {
 
   private final static String service_id = "pe/org.streampipes.processors.geo.flink";
   private final static String service_name = "Processors Geo Flink";
-  private final static String service_container_name = "processors-Geo-flink";
+  private final static String service_container_name = "processors-geo-flink";
   GeoFlinkConfig() {
     config = SpConfig.getSpConfig(service_id);
 
