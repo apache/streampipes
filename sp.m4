@@ -67,7 +67,7 @@ getCommand() {
 startStreamPipes() {
 #    docker stop $(docker ps -a -q)
 #    docker network prune -f
-	if [ -f ./env ]; 
+	if [ ! -f "./.env" ]; 
     then
 		getIp
 		sed "s/##IP##/${ip}/g" ./tmpl_env > .env

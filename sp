@@ -247,8 +247,9 @@ getCommand() {
 startStreamPipes() {
 #    docker stop $(docker ps -a -q)
 #    docker network prune -f
-	if [ -f ./env ];
+	if [ ! -f "./.env" ];
     then
+	    echo 'File does not exist'
 		getIp
 		sed "s/##IP##/${ip}/g" ./tmpl_env > .env
 	fi
