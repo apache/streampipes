@@ -9,6 +9,8 @@ services:
       - activemq
       - consul
       - swagger-ui
+      - connect-master
+      - backend
     networks:
       spnet:
  
