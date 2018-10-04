@@ -4,6 +4,8 @@ services:
     image: ${SP_INTERNAL_PE_DOCKER_REGISTRY}/processors-internal-logistics:${SP_PE_VERSION}
     depends_on:
       - "consul"
+    volumes:
+      - "./data:/model-repository"
 #    ports:
 #      - "8098:8090"
     environment:
