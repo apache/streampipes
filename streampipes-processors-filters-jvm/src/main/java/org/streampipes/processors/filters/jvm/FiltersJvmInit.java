@@ -19,6 +19,7 @@ package org.streampipes.processors.filters.jvm;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.processors.filters.jvm.config.FiltersJvmConfig;
 import org.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterController;
 import org.streampipes.processors.filters.jvm.processor.projection.ProjectionController;
@@ -37,6 +38,7 @@ public class FiltersJvmInit extends StandaloneModelSubmitter {
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
+    DeclarersSingleton.getInstance().registerProtocol(new SpJmsProtocolFactory());
 
     new FiltersJvmInit().init(FiltersJvmConfig.INSTANCE);
   }

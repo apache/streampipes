@@ -20,6 +20,7 @@ package org.streampipes.processors.geo.jvm;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.geo.jvm.config.GeoJvmConfig;
 import org.streampipes.processors.geo.jvm.processor.geocode.GeocodingController;
@@ -35,6 +36,7 @@ public class GeoJvmInit extends StandaloneModelSubmitter {
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
+    DeclarersSingleton.getInstance().registerProtocol(new SpJmsProtocolFactory());
 
     new GeoJvmInit().init(GeoJvmConfig.INSTANCE);
   }

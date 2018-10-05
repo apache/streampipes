@@ -19,6 +19,7 @@ package org.streampipes.sinks.brokers.jvm;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.sinks.brokers.jvm.config.BrokersJvmConfig;
 import org.streampipes.sinks.brokers.jvm.jms.JmsController;
@@ -38,6 +39,7 @@ public class BrokersJvmInit extends StandaloneModelSubmitter {
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
+    DeclarersSingleton.getInstance().registerProtocol(new SpJmsProtocolFactory());
 
     new BrokersJvmInit().init(BrokersJvmConfig.INSTANCE);
   }
