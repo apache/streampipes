@@ -37,7 +37,7 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
   private MessageConsumer consumer;
   private InternalEventProcessor<byte[]> eventProcessor;
 
-  private Boolean connected;
+  private Boolean connected = false;
 
   private void initListener() {
     try {
@@ -56,7 +56,7 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
   @Override
   public void connect(JmsTransportProtocol protocolSettings, InternalEventProcessor<byte[]>
           eventProcessor) throws SpRuntimeException {
-    String url = protocolSettings.getBrokerHostname() + ":" + protocolSettings.getPort();
+    String url = "tcp://" +protocolSettings.getBrokerHostname() + ":" + protocolSettings.getPort();
     try {
       this.eventProcessor = eventProcessor;
       session = startJmsConnection(url).createSession(false, Session.AUTO_ACKNOWLEDGE);
