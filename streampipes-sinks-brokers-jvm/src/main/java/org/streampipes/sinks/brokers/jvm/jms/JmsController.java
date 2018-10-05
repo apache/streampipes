@@ -51,7 +51,7 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
 										OntologyProperties.mandatory(JMS_HOST_URI),
 										OntologyProperties.mandatory(JMS_PORT_URI))
 						.supportedFormats(SupportedFormats.jsonFormat())
-						.supportedProtocols(SupportedProtocols.kafka())
+						.supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
 						.build();
 	}
 

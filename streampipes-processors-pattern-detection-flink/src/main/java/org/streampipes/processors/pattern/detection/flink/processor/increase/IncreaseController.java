@@ -60,7 +60,7 @@ public class IncreaseController extends FlinkDataProcessorDeclarer<IncreaseParam
             .requiredSingleValueSelection(Labels.from(OPERATION, "Increase/Decrease", "Specifies the type of operation the " +
                     "processor should perform."), Options.from("Increase", "Decrease"))
             .outputStrategy(OutputStrategies.custom(true))
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }

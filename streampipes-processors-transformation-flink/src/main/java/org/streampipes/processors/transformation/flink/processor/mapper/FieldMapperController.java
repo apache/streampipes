@@ -52,7 +52,7 @@ public class FieldMapperController extends
                                     " fields to replace"), PropertyScope.NONE)
                     .build())
             .requiredTextParameter(Labels.from(FIELD_NAME, "The name of the new field ", ""))
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .outputStrategy(OutputStrategies.customTransformation())
             .build();

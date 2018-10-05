@@ -52,7 +52,7 @@ public class SlackNotificationController extends StandaloneEventSinkDeclarer<Sla
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
             .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .requiredTextParameter(Labels.from(RECEIVER, "Send to", "Enter the username or channel you want to notify"))
             .requiredTextParameter(Labels.from(CONTENT, "Message", "The message that should be sent"))
             .requiredSingleValueSelection(Labels.from(CHANNEL_TYPE, "User or Channel", "Decide wether you want to sent a notification to a user or to a channel"), Options.from("User", "Channel"))

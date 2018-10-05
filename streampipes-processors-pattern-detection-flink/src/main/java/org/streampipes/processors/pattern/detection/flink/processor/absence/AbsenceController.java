@@ -36,7 +36,7 @@ public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParamet
             .requiredSingleValueSelection(Labels.from(TIME_UNIT, "Time Unit", "The time unit used for detecting the co-occurrence."), Options.from("Seconds", "Minutes", "Hours"))
             .requiredIntegerParameter(Labels.from(TIME_WINDOW, "Time Window Size", "Time window size (seconds)"))
             .outputStrategy(OutputStrategies.custom(false))
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }

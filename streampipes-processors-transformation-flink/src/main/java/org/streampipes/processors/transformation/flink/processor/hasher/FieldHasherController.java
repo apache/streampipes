@@ -48,7 +48,7 @@ public class FieldHasherController extends FlinkDataProcessorDeclarer<FieldHashe
 										Options.from("SHA1", "SHA2", "MD5"))
 						.outputStrategy(OutputStrategies.keep())
 						.supportedFormats(SupportedFormats.jsonFormat())
-						.supportedProtocols(SupportedProtocols.kafka())
+						.supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
 						.build();
 	}
 

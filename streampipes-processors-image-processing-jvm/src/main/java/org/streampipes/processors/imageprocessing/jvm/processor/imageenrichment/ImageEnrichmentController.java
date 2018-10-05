@@ -53,7 +53,7 @@ public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer
                     EpProperties.stringEp(Labels.empty(), "image", "https://image.com")
 
             ))
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }

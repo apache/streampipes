@@ -52,7 +52,7 @@ public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters
             .requiredHtmlInputParameter(Labels.from(EMAIL_CONTENT, "Content", "Enter the email text. You can" +
                     "use place holders like #fieldName# to add the value of a stream variable."))
             .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 

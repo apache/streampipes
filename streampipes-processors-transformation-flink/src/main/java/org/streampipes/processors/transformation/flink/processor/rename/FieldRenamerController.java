@@ -44,7 +44,7 @@ public class FieldRenamerController extends FlinkDataProcessorDeclarer<FieldRena
 																		" property to convert"), PropertyScope.NONE)
 										.build())
 						.requiredTextParameter(Labels.from(FIELD_NAME, "The new field name", ""))
-						.supportedProtocols(SupportedProtocols.kafka())
+						.supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
 						.supportedFormats(SupportedFormats.jsonFormat())
 						.outputStrategy(OutputStrategies.transform(TransformOperations
 										.dynamicRuntimeNameTransformation(CONVERT_PROPERTY, FIELD_NAME)))

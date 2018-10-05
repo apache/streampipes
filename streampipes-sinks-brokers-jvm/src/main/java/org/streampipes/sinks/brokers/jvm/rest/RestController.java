@@ -40,7 +40,7 @@ public class RestController extends StandaloneEventSinkDeclarer<RestParameters> 
 										.build())
 						.requiredTextParameter(Labels.from(URL_KEY, "REST URL", "URL of the REST endoint"), false, false)
 						.supportedFormats(SupportedFormats.jsonFormat())
-						.supportedProtocols(SupportedProtocols.kafka())
+						.supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
 						.build();
 	}
 

@@ -52,7 +52,7 @@ public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<Qr
             .outputStrategy(OutputStrategies.transform(TransformOperations.staticRuntimeNameTransformation
                     (IMAGE_PROPERTY, "image"), TransformOperations.staticDomainPropertyTransformation
                     (IMAGE_PROPERTY, "http://schema.org/text")))
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }

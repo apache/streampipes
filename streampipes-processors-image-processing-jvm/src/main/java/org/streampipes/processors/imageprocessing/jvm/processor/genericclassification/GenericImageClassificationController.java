@@ -47,7 +47,7 @@ public class GenericImageClassificationController extends StandaloneEventProcess
                     EpProperties.stringEp(Labels.empty(), "category", "https://schema.org/category")
 
             ))
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }

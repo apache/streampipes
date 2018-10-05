@@ -45,7 +45,7 @@ public class NotificationController extends StandaloneEventSinkDeclarer<Notifica
 										.requiredProperty(EpRequirements.anyProperty())
 										.build())
 						.supportedFormats(SupportedFormats.jsonFormat())
-						.supportedProtocols(SupportedProtocols.kafka())
+						.supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
 						.requiredTextParameter(Labels.from(TITLE_KEY, "Notification title", "Notification title"))
 						.requiredHtmlInputParameter(Labels.from(CONTENT_KEY, "Content", "Enter the notification text. You can " +
 										"use place holders like #fieldName# to add the value of a stream variable."))

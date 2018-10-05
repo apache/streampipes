@@ -48,7 +48,7 @@ public class CouchDbController  extends StandaloneEventSinkDeclarer<CouchDbParam
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
             .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .requiredTextParameter(Labels.from(DATABASE_HOST_KEY, "Hostname", "The hostname of the CouchDB instance"))
             .requiredIntegerParameter(Labels.from(DATABASE_PORT_KEY, "Port", "The port of the CouchDB instance"))
             .requiredTextParameter(Labels.from(DATABASE_NAME_KEY, "Database Name", "The name of the database where events will " +

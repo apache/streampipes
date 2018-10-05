@@ -16,6 +16,7 @@
 
 package org.streampipes.processors.enricher.flink.processor.timestamp;
 
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
@@ -42,7 +43,7 @@ public class TimestampController extends FlinkDataProcessorDeclarer<TimestampPar
                     .build())
             .outputStrategy(OutputStrategies.append(
                     EpProperties.longEp(Labels.empty(), APPEND_PROPERTY, SO.DateTime)))
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(StandardTransportFormat.standardProtocols())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }

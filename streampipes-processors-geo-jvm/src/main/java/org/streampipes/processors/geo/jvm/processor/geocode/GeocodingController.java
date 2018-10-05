@@ -79,7 +79,7 @@ public class GeocodingController extends StandaloneEventProcessingDeclarer<Geoco
                     "Longitude", ""), "longitude", Geo.lng)))
 
             .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 }

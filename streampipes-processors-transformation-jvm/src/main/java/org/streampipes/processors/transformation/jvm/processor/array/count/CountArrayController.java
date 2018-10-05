@@ -55,7 +55,7 @@ public class CountArrayController extends StandaloneEventProcessingDeclarer<Coun
                 .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), COUNT_NAME,
                         SO.Number)))
                 .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka())
+                .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
                 .build();
     }
 

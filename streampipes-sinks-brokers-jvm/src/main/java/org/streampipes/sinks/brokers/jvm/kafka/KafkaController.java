@@ -53,7 +53,7 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
 										OntologyProperties.mandatory(KAFKA_HOST_URI),
 										OntologyProperties.mandatory(KAFKA_PORT_URI))
 						.supportedFormats(SupportedFormats.jsonFormat())
-						.supportedProtocols(SupportedProtocols.kafka())
+						.supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
 						.build();
 	}
 

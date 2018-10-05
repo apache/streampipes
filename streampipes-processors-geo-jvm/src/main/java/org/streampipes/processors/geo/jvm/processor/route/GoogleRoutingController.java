@@ -66,7 +66,7 @@ public class GoogleRoutingController extends StandaloneEventProcessingDeclarer<G
                         "kvi", "http://kvi.de")))
 
                 .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka())
+                .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
                 .build();
     }
 

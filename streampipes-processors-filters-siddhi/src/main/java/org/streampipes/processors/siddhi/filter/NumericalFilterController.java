@@ -74,7 +74,7 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
             .requiredSingleValueSelection(Labels.from(OPERATION, "Filter Operation", "Specifies the filter " +
                     "operation that should be applied on the field"), Options.from("<", "<=", ">", ">=", "=="))
             .requiredFloatParameter(Labels.from(VALUE, "Threshold value", "Specifies a threshold value."), NUMBER_MAPPING)
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }

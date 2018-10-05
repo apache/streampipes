@@ -43,7 +43,7 @@ public class DashboardController extends StandaloneEventSinkDeclarer<DashboardPa
                         .build())
                 .iconUrl(SinksInternalJvmConfig.getIconUrl("dashboard-icon"))
                 .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka())
+                .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
                 .build();
     }
 

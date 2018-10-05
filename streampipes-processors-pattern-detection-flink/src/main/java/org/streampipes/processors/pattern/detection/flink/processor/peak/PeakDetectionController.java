@@ -68,7 +68,7 @@ public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDete
                     EpProperties.stringEp(Labels.empty(), "id", "http://schema.org/id"),
                     EpProperties.integerEp(Labels.empty(), "signal", "http://schema.org/Number")))
             .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 

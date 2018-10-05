@@ -44,7 +44,7 @@ public class SequenceController extends FlinkDataProcessorDeclarer<SequenceParam
                     "sequence. "), Options.from("sec", "min", "hrs"))
             .outputStrategy(OutputStrategies.keep(false))
             .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 

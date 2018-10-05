@@ -48,7 +48,7 @@ public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearch
                     .build())
             .requiredTextParameter(Labels.from(INDEX_NAME, "Index Name", "Elasticsearch index name property"))
             .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 

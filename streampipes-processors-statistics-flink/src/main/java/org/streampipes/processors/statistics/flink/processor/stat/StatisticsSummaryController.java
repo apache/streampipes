@@ -61,7 +61,7 @@ public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<Stat
                     EpProperties.doubleEp(Labels.empty(), VARIANCE, Statistics.VARIANCE),
                     EpProperties.doubleEp(Labels.empty(), N, Statistics.N)))
             .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 

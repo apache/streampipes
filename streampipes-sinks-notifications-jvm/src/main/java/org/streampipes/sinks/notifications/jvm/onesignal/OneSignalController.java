@@ -44,7 +44,7 @@ public class OneSignalController extends StandaloneEventSinkDeclarer<OneSignalPa
                         .requiredProperty(EpRequirements.anyProperty())
                         .build())
                 .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka())
+                .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
                 .requiredHtmlInputParameter(Labels.from(CONTENT_KEY, "Content", "Push Message"))
                 .requiredTextParameter(Labels.from(APP_ID, "App-ID", "OneSignal App ID"))
                 .requiredTextParameter(Labels.from(REST_API_KEY, "API-Key", "REST API Key"))

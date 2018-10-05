@@ -72,7 +72,7 @@ public class StatisticsSummaryControllerWindow extends
                     EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.VARIANCE, Statistics.VARIANCE),
                     EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.N, Statistics.N)))
             .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 

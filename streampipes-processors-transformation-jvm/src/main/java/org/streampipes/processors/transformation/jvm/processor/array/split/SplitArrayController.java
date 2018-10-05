@@ -63,7 +63,7 @@ public class SplitArrayController extends StandaloneEventProcessingDeclarer<Spli
 
                 .outputStrategy(OutputStrategies.customTransformation())
                 .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka())
+                .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
                 .build();
     }
 

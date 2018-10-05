@@ -48,7 +48,7 @@ public class FieldConverterController extends
             .requiredSingleValueSelection(Labels.from(TARGET_TYPE, "Datatype", "The target datatype"), Options.from
                     (new Tuple2<>("Float", XSD._float.toString()), new Tuple2<>
                             ("Integer", XSD._integer.toString())))
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .outputStrategy(OutputStrategies.transform(TransformOperations
                     .dynamicDatatypeTransformation(CONVERT_PROPERTY, TARGET_TYPE)))
