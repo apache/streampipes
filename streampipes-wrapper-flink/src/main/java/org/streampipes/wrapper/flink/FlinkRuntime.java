@@ -26,9 +26,12 @@ import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
+import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.wrapper.distributed.runtime.DistributedRuntime;
+import org.streampipes.wrapper.flink.consumer.JmsConsumer;
 import org.streampipes.wrapper.flink.converter.JsonToMapFormat;
 import org.streampipes.wrapper.flink.logger.StatisticLogger;
 import org.streampipes.wrapper.params.binding.BindingParams;
@@ -118,23 +121,35 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
 
       SpDataStream stream = bindingParams.getGraph().getInputStreams().get(i);
       if (stream != null) {
-        KafkaTransportProtocol protocol = (KafkaTransportProtocol) stream.getEventGrounding().getTransportProtocol();
+        TransportProtocol protocol = stream.getEventGrounding().getTransportProtocol();
 
-        if (protocol.getTopicDefinition() instanceof SimpleTopicDefinition) {
-          return new FlinkKafkaConsumer010<>(protocol
-                  .getTopicDefinition()
-                  .getActualTopicName(), new SimpleStringSchema
-                  (), getProperties(protocol));
+        if (protocol instanceof KafkaTransportProtocol) {
+          return getKafkaConsumer((KafkaTransportProtocol) protocol);
         } else {
-          String patternTopic = replaceWildcardWithPatternFormat(protocol.getTopicDefinition().getActualTopicName());
-          return new FlinkKafkaConsumer010<>(Pattern.compile(patternTopic), new SimpleStringSchema
-                  (), getProperties(protocol));
+          return getJmsConsumer((JmsTransportProtocol) protocol);
         }
       } else {
         return null;
       }
     } else {
       return null;
+    }
+  }
+
+  private SourceFunction<String> getJmsConsumer(JmsTransportProtocol protocol) {
+    return new JmsConsumer(protocol);
+  }
+
+  private SourceFunction<String> getKafkaConsumer(KafkaTransportProtocol protocol) {
+    if (protocol.getTopicDefinition() instanceof SimpleTopicDefinition) {
+      return new FlinkKafkaConsumer010<>(protocol
+              .getTopicDefinition()
+              .getActualTopicName(), new SimpleStringSchema
+              (), getProperties(protocol));
+    } else {
+      String patternTopic = replaceWildcardWithPatternFormat(protocol.getTopicDefinition().getActualTopicName());
+      return new FlinkKafkaConsumer010<>(Pattern.compile(patternTopic), new SimpleStringSchema
+              (), getProperties(protocol));
     }
   }
 
