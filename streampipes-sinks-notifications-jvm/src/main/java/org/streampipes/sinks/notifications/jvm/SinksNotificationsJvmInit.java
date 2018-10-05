@@ -20,6 +20,7 @@ package org.streampipes.sinks.notifications.jvm;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.sinks.notifications.jvm.config.SinksNotificationsJvmConfig;
 import org.streampipes.sinks.notifications.jvm.email.EmailController;
@@ -37,6 +38,7 @@ public class SinksNotificationsJvmInit extends StandaloneModelSubmitter {
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
+    DeclarersSingleton.getInstance().registerProtocol(new SpJmsProtocolFactory());
 
     new SinksNotificationsJvmInit().init(SinksNotificationsJvmConfig.INSTANCE);
   }
