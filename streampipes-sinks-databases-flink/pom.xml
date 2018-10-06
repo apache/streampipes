@@ -68,11 +68,6 @@
             <artifactId>streampipes-sdk</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-filesystem_2.11</artifactId>
-            <version>1.4.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
             <version>3.6.1</version>
@@ -128,7 +123,11 @@
                                     <mainClass>org.streampipes.sinks.databases.flink.DatabasesFlinkInit</mainClass>
                                 </transformer>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>reference.conf</resource>
+                                </transformer>
                             </transformers>
+
                             <filters>
 
                                 <filter>
