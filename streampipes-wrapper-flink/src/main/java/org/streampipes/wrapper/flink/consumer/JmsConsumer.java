@@ -23,9 +23,10 @@ import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.jms.ActiveMQConsumer;
 import org.streampipes.model.grounding.JmsTransportProtocol;
 
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 
-public class JmsConsumer implements SourceFunction<String> {
+public class JmsConsumer implements SourceFunction<String>, Serializable {
 
   private static final Logger LOG = LoggerFactory.getLogger(JmsConsumer.class);
 

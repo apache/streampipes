@@ -24,6 +24,8 @@ import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.model.grounding.JmsTransportProtocol;
 
+import java.io.Serializable;
+
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
@@ -31,7 +33,7 @@ import javax.jms.Session;
 
 public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
         EventConsumer<JmsTransportProtocol>,
-        AutoCloseable {
+        AutoCloseable, Serializable {
 
   private Session session;
   private MessageConsumer consumer;
