@@ -25,6 +25,8 @@ import org.streampipes.model.grounding.JmsTransportProtocol;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class JmsConsumer implements SourceFunction<String>, Serializable {
 
@@ -32,26 +34,39 @@ public class JmsConsumer implements SourceFunction<String>, Serializable {
 
   private JmsTransportProtocol protocol;
   private ActiveMQConsumer activeMQConsumer;
+  private Boolean isRunning;
+  private Queue<String> queue;
 
   public JmsConsumer(JmsTransportProtocol protocol) {
     this.protocol = protocol;
     this.activeMQConsumer = new ActiveMQConsumer();
+    this.queue = new LinkedBlockingQueue<>();
   }
 
   @Override
   public void run(SourceContext<String> sourceContext) throws Exception {
+    this.isRunning = true;
     this.activeMQConsumer.connect(protocol, new InternalEventProcessor<byte[]>() {
       @Override
       public void onEvent(byte[] event) {
-        sourceContext.collect(new String(event, StandardCharsets.UTF_8));
+        queue.add(new String(event, StandardCharsets.UTF_8));
       }
     });
+
+    while (isRunning) {
+      if (!queue.isEmpty()) {
+        sourceContext.collect(queue.poll());
+      } else {
+        Thread.sleep(100);
+      }
+    }
   }
 
   @Override
   public void cancel() {
     try {
       this.activeMQConsumer.disconnect();
+      this.isRunning = false;
     } catch (SpRuntimeException e) {
       LOG.error(e.getMessage());
     }
