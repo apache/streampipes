@@ -49,7 +49,7 @@ public class IncreaseProgram extends AbstractPatternDetectionProgram<IncreasePar
               public long extractTimestamp(Map<String, Object> map, long l) {
                 return Long.parseLong(String.valueOf(map.get(timestampField)));
               }
-            })
+            }).setParallelism(1)
             .keyBy(getKeySelector())
             .window(TumblingEventTimeWindows.of(Time.seconds(params.getDuration())))
             .apply(new Increase(params.getIncrease(), params.getOperation(), params.getMapping(), params
