@@ -225,6 +225,7 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
       }
 
     } catch (Exception e) {
+      e.printStackTrace();
       throw new SpRuntimeException(e.getMessage());
     }
   }
@@ -252,6 +253,7 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
     //The default value is TimeCharacteristic.ProcessingTime
     if (this.streamTimeCharacteristic != null) {
       env.setStreamTimeCharacteristic(this.streamTimeCharacteristic);
+      env.setParallelism(1);
     }
   }
 
