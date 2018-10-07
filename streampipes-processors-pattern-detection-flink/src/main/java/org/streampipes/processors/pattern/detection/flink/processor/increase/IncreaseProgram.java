@@ -24,8 +24,9 @@ import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindo
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 
-import javax.annotation.Nullable;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 public class IncreaseProgram extends AbstractPatternDetectionProgram<IncreaseParameters> {
 
@@ -52,7 +53,7 @@ public class IncreaseProgram extends AbstractPatternDetectionProgram<IncreasePar
             .keyBy(getKeySelector())
             .window(TumblingEventTimeWindows.of(Time.seconds(params.getDuration())))
             .apply(new Increase(params.getIncrease(), params.getOperation(), params.getMapping(), params
-                    .getOutputProperties(), params.getGroupBy()));
+                    .getOutputProperties(), params.getGroupBy())).setParallelism(1);
   }
 
   private KeySelector<Map<String, Object>, String> getKeySelector() {
