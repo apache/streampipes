@@ -60,6 +60,10 @@
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging-jms</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
             <artifactId>streampipes-measurement-units</artifactId>
             <scope>test</scope>
         </dependency>

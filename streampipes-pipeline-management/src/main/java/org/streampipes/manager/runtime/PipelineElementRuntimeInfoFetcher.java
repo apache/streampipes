@@ -27,7 +27,11 @@ import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.StringEntity;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.messaging.InternalEventProcessor;
+import org.streampipes.messaging.jms.ActiveMQConsumer;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -51,11 +55,47 @@ public class PipelineElementRuntimeInfoFetcher {
   }
 
   public String getCurrentData() throws SpRuntimeException {
+
+    if (spDataStream.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol) {
+      return getLatestEventFromKafka();
+    } else {
+      return getLatestEventFromJms();
+    }
+
+  }
+
+  private String getLatestEventFromJms() throws SpRuntimeException {
+    final String[] result = {null};
+      ActiveMQConsumer consumer = new ActiveMQConsumer();
+      consumer.connect((JmsTransportProtocol) spDataStream.getEventGrounding().getTransportProtocol(), new InternalEventProcessor<byte[]>() {
+        @Override
+        public void onEvent(byte[] event) {
+            result[0] = new String(event);
+          try {
+            consumer.disconnect();
+          } catch (SpRuntimeException e) {
+            e.printStackTrace();
+          }
+        }
+      });
+
+      while(result[0] == null) {
+        try {
+          Thread.sleep(300);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+
+      return result[0];
+  }
+
+
+  private String getLatestEventFromKafka() throws SpRuntimeException {
     String kafkaRestUrl = getKafkaRestUrl();
     String kafkaTopic = getOutputTopic();
 
     return getLatestSubscription(kafkaRestUrl, kafkaTopic);
-
   }
 
   private String getLatestSubscription(String kafkaRestUrl, String kafkaTopic) throws SpRuntimeException {
