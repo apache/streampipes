@@ -18,15 +18,11 @@ package org.streampipes.processors.pattern.detection.flink.processor.increase;
 
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks;
-import org.apache.flink.streaming.api.watermark.Watermark;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 public class IncreaseProgram extends AbstractPatternDetectionProgram<IncreaseParameters> {
 
@@ -38,18 +34,6 @@ public class IncreaseProgram extends AbstractPatternDetectionProgram<IncreasePar
   public DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
     String timestampField = params.getTimestampField();
     return dataStreams[0]
-            .assignTimestampsAndWatermarks(new AssignerWithPeriodicWatermarks<Map<String, Object>>() {
-              @Nullable
-              @Override
-              public Watermark getCurrentWatermark() {
-                return null;
-              }
-
-              @Override
-              public long extractTimestamp(Map<String, Object> map, long l) {
-                return Long.parseLong(String.valueOf(map.get(timestampField)));
-              }
-            }).setParallelism(1)
             .keyBy(getKeySelector())
             .window(TumblingEventTimeWindows.of(Time.seconds(params.getDuration())))
             .apply(new Increase(params.getIncrease(), params.getOperation(), params.getMapping(), params
