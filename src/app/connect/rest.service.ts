@@ -34,7 +34,8 @@ import { DeleteRuleDescription } from './model/connect/rules/DeleteRuleDescripti
 import { AddNestedRuleDescription } from './model/connect/rules/AddNestedRuleDescription';
 import { MoveRuleDescription } from './model/connect/rules/MoveRuleDesctiption';
 import { TransformationRuleDescription } from './model/connect/rules/TransformationRuleDescription';
-import {StatusMessage} from "./model/message/StatusMessage";
+import { StatusMessage } from "./model/message/StatusMessage";
+import { UnitDescription } from './model/UnitDescription';
 
 @Injectable()
 export class RestService {
@@ -237,4 +238,11 @@ export class RestService {
         return res;
       });
   }
+
+  getFittingUnits(unitDescription: UnitDescription): Observable<UnitDescription[]> {
+    return this.http
+       .post<UnitDescription[]>('/streampipes-connect/api/v1/\' + self.authStatusService.email + \'/master/adapters', unitDescription);
+  }
+
+
 }
