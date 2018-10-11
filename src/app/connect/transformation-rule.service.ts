@@ -10,6 +10,7 @@ import {AddNestedRuleDescription} from './model/connect/rules/AddNestedRuleDescr
 import {k} from '@angular/core/src/render3';
 import {MoveRuleDescription} from './model/connect/rules/MoveRuleDesctiption';
 import {DeleteRuleDescription} from './model/connect/rules/DeleteRuleDescription';
+import {UnitTransformRuleDescription} from './model/connect/rules/UnitTransformRuleDescription';
 
 @Injectable()
 export class TransformationRuleService {
@@ -51,6 +52,9 @@ export class TransformationRuleService {
         transformationRuleDescription = transformationRuleDescription.concat(this.getDeleteRules(
             this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
+        // Unit
+        transformationRuleDescription = transformationRuleDescription.concat(this.getUnitTransformaRules(
+            this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
         return transformationRuleDescription;
     }
@@ -186,6 +190,27 @@ export class TransformationRuleService {
 
         return resultRules;
     }
+
+    public getUnitTransformaRules(newEventProperties: EventProperty[],
+                                      oldEventSchema: EventSchema,
+                                      newEventSchema: EventSchema): UnitTransformRuleDescription[] {
+        var result: UnitTransformRuleDescription[] = [];
+
+        for (let eventProperty of newEventProperties) {
+            /*
+             * TODO: Create Rules
+             * Problem: Just the new EventPropertyPrimintive form the newEventSchema just contain the measurementUnit,
+             * in oldEventSchema propertiesPrimitives don't have measurementUnit.
+             *
+             * Hack: Add Attribute "measurementUnit" Attribute to EventPropertyPrimintive
+             */
+        }
+
+
+        return result;
+
+
+     }
 
 
     public getCompleteRuntimeNameKey(eventProperties: EventProperty[], id: string): string {

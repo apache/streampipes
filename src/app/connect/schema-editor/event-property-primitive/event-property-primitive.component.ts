@@ -63,7 +63,6 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
             startWith(''),
             map(unit => unit ? this._filteredUnits(unit) : this.allUnits.slice())
         );
-
   }
 
   protected open = false;
@@ -111,6 +110,7 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   private transformUnit() {
     if (this.transformUnitEnable) {
       this.transformUnitEnable = false;
+      this.property.measurementUnit = '';
     } else {
       const unit = this.allUnits.find(unitTmp => unitTmp.label === this.stateCtrl.value);
       if (!unit) {
@@ -121,6 +121,7 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
           this.possibleUnitTransformations = result;
           this.selectUnit = this.possibleUnitTransformations[0];
           this.transformUnitEnable = true;
+          this.property.measurementUnit = this.selectUnit.resource;
       });
     }
   }
@@ -131,4 +132,7 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
       return this.allUnits.filter(unit => unit.label.toLowerCase().indexOf(filterValue) === 0);
   }
 
+    changeTargetUnit(unit: UnitDescription) {
+        this.property.measurementUnit = unit.resource;
+    }
 }

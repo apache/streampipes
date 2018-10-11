@@ -49,7 +49,6 @@
 
     <div fxLayout="row" fxLayoutAlign="start">
         <div class="form-group" fxFlexAlign="center" style="width: 155px">
-
             <mat-form-field class="example-full-width" style="width: 155px">
                 <input matInput placeholder="Unit" [matAutocomplete]="auto" [formControl]="stateCtrl" [attr.disabled]="transformUnitEnable ? '' : null">
                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
@@ -65,8 +64,8 @@
                 <mat-icon *ngIf="transformUnitEnable" style="transform: rotate(180deg)">arrow_forward</mat-icon>
              </button>
         <mat-form-field class="example-full-width" style="width: 155px" *ngIf="transformUnitEnable">
-            <mat-select placeholder="New Unit" [(ngModel)]="selectUnit">
-                <mat-option *ngFor="let unit of possibleUnitTransformations" [value]="unit.resource">
+            <mat-select placeholder="New Unit" [(value)]="selectUnit">
+                <mat-option *ngFor="let unit of possibleUnitTransformations" [value]="unit" (click)="changeTargetUnit(unit)">
                     {{unit.label}}
                 </mat-option>
             </mat-select>

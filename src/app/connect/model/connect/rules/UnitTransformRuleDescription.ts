@@ -4,7 +4,7 @@ import { RdfProperty } from '../../../tsonld/RdfsProperty';
 import { TransformationRuleDescription } from './TransformationRuleDescription';
 
 @RdfsClass('sp:UnitTransformRuleDescription')
-export class AddNestedRuleDescription extends TransformationRuleDescription {
+export class UnitTransformRuleDescription extends TransformationRuleDescription {
 
     @RdfId
     public id: string;
