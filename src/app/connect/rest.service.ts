@@ -241,7 +241,7 @@ export class RestService {
 
   getFittingUnits(unitDescription: UnitDescription): Observable<UnitDescription[]> {
     return this.http
-       .post<UnitDescription[]>('/streampipes-connect/api/v1/\' + self.authStatusService.email + \'/master/adapters', unitDescription);
+       .post<UnitDescription[]>('/streampipes-connect/api/v1/' + this.authStatusService.email + '/master/unit', unitDescription);
   }
 
 

@@ -51,6 +51,7 @@ import { DataMarketplaceService } from './data-marketplace/data-marketplace.serv
 import { FormatComponent } from './format-component/format.component';
 import { FormatListComponent } from './format-list-component/format-list.component';
 import { ProtocolListComponent } from './protocol-list-component/protocol-list.component';
+import { UnitProviderService } from './schema-editor/unit-provider.service';
 import { SelectStaticPropertiesComponent } from './select-static-properties-component/select-static-properties.component';
 import { StaticAnyInput } from './static-properties/static-any-input/static-any-input.component';
 
@@ -103,6 +104,7 @@ import { StaticAnyInput } from './static-properties/static-any-input/static-any-
     StaticPropertyUtilService,
     DataMarketplaceService,
     ShepherdService,
+    UnitProviderService,
     {
       provide: '$state',
       useFactory: ($injector: any) => $injector.get('$state'),
