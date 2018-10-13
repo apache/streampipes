@@ -21,11 +21,15 @@ import com.github.jqudt.onto.UnitFactory;
 
 public class AreaUnit {
 
+	public static Unit SQUARE_METER = UnitFactory
+					.getInstance()
+					.getUnit("http://qudt.org/vocab/unit#SquareMeter");
+
+	public static Unit SQUARE_ANGSTROM = UnitFactory
+					.getInstance()
+					.getUnit("http://www.openphacts.org/units/SquareAngstrom");
+
 	private AreaUnit() {}
-
-	public static Unit SQUARE_METER = UnitFactory.getInstance().getUnit("http://qudt.org/vocab/unit#SquareMeter");
-	public static Unit SQUARE_ANGSTROM = UnitFactory.getInstance().getUnit("http://www.openphacts.org/units/SquareAngstrom");
-
 
 
 }

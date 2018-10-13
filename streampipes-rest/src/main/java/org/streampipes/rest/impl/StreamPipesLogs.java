@@ -79,7 +79,7 @@ public class StreamPipesLogs extends AbstractRestInterface implements ILogs {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 
         searchSourceBuilder.query(boolQuery()
-                .must(matchPhraseQuery("logSourceID", logRequest.getsourceID()))
+                .must(matchPhraseQuery("logSourceID", logRequest.getSourceID()))
                 .must(rangeQuery("time").gte(logRequest.getDateFrom()).lte(logRequest.getDateTo())));
 
         searchSourceBuilder.size(100);

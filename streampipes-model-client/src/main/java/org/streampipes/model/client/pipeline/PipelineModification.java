@@ -26,13 +26,13 @@ import java.util.List;
 
 public class PipelineModification {
 
-	String domId;
-	String elementId;
+	private String domId;
+	private String elementId;
 	
-	List<PipelineModificationErrorDescription> errorDescriptions;
-	List<StaticProperty> staticProperties;
-	List<OutputStrategy> outputStrategies;
-	List<SpDataStream> inputStreams;
+	private List<PipelineModificationErrorDescription> errorDescriptions;
+	private List<StaticProperty> staticProperties;
+	private List<OutputStrategy> outputStrategies;
+	private List<SpDataStream> inputStreams;
 	
 	public PipelineModification(String domId, String elementId,
 			List<StaticProperty> staticProperties) {

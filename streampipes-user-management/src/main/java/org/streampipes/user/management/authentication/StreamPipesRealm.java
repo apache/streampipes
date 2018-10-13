@@ -37,9 +37,9 @@ import java.util.List;
  */
 public class StreamPipesRealm implements Realm {
 
-  Logger LOG = LoggerFactory.getLogger(StreamPipesRealm.class);
+  private static final Logger LOG = LoggerFactory.getLogger(StreamPipesRealm.class);
 
-  StreamPipesCredentialsMatcher credentialsMatcher;
+  private StreamPipesCredentialsMatcher credentialsMatcher;
 
   public StreamPipesRealm() {
     this.credentialsMatcher = new StreamPipesCredentialsMatcher();

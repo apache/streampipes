@@ -17,16 +17,15 @@
 
 package org.streampipes.manager.monitoring.runtime;
 
-import java.util.Random;
-
 import org.apache.commons.lang.RandomStringUtils;
-
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.vocabulary.XSD;
 
+import java.util.Random;
+
 public class RandomDataGenerator {
 
-	Random random;
+	private Random random;
 	
 	public RandomDataGenerator()
 	{
@@ -35,11 +34,21 @@ public class RandomDataGenerator {
 	
 	public Object getValue(EventPropertyPrimitive primitive)
 	{
-		if (primitive.getRuntimeType().equals(getString())) return RandomStringUtils.randomAlphabetic(10);
-		else if (primitive.getRuntimeType().equals(getLong())) return random.nextLong();
-		else if (primitive.getRuntimeType().equals(getInt())) return random.nextInt();
-		else if (primitive.getRuntimeType().equals(getDouble())) return random.nextDouble();
-		else return random.nextBoolean();
+		if (primitive.getRuntimeType().equals(getString())) {
+			return RandomStringUtils.randomAlphabetic(10);
+		}
+		else if (primitive.getRuntimeType().equals(getLong())) {
+			return random.nextLong();
+		}
+		else if (primitive.getRuntimeType().equals(getInt())) {
+			return random.nextInt();
+		}
+		else if (primitive.getRuntimeType().equals(getDouble())) {
+			return random.nextDouble();
+		}
+		else {
+			return random.nextBoolean();
+		}
 	}
 	
 	private String getString()

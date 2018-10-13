@@ -28,7 +28,7 @@ public class PipelineModificationMessage extends Message {
 	 * Class that represents PipelineModification messages. Modifications are used to update a SEPA within an already created pipeline
 	 */
 	
-	List<PipelineModification> pipelineModifications;
+	private List<PipelineModification> pipelineModifications;
 	
 	public PipelineModificationMessage(
 			List<PipelineModification> pipelineModifications) {

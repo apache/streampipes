@@ -32,7 +32,7 @@ import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 
 public class AdapterWorkerManagement {
 
-    Logger logger = LoggerFactory.getLogger(AdapterWorkerManagement.class);
+    private static final Logger logger = LoggerFactory.getLogger(AdapterWorkerManagement.class);
 
     public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
 
