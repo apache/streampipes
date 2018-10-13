@@ -35,13 +35,24 @@ import org.streampipes.app.file.export.converter.JsonConverter;
 import org.streampipes.app.file.export.model.IndexInfo;
 import org.streampipes.storage.couchdb.utils.Utils;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/v1/elasticsearch")
 public class Elasticsearch implements IElasticsearch {
@@ -71,7 +82,7 @@ public class Elasticsearch implements IElasticsearch {
               .asJson();
       String response = jsonResponse.getBody().getObject().toString();
 
-      if (output.equals("csv")) {
+      if (("csv").equals(output)) {
         response = new JsonConverter(response).convertToCsv();
       } else {
         response = new JsonConverter(response).convertToJson();

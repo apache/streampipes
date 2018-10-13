@@ -17,25 +17,6 @@
 
 package org.streampipes.connect.rest;
 
-import org.apache.http.client.fluent.Form;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.streampipes.config.backend.BackendConfig;
-import org.streampipes.model.SpDataSet;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.streampipes.rest.shared.util.JsonLdUtils;
-import org.streampipes.serializers.jsonld.JsonLdTransformer;
-import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
-import org.streampipes.vocabulary.StreamPipes;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
-
 @Deprecated
 public class SpConnect {
 //

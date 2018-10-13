@@ -1,5 +1,5 @@
 #FROM tomcat:8-jre8
-FROM anapsix/alpine-java
+FROM anapsix/alpine-java:8
 
 
 
@@ -47,12 +47,12 @@ RUN set -x \
 
 EXPOSE 8080
 
-ADD target/streampipes-backend.war /usr/local/tomcat/webapps/streampipes-backend.war
-ADD ./deployment-config/rdf4j-server.war /usr/local/tomcat/webapps/rdf4j-server.war
-ADD ./deployment-config/rdf4j-workbench.war /usr/local/tomcat/webapps/rdf4j-workbench.war
+COPY target/streampipes-backend.war /usr/local/tomcat/webapps/streampipes-backend.war
+COPY ./deployment-config/rdf4j-server.war /usr/local/tomcat/webapps/rdf4j-server.war
+COPY ./deployment-config/rdf4j-workbench.war /usr/local/tomcat/webapps/rdf4j-workbench.war
 #ADD ./org.streampipes/streampipes-pe-slack/streampipes-pe-slack.war /usr/local/tomcat/webapps/slack.war
 
-ADD ./deployment-config/catalina.properties /usr/local/tomcat/conf/catalina.properties
-ADD ./deployment-config/server.xml /usr/local/tomcat/conf/server.xml
+COPY ./deployment-config/catalina.properties /usr/local/tomcat/conf/catalina.properties
+COPY ./deployment-config/server.xml /usr/local/tomcat/conf/server.xml
 
 CMD ["catalina.sh", "run"]

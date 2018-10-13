@@ -30,7 +30,7 @@ import java.util.Map;
 public class GeoJsonFormat extends Format {
 
     public static final String ID = "https://streampipes.org/vocabulary/v1/format/geojson";
-    Logger logger = LoggerFactory.getLogger(GeoJsonFormat.class);
+    private static final Logger logger = LoggerFactory.getLogger(GeoJsonFormat.class);
 
     @Override
     public FormatDescription declareModel() {
@@ -70,11 +70,11 @@ public class GeoJsonFormat extends Format {
 
         for (Map.Entry<String, Object> entry : map.entrySet())
         {
-            if (entry.getKey().toUpperCase().equals("GEOMETRY")) {
+            if (entry.getKey().equalsIgnoreCase("GEOMETRY")) {
                 foundGeometry = true;
                 geoJson.putAll(formatGeometryField( (Map<String, Object>) entry.getValue()));
             }
-            if(entry.getKey().toUpperCase().equals("PROPERTIES")) {
+            if(entry.getKey().equalsIgnoreCase("PROPERTIES")) {
                 foundProperties = true;
                 for (Map.Entry<String, Object> innerEntry : ((Map<String, Object>) entry.getValue()).entrySet()) {
                     geoJson.put(innerEntry.getKey(), innerEntry.getValue());
@@ -93,7 +93,7 @@ public class GeoJsonFormat extends Format {
 
         String type = (String) map.get("type");
 
-        if(type.toUpperCase().equals("POINT")) {
+        if(type.equalsIgnoreCase("POINT")) {
             List<Double> coordinates = (List<Double>) map.get("coordinates");
 
             try {
@@ -106,19 +106,19 @@ public class GeoJsonFormat extends Format {
                 logger.error(e.getMessage());
             }
 
-        } else if (type.toUpperCase().equals("LINESTRING")) {
+        } else if (type.equalsIgnoreCase("LINESTRING")) {
             geometryFields.put("coordinatesLineString", map.get("coordinates").toString());
 
-        } else if (type.toUpperCase().equals("POLYGON")) {
+        } else if (type.equalsIgnoreCase("POLYGON")) {
             geometryFields.put("coordinatesPolygon", map.get("coordinates").toString());
 
-        } else if (type.toUpperCase().equals("MULTIPOINT")) {
+        } else if (type.equalsIgnoreCase("MULTIPOINT")) {
             geometryFields.put("coordinatesMultiPoint", map.get("coordinates").toString());
 
-        } else if (type.toUpperCase().equals("MULTILINESTRING")) {
+        } else if (type.equalsIgnoreCase("MULTILINESTRING")) {
             geometryFields.put("coordinatesMultiString", map.get("coordinates").toString());
 
-        } else if (type.toUpperCase().equals("MULTIPOLYGON")) {
+        } else if (type.equalsIgnoreCase("MULTIPOLYGON")) {
             geometryFields.put("coordinatesMultiPolygon", map.get("coordinates").toString());
 
         } else {
