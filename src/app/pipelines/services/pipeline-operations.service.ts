@@ -1,5 +1,6 @@
 import * as angular from 'angular';
 import {PipelineStatusDialogController} from "../dialog/pipeline-status-dialog.controller";
+import {DeletePipelineDialogController} from "../dialog/delete-pipeline-dialog.controller";
 
 
 export class PipelineOperationsService {
@@ -60,22 +61,19 @@ export class PipelineOperationsService {
             });
     };
 
-    deletePipeline(ev, pipelineId, refreshPipelines) {
-        var confirm = this.$mdDialog.confirm()
-            .title('Delete pipeline?')
-            .textContent('The pipeline will be removed. ')
-            .targetEvent(ev)
-            .ok('Delete')
-            .cancel('Cancel');
-        this.$mdDialog.show(confirm).then(() => {
-            this.RestApi.deleteOwnPipeline(pipelineId)
-                .success(data => {
-                    refreshPipelines();
-                })
-                .error(function (data) {
-                    console.log(data);
-                })
-        });
+    showDeleteDialog(pipeline, refreshPipelines) {
+        this.$mdDialog.show({
+            controller: DeletePipelineDialogController,
+            controllerAs: 'ctrl',
+            templateUrl: '../dialog/delete-pipeline-dialog.tmpl.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false,
+            locals: {
+                pipeline: pipeline,
+                refreshPipelines: refreshPipelines
+            },
+            bindToController: true
+        })
     };
 
     showDialog(data) {

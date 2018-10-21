@@ -38,7 +38,7 @@
                 </md-button>
             </div>
             <div flex="30">
-                <md-button ng-disabled="ctrl.pipeline.running" ng-click="ctrl.PipelineOperationsService.deletePipeline($event, ctrl.pipeline._id, ctrl.switchToPipelineView)" class="md-button">
+                <md-button ng-click="ctrl.PipelineOperationsService.showDeleteDialog(ctrl.pipeline, ctrl.switchToPipelineView)" class="md-button">
                     <md-icon
                             md-svg-icon="action:ic_delete_24px"
                             aria-label="Delete" class="md-accent"></md-icon>

@@ -1,0 +1,38 @@
+<md-dialog aria-label="Pipeline Status" flex="70">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Delete pipeline</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                    <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content layout-align="center center" flex="100" class="md-dialog-content">
+            <div ng-if="!ctrl.isInProgress">
+                <div flex="100" layout-align="center center" layout="column">
+                    <b><h4>Do you really want to delete pipeline {{ctrl.pipeline.name}}?</h4></b>
+                    <b><h4 ng-if="ctrl.pipeline.running">This pipeline is still running.</h4></b>
+                    <b><h5>This operation cannot be undone.</h5></b>
+                </div>
+
+                <div flex="100" layout-align="center center" layout="column">
+                    <sp-button ng-if="!ctrl.pipeline.running" sp-button-blue ng-click="ctrl.deletePipeline()">Delete pipeline</sp-button>
+                    <sp-button ng-if="ctrl.pipeline.running" sp-button-blue ng-click="ctrl.stopAndDeletePipeline()">Stop and delete pipeline</sp-button>
+                </div>
+            </div>
+            <div flex="100" layout-align="center center" layout="column" ng-if="ctrl.isInProgress">
+                <div layout="row" layout-sm="column" layout-align="space-around">
+                    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                </div>
+                <b><h4>{{ctrl.currentStatus}}</h4></b>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <sp-button sp-button-gray ng-click="ctrl.hide()">
+                Cancel
+            </sp-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

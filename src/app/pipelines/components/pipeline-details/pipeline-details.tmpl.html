@@ -56,7 +56,7 @@
         </span>
                 <span flex flex-order="4" layout="row" layout-align="center center">
             <sp-button sp-button-flat
-                    ng-click="ctrl.PipelineOperationsService.deletePipeline($event, pipeline._id, ctrl.refreshPipelines)"
+                    ng-click="ctrl.PipelineOperationsService.showDeleteDialog(pipeline, ctrl.refreshPipelines)"
                     ng-disabled="ctrl.pipeline.running" class="md-icon-button"><i class="material-icons">delete</i>
                 <md-tooltip md-direction="top">
                 Delete Pipeline
