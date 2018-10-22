@@ -10,7 +10,7 @@
     <tbody>
     <tr ng-repeat="pipeline in ctrl.pipelines | pipelineCategoryFilter: ctrl.activeCategory | orderBy:'+name'">
         <td>
-            <sp-button sp-button-flat
+            <sp-button sp-button-icon
                     ng-click="ctrl.PipelineOperationsService.startPipeline(pipeline._id, ctrl.toggleRunningOperation, ctrl.refreshPipelines)"
                     class="md-icon-button"
                     ng-disabled="ctrl.starting" ng-if="!pipeline.running">
@@ -19,7 +19,7 @@
                     Start Pipeline
                 </md-tooltip>
             </sp-button>
-            <sp-button sp-button-flat
+            <sp-button sp-button-icon
                     ng-click="ctrl.PipelineOperationsService.stopPipeline(pipeline._id, ctrl.toggleRunningOperation, ctrl.refreshPipelines)"
                     class="md-icon-button"
                     ng-disabled="ctrl.stopping" ng-if="pipeline.running">
@@ -39,7 +39,7 @@
         <td>
             <div layout="row">
             <span flex flex-order="1" layout="row" layout-align="center center">
-            <sp-button sp-button-flat ng-click="ctrl.PipelineOperationsService.showPipelineDetails(pipeline._id)"
+            <sp-button sp-button-icon ng-click="ctrl.PipelineOperationsService.showPipelineDetails(pipeline._id)"
                        class="md-icon-button"><i class="material-icons">search</i>
             <md-tooltip md-direction="top">
                 Show Pipeline
@@ -47,7 +47,7 @@
             </sp-button>
         </span>
                 <span flex flex-order="2" layout="row" layout-align="center center">
-            <sp-button sp-button-flat ng-click="ctrl.PipelineOperationsService.modifyPipeline(pipeline._id)" class="md-icon-button">
+            <sp-button sp-button-icon ng-click="ctrl.PipelineOperationsService.modifyPipeline(pipeline._id)" class="md-icon-button">
                <i class="material-icons">mode_edit</i>
                 <md-tooltip md-direction="top">
                 Modify Pipeline
@@ -55,7 +55,7 @@
             </sp-button>
         </span>
                 <span flex flex-order="4" layout="row" layout-align="center center">
-            <sp-button sp-button-flat
+            <sp-button sp-button-icon
                     ng-click="ctrl.PipelineOperationsService.showDeleteDialog(pipeline, ctrl.refreshPipelines)"
                     ng-disabled="ctrl.pipeline.running" class="md-icon-button"><i class="material-icons">delete</i>
                 <md-tooltip md-direction="top">
@@ -64,7 +64,7 @@
             </sp-button>
         </span>
                 <span flex flex-order="4" layout="row" layout-align="center center">
-            <sp-button sp-button-flat ng-if="ctrl.VersionService.isEnterpriseEdition()" ng-click="ctrl.PipelineOperationsService.showLogs(pipeline._id)" class="md-icon-button"><i class="material-icons">info</i>
+            <sp-button sp-button-icon ng-if="ctrl.VersionService.isEnterpriseEdition()" ng-click="ctrl.PipelineOperationsService.showLogs(pipeline._id)" class="md-icon-button"><i class="material-icons">info</i>
                 <md-tooltip md-direction="top">
                 Show Logs
             </md-tooltip>
