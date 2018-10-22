@@ -64,6 +64,16 @@ public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStream
     }
 
     /**
+     * Assigns a list of new event properties to the stream's schema.
+     * @param properties The event properties that should be added.
+     * @return this
+     */
+    public DataStreamBuilder properties(List<EventProperty> properties) {
+        this.eventProperties.addAll(properties);
+        return me();
+    }
+
+    /**
      * Assigns a new {@link org.streampipes.model.grounding.TransportProtocol} to the stream definition.
      * @param protocol The transport protocol of the stream at runtime (e.g., Kafka or MQTT). Use
      * {@link org.streampipes.sdk.helpers.Protocols} to use some pre-defined protocols (or create a new protocol as
