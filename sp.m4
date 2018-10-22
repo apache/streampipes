@@ -67,11 +67,12 @@ getCommand() {
 startStreamPipes() {
 #    docker stop $(docker ps -a -q)
 #    docker network prune -f
-	if [ ! -f "./.env" ]; 
-    then
+#
+#	if [ ! -f "./.env" ]; 
+#    then
 		getIp
 		sed "s/##IP##/${ip}/g" ./tmpl_env > .env
-	fi
+#	fi
     getCommand
     $command up -d ${_arg_operation[1]}
     echo 'StreamPipes sucessfully started'
@@ -90,8 +91,15 @@ updateServices() {
 
 stopStreamPipes() {
     getCommand
-    $command down 
-    echo 'StreamPipes sucessfully stopped'
+    if [ "${_arg_operation[1]}" = "" ]; 
+		then
+    	$command down
+		else
+    	$command stop ${_arg_operation[1]}
+    	$command rm -f ${_arg_operation[1]}
+		fi
+
+    echo 'StreamPipes sucessfully stopped ' ${_arg_operation[1]}
 }
 
 restartStreamPipes() {
