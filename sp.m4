@@ -2,6 +2,7 @@
 
 # ARG_OPTIONAL_SINGLE([hostname],, [The default hostname of your server], )
 # ARG_OPTIONAL_BOOLEAN([defaultip],d, [When set the first ip is used as default])
+# ARG_OPTIONAL_BOOLEAN([logs],l, [When set the first ip is used as default])
 # ARG_OPTIONAL_BOOLEAN([prune],p, [Prune docker networks])
 # ARG_OPTIONAL_BOOLEAN([clean],c, [Start from a clean StreamPipes session])
 # ARG_OPTIONAL_BOOLEAN([current],u, [Show only currently registered services])
@@ -15,6 +16,21 @@
 # ARGBASH_GO
 
 # [ <-- needed because of Argbash
+
+run() {
+
+	if [ $_arg_logs = "on" ]; 
+	then
+		$1
+	else
+		$1 > /dev/null 2>&1
+	fi
+}
+
+endEcho() {
+	echo ''
+	echo $1
+}
 
 getIp() {
     if [ -x "$(command -v ifconfig)" ]; then
@@ -79,37 +95,54 @@ startStreamPipes() {
 		sed "s/##IP##/${ip}/g" ./tmpl_env > .env
 	fi
     getCommand
-    $command up -d ${_arg_operation[1]}
-    echo 'StreamPipes sucessfully started'
+		echo "Starting StreamPipes ${_arg_operation[1]}"
+		echo "This might take a while ..."
+    run "$command up -d ${_arg_operation[1]}"
+
+    endEcho "StreamPipes sucessfully started ${_arg_operation[1]}"
 }
 
 updateStreamPipes() {
     getCommand
-    $command up -d ${_arg_operation[1]}
+
+		echo "Updating StreamPipes ${_arg_operation[1]}"
+		echo "This might take a while ..."
+    run "$command up -d ${_arg_operation[1]}"
+
+		endEcho "Services sucessfully updated"
 }
 
 updateServices() {
     getCommand
     $command pull ${_arg_operation[1]}
-    echo "Service updated. Execute sp restart ${_arg_operation[1]} to restart service"
+
+    endEcho "Service updated. Execute sp restart ${_arg_operation[1]} to restart service"
 }
 
 stopStreamPipes() {
     getCommand
+
+		echo "Stopping StreamPipes ${_arg_operation[1]}"
+		echo "This might take a while ..."
     if [ "${_arg_operation[1]}" = "" ]; 
 		then
-    	$command down
+    	run "$command down"
 		else
-    	$command stop ${_arg_operation[1]}
-    	$command rm -f ${_arg_operation[1]}
+    	run "$command stop ${_arg_operation[1]}"
+    	run "$command rm -f ${_arg_operation[1]}"
 		fi
 
-    echo 'StreamPipes sucessfully stopped ' ${_arg_operation[1]}
+    endEcho "StreamPipes sucessfully stopped ${_arg_operation[1]}"
 }
 
 restartStreamPipes() {
 	getCommand
-	$command restart ${_arg_operation[1]}
+	echo "Restarting StreamPipes."
+	echo "This might take a while ..."
+	run "$command restart ${_arg_operation[1]}"
+
+  endEcho "StreamPipes sucessfully restarted ${_arg_operation[1]}"
+
 }
 
 logServices() {
@@ -120,7 +153,7 @@ logServices() {
 cleanStreamPipes() {
     stopStreamPipes
     rm -r ./config
-    echo "All configurations of StreamPipes have been deleted."
+    endEcho "All configurations of StreamPipes have been deleted."
 }
 
 resetStreamPipes() {

@@ -2,6 +2,7 @@
 
 # ARG_OPTIONAL_SINGLE([hostname],[],[The default hostname of your server],[])
 # ARG_OPTIONAL_BOOLEAN([defaultip],[d],[When set the first ip is used as default])
+# ARG_OPTIONAL_BOOLEAN([logs],[l],[When set the first ip is used as default])
 # ARG_OPTIONAL_BOOLEAN([prune],[p],[Prune docker networks])
 # ARG_OPTIONAL_BOOLEAN([clean],[c],[Start from a clean StreamPipes session])
 # ARG_OPTIONAL_BOOLEAN([current],[u],[Show only currently registered services])
@@ -43,7 +44,7 @@ operation()
 
 begins_with_short_option()
 {
-  local first_option all_short_options='dpcuahv'
+  local first_option all_short_options='dlpcuahv'
   first_option="${1:0:1}"
   test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
 }
@@ -54,6 +55,7 @@ _arg_operation=()
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_hostname=
 _arg_defaultip="off"
+_arg_logs="off"
 _arg_prune="off"
 _arg_clean="off"
 _arg_current="off"
@@ -63,10 +65,11 @@ _arg_all="off"
 print_help()
 {
   printf '%s\n' "This script provides advanced features to run StreamPipes on your server"
-  printf 'Usage: %s [--hostname <arg>] [-d|--(no-)defaultip] [-p|--(no-)prune] [-c|--(no-)clean] [-u|--(no-)current] [-a|--(no-)all] [-h|--help] [-v|--version] [<operation-1>] [<operation-2>]\n' "$0"
+  printf 'Usage: %s [--hostname <arg>] [-d|--(no-)defaultip] [-l|--(no-)logs] [-p|--(no-)prune] [-c|--(no-)clean] [-u|--(no-)current] [-a|--(no-)all] [-h|--help] [-v|--version] [<operation-1>] [<operation-2>]\n' "$0"
   printf '\t%s\n' "<operation>: The StreamPipes operation (operation-name) (service-name (optional)) (defaults for <operation-1> to <operation-2> respectively: '' and '')"
   printf '\t%s\n' "--hostname: The default hostname of your server (no default)"
   printf '\t%s\n' "-d, --defaultip, --no-defaultip: When set the first ip is used as default (off by default)"
+  printf '\t%s\n' "-l, --logs, --no-logs: When set the first ip is used as default (off by default)"
   printf '\t%s\n' "-p, --prune, --no-prune: Prune docker networks (off by default)"
   printf '\t%s\n' "-c, --clean, --no-clean: Start from a clean StreamPipes session (off by default)"
   printf '\t%s\n' "-u, --current, --no-current: Show only currently registered services (off by default)"
@@ -101,6 +104,18 @@ parse_commandline()
         if test -n "$_next" -a "$_next" != "$_key"
         then
           begins_with_short_option "$_next" && shift && set -- "-d" "-${_next}" "$@" || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
+        fi
+        ;;
+      -l|--no-logs|--logs)
+        _arg_logs="on"
+        test "${1:0:5}" = "--no-" && _arg_logs="off"
+        ;;
+      -l*)
+        _arg_logs="on"
+        _next="${_key##-l}"
+        if test -n "$_next" -a "$_next" != "$_key"
+        then
+          begins_with_short_option "$_next" && shift && set -- "-l" "-${_next}" "$@" || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
         fi
         ;;
       -p|--no-prune|--prune)
@@ -210,6 +225,21 @@ _arg_operation="$(operation "$_arg_operation" "operation")" || exit 1
 # [ <-- needed because of Argbash
 
 
+run() {
+
+	if [ $_arg_logs = "on" ];
+	then
+		$1
+	else
+		$1 > /dev/null 2>&1
+	fi
+}
+
+endEcho() {
+	echo ''
+	echo $1
+}
+
 getIp() {
     if [ -x "$(command -v ifconfig)" ]; then
         rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
@@ -273,37 +303,54 @@ startStreamPipes() {
 		sed "s/##IP##/${ip}/g" ./tmpl_env > .env
 	fi
     getCommand
-    $command up -d ${_arg_operation[1]}
-    echo 'StreamPipes sucessfully started'
+		echo "Starting StreamPipes ${_arg_operation[1]}"
+		echo "This might take a while ..."
+    run "$command up -d ${_arg_operation[1]}"
+
+    endEcho "StreamPipes sucessfully started ${_arg_operation[1]}"
 }
 
 updateStreamPipes() {
     getCommand
-    $command up -d ${_arg_operation[1]}
+
+		echo "Updating StreamPipes ${_arg_operation[1]}"
+		echo "This might take a while ..."
+    run "$command up -d ${_arg_operation[1]}"
+
+		endEcho "Services sucessfully updated"
 }
 
 updateServices() {
     getCommand
     $command pull ${_arg_operation[1]}
-    echo "Service updated. Execute sp restart ${_arg_operation[1]} to restart service"
+
+    endEcho "Service updated. Execute sp restart ${_arg_operation[1]} to restart service"
 }
 
 stopStreamPipes() {
     getCommand
+
+		echo "Stopping StreamPipes ${_arg_operation[1]}"
+		echo "This might take a while ..."
     if [ "${_arg_operation[1]}" = "" ];
 		then
-    	$command down
+    	run "$command down"
 		else
-    	$command stop ${_arg_operation[1]}
-    	$command rm -f ${_arg_operation[1]}
+    	run "$command stop ${_arg_operation[1]}"
+    	run "$command rm -f ${_arg_operation[1]}"
 		fi
 
-    echo 'StreamPipes sucessfully stopped ' ${_arg_operation[1]}
+    endEcho "StreamPipes sucessfully stopped ${_arg_operation[1]}"
 }
 
 restartStreamPipes() {
 	getCommand
-	$command restart ${_arg_operation[1]}
+	echo "Restarting StreamPipes."
+	echo "This might take a while ..."
+	run "$command restart ${_arg_operation[1]}"
+
+  endEcho "StreamPipes sucessfully restarted ${_arg_operation[1]}"
+
 }
 
 logServices() {
@@ -314,7 +361,7 @@ logServices() {
 cleanStreamPipes() {
     stopStreamPipes
     rm -r ./config
-    echo "All configurations of StreamPipes have been deleted."
+    endEcho "All configurations of StreamPipes have been deleted."
 }
 
 resetStreamPipes() {

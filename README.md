@@ -30,6 +30,7 @@ All available services are in the services folder.
 ## Flags
 
 * ARG_OPTIONAL_SINGLE([hostname], , [The default hostname of your server], )
+* ARG_OPTIONAL_BOOLEAN([logs],l, [When set the first ip is used as default])
 * ARG_OPTIONAL_BOOLEAN([defaultip],d, [When set the first ip is used as default])
 * ARG_OPTIONAL_BOOLEAN([prune],p, [Prune docker networks])
  * Why is this a flag and not a command?
