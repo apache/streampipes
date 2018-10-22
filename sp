@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # ARG_OPTIONAL_SINGLE([hostname],[],[The default hostname of your server],[])
+# ARG_OPTIONAL_BOOLEAN([defaultip],[d],[When set the first ip is used as default])
 # ARG_OPTIONAL_BOOLEAN([prune],[p],[Prune docker networks])
 # ARG_OPTIONAL_BOOLEAN([clean],[c],[Start from a clean StreamPipes session])
 # ARG_OPTIONAL_BOOLEAN([current],[u],[Show only currently registered services])
@@ -42,7 +43,7 @@ operation()
 
 begins_with_short_option()
 {
-  local first_option all_short_options='pcuahv'
+  local first_option all_short_options='dpcuahv'
   first_option="${1:0:1}"
   test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
 }
@@ -52,6 +53,7 @@ _positionals=()
 _arg_operation=()
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_hostname=
+_arg_defaultip="off"
 _arg_prune="off"
 _arg_clean="off"
 _arg_current="off"
@@ -61,9 +63,10 @@ _arg_all="off"
 print_help()
 {
   printf '%s\n' "This script provides advanced features to run StreamPipes on your server"
-  printf 'Usage: %s [--hostname <arg>] [-p|--(no-)prune] [-c|--(no-)clean] [-u|--(no-)current] [-a|--(no-)all] [-h|--help] [-v|--version] [<operation-1>] [<operation-2>]\n' "$0"
+  printf 'Usage: %s [--hostname <arg>] [-d|--(no-)defaultip] [-p|--(no-)prune] [-c|--(no-)clean] [-u|--(no-)current] [-a|--(no-)all] [-h|--help] [-v|--version] [<operation-1>] [<operation-2>]\n' "$0"
   printf '\t%s\n' "<operation>: The StreamPipes operation (operation-name) (service-name (optional)) (defaults for <operation-1> to <operation-2> respectively: '' and '')"
   printf '\t%s\n' "--hostname: The default hostname of your server (no default)"
+  printf '\t%s\n' "-d, --defaultip, --no-defaultip: When set the first ip is used as default (off by default)"
   printf '\t%s\n' "-p, --prune, --no-prune: Prune docker networks (off by default)"
   printf '\t%s\n' "-c, --clean, --no-clean: Start from a clean StreamPipes session (off by default)"
   printf '\t%s\n' "-u, --current, --no-current: Show only currently registered services (off by default)"
@@ -87,6 +90,18 @@ parse_commandline()
         ;;
       --hostname=*)
         _arg_hostname="${_key##--hostname=}"
+        ;;
+      -d|--no-defaultip|--defaultip)
+        _arg_defaultip="on"
+        test "${1:0:5}" = "--no-" && _arg_defaultip="off"
+        ;;
+      -d*)
+        _arg_defaultip="on"
+        _next="${_key##-d}"
+        if test -n "$_next" -a "$_next" != "$_key"
+        then
+          begins_with_short_option "$_next" && shift && set -- "-d" "-${_next}" "$@" || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
+        fi
         ;;
       -p|--no-prune|--prune)
         _arg_prune="on"
@@ -214,24 +229,31 @@ getIp() {
         ip=$_arg_hostname
         echo 'Default IP was selected: '${ip}
     else
-        echo ''
-        echo 'Please select your IP address or add one manually: '
-        PS3='Select option: '
-        select opt in "${allips[@]}"
-        do
-            if [ -z "${opt}" ];
-            then
-                echo "Wrong input, select one of the options";
-            else
-                ip="$opt"
 
-                if [ "$opt" == "Enter IP manually" ];
-                then
-                    read -p "Enter Ip: " ip
-                fi
-                break
-            fi
-        done
+				if [ $_arg_defaultip = "on" ];
+				then
+        	ip=${allips[0]}
+        	echo 'Default IP was selected: '${ip}
+				else
+					echo ''
+					echo 'Please select your IP address or add one manually: '
+					PS3='Select option: '
+					select opt in "${allips[@]}"
+					do
+							if [ -z "${opt}" ];
+							then
+									echo "Wrong input, select one of the options";
+							else
+									ip="$opt"
+
+									if [ "$opt" == "Enter IP manually" ];
+									then
+											read -p "Enter Ip: " ip
+									fi
+									break
+							fi
+        	done
+				fi
     fi
 
 }
@@ -245,14 +267,11 @@ getCommand() {
 }
 
 startStreamPipes() {
-#    docker stop $(docker ps -a -q)
-#    docker network prune -f
-#
-#	if [ ! -f "./.env" ];
-#    then
+	if [ ! -f "./.env" ] || [ $_arg_defaultip = "on" ];
+    then
 		getIp
 		sed "s/##IP##/${ip}/g" ./tmpl_env > .env
-#	fi
+	fi
     getCommand
     $command up -d ${_arg_operation[1]}
     echo 'StreamPipes sucessfully started'

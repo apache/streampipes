@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# ARG_OPTIONAL_SINGLE([hostname], , [The default hostname of your server], )
+# ARG_OPTIONAL_SINGLE([hostname],, [The default hostname of your server], )
+# ARG_OPTIONAL_BOOLEAN([defaultip],d, [When set the first ip is used as default])
 # ARG_OPTIONAL_BOOLEAN([prune],p, [Prune docker networks])
 # ARG_OPTIONAL_BOOLEAN([clean],c, [Start from a clean StreamPipes session])
 # ARG_OPTIONAL_BOOLEAN([current],u, [Show only currently registered services])
@@ -34,24 +35,31 @@ getIp() {
         ip=$_arg_hostname
         echo 'Default IP was selected: '${ip}
     else 
-        echo ''
-        echo 'Please select your IP address or add one manually: '
-        PS3='Select option: '
-        select opt in "${allips[@]}"
-        do
-            if [ -z "${opt}" ];
-            then 
-                echo "Wrong input, select one of the options"; 
-            else
-                ip="$opt"
 
-                if [ "$opt" == "Enter IP manually" ];
-                then
-                    read -p "Enter Ip: " ip
-                fi
-                break
-            fi
-        done
+				if [ $_arg_defaultip = "on" ]; 
+				then
+        	ip=${allips[0]}
+        	echo 'Default IP was selected: '${ip}
+				else
+					echo ''
+					echo 'Please select your IP address or add one manually: '
+					PS3='Select option: '
+					select opt in "${allips[@]}"
+					do
+							if [ -z "${opt}" ];
+							then 
+									echo "Wrong input, select one of the options"; 
+							else
+									ip="$opt"
+
+									if [ "$opt" == "Enter IP manually" ];
+									then
+											read -p "Enter Ip: " ip
+									fi
+									break
+							fi
+        	done
+				fi
     fi
 
 }
@@ -65,14 +73,11 @@ getCommand() {
 }
 
 startStreamPipes() {
-#    docker stop $(docker ps -a -q)
-#    docker network prune -f
-#
-#	if [ ! -f "./.env" ]; 
-#    then
+	if [ ! -f "./.env" ] || [ $_arg_defaultip = "on" ]; 
+    then
 		getIp
 		sed "s/##IP##/${ip}/g" ./tmpl_env > .env
-#	fi
+	fi
     getCommand
     $command up -d ${_arg_operation[1]}
     echo 'StreamPipes sucessfully started'
