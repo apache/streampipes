@@ -39,8 +39,8 @@ public class RandomDataProducer implements SemanticEventProducerDeclarer {
     List<DataStreamDeclarer> streams = new ArrayList<>();
 
     //streams.add(new RandomTextStream());
-		streams.add(new RandomNumberStreamJson());
-		streams.add(new RandomNumberStreamList());
+    streams.add(new RandomNumberStreamJson());
+    streams.add(new RandomNumberStreamList());
 //		streams.add(new ComplexRandomStream());
     streams.add(new RandomNumberStreamWildcard());
     streams.add(new RandomNumberDataSet());

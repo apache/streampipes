@@ -23,7 +23,11 @@ import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.Formats;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Protocols;
+import org.streampipes.sdk.helpers.ValueSpecifications;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.sources.config.SourcesConfig;
 import org.streampipes.vocabulary.SO;
@@ -32,7 +36,7 @@ public class ComplexRandomStream implements DataStreamDeclarer {
 
   @Override
   public SpDataStream declareModel(DataSourceDescription sep) {
-    return DataStreamBuilder.create("complex-stream","Complex Stream", "Stream used for testing list-based " +
+    return DataStreamBuilder.create("complex-stream", "Complex Stream", "Stream used for testing list-based " +
             "properties and " +
             "value " +
             "specifications")
