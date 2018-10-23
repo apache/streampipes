@@ -1,9 +1,9 @@
-<div layout="column" flex="100">
-    <h4>Select Value</h4>
-    <md-select ng-model="ctrl.wid.schema.selectedNumberProperty">
-        <md-option ng-value="prop" ng-selected="index == 1"
-                   ng-repeat="(index, prop) in ctrl.wid.schema.eventProperties">{{ prop.properties.runtimeName }}
-        </md-option>
-    </md-select>
-</div>
-<!--  | numberFilter -->
+<config-item flex="100" layout="row" element-title="Select value">
+    <div flex="100" layout="column">
+        <md-select ng-model="ctrl.wid.schema.selectedNumberProperty">
+            <md-option ng-value="prop" ng-selected="index == 1"
+                       ng-repeat="(index, prop) in ctrl.wid.schema.eventProperties">{{ prop.properties.runtimeName }}
+            </md-option>
+        </md-select>
+    </div>
+</config-item>
