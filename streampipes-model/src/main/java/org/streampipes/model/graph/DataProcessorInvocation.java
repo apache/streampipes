@@ -26,10 +26,15 @@ import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.DATA_PROCESSOR_INVOCATION)
 @Entity
@@ -68,6 +73,7 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
 		this.setBelongsTo(sepa.getElementId());
 		this.category = sepa.getCategory();
 		this.setStreamRequirements(sepa.getSpDataStreams());
+		this.setAppId(sepa.getAppId());
 		//this.setUri(belongsTo +"/" +getElementId());		
 	}
 	

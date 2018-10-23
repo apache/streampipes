@@ -23,12 +23,13 @@ import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.vocabulary.StreamPipes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
 
 @RdfsClass(StreamPipes.DATA_SINK_INVOCATION)
 @Entity
@@ -58,6 +59,7 @@ public class DataSinkInvocation extends InvocableStreamPipesEntity {
 		this.setBelongsTo(sec.getElementId());
 		this.category = sec.getCategory();
 		this.setStreamRequirements(sec.getSpDataStreams());
+		this.setAppId(sec.getAppId());
 		//this.setUri(belongsTo +"/" +getElementId());
 	}
 	
