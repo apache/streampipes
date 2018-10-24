@@ -1,11 +1,12 @@
-<div layout="column" flex="100">
-    <h4>Select field</h4>
-    <md-input-container class="md-block" flex-gt-sm>
-        <md-select ng-model="ctrl.wid.schema.selectedNumberProperty">
-            <md-option ng-value="lineValue" ng-selected="index == 1"
-                       ng-repeat="(index, lineValue) in ctrl.wid.schema.eventProperties">{{
-                lineValue.properties.runtimeName }}
-            </md-option>
-        </md-select>
-    </md-input-container>
-</div>
+<config-item flex="100" layout="row" element-title="Select image field">
+    <div flex="100" layout="column">
+        <md-input-container class="md-block" flex-gt-sm>
+            <md-select ng-model="ctrl.wid.schema.selectedNumberProperty">
+                <md-option ng-value="lineValue" ng-selected="index == 1"
+                           ng-repeat="(index, lineValue) in ctrl.wid.schema.eventProperties">{{
+                    lineValue.properties.runtimeName }}
+                </md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+</config-item>

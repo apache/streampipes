@@ -13,7 +13,7 @@ import 'legacy/malhar-angular-dashboard';
 //import 'npm/epoch-charting';
 import 'npm/ngmap'
 
-
+import { ConfigItemComponent } from "./components/config-item.component";
 import { DashboardCtrl } from './dashboard.controller';
 import { AddWidgetCtrl } from './add-widget.controller';
 import { WidgetInstances } from './widget-instances.service';
@@ -64,15 +64,16 @@ import { HeatmapDataModel } from './templates/heatmap/heatmap-data-model.service
 import spImageWidget from './templates/image/image.directive';
 import { spImageWidgetConfig } from './templates/image/image-config.component';
 import { ImageDataModel } from './templates/image/image-data-model.service';
+import {DomainConceptComponent} from "../editor/components/domainconcept/domainconcept.component";
 
 export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhrTable', 'ngMap'])
+
+    .component('configItem', ConfigItemComponent)
 	.controller('DashboardCtrl', DashboardCtrl)
 	.controller('AddWidgetCtrl', AddWidgetCtrl)
     .service('WidgetTemplates', WidgetTemplates)
     .service('WidgetDataModel', WidgetDataModel)
     .service('SocketConnectionDataModel', SocketConnectionDataModel)
-
-
 	.service('WidgetInstances', WidgetInstances)
 
 	.filter('soNumber', soFilter.soNumber)

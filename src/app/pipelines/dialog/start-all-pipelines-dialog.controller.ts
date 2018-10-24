@@ -14,8 +14,9 @@ export class StartAllPipelinesController {
     installationRunning: any;
     action: any;
     pipeline: any;
+    refreshPipelines: any;
 
-    constructor($mdDialog, RestApi, pipelines, action, activeCategory) {
+    constructor($mdDialog, RestApi, pipelines, action, activeCategory, refreshPipelines) {
         this.$mdDialog = $mdDialog;
         this.RestApi = RestApi;
         this.pipelines = pipelines;
@@ -27,6 +28,7 @@ export class StartAllPipelinesController {
         this.nextButton = "Next";
         this.installationRunning = false;
         this.action = action;
+        this.refreshPipelines = refreshPipelines;
 
         this.getPipelinesToModify();
         if (this.pipelinesToModify.length == 0) {
@@ -100,8 +102,7 @@ export class StartAllPipelinesController {
                     index++;
                     this.initiateInstallation(this.pipelinesToModify[index], index);
                 } else {
-                    // TODO: refreshPipelines not implemented
-                    //this.refreshPipelines();
+                    this.refreshPipelines();
                     this.nextButton = "Close";
                     this.installationRunning = false;
                 }
@@ -126,8 +127,7 @@ export class StartAllPipelinesController {
                     index++;
                     this.initiateInstallation(this.pipelinesToModify[index], index);
                 } else {
-                    // TODO: refreshPipelines not implemented
-                    //this.refreshPipelines();
+                    this.refreshPipelines();
                     this.nextButton = "Close";
                     this.installationRunning = false;
                 }
@@ -135,4 +135,9 @@ export class StartAllPipelinesController {
     }
 }
 
-StartAllPipelinesController.$inject = ['$mdDialog', 'RestApi', 'pipelines', 'action', 'activeCategory'];
+StartAllPipelinesController.$inject = ['$mdDialog',
+    'RestApi',
+    'pipelines',
+    'action',
+    'activeCategory',
+    'refreshPipelines'];
