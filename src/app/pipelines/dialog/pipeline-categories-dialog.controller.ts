@@ -11,8 +11,10 @@ export class PipelineCategoriesDialogController {
     selectedPipelineId: any;
     pipelineCategories: any;
     pipelines: any;
+    refreshPipelines: any;
+    getPipelineCategories;
 
-    constructor($mdDialog, RestApi)
+    constructor($mdDialog, RestApi, getPipelineCategories, refreshPipelines)
     {
         this.$mdDialog = $mdDialog;
         this.RestApi = RestApi;
@@ -23,8 +25,10 @@ export class PipelineCategoriesDialogController {
         this.addPipelineToCategorySelected = [];
         this.categoryDetailsVisible = [];
         this.selectedPipelineId = "";
+        this.getPipelineCategories = getPipelineCategories;
+        this.refreshPipelines = refreshPipelines;
 
-        this.getPipelineCategories();
+        this.fetchPipelineCategories();
 
     }
 
@@ -49,9 +53,9 @@ export class PipelineCategoriesDialogController {
     storeUpdatedPipeline(pipeline) {
         this.RestApi.updatePipeline(pipeline)
             .success(msg => {
-                console.log(msg);
-                // TODO: refreshPipelines not implemented
-                //this.refreshPipelines();
+                this.refreshPipelines();
+                this.getPipelineCategories();
+                this.fetchPipelineCategories();
             })
             .error(msg => {
                 console.log(msg);
@@ -71,7 +75,7 @@ export class PipelineCategoriesDialogController {
     addPipelineCategory() {
         this.RestApi.storePipelineCategory(this.newCategory)
             .success(data => {
-                console.log(data);
+                this.fetchPipelineCategories();
                 this.getPipelineCategories();
                 this.addSelected = false;
             })
@@ -80,7 +84,7 @@ export class PipelineCategoriesDialogController {
             });
     }
 
-    getPipelineCategories() {
+    fetchPipelineCategories() {
         this.RestApi.getPipelineCategories()
             .success(pipelineCategories => {
                 this.pipelineCategories = pipelineCategories;
@@ -98,7 +102,7 @@ export class PipelineCategoriesDialogController {
     deletePipelineCategory(pipelineId) {
         this.RestApi.deletePipelineCategory(pipelineId)
             .success(data => {
-                console.log(data);
+                this.fetchPipelineCategories();
                 this.getPipelineCategories();
             })
             .error(msg => {
@@ -121,4 +125,4 @@ export class PipelineCategoriesDialogController {
     }
 }
 
-PipelineCategoriesDialogController.$inject = ['$mdDialog', 'RestApi'];
+PipelineCategoriesDialogController.$inject = ['$mdDialog', 'RestApi', 'getPipelineCategories', 'refreshPipelines'];

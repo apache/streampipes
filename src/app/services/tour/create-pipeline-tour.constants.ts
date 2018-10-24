@@ -27,7 +27,7 @@ export default {
                 stepId: "step-3",
                 title: "Selecting data streams",
                 text: "The first element of a pipeline is a data stream, which produces data you'd like to transform. <p>To select a stream, click the stream named <b>Random Number Stream</b> and drop it in the assembly area below.</p>",
-                attachToElement: "#editor-icon-stand span:last-child>span>pipeline-element",
+                attachToElement: "#pe-icon-stand-org\\.streampipes\\.pe\\.random\\.number\\.json",
                 attachPosition: "left",
                 buttons: [
                     "cancel",
@@ -58,7 +58,7 @@ export default {
                 stepId: "step-6",
                 title: "Selecting data processors",
                 text: "<p>Now you can see a variety of available data processors.</p><p>Processors can provide simple capabilities such as filters or aggregations, but can also provide more advanced capabilities such as trend and pattern detection or even pre-trained neural networks.</p><p>Select the processor called <b>Field Hasher</b> and move it to the assembly area.</p>",
-                attachToElement: "#editor-icon-stand span:last-child>span>pipeline-element",
+                attachToElement: "#pe-icon-stand-org\\.streampipes\\.processors\\.transformation\\.flink\\.fieldhasher",
                 attachPosition: "right",
                 buttons: [
                     "cancel"
@@ -98,7 +98,7 @@ export default {
                 stepId: "step-10",
                 title: "Finish Pipeline",
                 text: "<p>Almost there!</p>Select the <b>Dashboard</b> sink and connect the <b>Field Hasher</b> to the Dashboard.</p>",
-                attachToElement: "#editor-icon-stand span:last-of-type>span>pipeline-element",
+                attachToElement: "#pe-icon-stand-org\\.streampipes\\.sinks\\.internal\\.jvm\\.dashboard",
                 attachPosition: "left",
                 buttons: [
                     "cancel"

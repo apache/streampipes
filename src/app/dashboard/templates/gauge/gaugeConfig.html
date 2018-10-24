@@ -1,31 +1,34 @@
-<div layout="column" flex="100">
-    <div flex="80"><h4>Select number field</h4>
-        <md-input-container class="md-block" flex-gt-sm>
-            <md-select ng-model="ctrl.wid.schema.config.selectedNumberMapping">
-                <md-option ng-value="lineValue" ng-selected="index == 1"
-                           ng-repeat="(index, lineValue) in ctrl.wid.schema.eventProperties | numberFilter">{{
-                    lineValue.properties.runtimeName }}
-                </md-option>
-            </md-select>
-        </md-input-container>
-    </div>
-    <div flex="80">
-        <h4>Gauge Settings</h4>
-        <div layout="row" flex="100" layout-align="center center">
-            <div flex="100">
-                <md-input-container>
-                    <label>Minimum</label>
-                    <input ng-model="ctrl.wid.config.min" style="color:black;">
-                </md-input-container>
+<div flex="100">
+    <config-item flex="100" layout="row" element-title="Select number field">
+        <div flex="100" layout="column">
+            <md-input-container class="md-block" flex-gt-sm>
+                <md-select ng-model="ctrl.wid.schema.config.selectedNumberMapping">
+                    <md-option ng-value="lineValue" ng-selected="index == 1"
+                               ng-repeat="(index, lineValue) in ctrl.wid.schema.eventProperties | numberFilter">{{
+                        lineValue.properties.runtimeName }}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+    </config-item>
+    <config-item flex="100" layout="row" element-title="Gauge Settings">
+        <div flex="100" layout="column">
+            <div layout="row" flex="100" layout-align="center center">
+                <div flex="100">
+                    <md-input-container>
+                        <label>Minimum</label>
+                        <input ng-model="ctrl.wid.config.min" style="color:black;">
+                    </md-input-container>
+                </div>
+            </div>
+            <div layout="row" flex="100" layout-align="center center">
+                <div flex="100">
+                    <md-input-container>
+                        <label>Maximum</label>
+                        <input ng-model="ctrl.wid.config.max" style="color:black;">
+                    </md-input-container>
+                </div>
             </div>
         </div>
-        <div layout="row" flex="100" layout-align="center center">
-            <div flex="100">
-                <md-input-container>
-                    <label>Maximum</label>
-                    <input ng-model="ctrl.wid.config.max" style="color:black;">
-                </md-input-container>
-            </div>
-        </div>
-    </div>
+    </config-item>
 </div>

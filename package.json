@@ -17,7 +17,8 @@
     "test": "node ./deployment/prebuild.js && karma start ./karma.conf.js",
     "build": "node ./deployment/prebuild.js && webpack --display-modules --progress",
     "lint": "tslint -c tslint.json 'src/**/*.ts*",
-    "test-e2e": "cypress open"
+    "test-e2e": "cypress open",
+    "run-e2e": "cypress run --spec cypress/integration/installation/installation.spec.js"
   },
   "dependencies": {
     "@angular/animations": "^5.2.5",

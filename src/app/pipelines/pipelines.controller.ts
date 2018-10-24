@@ -134,9 +134,9 @@ export class PipelineCtrl {
                 pipelines: this.pipelines,
                 action: action,
                 activeCategory: this.activeCategory,
-                refreshPipelines: this.refreshPipelines,
-                getPipelines: this.getPipelines,
-                getSystemPipelines: this.getSystemPipelines
+                refreshPipelines: () => {
+                    return this.refreshPipelines();
+                }
             },
             bindToController: true
         })
@@ -151,9 +151,12 @@ export class PipelineCtrl {
             clickOutsideToClose: true,
             locals: {
                 pipelines: this.pipelines,
-                refreshPipelines: this.refreshPipelines,
-                getPipelines: this.getPipelines,
-                getSystemPipelines: this.getSystemPipelines
+                getPipelineCategories: () => {
+                    return this.getPipelineCategories();
+                },
+                refreshPipelines: () => {
+                    return this.refreshPipelines();
+                }
             },
             bindToController: true
         })

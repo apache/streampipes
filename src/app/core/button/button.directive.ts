@@ -49,6 +49,10 @@ export class SpButtonDirective {
             element.addClass('sp-button-flat');
         }
 
+        if ('spButtonIcon' in attr) {
+            element.addClass('sp-button-icon');
+        }
+
         this.$mdButtonInkRipple.attach(scope, element);
         // //
         // // // Use async expect to support possible bindings in the button label

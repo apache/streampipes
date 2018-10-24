@@ -1,13 +1,13 @@
-<div layout="column" flex="100">
-    <h4>Select Columns</h4>
+<config-item flex="100" layout="row" element-title="Select columns">
     <div flex="100" layout="row">
         <b id="select-all-button" ng-click="ctrl.selectAll()">Select all</b>&nbsp;&nbsp;
         <b ng-click="ctrl.deselectAll()">Select none</b>
     </div>
     <p/>
+    <div flex="100" layout="column">
     <md-checkbox ng-model="prop.isSelected" ng-repeat="prop in ctrl.wid.schema.eventProperties"
                  aria-label="{{prop.properties.runtimeName}}">
         {{prop.properties.runtimeName}}
     </md-checkbox>
-
-</div>
+    </div>
+</config-item>
