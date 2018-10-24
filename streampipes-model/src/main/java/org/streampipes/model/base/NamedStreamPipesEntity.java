@@ -177,4 +177,8 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
   public void setAppId(String appId) {
     this.appId = appId;
   }
+
+  public void changeElementId(String elementId) {
+    this.elementId = elementId;
+  }
 }

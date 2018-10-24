@@ -2,19 +2,15 @@ package org.streampipes.connect.adapter.specific.gdelt;
 
 import com.opencsv.CSVReader;
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
-import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
-import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
-import org.streampipes.connect.adapter.generic.pipeline.elements.TransformValueAdapterPipelineElement;
-import org.streampipes.connect.adapter.specific.SpecificDataStreamAdapter;
+import org.streampipes.connect.adapter.specific.PullAdapter;
+import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
+import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.streampipes.sdk.utils.Datatypes;
 
 import java.io.BufferedReader;
@@ -24,14 +20,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipInputStream;
 
-public class GdeltAdapter extends SpecificDataStreamAdapter {
+public class GdeltAdapter extends PullAdapter {
 
     public static final String ID = "http://streampipes.org/adapter/specific/gdelt";
     private String url = "http://data.gdeltproject.org/gdeltv2/lastupdate.txt";
-
-    protected AdapterPipeline adapterPipeline;
 
     public GdeltAdapter() {
         super();
@@ -42,27 +37,25 @@ public class GdeltAdapter extends SpecificDataStreamAdapter {
     }
 
     @Override
-    public AdapterDescription declareModel() {
-        AdapterDescription adapterDescription = new SpecificAdapterStreamDescription();
-        adapterDescription.setAdapterId(ID);
-        adapterDescription.setUri(ID);
-        adapterDescription.setName("GDELT");
-        adapterDescription.setDescription("Global Database of Society");
-        adapterDescription.setIconUrl("https://lh3.googleusercontent.com/Q1PTxVzxr96yKEJyq3AV9ZviIxGjn_yz2PA7kz4CQAeQb4Iat49qrbrY3aE78M3G_iLb92Xf1IoFQcQCVp-X");
-
-        return adapterDescription;
+    protected PollingSettings getPollingInterval() {
+        return PollingSettings.from(TimeUnit.MINUTES, 15);
     }
 
     @Override
-    public void startAdapter() throws AdapterException {
-        List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
-        pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getSchemaRules()));
-        pipelineElements.add(new TransformValueAdapterPipelineElement(adapterDescription.getDataStream().getEventSchema(),
-                adapterDescription.getValueRules()));
-        pipelineElements.add(new SendToKafkaAdapterSink((AdapterDescription) adapterDescription));
+    public SpecificAdapterStreamDescription declareModel() {
+        return SpecificDataStreamAdapterBuilder.create(ID, "GDELT", "Global Database of Society")
+                .iconUrl("gdelt.png")
+                .build();
+    }
 
-        adapterPipeline = new AdapterPipeline(pipelineElements);
+    public List<Map<String, Object>> getEvents() {
 
+        List<Map<String, Object>> eventResults = new ArrayList<>();
+        return eventResults;
+    }
+
+    @Override
+    protected void pullData() {
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
             String firstLine = bufferedReader.readLine();
@@ -74,7 +67,7 @@ public class GdeltAdapter extends SpecificDataStreamAdapter {
             zipInputStream.getNextEntry();
             CSVReader csvReader = new CSVReader(zipBufferedReader, '\t', '"');
             String[] nextRecord;
-            while((nextRecord = csvReader.readNext()) != null) {
+            while ((nextRecord = csvReader.readNext()) != null) {
 
                 Map<String, Object> event = new HashMap<>();
 
@@ -112,6 +105,7 @@ public class GdeltAdapter extends SpecificDataStreamAdapter {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -120,12 +114,12 @@ public class GdeltAdapter extends SpecificDataStreamAdapter {
     }
 
     @Override
-    public Adapter getInstance(AdapterDescription adapterDescription) {
-        return new GdeltAdapter((SpecificAdapterStreamDescription) adapterDescription);
+    public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
+        return new GdeltAdapter(adapterDescription);
     }
 
     @Override
-    public GuessSchema getSchema(AdapterDescription adapterDescription) {
+    public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) {
         GuessSchema guessSchema = new GuessSchema();
         EventSchema eventSchema = new EventSchema();
 
@@ -168,5 +162,4 @@ public class GdeltAdapter extends SpecificDataStreamAdapter {
     public String getId() {
         return ID;
     }
-
 }

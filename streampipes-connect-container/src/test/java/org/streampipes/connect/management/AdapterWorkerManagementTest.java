@@ -17,6 +17,9 @@
 
 package org.streampipes.connect.management;
 
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -30,11 +33,13 @@ import org.streampipes.connect.adapter.specific.SpecificDataSetAdapter;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.management.worker.AdapterWorkerManagement;
 import org.streampipes.connect.utils.Utils;
-import org.streampipes.model.connect.adapter.*;
+import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.AdapterSetDescription;
+import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
-
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AdapterRegistry.class })
@@ -120,7 +125,7 @@ public class AdapterWorkerManagementTest {
 
 
         @Override
-        public AdapterDescription declareModel() {
+        public SpecificAdapterSetDescription declareModel() {
             return null;
         }
 
@@ -135,12 +140,12 @@ public class AdapterWorkerManagementTest {
         }
 
         @Override
-        public Adapter getInstance(AdapterDescription adapterDescription) {
+        public Adapter getInstance(SpecificAdapterSetDescription adapterDescription) {
             return null;
         }
 
         @Override
-        public GuessSchema getSchema(AdapterDescription adapterDescription) {
+        public GuessSchema getSchema(SpecificAdapterSetDescription adapterDescription) {
             return null;
         }
 

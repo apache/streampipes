@@ -15,18 +15,10 @@
  *
  */
 
-package org.streampipes.connect.adapter.specific;
+package org.streampipes.connect.management.master;
 
-import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
-
-public abstract class SpecificDataSetAdapter extends Adapter<SpecificAdapterSetDescription> {
-
-    public SpecificDataSetAdapter(SpecificAdapterSetDescription adapterDescription) {
-        super(adapterDescription);
-    }
-
-    public SpecificDataSetAdapter(SpecificAdapterSetDescription adapterDescription, boolean debug) {
-        super(adapterDescription, debug);
+public class Utils {
+    public static String addUserNameToApi(String url, String userName) {
+        return  url + "api/v1/" + userName + "/";
     }
 }

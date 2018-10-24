@@ -28,7 +28,11 @@ import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.rest.shared.annotation.GsonWithIds;
 import org.streampipes.rest.shared.annotation.JsonLdSerialized;
+import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.rest.shared.util.SpMediaType;
+import org.streampipes.vocabulary.StreamPipes;
+
+import javax.json.Json;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -43,7 +47,7 @@ public class SourcesResource extends AbstractContainerResource {
     private SourcesManagement sourcesManagement;
 
     public SourcesResource() {
-        this.connectContainerBaseUrl = ConnectContainerConfig.INSTANCE.getConnectContainerUrl();
+        this.connectContainerBaseUrl = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl();
         this.sourcesManagement = new SourcesManagement();
     }
 
@@ -87,11 +91,13 @@ public class SourcesResource extends AbstractContainerResource {
 
 
     @POST
-    @JsonLdSerialized
+//    @JsonLdSerialized
     @Consumes(SpMediaType.JSONLD)
     @Path("/{streamId}/streams")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAdapter(@PathParam("streamId") String elementId, SpDataSet dataSet) {
+    public Response addAdapter(@PathParam("streamId") String elementId, String dataSetSet) {
+
+        SpDataSet dataSet = JsonLdUtils.fromJsonLd(dataSetSet, SpDataSet.class, StreamPipes.DATA_SET);
 
         String responseMessage = "Instance of data set " + dataSet.getUri() + " successfully started";
 

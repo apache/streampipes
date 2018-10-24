@@ -24,7 +24,7 @@ import org.streampipes.model.connect.grounding.FormatDescription;
 
 public class JsonArrayFormat extends AbstractJsonFormat {
 
-    public static final String ID = "https://streampipes.org/vocabulary/v1/format/json/arraykey";
+    public static final String ID = "https://streampipes.org/vocabulary/v1/format/json/arraynokey";
 
     @Override
     public Format getInstance(FormatDescription formatDescription) {

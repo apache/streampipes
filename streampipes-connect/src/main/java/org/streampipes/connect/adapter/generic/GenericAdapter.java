@@ -37,21 +37,25 @@ import org.streampipes.model.connect.guess.GuessSchema;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GenericAdapter extends Adapter {
-
-    public abstract GenericAdapterDescription getAdapterDescription();
-    public abstract void setProtocol(Protocol protocol);
+public abstract class GenericAdapter<T extends AdapterDescription> extends Adapter<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(Adapter.class);
 
-    public GenericAdapter(boolean debug) {
-        super(debug);
+    public GenericAdapter(T adapterDescription) {
+        super(adapterDescription);
+    }
+
+    public GenericAdapter(T adapterDescription, boolean debug) {
+        super(adapterDescription, debug);
     }
 
     public GenericAdapter() {
         super();
     }
 
+    public abstract GenericAdapterDescription getAdapterDescription();
+
+    public abstract void setProtocol(Protocol protocol);
 
     @Override
     public void startAdapter() throws AdapterException {
@@ -81,7 +85,7 @@ public abstract class GenericAdapter extends Adapter {
 
 
     @Override
-    public GuessSchema getSchema(AdapterDescription adapterDescription) throws AdapterException {
+    public GuessSchema getSchema(T adapterDescription) throws AdapterException {
         Parser parser = getParser((GenericAdapterDescription) adapterDescription);
         Format format = getFormat((GenericAdapterDescription) adapterDescription);
 

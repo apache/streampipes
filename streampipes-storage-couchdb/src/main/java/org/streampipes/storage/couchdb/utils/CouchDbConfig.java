@@ -24,16 +24,6 @@ public enum CouchDbConfig {
 
     INSTANCE;
 
-    private class TestOnChange implements SpConfigChangeCallback {
-
-        @Override
-        public void onChange() {
-            System.out.println("Config changed Yeahh!!");
-
-        }
-    }
-
-
     private SpConfig config;
     private final static String COUCHDB_HOST = "SP_COUCHDB_HOST";
     private final static String COUCHDB_PORT = "SP_COUCHDB_PORT";
@@ -47,6 +37,15 @@ public enum CouchDbConfig {
         config.register(COUCHDB_PORT, 5984, "Port for the couch db service");
         config.register(PROTOCOL, "http", "Protocol the couch db service");
 
+    }
+
+    private class TestOnChange implements SpConfigChangeCallback {
+
+        @Override
+        public void onChange() {
+            System.out.println("Config changed Yeahh!!");
+
+        }
     }
 
     public String getHost() {

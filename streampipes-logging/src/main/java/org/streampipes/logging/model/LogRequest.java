@@ -2,13 +2,11 @@ package org.streampipes.logging.model;
 
 public class LogRequest {
 
-    String sourceID;
+    private String sourceID;
+    private String dateFrom;
+    private String dateTo;
 
-    String dateFrom;
-
-    String dateTo;
-
-    public String getsourceID() {
+    public String getSourceID() {
         return sourceID;
     }
 

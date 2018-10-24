@@ -81,7 +81,5 @@
 			<artifactId>elasticsearch-rest-high-level-client</artifactId>
 			<version>6.2.1</version>
 		</dependency>
-
-
 	</dependencies>
 </project>

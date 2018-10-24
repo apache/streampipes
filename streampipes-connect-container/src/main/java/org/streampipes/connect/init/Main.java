@@ -17,19 +17,24 @@
 
 package org.streampipes.connect.init;
 
+import org.apache.http.client.fluent.Request;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.management.master.AdapterMasterManagement;
 import org.streampipes.connect.rest.master.*;
 import org.streampipes.connect.rest.worker.WelcomePageWorker;
 import org.streampipes.connect.rest.worker.WorkerResource;
-import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
 import org.streampipes.rest.shared.serializer.JsonLdProvider;
+import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.streampipes.storage.couchdb.utils.Utils;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
@@ -40,7 +45,7 @@ public class Main {
 
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
-    public static void main(String... args) {
+    public static void main(String... args) throws InterruptedException {
 
         // TODO Two different execution modes
 
@@ -56,6 +61,24 @@ public class Main {
                 baseUri = UriBuilder
                     .fromUri(Config.getMasterBaseUrl())
                     .build();
+
+                boolean couchDbAvailable = true;
+
+                do {
+
+                    // Start all installed adapters on restart of master
+                    try {
+                        AdapterMasterManagement.startAllStreamAdapters();
+                        couchDbAvailable = true;
+                    } catch (AdapterException e) {
+                        LOG.error("Could not start all installed stream adapters", e);
+                        couchDbAvailable = true;
+                    } catch (Exception e) {
+                        LOG.error("Could not connect to couch db. Try again in 2 seconds");
+                        couchDbAvailable = false;
+                        Thread.sleep(2000);
+                    }
+                } while (!couchDbAvailable);
 
                 break;
             case Config.WORKER:

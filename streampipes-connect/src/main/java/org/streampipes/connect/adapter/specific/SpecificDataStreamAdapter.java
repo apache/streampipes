@@ -18,25 +18,20 @@
 package org.streampipes.connect.adapter.specific;
 
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 
-public abstract class SpecificDataStreamAdapter extends Adapter {
-
-    protected SpecificAdapterStreamDescription adapterDescription;
+public abstract class SpecificDataStreamAdapter extends Adapter<SpecificAdapterStreamDescription> {
 
     public SpecificDataStreamAdapter() {
         super();
     }
 
     public SpecificDataStreamAdapter(SpecificAdapterStreamDescription adapterDescription) {
-        super();
-        this.adapterDescription = adapterDescription;
+        super(adapterDescription);
     }
 
     public SpecificDataStreamAdapter(SpecificAdapterStreamDescription adapterDescription, boolean debug) {
-        super(debug);
-        this.adapterDescription = adapterDescription;
+        super(adapterDescription, debug);
     }
 
 }

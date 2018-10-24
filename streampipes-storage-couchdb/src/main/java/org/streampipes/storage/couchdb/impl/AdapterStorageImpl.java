@@ -10,6 +10,7 @@ import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.storage.api.IAdapterStorage;
 import org.streampipes.storage.couchdb.dao.AbstractDao;
 import org.streampipes.storage.couchdb.dao.DbCommand;
+import org.streampipes.storage.couchdb.dao.DeleteCommand;
 import org.streampipes.storage.couchdb.dao.FindCommand;
 import org.streampipes.storage.couchdb.utils.Utils;
 
@@ -41,57 +42,30 @@ public class AdapterStorageImpl extends AbstractDao<AdapterDescription> implemen
 
     @Override
     public void updateAdapter(AdapterDescription adapter) {
+        couchDbClientSupplier.get().
         update(adapter);
     }
 
     @Override
     public AdapterDescription getAdapter(String adapterId) {
 
-        InputStream in = couchDbClientSupplier.get().find(adapterId);
+//        InputStream in = couchDbClientSupplier.get().find(adapterId);
 
         DbCommand<Optional<AdapterDescription>, AdapterDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterDescription.class);
         return cmd.execute().get();
-
-
-//         TODO find better solution
-//        StringWriter writer = new StringWriter();
-//        try {
-//            IOUtils.copy(in, writer, Charsets.UTF_8);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        String theString = writer.toString();
-//
-//
-//        return GsonSerializer.getGson().fromJson(theString, AdapterDescription.class);
-
-//        System.out.println(theString);
-//        if (theString.contains("dataSet")) {
-//            DbCommand<Optional<AdapterSetDescription>, AdapterSetDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterSetDescription.class);
-//            return cmd.execute().get();
-//        } else {
-//             DbCommand<Optional<AdapterStreamDescription>, AdapterStreamDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterStreamDescription.class);
-//            return cmd.execute().get();
-//        }
-//        if (theString.contains("GenericAdapterStreamDescription")) {
-//            DbCommand<Optional<GenericAdapterStreamDescription>, GenericAdapterStreamDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, GenericAdapterStreamDescription.class);
-//            return cmd.execute().get();
-//        } else  if (theString.contains("GenericAdapterSetDescription")) {
-//            DbCommand<Optional<GenericAdapterSetDescription>, GenericAdapterSetDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, GenericAdapterSetDescription.class);
-//            return cmd.execute().get();
-//        } if (theString.contains("SpecificAdapterStreamDescription")) {
-//            DbCommand<Optional<SpecificAdapterStreamDescription>, SpecificAdapterStreamDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, SpecificAdapterStreamDescription.class);
-//            return cmd.execute().get();
-//        } else if (theString.contains("SpecificAdapterSetDescription")) {
-//             DbCommand<Optional<SpecificAdapterSetDescription>, SpecificAdapterSetDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, SpecificAdapterSetDescription.class);
-//            return cmd.execute().get();
-//        }
-
-//        return null;
     }
 
     @Override
     public void deleteAdapter(String adapterId) {
-        delete(adapterId);
+
+        AdapterDescription adapterDescription = getAdapter(adapterId);
+        couchDbClientSupplier.get().remove(adapterDescription.getId(), adapterDescription.getRev());
+
+//        T result = couchDbClient.find(clazz, key);
+//        couchDbClient.remove(result);
+//        DbCommand<Boolean, AdapterDescription> cmd = new DeleteCommand<>(couchDbClientSupplier, adapterId, AdapterDescription.class);
+//        cmd.execute();
+//
+//        delete(adapterId);
     }
 }

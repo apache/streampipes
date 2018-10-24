@@ -26,12 +26,19 @@ import org.streampipes.rest.api.IPipelineElement;
 import org.streampipes.rest.shared.annotation.GsonWithIds;
 import org.streampipes.storage.rdf4j.filter.Filter;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/sources")
 public class SemanticEventProducer extends AbstractRestInterface implements IPipelineElement {
@@ -152,7 +159,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		// TODO Access rights
 		try {
-			return ok(getPipelineElementRdfStorage().getSEPById(elementUri));
+			return ok(new DataSourceDescription(getPipelineElementRdfStorage().getSEPById(elementUri)));
 		} catch (URISyntaxException e) {
 			return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
 		}

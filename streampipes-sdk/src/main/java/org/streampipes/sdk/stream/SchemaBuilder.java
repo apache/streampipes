@@ -28,8 +28,8 @@ import java.util.List;
 @Deprecated
 public class SchemaBuilder {
 
-	EventSchema schema;
-	List<EventProperty> properties;
+	private EventSchema schema;
+	private List<EventProperty> properties;
 
 	private SchemaBuilder()
 	{

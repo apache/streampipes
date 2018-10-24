@@ -25,7 +25,7 @@ public class PipelineElementRecommendationMessage {
 	private List<PipelineElementRecommendation> possibleElements;
 	private List<PipelineElementRecommendation> recommendedElements;
 	
-	boolean success;
+	private boolean success;
 	
 	public PipelineElementRecommendationMessage()
 	{

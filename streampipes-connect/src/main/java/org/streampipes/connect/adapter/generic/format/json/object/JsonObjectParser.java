@@ -26,17 +26,22 @@ import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.format.util.JsonEventProperty;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.model.connect.grounding.FormatDescription;
-import org.streampipes.model.schema.*;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventSchema;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.json.Json;
 import javax.json.stream.JsonParserFactory;
 import javax.json.stream.JsonParsingException;
-import java.io.InputStream;
-import java.util.*;
 
 public class JsonObjectParser extends Parser {
 
-    Logger logger = LoggerFactory.getLogger(JsonObjectParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(JsonObjectParser.class);
 
     @Override
     public Parser getInstance(FormatDescription formatDescription) {

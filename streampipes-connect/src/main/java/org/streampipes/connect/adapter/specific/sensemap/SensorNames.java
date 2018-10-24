@@ -108,6 +108,26 @@ public class SensorNames {
         }
     }
 
+    public static String getKeyFromLabel(String labelString) {
+        if (LABEL_TEMPERATURE.equals(labelString)) {
+            return KEY_TEMPERATURE;
+        } else if (LABEL_HUMIDITY.equals(labelString)) {
+            return KEY_HUMIDITY;
+        } else if (LABEL_PRESSURE.equals(labelString)) {
+            return KEY_PRESSURE;
+        } else if (LABEL_ILLUMINANCE.equals(labelString)) {
+            return KEY_ILLUMINANCE;
+        } else if (LABEL_UV_INTENSITY.equals(labelString)) {
+            return KEY_UV_INTENSITY;
+        } else if (LABEL_PM10.equals(labelString)) {
+            return KEY_PM10;
+        } else if (LABEL_PM2_5.equals(labelString)) {
+            return KEY_PM2_5;
+        } else {
+            return KEY_NOT_FOUND;
+        }
+    }
+
     private static boolean check(String value, String contains) {
         return value.contains(contains);
     }

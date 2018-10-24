@@ -56,7 +56,7 @@ public class HttpProtocolTest {
                 new HttpStreamProtocol(
                         new TestParserWithAssertCheck(""),
                         new HttpProtocolTest.TestFormat(),
-                        Mock.HOST + "/", 1);
+                        Mock.HOST + "/", 1, "");
 
         httpProtocol.run(null);
         Thread.sleep(5000L);
@@ -75,7 +75,7 @@ public class HttpProtocolTest {
                         .withBody(expected)));
 
 
-        HttpStreamProtocol httpProtocol = new HttpStreamProtocol(null, null, Mock.HOST + "/", 100);
+        HttpStreamProtocol httpProtocol = new HttpStreamProtocol(null, null, Mock.HOST + "/", 100, "");
 
         InputStream data = httpProtocol.getDataFromEndpoint();
 
@@ -103,7 +103,7 @@ public class HttpProtocolTest {
                 new HttpStreamProtocol(
                         new HttpProtocolTest.TestParser(""),
                         new HttpProtocolTest.TestFormat(),
-                        Mock.HOST + "/", 1);
+                        Mock.HOST + "/", 1, "");
 
         List<Map<String, Object>> result = httpProtocol.getNElements(1);
 

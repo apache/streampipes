@@ -118,7 +118,7 @@ public class CsvParser extends Parser {
 
         }
 
-        if (o.toLowerCase().equals("true") || o.toLowerCase().equals("false")) {
+        if (o.equalsIgnoreCase("true") || o.equalsIgnoreCase("false")) {
             return XSD._boolean.toString();
         }
 

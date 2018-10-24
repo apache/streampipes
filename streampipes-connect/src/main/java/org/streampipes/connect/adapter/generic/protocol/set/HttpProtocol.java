@@ -28,8 +28,8 @@ import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
-import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
+import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 
@@ -57,12 +57,13 @@ public class HttpProtocol extends Protocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        ProtocolDescription pd = new ProtocolDescription(ID,"HTTP (Set)","This is the " +
+        ProtocolDescription pd = new ProtocolDescription(ID,"HTTP Set","This is the " +
                 "description for the http protocol");
         FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("url", "url",
                 "This property defines the URL for the http request.");
 
         pd.setSourceType("SET");
+        pd.setIconUrl("rest.png");
         //TODO remove just for testing
 //        urlProperty.setValue("https://opendata.bonn.de/api/action/datastore/search.json?resource_id=0a41c514-f760-4a17-b0a8-e1b755204fee&limit=100");
 

@@ -17,40 +17,40 @@
 
 package org.streampipes.connect.adapter.specific.sensemap;
 
-import com.github.jqudt.onto.units.TemperatureUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.specific.PullAdapter;
+import org.streampipes.connect.adapter.specific.PullRestAdapter;
 import org.streampipes.connect.adapter.specific.sensemap.model.CurrentLocation;
 import org.streampipes.connect.adapter.specific.sensemap.model.SenseBox;
 import org.streampipes.connect.adapter.specific.sensemap.model.Sensor;
 import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.AnyStaticProperty;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
+import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.vocabulary.XSD;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class OpenSenseMapAdapter extends PullAdapter {
+public class OpenSenseMapAdapter extends PullRestAdapter {
 
     private Logger logger = LoggerFactory.getLogger(OpenSenseMapAdapter.class);
 
@@ -62,6 +62,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
 
     private String url = "https://api.opensensemap.org/boxes";
 
+
     public OpenSenseMapAdapter() {
         super();
     }
@@ -69,43 +70,28 @@ public class OpenSenseMapAdapter extends PullAdapter {
     public OpenSenseMapAdapter(SpecificAdapterStreamDescription adapterDescription) {
         super(adapterDescription);
 
-        this.selectedSensors = Arrays.asList(SensorNames.ALL_SENSOR_KEYS);
 
     }
 
     @Override
-    public AdapterDescription declareModel() {
-        AdapterDescription adapterDescription = new SpecificAdapterStreamDescription();
-        adapterDescription.setAdapterId(ID);
-        adapterDescription.setUri(ID);
-        adapterDescription.setName("OpenSenseMap");
-        adapterDescription.setDescription("Environment Sensors");
-        adapterDescription.setIconUrl("https://raw.githubusercontent.com/sensebox/resources/master/images/openSenseMap_API_github.png");
-
-        // TODO once any properties are developed in ui change the static properties to possible Sensors
-        List<Option> options = new ArrayList<>();
-        for (String s : SensorNames.ALL_SENSOR_LABELS) {
-            options.add(new Option(s));
-        }
-        AnyStaticProperty possibleSensors = new AnyStaticProperty("sensors", "Sensors", "Select the sensors that are included in the data stream");
-        possibleSensors.setOptions(options);
-
-        FreeTextStaticProperty sensorType = new FreeTextStaticProperty("sensortype", "Sensor Type",
-                "Follow this Hashtag.");
-        adapterDescription.addConfig(possibleSensors);
-
-//        adapterDescription.addConfig(sensorType);
-
-        return adapterDescription;
+    public SpecificAdapterStreamDescription declareModel() {
+          return SpecificDataStreamAdapterBuilder.create(ID, "OpenSenseMap", "Environment Sensors")
+                .iconUrl("openSenseMap.png")
+                .requiredMultiValueSelection(Labels.from("sensors", "Sensors", "Select the " +
+                        "sensors that are included in the data stream"), Stream
+                        .of(SensorNames.ALL_SENSOR_LABELS)
+                        .map(s -> new Option(s, SensorNames.getKeyFromLabel(s)))
+                        .collect(Collectors.toList()))
+                .build();
     }
 
     @Override
-    public Adapter getInstance(AdapterDescription adapterDescription) {
-        return new OpenSenseMapAdapter((SpecificAdapterStreamDescription) adapterDescription);
+    public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
+        return new OpenSenseMapAdapter(adapterDescription);
     }
 
     @Override
-    public GuessSchema getSchema(AdapterDescription adapterDescription) {
+    public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) {
         GuessSchema guessSchema = new GuessSchema();
 
         EventSchema eventSchema = new EventSchema();
@@ -113,6 +99,9 @@ public class OpenSenseMapAdapter extends PullAdapter {
         eventPropertyPrimitive.setRuntimeType(XSD._double.toString());
 
         List<EventProperty> allProperties = new ArrayList<>();
+
+        List<Option> allOptions = ((AnyStaticProperty) (adapterDescription.getConfig().get(0))).getOptions();
+        activateSensors(allOptions);
 
         // Set basic properties
         allProperties.add(EpProperties.timestampProperty(SensorNames.KEY_TIMESTAMP));
@@ -141,7 +130,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
                         .label(SensorNames.LABEL_LATITUDE)
                         .description("Latitude value of box location")
                         .build());
-         allProperties.add(
+        allProperties.add(
                 PrimitivePropertyBuilder
                         .create(Datatypes.String, SensorNames.KEY_LONGITUDE)
                         .label(SensorNames.KEY_LONGITUDE)
@@ -154,7 +143,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
                     .create(Datatypes.Double, SensorNames.KEY_TEMPERATURE)
                     .label(SensorNames.LABEL_TEMPERATURE)
                     .description("Measurement for the temperature")
-                    .measurementUnit(TemperatureUnit.CELSIUS.getResource())
+//                    .measurementUnit(TemperatureUnit.CELSIUS.getResource())
                     .build());
         }
         if (selected(SensorNames.KEY_HUMIDITY)) {
@@ -264,7 +253,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
                             if (value != Double.MIN_VALUE) {
                                 event.put(key, value);
                             } else {
-                                logger.info("Sensor value " +s.getLastMeasurement().getValue() + " of sensor id: " +
+                                logger.info("Sensor value " + s.getLastMeasurement().getValue() + " of sensor id: " +
                                         s.get_id() + " in sense box id: " + senseBox.get_id() +
                                         " is not correctly formatted");
                             }
@@ -285,18 +274,32 @@ public class OpenSenseMapAdapter extends PullAdapter {
 
     @Override
     protected void pullData() {
+        List<Option> allOptions = ((AnyStaticProperty) (adapterDescription.getConfig().get(0))).getOptions();
+        activateSensors(allOptions);
 
         List<Map<String, Object>> events = getEvents();
 
         for (Map<String, Object> event : events) {
-           adapterPipeline.process(event);
+            adapterPipeline.process(event);
         }
 
     }
 
     @Override
-    protected PollingSettings getPollingIntervalInSeconds() {
+    protected PollingSettings getPollingInterval() {
         return PollingSettings.from(TimeUnit.SECONDS, 60);
+    }
+
+    private void activateSensors(List<Option> config) {
+//        this.selectedSensors = Arrays.asList(SensorNames.ALL_SENSOR_KEYS);
+        this.selectedSensors = new ArrayList<>();
+
+        for (Option option : config) {
+
+            if (option.isSelected()) {
+                this.selectedSensors.add(option.getInternalName());
+            }
+        }
     }
 
     private Map<String, Object> filterSensors(Map<String, Object> event) {
@@ -314,7 +317,7 @@ public class OpenSenseMapAdapter extends PullAdapter {
     }
 
     private boolean checkEvent(Map<String, Object> event) {
-        for(String key : selectedSensors) {
+        for (String key : selectedSensors) {
             if (!event.keySet().contains(key)) {
                 return false;
             }
@@ -359,24 +362,24 @@ public class OpenSenseMapAdapter extends PullAdapter {
     }
 
     private double getLatitude(SenseBox box) {
-       List<Double> latlong = getLatLong(box);
+        List<Double> latlong = getLatLong(box);
 
-       if (latlong != null) {
-           return latlong.get(1);
-       } else {
-           return Double.MIN_VALUE;
-       }
+        if (latlong != null) {
+            return latlong.get(1);
+        } else {
+            return Double.MIN_VALUE;
+        }
 
     }
 
     private double getLongitude(SenseBox box) {
-       List<Double> latlong = getLatLong(box);
+        List<Double> latlong = getLatLong(box);
 
-       if (latlong != null) {
-           return latlong.get(0);
-       } else {
-           return Double.MIN_VALUE;
-       }
+        if (latlong != null) {
+            return latlong.get(0);
+        } else {
+            return Double.MIN_VALUE;
+        }
     }
 
     private List<Double> getLatLong(SenseBox box) {

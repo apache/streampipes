@@ -1,9 +1,9 @@
-FROM anapsix/alpine-java
+FROM anapsix/alpine-java:8
 
 ENV CONSUL_LOCATION consul
 
 EXPOSE 8099
 
-ADD target/streampipes-connect-container.jar  /streampipes-connect-container.jar
+COPY target/streampipes-connect-container.jar  /streampipes-connect-container.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-connect-container.jar"]

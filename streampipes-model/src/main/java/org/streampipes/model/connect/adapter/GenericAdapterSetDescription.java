@@ -39,7 +39,7 @@ public class GenericAdapterSetDescription extends AdapterSetDescription implemen
     private FormatDescription formatDescription;
 
     @RdfProperty("sp:hasProtocol")
-    private ProtocolSetDescription protocolDescription;
+    private ProtocolDescription protocolDescription;
 
 
     public GenericAdapterSetDescription() {
@@ -72,7 +72,7 @@ public class GenericAdapterSetDescription extends AdapterSetDescription implemen
         return protocolDescription;
     }
 
-    public void setProtocolDescription(ProtocolSetDescription protocolDescription) {
+    public void setProtocolDescription(ProtocolDescription protocolDescription) {
         this.protocolDescription = protocolDescription;
     }
 

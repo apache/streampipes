@@ -43,7 +43,7 @@ public class TestAdapterSerializer {
     // Add _id field to json, probably there is a cleaner solution
     String serialized = (GsonSerializer.getAdapterGson().toJson(desc));
     serialized = serialized.substring(1);
-    serialized = "{\"_id\": \"1\", " + serialized;
+    serialized = "{\"_id\": \"1\", \"_rev\": \"2\"," + serialized;
 
     AdapterDescription deserialized = GsonSerializer.getAdapterGson().fromJson(serialized, AdapterDescription.class);
     assertEquals(deserialized.getAdapterId(), "http://streampipes.org/genericadapterstreamdescription");

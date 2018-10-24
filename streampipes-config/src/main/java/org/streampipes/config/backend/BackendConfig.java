@@ -45,7 +45,7 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.IS_CONFIGURED, false, "Boolean that indicates whether streampipes is " +
             "already configured or not");
     config.register(BackendConfigKeys.KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
-    config.register(BackendConfigKeys.KAFKA_REST_PORT, 8073, "The port of the kafka-rest module");
+    config.register(BackendConfigKeys.KAFKA_REST_PORT, 8082, "The port of the kafka-rest module");
     config.register(BackendConfigKeys.KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
 
 

@@ -71,7 +71,10 @@ public class WorkerRestClientTest {
 
         doNothing().when(WorkerRestClient.class, "stopAdapter", anyString(), any(), anyString());
         when(WorkerRestClient.class, "stopStreamAdapter", anyString(), any()).thenCallRealMethod();
-        WorkerRestClient.stopStreamAdapter("", new GenericAdapterStreamDescription());
+        GenericAdapterStreamDescription description = new GenericAdapterStreamDescription();
+        description.setId("id1");
+
+        WorkerRestClient.stopStreamAdapter("", description);
 
         verifyStatic(WorkerRestClient.class, times(1));
         WorkerRestClient.stopAdapter(anyString(), any(), eq("worker/stream/stop"));
@@ -83,7 +86,10 @@ public class WorkerRestClientTest {
         doThrow(new AdapterException()).when(WorkerRestClient.class, "stopAdapter", anyString(), any(), anyString());
         when(WorkerRestClient.class, "stopStreamAdapter", anyString(), any()).thenCallRealMethod();
 
-        WorkerRestClient.stopStreamAdapter("", new GenericAdapterStreamDescription());
+        GenericAdapterStreamDescription description = new GenericAdapterStreamDescription();
+        description.setId("id1");
+
+        WorkerRestClient.stopStreamAdapter("", description);
 
     }
 
@@ -93,7 +99,9 @@ public class WorkerRestClientTest {
         doNothing().when(WorkerRestClient.class, "startAdapter", anyString(), any());
         when(WorkerRestClient.class, "invokeSetAdapter", anyString(), any()).thenCallRealMethod();
 
-        WorkerRestClient.invokeSetAdapter("", new GenericAdapterSetDescription());
+        GenericAdapterSetDescription description = new GenericAdapterSetDescription();
+        description.setId("id1");
+        WorkerRestClient.invokeSetAdapter("", description);
 
         verifyStatic(WorkerRestClient.class, times(1));
         WorkerRestClient.startAdapter(eq("worker/set/invoke"), any());
@@ -113,7 +121,10 @@ public class WorkerRestClientTest {
 
         doNothing().when(WorkerRestClient.class, "stopAdapter", anyString(), any(), anyString());
         when(WorkerRestClient.class, "stopSetAdapter", anyString(), any()).thenCallRealMethod();
-        WorkerRestClient.stopSetAdapter("", new GenericAdapterSetDescription());
+
+        GenericAdapterSetDescription description = new GenericAdapterSetDescription();
+        description.setId("id1");
+        WorkerRestClient.stopSetAdapter("", description);
 
         verifyStatic(WorkerRestClient.class, times(1));
         WorkerRestClient.stopAdapter(anyString(), any(), eq("worker/set/stop"));
@@ -124,7 +135,10 @@ public class WorkerRestClientTest {
     public void stopSetAdapterFail() throws Exception {
         doThrow(new AdapterException()).when(WorkerRestClient.class, "stopAdapter", anyString(), any(), anyString());
         when(WorkerRestClient.class, "stopSetAdapter", anyString(), any()).thenCallRealMethod();
-        WorkerRestClient.stopSetAdapter("", new GenericAdapterSetDescription());
+
+        GenericAdapterSetDescription description = new GenericAdapterSetDescription();
+        description.setId("id1");
+        WorkerRestClient.stopSetAdapter("", description);
 
     }
 

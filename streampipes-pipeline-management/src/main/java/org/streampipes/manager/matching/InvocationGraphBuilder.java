@@ -42,7 +42,7 @@ public class InvocationGraphBuilder {
   private PipelineGraph pipelineGraph;
   private String pipelineId;
 
-  List<InvocableStreamPipesEntity> graphs;
+  private List<InvocableStreamPipesEntity> graphs;
 
   public InvocationGraphBuilder(PipelineGraph pipelineGraph, String pipelineId) {
     this.graphs = new ArrayList<>();
@@ -72,18 +72,26 @@ public class InvocationGraphBuilder {
 
         DataProcessorInvocation dataProcessorInvocation = (DataProcessorInvocation) source;
         EventSchema outputSchema = new EventSchema();
-        OutputSchemaGenerator schemaGenerator = new OutputSchemaFactory(dataProcessorInvocation).getOuputSchemaGenerator();
+        OutputSchemaGenerator schemaGenerator = new OutputSchemaFactory(dataProcessorInvocation)
+                .getOuputSchemaGenerator();
 
         if (((DataProcessorInvocation) source).getInputStreams().size() == 1) {
-          outputSchema = schemaGenerator.buildFromOneStream(dataProcessorInvocation.getInputStreams().get(0));
+          outputSchema = schemaGenerator.buildFromOneStream(dataProcessorInvocation
+                  .getInputStreams()
+                  .get(0));
         } else if (graphExists(dataProcessorInvocation.getDOM())) {
           DataProcessorInvocation existingInvocation = (DataProcessorInvocation) find(dataProcessorInvocation.getDOM());
 
-          outputSchema = schemaGenerator.buildFromTwoStreams(existingInvocation.getInputStreams().get(0), dataProcessorInvocation.getInputStreams().get(1));
+          outputSchema = schemaGenerator.buildFromTwoStreams(existingInvocation
+                  .getInputStreams().get(0), dataProcessorInvocation.getInputStreams().get(1));
           graphs.remove(existingInvocation);
         }
 
-        dataProcessorInvocation.setOutputStrategies(Arrays.asList(schemaGenerator.getModifiedOutputStrategy(dataProcessorInvocation.getOutputStrategies().get(0))));
+        dataProcessorInvocation.setOutputStrategies(Arrays
+                .asList(schemaGenerator
+                        .getModifiedOutputStrategy(dataProcessorInvocation
+                                .getOutputStrategies()
+                                .get(0))));
 
         SpDataStream outputStream = new SpDataStream();
         outputStream.setEventSchema(outputSchema);

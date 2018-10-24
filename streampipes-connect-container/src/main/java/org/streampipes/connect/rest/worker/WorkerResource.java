@@ -35,7 +35,7 @@ import javax.ws.rs.core.Response;
 @Path("/api/v1/{username}/worker")
 public class WorkerResource extends AbstractContainerResource {
 
-    Logger logger = LoggerFactory.getLogger(WorkerResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(WorkerResource.class);
 
     private AdapterWorkerManagement adapterManagement;
 

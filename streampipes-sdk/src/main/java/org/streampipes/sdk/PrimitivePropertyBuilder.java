@@ -25,7 +25,7 @@ import java.net.URI;
 @Deprecated
 public class PrimitivePropertyBuilder {
 
-	EventPropertyPrimitive primitive;
+	private EventPropertyPrimitive primitive;
 	
 	private PrimitivePropertyBuilder(String dataType, String runtimeName, String subPropertyOf) {
 		primitive = new EventPropertyPrimitive(dataType, runtimeName, "", Utils.createURI(subPropertyOf));

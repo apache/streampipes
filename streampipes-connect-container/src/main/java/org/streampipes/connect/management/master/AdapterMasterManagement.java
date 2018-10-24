@@ -19,10 +19,8 @@ package org.streampipes.connect.management.master;
 
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.connect.adapter.GroundingService;
 import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.exception.AdapterException;
@@ -35,14 +33,28 @@ import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
-import static org.streampipes.connect.rest.SpConnect.deleteDataSource;
 
 public class AdapterMasterManagement {
 
     private static final Logger logger = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
-    public void addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl adapterStorage)
+    public static void startAllStreamAdapters() throws AdapterException {
+        AdapterStorageImpl adapterStorage = new AdapterStorageImpl();
+        List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
+
+        for (AdapterDescription ad : allAdapters) {
+            if (ad instanceof AdapterStreamDescription) {
+                String url = Utils.addUserNameToApi(ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl(), ad.getUserName());
+
+                WorkerRestClient.invokeStreamAdapter(url, (AdapterStreamDescription) ad);
+            }
+        }
+    }
+
+    public String addAdapter(AdapterDescription ad, String baseUrl, AdapterStorageImpl
+            adapterStorage, String username)
             throws AdapterException {
 
         // Add EventGrounding to AdapterDescription
@@ -50,9 +62,12 @@ public class AdapterMasterManagement {
                 ConnectContainerConfig.INSTANCE.getKafkaHost(), ConnectContainerConfig.INSTANCE.getKafkaPort(), null);
         ad.setEventGrounding(eventGrounding);
 
+        String newId = ad.getElementId() + UUID.randomUUID().toString();
+        ad.changeElementId(newId);
+        ad.setElementId(newId);
+
         // store in db
         adapterStorage.storeAdapter(ad);
-
 
         // start when stream adapter
         if (ad instanceof AdapterStreamDescription) {
@@ -65,20 +80,22 @@ public class AdapterMasterManagement {
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
         String adapterCouchdbId = "";
         for (AdapterDescription a : allAdapters) {
-           if (a.getAdapterId().equals(ad.getAdapterId())) {
+           if (a.getElementId().equals(ad.getElementId())) {
                adapterCouchdbId = a.getId();
            }
         }
 
         String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() +"api/v2/";
-        String userName = ad.getUserName();
-        String requestUrl = backendBaseUrl +  "noauth/users/" + userName + "/element";
-        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerUrl() + "api/v1/" + userName + "/master/sources/" + adapterCouchdbId;
+//        String userName = ad.getUserName();
+        String requestUrl = backendBaseUrl +  "noauth/users/" + username + "/element";
+        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() +
+                "api/v1/" + username + "/master/sources/" + adapterCouchdbId;
 
         logger.info("Install source (source URL: " + elementUrl +" in backend over URL: " + requestUrl);
 
         installDataSource(requestUrl, elementUrl);
 
+        return new SourcesManagement().getAdapterDataSource(adapterCouchdbId).getElementId();
     }
 
     public boolean installDataSource(String requestUrl, String elementIdUrl) throws AdapterException {
@@ -130,9 +147,12 @@ public class AdapterMasterManagement {
 
         adapterStorage.deleteAdapter(id);
 
-        String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/noauth/users/"+ username + "/element/";
-        backendBaseUrl = backendBaseUrl + id;
-        deleteDataSource(backendBaseUrl);
+        String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/noauth/users/"+ username + "/element/delete";
+
+//        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() + "api/v1/" + username + "/master/sources/" + id;
+        String elementUrl = ad.getUri() + "/" + ad.getId();
+
+//        deleteDataSource(backendBaseUrl, elementUrl);
 
 
         boolean response = true;
@@ -140,10 +160,12 @@ public class AdapterMasterManagement {
         String responseString = null;
         logger.info("Delete data source in backend with request URL: " + backendBaseUrl);
         try {
-            responseString = Request.Delete(backendBaseUrl)
-                   .connectTimeout(1000)
-                   .socketTimeout(100000)
-                   .execute().returnContent().asString();
+            responseString = Request.Post(backendBaseUrl)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .bodyForm(Form.form()
+                            .add("uri", elementUrl).build())
+                    .execute().returnContent().asString();
         } catch (IOException e) {
             e.printStackTrace();
             responseString = e.toString();

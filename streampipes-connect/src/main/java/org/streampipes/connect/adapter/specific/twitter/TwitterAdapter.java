@@ -26,9 +26,16 @@ import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.vocabulary.XSD;
-import twitter4j.*;
+import twitter4j.StallWarning;
+import twitter4j.Status;
+import twitter4j.StatusDeletionNotice;
+import twitter4j.StatusListener;
+import twitter4j.TwitterObjectFactory;
+import twitter4j.TwitterStream;
+import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.Arrays;
@@ -51,23 +58,16 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
     }
 
     @Override
-    public AdapterDescription declareModel() {
-        AdapterDescription adapterDescription = new SpecificAdapterStreamDescription();
-        adapterDescription.setAdapterId(ID);
-        adapterDescription.setUri(ID);
-        adapterDescription.setName("Twitter");
-        adapterDescription.setDescription("Follow Hashtag");
-        adapterDescription.setIconUrl("https://upload.wikimedia.org/wikipedia/de/thumb/9/9f/Twitter_bird_logo_2012.svg/1200px-Twitter_bird_logo_2012.svg.png");
-        FreeTextStaticProperty accessToken = new FreeTextStaticProperty("access_token", "Access Token",
-                "Access Token for Twitter Rest API.");
-        FreeTextStaticProperty accessTokenSecret = new FreeTextStaticProperty("access_token_secret", "Access Token Secret",
-                "Access Token Secret for Twitter Rest API.");
-        FreeTextStaticProperty hashtag = new FreeTextStaticProperty("hashtag", "Hashtag",
-                "Follow this Hashtag.");
-        adapterDescription.addConfig(accessToken);
-        adapterDescription.addConfig(accessTokenSecret);
-        adapterDescription.addConfig(hashtag);
-        return adapterDescription;
+    public SpecificAdapterStreamDescription declareModel() {
+        return SpecificDataStreamAdapterBuilder.create(ID, "Twitter", "Follow Hashtag")
+                .iconUrl("twitter.png")
+                .requiredTextParameter(Labels.from("access_token", "Access Token",
+                        "Access Token for Twitter Rest API."))
+                .requiredTextParameter(Labels.from("access_token_secret", "Access Token Secret",
+                        "Access Token Secret for Twitter Rest API."))
+                .requiredTextParameter(Labels.from("hashtag", "Hashtag",
+                        "Follow this Hashtag."))
+                .build();
     }
 
     @Override
@@ -76,8 +76,8 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
     }
 
     @Override
-    public Adapter getInstance(AdapterDescription adapterDescription) {
-        return new TwitterAdapter((SpecificAdapterStreamDescription) adapterDescription);
+    public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
+        return new TwitterAdapter(adapterDescription);
     }
 
     public static void main(String... args) {
@@ -117,7 +117,7 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
     }
 
     @Override
-    public GuessSchema getSchema(AdapterDescription adapterDescription) {
+    public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) {
         //TODO not needed or return fixed schema
         GuessSchema guessSchema = new GuessSchema();
         EventPropertyPrimitive eventPropertyPrimitive = new EventPropertyPrimitive();

@@ -21,12 +21,14 @@ import com.google.gson.Gson;
 import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.rest.shared.annotation.GsonWithoutIds;
 
+import javax.annotation.Priority;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 @Provider
+@Priority(2)
 @GsonWithoutIds
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

@@ -45,7 +45,7 @@ public class WorkerRestClient {
     public static void stopStreamAdapter(String baseUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
         String url = baseUrl + "worker/stream/stop";
 
-        stopAdapter(adapterStreamDescription.getAdapterId(), new AdapterStorageImpl(), url);
+        stopAdapter(adapterStreamDescription.getId(), new AdapterStorageImpl(), url);
     }
 
     public static void invokeSetAdapter(String baseUrl, AdapterSetDescription adapterSetDescription) throws AdapterException {
@@ -90,6 +90,10 @@ public class WorkerRestClient {
 
         //Delete from database
         AdapterDescription ad = adapterStorage.getAdapter(adapterId);
+
+//        System.out.println("blll: " + adapterId);
+
+//        adapterStorage.deleteAdapter(adapterId);
 
         // Stop execution of adatper
         try {

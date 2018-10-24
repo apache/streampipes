@@ -14,19 +14,20 @@
  * limitations under the License.
  *
  */
+
 package org.streampipes.serializers.json;
 
 import com.google.gson.*;
-import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.rules.TransformationRuleDescription;
 
 import java.lang.reflect.MalformedParameterizedTypeException;
 import java.lang.reflect.Type;
 
-public class AdapterSerializer implements JsonSerializer<AdapterDescription>, JsonDeserializer<AdapterDescription> {
+public class TransformationRuleSerializer implements JsonSerializer<TransformationRuleDescription>, JsonDeserializer<TransformationRuleDescription> {
 
 
   @Override
-  public AdapterDescription deserialize(JsonElement json, Type typeInfo, JsonDeserializationContext context) throws JsonParseException {
+  public TransformationRuleDescription deserialize(JsonElement json, Type typeInfo, JsonDeserializationContext context) throws JsonParseException {
     JsonObject jsonObject = json.getAsJsonObject();
     String type = jsonObject.get("type").getAsString();
     JsonElement element = jsonObject.get("properties");
@@ -35,14 +36,14 @@ public class AdapterSerializer implements JsonSerializer<AdapterDescription>, Js
     tmp.addProperty("_rev", jsonObject.get("_rev").getAsString());
 
     try {
-      return (AdapterDescription) GsonSerializer.getGson().fromJson(element, Class.forName(type));
+      return (TransformationRuleDescription) GsonSerializer.getGson().fromJson(element, Class.forName(type));
     } catch (ClassNotFoundException cnfe) {
       throw new JsonParseException("Unknown element type: " + type, cnfe);
     }
   }
 
   @Override
-  public JsonElement serialize(AdapterDescription src, Type type, JsonSerializationContext context) {
+  public JsonElement serialize(TransformationRuleDescription src, Type type, JsonSerializationContext context) {
     JsonObject result = new JsonObject();
     try {
       result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));

@@ -39,7 +39,7 @@ public class AdapterResourceTest extends ConnectContainerResourceTest {
 
     @Override
     protected String getApi() {
-        return "/api/v1/riemer@fzi.de/master/adapters";
+        return "/api/v1/admin@fzi.de/master/adapters";
     }
 
     private AdapterResource adapterResource;
@@ -71,14 +71,14 @@ public class AdapterResourceTest extends ConnectContainerResourceTest {
 
     @Test
     public void addAdapterSuccess() throws AdapterException {
-        doNothing().when(adapterMasterManagement).addAdapter(any(), any(), any());
+        when(adapterMasterManagement.addAdapter(any(), anyString(), any(), anyString())).thenReturn("http://t.de/");
         String data = Utils.getMinimalStreamAdapterJsonLD();
-        postJsonLdSuccessRequest(data, "/", "Stream adapter with id http://t.de/ successfully added");
+        postJsonLdSuccessRequest(data, "/", "http://t.de/");
     }
 
     @Test
     public void addAdapterFail() throws AdapterException {
-        doThrow(new AdapterException(ERROR_MESSAGE)).when(adapterMasterManagement).addAdapter(any(), any(), any());
+        doThrow(new AdapterException(ERROR_MESSAGE)).when(adapterMasterManagement).addAdapter(any(), any(), any(), anyString());
         adapterResource.setAdapterMasterManagement(adapterMasterManagement);
 
         String data = Utils.getMinimalStreamAdapterJsonLD();

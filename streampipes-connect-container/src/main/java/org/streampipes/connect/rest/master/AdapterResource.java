@@ -23,19 +23,26 @@ import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.management.AdapterDeserializer;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
+import org.streampipes.connect.management.master.Utils;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.model.connect.adapter.*;
+import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 import org.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.rest.shared.util.SpMediaType;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
+import java.util.List;
 
-import javax.ws.rs.*;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Path("/api/v1/{username}/master/adapters")
 public class AdapterResource extends AbstractContainerResource {
@@ -59,11 +66,12 @@ public class AdapterResource extends AbstractContainerResource {
     @POST
 //    @JsonLdSerialized
     @Path("/")
+    @GsonWithIds
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAdapter(String s, @PathParam("username") String userName) {
 
         AdapterDescription adapterDescription = null;
-
+        String adapterId;
 
         try {
             adapterDescription = AdapterDeserializer.getAdapterDescription(s);
@@ -74,19 +82,18 @@ public class AdapterResource extends AbstractContainerResource {
 
         logger.info("User: " + userName + " starts adapter " + adapterDescription.getAdapterId());
 
-        String newUrl = addUserNameToApi(connectContainerEndpoint, userName);
+        String newUrl = Utils.addUserNameToApi(connectContainerEndpoint, userName);
 
         try {
-            adapterMasterManagement.addAdapter(adapterDescription, newUrl, new AdapterStorageImpl());
+            adapterId = adapterMasterManagement.addAdapter(adapterDescription, newUrl, new
+                    AdapterStorageImpl(), userName);
         } catch (AdapterException e) {
             logger.error("Error while starting adapter with id " + adapterDescription.getUri(), e);
             return ok(Notifications.error(e.getMessage()));
         }
 
-        String responseMessage = "Stream adapter with id " + adapterDescription.getUri() + " successfully added";
-
-        logger.info(responseMessage);
-        return ok(Notifications.success(responseMessage));
+        logger.info("Stream adapter with id " + adapterId + " successfully added");
+        return ok(Notifications.success(adapterId));
     }
 
     @GET
@@ -114,7 +121,7 @@ public class AdapterResource extends AbstractContainerResource {
 
         try {
 
-            String newUrl = addUserNameToApi(connectContainerEndpoint, userName);
+            String newUrl = Utils.addUserNameToApi(connectContainerEndpoint, userName);
             adapterMasterManagement.deleteAdapter(id, newUrl);
             return ok(true);
         } catch (AdapterException e) {
@@ -145,7 +152,4 @@ public class AdapterResource extends AbstractContainerResource {
         this.adapterMasterManagement = adapterMasterManagement;
     }
 
-    private String addUserNameToApi(String url, String userName) {
-        return  url + "api/v1/" + userName + "/";
-    }
 }

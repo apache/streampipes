@@ -1,8 +1,8 @@
-FROM anapsix/alpine-java
+FROM anapsix/alpine-java:8
 
 EXPOSE 8090
 ENV CONSUL_LOCATION consul
 
-ADD ./target/${artifactId}.jar  /streampipes-processing-element-container.jar
+COPY ./target/${artifactId}.jar  /streampipes-processing-element-container.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-processing-element-container.jar"]

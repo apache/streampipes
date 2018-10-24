@@ -33,19 +33,26 @@ import org.streampipes.sdk.builder.PipelineTemplateBuilder;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.streampipes.storage.management.StorageDispatcher;
 
-import javax.ws.rs.*;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URISyntaxException;
-import java.util.*;
 
 @Path("/v2/users/{username}/internal-pipelines")
 public class InternalPipelineTemplates extends AbstractRestInterface implements InternalPipelineTemplate {
 
-    static Logger LOG = LoggerFactory.getLogger(InternalPipelineTemplates.class);
-
-
-    Map<String, Template> templates;
+    private static final Logger LOG = LoggerFactory.getLogger(InternalPipelineTemplates.class);
+    private Map<String, Template> templates;
 
     public InternalPipelineTemplates() {
         templates = new HashMap<>();

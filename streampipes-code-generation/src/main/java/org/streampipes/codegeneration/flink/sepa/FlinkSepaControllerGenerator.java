@@ -17,22 +17,21 @@
 
 package org.streampipes.codegeneration.flink.sepa;
 
-import javax.lang.model.element.Modifier;
-
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
-
+import org.streampipes.codegeneration.ControllerGenerator;
+import org.streampipes.codegeneration.utils.JFC;
 import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.MappingProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
-import org.streampipes.codegeneration.ControllerGenerator;
-import org.streampipes.codegeneration.utils.JFC;
+
+import javax.lang.model.element.Modifier;
 
 public class FlinkSepaControllerGenerator extends ControllerGenerator {
 
@@ -73,11 +72,13 @@ public class FlinkSepaControllerGenerator extends ControllerGenerator {
 	private Builder getStaticProperty(Builder b, StaticProperty sp) {
 		String name = sp.getInternalName().replaceAll("-", "_").replaceAll("/", "_");
 		if (sp instanceof MappingProperty) {
-			b.addStatement("String $L = $T.getMappingPropertyName(graph, $S)", name, JFC.SEPA_UTILS,
-					sp.getInternalName());
+			// TODO use SDK
+//			b.addStatement("String $L = $T.getMappingPropertyName(graph, $S)", name, JFC.SEPA_UTILS,
+//					sp.getInternalName());
 		} else if (sp instanceof FreeTextStaticProperty) {
-			b.addStatement("String $L = $T.getFreeTextStaticPropertyValue(graph, $S)", name, JFC.SEPA_UTILS,
-					sp.getInternalName());
+			// TODO use SDK
+//			b.addStatement("String $L = $T.getFreeTextStaticPropertyValue(graph, $S)", name, JFC.SEPA_UTILS,
+//					sp.getInternalName());
 		} else {
 			// TODO add implementation for the other strategies
 			try {

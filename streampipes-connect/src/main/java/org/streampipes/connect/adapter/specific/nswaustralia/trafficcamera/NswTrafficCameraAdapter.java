@@ -21,7 +21,6 @@ import org.streampipes.connect.adapter.specific.nswaustralia.trafficcamera.model
 import org.streampipes.connect.adapter.specific.nswaustralia.trafficcamera.model.FeatureCollection;
 import org.streampipes.connect.adapter.specific.sensemap.SensorNames;
 import org.streampipes.connect.adapter.util.PollingSettings;
-import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
@@ -62,7 +61,7 @@ public class NswTrafficCameraAdapter extends PullAdapter {
   }
 
   @Override
-  protected PollingSettings getPollingIntervalInSeconds() {
+  protected PollingSettings getPollingInterval() {
     return PollingSettings.from(TimeUnit.MINUTES, 5);
   }
 
@@ -83,21 +82,22 @@ public class NswTrafficCameraAdapter extends PullAdapter {
   }
 
   @Override
-  public AdapterDescription declareModel() {
+  public SpecificAdapterStreamDescription declareModel() {
     return SpecificDataStreamAdapterBuilder.create(ID, "NSW Traffic Cameras", "Traffic camera " +
             "images produced by NSW Australia")
             .requiredTextParameter(Labels.from("api-key", "API Key", "The TfNSW " +
                     "API key"))
+            .iconUrl("nsw.png")
             .build();
   }
 
   @Override
-  public Adapter getInstance(AdapterDescription adapterDescription) {
-    return new NswTrafficCameraAdapter((SpecificAdapterStreamDescription) adapterDescription);
+  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
+    return new NswTrafficCameraAdapter(adapterDescription);
   }
 
   @Override
-  public GuessSchema getSchema(AdapterDescription adapterDescription) {
+  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) {
 
     EventSchema schema = new EventSchema();
 
