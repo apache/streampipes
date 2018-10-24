@@ -41,6 +41,7 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   private allUnits: UnitDescription[];
   private stateCtrl = new FormControl();
   private filteredUnits: Observable<UnitDescription[]>;
+  private oldExistingMeasurementUnitHolder = undefined;
 
   constructor(private formBuilder: FormBuilder,
               private dataTypeService: DataTypesService,
@@ -63,6 +64,8 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
             startWith(''),
             map(unit => unit ? this._filteredUnits(unit) : this.allUnits.slice())
         );
+
+
   }
 
   protected open = false;
@@ -72,6 +75,13 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   ngOnInit() {
   //   this.dragulaService.drag.subscribe((value: any) => this.drag());
   //   this.property.propertyNumber = this.index;
+      if (this.property.measurementUnit !== undefined) {
+          this.property.oldMeasurementUnit = '';
+          const unit = this.allUnits.find(unitTmp => unitTmp.resource === this.property.measurementUnit);
+          this.oldExistingMeasurementUnitHolder = unit.label;
+          this.property.measurementUnit = undefined;
+          this.stateCtrl.setValue(this.oldExistingMeasurementUnitHolder);
+      }
   }
 
   ngDoCheck() {
@@ -110,7 +120,7 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   private transformUnit() {
     if (this.transformUnitEnable) {
       this.transformUnitEnable = false;
-      this.property.measurementUnit = '';
+      this.property.measurementUnit = undefined;
     } else {
       const unit = this.allUnits.find(unitTmp => unitTmp.label === this.stateCtrl.value);
       if (!unit) {
@@ -120,8 +130,8 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
       this.restService.getFittingUnits(unit).subscribe( result => {
           this.possibleUnitTransformations = result;
           this.selectUnit = this.possibleUnitTransformations[0];
-          this.transformUnitEnable = true;
-          this.property.measurementUnit = this.selectUnit.resource;
+          this.transformUnitEnable = true
+          this.changeTargetUnit(this.selectUnit);
       });
     }
   }
@@ -132,7 +142,11 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
       return this.allUnits.filter(unit => unit.label.toLowerCase().indexOf(filterValue) === 0);
   }
 
-    changeTargetUnit(unit: UnitDescription) {
-        this.property.measurementUnit = unit.resource;
-    }
+  changeTargetUnit(unit: UnitDescription) {
+      this.property.measurementUnit = unit.resource;
+      if (this.oldExistingMeasurementUnitHolder === undefined) {
+          const unit = this.allUnits.find(unitTmp => unitTmp.label === this.stateCtrl.value);
+          this.property.oldMeasurementUnit = unit.resource;
+      }
+  }
 }

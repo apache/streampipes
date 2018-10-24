@@ -53,7 +53,7 @@ export class TransformationRuleService {
             this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
         // Unit
-        transformationRuleDescription = transformationRuleDescription.concat(this.getUnitTransformaRules(
+        transformationRuleDescription = transformationRuleDescription.concat(this.getUnitTransformRules(
             this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
         return transformationRuleDescription;
@@ -191,19 +191,37 @@ export class TransformationRuleService {
         return resultRules;
     }
 
-    public getUnitTransformaRules(newEventProperties: EventProperty[],
+    public getUnitTransformRules(newEventProperties: EventProperty[],
                                       oldEventSchema: EventSchema,
                                       newEventSchema: EventSchema): UnitTransformRuleDescription[] {
         var result: UnitTransformRuleDescription[] = [];
 
         for (let eventProperty of newEventProperties) {
-            /*
-             * TODO: Create Rules
-             * Problem: Just the new EventPropertyPrimintive form the newEventSchema just contain the measurementUnit,
-             * in oldEventSchema propertiesPrimitives don't have measurementUnit.
-             *
-             * Hack: Add Attribute "measurementUnit" Attribute to EventPropertyPrimintive
-             */
+
+            if (eventProperty instanceof EventPropertyPrimitive) {
+                const eventPropertyPrimitive =  eventProperty as EventPropertyPrimitive;
+                if (eventProperty.measurementUnit !== undefined) {
+                    if (eventProperty.oldMeasurementUnit === '') {
+                        const oldEventProperty = this.getEventProperty(this.oldEventSchema.eventProperties, eventProperty.id);
+
+                        result.push(new UnitTransformRuleDescription(eventProperty.id, (oldEventProperty as EventPropertyPrimitive).measurementUnit,
+                                                                        eventProperty.measurementUnit));
+                    } else {
+                        result.push(new UnitTransformRuleDescription(eventProperty.id, eventProperty.oldMeasurementUnit,
+                            eventProperty.measurementUnit));
+                    }
+                }
+
+
+            } else if (eventProperty instanceof EventPropertyNested) {
+
+                const tmpResults: UnitTransformRuleDescription[] = this.getUnitTransformRules((<EventPropertyNested> eventProperty).eventProperties,
+                    oldEventSchema, newEventSchema);
+                result = result.concat(tmpResults);
+
+            }
+
+
         }
 
 
@@ -259,6 +277,22 @@ export class TransformationRuleService {
 
             if (eventProperty instanceof EventPropertyNested) {
                 result = result.concat(this.getAllIds((<EventPropertyNested> eventProperty).eventProperties));
+            }
+        }
+        return result;
+    }
+
+    public getEventProperty(eventProperties: EventProperty[], id: string): EventProperty {
+        var result: EventProperty = null;
+
+        for (let eventProperty of eventProperties) {
+
+            if (eventProperty.id === id) {
+                return eventProperty;
+            } else {
+                if (eventProperty instanceof EventPropertyNested) {
+                    return this.getEventProperty((eventProperty as EventPropertyNested).eventProperties, id);
+                }
             }
         }
         return result;
