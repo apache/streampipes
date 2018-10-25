@@ -12,6 +12,8 @@ All available services are in the services folder.
   * Restarts containers
 * update (service-name)
   * Updates and restarts docker container
+* mode (mode-name)
+  * Replaces the systems file with file mode-name
 * logs (service-name)
   * Prints the logs of the service
 

@@ -8,7 +8,7 @@
 # ARG_OPTIONAL_BOOLEAN([current],[u],[Show only currently registered services])
 # ARG_OPTIONAL_BOOLEAN([all],[a],[Select all available StreamPipes services])
 # ARG_POSITIONAL_MULTI([operation],[The StreamPipes operation (operation-name) (service-name (optional))],[2],[],[])
-# ARG_TYPE_GROUP_SET([operation],[type string],[operation],[test,start,stop,restart,clean,add,remove,update,list,logs,reset,set-template])
+# ARG_TYPE_GROUP_SET([operation],[type string],[operation],[test,start,stop,restart,clean,add,remove,mode,update,list,logs,reset,set-template])
 # ARG_DEFAULTS_POS()
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -33,12 +33,12 @@ die()
 
 operation()
 {
-	local _allowed=("test" "start" "stop" "restart" "clean" "add" "remove" "update" "list" "logs" "reset" "set-template") _seeking="$1"
+	local _allowed=("test" "start" "stop" "restart" "clean" "add" "remove" "mode" "update" "list" "logs" "reset" "set-template") _seeking="$1"
 	for element in "${_allowed[@]}"
 	do
 		test "$element" = "$_seeking" && echo "$element" && return 0
 	done
-	die "Value '$_seeking' (of argument '$2') doesn't match the list of allowed values: 'test', 'start', 'stop', 'restart', 'clean', 'add', 'remove', 'update', 'list', 'logs', 'reset' and 'set-template'" 4
+	die "Value '$_seeking' (of argument '$2') doesn't match the list of allowed values: 'test', 'start', 'stop', 'restart', 'clean', 'add', 'remove', 'mode', 'update', 'list', 'logs', 'reset' and 'set-template'" 4
 }
 
 
@@ -288,6 +288,15 @@ getIp() {
 
 }
 
+moveSystemConfig() {
+  if [ -e ./system-configurations/"$1" ]; then
+		cp ./system-configurations/$1 system
+	  echo "Set configuration for $1"
+	else
+		echo "Configuration $1 was not found"
+	fi
+}
+
 
 getCommand() {
     command="docker-compose -f docker-compose.yml"
@@ -297,6 +306,12 @@ getCommand() {
 }
 
 startStreamPipes() {
+
+	if [ ! -f "./system" ];
+	then
+		moveSystemConfig system
+	fi
+
 	if [ ! -f "./.env" ] || [ $_arg_defaultip = "on" ];
     then
 		getIp
@@ -504,6 +519,12 @@ if [ "$_arg_operation" = "set-template" ];
 then
     setTemplate
 fi
+
+if [ "$_arg_operation" = "mode" ];
+then
+    moveSystemConfig ${_arg_operation[1]}
+fi
+
 
 if [ "$_arg_operation" = "nil" ];
 then
