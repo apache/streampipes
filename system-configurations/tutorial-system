@@ -1,0 +1,15 @@
+activemq
+kafka
+zookeeper
+swagger-ui
+couchdb
+backend
+nginx
+connect-master
+connect-worker
+jobmanager
+taskmanager
+sinks-internal-jvm
+sources-random-data-generator
+processors-transformation-jvm
+processors-transformation-flink
