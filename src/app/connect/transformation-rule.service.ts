@@ -200,8 +200,10 @@ export class TransformationRuleService {
 
             if (eventProperty instanceof EventPropertyPrimitive) {
                 const eventPropertyPrimitive =  eventProperty as EventPropertyPrimitive;
+                const keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventPropertyPrimitive.id);
 
-                result.push(new UnitTransformRuleDescription(eventPropertyPrimitive.id,
+
+                result.push(new UnitTransformRuleDescription(keyNew,
        // TODO: use if backend deserialize URI correct
        //             eventPropertyPrimitive.oldMeasurementUnit, eventPropertyPrimitive.measurementUnit));
                     eventPropertyPrimitive.oldMeasurementUnit, eventPropertyPrimitive.measurementUnitTmp));

@@ -9,8 +9,8 @@ export class UnitTransformRuleDescription extends TransformationRuleDescription 
     @RdfId
     public id: string;
 
-    @RdfProperty('sp:eventPropertyId')
-    public eventPropertyId: string;
+    @RdfProperty('sp:runtimeKey')
+    public runtimeKey: string;
 
     @RdfProperty('sp:fromUnit')
     public fromUnitRessourceURL: string;
@@ -20,10 +20,10 @@ export class UnitTransformRuleDescription extends TransformationRuleDescription 
 
 
 
-    constructor(eventPropertyId: string, fromUnitRessourceURL: string, toUnitRessourceURL: string) {
+    constructor(runtimeKey: string, fromUnitRessourceURL: string, toUnitRessourceURL: string) {
         super();
         this.id = "http://streampipes.org/transformation_rule/" + Math.floor(Math.random() * 10000000) + 1;
-        this.eventPropertyId = eventPropertyId;
+        this.runtimeKey = runtimeKey;
         this.fromUnitRessourceURL = fromUnitRessourceURL;
         this.toUnitRessourceURL = toUnitRessourceURL;
     }
