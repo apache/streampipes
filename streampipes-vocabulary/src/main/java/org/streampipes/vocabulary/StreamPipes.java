@@ -282,7 +282,7 @@ public class StreamPipes {
   public static final String TRANSFORM_RULE_DESCRIPTION =  NS + "TransformationRuleDescriptio";
   public static final String UNIT_TRANSFORM_RULE_DESCRIPTION =  NS + "UnitTransformRuleDescription";
   public static final String RENAME_RULE_DESCRIPTION =  NS + "RenameRuleDescription";
-  public static final String MOVE_RULE_DESCRIPTION =  NS + "MoveRuleDescript";
+  public static final String MOVE_RULE_DESCRIPTION =  NS + "MoveRuleDescription";
   public static final String DELETE_RULE_DESCRIPTION =  NS + "DeleteRuleDescription";
   public static final String CREATE_NESTED_RULE_DESCRIPTION =  NS + "CreateNestedRuleDescription";
 
