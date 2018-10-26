@@ -3,3 +3,4 @@ kafka
 zookeeper
 swagger-ui
 couchdb
+kafka-rest
