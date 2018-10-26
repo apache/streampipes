@@ -149,6 +149,11 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
           this.property.measurementUnitTmp = unit.resource;
           // TODO: use if backend deserialize URI correct
        //   this.property.measurementUnit = units.resource;
+      } else {
+          this.property.oldMeasurementUnit = undefined;
+          this.property.measurementUnitTmp = undefined;
+          // TODO: use if backend deserialize URI correct
+          //   this.property.measurementUnit = undefined;
       }
       return units;
   }
