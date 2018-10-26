@@ -40,10 +40,10 @@ public class ValueEventTransformerTest {
         event.put("a", 273.15);
 
         List<String> keys = new ArrayList<>();
-        keys.add(eventPropertyf.getPropertyId());
+        keys.add("a");
 
         List<ValueTransformationRule> rules = new ArrayList<>();
-        rules.add(new UnitTransformationRule(eventSchema, keys,
+        rules.add(new UnitTransformationRule(keys,
                "http://qudt.org/vocab/unit#Kelvin","http://qudt.org/vocab/unit#DegreeCelsius"));
 
         ValueEventTransformer eventTransformer = new ValueEventTransformer(rules);

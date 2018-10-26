@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.pipeline.Util;
-import org.streampipes.connect.adapter.generic.transform.TransformationRule;
 import org.streampipes.connect.adapter.generic.transform.value.UnitTransformationRule;
 import org.streampipes.connect.adapter.generic.transform.value.ValueEventTransformer;
 import org.streampipes.connect.adapter.generic.transform.value.ValueTransformationRule;
@@ -38,14 +37,14 @@ public class TransformValueAdapterPipelineElement implements AdapterPipelineElem
     private ValueEventTransformer eventTransformer;
     Logger logger = LoggerFactory.getLogger(TransformValueAdapterPipelineElement.class);
 
-    public TransformValueAdapterPipelineElement(EventSchema eventSchema, List<ValueTransformationRuleDescription> transformationRuleDescriptions) {
+    public TransformValueAdapterPipelineElement(List<ValueTransformationRuleDescription> transformationRuleDescriptions) {
         List<ValueTransformationRule> rules = new ArrayList<>();
 
         // transforms description to actual rules
         for (TransformationRuleDescription ruleDescription : transformationRuleDescriptions) {
             if (ruleDescription instanceof UnitTransformRuleDescription) {
                 UnitTransformRuleDescription tmp = (UnitTransformRuleDescription) ruleDescription;
-                rules.add(new UnitTransformationRule(eventSchema, Util.toKeyArray(tmp.getEventPropertyId()),
+                rules.add(new UnitTransformationRule(Util.toKeyArray(tmp.getRuntimeKey()),
                         tmp.getFromUnitRessourceURL(), tmp.getToUnitRessourceURL()));
             } else {
                 logger.error("Could not find the class for the rule description. This should never happen. Talk to admins to extend the rule implementations to get rid of this error!");

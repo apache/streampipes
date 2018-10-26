@@ -74,8 +74,7 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
 
         List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
         pipelineElements.add(new TransformSchemaAdapterPipelineElement(((AdapterDescription) adapterDescription).getSchemaRules()));
-        pipelineElements.add(new TransformValueAdapterPipelineElement(Util.getEventSchema(adapterDescription),
-                ((AdapterDescription) adapterDescription).getValueRules()));
+        pipelineElements.add(new TransformValueAdapterPipelineElement(((AdapterDescription) adapterDescription).getValueRules()));
         pipelineElements.add(new SendToKafkaAdapterSink((AdapterDescription) adapterDescription));
 
         AdapterPipeline adapterPipeline = new AdapterPipeline(pipelineElements);

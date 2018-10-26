@@ -62,8 +62,7 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
 
         List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
         pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getSchemaRules()));
-        pipelineElements.add(new TransformValueAdapterPipelineElement(adapterDescription.getDataStream().getEventSchema(),
-                adapterDescription.getValueRules()));
+        pipelineElements.add(new TransformValueAdapterPipelineElement(adapterDescription.getValueRules()));
         pipelineElements.add(new SendToKafkaAdapterSink((AdapterDescription) adapterDescription));
 
         adapterPipeline = new AdapterPipeline(pipelineElements);

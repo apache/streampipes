@@ -28,8 +28,8 @@ import javax.persistence.Entity;
 @Entity
 public class UnitTransformRuleDescription extends ValueTransformationRuleDescription {
 
-    @RdfProperty(StreamPipes.EVENT_PROPERTY_ID)
-    private String eventPropertyId;
+    @RdfProperty(StreamPipes.RUNTIME_KEY)
+    private String runtimeKey;
 
     @RdfProperty(StreamPipes.FROM_UNIT)
     private String fromUnitRessourceURL;
@@ -41,26 +41,26 @@ public class UnitTransformRuleDescription extends ValueTransformationRuleDescrip
         super();
     }
 
-    public UnitTransformRuleDescription(String eventPropertyId, String fromUnitRessourceURL, String toUnit) {
+    public UnitTransformRuleDescription(String runtimeKey, String fromUnitRessourceURL, String toUnit) {
         super();
-        this.eventPropertyId = eventPropertyId;
+        this.runtimeKey = runtimeKey;
         this.fromUnitRessourceURL = fromUnitRessourceURL;
         this.toUnitRessourceURL = toUnit;
     }
 
     public UnitTransformRuleDescription(UnitTransformRuleDescription other) {
         super(other);
-        this.eventPropertyId = other.getEventPropertyId();
+        this.runtimeKey = other.getRuntimeKey();
         this.fromUnitRessourceURL = other.getFromUnitRessourceURL();
         this.toUnitRessourceURL = other.getToUnitRessourceURL();
     }
 
-    public String getEventPropertyId() {
-        return eventPropertyId;
+    public String getRuntimeKey() {
+        return runtimeKey;
     }
 
-    public void setEventPropertyId(String eventPropertyId) {
-        this.eventPropertyId = eventPropertyId;
+    public void setRuntimeKey(String runtimeKey) {
+        this.runtimeKey = runtimeKey;
     }
 
     public String getFromUnitRessourceURL() {

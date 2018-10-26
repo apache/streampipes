@@ -43,10 +43,10 @@ public class UnitTransformRuleTest {
         event.put("list",subEvent);
 
         List<String> keys = new ArrayList<>();
-        keys.add(eventPropertyList.getPropertyId());
-        keys.add(eventPropertyValue.getPropertyId());
+        keys.add("list");
+        keys.add("value");
 
-        UnitTransformationRule unitTransformationRule = new UnitTransformationRule(eventSchema, keys,
+        UnitTransformationRule unitTransformationRule = new UnitTransformationRule(keys,
                 "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
 
         Map result = unitTransformationRule.transform(event);
@@ -74,10 +74,10 @@ public class UnitTransformRuleTest {
         event.put("mainKey",subEvent);
 
         List<String> keys = new ArrayList<>();
-        keys.add(eventPropertyMainKey.getPropertyId());
-        keys.add(eventPropertyValue.getPropertyId());
+        keys.add("mainKey");
+        keys.add("value");
 
-        UnitTransformationRule unitTransformationRule = new UnitTransformationRule(eventSchema, keys,
+        UnitTransformationRule unitTransformationRule = new UnitTransformationRule(keys,
                 "http://qudt.org/vocab/unit#DegreeCelsius",          "http://qudt.org/vocab/unit#Kelvin");
 
         Map result = unitTransformationRule.transform(event);
@@ -100,9 +100,9 @@ public class UnitTransformRuleTest {
         eventSchema.addEventProperty(eventPropertyValue2);
 
         List<String> keys = new ArrayList<>();
-        keys.add(eventPropertyValue2.getPropertyId());
+        keys.add("value2");
 
-        UnitTransformationRule unitTransformationRule = new UnitTransformationRule(eventSchema, keys,
+        UnitTransformationRule unitTransformationRule = new UnitTransformationRule(keys,
                 "http://qudt.org/vocab/unit#DegreeCelsius", "http://qudt.org/vocab/unit#Kelvin");
         Map<String, Object> event = new HashMap<>();
         event.put("value1", 0.0);
