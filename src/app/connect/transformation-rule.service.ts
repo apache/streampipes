@@ -200,23 +200,15 @@ export class TransformationRuleService {
 
             if (eventProperty instanceof EventPropertyPrimitive) {
                 const eventPropertyPrimitive =  eventProperty as EventPropertyPrimitive;
-                if (eventProperty.measurementUnit !== undefined) {
-                    if (eventProperty.oldMeasurementUnit === '') {
-                        const oldEventProperty = this.getEventProperty(this.oldEventSchema.eventProperties, eventProperty.id);
 
-                        result.push(new UnitTransformRuleDescription(eventProperty.id, (oldEventProperty as EventPropertyPrimitive).measurementUnit,
-                                                                        eventProperty.measurementUnit));
-                    } else {
-                        result.push(new UnitTransformRuleDescription(eventProperty.id, eventProperty.oldMeasurementUnit,
-                            eventProperty.measurementUnit));
-                    }
-                }
-
-
+                result.push(new UnitTransformRuleDescription(eventPropertyPrimitive.id,
+       // TODO: use if backend deserialize URI correct
+       //             eventPropertyPrimitive.oldMeasurementUnit, eventPropertyPrimitive.measurementUnit));
+                    eventPropertyPrimitive.oldMeasurementUnit, eventPropertyPrimitive.measurementUnitTmp));
             } else if (eventProperty instanceof EventPropertyNested) {
 
-                const tmpResults: UnitTransformRuleDescription[] = this.getUnitTransformRules((<EventPropertyNested> eventProperty).eventProperties,
-                    oldEventSchema, newEventSchema);
+                const tmpResults: UnitTransformRuleDescription[] =
+                    this.getUnitTransformRules((<EventPropertyNested> eventProperty).eventProperties,  oldEventSchema, newEventSchema);
                 result = result.concat(tmpResults);
 
             }
@@ -224,8 +216,14 @@ export class TransformationRuleService {
 
         }
 
+        var filteredResult: UnitTransformRuleDescription[] = [];
+        for (let res of result) {
+            if (res.fromUnitRessourceURL !== res.toUnitRessourceURL) {
+                filteredResult.push(res);
+            }
+        }
 
-        return result;
+        return filteredResult;
 
 
      }

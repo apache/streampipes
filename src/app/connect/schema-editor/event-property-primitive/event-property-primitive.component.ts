@@ -41,7 +41,8 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   private allUnits: UnitDescription[];
   private stateCtrl = new FormControl();
   private filteredUnits: Observable<UnitDescription[]>;
-  private oldExistingMeasurementUnitHolder = undefined;
+  private hadMesarumentUnit = false;
+  private oldMeasurementUnitDipsplay;
 
   constructor(private formBuilder: FormBuilder,
               private dataTypeService: DataTypesService,
@@ -76,11 +77,13 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   //   this.dragulaService.drag.subscribe((value: any) => this.drag());
   //   this.property.propertyNumber = this.index;
       if (this.property.measurementUnit !== undefined) {
-          this.property.oldMeasurementUnit = '';
+          this.property.oldMeasurementUnit = this.property.measurementUnit;
+          this.property.measurementUnitTmp = this.property.measurementUnit;
+          this.hadMesarumentUnit = true;
+      //    const unit = this.allUnits.find(unitTmp => unitTmp.resource === this.property.measurementUnit);
           const unit = this.allUnits.find(unitTmp => unitTmp.resource === this.property.measurementUnit);
-          this.oldExistingMeasurementUnitHolder = unit.label;
-          this.property.measurementUnit = undefined;
-          this.stateCtrl.setValue(this.oldExistingMeasurementUnitHolder);
+          this.oldMeasurementUnitDipsplay = unit.label;
+          this.stateCtrl.setValue(unit.label);
       }
   }
 
@@ -120,7 +123,8 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   private transformUnit() {
     if (this.transformUnitEnable) {
       this.transformUnitEnable = false;
-      this.property.measurementUnit = undefined;
+     // this.property.measurementUnit = undefined;
+        this.property.measurementUnitTmp = this.property.oldMeasurementUnit;
     } else {
       const unit = this.allUnits.find(unitTmp => unitTmp.label === this.stateCtrl.value);
       if (!unit) {
@@ -138,15 +142,19 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
   private _filteredUnits(value: string): UnitDescription[] {
       const filterValue = value.toLowerCase();
-
-      return this.allUnits.filter(unit => unit.label.toLowerCase().indexOf(filterValue) === 0);
+      const units: UnitDescription[] = this.allUnits.filter(unit => unit.label.toLowerCase().indexOf(filterValue) === 0);
+      const unit: UnitDescription = this.allUnits.filter(unit => unit.label.toLocaleLowerCase() === filterValue)[0];
+      if (unit !== undefined) {
+          this.property.oldMeasurementUnit = unit.resource;
+          this.property.measurementUnitTmp = unit.resource;
+          // TODO: use if backend deserialize URI correct
+       //   this.property.measurementUnit = units.resource;
+      }
+      return units;
   }
 
   changeTargetUnit(unit: UnitDescription) {
-      this.property.measurementUnit = unit.resource;
-      if (this.oldExistingMeasurementUnitHolder === undefined) {
-          const unit = this.allUnits.find(unitTmp => unitTmp.label === this.stateCtrl.value);
-          this.property.oldMeasurementUnit = unit.resource;
-      }
+      // this.property.measurementUnit = unit.resource;
+      this.property.measurementUnitTmp = unit.resource;
   }
 }
