@@ -65,7 +65,9 @@ public class HttpStreamProtocol extends PullProtocol {
         String urlProperty = extractor.singleValue(URL_PROPERTY);
         try {
             long intervalProperty = Long.parseLong(extractor.singleValue(INTERVAL_PROPERTY));
-            String accessToken = extractor.singleValue(ACCESS_TOKEN_PROPERTY);
+            // TODO change access token to an optional parameter
+//            String accessToken = extractor.singleValue(ACCESS_TOKEN_PROPERTY);
+            String accessToken = "";
             return new HttpStreamProtocol(parser, format, urlProperty, intervalProperty, accessToken);
         } catch (NumberFormatException e) {
             logger.error("Could not parse" + extractor.singleValue(INTERVAL_PROPERTY) + "to int");

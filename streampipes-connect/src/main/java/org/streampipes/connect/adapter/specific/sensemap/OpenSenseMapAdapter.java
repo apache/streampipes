@@ -133,7 +133,7 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
         allProperties.add(
                 PrimitivePropertyBuilder
                         .create(Datatypes.String, SensorNames.KEY_LONGITUDE)
-                        .label(SensorNames.KEY_LONGITUDE)
+                        .label(SensorNames.LABEL_LONGITUDE)
                         .description("Longitude value of box location")
                         .build());
 
