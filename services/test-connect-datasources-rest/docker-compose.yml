@@ -1,0 +1,10 @@
+version: "2"
+services:
+  taskmanager:
+    image: ${SP_DOCKER_REGISTRY}/streampipes/streampipes-connect-datasources-for-testing/master
+    ports:
+      - "3001:3001"
+    networks:
+      spnet:
+
+
