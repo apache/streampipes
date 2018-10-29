@@ -31,18 +31,10 @@ Cypress.Commands.add('login', (options = {}) => {
         whitelist: "JSESSIONID"
     });
 
-    cy.visit('');
-
-    cy.url({timeout: 60000}).should('contain', '#/login');
-
-    cy.get('#shepherd-delay').click({ force: true });
-
-    //TODO change again
-    cy.get('input[type="email"]').type('riemer@fzi.de');
-    cy.get('input[type="password"]').type('1234');
-
-    cy.get('button').contains('Login').parent().click();
-
+    cy.request('POST', '/streampipes-backend/api/v2/admin/login', {
+            username: 'riemer@fzi.de',
+            password: '1234'
+    });
 });
 
 Cypress.Commands.add('logout', (options = {}) => {
