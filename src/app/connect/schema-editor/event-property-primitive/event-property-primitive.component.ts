@@ -78,9 +78,9 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   //   this.property.propertyNumber = this.index;
       if (this.property.measurementUnit !== undefined) {
           this.property.oldMeasurementUnit = this.property.measurementUnit;
+          // TODO: use if backend deserialize URI correct
           this.property.measurementUnitTmp = this.property.measurementUnit;
           this.hadMesarumentUnit = true;
-      //    const unit = this.allUnits.find(unitTmp => unitTmp.resource === this.property.measurementUnit);
           const unit = this.allUnits.find(unitTmp => unitTmp.resource === this.property.measurementUnit);
           this.oldMeasurementUnitDipsplay = unit.label;
           this.stateCtrl.setValue(unit.label);
@@ -123,7 +123,8 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   private transformUnit() {
     if (this.transformUnitEnable) {
       this.transformUnitEnable = false;
-     // this.property.measurementUnit = undefined;
+        // TODO: use if backend deserialize URI correct
+        // this.property.measurementUnit = this.property.oldMeasurementUnit;
         this.property.measurementUnitTmp = this.property.oldMeasurementUnit;
     } else {
       const unit = this.allUnits.find(unitTmp => unitTmp.label === this.stateCtrl.value);
@@ -159,6 +160,7 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   }
 
   changeTargetUnit(unit: UnitDescription) {
+      // TODO: use if backend deserialize URI correct
       // this.property.measurementUnit = unit.resource;
       this.property.measurementUnitTmp = unit.resource;
   }
