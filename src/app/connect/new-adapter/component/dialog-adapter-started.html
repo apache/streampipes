@@ -1,4 +1,4 @@
-<div class="md-dialog">
+<div class="md-dialog" style="height: 80vh;">
     <div class="md-toolbar">
         <div class="md-toolbar-tools">
             <h2>Adapter Generation</h2>
@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <div class="md-dialog-content">
+    <div class="md-dialog-content" style="height: 60vh;">
         <div fxLayout="column" *ngIf="!adapterInstalled">
             <div fxLayoutAlign="center" >
                 <mat-spinner fxLayoutAlign="center" style="margin: 10px 0 5px 0" >Loading</mat-spinner>
@@ -41,7 +41,7 @@
                             <th>Value</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="preview-data-rows-id">
                         <tr *ngFor="let property of streamDescription.eventSchema.eventProperties">
                             <td>{{property.properties.runtimeName}}</td>
                             <td>{{runtimeData[property.properties.runtimeName]}}</td>
@@ -55,6 +55,7 @@
             </div>
         </div>
     </div>
+
 
     <div class="md-dialog-actions">
         <button id="confirm_adapter_started_button" class="mat-basic" mat-raised-button (click)="onCloseConfirm()">Close
