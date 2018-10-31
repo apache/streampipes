@@ -57,7 +57,6 @@ public class JsonObjectParser extends Parser {
     @Override
     public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) {
         JsonParserFactory factory = Json.createParserFactory(null);
-        String s = data.toString();
         javax.json.stream.JsonParser jsonParser = factory.createParser(data);
 
         // Parse all events

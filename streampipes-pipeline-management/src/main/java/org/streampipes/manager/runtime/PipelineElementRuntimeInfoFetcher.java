@@ -25,6 +25,8 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.StringEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.messaging.InternalEventProcessor;
@@ -38,6 +40,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PipelineElementRuntimeInfoFetcher {
+
+  Logger logger = LoggerFactory.getLogger(JsonParser.class);
 
   private SpDataStream spDataStream;
 
@@ -112,7 +116,11 @@ public class PipelineElementRuntimeInfoFetcher {
 
       return extractPayload(response.returnContent().asString());
     } catch (IOException | SpRuntimeException e) {
+      if (!e.getMessage().equals("")) {
+        logger.error("Could not get any sample data from Kafka", e);
+      }
       consumerInstances.remove(getConsumerInstanceId(kafkaTopic));
+
       throw new SpRuntimeException(e.getMessage());
     }
   }
@@ -123,7 +131,7 @@ public class PipelineElementRuntimeInfoFetcher {
     Integer statusCode = createConsumer(kafkaRestUrl, consumerInstance, kafkaTopic);
     Integer subscriptionStatusCode = subscribeConsumer(kafkaRestUrl, consumerInstance, kafkaTopic);
     if (subscriptionStatusCode != 204) {
-      throw new SpRuntimeException("Could not read message");
+      throw new SpRuntimeException("Could not read message form Kafka-REST: " + kafkaRestUrl);
     }
 
   }
