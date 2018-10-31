@@ -18,7 +18,7 @@
             <p>{{adapter.description}}</p>
         </div>
         <div fxFlex="30" fxLayout="row" fxLayoutAlign="end end" *ngIf="adapter.couchDbId" class="delete">
-            <button id="{{ 'delete-' + adapter.label }}" color="primary" mat-fab (click)="deleteAdapter(adapter)" [disabled]="deleteInProgress(adapter.couchDbId)">
+            <button id="{{ 'delete-' + adapter.label.split(' ').join('_') }}" color="primary" mat-fab (click)="deleteAdapter(adapter)" [disabled]="deleteInProgress(adapter.couchDbId)">
                 <i class="material-icons" *ngIf="!deleteInProgress(adapter.couchDbId)">
                     delete
                 </i>

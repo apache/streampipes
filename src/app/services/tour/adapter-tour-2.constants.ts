@@ -29,7 +29,7 @@ export default {
                 stepId: "step-3",
                 title: "Configure the protocol",
                 text: "The data is provided through a REST endpoint, which has to be polled regularly. To do this set the <b>Interval [Sec]</b> to <b>60</b>. This means the endpoint is accessed every minute." +
-                "The <b>URL of the endpoint is: http://lupo-messwerte.appspot.com/lupo_luft_query?land=bw&limit=500&format=gme</b>, copy this URL into the URL field",
+                "The <b>URL of the endpoint is: restendpoint:3001/lubw</b>, copy this URL into the URL field",
                 attachToElement: "#formWrapper:last-of-type",
                 attachPosition: "top",
                 buttons: [
@@ -102,7 +102,7 @@ export default {
             {
                 stepId: "step-8",
                 title: "Adapter was started successfully",
-                text: "Confirm the start up by clicking on the button",
+                text: "Wait for the data! Then finish the creation process by clicking on this button.",
                 attachToElement: "#confirm_adapter_started_button",
                 attachPosition: "right",
                 buttons: [
