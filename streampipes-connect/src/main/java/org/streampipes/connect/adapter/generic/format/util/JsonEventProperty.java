@@ -60,7 +60,7 @@ public class JsonEventProperty {
         else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)|| o.getClass().equals(Long.class)) {
             resultProperty = new EventPropertyPrimitive();
             resultProperty.setRuntimeName(key);
-            ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._double.toString());
+            ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._float.toString());
         }
         else if (o.getClass().equals(LinkedHashMap.class)) {
             resultProperty = new EventPropertyNested();
