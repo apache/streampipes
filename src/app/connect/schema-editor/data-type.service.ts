@@ -10,8 +10,8 @@ export class DataTypesService {
     label: 'Boolean - A true/false value',
     url: 'http://www.w3.org/2001/XMLSchema#boolean'},
   {
-    label:  'Number - A number, e.g., \'1.25\'',
-    url: 'http://schema.org/Number'
+    label:  'Float - A number, e.g., \'1.25\'',
+    url: 'http://www.w3.org/2001/XMLSchema#float'
   }];
 
   constructor() {}
