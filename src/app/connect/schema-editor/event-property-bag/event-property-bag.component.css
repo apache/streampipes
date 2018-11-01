@@ -2,6 +2,12 @@ ul {
   list-style-type: none;
 }
 
+
+
+.row-border {
+  border-top: 1px solid black;
+}
+
 .addSchema{
   margin: auto;
   padding-left: 10px;
