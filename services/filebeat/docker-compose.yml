@@ -1,0 +1,12 @@
+version: "2"
+services:
+  filebeat:
+    image: ${SP_DOCKER_REGISTRY}/streampipes/services/filebeat
+    user: root # Need to override user so we can access the log files, and docker.sock
+    volumes:
+      - ./config/filebeats/data:/usr/share/filebeats/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/hostfs/var/lib/docker/containers
+    networks: 
+      spnet:
+

@@ -9,8 +9,12 @@ connect-master
 connect-worker
 jobmanager
 taskmanager
-kafka-rest
 sinks-internal-jvm
 sources-random-data-generator
 processors-transformation-jvm
 processors-transformation-flink
+kafka-rest
+elasticsearch
+kibana
+filebeat
+logstash
