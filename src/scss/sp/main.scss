@@ -159,31 +159,6 @@ md-toolbar:not(.md-menu-toolbar) {
     background: $sp-color-primary;
 }
 
-.md-button {
-    line-height: 0px !important;
-    font-family: "Arial Black", Arial !important;
-    font-weight: bold !important;
-    text-transform: none !important;
-    min-height: 30px !important;
-}
-
-.md-button.md-raised:not[disabled] {
-    background-color: $sp-color-accent !important;
-    border: 2px solid $sp-color-accent;
-    box-shadow: none !important;
-    border-radius: 2px !important;
-    text-transform: none !important;
-}
-
-.md-button.md-raised[disabled] {
-    background-color: lightgrey !important;
-    border: 2px solid lightgrey;
-    box-shadow: none !important;
-    border-radius: 2px !important;
-    text-transform: none !important;
-    color: white;
-}
-
 .md-list-item-text {
     font-family: Arial !important;
 }

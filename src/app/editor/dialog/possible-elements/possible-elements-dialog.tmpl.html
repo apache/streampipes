@@ -12,7 +12,9 @@
     <md-dialog-content flex="100" class="md-dialog-content">
         <md-list>
         <md-list-item class="md-2-line" ng-repeat="possibleElement in ctrl.possibleElements | orderBy: '+name'" ng-click="ctrl.create(possibleElement)">
-            <div class="draggable-icon-preview {{possibleElement.type}}">{{ctrl.iconText(possibleElement.name)}}</div>
+            <div class="draggable-icon-preview {{possibleElement.type}}">
+                <pipeline-element pipeline-element="possibleElement" icon-size="true"></pipeline-element>
+            </div>
             <div class="md-list-item-text">
                 <h3>{{ possibleElement.name }}</h3>
                 <p>{{ possibleElement.description }}</p>
