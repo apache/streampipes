@@ -39,8 +39,8 @@
 							<i ng-if="widget.contentStyle.display !== 'none'" class="material-icons">visibility_off</i>
 						</md-button>
 						<!--                  			<md-button class="md-icon-button" ng-click="openWidgetSettings(widget);" ng-if="!options.hideWidgetSettings"><i class="material-icons">settings</i></md-button> -->
-						<md-button class="md-icon-button" ng-click="ctrl.maximizeWidget();" ng-if="!maximized"><i class="material-icons">fullscreen</i></md-button>
-						<md-button class="md-icon-button" ng-click="ctrl.minimizeWidget();" ng-if="maximized"><i class="material-icons">fullscreen_exit</i></md-button>
+						<md-button class="md-icon-button" ng-click="ctrl.maximizeSpWidget(widget);" ng-if="!widget.maximized"><i class="material-icons">fullscreen</i></md-button>
+						<md-button class="md-icon-button" ng-click="ctrl.minimizeSpWidget(widget);" ng-if="widget.maximized"><i class="material-icons">fullscreen_exit</i></md-button>
 						<md-button class="md-icon-button" ng-click="ctrl.removeSpWidget(widget);" ng-if="!options.hideWidgetClose"><i class="material-icons">clear</i></md-button>
 					</div>
 				</div>

@@ -13,6 +13,7 @@ export class DashboardCtrl {
     layoutOptions: any;
     rerender: any;
     ShepherdService: any;
+    maximized: any = false;
 
     constructor($http, $mdDialog, WidgetInstances, $scope, $templateCache, ShepherdService) {
         this.$http = $http;
@@ -75,6 +76,18 @@ export class DashboardCtrl {
             });
         });
     };
+
+    maximizeSpWidget(widget) {
+        var widthUnits = widget.widthUnits;
+        widget.maximized = true;
+        widget.setWidth("100", widthUnits);
+    }
+
+    minimizeSpWidget(widget) {
+        var widthUnits = widget.widthUnits;
+        widget.maximized = false;
+        widget.setWidth("30", widthUnits);
+    }
 
 
     // TODO Helper to add new Widgets to the dashboard
