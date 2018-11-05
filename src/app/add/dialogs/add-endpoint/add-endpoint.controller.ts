@@ -5,13 +5,15 @@ export class AddEndpointController {
     rdfEndpoints: any;
     addSelected: any;
     newEndpoint: any;
+    getEndpointItems: any;
 
-    constructor($mdDialog, RestApi) {
+    constructor($mdDialog, RestApi, getEndpointItems) {
         this.$mdDialog = $mdDialog;
         this.RestApi = RestApi;
         this.rdfEndpoints = [];
         this.addSelected = false;
         this.newEndpoint = {};
+        this.getEndpointItems = getEndpointItems;
         this.loadRdfEndpoints();
     }
 
@@ -29,12 +31,11 @@ export class AddEndpointController {
             });
     }
 
-    // TODO: getEndpointItems() not implemented
     addRdfEndpoint(rdfEndpoint) {
         this.RestApi.addRdfEndpoint(rdfEndpoint)
             .success(message => {
                 this.loadRdfEndpoints();
-                //this.getEndpointItems();
+                this.getEndpointItems();
             })
             .error(error => {
                 console.log(error);
@@ -45,6 +46,7 @@ export class AddEndpointController {
         this.RestApi.removeRdfEndpoint(rdfEndpointId)
             .success(message => {
                 this.loadRdfEndpoints();
+                this.getEndpointItems();
             })
             .error(error => {
                 console.log(error);
@@ -61,4 +63,4 @@ export class AddEndpointController {
 
 }
 
-AddEndpointController.$inject = ['$mdDialog', 'RestApi'];
+AddEndpointController.$inject = ['$mdDialog', 'RestApi', 'getEndpointItems'];

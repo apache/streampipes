@@ -102,7 +102,9 @@ export class AddCtrl {
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             locals: {
-                getEndpointItems: this.getEndpointItems
+                getEndpointItems: () => {
+                    return this.getEndpointItems();
+                }
             },
             bindToController: true
         })
