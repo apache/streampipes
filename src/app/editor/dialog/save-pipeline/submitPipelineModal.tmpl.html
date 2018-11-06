@@ -24,31 +24,18 @@
                 </div>
                 <div flex="100" layout="column" ng-if="!ctrl.modificationMode || ctrl.updateMode=='clone'">
                     <md-input-container flex><label>Pipeline Name</label>
-                        <input name="pipelineName" ng-model="ctrl.pipeline.name" required ng-maxlength="20"/>
+                        <input name="pipelineName" ng-model="ctrl.pipeline.name" required ng-maxlength="40"/>
                         <span ng-show="ctrl.submitPipelineForm.pipelineName.$touched && ctrl.submitPipelineForm.pipelineName.$error.required">Please provide a pipeline name.</span>
                         <span ng-show="ctrl.submitPipelineForm.pipelineName.$error.maxlength">Please provide a shorter pipeline name.</span>
                     </md-input-container>
                     <md-input-container flex><label>Description</label>
-                        <input name="pipelineDescription" ng-model="ctrl.pipeline.description" ng-maxlength="60"/>
+                        <input name="pipelineDescription" ng-model="ctrl.pipeline.description" ng-maxlength="80"/>
                         <span ng-show="ctrl.submitPipelineForm.pipelineDescription.$error.maxlength">Please provide a shorter description.</span>
                     </md-input-container>
                 </div>
                 <md-checkbox ng-disabled="false" aria-label="Start Pipeline" ng-model="ctrl.startPipelineAfterStorage">
                     Start pipeline immediately
                 </md-checkbox>
-                <!-- 			<div flex="100" layout="row"> -->
-                <!-- 				<md-checkbox ng-disabled="false" aria-label="Start Pipeline" ng-model="addToCategory"> -->
-                <!-- 				Add to Category -->
-                <!-- 				</md-checkbox> -->
-                <!-- 				<div ng-if="addToCategory"> -->
-                <!-- 					<md-select ng-model="state.currentPipeline.pipelineCategories[0]" placeholder="Select Pipeline"> -->
-                <!-- 			          <md-option ng-repeat="pipeline in pipelines | orderBy:'+name'" value="{{pipeline._id}}"> -->
-                <!-- 			            <b>{{pipeline.name}}</b><br/> -->
-                <!-- 			          </md-option> -->
-                <!-- 			        </md-select> -->
-                <!-- 				</div> -->
-                <!-- 			</div> -->
-
             </div>
         </form>
     </md-dialog-content>

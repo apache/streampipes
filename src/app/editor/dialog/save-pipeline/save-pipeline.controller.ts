@@ -46,9 +46,9 @@ export class SavePipelineController {
     }
 
     displaySuccess(data) {
-        for (var i = 0, notification; notification = data.notifications[i]; i++) {
-            this.showToast("success", notification.description, notification.title);
-        }
+        if (data.notifications.length > 0) {
+            this.showToast("success", data.notifications[0].description, data.notifications[0].title);
+        } 
     }
 
     getPipelineCategories() {
@@ -74,27 +74,15 @@ export class SavePipelineController {
                 if (data.success) {
                     if (this.modificationMode && this.updateMode === 'update') {
                         this.RestApi.deleteOwnPipeline(this.pipeline._id)
-                            .success(data => {
+                            .success(d => {
+                                this.afterStorage(data, switchTab);
                             })
-                            .error(data => {
+                            .error(d => {
                                 this.showToast("error", "Could not delete Pipeline");
                             })
+                    } else {
+                        this.afterStorage(data, switchTab);
                     }
-                    this.displaySuccess(data);
-                    this.hide();
-                    this.TransitionService.makePipelineAssemblyEmpty(true);
-                    if (this.ShepherdService.isTourActive()) {
-                        this.ShepherdService.hideCurrentStep();
-                    }
-                    if (switchTab && !this.startPipelineAfterStorage) {
-                        this.$state.go("streampipes.pipelines");
-                    }
-                    if (this.startPipelineAfterStorage) {
-                        this.$state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
-                    }
-                    // TODO clear assembly
-                    //this.clearAssembly();
-
                 } else {
                     this.displayErrors(data);
                 }
@@ -102,8 +90,22 @@ export class SavePipelineController {
             .error(function (data) {
                 this.showToast("error", "Could not fulfill request", "Connection Error");
             });
-
     };
+
+    afterStorage(data, switchTab) {
+        this.displaySuccess(data);
+        this.hide();
+        this.TransitionService.makePipelineAssemblyEmpty(true);
+        if (this.ShepherdService.isTourActive()) {
+            this.ShepherdService.hideCurrentStep();
+        }
+        if (switchTab && !this.startPipelineAfterStorage) {
+            this.$state.go("streampipes.pipelines");
+        }
+        if (this.startPipelineAfterStorage) {
+            this.$state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
+        }
+    }
 
     hide() {
         this.$mdDialog.hide();
