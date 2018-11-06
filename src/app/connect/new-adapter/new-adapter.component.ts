@@ -35,6 +35,9 @@ export class NewAdapterComponent implements OnInit {
   allFormats: FormatDescription[] = [];
   isLinearStepper: boolean = true;
 
+  protocolConfigurationValid: boolean;
+  formatConfigurationValid: boolean;
+
   startAdapterFormGroup: FormGroup;
 
   eventSchema: EventSchema;
@@ -65,6 +68,9 @@ export class NewAdapterComponent implements OnInit {
           startAdapterFormCtrl: ['', Validators.required]
       });
 
+    this.protocolConfigurationValid = false;
+    this.formatConfigurationValid = false;
+
     this.eventSchema = new EventSchema();
   }
 
@@ -82,6 +88,14 @@ export class NewAdapterComponent implements OnInit {
         this.removeSelectionEmitter.emit();
     });
 
+  }
+
+  validateProtocol(valid) {
+      this.protocolConfigurationValid = valid;
+  }
+
+  validateFormat(valid) {
+      this.formatConfigurationValid = valid;
   }
 
   removeSelection() {
@@ -128,6 +142,9 @@ export class NewAdapterComponent implements OnInit {
       this.adapter instanceof GenericAdapterStreamDescription
     ) {
       this.adapter.format = selectedFormat;
+      if (selectedFormat.config.length == 0) {
+          this.validateFormat(true);
+      }
     }
   }
 }

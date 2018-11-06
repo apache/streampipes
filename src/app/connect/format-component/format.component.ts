@@ -27,23 +27,13 @@ export class FormatComponent {
   }
 
   formatEditable() {
-    /*
-    this.format.edit = !this.format.edit;
-    this.editableEmitter.emit(this.format);
-    if (this.format.config.length == 0) {
-      console.log(this.format.config);
-      this.hasConfig = false;
-      this.validateEmitter.emit(true);
-      this.selectedFormat = this.format;
-      this.selectedFormatEmitter.emit(this.selectedFormat);
-    }
-    */
     this.selectedFormat = this.format;
     this.selectedFormatEmitter.emit(this.selectedFormat);
 
     this.ShepherdService.trigger("select-" + this.selectedFormat.label.toLocaleLowerCase());
 
   }
+
   validateText(textValid) {
     if (textValid && this.format.edit) {
       this.validateEmitter.emit(true);
