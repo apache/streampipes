@@ -20,19 +20,10 @@ export class ProtocolComponent {
     this.hasConfig=true;
   }
 
-  protocolEditable() {
-    this.protocol.edit = !this.protocol.edit;
-    this.editableEmitter.emit(this.protocol);
-    if (this.protocol.config.length == 0) {
-      console.log(this.protocol.config);
-      this.hasConfig = false;
-      this.validateEmitter.emit(true);
-      this.selectedProtocol = this.protocol;
-      this.selectedProtocolEmitter.emit(this.selectedProtocol);
-    }
-  }
   validateText(textValid) {
-    if(textValid && this.protocol.edit) {
+
+    // if(textValid && this.protocol.edit) {
+        if(textValid) {
       this.validateEmitter.emit(true);
       this.selectedProtocol = this.protocol;
       this.selectedProtocolEmitter.emit(this.selectedProtocol);
@@ -43,7 +34,6 @@ export class ProtocolComponent {
     }
   }
   ngOnInit() {
-    console.log("test1234")
     console.log(this.protocol);
     
   }

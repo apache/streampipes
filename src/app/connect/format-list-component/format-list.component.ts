@@ -36,9 +36,6 @@ export class FormatListComponent {
       this.validateEmitter.emit(allValid);
     }
     ngOnInit(){
-      console.log("test4");
-      
-      console.log(this.allFormats)
     }
 
   }

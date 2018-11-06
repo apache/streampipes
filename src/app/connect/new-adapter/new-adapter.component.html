@@ -32,14 +32,19 @@
             </div>
             <div class="sp-blue-border padding">
                 <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"></app-static-property>
-                <app-protocol [protocol]="adapter.protocol" *ngIf="adapter.id.includes('generic')"></app-protocol>
+                <app-protocol (validateEmitter)="validateProtocol($event)" [protocol]="adapter.protocol" *ngIf="adapter.id.includes('generic')"></app-protocol>
             </div>
 
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
-                <button id="specific-settings-next-button" (click)="clickSpecificSettingsNextButton()" color="primary"
-                        mat-raised-button matStepperNext style="margin-left:10px;">Next
-                </button>
+                <div id="specific-settings-next-button">
+                    <button *ngIf="adapter.id.includes('generic')" [disabled]="!protocolConfigurationValid"  (click)="clickSpecificSettingsNextButton()" color="primary"
+                            mat-raised-button matStepperNext style="margin-left:10px;">Next
+                    </button>
+                    <button *ngIf="!adapter.id.includes('generic')" (click)="clickSpecificSettingsNextButton()" color="primary"
+                            mat-raised-button matStepperNext style="margin-left:10px;">Next
+                    </button>
+                </div>
             </div>
         </mat-step>
 
@@ -61,7 +66,7 @@
                 </div>
                 <div class="sp-blue-border padding">
                     <div fxFlex="100" *ngIf="adapter.format">
-                        <app-select-static-properties [staticProperties]="adapter.format.config"
+                        <app-select-static-properties (validateEmitter)="validateFormat($event)" [staticProperties]="adapter.format.config"
                                                       class="fullWidth"></app-select-static-properties>
                         <h5 *ngIf="adapter.format.config.length === 0" style="text-align:center;">(no further configuration needed)</h5>
                     </div>
@@ -70,7 +75,7 @@
                 <div fxLayoutAlign="end">
                     <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                     <button class="mat-basic" mat-raised-button matStepperPrevious style="margin-left:10px;">Back</button>
-                    <button id="format-selection-next-button" (click)="clickFormatSelectionNextButton()" color="primary"
+                    <button id="format-selection-next-button" [disabled]="!formatConfigurationValid" (click)="clickFormatSelectionNextButton()" color="primary"
                             mat-raised-button matStepperNext style="margin-left:10px;">
                         Next
                     </button>
