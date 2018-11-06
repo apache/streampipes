@@ -53,6 +53,10 @@ export class SpButtonDirective {
             element.addClass('sp-button-icon');
         }
 
+        if ('spButtonSmallPadding' in attr) {
+            element.addClass('sp-button-small-padding');
+        }
+
         this.$mdButtonInkRipple.attach(scope, element);
         // //
         // // // Use async expect to support possible bindings in the button label
