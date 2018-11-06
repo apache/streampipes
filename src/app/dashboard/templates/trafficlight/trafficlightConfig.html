@@ -16,7 +16,7 @@
             <div flex="50">
                 <md-input-container>
                     <label>Operator</label>
-                    <md-select ng-model="ctrl.wid.config.critical.operator">
+                    <md-select required ng-model="ctrl.wid.config.critical.operator">
                         <md-option ng-value="'ge'">upper limit</md-option>
                         <md-option ng-value="'le'">under limit</md-option>
                     </md-select>
@@ -25,7 +25,7 @@
             <div flex="50">
                 <md-input-container>
                     <label>Value</label>
-                    <input ng-model="ctrl.wid.config.critical.value" style="color:black;">
+                    <input required ng-model="ctrl.wid.config.critical.value" style="color:black;">
                 </md-input-container>
             </div>
         </div>
@@ -36,7 +36,7 @@
             <div flex="100">
                 <md-input-container>
                     <label>Value</label>
-                    <input ng-model="ctrl.wid.config.critical.range" style="color:black;">
+                    <input required ng-model="ctrl.wid.config.critical.range" style="color:black;">
                 </md-input-container>
             </div>
         </div>

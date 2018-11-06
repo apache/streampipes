@@ -1,5 +1,4 @@
 <md-dialog aria-label="Add Widget" flex="80" style="max-height:80%;">
-    <form>
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Add a new Widget</h2>
@@ -62,31 +61,32 @@
                     <!-- Select Scheme -->
                     <div ng-if="ctrl.page == 'select-scheme'">
                         <b><h4>{{ctrl.pages[2].description}}</h4></b>
-                        <md-input-container id="scheme-selection" layout="row" flex="100">
-                            <sp-gauge-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'gauge'"
-                                                    wid=ctrl.selectedVisualisation></sp-gauge-widget-config>
-                            <sp-heatmap-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'heatmap'"
-                                                      wid=ctrl.selectedVisualisation></sp-heatmap-widget-config>
-                            <sp-line-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'line'"
-                                                   wid=ctrl.selectedVisualisation></sp-line-widget-config>
-                            <sp-map-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'map'"
-                                                  wid=ctrl.selectedVisualisation></sp-map-widget-config>
-                            <sp-number-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'number'"
-                                                     wid=ctrl.selectedVisualisation></sp-number-widget-config>
-                            <sp-raw-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'raw'"
-                                                  wid=ctrl.selectedVisualisation></sp-raw-widget-config>
-                            <sp-table-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'table'"
-                                                    wid=ctrl.selectedVisualisation></sp-table-widget-config>
-                            <sp-trafficlight-widget-config layout="row" flex="100"
-                                                           ng-if="ctrl.selectedType == 'trafficlight'"
-                                                           wid=ctrl.selectedVisualisation></sp-trafficlight-widget-config>
-                            <sp-verticalbar-widget-config layout="row" flex="100"
-                                                          ng-if="ctrl.selectedType == 'verticalbar'"
-                                                          wid=ctrl.selectedVisualisation></sp-verticalbar-widget-config>
-                            <sp-image-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'image'"
-                                                    wid=ctrl.selectedVisualisation></sp-image-widget-config>
-
-                        </md-input-container>
+                        <form name="ctrl.configForm">
+                            <md-input-container id="scheme-selection" layout="row" flex="100">
+                                <sp-gauge-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'gauge'"
+                                                        wid=ctrl.selectedVisualisation></sp-gauge-widget-config>
+                                <sp-heatmap-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'heatmap'"
+                                                          wid=ctrl.selectedVisualisation></sp-heatmap-widget-config>
+                                <sp-line-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'line'"
+                                                       wid="ctrl.selectedVisualisation" config-form="ctrl.configForm"></sp-line-widget-config>
+                                <sp-map-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'map'"
+                                                      wid=ctrl.selectedVisualisation></sp-map-widget-config>
+                                <sp-number-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'number'"
+                                                         wid=ctrl.selectedVisualisation></sp-number-widget-config>
+                                <sp-raw-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'raw'"
+                                                      wid=ctrl.selectedVisualisation></sp-raw-widget-config>
+                                <sp-table-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'table'"
+                                                        wid=ctrl.selectedVisualisation></sp-table-widget-config>
+                                <sp-trafficlight-widget-config layout="row" flex="100"
+                                                               ng-if="ctrl.selectedType == 'trafficlight'"
+                                                               wid=ctrl.selectedVisualisation></sp-trafficlight-widget-config>
+                                <sp-verticalbar-widget-config layout="row" flex="100"
+                                                              ng-if="ctrl.selectedType == 'verticalbar'"
+                                                              wid=ctrl.selectedVisualisation></sp-verticalbar-widget-config>
+                                <sp-image-widget-config layout="row" flex="100" ng-if="ctrl.selectedType == 'image'"
+                                                        wid=ctrl.selectedVisualisation></sp-image-widget-config>
+                            </md-input-container>
+                        </form>
                     </div>
 
                 </div>
@@ -101,9 +101,8 @@
                        ng-if="!('select-viz'===ctrl.page)">
                 Back
             </sp-button>
-            <sp-button id="save-viz-button" sp-button-blue ng-click="ctrl.next()" ng-if="ctrl.page === 'select-scheme'">
+            <sp-button id="save-viz-button" ng-click="ctrl.next()" ng-disabled="ctrl.configForm.$pristine || ctrl.configForm.$invalid" sp-button-blue ng-if="ctrl.page === 'select-scheme'">
                 Create
             </sp-button>
         </md-dialog-actions>
-    </form>
 </md-dialog>

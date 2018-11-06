@@ -17,6 +17,7 @@ export class AddWidgetCtrl {
     visualizablePipelines: any;
     selectedType: any;
     ShepherdService: any;
+    configForm: any;
 
     constructor($mdDialog, WidgetTemplates, WidgetInstances, ElementIconText, $http, rerenderDashboard, dashboard, layoutId, ShepherdService) {
         this.page = 'select-viz';
