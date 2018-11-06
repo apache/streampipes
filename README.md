@@ -20,8 +20,10 @@ All available services are in the services folder.
 * activate {add} (service-name) (--all)
   * Adds service to system 
 * deactivate {remove} (service-name) (--all // do we need this here?)
-* list (--available) (--current)
+* list services (--available) (--current)
   * Lists the names of the services
+* list modes
+  * Lists the names of all modes
 
 * clean
   * Stops and cleans SP installation, remove networks
