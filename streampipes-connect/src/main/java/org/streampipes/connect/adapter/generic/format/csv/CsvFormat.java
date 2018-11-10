@@ -21,8 +21,11 @@ package org.streampipes.connect.adapter.generic.format.csv;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.model.connect.grounding.FormatDescription;
+import org.streampipes.model.staticproperty.AnyStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.Option;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -92,9 +95,14 @@ public class CsvFormat extends Format {
         FormatDescription fd = new FormatDescription(ID, "Csv", "This is the description" +
                 "for csv format");
         FreeTextStaticProperty delimiterProperty = new FreeTextStaticProperty("delimiter",
-                "Delimiter", "Description");
-        FreeTextStaticProperty offset = new FreeTextStaticProperty("header",
-                "Includes Header", "Description");
+                "Delimiter", "The delimiter for json. Mostly either , or ;");
+
+
+        AnyStaticProperty offset = new AnyStaticProperty("header", "Header", "Does the CSV file include a header or not");
+        offset.setOptions(Arrays.asList(new Option("Header","Header")));
+
+//        FreeTextStaticProperty offset = new FreeTextStaticProperty("header",
+//                "Includes Header", "Description");
 
         fd.addConfig(delimiterProperty);
         fd.addConfig(offset);

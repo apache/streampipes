@@ -82,7 +82,7 @@ public class CsvParser extends Parser {
         String[] keys;
         String[] data;
 
-        if (this.header) {
+        if (!this.header) {
             keys = new String (oneEvent.get(0)).split(delimiter);
             data = new String (oneEvent.get(1)).split(delimiter);
         } else {
