@@ -40,7 +40,7 @@ export default {
                 stepId: "step-4",
                 title: "Select the format geo Json",
                 text: "The data is provided in the form of geo Json. This is a Json format optimized for geospatiol data. To process this data select the <b>GeoJson</b> format. This format needs no further configuration." +
-                "Go to the next step",
+                " Go to the next step",
                 attachToElement: "#GeoJSON",
                 attachPosition: "right",
                 buttons: [
@@ -122,7 +122,7 @@ export default {
         matchingSteps: [
             {actionId: "select-adapter", currentStep: "step-2"},
             {actionId: "specific-settings-next-button", currentStep: "step-3"},
-            {actionId: "select-geojson", currentStep: "step-4"},
+            {actionId: "select-format", currentStep: "step-4"},
             {actionId: "format-selection-next-button", currentStep: "step-5"},
 
             {actionId: "event-schema-next-button", currentStep: "step-6.1"},

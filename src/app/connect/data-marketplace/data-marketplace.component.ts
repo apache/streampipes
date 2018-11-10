@@ -55,6 +55,10 @@ export class DataMarketplaceComponent implements OnInit {
         this.ShepherdService.startAdapterTour2();
     }
 
+    startAdapterTutorial3() {
+        this.ShepherdService.startAdapterTour3();
+    }
+
     selectAdapter(adapterDescription: AdapterDescription) {
         this.newAdapterFromDescription = this.dataMarketplaceService.cloneAdapterDescription(adapterDescription);
 

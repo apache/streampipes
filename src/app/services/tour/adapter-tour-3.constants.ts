@@ -1,11 +1,12 @@
 export default {
     adapterTour: {
-        id: "adapter2",
+        id: "adapter3",
         steps: [{
             stepId: "step-1",
             title: "Welcome to the Second Adapter Tutorial",
-            text: "<p>In this tutorial we connect the live data form tparking lots of the LAX airport: https://goo.gl/48y2xv" +
-            "</p> Click <b>next</b> to continue.",
+            text: "<p>In this tutorial we connect the live data form parking lots of the LAX airport.</p>" +
+            "<p>Link to data description: https://goo.gl/48y2xv </p>" +
+            "Click <b>next</b> to continue.",
             classes: "shepherd shepherd-welcome",
             buttons: [
                 "cancel",
@@ -27,7 +28,8 @@ export default {
                 stepId: "step-3",
                 title: "Configure the protocol",
                 text: "The data is provided through a REST endpoint, which has to be polled regularly. To do this set the <b>Interval</b> to <b>60</b>. This configuration will poll the data every minute" +
-                "The <b>URL of the endpoint is: https://data.lacity.org/resource/xzkr-5anj.json</b>, copy this URL into the URL field",
+                "The <b>URL of the endpoint is: https://data.lacity.org/resource/xzkr-5anj.json</b>, copy this URL into the URL field" +
+                "<p>After setting the configuration, click on next to go to the next step</p>",
                 attachToElement: "#formWrapper:last-of-type",
                 attachPosition: "top",
                 buttons: [
@@ -39,18 +41,8 @@ export default {
                 title: "Select the format Json Array No Key",
                 text: "Click on <b>Json Array No Key</b> format. The data is provided in an array and no further configurations are required" +
                 "Go to the next step",
-                attachToElement: "#JsonArrayNoKey",
+                attachToElement: "#json_array_no_key",
                 attachPosition: "left",
-                buttons: [
-                    "cancel",
-                ]
-            },
-            {
-                stepId: "step-5",
-                title: "Finish Format configuration",
-                text: "After selecting Json Array No Key as a format go to the next step",
-                attachPosition: "top",
-                attachToElement: "#format-selection-next-button",
                 buttons: [
                     "cancel",
                 ]
@@ -58,23 +50,13 @@ export default {
             {
                 stepId: "step-6.0",
                 title: "Change the schema of the data",
-                text: "In this view you can see the schema of each data entry. You can use the schema editor to change the schema, add more information and have a look at the data",
+                text: "In this view you can see the schema of each data entry. You can use the schema editor to change the schema, add more information and have a look at the data" +
+                "<p>When you understand the schema of the data go to the next step by clicking on the <b>next</b> button!",
                 attachToElement: "#schema_reload_button",
                 attachPosition: "top",
                 buttons: [
                     "cancel",
-                    "next"
 
-                ]
-            },
-            {
-                stepId: "step-6.1",
-                title: "Go to next Step",
-                text: "Finish the modelling and go to next step to start the adapter",
-                attachToElement: "#event-schema-next-button",
-                attachPosition: "bottom",
-                buttons: [
-                    "cancel"
                 ]
             },
             {
@@ -100,7 +82,7 @@ export default {
             {
                 stepId: "step-9",
                 title: "Congratulation",
-                text: "Congratulation you have created your first adapter and finished the tutorial. Go to the pipeline editor to see the new data source",
+                text: "Congratulation you have created your second adapter and finished the tutorial. Go to the pipeline editor to see the new data source",
                 classes: "shepherd shepherd-welcome",
                 buttons: [
                     "cancel"
@@ -110,10 +92,9 @@ export default {
         matchingSteps: [
             {actionId: "select-adapter", currentStep: "step-2"},
             {actionId: "specific-settings-next-button", currentStep: "step-3"},
-            {actionId: "select-geojson", currentStep: "step-4"},
-            {actionId: "format-selection-next-button", currentStep: "step-5"},
+            {actionId: "format-selection-next-button", currentStep: "step-4"},
 
-            {actionId: "event-schema-next-button", currentStep: "step-6.1"},
+            {actionId: "event-schema-next-button", currentStep: "step-6.0"},
 
             {actionId: "button-startAdapter", currentStep: "step-7"},
             {actionId: "confirm_adapter_started_button", currentStep: "step-8"},

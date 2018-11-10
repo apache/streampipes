@@ -153,6 +153,10 @@ export class ShepherdService {
         this.startTour(this.TourProviderService.getTourById("adapter2"));
     }
 
+    startAdapterTour3() {
+        this.startTour(this.TourProviderService.getTourById("adapter3"));
+    }
+
     setTimeWaitMillies(value) {
         this.TourProviderService.setTime(value);
     }
