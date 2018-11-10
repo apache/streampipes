@@ -35,6 +35,8 @@ import { AddNestedRuleDescription } from './model/connect/rules/AddNestedRuleDes
 import { MoveRuleDescription } from './model/connect/rules/MoveRuleDesctiption';
 import { TransformationRuleDescription } from './model/connect/rules/TransformationRuleDescription';
 import {StatusMessage} from "./model/message/StatusMessage";
+import {AnyStaticProperty} from './model/AnyStaticProperty';
+import { Option } from './model/Option';
 
 @Injectable()
 export class RestService {
@@ -65,6 +67,8 @@ export class RestService {
     tsonld.addClassMapping(DeleteRuleDescription);
     tsonld.addClassMapping(AddNestedRuleDescription);
     tsonld.addClassMapping(MoveRuleDescription);
+      tsonld.addClassMapping(Option);
+      tsonld.addClassMapping(AnyStaticProperty);
 
     return tsonld;
   }
@@ -207,6 +211,8 @@ export class RestService {
         tsonld.addClassMapping(FreeTextStaticProperty);
         tsonld.addClassMapping(FormatDescription);
         tsonld.addClassMapping(FormatDescriptionList);
+        tsonld.addClassMapping(AnyStaticProperty);
+          tsonld.addClassMapping(Option);
 
         // console.log(JSON.stringify(jsonResponse, null, 2));
         const res = tsonld.fromJsonLdType(response, 'sp:FormatDescriptionList');
@@ -224,6 +230,8 @@ export class RestService {
         tsonld.addClassMapping(ProtocolDescriptionList);
         tsonld.addClassMapping(FreeTextStaticProperty);
         tsonld.addClassMapping(ProtocolDescription);
+          tsonld.addClassMapping(AnyStaticProperty);
+          tsonld.addClassMapping(Option);
 
         // console.log(JSON.stringify(jsonResponse, null, 2));
         const res = tsonld.fromJsonLdType(
