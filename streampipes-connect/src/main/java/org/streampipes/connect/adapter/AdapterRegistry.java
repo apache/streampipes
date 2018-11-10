@@ -56,12 +56,12 @@ public class AdapterRegistry {
     public static Map<String, Adapter> getAllAdapters() {
         Map<String, Adapter> allAdapters = new HashMap<>();
 
-        allAdapters.put(GenericDataSetAdapter.ID, new GenericDataSetAdapter());
+//        allAdapters.put(GenericDataSetAdapter.ID, new GenericDataSetAdapter());
         allAdapters.put(GenericDataStreamAdapter.ID, new GenericDataStreamAdapter());
-        allAdapters.put(TwitterAdapter.ID, new TwitterAdapter());
+//        allAdapters.put(TwitterAdapter.ID, new TwitterAdapter());
         allAdapters.put(OpenSenseMapAdapter.ID, new OpenSenseMapAdapter());
         allAdapters.put(GdeltAdapter.ID, new GdeltAdapter());
-        allAdapters.put(NswTrafficCameraAdapter.ID, new NswTrafficCameraAdapter());
+//        allAdapters.put(NswTrafficCameraAdapter.ID, new NswTrafficCameraAdapter());
 
         return allAdapters;
     }
@@ -72,9 +72,9 @@ public class AdapterRegistry {
         allFormats.put(JsonFormat.ID, new JsonFormat());
         allFormats.put(JsonObjectFormat.ID, new JsonObjectFormat());
         allFormats.put(JsonArrayFormat.ID, new JsonArrayFormat());
-        allFormats.put(CsvFormat.ID, new CsvFormat());
+//        allFormats.put(CsvFormat.ID, new CsvFormat());
         allFormats.put(GeoJsonFormat.ID, new GeoJsonFormat());
-        allFormats.put(XmlFormat.ID, new XmlFormat());
+//        allFormats.put(XmlFormat.ID, new XmlFormat());
 
         return allFormats;
     }
@@ -85,9 +85,9 @@ public class AdapterRegistry {
         allParsers.put(JsonFormat.ID, new JsonParser());
         allParsers.put(JsonObjectFormat.ID, new JsonObjectParser());
         allParsers.put(JsonArrayFormat.ID, new JsonArrayParser());
-        allParsers.put(CsvFormat.ID, new CsvParser());
+//        allParsers.put(CsvFormat.ID, new CsvParser());
         allParsers.put(GeoJsonFormat.ID, new GeoJsonParser());
-        allParsers.put(XmlFormat.ID, new XmlParser());
+//        allParsers.put(XmlFormat.ID, new XmlParser());
 
         return allParsers;
     }
@@ -95,8 +95,8 @@ public class AdapterRegistry {
     public static Map<String, Protocol> getAllProtocols() {
         Map<String, Protocol> allProtocols = new HashMap<>();
 
-        allProtocols.put(HttpProtocol.ID, new HttpProtocol());
-        allProtocols.put(FileProtocol.ID, new FileProtocol());
+//        allProtocols.put(HttpProtocol.ID, new HttpProtocol());
+//        allProtocols.put(FileProtocol.ID, new FileProtocol());
         allProtocols.put(KafkaProtocol.ID, new KafkaProtocol());
         allProtocols.put(MqttProtocol.ID, new MqttProtocol());
         allProtocols.put(HttpStreamProtocol.ID, new HttpStreamProtocol());
