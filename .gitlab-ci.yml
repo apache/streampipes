@@ -163,7 +163,7 @@ finish release:
     - git push origin --tags
     - git checkout master
     - git push github master
-    - git push github version-$MVN_VERSION
+    - git push github $MVN_VERSION
     - git checkout dev
     - git push github dev
 
