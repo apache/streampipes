@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [0.60.0] - 2018-11-14
+### Added
+- Beta release of StreamPipes Connect Library
+- Tutorials for better user guidance
+- New Wrapper for the Siddhi CEP engine
+- New Project streampipes-pipeline-elements contains more than 40 new pipeline elements
+
+### Changed
+- Various bug fixes and stability improvements
+- Many UX improvements (e.g., harmonized styles)
+- Dashboard does not reload after new visualization type has been created
+- Improved test coverage
+
+### Removed
+
 ## [0.55.2] - 2018-05-08
 ### Added
 - The [installer](https://www.github.com/streampipes/streampipes-installer) makes it easy to install StreamPipes on Linux, MacOS and Windows
