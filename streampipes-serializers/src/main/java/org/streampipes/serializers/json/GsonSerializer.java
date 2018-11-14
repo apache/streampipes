@@ -25,6 +25,9 @@ import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.client.messages.Message;
+import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.rules.*;
 import org.streampipes.model.grounding.TopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.output.OutputStrategy;
@@ -40,19 +43,21 @@ import java.net.URI;
 
 public class GsonSerializer {
 
+  public static GsonBuilder getAdapterGsonBuilder() {
+    GsonBuilder builder = getGsonBuilder();
+    builder.registerTypeHierarchyAdapter(AdapterDescription.class, new AdapterSerializer());
+    builder.registerTypeAdapter(TransformationRuleDescription.class, new JsonLdSerializer<TransformationRuleDescription>());
+//    builder.registerTypeHierarchyAdapter(TransformationRuleDescription.class, new AdapterSerializer());
+
+    return builder;
+  }
+
+  public static Gson getAdapterGson() {
+    return getAdapterGsonBuilder().create();
+  }
+
   public static Gson getGson() {
-    GsonBuilder builder = new GsonBuilder();
-    builder.registerTypeAdapter(EventProperty.class, new JsonLdSerializer<EventProperty>());
-    builder.registerTypeAdapter(StaticProperty.class, new JsonLdSerializer<StaticProperty>());
-    builder.registerTypeAdapter(OutputStrategy.class, new JsonLdSerializer<OutputStrategy>());
-    builder.registerTypeAdapter(TransportProtocol.class, new JsonLdSerializer<TransportProtocol>());
-    builder.registerTypeAdapter(ValueSpecification.class, new JsonLdSerializer<ValueSpecification>());
-    builder.registerTypeAdapter(TopicDefinition.class, new JsonLdSerializer<TopicDefinition>());
-    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
-            .registerSubtype(SpDataSet.class, "org.streampipes.model.SpDataSet")
-            .registerSubtype(SpDataStream.class, "org.streampipes.model.SpDataStream"));
-    builder.setPrettyPrinting();
-    return builder.create();
+    return getGsonBuilder().create();
   }
 
   public static GsonBuilder getGsonBuilder() {
@@ -64,15 +69,23 @@ public class GsonSerializer {
     builder.registerTypeAdapter(MappingProperty.class, new JsonLdSerializer<MappingProperty>());
     builder.registerTypeAdapter(ValueSpecification.class, new JsonLdSerializer<ValueSpecification>());
     builder.registerTypeAdapter(DataSinkType.class, new EcTypeAdapter());
+    builder.registerTypeAdapter(Message.class, new JsonLdSerializer<Message>());
     builder.registerTypeAdapter(DataProcessorType.class, new EpaTypeAdapter());
     builder.registerTypeAdapter(URI.class, new UriSerializer());
     builder.registerTypeAdapter(Frequency.class, new JsonLdSerializer<Frequency>());
     builder.registerTypeAdapter(EventPropertyQualityDefinition.class, new JsonLdSerializer<EventPropertyQualityDefinition>());
     builder.registerTypeAdapter(EventStreamQualityDefinition.class, new JsonLdSerializer<EventStreamQualityDefinition>());
     builder.registerTypeAdapter(TopicDefinition.class, new JsonLdSerializer<TopicDefinition>());
+    builder.registerTypeAdapter(TransformationRuleDescription.class, new JsonLdSerializer<TransformationRuleDescription>());
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
             .registerSubtype(SpDataSet.class, "org.streampipes.model.SpDataSet")
             .registerSubtype(SpDataStream.class, "org.streampipes.model.SpDataStream"));
+
+    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(TransformationRuleDescription.class, "sourceType")
+            .registerSubtype(RenameRuleDescription.class, "org.streampipes.model.RenameRuleDescription")
+            .registerSubtype(MoveRuleDescription.class, "org.streampipes.model.MoveRuleDescription")
+            .registerSubtype(DeleteRuleDescription.class, "org.streampipes.model.DeleteRuleDescription")
+            .registerSubtype(CreateNestedRuleDescription.class, "org.streampipes.model.CreateNestedRuleDescription"));
 
     builder.setPrettyPrinting();
     return builder;

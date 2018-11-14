@@ -65,7 +65,7 @@ public class Utils {
   }
 
 
-  public static RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException {
+  private static RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException {
     RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
 
     writer.handleNamespace("sp", "https://streampipes.org/vocabulary/v1/");

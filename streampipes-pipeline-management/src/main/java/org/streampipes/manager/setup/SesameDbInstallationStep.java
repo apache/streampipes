@@ -46,7 +46,7 @@ public class SesameDbInstallationStep implements InstallationStep {
 
 	@Override
 	public List<Message> install() {
-		List<Message> msgs = new ArrayList<Message>();
+		List<Message> msgs = new ArrayList<>();
 		RemoteRepositoryManager manager = new RemoteRepositoryManager(sesameUrl);
 		try {
 			manager.initialize();

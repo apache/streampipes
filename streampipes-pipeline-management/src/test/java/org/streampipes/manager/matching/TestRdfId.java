@@ -17,13 +17,11 @@
 
 package org.streampipes.manager.matching;
 
-import org.junit.Test;
-
 public class TestRdfId {
 
-    @Test
-    public void testGraphIdAfterClone() {
-
+//    @Test
+//    public void testGraphIdAfterClone() {
+//
 //        DataProcessorInvocation invocation = TestUtils.makeSepa(new ProjectController(), "A", "B");
 //        SpDataStream stream = TestUtils.makeStream(new RandomDataProducer(), new RandomNumberStreamJson(), "B");
 //
@@ -42,7 +40,7 @@ public class TestRdfId {
 //
 //        assertEquals(clonedStream.getEventSchema().getEventProperties().get(0).getElementId(), strategy2.getEventProperties().get(0).getElementId());
 //
-
-
-    }
+//
+//
+//    }
 }

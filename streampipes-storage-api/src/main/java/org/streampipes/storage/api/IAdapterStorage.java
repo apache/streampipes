@@ -1,7 +1,6 @@
 package org.streampipes.storage.api;
 
-import org.streampipes.model.client.VirtualSensor;
-import org.streampipes.model.modelconnect.AdapterDescription;
+import org.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.List;
 

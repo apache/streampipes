@@ -26,69 +26,68 @@ import java.util.List;
 
 public class PipelineModification {
 
-	String domId;
-	String elementId;
-	
-	List<PipelineModificationErrorDescription> errorDescriptions;
-	List<StaticProperty> staticProperties;
-	List<OutputStrategy> outputStrategies;
-	List<SpDataStream> inputStreams;
-	
-	public PipelineModification(String domId, String elementId,
-			List<StaticProperty> staticProperties) {
-		super();
-		this.domId = domId;
-		this.elementId = elementId;
-		this.staticProperties = staticProperties;
-		this.inputStreams = new ArrayList<>();
-	}
-	
-	public PipelineModification()
-	{
-		
-	}
+  private String domId;
+  private String elementId;
 
-	public String getDomId() {
-		return domId;
-	}
+  private List<PipelineModificationErrorDescription> errorDescriptions;
+  private List<StaticProperty> staticProperties;
+  private List<OutputStrategy> outputStrategies;
+  private List<SpDataStream> inputStreams;
 
-	public void setDomId(String domId) {
-		this.domId = domId;
-	}
+  public PipelineModification(String domId, String elementId,
+                              List<StaticProperty> staticProperties) {
+    super();
+    this.domId = domId;
+    this.elementId = elementId;
+    this.staticProperties = staticProperties;
+    this.inputStreams = new ArrayList<>();
+  }
 
-	public String getElementId() {
-		return elementId;
-	}
+  public PipelineModification() {
 
-	public void setElementId(String elementId) {
-		this.elementId = elementId;
-	}
+  }
 
-	public List<StaticProperty> getStaticProperties() {
-		return staticProperties;
-	}
+  public String getDomId() {
+    return domId;
+  }
 
-	public void setStaticProperties(List<StaticProperty> staticProperties) {
-		this.staticProperties = staticProperties;
-	}
+  public void setDomId(String domId) {
+    this.domId = domId;
+  }
 
-	public List<OutputStrategy> getOutputStrategies() {
-		return outputStrategies;
-	}
+  public String getElementId() {
+    return elementId;
+  }
 
-	public void setOutputStrategies(List<OutputStrategy> outputStrategies) {
-		this.outputStrategies = outputStrategies;
-	}
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
+  }
 
-	public List<SpDataStream> getInputStreams() {
-		return inputStreams;
-	}
+  public List<StaticProperty> getStaticProperties() {
+    return staticProperties;
+  }
 
-	public void setInputStreams(List<SpDataStream> inputStreams) {
-		this.inputStreams = inputStreams;
-	}
+  public void setStaticProperties(List<StaticProperty> staticProperties) {
+    this.staticProperties = staticProperties;
+  }
 
-	public void addInputStream(SpDataStream inputStream) {
-		this.inputStreams.add(inputStream);
-	}
+  public List<OutputStrategy> getOutputStrategies() {
+    return outputStrategies;
+  }
+
+  public void setOutputStrategies(List<OutputStrategy> outputStrategies) {
+    this.outputStrategies = outputStrategies;
+  }
+
+  public List<SpDataStream> getInputStreams() {
+    return inputStreams;
+  }
+
+  public void setInputStreams(List<SpDataStream> inputStreams) {
+    this.inputStreams = inputStreams;
+  }
+
+  public void addInputStream(SpDataStream inputStream) {
+    this.inputStreams.add(inputStream);
+  }
 }

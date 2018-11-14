@@ -23,5 +23,5 @@ public enum TopicParameterType {
   LOCATION_IDENTIFIER,
 
   PLATFORM_TYPE,
-  SENSOR_TYPE;
+  SENSOR_TYPE
 }

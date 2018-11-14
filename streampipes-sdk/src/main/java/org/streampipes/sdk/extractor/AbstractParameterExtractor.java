@@ -117,7 +117,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .getOptions()
             .stream()
             .filter(Option::isSelected)
-            .map(o -> o.getName())
+            .map(Option::getName)
             .map(o -> typeParser.parse(o, targetClass))
             .collect(Collectors.toList());
   }
@@ -218,14 +218,14 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .stream()
             .filter(sp -> sp.getPropertyId().equals(propertyId))
             .findFirst()
-            .map(m -> m.getValue())
+            .map(SupportedProperty::getValue)
             .get(), targetClass);
 
   }
 
   // TODO copied from SepaUtils, refactor code
   private List<String> getMappingPropertyName(List<EventProperty> eventProperties, URI propertyURI, boolean completeNames, String prefix) {
-    List<String> result = new ArrayList<String>();
+    List<String> result = new ArrayList<>();
     for (EventProperty p : eventProperties) {
       if (p instanceof EventPropertyPrimitive || p instanceof EventPropertyList) {
         if (p.getElementId().equals(propertyURI.toString())) {
@@ -256,11 +256,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .filter(p -> p.getInternalName().equals(staticPropertyName))
             .findFirst();
 
-    if (property.isPresent()) {
-      return property.get().getMapsTo();
-    } else {
-      return null;
-    }
+    return property.map(MappingPropertyUnary::getMapsTo).orElse(null);
     //TODO: exceptions
   }
 }

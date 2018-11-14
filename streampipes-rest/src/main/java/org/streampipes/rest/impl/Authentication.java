@@ -32,8 +32,8 @@ import org.streampipes.model.client.user.Role;
 import org.streampipes.model.client.user.ShiroAuthenticationRequest;
 import org.streampipes.model.client.user.ShiroAuthenticationResponse;
 import org.streampipes.model.client.user.ShiroAuthenticationResponseFactory;
-import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IAuthentication;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 
 import java.util.HashSet;
 import java.util.Set;

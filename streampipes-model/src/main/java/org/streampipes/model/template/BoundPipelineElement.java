@@ -20,6 +20,7 @@ import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.CascadeType;
@@ -50,7 +51,7 @@ public class BoundPipelineElement extends UnnamedStreamPipesEntity {
     // TODO add cloner
     super(other);
     this.pipelineElementTemplate = other.getPipelineElementTemplate();
-    this.connectedTo = other.getConnectedTo();
+    this.connectedTo = new Cloner().boundPipelineElements(other.getConnectedTo());
   }
 
   public InvocableStreamPipesEntity getPipelineElementTemplate() {

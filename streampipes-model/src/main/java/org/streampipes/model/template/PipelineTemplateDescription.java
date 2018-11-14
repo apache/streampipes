@@ -19,85 +19,96 @@ package org.streampipes.model.template;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.base.UnnamedStreamPipesEntity;
-import org.streampipes.vocabulary.RDFS;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
 @RdfsClass(StreamPipes.PIPELINE_TEMPLATE_DESCRIPTION)
 @Entity
-public class PipelineTemplateDescription extends UnnamedStreamPipesEntity {
+public class PipelineTemplateDescription extends NamedStreamPipesEntity {
 
-  @RdfProperty(RDFS.LABEL)
-  private String pipelineTemplateName;
+  //@RdfProperty(RDFS.LABEL)
+  //private String pipelineTemplateName;
 
-  @RdfProperty(StreamPipes.INTERNAL_NAME)
-  private String pipelineTemplateId;
+  //@RdfProperty(StreamPipes.INTERNAL_NAME)
+  //private String pipelineTemplateId;
 
-  @RdfProperty(RDFS.DESCRIPTION)
-  private String pipelineTemplateDescription;
+  //@RdfProperty(RDFS.DESCRIPTION)
+  //private String pipelineTemplateDescription;
 
-  //@OneToMany(fetch = FetchType.EAGER,
-  //        cascade = {CascadeType.ALL})
-  //@RdfProperty(StreamPipes.IS_CONNECTED_TO)
-  private List<BoundPipelineElement> connectedTo;
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.IS_CONNECTED_TO)
+  private List<BoundPipelineElement> boundTo;
 
   public PipelineTemplateDescription() {
     super();
-    this.connectedTo = new ArrayList<>();
+    this.boundTo = new ArrayList<>();
+  }
+
+  public PipelineTemplateDescription(String uri, String name, String description) {
+    super(uri, name, description);
+    this.boundTo = new ArrayList<>();
   }
 
   public PipelineTemplateDescription(SpDataStream requiredStream, List<BoundPipelineElement> connectedTo) {
     super();
-    this.connectedTo = connectedTo;
+    this.boundTo = connectedTo == null ? new ArrayList<>() : connectedTo;
   }
 
   public PipelineTemplateDescription(PipelineTemplateDescription other) {
     super(other);
     // TODO use cloner
-    this.connectedTo = other.getConnectedTo();
-    this.pipelineTemplateName = other.getPipelineTemplateName();
-    this.pipelineTemplateDescription = other.getPipelineTemplateDescription();
-    this.pipelineTemplateId = other.getPipelineTemplateId();
+    if (other.getBoundTo() != null) {
+      this.boundTo = new Cloner().boundPipelineElements(other.getBoundTo());
+    }
+    //this.pipelineTemplateName = other.getPipelineTemplateName();
+    //this.pipelineTemplateDescription = other.getPipelineTemplateDescription();
+    //this.pipelineTemplateId = other.getPipelineTemplateId();
   }
 
   public PipelineTemplateDescription(String elementName, SpDataStream requiredStream, List<BoundPipelineElement> connectedTo) {
     super(elementName);
-    this.connectedTo = connectedTo;
+    this.boundTo = connectedTo;
   }
 
-  public List<BoundPipelineElement> getConnectedTo() {
-    return connectedTo;
+  public List<BoundPipelineElement> getBoundTo() {
+    return boundTo;
   }
 
-  public void setConnectedTo(List<BoundPipelineElement> connectedTo) {
-    this.connectedTo = connectedTo;
+  public void setBoundTo(List<BoundPipelineElement> boundTo) {
+    this.boundTo = boundTo;
   }
 
   public String getPipelineTemplateName() {
-    return pipelineTemplateName;
+    return super.getName();
   }
 
   public void setPipelineTemplateName(String pipelineTemplateName) {
-    this.pipelineTemplateName = pipelineTemplateName;
+    super.setName(pipelineTemplateName);
   }
 
   public String getPipelineTemplateDescription() {
-    return pipelineTemplateDescription;
+    return super.getDescription();
   }
 
   public void setPipelineTemplateDescription(String pipelineTemplateDescription) {
-    this.pipelineTemplateDescription = pipelineTemplateDescription;
+    super.setDescription(pipelineTemplateDescription);
   }
 
   public String getPipelineTemplateId() {
-    return pipelineTemplateId;
+    return super.getElementId();
   }
 
   public void setPipelineTemplateId(String pipelineTemplateId) {
-    this.pipelineTemplateId = pipelineTemplateId;
+    super.setElementId(pipelineTemplateId);
+    super.setAppId(pipelineTemplateId);
   }
 }

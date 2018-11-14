@@ -32,10 +32,6 @@ public class XSD {
 	 */
 	public static final String XSD_NS = "http://www.w3.org/2001/XMLSchema#";
 	
-	protected static final URI toURI(String local) {
-		return URI.create(XSD_NS + local);
-	}
-	
 	public static final URI _string = toURI("string");
 	
 	public static final URI _boolean = toURI("boolean");
@@ -165,5 +161,9 @@ public class XSD {
 	        _positiveInteger, _anyType, _sequence
 
 	};
+
+	protected static final URI toURI(String local) {
+		return URI.create(XSD_NS + local);
+	}
 	
 }

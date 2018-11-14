@@ -85,10 +85,10 @@ public class TreeUtils {
 				{
 					for(EventProperty sp : ((EventPropertyList) p).getEventProperties())
 					{
-						if (sp.getElementId().toString().equals(uri)) return sp;
+						if (sp.getElementId().equals(uri)) return sp;
 					}
 				}
-				if (p.getElementId().toString().equals(uri))
+				if (p.getElementId().equals(uri))
 					return p;
 			}
 		}

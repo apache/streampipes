@@ -22,7 +22,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.55.2</version>
+		<version>0.60.0</version>
 	</parent>
 	<dependencies>
 		<dependency>
@@ -37,11 +37,14 @@
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-logging</artifactId>
         </dependency>
-
 		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>persistence-api</artifactId>
 		</dependency>
-
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

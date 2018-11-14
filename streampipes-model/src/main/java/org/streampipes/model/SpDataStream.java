@@ -30,15 +30,10 @@ import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.DATA_STREAM)
 @Entity
@@ -101,8 +96,8 @@ public class SpDataStream extends NamedStreamPipesEntity {
 		super(other);
 		if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
 		if (other.getEventSchema() != null) this.eventSchema = new EventSchema(other.getEventSchema());
-		if (other.getHasEventStreamQualities() != null) this.hasEventStreamQualities = other.getHasEventStreamQualities().stream().map(s -> new EventStreamQualityDefinition(s)).collect(Collectors.toCollection(ArrayList<EventStreamQualityDefinition>::new));
-		if (other.getRequiresEventStreamQualities() != null) this.requiresEventStreamQualities = other.getRequiresEventStreamQualities().stream().map(s -> new EventStreamQualityRequirement(s)).collect(Collectors.toCollection(ArrayList<EventStreamQualityRequirement>::new));
+		if (other.getHasEventStreamQualities() != null) this.hasEventStreamQualities = other.getHasEventStreamQualities().stream().map(EventStreamQualityDefinition::new).collect(Collectors.toCollection(ArrayList::new));
+		if (other.getRequiresEventStreamQualities() != null) this.requiresEventStreamQualities = other.getRequiresEventStreamQualities().stream().map(EventStreamQualityRequirement::new).collect(Collectors.toCollection(ArrayList::new));
 		if (other.getMeasurementCapability() != null) this.measurementCapability =  new Cloner().mc(other.getMeasurementCapability());
 		if (other.getMeasurementObject() != null) this.measurementObject = new Cloner().mo(other.getMeasurementObject());
 

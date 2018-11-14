@@ -17,18 +17,18 @@
 
 package org.streampipes.units;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.github.jqudt.Unit;
 import com.github.jqudt.onto.UnitFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class UnitCollector {
 
-	static Logger LOG = LoggerFactory.getLogger(UnitCollector.class);
+	private static final Logger LOG = LoggerFactory.getLogger(UnitCollector.class);
 
 	private static final String namespace = "http://qudt.org/schema/qudt#";
 	

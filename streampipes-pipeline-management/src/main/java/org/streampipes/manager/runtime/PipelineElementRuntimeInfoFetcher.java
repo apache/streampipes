@@ -25,15 +25,23 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.StringEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.messaging.InternalEventProcessor;
+import org.streampipes.messaging.jms.ActiveMQConsumer;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 public class PipelineElementRuntimeInfoFetcher {
+
+  Logger logger = LoggerFactory.getLogger(JsonParser.class);
 
   private SpDataStream spDataStream;
 
@@ -51,15 +59,51 @@ public class PipelineElementRuntimeInfoFetcher {
   }
 
   public String getCurrentData() throws SpRuntimeException {
+
+    if (spDataStream.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol) {
+      return getLatestEventFromKafka();
+    } else {
+      return getLatestEventFromJms();
+    }
+
+  }
+
+  private String getLatestEventFromJms() throws SpRuntimeException {
+    final String[] result = {null};
+    ActiveMQConsumer consumer = new ActiveMQConsumer();
+    consumer.connect((JmsTransportProtocol) spDataStream.getEventGrounding().getTransportProtocol(), new InternalEventProcessor<byte[]>() {
+      @Override
+      public void onEvent(byte[] event) {
+        result[0] = new String(event);
+        try {
+          consumer.disconnect();
+        } catch (SpRuntimeException e) {
+          e.printStackTrace();
+        }
+      }
+    });
+
+    while (result[0] == null) {
+      try {
+        Thread.sleep(300);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+
+    return result[0];
+  }
+
+
+  private String getLatestEventFromKafka() throws SpRuntimeException {
     String kafkaRestUrl = getKafkaRestUrl();
     String kafkaTopic = getOutputTopic();
 
     return getLatestSubscription(kafkaRestUrl, kafkaTopic);
-
   }
 
   private String getLatestSubscription(String kafkaRestUrl, String kafkaTopic) throws SpRuntimeException {
-    String kafkaRestRecordsUrl = getConsumerInstanceUrl(kafkaRestUrl, getConsumerInstanceId(kafkaTopic), kafkaTopic) +"/records";
+    String kafkaRestRecordsUrl = getConsumerInstanceUrl(kafkaRestUrl, getConsumerInstanceId(kafkaTopic), kafkaTopic) + "/records";
 
     try {
       if (!consumerInstances.contains(getConsumerInstanceId(kafkaTopic))) {
@@ -72,7 +116,11 @@ public class PipelineElementRuntimeInfoFetcher {
 
       return extractPayload(response.returnContent().asString());
     } catch (IOException | SpRuntimeException e) {
+      if (!e.getMessage().equals("")) {
+        logger.error("Could not get any sample data from Kafka", e);
+      }
       consumerInstances.remove(getConsumerInstanceId(kafkaTopic));
+
       throw new SpRuntimeException(e.getMessage());
     }
   }
@@ -83,14 +131,14 @@ public class PipelineElementRuntimeInfoFetcher {
     Integer statusCode = createConsumer(kafkaRestUrl, consumerInstance, kafkaTopic);
     Integer subscriptionStatusCode = subscribeConsumer(kafkaRestUrl, consumerInstance, kafkaTopic);
     if (subscriptionStatusCode != 204) {
-      throw new SpRuntimeException("Could not read message");
+      throw new SpRuntimeException("Could not read message form Kafka-REST: " + kafkaRestUrl);
     }
 
   }
 
   private Integer subscribeConsumer(String kafkaRestUrl, String consumerInstance, String kafkaTopic) throws IOException {
     String subscribeConsumerUrl = getConsumerInstanceUrl(kafkaRestUrl, consumerInstance, kafkaTopic)
-            +"/subscription";
+            + "/subscription";
 
 
     return Request.Post(subscribeConsumerUrl)
@@ -104,11 +152,11 @@ public class PipelineElementRuntimeInfoFetcher {
   }
 
   private String getConsumerInstanceUrl(String kafkaRestUrl, String consumerInstance, String topic) {
-    return kafkaRestUrl +"/"
-            +"consumers/"
-            +getConsumerGroupId(topic)
-            +"/instances/"
-            +consumerInstance;
+    return kafkaRestUrl + "/"
+            + "consumers/"
+            + getConsumerGroupId(topic)
+            + "/instances/"
+            + consumerInstance;
   }
 
   private String getConsumerGroupId(String topic) {
@@ -116,11 +164,11 @@ public class PipelineElementRuntimeInfoFetcher {
   }
 
   private String makeSubscribeConsumerBody(String kafkaTopic) {
-    return "{\"topics\":[\"" +kafkaTopic +"\"]}";
+    return "{\"topics\":[\"" + kafkaTopic + "\"]}";
   }
 
   private Integer createConsumer(String kafkaRestUrl, String consumerInstance, String topic) throws IOException {
-    String createConsumerUrl = kafkaRestUrl +"/consumers/" +getConsumerGroupId(topic);
+    String createConsumerUrl = kafkaRestUrl + "/consumers/" + getConsumerGroupId(topic);
     return Request.Post(createConsumerUrl)
             .addHeader(HttpHeaders.CONTENT_TYPE, KAFKA_REST_CONTENT_TYPE)
             .addHeader(HttpHeaders.ACCEPT, KAFKA_REST_CONTENT_TYPE)
@@ -132,11 +180,13 @@ public class PipelineElementRuntimeInfoFetcher {
   }
 
   private String makeCreateConsumerBody(String consumerInstance) {
-    return "{\"name\": \""+consumerInstance +"\", \"format\": \"json\", \"auto.offset.reset\": \"latest\"}";
+    return "{\"name\": \""
+            + consumerInstance
+            + "\", \"format\": \"json\", \"auto.offset.reset\": \"latest\"}";
   }
 
   private String getConsumerInstanceId(String kafkaTopic) {
-    return CONSUMER_GROUP_ID +"-" +kafkaTopic;
+    return CONSUMER_GROUP_ID + "-" + kafkaTopic;
   }
 
   private String getOutputTopic() {
@@ -161,7 +211,7 @@ public class PipelineElementRuntimeInfoFetcher {
       if (allElements.size() > 0) {
         lastItem = allElements.get(0).getAsJsonObject();
         lastOffset = lastItem.get(OFFSET_FIELD_NAME).getAsLong();
-        for(int i = 1; i < allElements.size(); i++) {
+        for (int i = 1; i < allElements.size(); i++) {
           JsonObject obj = allElements.get(i).getAsJsonObject();
           Long offset = obj.get(OFFSET_FIELD_NAME).getAsLong();
           if (offset > lastOffset) {

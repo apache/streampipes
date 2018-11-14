@@ -24,8 +24,8 @@ import org.streampipes.config.consul.ConsulSpConfig;
 import org.streampipes.config.model.ConfigItem;
 import org.streampipes.config.model.PeConfig;
 import org.streampipes.container.util.ConsulUtil;
-import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IConsulConfig;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -40,7 +40,7 @@ import static org.streampipes.container.util.ConsulUtil.updateConfig;
 @Path("/v2/consul")
 public class ConsulConfig extends AbstractRestInterface implements IConsulConfig {
 
-    static Logger LOG = LoggerFactory.getLogger(ConsulConfig.class);
+    private static Logger LOG = LoggerFactory.getLogger(ConsulConfig.class);
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,21 +50,21 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
         LOG.info("Request for all service configs");
         Map<String, String> peServices = ConsulUtil.getPEServices();
 
-        List peConfigs = new LinkedList<PeConfig>();
+        List<PeConfig> peConfigs = new LinkedList<>();
 
         for(Map.Entry<String, String> entry: peServices.entrySet()) {
             String serviceName = "";
             String serviceStatus = entry.getValue();
             String mainKey = ConsulSpConfig.SERVICE_ROUTE_PREFIX + entry.getKey();
 
-            Map meta = new HashMap<String, String>();
+            Map<String, String> meta = new HashMap<>();
             meta.put("status", serviceStatus);
             List<ConfigItem> configItems = getConfigForService(entry.getKey());
 
             PeConfig peConfig = new PeConfig();
 
             for(ConfigItem configItem: configItems) {
-                if(configItem.getKey().equals("service_name")) {
+                if(configItem.getKey().endsWith("SP_SERVICE_NAME")) {
                     configItems.remove(configItem);
                     peConfig.setName(configItem.getValue());
                     break;
@@ -87,8 +87,8 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
     @GsonWithIds
     @Override
     public Response saveServiceConfig(PeConfig peConfig) {
-         LOG.info("Request to update a service config");
-         for (ConfigItem configItem: peConfig.getConfigs()) {
+        LOG.info("Request to update a service config");
+        for (ConfigItem configItem: peConfig.getConfigs()) {
             String value = configItem.getValue();
             switch (configItem.getValueType()) {
                 case "xs:boolean":
@@ -126,11 +126,8 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
         String prefix = peConfig.getMainKey();
 
         for (ConfigItem configItem: peConfig.getConfigs()) {
-            updateConfig(prefix + "/" + configItem.getKey(),
-                            configItem.getValue(),
-                            configItem.getValueType(),
-                            configItem.getDescription(),
-                            configItem.isPassword());
+            updateConfig(configItem.getKey(), new Gson().toJson(configItem),
+                    configItem.isPassword());
         }
         return Response.status(Response.Status.OK).build();
     }
@@ -145,43 +142,16 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
         return Response.status(Response.Status.OK).build();
     }
 
-    private List<ConfigItem> getConfigForService(String serviceId) {
+    public List<ConfigItem> getConfigForService(String serviceId) {
         Map<String, String> keyValues = ConsulUtil.getKeyValue(ConsulSpConfig.SERVICE_ROUTE_PREFIX + serviceId);
 
         List<ConfigItem> configItems = new LinkedList<>();
 
         for(Map.Entry<String, String> entry : keyValues.entrySet()) {
-            String key = entry.getKey();
-            if(!key.endsWith("_description") && !key.endsWith("_type") && !key.endsWith("_isPassword")) {
-                ConfigItem configItem = new ConfigItem();
+            ConfigItem configItem = new Gson().fromJson(entry.getValue(), ConfigItem.class);
+            configItem.setKey(entry.getKey());
 
-                String[] splittedKey = entry.getKey().split("/");
-                String shortKey = splittedKey[splittedKey.length - 1];
-
-                configItem.setKey(shortKey);
-
-                String isPasswordKey = key + "_isPassword";
-                if(keyValues.containsKey(isPasswordKey)) {
-                    if(keyValues.get(isPasswordKey).equals("true")) {
-                        configItem.setPassword(true);
-                        configItem.setValue("");
-                    }
-                }
-                if(!configItem.isPassword())
-                    configItem.setValue(entry.getValue());
-
-                String descriptionKey = key + "_description";
-                if(keyValues.containsKey(descriptionKey)) {
-                    configItem.setDescription(keyValues.get(descriptionKey));
-                }
-
-                String typeKey = key + "_type";
-                if(keyValues.containsKey(typeKey)) {
-                    configItem.setValueType(keyValues.get(typeKey));
-                }
-
-                configItems.add(configItem);
-            }
+            configItems.add(configItem);
         }
         return configItems;
     }

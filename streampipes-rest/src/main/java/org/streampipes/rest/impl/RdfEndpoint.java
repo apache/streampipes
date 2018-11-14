@@ -20,8 +20,8 @@ package org.streampipes.rest.impl;
 import org.streampipes.manager.endpoint.EndpointFetcher;
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.client.endpoint.RdfEndpointItem;
-import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IRdfEndpoint;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 import org.streampipes.storage.api.IRdfEndpointStorage;
 
 import javax.ws.rs.*;

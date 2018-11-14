@@ -21,7 +21,7 @@
 
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.55.2</version>
+    <version>0.60.0</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -38,6 +38,8 @@
         <shiro.version>1.2.3</shiro.version>
         <streampipes-empire.version>1.9.8</streampipes-empire.version>
         <dependency.locations.enabled>false</dependency.locations.enabled>
+        <mockito.version>2.18.3</mockito.version>
+        <powermock.version>2.0.0-beta.5</powermock.version>
     </properties>
 
     <name>StreamPipes Parent Pom</name>
@@ -65,6 +67,11 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.8.5</version>
             </dependency>
             <dependency>
                 <groupId>com.orbitz.consul</groupId>
@@ -339,7 +346,7 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-vocabulary</artifactId>
+                <artifactId>streampipes-rest-shared</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -369,6 +376,11 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-vocabulary</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-empire-rdf4j</artifactId>
                 <version>${streampipes-empire.version}</version>
             </dependency>
@@ -382,50 +394,141 @@
                 <artifactId>streampipes-logging</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.tomakehurst</groupId>
+                <artifactId>wiremock</artifactId>
+                <version>2.18.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito2</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.jayway.restassured</groupId>
+                <artifactId>rest-assured</artifactId>
+                <version>2.3.2</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
+                <version>9.2.24.v20180105</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-util</artifactId>
+                <version>9.2.24.v20180105</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-continuation</artifactId>
+                <version>9.2.24.v20180105</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>2.18.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.restassured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>2.3.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <modules>
+        <module>archetypes/streampipes-archetype-pe-sources</module>
+        <module>archetypes/streampipes-archetype-pe-sinks-jvm</module>
+        <module>archetypes/streampipes-archetype-pe-processors-jvm</module>
+        <module>archetypes/streampipes-archetype-pe-sinks-flink</module>
+        <module>archetypes/streampipes-archetype-pe-processors-flink</module>
+        <module>streampipes-app-file-export</module>
         <module>streampipes-backend</module>
         <module>streampipes-code-generation</module>
         <module>streampipes-commons</module>
         <module>streampipes-config</module>
         <module>streampipes-connect</module>
+        <module>streampipes-connect-container</module>
         <module>streampipes-container</module>
         <module>streampipes-container-embedded</module>
         <module>streampipes-container-standalone</module>
         <module>streampipes-dataformat</module>
         <module>streampipes-dataformat-json</module>
-        <module>streampipes-pipeline-management</module>
+        <module>streampipes-logging</module>
         <module>streampipes-measurement-units</module>
         <module>streampipes-messaging-kafka</module>
         <module>streampipes-messaging</module>
         <module>streampipes-messaging-jms</module>
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
+        <module>streampipes-performance-tests</module>
+        <module>streampipes-pipeline-management</module>
         <module>streampipes-sources</module>
         <module>streampipes-rest</module>
+        <module>streampipes-rest-shared</module>
         <module>streampipes-sdk</module>
+        <module>streampipes-serializers</module>
         <module>streampipes-storage-api</module>
+        <module>streampipes-storage-management</module>
+        <module>streampipes-storage-couchdb</module>
+        <module>streampipes-storage-rdf4j</module>
+        <module>streampipes-test-utils</module>
         <module>streampipes-user-management</module>
+        <module>streampipes-vocabulary</module>
         <module>streampipes-wrapper</module>
+        <module>streampipes-wrapper-distributed</module>
         <module>streampipes-wrapper-esper</module>
         <module>streampipes-wrapper-flink</module>
+        <module>streampipes-wrapper-kafka-streams</module>
+        <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-spark</module>
         <module>streampipes-wrapper-standalone</module>
-        <module>streampipes-performance-tests</module>
-        <module>streampipes-storage-rdf4j</module>
-        <module>streampipes-storage-couchdb</module>
-        <module>streampipes-app-file-export</module>
-        <module>streampipes-vocabulary</module>
-        <module>streampipes-serializers</module>
-        <module>streampipes-wrapper-kafka-streams</module>
-        <module>streampipes-wrapper-distributed</module>
-        <module>streampipes-storage-management</module>
-        <module>streampipes-logging</module>
-        <module>archetypes/streampipes-archetype-pe-sources</module>
-        <module>archetypes/streampipes-archetype-pe-jvm</module>
     </modules>
 
     <profiles>
@@ -483,7 +586,6 @@
                         <featureBranchPrefix>feature-</featureBranchPrefix>
                         <releaseBranchPrefix>release-</releaseBranchPrefix>
                         <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
-                        <versionTagPrefix>version-</versionTagPrefix>
                     </flowInitContext>
                     <noDeploy>false</noDeploy>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -564,6 +666,19 @@
                         <arg>--pinentry-mode</arg>
                         <arg>loopback</arg>
                     </gpgArguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
 

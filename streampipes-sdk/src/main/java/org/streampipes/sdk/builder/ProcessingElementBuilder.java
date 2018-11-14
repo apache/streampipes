@@ -20,6 +20,7 @@ package org.streampipes.sdk.builder;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.sdk.helpers.Label;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +47,9 @@ public class ProcessingElementBuilder extends AbstractProcessingElementBuilder<P
         return new ProcessingElementBuilder(id, label, description);
     }
 
+    public static ProcessingElementBuilder create(Label label) {
+        return new ProcessingElementBuilder(label.getInternalId(), label.getLabel(), label.getDescription());
+    }
 
     /**
      * Assigns an output strategy to the element which defines the output the data processor produces.

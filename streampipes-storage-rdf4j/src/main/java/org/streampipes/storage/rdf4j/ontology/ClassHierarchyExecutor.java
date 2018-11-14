@@ -93,9 +93,9 @@ public class ClassHierarchyExecutor extends QueryExecutor {
 	private OntologyNode makeNode(String id, NodeType nodeType)
 	{
 		OntologyNode node;
-		Optional<Namespace> ns = BackgroundKnowledgeUtils.getNamespace(id.toString());
-		if (ns.isPresent()) node = new OntologyNode(id.toString(), id.toString().replace(ns.get().getNamespaceId(), ns.get().getPrefix() +":"), ns.get().getPrefix(), ns.get().getNamespaceId(), NodeType.CLASS);
-		else node = new OntologyNode(id.toString(), getLabelName(id.toString()), nodeType);
+		Optional<Namespace> ns = BackgroundKnowledgeUtils.getNamespace(id);
+		node = ns.map(namespace -> new OntologyNode(id, id.replace(namespace.getNamespaceId(), namespace.getPrefix() + ":"), namespace.getPrefix(), namespace.getNamespaceId(), NodeType.CLASS))
+						.orElseGet(() -> new OntologyNode(id, getLabelName(id), nodeType));
 		
 		return node;
 	}

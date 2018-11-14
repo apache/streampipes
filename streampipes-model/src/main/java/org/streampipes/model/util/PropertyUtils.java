@@ -41,8 +41,8 @@ public class PropertyUtils {
 
     } else if (ep instanceof EventPropertyNested) {
       EventPropertyNested nestedEp = (EventPropertyNested) ep;
-      Map<String, Object> propertyMap = new HashMap<String, Object>();
-      Map<String, Object> subTypes = new HashMap<String, Object>();
+      Map<String, Object> propertyMap = new HashMap<>();
+      Map<String, Object> subTypes = new HashMap<>();
       for(EventProperty p : nestedEp.getEventProperties())
       {
         subTypes.putAll(getUntypedRuntimeFormat(p));
@@ -69,18 +69,18 @@ public class PropertyUtils {
 
   public static List<String> getFullPropertyName(EventProperty ep, String prefix) {
     if (ep instanceof EventPropertyPrimitive) {
-      List<String> result = new ArrayList<String>();
+      List<String> result = new ArrayList<>();
       result.add(prefix + ep.getRuntimeName());
       return result;
     } else if (ep instanceof EventPropertyNested) {
-      List<String> result = new ArrayList<String>();
+      List<String> result = new ArrayList<>();
       for(EventProperty p : ((EventPropertyNested) ep).getEventProperties())
       {
         result.addAll(getFullPropertyName(p, ep.getRuntimeName() +"."));
       }
       return result;
     } else {
-      List<String> result = new ArrayList<String>();
+      List<String> result = new ArrayList<>();
       result.add(prefix + ep.getRuntimeName());
       return result;
     }

@@ -95,7 +95,7 @@ public class ConsulUtil {
         Map<String, Service> services = consul.agentClient().getServices();
         Map<String, HealthCheck> checks = agent.getChecks();
 
-        Map<String, String> peServices = new HashMap();
+        Map<String, String> peServices = new HashMap<>();
 
         for(Map.Entry<String, Service> entry : services.entrySet()) {
             if(entry.getValue().getTags().contains(PE_SERVICE_NAME)) {
@@ -133,22 +133,21 @@ public class ConsulUtil {
         return keyValues;
     }
 
-    public static void updateConfig(String key, String value, String valueType, String description, boolean password) {
+    public static void updateConfig(String key, String entry, boolean password) {
         Consul consul = consulInstance();
         KeyValueClient keyValueClient = consul.keyValueClient();
 
         if(!password) {
-            keyValueClient.putValue(key, value);
-        } else if(!value.equals("")) {
-            keyValueClient.putValue(key, value);
+            keyValueClient.putValue(key, entry);
         }
 
-        keyValueClient.putValue(key + "_description", description);
-        keyValueClient.putValue(key + "_type", valueType);
+//        keyValueClient.putValue(key + "_description", description);
+//        keyValueClient.putValue(key + "_type", valueType);
         LOG.info("Updated config - key:" + key +
-                " value: " + value +
-                " description: " + description +
-                " type: " + valueType);
+                " value: " + entry);
+//        +
+//                " description: " + description +
+//                " type: " + valueType);
     }
 
     public static List<String> getActivePEServicesEndPoints() {

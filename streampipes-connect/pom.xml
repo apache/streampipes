@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-		<groupId>org.streampipes</groupId>
-		<artifactId>streampipes-parent</artifactId>
-		<version>0.55.2</version>
-	</parent>
+        <groupId>org.streampipes</groupId>
+        <artifactId>streampipes-parent</artifactId>
+        <version>0.60.0</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>streampipes-connect</artifactId>
@@ -26,10 +26,15 @@
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-serializers</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-commons</artifactId>
-        </dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-rest-shared</artifactId>
+		</dependency>
+        <dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-measurement-units</artifactId>
+		</dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.json</artifactId>
@@ -59,6 +64,42 @@
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20180130</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.mqtt-client</groupId>
+            <artifactId>mqtt-client</artifactId>
+            <version>1.12</version>
+        </dependency>
+        <dependency>
+            <groupId>de.grundid.opendatalab</groupId>
+            <artifactId>geojson-jackson</artifactId>
+            <version>1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20171018</version>
+        </dependency>
+        <dependency>
+            <groupId>org.twitter4j</groupId>
+            <artifactId>twitter4j-core</artifactId>
+            <version>[4.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.twitter4j</groupId>
+            <artifactId>twitter4j-stream</artifactId>
+            <version>4.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>4.0</version>
+        </dependency>
     </dependencies>
 </project>

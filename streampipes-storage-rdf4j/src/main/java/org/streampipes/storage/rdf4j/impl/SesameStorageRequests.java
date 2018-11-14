@@ -23,6 +23,7 @@ import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 import org.streampipes.empire.core.empire.impl.RdfQuery;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
@@ -32,23 +33,21 @@ import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.streampipes.storage.rdf4j.sparql.QueryBuilder;
 import org.streampipes.storage.rdf4j.util.Transformer;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
 public class SesameStorageRequests implements IPipelineElementDescriptionStorage {
 
-	private Rdf4JStorageManager manager;
 	private EntityManager entityManager;
 	
 	public SesameStorageRequests()
 	{
-		manager = Rdf4JStorageManager.INSTANCE;
-		entityManager = manager.getEntityManager();
+		Rdf4JStorageManager manager = Rdf4JStorageManager.INSTANCE;
+		this.entityManager = manager.getEntityManager();
 	}
 	
 	//TODO: exception handling
@@ -66,16 +65,7 @@ public class SesameStorageRequests implements IPipelineElementDescriptionStorage
 		try {
 			sep = Transformer.fromJsonLd(DataSourceDescription.class, jsonld);
 			return storeSEP(sep);
-		} catch (RDFParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedRDFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RepositoryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (RDFParseException | IOException | RepositoryException | UnsupportedRDFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -101,16 +91,7 @@ public class SesameStorageRequests implements IPipelineElementDescriptionStorage
 		try {
 			sepa = Transformer.fromJsonLd(DataProcessorDescription.class, jsonld);
 			return storeSEPA(sepa);
-		} catch (RDFParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedRDFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RepositoryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (RDFParseException | IOException | RepositoryException | UnsupportedRDFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -120,6 +101,11 @@ public class SesameStorageRequests implements IPipelineElementDescriptionStorage
 	@Override
 	public DataSourceDescription getSEPById(URI rdfId) {
 		return entityManager.find(DataSourceDescription.class, rdfId);
+	}
+
+	@Override
+	public DataSourceDescription getSEPByAppId(String appId) {
+		return getByAppId(getAllSEPs(), appId);
 	}
 
 	@Override
@@ -172,13 +158,13 @@ public class SesameStorageRequests implements IPipelineElementDescriptionStorage
 	@Override
 	public boolean exists(DataSourceDescription sep) {
 		DataSourceDescription storedSEP = entityManager.find(DataSourceDescription.class, sep.getElementId());
-		return storedSEP != null ? true : false;
+		return storedSEP != null;
 	}
 
 	@Override
 	public boolean exists(DataProcessorDescription sepa) {
 		DataProcessorDescription storedSEPA = entityManager.find(DataProcessorDescription.class, sepa.getElementId());
-		return storedSEPA != null ? true : false;
+		return storedSEPA != null;
 	}
 
 	@Override
@@ -220,6 +206,11 @@ public class SesameStorageRequests implements IPipelineElementDescriptionStorage
 	}
 
 	@Override
+	public DataProcessorDescription getSEPAByAppId(String appId) {
+		return getByAppId(getAllSEPAs(), appId);
+	}
+
+	@Override
 	public DataSinkDescription getSECById(String rdfId) throws URISyntaxException {
 		return getSECById(new URI(rdfId));
 	}
@@ -230,9 +221,14 @@ public class SesameStorageRequests implements IPipelineElementDescriptionStorage
 	}
 
 	@Override
+	public DataSinkDescription getSECByAppId(String appId) {
+		return getByAppId(getAllSECs(), appId);
+	}
+
+	@Override
 	public boolean exists(DataSinkDescription sec) {
 		DataSinkDescription storedSEC = entityManager.find(DataSinkDescription.class, sec.getElementId());
-		return storedSEC != null ? true : false;
+		return storedSEC != null;
 	}
 
 	@Override
@@ -282,6 +278,14 @@ public class SesameStorageRequests implements IPipelineElementDescriptionStorage
 	@Override
 	public SpDataStream getEventStreamById(String rdfId) {
 		return entityManager.find(SpDataStream.class, URI.create(rdfId));
+	}
+
+	private <T extends NamedStreamPipesEntity> T getByAppId(List<T> elements, String appId) {
+		return elements
+						.stream()
+						.filter(e -> e.getAppId().equals(appId))
+						.findFirst()
+						.orElse(null);
 	}
 
 	

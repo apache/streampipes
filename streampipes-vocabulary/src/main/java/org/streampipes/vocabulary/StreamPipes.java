@@ -32,8 +32,17 @@ public class StreamPipes {
   public static final String DATA_SINK_INVOCATION = NS + "DataSinkInvocation";
   public static final String DATA_SOURCE_DESCRIPTION = NS + "DataSourceDescription";
   public static final String ADAPTER_DESCRIPTION = NS + "AdapterDescription";
+  public static final String ADAPTER_SET_DESCRIPTION = NS + "AdapterSetDescription";
+  public static final String ADAPTER_STREAM_DESCRIPTION = NS + "AdapterStreamDescription";
   public static final String ADAPTER_DESCRIPTION_LIST = NS + "AdapterDescriptionList";
-  public static final String FORMAT_DESCRIPTION_LIST = NS + "FromatDescriptionList";
+
+  public static final String GENERIC_ADAPTER_STREAM_DESCRIPTION = NS + "GenericAdapterStreamDescription";
+  public static final String GENERIC_ADAPTER_SET_DESCRIPTION = NS + "GenericAdapterSetDescription";
+  public static final String SPECIFIC_ADAPTER_STREAM_DESCRIPTION = NS + "SpecificAdapterStreamDescription";
+  public static final String SPECIFIC_ADAPTER_SET_DESCRIPTION = NS + "SpecificAdapterSetDescription";
+
+
+  public static final String FORMAT_DESCRIPTION_LIST = NS + "FormatDescriptionList";
   public static final String PROTOCOL_DESCRIPTION_LIST = NS + "ProtocolDescriptionList";
   public static final String DOMAIN_PROPERTY_PROBABILITY_LIST = NS + "DomainPropertyProbabilityList";
   public static final String GUESS_SCHEMA = NS + "GuessSchema";
@@ -256,4 +265,8 @@ public class StreamPipes {
   public static final String DATA_STREAM_CONTAINER = NS + "DataStreamContainer";
   public static final String PIPELINE_TEMPLATE_DESCRIPTION_CONTAINER = NS + "PipelineTemplateDescriptionContainer" ;
   public static final String MAPS_FROM_OPTIONS = NS + "hasMapsFromOptions";
+  public static final String HAS_APP_ID = NS + "hasAppId";
+  public static final String HAS_PIPELINE_ELEMENTS = "hasPipelineElements";
+  public static final String PIPELINE_ELEMENT_CONTAINER = "PipelineElementContainer" ;
+
 }

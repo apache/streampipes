@@ -22,7 +22,8 @@ import org.streampipes.commons.messaging.IMessagePublisher;
 
 public interface ProtocolHandler {
 
-	IMessagePublisher getPublisher();
-	IMessageListener getConsumer();
-	
+  IMessagePublisher getPublisher();
+
+  IMessageListener getConsumer();
+
 }

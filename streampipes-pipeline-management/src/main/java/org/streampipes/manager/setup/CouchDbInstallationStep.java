@@ -30,7 +30,7 @@ import java.util.*;
 
 public class CouchDbInstallationStep implements InstallationStep {
 
-    private static List<String> initRdfEndpointPorts = Arrays.asList("8089", "8090", "8091", "8094", "8030/sources-mhwirth", "8030/sources-hella");
+    private static List<String> initRdfEndpointPorts = Arrays.asList("8099/api/v1/admin@streampipes.org/master/sources/");
     private static final String initRdfEndpointHost = "http://localhost:";
 
     public CouchDbInstallationStep() {
@@ -53,7 +53,12 @@ public class CouchDbInstallationStep implements InstallationStep {
 
     private List<Message> createDatabases() {
         try {
+            // Set up couchdb internal databases
+            Utils.getCouchDbInternalUsersClient();
+            Utils.getCouchDbReplicatorClient();
+            Utils.getCouchDbGlobalChangesClient();
 
+            // Set up streampipes internal databases
             Utils.getCouchDbUserClient();
             Utils.getCouchDbMonitoringClient();
             Utils.getCouchDbPipelineClient();

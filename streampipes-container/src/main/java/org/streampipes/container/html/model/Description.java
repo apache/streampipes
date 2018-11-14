@@ -21,10 +21,10 @@ import java.net.URI;
 
 public class Description {
 
-	String name;
-	String description;
-	URI uri;
-	String type;
+	private String name;
+	private String description;
+	private URI uri;
+	private String type;
 
 	public Description(String name, String description, URI uri)
 	{

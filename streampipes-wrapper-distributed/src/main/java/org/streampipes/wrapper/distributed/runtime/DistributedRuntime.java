@@ -39,6 +39,10 @@ public abstract class DistributedRuntime<B extends BindingParams<I>, I extends I
     this.params = bindingParams;
   }
 
+  public DistributedRuntime() {
+
+  }
+
   protected I getGraph() {
     return bindingParams.getGraph();
   }

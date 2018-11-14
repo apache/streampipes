@@ -28,11 +28,22 @@ public abstract class FlinkDataSinkRuntime<B extends EventSinkBindingParams> ext
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * @deprecated Use {@link #FlinkDataSinkRuntime(EventSinkBindingParams, boolean)} instead
+	 */
 	public FlinkDataSinkRuntime(B params)
 	{
 		super(params);
 	}
 
+	public FlinkDataSinkRuntime(B params, boolean debug)
+	{
+		super(params, debug);
+	}
+
+	/**
+	 * @deprecated Use {@link #FlinkDataSinkRuntime(EventSinkBindingParams, boolean)} instead
+	 */
 	public FlinkDataSinkRuntime(B params, FlinkDeploymentConfig config)
 	{
 		super(params, config);

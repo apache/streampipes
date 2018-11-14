@@ -26,9 +26,12 @@ import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
+import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.wrapper.distributed.runtime.DistributedRuntime;
+import org.streampipes.wrapper.flink.consumer.JmsConsumer;
 import org.streampipes.wrapper.flink.converter.JsonToMapFormat;
 import org.streampipes.wrapper.flink.logger.StatisticLogger;
 import org.streampipes.wrapper.params.binding.BindingParams;
@@ -48,12 +51,30 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
   private boolean debug;
   private StreamExecutionEnvironment env;
 
+  /**
+   * @deprecated Use {@link #FlinkRuntime(BindingParams, boolean)} instead
+   */
+  @Deprecated
   public FlinkRuntime(B bindingParams) {
-    this(bindingParams, new FlinkDeploymentConfig("", "localhost", 6123), true);
+    this(bindingParams,true);
   }
 
+  /**
+   * @deprecated Use {@link #FlinkRuntime(BindingParams, boolean)} instead
+   */
+  @Deprecated
   public FlinkRuntime(B bindingParams, FlinkDeploymentConfig config) {
     this(bindingParams, config, false);
+  }
+
+  public FlinkRuntime(B bindingParams, boolean debug) {
+    super(bindingParams);
+    if (!debug) {
+      this.config = getDeploymentConfig();
+    } else {
+      this.config = new FlinkDeploymentConfig("", "localhost", 6123);
+    }
+    this.debug = debug;
   }
 
   private FlinkRuntime(B bindingParams, FlinkDeploymentConfig config, boolean debug) {
@@ -61,6 +82,8 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
     this.config = config;
     this.debug = debug;
   }
+
+  protected abstract FlinkDeploymentConfig getDeploymentConfig();
 
   protected abstract void appendExecutionConfig(DataStream<Map<String, Object>>... convertedStream);
 
@@ -98,23 +121,35 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
 
       SpDataStream stream = bindingParams.getGraph().getInputStreams().get(i);
       if (stream != null) {
-        KafkaTransportProtocol protocol = (KafkaTransportProtocol) stream.getEventGrounding().getTransportProtocol();
+        TransportProtocol protocol = stream.getEventGrounding().getTransportProtocol();
 
-        if (protocol.getTopicDefinition() instanceof SimpleTopicDefinition) {
-          return new FlinkKafkaConsumer010<>(protocol
-                  .getTopicDefinition()
-                  .getActualTopicName(), new SimpleStringSchema
-                  (), getProperties(protocol));
+        if (protocol instanceof KafkaTransportProtocol) {
+          return getKafkaConsumer((KafkaTransportProtocol) protocol);
         } else {
-          String patternTopic = replaceWildcardWithPatternFormat(protocol.getTopicDefinition().getActualTopicName());
-          return new FlinkKafkaConsumer010<>(Pattern.compile(patternTopic), new SimpleStringSchema
-                  (), getProperties(protocol));
+          return getJmsConsumer((JmsTransportProtocol) protocol);
         }
       } else {
         return null;
       }
     } else {
       return null;
+    }
+  }
+
+  private SourceFunction<String> getJmsConsumer(JmsTransportProtocol protocol) {
+    return new JmsConsumer(protocol);
+  }
+
+  private SourceFunction<String> getKafkaConsumer(KafkaTransportProtocol protocol) {
+    if (protocol.getTopicDefinition() instanceof SimpleTopicDefinition) {
+      return new FlinkKafkaConsumer010<>(protocol
+              .getTopicDefinition()
+              .getActualTopicName(), new SimpleStringSchema
+              (), getProperties(protocol));
+    } else {
+      String patternTopic = replaceWildcardWithPatternFormat(protocol.getTopicDefinition().getActualTopicName());
+      return new FlinkKafkaConsumer010<>(Pattern.compile(patternTopic), new SimpleStringSchema
+              (), getProperties(protocol));
     }
   }
 
@@ -142,7 +177,7 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
     SourceFunction<String> source2 = getStream2Source();
     if (source2 != null) {
       messageStream2 = env
-              .addSource(source2).flatMap(new JsonToMapFormat()).flatMap(new StatisticLogger(getGraph()));;
+              .addSource(source2).flatMap(new JsonToMapFormat()).flatMap(new StatisticLogger(getGraph()));
 
       appendExecutionConfig(messageStream1, messageStream2);
     } else {
@@ -190,6 +225,7 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
       }
 
     } catch (Exception e) {
+      e.printStackTrace();
       throw new SpRuntimeException(e.getMessage());
     }
   }
@@ -217,6 +253,7 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
     //The default value is TimeCharacteristic.ProcessingTime
     if (this.streamTimeCharacteristic != null) {
       env.setStreamTimeCharacteristic(this.streamTimeCharacteristic);
+      env.setParallelism(1);
     }
   }
 

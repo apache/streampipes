@@ -26,7 +26,7 @@ public class Utils {
 
 	public static CouchDbClient getCouchDbAdapterClient() {
 		CouchDbClient dbClient = new CouchDbClient(props("adapter"));
-		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+		dbClient.setGsonBuilder(GsonSerializer.getAdapterGsonBuilder());
 		return dbClient;
 	}
 
@@ -73,6 +73,22 @@ public class Utils {
 		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
 		return dbClient;
 	}
+
+	public static CouchDbClient getCouchDbInternalUsersClient() {
+		CouchDbClient dbClient = new CouchDbClient(props("_users"));
+		return dbClient;
+	}
+
+	public static CouchDbClient getCouchDbReplicatorClient() {
+		CouchDbClient dbClient = new CouchDbClient(props("_replicator"));
+		return dbClient;
+	}
+
+	public static CouchDbClient getCouchDbGlobalChangesClient() {
+		CouchDbClient dbClient = new CouchDbClient(props("_global_changes"));
+		return dbClient;
+	}
+
 	
 	public static CouchDbClient getCouchDbMonitoringClient() {
 		CouchDbClient dbClient = new CouchDbClient(props("monitoring"));

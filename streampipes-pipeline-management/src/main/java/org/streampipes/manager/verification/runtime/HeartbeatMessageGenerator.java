@@ -27,6 +27,12 @@ public class HeartbeatMessageGenerator {
 	{
 		this.description = description;
 	}
-	
-	
+
+	public DataProcessorDescription getDescription() {
+		return description;
+	}
+
+	public void setDescription(DataProcessorDescription description) {
+		this.description = description;
+	}
 }

@@ -22,7 +22,7 @@ import org.streampipes.model.client.messages.NotificationType;
 
 public abstract class VerificationResult {
 
-	NotificationType type;
+	private NotificationType type;
 	
 	public VerificationResult(NotificationType type)
 	{

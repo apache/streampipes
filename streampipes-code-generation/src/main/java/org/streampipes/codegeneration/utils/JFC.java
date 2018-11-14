@@ -28,7 +28,6 @@ import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.util.SepaUtils;
 import org.streampipes.sdk.PrimitivePropertyBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.stream.SchemaBuilder;
@@ -69,7 +68,6 @@ public abstract class JFC {
 	public static ClassName SEC_DESCRIPTION = ClassName.get(DataSinkDescription.class);
 	public static ClassName SEPA_INVOCATION = ClassName.get(DataProcessorInvocation.class);
 	public static ClassName SEC_INVOCATION = ClassName.get(DataSinkInvocation.class);
-	public static ClassName SEPA_UTILS = ClassName.get(SepaUtils.class);
 	public static ClassName EVENT_STREAM = ClassName.get(SpDataStream.class);
 	public static ClassName STREAM_BUILDER = ClassName.get(StreamBuilder.class);
 	public static ClassName SCHEMA_BUILDER = ClassName.get(SchemaBuilder.class);

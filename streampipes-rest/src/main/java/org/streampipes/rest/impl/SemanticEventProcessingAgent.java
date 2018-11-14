@@ -32,13 +32,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.rest.annotation.GsonWithIds;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.rest.api.IPipelineElement;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 import org.streampipes.storage.rdf4j.filter.Filter;
 
 @Path("/v2/users/{username}/sepas")

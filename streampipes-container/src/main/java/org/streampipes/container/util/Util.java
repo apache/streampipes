@@ -30,9 +30,20 @@ public class Util {
         return toResponseString(elementId, success, "");
     }
 
-    public static String toResponseString(String elementId, boolean success, String optionalMessage) {
+    public static Response fromResponseString(String s) {
         Gson gson = new Gson();
-        return gson.toJson(new Response(elementId, success, optionalMessage));
+        Response result = gson.fromJson(s, Response.class);
+
+        if (result.getElementId() == null) {
+            return null;
+        } else {
+            return result;
+        }
+
+    }
+
+    public static String toResponseString(String elementId, boolean success, String optionalMessage) {
+        return new Response(elementId, success, optionalMessage).toString();
     }
 
     public static String toResponseString(Response response) {

@@ -17,18 +17,18 @@
 
 package org.streampipes.sdk.builder;
 
+import org.streampipes.model.quality.Accuracy;
+import org.streampipes.model.quality.EventPropertyQualityDefinition;
+import org.streampipes.model.quality.Resolution;
 import org.streampipes.model.schema.Enumeration;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.model.schema.QuantitativeValue;
-import org.streampipes.model.quality.Accuracy;
-import org.streampipes.model.quality.EventPropertyQualityDefinition;
-import org.streampipes.model.quality.Resolution;
 import org.streampipes.sdk.utils.Datatypes;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class PrimitivePropertyBuilder {
@@ -61,7 +61,7 @@ public class PrimitivePropertyBuilder {
      * @return
      */
     public PrimitivePropertyBuilder domainProperty(String domainProperty) {
-        this.eventProperty.setDomainProperties(Arrays.asList(URI.create(domainProperty)));
+        this.eventProperty.setDomainProperties(Collections.singletonList(URI.create(domainProperty)));
         return this;
     }
 

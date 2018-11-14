@@ -63,7 +63,7 @@ public class EventPropertyList extends EventProperty {
 	public EventPropertyList(String propertyName, EventProperty eventProperty) {
 		super(propertyName);
 		this.eventProperty = eventProperty;
-		eventProperties = new ArrayList<EventProperty>();
+		eventProperties = new ArrayList<>();
 		eventProperties.add(eventProperty);
 	}
 

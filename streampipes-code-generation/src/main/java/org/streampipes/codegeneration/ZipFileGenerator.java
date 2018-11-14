@@ -34,7 +34,7 @@ public class ZipFileGenerator {
 	private File outputFile;
 	
 	public ZipFileGenerator(File inputDirectory, File outputFile) {
-		this.fileList = new ArrayList<String>();
+		this.fileList = new ArrayList<>();
 		this.inputDirectory = inputDirectory;
 		this.outputFile = outputFile;
 		generateFileList(inputDirectory);

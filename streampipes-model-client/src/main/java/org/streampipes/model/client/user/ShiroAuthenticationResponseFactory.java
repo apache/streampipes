@@ -27,7 +27,7 @@ public class ShiroAuthenticationResponseFactory {
 		Authc authc = new Authc(new Principal(user.getEmail(), ""), new Credentials(user.getEmail()));
 		List<String> roles = new ArrayList<>();
 		user.getRoles().forEach(r -> roles.add(r.toString()));
-		Authz authz = new Authz(roles, new ArrayList<String>());
+		Authz authz = new Authz(roles, new ArrayList<>());
 		
 		Info info = new Info();
 		info.setAuthc(authc);

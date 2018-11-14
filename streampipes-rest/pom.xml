@@ -20,14 +20,12 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.55.2</version>
+		<version>0.60.0</version>
 	</parent>
 	<name>StreamPipes REST API</name>
 	<artifactId>streampipes-rest</artifactId>
 	<packaging>jar</packaging>
-	<properties>
-		<jersey.version>2.22.1</jersey.version>
-	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.streampipes</groupId>
@@ -55,42 +53,7 @@
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-measurement-units</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-servlet</artifactId>
-			<version>${jersey.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-json-jackson</artifactId>
-			<version>${jersey.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-multipart</artifactId>
-			<version>${jersey.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.jayway.restassured</groupId>
-			<artifactId>rest-assured</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.httpcomponents</groupId>
-					<artifactId>httpclient</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.httpcomponents</groupId>
-					<artifactId>httpcore</artifactId>
-				</exclusion>
-			</exclusions>
-			<version>2.3.2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -103,13 +66,20 @@
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-messaging-jms</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-rest-shared</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>elasticsearch-rest-high-level-client</artifactId>
 			<version>6.2.1</version>
 		</dependency>
-
-    </dependencies>
+	</dependencies>
 </project>

@@ -28,13 +28,13 @@ import java.util.List;
 @Deprecated
 public class SchemaBuilder {
 
-	EventSchema schema;
-	List<EventProperty> properties;
+	private EventSchema schema;
+	private List<EventProperty> properties;
 
 	private SchemaBuilder()
 	{
 		this.schema = new EventSchema();
-		this.properties = new ArrayList<EventProperty>();
+		this.properties = new ArrayList<>();
 	}
 
 	public static SchemaBuilder create()

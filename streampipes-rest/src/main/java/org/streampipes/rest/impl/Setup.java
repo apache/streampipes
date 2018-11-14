@@ -25,6 +25,7 @@ import org.streampipes.model.client.messages.SetupStatusMessage;
 import org.streampipes.model.client.setup.InitialSettings;
 import org.streampipes.rest.api.ISetup;
 import org.streampipes.rest.notifications.NotificationListener;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -50,6 +51,8 @@ public class Setup extends AbstractRestInterface implements ISetup {
 
   @POST
   @Path("/install/{currentInstallationStep}")
+  @GsonWithIds
+  @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Override
   public Response configure(InitialSettings settings, @PathParam("currentInstallationStep") Integer currentInstallationStep) {
@@ -62,6 +65,7 @@ public class Setup extends AbstractRestInterface implements ISetup {
 
   @PUT
   @Path("/configuration")
+  @GsonWithIds
   @Produces(MediaType.APPLICATION_JSON)
   @Override
   public Response updateConfiguration(InitialSettings settings) {
@@ -82,6 +86,7 @@ public class Setup extends AbstractRestInterface implements ISetup {
   @GET
   @Path("/configuration")
   @Produces(MediaType.APPLICATION_JSON)
+  @GsonWithIds
   @Override
   @Deprecated
   // NOT sure if we need this method

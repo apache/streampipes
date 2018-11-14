@@ -60,19 +60,20 @@ public class PipelineGenerator {
     pipeline.setStreams(Collections.singletonList(prepareStream(datasetId)));
     pipeline.setSepas(new ArrayList<>());
     pipeline.setActions(new ArrayList<>());
-    collectInvocations("domId" + count, pipelineTemplateDescription.getConnectedTo());
+    collectInvocations("domId" + count, pipelineTemplateDescription.getBoundTo());
 
     return pipeline;
   }
 
-  private SpDataStream prepareStream(String datasetId) {
-    SpDataSet stream = new SpDataSet((SpDataSet) getStream(datasetId));
+  private SpDataStream prepareStream(String streamId) {
+    SpDataStream stream = getStream(streamId);
     if (stream instanceof SpDataSet) {
+      stream = new SpDataSet((SpDataSet) stream);
       DataSetModificationMessage message = new DataSetGroundingSelector((SpDataSet) stream).selectGrounding();
       stream.setEventGrounding(message.getEventGrounding());
       ((SpDataSet) stream).setDatasetInvocationId(message.getInvocationId());
     } else {
-
+      stream = new SpDataStream(stream);
     }
     stream.setDOM(getDom());
     return stream;
@@ -81,7 +82,7 @@ public class PipelineGenerator {
   private void collectInvocations(String currentDomId, List<BoundPipelineElement> boundPipelineElements) {
     for (BoundPipelineElement pipelineElement : boundPipelineElements) {
       InvocableStreamPipesEntity entity = clonePe(pipelineElement.getPipelineElementTemplate());
-      entity.setConnectedTo(Arrays.asList(currentDomId));
+      entity.setConnectedTo(Collections.singletonList(currentDomId));
       entity.setDOM(getDom());
       //entity.setConfigured(true);
       // TODO hack

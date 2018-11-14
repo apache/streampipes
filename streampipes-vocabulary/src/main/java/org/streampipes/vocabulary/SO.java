@@ -24,10 +24,16 @@ public class SO {
   public static final String NS = "http://schema.org/";
   public static final String NS_PREFIX = "so";
 
+  public static final String GeoJsonLineString = "http://streampipes.org/GeoJsonLineString";
+  public static final String GeoJsonPolygon = "http://streampipes.org/GeoJsonPolygon";
+  public static final String GeoJsonMultiPoint = "http://streampipes.org/GeoJsonMultiPoint";
+  public static final String GeoJsonMultiLineString = "http://streampipes.org/GeoJsonMultiLineString";
+  public static final String GeoJsonMultiPolygon = "http://streampipes.org/GeoJsonMultiPolygon";
   public static final String QuantitativeValue = "http://schema.org/QuantitativeValue";
   public static final String PropertyValueSpecification = "http://schema.org/PropertyValueSpecification";
   public static final String Number = "http://schema.org/Number";
   public static final String Enumeration = "http://schema.org/Enumeration";
+  public static final String Altitude = "http://streampipes.org/Altitude";
   public static final String AcceptsReservations = "http://schema.org/acceptsReservations";
   public static final String AccessCode = "http://schema.org/accessCode";
   public static final String AccessibilityAPI = "http://schema.org/accessibilityAPI";

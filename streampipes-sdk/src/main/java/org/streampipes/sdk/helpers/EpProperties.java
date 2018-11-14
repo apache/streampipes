@@ -25,6 +25,7 @@ import org.streampipes.sdk.utils.Datatypes;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class EpProperties {
@@ -43,7 +44,7 @@ public class EpProperties {
 
 		EventPropertyNested nested = new EventPropertyNested();
 		nested.setEventProperties(Arrays.asList(nestedProperties));
-		list.setEventProperties(Arrays.asList(nested));
+		list.setEventProperties(Collections.singletonList(nested));
 
 		return list;
 	}
@@ -170,6 +171,18 @@ public class EpProperties {
 	public static EventPropertyPrimitive booleanEp(Label label, String runtimeName, String domainProperty) {
 		return ep(label, XSD._boolean.toString(), runtimeName, domainProperty);
 	}
+
+    /**
+     * Creates a new primitive property of type number and the provided domain property.
+     * @param runtimeName The field identifier of the event property at runtime.
+     * @param domainProperty The semantics of the list property as a String. The string should correspond to a URI
+     *                        provided by a vocabulary. Use one of the vocabularies provided in
+     *                        {@link org.streampipes.vocabulary} or create your own domain-specific vocabulary.
+     * @return {@link org.streampipes.model.schema.EventPropertyPrimitive}
+     */
+	public static EventPropertyPrimitive numberEp(Label label, String runtimeName, String domainProperty) {
+        return ep(label, "http://schema.org/Number", runtimeName, domainProperty);
+    }
 
 	/**
 	 * Creates a new primitive property of type string and the provided domain property.

@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.55.2</version>
+        <version>0.60.0</version>
     </parent>
     <artifactId>streampipes-pipeline-management</artifactId>
 
@@ -56,6 +56,10 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging-jms</artifactId>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
@@ -100,6 +104,10 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging-jms</artifactId>
         </dependency>
     </dependencies>
 </project>

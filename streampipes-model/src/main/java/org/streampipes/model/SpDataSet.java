@@ -43,11 +43,13 @@ public class SpDataSet extends SpDataStream {
   @RdfProperty(StreamPipes.DATA_SET_INVOCATION_ID)
   private String datasetInvocationId;
 
+  @RdfProperty(StreamPipes.CORRESPONDING_PIPELINE)
+  private String correspondingPipeline;
 
   public SpDataSet(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition>
           hasEventStreamQualities,
-                      EventGrounding eventGrounding,
-                      EventSchema eventSchema) {
+                   EventGrounding eventGrounding,
+                   EventSchema eventSchema) {
     super(uri, name, description, iconUrl, hasEventStreamQualities, eventGrounding, eventSchema);
   }
 
@@ -66,6 +68,26 @@ public class SpDataSet extends SpDataStream {
     if (other.getSupportedGrounding() != null) this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
   }
 
+  public String getBrokerHostname() {
+    if (getEventGrounding() == null || getEventGrounding().getTransportProtocol() == null ||
+            getEventGrounding().getTransportProtocol().getBrokerHostname() == null) {
+      return "";
+    } else {
+      return getEventGrounding().getTransportProtocol().getBrokerHostname();
+    }
+  }
+
+  public String getActualTopicName() {
+    if (getEventGrounding() == null || getEventGrounding().getTransportProtocol() == null ||
+            getEventGrounding().getTransportProtocol().getTopicDefinition() == null) {
+      return "";
+    } else {
+      return getEventGrounding().getTransportProtocol().getTopicDefinition()
+              .getActualTopicName();
+    }
+  }
+
+
   public EventGrounding getSupportedGrounding() {
     return supportedGrounding;
   }
@@ -80,5 +102,13 @@ public class SpDataSet extends SpDataStream {
 
   public void setDatasetInvocationId(String datasetInvocationId) {
     this.datasetInvocationId = datasetInvocationId;
+  }
+
+  public String getCorrespondingPipeline() {
+    return correspondingPipeline;
+  }
+
+  public void setCorrespondingPipeline(String correspondingPipeline) {
+    this.correspondingPipeline = correspondingPipeline;
   }
 }

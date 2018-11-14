@@ -18,7 +18,7 @@ package org.streampipes.rest.impl;
 
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.rest.annotation.GsonWithIds;
+import org.streampipes.rest.shared.annotation.GsonWithIds;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

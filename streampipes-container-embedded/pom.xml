@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.55.2</version>
+		<version>0.60.0</version>
 	</parent>
 	<artifactId>streampipes-container-embedded</artifactId>
 	<packaging>jar</packaging>

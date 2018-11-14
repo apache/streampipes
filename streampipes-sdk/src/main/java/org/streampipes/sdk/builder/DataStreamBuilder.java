@@ -17,15 +17,15 @@
 
 package org.streampipes.sdk.builder;
 
-import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventSchema;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStreamBuilder, SpDataStream> {
@@ -64,6 +64,16 @@ public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStream
     }
 
     /**
+     * Assigns a list of new event properties to the stream's schema.
+     * @param properties The event properties that should be added.
+     * @return this
+     */
+    public DataStreamBuilder properties(List<EventProperty> properties) {
+        this.eventProperties.addAll(properties);
+        return me();
+    }
+
+    /**
      * Assigns a new {@link org.streampipes.model.grounding.TransportProtocol} to the stream definition.
      * @param protocol The transport protocol of the stream at runtime (e.g., Kafka or MQTT). Use
      * {@link org.streampipes.sdk.helpers.Protocols} to use some pre-defined protocols (or create a new protocol as
@@ -83,7 +93,7 @@ public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStream
      * @return this
      */
     public DataStreamBuilder format(TransportFormat format) {
-        this.eventGrounding.setTransportFormats(Arrays.asList(format));
+        this.eventGrounding.setTransportFormats(Collections.singletonList(format));
         return this;
     }
 
