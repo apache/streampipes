@@ -9,4 +9,5 @@ modules:
   - spDashboard
   - spAdd
   - spMyElements
+  - spFileUpload
   - spConfiguration

@@ -167,3 +167,18 @@ spConfiguration:
   icon: 'action:ic_settings_24px'
   homeImage: '/assets/img/home/configuration.png'
   admin: True
+spFileUpload:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'FileUploadModule'
+  ng5_component: 'FileUploadComponent'
+  ng5_componentPath: '../file-upload/file-upload.component'
+  path: './file-upload/file-upload.module'
+  link: 'streampipes.file-upload'
+  url: '/file-upload'
+  title: 'File Upload'
+  description: 'file-upload'
+  icon: 'file:ic_file_upload_24px'
+  homeImage: '/assets/img/home/configuration.png'
+  admin: false

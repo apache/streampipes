@@ -1,0 +1,56 @@
+<div fxLayout="column" fxFlex="100" class="page-container page-container-padding">
+  <div fxLayout="row" style="padding:0px;background-color:#f6f6f6">
+    <div fxLayout="fill" style="line-height:24px;border-bottom:1px solid #ccc; width: 100%">
+      <h4 style="margin-left: 5px">File Upload</h4>
+    </div>
+  </div>
+
+  <div class="container-fluid" style="margin: 0px; min-height: calc(100vh - 135px);">
+
+    <div class="assemblyOptions sp-blue-bg">
+      <h4>Upload File</h4>
+    </div>
+    <div class="sp-blue-border padding">
+      <div fxLayoutAlign="center" class="padding">
+        <mat-form-field style="width: 50%" (click)="fileInput.click();">
+          <input matInput placeholder="File" disabled (value)="fileName">
+          <input #fileInput type="file" style="display:none;"
+                 (change)="handleFileInput($event.target.files)">
+          {{fileName}}
+          <button color="primary" matSuffix
+                  mat-button style="min-width: 0px">
+            <mat-icon>insert_drive_file</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <div fxLayoutAlign="center none">
+        <button color="primary" mat-raised-button (click)="upload()">
+          Upload
+        </button>
+      </div>
+    </div>
+
+    <div class="assemblyOptions sp-blue-bg">
+      <h4>Uploaded Files</h4>
+    </div>
+    <div class="sp-blue-border">
+      <mat-list style="max-height: 300px; overflow-y: scroll" style="margin-top: -25px;">
+        <mat-list-item *ngFor="let url of urls" style="width: 100%">
+
+          <div mat-line>
+            <button mat-icon-button matTooltip="Copy File URL" (click)="copyText(url.url)">
+              <mat-icon>file_copy</mat-icon>
+            </button>
+            <label  style="font-weight: normal; padding-top: 8px;">
+              {{url.name}}
+            </label>
+          </div>
+            <button mat-icon-button (click)="delete(url.name)">
+              <mat-icon>delete</mat-icon>
+            </button>
+        </mat-list-item>
+      </mat-list>
+    </div>
+ </div>
+</div>
+
