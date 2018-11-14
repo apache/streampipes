@@ -76,6 +76,7 @@ public class AdapterRegistry {
         allFormats.put(GeoJsonFormat.ID, new GeoJsonFormat());
 //        allFormats.put(XmlFormat.ID, new XmlFormat());
 
+        
         return allFormats;
     }
 
