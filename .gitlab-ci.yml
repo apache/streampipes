@@ -84,7 +84,8 @@ docker-connect-container:
      - docker push $IMAGE_NAME/streampipes-connect-container:latest
      - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
      - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:latest
-
+   only:
+     - dev
 
 deploy:
   image: maven:3-jdk-8
