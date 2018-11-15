@@ -27,7 +27,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -63,7 +62,7 @@ public class FileResource extends AbstractContainerResource {
     @GET
   //  @Produces({MediaType.F})
     @Path("/{filename}")
-    public Response getFileU(@PathParam("filename") String fileName) {
+    public Response getFile(@PathParam("filename") String fileName) {
         try {
             File file = fileManagement.getFile(fileName);
             logger.info("Downloaded file: " + fileName);
@@ -77,9 +76,9 @@ public class FileResource extends AbstractContainerResource {
     }
 
     @GET
-    public Response getFileUrls(@PathParam("username") String username) {
+    public Response getFilePahts(@PathParam("username") String username) {
         try {
-            return ok(fileManagement.getUrls(username));
+            return ok(fileManagement.getFilePahts(username));
         } catch (IOException e) {
             logger.error(e.toString());
             return fail();

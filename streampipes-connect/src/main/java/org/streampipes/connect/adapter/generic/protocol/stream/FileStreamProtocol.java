@@ -22,51 +22,43 @@ import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
-import org.streampipes.connect.adapter.generic.protocol.set.FileProtocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class FilePullProtocol extends PullProtocol {
+public class FileStreamProtocol extends PullProtocol {
 
-    private static Logger logger = LoggerFactory.getLogger(FilePullProtocol.class);
+    private static Logger logger = LoggerFactory.getLogger(FileStreamProtocol.class);
 
-    public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/pull/file";
+    public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/file";
 
-    private String fileUrl;
+    private String filePath;
 
-    public FilePullProtocol() {
+    public FileStreamProtocol() {
     }
 
-    public FilePullProtocol(Parser parser, Format format, long interval, String fileUrl) {
+    public FileStreamProtocol(Parser parser, Format format, long interval, String filePath) {
         super(parser, format, interval);
-        this.fileUrl = fileUrl;
+        this.filePath = filePath;
     }
 
     @Override
     InputStream getDataFromEndpoint() {
         FileReader fr = null;
         InputStream inn = null;
-
         try {
-            URL url = new URL(fileUrl);
 
-            //    fr = new FileReader(fileUri);
-            //    BufferedReader br = new BufferedReader(fr);
+            fr = new FileReader(filePath);
+            BufferedReader br = new BufferedReader(fr);
 
-            //      inn = new FileInputStream(fileUri);
-            inn = url.openStream();
+            inn = new FileInputStream(filePath);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -82,16 +74,16 @@ public class FilePullProtocol extends PullProtocol {
         ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
         long intervalProperty = Long.parseLong(extractor.singleValue("interval"));
 
-        String fileUri = extractor.singleValue("fileUrl");
+        String fileUri = extractor.singleValue("filePath");
 
-        return new FilePullProtocol(parser, format, intervalProperty, fileUri);    }
+        return new FileStreamProtocol(parser, format, intervalProperty, fileUri);    }
 
     @Override
     public ProtocolDescription declareModel() {
-        ProtocolDescription pd = new ProtocolDescription(ID,"File Pull","This is the " +
-                "description for the File Pull protocol");
-        FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("fileUrl", "File URL",
-                "This property defines the URL for the http file location.");
+        ProtocolDescription pd = new ProtocolDescription(ID,"File","This is the " +
+                "description for the File Stream protocol");
+        FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("filePath", "File Path",
+                "This property defines the path to the file.");
         pd.setSourceType("STREAM");
         FreeTextStaticProperty intervalProperty = new FreeTextStaticProperty("interval", "Interval", "This property " +
                 "defines the pull interval in seconds.");

@@ -36,7 +36,7 @@ import org.streampipes.connect.adapter.generic.format.xml.XmlParser;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.protocol.set.FileProtocol;
 import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
-import org.streampipes.connect.adapter.generic.protocol.stream.FilePullProtocol;
+import org.streampipes.connect.adapter.generic.protocol.stream.FileStreamProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.HttpStreamProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.MqttProtocol;
@@ -101,7 +101,7 @@ public class AdapterRegistry {
         allProtocols.put(KafkaProtocol.ID, new KafkaProtocol());
         allProtocols.put(MqttProtocol.ID, new MqttProtocol());
         allProtocols.put(HttpStreamProtocol.ID, new HttpStreamProtocol());
-        allProtocols.put(FilePullProtocol.ID, new FilePullProtocol());
+        allProtocols.put(FileStreamProtocol.ID, new FileStreamProtocol());
 
         return allProtocols;
     }

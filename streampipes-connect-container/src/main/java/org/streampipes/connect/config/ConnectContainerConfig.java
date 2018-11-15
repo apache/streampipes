@@ -41,7 +41,7 @@ public enum ConnectContainerConfig {
     config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT, Config.WORKER_PORT, "The port of the connect container");
     config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST, "connect-worker", "The hostname of the connect container");
 
-    config.register(ConfigKeys.DATA_LOCATION,"/home/user/", "Folder that stores all the uploaded data");
+    config.register(ConfigKeys.DATA_LOCATION,"/data/", "Folder that stores all the uploaded data");
 
   }
 

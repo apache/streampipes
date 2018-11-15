@@ -33,14 +33,11 @@ public class FileManagement {
         saveFile(filePath, inputStream);
     }
 
-    public List<String> getUrls(String username) throws IOException {
-        String urlPrefix = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl()+ "api/v1/" +
-                username + "/master/file/";
-
+    public List<String> getFilePahts(String username) throws IOException {
         List<String> urls = new ArrayList<>();
         File[] files = new File(getMainFilePath()).listFiles();
         for (int i = 0; i < files.length; i++) {
-            urls.add(urlPrefix + files[i].getName());
+            urls.add(getMainFilePath() + files[i].getName());
         }
 
         return urls;
