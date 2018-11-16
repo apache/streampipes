@@ -4,61 +4,50 @@ All active services are defined in the system file.
 All available services are in the services folder.
 
 ## Features Suggestion
-* start (service-name) (--hostname) (--prune) (--defaultip)
-  * Starts StreamPipes.
+* start (service-name) (--hostname "valueHostName") (--defaultip)
+  * Starts StreamPipes or service
 * stop (service-name) 
   * Stops StreamPipes and deletes containers
 * restart (service-name) 
   * Restarts containers
-* update (service-name)
-  * Updates and restarts docker container
-* mode (mode-name)
+* update (service-name) (--renew)
+  * Downloads new docker images 
+  * --renew restart containers after download
+* set-template (template-name)
   * Replaces the systems file with file mode-name
-* logs (service-name)
+* log (service-name)
   * Prints the logs of the service
 
-* activate {add} (service-name) (--all)
-  * Adds service to system 
-* deactivate {remove} (service-name) (--all // do we need this here?)
-* list (--available) (--current)
-  * Lists the names of the services
+* list-available
+* list-active
+* list-template
+
+* activate (service-name) (--all)
+  * Adds service to system and starts
+* deactivate {remove} (service-name)  (--all)
+  * Stops container and removes from system file
 
 * clean
   * Stops and cleans SP installation, remove networks
-* reset: Delete all .env files and everything else (Do we need this in adition to clean?)
+* remove-settings: Delete all .env files and everything else (Do we need this in adition to clean?)
 
-* template (template-name:bigdata|desktop|ui-developer|pe-developer|backend-developer){NOT SUPPORTED YET} 
+* generate-compose-file
+
 
 ## Flags
 
 * ARG_OPTIONAL_SINGLE([hostname], , [The default hostname of your server], )
-* ARG_OPTIONAL_BOOLEAN([logs],l, [When set the first ip is used as default])
 * ARG_OPTIONAL_BOOLEAN([defaultip],d, [When set the first ip is used as default])
-* ARG_OPTIONAL_BOOLEAN([prune],p, [Prune docker networks])
- * Why is this a flag and not a command?
-* ARG_OPTIONAL_BOOLEAN([clean],c, [Start from a clean StreamPipes session])
- * Why is this a flag and not a command?
-* ARG_OPTIONAL_BOOLEAN([current],u, [Show only currently registered services])
 * ARG_OPTIONAL_BOOLEAN([all],a, [Select all available StreamPipes services])
-* ARG_POSITIONAL_MULTI([operation], [The StreamPipes operation (operation-name) (service-name (optional))], 2, [], [])
-
-
-
-## Features
-
-* start (service-name) (--all) (--hostname) (--prune)
-* stop (service-name) (--all)
-* restart (service-name) (--all)
-* add (service-name) (--all)
-* remove (service-name) (--all)
-* update (service-name) (--all)
-* list (--available) (--current)
-* logs (service-name) (--all)
-* clean: Clean SP installation, remove networks
-* reset: Delete all .env files and everything else
-* template (template-name:bigdata|desktop|ui-developer|pe-developer|backend-developer)
 
 
 ## Usage
 
 ~/argbash/argbash-2.7.0/bin/argbash sp.m4 -o sp
+
+
+## Naming Files / Folders
+* active-services
+* services/
+* system-configurations -> templates/
+* tmpl_env
