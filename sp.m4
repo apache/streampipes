@@ -1,14 +1,10 @@
 #!/bin/bash
 
-# ARG_OPTIONAL_SINGLE([hostname],, [The default hostname of your server], )
+# ARG_OPTIONAL_SINGLE([hostname],, [Set the default hostname of your server by providing the IP or DNS name], )
 # ARG_OPTIONAL_BOOLEAN([defaultip],d, [When set the first ip is used as default])
-# ARG_OPTIONAL_BOOLEAN([logs],l, [When set the first ip is used as default])
-# ARG_OPTIONAL_BOOLEAN([prune],p, [Prune docker networks])
-# ARG_OPTIONAL_BOOLEAN([clean],c, [Start from a clean StreamPipes session])
-# ARG_OPTIONAL_BOOLEAN([current],u, [Show only currently registered services])
 # ARG_OPTIONAL_BOOLEAN([all],a, [Select all available StreamPipes services])
 # ARG_POSITIONAL_MULTI([operation], [The StreamPipes operation (operation-name) (service-name (optional))], 2, [], [])
-# ARG_TYPE_GROUP_SET([operation], [type string], [operation], [test,start,stop,restart,clean,add,remove,mode,update,list,logs,reset,set-template])
+# ARG_TYPE_GROUP_SET([operation], [type string], [operation], [start,stop,restart,update,set-template,log,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,generate-compose-file])
 # ARG_DEFAULTS_POS
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -19,12 +15,12 @@
 
 run() {
 
-	if [ $_arg_logs = "on" ]; 
-	then
+#	if [ $_arg_logs = "on" ]; 
+#	then
 		$1
-	else
-		$1 > /dev/null 2>&1
-	fi
+#	else
+#		$1 > /dev/null 2>&1
+#	fi
 }
 
 endEcho() {
@@ -111,20 +107,18 @@ startStreamPipes() {
 	fi
     getCommand
 		echo "Starting StreamPipes ${_arg_operation[1]}"
-		echo "This might take a while ..."
     run "$command up -d ${_arg_operation[1]}"
 
-    endEcho "StreamPipes sucessfully started ${_arg_operation[1]}"
+    endEcho "StreamPipes started ${_arg_operation[1]}"
 }
 
 updateStreamPipes() {
     getCommand
 
 		echo "Updating StreamPipes ${_arg_operation[1]}"
-		echo "This might take a while ..."
     run "$command up -d ${_arg_operation[1]}"
 
-		endEcho "Services sucessfully updated"
+		endEcho "Services updated"
 }
 
 updateServices() {
@@ -138,7 +132,6 @@ stopStreamPipes() {
     getCommand
 
 		echo "Stopping StreamPipes ${_arg_operation[1]}"
-		echo "This might take a while ..."
     if [ "${_arg_operation[1]}" = "" ]; 
 		then
     	run "$command down"
@@ -147,16 +140,15 @@ stopStreamPipes() {
     	run "$command rm -f ${_arg_operation[1]}"
 		fi
 
-    endEcho "StreamPipes sucessfully stopped ${_arg_operation[1]}"
+    endEcho "StreamPipes stopped ${_arg_operation[1]}"
 }
 
 restartStreamPipes() {
 	getCommand
 	echo "Restarting StreamPipes."
-	echo "This might take a while ..."
 	run "$command restart ${_arg_operation[1]}"
 
-  endEcho "StreamPipes sucessfully restarted ${_arg_operation[1]}"
+  endEcho "StreamPipes restarted ${_arg_operation[1]}"
 
 }
 
@@ -171,28 +163,42 @@ cleanStreamPipes() {
     endEcho "All configurations of StreamPipes have been deleted."
 }
 
+removeStreamPipesSettings() {
+    stopStreamPipes
+		rm .env
+}
+
 resetStreamPipes() {
     cleanStreamPipes
     rm .env
     echo "All configurations of StreamPipes have been deleted."
 }
 
-listServices() {
-    if [ "$_arg_current" = "on" ]; 
-    then
-        echo "Currently registered services:"
-        cat system
-    else 
-        echo "Available services:"
-        cd services
-        for dir in */ ; do
-          echo $dir | sed "s/\///g" 
-        done
-        cd ..
-    fi
+listAvailableServices() {
+	echo "Available services:"
+  cd services
+  for dir in */ ; do
+  	echo $dir | sed "s/\///g" 
+  done
+  cd ..
 }
 
-removeService() {
+listActiveServices() {
+	echo "Active services:"
+	cat system
+}
+
+listTemplates() {
+	echo "Available Templates:"
+  cd templates
+  for file in * ; do
+  	echo $file 
+  done
+	cd ..
+}
+
+
+deactivateService() {
     if [ "$_arg_all" = "on" ]; 
     then
         removeAllServices
@@ -206,6 +212,11 @@ removeService() {
     fi
 }
 
+activateService() {
+	addService
+	updateStreamPipes
+}
+
 addService() {
     if [ "$_arg_all" = "on" ]; 
     then
@@ -215,7 +226,6 @@ addService() {
             echo "Service ${_arg_operation[1]} already exists"
         else
             echo ${_arg_operation[1]} >> ./system
-            updateStreamPipes
         fi
     fi
     
@@ -227,8 +237,7 @@ removeAllServices() {
 }
 
 setTemplate() {
-# bigdata|desktop|ui-developer|pe-developer|backend-developer
-    echo "Set-Template is currently not yet implemented."
+  moveSystemConfig ${_arg_operation[1]}
 }
 
 addAllServices() {
@@ -261,8 +270,6 @@ fi
 if [ "$_arg_operation" = "restart" ];
 then
     restartStreamPipes
-    echo 'StreamPipes sucessfully restarted'
-
 fi
 
 if [ "$_arg_operation" = "clean" ];
@@ -270,14 +277,25 @@ then
     cleanStreamPipes
 fi
 
+if [ "$_arg_operation" = "remove-settings" ];
+then
+    removeStreamPipesSettings
+fi
+
+if [ "$_arg_operation" = "activate" ];
+then
+    activateService
+fi
+
 if [ "$_arg_operation" = "add" ];
 then
     addService
 fi
 
-if [ "$_arg_operation" = "remove" ];
+
+if [ "$_arg_operation" = "deactivate" ];
 then
-    removeService
+    deactivateService
 fi
 
 if [ "$_arg_operation" = "cleanstart" ];
@@ -287,9 +305,19 @@ then
     echo 'All configurations of StreamPipes are deleted and StreamPipes is restarted'
 fi
 
-if [ "$_arg_operation" = "list" ];
+if [ "$_arg_operation" = "list-available" ];
 then
-    listServices
+    listAvailableServices
+fi
+
+if [ "$_arg_operation" = "list-active" ];
+then
+    listActiveServices
+fi
+
+if [ "$_arg_operation" = "list-templates" ];
+then
+    listTemplates
 fi
 
 if [ "$_arg_operation" = "update" ];
@@ -297,7 +325,7 @@ then
     updateServices
 fi
 
-if [ "$_arg_operation" = "logs" ];
+if [ "$_arg_operation" = "log" ];
 then
     logServices
 fi
@@ -311,12 +339,6 @@ if [ "$_arg_operation" = "set-template" ];
 then
     setTemplate
 fi
-
-if [ "$_arg_operation" = "mode" ];
-then
-    moveSystemConfig ${_arg_operation[1]}
-fi
-
 
 if [ "$_arg_operation" = "nil" ];
 then

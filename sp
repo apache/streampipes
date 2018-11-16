@@ -1,14 +1,10 @@
 #!/bin/bash
 
-# ARG_OPTIONAL_SINGLE([hostname],[],[The default hostname of your server],[])
+# ARG_OPTIONAL_SINGLE([hostname],[],[Set the default hostname of your server by providing the IP or DNS name],[])
 # ARG_OPTIONAL_BOOLEAN([defaultip],[d],[When set the first ip is used as default])
-# ARG_OPTIONAL_BOOLEAN([logs],[l],[When set the first ip is used as default])
-# ARG_OPTIONAL_BOOLEAN([prune],[p],[Prune docker networks])
-# ARG_OPTIONAL_BOOLEAN([clean],[c],[Start from a clean StreamPipes session])
-# ARG_OPTIONAL_BOOLEAN([current],[u],[Show only currently registered services])
 # ARG_OPTIONAL_BOOLEAN([all],[a],[Select all available StreamPipes services])
 # ARG_POSITIONAL_MULTI([operation],[The StreamPipes operation (operation-name) (service-name (optional))],[2],[],[])
-# ARG_TYPE_GROUP_SET([operation],[type string],[operation],[test,start,stop,restart,clean,add,remove,mode,update,list,logs,reset,set-template])
+# ARG_TYPE_GROUP_SET([operation],[type string],[operation],[start,stop,restart,update,set-template,log,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,generate-compose-file])
 # ARG_DEFAULTS_POS()
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -33,18 +29,18 @@ die()
 
 operation()
 {
-	local _allowed=("test" "start" "stop" "restart" "clean" "add" "remove" "mode" "update" "list" "logs" "reset" "set-template") _seeking="$1"
+	local _allowed=("start" "stop" "restart" "update" "set-template" "log" "list-available" "list-active" "list-templates" "activate" "add" "deactivate" "clean" "remove-settings" "generate-compose-file") _seeking="$1"
 	for element in "${_allowed[@]}"
 	do
 		test "$element" = "$_seeking" && echo "$element" && return 0
 	done
-	die "Value '$_seeking' (of argument '$2') doesn't match the list of allowed values: 'test', 'start', 'stop', 'restart', 'clean', 'add', 'remove', 'mode', 'update', 'list', 'logs', 'reset' and 'set-template'" 4
+	die "Value '$_seeking' (of argument '$2') doesn't match the list of allowed values: 'start', 'stop', 'restart', 'update', 'set-template', 'log', 'list-available', 'list-active', 'list-templates', 'activate', 'add', 'deactivate', 'clean', 'remove-settings' and 'generate-compose-file'" 4
 }
 
 
 begins_with_short_option()
 {
-  local first_option all_short_options='dlpcuahv'
+  local first_option all_short_options='dahv'
   first_option="${1:0:1}"
   test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
 }
@@ -55,24 +51,16 @@ _arg_operation=()
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_hostname=
 _arg_defaultip="off"
-_arg_logs="off"
-_arg_prune="off"
-_arg_clean="off"
-_arg_current="off"
 _arg_all="off"
 
 
 print_help()
 {
   printf '%s\n' "This script provides advanced features to run StreamPipes on your server"
-  printf 'Usage: %s [--hostname <arg>] [-d|--(no-)defaultip] [-l|--(no-)logs] [-p|--(no-)prune] [-c|--(no-)clean] [-u|--(no-)current] [-a|--(no-)all] [-h|--help] [-v|--version] [<operation-1>] [<operation-2>]\n' "$0"
+  printf 'Usage: %s [--hostname <arg>] [-d|--(no-)defaultip] [-a|--(no-)all] [-h|--help] [-v|--version] [<operation-1>] [<operation-2>]\n' "$0"
   printf '\t%s\n' "<operation>: The StreamPipes operation (operation-name) (service-name (optional)) (defaults for <operation-1> to <operation-2> respectively: '' and '')"
-  printf '\t%s\n' "--hostname: The default hostname of your server (no default)"
+  printf '\t%s\n' "--hostname: Set the default hostname of your server by providing the IP or DNS name (no default)"
   printf '\t%s\n' "-d, --defaultip, --no-defaultip: When set the first ip is used as default (off by default)"
-  printf '\t%s\n' "-l, --logs, --no-logs: When set the first ip is used as default (off by default)"
-  printf '\t%s\n' "-p, --prune, --no-prune: Prune docker networks (off by default)"
-  printf '\t%s\n' "-c, --clean, --no-clean: Start from a clean StreamPipes session (off by default)"
-  printf '\t%s\n' "-u, --current, --no-current: Show only currently registered services (off by default)"
   printf '\t%s\n' "-a, --all, --no-all: Select all available StreamPipes services (off by default)"
   printf '\t%s\n' "-h, --help: Prints help"
   printf '\t%s\n' "-v, --version: Prints version"
@@ -104,54 +92,6 @@ parse_commandline()
         if test -n "$_next" -a "$_next" != "$_key"
         then
           begins_with_short_option "$_next" && shift && set -- "-d" "-${_next}" "$@" || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
-        fi
-        ;;
-      -l|--no-logs|--logs)
-        _arg_logs="on"
-        test "${1:0:5}" = "--no-" && _arg_logs="off"
-        ;;
-      -l*)
-        _arg_logs="on"
-        _next="${_key##-l}"
-        if test -n "$_next" -a "$_next" != "$_key"
-        then
-          begins_with_short_option "$_next" && shift && set -- "-l" "-${_next}" "$@" || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
-        fi
-        ;;
-      -p|--no-prune|--prune)
-        _arg_prune="on"
-        test "${1:0:5}" = "--no-" && _arg_prune="off"
-        ;;
-      -p*)
-        _arg_prune="on"
-        _next="${_key##-p}"
-        if test -n "$_next" -a "$_next" != "$_key"
-        then
-          begins_with_short_option "$_next" && shift && set -- "-p" "-${_next}" "$@" || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
-        fi
-        ;;
-      -c|--no-clean|--clean)
-        _arg_clean="on"
-        test "${1:0:5}" = "--no-" && _arg_clean="off"
-        ;;
-      -c*)
-        _arg_clean="on"
-        _next="${_key##-c}"
-        if test -n "$_next" -a "$_next" != "$_key"
-        then
-          begins_with_short_option "$_next" && shift && set -- "-c" "-${_next}" "$@" || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
-        fi
-        ;;
-      -u|--no-current|--current)
-        _arg_current="on"
-        test "${1:0:5}" = "--no-" && _arg_current="off"
-        ;;
-      -u*)
-        _arg_current="on"
-        _next="${_key##-u}"
-        if test -n "$_next" -a "$_next" != "$_key"
-        then
-          begins_with_short_option "$_next" && shift && set -- "-u" "-${_next}" "$@" || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
         fi
         ;;
       -a|--no-all|--all)
@@ -227,12 +167,12 @@ _arg_operation="$(operation "$_arg_operation" "operation")" || exit 1
 
 run() {
 
-	if [ $_arg_logs = "on" ];
-	then
+#	if [ $_arg_logs = "on" ];
+#	then
 		$1
-	else
-		$1 > /dev/null 2>&1
-	fi
+#	else
+#		$1 > /dev/null 2>&1
+#	fi
 }
 
 endEcho() {
@@ -319,20 +259,18 @@ startStreamPipes() {
 	fi
     getCommand
 		echo "Starting StreamPipes ${_arg_operation[1]}"
-		echo "This might take a while ..."
     run "$command up -d ${_arg_operation[1]}"
 
-    endEcho "StreamPipes sucessfully started ${_arg_operation[1]}"
+    endEcho "StreamPipes started ${_arg_operation[1]}"
 }
 
 updateStreamPipes() {
     getCommand
 
 		echo "Updating StreamPipes ${_arg_operation[1]}"
-		echo "This might take a while ..."
     run "$command up -d ${_arg_operation[1]}"
 
-		endEcho "Services sucessfully updated"
+		endEcho "Services updated"
 }
 
 updateServices() {
@@ -346,7 +284,6 @@ stopStreamPipes() {
     getCommand
 
 		echo "Stopping StreamPipes ${_arg_operation[1]}"
-		echo "This might take a while ..."
     if [ "${_arg_operation[1]}" = "" ];
 		then
     	run "$command down"
@@ -355,16 +292,15 @@ stopStreamPipes() {
     	run "$command rm -f ${_arg_operation[1]}"
 		fi
 
-    endEcho "StreamPipes sucessfully stopped ${_arg_operation[1]}"
+    endEcho "StreamPipes stopped ${_arg_operation[1]}"
 }
 
 restartStreamPipes() {
 	getCommand
 	echo "Restarting StreamPipes."
-	echo "This might take a while ..."
 	run "$command restart ${_arg_operation[1]}"
 
-  endEcho "StreamPipes sucessfully restarted ${_arg_operation[1]}"
+  endEcho "StreamPipes restarted ${_arg_operation[1]}"
 
 }
 
@@ -379,28 +315,42 @@ cleanStreamPipes() {
     endEcho "All configurations of StreamPipes have been deleted."
 }
 
+removeStreamPipesSettings() {
+    stopStreamPipes
+		rm .env
+}
+
 resetStreamPipes() {
     cleanStreamPipes
     rm .env
     echo "All configurations of StreamPipes have been deleted."
 }
 
-listServices() {
-    if [ "$_arg_current" = "on" ];
-    then
-        echo "Currently registered services:"
-        cat system
-    else
-        echo "Available services:"
-        cd services
-        for dir in */ ; do
-          echo $dir | sed "s/\///g"
-        done
-        cd ..
-    fi
+listAvailableServices() {
+	echo "Available services:"
+  cd services
+  for dir in */ ; do
+  	echo $dir | sed "s/\///g"
+  done
+  cd ..
 }
 
-removeService() {
+listActiveServices() {
+	echo "Active services:"
+	cat system
+}
+
+listTemplates() {
+	echo "Available Templates:"
+  cd templates
+  for file in * ; do
+  	echo $file
+  done
+	cd ..
+}
+
+
+deactivateService() {
     if [ "$_arg_all" = "on" ];
     then
         removeAllServices
@@ -414,6 +364,11 @@ removeService() {
     fi
 }
 
+activateService() {
+	addService
+	updateStreamPipes
+}
+
 addService() {
     if [ "$_arg_all" = "on" ];
     then
@@ -423,7 +378,6 @@ addService() {
             echo "Service ${_arg_operation[1]} already exists"
         else
             echo ${_arg_operation[1]} >> ./system
-            updateStreamPipes
         fi
     fi
 
@@ -435,8 +389,7 @@ removeAllServices() {
 }
 
 setTemplate() {
-# bigdata|desktop|ui-developer|pe-developer|backend-developer
-    echo "Set-Template is currently not yet implemented."
+  moveSystemConfig ${_arg_operation[1]}
 }
 
 addAllServices() {
@@ -469,8 +422,6 @@ fi
 if [ "$_arg_operation" = "restart" ];
 then
     restartStreamPipes
-    echo 'StreamPipes sucessfully restarted'
-
 fi
 
 if [ "$_arg_operation" = "clean" ];
@@ -478,14 +429,25 @@ then
     cleanStreamPipes
 fi
 
+if [ "$_arg_operation" = "remove-settings" ];
+then
+    removeStreamPipesSettings
+fi
+
+if [ "$_arg_operation" = "activate" ];
+then
+    activateService
+fi
+
 if [ "$_arg_operation" = "add" ];
 then
     addService
 fi
 
-if [ "$_arg_operation" = "remove" ];
+
+if [ "$_arg_operation" = "deactivate" ];
 then
-    removeService
+    deactivateService
 fi
 
 if [ "$_arg_operation" = "cleanstart" ];
@@ -495,9 +457,19 @@ then
     echo 'All configurations of StreamPipes are deleted and StreamPipes is restarted'
 fi
 
-if [ "$_arg_operation" = "list" ];
+if [ "$_arg_operation" = "list-available" ];
 then
-    listServices
+    listAvailableServices
+fi
+
+if [ "$_arg_operation" = "list-active" ];
+then
+    listActiveServices
+fi
+
+if [ "$_arg_operation" = "list-templates" ];
+then
+    listTemplates
 fi
 
 if [ "$_arg_operation" = "update" ];
@@ -505,7 +477,7 @@ then
     updateServices
 fi
 
-if [ "$_arg_operation" = "logs" ];
+if [ "$_arg_operation" = "log" ];
 then
     logServices
 fi
@@ -519,12 +491,6 @@ if [ "$_arg_operation" = "set-template" ];
 then
     setTemplate
 fi
-
-if [ "$_arg_operation" = "mode" ];
-then
-    moveSystemConfig ${_arg_operation[1]}
-fi
-
 
 if [ "$_arg_operation" = "nil" ];
 then

@@ -20,16 +20,19 @@ All available services are in the services folder.
 
 * list-available
 * list-active
-* list-template
+* list-templates
 
 * activate (service-name) (--all)
   * Adds service to system and starts
+* add (service-name) (--all)
+  * Adds service to system 
 * deactivate {remove} (service-name)  (--all)
   * Stops container and removes from system file
 
 * clean
   * Stops and cleans SP installation, remove networks
-* remove-settings: Delete all .env files and everything else (Do we need this in adition to clean?)
+* remove-settings: 
+  * Stops StreamPipes and deletes .env file
 
 * generate-compose-file
 
