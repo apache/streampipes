@@ -77,8 +77,8 @@ getIp() {
 }
 
 moveSystemConfig() {
-  if [ -e ./system-configurations/"$1" ]; then
-		cp ./system-configurations/$1 system
+  if [ -e ./templates/"$1" ]; then
+		cp ./templates/$1 system
 	  echo "Set configuration for $1" 
 	else
 		echo "Configuration $1 was not found"
@@ -296,13 +296,6 @@ fi
 if [ "$_arg_operation" = "deactivate" ];
 then
     deactivateService
-fi
-
-if [ "$_arg_operation" = "cleanstart" ];
-then
-    cleanStreamPipes
-    startStreamPipes
-    echo 'All configurations of StreamPipes are deleted and StreamPipes is restarted'
 fi
 
 if [ "$_arg_operation" = "list-available" ];
