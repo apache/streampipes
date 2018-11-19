@@ -28,7 +28,6 @@ All available services are in the services folder.
   * Adds service to system 
 * deactivate {remove} (service-name)  (--all)
   * Stops container and removes from system file
-
 * clean
   * Stops and cleans SP installation, remove networks
 * remove-settings: 
@@ -45,7 +44,6 @@ All available services are in the services folder.
 
 
 ## Usage
-
 ~/argbash/argbash-2.7.0/bin/argbash sp.m4 -o sp
 
 
