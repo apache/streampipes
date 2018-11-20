@@ -20,6 +20,7 @@ package org.streampipes.connect.init;
 import org.apache.http.client.fluent.Request;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
@@ -107,6 +108,9 @@ public class Main {
         allClasses.add(DescriptionResource.class);
         allClasses.add(SourcesResource.class);
         allClasses.add(GuessResource.class);
+        allClasses.add(FileResource.class);
+        allClasses.add(MultiPartFeature.class);
+
 
         allClasses.addAll(getApiClasses());
 

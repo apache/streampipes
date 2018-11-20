@@ -29,4 +29,7 @@ public class ConfigKeys {
 
     final static String CONNECT_CONTAINER_WORKER_HOST = "SP_CONNECT_CONTAINER_WORKER_HOST";
     final static String CONNECT_CONTAINER_WORKER_PORT = "SP_CONNECT_CONTAINER_WORKER_PORT";
+
+    final static String DATA_LOCATION = "SP_DATA_LOCATION";
+
 }

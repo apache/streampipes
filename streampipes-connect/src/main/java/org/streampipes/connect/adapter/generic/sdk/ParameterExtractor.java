@@ -17,10 +17,10 @@
 
 package org.streampipes.connect.adapter.generic.sdk;
 
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ParameterExtractor {
     private List<StaticProperty> list;
@@ -32,6 +32,15 @@ public class ParameterExtractor {
     public String singleValue(String internalName) {
         return (((FreeTextStaticProperty) getStaticPropertyByName(internalName))
                 .getValue());
+    }
+
+    public List<String> selectedMultiValues(String internalName) {
+        return ((SelectionStaticProperty) getStaticPropertyByName(internalName))
+                .getOptions()
+                .stream()
+                .filter(Option::isSelected)
+                .map(Option::getName)
+                .collect(Collectors.toList());
     }
 
     private StaticProperty getStaticPropertyByName(String name)
