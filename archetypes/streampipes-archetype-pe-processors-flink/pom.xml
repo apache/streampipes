@@ -31,29 +31,4 @@
         </pluginManagement>
     </build>
 
-    <scm>
-        <developerConnection>
-            scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce-backend.git/archetypes/streampipes-archetype-pe-sinks-jvm
-        </developerConnection>
-    </scm>
-
-    <repositories>
-        <repository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/public/</url>
-        </repository>
-    </repositories>
-    <distributionManagement>
-        <repository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>
