@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FreeTextStaticProperty } from '../model/FreeTextStaticProperty';
 import { StaticProperty } from '../model/StaticProperty';
 import { MappingPropertyUnary } from '../model/MappingPropertyUnary';
+import { OneOfStaticProperty } from '../model/OneOfStaticProperty';
 import { DataSetDescription } from '../model/DataSetDescription';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Logger } from '../../shared/logger/default-log.service';
@@ -78,6 +79,10 @@ export class StaticPropertyComponent implements OnInit {
 
   isMappingPropertyUnary(val) {
     return val instanceof MappingPropertyUnary;
+  }
+
+  isOneOfStaticProperty(val) {
+    return val instanceof OneOfStaticProperty;
   }
 
   valueChange(hasInput) {

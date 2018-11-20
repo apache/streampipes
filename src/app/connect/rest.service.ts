@@ -37,6 +37,7 @@ import { TransformationRuleDescription } from './model/connect/rules/Transformat
 import {StatusMessage} from "./model/message/StatusMessage";
 import {AnyStaticProperty} from './model/AnyStaticProperty';
 import { Option } from './model/Option';
+import { OneOfStaticProperty } from './model/OneOfStaticProperty';
 
 @Injectable()
 export class RestService {
@@ -69,6 +70,7 @@ export class RestService {
     tsonld.addClassMapping(MoveRuleDescription);
       tsonld.addClassMapping(Option);
       tsonld.addClassMapping(AnyStaticProperty);
+      tsonld.addClassMapping(OneOfStaticProperty);
 
     return tsonld;
   }
@@ -213,6 +215,8 @@ export class RestService {
         tsonld.addClassMapping(FormatDescriptionList);
         tsonld.addClassMapping(AnyStaticProperty);
           tsonld.addClassMapping(Option);
+          tsonld.addClassMapping(OneOfStaticProperty);
+
 
         // console.log(JSON.stringify(jsonResponse, null, 2));
         const res = tsonld.fromJsonLdType(response, 'sp:FormatDescriptionList');
@@ -232,6 +236,7 @@ export class RestService {
         tsonld.addClassMapping(ProtocolDescription);
           tsonld.addClassMapping(AnyStaticProperty);
           tsonld.addClassMapping(Option);
+          tsonld.addClassMapping(OneOfStaticProperty);
 
         // console.log(JSON.stringify(jsonResponse, null, 2));
         const res = tsonld.fromJsonLdType(

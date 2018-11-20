@@ -53,6 +53,7 @@ import { FormatListComponent } from './format-list-component/format-list.compone
 import { ProtocolListComponent } from './protocol-list-component/protocol-list.component';
 import { SelectStaticPropertiesComponent } from './select-static-properties-component/select-static-properties.component';
 import { StaticAnyInput } from './static-properties/static-any-input/static-any-input.component';
+import { StaticOneOfInputComponent } from './static-properties/static-one-of-input/static-one-of-input.component';
 
 @NgModule({
   imports: [
@@ -94,6 +95,7 @@ import { StaticAnyInput } from './static-properties/static-any-input/static-any-
     AdapterDescriptionComponent,
     ConnectComponent,
     SelectStaticPropertiesComponent,
+    StaticOneOfInputComponent,
   ],
   providers: [
     RestService,

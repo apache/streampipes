@@ -31,6 +31,7 @@ import {EventPropertyNested} from '../schema-editor/model/EventPropertyNested';
 import {EventPropertyList} from '../schema-editor/model/EventPropertyList';
 import {UUID} from 'angular2-uuid';
 import {DataSetDescription} from '../model/DataSetDescription';
+import {OneOfStaticProperty} from '../model/OneOfStaticProperty';
 
 @Injectable()
 export class DataMarketplaceService {
@@ -55,6 +56,7 @@ export class DataMarketplaceService {
 
 
     tsonld.addClassMapping(AnyStaticProperty);
+    tsonld.addClassMapping(OneOfStaticProperty);
     tsonld.addClassMapping(Option);
 
     tsonld.addClassMapping(ProtocolDescriptionList);

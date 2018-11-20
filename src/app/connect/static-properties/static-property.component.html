@@ -18,6 +18,11 @@
 
 <app-static-any-input *ngIf="isAnyStaticProperty(staticProperty)" [staticProperty]="staticProperty"></app-static-any-input>
 
+<app-static-one-of-input *ngIf="isOneOfStaticProperty(staticProperty)"
+                         (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
+</app-static-one-of-input>
+
+
 
 
 <form>

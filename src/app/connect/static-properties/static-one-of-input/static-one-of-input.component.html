@@ -1,0 +1,9 @@
+<div fxLayout="column">
+  <p>{{staticProperty.label}}: </p>
+  <mat-radio-button *ngFor="let option of staticProperty.options" style="margin-top: -10px"
+                    (click)="select(option.id)" [checked]="option.selected">
+    <label style="font-weight: normal; padding-top: 8px;">
+      {{option.name}}
+    </label>
+  </mat-radio-button>
+</div>
