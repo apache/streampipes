@@ -30,6 +30,13 @@ public abstract class AbstractContainerResource {
                 .build();
     }
 
+    protected <T> Response ok() {
+        return Response
+                .ok()
+                .build();
+    }
+
+
     protected Response statusMessage(Message message) {
         return ok(message);
     }
