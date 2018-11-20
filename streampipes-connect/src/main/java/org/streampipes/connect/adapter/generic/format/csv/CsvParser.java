@@ -51,7 +51,8 @@ public class CsvParser extends Parser {
     public Parser getInstance(FormatDescription formatDescription) {
         ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
 
-        boolean header = extractor.singleValue(CsvFormat.HEADER_NAME) == null ? false : true;
+        boolean header = extractor.selectedMultiValues(CsvFormat.HEADER_NAME).stream()
+                .anyMatch(option -> option.equals("Header"));
         String delimiter = extractor.singleValue(CsvFormat.DELIMITER_NAME);
 
         return new CsvParser(delimiter, header);

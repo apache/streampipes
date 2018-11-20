@@ -52,8 +52,11 @@ public class CsvFormat extends Format {
     @Override
     public Format getInstance(FormatDescription formatDescription) {
         ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
-        boolean header = extractor.singleValue(HEADER_NAME) == null ? false : true;
         String delimiter = extractor.singleValue(DELIMITER_NAME);
+
+        boolean header = extractor.selectedMultiValues(HEADER_NAME).stream()
+                .anyMatch(option -> option.equals("Header"));
+
 
         return new CsvFormat(delimiter, header);
     }
