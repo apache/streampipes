@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { AnyStaticProperty } from '../../model/AnyStaticProperty';
 
 @Component({
@@ -10,9 +10,13 @@ export class StaticAnyInput implements OnInit {
   @Input()
   staticProperty: AnyStaticProperty;
 
+  @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+
+
   ngOnInit() {
     for (let option of this.staticProperty.options) {
       option.selected = false;
     }
+    this.inputEmitter.emit(true);
   }
 }
