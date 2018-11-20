@@ -20,6 +20,11 @@ export class EditorCtrl {
     currentlyFocusedElement: any;
     ShepherdService: any;
 
+    requiredStreamForTutorialAppId: any = "org.streampipes.pe.random.number.json";
+    requiredProcessorForTutorialAppId: any = "org.streampipes.processors.transformation.flink.fieldhasher";
+    requiredSinkForTutorialAppId: any = "org.streampipes.sinks.internal.jvm.dashboard";
+    missingElementsForTutorial: any = [];
+
     constructor($rootScope,
                 RestApi,
                 $stateParams,
@@ -65,7 +70,9 @@ export class EditorCtrl {
                 .getUserDetails()
                 .success(user => {
                     if (!user.hideTutorial || user.hideTutorial == undefined) {
-                        this.EditorDialogManager.showWelcomeDialog(user);
+                        if (this.requiredPipelineElementsForTourPresent()) {
+                            this.EditorDialogManager.showWelcomeDialog(user);
+                        }
                     }
                 })
         }
@@ -95,7 +102,48 @@ export class EditorCtrl {
     }
 
     startCreatePipelineTour() {
-        this.ShepherdService.startCreatePipelineTour();
+        if (this.requiredPipelineElementsForTourPresent()) {
+            this.ShepherdService.startCreatePipelineTour();
+        } else {
+            if (!this.requiredStreamForTourPresent()) {
+                this.missingElementsForTutorial.push({"name" : "Random Number Stream", "appId" : this.requiredStreamForTutorialAppId });
+            }
+            if (!this.requiredProcessorForTourPresent()) {
+                this.missingElementsForTutorial.push({"name" : "Field Hasher", "appId" : this.requiredProcessorForTutorialAppId});
+            }
+            if (!this.requiredSinkForTourPresent()) {
+                this.missingElementsForTutorial.push({"name" : "Dashboard Sink", "appId" : this.requiredSinkForTutorialAppId});
+            }
+
+            this.EditorDialogManager.showMissingElementsForTutorialDialog(this.missingElementsForTutorial);
+        }
+    }
+
+    requiredPipelineElementsForTourPresent() {
+        return this.requiredStreamForTourPresent() &&
+            this.requiredProcessorForTourPresent() &&
+            this.requiredSinkForTourPresent();
+    }
+
+    requiredStreamForTourPresent() {
+        return this.requiredPeForTourPresent(this.allElements["stream"],
+            this.requiredStreamForTutorialAppId);
+    }
+
+    requiredProcessorForTourPresent() {
+        return this.requiredPeForTourPresent(this.allElements["sepa"],
+            this.requiredProcessorForTutorialAppId);
+    }
+
+    requiredSinkForTourPresent() {
+        return this.requiredPeForTourPresent(this.allElements["action"],
+            this.requiredSinkForTutorialAppId);
+    }
+
+    requiredPeForTourPresent(list, appId) {
+        return list && list.some(el => {
+            return el.appId === appId;
+        });
     }
 
     isActiveTab(elementType) {

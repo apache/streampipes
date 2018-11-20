@@ -1,0 +1,28 @@
+<md-dialog aria-label="Missing Elements" flex="70" style="height:50%;">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Tutorial requires pipeline elements</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content flex="100" class="md-dialog-content">
+        <div flex="100" layout="column">
+            <div flex="100" layout="column">
+                <h4>The tutorial requires pipeline elements that are not yet installed.</h4>
+                <h5>Install the following pipeline elements and start the tutorial again:</h5>
+                <div ng-repeat="missingElement in ctrl.missingElements">
+                    <li><b>{{missingElement.name}}</b> <i>({{missingElement.appId}})</i></li>
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <sp-button sp-button-gray ng-click="ctrl.hide()">
+            Close
+        </sp-button>
+    </md-dialog-actions>
+</md-dialog>

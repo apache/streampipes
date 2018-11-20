@@ -9,6 +9,7 @@ import {PossibleElementsController} from "../dialog/possible-elements/possible-e
 import {HelpDialogController} from "../dialog/help/help-dialog.controller";
 import {SavePipelineController} from "../dialog/save-pipeline/save-pipeline.controller";
 import {WelcomeTourDialogController} from "../dialog/welcome-tour/welcome-tour-dialog.controller";
+import {MissingElementsForTutorialDialogController} from "../dialog/missing-elements-for-tutorial/missing-elements-for-tutorial-dialog.controller";
 
 export class EditorDialogManager {
 
@@ -105,6 +106,20 @@ export class EditorDialogManager {
             bindToController: true,
             locals: {
                 user: user
+            }
+        })
+    }
+
+    showMissingElementsForTutorialDialog(pipelineElements) {
+        this.$mdDialog.show({
+            controller: MissingElementsForTutorialDialogController,
+            controllerAs: 'ctrl',
+            templateUrl: '../dialog/missing-elements-for-tutorial/missing-elements-for-tutorial-dialog.tmpl.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false,
+            bindToController: true,
+            locals: {
+                pipelineElements: pipelineElements
             }
         })
     }
