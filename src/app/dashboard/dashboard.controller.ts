@@ -1,6 +1,8 @@
 import {AddWidgetCtrl} from './add-widget.controller';
 import * as angular from 'angular';
 import * as _ from 'lodash';
+import {MissingElementsForTutorialDialogController} from "../editor/dialog/missing-elements-for-tutorial/missing-elements-for-tutorial-dialog.controller";
+import {NoPipelinePresentDialogController} from "./dialog/no-pipeline-present-dialog.controller";
 
 declare const require: any;
 
@@ -14,6 +16,7 @@ export class DashboardCtrl {
     rerender: any;
     ShepherdService: any;
     maximized: any = false;
+    pipelinePresent: any = false;
 
     constructor($http, $mdDialog, WidgetInstances, $scope, $templateCache, ShepherdService) {
         this.$http = $http;
@@ -32,22 +35,7 @@ export class DashboardCtrl {
         };
 
         this.rerender = true;
-
-        // this.$http.get('/visualizablepipeline/_all_docs?include_docs=true')
-        //     .success(data => {
-        //         var tempVisPipelines = data.rows;
-        //
-        //         // get the names for each pipeline
-        //         angular.forEach(tempVisPipelines, vis => {
-        //             this.$http.get('/pipeline/' + vis.doc.pipelineId)
-        //                 .success(pipeline => {
-        //                     vis.doc.name = pipeline.name;
-        //                     this.visualizablePipelines.push(vis);
-        //                 });
-        //         });
-        //     });
-
-
+        this.isPipelinePresent();
         this.rerenderDashboard(this);
     }
 
@@ -139,7 +127,25 @@ export class DashboardCtrl {
     }
 
     startDashboardTour() {
-        this.ShepherdService.startDashboardTour();
+        if (this.pipelinePresent) {
+            this.ShepherdService.startDashboardTour();
+        } else {
+            this.$mdDialog.show({
+                controller: NoPipelinePresentDialogController,
+                controllerAs: 'ctrl',
+                templateUrl: 'dialog/no-pipeline-present-dialog.tmpl.html',
+                parent: angular.element(document.body),
+                clickOutsideToClose: false,
+                bindToController: true
+            })
+        }
+    }
+
+    isPipelinePresent() {
+        this.$http.get('/visualizablepipeline/_all_docs?include_docs=true')
+            .success(data => {
+                this.pipelinePresent = (data.rows.length > 0);
+            });
     }
 
     addWidget(widget) {
