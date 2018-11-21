@@ -48,7 +48,7 @@ export class SavePipelineController {
     displaySuccess(data) {
         if (data.notifications.length > 0) {
             this.showToast("success", data.notifications[0].description, data.notifications[0].title);
-        } 
+        }
     }
 
     getPipelineCategories() {

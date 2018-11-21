@@ -186,11 +186,16 @@ export class PipelineController {
 
         this.JsplumbBridge.unbind("connection");
 
+        this.JsplumbBridge.bind("connectionMoved", (info, originalEvent) => {
+            var pe = this.objectProvider.findElement(info.newTargetEndpoint.elementId, this.rawPipelineModel);
+            var oldPe = this.objectProvider.findElement(info.originalTargetEndpoint.elementId, this.rawPipelineModel);
+            oldPe.payload.configured = false;
+            pe.payload.configured = false;
+        });
+
         this.JsplumbBridge.bind("connectionDetached", (info, originalEvent) => {
-            var el = ($("#" + info.targetEndpoint.elementId));
-            //el.data("JSON", $.extend(true, {}, getPipelineElementContents(el.data("JSON").belongsTo)));
-            el.removeClass('a');
-            el.addClass('disabled');
+            var pe = this.objectProvider.findElement(info.targetEndpoint.elementId, this.rawPipelineModel);
+            pe.payload.configured = false;
             info.targetEndpoint.setType("empty");
         });
 
