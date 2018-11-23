@@ -105,6 +105,7 @@ export class EditorCtrl {
         if (this.requiredPipelineElementsForTourPresent()) {
             this.ShepherdService.startCreatePipelineTour();
         } else {
+            this.missingElementsForTutorial = [];
             if (!this.requiredStreamForTourPresent()) {
                 this.missingElementsForTutorial.push({"name" : "Random Number Stream", "appId" : this.requiredStreamForTutorialAppId });
             }
