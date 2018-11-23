@@ -16,6 +16,8 @@
  */
 package org.streampipes.processors.pattern.detection.flink;
 
+import org.apache.flink.streaming.api.TimeCharacteristic;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.streampipes.processors.pattern.detection.flink.config.PatternDetectionFlinkConfig;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
@@ -35,6 +37,12 @@ public abstract class AbstractPatternDetectionProgram<B extends EventProcessorBi
   protected FlinkDeploymentConfig getDeploymentConfig() {
     return new FlinkDeploymentConfig(PatternDetectionFlinkConfig.JAR_FILE,
             PatternDetectionFlinkConfig.INSTANCE.getFlinkHost(), PatternDetectionFlinkConfig.INSTANCE.getFlinkPort());
+  }
+
+  @Override
+  public void appendEnvironmentConfig(StreamExecutionEnvironment env) {
+    env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+    env.setParallelism(1);
   }
 
 }

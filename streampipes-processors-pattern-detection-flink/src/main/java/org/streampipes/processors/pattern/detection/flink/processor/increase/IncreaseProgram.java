@@ -18,6 +18,7 @@ package org.streampipes.processors.pattern.detection.flink.processor.increase;
 
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
@@ -34,6 +35,12 @@ public class IncreaseProgram extends AbstractPatternDetectionProgram<IncreasePar
   public DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
     String timestampField = params.getTimestampField();
     return dataStreams[0]
+            .assignTimestampsAndWatermarks(new AscendingTimestampExtractor<Map<String, Object>>() {
+              @Override
+              public long extractAscendingTimestamp(Map<String, Object> stringObjectMap) {
+                return Long.parseLong(String.valueOf(stringObjectMap.get(timestampField)));
+              }
+            })
             .keyBy(getKeySelector())
             .window(TumblingEventTimeWindows.of(Time.seconds(params.getDuration())))
             .apply(new Increase(params.getIncrease(), params.getOperation(), params.getMapping(), params

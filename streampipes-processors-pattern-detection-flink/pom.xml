@@ -88,6 +88,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-streaming-java_2.11</artifactId>
+            <version>1.4.0</version>
+            <scope>test-jar</scope>
+        </dependency>
+        <dependency>
             <groupId>io.flinkspector</groupId>
             <artifactId>flinkspector-datastream_2.11</artifactId>
             <version>0.8.4</version>
