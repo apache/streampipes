@@ -30,11 +30,8 @@ Currently, the following pipeline elements are available:
 * Projection: Outputs a configurable subset of the fields available in an input event stream.
 * Geocoding
 * Google Routing
-* Co-Occurrence
 * Increase
-* Absence
 * Peak Detection
-* Sequence
 * Statistics Summary
 * Statistics Summary Window-Based
 * Field Converter
