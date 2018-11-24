@@ -1,6 +1,7 @@
 variables:
   REGISTRY_HOST: ipe-wim-gitlab.fzi.de:5000
   IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH
+  DOCKER_HUB_IMAGE_NAME: streampipes/
   MAVEN_CLI_OPTS: -DskipTests --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true
   HARBOR_REGISTRY_HOST: laus.fzi.de:8201
   HARBOR_IMAGE_NAME: $HARBOR_REGISTRY_HOST/$CI_PROJECT_PATH
@@ -12,6 +13,7 @@ stages:
   - docker
   - deploy
   - release
+  - docker-hub
 
 build:
   image: maven:3-jdk-8
@@ -63,6 +65,20 @@ github:
    only:
      - dev
 
+.docker_hub: &docker_script
+  image: docker:17.06.0-ce
+  stage: docker-hub
+  when: manual
+  script:
+    - export MVN_VERSION=$(cat ./target/mvn_version)
+    - docker login -u streampipesbuild -p $DOCKER_HUB_USER_PWD
+    - docker build --no-cache --pull  -t $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:latest -t $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
+    - docker push $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
+    - docker push $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:latest
+  when: manual
+  only:
+    - master
+
 deploy:
   image: maven:3-jdk-8
   stage: deploy
@@ -102,8 +118,10 @@ finish release:
   image: maven:3-jdk-8
   stage: release
   script:
+    - export MVN_VERSION=$(cat ./target/mvn_version)
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+    - git remote add github https://$GITHUB_TOKEN:x-oauth-basic@github.com/streampipes/streampipes-pipeline-elements.git
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH")
     - mkdir ~/.ssh
@@ -117,6 +135,11 @@ finish release:
     - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS
     - git push origin --all
     - git push origin --tags
+    - git checkout master
+    - git push github master
+    - git push github $MVN_VERSION
+    - git checkout dev
+    - git push github dev
   when: manual
   except:
     - master
