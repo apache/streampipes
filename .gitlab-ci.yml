@@ -65,7 +65,7 @@ github:
    only:
      - dev
 
-.docker_hub: &docker_script
+.docker_hub: &docker_hub_script
   image: docker:17.06.0-ce
   stage: docker-hub
   when: manual
@@ -78,6 +78,7 @@ github:
   when: manual
   only:
     - master
+    - dev
 
 deploy:
   image: maven:3-jdk-8
@@ -146,6 +147,7 @@ finish release:
 
 docker-processors-aggregation-flink:
     <<: *docker_script
+    <<: *docker_hub_script
     variables:
       CONTAINER_NAME: "processors-aggregation-flink"
 
