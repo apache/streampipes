@@ -78,7 +78,6 @@ github:
   when: manual
   only:
     - master
-    - dev
 
 deploy:
   image: maven:3-jdk-8
@@ -147,7 +146,6 @@ finish release:
 
 docker-processors-aggregation-flink:
     <<: *docker_script
-    <<: *docker_hub_script
     variables:
       CONTAINER_NAME: "processors-aggregation-flink"
 
@@ -241,3 +239,98 @@ docker-sources-watertank-simulator:
     variables:
       CONTAINER_NAME: "sources-watertank-simulator"
 
+
+docker-hub-processors-aggregation-flink:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "processors-aggregation-flink"
+
+docker-hub-processors-enricher-flink:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "processors-enricher-flink"
+
+docker-hub-processors-filters-jvm:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "processors-filters-jvm"
+
+docker-hub-processors-geo-jvm:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "processors-geo-jvm"
+
+docker-hub-processors-image-processing-jvm:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "processors-image-processing-jvm"
+
+docker-hub-processors-pattern-detection-flink:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "processors-pattern-detection-flink"
+
+docker-hub-processors-filters-siddhi:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "processors-filters-siddhi"
+
+docker-hub-processors-statistics-flink:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "processors-statistics-flink"
+
+docker-hub-processors-geo-flink:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "processors-geo-flink"
+
+docker-hub-processors-transformation-flink:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "processors-transformation-flink"
+
+docker-hub-processors-transformation-jvm:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "processors-transformation-jvm"
+
+docker-hub-sinks-brokers-jvm:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "sinks-brokers-jvm"
+
+docker-hub-sinks-databases-flink:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "sinks-databases-flink"
+
+docker-hub-sinks-databases-jvm:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "sinks-databases-jvm"
+
+docker-hub-sinks-notifications-jvm:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "sinks-notifications-jvm"
+
+docker-hub-sinks-internal-jvm:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "sinks-internal-jvm"
+
+docker-hub-sources-vehicle-simulator:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "sources-vehicle-simulator"
+
+docker-hub-sources-random:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "sources-random-data-generator"
+
+docker-hub-sources-watertank-simulator:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "sources-watertank-simulator"
