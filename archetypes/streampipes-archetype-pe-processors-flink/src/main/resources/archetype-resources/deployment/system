@@ -1,0 +1,10 @@
+activemq
+kafka
+zookeeper
+swagger-ui
+connect-master
+couchdb
+backend
+nginx
+kafka-rest
+testarchetype

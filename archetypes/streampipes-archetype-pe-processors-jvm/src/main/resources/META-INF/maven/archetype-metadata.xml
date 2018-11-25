@@ -32,7 +32,13 @@
         <fileSet filtered="true" packaged="false" encoding="UTF-8">
             <directory/>
             <includes>
-                <include>development/.env</include>
+                <include>deployment/system</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="true" packaged="false" encoding="UTF-8">
+            <directory/>
+            <includes>
+                <include>development/env</include>
             </includes>
         </fileSet>
     </fileSets>
