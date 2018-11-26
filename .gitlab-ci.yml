@@ -57,7 +57,7 @@ github:
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
      - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
-     - docker build --no-cache --pull  -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
+     - docker build --no-cache --pull -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
      - docker push $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
      - docker push $IMAGE_NAME/$CONTAINER_NAME:latest
      - docker push $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
