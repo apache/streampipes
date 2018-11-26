@@ -81,6 +81,21 @@
             <artifactId>streampipes-config</artifactId>
             <version>${sp.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-json</artifactId>
+            <version>${sp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging-kafka</artifactId>
+            <version>${sp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging-jms</artifactId>
+            <version>${sp.version}</version>
+        </dependency>
     </dependencies>
 
     <repositories>

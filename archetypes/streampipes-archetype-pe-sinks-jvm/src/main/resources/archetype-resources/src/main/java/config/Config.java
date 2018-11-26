@@ -22,7 +22,7 @@ public enum Config implements PeConfig {
   Config() {
     config = SpConfig.getSpConfig("pe/${package}");
 
-    config.register(HOST, ""${artifactId}"", "Hostname for the pe sinks");
+    config.register(HOST, "${artifactId}", "Hostname for the pe sinks");
     config.register(PORT, 8090, "Port for the pe sinks");
     config.register(NGINX_HOST, System.getenv("STREAMPIPES_HOST"), "External hostname of " +
             "StreamPipes Nginx");

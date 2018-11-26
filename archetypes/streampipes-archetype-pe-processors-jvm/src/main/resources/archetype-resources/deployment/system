@@ -3,6 +3,7 @@ kafka
 zookeeper
 swagger-ui
 connect-master
+connect-worker
 couchdb
 backend
 nginx

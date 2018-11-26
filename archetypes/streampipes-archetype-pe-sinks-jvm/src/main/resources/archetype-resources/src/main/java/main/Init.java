@@ -9,7 +9,7 @@ import org.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 
 import ${package}.config.Config;
-import ${package}.pe.processor.${packageName}.${classNamePrefix}Controller;
+import ${package}.pe.sink.${packageName}.${classNamePrefix}Controller;
 
 public class Init extends StandaloneModelSubmitter {
 
