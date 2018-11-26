@@ -17,25 +17,20 @@
 package org.streampipes.processors.enricher.flink.processor.timestamp;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
+import org.streampipes.processors.enricher.flink.AbstractEnricherProgram;
 
 import java.util.Map;
 
-public class TimestampProgram extends FlinkDataProcessorRuntime<TimestampParameters> {
+public class TimestampProgram extends AbstractEnricherProgram<TimestampParameters> {
 
-	public TimestampProgram(TimestampParameters params) {
-		super(params);
-	}
-	
-	public TimestampProgram(TimestampParameters params, FlinkDeploymentConfig config) {
-		super(params, config);
+	public TimestampProgram(TimestampParameters params, boolean debug) {
+		super(params, debug);
 	}
 
 	@Override
 	protected DataStream<Map<String, Object>> getApplicationLogic(
 			DataStream<Map<String, Object>>... messageStream) {
-		return (DataStream<Map<String, Object>>) messageStream[0]
+		return messageStream[0]
 				.flatMap(new TimestampEnricher(params.getAppendTimePropertyName()));
 	}
 

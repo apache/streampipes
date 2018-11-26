@@ -23,9 +23,9 @@ public enum PatternDetectionFlinkConfig implements PeConfig {
   INSTANCE;
 
   private SpConfig config;
-  public static final String JAR_FILE = "./streampipes-examples-flink.jar";
+  public static final String JAR_FILE = "./streampipes-processing-element-container.jar";
 
-  private final static String service_id = "pe/org.streampipes.processors.pattern.detection.flink.jvm";
+  private final static String service_id = "pe/org.streampipes.processors.pattern.detection.flink";
   private final static String service_name = "Processors Pattern Detection Flink";
   private final static String service_container_name = "processors-pattern-detection-flink";
 

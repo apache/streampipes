@@ -16,97 +16,92 @@
 
 package org.streampipes.processors.aggregation.flink.processor.aggregation;
 
-import org.streampipes.processors.aggregation.flink.config.AggregationFlinkConfig;
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.model.util.SepaUtils;
+import org.streampipes.processors.aggregation.flink.config.AggregationFlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AggregationController extends FlinkDataProcessorDeclarer<AggregationParameters> {
 
+  private static final String RESOURCE_ID = "strings";
+  private static final String PE_ID = "org.streampipes.processors.aggregation.flink.aggregation";
+
+  private static final String AGGREGATE_KEY = "aggregate";
+  private static final String AGGREGATED_VALUE_KEY = "aggregatedValue";
+  private static final String GROUP_BY_KEY = "groupBy";
+  private static final String OUTPUT_EVERY_KEY = "outputEvery";
+  private static final String TIME_WINDOW_KEY = "timeWindow";
+  private static final String OPERATION_KEY = "operation";
+
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("aggregation", "Aggregation", "Performs different " +
-            "aggregation functions")
+    return ProcessingElementBuilder.create(getLabel(PE_ID))
             .category(DataProcessorType.AGGREGATE)
             .iconUrl(AggregationFlinkConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png")
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from("aggregate",
-                            "Property Selection", "Specifies the event property from your stream that should be aggregated" +
-                                    "."), PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.numberReq(),
+                            getLabel(AGGREGATE_KEY),
+                            PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
-            .naryMappingPropertyWithoutRequirement(Labels.from("groupBy", "Group by", "Partitions the incoming stream" +
-                    " by the selected event " +
-                    "properties"), PropertyScope.DIMENSION_PROPERTY)
-            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.from("aggregated-value",
-                    "Aggregated Value", "The calculated aggregation value"       ),
+            .naryMappingPropertyWithoutRequirement(
+                    getLabel(GROUP_BY_KEY),
+                    PropertyScope.DIMENSION_PROPERTY)
+            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(
+                    getLabel(AGGREGATED_VALUE_KEY),
                     "aggregatedValue",
                     "http://schema.org/Number")))
-            .requiredIntegerParameter("outputEvery", "Output Frequency", "Output values every " +
-                    "(seconds")
-            .requiredIntegerParameter("timeWindow", "Time Window Size", "Size of the time window " +
-                    "in seconds")
-            .requiredSingleValueSelection("operation", "Operation", "Aggregation operation type",
-                    Options.from("Average", "Sum", "Min", "Max"))
+            .requiredIntegerParameter(getLabel(OUTPUT_EVERY_KEY))
+            .requiredIntegerParameter(getLabel(TIME_WINDOW_KEY))
+            .requiredSingleValueSelection(getLabel(OPERATION_KEY),
+                    Options.from(new Tuple2<>("Average", "AVG"),
+                            new Tuple2<>("Sum", "SUM"),
+                            new Tuple2<>("Min", "MIN"),
+                            new Tuple2<>("Max", "MAX")))
             .supportedFormats(StandardTransportFormat.standardFormat())
             .supportedProtocols(StandardTransportFormat.standardProtocols())
             .build();
+  }
+
+  private Label getLabel(String id) {
+    return Labels.fromResources(RESOURCE_ID, id);
   }
 
   @Override
   public FlinkDataProcessorRuntime<AggregationParameters> getRuntime(DataProcessorInvocation graph,
                                                                      ProcessingElementParameterExtractor extractor) {
 
-    //List<String> groupBy = SepaUtils.getMultipleMappingPropertyNames(graph, "groupBy", true);
     List<String> groupBy = new ArrayList<>();
 
-    String aggregate = SepaUtils.getMappingPropertyName(graph, "aggregate");
-
-    Integer outputEvery = extractor.singleValueParameter("outputEvery", Integer.class);
-    Integer timeWindowSize = extractor.singleValueParameter("timeWindow", Integer.class);
-    String aggregateOperation = extractor.selectedSingleValue("operation", String.class);
+    String aggregate = extractor.mappingPropertyValue(AGGREGATE_KEY);
+    Integer outputEvery = extractor.singleValueParameter(OUTPUT_EVERY_KEY, Integer.class);
+    Integer timeWindowSize = extractor.singleValueParameter(TIME_WINDOW_KEY, Integer.class);
+    String aggregateOperation = extractor.selectedSingleValueInternalName(OPERATION_KEY, String.class);
 
     List<String> selectProperties = new ArrayList<>();
     for (EventProperty p : graph.getInputStreams().get(0).getEventSchema().getEventProperties()) {
       selectProperties.add(p.getRuntimeName());
     }
 
-    AggregationParameters staticParam = new AggregationParameters(graph, convert(aggregateOperation),
+    AggregationParameters staticParam = new AggregationParameters(graph, AggregationType.valueOf
+            (aggregateOperation),
             outputEvery, groupBy,
             aggregate, timeWindowSize, selectProperties);
 
-    if (AggregationFlinkConfig.INSTANCE.getDebug()) {
-      return new AggregationProgram(staticParam);
-    } else {
-      return new AggregationProgram(staticParam, new FlinkDeploymentConfig(AggregationFlinkConfig.JAR_FILE,
-              AggregationFlinkConfig.INSTANCE.getFlinkHost(), AggregationFlinkConfig.INSTANCE.getFlinkPort()));
-    }
+    return new AggregationProgram(staticParam, AggregationFlinkConfig.INSTANCE.getDebug());
 
-  }
-
-  private AggregationType convert(String aggregateOperation) {
-    if (aggregateOperation.equals("Average")) {
-      return AggregationType.AVG;
-    } else if (aggregateOperation.equals("Sum")) {
-      return AggregationType.SUM;
-    } else if (aggregateOperation.equals("Min")) {
-      return AggregationType.MIN;
-    } else {
-      return AggregationType.MAX;
-    }
   }
 }

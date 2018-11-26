@@ -1,0 +1,13 @@
+version: "2"
+services:
+  sinks-databases-flink:
+    image: ${SP_DOCKER_REGISTRY}/streampipes/streampipes-pipeline-elements/sinks-databases-flink:${SP_PE_VERSION}
+    depends_on:
+      - "consul"
+#    ports:
+#      - "8098:8090"
+    environment:
+      - SP_ICON_HOST=${SP_ICON_HOST}
+    networks:
+      spnet:
+

@@ -5,7 +5,7 @@
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-pipeline-elements</artifactId>
     <packaging>pom</packaging>
-    <version>0.55.3-SNAPSHOT</version>
+    <version>0.60.0</version>
     <modules>
         <module>streampipes-sinks-databases-jvm</module>
         <module>streampipes-sinks-internal-jvm</module>
@@ -17,50 +17,114 @@
         <module>streampipes-processors-enricher-flink</module>
         <module>streampipes-sources-watertank-simulator</module>
         <module>streampipes-sources-vehicle-simulator</module>
+        <module>streampipes-processors-transformation-flink</module>
+        <module>streampipes-processors-geo-jvm</module>
+        <module>streampipes-processors-statistics-flink</module>
+        <module>streampipes-processors-filters-siddhi</module>
+        <module>streampipes-processors-text-mining-flink</module>
+        <module>streampipes-sources-random-data-generator</module>
+        <module>streampipes-sinks-notifications-jvm</module>
+        <module>streampipes-pipeline-elements-shared</module>
+        <module>streampipes-processors-geo-flink</module>
+        <module>streampipes-processors-image-processing-jvm</module>
+        <module>streampipes-processors-transformation-jvm</module>
     </modules>
 
     <properties>
-        <streampipes.version>0.55.3-SNAPSHOT</streampipes.version>
+        <streampipes.version>0.60.0</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-wrapper-standalone</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-sdk</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-container-standalone</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-config</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-dataformat-json</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-messaging-kafka</artifactId>
-            <version>${streampipes.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lightcouch</groupId>
-            <artifactId>lightcouch</artifactId>
-            <version>${lightcouch.version}</version>
-        </dependency>
-    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-commons</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-sources</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-container-standalone</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-standalone</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-flink</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-sdk</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-config</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-json</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-messaging-kafka</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-messaging-jms</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.lightcouch</groupId>
+                <artifactId>lightcouch</artifactId>
+                <version>${lightcouch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-measurement-units</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pipeline-elements-shared</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-test-utils</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-siddhi</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.8.5</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <pluginManagement>
@@ -74,11 +138,6 @@
                         <target>1.8</target>
                         <encoding>UTF-8</encoding>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.4</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -97,47 +156,12 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                        <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                        </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.streampipes.examples.jvm.ExamplesJvmInit</mainClass>
-                                </transformer>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                            </transformers>
-                            <filters>
-
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                        <exclude>META-INF/maven/com.github.jsonld-java/jsonld-java/pom.xml</exclude>
-                                        <exclude>META-INF/maven/com.github.jsonld-java/jsonld-java-sesame/pom.xml
-                                        </exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                </executions>
+                <configuration>
+                    <failOnError>false</failOnError>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>external.atlassian.jgitflow</groupId>
@@ -150,9 +174,8 @@
                         <featureBranchPrefix>feature-</featureBranchPrefix>
                         <releaseBranchPrefix>release-</releaseBranchPrefix>
                         <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
-                        <versionTagPrefix>version-</versionTagPrefix>
                     </flowInitContext>
-                    <noDeploy>false</noDeploy>
+                    <noDeploy>true</noDeploy>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <pushReleases>false</pushReleases>
                     <localOnly>true</localOnly>
@@ -182,15 +205,13 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>streampipes-examples-jvm</finalName>
-
     </build>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/pe-examples-jvm.git
+        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-pipeline-elements.git
         </developerConnection>
-        <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/pe-examples-jvm.git</connection>
-        <url>https://github.com/streampipes/pe-examples-jvm</url>
+        <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-pipeline-elements.git</connection>
+        <url>https://github.com/streampipes/streampipes-pipeline-elements</url>
     </scm>
 
     <licenses>

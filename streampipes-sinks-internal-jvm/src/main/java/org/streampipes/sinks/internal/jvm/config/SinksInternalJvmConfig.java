@@ -49,7 +49,7 @@ public enum SinksInternalJvmConfig implements PeConfig {
 		config.register(ConfigKeys.ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe sinks project");
 		config.register(ConfigKeys.COUCHDB_HOST, "couchdb", "Host for couchdb of the pe sinks project");
 		config.register(ConfigKeys.COUCHDB_PORT, 5984, "Port for couchdb of the pe sinks project");
-		config.register(ConfigKeys.JMS_HOST, "tcp://activemq", "Hostname for pe actions service for active mq");
+		config.register(ConfigKeys.JMS_HOST, "activemq", "Hostname for pe actions service for active mq");
 		config.register(ConfigKeys.JMS_PORT, 61616, "Port for pe actions service for active mq");
 
 		config.register(ConfigKeys.SERVICE_NAME, service_name, "The name of the service");
@@ -112,7 +112,7 @@ public enum SinksInternalJvmConfig implements PeConfig {
 	}
 
 	public String getJmsHost() {
-		return config.getString(ConfigKeys.JMS_HOST);
+		return "tcp://" + config.getString(ConfigKeys.JMS_HOST);
 	}
 
 	public int getJmsPort() {

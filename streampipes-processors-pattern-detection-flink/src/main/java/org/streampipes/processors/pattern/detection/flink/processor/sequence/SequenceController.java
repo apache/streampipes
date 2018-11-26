@@ -26,7 +26,6 @@ import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
 public class SequenceController extends FlinkDataProcessorDeclarer<SequenceParameters> {
 
@@ -35,17 +34,17 @@ public class SequenceController extends FlinkDataProcessorDeclarer<SequenceParam
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("sequence", "Sequence", "Detects a sequence of events in the following form: Event A followed by Event B within X seconds. In addition, both streams can be matched by a common property value (e.g., a.machineId = b.machineId)")
+    return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.sequence", "Sequence", "Detects a sequence of events in the following form: Event A followed by Event B within X seconds. In addition, both streams can be matched by a common property value (e.g., a.machineId = b.machineId)")
             .category(DataProcessorType.PATTERN_DETECT)
             .iconUrl(PatternDetectionFlinkConfig.getIconUrl("Sequence_Icon_HQ"))
             .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
             .requiredStream(StreamRequirementsBuilder.create().requiredProperty(EpRequirements.anyProperty()).build())
-            .requiredIntegerParameter(TIME_WINDOW, "Time Window Size", "Size of the time window ")
-            .requiredSingleValueSelection(TIME_UNIT, "Time Unit", "Specifies a unit for the time window of the " +
-                    "sequence. ", Options.from("sec", "min", "hrs"))
+            .requiredIntegerParameter(Labels.from(TIME_WINDOW, "Time Window Size", "Size of the time window "))
+            .requiredSingleValueSelection(Labels.from(TIME_UNIT, "Time Unit", "Specifies a unit for the time window of the " +
+                    "sequence. "), Options.from("sec", "min", "hrs"))
             .outputStrategy(OutputStrategies.keep(false))
             .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 
@@ -58,12 +57,7 @@ public class SequenceController extends FlinkDataProcessorDeclarer<SequenceParam
 
     SequenceParameters params = new SequenceParameters(graph, timeWindowSize, timeUnit);
 
-    if (PatternDetectionFlinkConfig.INSTANCE.getDebug()) {
-      return new SequenceProgram(params);
-    } else {
-      return new SequenceProgram(params, new FlinkDeploymentConfig(PatternDetectionFlinkConfig.JAR_FILE,
-              PatternDetectionFlinkConfig.INSTANCE.getFlinkHost(), PatternDetectionFlinkConfig.INSTANCE.getFlinkPort()));
-    }
+    return new SequenceProgram(params, PatternDetectionFlinkConfig.INSTANCE.getDebug());
 
   }
 }

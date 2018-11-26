@@ -16,16 +16,17 @@
 
 package org.streampipes.processors.enricher.flink.processor.timestamp;
 
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
 public class TimestampController extends FlinkDataProcessorDeclarer<TimestampParameters> {
 
@@ -33,13 +34,17 @@ public class TimestampController extends FlinkDataProcessorDeclarer<TimestampPar
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("enrich_configurable_timestamp", "Configurable Flink Timestamp Enrichment",
-            "Appends the current time in ms to the event payload using Flink")
+    return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink" +
+                    ".enrich-timestamp", "Timestamp Enricher",
+            "Appends the current time in ms to the event payload")
             .iconUrl(EnricherFlinkConfig.getIconUrl("enrich-timestamp-icon"))
-            .requiredPropertyStream1(EpRequirements.anyProperty())
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredProperty(EpRequirements.anyProperty())
+                    .build())
             .outputStrategy(OutputStrategies.append(
                     EpProperties.longEp(Labels.empty(), APPEND_PROPERTY, SO.DateTime)))
-            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedProtocols(StandardTransportFormat.standardProtocols())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }
@@ -49,16 +54,12 @@ public class TimestampController extends FlinkDataProcessorDeclarer<TimestampPar
           DataProcessorInvocation graph,
           ProcessingElementParameterExtractor extractor) {
 
-       TimestampParameters staticParam = new TimestampParameters(
+    TimestampParameters staticParam = new TimestampParameters(
             graph,
             APPEND_PROPERTY);
 
-    if (EnricherFlinkConfig.INSTANCE.getDebug()) {
-      return new TimestampProgram(staticParam);
-    } else {
-       return new TimestampProgram(staticParam, new FlinkDeploymentConfig(EnricherFlinkConfig.JAR_FILE,
-              EnricherFlinkConfig.INSTANCE.getFlinkHost(), EnricherFlinkConfig.INSTANCE.getFlinkPort()));
-    }
+
+    return new TimestampProgram(staticParam, EnricherFlinkConfig.INSTANCE.getDebug());
   }
 
 }

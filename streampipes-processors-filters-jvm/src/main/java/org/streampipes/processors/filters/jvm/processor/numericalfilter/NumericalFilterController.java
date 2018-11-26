@@ -20,36 +20,35 @@ import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.model.util.SepaUtils;
 import org.streampipes.processors.filters.jvm.config.FiltersJvmConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.sdk.helpers.Options;
-import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.helpers.*;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
 public class NumericalFilterController extends StandaloneEventProcessingDeclarer<NumericalFilterParameters> {
 
+  private static final String NUMBER_MAPPING = "number-mapping";
+  private static final String VALUE = "value";
+  private static final String OPERATION = "operation";
+
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("numericalfilter", "Numerical Filter", "Numerical Filter Description")
+    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.numericalfilter", "Numerical Filter", "Numerical Filter Description")
             .category(DataProcessorType.FILTER)
             .iconUrl(FiltersJvmConfig.getIconUrl("Numerical_Filter_Icon_HQ"))
-            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
-                    .numberReq(), Labels.from("number", "Specifies the field name where the filter operation should" +
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from(NUMBER_MAPPING, "Specifies the field name where the filter operation should" +
                     " be applied " +
                     "on.", ""), PropertyScope.NONE).build())
             .outputStrategy(OutputStrategies.keep())
-            .requiredSingleValueSelection("operation", "Filter Operation", "Specifies the filter " +
-                    "operation that should be applied on the field", Options.from("<", "<=", ">", ">=", "=="))
-            .requiredFloatParameter("value", "Threshold value", "Specifies a threshold value.", "number")
-            .supportedProtocols(SupportedProtocols.kafka())
+            .requiredSingleValueSelection(Labels.from(OPERATION, "Filter Operation", "Specifies the filter " +
+                    "operation that should be applied on the field"), Options.from("<", "<=", ">", ">=", "=="))
+            .requiredFloatParameter(Labels.from(VALUE, "Threshold value", "Specifies a threshold value."), "number")
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
 
@@ -60,8 +59,8 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
           (DataProcessorInvocation sepa) {
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
-    Double threshold = extractor.singleValueParameter("value", Double.class);
-    String stringOperation = extractor.selectedSingleValue("operation", String.class);
+    Double threshold = extractor.singleValueParameter(VALUE, Double.class);
+    String stringOperation = extractor.selectedSingleValue(OPERATION, String.class);
 
     String operation = "GT";
 
@@ -75,8 +74,7 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
       operation = "EQ";
     }
 
-    String filterProperty = SepaUtils.getMappingPropertyName(sepa,
-            "number", true);
+    String filterProperty = extractor.mappingPropertyValue(NUMBER_MAPPING);
 
     NumericalFilterParameters staticParam = new NumericalFilterParameters(sepa, threshold, NumericalOperator.valueOf
             (operation)

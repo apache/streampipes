@@ -20,6 +20,7 @@ import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.dataformat.json.JsonDataFormatFactory;
 
+import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.sinks.databases.jvm.config.DatabasesJvmConfig;
 import org.streampipes.sinks.databases.jvm.couchdb.CouchDbController;
@@ -33,6 +34,7 @@ public class DatabasesJvmInit extends StandaloneModelSubmitter {
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
+    DeclarersSingleton.getInstance().registerProtocol(new SpJmsProtocolFactory());
 
     new DatabasesJvmInit().init(DatabasesJvmConfig.INSTANCE);
   }

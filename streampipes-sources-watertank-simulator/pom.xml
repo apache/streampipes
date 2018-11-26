@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>streampipes-pipeline-elements</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.55.3-SNAPSHOT</version>
+        <version>0.60.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>streampipes-sources-watertank</artifactId>
+    <artifactId>streampipes-sources-watertank-simulator</artifactId>
 
 
     <properties>
-        <streampipes.version>0.55.3-SNAPSHOT</streampipes.version>
         <data-generator.version>1.3.1</data-generator.version>
     </properties>
 
@@ -21,22 +18,18 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sources</artifactId>
-            <version>${streampipes.version}</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sdk</artifactId>
-            <version>${streampipes.version}</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container-standalone</artifactId>
-            <version>${streampipes.version}</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
-            <version>${streampipes.version}</version>
         </dependency>
         <dependency>
             <groupId>net.acesinc.data</groupId>
@@ -46,25 +39,6 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                        <encoding>UTF-8</encoding>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.4</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -80,7 +54,7 @@
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.streampipes.examples.org.streampipes.sources.watertank.simulator.WatertankSimulatorInit</mainClass>
+                                    <mainClass>org.streampipes.sources.watertank.simulator.WatertankSimulatorInit</mainClass>
                                 </transformer>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
                             </transformers>
@@ -102,66 +76,8 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>external.atlassian.jgitflow</groupId>
-                <artifactId>jgitflow-maven-plugin</artifactId>
-                <version>1.0-m5.1</version>
-                <configuration>
-                    <flowInitContext>
-                        <masterBranchName>master</masterBranchName>
-                        <developBranchName>dev</developBranchName>
-                        <featureBranchPrefix>feature-</featureBranchPrefix>
-                        <releaseBranchPrefix>release-</releaseBranchPrefix>
-                        <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
-                        <versionTagPrefix>version-</versionTagPrefix>
-                    </flowInitContext>
-                    <noDeploy>false</noDeploy>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <pushReleases>false</pushReleases>
-                    <localOnly>true</localOnly>
-                    <squash>false</squash>
-                    <scmCommentPrefix>[RELEASE] [skip-ci]</scmCommentPrefix>
-                    <enableSshAgent>true</enableSshAgent>
-                </configuration>
-            </plugin>
         </plugins>
         <finalName>streampipes-sources-watertank-simulator</finalName>
 
     </build>
-
-    <scm>
-        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/pe-examples-sources.git
-        </developerConnection>
-    </scm>
-
-
-    <repositories>
-        <repository>
-            <id>laus</id>
-            <name>nexus repository</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
 </project>

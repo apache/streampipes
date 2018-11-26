@@ -16,7 +16,6 @@
 
 package org.streampipes.sinks.databases.flink.elasticsearch;
 
-import org.streampipes.sinks.databases.flink.config.DatabasesFlinkConfig;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
@@ -28,43 +27,41 @@ import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sinks.databases.flink.config.DatabasesFlinkConfig;
 import org.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
 public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearchParameters> {
 
-	@Override
-	public DataSinkDescription declareModel() {
-		return DataSinkBuilder.create("elasticsearch", "Elasticsearch", "Stores data in an elasticsearch cluster")
-				.category(DataSinkType.STORAGE)
-				.iconUrl(DatabasesFlinkConfig.getIconUrl("elasticsearch_icon"))
-				.requiredStream(StreamRequirementsBuilder
-						.create()
-						.requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.from("timestamp",
-								"Timestamp Property", "Timestamp Mapping"), PropertyScope.HEADER_PROPERTY)
-						.build())
-				.requiredTextParameter("index-name", "Index Name", "Elasticsearch index name property")
-				.supportedFormats(SupportedFormats.jsonFormat())
-				.supportedProtocols(SupportedProtocols.kafka())
-				.build();
-	}
+  private static final String INDEX_NAME = "index-name";
+  private static final String TIMESTAMP_MAPPING = "timestamp-mapping";
 
-	@Override
-	public FlinkDataSinkRuntime getRuntime(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
+  @Override
+  public DataSinkDescription declareModel() {
+    return DataSinkBuilder.create("org.streampipes.sinks.databases.flink.elasticsearch", "Elasticsearch", "Stores data in an elasticsearch cluster")
+            .category(DataSinkType.STORAGE)
+            .iconUrl(DatabasesFlinkConfig.getIconUrl("elasticsearch_icon"))
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.from(TIMESTAMP_MAPPING,
+                            "Timestamp Property", "Timestamp Mapping"), PropertyScope.HEADER_PROPERTY)
+                    .build())
+            .requiredTextParameter(Labels.from(INDEX_NAME, "Index Name", "Elasticsearch index name property"))
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+            .build();
+  }
 
-		String timestampField = extractor.mappingPropertyValue("timestamp");
-		String indexName = extractor.singleValueParameter("index-name", String.class);
+  @Override
+  public FlinkDataSinkRuntime<ElasticSearchParameters> getRuntime(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
 
-		ElasticSearchParameters params = new ElasticSearchParameters(graph, timestampField, indexName);
+    String timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING);
+    String indexName = extractor.singleValueParameter(INDEX_NAME, String.class);
 
+    ElasticSearchParameters params = new ElasticSearchParameters(graph, timestampField, indexName);
 
-		if (DatabasesFlinkConfig.INSTANCE.getDebug()) {
-			return new ElasticSearchProgram(params);
-		} else {
-			return new ElasticSearchProgram(params, new FlinkDeploymentConfig(DatabasesFlinkConfig.JAR_FILE,
-					DatabasesFlinkConfig.INSTANCE.getFlinkHost(), DatabasesFlinkConfig.INSTANCE.getFlinkPort()));
-		}
-	}
+    return new ElasticSearchProgram(params, DatabasesFlinkConfig.INSTANCE.getDebug());
+
+  }
 
 }

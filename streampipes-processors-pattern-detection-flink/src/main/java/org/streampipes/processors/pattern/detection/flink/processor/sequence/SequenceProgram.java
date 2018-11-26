@@ -18,19 +18,14 @@ package org.streampipes.processors.pattern.detection.flink.processor.sequence;
 
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
+import org.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 
 import java.util.Map;
 
-public class SequenceProgram extends FlinkDataProcessorRuntime<SequenceParameters> {
+public class SequenceProgram extends AbstractPatternDetectionProgram<SequenceParameters> {
 
-  public SequenceProgram(SequenceParameters params) {
-    super(params);
-  }
-
-  public SequenceProgram(SequenceParameters params, FlinkDeploymentConfig config) {
-    super(params, config);
+  public SequenceProgram(SequenceParameters params, boolean debug) {
+    super(params, debug);
   }
 
   @Override

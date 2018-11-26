@@ -24,11 +24,12 @@ import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Formats;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Protocols;
-import org.streampipes.sources.AbstractAlreadyExistingStream;
+import org.streampipes.sources.AbstractAdapterIncludedStream;
 import org.streampipes.sources.vehicle.simulator.config.VehicleSimulatorConfig;
+import org.streampipes.sources.vehicle.simulator.simulator.ExampleSourceDataSimulator;
 import org.streampipes.vocabulary.Geo;
 
-public class VehicleStream extends AbstractAlreadyExistingStream {
+public class VehicleStream extends AbstractAdapterIncludedStream {
 
   @Override
   public SpDataStream declareModel(DataSourceDescription sep) {
@@ -46,5 +47,11 @@ public class VehicleStream extends AbstractAlreadyExistingStream {
             .protocol(Protocols.kafka(VehicleSimulatorConfig.INSTANCE.getKafkaHost(), VehicleSimulatorConfig.INSTANCE.getKafkaPort(),
                     "org.streampipes.examples.sources.vehicle"))
             .build();
+  }
+
+  @Override
+  public void executeStream() {
+    Thread thread = new Thread(new ExampleSourceDataSimulator());
+    thread.start();
   }
 }

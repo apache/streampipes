@@ -57,11 +57,12 @@ public class Increase implements WindowFunction<Map<String, Object>, Map<String,
     }
     if (values.size() > 0) {
       if (operation == Operation.INCREASE) {
-        if (values.get(values.size()-1) > values.get(0) * (1 + increaseValue / 100)) {
+        if (values.get(values.size()-1) >= values.get(0) * (1 + increaseValue / 100)) {
           buildOutput(out, lastEvent);
         }
       } else {
-        if (values.get(values.size()-1) > values.get(0) * (1 - increaseValue / 100)) {
+        // 1 <= 2 - (2* (1- 10 / 100) <=> 1 <= 2*0
+        if (values.get(values.size()-1) <= values.get(0) - (values.get(values.size()-1) * (1 - (increaseValue / 100)))) {
           buildOutput(out, lastEvent);
         }
       }

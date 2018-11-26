@@ -3,6 +3,6 @@ FROM anapsix/alpine-java
 EXPOSE 8090
 ENV CONSUL_LOCATION consul
 
-ADD ./target/streampipes-examples-sources.jar  /streampipes-examples-sources.jar
+ADD target/streampipes-processors-aggregation-flink.jar  /streampipes-processing-element-container.jar
 
-ENTRYPOINT ["java", "-jar", "/streampipes-examples-sources.jar"]
+ENTRYPOINT ["java", "-jar", "/streampipes-processing-element-container.jar"]

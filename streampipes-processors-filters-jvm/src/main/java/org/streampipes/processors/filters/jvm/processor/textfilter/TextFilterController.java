@@ -41,7 +41,7 @@ public class TextFilterController extends StandaloneEventProcessingDeclarer<Text
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("textfilter", "Text Filter", "Text Filter Description")
+    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.textfilter", "Text Filter", "Text Filter Description")
             .iconUrl(FiltersJvmConfig.getIconUrl("Textual_Filter_Icon_HQ"))
             .category(DataProcessorType.FILTER)
             .requiredStream(StreamRequirementsBuilder
@@ -49,8 +49,8 @@ public class TextFilterController extends StandaloneEventProcessingDeclarer<Text
                     .requiredPropertyWithUnaryMapping(EpRequirements
                     .stringReq(), Labels.from(MAPPING_PROPERTY_ID, "Select Text Property", ""), PropertyScope.NONE)
                     .build())
-            .requiredSingleValueSelection(OPERATION_ID, "Select Operation", "", Options.from("MATCHES", "CONTAINS"))
-            .requiredTextParameter(KEYWORD_ID, "Select Keyword", "", "text")
+            .requiredSingleValueSelection(Labels.from(OPERATION_ID, "Select Operation", ""), Options.from("MATCHES", "CONTAINS"))
+            .requiredTextParameter(Labels.from(KEYWORD_ID, "Select Keyword", ""), "text")
             .outputStrategy(OutputStrategies.keep())
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())

@@ -37,12 +37,14 @@ public class ElasticSearchProgram extends FlinkDataSinkRuntime<ElasticSearchPara
     private static final long serialVersionUID = 1L;
     private static final String INDEX_NAME_PREFIX = "sp_";
 
-    public ElasticSearchProgram(ElasticSearchParameters params) {
-        super(params);
+    public ElasticSearchProgram(ElasticSearchParameters params, boolean debug) {
+        super(params, debug);
     }
 
-    public ElasticSearchProgram(ElasticSearchParameters params, FlinkDeploymentConfig config) {
-        super(params, config);
+    @Override
+    protected FlinkDeploymentConfig getDeploymentConfig() {
+        return new FlinkDeploymentConfig(DatabasesFlinkConfig.JAR_FILE,
+                DatabasesFlinkConfig.INSTANCE.getFlinkHost(), DatabasesFlinkConfig.INSTANCE.getFlinkPort());
     }
 
     @Override

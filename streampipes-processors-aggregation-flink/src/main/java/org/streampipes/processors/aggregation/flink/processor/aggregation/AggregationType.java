@@ -17,5 +17,8 @@
 package org.streampipes.processors.aggregation.flink.processor.aggregation;
 
 public enum AggregationType {
-AVG, MIN, MAX, SUM
+  AVG,
+  MIN,
+  MAX,
+  SUM
 }

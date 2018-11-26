@@ -17,34 +17,29 @@
 package org.streampipes.processors.pattern.detection.flink.processor.increase;
 
 import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
-import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
+import org.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
+import org.streampipes.processors.pattern.detection.flink.processor.common.TimestampExtractor;
 
 import java.util.Map;
 
-public class IncreaseProgram extends FlinkDataProcessorRuntime<IncreaseParameters> {
+public class IncreaseProgram extends AbstractPatternDetectionProgram<IncreaseParameters> {
 
-  public IncreaseProgram(IncreaseParameters params) {
-    super(params);
-    setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
-  }
-
-  public IncreaseProgram(IncreaseParameters params, FlinkDeploymentConfig config) {
-    super(params, config);
-    setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
+  public IncreaseProgram(IncreaseParameters params, boolean debug) {
+    super(params, debug);
   }
 
   @Override
-  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
+  public DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
+    String timestampField = params.getTimestampField();
     return dataStreams[0]
+            .assignTimestampsAndWatermarks(new TimestampExtractor(timestampField))
             .keyBy(getKeySelector())
-            .window(SlidingEventTimeWindows.of(Time.seconds(params.getDuration()), Time.seconds(1)))
+            .window(TumblingEventTimeWindows.of(Time.seconds(params.getDuration())))
             .apply(new Increase(params.getIncrease(), params.getOperation(), params.getMapping(), params
-                    .getOutputProperties(), params.getGroupBy()));
+                    .getOutputProperties(), params.getGroupBy())).setParallelism(1);
   }
 
   private KeySelector<Map<String, Object>, String> getKeySelector() {
