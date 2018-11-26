@@ -26,7 +26,6 @@ import org.streampipes.processors.imageprocessing.jvm.config.ImageProcessingJvmC
 import org.streampipes.processors.imageprocessing.jvm.processor.genericclassification.GenericImageClassificationController;
 import org.streampipes.processors.imageprocessing.jvm.processor.imagecropper.ImageCropperController;
 import org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentController;
-import org.streampipes.processors.imageprocessing.jvm.processor.imagerectification.ImageRectificationController;
 import org.streampipes.processors.imageprocessing.jvm.processor.qrreader.QrCodeReaderController;
 
 public class ImageProcessingJvmInit extends StandaloneModelSubmitter {
@@ -36,7 +35,7 @@ public class ImageProcessingJvmInit extends StandaloneModelSubmitter {
             .getInstance()
             .add(new ImageEnrichmentController())
             .add(new ImageCropperController())
-            .add(new ImageRectificationController())
+            //.add(new ImageRectificationController())
             .add(new QrCodeReaderController())
             .add(new GenericImageClassificationController());
 
