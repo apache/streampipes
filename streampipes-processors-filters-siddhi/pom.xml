@@ -28,15 +28,10 @@
 
     <artifactId>streampipes-processors-filters-siddhi</artifactId>
 
-    <properties>
-        <streampipes.version>0.55.3-SNAPSHOT</streampipes.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-wrapper-siddhi</artifactId>
-            <version>0.55.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
@@ -49,17 +44,14 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
-            <version>0.55.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-dataformat-json</artifactId>
-            <version>0.55.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
-            <version>0.55.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -78,11 +70,14 @@
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>org.streampipes.processors.siddhi.FiltersSiddhiInit</mainClass>
                                 </transformer>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>reference.conf</resource>
                                 </transformer>
                             </transformers>
