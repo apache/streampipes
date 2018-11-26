@@ -81,18 +81,18 @@ github:
   only:
     - master
 
-deploy:
-  image: maven:3-jdk-8
-  stage: deploy
-  script:
-    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
-    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn deploy -DskipTests
-  artifacts:
-    paths:
-      - ./**/*.jar
-  only:
-    - dev
+#deploy:
+#  image: maven:3-jdk-8
+#  stage: deploy
+#  script:
+#    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
+#    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+#    - mvn deploy -DskipTests
+#  artifacts:
+#    paths:
+#      - ./**/*.jar
+#  only:
+#    - dev
 
 start release:
   image: maven:3-jdk-8
