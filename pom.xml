@@ -101,7 +101,7 @@
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pipeline-elements-shared</artifactId>
-                <version>${streampipes.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
