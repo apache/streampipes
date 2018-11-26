@@ -10,7 +10,6 @@ variables:
 stages:
   - build
   - github
-#  - docker
   - deploy
   - release
   - docker-hub
