@@ -72,7 +72,7 @@ github:
   script:
     - export MVN_VERSION=$(cat ./target/mvn_version)
     - docker login -u streampipesbuild -p $DOCKER_HUB_USER_PWD
-    - docker build --no-cache --pull  -t $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:latest -t $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
+    - docker build --no-cache --pull -t $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:latest -t $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
     - docker push $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
     - docker push $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:latest
   when: manual
