@@ -1,7 +1,7 @@
 version: "2"
 services:
   processors-image-processing-jvm:
-    image: ${SP_PE_DOCKER_REGISTRY}/processors-image-processing-jvm:${SP_PE_VERSION}
+    image: ${SP_PE_DOCKER_REGISTRY}processors-image-processing-jvm:${SP_PE_VERSION}
     depends_on:
       - "consul"
 #    ports:

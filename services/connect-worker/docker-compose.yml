@@ -1,7 +1,7 @@
 version: "2"
 services:
   connect-worker:
-    image: ${SP_DOCKER_REGISTRY}/streampipes/ce/streampipes-connect-container:${SP_BACKEND_VERSION}
+    image: ${SP_DOCKER_REGISTRY}streampipes/ce/streampipes-connect-container:${SP_BACKEND_VERSION}
     depends_on:
       - consul
       - couchdb

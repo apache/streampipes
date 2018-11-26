@@ -1,7 +1,7 @@
 version: "2"
 services:
   sources-watertank-simulator:
-    image: ${SP_PE_DOCKER_REGISTRY}/sources-watertank-simulator:${SP_PE_VERSION}
+    image: ${SP_PE_DOCKER_REGISTRY}sources-watertank-simulator:${SP_PE_VERSION}
     depends_on:
       - "consul"
 #    ports:

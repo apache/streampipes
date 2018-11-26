@@ -1,7 +1,7 @@
 version: "2"
 services:
   test-connect-datasources-rest:
-    image: ${SP_DOCKER_REGISTRY}/streampipes/streampipes-connect-datasources-for-testing/master
+    image: ${SP_DOCKER_REGISTRY}streampipes/streampipes-connect-datasources-for-testing/master
     ports:
       - "3001:3001"
     networks:

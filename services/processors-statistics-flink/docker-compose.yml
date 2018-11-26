@@ -1,7 +1,7 @@
 version: "2"
 services:
   processors-statistics-flink:
-    image: ${SP_PE_DOCKER_REGISTRY}/processors-statistics-flink:${SP_PE_VERSION}
+    image: ${SP_PE_DOCKER_REGISTRY}processors-statistics-flink:${SP_PE_VERSION}
     depends_on:
       - "consul"
 #    ports:

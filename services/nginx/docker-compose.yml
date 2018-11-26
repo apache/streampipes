@@ -1,7 +1,7 @@
 version: "2"
 services:
   nginx:
-    image: ${SP_DOCKER_REGISTRY}/streampipes/ui/dev
+    image: ${SP_DOCKER_REGISTRY}streampipes/ui/dev
     ports:
       - "80:80"
     depends_on:
