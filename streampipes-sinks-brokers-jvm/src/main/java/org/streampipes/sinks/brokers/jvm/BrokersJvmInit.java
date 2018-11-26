@@ -25,7 +25,6 @@ import org.streampipes.sinks.brokers.jvm.config.BrokersJvmConfig;
 import org.streampipes.sinks.brokers.jvm.jms.JmsController;
 import org.streampipes.sinks.brokers.jvm.kafka.KafkaController;
 import org.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqController;
-import org.streampipes.sinks.brokers.jvm.rest.RestController;
 
 public class BrokersJvmInit extends StandaloneModelSubmitter {
 
@@ -34,7 +33,7 @@ public class BrokersJvmInit extends StandaloneModelSubmitter {
             .getInstance()
             .add(new KafkaController())
             .add(new JmsController())
-            .add(new RestController())
+            //.add(new RestController())
             .add(new RabbitMqController());
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
