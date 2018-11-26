@@ -186,7 +186,9 @@ export class AddCtrl {
             locals: {
                 endpointItems: endpointItems,
                 install: install,
-                getEndpointItems: this.getEndpointItems
+                getEndpointItems: () => {
+                    return this.getEndpointItems();
+                }
             },
             bindToController: true
         });

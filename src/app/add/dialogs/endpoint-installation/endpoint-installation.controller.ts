@@ -10,8 +10,9 @@ export class EndpointInstallationController {
     page: any;
     nextButton: any;
     installationRunning: any;
+    getEndpointItems: any;
 
-    constructor($mdDialog, RestApi, endpointItems, install) {
+    constructor($mdDialog, RestApi, endpointItems, install, getEndpointItems) {
         this.$mdDialog = $mdDialog;
         this.RestApi = RestApi;
         this.endpointItems = endpointItems;
@@ -23,6 +24,7 @@ export class EndpointInstallationController {
         this.install = install;
         this.nextButton = "Next";
         this.installationRunning = false;
+        this.getEndpointItems = getEndpointItems;
     }
 
     hide() {
@@ -53,7 +55,6 @@ export class EndpointInstallationController {
     }
 
 
-    // TODO: getEndpointItems not implemented
     installElement(endpointUri, index) {
         endpointUri = encodeURIComponent(endpointUri.uri);
 
@@ -74,14 +75,13 @@ export class EndpointInstallationController {
                     index++;
                     this.initiateInstallation(this.endpointItemsToInstall[index], index);
                 } else {
-                    //this.getEndpointItems();
+                    this.getEndpointItems();
                     this.nextButton = "Close";
                     this.installationRunning = false;
                 }
             });
     }
-
-    // TODO: getEndpointItems not implemented
+    
     uninstallElement(endpointUri, index) {
         this.RestApi.del(endpointUri.uri)
             .success(data => {
@@ -101,10 +101,10 @@ export class EndpointInstallationController {
                 } else {
                     this.nextButton = "Close";
                     this.installationRunning = false;
-                    //this.getEndpointItems();
+                    this.getEndpointItems();
                 }
             });
     }
 }
 
-EndpointInstallationController.$inject = ['$mdDialog', 'RestApi', 'endpointItems', 'install'];
+EndpointInstallationController.$inject = ['$mdDialog', 'RestApi', 'endpointItems', 'install', 'getEndpointItems'];
