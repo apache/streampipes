@@ -18,11 +18,15 @@ package org.streampipes.processors.transformation.flink.processor.converter;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.vocabulary.XSD;
 
 import java.util.Map;
 
 public class FieldConverter implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
+
+  private static Logger LOG = LoggerFactory.getLogger(FieldConverter.class);
 
   private String convertProperty;
   private String targetDatatype;
@@ -34,14 +38,20 @@ public class FieldConverter implements FlatMapFunction<Map<String, Object>, Map<
 
 
   @Override
-  public void flatMap(Map<String, Object> in, Collector<Map<String, Object>> out) throws Exception {
+  public void flatMap(Map<String, Object> in, Collector<Map<String, Object>> out) {
       String value = String.valueOf(in.get(convertProperty));
-      if (targetDatatype.equals(XSD._float.toString())) {
-        in.put(convertProperty, Float.parseFloat(value));
-      } else {
-        in.put(convertProperty, Integer.parseInt(value));
+      try {
+          if (targetDatatype.equals(XSD._float.toString())) {
+              in.put(convertProperty, Float.parseFloat(value));
+          } else {
+              in.put(convertProperty, Integer.parseInt(value));
+          }
+          
+          out.collect(in);
+
+      } catch (NumberFormatException e) {
+          LOG.error("Field Converter could not convert value: " + value + " of event: " + in);
       }
 
-      out.collect(in);
   }
 }
