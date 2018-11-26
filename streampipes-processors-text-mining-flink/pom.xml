@@ -12,7 +12,6 @@
     <artifactId>streampipes-processors-text-mining-flink</artifactId>
 
     <properties>
-        <streampipes.version>0.55.3-SNAPSHOT</streampipes.version>
         <opennlp.version>1.9.0</opennlp.version>
     </properties>
 

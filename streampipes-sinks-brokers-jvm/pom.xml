@@ -13,7 +13,6 @@
 
 
     <properties>
-        <streampipes.version>0.55.3-SNAPSHOT</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
     </properties>
 
