@@ -3,8 +3,8 @@
 # ARG_OPTIONAL_SINGLE([hostname],, [Set the default hostname of your server by providing the IP or DNS name], )
 # ARG_OPTIONAL_BOOLEAN([defaultip],d, [When set the first ip is used as default])
 # ARG_OPTIONAL_BOOLEAN([all],a, [Select all available StreamPipes services])
-# ARG_POSITIONAL_MULTI([operation], [The StreamPipes operation (operation-name) (service-name (optional))], 2, [], [])
-# ARG_TYPE_GROUP_SET([operation], [type string], [operation], [start,stop,restart,update,set-template,log,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,generate-compose-file])
+# ARG_POSITIONAL_MULTI([operation], [The StreamPipes operation (operation-name) (service-name (optional))], 3, [], [])
+# ARG_TYPE_GROUP_SET([operation], [type string], [operation], [start,stop,restart,update,set-template,log,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,generate-compose-file,set-env,unset-env])
 # ARG_DEFAULTS_POS
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -74,6 +74,41 @@ getIp() {
 				fi
     fi
 
+}
+
+unsetEnv() {
+	cd services
+	for dir in */ ; do
+  file="$dir"docker-compose.yml
+
+    one=${_arg_operation[1]}"="
+	  two=${_arg_operation[2]}
+
+	  result="$one$two"
+
+	  IFS=''
+
+    while read a ; do echo ${a//      - $one*/#      - $one} ; done < $file > ./$file.t ; mv $file{.t,}
+	done
+	cd ..
+}
+
+setEnv() {
+	cd services
+	for dir in */ ; do
+  	file="$dir"docker-compose.yml
+
+    one=${_arg_operation[1]}"="
+	  two=${_arg_operation[2]}
+
+	  result="$one$two"
+
+	  IFS=''
+
+	  while read a ; do echo ${a//#      - $one/      - $result} ; done < $file > ./$file.t ; mv $file{.t,}
+
+	done
+	cd ..
 }
 
 moveSystemConfig() {
@@ -331,6 +366,16 @@ fi
 if [ "$_arg_operation" = "set-template" ];
 then
     setTemplate
+fi
+
+if [ "$_arg_operation" = "set-env" ];
+then
+    setEnv
+fi
+
+if [ "$_arg_operation" = "unset-env" ];
+then
+    unsetEnv
 fi
 
 if [ "$_arg_operation" = "nil" ];

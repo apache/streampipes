@@ -8,7 +8,7 @@ services:
 #      - "8098:8090"
     environment:
       - SP_ICON_HOST=${SP_ICON_HOST}
-#      - SP_KAFKA_HOST=
+      - SP_KAFKA_HOST=${SP_KAFKA_HOST}
     networks:
       spnet:
 

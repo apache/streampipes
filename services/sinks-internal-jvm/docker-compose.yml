@@ -10,7 +10,7 @@ services:
       - STREAMPIPES_HOST=${SP_HOST}
       - SP_ICON_HOST=${SP_HOST}
       - SP_NGINX_HOST=${SP_HOST}
-#      - SP_KAFKA_HOST=
+      - SP_KAFKA_HOST=${SP_KAFKA_HOST}
     networks:
       spnet:
 

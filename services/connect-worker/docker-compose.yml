@@ -11,6 +11,7 @@ services:
       - EXECUTION_MODE=WORKER
       - SP_CONNECT_CONTAINER_HOST=connect-master      
       - SP_CONNECT_CONTAINER_WORKER=connect-worker
+      - SP_KAFKA_HOST=${SP_KAFKA_HOST}
     networks:
       spnet:
 

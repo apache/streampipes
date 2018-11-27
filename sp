@@ -3,8 +3,8 @@
 # ARG_OPTIONAL_SINGLE([hostname],[],[Set the default hostname of your server by providing the IP or DNS name],[])
 # ARG_OPTIONAL_BOOLEAN([defaultip],[d],[When set the first ip is used as default])
 # ARG_OPTIONAL_BOOLEAN([all],[a],[Select all available StreamPipes services])
-# ARG_POSITIONAL_MULTI([operation],[The StreamPipes operation (operation-name) (service-name (optional))],[2],[],[])
-# ARG_TYPE_GROUP_SET([operation],[type string],[operation],[start,stop,restart,update,set-template,log,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,generate-compose-file])
+# ARG_POSITIONAL_MULTI([operation],[The StreamPipes operation (operation-name) (service-name (optional))],[3],[],[])
+# ARG_TYPE_GROUP_SET([operation],[type string],[operation],[start,stop,restart,update,set-template,log,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,generate-compose-file,set-env,unset-env])
 # ARG_DEFAULTS_POS()
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -29,12 +29,12 @@ die()
 
 operation()
 {
-	local _allowed=("start" "stop" "restart" "update" "set-template" "log" "list-available" "list-active" "list-templates" "activate" "add" "deactivate" "clean" "remove-settings" "generate-compose-file") _seeking="$1"
+	local _allowed=("start" "stop" "restart" "update" "set-template" "log" "list-available" "list-active" "list-templates" "activate" "add" "deactivate" "clean" "remove-settings" "generate-compose-file" "set-env" "unset-env") _seeking="$1"
 	for element in "${_allowed[@]}"
 	do
 		test "$element" = "$_seeking" && echo "$element" && return 0
 	done
-	die "Value '$_seeking' (of argument '$2') doesn't match the list of allowed values: 'start', 'stop', 'restart', 'update', 'set-template', 'log', 'list-available', 'list-active', 'list-templates', 'activate', 'add', 'deactivate', 'clean', 'remove-settings' and 'generate-compose-file'" 4
+	die "Value '$_seeking' (of argument '$2') doesn't match the list of allowed values: 'start', 'stop', 'restart', 'update', 'set-template', 'log', 'list-available', 'list-active', 'list-templates', 'activate', 'add', 'deactivate', 'clean', 'remove-settings', 'generate-compose-file', 'set-env' and 'unset-env'" 4
 }
 
 
@@ -47,7 +47,7 @@ begins_with_short_option()
 
 # THE DEFAULTS INITIALIZATION - POSITIONALS
 _positionals=()
-_arg_operation=()
+_arg_operation=('' )
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_hostname=
 _arg_defaultip="off"
@@ -57,8 +57,8 @@ _arg_all="off"
 print_help()
 {
   printf '%s\n' "This script provides advanced features to run StreamPipes on your server"
-  printf 'Usage: %s [--hostname <arg>] [-d|--(no-)defaultip] [-a|--(no-)all] [-h|--help] [-v|--version] [<operation-1>] [<operation-2>]\n' "$0"
-  printf '\t%s\n' "<operation>: The StreamPipes operation (operation-name) (service-name (optional)) (defaults for <operation-1> to <operation-2> respectively: '' and '')"
+  printf 'Usage: %s [--hostname <arg>] [-d|--(no-)defaultip] [-a|--(no-)all] [-h|--help] [-v|--version] <operation-1> [<operation-2>] [<operation-3>]\n' "$0"
+  printf '\t%s\n' "<operation>: The StreamPipes operation (operation-name) (service-name (optional)) (defaults for <operation-2> to <operation-3> respectively: '' and '')"
   printf '\t%s\n' "--hostname: Set the default hostname of your server by providing the IP or DNS name (no default)"
   printf '\t%s\n' "-d, --defaultip, --no-defaultip: When set the first ip is used as default (off by default)"
   printf '\t%s\n' "-a, --all, --no-all: Select all available StreamPipes services (off by default)"
@@ -135,14 +135,16 @@ parse_commandline()
 
 handle_passed_args_count()
 {
-  test "${_positionals_count}" -le 2 || _PRINT_HELP=yes die "FATAL ERROR: There were spurious positional arguments --- we expect between 0 and 2, but got ${_positionals_count} (the last one was: '${_last_positional}')." 1
+  local _required_args_string="'operation'"
+  test "${_positionals_count}" -ge 1 || _PRINT_HELP=yes die "FATAL ERROR: Not enough positional arguments - we require between 1 and 3 (namely: $_required_args_string), but got only ${_positionals_count}." 1
+  test "${_positionals_count}" -le 3 || _PRINT_HELP=yes die "FATAL ERROR: There were spurious positional arguments --- we expect between 1 and 3 (namely: $_required_args_string), but got ${_positionals_count} (the last one was: '${_last_positional}')." 1
 }
 
 
 assign_positional_args()
 {
   local _positional_name _shift_for=$1
-  _positional_names="_arg_operation[0] _arg_operation[1] "
+  _positional_names="_arg_operation[0] _arg_operation[1] _arg_operation[2] "
 
   shift "$_shift_for"
   for _positional_name in ${_positional_names}
@@ -226,6 +228,41 @@ getIp() {
 				fi
     fi
 
+}
+
+unsetEnv() {
+	cd services
+	for dir in */ ; do
+  file="$dir"docker-compose.yml
+
+    one=${_arg_operation[1]}"="
+	  two=${_arg_operation[2]}
+
+	  result="$one$two"
+
+	  IFS=''
+
+    while read a ; do echo ${a//      - $one*/#      - $one} ; done < $file > ./$file.t ; mv $file{.t,}
+	done
+	cd ..
+}
+
+setEnv() {
+	cd services
+	for dir in */ ; do
+  	file="$dir"docker-compose.yml
+
+    one=${_arg_operation[1]}"="
+	  two=${_arg_operation[2]}
+
+	  result="$one$two"
+
+	  IFS=''
+
+	  while read a ; do echo ${a//#      - $one/      - $result} ; done < $file > ./$file.t ; mv $file{.t,}
+
+	done
+	cd ..
 }
 
 moveSystemConfig() {
@@ -483,6 +520,16 @@ fi
 if [ "$_arg_operation" = "set-template" ];
 then
     setTemplate
+fi
+
+if [ "$_arg_operation" = "set-env" ];
+then
+    setEnv
+fi
+
+if [ "$_arg_operation" = "unset-env" ];
+then
+    unsetEnv
 fi
 
 if [ "$_arg_operation" = "nil" ];
