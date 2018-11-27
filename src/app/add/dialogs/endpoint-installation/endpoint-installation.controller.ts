@@ -81,7 +81,7 @@ export class EndpointInstallationController {
                 }
             });
     }
-    
+
     uninstallElement(endpointUri, index) {
         this.RestApi.del(endpointUri.uri)
             .success(data => {
