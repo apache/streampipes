@@ -6,39 +6,50 @@
     <artifactId>${artifactId}</artifactId>
     <version>${version}</version>
 
+    <properties>
+        <sp.version>0.60.1</sp.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-commons</artifactId>
+            <version>${sp.version}</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
+            <version>${sp.version}</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-jms</artifactId>
+            <version>${sp.version}</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-dataformat-json</artifactId>
+            <version>${sp.version}</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-wrapper-standalone</artifactId>
+            <version>${sp.version}</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container-standalone</artifactId>
+            <version>${sp.version}</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sdk</artifactId>
+            <version>${sp.version}</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
-            <version>${version}</version>
+            <version>${sp.version}</version>
         </dependency>
     </dependencies>
 
