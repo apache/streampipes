@@ -4,7 +4,7 @@
 # ARG_OPTIONAL_BOOLEAN([defaultip],[d],[When set the first ip is used as default])
 # ARG_OPTIONAL_BOOLEAN([all],[a],[Select all available StreamPipes services])
 # ARG_POSITIONAL_MULTI([operation],[The StreamPipes operation (operation-name) (service-name (optional))],[3],[],[])
-# ARG_TYPE_GROUP_SET([operation],[type string],[operation],[start,stop,restart,update,set-template,log,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,generate-compose-file,set-env,unset-env])
+# ARG_TYPE_GROUP_SET([operation],[type string],[operation],[start,stop,restart,update,set-template,log,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,generate-compose-file,set-env,unset-env,create-compose])
 # ARG_DEFAULTS_POS()
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -29,12 +29,12 @@ die()
 
 operation()
 {
-	local _allowed=("start" "stop" "restart" "update" "set-template" "log" "list-available" "list-active" "list-templates" "activate" "add" "deactivate" "clean" "remove-settings" "generate-compose-file" "set-env" "unset-env") _seeking="$1"
+	local _allowed=("start" "stop" "restart" "update" "set-template" "log" "list-available" "list-active" "list-templates" "activate" "add" "deactivate" "clean" "remove-settings" "generate-compose-file" "set-env" "unset-env" "create-compose") _seeking="$1"
 	for element in "${_allowed[@]}"
 	do
 		test "$element" = "$_seeking" && echo "$element" && return 0
 	done
-	die "Value '$_seeking' (of argument '$2') doesn't match the list of allowed values: 'start', 'stop', 'restart', 'update', 'set-template', 'log', 'list-available', 'list-active', 'list-templates', 'activate', 'add', 'deactivate', 'clean', 'remove-settings', 'generate-compose-file', 'set-env' and 'unset-env'" 4
+	die "Value '$_seeking' (of argument '$2') doesn't match the list of allowed values: 'start', 'stop', 'restart', 'update', 'set-template', 'log', 'list-available', 'list-active', 'list-templates', 'activate', 'add', 'deactivate', 'clean', 'remove-settings', 'generate-compose-file', 'set-env', 'unset-env' and 'create-compose'" 4
 }
 
 
@@ -228,6 +228,22 @@ getIp() {
 				fi
     fi
 
+}
+
+createCompose() {
+  IFS=''
+
+	result=$(head -n 28 docker-compose.yml)
+
+	while read service; do
+  	result=$result"\n \n"$(tail -n +3 "services/$service/docker-compose.yml")
+	done <system
+
+	result=$result"\n \n"$(tail -n -13 docker-compose.yml)
+
+	echo -e "$result" > "docker-compose.yml-generated"
+
+	echo "New compose file is generated: docker-compose.tml-generated"
 }
 
 unsetEnv() {
@@ -527,9 +543,9 @@ then
     setEnv
 fi
 
-if [ "$_arg_operation" = "unset-env" ];
+if [ "$_arg_operation" = "create-compose" ];
 then
-    unsetEnv
+   createCompose
 fi
 
 if [ "$_arg_operation" = "nil" ];
