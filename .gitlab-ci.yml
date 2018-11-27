@@ -1,7 +1,7 @@
 variables:
   REGISTRY_HOST: ipe-wim-gitlab.fzi.de:5000
   IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH
-  DOCKER_HUB_IMAGE_NAME: streampipes/
+  DOCKER_HUB_IMAGE_NAME: streampipes
   MAVEN_CLI_OPTS: -DskipTests --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true
   HARBOR_REGISTRY_HOST: laus.fzi.de:8201
   HARBOR_IMAGE_NAME: $HARBOR_REGISTRY_HOST/$CI_PROJECT_PATH
@@ -12,8 +12,8 @@ variables:
 stages:
   - build
   - github
-#  - docker
-#  - deploy
+  - docker
+  - deploy
   - release
   - docker-hub
 
@@ -50,22 +50,22 @@ github:
     - master
 
 
-#.docker_script: &docker_script
-#   image: docker:17.06.0-ce
-#   stage: docker
-#   dependencies:
-#     - build
-#   script:
-#     - export MVN_VERSION=$(cat ./target/mvn_version)
-#     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-#     - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
-#     - docker build --no-cache --pull -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
-#     - docker push $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
-#     - docker push $IMAGE_NAME/$CONTAINER_NAME:latest
-#     - docker push $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
-#     - docker push $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest
-#   only:
-#     - dev
+.docker_script: &docker_script
+   image: docker:17.06.0-ce
+   stage: docker
+   dependencies:
+     - build
+   script:
+     - export MVN_VERSION=$(cat ./target/mvn_version)
+     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+     - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
+     - docker build --no-cache --pull -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
+     - docker push $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
+     - docker push $IMAGE_NAME/$CONTAINER_NAME:latest
+     - docker push $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
+     - docker push $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest
+   only:
+     - dev
 
 .docker_hub: &docker_hub_script
   image: docker:17.06.0-ce
@@ -81,18 +81,18 @@ github:
   only:
     - master
 
-#deploy:
-#  image: maven:3-jdk-8
-#  stage: deploy
-#  script:
-#    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
-#    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-#    - mvn deploy -DskipTests
-#  artifacts:
-#    paths:
-#      - ./**/*.jar
-#  only:
-#    - dev
+deploy:
+  image: maven:3-jdk-8
+  stage: deploy
+  script:
+    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    - mvn deploy -DskipTests
+  artifacts:
+    paths:
+      - ./**/*.jar
+  only:
+    - dev
 
 start release:
   image: maven:3-jdk-8
@@ -140,107 +140,107 @@ finish release:
     - git push origin --tags
     - git checkout master
     - git push github master
-    - git push github $MVN_VERSION
+    - git push github $CI_BUILD_REF_NAME
     - git checkout dev
     - git push github dev
   when: manual
   except:
     - master
 
-#docker-processors-aggregation-flink:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "processors-aggregation-flink"
-#
-#docker-processors-enricher-flink:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "processors-enricher-flink"
-#
-#docker-processors-filters-jvm:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "processors-filters-jvm"
-#
-#docker-processors-geo-jvm:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "processors-geo-jvm"
-#
-#docker-processors-image-processing-jvm:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "processors-image-processing-jvm"
-#
-#docker-processors-pattern-detection-flink:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "processors-pattern-detection-flink"
-#
-#docker-processors-filters-siddhi:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "processors-filters-siddhi"
-#
-#docker-processors-statistics-flink:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "processors-statistics-flink"
-#
-#docker-processors-geo-flink:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "processors-geo-flink"
-#
-#docker-processors-transformation-flink:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "processors-transformation-flink"
-#
-#docker-processors-transformation-jvm:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "processors-transformation-jvm"
-#
-#docker-sinks-brokers-jvm:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "sinks-brokers-jvm"
-#
-#docker-sinks-databases-flink:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "sinks-databases-flink"
-#
-#docker-sinks-databases-jvm:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "sinks-databases-jvm"
-#
-#docker-sinks-notifications-jvm:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "sinks-notifications-jvm"
-#
-#docker-sinks-internal-jvm:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "sinks-internal-jvm"
-#
-#docker-sources-vehicle-simulator:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "sources-vehicle-simulator"
-#
-#docker-sources-random:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "sources-random-data-generator"
-#
-#docker-sources-watertank-simulator:
-#    <<: *docker_script
-#    variables:
-#      CONTAINER_NAME: "sources-watertank-simulator"
+docker-processors-aggregation-flink:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-aggregation-flink"
+
+docker-processors-enricher-flink:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-enricher-flink"
+
+docker-processors-filters-jvm:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-filters-jvm"
+
+docker-processors-geo-jvm:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-geo-jvm"
+
+docker-processors-image-processing-jvm:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-image-processing-jvm"
+
+docker-processors-pattern-detection-flink:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-pattern-detection-flink"
+
+docker-processors-filters-siddhi:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-filters-siddhi"
+
+docker-processors-statistics-flink:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-statistics-flink"
+
+docker-processors-geo-flink:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-geo-flink"
+
+docker-processors-transformation-flink:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-transformation-flink"
+
+docker-processors-transformation-jvm:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-transformation-jvm"
+
+docker-sinks-brokers-jvm:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "sinks-brokers-jvm"
+
+docker-sinks-databases-flink:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "sinks-databases-flink"
+
+docker-sinks-databases-jvm:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "sinks-databases-jvm"
+
+docker-sinks-notifications-jvm:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "sinks-notifications-jvm"
+
+docker-sinks-internal-jvm:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "sinks-internal-jvm"
+
+docker-sources-vehicle-simulator:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "sources-vehicle-simulator"
+
+docker-sources-random:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "sources-random-data-generator"
+
+docker-sources-watertank-simulator:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "sources-watertank-simulator"
 
 
 docker-hub-processors-aggregation-flink:
