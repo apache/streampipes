@@ -183,6 +183,9 @@ docker hub:
     - docker push streampipes/backend:$MVN_VERSION
     - docker build --pull -t streampipes/backend ./streampipes-backend/
     - docker push streampipes/backend
+    - docker build --pull -t streampipes/streampipes-connect-container:latest -t streampipes/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container/
+    - docker push streampipes/streampipes-connect-container:$MVN_VERSION
+    - docker push streampipes/streampipes-connect-container:latest
   when: manual
   only:
     - master
