@@ -74,7 +74,7 @@ nginx-docker-hub:
     - docker push streampipes/ui
   when: manual
   only:
-    - 0.60.0
+    - 0.60.1
     
 nginx-testfeld:
   image: docker:17.06.0-ce
