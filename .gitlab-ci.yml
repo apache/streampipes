@@ -84,7 +84,8 @@ docker-connect-container:
      - docker push $IMAGE_NAME/streampipes-connect-container:latest
      - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
      - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:latest
-
+   only:
+     - dev
 
 deploy:
   image: maven:3-jdk-8
@@ -163,7 +164,7 @@ finish release:
     - git push origin --tags
     - git checkout master
     - git push github master
-    - git push github version-$MVN_VERSION
+    - git push github $MVN_VERSION
     - git checkout dev
     - git push github dev
 
@@ -182,6 +183,9 @@ docker hub:
     - docker push streampipes/backend:$MVN_VERSION
     - docker build --pull -t streampipes/backend ./streampipes-backend/
     - docker push streampipes/backend
+    - docker build --pull -t streampipes/streampipes-connect-container:latest -t streampipes/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container/
+    - docker push streampipes/streampipes-connect-container:$MVN_VERSION
+    - docker push streampipes/streampipes-connect-container:latest
   when: manual
   only:
     - master

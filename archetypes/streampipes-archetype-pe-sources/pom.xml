@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.60.0</version>
+        <version>0.60.1</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>streampipes-archetype-pe-sources</artifactId>
@@ -30,30 +30,4 @@
             </plugins>
         </pluginManagement>
     </build>
-
-    <scm>
-        <developerConnection>
-            scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce-backend.git/archetypes/streampipes-archetype-pe-sources
-        </developerConnection>
-    </scm>
-
-    <repositories>
-        <repository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/public/</url>
-        </repository>
-    </repositories>
-    <distributionManagement>
-        <repository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>

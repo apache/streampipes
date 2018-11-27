@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.60.0</version>
+		<version>0.60.1</version>
 	</parent>
 	<artifactId>streampipes-container</artifactId>
 	<description>Large scale event processing agents with semantic checking for combinability.

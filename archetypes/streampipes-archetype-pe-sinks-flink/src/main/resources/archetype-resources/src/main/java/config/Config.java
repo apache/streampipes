@@ -13,15 +13,12 @@ public enum Config implements PeConfig {
   private SpConfig config;
   public static final String JAR_FILE = "./streampipes-processing-element-container.jar";
 
-  private final static String service_id = "pe/${package}";
-  private final static String service_name = "${packageName}";
-  private final static String service_container_name = "${artifactId}";
-
+  private final static String SERVICE_ID = "pe/${package}";
 
   Config() {
-    config = SpConfig.getSpConfig(service_id);
+    config = SpConfig.getSpConfig(SERVICE_ID);
 
-    config.register(ConfigKeys.HOST, service_container_name, "Hostname for the pe mixed flink component");
+    config.register(ConfigKeys.HOST, "${artifactId}", "Hostname for the pe mixed flink component");
     config.register(ConfigKeys.PORT, 8090, "Port for the pe mixed flink component");
     config.register(ConfigKeys.FLINK_HOST, "jobmanager", "Host for the flink cluster");
     config.register(ConfigKeys.FLINK_PORT, 6123, "Port for the flink cluster");
@@ -30,7 +27,7 @@ public enum Config implements PeConfig {
 
     config.register(ConfigKeys.DEBUG, false, "When set to true programs are not deployed to cluster, but executed locally");
 
-    config.register(ConfigKeys.SERVICE_NAME, service_name, "The name of the service");
+    config.register(ConfigKeys.SERVICE_NAME, "${packageName}", "The name of the service");
 
   }
 
@@ -73,7 +70,7 @@ public enum Config implements PeConfig {
 
   @Override
   public String getId() {
-    return service_id;
+    return SERVICE_ID;
   }
 
   @Override
