@@ -140,7 +140,7 @@ finish release:
     - git push origin --tags
     - git checkout master
     - git push github master
-    - git push github $MVN_VERSION
+    - git push github $CI_BUILD_REF_NAME
     - git checkout dev
     - git push github dev
   when: manual
