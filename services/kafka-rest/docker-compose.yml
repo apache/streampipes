@@ -9,3 +9,4 @@ services:
       - KAFKA_REST_HOST_NAME=${SP_HOST}
       - KAFKA_REST_ZOOKEEPER_CONNECT=zookeeper:2181
     networks:
+      spnet:  
