@@ -24,15 +24,14 @@ import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.transformation.jvm.config.TransformationJvmConfig;
 import org.streampipes.processors.transformation.jvm.processor.array.count.CountArrayController;
-import org.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayController;
 
 public class TransformationJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton
             .getInstance()
-            .add(new CountArrayController())
-            .add(new SplitArrayController());
+            .add(new CountArrayController());
+            //.add(new SplitArrayController());
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());

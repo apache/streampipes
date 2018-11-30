@@ -26,12 +26,12 @@ import org.streampipes.processors.imageprocessing.jvm.config.ImageProcessingJvmC
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.sdk.helpers.TransformOperations;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -48,10 +48,9 @@ public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<Qr
                             .domainPropertyReq("https://image.com"), Labels
                             .from(IMAGE_PROPERTY, "Image", ""),
                     PropertyScope.NONE).build())
-            // TODO fix bug in transform output strategy
-            .outputStrategy(OutputStrategies.transform(TransformOperations.staticRuntimeNameTransformation
-                    (IMAGE_PROPERTY, "image"), TransformOperations.staticDomainPropertyTransformation
-                    (IMAGE_PROPERTY, "http://schema.org/text")))
+            .outputStrategy(OutputStrategies.fixed(EpProperties.timestampProperty("timestamp"),
+                    EpProperties.stringEp(Labels.from("qr-value", "QR code value", ""),
+                            "qrvalue", "http://schema.org/text")))
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();

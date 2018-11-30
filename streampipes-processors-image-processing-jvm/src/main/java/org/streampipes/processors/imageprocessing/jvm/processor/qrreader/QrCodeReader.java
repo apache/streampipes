@@ -21,12 +21,15 @@ import boofcv.alg.fiducial.qrcode.QrCode;
 import boofcv.factory.fiducial.FactoryFiducial;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayU8;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.processors.imageprocessing.jvm.processor.commons.PlainImageTransformer;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,6 +37,7 @@ import java.util.Optional;
 public class QrCodeReader extends StandaloneEventProcessorEngine<QrCodeReaderParameters> {
 
   private QrCodeReaderParameters params;
+  private static final Logger LOG = LoggerFactory.getLogger(QrCodeReader.class);
 
   public QrCodeReader(QrCodeReaderParameters params) {
     super(params);
@@ -60,9 +64,13 @@ public class QrCodeReader extends StandaloneEventProcessorEngine<QrCodeReaderPar
       List<QrCode> detections = detector.getDetections();
 
       if (detections.size() > 0) {
-        in.remove(params.getImagePropertyName());
-        in.put("qrvalue", detections.get(0).message);
-        out.onEvent(in);
+        LOG.info(detections.get(0).message);
+        Map<String, Object> outMap = new HashMap<>();
+        outMap.put("qrvalue", detections.get(0).message);
+        outMap.put("timestamp", System.currentTimeMillis());
+        out.onEvent(outMap);
+      } else {
+        LOG.info("Could not find any QR code");
       }
 
 

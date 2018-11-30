@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-pipeline-elements</artifactId>
     <packaging>pom</packaging>
-    <version>0.55.3-SNAPSHOT</version>
+    <version>0.60.2-SNAPSHOT</version>
     <modules>
         <module>streampipes-sinks-databases-jvm</module>
         <module>streampipes-sinks-internal-jvm</module>
@@ -32,7 +31,7 @@
     </modules>
 
     <properties>
-        <streampipes.version>0.60.0</streampipes.version>
+        <streampipes.version>0.60.1</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
     </properties>
 
@@ -101,11 +100,16 @@
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pipeline-elements-shared</artifactId>
-                <version>${streampipes.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-test-utils</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-siddhi</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
@@ -170,7 +174,6 @@
                         <featureBranchPrefix>feature-</featureBranchPrefix>
                         <releaseBranchPrefix>release-</releaseBranchPrefix>
                         <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
-                        <versionTagPrefix>version-</versionTagPrefix>
                     </flowInitContext>
                     <noDeploy>true</noDeploy>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
