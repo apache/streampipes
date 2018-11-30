@@ -40,12 +40,8 @@ public enum GeoJvmConfig implements PeConfig {
 
     config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
-    config.register(ConfigKeys.NGINX_HOST, "localhost", "External hostname of StreamPipes Nginx");
-    config.register(ConfigKeys.NGINX_PORT, 80, "External port of StreamPipes Nginx");
     config.register(ConfigKeys.KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");
     config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the pe sinks project");
-    config.register(ConfigKeys.ZOOKEEPER_HOST, "zookeeper", "Host for zookeeper of the pe sinks project");
-    config.register(ConfigKeys.ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe sinks project");
 
     config.registerPassword(ConfigKeys.GOOGLE_API_KEY, "", "Google API Key for the routing service");
 
@@ -90,23 +86,6 @@ public enum GeoJvmConfig implements PeConfig {
 
   public String getKafkaUrl() {
     return getKafkaHost() + ":" + getKafkaPort();
-  }
-
-  public String getZookeeperHost() {
-    return config.getString(ConfigKeys.ZOOKEEPER_HOST);
-  }
-
-  public int getZookeeperPort() {
-    return config.getInteger(ConfigKeys.ZOOKEEPER_PORT);
-  }
-
-  public String getNginxHost() {
-    return config.getString(ConfigKeys.NGINX_HOST);
-  }
-
-  public Integer getNginxPort() {
-
-    return config.getInteger(ConfigKeys.NGINX_PORT);
   }
 
   public String getGoogleApiKey() {

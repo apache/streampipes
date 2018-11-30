@@ -34,6 +34,5 @@ public final class ConfigKeys {
     final static String SIMULATION_WAIT_FOR = "SP_SIMULATION_WAIT_FOR";
     final static String ICON_HOST = "SP_ICON_HOST";
     final static String ICON_PORT = "SP_ICON_PORT";
-    final static String STREAM_CONNECT_TOPIC = "SP_STREAM_CONNECT_TOPIC";
     final static String SERVICE_NAME = "SP_SERVICE_NAME";
 }

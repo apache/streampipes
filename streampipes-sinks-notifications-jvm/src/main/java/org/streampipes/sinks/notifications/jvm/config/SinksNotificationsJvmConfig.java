@@ -41,17 +41,9 @@ public enum SinksNotificationsJvmConfig implements PeConfig {
 
     config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
-    config.register(ConfigKeys.NGINX_HOST, System.getenv("STREAMPIPES_HOST"), "External hostname of " +
-            "StreamPipes Nginx");
     config.register(ConfigKeys.NGINX_PORT, 80, "External port of StreamPipes Nginx");
     config.register(ConfigKeys.KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");
     config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the pe sinks project");
-    config.register(ConfigKeys.ZOOKEEPER_HOST, "zookeeper", "Host for zookeeper of the pe sinks project");
-    config.register(ConfigKeys.ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe sinks project");
-    config.register(ConfigKeys.COUCHDB_HOST, "couchdb", "Host for couchdb of the pe sinks project");
-    config.register(ConfigKeys.COUCHDB_PORT, 5984, "Port for couchdb of the pe sinks project");
-    config.register(ConfigKeys.JMS_HOST, "tcp://activemq", "Hostname for pe actions service for active mq");
-    config.register(ConfigKeys.JMS_PORT, 61616, "Port for pe actions service for active mq");
 
     config.register(ConfigKeys.SLACK_TOKEN, ConfigKeys.SLACK_NOT_INITIALIZED, "Token for the slack bot. Must be generated in slack");
 
@@ -106,15 +98,6 @@ public enum SinksNotificationsJvmConfig implements PeConfig {
   public String getKafkaUrl() {
     return getKafkaHost() + ":" + getKafkaPort();
   }
-
-  public String getZookeeperHost() {
-    return config.getString(ConfigKeys.ZOOKEEPER_HOST);
-  }
-
-  public int getZookeeperPort() {
-    return config.getInteger(ConfigKeys.ZOOKEEPER_PORT);
-  }
-
 
   public String getSlackToken() {
     return config.getString(ConfigKeys.SLACK_TOKEN);

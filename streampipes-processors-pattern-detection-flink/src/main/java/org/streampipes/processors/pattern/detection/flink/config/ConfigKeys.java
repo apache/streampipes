@@ -22,9 +22,6 @@ public class ConfigKeys {
     final static String PORT = "SP_PORT";
     final static String FLINK_HOST = "SP_FLINK_HOST";
     final static String FLINK_PORT = "SP_FLINK_PORT";
-    final static String ELASTIC_HOST = "SP_ELASTICSEARCH_HOST";
-    final static String ELASTIC_PORT = "SP_ELASTICSEARCH_PORT";
-    final static String ELASTIC_PORT_REST = "SP_ELASTICSEARCH_PORT_REST";
     final static String ICON_HOST = "SP_ICON_HOST";
     final static String ICON_PORT = "SP_ICON_PORT";
     final static String SERVICE_NAME = "SP_SERVICE_NAME";

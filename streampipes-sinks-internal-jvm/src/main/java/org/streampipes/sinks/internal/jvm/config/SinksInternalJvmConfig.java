@@ -45,8 +45,6 @@ public enum SinksInternalJvmConfig implements PeConfig {
 		config.register(ConfigKeys.NGINX_PORT, 80, "External port of StreamPipes Nginx");
 		config.register(ConfigKeys.KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");
 		config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the pe sinks project");
-		config.register(ConfigKeys.ZOOKEEPER_HOST, "zookeeper", "Host for zookeeper of the pe sinks project");
-		config.register(ConfigKeys.ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe sinks project");
 		config.register(ConfigKeys.COUCHDB_HOST, "couchdb", "Host for couchdb of the pe sinks project");
 		config.register(ConfigKeys.COUCHDB_PORT, 5984, "Port for couchdb of the pe sinks project");
 		config.register(ConfigKeys.JMS_HOST, "activemq", "Hostname for pe actions service for active mq");
@@ -93,14 +91,6 @@ public enum SinksInternalJvmConfig implements PeConfig {
 
 	public String getKafkaUrl() {
 		return getKafkaHost() + ":" + getKafkaPort();
-	}
-
-	public String getZookeeperHost() {
-		return config.getString(ConfigKeys.ZOOKEEPER_HOST);
-	}
-
-	public int getZookeeperPort() {
-		return config.getInteger(ConfigKeys.ZOOKEEPER_PORT);
 	}
 
 	public String getCouchDbHost() {
