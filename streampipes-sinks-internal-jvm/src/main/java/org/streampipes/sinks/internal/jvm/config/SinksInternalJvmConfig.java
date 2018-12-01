@@ -43,8 +43,6 @@ public enum SinksInternalJvmConfig implements PeConfig {
 		config.register(ConfigKeys.NGINX_HOST, System.getenv("STREAMPIPES_HOST"), "External hostname of " +
 						"StreamPipes Nginx");
 		config.register(ConfigKeys.NGINX_PORT, 80, "External port of StreamPipes Nginx");
-		config.register(ConfigKeys.KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");
-		config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the pe sinks project");
 		config.register(ConfigKeys.COUCHDB_HOST, "couchdb", "Host for couchdb of the pe sinks project");
 		config.register(ConfigKeys.COUCHDB_PORT, 5984, "Port for couchdb of the pe sinks project");
 		config.register(ConfigKeys.JMS_HOST, "activemq", "Hostname for pe actions service for active mq");
@@ -79,18 +77,6 @@ public enum SinksInternalJvmConfig implements PeConfig {
 
 	public int getIconPort() {
 		return config.getInteger(ConfigKeys.ICON_PORT);
-	}
-
-	public String getKafkaHost() {
-		return config.getString(ConfigKeys.KAFKA_HOST);
-	}
-
-	public int getKafkaPort() {
-		return config.getInteger(ConfigKeys.KAFKA_PORT);
-	}
-
-	public String getKafkaUrl() {
-		return getKafkaHost() + ":" + getKafkaPort();
 	}
 
 	public String getCouchDbHost() {

@@ -40,8 +40,6 @@ public enum GeoJvmConfig implements PeConfig {
 
     config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
-    config.register(ConfigKeys.KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");
-    config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the pe sinks project");
 
     config.registerPassword(ConfigKeys.GOOGLE_API_KEY, "", "Google API Key for the routing service");
 
@@ -74,18 +72,6 @@ public enum GeoJvmConfig implements PeConfig {
 
   public int getIconPort() {
     return config.getInteger(ConfigKeys.ICON_PORT);
-  }
-
-  public String getKafkaHost() {
-    return config.getString(ConfigKeys.KAFKA_HOST);
-  }
-
-  public int getKafkaPort() {
-    return config.getInteger(ConfigKeys.KAFKA_PORT);
-  }
-
-  public String getKafkaUrl() {
-    return getKafkaHost() + ":" + getKafkaPort();
   }
 
   public String getGoogleApiKey() {

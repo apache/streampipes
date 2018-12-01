@@ -42,10 +42,6 @@ public enum ImageProcessingJvmConfig implements PeConfig {
 
 		config.register(ICON_HOST, "backend", "Hostname for the icon host");
 		config.register(ICON_PORT, 80, "Port for the icons in nginx");
-		config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");
-		config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the pe sinks project");
-		config.register(ConfigKeys.JMS_HOST, "activemq", "Hostname for pe actions service for active mq");
-		config.register(ConfigKeys.JMS_PORT, 61616, "Port for pe actions service for active mq");
 
 		config.register(ConfigKeys.SERVICE_NAME_KEY, service_name, "The name of the service");
 
@@ -77,30 +73,6 @@ public enum ImageProcessingJvmConfig implements PeConfig {
 
 	public int getIconPort() {
 		return config.getInteger(ICON_PORT);
-	}
-
-	public String getKafkaHost() {
-		return config.getString(KAFKA_HOST);
-	}
-
-	public int getKafkaPort() {
-		return config.getInteger(KAFKA_PORT);
-	}
-
-	public String getKafkaUrl() {
-		return getKafkaHost() + ":" + getKafkaPort();
-	}
-
-	public String getJmsHost() {
-		return "tcp://" + config.getString(JMS_HOST);
-	}
-
-	public int getJmsPort() {
-		return config.getInteger(JMS_PORT);
-	}
-
-	public String getJmsUrl() {
-		return getJmsHost() + ":" + getJmsPort();
 	}
 
 	@Override

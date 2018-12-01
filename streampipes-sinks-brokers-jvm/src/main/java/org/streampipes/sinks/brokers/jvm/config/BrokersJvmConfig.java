@@ -39,10 +39,6 @@ public enum BrokersJvmConfig implements PeConfig {
 
 		config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
 		config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
-		config.register(ConfigKeys.KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");
-		config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the pe sinks project");
-		config.register(ConfigKeys.JMS_HOST, "activemq", "Hostname for pe actions service for active mq");
-		config.register(ConfigKeys.JMS_PORT, 61616, "Port for pe actions service for active mq");
 
 		config.register(ConfigKeys.SERVICE_NAME, service_name, "The name of the service");
 
@@ -73,30 +69,6 @@ public enum BrokersJvmConfig implements PeConfig {
 
 	public int getIconPort() {
 		return config.getInteger(ConfigKeys.ICON_PORT);
-	}
-
-	public String getKafkaHost() {
-		return config.getString(ConfigKeys.KAFKA_HOST);
-	}
-
-	public int getKafkaPort() {
-		return config.getInteger(ConfigKeys.KAFKA_PORT);
-	}
-
-	public String getKafkaUrl() {
-		return getKafkaHost() + ":" + getKafkaPort();
-	}
-
-	public String getJmsHost() {
-		return "tcp://" + config.getString(ConfigKeys.JMS_HOST);
-	}
-
-	public int getJmsPort() {
-		return config.getInteger(ConfigKeys.JMS_PORT);
-	}
-
-	public String getJmsUrl() {
-		return getJmsHost() + ":" + getJmsPort();
 	}
 
 	@Override

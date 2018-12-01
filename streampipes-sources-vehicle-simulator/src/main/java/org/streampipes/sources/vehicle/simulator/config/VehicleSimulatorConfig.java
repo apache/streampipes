@@ -74,10 +74,6 @@ public enum VehicleSimulatorConfig implements PeConfig {
     return config.getInteger(ConfigKeys.KAFKA_PORT);
   }
 
-  public String getKafkaUrl() {
-    return getKafkaHost() + ":" + getKafkaPort();
-  }
-
   public String getIconHost() {
     return config.getString(ConfigKeys.ICON_HOST);
   }

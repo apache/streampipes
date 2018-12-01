@@ -22,8 +22,6 @@ public class ConfigKeys {
     final static String PORT = "SP_PORT";
     final static String ICON_HOST = "SP_ICON_HOST";
     final static String ICON_PORT = "SP_ICON_PORT";
-    final static String KAFKA_HOST = "SP_KAFKA_HOST";
-    final static String KAFKA_PORT = "SP_KAFKA_PORT";
     final static String SERVICE_NAME_KEY = "SP_SERVICE_NAME";
     final static String GOOGLE_API_KEY = "SP_GOOGLE_API_KEY";
 }
