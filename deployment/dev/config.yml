@@ -8,6 +8,11 @@ modules:
   - spConnect
   - spDashboard
   - spAdd
+  - spAppFileDownload
+  - spOntology
+  - spSensors
   - spMyElements
   - spFileUpload
+  - spKvi
+  - spKviVisualization
   - spConfiguration
