@@ -31,7 +31,7 @@ public enum Config implements PeConfig {
     config.register(KAFKA_PORT, 9092, "Port for kafka of the pe sinks project");
     config.register(ZOOKEEPER_HOST, "zookeeper", "Host for zookeeper of the pe sinks project");
     config.register(ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe sinks project");
-    config.register(JMS_HOST, "tcp://activemq", "Hostname for pe actions service for active mq");
+    config.register(JMS_HOST, "activemq", "Hostname for pe actions service for active mq");
     config.register(JMS_PORT, 61616, "Port for pe actions service for active mq");
     config.register(ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ICON_PORT, 80, "Port for the icons in nginx");
@@ -75,7 +75,7 @@ public enum Config implements PeConfig {
   }
 
   public String getJmsHost() {
-    return config.getString(JMS_HOST);
+    return "tcp://" + config.getString(JMS_HOST);
   }
 
   public int getJmsPort() {
