@@ -10,7 +10,7 @@ COPY dist/main.bundle.js /usr/share/nginx/html/
 COPY dist/polyfills.bundle.js /usr/share/nginx/html/
 COPY dist/style.bundle.css /usr/share/nginx/html/
 
-COPY javadoc/ /usr/share/nginx/html/javadoc
+#COPY javadoc/ /usr/share/nginx/html/javadoc
 
 COPY nginx_config/nginx.conf /etc/nginx/nginx.conf
 COPY nginx_config/default.conf /etc/nginx/conf.d/default.conf
