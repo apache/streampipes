@@ -13,6 +13,4 @@ modules:
   - spSensors
   - spMyElements
   - spFileUpload
-  - spKvi
-  - spKviVisualization
   - spConfiguration
