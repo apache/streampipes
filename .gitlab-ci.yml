@@ -51,9 +51,9 @@ nginx:
     - apk update
     - apk add curl
     - apk add unzip
-    - 'curl -k -f -L -H "PRIVATE-TOKEN: ${API_KEY}" -o javadoc.zip "https://ipe-wim-gitlab.fzi.de/streampipes/ce/-/jobs/artifacts/dev/download?job=build"'
-    - unzip javadoc.zip
-    - mkdir javadoc && mv target/site/apidocs/* ./javadoc
+#    - 'curl -k -f -L -H "PRIVATE-TOKEN: ${API_KEY}" -o javadoc.zip "https://ipe-wim-gitlab.fzi.de/streampipes/ce/-/jobs/artifacts/dev/download?job=build"'
+#    - unzip javadoc.zip
+#    - mkdir javadoc && mv target/site/apidocs/* ./javadoc
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
     - docker login -u riemer -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST
     - docker build --no-cache --pull -t $HARBOR_IMAGE_NAME -t $IMAGE_NAME .
