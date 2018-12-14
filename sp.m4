@@ -4,7 +4,7 @@
 # ARG_OPTIONAL_BOOLEAN([defaultip],d, [When set the first ip is used as default])
 # ARG_OPTIONAL_BOOLEAN([all],a, [Select all available StreamPipes services])
 # ARG_POSITIONAL_MULTI([operation], [The StreamPipes operation (operation-name) (service-name (optional))], 3, [], [])
-# ARG_TYPE_GROUP_SET([operation], [type string], [operation], [start,stop,restart,update,set-template,log,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,generate-compose-file,set-env,unset-env,create-compose])
+# ARG_TYPE_GROUP_SET([operation], [type string], [operation], [start,stop,restart,update,set-template,log,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,set-env,unset-env,create-compose])
 # ARG_DEFAULTS_POS
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])

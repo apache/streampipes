@@ -3,4 +3,6 @@ config/
 .DS_Store
 .idea
 
+*-generated
+
 system
