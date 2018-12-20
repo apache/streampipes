@@ -16,25 +16,31 @@ limitations under the License.
 
 package org.streampipes.connect.adapter.generic.protocol.stream;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.SendToPipeline;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
+import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.AnyStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 
+
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.net.URI;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 public class HDFSProtocol extends Protocol {
 
@@ -57,6 +63,10 @@ public class HDFSProtocol extends Protocol {
 
     private ScheduledExecutorService scheduler;
     private Logger logger = LoggerFactory.getLogger(HDFSProtocol.class);
+
+    private long knownNewestFileDate;
+
+
 
 
     public HDFSProtocol() {
@@ -83,7 +93,7 @@ public class HDFSProtocol extends Protocol {
         boolean recursively = extractor.selectedMultiValues(RECURSIVELY_PROPERTY).stream()
                 .anyMatch(o -> o.equals("recursively"));
 
-        return new HDFSProtocol();
+        return new HDFSProtocol(parser, format, intervalProperty, dataPathProperty, urlProperty, recursively);
 
     }
 
@@ -116,23 +126,59 @@ public class HDFSProtocol extends Protocol {
      //   pd.addConfig(userNameProperty);
     //    pd.addConfig(passwordProperty);
         pd.addConfig(dataPathProperty);
-    //    pd.addConfig(repeatProperty);
 
         return pd;
     }
 
     @Override
     public GuessSchema getGuessSchema() {
-        return null;
+        int n = 1;
+        GuessSchema result = null;
+
+        InputStream inputStream = getInputStreamFromFile(getFiles().get(0));
+
+        List<byte[]> dataByte = parser.parseNEvents(inputStream, n);
+        if (dataByte.size() < n) {
+            logger.error("Error in HDFS Protocol! Required: " + n + " elements but the resource just had: " +
+                    dataByte.size());
+
+            dataByte.addAll(dataByte);
+        }
+        EventSchema eventSchema = parser.getEventSchema(dataByte);
+        result = SchemaGuesser.guessSchma(eventSchema, getNElements(n));
+
+
+        return result;
     }
 
     @Override
     public List<Map<String, Object>> getNElements(int n) {
-        return null;
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        InputStream inputStream = getInputStreamFromFile(getFiles().get(0));
+
+        List<byte[]> dataByte = parser.parseNEvents(inputStream, n);
+
+        // Check that result size is n. Currently just an error is logged. Maybe change to an exception
+        if (dataByte.size() < n) {
+            logger.error("Error in  HDFS Protocol! User required: " + n + " elements but the resource just had: " +
+                    dataByte.size());
+        }
+
+        for (byte[] b : dataByte) {
+            result.add(format.parse(b));
+        }
+
+        return result;
+
     }
 
     @Override
     public void run(AdapterPipeline adapterPipeline) {
+        logger.info("Start HDFS Adapter");
+
+        this.knownNewestFileDate = 0;
+
         final Runnable errorThread = () -> {
             executeProtocolLogic(adapterPipeline);
         };
@@ -140,19 +186,22 @@ public class HDFSProtocol extends Protocol {
 
         scheduler = Executors.newScheduledThreadPool(1);
         scheduler.schedule(errorThread, 0, TimeUnit.MILLISECONDS);
-
     }
 
 
     private void executeProtocolLogic(AdapterPipeline adapterPipeline) {
         final Runnable task = () -> {
             SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
-        //    InputStream data = getDataFromEndpoint();
-        // TODO Get Data
-        // 1. Get File/Files Name/Path from HDSF
-        // 2. Create InputStream for File
-        //    parser.parse(data, stk);
+
+            List<LocatedFileStatus> files = getFiles(this.knownNewestFileDate);
+            if (files.size() > 0) {
+                this.knownNewestFileDate = files.get(files.size() - 1).getModificationTime();
+                logger.info("+++ New files found, newest file Date: " + this.knownNewestFileDate + " (in milliseconds form 1970)");
+            } else
+                logger.info("No new files found");
+            files.forEach(file -> parser.parse(getInputStreamFromFile(file), stk));
         };
+
 
         scheduler = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1, this.intervalProperty, TimeUnit.SECONDS);
@@ -175,4 +224,71 @@ public class HDFSProtocol extends Protocol {
     public String getId() {
         return ID;
     }
+
+
+    private List<LocatedFileStatus> getFiles(long startDate) {
+        List<LocatedFileStatus> files = getFiles();
+
+        files = files
+                .parallelStream()
+                .filter(ftpFile -> ftpFile.getModificationTime() > startDate)
+                .sorted(((o1, o2) -> (((Long) o2.getModificationTime()).compareTo((Long) (o1.getModificationTime())))))
+                .collect(Collectors.toList());
+
+        return files;
+
+    }
+
+    private List<LocatedFileStatus> getFiles() {
+        List<LocatedFileStatus> files = new ArrayList<>();
+
+        FileSystem fs = getFilesSystem();
+        Path hdfsreadpath = new Path(this.dataPathProperty);
+
+        RemoteIterator<LocatedFileStatus> iter = null;
+        try {
+            RemoteIterator<LocatedFileStatus> inter = fs.listFiles(hdfsreadpath, this.recursively);
+            while (iter.hasNext())
+                files.add(inter.next());
+        } catch (IOException e) {
+            logger.error(e.toString());
+        } finally {
+            try {
+                fs.close();
+            } catch (IOException e) {
+                logger.error(e.toString());
+            }
+        }
+        return files;
+    }
+
+    private FileSystem getFilesSystem() {
+        FileSystem fs = null;
+        Configuration conf = new Configuration();
+        conf.set("fs.defaultFS", this.urlProperty);
+        conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
+        conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
+        System.setProperty("HADOOP_USER_NAME", "hdfs");
+        System.setProperty("hadoop.home.dir", "/");
+        try {
+             fs = FileSystem.get(URI.create(this.urlProperty), conf);
+        } catch (IOException e) {
+            logger.error(e.toString());
+        }
+        return fs;
+    }
+
+    private FSDataInputStream getInputStreamFromFile(LocatedFileStatus locatedFileStatus) {
+        FileSystem fs = getFilesSystem();
+        FSDataInputStream inputStream = null;
+        try {
+            inputStream = fs.open(locatedFileStatus.getPath());
+            fs.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return inputStream;
+    }
+
+
 }
