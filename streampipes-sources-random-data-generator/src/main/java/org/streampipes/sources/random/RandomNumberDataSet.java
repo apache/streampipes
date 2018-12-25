@@ -21,6 +21,7 @@ import org.streampipes.container.model.DataSetReplayFinishedNotifier;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.sdk.builder.DataSetBuilder;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
@@ -74,13 +75,15 @@ public class RandomNumberDataSet implements DataSetDeclarer {
   public boolean invokeRuntime(SpDataSet dataSetDescription, DataSetReplayFinishedNotifier replayFinishedNotifier) {
 
     String brokerUrl = dataSetDescription.getEventGrounding().getTransportProtocol().getBrokerHostname();
+    KafkaTransportProtocol ktp = (KafkaTransportProtocol) dataSetDescription.getEventGrounding().getTransportProtocol();
+    brokerUrl = brokerUrl + ":" + ktp.getKafkaPort();
     String topic = dataSetDescription.getEventGrounding().getTransportProtocol().getTopicDefinition()
             .getActualTopicName();
 
     this.kafkaPublisher = new SpKafkaProducer(brokerUrl, topic);
     Runnable replay = () -> {
       for(int i = 0; i < 100; i++) {
-        sendDummyMessage("{'count':" + i + "}");
+        sendDummyMessage("{\"count\":" + i + "}");
       }
     };
 
@@ -90,6 +93,7 @@ public class RandomNumberDataSet implements DataSetDeclarer {
   }
 
   private void sendDummyMessage(String message) {
+    System.out.println(message);
     this.kafkaPublisher.publish(message);
   }
 
