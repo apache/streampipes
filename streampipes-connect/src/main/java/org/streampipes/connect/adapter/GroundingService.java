@@ -17,7 +17,11 @@
 
 package org.streampipes.connect.adapter;
 
+import org.streampipes.connect.adapter.generic.GenericDataSetAdapter;
+import org.streampipes.connect.adapter.specific.SpecificDataSetAdapter;
 import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
@@ -29,13 +33,37 @@ import java.util.UUID;
 public class GroundingService {
 
     public static String extractBroker(AdapterDescription adapterDescription) {
-        String host = adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname();
-        int port = ((KafkaTransportProtocol) adapterDescription.getEventGrounding().getTransportProtocol()).getKafkaPort();
-        return host + ":" + port;
+        if (adapterDescription instanceof SpecificAdapterSetDescription) {
+            SpecificAdapterSetDescription sdsa = (SpecificAdapterSetDescription) adapterDescription;
+            String host = sdsa.getDataSet().getEventGrounding().getTransportProtocol().getBrokerHostname();
+            int port = ((KafkaTransportProtocol) adapterDescription.getEventGrounding().getTransportProtocol()).getKafkaPort();
+            return host + ":" + port;
+        } else if (adapterDescription instanceof GenericAdapterSetDescription) {
+            GenericAdapterSetDescription sdsa = (GenericAdapterSetDescription) adapterDescription;
+            String host = sdsa.getDataSet().getEventGrounding().getTransportProtocol().getBrokerHostname();
+            int port = ((KafkaTransportProtocol) adapterDescription.getEventGrounding().getTransportProtocol()).getKafkaPort();
+            return host + ":" + port;
+        } else {
+            String host = adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname();
+            int port = ((KafkaTransportProtocol) adapterDescription.getEventGrounding().getTransportProtocol()).getKafkaPort();
+            return host + ":" + port;
+        }
+
+//        String host = adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname();
+//        int port = ((KafkaTransportProtocol) adapterDescription.getEventGrounding().getTransportProtocol()).getKafkaPort();
+//        return host + ":" + port;
     }
 
     public static String extractTopic(AdapterDescription adapterDescription) {
-        return adapterDescription.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
+        if (adapterDescription instanceof SpecificAdapterSetDescription) {
+            SpecificAdapterSetDescription sdsa = (SpecificAdapterSetDescription) adapterDescription;
+            return sdsa.getDataSet().getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
+        } else if (adapterDescription instanceof GenericAdapterSetDescription) {
+            GenericAdapterSetDescription sdsa = (GenericAdapterSetDescription) adapterDescription;
+            return sdsa.getDataSet().getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
+        } else {
+            return adapterDescription.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
+        }
     }
 
     public static EventGrounding createEventGrounding(String kafkaHost, int kafkaPort, EventSchema eventSchema) {

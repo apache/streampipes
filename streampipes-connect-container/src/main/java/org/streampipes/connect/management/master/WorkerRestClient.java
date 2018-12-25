@@ -29,6 +29,7 @@ import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 public class WorkerRestClient {
@@ -45,7 +46,9 @@ public class WorkerRestClient {
     public static void stopStreamAdapter(String baseUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
         String url = baseUrl + "worker/stream/stop";
 
-        stopAdapter(adapterStreamDescription.getId(), new AdapterStorageImpl(), url);
+        AdapterDescription ad = getAdapterDescriptionById(new AdapterStorageImpl(), adapterStreamDescription.getId());
+
+        stopAdapter(adapterStreamDescription.getId(), ad, url);
     }
 
     public static void invokeSetAdapter(String baseUrl, AdapterSetDescription adapterSetDescription) throws AdapterException {
@@ -57,7 +60,7 @@ public class WorkerRestClient {
     public static void stopSetAdapter(String baseUrl, AdapterSetDescription adapterSetDescription) throws AdapterException {
         String url = baseUrl + "worker/set/stop";
 
-        stopAdapter(adapterSetDescription.getAdapterId(), new AdapterStorageImpl(), url);
+        stopAdapter(adapterSetDescription.getUri(), adapterSetDescription, url);
     }
 
     public static void startAdapter(String url, AdapterDescription ad) throws AdapterException {
@@ -86,10 +89,10 @@ public class WorkerRestClient {
     }
 
 
-    public static void stopAdapter(String adapterId, AdapterStorageImpl adapterStorage, String url) throws AdapterException {
+    public static void stopAdapter(String adapterId, AdapterDescription ad, String url) throws AdapterException {
 
         //Delete from database
-        AdapterDescription ad = adapterStorage.getAdapter(adapterId);
+//        AdapterDescription ad = getAdapterDescriptionById(adapterStorage, adapterId);
 
 //        System.out.println("blll: " + adapterId);
 
@@ -120,6 +123,18 @@ public class WorkerRestClient {
             throw new AdapterException("Adapter was not stopped successfully with url: " + url);
         }
 
+    }
+
+   private static AdapterDescription getAdapterDescriptionById(AdapterStorageImpl adapterStorage, String id) {
+        AdapterDescription adapterDescription = null;
+        List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
+        for (AdapterDescription a : allAdapters) {
+            if (a.getUri().endsWith(id)) {
+                adapterDescription = a;
+            }
+        }
+
+        return adapterDescription;
     }
 
 
