@@ -30,7 +30,9 @@ import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.List;
 
 import static groovy.xml.Entity.iexcl;
 import static groovy.xml.Entity.times;
@@ -44,6 +46,8 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ WorkerRestClient.class })
 public class SourcesManagementTest {
+    private final static String ID = "id_1234";
+
     @Before
     public  void before() {
         PowerMockito.mockStatic(WorkerRestClient.class);
@@ -52,13 +56,13 @@ public class SourcesManagementTest {
     @Test
     public void addAdapterSuccess() throws Exception {
         AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
-        when(adapterStorage.getAdapter(anyString())).thenReturn(new GenericAdapterSetDescription());
+        when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         doNothing().when(WorkerRestClient.class, "invokeSetAdapter", anyString(), any());
 
-        sourcesManagement.addAdapter("/", "id", new SpDataSet());
+        sourcesManagement.addAdapter("/", ID, new SpDataSet());
 
-        verify(adapterStorage, times(1)).getAdapter(anyString());
+        verify(adapterStorage, times(1)).getAllAdapters();
         verifyStatic(WorkerRestClient.class, times(1));
         WorkerRestClient.invokeSetAdapter(eq("/"), any());
 
@@ -67,24 +71,24 @@ public class SourcesManagementTest {
     @Test(expected = AdapterException.class)
     public void addAdapterFail() throws Exception {
         AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
-        when(adapterStorage.getAdapter(anyString())).thenReturn(new GenericAdapterSetDescription());
+        when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
 
         org.powermock.api.mockito.PowerMockito.doThrow(new AdapterException()).when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
 
-        sourcesManagement.detachAdapter("/", "id0", "id1");
+        sourcesManagement.detachAdapter("/", ID, "id1");
     }
 
     @Test
     public void detachAdapterSuccess() throws Exception {
         AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
-        when(adapterStorage.getAdapter(anyString())).thenReturn(new GenericAdapterSetDescription());
+        when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         doNothing().when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
 
-        sourcesManagement.detachAdapter("/", "id0", "id1");
+        sourcesManagement.detachAdapter("/", ID, "id1");
 
-        verify(adapterStorage, times(1)).getAdapter(anyString());
+        verify(adapterStorage, times(1)).getAllAdapters();
         verifyStatic(WorkerRestClient.class, times(1));
         WorkerRestClient.stopSetAdapter(eq("/"), any());
     }
@@ -92,19 +96,19 @@ public class SourcesManagementTest {
     @Test(expected = AdapterException.class)
     public void detachAdapterFail() throws Exception {
         AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
-        when(adapterStorage.getAdapter(anyString())).thenReturn(new GenericAdapterSetDescription());
+        when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         org.powermock.api.mockito.PowerMockito.doThrow(new AdapterException()).when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
 
-        sourcesManagement.detachAdapter("/", "id0", "id1");
+        sourcesManagement.detachAdapter("/", ID, "id1");
     }
 
     @Test
     public void getAllAdaptersInstallDescriptionSuccess() throws Exception {
-        AdapterDescription adapterDescription = new GenericAdapterSetDescription();
-        adapterDescription.setId("1234");
+
         AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
-        when(adapterStorage.getAllAdapters()).thenReturn(Arrays.asList(adapterDescription));
+        when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
+
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         sourcesManagement.setConnectHost("host");
 
@@ -116,7 +120,9 @@ public class SourcesManagementTest {
     @Test(expected = AdapterException.class)
     public void getAllAdaptersInstallDescriptionFail() throws Exception {
         AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
-        when(adapterStorage.getAllAdapters()).thenReturn(Arrays.asList(new GenericAdapterSetDescription()));
+        AdapterDescription adapterDescription = new GenericAdapterSetDescription();
+        adapterDescription.setUri(" ");
+        when(adapterStorage.getAllAdapters()).thenReturn(Arrays.asList(adapterDescription));
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         sourcesManagement.setConnectHost("host");
 
@@ -124,17 +130,27 @@ public class SourcesManagementTest {
 
     }
 
+    private List<AdapterDescription> getAdapterDescriptionList() {
+        GenericAdapterSetDescription adapterSetDescription = new GenericAdapterSetDescription();
+
+        adapterSetDescription.setUri(ID);
+        adapterSetDescription.setId(ID);
+
+
+        return Arrays.asList(adapterSetDescription);
+    }
+
 
     private String getJsonString() {
         return "[" +
                 "{" +
-                "\"uri\":\"http://host/streampipes-connect/api/v1/user@fzi.de/master/sources/1234\"," +
+                "\"uri\":\"id_1234\"," +
                 "\"name\":\"Adapter Stream\"," +
-                "\"description\":\"This stream is generated by an StreamPipes Connect adapter. ID of adapter: 1234\"," +
+                "\"description\":\"This stream is generated by an StreamPipes Connect adapter. ID of adapter: id_1234\"," +
                 "\"type\":\"source\"," +
                 "\"streams\":[" +
                 "{" +
-                "\"uri\":\"http://host/streampipes-connect/api/v1/user@fzi.de/master/sources/1234\"," +
+                "\"uri\":\"id_1234\"," +
                 "\"name\":\"GenericAdapterSetDescription\"," +
                 "\"description\":\"\"," +
                 "\"type\":\"set\"" +

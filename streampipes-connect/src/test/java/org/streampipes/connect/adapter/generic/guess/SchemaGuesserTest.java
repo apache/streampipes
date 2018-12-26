@@ -76,30 +76,30 @@ public class SchemaGuesserTest {
 
     }
 
-    @Test
-    public void getDomainPropertyProbabilityTest() {
-
-        String payload = "{\n" +
-                "  \"result\": [\n" +
-                "    {\n" +
-                "      \"class\": \"one\", \n" +
-                "      \"probability\": 1.1\n" +
-                "    }]}";
-
-        stubFor(post(urlEqualTo("/predict"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withBody(payload)));
-
-
-        String[] data = {"a"};
-        DomainPropertyProbabilityList result = SchemaGuesser.getDomainPropertyProbability(data);
-
-        assertNotNull(result.getList());
-        assertEquals(1, result.getList().size());
-        assertEquals("one", result.getList().get(0).getDomainProperty());
-        assertEquals("1.1", result.getList().get(0).getProbability());
-    }
+//    @Test
+//    public void getDomainPropertyProbabilityTest() {
+//
+//        String payload = "{\n" +
+//                "  \"result\": [\n" +
+//                "    {\n" +
+//                "      \"class\": \"one\", \n" +
+//                "      \"probability\": 1.1\n" +
+//                "    }]}";
+//
+//        stubFor(post(urlEqualTo("/predict"))
+//                .willReturn(aResponse()
+//                        .withStatus(200)
+//                        .withBody(payload)));
+//
+//
+//        String[] data = {"a"};
+//        DomainPropertyProbabilityList result = SchemaGuesser.getDomainPropertyProbability(data);
+//
+//        assertNotNull(result.getList());
+//        assertEquals(1, result.getList().size());
+//        assertEquals("one", result.getList().get(0).getDomainProperty());
+//        assertEquals("1.1", result.getList().get(0).getProbability());
+//    }
 
     @Test
     public void requestProbabilitiesObjectTest() {

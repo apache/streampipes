@@ -18,17 +18,21 @@
 package org.streampipes.connect.adapter;
 
 import org.junit.Test;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 import org.streampipes.model.grounding.*;
 
 import static org.junit.Assert.*;
 
 public class GroundingServiceTest {
 
+
     @Test
-    public void extractBrokerTest() {
-        AdapterDescription adapterDescription = getAdapterDescription();
+    public void extractBrokerForGenericAdapterSetTest() {
+        AdapterDescription adapterDescription = getGenericAdapterSetDescription();
 
         String result = GroundingService.extractBroker(adapterDescription);
 
@@ -37,8 +41,46 @@ public class GroundingServiceTest {
 
 
     @Test
-    public void extractTopicTest() {
-        AdapterDescription adapterDescription = getAdapterDescription();
+    public void extractTopicForGenericAdapterSetTest() {
+        AdapterDescription adapterDescription = getGenericAdapterSetDescription();
+
+        String result = GroundingService.extractTopic(adapterDescription);
+
+        assertEquals("test.topic", result);
+    }
+
+    @Test
+    public void extractBrokerForSpecificAdapterSetTest() {
+        AdapterDescription adapterDescription = getSpecificAdapterSetDescription();
+
+        String result = GroundingService.extractBroker(adapterDescription);
+
+        assertEquals("localhost:1111", result);
+    }
+
+
+    @Test
+    public void extractTopicForSpecificAdapterSetTest() {
+        AdapterDescription adapterDescription = getSpecificAdapterSetDescription();
+
+        String result = GroundingService.extractTopic(adapterDescription);
+
+        assertEquals("test.topic", result);
+    }
+
+    @Test
+    public void extractBrokerForStreamTest() {
+        AdapterDescription adapterDescription = getAdapterStreamDescription();
+
+        String result = GroundingService.extractBroker(adapterDescription);
+
+        assertEquals("localhost:1111", result);
+    }
+
+
+    @Test
+    public void extractTopicForStreamTest() {
+        AdapterDescription adapterDescription = getAdapterStreamDescription();
 
         String result = GroundingService.extractTopic(adapterDescription);
 
@@ -56,18 +98,43 @@ public class GroundingServiceTest {
 
     }
 
-    private AdapterDescription getAdapterDescription() {
-        AdapterDescription adapterDescription = new GenericAdapterSetDescription();
+    private AdapterDescription getAdapterStreamDescription() {
+        AdapterDescription adapterDescription = new GenericAdapterStreamDescription();
+
+        adapterDescription.setEventGrounding(getEventGrounding());
+
+        return adapterDescription;
+    }
+
+    private AdapterDescription getGenericAdapterSetDescription() {
+        GenericAdapterSetDescription adapterDescription = new GenericAdapterSetDescription();
+        SpDataSet set = new SpDataSet();
+        adapterDescription.setDataSet(set);
+
+        set.setEventGrounding(getEventGrounding());
+        return adapterDescription;
+    }
+
+    private AdapterDescription getSpecificAdapterSetDescription() {
+        SpecificAdapterSetDescription adapterDescription = new SpecificAdapterSetDescription();
+        SpDataSet set = new SpDataSet();
+        adapterDescription.setDataSet(set);
+
+        set.setEventGrounding(getEventGrounding());
+        return adapterDescription;
+    }
+
+    private EventGrounding getEventGrounding() {
         EventGrounding eventGrounding = new EventGrounding();
         KafkaTransportProtocol transportProtocol = new KafkaTransportProtocol();
         transportProtocol.setBrokerHostname("localhost");
         transportProtocol.setKafkaPort(1111);
         eventGrounding.setTransportProtocol(transportProtocol);
-        adapterDescription.setEventGrounding(eventGrounding);
 
         TopicDefinition topicDefinition = new SimpleTopicDefinition("test.topic");
         transportProtocol.setTopicDefinition(topicDefinition);
-        return adapterDescription;
+
+        return eventGrounding;
     }
 
 }

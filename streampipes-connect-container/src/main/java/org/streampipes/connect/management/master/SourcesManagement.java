@@ -85,17 +85,15 @@ public class SourcesManagement {
 
 
     public String getAllAdaptersInstallDescription(String user) throws AdapterException {
-        String host = getConnectHost();
+//        String host = getConnectHost();
 
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
         List<Description> allAdapterDescriptions = new ArrayList<>();
 
         for (AdapterDescription ad : allAdapters) {
-            URI uri = null;
+            URI uri;
             String uriString = null;
             try {
-//                uriString = "http://" + host + "/streampipes-connect/api/v1/" + user + "/master/adapters/" + ad.getId();
-//                uriString = "http://" + host + "/api/v1/" + user + "/master/sources/" + ad.getId();
                 uriString = ad.getUri();
                 uri = new URI(uriString);
             } catch (URISyntaxException e) {
@@ -176,13 +174,13 @@ public class SourcesManagement {
         return dataSourceDescription;
     }
 
-    public String getConnectHost() {
-        if (connectHost == null) {
-            return ConnectContainerConfig.INSTANCE.getConnectContainerMasterHost() + ":" + ConnectContainerConfig.INSTANCE.getConnectContainerMasterPort();
-        } else {
-            return connectHost;
-        }
-    }
+//    public String getConnectHost() {
+//        if (connectHost == null) {
+//            return ConnectContainerConfig.INSTANCE.getConnectContainerMasterHost() + ":" + ConnectContainerConfig.INSTANCE.getConnectContainerMasterPort();
+//        } else {
+//            return connectHost;
+//        }
+//    }
 
     public void setConnectHost(String connectHost) {
         this.connectHost = connectHost;
