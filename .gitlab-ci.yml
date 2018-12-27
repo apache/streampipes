@@ -25,7 +25,8 @@ build:
   script:
     - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn clean package javadoc:aggregate gpg:sign -DskipTests
+   # - mvn clean package javadoc:aggregate gpg:sign -DskipTests
+    - mvn clean package javadoc:aggregate -DskipTests
     - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
     - "echo $MVN_VERSION >> ./target/mvn_version"
   artifacts:
