@@ -3,6 +3,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {ShepherdService} from '../../../services/tour/shepherd.service';
 import {RestService} from "../../rest.service";
 import {StatusMessage} from "../../model/message/StatusMessage";
+import {GenericAdapterSetDescription} from '../../model/connect/GenericAdapterSetDescription';
+import {SpecificAdapterSetDescription} from '../../model/connect/SpecificAdapterSetDescription';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -16,6 +18,7 @@ export class AdapterStartedDialog {
     private streamDescription: any;
     private pollingActive: boolean = false;
     private runtimeData: any;
+    private isSetAdapter: boolean = false;
 
     constructor(
         public dialogRef: MatDialogRef<AdapterStartedDialog>,
@@ -28,15 +31,22 @@ export class AdapterStartedDialog {
     }
 
     startAdapter() {
+        var newAdapter = this.data.adapter;
         this.restService.addAdapter(this.data.adapter).subscribe(x => {
             this.adapterInstalled = true;
             this.adapterStatus = x;
             if (x.success) {
-                this.restService.getSourceDetails(x.notifications[0].title).subscribe(x => {
-                  this.streamDescription = x.spDataStreams[0];
-                  this.pollingActive = true;
-                  this.getLatestRuntimeInfo();
-                });
+                // Start preview on streams and message for sets
+                if (newAdapter instanceof GenericAdapterSetDescription || newAdapter instanceof SpecificAdapterSetDescription) {
+                   this.isSetAdapter = true;
+                } else {
+                    this.restService.getSourceDetails(x.notifications[0].title).subscribe(x => {
+                        this.streamDescription = x.spDataStreams[0];
+                        this.pollingActive = true;
+                        this.getLatestRuntimeInfo();
+                    });
+                }
+
             }
         });
     }
