@@ -24,13 +24,15 @@ import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.sinks.databases.jvm.config.DatabasesJvmConfig;
 import org.streampipes.sinks.databases.jvm.couchdb.CouchDbController;
+import org.streampipes.sinks.databases.jvm.postgresql.PostgreSqlController;
 
 public class DatabasesJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton
             .getInstance()
-            .add(new CouchDbController());
+            .add(new CouchDbController())
+            .add(new PostgreSqlController());
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
