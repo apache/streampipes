@@ -53,7 +53,7 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
       postgreSqlClient.save(event, LOG);
     } catch (SQLException e) {
       LOG.error(e.getMessage());
-      e.printStackTrace();
+      //e.printStackTrace();
     }
   }
 
@@ -62,6 +62,7 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
     try {
       this.postgreSqlClient.stop();
     } catch (SQLException e) {
+      LOG.warn(e.getMessage());
       e.printStackTrace();
     }
   }

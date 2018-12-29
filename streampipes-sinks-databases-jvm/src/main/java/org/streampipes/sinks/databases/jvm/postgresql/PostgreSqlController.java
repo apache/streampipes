@@ -41,7 +41,7 @@ public class PostgreSqlController  extends StandaloneEventSinkDeclarer<PostgreSq
 
   @Override
   public DataSinkDescription declareModel() {
-    //TODO: Replace Icon
+    //TODO: Replace Icon, insert defaults (for the port)
     return DataSinkBuilder.create("org.streampipes.sinks.databases.jvm.postgresql", "PostgreSQL", "Stores events in a Postgres database.")
             .category(DataSinkType.STORAGE)
             .iconUrl(DatabasesJvmConfig.getIconUrl("couchdb_icon"))
