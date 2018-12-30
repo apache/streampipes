@@ -38,19 +38,20 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
     LOG = parameters.getGraph().getLogger(PostgreSql.class);
 
     this.postgreSqlClient = new PostgreSqlClient(
-            parameters.getPostgreSqlHost(),
-            parameters.getPostgreSqlPort(),
-            parameters.getDatabaseName(),
-            parameters.getTableName(),
-            parameters.getUsername(),
-            parameters.getPassword()
+        parameters.getPostgreSqlHost(),
+        parameters.getPostgreSqlPort(),
+        parameters.getDatabaseName(),
+        parameters.getTableName(),
+        parameters.getUsername(),
+        parameters.getPassword(),
+        LOG
     );
   }
 
   @Override
   public void onEvent(Map<String, Object> event, String sourceInfo) {
     try {
-      postgreSqlClient.save(event, LOG);
+      postgreSqlClient.save(event);
     } catch (SpRuntimeException e) {
       //TODO: error or warn?
       LOG.error(e.getMessage());

@@ -131,6 +131,8 @@ public class PostgreSqlClient {
 
 	private boolean tableExists = false;
 
+	private Logger logger;
+
 	private Connection c = null;
 	private Statement  st = null;
 	private PreparedStatement ps = null;
@@ -142,17 +144,19 @@ public class PostgreSqlClient {
 
 
 	PostgreSqlClient(String postgreSqlHost,
-													Integer postgreSqlPort,
-													String databaseName,
-													String tableName,
-													String user,
-													String password) throws SpRuntimeException {
+			Integer postgreSqlPort,
+			String databaseName,
+			String tableName,
+			String user,
+			String password,
+			Logger logger) throws SpRuntimeException {
 		this.postgreSqlHost = postgreSqlHost;
 		this.postgreSqlPort = postgreSqlPort;
 		this.databaseName = databaseName;
 		this.tableName = tableName;
 		this.user = user;
 		this.password = password;
+		this.logger = logger;
 		try {
 			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
@@ -217,12 +221,11 @@ public class PostgreSqlClient {
 	 * Prepares a statement for the insertion of values or the
 	 *
 	 * @param event The event which should be saved to the Postgres table
-	 * @param LOG The logger used in this pipeline
 	 * @throws SpRuntimeException When there was an error in the saving process
 	 */
-	void save(Map<String, Object> event, Logger LOG) throws SpRuntimeException {
+	void save(Map<String, Object> event) throws SpRuntimeException {
 		if (event == null) {
-			LOG.warn("Event is null");
+			logger.warn("Event is null");
 			return;
 		}
 		if(!tableExists) {
@@ -244,9 +247,9 @@ public class PostgreSqlClient {
 				// For error codes see: https://www.postgresql.org/docs/current/errcodes-appendix.html
 				//TODO: Possible problem of infinite recursion
 				//TODO: Consider possible other exception handling strategies
-				LOG.warn("Table '" + tableName + "' was unexpectedly not found and gets recreated.");
+				logger.warn("Table '" + tableName + "' was unexpectedly not found and gets recreated.");
 				tableExists = false;
-				this.save(event, LOG);
+				this.save(event);
 			} else {
 				throw new SpRuntimeException(e.getMessage());
 			}
