@@ -15,9 +15,10 @@
  *
  */
 
-package org.streampipes.sources.random;
+package org.streampipes.sources.random.stream;
 
-import org.streampipes.container.declarer.DataStreamDeclarer;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.schema.PropertyScope;
@@ -29,10 +30,18 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Protocols;
 import org.streampipes.sdk.helpers.ValueSpecifications;
 import org.streampipes.sdk.utils.Datatypes;
-import org.streampipes.sources.config.SourcesConfig;
+import org.streampipes.sources.random.config.SourcesConfig;
+import org.streampipes.sources.random.model.MessageConfig;
+import org.streampipes.sources.random.model.MessageResult;
+import org.streampipes.vocabulary.Geo;
 import org.streampipes.vocabulary.SO;
 
-public class ComplexRandomStream implements DataStreamDeclarer {
+import java.util.Arrays;
+import java.util.List;
+
+public class ComplexRandomStream extends RandomNumberStream {
+
+  private static final String TOPIC = "SEPA.SEP.Random.Complex.Json";
 
   @Override
   public SpDataStream declareModel(DataSourceDescription sep) {
@@ -62,16 +71,45 @@ public class ComplexRandomStream implements DataStreamDeclarer {
                     SO.Number, ValueSpecifications.from(0.0f, 1.0f, 1.f)))
             .property(EpProperties.integerEp(Labels.withTitle("integer", "integerDescription"), "testInteger",
                     SO.Number, ValueSpecifications.from(10.0f, 100.0f, 10.0f)))
+            .property(EpProperties.nestedEp(Labels.from("location", "", ""), "location-property",
+                    EpProperties.doubleEp(Labels.withId("latitude"), "latitude", Geo
+                            .lat),
+                    EpProperties.doubleEp(Labels.withId("longitude"), "longitude", Geo.lng)))
             .build();
   }
 
   @Override
-  public void executeStream() {
-
+  protected MessageResult getMessage(MessageConfig messageConfig) {
+    try {
+      return new MessageResult(
+              buildJson(messageConfig.getTimestamp(), messageConfig.getCounter())
+                      .toString()
+                      .getBytes(), TOPIC);
+    } catch (JSONException e) {
+      e.printStackTrace();
+      return new MessageResult(false);
+    }
   }
 
-  @Override
-  public boolean isExecutable() {
-    return false;
+  private JSONObject buildJson(long timestamp, int counter) throws JSONException {
+    JSONObject json = new JSONObject();
+
+    json.put("timestamp", timestamp);
+    json.put("testMeasurement", random.nextInt(100));
+    json.put("testDimension", random.nextInt(10));
+    json.put("string", getString(Arrays.asList("A", "B", "C")));
+    json.put("string2", getString(Arrays.asList("A", "B", "C", "D")));
+    json.put("integer", getInteger(0, 1, 1));
+    json.put("integer2", getInteger(10, 100, 10));
+    return json;
   }
+
+  private Integer getInteger(int min, int max, int step) {
+    return (Math.round(random.nextInt(max - min + 1) / step) * step) + min;
+  }
+
+  private String getString(List<String> strings) {
+    return strings.get(random.nextInt(strings.size()));
+  }
+
 }

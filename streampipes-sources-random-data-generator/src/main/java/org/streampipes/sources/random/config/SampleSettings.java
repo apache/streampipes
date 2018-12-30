@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.sources.config;
+package org.streampipes.sources.random.config;
 
 import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.KafkaTransportProtocol;

@@ -14,11 +14,10 @@
  * limitations under the License.
  *
  */
-package org.streampipes.sources.random;
+package org.streampipes.sources.random.stream;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.schema.PropertyScope;
@@ -29,10 +28,13 @@ import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Formats;
 import org.streampipes.sdk.helpers.Protocols;
 import org.streampipes.sdk.utils.Datatypes;
-import org.streampipes.sources.config.SourcesConfig;
+import org.streampipes.sources.random.config.SourcesConfig;
+import org.streampipes.sources.random.model.MessageConfig;
+import org.streampipes.sources.random.model.MessageResult;
 
 import java.net.URI;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class RandomNumberStreamWildcard extends RandomNumberStream {
 
@@ -44,17 +46,8 @@ public class RandomNumberStreamWildcard extends RandomNumberStream {
 
   private static final List<String> sensorIds = Arrays.asList("sensor1", "sensor2");
   private static final List<String> machineIds = Arrays.asList("machine1", "machine2", "machine3");
-  private static final List<String> assemblyLineIds =  Arrays.asList("assemblyLine1", "assemblyLine2");
+  private static final List<String> assemblyLineIds = Arrays.asList("assemblyLine1", "assemblyLine2");
   private static final List<String> facilityIds = Arrays.asList("facility1", "facility2");
-
-  private Random random;
-  private Map<String, SpKafkaProducer> producerMap;
-
-  public RandomNumberStreamWildcard() {
-    super();
-    this.random = new Random();
-    this.producerMap = new HashMap<>();
-  }
 
   @Override
   public SpDataStream declareModel(DataSourceDescription sep) {
@@ -103,8 +96,8 @@ public class RandomNumberStreamWildcard extends RandomNumberStream {
             .format(Formats.jsonFormat())
             .protocol(Protocols.kafka(SourcesConfig.INSTANCE.getKafkaHost(), SourcesConfig.INSTANCE.getKafkaPort(),
                     WildcardTopicBuilder
-                            .create("org.streampipes.company.$facilityId.$assemblyLineId.$afagor" +
-                            ".$machineId.$pressure.$sensorId")
+                            .create("org.streampipes.company.$facilityId.$assemblyLineId.$afagor"
+                                    + ".$machineId.$pressure.$sensorId")
                             .addLocationIdMapping(FACILITY_ID_NAME)
                             .addLocationIdMapping(ASSEMBLY_LINE_ID_NAME)
                             .addSensorIdMapping(SENSOR_ID_NAME)
@@ -112,79 +105,42 @@ public class RandomNumberStreamWildcard extends RandomNumberStream {
                             .addPlatformTypeMapping("afagor")
                             .addSensorTypeMapping("pressure")
                             .build()))
-
             .build();
-
   }
 
   @Override
-  protected Optional<byte[]> getMessage(long nanoTime, int randomNumber, int counter) {
+  protected MessageResult getMessage(MessageConfig messageConfig) {
     try {
-      return Optional.of(
-              buildJson(nanoTime, randomNumber, counter)
-                      .toString()
-                      .getBytes());
+      JSONObject message = buildJson(messageConfig.getTimestamp());
+      return new MessageResult(message
+              .toString()
+              .getBytes(), getTopic(message));
     } catch (JSONException e) {
       e.printStackTrace();
-      return Optional.empty();
+      return new MessageResult(false);
     }
-  }
-
-  @Override
-  public void executeStream() {
-
-    Runnable r = new Runnable() {
-
-      @Override
-      public void run() {
-        Random random = new Random();
-        int j = 0;
-        for (int i = 0; i < SourcesConfig.INSTANCE.getMaxEvents(); i++) {
-          try {
-            if (j % 50 == 0) {
-              System.out.println(j +" Events (Random Number) sent.");
-            }
-            JSONObject jsonObject = buildJson(System.currentTimeMillis(), random.nextInt(100), j);
-            String topic = getTopic(jsonObject);
-            getKafkaProducer(topic).publish(jsonObject.toString().getBytes());
-            Thread.sleep(SIMULATION_DELAY_MS, SIMULATION_DELAY_NS);
-            if (j % SourcesConfig.INSTANCE.getSimulationWaitEvery() == 0) {
-              Thread.sleep(SourcesConfig.INSTANCE.getSimulationWaitFor());
-            }
-            j++;
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        }
-      }
-    };
-    Thread thread = new Thread(r);
-    thread.start();
-
   }
 
   private String getTopic(JSONObject jsonObject) throws JSONException {
     return "org.streampipes.company."
-            +jsonObject.getString(FACILITY_ID_NAME)
-            +"."
-            +jsonObject.getString(ASSEMBLY_LINE_ID_NAME)
-            +".afagor"
-            +"."
-            +jsonObject.getString(MACHINE_ID_NAME)
-            +".pressure."
-            +jsonObject.getString(SENSOR_ID_NAME);
+            + jsonObject.getString(FACILITY_ID_NAME)
+            + "."
+            + jsonObject.getString(ASSEMBLY_LINE_ID_NAME)
+            + ".afagor"
+            + "."
+            + jsonObject.getString(MACHINE_ID_NAME)
+            + ".pressure."
+            + jsonObject.getString(SENSOR_ID_NAME);
   }
 
-  private JSONObject buildJson(long timestamp, int randomNumber, int counter) throws JSONException {
+  private JSONObject buildJson(long timestamp) throws JSONException {
     JSONObject json = new JSONObject();
-
     json.put("timestamp", timestamp);
     json.put(SENSOR_ID_NAME, getRandom(sensorIds));
     json.put(MACHINE_ID_NAME, getRandom(machineIds));
     json.put(FACILITY_ID_NAME, getRandom(facilityIds));
     json.put(ASSEMBLY_LINE_ID_NAME, getRandom(assemblyLineIds));
-    json.put(PRESSURE_NAME, randomNumber);
-    System.out.println(json.toString());
+    json.put(PRESSURE_NAME, random.nextInt(10));
     return json;
   }
 
@@ -192,16 +148,6 @@ public class RandomNumberStreamWildcard extends RandomNumberStream {
     return values.get(random.nextInt(values.size()));
   }
 
-  @Override
-  public SpKafkaProducer getKafkaProducer(String topic) {
-    if (producerMap.containsKey(topic)) {
-      return producerMap.get(topic);
-    } else {
-      SpKafkaProducer producer = new SpKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), topic);
-      producerMap.put(topic, producer);
-      return producer;
-    }
-  }
 
   public static void main(String[] args) {
     new RandomNumberStreamJson().executeStream();

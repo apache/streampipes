@@ -15,13 +15,18 @@
  *
  */
 
-package org.streampipes.sources.random;
+package org.streampipes.sources.random.source;
 
 import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.sources.random.set.RandomNumberDataSet;
+import org.streampipes.sources.random.stream.ComplexRandomStream;
+import org.streampipes.sources.random.stream.RandomNumberStreamJson;
+import org.streampipes.sources.random.stream.RandomNumberStreamList;
+import org.streampipes.sources.random.stream.RandomNumberStreamWildcard;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RandomDataProducer implements SemanticEventProducerDeclarer {
@@ -32,20 +37,12 @@ public class RandomDataProducer implements SemanticEventProducerDeclarer {
     return sep;
   }
 
-
   @Override
   public List<DataStreamDeclarer> getEventStreams() {
-
-    List<DataStreamDeclarer> streams = new ArrayList<>();
-
-    //streams.add(new RandomTextStream());
-    streams.add(new RandomNumberStreamJson());
-    streams.add(new RandomNumberStreamList());
-//		streams.add(new ComplexRandomStream());
-    streams.add(new RandomNumberStreamWildcard());
-    streams.add(new RandomNumberDataSet());
-
-
-    return streams;
+    return Arrays.asList(new RandomNumberStreamJson(),
+            new RandomNumberStreamList(),
+            new RandomNumberStreamWildcard(),
+            new RandomNumberDataSet(),
+            new ComplexRandomStream());
   }
 }

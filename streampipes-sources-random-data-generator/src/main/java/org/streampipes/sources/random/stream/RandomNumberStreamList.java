@@ -15,10 +15,9 @@
  *
  */
 
-package org.streampipes.sources.random;
+package org.streampipes.sources.random.stream;
 
 import org.codehaus.jettison.json.JSONObject;
-import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
@@ -26,19 +25,18 @@ import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Formats;
 import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.sources.config.SampleSettings;
-import org.streampipes.sources.config.SourcesConfig;
+import org.streampipes.sources.random.config.SampleSettings;
+import org.streampipes.sources.random.model.MessageConfig;
+import org.streampipes.sources.random.model.MessageResult;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
-public class RandomNumberStreamList implements EventStreamDeclarer {
+public class RandomNumberStreamList extends RandomNumberStream {
 
   private SpKafkaProducer kafkaProducer;
 
-  private static final String topic = "de.fzi.random.number.list";
+  private static final String TOPIC = "de.fzi.random.number.list";
 
   @Override
   public SpDataStream declareModel(DataSourceDescription sep) {
@@ -46,7 +44,7 @@ public class RandomNumberStreamList implements EventStreamDeclarer {
     return DataStreamBuilder.create("random-list", "Random Number (List)", "Random number stream " +
             "to test list-based properties")
             .format(Formats.jsonFormat())
-            .protocol(SampleSettings.kafkaProtocol(topic))
+            .protocol(SampleSettings.kafkaProtocol(TOPIC))
             .property(EpProperties.integerEp(Labels.empty(), "timestamp", "http://schema.org/DateTime"))
             .property(EpProperties.integerEp(Labels.empty(), "counter", "http://schema.org/counter"))
             .property(EpProperties.listIntegerEp(Labels.empty(), "listValues", "http://schema.org/random"))
@@ -54,59 +52,25 @@ public class RandomNumberStreamList implements EventStreamDeclarer {
   }
 
   @Override
-  public void executeStream() {
-    kafkaProducer = new SpKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), topic);
-
-    Runnable r = new Runnable() {
-
-      @Override
-      public void run() {
-        Random random = new Random();
-        int j = 0;
-        for (;;) {
-          try {
-            if (j % 10000 == 0) {
-              System.out.println(j +" Events (Random Number) sent.");
-            }
-            Optional<byte[]> nextMsg = getMessage(System.currentTimeMillis(), j);
-            nextMsg.ifPresent(bytes -> kafkaProducer.publish(bytes));
-            Thread.sleep(1000);
-            j++;
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        }
-      }
-    };
-    Thread thread = new Thread(r);
-    thread.start();
-
-  }
-
-  private Optional<byte[]> getMessage(long timestamp, int counter) {
+  protected MessageResult getMessage(MessageConfig messageConfig) {
     try {
       JSONObject json = new JSONObject();
-      json.put("timestamp", timestamp);
-      json.put("counter", counter);
+      json.put("timestamp", messageConfig.getTimestamp());
+      json.put("counter", messageConfig.getCounter());
       json.put("listValues", buildRandomList());
 
-      return Optional.of(json.toString().getBytes());
+      return new MessageResult(json.toString().getBytes(), TOPIC);
     } catch (Exception e) {
-      return Optional.empty();
+      return new MessageResult(false);
     }
   }
 
   private List<Integer> buildRandomList() {
-    Random random = new Random();
     List<Integer> result = new ArrayList<>();
-    for(int i = 0; i <= 20; i++) {
+    for (int i = 0; i <= 20; i++) {
       result.add(random.nextInt(20));
     }
     return result;
   }
 
-  @Override
-  public boolean isExecutable() {
-    return true;
-  }
 }

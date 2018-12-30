@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.sources.config;
+package org.streampipes.sources.random.config;
 
 public final class ConfigKeys {
 

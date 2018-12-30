@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.sources.config;
+package org.streampipes.sources.random.config;
 
 import org.streampipes.config.SpConfig;
 import org.streampipes.container.model.PeConfig;

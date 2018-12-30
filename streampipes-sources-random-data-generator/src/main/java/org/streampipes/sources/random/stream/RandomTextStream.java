@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.sources.random;
+package org.streampipes.sources.random.stream;
 
 
 import org.streampipes.container.declarer.EventStreamDeclarer;

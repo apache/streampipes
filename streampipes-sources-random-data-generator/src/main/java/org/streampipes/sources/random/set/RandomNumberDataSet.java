@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package org.streampipes.sources.random;
+package org.streampipes.sources.random.set;
 
 import org.streampipes.container.declarer.DataSetDeclarer;
 import org.streampipes.container.model.DataSetReplayFinishedNotifier;

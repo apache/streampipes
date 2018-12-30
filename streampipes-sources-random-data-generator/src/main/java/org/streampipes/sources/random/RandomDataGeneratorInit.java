@@ -19,7 +19,8 @@ package org.streampipes.sources.random;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
-import org.streampipes.sources.config.SourcesConfig;
+import org.streampipes.sources.random.config.SourcesConfig;
+import org.streampipes.sources.random.source.RandomDataProducer;
 
 public class RandomDataGeneratorInit extends StandaloneModelSubmitter {
 

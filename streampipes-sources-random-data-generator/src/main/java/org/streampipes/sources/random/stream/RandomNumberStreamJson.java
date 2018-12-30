@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.sources.random;
+package org.streampipes.sources.random.stream;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -23,17 +23,13 @@ import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.helpers.Formats;
-import org.streampipes.sources.config.SampleSettings;
-
-import java.util.Optional;
+import org.streampipes.sources.random.config.SampleSettings;
+import org.streampipes.sources.random.model.MessageConfig;
+import org.streampipes.sources.random.model.MessageResult;
 
 public class RandomNumberStreamJson extends RandomNumberStream {
 
-  public static final String TOPIC = "SEPA.SEP.Random.Number.Json";
-
-  public RandomNumberStreamJson() {
-    super(TOPIC);
-  }
+  private static final String TOPIC = "SEPA.SEP.Random.Number.Json";
 
   @Override
   public SpDataStream declareModel(DataSourceDescription sep) {
@@ -43,27 +39,26 @@ public class RandomNumberStreamJson extends RandomNumberStream {
             .format(Formats.jsonFormat())
             .protocol(SampleSettings.kafkaProtocol(TOPIC))
             .build();
-
   }
 
   @Override
-  protected Optional<byte[]> getMessage(long nanoTime, int randomNumber, int counter) {
+  protected MessageResult getMessage(MessageConfig messageConfig) {
     try {
-      return Optional.of(
-              buildJson(nanoTime, randomNumber, counter)
+      return new MessageResult(
+              buildJson(messageConfig.getTimestamp(), messageConfig.getCounter())
                       .toString()
-                      .getBytes());
+                      .getBytes(), TOPIC);
     } catch (JSONException e) {
       e.printStackTrace();
-      return Optional.empty();
+      return new MessageResult(false);
     }
   }
 
-  private JSONObject buildJson(long timestamp, int randomNumber, int counter) throws JSONException {
+  private JSONObject buildJson(long timestamp, int counter) throws JSONException {
     JSONObject json = new JSONObject();
 
     json.put("timestamp", timestamp);
-    json.put("randomValue", randomNumber);
+    json.put("randomValue", random.nextInt(100));
     json.put("randomString", randomString());
     json.put("count", counter);
     return json;
