@@ -141,7 +141,7 @@ public class PostgreSqlClient {
 	private HashMap<String, Parameterinfo> parameters = new HashMap<>();
 
 
-	public PostgreSqlClient(String postgreSqlHost,
+	PostgreSqlClient(String postgreSqlHost,
 													Integer postgreSqlPort,
 													String databaseName,
 													String tableName,
@@ -220,7 +220,7 @@ public class PostgreSqlClient {
 	 * @param LOG The logger used in this pipeline
 	 * @throws SpRuntimeException When there was an error in the saving process
 	 */
-	public void save(Map<String, Object> event, Logger LOG) throws SpRuntimeException {
+	void save(Map<String, Object> event, Logger LOG) throws SpRuntimeException {
 		if (event == null) {
 			LOG.warn("Event is null");
 			return;
@@ -341,7 +341,7 @@ public class PostgreSqlClient {
 	/**
 	 * Closes all open connections and statements of JDBC
 	 */
-	public void stop() throws SQLException {
+	void stop() throws SQLException {
 		if(st != null) {
 			st.close();
 		}

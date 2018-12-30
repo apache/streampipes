@@ -52,6 +52,7 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
     try {
       postgreSqlClient.save(event, LOG);
     } catch (SpRuntimeException e) {
+      //TODO: error or warn?
       LOG.error(e.getMessage());
       //e.printStackTrace();
     }
@@ -63,7 +64,7 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
       postgreSqlClient.stop();
     } catch (SQLException e) {
       LOG.warn(e.getMessage());
-      e.printStackTrace();
+      //e.printStackTrace();
     }
   }
 }
