@@ -160,7 +160,7 @@ public class PostgreSqlClient {
 		try {
 			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			throw new SpRuntimeException("PostgreSql Driver not found.");
 		}
 		validate();
 		connect();
@@ -212,6 +212,7 @@ public class PostgreSqlClient {
 			}
 			//TODO: printStackTrace() always needed?
 			e.printStackTrace();
+			//TODO: Or throw the original SQLException (also in the following cases)?
 			throw new SpRuntimeException(e.getMessage());
 		}
 	}
@@ -225,8 +226,7 @@ public class PostgreSqlClient {
 	 */
 	void save(Map<String, Object> event) throws SpRuntimeException {
 		if (event == null) {
-			logger.warn("Event is null");
-			return;
+			throw new SpRuntimeException("event is null");
 		}
 		if(!tableExists) {
 			// Creates the table (executeUpdate might throw a SQLException)
@@ -271,6 +271,7 @@ public class PostgreSqlClient {
 		}
 		for (Map.Entry<String, Object> pair : event.entrySet()) {
 			if(!parameters.containsKey(pair.getKey())) {
+				//TODO: start the for loop all over again
 				generatePreparedStatement(event);
 			}
 			Parameterinfo p = parameters.get(pair.getKey());
