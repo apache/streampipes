@@ -51,7 +51,7 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
   public void onEvent(Map<String, Object> event, String sourceInfo) {
     try {
       postgreSqlClient.save(event, LOG);
-    } catch (SQLException e) {
+    } catch (SpRuntimeException e) {
       LOG.error(e.getMessage());
       //e.printStackTrace();
     }
@@ -60,7 +60,7 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
   @Override
   public void discard() throws SpRuntimeException {
     try {
-      this.postgreSqlClient.stop();
+      postgreSqlClient.stop();
     } catch (SQLException e) {
       LOG.warn(e.getMessage());
       e.printStackTrace();
