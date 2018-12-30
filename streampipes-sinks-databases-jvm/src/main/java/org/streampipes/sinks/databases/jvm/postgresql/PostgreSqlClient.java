@@ -35,6 +35,26 @@ public class PostgreSqlClient {
 	// (https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS)
 	private static final String allowedRegEx = "^[a-zA-Z_][a-zA-Z0-9_]*$";
 
+	private Integer postgreSqlPort;
+	private String postgreSqlHost;
+	private String databaseName;
+	private String tableName;
+	private String user;
+	private String password;
+
+	private boolean tableExists = false;
+
+	private Logger logger;
+
+	private Connection c = null;
+	private Statement  st = null;
+	private PreparedStatement ps = null;
+
+	/**
+	 * The parameters in the prepared statement {@code ps} together with their index and data type
+	 */
+	private HashMap<String, Parameterinfo> parameters = new HashMap<>();
+
 	/**
 	 * A wrapper class for all supported SQL data types (INT, BIGINT, FLOAT, DOUBLE, VARCHAR(255)).
 	 * If no matching type is found, it is interpreted as a String (VARCHAR(255))
@@ -121,26 +141,6 @@ public class PostgreSqlClient {
 			this.type = type;
 		}
 	}
-
-	private Integer postgreSqlPort;
-	private String postgreSqlHost;
-	private String databaseName;
-	private String tableName;
-	private String user;
-	private String password;
-
-	private boolean tableExists = false;
-
-	private Logger logger;
-
-	private Connection c = null;
-	private Statement  st = null;
-	private PreparedStatement ps = null;
-
-	/**
-	 * The parameters in the prepared statement {@code ps} together with their index and data type
-	 */
-	private HashMap<String, Parameterinfo> parameters = new HashMap<>();
 
 
 	PostgreSqlClient(String postgreSqlHost,
