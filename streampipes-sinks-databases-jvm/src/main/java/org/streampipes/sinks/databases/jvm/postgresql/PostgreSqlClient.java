@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 FZI Forschungszentrum Informatik
+ * Copyright 2018 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,8 +97,9 @@ public class PostgreSqlClient {
 		 * @param p The needed info about the parameter (index and type)
 		 * @param value The value of the object, which should be filled in the
 		 * @param ps The prepared statement, which will be filled
-		 * @throws SQLException When the setters of the statement throw an exception ({@code setInt, ...})
 		 * @throws SpRuntimeException When the data type in {@code p} is unknown
+		 * @throws SQLException When the setters of the statement throw an
+     * exception (e.g. {@code setInt()})
 		 */
 		public static void setValue(Parameterinfo p, Object value, PreparedStatement ps)
 												throws SQLException, SpRuntimeException {
@@ -176,10 +177,12 @@ public class PostgreSqlClient {
 		// Validates the database name and the attributes
 		if (!postgreSqlHost.matches("[a-zA-Z0-9./]*")) {
 			//TODO: How can the hostname look like?
-			throw new SpRuntimeException("Error: Hostname '" + postgreSqlHost + "' not allowed (allowed: '[a-zA-Z0-9./]*)'");
+			throw new SpRuntimeException("Error: Hostname '" + postgreSqlHost
+					+ "' not allowed (allowed: '[a-zA-Z0-9./]*')");
 		}
 		if (!databaseName.matches(PostgreSqlClient.allowedRegEx)) {
-			throw new SpRuntimeException("Error: Databasename '" + databaseName + "' not allowed (allowed: '" + PostgreSqlClient.allowedRegEx + "')");
+			throw new SpRuntimeException("Error: Databasename '" + databaseName
+					+ "' not allowed (allowed: '" + PostgreSqlClient.allowedRegEx + "')");
 		}
 	}
 
@@ -192,8 +195,8 @@ public class PostgreSqlClient {
 	 */
 	private void connect() throws SpRuntimeException {
 		try {
-			String url = "jdbc:postgresql://" + postgreSqlHost + ":" + postgreSqlPort + "/" + databaseName;
-			c = DriverManager.getConnection(url, user, password);
+			String u = "jdbc:postgresql://" + postgreSqlHost + ":" + postgreSqlPort + "/" + databaseName;
+			c = DriverManager.getConnection(u, user, password);
 			st = c.createStatement();
 
 			//TODO: Remove this one?
@@ -265,7 +268,8 @@ public class PostgreSqlClient {
 	 * @throws SpRuntimeException When the table name is not allowed or it is thrown
 	 * by {@link SqlAttribute#setValue(Parameterinfo, Object, PreparedStatement)}
 	 */
-	private void executePreparedStatement(Map<String, Object> event) throws SQLException, SpRuntimeException {
+	private void executePreparedStatement(Map<String, Object> event)
+			throws SQLException, SpRuntimeException {
 		if(ps != null) {
 			ps.clearParameters();
 		}
@@ -288,14 +292,16 @@ public class PostgreSqlClient {
 	 * @throws SpRuntimeException When the tablename is not allowed
 	 * @throws SQLException When the prepareStatment cannot be evaluated
 	 */
-	private void generatePreparedStatement(Map<String, Object> event) throws SQLException, SpRuntimeException {
+	private void generatePreparedStatement(Map<String, Object> event)
+			throws SQLException, SpRuntimeException {
 		// input: event
-		// wanted statement: INSERT INTO test4321 ( randomString, randomValue, count, timestamp ) VALUES ( ?,?,?,? );
+		// wanted: INSERT INTO test4321 ( randomString, randomValue ) VALUES ( ?,? );
 		parameters.clear();
 		StringBuilder statement1 = new StringBuilder("INSERT  INTO ");
 		StringBuilder statement2 = new StringBuilder("VALUES ( ");
 		if(!tableName.matches(PostgreSqlClient.allowedRegEx)) {
-			throw new SpRuntimeException("Table name '" + tableName + "' not allowed (allowed: '" + PostgreSqlClient.allowedRegEx + "')");
+			throw new SpRuntimeException("Table name '" + tableName + "' not allowed (allowed: '"
+					+ PostgreSqlClient.allowedRegEx + "')");
 		}
 		statement1.append(tableName).append(" ( ");
 
@@ -303,9 +309,11 @@ public class PostgreSqlClient {
 		int i = 1;
 		for (Map.Entry<String, Object> pair : event.entrySet()) {
 			if(!pair.getKey().matches(PostgreSqlClient.allowedRegEx)) {
-				throw new SpRuntimeException("Column name '" + pair.getKey() + "' not allowed (allowed: '" + PostgreSqlClient.allowedRegEx + "')");
+				throw new SpRuntimeException("Column name '" + pair.getKey() + "' not allowed (allowed: '"
+            + PostgreSqlClient.allowedRegEx + "')");
 			}
-			parameters.put(pair.getKey(), new Parameterinfo(i, SqlAttribute.getFromObject(pair.getValue())));
+			parameters.put(pair.getKey(),
+					new Parameterinfo(i, SqlAttribute.getFromObject(pair.getValue())));
 			statement1.append(pair.getKey()).append(", ");
 			statement2.append("?,");
 			i++;
@@ -316,27 +324,32 @@ public class PostgreSqlClient {
 	}
 
 	/**
-	 * Prepares a statement for the creation of a table matched to the event (takes care of SQL Injection)
+	 * Prepares a statement for the creation of a table matched to the event
+	 * (takes care of SQL Injection)
 	 *
 	 * @param  event  an absolute URL giving the base location of the image
 	 * @return      an SQL-Injection save statement, which then can be used in a JDBC-statement
-	 * @throws SpRuntimeException if the event has illegal names for the parameters or if the table name is not allowed
+	 * @throws SpRuntimeException if the event has illegal names for the parameters or if the table
+	 * name is not allowed
 	 */
 	private String generateCreateStatement(Map<String, Object> event) throws SpRuntimeException {
 		// input: event(), tablename
-		// output (example): "CREATE TABLE test4321 ( randomString VARCHAR(255), randomValue INT, count INT, timestamp BIGINT );"
+		// output (example): "CREATE TABLE test4321 ( randomString VARCHAR(255), randomValue INT );"
 		StringBuilder statement = new StringBuilder("CREATE TABLE ");
 
 		if(!tableName.matches(PostgreSqlClient.allowedRegEx)) {
-			throw new SpRuntimeException("Table name '" + tableName + "' not allowed (allowed: '" + PostgreSqlClient.allowedRegEx + "')");
+			throw new SpRuntimeException("Table name '" + tableName + "' not allowed (allowed: '"
+					+ PostgreSqlClient.allowedRegEx + "')");
 		}
 		statement.append(tableName).append(" ( ");
 
 		for (Map.Entry<String, Object> pair : event.entrySet()) {
 			if(!pair.getKey().matches(PostgreSqlClient.allowedRegEx)) {
-				throw new SpRuntimeException("Column name '" + pair.getKey() + "' not allowed (allowed: '" + PostgreSqlClient.allowedRegEx + "')");
+				throw new SpRuntimeException("Column name '" + pair.getKey() + "' not allowed (allowed: '"
+						+ PostgreSqlClient.allowedRegEx + "')");
 			}
-			statement.append(pair.getKey()).append(" ").append(SqlAttribute.getFromObject(pair.getValue())).append(", ");
+			statement.append(pair.getKey()).append(" ").append(
+					SqlAttribute.getFromObject(pair.getValue())).append(", ");
 
 		}
 		return statement.delete(statement.length() - 2, statement.length()).append(" );").toString();

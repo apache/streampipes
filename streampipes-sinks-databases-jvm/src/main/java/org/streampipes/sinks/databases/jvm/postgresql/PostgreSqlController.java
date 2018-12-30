@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 FZI Forschungszentrum Informatik
+ * Copyright 2018 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,23 +42,35 @@ public class PostgreSqlController  extends StandaloneEventSinkDeclarer<PostgreSq
   @Override
   public DataSinkDescription declareModel() {
     //TODO: Replace Icon, insert defaults (for the port)
-    return DataSinkBuilder.create("org.streampipes.sinks.databases.jvm.postgresql", "PostgreSQL", "Stores events in a Postgres database.")
-            .category(DataSinkType.STORAGE)
+    return DataSinkBuilder.create("org.streampipes.sinks.databases.jvm.postgresql",
+        "PostgreSQL",
+        "Stores events in a Postgres database.")
+        .category(DataSinkType.STORAGE)
             .iconUrl(DatabasesJvmConfig.getIconUrl("couchdb_icon"))
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
+            .requiredStream(StreamRequirementsBuilder.create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .requiredTextParameter(Labels.from(DATABASE_HOST_KEY, "Hostname", "The hostname of the PostgreSQL instance"))
-            .requiredIntegerParameter(Labels.from(DATABASE_PORT_KEY, "Port", "The port of the PostgreSQL instance (default 5432)"))
-            .requiredTextParameter(Labels.from(DATABASE_NAME_KEY, "Database Name", "The name of the database where events will " +
+            .requiredTextParameter(Labels.from(DATABASE_HOST_KEY,
+                "Hostname",
+                "The hostname of the PostgreSQL instance"))
+            .requiredIntegerParameter(Labels.from(DATABASE_PORT_KEY,
+                "Port",
+                "The port of the PostgreSQL instance (default 5432)"))
+            .requiredTextParameter(Labels.from(DATABASE_NAME_KEY, "Database Name",
+                "The name of the database where events will " +
                     "be stored"))
-            .requiredTextParameter(Labels.from(DATABASE_TABLE_KEY , "Table Name", "The name of the table where events will " +
-                    "be stored (will be created if it does not exist)"))
-            .requiredTextParameter(Labels.from(DATABASE_USER_KEY , "Username", "The username for the PostgreSQL Server"))
-            .requiredTextParameter(Labels.from(DATABASE_PASSWORD_KEY , "Password", "The password for the PostgreSQL Server"))
+            .requiredTextParameter(Labels.from(DATABASE_TABLE_KEY ,
+                "Table Name",
+                "The name of the table where events will be stored "
+                    + "(will be created if it does not exist)"))
+            .requiredTextParameter(Labels.from(DATABASE_USER_KEY ,
+                "Username",
+                "The username for the PostgreSQL Server"))
+            .requiredTextParameter(Labels.from(DATABASE_PASSWORD_KEY ,
+                "Password",
+                "The password for the PostgreSQL Server"))
             .build();
   }
 
@@ -74,7 +86,13 @@ public class PostgreSqlController  extends StandaloneEventSinkDeclarer<PostgreSq
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
     String password = extractor.singleValueParameter(DATABASE_PASSWORD_KEY, String.class);
 
-    PostgreSqlParameters params = new PostgreSqlParameters(graph, hostname, port, dbName, tableName, user, password);
+    PostgreSqlParameters params = new PostgreSqlParameters(graph,
+        hostname,
+        port,
+        dbName,
+        tableName,
+        user,
+        password);
 
     return new ConfiguredEventSink<>(params, () -> new PostgreSql(params));
   }
