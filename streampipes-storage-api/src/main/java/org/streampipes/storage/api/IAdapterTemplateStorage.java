@@ -17,19 +17,19 @@
 
 package org.streampipes.storage.api;
 
+
 import org.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.List;
 
-public interface IAdapterStorage {
+public interface IAdapterTemplateStorage {
+    List<AdapterDescription> getAllAdapterTemplates();
 
-    List<AdapterDescription> getAllAdapters();
+    void storeAdapterTemplate(AdapterDescription adapter);
 
-    void storeAdapter(AdapterDescription adapter);
+    void updateAdapterTemplate(AdapterDescription adapter);
 
-    void updateAdapter(AdapterDescription adapter);
+    AdapterDescription getAdapterTemplate(String adapterId);
 
-    AdapterDescription getAdapter(String adapterId);
-
-    void deleteAdapter(String adapterId);
+    void deleteAdapterTemplate(String adapterId);
 }

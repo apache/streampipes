@@ -66,7 +66,7 @@ public class AdapterTemplateResource extends AbstractContainerResource {
 
         try {
             String adapterTemplateId = adapterTemplateMasterManagement.addAdapterTemplate(adapterDescription);
-            logger.info("User: " + userName + " added adapter " + adapterTemplateId + "as adapter template");
+            logger.info("User: " + userName + " added adapter as adapter template");
 
             return ok(Notifications.success(adapterTemplateId));
         } catch (AdapterException e) {
