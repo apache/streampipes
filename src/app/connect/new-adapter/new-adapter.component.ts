@@ -62,6 +62,26 @@ export class NewAdapterComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+
+
+      console.log("Adapter");
+      console.log(this.adapter);
+      console.log("Adapter");
+
+      this.formatConfigurationValid = false;
+
+      if (this.adapter instanceof GenericAdapterSetDescription) {
+          if ((<GenericAdapterSetDescription> this.adapter).format != undefined) {
+              this.formatConfigurationValid = true;
+          }
+      }
+
+      if (this.adapter instanceof GenericAdapterStreamDescription) {
+          if ((<GenericAdapterStreamDescription> this.adapter).format != undefined) {
+              this.formatConfigurationValid = true;
+          }
+      }
+
     this.restService.getFormats().subscribe(x => {
       this.allFormats = x.list;
     });
@@ -73,7 +93,6 @@ export class NewAdapterComponent implements OnInit {
     this.storeAsAdapter = false;
 
     this.protocolConfigurationValid = false;
-    this.formatConfigurationValid = false;
     this.eventSchema = new EventSchema();
   }
 

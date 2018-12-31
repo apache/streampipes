@@ -23,4 +23,5 @@
 
 .selectedItem {
   opacity: 1;
+  background-color: grey;
 }

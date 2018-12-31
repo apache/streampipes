@@ -45,7 +45,11 @@ export class FormatComponent {
     }
   }
   isSelected(): boolean {
-    return this.selectedFormat === this.format;
+    if (!this.selectedFormat || !this.format) {
+      return false;
+    } else {
+        return this.selectedFormat.label === this.format.label;
+    }
   }
   ngOnInit() {}
 }
