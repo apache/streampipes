@@ -48,7 +48,7 @@ export class AdapterDescriptionComponent {
   }
 
   getClassName() {
-    let className = this.adapter.couchDbId ? "adapter-box" : "adapter-description-box";
+    let className = this.isRunningAdapter(this.adapter) ? "adapter-box" : "adapter-description-box";
 
     if (this.isDataSetDescription()) {
       className += " adapter-box-set";
@@ -57,6 +57,10 @@ export class AdapterDescriptionComponent {
     }
 
     return className;
+  }
+
+  isRunningAdapter(adapter: AdapterDescription) {
+    return (adapter.couchDbId != undefined && !adapter.isTemplate);
   }
 
   deleteInProgress(adapterCouchDbId) {

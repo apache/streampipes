@@ -81,30 +81,24 @@ export class DataMarketplaceService {
   }
 
   getAdapterDescriptions(): Observable<AdapterDescription[]> {
-    return this.http
-      .get(
-        this.host +
-          'api/v1/' +
-          this.authStatusService.email +
-          '/master/description/adapters'
-      )
-      .map(response => {
-        const res = this.getTsonLd().fromJsonLdType(
-          response,
-          'sp:AdapterDescriptionList'
-        );
-
-        return res.list;
-      });
+      return this.requestAdapterDescriptions('/master/description/adapters');
   }
 
   getAdapters(): Observable<AdapterDescription[]> {
+    return this.requestAdapterDescriptions('/master/adapters');
+  }
+
+  getAdapterTemplates(): Observable<AdapterDescription[]> {
+    return this.requestAdapterDescriptions('/master/adapters/template/all');
+  }
+
+  requestAdapterDescriptions(path: string) : Observable<AdapterDescription[]> {
     return this.http
       .get(
         this.host +
           'api/v1/' +
           this.authStatusService.email +
-          '/master/adapters'
+          path
       )
       .map(response => {
         if(response['@graph'] === undefined) return [];

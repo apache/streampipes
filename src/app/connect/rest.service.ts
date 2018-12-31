@@ -76,6 +76,14 @@ export class RestService {
   }
 
   addAdapter(adapter: AdapterDescription): Observable<StatusMessage> {
+      return this.addAdapterDescription(adapter, '/master/adapters');
+  }
+
+  addAdapterTemplate(adapter: AdapterDescription): Observable<StatusMessage> {
+      return this.addAdapterDescription(adapter, '/master/adapters/template');
+  }
+
+  addAdapterDescription(adapter: AdapterDescription, url: String): Observable<StatusMessage> {
     const tsonld = new TsonLd();
     tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
     tsonld.addContext('spi', 'urn:streampipes.org:spi:');
@@ -93,10 +101,9 @@ export class RestService {
                           'Content-Type': 'application/ld+json',
                       }),
                   };
-                  console.log(JSON.stringify(res));
                   self.http
                       .post(
-                          '/streampipes-connect/api/v1/' + self.authStatusService.email + '/master/adapters',
+                          '/streampipes-connect/api/v1/' + self.authStatusService.email + url,
                           res,
                           httpOptions
                       )
@@ -109,6 +116,7 @@ export class RestService {
           })
       );
   }
+
 
   getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
     const self = this;

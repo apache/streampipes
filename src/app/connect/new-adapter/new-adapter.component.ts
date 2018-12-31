@@ -38,6 +38,8 @@ export class NewAdapterComponent implements OnInit {
   protocolConfigurationValid: boolean;
   formatConfigurationValid: boolean;
 
+  storeAsAdapter: boolean;
+
   startAdapterFormGroup: FormGroup;
 
   eventSchema: EventSchema;
@@ -64,20 +66,22 @@ export class NewAdapterComponent implements OnInit {
       this.allFormats = x.list;
     });
 
-      this.startAdapterFormGroup = this._formBuilder.group({
-          startAdapterFormCtrl: ['', Validators.required]
-      });
+    this.startAdapterFormGroup = this._formBuilder.group({
+        startAdapterFormCtrl: ['', Validators.required]
+    });
+
+    this.storeAsAdapter = false;
 
     this.protocolConfigurationValid = false;
     this.formatConfigurationValid = false;
-
     this.eventSchema = new EventSchema();
   }
 
   public startAdapter() {
     let dialogRef = this.dialog.open(AdapterStartedDialog, {
        width: '70%',
-       data: { adapter: this.adapter },
+       data: { adapter: this.adapter,
+               storeAsAdapter: this.storeAsAdapter},
        panelClass: 'sp-no-padding-dialog'
     });
 

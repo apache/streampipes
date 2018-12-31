@@ -15,6 +15,7 @@ import {SpecificAdapterStreamDescription} from '../model/connect/SpecificAdapter
 })
 export class DataMarketplaceComponent implements OnInit {
     adapterDescriptions: AdapterDescription[];
+    adapterTemplates: AdapterDescription[];
     newAdapterFromDescription: AdapterDescription;
     adapters: AdapterDescription[];
     @Output()
@@ -35,11 +36,22 @@ export class DataMarketplaceComponent implements OnInit {
                 });
             });
         this.getAdapters();
+        this.getAdapterTemplates();
     }
 
     getAdapters(): void {
         this.dataMarketplaceService.getAdapters().subscribe(adapters => {
             this.adapters = adapters;
+        });
+    }
+
+    getAdapterTemplates(): void {
+        this.dataMarketplaceService.getAdapterTemplates().subscribe(adapterTemplates => {
+            adapterTemplates.forEach(function (adapterTemplate) {
+                adapterTemplate.isTemplate = true;
+            });
+
+            this.adapterTemplates = adapterTemplates;
         });
     }
 

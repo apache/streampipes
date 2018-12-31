@@ -49,6 +49,14 @@ export class AdapterStartedDialog {
 
             }
         });
+
+        if (this.data.storeAsAdapter) {
+            this.restService.addAdapterTemplate(this.data.adapter).subscribe(x => {
+                console.log(x);
+                console.log("Adapter Template added!")
+            });
+
+        }
     }
 
     getLatestRuntimeInfo() {

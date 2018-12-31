@@ -36,6 +36,8 @@ export class AdapterDescription {
 
   public templateTitle: String;
 
+  public isTemplate: boolean;
+
   constructor(id: string) {
     this.id = id;
   }
