@@ -37,7 +37,7 @@ public class AdapterTemplateStorageImpl extends AbstractDao<AdapterDescription> 
     private static final String SYSTEM_USER = "system";
 
     public AdapterTemplateStorageImpl() {
-        super(Utils::getCouchDbAdapterClient, AdapterDescription.class);
+        super(Utils::getCouchDbAdapterTemplateClient, AdapterDescription.class);
     }
 
     @Override

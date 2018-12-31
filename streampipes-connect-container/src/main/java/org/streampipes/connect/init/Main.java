@@ -105,6 +105,7 @@ public class Main {
 
         allClasses.add(WelcomePageMaster.class);
         allClasses.add(AdapterResource.class);
+        allClasses.add(AdapterTemplateResource.class);
         allClasses.add(DescriptionResource.class);
         allClasses.add(SourcesResource.class);
         allClasses.add(GuessResource.class);
