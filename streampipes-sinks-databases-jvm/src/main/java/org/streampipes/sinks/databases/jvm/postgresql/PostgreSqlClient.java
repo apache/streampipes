@@ -44,7 +44,7 @@ public class PostgreSqlClient {
 
 	private boolean tableExists = false;
 
-	private Logger logger;
+	private Logger logger = null;
 
 	private Connection c = null;
 	private Statement  st = null;
