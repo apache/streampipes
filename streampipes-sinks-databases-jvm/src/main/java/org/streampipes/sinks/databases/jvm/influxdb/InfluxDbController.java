@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 FZI Forschungszentrum Informatik
+ * Copyright 2019 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package org.streampipes.sinks.databases.jvm.influxdb;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -35,45 +36,51 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
   private static final String DATABASE_HOST_KEY = "db_host";
   private static final String DATABASE_PORT_KEY = "db_port";
   private static final String DATABASE_NAME_KEY = "db_name";
-  private static final String DATABASE_TABLE_KEY = "db_table";
+  private static final String DATABASE_MEASUREMENT_KEY = "db_measurement";
   private static final String DATABASE_USER_KEY = "db_user";
   private static final String DATABASE_PASSWORD_KEY = "db_password";
+  private static final String TIMESTAMP_MAPPING = "timestamp-mapping";
 
   @Override
   public DataSinkDescription declareModel() {
     //TODO: Replace Icon, insert defaults (for the port)
-    return DataSinkBuilder.create("org.streampipes.sinks.databases.jvm.postgresql",
-        "PostgreSQL",
-        "Stores events in a Postgres database.")
+    return DataSinkBuilder.create("org.streampipes.sinks.databases.jvm.influxdb",
+        "InfluxDB",
+        "Stores events in an InfluxDB.")
         .category(DataSinkType.STORAGE)
             .iconUrl(DatabasesJvmConfig.getIconUrl("couchdb_icon"))
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
+            /*.requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
+                EpRequirements.timestampReq(),
+                Labels.from(TIMESTAMP_MAPPING,
+                    "Timestamp Property",
+                    "The value which contains a timestamp"),
+                PropertyScope.HEADER_PROPERTY).build())*/
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .requiredTextParameter(Labels.from(DATABASE_HOST_KEY,
                 "Hostname",
-                "The hostname of the PostgreSQL instance"))
+                "The hostname/URL of the InfluxDB instance"))
             .requiredIntegerParameter(Labels.from(DATABASE_PORT_KEY,
                 "Port",
-                "The port of the PostgreSQL instance (default 5432)"))
+                "The port of the InfluxDB instance (default 8086)"), 8086)
             .requiredTextParameter(Labels.from(DATABASE_NAME_KEY, "Database Name",
                 "The name of the database where events will " +
                     "be stored"))
-            .requiredTextParameter(Labels.from(DATABASE_TABLE_KEY ,
-                "Table Name",
-                "The name of the table where events will be stored "
+            .requiredTextParameter(Labels.from(DATABASE_MEASUREMENT_KEY ,
+                "Measurement Name",
+                "The name of the Measurement where events will be stored "
                     + "(will be created if it does not exist)"))
             .requiredTextParameter(Labels.from(DATABASE_USER_KEY ,
                 "Username",
-                "The username for the PostgreSQL Server"))
+                "The username for the InfluxDB Server"))
             .requiredTextParameter(Labels.from(DATABASE_PASSWORD_KEY ,
                 "Password",
-                "The password for the PostgreSQL Server"))
+                "The password for the InfluxDB Server"))
             .build();
   }
-
 
   @Override
   public ConfiguredEventSink<InfluxDbParameters> onInvocation(DataSinkInvocation graph,
@@ -82,17 +89,20 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
     String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
     String dbName = extractor.singleValueParameter(DATABASE_NAME_KEY, String.class);
-    String tableName = extractor.singleValueParameter(DATABASE_TABLE_KEY, String.class);
+    String measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
     String password = extractor.singleValueParameter(DATABASE_PASSWORD_KEY, String.class);
+    String timestampField = "";//extractor.mappingPropertyValue(TIMESTAMP_MAPPING);
+
 
     InfluxDbParameters params = new InfluxDbParameters(graph,
         hostname,
         port,
         dbName,
-        tableName,
+        measureName,
         user,
-        password);
+        password,
+        timestampField);
 
     return new ConfiguredEventSink<>(params, () -> new InfluxDb(params));
   }

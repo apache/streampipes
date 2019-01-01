@@ -1,7 +1,7 @@
 /*
- * Copyright 2018 FZI Forschungszentrum Informatik
+ * Copyright 2019 FZI Forschungszentrum Informatik
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Ap<ache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -16,7 +16,6 @@
 
 package org.streampipes.sinks.databases.jvm.influxdb;
 
-import java.sql.SQLException;
 import java.util.Map;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.logging.api.Logger;
@@ -40,9 +39,10 @@ public class InfluxDb extends EventSink<InfluxDbParameters> {
         parameters.getPostgreSqlHost(),
         parameters.getPostgreSqlPort(),
         parameters.getDatabaseName(),
-        parameters.getTableName(),
+        parameters.getMeasurementName(),
         parameters.getUsername(),
         parameters.getPassword(),
+        parameters.getTimestampField(),
         LOG
     );
   }
@@ -60,11 +60,6 @@ public class InfluxDb extends EventSink<InfluxDbParameters> {
 
   @Override
   public void discard() throws SpRuntimeException {
-    try {
-      influxDbClient.stop();
-    } catch (SQLException e) {
-      LOG.warn(e.getMessage());
-      //e.printStackTrace();
-    }
+    influxDbClient.stop();
   }
 }

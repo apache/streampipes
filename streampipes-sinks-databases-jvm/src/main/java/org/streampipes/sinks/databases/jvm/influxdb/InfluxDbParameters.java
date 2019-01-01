@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 FZI Forschungszentrum Informatik
+ * Copyright 2019 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,37 +21,46 @@ import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class InfluxDbParameters extends EventSinkBindingParams {
 
-  private String PostgreSqlHost;
-  private Integer PostgreSqlPort;
+  private String influxDbHost;
+  private Integer influxDbPort;
   private String databaseName;
-  private String tableName;
+  private String measureName;
   private String user;
   private String password;
+  private String timestampField;
 
-  public InfluxDbParameters(DataSinkInvocation graph, String PostgreSqlHost, Integer PostgreSqlPort, String databaseName, String tableName, String user, String password) {
+  public InfluxDbParameters(DataSinkInvocation graph,
+      String influxDbHost,
+      Integer influxDbPort,
+      String databaseName,
+      String measureName,
+      String user,
+      String password,
+      String timestampField) {
     super(graph);
-    this.PostgreSqlHost = PostgreSqlHost;
-    this.PostgreSqlPort = PostgreSqlPort;
+    this.influxDbHost = influxDbHost;
+    this.influxDbPort = influxDbPort;
     this.databaseName = databaseName;
-    this.tableName = tableName;
+    this.measureName = measureName;
     this.user = user;
     this.password = password;
+    this.timestampField = timestampField;
   }
 
   public String getPostgreSqlHost() {
-    return PostgreSqlHost;
+    return influxDbHost;
   }
 
   public Integer getPostgreSqlPort() {
-    return PostgreSqlPort;
+    return influxDbPort;
   }
 
   public String getDatabaseName() {
     return databaseName;
   }
 
-  public String getTableName() {
-    return tableName;
+  public String getMeasurementName() {
+    return measureName;
   }
 
   public String getUsername() {
@@ -61,4 +70,6 @@ public class InfluxDbParameters extends EventSinkBindingParams {
   public String getPassword() {
     return password;
   }
+
+  public String getTimestampField() { return timestampField; }
 }
