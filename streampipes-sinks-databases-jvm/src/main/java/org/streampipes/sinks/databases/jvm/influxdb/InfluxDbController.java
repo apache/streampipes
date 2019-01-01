@@ -39,7 +39,10 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
   private static final String DATABASE_MEASUREMENT_KEY = "db_measurement";
   private static final String DATABASE_USER_KEY = "db_user";
   private static final String DATABASE_PASSWORD_KEY = "db_password";
-  private static final String TIMESTAMP_MAPPING = "timestamp-mapping";
+  private static final String TIMESTAMP_MAPPING_KEY = "timestamp_mapping";
+  private static final String BATCH_INTERVAL_ACTIONS_KEY = "batch_interval_actions";
+  private static final String MAX_FLUSH_DURATION_KEY = "max_flush_duration";
+
 
   @Override
   public DataSinkDescription declareModel() {
@@ -48,38 +51,49 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
         "InfluxDB",
         "Stores events in an InfluxDB.")
         .category(DataSinkType.STORAGE)
-            .iconUrl(DatabasesJvmConfig.getIconUrl("couchdb_icon"))
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            /*.requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
-                EpRequirements.timestampReq(),
-                Labels.from(TIMESTAMP_MAPPING,
-                    "Timestamp Property",
-                    "The value which contains a timestamp"),
-                PropertyScope.HEADER_PROPERTY).build())*/
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .requiredTextParameter(Labels.from(DATABASE_HOST_KEY,
-                "Hostname",
-                "The hostname/URL of the InfluxDB instance"))
-            .requiredIntegerParameter(Labels.from(DATABASE_PORT_KEY,
-                "Port",
-                "The port of the InfluxDB instance (default 8086)"), 8086)
-            .requiredTextParameter(Labels.from(DATABASE_NAME_KEY, "Database Name",
-                "The name of the database where events will " +
-                    "be stored"))
-            .requiredTextParameter(Labels.from(DATABASE_MEASUREMENT_KEY ,
-                "Measurement Name",
-                "The name of the Measurement where events will be stored "
+        .iconUrl(DatabasesJvmConfig.getIconUrl("couchdb_icon"))
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        /*.requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
+            EpRequirements.timestampReq(),
+            Labels.from(TIMESTAMP_MAPPING_KEY,
+                "Timestamp Property",
+                "The value which contains a timestamp"),
+            PropertyScope.HEADER_PROPERTY).build())*/
+        .supportedFormats(SupportedFormats.jsonFormat())
+        .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+        .requiredTextParameter(Labels.from(DATABASE_HOST_KEY,
+            "Hostname",
+            "The hostname/URL of the InfluxDB instance"))
+        .requiredIntegerParameter(Labels.from(DATABASE_PORT_KEY,
+            "Port",
+            "The port of the InfluxDB instance (default 8086)"), 8086)
+        .requiredIntegerParameter(Labels.from(BATCH_INTERVAL_ACTIONS_KEY,
+            "Buffer size",
+            "How many actions are written into a buffer, before it is written "
+                + "to the database"))
+        .requiredIntegerParameter(Labels.from(MAX_FLUSH_DURATION_KEY,
+            "Maximum flush ",
+            "The maximum waiting time for the buffer to fill the Buffer size before "
+                + "it will be written to the database in ms"), 2000)
+        .requiredTextParameter(Labels.from(DATABASE_NAME_KEY,
+            "Database Name",
+            "The name of the database where events will be stored"))
+        .requiredTextParameter(Labels.from(DATABASE_MEASUREMENT_KEY ,
+            "Measurement Name",
+            "The name of the Measurement where events will be stored "
                     + "(will be created if it does not exist)"))
-            .requiredTextParameter(Labels.from(DATABASE_USER_KEY ,
-                "Username",
-                "The username for the InfluxDB Server"))
-            .requiredTextParameter(Labels.from(DATABASE_PASSWORD_KEY ,
-                "Password",
-                "The password for the InfluxDB Server"))
-            .build();
+        .requiredTextParameter(Labels.from(DATABASE_USER_KEY ,
+            "Username",
+            "The username for the InfluxDB Server"))
+        .requiredTextParameter(Labels.from(DATABASE_PASSWORD_KEY ,
+            "Password",
+            "The password for the InfluxDB Server"))
+        .requiredTextParameter(Labels.from(DATABASE_PASSWORD_KEY ,
+            "Password",
+            "The password for the InfluxDB Server"))
+        .build();
   }
 
   @Override
@@ -92,8 +106,9 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
     String measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
     String password = extractor.singleValueParameter(DATABASE_PASSWORD_KEY, String.class);
-    String timestampField = "";//extractor.mappingPropertyValue(TIMESTAMP_MAPPING);
-
+    String timestampField = "";//extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
+    Integer batch_size = extractor.singleValueParameter(BATCH_INTERVAL_ACTIONS_KEY, Integer.class);
+    Integer flush_duration = extractor.singleValueParameter(MAX_FLUSH_DURATION_KEY, Integer.class);
 
     InfluxDbParameters params = new InfluxDbParameters(graph,
         hostname,
@@ -102,7 +117,9 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
         measureName,
         user,
         password,
-        timestampField);
+        timestampField,
+        batch_size,
+        flush_duration);
 
     return new ConfiguredEventSink<>(params, () -> new InfluxDb(params));
   }

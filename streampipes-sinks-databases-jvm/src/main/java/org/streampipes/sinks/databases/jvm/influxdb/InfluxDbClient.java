@@ -38,6 +38,8 @@ public class InfluxDbClient {
 	private String user;
 	private String password;
 	private String timestampField;
+  private Integer batchSize;
+  private Integer flushDuration;
 
 	private boolean tableExists = false;
 
@@ -53,6 +55,8 @@ public class InfluxDbClient {
 			String user,
 			String password,
 			String timestampField,
+      Integer batchSize,
+      Integer flushDuration,
 			Logger logger) throws SpRuntimeException {
 		//TODO: Why are we not just passing an InfluxDbParameters object?
 		this.influxDbHost = influxDbHost;
@@ -62,6 +66,8 @@ public class InfluxDbClient {
 		this.user = user;
 		this.password = password;
 		this.timestampField = timestampField;
+		this.batchSize = batchSize;
+		this.flushDuration = flushDuration;
 		this.logger = logger;
 
 		validate();
@@ -81,7 +87,7 @@ public class InfluxDbClient {
     Pong response = influxDb.ping();
     if (response.getVersion().equalsIgnoreCase("unknown")) {
       //TODO: Throwing exception -> logger needed?
-      // throw new SpRuntimeException("Could not connect to InfluxDb Server: " + urlAndPort);
+      throw new SpRuntimeException("Could not connect to InfluxDb Server: " + urlAndPort);
     }
 
     // Checking whether the database exists
@@ -92,8 +98,9 @@ public class InfluxDbClient {
       //createDatabase(databaseName);
     }
 
+    // setting up the database
     influxDb.setDatabase(databaseName);
-    influxDb.enableBatch(BatchOptions.DEFAULTS.actions(2).flushDuration(1000));
+    influxDb.enableBatch(BatchOptions.DEFAULTS.actions(batchSize).flushDuration(flushDuration));
 	}
 
 	private boolean databaseExists(String dbName) {
@@ -121,18 +128,29 @@ public class InfluxDbClient {
 		if (event == null) {
 			throw new SpRuntimeException("event is null");
 		}
-		Point.Builder p = Point.measurement(measureName).time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+		//TODO: Check performance
+		//TODO: Choose the timestamp from the parameters
+    Point.Builder p = Point.measurement(measureName).time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
     for (Map.Entry<String, Object> pair : event.entrySet()) {
+      //TODO: Check regEx
       if(!pair.getKey().matches("^[a-zA-Z_][a-zA-Z0-9_]*$")) {
         throw new SpRuntimeException("Column name '" + pair.getKey() + "' not allowed "
             + "(allowed: '^[a-zA-Z_][a-zA-Z0-9_]*$')");
       }
-      //TODO: Add support for Long, Int etc.
-      p.addField(pair.getKey(), pair.getValue().toString());
+      if (pair.getValue() instanceof Integer) {
+        p.addField(pair.getKey(), (Integer)pair.getValue());
+      } else if (pair.getValue() instanceof Long) {
+        p.addField(pair.getKey(), (Long)pair.getValue());
+      } else if (pair.getValue() instanceof Double) {
+        p.addField(pair.getKey(), (Double)pair.getValue());
+      } else if (pair.getValue() instanceof Boolean) {
+        p.addField(pair.getKey(), (Boolean)pair.getValue());
+      } else {
+        p.addField(pair.getKey(), pair.getValue().toString());
+      }
     }
     influxDb.write(p.build());
 	}
-
 
 	void stop() {
     influxDb.close();

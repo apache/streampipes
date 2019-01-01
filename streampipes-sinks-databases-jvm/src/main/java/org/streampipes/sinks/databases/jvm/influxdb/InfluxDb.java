@@ -36,13 +36,15 @@ public class InfluxDb extends EventSink<InfluxDbParameters> {
     LOG = parameters.getGraph().getLogger(InfluxDb.class);
 
     this.influxDbClient = new InfluxDbClient(
-        parameters.getPostgreSqlHost(),
-        parameters.getPostgreSqlPort(),
+        parameters.getInfluxDbHost(),
+        parameters.getInfluxDbPort(),
         parameters.getDatabaseName(),
         parameters.getMeasurementName(),
         parameters.getUsername(),
         parameters.getPassword(),
         parameters.getTimestampField(),
+        parameters.getBatchSize(),
+        parameters.getFlushDuration(),
         LOG
     );
   }

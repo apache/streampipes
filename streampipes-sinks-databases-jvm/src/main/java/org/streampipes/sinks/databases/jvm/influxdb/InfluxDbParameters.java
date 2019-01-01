@@ -28,6 +28,8 @@ public class InfluxDbParameters extends EventSinkBindingParams {
   private String user;
   private String password;
   private String timestampField;
+  private Integer batchSize;
+  private Integer flushDuration;
 
   public InfluxDbParameters(DataSinkInvocation graph,
       String influxDbHost,
@@ -36,7 +38,9 @@ public class InfluxDbParameters extends EventSinkBindingParams {
       String measureName,
       String user,
       String password,
-      String timestampField) {
+      String timestampField,
+      Integer batchSize,
+      Integer flushDuration) {
     super(graph);
     this.influxDbHost = influxDbHost;
     this.influxDbPort = influxDbPort;
@@ -45,13 +49,15 @@ public class InfluxDbParameters extends EventSinkBindingParams {
     this.user = user;
     this.password = password;
     this.timestampField = timestampField;
+    this.batchSize = batchSize;
+    this.flushDuration = flushDuration;
   }
 
-  public String getPostgreSqlHost() {
+  public String getInfluxDbHost() {
     return influxDbHost;
   }
 
-  public Integer getPostgreSqlPort() {
+  public Integer getInfluxDbPort() {
     return influxDbPort;
   }
 
@@ -71,5 +77,15 @@ public class InfluxDbParameters extends EventSinkBindingParams {
     return password;
   }
 
-  public String getTimestampField() { return timestampField; }
+  public String getTimestampField() {
+    return timestampField;
+  }
+
+  public Integer getBatchSize() {
+    return batchSize;
+  }
+
+  public Integer getFlushDuration() {
+    return flushDuration;
+  }
 }
