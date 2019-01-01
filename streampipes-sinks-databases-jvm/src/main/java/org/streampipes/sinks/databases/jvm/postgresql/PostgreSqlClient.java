@@ -47,7 +47,7 @@ public class PostgreSqlClient {
 	private Logger logger = null;
 
 	private Connection c = null;
-	private Statement  st = null;
+	private Statement st = null;
 	private PreparedStatement ps = null;
 
 	/**
@@ -175,8 +175,14 @@ public class PostgreSqlClient {
 	 */
 	private void validate() throws SpRuntimeException {
 		// Validates the database name and the attributes
-		if (!postgreSqlHost.matches("[a-zA-Z0-9./]*")) {
-			//TODO: How can the hostname look like?
+    // See following link for regular expressions:
+    // https://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
+		String ipRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|"
+        + "[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
+    String hostnameRegex = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*"
+        + "([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$";
+		//TODO: No Ipv6 support?
+		if (!postgreSqlHost.matches(ipRegex) && !postgreSqlHost.matches(hostnameRegex)) {
 			throw new SpRuntimeException("Error: Hostname '" + postgreSqlHost
 					+ "' not allowed (allowed: '[a-zA-Z0-9./]*')");
 		}
