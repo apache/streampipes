@@ -57,7 +57,7 @@ public class PostgreSqlController  extends StandaloneEventSinkDeclarer<PostgreSq
                 "The hostname of the PostgreSQL instance"))
             .requiredIntegerParameter(Labels.from(DATABASE_PORT_KEY,
                 "Port",
-                "The port of the PostgreSQL instance (default 5432)"))
+                "The port of the PostgreSQL instance (default 5432)"), 5432)
             .requiredTextParameter(Labels.from(DATABASE_NAME_KEY, "Database Name",
                 "The name of the database where events will " +
                     "be stored"))
