@@ -48,6 +48,11 @@
             <artifactId>postgresql</artifactId>
             <version>42.2.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.influxdb</groupId>
+            <artifactId>influxdb-java</artifactId>
+            <version>2.14</version>
+        </dependency>
     </dependencies>
 
     <build>
