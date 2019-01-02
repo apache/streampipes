@@ -31,6 +31,9 @@ export class AdapterDescription {
   @RdfProperty('sp:iconUrl')
   public iconUrl: string;
 
+  @RdfProperty('sp:adapterType')
+  public adapterType: string;
+
   @RdfProperty('sp:rules')
   public rules: TransformationRuleDescription[];
 

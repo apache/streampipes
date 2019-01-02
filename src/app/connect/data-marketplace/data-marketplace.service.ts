@@ -163,6 +163,7 @@ export class DataMarketplaceService {
           newAdapterDescription.description = protocol.description;
           newAdapterDescription.iconUrl = protocol.iconUrl;
           newAdapterDescription.uri = newAdapterDescription.id;
+
           if (
             newAdapterDescription instanceof GenericAdapterSetDescription ||
             newAdapterDescription instanceof GenericAdapterStreamDescription

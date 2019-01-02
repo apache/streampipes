@@ -16,6 +16,9 @@ export class AdapterDescriptionComponent {
   @Output()
   updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
 
+  @Output()
+  createTemplateEmitter: EventEmitter<AdapterDescription> = new EventEmitter<AdapterDescription>();
+
   adapterToDelete: string;
   deleting: boolean = false;
 
@@ -45,6 +48,10 @@ export class AdapterDescriptionComponent {
           this.updateAdapterEmitter.emit();
           this.deleting = false;
       });
+  }
+
+  createTemplate(adapter: AdapterDescription): void {
+      this.createTemplateEmitter.emit(adapter);
   }
 
   getClassName() {

@@ -17,6 +17,10 @@
   opacity: 1;
 }
 
+.edit {
+  margin-right: 5px;
+}
+
 .delete {
   cursor: pointer;
 }

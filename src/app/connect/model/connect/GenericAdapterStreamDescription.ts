@@ -14,7 +14,8 @@ export class GenericAdapterStreamDescription extends AdapterStreamDescription {
     public format: FormatDescription;
 
     constructor(id: string) {
-        super(id)
+        super(id);
+        this.appId = id;
     }
 
 }

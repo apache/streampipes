@@ -1,7 +1,7 @@
 <div fxLayout="column" fxFlex="100" class="page-container page-container-padding page-container-connect">
     <div fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
         <div fxLayout="fill" style="line-height:24px;border-bottom:1px solid #ccc">
-            <mat-tab-group (selectedIndexChange)="selectedIndexChange($event)">
+            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)">
                 <mat-tab label="Data Marketplace">
                 </mat-tab>
                 <mat-tab id="all-adapters" label="All Adapters">
@@ -52,7 +52,7 @@
         <div *ngIf="selectedIndex === 1">
             <div fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-container">
                 <sp-adapter-description class="adapter-description" fxFlex="33" *ngFor="let adapter of adapters"
-                                        [adapter]="adapter" (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-adapter-description>
+                                        [adapter]="adapter" (createTemplateEmitter)="templateFromRunningAdapter(adapter)" (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-adapter-description>
             </div>
         </div>
         <div class="ribbon"><span>Beta</span></div>

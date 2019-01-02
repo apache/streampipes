@@ -16,8 +16,6 @@ import {SpecificAdapterStreamDescription} from '../model/connect/SpecificAdapter
 export class DataMarketplaceComponent implements OnInit {
     adapterDescriptions: AdapterDescription[];
 
-    adapterTemplates: AdapterDescription[];
-
     newAdapterFromDescription: AdapterDescription;
     adapters: AdapterDescription[];
     @Output()
@@ -102,6 +100,12 @@ export class DataMarketplaceComponent implements OnInit {
         this.newAdapterFromDescription.description = "";
 
         this.ShepherdService.trigger("select-adapter");
+    }
+
+    templateFromRunningAdapter(adapter: AdapterDescription) {
+        this.selectedIndexChange(0);
+        this.selectAdapter(adapter);
+
     }
 
     removeSelection() {

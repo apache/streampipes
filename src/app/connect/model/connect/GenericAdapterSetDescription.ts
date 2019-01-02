@@ -14,7 +14,8 @@ export class GenericAdapterSetDescription extends AdapterSetDescription {
     public format: FormatDescription;
 
     constructor(id: string) {
-        super(id)
+        super(id);
+        this.appId = id;
     }
 
 }
