@@ -100,6 +100,7 @@ public class CsvFormat extends Format {
         FreeTextStaticProperty delimiterProperty = new FreeTextStaticProperty("delimiter",
                 "Delimiter", "The delimiter for json. Mostly either , or ;");
 
+        fd.setAppId(ID);
 
         AnyStaticProperty offset = new AnyStaticProperty("header", "Header", "Does the CSV file include a header or not");
         offset.setOptions(Arrays.asList(new Option("Header","Header")));

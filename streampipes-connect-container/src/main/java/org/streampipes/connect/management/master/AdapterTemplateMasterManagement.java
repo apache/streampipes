@@ -18,12 +18,12 @@
 package org.streampipes.connect.management.master;
 
 import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.storage.api.IAdapterTemplateStorage;
 import org.streampipes.storage.couchdb.impl.AdapterTemplateStorageImpl;
 
 import java.util.List;
+import java.util.UUID;
 
 
 public class AdapterTemplateMasterManagement {
@@ -31,7 +31,7 @@ public class AdapterTemplateMasterManagement {
     private IAdapterTemplateStorage adapterTemplateStorage;
 
     public AdapterTemplateMasterManagement() {
-         this.adapterTemplateStorage = new AdapterTemplateStorageImpl();
+        this.adapterTemplateStorage = new AdapterTemplateStorageImpl();
 
     }
 
@@ -40,6 +40,45 @@ public class AdapterTemplateMasterManagement {
     }
 
     public String addAdapterTemplate(AdapterDescription adapterDescription) throws AdapterException {
+
+//        String uri = "http://streampipes.org/adapter/template/" + UUID.randomUUID().toString();
+
+        if (adapterDescription instanceof GenericAdapterSetDescription) {
+            adapterDescription = new GenericAdapterSetDescription((GenericAdapterSetDescription) adapterDescription);
+        } else if (adapterDescription instanceof GenericAdapterStreamDescription) {
+            adapterDescription = new GenericAdapterStreamDescription((GenericAdapterStreamDescription) adapterDescription);
+        } else if (adapterDescription instanceof SpecificAdapterSetDescription) {
+            adapterDescription = new SpecificAdapterSetDescription((SpecificAdapterSetDescription) adapterDescription);
+        } else {
+            adapterDescription = new SpecificAdapterSetDescription((SpecificAdapterSetDescription) adapterDescription);
+        }
+
+        String uri = adapterDescription.getUri() + UUID.randomUUID().toString();
+        adapterDescription.setUri(uri);
+        adapterDescription.changeElementId(uri);
+        adapterDescription.setAdapterId(uri);
+
+
+        if (adapterDescription instanceof GenericAdapterSetDescription) {
+            String id = ((GenericAdapterSetDescription) adapterDescription).getFormatDescription().getElementId();
+            id = id + "/" + UUID.randomUUID().toString();
+            ((GenericAdapterSetDescription) adapterDescription).getFormatDescription().changeElementId(id);
+
+            id = ((GenericAdapterSetDescription) adapterDescription).getProtocolDescription().getElementId();
+            id = id + "/" + UUID.randomUUID().toString();
+            ((GenericAdapterSetDescription) adapterDescription).getProtocolDescription().changeElementId(id);
+        }
+
+        if (adapterDescription instanceof GenericAdapterStreamDescription) {
+            String id = ((GenericAdapterStreamDescription) adapterDescription).getFormatDescription().getElementId();
+            id = id + "/" + UUID.randomUUID().toString();
+            ((GenericAdapterStreamDescription) adapterDescription).getFormatDescription().changeElementId(id);
+
+            id = ((GenericAdapterStreamDescription) adapterDescription).getProtocolDescription().getElementId();
+            id = id + "/" + UUID.randomUUID().toString();
+            ((GenericAdapterStreamDescription) adapterDescription).getProtocolDescription().changeElementId(id);
+        }
+
         this.adapterTemplateStorage.storeAdapterTemplate(adapterDescription);
         return adapterDescription.getId();
     }
