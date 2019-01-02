@@ -19,6 +19,7 @@ export class AdapterStartedDialog {
     private pollingActive: boolean = false;
     private runtimeData: any;
     private isSetAdapter: boolean = false;
+    private isTemplate: boolean = false;
 
     constructor(
         public dialogRef: MatDialogRef<AdapterStartedDialog>,
@@ -31,29 +32,33 @@ export class AdapterStartedDialog {
     }
 
     startAdapter() {
-        var newAdapter = this.data.adapter;
-        this.restService.addAdapter(this.data.adapter).subscribe(x => {
-            this.adapterInstalled = true;
-            this.adapterStatus = x;
-            if (x.success) {
-                // Start preview on streams and message for sets
-                if (newAdapter instanceof GenericAdapterSetDescription || newAdapter instanceof SpecificAdapterSetDescription) {
-                   this.isSetAdapter = true;
-                } else {
-                    this.restService.getSourceDetails(x.notifications[0].title).subscribe(x => {
-                        this.streamDescription = x.spDataStreams[0];
-                        this.pollingActive = true;
-                        this.getLatestRuntimeInfo();
-                    });
-                }
+        if (this.data.storeAsTemplate) {
 
-            }
-        });
-
-        if (this.data.storeAsAdapter) {
             this.restService.addAdapterTemplate(this.data.adapter).subscribe(x => {
-                console.log(x);
-                console.log("Adapter Template added!")
+                this.adapterStatus = x;
+                this.isTemplate = true;
+                this.adapterInstalled = true;
+            });
+
+        } else {
+
+            var newAdapter = this.data.adapter;
+            this.restService.addAdapter(this.data.adapter).subscribe(x => {
+                this.adapterInstalled = true;
+                this.adapterStatus = x;
+                if (x.success) {
+                    // Start preview on streams and message for sets
+                    if (newAdapter instanceof GenericAdapterSetDescription || newAdapter instanceof SpecificAdapterSetDescription) {
+                        this.isSetAdapter = true;
+                    } else {
+                        this.restService.getSourceDetails(x.notifications[0].title).subscribe(x => {
+                            this.streamDescription = x.spDataStreams[0];
+                            this.pollingActive = true;
+                            this.getLatestRuntimeInfo();
+                        });
+                    }
+
+                }
             });
 
         }

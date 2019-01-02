@@ -19,6 +19,7 @@
             </div>
         </div>
         <div fxLayout="column" *ngIf="adapterInstalled">
+
             <div *ngIf="adapterStatus.success">
                 The adapter was created successfully. You can now switch to the pipeline editor to create a pipeline based on your new element!
 
@@ -30,7 +31,15 @@
                     </div>
                 </div>
 
-                <div *ngIf="runtimeData === undefined && !isSetAdapter">
+                <div *ngIf="isTemplate">
+                    <div fxLayout="column">
+                        <div fxLayoutAlign="center" >
+                            <h3>Template created. You or other users can now create adapters based on this template!</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="runtimeData === undefined && !isSetAdapter && !isTemplate">
                     <div fxLayout="column">
                         <div fxLayoutAlign="center" >
                             <mat-spinner [diameter]="40" fxLayoutAlign="center" style="margin: 10px 0 5px 0" >Loading</mat-spinner>

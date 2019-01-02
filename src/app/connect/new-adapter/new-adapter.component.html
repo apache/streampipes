@@ -118,14 +118,15 @@
                         <mat-form-field>
                             <input matInput id="input-AdapterDescription" [ngModelOptions]="{standalone: true}" placeholder="Adapter Description" [(ngModel)]="adapter.description">
                         </mat-form-field>
-
-                        <mat-checkbox [(ngModel)]="storeAsAdapter" [ngModelOptions]="{standalone: true}">Store as Adapter Template</mat-checkbox>
                     </div>
                 </div>
 
                 <div fxLayoutAlign="end">
                     <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                     <button class="mat-basic" mat-raised-button matStepperPrevious style="margin-left:10px;">Back</button>
+                    <button [disabled]="startAdapterFormGroup.invalid" mat-raised-button id="button-saveTemplate" color="primary" (click)="saveTemplate()" mat-button style="margin-left:10px;">
+                        Save as Template
+                    </button>
                     <button [disabled]="startAdapterFormGroup.invalid" mat-raised-button id="button-startAdapter" color="primary" (click)="startAdapter()" mat-button style="margin-left:10px;">
                         Start Adapter
                     </button>

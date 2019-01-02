@@ -18,154 +18,158 @@ import {EventSchemaComponent} from '../schema-editor/event-schema/event-schema.c
 import {ConnectService} from "../connect.service";
 
 @Component({
-  selector: 'sp-new-adapter',
-  templateUrl: './new-adapter.component.html',
-  styleUrls: ['./new-adapter.component.css'],
+    selector: 'sp-new-adapter',
+    templateUrl: './new-adapter.component.html',
+    styleUrls: ['./new-adapter.component.css'],
 })
 export class NewAdapterComponent implements OnInit {
-  @Input()
-  adapter: AdapterDescription;
+    @Input()
+    adapter: AdapterDescription;
 
-  @Output()
-  removeSelectionEmitter: EventEmitter<void> = new EventEmitter<void>();
+    @Output()
+    removeSelectionEmitter: EventEmitter<void> = new EventEmitter<void>();
 
-  @Output()
-  updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
+    @Output()
+    updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
 
-  allFormats: FormatDescription[] = [];
-  isLinearStepper: boolean = true;
+    allFormats: FormatDescription[] = [];
+    isLinearStepper: boolean = true;
 
-  protocolConfigurationValid: boolean;
-  formatConfigurationValid: boolean;
+    protocolConfigurationValid: boolean;
+    formatConfigurationValid: boolean;
 
-  storeAsAdapter: boolean;
+    startAdapterFormGroup: FormGroup;
 
-  startAdapterFormGroup: FormGroup;
+    eventSchema: EventSchema;
+    oldEventSchema: EventSchema;
 
-  eventSchema: EventSchema;
-  oldEventSchema: EventSchema;
+    hasInput: Boolean[];
 
-  hasInput: Boolean[];
-
-  @ViewChild(EventSchemaComponent)
-  private eventSchemaComponent: EventSchemaComponent;
+    @ViewChild(EventSchemaComponent)
+    private eventSchemaComponent: EventSchemaComponent;
 
 
-  constructor(
-    private logger: Logger,
-    private restService: RestService,
-    private transformationRuleService: TransformationRuleService,
-    public dialog: MatDialog,
-    private ShepherdService: ShepherdService,
-    private connectService: ConnectService,
-    private _formBuilder: FormBuilder
-  ) {}
+    constructor(
+        private logger: Logger,
+        private restService: RestService,
+        private transformationRuleService: TransformationRuleService,
+        public dialog: MatDialog,
+        private ShepherdService: ShepherdService,
+        private connectService: ConnectService,
+        private _formBuilder: FormBuilder
+    ) {}
 
-  ngOnInit() {
-      this.formatConfigurationValid = false;
+    ngOnInit() {
+        this.formatConfigurationValid = false;
 
-      if (this.adapter instanceof GenericAdapterSetDescription) {
-          if ((<GenericAdapterSetDescription> this.adapter).format != undefined) {
-              this.formatConfigurationValid = true;
-          }
-      }
+        if (this.adapter instanceof GenericAdapterSetDescription) {
+            if ((<GenericAdapterSetDescription> this.adapter).format != undefined) {
+                this.formatConfigurationValid = true;
+            }
+        }
 
-      if (this.adapter instanceof GenericAdapterStreamDescription) {
-          if ((<GenericAdapterStreamDescription> this.adapter).format != undefined) {
-              this.formatConfigurationValid = true;
-          }
-      }
+        if (this.adapter instanceof GenericAdapterStreamDescription) {
+            if ((<GenericAdapterStreamDescription> this.adapter).format != undefined) {
+                this.formatConfigurationValid = true;
+            }
+        }
 
-    this.restService.getFormats().subscribe(x => {
-      this.allFormats = x.list;
-    });
+        this.restService.getFormats().subscribe(x => {
+            this.allFormats = x.list;
+        });
 
-    this.startAdapterFormGroup = this._formBuilder.group({
-        startAdapterFormCtrl: ['', Validators.required]
-    });
+        this.startAdapterFormGroup = this._formBuilder.group({
+            startAdapterFormCtrl: ['', Validators.required]
+        });
 
-    this.storeAsAdapter = false;
+        this.protocolConfigurationValid = false;
+        this.eventSchema = new EventSchema();
+    }
 
-    this.protocolConfigurationValid = false;
-    this.eventSchema = new EventSchema();
-  }
 
-  public startAdapter() {
-    let dialogRef = this.dialog.open(AdapterStartedDialog, {
-       width: '70%',
-       data: { adapter: this.adapter,
-               storeAsAdapter: this.storeAsAdapter},
-       panelClass: 'sp-no-padding-dialog'
-    });
+    public triggerDialog(storeAsTemplate: boolean) {
+        let dialogRef = this.dialog.open(AdapterStartedDialog, {
+            width: '70%',
+            data: { adapter: this.adapter,
+                storeAsTemplate: storeAsTemplate},
+            panelClass: 'sp-no-padding-dialog'
+        });
 
-    this.ShepherdService.trigger("button-startAdapter");
+        this.ShepherdService.trigger("button-startAdapter");
 
-    dialogRef.afterClosed().subscribe(result => {
-        this.updateAdapterEmitter.emit();
+        dialogRef.afterClosed().subscribe(result => {
+            this.updateAdapterEmitter.emit();
+            this.removeSelectionEmitter.emit();
+        });
+    }
+
+    public saveTemplate() {
+        this.triggerDialog(true);
+    }
+
+    public startAdapter() {
+        this.triggerDialog(false);
+    }
+
+    validateProtocol(valid) {
+        this.protocolConfigurationValid = valid;
+    }
+
+    validateFormat(valid) {
+        this.formatConfigurationValid = valid;
+    }
+
+    removeSelection() {
         this.removeSelectionEmitter.emit();
-    });
-
-  }
-
-  validateProtocol(valid) {
-      this.protocolConfigurationValid = valid;
-  }
-
-  validateFormat(valid) {
-      this.formatConfigurationValid = valid;
-  }
-
-  removeSelection() {
-      this.removeSelectionEmitter.emit();
-  }
-
-  clickSpecificSettingsNextButton() {
-      this.ShepherdService.trigger("specific-settings-next-button");
-      this.eventSchemaComponent.guessSchema();
-  }
-
-  clickEventSchemaNextButtonButton() {
-      this.ShepherdService.trigger("event-schema-next-button");
-  }
-
-  clickFormatSelectionNextButton() {
-      this.ShepherdService.trigger("format-selection-next-button");
-      this.eventSchemaComponent.guessSchema();
-  }
-
-  public setSchema() {
-
-    if (this.adapter.constructor.name == 'GenericAdapterSetDescription') {
-        (<GenericAdapterSetDescription> this.adapter).dataSet.eventSchema = this.eventSchema;
-    } else if (this.adapter.constructor.name == 'SpecificAdapterSetDescription'){
-        (<SpecificAdapterSetDescription> this.adapter).dataSet.eventSchema = this.eventSchema;
-    } else if (this.adapter.constructor.name == 'GenericAdapterStreamDescription'){
-        (<GenericAdapterStreamDescription> this.adapter).dataStream.eventSchema = this.eventSchema;
-    } else if (this.adapter.constructor.name == 'SpecificAdapterStreamDescription'){
-        (<SpecificAdapterStreamDescription> this.adapter).dataStream.eventSchema = this.eventSchema;
     }
 
-
-    this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
-
-    this.transformationRuleService.setNewEventSchema(this.eventSchema);
-    const transformationRules: TransformationRuleDescription[] = this.transformationRuleService.getTransformationRuleDescriptions();
-    this.adapter.rules = transformationRules;
-  }
-
-  formatSelected(selectedFormat) {
-    if (
-      this.adapter instanceof GenericAdapterSetDescription ||
-      this.adapter instanceof GenericAdapterStreamDescription
-    ) {
-      this.adapter.format = selectedFormat;
-      if (selectedFormat.config.length == 0) {
-          this.validateFormat(true);
-      }
+    clickSpecificSettingsNextButton() {
+        this.ShepherdService.trigger("specific-settings-next-button");
+        this.eventSchemaComponent.guessSchema();
     }
-  }
 
-  isGenericAdapter() {
-      return this.connectService.isGenericDescription(this.adapter);
-  }
+    clickEventSchemaNextButtonButton() {
+        this.ShepherdService.trigger("event-schema-next-button");
+    }
+
+    clickFormatSelectionNextButton() {
+        this.ShepherdService.trigger("format-selection-next-button");
+        this.eventSchemaComponent.guessSchema();
+    }
+
+    public setSchema() {
+
+        if (this.adapter.constructor.name == 'GenericAdapterSetDescription') {
+            (<GenericAdapterSetDescription> this.adapter).dataSet.eventSchema = this.eventSchema;
+        } else if (this.adapter.constructor.name == 'SpecificAdapterSetDescription'){
+            (<SpecificAdapterSetDescription> this.adapter).dataSet.eventSchema = this.eventSchema;
+        } else if (this.adapter.constructor.name == 'GenericAdapterStreamDescription'){
+            (<GenericAdapterStreamDescription> this.adapter).dataStream.eventSchema = this.eventSchema;
+        } else if (this.adapter.constructor.name == 'SpecificAdapterStreamDescription'){
+            (<SpecificAdapterStreamDescription> this.adapter).dataStream.eventSchema = this.eventSchema;
+        }
+
+
+        this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
+
+        this.transformationRuleService.setNewEventSchema(this.eventSchema);
+        const transformationRules: TransformationRuleDescription[] = this.transformationRuleService.getTransformationRuleDescriptions();
+        this.adapter.rules = transformationRules;
+    }
+
+    formatSelected(selectedFormat) {
+        if (
+            this.adapter instanceof GenericAdapterSetDescription ||
+            this.adapter instanceof GenericAdapterStreamDescription
+        ) {
+            this.adapter.format = selectedFormat;
+            if (selectedFormat.config.length == 0) {
+                this.validateFormat(true);
+            }
+        }
+    }
+
+    isGenericAdapter() {
+        return this.connectService.isGenericDescription(this.adapter);
+    }
 }
