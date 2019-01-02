@@ -12,7 +12,8 @@
                         </div>
                     </div>
                 </div>
-                <h1 class="new-adapter-title">New Source: {{adapter.templateTitle}}</h1>
+                <h1 *ngIf="!fromTemplate" class="new-adapter-title">New Source: {{adapter.templateTitle}}</h1>
+                <h1 *ngIf="fromTemplate" class="new-adapter-title">From Template: {{adapter.templateTitle}}</h1>
             </div>
         </div>
         <div fxFlex="20" fxLayoutAlign="end start">

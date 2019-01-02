@@ -4,6 +4,7 @@ import { RestService } from '../rest.service';
 import { FormatDescription } from '../model/connect/grounding/FormatDescription';
 import { AdapterDescription } from '../model/connect/AdapterDescription';
 import { MatDialog } from '@angular/material';
+import { MatStepper } from '@angular/material';
 import { AdapterStartedDialog } from './component/adapter-started-dialog.component';
 import { Logger } from '../../shared/logger/default-log.service';
 import { GenericAdapterSetDescription } from '../model/connect/GenericAdapterSetDescription';
@@ -32,6 +33,8 @@ export class NewAdapterComponent implements OnInit {
     @Output()
     updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
 
+    @ViewChild('stepper') private myStepper: MatStepper;
+
     allFormats: FormatDescription[] = [];
     isLinearStepper: boolean = true;
 
@@ -44,6 +47,8 @@ export class NewAdapterComponent implements OnInit {
     oldEventSchema: EventSchema;
 
     hasInput: Boolean[];
+
+    fromTemplate: Boolean = false;
 
     @ViewChild(EventSchemaComponent)
     private eventSchemaComponent: EventSchemaComponent;
@@ -83,7 +88,13 @@ export class NewAdapterComponent implements OnInit {
         });
 
         this.protocolConfigurationValid = false;
-        this.eventSchema = new EventSchema();
+
+        this.eventSchema = this.getEventSchema(this.adapter);
+
+        if (this.eventSchema.eventProperties.length > 0) {
+            this.myStepper.selectedIndex = 2;
+            this.fromTemplate = true;
+        }
     }
 
 
@@ -125,7 +136,7 @@ export class NewAdapterComponent implements OnInit {
 
     clickSpecificSettingsNextButton() {
         this.ShepherdService.trigger("specific-settings-next-button");
-        this.eventSchemaComponent.guessSchema();
+        this.guessEventSchema();
     }
 
     clickEventSchemaNextButtonButton() {
@@ -134,7 +145,31 @@ export class NewAdapterComponent implements OnInit {
 
     clickFormatSelectionNextButton() {
         this.ShepherdService.trigger("format-selection-next-button");
-        this.eventSchemaComponent.guessSchema();
+        this.guessEventSchema();
+    }
+
+    guessEventSchema() {
+        var eventSchema: EventSchema = this.getEventSchema(this.adapter);
+        if (eventSchema.eventProperties.length == 0) {
+            this.eventSchemaComponent.guessSchema();
+        } else {
+            this.oldEventSchema = eventSchema;
+        }
+    }
+
+    getEventSchema(adapter: AdapterDescription): EventSchema {
+
+        if (adapter.constructor.name == 'GenericAdapterSetDescription') {
+            return (<GenericAdapterSetDescription> adapter).dataSet.eventSchema;
+        } else if (adapter.constructor.name == 'SpecificAdapterSetDescription'){
+            return (<SpecificAdapterSetDescription> adapter).dataSet.eventSchema;
+        } else if (adapter.constructor.name == 'GenericAdapterStreamDescription'){
+            return (<GenericAdapterStreamDescription> adapter).dataStream.eventSchema;
+        } else if (adapter.constructor.name == 'SpecificAdapterStreamDescription'){
+            return (<SpecificAdapterStreamDescription> adapter).dataStream.eventSchema;
+        } else {
+            return new EventSchema();
+        }
     }
 
     public setSchema() {
