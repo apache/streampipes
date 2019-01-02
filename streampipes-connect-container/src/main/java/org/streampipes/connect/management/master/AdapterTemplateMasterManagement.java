@@ -55,28 +55,36 @@ public class AdapterTemplateMasterManagement {
 
         String uri = adapterDescription.getUri() + UUID.randomUUID().toString();
         adapterDescription.setUri(uri);
-        adapterDescription.changeElementId(uri);
+        adapterDescription.setElementId(uri);
         adapterDescription.setAdapterId(uri);
 
 
         if (adapterDescription instanceof GenericAdapterSetDescription) {
             String id = ((GenericAdapterSetDescription) adapterDescription).getFormatDescription().getElementId();
             id = id + "/" + UUID.randomUUID().toString();
-            ((GenericAdapterSetDescription) adapterDescription).getFormatDescription().changeElementId(id);
+            ((GenericAdapterSetDescription) adapterDescription).getFormatDescription().setElementId(id);
 
             id = ((GenericAdapterSetDescription) adapterDescription).getProtocolDescription().getElementId();
             id = id + "/" + UUID.randomUUID().toString();
-            ((GenericAdapterSetDescription) adapterDescription).getProtocolDescription().changeElementId(id);
+            ((GenericAdapterSetDescription) adapterDescription).getProtocolDescription().setElementId(id);
+
+            id = ((GenericAdapterSetDescription) adapterDescription).getDataSet().getElementId();
+            id = id + "/" + UUID.randomUUID().toString();
+            ((GenericAdapterSetDescription) adapterDescription).getDataSet().setElementId(id);
         }
 
         if (adapterDescription instanceof GenericAdapterStreamDescription) {
             String id = ((GenericAdapterStreamDescription) adapterDescription).getFormatDescription().getElementId();
             id = id + "/" + UUID.randomUUID().toString();
-            ((GenericAdapterStreamDescription) adapterDescription).getFormatDescription().changeElementId(id);
+            ((GenericAdapterStreamDescription) adapterDescription).getFormatDescription().setElementId(id);
 
             id = ((GenericAdapterStreamDescription) adapterDescription).getProtocolDescription().getElementId();
             id = id + "/" + UUID.randomUUID().toString();
-            ((GenericAdapterStreamDescription) adapterDescription).getProtocolDescription().changeElementId(id);
+            ((GenericAdapterStreamDescription) adapterDescription).getProtocolDescription().setElementId(id);
+
+            id = ((GenericAdapterStreamDescription) adapterDescription).getDataStream().getElementId();
+            id = id + "/" + UUID.randomUUID().toString();
+            ((GenericAdapterStreamDescription) adapterDescription).getDataStream().setElementId(id);
         }
 
         this.adapterTemplateStorage.storeAdapterTemplate(adapterDescription);

@@ -68,8 +68,6 @@ public class AdapterMasterManagement {
 
         String newId = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() + "api/v1/" + username + "/master/sources/" + uuid;
 
-
-        ad.changeElementId(newId);
         ad.setElementId(newId);
 
         // store in db

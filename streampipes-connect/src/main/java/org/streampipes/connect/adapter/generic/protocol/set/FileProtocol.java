@@ -63,6 +63,8 @@ public class FileProtocol extends Protocol {
         pd.setSourceType("SET");
         pd.setIconUrl("file.png");
         pd.addConfig(urlProperty);
+
+        pd.setAppId(ID);
         return pd;
     }
 

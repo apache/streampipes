@@ -96,6 +96,7 @@ public class HttpStreamProtocol extends PullProtocol {
         description.addConfig(intervalProperty);
 //        description.addConfig(accessToken);
 
+        description.setAppId(ID);
         return description;
     }
 

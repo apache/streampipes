@@ -95,14 +95,14 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
 
     private Parser getParser(GenericAdapterDescription adapterDescription) throws AdapterException {
          if (adapterDescription.getFormatDescription() == null) throw new AdapterException("Format description of Adapter ist empty");
-         return AdapterRegistry.getAllParsers().get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
+         return AdapterRegistry.getAllParsers().get(adapterDescription.getFormatDescription().getAppId()).getInstance(adapterDescription.getFormatDescription());
     }
 
     private Format getFormat(GenericAdapterDescription adapterDescription) {
-        return AdapterRegistry.getAllFormats().get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
+        return AdapterRegistry.getAllFormats().get(adapterDescription.getFormatDescription().getAppId()).getInstance(adapterDescription.getFormatDescription());
     }
 
     private Protocol getProtocol(GenericAdapterDescription adapterDescription, Format format, Parser parser) {
-        return AdapterRegistry.getAllProtocols().get(adapterDescription.getProtocolDescription().getUri()).getInstance(adapterDescription.getProtocolDescription(), parser, format);
+        return AdapterRegistry.getAllProtocols().get(adapterDescription.getProtocolDescription().getAppId()).getInstance(adapterDescription.getProtocolDescription(), parser, format);
     }
 }

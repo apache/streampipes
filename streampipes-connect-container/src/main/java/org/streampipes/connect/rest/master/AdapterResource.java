@@ -88,7 +88,7 @@ public class AdapterResource extends AbstractContainerResource {
             adapterId = adapterMasterManagement.addAdapter(adapterDescription, newUrl, new
                     AdapterStorageImpl(), userName);
         } catch (AdapterException e) {
-            logger.error("Error while starting adapter with id " + adapterDescription.getUri(), e);
+            logger.error("Error while starting adapter with id " + adapterDescription.getAppId(), e);
             return ok(Notifications.error(e.getMessage()));
         }
 

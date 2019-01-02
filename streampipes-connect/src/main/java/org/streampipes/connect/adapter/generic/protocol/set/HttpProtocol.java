@@ -64,6 +64,8 @@ public class HttpProtocol extends Protocol {
 
         pd.setSourceType("SET");
         pd.setIconUrl("rest.png");
+
+        pd.setAppId(ID);
         //TODO remove just for testing
 //        urlProperty.setValue("https://opendata.bonn.de/api/action/datastore/search.json?resource_id=0a41c514-f760-4a17-b0a8-e1b755204fee&limit=100");
 

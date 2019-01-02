@@ -43,9 +43,11 @@ public class GdeltAdapter extends PullAdapter {
 
     @Override
     public SpecificAdapterStreamDescription declareModel() {
-        return SpecificDataStreamAdapterBuilder.create(ID, "GDELT", "Global Database of Society")
+        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "GDELT", "Global Database of Society")
                 .iconUrl("gdelt.png")
                 .build();
+        description.setAppId(ID);
+        return  description;
     }
 
     public List<Map<String, Object>> getEvents() {

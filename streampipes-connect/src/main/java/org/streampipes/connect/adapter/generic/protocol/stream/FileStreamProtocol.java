@@ -90,6 +90,8 @@ public class FileStreamProtocol extends PullProtocol {
         pd.setIconUrl("file.png");
         pd.addConfig(urlProperty);
         pd.addConfig(intervalProperty);
+
+        pd.setAppId(ID);
         return pd;
     }
 

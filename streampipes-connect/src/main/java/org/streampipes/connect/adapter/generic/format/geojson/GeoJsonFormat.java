@@ -36,6 +36,8 @@ public class GeoJsonFormat extends Format {
     public FormatDescription declareModel() {
         FormatDescription description = new FormatDescription(ID, "GeoJSON", "This is the description " +
                 "for the geoJSON format");
+
+        description.setAppId(ID);
         return description;
     }
 
