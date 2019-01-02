@@ -27,28 +27,28 @@
         <mat-step>
             <ng-template matStepLabel>Settings</ng-template>
             <div class="assemblyOptions sp-blue-bg">
-                <h4 *ngIf="!adapter.id.includes('generic')">Basic settings</h4>
-                <h4 *ngIf="adapter.id.includes('generic')">Protocol settings</h4>
+                <h4 *ngIf="!isGenericAdapter()">Basic settings</h4>
+                <h4 *ngIf="isGenericAdapter()">Protocol settings</h4>
             </div>
             <div class="sp-blue-border padding">
                 <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"></app-static-property>
-                <app-protocol (validateEmitter)="validateProtocol($event)" [protocol]="adapter.protocol" *ngIf="adapter.id.includes('generic')"></app-protocol>
+                <app-protocol (validateEmitter)="validateProtocol($event)" [protocol]="adapter.protocol" *ngIf="isGenericAdapter()"></app-protocol>
             </div>
 
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                 <div id="specific-settings-next-button">
-                    <button *ngIf="adapter.id.includes('generic')" [disabled]="!protocolConfigurationValid"  (click)="clickSpecificSettingsNextButton()" color="primary"
+                    <button *ngIf="isGenericAdapter()" [disabled]="!protocolConfigurationValid"  (click)="clickSpecificSettingsNextButton()" color="primary"
                             mat-raised-button matStepperNext style="margin-left:10px;">Next
                     </button>
-                    <button *ngIf="!adapter.id.includes('generic')" (click)="clickSpecificSettingsNextButton()" color="primary"
+                    <button *ngIf="!isGenericAdapter()" (click)="clickSpecificSettingsNextButton()" color="primary"
                             mat-raised-button matStepperNext style="margin-left:10px;">Next
                     </button>
                 </div>
             </div>
         </mat-step>
 
-        <mat-step *ngIf="adapter.id.includes('generic')">
+        <mat-step *ngIf="isGenericAdapter()">
             <form>
                 <ng-template matStepLabel>Select Format</ng-template>
 

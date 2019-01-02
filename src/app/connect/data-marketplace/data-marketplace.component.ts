@@ -15,7 +15,9 @@ import {SpecificAdapterStreamDescription} from '../model/connect/SpecificAdapter
 })
 export class DataMarketplaceComponent implements OnInit {
     adapterDescriptions: AdapterDescription[];
+
     adapterTemplates: AdapterDescription[];
+
     newAdapterFromDescription: AdapterDescription;
     adapters: AdapterDescription[];
     @Output()
@@ -28,32 +30,53 @@ export class DataMarketplaceComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.updateDescriptionsAndRunningAdatpers();
+    }
+
+    updateDescriptionsAndRunningAdatpers() {
+        this.getAdapterDescriptions();
+        this.getAdaptersRunning();
+    }
+
+    getAdapterDescriptions(): void {
+        var self = this;
+
+        this.adapterDescriptions = [];
+
         this.dataMarketplaceService
             .getGenericAndSpecifigAdapterDescriptions()
             .subscribe(res => {
                 res.subscribe(adapterDescriptions => {
-                    this.adapterDescriptions = adapterDescriptions;
+                    this.adapterDescriptions = this.adapterDescriptions.concat(adapterDescriptions);
+
                 });
             });
-        this.getAdapters();
-        this.getAdapterTemplates();
-    }
 
-    getAdapters(): void {
-        this.dataMarketplaceService.getAdapters().subscribe(adapters => {
-            this.adapters = adapters;
-        });
-    }
-
-    getAdapterTemplates(): void {
         this.dataMarketplaceService.getAdapterTemplates().subscribe(adapterTemplates => {
             adapterTemplates.forEach(function (adapterTemplate) {
                 adapterTemplate.isTemplate = true;
             });
 
-            this.adapterTemplates = adapterTemplates;
+            this.adapterDescriptions = this.adapterDescriptions.concat(adapterTemplates);
+
         });
     }
+
+    getAdaptersRunning(): void {
+        this.dataMarketplaceService.getAdapters().subscribe(adapters => {
+            this.adapters = adapters;
+        });
+    }
+
+    // getAdapterTemplates(): void {
+    //     this.dataMarketplaceService.getAdapterTemplates().subscribe(adapterTemplates => {
+    //         adapterTemplates.forEach(function (adapterTemplate) {
+    //             adapterTemplate.isTemplate = true;
+    //         });
+    //
+    //         this.adapterTemplates = adapterTemplates;
+    //     });
+    // }
 
     selectedIndexChange(index: number) {
         this.selectedIndex = index;

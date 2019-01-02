@@ -62,12 +62,6 @@ export class NewAdapterComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
-
-      console.log("Adapter");
-      console.log(this.adapter);
-      console.log("Adapter");
-
       this.formatConfigurationValid = false;
 
       if (this.adapter instanceof GenericAdapterSetDescription) {
@@ -169,5 +163,9 @@ export class NewAdapterComponent implements OnInit {
           this.validateFormat(true);
       }
     }
+  }
+
+  isGenericAdapter() {
+      return this.connectService.isGenericDescription(this.adapter);
   }
 }

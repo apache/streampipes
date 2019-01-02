@@ -37,22 +37,22 @@
                                         [adapter]="adapterDescription"></sp-adapter-description>
             </div>
 
-            <div *ngIf="newAdapterFromDescription===undefined" fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-description-container">
-                <sp-adapter-description attr.id="{{adapterTemplate.label.replace(' ', '_')}}" class="adapter-description" fxFlex="33"
-                                        (click)="selectAdapter(adapterTemplate)"
-                                        *ngFor="let adapterTemplate of adapterTemplates"
-                                        [adapter]="adapterTemplate"></sp-adapter-description>
-            </div>
+            <!--<div *ngIf="newAdapterFromDescription===undefined" fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-description-container">-->
+                <!--<sp-adapter-description attr.id="{{adapterTemplate.label.replace(' ', '_')}}" class="adapter-description" fxFlex="33"-->
+                                        <!--(click)="selectAdapter(adapterTemplate)"-->
+                                        <!--*ngFor="let adapterTemplate of adapterTemplates"-->
+                                        <!--[adapter]="adapterTemplate"></sp-adapter-description>-->
+            <!--</div>-->
 
             <div class="new-adapter-container" fxFlex="100" fxLayout="row" fxLayoutAlign="start start" *ngIf="newAdapterFromDescription!==undefined">
-                <sp-new-adapter fxFlex="100" (removeSelectionEmitter)="removeSelection($event)" [adapter]="newAdapterFromDescription" (updateAdapterEmitter)="getAdapters()"></sp-new-adapter>
+                <sp-new-adapter fxFlex="100" (removeSelectionEmitter)="removeSelection($event)" [adapter]="newAdapterFromDescription" (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-new-adapter>
             </div>
 
         </div>
         <div *ngIf="selectedIndex === 1">
             <div fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-container">
                 <sp-adapter-description class="adapter-description" fxFlex="33" *ngFor="let adapter of adapters"
-                                        [adapter]="adapter" (updateAdapterEmitter)="getAdapters()"></sp-adapter-description>
+                                        [adapter]="adapter" (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-adapter-description>
             </div>
         </div>
         <div class="ribbon"><span>Beta</span></div>
