@@ -17,6 +17,9 @@ export class ProtocolDescription {
   @RdfProperty('http://www.w3.org/2000/01/rdf-schema#description')
   public description: string;
 
+  @RdfProperty('sp:hasAppId')
+  public appId: string;
+
   @RdfProperty('sp:iconUrl')
   public iconUrl: string;
 

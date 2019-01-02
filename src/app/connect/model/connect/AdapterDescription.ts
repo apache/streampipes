@@ -16,6 +16,9 @@ export class AdapterDescription {
   @RdfProperty('http://www.w3.org/2000/01/rdf-schema#description')
   public description: string;
 
+  @RdfProperty('sp:hasAppId')
+  public appId: string;
+
   @RdfProperty('sp:couchDBId')
   public couchDbId: string;
 
