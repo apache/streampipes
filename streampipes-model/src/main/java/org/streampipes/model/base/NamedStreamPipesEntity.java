@@ -25,11 +25,12 @@ import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.RDFS;
 import org.streampipes.vocabulary.StreamPipes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * named SEPA elements, can be accessed via the URI provided in @RdfId
@@ -49,7 +50,7 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   @RdfProperty(StreamPipes.HAS_URI)
   @RdfId
-  private String uri;
+  protected String elementId;
 
   @RdfProperty(StreamPipes.HAS_APP_ID)
   private String appId;
@@ -58,8 +59,6 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
           cascade = {CascadeType.ALL})
   @RdfProperty(StreamPipes.HAS_APPLICATION_LINK)
   private List<ApplicationLink> applicationLinks;
-
-  protected String elementId;
 
   protected String DOM;
   protected List<String> connectedTo;
@@ -70,24 +69,23 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.applicationLinks = new ArrayList<>();
   }
 
-  public NamedStreamPipesEntity(String uri) {
+  public NamedStreamPipesEntity(String elementId) {
     super();
-    this.uri = uri;
+    this.elementId = elementId;
     this.applicationLinks = new ArrayList<>();
   }
 
-  public NamedStreamPipesEntity(String uri, String name, String description, String iconUrl) {
-    this(uri, name, description);
+  public NamedStreamPipesEntity(String elementId, String name, String description, String iconUrl) {
+    this(elementId, name, description);
     this.iconUrl = iconUrl;
     this.applicationLinks = new ArrayList<>();
   }
 
-  public NamedStreamPipesEntity(String uri, String name, String description) {
+  public NamedStreamPipesEntity(String elementId, String name, String description) {
     super();
-    this.uri = uri;
+    this.elementId = elementId;
     this.name = name;
     this.description = description;
-    this.elementId = uri;
     this.applicationLinks = new ArrayList<>();
   }
 
@@ -96,10 +94,9 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.description = other.getDescription();
     this.name = other.getName();
     this.iconUrl = other.getIconUrl();
-    this.uri = other.getUri();
+    this.elementId = other.getElementId();
     this.DOM = other.getDOM();
     this.connectedTo = other.getConnectedTo();
-    this.elementId = other.getElementId();
     if (other.getApplicationLinks() != null) {
       this.applicationLinks = new Cloner().al(other.getApplicationLinks());
     }
@@ -130,20 +127,22 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.iconUrl = iconUrl;
   }
 
+  @Deprecated
   public String getUri() {
-    return uri;
+    return elementId;
   }
 
+  @Deprecated
   public void setUri(String uri) {
-    this.uri = uri;
+    this.elementId = uri;
   }
 
   public String getElementId() {
-    return uri;
+    return elementId;
   }
 
   public void setElementId(String elementId) {
-    this.uri = elementId;
+    this.elementId = elementId;
   }
 
   public void setDOM(String DOM) {
@@ -178,6 +177,7 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.appId = appId;
   }
 
+  @Deprecated
   public void changeElementId(String elementId) {
     this.elementId = elementId;
   }

@@ -25,55 +25,41 @@ import org.streampipes.vocabulary.StreamPipes;
 
 /**
  * unnamed SEPA elements (that do not require any readable identifier)
- *
  */
 public abstract class UnnamedStreamPipesEntity extends AbstractStreamPipesEntity {
-	
-	private static final long serialVersionUID = 8051137255998890188L;
-	
-	private static final String prefix = "urn:streampipes.org:spi:";
 
-	@RdfId
-	@RdfProperty(StreamPipes.HAS_ELEMENT_NAME)
-	private String elementName;
+  private static final long serialVersionUID = 8051137255998890188L;
 
-	private String elementId;
-	
-	public UnnamedStreamPipesEntity()
-	{
-		super();
-		this.elementName = prefix + this.getClass().getSimpleName().toLowerCase() +":" +RandomStringUtils.randomAlphabetic(6);
-        this.elementId = elementName;
-	}
-	
-	public UnnamedStreamPipesEntity(UnnamedStreamPipesEntity other)
-	{
-		super();
-		this.elementName = other.getElementName();
-        this.elementId = other.getElementId();
-	}
-	
-	public UnnamedStreamPipesEntity(String elementName)
-	{
-		super();
-		this.elementName = elementName;
-	}
+  private static final String prefix = "urn:streampipes.org:spi:";
 
-	public String getElementName() {
+  @RdfId
+  @RdfProperty(StreamPipes.HAS_ELEMENT_NAME)
+  private String elementId;
 
-		return elementName;
-	}
 
-	public void setElementName(String elementName) {
-		this.elementName = elementName;
-	}
+  public UnnamedStreamPipesEntity() {
+    super();
+    this.elementId = prefix
+            + this.getClass().getSimpleName().toLowerCase()
+            + ":"
+            + RandomStringUtils.randomAlphabetic(6);
+  }
 
-	public String getElementId()
-	{
-		return elementName;
-	}
+  public UnnamedStreamPipesEntity(UnnamedStreamPipesEntity other) {
+    super();
+    this.elementId = other.getElementId();
+  }
 
-	public void setElementId(String elementId) {
-		this.elementName = elementId;
-	}
+  public UnnamedStreamPipesEntity(String elementId) {
+    super();
+    this.elementId = elementId;
+  }
+
+  public String getElementId() {
+    return elementId;
+  }
+
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
+  }
 }

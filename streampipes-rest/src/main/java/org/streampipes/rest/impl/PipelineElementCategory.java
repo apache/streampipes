@@ -17,6 +17,13 @@
 
 package org.streampipes.rest.impl;
 
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.DataSinkType;
+import org.streampipes.model.client.Category;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.rest.api.IPipelineElementCategory;
+import org.streampipes.storage.management.StorageManager;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,13 +31,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-
-import org.streampipes.model.DataSinkType;
-import org.streampipes.model.DataProcessorType;
-import org.streampipes.model.client.Category;
-import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.rest.api.IPipelineElementCategory;
-import org.streampipes.storage.management.StorageManager;
 
 @Path("/v2/categories")
 public class PipelineElementCategory extends AbstractRestInterface implements IPipelineElementCategory {
@@ -62,7 +62,7 @@ public class PipelineElementCategory extends AbstractRestInterface implements IP
 	private List<Category> makeCategories(List<DataSourceDescription> producers) {
 		return producers
 				.stream()
-				.map(p -> new Category(p.getRdfId().toString(), p.getName(), p.getDescription()))
+				.map(p -> new Category(p.getElementId(), p.getName(), p.getDescription()))
 				.collect(Collectors.toList());
 	}
 }
