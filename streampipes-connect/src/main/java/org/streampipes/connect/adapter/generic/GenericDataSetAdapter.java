@@ -50,6 +50,7 @@ public class GenericDataSetAdapter extends GenericAdapter<GenericAdapterSetDescr
         GenericAdapterSetDescription adapterDescription = new GenericAdapterSetDescription();
         adapterDescription.setAdapterId(GenericAdapterSetDescription.ID);
         adapterDescription.setUri(GenericAdapterSetDescription.ID);
+        adapterDescription.setAppId(GenericAdapterSetDescription.ID);
         return adapterDescription;
     }
 

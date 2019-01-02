@@ -58,6 +58,9 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     @RdfProperty("sp:grounding")
     private EventGrounding eventGrounding;
 
+    @RdfProperty("sp:adapterType")
+    private String adapterType;
+
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
     @RdfProperty("sp:config")
@@ -94,6 +97,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.adapterId = other.getAdapterId();
         this.userName = other.getUserName();
         this.rules = other.getRules();
+        this.adapterType = other.getAdapterType();
         if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
 
@@ -157,6 +161,14 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     public void setConfig(List<StaticProperty> config) {
         this.config = config;
+    }
+
+    public String getAdapterType() {
+        return adapterType;
+    }
+
+    public void setAdapterType(String adapterType) {
+        this.adapterType = adapterType;
     }
 
     @Override
