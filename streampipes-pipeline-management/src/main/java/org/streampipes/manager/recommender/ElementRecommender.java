@@ -206,7 +206,7 @@ public class ElementRecommender {
     } else {
       List<InvocableStreamPipesEntity> graphs = new PipelineVerificationHandler(pipeline)
               .validateConnection()
-              .makeInvocationGraphs(null);
+              .makeInvocationGraphs();
 
       Optional<InvocableStreamPipesEntity> rootElementWithOutputStream = graphs
               .stream()
