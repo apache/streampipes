@@ -10,6 +10,7 @@ import {AddNestedRuleDescription} from './model/connect/rules/AddNestedRuleDescr
 import {k} from '@angular/core/src/render3';
 import {MoveRuleDescription} from './model/connect/rules/MoveRuleDesctiption';
 import {DeleteRuleDescription} from './model/connect/rules/DeleteRuleDescription';
+import {UnitTransformRuleDescription} from './model/connect/rules/UnitTransformRuleDescription';
 
 @Injectable()
 export class TransformationRuleService {
@@ -51,6 +52,9 @@ export class TransformationRuleService {
         transformationRuleDescription = transformationRuleDescription.concat(this.getDeleteRules(
             this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
+        // Unit
+        transformationRuleDescription = transformationRuleDescription.concat(this.getUnitTransformRules(
+            this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
         return transformationRuleDescription;
     }
@@ -187,6 +191,45 @@ export class TransformationRuleService {
         return resultRules;
     }
 
+    public getUnitTransformRules(newEventProperties: EventProperty[],
+                                      oldEventSchema: EventSchema,
+                                      newEventSchema: EventSchema): UnitTransformRuleDescription[] {
+        var result: UnitTransformRuleDescription[] = [];
+
+        for (let eventProperty of newEventProperties) {
+
+            if (eventProperty instanceof EventPropertyPrimitive) {
+                const eventPropertyPrimitive =  eventProperty as EventPropertyPrimitive;
+                const keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventPropertyPrimitive.id);
+
+
+                result.push(new UnitTransformRuleDescription(keyNew,
+       // TODO: use if backend deserialize URI correct
+       //             eventPropertyPrimitive.oldMeasurementUnit, eventPropertyPrimitive.measurementUnit));
+                    eventPropertyPrimitive.oldMeasurementUnit, eventPropertyPrimitive.measurementUnitTmp));
+            } else if (eventProperty instanceof EventPropertyNested) {
+
+                const tmpResults: UnitTransformRuleDescription[] =
+                    this.getUnitTransformRules((<EventPropertyNested> eventProperty).eventProperties,  oldEventSchema, newEventSchema);
+                result = result.concat(tmpResults);
+
+            }
+
+
+        }
+
+        var filteredResult: UnitTransformRuleDescription[] = [];
+        for (let res of result) {
+            if (res.fromUnitRessourceURL !== res.toUnitRessourceURL) {
+                filteredResult.push(res);
+            }
+        }
+
+        return filteredResult;
+
+
+     }
+
 
     public getCompleteRuntimeNameKey(eventProperties: EventProperty[], id: string): string {
         var result: string = '';
@@ -234,6 +277,22 @@ export class TransformationRuleService {
 
             if (eventProperty instanceof EventPropertyNested) {
                 result = result.concat(this.getAllIds((<EventPropertyNested> eventProperty).eventProperties));
+            }
+        }
+        return result;
+    }
+
+    public getEventProperty(eventProperties: EventProperty[], id: string): EventProperty {
+        var result: EventProperty = null;
+
+        for (let eventProperty of eventProperties) {
+
+            if (eventProperty.id === id) {
+                return eventProperty;
+            } else {
+                if (eventProperty instanceof EventPropertyNested) {
+                    return this.getEventProperty((eventProperty as EventPropertyNested).eventProperties, id);
+                }
             }
         }
         return result;

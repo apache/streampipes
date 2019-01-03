@@ -45,5 +45,35 @@
     <!--</div>-->
     <!---->
     <!--</form>-->
+
+
+    <div fxLayout="row" fxLayoutAlign="start">
+        <div class="form-group" fxFlexAlign="center" style="width: 155px">
+            <mat-form-field *ngIf="!hadMesarumentUnit" class="example-full-width" style="width: 155px">
+                <input matInput placeholder="Unit" [matAutocomplete]="auto" [formControl]="stateCtrl" [attr.disabled]="transformUnitEnable ? '' : null">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let unit of filteredUnits | async" [value]="unit.label">
+                        <span [matTooltip]="unit.label">{{unit.label}}</span>
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field *ngIf="hadMesarumentUnit" class="example-full-width" style="width: 155px">
+                <input matInput placeholder="Unit" disabled [(ngModel)]="oldMeasurementUnitDipsplay">
+            </mat-form-field>
+
+        </div>
+             <button mat-button (click)="transformUnit()" color="primary"  class="form-group" fxFlexAlign="center" style="min-width: 60px; max-width: 60px">
+                <mat-icon *ngIf="!transformUnitEnable">arrow_forward</mat-icon>
+                <mat-icon *ngIf="transformUnitEnable" style="transform: rotate(180deg)">arrow_forward</mat-icon>
+             </button>
+        <mat-form-field class="example-full-width" style="width: 155px" *ngIf="transformUnitEnable">
+            <mat-select placeholder="New Unit" [(value)]="selectUnit">
+                <mat-option *ngFor="let unit of possibleUnitTransformations" [value]="unit" (click)="changeTargetUnit(unit)">
+                    {{unit.label}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+    </div>
 </div>
 

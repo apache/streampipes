@@ -16,6 +16,10 @@ export class EventPropertyPrimitive extends EventProperty {
     @RdfProperty('sp:hasMeasurementUnit')
     public measurementUnit: string;
 
+    public measurementUnitTmp: string;
+
+    public oldMeasurementUnit: string;
+
     @RdfProperty('sp:hasValueSpecification')
     public valueSpecification: string;
 

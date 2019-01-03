@@ -35,6 +35,7 @@ import { AddNestedRuleDescription } from './model/connect/rules/AddNestedRuleDes
 import { MoveRuleDescription } from './model/connect/rules/MoveRuleDesctiption';
 import { TransformationRuleDescription } from './model/connect/rules/TransformationRuleDescription';
 import {StatusMessage} from "./model/message/StatusMessage";
+import { UnitDescription } from './model/UnitDescription';
 import {AnyStaticProperty} from './model/AnyStaticProperty';
 import { Option } from './model/Option';
 import { OneOfStaticProperty } from './model/OneOfStaticProperty';
@@ -256,4 +257,15 @@ export class RestService {
         return res;
       });
   }
+
+  getFittingUnits(unitDescription: UnitDescription): Observable<UnitDescription[]> {
+    return this.http
+       .post<UnitDescription[]>('/streampipes-connect/api/v1/' + this.authStatusService.email + '/master/unit', unitDescription)
+        .map(response => {
+            const descriptions = response as UnitDescription[];
+            return descriptions.filter(entry => entry.resource != unitDescription.resource)
+        });
+  }
+
+
 }
