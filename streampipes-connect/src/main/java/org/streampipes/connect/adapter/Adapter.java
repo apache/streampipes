@@ -20,26 +20,31 @@ package org.streampipes.connect.adapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
+import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
+import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
+import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
+import org.streampipes.connect.adapter.generic.pipeline.elements.TransformValueAdapterPipelineElement;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Adapter<T extends AdapterDescription> {
     Logger logger = LoggerFactory.getLogger(Adapter.class);
 
-    @Deprecated
-    protected String kafkaUrl;
-
-    @Deprecated
-    protected String topic;
-
     private boolean debug;
+
+    protected AdapterPipeline adapterPipeline;
 
     protected T adapterDescription;
 
     public Adapter(T adapterDescription, boolean debug) {
         this.adapterDescription = adapterDescription;
         this.debug = debug;
+        this.adapterPipeline = getAdapterPipeline(adapterDescription);
     }
 
     public Adapter(T adapterDescription) {
@@ -54,18 +59,6 @@ public abstract class Adapter<T extends AdapterDescription> {
         this(false);
     }
 
-    @Deprecated
-    public Adapter(String kafkaUrl, String topic, boolean debug) {
-        this.kafkaUrl = kafkaUrl;
-        this.topic = topic;
-        this.debug = debug;
-    }
-
-    @Deprecated
-    public Adapter(String kafkaUrl, String topic) {
-        this(kafkaUrl, topic, false);
-    }
-
     public abstract T declareModel();
 
     // Decide which adapter to call
@@ -78,6 +71,22 @@ public abstract class Adapter<T extends AdapterDescription> {
     public abstract GuessSchema getSchema(T adapterDescription) throws AdapterException;
 
     public abstract String getId();
+
+    private AdapterPipeline getAdapterPipeline(AdapterDescription adapterDescription) {
+
+        List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
+        // first transform schema before transforming vales
+        // value rules should use unique keys for of new schema
+        pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getSchemaRules()));
+        pipelineElements.add(new TransformValueAdapterPipelineElement(adapterDescription.getValueRules()));
+
+        // Needed when adapter is
+        if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null) {
+            pipelineElements.add(new SendToKafkaAdapterSink( adapterDescription));
+        }
+
+       return new AdapterPipeline(pipelineElements);
+    }
 
     public boolean isDebug() {
         return debug;

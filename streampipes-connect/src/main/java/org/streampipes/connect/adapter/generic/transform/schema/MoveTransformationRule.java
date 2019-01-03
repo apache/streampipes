@@ -19,6 +19,8 @@ package org.streampipes.connect.adapter.generic.transform.schema;
 
 import java.util.*;
 
+import static javax.swing.UIManager.put;
+
 public class MoveTransformationRule implements SchemaTransformationRule {
 
     private List<String> oldKey;
@@ -41,8 +43,8 @@ public class MoveTransformationRule implements SchemaTransformationRule {
         Map<String, Object> objectToMove = (Map<String, Object>) ((HashMap<String, Object>) getItem(event, oldKey)).clone();
 
 
-        Map<String, Object>resultEvent = addItem(event, newKey, objectToMove);
-        resultEvent = deleteItem(event, oldKey);
+        Map<String, Object> resultEvent = addItem(event, newKey, objectToMove);
+        resultEvent = deleteItem(resultEvent, oldKey);
 
         return resultEvent;
     }
@@ -53,7 +55,12 @@ public class MoveTransformationRule implements SchemaTransformationRule {
             event.put(key, movedObject.get(key));
             return event;
         } else if (keys.size() == 1) {
-            event.put(keys.get(0), movedObject);
+            if (event.get(keys.get(0)) != null && event.get(keys.get(0)) instanceof HashMap) {
+                String movedObjectKey = movedObject.keySet().iterator().next();
+                ((Map<String, Object>) event.get(keys.get(0))).put(movedObjectKey, movedObject.get(movedObjectKey));
+            } else {
+                event.put(keys.get(0), movedObject);
+            }
             return event;
         } else {
             String key = keys.get(0);

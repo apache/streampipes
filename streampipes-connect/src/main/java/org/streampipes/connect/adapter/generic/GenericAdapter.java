@@ -71,13 +71,12 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
 
         logger.debug("Start adatper with format: " + format.getId() + " and " + protocol.getId());
 
-
-        List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
-        pipelineElements.add(new TransformSchemaAdapterPipelineElement(((AdapterDescription) adapterDescription).getSchemaRules()));
-        pipelineElements.add(new TransformValueAdapterPipelineElement(((AdapterDescription) adapterDescription).getValueRules()));
-        pipelineElements.add(new SendToKafkaAdapterSink((AdapterDescription) adapterDescription));
-
-        AdapterPipeline adapterPipeline = new AdapterPipeline(pipelineElements);
+//        List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
+//        pipelineElements.add(new TransformSchemaAdapterPipelineElement(((AdapterDescription) adapterDescription).getSchemaRules()));
+//        pipelineElements.add(new TransformValueAdapterPipelineElement(((AdapterDescription) adapterDescription).getValueRules()));
+//        pipelineElements.add(new SendToKafkaAdapterSink((AdapterDescription) adapterDescription));
+//
+//        AdapterPipeline adapterPipeline = new AdapterPipeline(pipelineElements);
 
         protocol.run(adapterPipeline);
     }
