@@ -39,6 +39,7 @@ import { UnitDescription } from './model/UnitDescription';
 import {AnyStaticProperty} from './model/AnyStaticProperty';
 import { Option } from './model/Option';
 import { OneOfStaticProperty } from './model/OneOfStaticProperty';
+import {UnitTransformRuleDescription} from './model/connect/rules/UnitTransformRuleDescription';
 
 @Injectable()
 export class RestService {
@@ -69,6 +70,7 @@ export class RestService {
     tsonld.addClassMapping(DeleteRuleDescription);
     tsonld.addClassMapping(AddNestedRuleDescription);
     tsonld.addClassMapping(MoveRuleDescription);
+      tsonld.addClassMapping(UnitTransformRuleDescription);
       tsonld.addClassMapping(Option);
       tsonld.addClassMapping(AnyStaticProperty);
       tsonld.addClassMapping(OneOfStaticProperty);

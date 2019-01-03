@@ -32,6 +32,7 @@ import {EventPropertyList} from '../schema-editor/model/EventPropertyList';
 import {UUID} from 'angular2-uuid';
 import {DataSetDescription} from '../model/DataSetDescription';
 import {OneOfStaticProperty} from '../model/OneOfStaticProperty';
+import {UnitTransformRuleDescription} from '../model/connect/rules/UnitTransformRuleDescription';
 
 @Injectable()
 export class DataMarketplaceService {
@@ -76,6 +77,7 @@ export class DataMarketplaceService {
     tsonld.addClassMapping(DeleteRuleDescription);
     tsonld.addClassMapping(AddNestedRuleDescription);
     tsonld.addClassMapping(MoveRuleDescription);
+    tsonld.addClassMapping(UnitTransformRuleDescription);
 
     return tsonld;
   }
