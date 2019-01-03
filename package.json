@@ -16,9 +16,7 @@
     "watchtest": "node ./deployment/prebuild.js && karma start ./karma.conf.js --no-auto-watch --single-run",
     "test": "node ./deployment/prebuild.js && karma start ./karma.conf.js",
     "build": "node ./deployment/prebuild.js && webpack --display-modules --progress",
-    "lint": "tslint -c tslint.json 'src/**/*.ts*",
-    "test-e2e": "cypress open",
-    "run-e2e": "cypress run --record false --spec cypress/integration/newadapter/test.spec.js"
+    "lint": "tslint -c tslint.json 'src/**/*.ts*"
   },
   "dependencies": {
     "@angular/animations": "^5.2.5",
