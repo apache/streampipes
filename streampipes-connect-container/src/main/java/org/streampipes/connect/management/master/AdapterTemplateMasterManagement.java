@@ -100,6 +100,10 @@ public class AdapterTemplateMasterManagement {
         return result;
     }
 
+    public void deleteAdapterTemplates(String id) throws AdapterException {
+        this.adapterTemplateStorage.deleteAdapterTemplate(id);
+    }
+
     public void setAdapterTemplateStorage(IAdapterTemplateStorage adapterTemplateStorage) {
         this.adapterTemplateStorage = adapterTemplateStorage;
     }

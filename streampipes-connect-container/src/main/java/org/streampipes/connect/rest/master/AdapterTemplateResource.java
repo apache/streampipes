@@ -93,6 +93,22 @@ public class AdapterTemplateResource extends AbstractContainerResource {
 
     }
 
+
+    @DELETE
+    @JsonLdSerialized
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteAdapter(@PathParam("id") String id, @PathParam("username") String userName) {
+
+        try {
+            adapterTemplateMasterManagement.deleteAdapterTemplates(id);
+            return ok(true);
+        } catch (AdapterException e) {
+            logger.error("Error while deleting adapter with id " + id, e);
+            return fail();
+        }
+    }
+
     public void setAdapterTemplateMasterManagement(AdapterTemplateMasterManagement adapterTemplateMasterManagement) {
         this.adapterTemplateMasterManagement = adapterTemplateMasterManagement;
     }
