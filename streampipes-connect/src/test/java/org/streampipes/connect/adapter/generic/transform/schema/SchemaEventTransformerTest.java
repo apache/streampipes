@@ -15,15 +15,16 @@
  *
  */
 
-package org.streampipes.connect.adapter.generic.transform;
+package org.streampipes.connect.adapter.generic.transform.schema;
 
 import org.junit.Test;
+import org.streampipes.connect.adapter.generic.transform.TransformationRule;
 
 import java.util.*;
 
 import static org.junit.Assert.*;
 
-public class EventTransformerTest {
+public class SchemaEventTransformerTest {
 
     @Test
     public void transform() {
@@ -38,7 +39,7 @@ public class EventTransformerTest {
         rules.add(new MoveTransformationRule(Arrays.asList("b1"), Arrays.asList("c1", "f")));
         rules.add(new DeleteTransformationRule(Arrays.asList("e")));
 
-        EventTransformer eventTransformer = new EventTransformer(rules);
+        SchemaEventTransformer eventTransformer = new SchemaEventTransformer(rules);
 
         Map<String, Object> result = eventTransformer.transform(event);
 

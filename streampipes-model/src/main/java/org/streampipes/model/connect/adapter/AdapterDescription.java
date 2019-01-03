@@ -24,7 +24,10 @@ import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
+import org.streampipes.model.connect.rules.Schema.SchemaTransformationRuleDescription;
+import org.streampipes.model.connect.rules.Stream.StreamTransformationRuleDescription;
 import org.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
@@ -169,6 +172,33 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     public void setAdapterType(String adapterType) {
         this.adapterType = adapterType;
+    }
+
+    public List getValueRules() {
+        List tmp = new ArrayList<>();
+        rules.forEach(rule -> {
+            if(rule instanceof ValueTransformationRuleDescription)
+                tmp.add(rule);
+        });
+        return tmp;
+    }
+
+    public List getStreamRules() {
+        List tmp = new ArrayList<>();
+        rules.forEach(rule -> {
+            if(rule instanceof StreamTransformationRuleDescription)
+                tmp.add(rule);
+        });
+        return tmp;
+    }
+
+    public List getSchemaRules() {
+        List tmp = new ArrayList<>();
+        rules.forEach(rule -> {
+            if(rule instanceof SchemaTransformationRuleDescription)
+                tmp.add(rule);
+        });
+        return tmp;
     }
 
     @Override

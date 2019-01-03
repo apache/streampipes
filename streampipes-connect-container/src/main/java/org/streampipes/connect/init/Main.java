@@ -111,8 +111,7 @@ public class Main {
         allClasses.add(GuessResource.class);
         allClasses.add(FileResource.class);
         allClasses.add(MultiPartFeature.class);
-
-
+        allClasses.add(UnitResource.class);
         allClasses.addAll(getApiClasses());
 
         return allClasses;

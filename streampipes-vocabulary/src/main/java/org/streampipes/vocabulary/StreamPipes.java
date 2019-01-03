@@ -269,4 +269,21 @@ public class StreamPipes {
   public static final String HAS_PIPELINE_ELEMENTS = "hasPipelineElements";
   public static final String PIPELINE_ELEMENT_CONTAINER = "PipelineElementContainer" ;
 
+
+  public static final String EVENT_PROPERTY_ID = NS + "eventPropertyId" ;
+  public static final String RUNTIME_KEY = NS + "runtimeKey" ;
+  public static final String FROM_UNIT = NS + "fromUnit";
+  public static final String TO_UNIT = NS + "toUnit" ;
+  public static final String OLD_RUNTIME_NAME = NS + "oldRuntimeKey" ;
+  public static final String NEW_RUNTIME_NAME = NS + "newRuntimeKey" ;
+
+  //Class
+
+  public static final String TRANSFORM_RULE_DESCRIPTION =  NS + "TransformationRuleDescriptio";
+  public static final String UNIT_TRANSFORM_RULE_DESCRIPTION =  NS + "UnitTransformRuleDescription";
+  public static final String RENAME_RULE_DESCRIPTION =  NS + "RenameRuleDescription";
+  public static final String MOVE_RULE_DESCRIPTION =  NS + "MoveRuleDescription";
+  public static final String DELETE_RULE_DESCRIPTION =  NS + "DeleteRuleDescription";
+  public static final String CREATE_NESTED_RULE_DESCRIPTION =  NS + "CreateNestedRuleDescription";
+
 }

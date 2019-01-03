@@ -15,36 +15,38 @@
  *
  */
 
-package org.streampipes.model.connect.rules;
+package org.streampipes.model.connect.rules.Schema;
 
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
 
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp:MoveRuleDescription")
+@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
+@RdfsClass(StreamPipes.RENAME_RULE_DESCRIPTION)
 @Entity
-public class MoveRuleDescription extends TransformationRuleDescription {
+public class RenameRuleDescription extends SchemaTransformationRuleDescription {
 
-    @RdfProperty("sp:oldRuntimeKey")
+    @RdfProperty(StreamPipes.OLD_RUNTIME_NAME)
     private String oldRuntimeKey;
 
-    @RdfProperty("sp:newRuntimeKey")
+    @RdfProperty(StreamPipes.NEW_RUNTIME_NAME)
     private String newRuntimeKey;
 
-    public MoveRuleDescription() {
+    public RenameRuleDescription() {
         super();
     }
 
-    public MoveRuleDescription(String oldRuntimeKey, String newRuntimeKey) {
+    public RenameRuleDescription(String oldRuntimeKey, String newRuntimeKey) {
         super();
         this.oldRuntimeKey = oldRuntimeKey;
         this.newRuntimeKey = newRuntimeKey;
     }
 
-    public MoveRuleDescription(MoveRuleDescription other) {
+    public RenameRuleDescription(RenameRuleDescription other) {
         super(other);
         this.oldRuntimeKey = other.getOldRuntimeKey();
         this.newRuntimeKey = other.getNewRuntimeKey();
@@ -66,4 +68,3 @@ public class MoveRuleDescription extends TransformationRuleDescription {
         this.newRuntimeKey = newRuntimeKey;
     }
 }
-

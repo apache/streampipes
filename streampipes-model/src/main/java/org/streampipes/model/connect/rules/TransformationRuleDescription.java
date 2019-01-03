@@ -20,11 +20,12 @@ package org.streampipes.model.connect.rules;
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
 
-@Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp:TransformationRuleDescription")
+@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
+@RdfsClass(StreamPipes.TRANSFORM_RULE_DESCRIPTION)
 @Entity
 public abstract class TransformationRuleDescription extends UnnamedStreamPipesEntity {
 

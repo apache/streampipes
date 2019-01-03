@@ -15,13 +15,13 @@
  *
  */
 
-package org.streampipes.connect.adapter.generic.transform;
+package org.streampipes.connect.adapter.generic.transform.schema;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CreateNestedTransformationRule implements TransformationRule {
+public class CreateNestedTransformationRule implements SchemaTransformationRule {
     private List<String> key;
 
     public CreateNestedTransformationRule(List<String> key) {

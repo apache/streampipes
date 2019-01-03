@@ -31,10 +31,11 @@ import org.streampipes.model.connect.grounding.ProtocolDescriptionList;
 import org.streampipes.model.connect.guess.DomainPropertyProbability;
 import org.streampipes.model.connect.guess.DomainPropertyProbabilityList;
 import org.streampipes.model.connect.guess.GuessSchema;
-import org.streampipes.model.connect.rules.CreateNestedRuleDescription;
-import org.streampipes.model.connect.rules.DeleteRuleDescription;
-import org.streampipes.model.connect.rules.MoveRuleDescription;
-import org.streampipes.model.connect.rules.RenameRuleDescription;
+import org.streampipes.model.connect.rules.Schema.CreateNestedRuleDescription;
+import org.streampipes.model.connect.rules.Schema.DeleteRuleDescription;
+import org.streampipes.model.connect.rules.Schema.MoveRuleDescription;
+import org.streampipes.model.connect.rules.Schema.RenameRuleDescription;
+import org.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.streampipes.model.graph.*;
 import org.streampipes.model.grounding.*;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
@@ -140,7 +141,8 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             DeleteRuleDescription.class,
             CreateNestedRuleDescription.class,
             MoveRuleDescription.class,
-            RenameRuleDescription.class
+            RenameRuleDescription.class,
+            UnitTransformRuleDescription.class
     );
   }
 }

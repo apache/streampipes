@@ -15,12 +15,12 @@
  *
  */
 
-package org.streampipes.connect.adapter.generic.transform;
+package org.streampipes.connect.adapter.generic.transform.schema;
 
 import java.util.List;
 import java.util.Map;
 
-public class DeleteTransformationRule implements TransformationRule {
+public class DeleteTransformationRule implements SchemaTransformationRule {
 
     private List<String> key;
 

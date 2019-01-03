@@ -15,20 +15,23 @@
  *
  */
 
-package org.streampipes.connect.adapter.generic.transform;
+package org.streampipes.connect.adapter.generic.transform.schema;
+
+import org.streampipes.connect.adapter.generic.transform.TransformationRule;
+import org.streampipes.connect.adapter.generic.transform.value.UnitTransformationRule;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class EventTransformer implements TransformationRule {
+public class SchemaEventTransformer implements SchemaTransformationRule {
 
     private List<RenameTransformationRule> renameTransformationRules;
     private List<CreateNestedTransformationRule> createNestedTransformationRules;
     private List<MoveTransformationRule> moveTransformationRules;
     private List<DeleteTransformationRule> deleteTransformationRules;
 
-    public  EventTransformer(List<TransformationRule> rules) {
+    public SchemaEventTransformer(List<TransformationRule> rules) {
         this.renameTransformationRules = new ArrayList<>();
         this.createNestedTransformationRules = new ArrayList<>();
         this.moveTransformationRules = new ArrayList<>();
@@ -48,7 +51,10 @@ public class EventTransformer implements TransformationRule {
     }
 
 
-    public EventTransformer(List<RenameTransformationRule> renameTransformationRules, List<CreateNestedTransformationRule> createNestedTransformationRules, List<MoveTransformationRule> moveTransformationRules, List<DeleteTransformationRule> deleteTransformationRules) {
+    public SchemaEventTransformer(List<RenameTransformationRule> renameTransformationRules,
+                                  List<CreateNestedTransformationRule> createNestedTransformationRules,
+                                  List<MoveTransformationRule> moveTransformationRules,
+                                  List<DeleteTransformationRule> deleteTransformationRules) {
         this.renameTransformationRules = renameTransformationRules;
         this.createNestedTransformationRules = createNestedTransformationRules;
         this.moveTransformationRules = moveTransformationRules;
@@ -77,7 +83,6 @@ public class EventTransformer implements TransformationRule {
 
         return event;
     }
-
 
 
     public List<RenameTransformationRule> getRenameTransformationRules() {
@@ -111,6 +116,4 @@ public class EventTransformer implements TransformationRule {
     public void setDeleteTransformationRules(List<DeleteTransformationRule> deleteTransformationRules) {
         this.deleteTransformationRules = deleteTransformationRules;
     }
-
-
 }

@@ -15,11 +15,11 @@
  *
  */
 
-package org.streampipes.connect.adapter.generic.transform;
+package org.streampipes.connect.adapter.generic.transform.schema;
 
 import java.util.*;
 
-public class MoveTransformationRule implements TransformationRule {
+public class MoveTransformationRule implements SchemaTransformationRule {
 
     private List<String> oldKey;
     private List<String> newKey;
