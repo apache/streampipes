@@ -33,10 +33,9 @@ export class NewAdapterComponent implements OnInit {
     @Output()
     updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
 
-    @ViewChild('stepper') private myStepper: MatStepper;
+    @ViewChild('stepper') myStepper: MatStepper;
 
     allFormats: FormatDescription[] = [];
-    isLinearStepper: boolean = true;
 
     protocolConfigurationValid: boolean;
     formatConfigurationValid: boolean;
@@ -92,8 +91,16 @@ export class NewAdapterComponent implements OnInit {
         this.eventSchema = this.getEventSchema(this.adapter);
 
         if (this.eventSchema.eventProperties.length > 0) {
-            this.myStepper.selectedIndex = 2;
+
+            // Timeout is needed for stepper to work correctly. Without the stepper is frozen when initializing with
+            // step 2. Can be removed when a better solution is founf.
+            setTimeout(() => {
+                this.goForward(this.myStepper);
+                this.goForward(this.myStepper);
+            }, 1);
+
             this.fromTemplate = true;
+            this.oldEventSchema = this.eventSchema;
         }
     }
 
@@ -134,18 +141,22 @@ export class NewAdapterComponent implements OnInit {
         this.removeSelectionEmitter.emit();
     }
 
-    clickSpecificSettingsNextButton() {
+    clickSpecificSettingsNextButton(stepper: MatStepper) {
         this.ShepherdService.trigger("specific-settings-next-button");
         this.guessEventSchema();
+        this.goForward(stepper);
     }
 
-    clickEventSchemaNextButtonButton() {
+    clickEventSchemaNextButtonButton(stepper: MatStepper) {
+        this.setSchema();
         this.ShepherdService.trigger("event-schema-next-button");
+        this.goForward(stepper);
     }
 
-    clickFormatSelectionNextButton() {
+    clickFormatSelectionNextButton(stepper: MatStepper) {
         this.ShepherdService.trigger("format-selection-next-button");
         this.guessEventSchema();
+        this.goForward(stepper);
     }
 
     guessEventSchema() {
@@ -158,15 +169,22 @@ export class NewAdapterComponent implements OnInit {
     }
 
     getEventSchema(adapter: AdapterDescription): EventSchema {
+        var eventSchema : EventSchema;
 
         if (adapter.constructor.name == 'GenericAdapterSetDescription') {
-            return (<GenericAdapterSetDescription> adapter).dataSet.eventSchema;
+            eventSchema = (<GenericAdapterSetDescription> adapter).dataSet.eventSchema;
         } else if (adapter.constructor.name == 'SpecificAdapterSetDescription'){
-            return (<SpecificAdapterSetDescription> adapter).dataSet.eventSchema;
+            eventSchema = (<SpecificAdapterSetDescription> adapter).dataSet.eventSchema;
         } else if (adapter.constructor.name == 'GenericAdapterStreamDescription'){
-            return (<GenericAdapterStreamDescription> adapter).dataStream.eventSchema;
+            eventSchema = (<GenericAdapterStreamDescription> adapter).dataStream.eventSchema;
         } else if (adapter.constructor.name == 'SpecificAdapterStreamDescription'){
-            return (<SpecificAdapterStreamDescription> adapter).dataStream.eventSchema;
+            eventSchema = (<SpecificAdapterStreamDescription> adapter).dataStream.eventSchema;
+        } else {
+            return new EventSchema();
+        }
+
+        if (eventSchema && eventSchema.eventProperties && eventSchema.eventProperties.length > 0) {
+            return eventSchema;
         } else {
             return new EventSchema();
         }
@@ -206,5 +224,16 @@ export class NewAdapterComponent implements OnInit {
 
     isGenericAdapter() {
         return this.connectService.isGenericDescription(this.adapter);
+    }
+
+    goBack(stepper: MatStepper) {
+        console.log(this.myStepper.selectedIndex);
+        this.myStepper.selectedIndex = this.myStepper.selectedIndex - 1;
+        // this.myStepper.previous();
+    }
+    goForward(stepper: MatStepper) {
+        this.myStepper.selectedIndex = this.myStepper.selectedIndex + 1;
+        // this.myStepper.selectedIndex++;
+        // this.myStepper.next();
     }
 }

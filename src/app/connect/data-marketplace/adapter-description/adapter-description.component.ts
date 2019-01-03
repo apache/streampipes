@@ -50,6 +50,15 @@ export class AdapterDescriptionComponent {
       });
   }
 
+  deleteAdapterTemplate(adapter: AdapterDescription): void {
+      this.adapterToDelete = adapter.couchDbId;
+      this.dataMarketplaceService.deleteAdapterTemplate(adapter).subscribe(res => {
+          this.adapterToDelete = undefined;
+          this.updateAdapterEmitter.emit();
+          this.deleting = false;
+      });
+  }
+
   createTemplate(adapter: AdapterDescription): void {
       this.createTemplateEmitter.emit(adapter);
   }

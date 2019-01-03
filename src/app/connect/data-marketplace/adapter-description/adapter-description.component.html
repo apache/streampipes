@@ -23,7 +23,15 @@
                    file_copy
                 </i>
             </button>
-            <button id="{{ 'delete-' + adapter.label.split(' ').join('_') }}" matTooltip="Delete Adpater" color="primary" mat-fab (click)="deleteAdapter(adapter)" [disabled]="deleteInProgress(adapter.couchDbId)">
+            <button id="{{ 'delete-' + adapter.label.split(' ').join('_') }}" matTooltip="Delete Adapter" color="primary" mat-fab (click)="deleteAdapter(adapter)" [disabled]="deleteInProgress(adapter.couchDbId)">
+                <i class="material-icons" *ngIf="!deleteInProgress(adapter.couchDbId)">
+                    delete
+                </i>
+                <mat-spinner *ngIf="deleteInProgress(adapter.couchDbId)" [diameter]="20" fxLayoutAlign="center"></mat-spinner>
+            </button>
+        </div>
+        <div fxFlex="30" fxLayout="row" fxLayoutAlign="end end" *ngIf="adapter.isTemplate" class="delete">
+            <button id="{{ 'delete-' + adapter.label.split(' ').join('_') }}" matTooltip="Delete Adapter Template" color="primary" mat-fab (click)="deleteAdapterTemplate(adapter); $event.stopPropagation()" [disabled]="deleteInProgress(adapter.couchDbId)">
                 <i class="material-icons" *ngIf="!deleteInProgress(adapter.couchDbId)">
                     delete
                 </i>

@@ -23,7 +23,7 @@
         </div>
 
     </div>
-    <mat-horizontal-stepper [linear]="isLinearStepper" #stepper>
+    <mat-horizontal-stepper [linear]="true" #stepper>
 
         <mat-step>
             <ng-template matStepLabel>Settings</ng-template>
@@ -39,11 +39,11 @@
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                 <div id="specific-settings-next-button">
-                    <button *ngIf="isGenericAdapter()" [disabled]="!protocolConfigurationValid"  (click)="clickSpecificSettingsNextButton()" color="primary"
-                            mat-raised-button matStepperNext style="margin-left:10px;">Next
+                    <button class="stepper-button" *ngIf="isGenericAdapter()" [disabled]="!protocolConfigurationValid"  (click)="clickSpecificSettingsNextButton(stepper)" color="primary"
+                            mat-raised-button>Next
                     </button>
-                    <button *ngIf="!isGenericAdapter()" (click)="clickSpecificSettingsNextButton()" color="primary"
-                            mat-raised-button matStepperNext style="margin-left:10px;">Next
+                    <button class="stepper-button" *ngIf="!isGenericAdapter()" (click)="clickSpecificSettingsNextButton(stepper)" color="primary"
+                            mat-raised-button>Next
                     </button>
                 </div>
             </div>
@@ -75,9 +75,9 @@
 
                 <div fxLayoutAlign="end">
                     <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
-                    <button class="mat-basic" mat-raised-button matStepperPrevious style="margin-left:10px;">Back</button>
-                    <button id="format-selection-next-button" [disabled]="!formatConfigurationValid" (click)="clickFormatSelectionNextButton()" color="primary"
-                            mat-raised-button matStepperNext style="margin-left:10px;">
+                    <button class="mat-basic stepper-button" mat-raised-button (click)="goBack(stepper)">Back</button>
+                    <button class="stepper-button" id="format-selection-next-button" [disabled]="!formatConfigurationValid" (click)="clickFormatSelectionNextButton(stepper)" color="primary"
+                            mat-raised-button>
                         Next
                     </button>
                 </div>
@@ -97,9 +97,9 @@
 
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
-                <button class="mat-basic" mat-raised-button matStepperPrevious style="margin-left:10px;">Back</button>
-                <button id="event-schema-next-button" (click)="clickEventSchemaNextButtonButton()" color="primary"
-                        (click)="setSchema()" mat-raised-button matStepperNext style="margin-left:10px;">Next
+                <button class="mat-basic stepper-button" mat-raised-button (click)="goBack(stepper)">Back</button>
+                <button class="stepper-button" id="event-schema-next-button" (click)="clickEventSchemaNextButtonButton(stepper)" color="primary"
+                        mat-raised-button>Next
                 </button>
             </div>
         </mat-step>
@@ -124,7 +124,7 @@
 
                 <div fxLayoutAlign="end">
                     <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
-                    <button class="mat-basic" mat-raised-button matStepperPrevious style="margin-left:10px;">Back</button>
+                    <button class="mat-basic stepper-button" mat-raised-button (click)="goBack(stepper)">Back</button>
                     <button [disabled]="startAdapterFormGroup.invalid" mat-raised-button id="button-saveTemplate" color="primary" (click)="saveTemplate()" mat-button style="margin-left:10px;">
                         Save as Template
                     </button>

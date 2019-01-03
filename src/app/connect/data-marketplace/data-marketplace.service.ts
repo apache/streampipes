@@ -112,11 +112,19 @@ export class DataMarketplaceService {
   }
 
   deleteAdapter(adapter: AdapterDescription): Observable<Object> {
+    return this.deleteRequest(adapter, '/master/adapters/')
+  }
+
+  deleteAdapterTemplate(adapter: AdapterDescription): Observable<Object> {
+      return this.deleteRequest(adapter, '/master/adapters/template/')
+  }
+
+  private deleteRequest(adapter: AdapterDescription, url: String) {
     return this.http.delete(
       this.host +
         'api/v1/' +
         this.authStatusService.email +
-        '/master/adapters/' +
+        url +
         adapter.couchDbId
     );
   }

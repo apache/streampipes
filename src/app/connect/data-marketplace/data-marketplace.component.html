@@ -34,7 +34,8 @@
                 <sp-adapter-description attr.id="{{adapterDescription.label.replace(' ', '_')}}" class="adapter-description" fxFlex="33"
                                         (click)="selectAdapter(adapterDescription)"
                                         *ngFor="let adapterDescription of adapterDescriptions"
-                                        [adapter]="adapterDescription"></sp-adapter-description>
+                                        [adapter]="adapterDescription"
+                                        (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-adapter-description>
             </div>
 
             <!--<div *ngIf="newAdapterFromDescription===undefined" fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-description-container">-->

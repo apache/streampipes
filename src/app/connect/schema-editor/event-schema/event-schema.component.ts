@@ -48,6 +48,9 @@ export class EventSchemaComponent implements OnInit {
 
   ngOnInit() {
       // this.guessSchema();
+      if (!this.eventSchema) {
+        this.eventSchema = new EventSchema();
+      }
 
   }
 }
