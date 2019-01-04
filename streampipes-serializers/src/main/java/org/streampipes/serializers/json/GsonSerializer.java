@@ -32,6 +32,7 @@ import org.streampipes.model.connect.rules.Schema.CreateNestedRuleDescription;
 import org.streampipes.model.connect.rules.Schema.DeleteRuleDescription;
 import org.streampipes.model.connect.rules.Schema.MoveRuleDescription;
 import org.streampipes.model.connect.rules.Schema.RenameRuleDescription;
+import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
 import org.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.streampipes.model.grounding.TopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
@@ -91,6 +92,7 @@ public class GsonSerializer {
             .registerSubtype(MoveRuleDescription.class, "org.streampipes.model.MoveRuleDescription")
             .registerSubtype(DeleteRuleDescription.class, "org.streampipes.model.DeleteRuleDescription")
             .registerSubtype(CreateNestedRuleDescription.class, "org.streampipes.model.CreateNestedRuleDescription")
+            .registerSubtype(RemoveDuplicatesTransformationRuleDescription.class, "org.streampipes.model.RemoveDuplicatesRuleDescription")
             .registerSubtype(UnitTransformRuleDescription.class, "org.streampipes.model.UnitTransformRuleDescription"));
 
     builder.setPrettyPrinting();

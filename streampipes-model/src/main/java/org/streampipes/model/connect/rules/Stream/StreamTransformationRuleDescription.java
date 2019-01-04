@@ -18,6 +18,7 @@ package org.streampipes.model.connect.rules.Stream;
 
 import org.streampipes.model.connect.rules.TransformationRuleDescription;
 
+
 public abstract class StreamTransformationRuleDescription extends TransformationRuleDescription {
 
     public StreamTransformationRuleDescription() {

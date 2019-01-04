@@ -30,7 +30,7 @@ public class DuplicateFilterTest {
 
     @Test
     public void duplicateSimple() {
-        DuplicateFilter duplicateFilter = new DuplicateFilter();
+        DuplicateFilter duplicateFilter = new DuplicateFilter("0");
         List<Map> events = generateEvents();
 
         assertNotNull(duplicateFilter.process(events.get(0)));
@@ -40,7 +40,7 @@ public class DuplicateFilterTest {
 
     @Test
     public void duplicateComplex() {
-        DuplicateFilter duplicateFilter = new DuplicateFilter();
+        DuplicateFilter duplicateFilter = new DuplicateFilter("0");
         List<Map> events = generateEvents();
 
         assertNotNull(duplicateFilter.process(events.get(0)));

@@ -294,7 +294,7 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
 
     @Override
     protected PollingSettings getPollingInterval() {
-        return PollingSettings.from(TimeUnit.SECONDS, POLLING_INTERVALL);
+        return PollingSettings.from(TimeUnit.MINUTES, POLLING_INTERVALL);
     }
 
     private void activateSensors(List<Option> config) {

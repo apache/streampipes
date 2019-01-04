@@ -22,12 +22,15 @@ import org.slf4j.LoggerFactory;
 
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
+import org.streampipes.connect.adapter.generic.pipeline.elements.DuplicateFilter;
 import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
 import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.pipeline.elements.TransformValueAdapterPipelineElement;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
+import org.streampipes.model.connect.rules.TransformationRuleDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +75,7 @@ public abstract class Adapter<T extends AdapterDescription> {
 
     public abstract String getId();
 
-    private AdapterPipeline getAdapterPipeline(AdapterDescription adapterDescription) {
+    private AdapterPipeline getAdapterPipeline(T adapterDescription) {
 
         List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
         // first transform schema before transforming vales
@@ -80,12 +83,30 @@ public abstract class Adapter<T extends AdapterDescription> {
         pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getSchemaRules()));
         pipelineElements.add(new TransformValueAdapterPipelineElement(adapterDescription.getValueRules()));
 
+
+        RemoveDuplicatesTransformationRuleDescription duplicatesTransformationRuleDescription = getRemoveDuplicateRule(adapterDescription);
+        if (duplicatesTransformationRuleDescription != null) {
+            pipelineElements.add(new DuplicateFilter(duplicatesTransformationRuleDescription.getFilterTimeWindow()));
+        }
+
         // Needed when adapter is
-        if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null) {
+        if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
+        && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
             pipelineElements.add(new SendToKafkaAdapterSink( adapterDescription));
         }
 
        return new AdapterPipeline(pipelineElements);
+    }
+
+    private RemoveDuplicatesTransformationRuleDescription getRemoveDuplicateRule(T adapterDescription) {
+
+        for (TransformationRuleDescription tr : adapterDescription.getRules()) {
+            if (tr instanceof RemoveDuplicatesTransformationRuleDescription) {
+                return (RemoveDuplicatesTransformationRuleDescription) tr;
+            }
+        }
+
+        return null;
     }
 
     public boolean isDebug() {

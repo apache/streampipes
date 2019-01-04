@@ -21,10 +21,25 @@ import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *  A hash of events is stored to check if event was already sent
+ *  If the same event is sent multiple times the timer is always reseted to cover polling of rest endpoints
+ *  User can configure how long events are stored in cache, it should be minimum 2x the polling intervall
+ */
 public class DuplicateFilter implements AdapterPipelineElement {
 
-    private static final long CLEAN_UP_INTERVAL_MILLI_SEC = 1000 * 60 * 60; //1 Hour
-    private static final long LIFE_TIME_EVENT_DUPLICATE = 1000 * 60 * 60 * 24; //24 Hour
+    /**
+     * Lifetime of events
+     */
+    private long filterTimeWindow;
+
+    public DuplicateFilter(String filterTimeWindow) {
+        // convert it to seconds
+        this.filterTimeWindow = 1000 * Long.parseLong(filterTimeWindow);
+    }
+
+    // Trade of between computation and storage, maybe change value in future
+    private static final long CLEAN_UP_INTERVAL_MILLI_SEC = 10000   ; //10 seconds
 
     private Map<Integer, Long> eventState = new HashMap<>();
     private long lastCleanUpTimestamp = System.currentTimeMillis();
@@ -32,6 +47,8 @@ public class DuplicateFilter implements AdapterPipelineElement {
     @Override
     public Map<String, Object> process(Map<String, Object> event) {
         cleanUpEvenState();
+
+        System.out.println("State size: " + eventState.keySet().size());
 
         int hash = event.hashCode();
 
@@ -53,9 +70,8 @@ public class DuplicateFilter implements AdapterPipelineElement {
 
     private void cleanUpEvenState() {
         if (System.currentTimeMillis() > lastCleanUpTimestamp + CLEAN_UP_INTERVAL_MILLI_SEC) {
-
-           eventState.entrySet().removeIf(entry -> entry.getValue() + LIFE_TIME_EVENT_DUPLICATE < System.currentTimeMillis());
-
+           eventState.entrySet().removeIf(entry -> entry.getValue() + filterTimeWindow < System.currentTimeMillis());
+           lastCleanUpTimestamp = System.currentTimeMillis();
         }
     }
 }

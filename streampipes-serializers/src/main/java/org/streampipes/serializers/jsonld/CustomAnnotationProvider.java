@@ -35,6 +35,7 @@ import org.streampipes.model.connect.rules.Schema.CreateNestedRuleDescription;
 import org.streampipes.model.connect.rules.Schema.DeleteRuleDescription;
 import org.streampipes.model.connect.rules.Schema.MoveRuleDescription;
 import org.streampipes.model.connect.rules.Schema.RenameRuleDescription;
+import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
 import org.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.streampipes.model.graph.*;
 import org.streampipes.model.grounding.*;
@@ -142,7 +143,8 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             CreateNestedRuleDescription.class,
             MoveRuleDescription.class,
             RenameRuleDescription.class,
-            UnitTransformRuleDescription.class
+            UnitTransformRuleDescription.class,
+            RemoveDuplicatesTransformationRuleDescription.class
     );
   }
 }
