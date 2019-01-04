@@ -66,16 +66,6 @@ export class DataMarketplaceComponent implements OnInit {
         });
     }
 
-    // getAdapterTemplates(): void {
-    //     this.dataMarketplaceService.getAdapterTemplates().subscribe(adapterTemplates => {
-    //         adapterTemplates.forEach(function (adapterTemplate) {
-    //             adapterTemplate.isTemplate = true;
-    //         });
-    //
-    //         this.adapterTemplates = adapterTemplates;
-    //     });
-    // }
-
     selectedIndexChange(index: number) {
         this.selectedIndex = index;
     }

@@ -34,7 +34,7 @@ export class EventPropertyNestedComponent implements OnInit, DoCheck {
   @Output()delete: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
 
   ngOnInit() {
-    // this.addPrimitiveProperty();
+    // this.addStaticValueProperty();
     // const dragDropService: DragDropService = DragDropService.getInstance();
     // this.dragulaService.drag.subscribe((value: any) => { // wenn nested gedragt wird
     //   console.log('drag at nested');

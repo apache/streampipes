@@ -164,4 +164,13 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
       // this.property.measurementUnit = unit.resource;
       this.property.measurementUnitTmp = unit.resource;
   }
+
+  staticValueAddedByUser() {
+      if (this.property.id.startsWith('http://eventProperty.de/staticValue/')){
+          return true;
+      } else {
+          return false;
+      }
+
+  }
 }

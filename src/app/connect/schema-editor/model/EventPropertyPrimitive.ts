@@ -20,6 +20,9 @@ export class EventPropertyPrimitive extends EventProperty {
 
     public oldMeasurementUnit: string;
 
+    // used to add a EventProperty Primitive with a static value in the event schema
+    public staticValue: string = "";
+
     @RdfProperty('sp:hasValueSpecification')
     public valueSpecification: string;
 
@@ -36,7 +39,13 @@ export class EventPropertyPrimitive extends EventProperty {
         result.measurementUnit = this.measurementUnit;
         result.valueSpecification = this.valueSpecification;
 
+        result.staticValue = this.staticValue;
+
         return result;
+    }
+
+    public setRuntimeType(runtimeType: string): void {
+        this.runtimeType = runtimeType;
     }
 
 }

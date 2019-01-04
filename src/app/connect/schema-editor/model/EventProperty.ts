@@ -45,6 +45,11 @@ export abstract class EventProperty {
     this.runTimeName = propertyName;
   }
 
+  public setDomainProperty(domainProperty: string): void {
+      this.domainProperty = domainProperty;
+
+  }
+
   public getPropertyNumber(): string {
     return this.propertyNumber.toString();
   }

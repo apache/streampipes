@@ -8,6 +8,7 @@ import { EventPropertyList } from '../model/EventPropertyList';
 import { EventPropertyPrimitive } from '../model/EventPropertyPrimitive';
 import { DomainPropertyProbabilityList } from '../model/DomainPropertyProbabilityList';
 import { DomainPropertyProbability } from '../model/DomainPropertyProbability';
+import {DataTypesService} from '../data-type.service';
 
 
 @Component({
@@ -28,7 +29,8 @@ export class EventPropertyBagComponent implements OnInit {
     };
 
     constructor(private restService: RestService,
-        private dragulaService: DragulaService) {
+        private dragulaService: DragulaService,
+                private dataTypesService: DataTypesService) {
     }
 
     ngOnInit() {
@@ -49,11 +51,26 @@ export class EventPropertyBagComponent implements OnInit {
         return result;
     }
 
-    public addPrimitiveProperty(): void {
-        const uuid: string = UUID.UUID();
-        const path = '/' + uuid;
+    public addStaticValueProperty(): void {
+        var eventProperty = new EventPropertyPrimitive('staticValue/' + UUID.UUID(), undefined);
 
-        this.eventProperties.push(new EventPropertyPrimitive(uuid, undefined));
+        eventProperty.setRuntimeName("key_0");
+        eventProperty.setRuntimeType(this.dataTypesService.getStringTypeUrl());
+
+        this.eventProperties.push(eventProperty);
+    }
+
+    public addTimestampProperty(): void {
+
+        var eventProperty = new EventPropertyPrimitive('timestamp/' + UUID.UUID(), undefined);
+
+        eventProperty.setRuntimeName("timestamp");
+        eventProperty.setLabel("Timestamp");
+        eventProperty.setDomainProperty("http://schema.org/DateTime");
+        eventProperty.setRuntimeType(this.dataTypesService.getNumberTypeUrl());
+
+
+        this.eventProperties.push(eventProperty);
     }
 
 

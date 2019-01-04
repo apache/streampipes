@@ -23,6 +23,7 @@
 <div class="divBorder" [hidden]=!open>
     <app-event-property [(property)]="property" [domainPropertyGuess]="domainPropertyGuess"></app-event-property>
 
+
     <mat-form-field class="doubleWidth">
         <mat-select placeholder="Runtime Type" [(ngModel)]="property.runtimeType">
             <mat-option *ngFor="let dataType of runtimeDataTypes" [value]="dataType.url">
@@ -75,5 +76,11 @@
         </mat-form-field>
 
     </div>
+
+    <mat-form-field *ngIf="staticValueAddedByUser()" class="doubleWidth">
+        <input matInput placeholder="Static Value" name="static_value" id="static_value" [matAutocomplete]="auto" [(ngModel)]="property.staticValue">
+    </mat-form-field>
+
 </div>
+
 

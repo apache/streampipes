@@ -11,6 +11,8 @@ import {k} from '@angular/core/src/render3';
 import {MoveRuleDescription} from './model/connect/rules/MoveRuleDesctiption';
 import {DeleteRuleDescription} from './model/connect/rules/DeleteRuleDescription';
 import {UnitTransformRuleDescription} from './model/connect/rules/UnitTransformRuleDescription';
+import {TimestampTransformationRuleDescription} from './model/connect/rules/TimestampTransformationRuleDescription';
+import {AddValueTransformationRuleDescription} from './model/connect/rules/AddValueTransformationRuleDescription';
 
 @Injectable()
 export class TransformationRuleService {
@@ -29,34 +31,49 @@ export class TransformationRuleService {
     }
 
     public getTransformationRuleDescriptions(): TransformationRuleDescription[] {
-        if (this.oldEventSchema == null || this.newEventSchema == null) {
-            this.logger.error("Old and new schema must be defined")
-        }
-
         var transformationRuleDescription: TransformationRuleDescription[] = [];
 
-        // Rename
-        transformationRuleDescription = transformationRuleDescription.concat(this.getRenameRules(
-            this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
+        if (this.oldEventSchema == null || this.newEventSchema == null) {
+            this.logger.error("Old and new schema must be defined")
+        } else {
+
+            let timestampProperty = this.getTimestampProperty(this.newEventSchema.eventProperties);
+            if (timestampProperty) {
+                // add to old event schema for the case users moved the property to a nested property
+                this.oldEventSchema.eventProperties.push(timestampProperty);
+
+                transformationRuleDescription.push(new TimestampTransformationRuleDescription(timestampProperty.getRuntimeName()));
+            }
+
+            let staticValueProperties = this.getStaticValueProperties(this.newEventSchema.eventProperties);
+            for (let ep of staticValueProperties) {
+                this.oldEventSchema.eventProperties.push(ep);
+                transformationRuleDescription.push(new AddValueTransformationRuleDescription(ep.getRuntimeName(), (<EventPropertyPrimitive> ep).staticValue))
+            }
+
+            // Rename
+            transformationRuleDescription = transformationRuleDescription.concat(this.getRenameRules(
+                this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
 
-        // Create Nested
-        transformationRuleDescription = transformationRuleDescription.concat(this.getCreateNestedRules(
-            this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
+            // Create Nested
+            transformationRuleDescription = transformationRuleDescription.concat(this.getCreateNestedRules(
+                this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
-        // Move
-        transformationRuleDescription = transformationRuleDescription.concat(this.getMoveRules(
-            this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
+            // Move
+            transformationRuleDescription = transformationRuleDescription.concat(this.getMoveRules(
+                this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
-        // Delete
-        transformationRuleDescription = transformationRuleDescription.concat(this.getDeleteRules(
-            this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
+            // Delete
+            transformationRuleDescription = transformationRuleDescription.concat(this.getDeleteRules(
+                this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
-        // Unit
-        transformationRuleDescription = transformationRuleDescription.concat(this.getUnitTransformRules(
-            this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
+            // Unit
+            transformationRuleDescription = transformationRuleDescription.concat(this.getUnitTransformRules(
+                this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
-        return transformationRuleDescription;
+            return transformationRuleDescription;
+        }
     }
 
     public getMoveRules(newEventProperties: EventProperty[],
@@ -192,8 +209,8 @@ export class TransformationRuleService {
     }
 
     public getUnitTransformRules(newEventProperties: EventProperty[],
-                                      oldEventSchema: EventSchema,
-                                      newEventSchema: EventSchema): UnitTransformRuleDescription[] {
+                                 oldEventSchema: EventSchema,
+                                 newEventSchema: EventSchema): UnitTransformRuleDescription[] {
         var result: UnitTransformRuleDescription[] = [];
 
         for (let eventProperty of newEventProperties) {
@@ -204,8 +221,8 @@ export class TransformationRuleService {
 
 
                 result.push(new UnitTransformRuleDescription(keyNew,
-       // TODO: use if backend deserialize URI correct
-       //             eventPropertyPrimitive.oldMeasurementUnit, eventPropertyPrimitive.measurementUnit));
+                    // TODO: use if backend deserialize URI correct
+                    //             eventPropertyPrimitive.oldMeasurementUnit, eventPropertyPrimitive.measurementUnit));
                     eventPropertyPrimitive.oldMeasurementUnit, eventPropertyPrimitive.measurementUnitTmp));
             } else if (eventProperty instanceof EventPropertyNested) {
 
@@ -228,7 +245,7 @@ export class TransformationRuleService {
         return filteredResult;
 
 
-     }
+    }
 
 
     public getCompleteRuntimeNameKey(eventProperties: EventProperty[], id: string): string {
@@ -298,5 +315,41 @@ export class TransformationRuleService {
         return result;
     }
 
+    private getTimestampProperty(eventProperties: EventProperty[]): EventProperty {
 
+        for (let eventProperty of eventProperties) {
+            if (eventProperty.id.startsWith('http://eventProperty.de/timestamp/')) {
+                return eventProperty;
+            }
+
+            if (eventProperty instanceof EventPropertyNested) {
+                let result = this.getTimestampProperty(eventProperty.eventProperties);
+
+                if (result) {
+                    return result;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private getStaticValueProperties(eventProperties: EventProperty[]): EventProperty[] {
+        var result = [];
+
+         for (let eventProperty of eventProperties) {
+            if (eventProperty.id.startsWith('http://eventProperty.de/staticValue/')) {
+                return [eventProperty];
+            }
+
+            if (eventProperty instanceof EventPropertyNested) {
+                let tmpResult  = this.getStaticValueProperties(eventProperty.eventProperties);
+                if (tmpResult.length > 0) {
+                    result = result.concat(tmpResult);
+                }
+            }
+        }
+
+        return result;
+    }
 }
