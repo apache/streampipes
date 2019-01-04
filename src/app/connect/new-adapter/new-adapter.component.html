@@ -119,6 +119,11 @@
                         <mat-form-field>
                             <input matInput id="input-AdapterDescription" [ngModelOptions]="{standalone: true}" placeholder="Adapter Description" [(ngModel)]="adapter.description">
                         </mat-form-field>
+                        <mat-checkbox [(ngModel)]="removeDuplicates" [ngModelOptions]="{standalone: true}">Remove Duplicates</mat-checkbox>
+                        <mat-form-field *ngIf="removeDuplicates">
+                            <input matInput id="input-removeDuplicatesTime" [ngModelOptions]="{standalone: true}" placeholder="Remove Duplicates Time Window" [(ngModel)]="removeDuplicatesTime">
+                        </mat-form-field>
+
                     </div>
                 </div>
 

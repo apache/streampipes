@@ -17,6 +17,7 @@ import {TransformationRuleService} from '../transformation-rule.service';
 import {ShepherdService} from '../../services/tour/shepherd.service';
 import {EventSchemaComponent} from '../schema-editor/event-schema/event-schema.component';
 import {ConnectService} from "../connect.service";
+import {RemoveDuplicatesRuleDescription} from '../model/connect/rules/RemoveDuplicatesRuleDescription';
 
 @Component({
     selector: 'sp-new-adapter',
@@ -39,6 +40,9 @@ export class NewAdapterComponent implements OnInit {
 
     protocolConfigurationValid: boolean;
     formatConfigurationValid: boolean;
+
+    removeDuplicates: boolean = false;
+    removeDuplicatesTime: number;
 
     startAdapterFormGroup: FormGroup;
 
@@ -106,6 +110,10 @@ export class NewAdapterComponent implements OnInit {
 
 
     public triggerDialog(storeAsTemplate: boolean) {
+        if (this.removeDuplicates) {
+            this.adapter.rules.push(new RemoveDuplicatesRuleDescription(this.removeDuplicatesTime));
+        }
+
         let dialogRef = this.dialog.open(AdapterStartedDialog, {
             width: '70%',
             data: { adapter: this.adapter,

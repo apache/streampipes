@@ -33,6 +33,7 @@ import {UUID} from 'angular2-uuid';
 import {DataSetDescription} from '../model/DataSetDescription';
 import {OneOfStaticProperty} from '../model/OneOfStaticProperty';
 import {UnitTransformRuleDescription} from '../model/connect/rules/UnitTransformRuleDescription';
+import {RemoveDuplicatesRuleDescription} from '../model/connect/rules/RemoveDuplicatesRuleDescription';
 
 @Injectable()
 export class DataMarketplaceService {
@@ -78,6 +79,7 @@ export class DataMarketplaceService {
     tsonld.addClassMapping(AddNestedRuleDescription);
     tsonld.addClassMapping(MoveRuleDescription);
     tsonld.addClassMapping(UnitTransformRuleDescription);
+    tsonld.addClassMapping(RemoveDuplicatesRuleDescription);
 
     return tsonld;
   }
