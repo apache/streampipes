@@ -20,13 +20,17 @@ import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 
 import java.util.Map;
 
-public class AddTimestamp implements AdapterPipelineElement {
+public class AddTimestampPipelineElement implements AdapterPipelineElement {
 
-    private static final String TIMESTAMP_PROPERTY_NAME = "timestamp";
+    private String runtimeKey;
+
+    public AddTimestampPipelineElement(String runtimeKey) {
+        this.runtimeKey = runtimeKey;
+    }
 
     @Override
     public Map<String, Object> process(Map<String, Object> event) {
-        event.put(TIMESTAMP_PROPERTY_NAME, System.currentTimeMillis());
+        event.put(runtimeKey, System.currentTimeMillis());
         return event;
     }
 

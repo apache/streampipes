@@ -22,15 +22,15 @@ import org.slf4j.LoggerFactory;
 
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
-import org.streampipes.connect.adapter.generic.pipeline.elements.DuplicateFilter;
-import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
-import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
-import org.streampipes.connect.adapter.generic.pipeline.elements.TransformValueAdapterPipelineElement;
+import org.streampipes.connect.adapter.generic.pipeline.elements.*;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
 import org.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
+import org.streampipes.model.connect.rules.value.TimestampTransformationRuleDescription;
+import org.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +78,19 @@ public abstract class Adapter<T extends AdapterDescription> {
     private AdapterPipeline getAdapterPipeline(T adapterDescription) {
 
         List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
+
+        // Must be before the schema transformations to ensure that user can move this event property
+        TimestampTransformationRuleDescription timestampTransformationRuleDescription = getTimestampRule(adapterDescription);
+        if (timestampTransformationRuleDescription != null) {
+            pipelineElements.add(new AddTimestampPipelineElement(timestampTransformationRuleDescription.getRuntimeKey()));
+        }
+
+        AddValueTransformationRuleDescription valueTransformationRuleDescription = getAddValueRule(adapterDescription);
+        if (valueTransformationRuleDescription != null) {
+            pipelineElements.add(new AddValuePipelineElement(valueTransformationRuleDescription.getRuntimeKey(), valueTransformationRuleDescription.getStaticValue()));
+        }
+
+
         // first transform schema before transforming vales
         // value rules should use unique keys for of new schema
         pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getSchemaRules()));
@@ -86,8 +99,9 @@ public abstract class Adapter<T extends AdapterDescription> {
 
         RemoveDuplicatesTransformationRuleDescription duplicatesTransformationRuleDescription = getRemoveDuplicateRule(adapterDescription);
         if (duplicatesTransformationRuleDescription != null) {
-            pipelineElements.add(new DuplicateFilter(duplicatesTransformationRuleDescription.getFilterTimeWindow()));
+            pipelineElements.add(new DuplicateFilterPipelineElement(duplicatesTransformationRuleDescription.getFilterTimeWindow()));
         }
+
 
         // Needed when adapter is
         if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
@@ -99,10 +113,23 @@ public abstract class Adapter<T extends AdapterDescription> {
     }
 
     private RemoveDuplicatesTransformationRuleDescription getRemoveDuplicateRule(T adapterDescription) {
+        return getRule(adapterDescription, RemoveDuplicatesTransformationRuleDescription.class);
+    }
+
+    private TimestampTransformationRuleDescription getTimestampRule(T adapterDescription) {
+        return getRule(adapterDescription, TimestampTransformationRuleDescription.class);
+    }
+
+    private AddValueTransformationRuleDescription getAddValueRule(T adapterDescription) {
+        return getRule(adapterDescription, AddValueTransformationRuleDescription.class);
+    }
+
+
+    private <G extends TransformationRuleDescription> G getRule(T adapterDescription, Class<G> type) {
 
         for (TransformationRuleDescription tr : adapterDescription.getRules()) {
-            if (tr instanceof RemoveDuplicatesTransformationRuleDescription) {
-                return (RemoveDuplicatesTransformationRuleDescription) tr;
+            if (type.isInstance(tr)) {
+                return type.cast(tr);
             }
         }
 

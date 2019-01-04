@@ -17,7 +17,7 @@ limitations under the License.
 package org.streampipes.connect.adapter.generic.elements;
 
 import org.junit.Test;
-import org.streampipes.connect.adapter.generic.pipeline.elements.DuplicateFilter;
+import org.streampipes.connect.adapter.generic.pipeline.elements.DuplicateFilterPipelineElement;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -30,7 +30,7 @@ public class DuplicateFilterTest {
 
     @Test
     public void duplicateSimple() {
-        DuplicateFilter duplicateFilter = new DuplicateFilter("0");
+        DuplicateFilterPipelineElement duplicateFilter = new DuplicateFilterPipelineElement("0");
         List<Map> events = generateEvents();
 
         assertNotNull(duplicateFilter.process(events.get(0)));
@@ -40,7 +40,7 @@ public class DuplicateFilterTest {
 
     @Test
     public void duplicateComplex() {
-        DuplicateFilter duplicateFilter = new DuplicateFilter("0");
+        DuplicateFilterPipelineElement duplicateFilter = new DuplicateFilterPipelineElement("0");
         List<Map> events = generateEvents();
 
         assertNotNull(duplicateFilter.process(events.get(0)));

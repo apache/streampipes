@@ -26,14 +26,14 @@ import java.util.Map;
  *  If the same event is sent multiple times the timer is always reseted to cover polling of rest endpoints
  *  User can configure how long events are stored in cache, it should be minimum 2x the polling intervall
  */
-public class DuplicateFilter implements AdapterPipelineElement {
+public class DuplicateFilterPipelineElement implements AdapterPipelineElement {
 
     /**
      * Lifetime of events
      */
     private long filterTimeWindow;
 
-    public DuplicateFilter(String filterTimeWindow) {
+    public DuplicateFilterPipelineElement(String filterTimeWindow) {
         // convert it to seconds
         this.filterTimeWindow = 1000 * Long.parseLong(filterTimeWindow);
     }
@@ -47,8 +47,6 @@ public class DuplicateFilter implements AdapterPipelineElement {
     @Override
     public Map<String, Object> process(Map<String, Object> event) {
         cleanUpEvenState();
-
-        System.out.println("State size: " + eventState.keySet().size());
 
         int hash = event.hashCode();
 

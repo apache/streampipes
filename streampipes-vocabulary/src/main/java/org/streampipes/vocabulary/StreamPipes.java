@@ -272,6 +272,7 @@ public class StreamPipes {
 
   public static final String EVENT_PROPERTY_ID = NS + "eventPropertyId" ;
   public static final String RUNTIME_KEY = NS + "runtimeKey";
+  public static final String STATIC_VALUE = NS + "staticValue";
   public static final String FROM_UNIT = NS + "fromUnit";
   public static final String TO_UNIT = NS + "toUnit" ;
   public static final String OLD_RUNTIME_NAME = NS + "oldRuntimeKey" ;
@@ -289,4 +290,6 @@ public class StreamPipes {
 
   public static final String REMOVE_DUPLICATES_RULE_DESCRIPTION =  NS + "RemoveDuplicatesRuleDescription";
 
+  public static final String TIMESTAMP_RULE_DESCRIPTION =  NS + "TimestampTransformationRuleDescription";
+  public static final String ADD_VALUE_TRANSFORMATION_RULE_DESCRIPTION =  NS + "AddValueTransformationRuleDescription";
 }
