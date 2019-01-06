@@ -90,9 +90,6 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
         .requiredTextParameter(Labels.from(DATABASE_PASSWORD_KEY ,
             "Password",
             "The password for the InfluxDB Server"))
-        .requiredTextParameter(Labels.from(DATABASE_PASSWORD_KEY ,
-            "Password",
-            "The password for the InfluxDB Server"))
         .build();
   }
 
