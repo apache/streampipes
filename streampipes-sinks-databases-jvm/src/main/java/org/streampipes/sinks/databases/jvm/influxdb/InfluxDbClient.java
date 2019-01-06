@@ -41,8 +41,6 @@ public class InfluxDbClient {
   private Integer batchSize;
   private Integer flushDuration;
 
-	private boolean tableExists = false;
-
 	private Logger logger = null;
 
 
@@ -74,7 +72,20 @@ public class InfluxDbClient {
 		connect();
 	}
 
-	private void validate() {
+	private void validate() throws SpRuntimeException {
+    // Validates the database name and the attributes
+    // See following link for regular expressions:
+    // https://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
+    String ipRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|"
+        + "[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
+    String hostnameRegex = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*"
+        + "([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$";
+    //TODO: replace regex with validation method (import org.apache.commons.validator.routines.InetAddressValidator;)
+    // https://stackoverflow.com/questions/3114595/java-regex-for-accepting-a-valid-hostname-ipv4-or-ipv6-address)
+    if (!influxDbHost.matches(ipRegex) && !influxDbHost.matches(hostnameRegex)) {
+      throw new SpRuntimeException("Error: Hostname '" + influxDbHost
+          + "' not allowed");
+    }
   }
 
 	private void connect() throws SpRuntimeException {
