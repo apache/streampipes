@@ -72,6 +72,11 @@ public class InfluxDbClient {
 		connect();
 	}
 
+  /**
+   * Checks whether the {@link InfluxDbClient#influxDbHost} is valid
+   *
+   * @throws SpRuntimeException If the hostname is not valid
+   */
 	private void validate() throws SpRuntimeException {
     // Validates the database name and the attributes
     // See following link for regular expressions:
@@ -88,6 +93,12 @@ public class InfluxDbClient {
     }
   }
 
+  /**
+   * Connects to the InfluxDB Server, sets the database and initializes the batch-behaviour
+   *
+   * @throws SpRuntimeException If not connection can be established or if the database could not
+   * be found
+   */
 	private void connect() throws SpRuntimeException {
 	  // Connecting to the server
     //TODO: localhost not working. choose http://127.0.0.1 instead
@@ -114,6 +125,13 @@ public class InfluxDbClient {
     influxDb.enableBatch(BatchOptions.DEFAULTS.actions(batchSize).flushDuration(flushDuration));
 	}
 
+  /**
+   * Checks whether the given database exists. Needs a working connection to an InfluxDB Server
+   * ({@link InfluxDbClient#influxDb} needs to be initialized)
+   *
+   * @param dbName The name of the database, the method should look for
+   * @return True if the database exists, false otherwise
+   */
 	private boolean databaseExists(String dbName) {
 	  //TODO: Check errors and/or catch exceptions
     QueryResult queryResult = influxDb.query(new Query("SHOW DATABASES", ""));
@@ -125,6 +143,12 @@ public class InfluxDbClient {
     return false;
   }
 
+  /**
+   * Creates a new database with the given name
+   *
+   * @param dbName The name of the database which should be created
+   * @deprecated Do not use this method. It is not working. The functionality was not needed so far
+   */
   private void createDatabase(String dbName) {
     //throws exception: "org.influxdb.InfluxDBException: error parsing query: found $dbName, expected identifier at line 1, char 17"
     Query query = QueryBuilder.newQuery("CREATE DATABASE $dbName")
@@ -134,7 +158,12 @@ public class InfluxDbClient {
     QueryResult results = influxDb.query(query);
   }
 
-
+  /**
+   * Saves an event to the connnected InfluxDB database
+   *
+   * @param event The event which should be saved
+   * @throws SpRuntimeException If the column name (key-value of the event map) is not allowed
+   */
 	void save(Map<String, Object> event) throws SpRuntimeException {
 		if (event == null) {
 			throw new SpRuntimeException("event is null");
@@ -163,6 +192,9 @@ public class InfluxDbClient {
     influxDb.write(p.build());
 	}
 
+  /**
+   * Shuts down the connection to the InfluxDB server
+   */
 	void stop() {
     influxDb.close();
 	}
