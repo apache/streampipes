@@ -2,7 +2,7 @@
   <ul id="event-property-list-id" style="min-height: 50px;" [dragula]='"event-property-bag"'[dragulaModel]='eventProperties' [dragulaOptions]="dragularOptions">
     <div class="row-border" attr.id="{{property.runTimeName}}" *ngFor="let property of eventProperties; let i=index">
       <div class="schema"  *ngIf="isEventPropertyNested(property)">
-         <!--placeholder for nested-properties-->
+        <!--placeholder for nested-properties-->
         <app-event-property-nested [index]="i + 1"
                                    [eventPropertyNested]="property"
                                    [domainPropertyGuess]="getDomainProbability(property.runTimeName)"
@@ -17,9 +17,9 @@
                                       [property]="property">
         </app-event-property-primitive>
       </div>
-        <!--<app-event-propoerty-list (delete)=// deleteProperty($event)-->
-                                  <!--[eventPropertyList]="property"-->
-                                  <!--[index]="i + 1"></app-event-propoerty-list>-->
+      <!--<app-event-propoerty-list (delete)=// deleteProperty($event)-->
+      <!--[eventPropertyList]="property"-->
+      <!--[index]="i + 1"></app-event-propoerty-list>-->
       <!--</div>-->
     </div>
   </ul>
@@ -27,10 +27,10 @@
     <button color="primary" mat-button (click)=addNestedProperty()>
       <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
     </button>
-    <button color="primary" mat-button (click)="addStaticValueProperty()">
+    <button *ngIf="!eventPropertyNested" color="primary" mat-button (click)="addStaticValueProperty()">
       <mat-icon matTooltip="Add a static value to event">add</mat-icon>
     </button>
-        <button color="primary" mat-button (click)=addTimestampProperty()>
+    <button  *ngIf="!eventPropertyNested" color="primary" mat-button (click)=addTimestampProperty()>
       <mat-icon matTooltip="Add timestamp to event schema">access_time</mat-icon>
     </button>
     <!-- <button mat-button (click)=addListProperty()>

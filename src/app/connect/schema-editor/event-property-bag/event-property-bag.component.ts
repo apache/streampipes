@@ -20,6 +20,9 @@ import {DataTypesService} from '../data-type.service';
 export class EventPropertyBagComponent implements OnInit {
 
     @Input() eventProperties: EventProperty[];
+
+    @Input() eventPropertyNested: boolean = false;
+
     @Output() eventPropertiesChange = new EventEmitter<EventProperty[]>();
 
     @Input() domainPropertyGuesses: DomainPropertyProbabilityList[];
