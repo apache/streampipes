@@ -4,3 +4,4 @@ zookeeper
 swagger-ui
 couchdb
 kafka-rest
+test-connect-datasources-rest
