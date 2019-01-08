@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 FZI Forschungszentrum Informatik
+ * Copyright 2019 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,19 @@
 package org.streampipes.connect.adapter.specific;
 
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
+import org.streampipes.model.connect.adapter.AdapterDescription;
 
-public abstract class SpecificDataSetAdapter extends SpecificAdapter<SpecificAdapterSetDescription> {
+public abstract class SpecificAdapter <T extends AdapterDescription> extends Adapter<T> {
 
-    public SpecificDataSetAdapter(SpecificAdapterSetDescription adapterDescription) {
+    public SpecificAdapter() {
+        super();
+    }
+
+    public SpecificAdapter(T adapterDescription) {
         super(adapterDescription);
     }
 
-    public SpecificDataSetAdapter(SpecificAdapterSetDescription adapterDescription, boolean debug) {
+    public SpecificAdapter(T adapterDescription, boolean debug) {
         super(adapterDescription, debug);
     }
 }

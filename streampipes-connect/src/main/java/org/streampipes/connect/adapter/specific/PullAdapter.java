@@ -43,7 +43,6 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
     private ScheduledExecutorService scheduler;
     private ScheduledExecutorService errorThreadscheduler;
 
-    protected AdapterPipeline adapterPipeline;
 
     public PullAdapter() {
         super();
@@ -60,17 +59,9 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
     @Override
     public void startAdapter() throws AdapterException {
 
-        List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
-        pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getSchemaRules()));
-        pipelineElements.add(new TransformValueAdapterPipelineElement(adapterDescription.getValueRules()));
-        pipelineElements.add(new SendToKafkaAdapterSink((AdapterDescription) adapterDescription));
-
-        adapterPipeline = new AdapterPipeline(pipelineElements);
-
         final Runnable errorThread = () -> {
             executeAdpaterLogic();
         };
-
 
         scheduler = Executors.newScheduledThreadPool(1);
         scheduler.schedule(errorThread, 0, TimeUnit.MILLISECONDS);
