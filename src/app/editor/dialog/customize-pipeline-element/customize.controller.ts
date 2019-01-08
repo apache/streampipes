@@ -154,7 +154,7 @@ export class CustomizeController {
 
         angular.forEach(this.selectedElement.outputStrategies, strategy => {
             if (strategy.type == 'org.streampipes.model.output.CustomOutputStrategy') {
-                if (!strategy.properties.eventProperties && !(strategy.properties.eventProperties.length > 0)) {
+                if (!strategy.properties.selectedPropertyKeys && !(strategy.properties.selectedPropertyKeys.length > 0)) {
                     valid = false;
                 }
             }

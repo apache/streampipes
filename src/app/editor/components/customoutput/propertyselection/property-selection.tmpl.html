@@ -1,0 +1,15 @@
+<div class="property-selection" style="margin-left:{{ctrl.layer*5}}%">
+    <md-checkbox style="margin-bottom:0px;" ng-checked="ctrl.exists(ctrl.eventProperty.properties.runtimeId)" ng-click="ctrl.toggle(ctrl.eventProperty.properties.runtimeId)">
+        <div ng-if="ctrl.eventProperty.properties.label"><b>{{ctrl.eventProperty.properties.label}}</b> <i>({{ctrl.eventProperty.properties.description}},
+            field name: {{ctrl.eventProperty.properties.runtimeName}})</i><br/></div>
+        <div ng-if="!ctrl.eventProperty.properties.label"><b>{{ctrl.eventProperty.properties.runtimeName}}</b><br/>
+        </div>
+    </md-checkbox>
+</div>
+<div ng-if="(ctrl.eventProperty.type==='org.streampipes.model.schema.EventPropertyNested')">
+    <div ng-repeat="nestedProperty in ctrl.eventProperty.properties.eventProperties">
+        <property-selection output-strategy="ctrl.outputStrategy" event-property="nestedProperty"
+                            layer="{{(ctrl.layer + 1)}}"></property-selection>
+    </div>
+</div>
+

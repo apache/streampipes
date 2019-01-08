@@ -47,6 +47,7 @@ import {TextValidatorDirective} from "./validator/text/text-validator.directive"
 
 import selectFilter from './filter/select.filter';
 import elementNameFilter from './filter/element-name.filter';
+import {PropertySelectionComponent} from "./components/customoutput/propertyselection/property-selection.component";
 
 
 export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate', 'datatables'])
@@ -66,6 +67,7 @@ export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimat
     .component('matchingProperty', MatchingPropertyComponent)
     .component('oneof', OneOfComponent)
     .component('oneofRemote', OneOfRemoteComponent)
+    .component('propertySelection', PropertySelectionComponent)
     .component('replaceOutput', ReplaceOutputComponent)
     .component('multipleValueInput', MultipleValueInputComponent)
     .component('collectionStaticProperty', CollectionComponent)

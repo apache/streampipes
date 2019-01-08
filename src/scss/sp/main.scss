@@ -1396,3 +1396,12 @@ md-list .md-button {
 .dropdown-menu {
     cursor: pointer;
 }
+
+.property-selection {
+    padding: 3px;
+    padding-left:10px;
+    margin-top:3px;
+    margin-bottom:3px;
+    background: #dfdfdf5e;
+    border-left: 1px solid $sp-color-accent;
+}
