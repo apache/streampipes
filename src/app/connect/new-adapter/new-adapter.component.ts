@@ -164,7 +164,7 @@ export class NewAdapterComponent implements OnInit {
         if (this.isEditable) {
             this.setSchema();
         }
-        
+
         this.ShepherdService.trigger("event-schema-next-button");
         this.goForward(stepper);
     }
