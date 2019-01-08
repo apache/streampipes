@@ -29,5 +29,8 @@
     margin-left:10px;
 }
 
-
+.disable-editing {
+  pointer-events: none !important;
+  opacity:0.5;
+}
 

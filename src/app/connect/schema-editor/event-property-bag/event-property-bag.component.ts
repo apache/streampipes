@@ -23,6 +23,9 @@ export class EventPropertyBagComponent implements OnInit {
 
     @Input() eventPropertyNested: boolean = false;
 
+    @Input()
+    isEditable: Boolean;
+
     @Output() eventPropertiesChange = new EventEmitter<EventProperty[]>();
 
     @Input() domainPropertyGuesses: DomainPropertyProbabilityList[];

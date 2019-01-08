@@ -28,6 +28,9 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
   @Input() domainPropertyGuess: DomainPropertyProbabilityList;
 
+  @Input()
+  isEditable: Boolean;
+
 
   private propertyPrimitivForm: FormGroup;
   private runtimeDataTypes;

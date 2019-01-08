@@ -51,7 +51,11 @@ export class NewAdapterComponent implements OnInit {
 
     hasInput: Boolean[];
 
+    // indicates whether user uses a template or not
     fromTemplate: Boolean = false;
+
+    // deactivates all edit functions when user starts a template
+    isEditable: Boolean = true;
 
     @ViewChild(EventSchemaComponent)
     private eventSchemaComponent: EventSchemaComponent;
@@ -104,6 +108,7 @@ export class NewAdapterComponent implements OnInit {
             }, 1);
 
             this.fromTemplate = true;
+            this.isEditable = false;
             this.oldEventSchema = this.eventSchema;
         }
     }
@@ -156,7 +161,10 @@ export class NewAdapterComponent implements OnInit {
     }
 
     clickEventSchemaNextButtonButton(stepper: MatStepper) {
-        this.setSchema();
+        if (this.isEditable) {
+            this.setSchema();
+        }
+        
         this.ShepherdService.trigger("event-schema-next-button");
         this.goForward(stepper);
     }

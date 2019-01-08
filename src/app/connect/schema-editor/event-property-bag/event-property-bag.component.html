@@ -7,6 +7,7 @@
                                    [eventPropertyNested]="property"
                                    [domainPropertyGuess]="getDomainProbability(property.runTimeName)"
                                    [domainPropertyGuesses]="domainPropertyGuesses"
+                                   [isEditable]="isEditable"
                                    (delete)=deletePropertyNested($event)></app-event-property-nested>
       </div>
       <div *ngIf="isEventPropertyPrimitive(property)">
@@ -14,6 +15,7 @@
         <app-event-property-primitive (delete)=deletePropertyPrimitive($event)
                                       (addPrimitive)="addStaticValueProperty($event)"
                                       [domainPropertyGuess]="getDomainProbability(property.runTimeName)"
+                                      [isEditable]="isEditable"
                                       [property]="property">
         </app-event-property-primitive>
       </div>
@@ -24,13 +26,13 @@
     </div>
   </ul>
   <div fxFlexAlign="start" class="addSchema">
-    <button color="primary" mat-button (click)=addNestedProperty()>
+    <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty()>
       <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
     </button>
-    <button *ngIf="!eventPropertyNested" color="primary" mat-button (click)="addStaticValueProperty()">
+    <button [disabled]="!isEditable" *ngIf="!eventPropertyNested" color="primary" mat-button (click)="addStaticValueProperty()">
       <mat-icon matTooltip="Add a static value to event">add</mat-icon>
     </button>
-    <button  *ngIf="!eventPropertyNested" color="primary" mat-button (click)=addTimestampProperty()>
+    <button [disabled]="!isEditable"  *ngIf="!eventPropertyNested" color="primary" mat-button (click)=addTimestampProperty()>
       <mat-icon matTooltip="Add timestamp to event schema">access_time</mat-icon>
     </button>
     <!-- <button mat-button (click)=addListProperty()>
