@@ -64,6 +64,9 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     @RdfProperty("sp:adapterType")
     private String adapterType;
 
+    @RdfProperty("sp:icon")
+    private String icon;
+
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
     @RdfProperty("sp:config")
@@ -101,6 +104,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.userName = other.getUserName();
         this.rules = other.getRules();
         this.adapterType = other.getAdapterType();
+        this.icon = other.getIcon();
         if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
 
@@ -199,6 +203,14 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
                 tmp.add(rule);
         });
         return tmp;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     @Override
