@@ -14,5 +14,11 @@ COPY dist/style.bundle.css /usr/share/nginx/html/
 
 COPY nginx_config/nginx.conf /etc/nginx/nginx.conf
 COPY nginx_config/default.conf /etc/nginx/conf.d/default.conf
+COPY nginx_config/ssl.conf /app/nginx-confs/ssl.conf
+
+COPY docker-entrypoint.sh /
 
 RUN chown -R nginx:nginx /usr/share/nginx/html/
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["nginx", "-g", "daemon off;"]
