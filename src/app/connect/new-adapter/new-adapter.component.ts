@@ -1,3 +1,4 @@
+///<reference path="../model/connect/AdapterDescription.ts"/>
 import {Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { RestService } from '../rest.service';
@@ -18,6 +19,7 @@ import {ShepherdService} from '../../services/tour/shepherd.service';
 import {EventSchemaComponent} from '../schema-editor/event-schema/event-schema.component';
 import {ConnectService} from "../connect.service";
 import {RemoveDuplicatesRuleDescription} from '../model/connect/rules/RemoveDuplicatesRuleDescription';
+import {IconService} from './icon.service';
 
 @Component({
     selector: 'sp-new-adapter',
@@ -25,6 +27,28 @@ import {RemoveDuplicatesRuleDescription} from '../model/connect/rules/RemoveDupl
     styleUrls: ['./new-adapter.component.css'],
 })
 export class NewAdapterComponent implements OnInit {
+
+
+    selectedUploadFile: File;
+    fileName;
+
+    handleFileInput(files: any) {
+        this.selectedUploadFile = files[0];
+        this.fileName = this.selectedUploadFile.name;
+
+        console.log(this.fileName);
+
+        this.iconService.test(this.selectedUploadFile)
+            .then(
+                data => {
+                    this.adapter.icon = (<string> data);
+                }
+            );
+
+
+    }
+
+
     @Input()
     adapter: AdapterDescription;
 
@@ -68,10 +92,13 @@ export class NewAdapterComponent implements OnInit {
         public dialog: MatDialog,
         private ShepherdService: ShepherdService,
         private connectService: ConnectService,
-        private _formBuilder: FormBuilder
+        private _formBuilder: FormBuilder,
+        private iconService: IconService
     ) {}
 
     ngOnInit() {
+
+
         this.formatConfigurationValid = false;
 
         if (this.adapter instanceof GenericAdapterSetDescription) {

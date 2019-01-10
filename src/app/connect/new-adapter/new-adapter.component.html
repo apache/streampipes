@@ -123,6 +123,19 @@
                         <mat-form-field>
                             <input matInput id="input-AdapterDescription" [ngModelOptions]="{standalone: true}" placeholder="Adapter Description" [(ngModel)]="adapter.description">
                         </mat-form-field>
+
+                        <mat-form-field *ngIf="isEditable" style="width: 50%" (click)="fileInput.click();">
+                          <input  matInput placeholder="File" disabled (value)="fileName">
+                          <input #fileInput type="file" style="display:none;"
+                                 (change)="handleFileInput($event.target.files)">
+                          {{fileName}}
+                          <button color="primary" matSuffix
+                                  mat-button style="min-width: 0px">
+                            <mat-icon>insert_drive_file</mat-icon>
+                          </button>
+                        </mat-form-field>
+
+
                         <mat-checkbox [disabled]="!isEditable" [(ngModel)]="removeDuplicates" [ngModelOptions]="{standalone: true}">Remove Duplicates</mat-checkbox>
                         <mat-form-field *ngIf="removeDuplicates">
                             <input [disabled]="!isEditable" matInput id="input-removeDuplicatesTime" [ngModelOptions]="{standalone: true}" placeholder="Remove Duplicates Time Window" [(ngModel)]="removeDuplicatesTime">

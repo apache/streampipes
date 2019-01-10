@@ -55,6 +55,7 @@ import { UnitProviderService } from './schema-editor/unit-provider.service';
 import { SelectStaticPropertiesComponent } from './select-static-properties-component/select-static-properties.component';
 import { StaticAnyInput } from './static-properties/static-any-input/static-any-input.component';
 import { StaticOneOfInputComponent } from './static-properties/static-one-of-input/static-one-of-input.component';
+import { IconService } from './new-adapter/icon.service';
 
 @NgModule({
   imports: [
@@ -105,6 +106,7 @@ import { StaticOneOfInputComponent } from './static-properties/static-one-of-inp
     TransformationRuleService,
     StaticPropertyUtilService,
     DataMarketplaceService,
+    IconService,
     ShepherdService,
     UnitProviderService,
     {
