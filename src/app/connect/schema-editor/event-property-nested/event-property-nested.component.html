@@ -7,7 +7,7 @@
             </b>
         </div>
         <div fxFlex="20" fxLayoutAlign="end">
-                <button mat-button (click)=OnClickDeleteProperty()>
+                <button [disabled]="!isEditable" mat-button (click)=OnClickDeleteProperty()>
                         <mat-icon>delete</mat-icon>
                     </button>
             <button mat-button (click)=onClickOpen()>
@@ -30,7 +30,9 @@
 
     <div style="padding-left: 50px; border-left: 4px dotted black;">
         <app-event-property-bag [domainPropertyGuesses]="domainPropertyGuesses"
-                                [eventProperties]="eventPropertyNested.eventProperties">
+                                [eventProperties]="eventPropertyNested.eventProperties"
+                                [eventPropertyNested]="true"
+                                [isEditable]="isEditable">
         </app-event-property-bag>
     </div>
 </div>

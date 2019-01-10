@@ -31,6 +31,9 @@ export class AdapterDescription {
   @RdfProperty('sp:iconUrl')
   public iconUrl: string;
 
+  @RdfProperty('sp:icon')
+  public icon: string;
+
   @RdfProperty('sp:adapterType')
   public adapterType: string;
 

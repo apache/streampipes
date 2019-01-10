@@ -27,6 +27,9 @@ export class EventPropertyNestedComponent implements OnInit, DoCheck {
   @Input() eventPropertyNested: EventPropertyNested;
   @Input() index: number;
 
+  @Input()
+  isEditable: Boolean;
+
 
   @Input() domainPropertyGuesses: DomainPropertyProbabilityList[];
   @Input() domainPropertyGuess: DomainPropertyProbabilityList;
@@ -34,18 +37,6 @@ export class EventPropertyNestedComponent implements OnInit, DoCheck {
   @Output()delete: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
 
   ngOnInit() {
-    // this.addPrimitiveProperty();
-    // const dragDropService: DragDropService = DragDropService.getInstance();
-    // this.dragulaService.drag.subscribe((value: any) => { // wenn nested gedragt wird
-    //   console.log('drag at nested');
-    //   dragDropService.announceDrag(this.eventPropertyNested);
-    // });
-    //
-    // this.dragulaService.drop.subscribe((value: any) => { // von Dragula-Service aufgerufen, wenn Element hier gedroppt wird, um dies zu bestätigen
-    //   console.log('drop at nested' + this.eventPropertyNested.propertyID);
-    //   dragDropService.announceDrop(this.eventPropertyNested);
-    // });
-
     this.eventPropertyNested.propertyNumber = this.index;
   }
 

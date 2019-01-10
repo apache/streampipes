@@ -27,15 +27,17 @@
 
         <mat-step>
             <ng-template matStepLabel>Settings</ng-template>
-            <div class="assemblyOptions sp-blue-bg">
-                <h4 *ngIf="!isGenericAdapter()">Basic settings</h4>
-                <h4 *ngIf="isGenericAdapter()">Protocol settings</h4>
-            </div>
-            <div class="sp-blue-border padding">
-                <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"></app-static-property>
-                <app-protocol (validateEmitter)="validateProtocol($event)" [protocol]="adapter.protocol" *ngIf="isGenericAdapter()"></app-protocol>
-            </div>
 
+            <div [ngClass]="{'disable-editing': !isEditable}">
+                <div class="assemblyOptions sp-blue-bg">
+                    <h4 *ngIf="!isGenericAdapter()">Basic settings</h4>
+                    <h4 *ngIf="isGenericAdapter()">Protocol settings</h4>
+                </div>
+                <div class="sp-blue-border padding">
+                    <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"></app-static-property>
+                    <app-protocol (validateEmitter)="validateProtocol($event)" [protocol]="adapter.protocol" *ngIf="isGenericAdapter()"></app-protocol>
+                </div>
+            </div>
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                 <div id="specific-settings-next-button">
@@ -53,23 +55,25 @@
             <form>
                 <ng-template matStepLabel>Select Format</ng-template>
 
-                <div class="assemblyOptions sp-blue-bg">
-                    <h4>Select format</h4>
-                </div>
-                <div class="sp-blue-border padding">
-                    <app-format-form fxFlex="100" (selectedFormatEmitter)="formatSelected($event)"
-                                     [(selectedFormat)]="adapter.format"
-                                     [allFormats]="allFormats"></app-format-form>
-                </div>
+                <div [ngClass]="{'disable-editing': !isEditable}">
+                    <div class="assemblyOptions sp-blue-bg">
+                        <h4>Select format</h4>
+                    </div>
+                    <div class="sp-blue-border padding" >
+                        <app-format-form fxFlex="100" (selectedFormatEmitter)="formatSelected($event)"
+                                         [(selectedFormat)]="adapter.format"
+                                         [allFormats]="allFormats"></app-format-form>
+                    </div>
 
-                <div class="assemblyOptions sp-blue-bg">
-                    <h4>Configure format</h4>
-                </div>
-                <div class="sp-blue-border padding">
-                    <div fxFlex="100" *ngIf="adapter.format">
-                        <app-select-static-properties (validateEmitter)="validateFormat($event)" [staticProperties]="adapter.format.config"
-                                                      class="fullWidth"></app-select-static-properties>
-                        <h5 *ngIf="adapter.format.config.length === 0" style="text-align:center;">(no further configuration needed)</h5>
+                    <div class="assemblyOptions sp-blue-bg">
+                        <h4>Configure format</h4>
+                    </div>
+                    <div class="sp-blue-border padding">
+                        <div fxFlex="100" *ngIf="adapter.format">
+                            <app-select-static-properties (validateEmitter)="validateFormat($event)" [staticProperties]="adapter.format.config"
+                                                          class="fullWidth"></app-select-static-properties>
+                            <h5 *ngIf="adapter.format.config.length === 0" style="text-align:center;">(no further configuration needed)</h5>
+                        </div>
                     </div>
                 </div>
 
@@ -91,7 +95,7 @@
                 <h4>Edit schema</h4>
             </div>
             <div class="sp-blue-border padding">
-                <app-event-schema #eschema fxLayout="column" fxFlex="100" [(adapterDescription)]="adapter"
+                <app-event-schema #eschema fxLayout="column" fxFlex="100" [(isEditable)]="isEditable" [(adapterDescription)]="adapter"
                                   [(eventSchema)]="eventSchema" [(oldEventSchema)]="oldEventSchema"></app-event-schema>
             </div>
 
@@ -119,13 +123,31 @@
                         <mat-form-field>
                             <input matInput id="input-AdapterDescription" [ngModelOptions]="{standalone: true}" placeholder="Adapter Description" [(ngModel)]="adapter.description">
                         </mat-form-field>
+
+                        <mat-form-field *ngIf="isEditable" style="width: 50%" (click)="fileInput.click();">
+                          <input  matInput placeholder="File" disabled (value)="fileName">
+                          <input #fileInput type="file" style="display:none;"
+                                 (change)="handleFileInput($event.target.files)">
+                          {{fileName}}
+                          <button color="primary" matSuffix
+                                  mat-button style="min-width: 0px">
+                            <mat-icon>insert_drive_file</mat-icon>
+                          </button>
+                        </mat-form-field>
+
+
+                        <mat-checkbox [disabled]="!isEditable" [(ngModel)]="removeDuplicates" [ngModelOptions]="{standalone: true}">Remove Duplicates</mat-checkbox>
+                        <mat-form-field *ngIf="removeDuplicates">
+                            <input [disabled]="!isEditable" matInput id="input-removeDuplicatesTime" [ngModelOptions]="{standalone: true}" placeholder="Remove Duplicates Time Window" [(ngModel)]="removeDuplicatesTime">
+                        </mat-form-field>
+
                     </div>
                 </div>
 
                 <div fxLayoutAlign="end">
                     <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                     <button class="mat-basic stepper-button" mat-raised-button (click)="goBack(stepper)">Back</button>
-                    <button [disabled]="startAdapterFormGroup.invalid" mat-raised-button id="button-saveTemplate" color="primary" (click)="saveTemplate()" mat-button style="margin-left:10px;">
+                    <button [disabled]="startAdapterFormGroup.invalid || !isEditable" mat-raised-button id="button-saveTemplate" color="primary" (click)="saveTemplate()" mat-button style="margin-left:10px;">
                         Save as Template
                     </button>
                     <button [disabled]="startAdapterFormGroup.invalid" mat-raised-button id="button-startAdapter" color="primary" (click)="startAdapter()" mat-button style="margin-left:10px;">

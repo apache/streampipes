@@ -35,9 +35,14 @@ import { AddNestedRuleDescription } from './model/connect/rules/AddNestedRuleDes
 import { MoveRuleDescription } from './model/connect/rules/MoveRuleDesctiption';
 import { TransformationRuleDescription } from './model/connect/rules/TransformationRuleDescription';
 import {StatusMessage} from "./model/message/StatusMessage";
+import { UnitDescription } from './model/UnitDescription';
 import {AnyStaticProperty} from './model/AnyStaticProperty';
 import { Option } from './model/Option';
 import { OneOfStaticProperty } from './model/OneOfStaticProperty';
+import {UnitTransformRuleDescription} from './model/connect/rules/UnitTransformRuleDescription';
+import {RemoveDuplicatesRuleDescription} from './model/connect/rules/RemoveDuplicatesRuleDescription';
+import {TimestampTransformationRuleDescription} from './model/connect/rules/TimestampTransformationRuleDescription';
+import {AddValueTransformationRuleDescription} from './model/connect/rules/AddValueTransformationRuleDescription';
 
 @Injectable()
 export class RestService {
@@ -67,10 +72,14 @@ export class RestService {
     tsonld.addClassMapping(RenameRuleDescription);
     tsonld.addClassMapping(DeleteRuleDescription);
     tsonld.addClassMapping(AddNestedRuleDescription);
+    tsonld.addClassMapping(RemoveDuplicatesRuleDescription);
+    tsonld.addClassMapping(TimestampTransformationRuleDescription);
+    tsonld.addClassMapping(AddValueTransformationRuleDescription);
     tsonld.addClassMapping(MoveRuleDescription);
-      tsonld.addClassMapping(Option);
-      tsonld.addClassMapping(AnyStaticProperty);
-      tsonld.addClassMapping(OneOfStaticProperty);
+    tsonld.addClassMapping(UnitTransformRuleDescription);
+    tsonld.addClassMapping(Option);
+    tsonld.addClassMapping(AnyStaticProperty);
+    tsonld.addClassMapping(OneOfStaticProperty);
 
     return tsonld;
   }
@@ -256,4 +265,15 @@ export class RestService {
         return res;
       });
   }
+
+  getFittingUnits(unitDescription: UnitDescription): Observable<UnitDescription[]> {
+    return this.http
+       .post<UnitDescription[]>('/streampipes-connect/api/v1/' + this.authStatusService.email + '/master/unit', unitDescription)
+        .map(response => {
+            const descriptions = response as UnitDescription[];
+            return descriptions.filter(entry => entry.resource != unitDescription.resource)
+        });
+  }
+
+
 }

@@ -12,6 +12,13 @@ import { GuessSchema } from '../model/GuessSchema';
 export class EventSchemaComponent implements OnInit {
   @Input()
   adapterDescription;
+
+
+  @Input()
+  isEditable: Boolean;
+  @Output()
+  isEditableChange = new EventEmitter<Boolean>();
+
   @Output()
   adapterChange = new EventEmitter<AdapterDescription>();
 
@@ -43,6 +50,11 @@ export class EventSchemaComponent implements OnInit {
 
       this.oldEventSchema = this.eventSchema.copy();
       this.oldEventSchemaChange.emit(this.oldEventSchema);
+
+      this.isEditable = true;
+      this.isEditableChange.emit(true);
+
+
     });
   }
 

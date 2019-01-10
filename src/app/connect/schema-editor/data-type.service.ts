@@ -33,4 +33,16 @@ export class DataTypesService {
   getDataTypes() {
     return this.dataTypes;
   }
+
+  getNumberTypeUrl(): string {
+    return String(this.dataTypes[2].url);
+  }
+
+  getStringTypeUrl(): string {
+    return String(this.dataTypes[0].url);
+  }
+  getBooleanTypeUrl(): string {
+    return String(this.dataTypes[1].url);
+  }
+
 }
