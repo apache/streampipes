@@ -41,8 +41,7 @@ public class InfluxDbClient {
   private Integer batchSize;
   private Integer flushDuration;
 
-	private Logger logger = null;
-
+	private Logger logger;
 
 	private InfluxDB influxDb = null;
 
@@ -87,10 +86,10 @@ public class InfluxDbClient {
         + "([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$";
     //TODO: replace regex with validation method (import org.apache.commons.validator.routines.InetAddressValidator;)
     // https://stackoverflow.com/questions/3114595/java-regex-for-accepting-a-valid-hostname-ipv4-or-ipv6-address)
-    if (!influxDbHost.matches(ipRegex) && !influxDbHost.matches(hostnameRegex)) {
-      throw new SpRuntimeException("Error: Hostname '" + influxDbHost
-          + "' not allowed");
-    }
+    //if (!influxDbHost.matches(ipRegex) && !influxDbHost.matches(hostnameRegex)) {
+    //  throw new SpRuntimeException("Error: Hostname '" + influxDbHost
+    //      + "' not allowed");
+    //}
   }
 
   /**
@@ -102,13 +101,13 @@ public class InfluxDbClient {
 	private void connect() throws SpRuntimeException {
 	  // Connecting to the server
     //TODO: localhost not working. choose http://127.0.0.1 instead
+    //TODO: test http://localhost. Defaultvalue: "http://"
     String urlAndPort = influxDbHost + ":" + influxDbPort;
     influxDb = InfluxDBFactory.connect(urlAndPort, user, password);
 
     // Checking, if server is available
     Pong response = influxDb.ping();
     if (response.getVersion().equalsIgnoreCase("unknown")) {
-      //TODO: Throwing exception -> logger needed?
       throw new SpRuntimeException("Could not connect to InfluxDb Server: " + urlAndPort);
     }
 
@@ -116,7 +115,7 @@ public class InfluxDbClient {
     System.out.println(databaseExists(databaseName));
     if(!databaseExists(databaseName)) {
       throw new SpRuntimeException("Database '" + databaseName + "' not found.");
-      //TODO: Or should a missing database get created?
+      //logger.info("Database '" + databaseName + "' not found. Gets created ...");
       //createDatabase(databaseName);
     }
 
