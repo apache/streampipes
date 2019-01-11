@@ -1,0 +1,16 @@
+version: "2"
+services:
+  influxdb:
+    image: influxdb:1.7
+    ports:
+      - "8083:8083"
+      - "8086:8086"
+      - "8090:8090"
+    #env_file:
+    #  - 'env.influxdb'
+    volumes:
+      # Data persistency
+      # sudo mkdir -p /srv/docker/influxdb/data
+      - ./config/influxdb/data:/var/lib/influxdb
+    networks:
+      spnet:
