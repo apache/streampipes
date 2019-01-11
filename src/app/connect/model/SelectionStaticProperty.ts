@@ -28,7 +28,7 @@ export class SelectionStaticProperty extends StaticProperty {
   public requiredDomainProperty: string;
 
   @RdfProperty('sp:hasOption')
-  public options: Option[];
+  public options: Option[] = [];
 
   constructor(id: string) {
     super();
