@@ -102,7 +102,7 @@ public class HttpStreamProtocol extends PullProtocol {
 
     @Override
     public GuessSchema getGuessSchema() {
-        int n = 1;
+        int n = 2;
 
         InputStream dataInputStream = getDataFromEndpoint();
 

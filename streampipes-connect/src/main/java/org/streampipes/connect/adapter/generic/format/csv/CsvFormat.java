@@ -104,7 +104,7 @@ public class CsvFormat extends Format {
 
         AnyStaticProperty offset = new AnyStaticProperty("header", "Header", "Does the CSV file include a header or not");
         offset.setOptions(Arrays.asList(new Option("Header","Header")));
-
+//
 //        FreeTextStaticProperty offset = new FreeTextStaticProperty("header",
 //                "Includes Header", "Description");
 

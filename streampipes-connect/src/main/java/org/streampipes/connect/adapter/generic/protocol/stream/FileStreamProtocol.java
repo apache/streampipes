@@ -99,13 +99,14 @@ public class FileStreamProtocol extends PullProtocol {
     public GuessSchema getGuessSchema() {
         InputStream dataInputStream = getDataFromEndpoint();
 
-        List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 20);
+        List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 2);
 
         EventSchema eventSchema= parser.getEventSchema(dataByte);
 
-        GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(20));
+        GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(2));
 
-        return result;    }
+        return result;
+    }
 
     @Override
     public List<Map<String, Object>> getNElements(int n) {
