@@ -104,6 +104,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             RemoteOneOfStaticProperty.class,
             AnyStaticProperty.class,
             FreeTextStaticProperty.class,
+            FileStaticProperty.class,
             Option.class,
             MappingProperty.class,
             DataSinkInvocation.class,
