@@ -19,49 +19,48 @@ package org.streampipes.manager.matching.output;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.empire.core.empire.SupportsRdfId;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.output.ListOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
-import org.streampipes.model.output.ListOutputStrategy;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.sdk.helpers.Tuple2;
 
 import java.net.URI;
 import java.util.List;
 
-public class ListOutputSchemaGenerator implements OutputSchemaGenerator<ListOutputStrategy> {
+public class ListOutputSchemaGenerator extends OutputSchemaGenerator<ListOutputStrategy> {
 
-	private String propertyName;
-	
-	public ListOutputSchemaGenerator(String propertyName) {
-		this.propertyName = propertyName;
-	}
+  private String propertyName;
 
-	@Override
-	public EventSchema buildFromOneStream(SpDataStream stream) {
-		return makeList(stream.getEventSchema().getEventProperties());
-	}
+  public static ListOutputSchemaGenerator from(OutputStrategy strategy) {
+    return new ListOutputSchemaGenerator((ListOutputStrategy) strategy);
+  }
 
-	@Override
-	public EventSchema buildFromTwoStreams(SpDataStream stream1,
-			SpDataStream stream2) {
-		return buildFromOneStream(stream1);
-	}
-	
-	private EventSchema makeList(List<EventProperty> schemaProperties)
-	{
-		EventPropertyList list = new EventPropertyList();
-		list.setEventProperties(schemaProperties);
-		list.setRuntimeName(propertyName);
-		list.setRdfId(new SupportsRdfId.URIKey(URI.create(schemaProperties.get(0).getRdfId()+"-list")));
-		EventSchema schema = new EventSchema();
-		schema.setEventProperties(Utils.createList(list));
-		return schema;
-	}
+  public ListOutputSchemaGenerator(ListOutputStrategy strategy) {
+    super(strategy);
+    this.propertyName = strategy.getPropertyName();
+  }
 
-	@Override
-	public ListOutputStrategy getModifiedOutputStrategy(
-			ListOutputStrategy strategy) {
-		return strategy;
-	}
+  @Override
+  public Tuple2<EventSchema, ListOutputStrategy> buildFromOneStream(SpDataStream stream) {
+    return makeTuple(makeList(stream.getEventSchema().getEventProperties()));
+  }
 
+  @Override
+  public Tuple2<EventSchema, ListOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
+                                         SpDataStream stream2) {
+    return buildFromOneStream(stream1);
+  }
+
+  private EventSchema makeList(List<EventProperty> schemaProperties) {
+    EventPropertyList list = new EventPropertyList();
+    list.setEventProperties(schemaProperties);
+    list.setRuntimeName(propertyName);
+    list.setRdfId(new SupportsRdfId.URIKey(URI.create(schemaProperties.get(0).getRdfId() + "-list")));
+    EventSchema schema = new EventSchema();
+    schema.setEventProperties(Utils.createList(list));
+    return schema;
+  }
 }

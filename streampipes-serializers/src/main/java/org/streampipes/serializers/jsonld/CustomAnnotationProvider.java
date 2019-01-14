@@ -140,7 +140,8 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             DeleteRuleDescription.class,
             CreateNestedRuleDescription.class,
             MoveRuleDescription.class,
-            RenameRuleDescription.class
+            RenameRuleDescription.class,
+            PropertyRenameRule.class
     );
   }
 }

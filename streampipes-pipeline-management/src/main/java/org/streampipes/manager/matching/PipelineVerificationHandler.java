@@ -22,6 +22,7 @@ import org.streampipes.manager.data.PipelineGraph;
 import org.streampipes.manager.data.PipelineGraphBuilder;
 import org.streampipes.manager.matching.v2.ElementVerification;
 import org.streampipes.manager.matching.v2.mapping.MappingPropertyCalculator;
+import org.streampipes.manager.selector.PropertySelectorGenerator;
 import org.streampipes.manager.util.PipelineVerificationUtils;
 import org.streampipes.manager.util.TreeUtils;
 import org.streampipes.model.SpDataStream;
@@ -43,7 +44,6 @@ import org.streampipes.storage.management.StorageDispatcher;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class PipelineVerificationHandler {
@@ -60,20 +60,17 @@ public class PipelineVerificationHandler {
     this.invocationGraphs = new ArrayList<>();
 
     pipelineModificationMessage = new PipelineModificationMessage();
+
   }
 
   public PipelineVerificationHandler validateConnection() throws InvalidConnectionException {
 
     ElementVerification verifier = new ElementVerification();
     boolean verified = true;
-    // current root element can be either an action or a SEPA
     InvocableStreamPipesEntity rightElement = rdfRootElement;
     List<String> connectedTo = rdfRootElement.getConnectedTo();
 
-    Iterator<String> it = connectedTo.iterator();
-
-    while (it.hasNext()) {
-      String domId = it.next();
+    for (String domId : connectedTo) {
       NamedStreamPipesEntity element = TreeUtils.findSEPAElement(domId, pipeline.getSepas(), pipeline.getStreams());
       if (element instanceof SpDataStream) {
         SpDataStream leftSpDataStream = (SpDataStream) element;
@@ -125,14 +122,14 @@ public class PipelineVerificationHandler {
 
           incomingStream = ancestor.getOutputStream();
           updateStaticProperties(ancestor.getOutputStream(), i);
-          updateOutputStrategy(ancestor.getOutputStream(), i);
+          //updateOutputStrategy(ancestor.getOutputStream(), i);
 
         } else {
 
           SpDataStream stream = (SpDataStream) element;
           incomingStream = stream;
           updateStaticProperties(stream, i);
-          updateOutputStrategy(stream, i);
+          //updateOutputStrategy(stream, i);
 
         }
 
@@ -143,6 +140,7 @@ public class PipelineVerificationHandler {
                   rdfRootElement.getElementId(),
                   rdfRootElement.getStaticProperties());
           modification.setInputStreams(tempStreams);
+          updateOutputStrategy(tempStreams);
           if (rdfRootElement instanceof DataProcessorInvocation) {
             modification.setOutputStrategies(((DataProcessorInvocation) rdfRootElement).getOutputStrategies());
           }
@@ -209,7 +207,7 @@ public class PipelineVerificationHandler {
             .findEventProperty(mapsFrom.toString(), rdfRootElement.getStreamRequirements());
   }
 
-  private void updateOutputStrategy(SpDataStream stream, Integer count) {
+  private void updateOutputStrategy(List<SpDataStream> inputStreams) {
 
     if (rdfRootElement instanceof DataProcessorInvocation) {
       ((DataProcessorInvocation) rdfRootElement)
@@ -218,16 +216,14 @@ public class PipelineVerificationHandler {
               .filter(strategy -> strategy instanceof CustomOutputStrategy)
               .forEach(strategy -> {
                 CustomOutputStrategy outputStrategy = (CustomOutputStrategy) strategy;
-                if (count == 0) {
-                  outputStrategy.setProvidesProperties(new ArrayList<>());
-                }
-                if (outputStrategy.isOutputRight() && count > 0) {
-                  outputStrategy.setProvidesProperties(stream.getEventSchema().getEventProperties());
+                if (inputStreams.size() == 1 || (inputStreams.size() > 1 && !(outputStrategy
+                        .isOutputRight()))) {
+                  outputStrategy.setAvailablePropertyKeys(new PropertySelectorGenerator
+                          (inputStreams.get(0).getEventSchema()).generateSelectors());
                 } else {
-                  if (outputStrategy.getProvidesProperties() == null) {
-                    outputStrategy.setProvidesProperties(new ArrayList<>());
-                  }
-                  outputStrategy.getProvidesProperties().addAll(stream.getEventSchema().getEventProperties());
+                  outputStrategy.setAvailablePropertyKeys(new PropertySelectorGenerator
+                          (inputStreams.get(0).getEventSchema(), inputStreams.get(1).getEventSchema())
+                          .generateSelectors());
                 }
               });
     }

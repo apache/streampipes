@@ -27,26 +27,29 @@ import java.util.stream.Collectors;
 
 public class PipelineVerificationUtils {
 
-	/**
-	 * returns the root node of a partial pipeline (a pipeline without an action)
-	 * @param pipeline
-	 * @return {@link org.streampipes.model.base.InvocableStreamPipesEntity}
-	 */
+  /**
+   * returns the root node of a partial pipeline (a pipeline without an action)
+   *
+   * @param pipeline
+   * @return {@link org.streampipes.model.base.InvocableStreamPipesEntity}
+   */
 
-	public static InvocableStreamPipesEntity getRootNode(Pipeline pipeline) throws NoSepaInPipelineException
-	{
-		List<InvocableStreamPipesEntity> elements = new ArrayList<>();
-		elements.addAll(pipeline.getSepas());
-		elements.addAll(pipeline.getActions());
+  public static InvocableStreamPipesEntity getRootNode(Pipeline pipeline) throws NoSepaInPipelineException {
+    List<InvocableStreamPipesEntity> elements = new ArrayList<>();
+    elements.addAll(pipeline.getSepas());
+    elements.addAll(pipeline.getActions());
 
-		List<InvocableStreamPipesEntity> unconfiguredElements = elements
-				.stream()
-				.filter(e -> !e.isConfigured())
-				.collect(Collectors.toList());
+    List<InvocableStreamPipesEntity> unconfiguredElements = elements
+            .stream()
+            .filter(e -> !e.isConfigured())
+            .collect(Collectors.toList());
 
 
-		if (unconfiguredElements.size() != 1) throw new NoSepaInPipelineException();
-		else return unconfiguredElements.get(0);
+    if (unconfiguredElements.size() != 1) {
+      throw new NoSepaInPipelineException();
+    } else {
+      return unconfiguredElements.get(0);
+    }
 
-	}
+  }
 }

@@ -19,8 +19,6 @@ package org.streampipes.model.output;
 
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
 import java.util.ArrayList;
@@ -35,62 +33,62 @@ import javax.persistence.OneToMany;
 @Entity
 public class CustomOutputStrategy extends OutputStrategy {
 
-	private static final long serialVersionUID = -5858193127308435472L;
-	
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.PRODUCES_PROPERTY)
-	private List<EventProperty> eventProperties;
+  private static final long serialVersionUID = -5858193127308435472L;
 
-	@RdfProperty(StreamPipes.OUTPUT_RIGHT)
-	private boolean outputRight;
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.PRODUCES_PROPERTY)
+  private List<String> selectedPropertyKeys;
 
-    private List<EventProperty> providesProperties;
-	
-	public CustomOutputStrategy()
-	{
-		super();
-		this.eventProperties = new ArrayList<>();
-	}
-	
-	public CustomOutputStrategy(boolean outputRight) {
-		super();
-		this.outputRight = outputRight;
-		this.eventProperties = new ArrayList<>();
-	}
-	
-	public CustomOutputStrategy(CustomOutputStrategy other) {
-		super(other);
-		this.eventProperties = new Cloner().properties(other.getEventProperties());
-		this.outputRight = other.isOutputRight();
-	}
-	
-	public CustomOutputStrategy(List<EventProperty> eventProperties)
-	{
-		this.eventProperties = eventProperties;
-	}
+  @RdfProperty(StreamPipes.OUTPUT_RIGHT)
+  private boolean outputRight;
 
-	public List<EventProperty> getEventProperties() {
-		return eventProperties;
-	}
+  private List<String> availablePropertyKeys;
 
-	public void setEventProperties(List<EventProperty> eventProperties) {
-		this.eventProperties = eventProperties;
-	}
+  public CustomOutputStrategy() {
+    super();
+    this.selectedPropertyKeys = new ArrayList<>();
+    this.availablePropertyKeys = new ArrayList<>();
+  }
 
-	public boolean isOutputRight() {
-		return outputRight;
-	}
+  public CustomOutputStrategy(boolean outputRight) {
+    this();
+    this.outputRight = outputRight;
+  }
 
-	public void setOutputRight(boolean outputRight) {
-		this.outputRight = outputRight;
-	}
+  public CustomOutputStrategy(CustomOutputStrategy other) {
+    super(other);
+    this.selectedPropertyKeys = other.getSelectedPropertyKeys();
+    this.availablePropertyKeys = other.getAvailablePropertyKeys();
+    this.outputRight = other.isOutputRight();
+  }
 
-    public List<EventProperty> getProvidesProperties() {
-        return providesProperties;
-    }
+  public CustomOutputStrategy(List<String> selectedPropertyKeys) {
+    this();
+    this.selectedPropertyKeys = selectedPropertyKeys;
+  }
 
-    public void setProvidesProperties(List<EventProperty> providesProperties) {
-        this.providesProperties = providesProperties;
-    }
+  public boolean isOutputRight() {
+    return outputRight;
+  }
+
+  public void setOutputRight(boolean outputRight) {
+    this.outputRight = outputRight;
+  }
+
+  public List<String> getSelectedPropertyKeys() {
+    return selectedPropertyKeys;
+  }
+
+  public void setSelectedPropertyKeys(List<String> selectedPropertyKeys) {
+    this.selectedPropertyKeys = selectedPropertyKeys;
+  }
+
+  public List<String> getAvailablePropertyKeys() {
+    return availablePropertyKeys;
+  }
+
+  public void setAvailablePropertyKeys(List<String> availablePropertyKeys) {
+    this.availablePropertyKeys = availablePropertyKeys;
+  }
 }

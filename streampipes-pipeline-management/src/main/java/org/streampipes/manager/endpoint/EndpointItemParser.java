@@ -40,8 +40,7 @@ public class EndpointItemParser {
     }
   }
 
-  private String parseURIContent(String payload, String mediaType) throws URISyntaxException, IOException
-  {
+  private String parseURIContent(String payload, String mediaType) throws URISyntaxException, IOException {
     URI uri = new URI(payload);
     return HttpJsonParser.getContentFromUrl(uri, mediaType);
   }

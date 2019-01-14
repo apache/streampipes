@@ -1,0 +1,68 @@
+/*
+Copyright 2019 FZI Forschungszentrum Informatik
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+package org.streampipes.manager.selector;
+
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyNested;
+import org.streampipes.model.schema.EventSchema;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class PropertySelectorGenerator {
+
+  private EventSchema firstSchema;
+  private EventSchema secondSchema;
+
+  public PropertySelectorGenerator(EventSchema firstSchema) {
+    this.firstSchema = firstSchema;
+  }
+
+  public PropertySelectorGenerator(EventSchema firstSchema, EventSchema secondSchema) {
+    this.firstSchema = firstSchema;
+    this.secondSchema = secondSchema;
+  }
+
+  public List<String> generateSelectors() {
+    List<String> propertySelectors = new ArrayList<>();
+
+    propertySelectors.addAll(generateSelectors(PropertySelectorUtils.getProperties(firstSchema),
+            PropertySelectorConstants.FIRST_STREAM_ID_PREFIX));
+    propertySelectors.addAll(generateSelectors(PropertySelectorUtils.getProperties(secondSchema),
+            PropertySelectorConstants.SECOND_STREAM_ID_PREFIX));
+
+    return propertySelectors;
+  }
+
+  private List<String> generateSelectors(List<EventProperty> eventProperties, String prefix) {
+    List<String> propertySelectors = new ArrayList<>();
+    for (EventProperty ep : eventProperties) {
+      if (ep instanceof EventPropertyNested) {
+        propertySelectors.addAll(generateSelectors(((EventPropertyNested) ep).getEventProperties(),
+                makeSelector
+                        (prefix, ep.getRuntimeName())));
+      }
+      propertySelectors.add(makeSelector(prefix, ep.getRuntimeName()));
+    }
+    return propertySelectors;
+  }
+
+  private String makeSelector(String prefix, String runtimeName) {
+    return prefix
+            + PropertySelectorConstants.PROPERTY_DELIMITER
+            + runtimeName;
+  }
+}
