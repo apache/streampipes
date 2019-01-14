@@ -6,6 +6,8 @@
                 </mat-tab>
                 <mat-tab id="all-adapters" label="All Adapters">
                 </mat-tab>
+                <mat-tab id="uploaded-files" label="Files">
+                </mat-tab>
             </mat-tab-group>
         </div>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center"
@@ -57,5 +59,10 @@
             </div>
         </div>
         <div class="ribbon"><span>Beta</span></div>
+        <div *ngIf="selectedIndex === 2">
+            <div fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-container">
+                <sp-file-management fxFlex="100" fxLayout="column"></sp-file-management>
+            </div>
+        </div>
     </div>
 </div>

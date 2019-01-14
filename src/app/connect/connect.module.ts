@@ -58,6 +58,8 @@ import { StaticOneOfInputComponent } from './static-properties/static-one-of-inp
 import { IconService } from './new-adapter/icon.service';
 import {StaticFileInputComponent} from './static-properties/static-file-input/static-file-input.component';
 import {StaticFileRestService} from './static-properties/static-file-input/static-file-rest.service';
+import {FileManagementComponent} from './file-management/file-management.component';
+import {FileRestService} from './file-management/service/filerest.service';
 
 @NgModule({
   imports: [
@@ -101,6 +103,7 @@ import {StaticFileRestService} from './static-properties/static-file-input/stati
     ConnectComponent,
     SelectStaticPropertiesComponent,
     StaticOneOfInputComponent,
+    FileManagementComponent,
   ],
   providers: [
     RestService,
@@ -112,6 +115,7 @@ import {StaticFileRestService} from './static-properties/static-file-input/stati
     IconService,
     ShepherdService,
     UnitProviderService,
+    FileRestService,
     StaticFileRestService,
     {
       provide: '$state',
