@@ -23,11 +23,11 @@ import { EventPropertyPrimitive } from '../schema-editor/model/EventPropertyPrim
 import { ConnectService } from '../connect.service';
 import { AnyStaticProperty } from '../model/AnyStaticProperty';
 import { Option } from '../model/Option';
-import {RenameRuleDescription} from '../model/connect/rules/RenameRuleDescription';
-import {DeleteRuleDescription} from '../model/connect/rules/DeleteRuleDescription';
-import {AddNestedRuleDescription} from '../model/connect/rules/AddNestedRuleDescription';
-import {MoveRuleDescription} from '../model/connect/rules/MoveRuleDesctiption';
-import {EventPropertyNested} from '../schema-editor/model/EventPropertyNested';
+import { RenameRuleDescription} from '../model/connect/rules/RenameRuleDescription';
+import { DeleteRuleDescription} from '../model/connect/rules/DeleteRuleDescription';
+import { AddNestedRuleDescription} from '../model/connect/rules/AddNestedRuleDescription';
+import { MoveRuleDescription} from '../model/connect/rules/MoveRuleDesctiption';
+import { EventPropertyNested} from '../schema-editor/model/EventPropertyNested';
 import {EventPropertyList} from '../schema-editor/model/EventPropertyList';
 import {UUID} from 'angular2-uuid';
 import {DataSetDescription} from '../model/DataSetDescription';
@@ -36,6 +36,7 @@ import {UnitTransformRuleDescription} from '../model/connect/rules/UnitTransform
 import {RemoveDuplicatesRuleDescription} from '../model/connect/rules/RemoveDuplicatesRuleDescription';
 import {TimestampTransformationRuleDescription} from '../model/connect/rules/TimestampTransformationRuleDescription';
 import {AddValueTransformationRuleDescription} from '../model/connect/rules/AddValueTransformationRuleDescription';
+import {FileStaticProperty} from '../model/FileStaticProperty';
 
 @Injectable()
 export class DataMarketplaceService {
@@ -60,6 +61,7 @@ export class DataMarketplaceService {
 
 
     tsonld.addClassMapping(AnyStaticProperty);
+    tsonld.addClassMapping(FileStaticProperty);
     tsonld.addClassMapping(OneOfStaticProperty);
     tsonld.addClassMapping(Option);
 

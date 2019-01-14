@@ -1,0 +1,31 @@
+<div id="formWrapper" fxFlex="90" fxLayout="row">
+    <div fxFlex="20">
+        <p>{{staticProperty.label}}: </p>
+    </div>
+    <div fxFlex fxLayout="row">
+        <form fxFlex>
+            <mat-form-field style="width: 75%" (click)="fileInput.click();">
+                <input  matInput placeholder="{{staticProperty.label}}" disabled (value)="fileName">
+                <input #fileInput type="file" style="display:none;"
+                       (change)="handleFileInput($event.target.files)">
+                {{fileName}}
+                <button color="primary" matSuffix
+                        mat-button style="min-width: 0px">
+                    <mat-icon>insert_drive_file</mat-icon>
+                </button>
+                <mat-error *ngIf="!hasInput">
+                    {{errorMessage}}
+                </mat-error>
+
+            </mat-form-field>
+        </form>
+        <!--<div fxLayoutAlign="center none">-->
+        <div>
+            <button color="primary" mat-raised-button (click)="upload()">
+                Upload
+            </button>
+        </div>
+
+    </div>
+
+</div>

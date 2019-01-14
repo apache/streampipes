@@ -56,6 +56,8 @@ import { SelectStaticPropertiesComponent } from './select-static-properties-comp
 import { StaticAnyInput } from './static-properties/static-any-input/static-any-input.component';
 import { StaticOneOfInputComponent } from './static-properties/static-one-of-input/static-one-of-input.component';
 import { IconService } from './new-adapter/icon.service';
+import {StaticFileInputComponent} from './static-properties/static-file-input/static-file-input.component';
+import {StaticFileRestService} from './static-properties/static-file-input/static-file-rest.service';
 
 @NgModule({
   imports: [
@@ -88,6 +90,7 @@ import { IconService } from './new-adapter/icon.service';
     StaticUrlInputComponent,
     StaticTextInputComponent,
     StaticFreeInputComponent,
+    StaticFileInputComponent,
     StaticAnyInput,
     ProtocolComponent,
     ProtocolListComponent,
@@ -109,6 +112,7 @@ import { IconService } from './new-adapter/icon.service';
     IconService,
     ShepherdService,
     UnitProviderService,
+    StaticFileRestService,
     {
       provide: '$state',
       useFactory: ($injector: any) => $injector.get('$state'),

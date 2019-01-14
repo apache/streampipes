@@ -15,13 +15,8 @@ export class IconService {
         });
     }
 
-  test(file: File) {
-
+  toBase64(file: File) {
       return this.getBase64(file);
-          // .then(
-          // data => console.log(data)
-      // );
-
   }
 
 }
