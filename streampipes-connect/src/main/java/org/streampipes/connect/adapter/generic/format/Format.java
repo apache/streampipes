@@ -36,5 +36,12 @@ public abstract class Format {
      */
     public abstract Map<String, Object> parse(byte[] object);
 
+    /**
+     * Needed for example for the CSV format in iterative protocols to ensure header is not send again
+     * When the reset is not required it can be ignored
+     */
+    public void reset() {
+
+    }
 
 }

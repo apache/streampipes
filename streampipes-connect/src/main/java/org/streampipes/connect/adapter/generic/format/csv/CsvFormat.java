@@ -62,6 +62,11 @@ public class CsvFormat extends Format {
     }
 
     @Override
+    public void reset() {
+        this.keyValues = null;
+    }
+
+    @Override
     public Map<String,Object> parse(byte[] object) {
         String[] arr = new String(object).split(delimiter);
         Map<String, Object> map =  new HashMap<>();
