@@ -6,8 +6,10 @@ services:
       - "8083:8083"
       - "8086:8086"
       - "8090:8090"
-    #env_file:
-    #  - 'env.influxdb'
+    environment:
+      - INFLUXDB_DATA_ENGINE=tsm1
+      - INFLUXDB_REPORTING_DISABLED=false
+      - INFLUXDB_ADMIN_ENABLED=true
     volumes:
       # Data persistency
       # sudo mkdir -p /srv/docker/influxdb/data
