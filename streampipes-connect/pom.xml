@@ -9,6 +9,10 @@
 
     <artifactId>streampipes-connect</artifactId>
 
+    <properties>
+        <jsrosbridge.version>0.2.0</jsrosbridge.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.streampipes</groupId>
@@ -28,13 +32,19 @@
         </dependency>
 
         <dependency>
-			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-rest-shared</artifactId>
-		</dependency>
+            <groupId>edu.wpi.rail</groupId>
+            <artifactId>jrosbridge</artifactId>
+            <version>${jsrosbridge.version}</version>
+        </dependency>
+
         <dependency>
-			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-measurement-units</artifactId>
-		</dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-rest-shared</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-measurement-units</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.json</artifactId>
