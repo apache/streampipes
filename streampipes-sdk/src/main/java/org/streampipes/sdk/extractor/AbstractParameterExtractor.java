@@ -113,7 +113,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   public <V> List<V> selectedMultiValues(String internalName, Class<V> targetClass) {
-    return getStaticPropertyByName(internalName, OneOfStaticProperty.class)
+    return getStaticPropertyByName(internalName, AnyStaticProperty.class)
             .getOptions()
             .stream()
             .filter(Option::isSelected)
