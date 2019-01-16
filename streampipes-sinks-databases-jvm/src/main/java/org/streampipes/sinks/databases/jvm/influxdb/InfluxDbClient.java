@@ -100,8 +100,7 @@ public class InfluxDbClient {
    */
 	private void connect() throws SpRuntimeException {
 	  // Connecting to the server
-    //TODO: localhost not working. choose http://127.0.0.1 instead
-    //TODO: test http://localhost. Defaultvalue: "http://"
+    //TODO: http:// must be in front
     String urlAndPort = influxDbHost + ":" + influxDbPort;
     influxDb = InfluxDBFactory.connect(urlAndPort, user, password);
 
@@ -114,9 +113,8 @@ public class InfluxDbClient {
     // Checking whether the database exists
     System.out.println(databaseExists(databaseName));
     if(!databaseExists(databaseName)) {
-      throw new SpRuntimeException("Database '" + databaseName + "' not found.");
-      //logger.info("Database '" + databaseName + "' not found. Gets created ...");
-      //createDatabase(databaseName);
+      logger.info("Database '" + databaseName + "' not found. Gets created ...");
+      createDatabase(databaseName);
     }
 
     // setting up the database
@@ -146,15 +144,18 @@ public class InfluxDbClient {
    * Creates a new database with the given name
    *
    * @param dbName The name of the database which should be created
-   * @deprecated Do not use this method. It is not working. The functionality was not needed so far
    */
-  private void createDatabase(String dbName) {
+  private void createDatabase(String dbName) throws SpRuntimeException {
     //throws exception: "org.influxdb.InfluxDBException: error parsing query: found $dbName, expected identifier at line 1, char 17"
-    Query query = QueryBuilder.newQuery("CREATE DATABASE $dbName")
+    if(!dbName.matches("^[a-zA-Z_][a-zA-Z0-9_]*$")) {
+      throw new SpRuntimeException("Databasename '" + dbName + "' not allowed. Allowed names: ^[a-zA-Z_][a-zA-Z0-9_]*$");
+    }
+    influxDb.query(new Query("CREATE DATABASE \"" + dbName + "\"", ""));
+    /*Query query = QueryBuilder.newQuery("CREATE DATABASE $dbName")
         .forDatabase("")
-        .bind("dbName", 4)
+        .bind("dbName", dbName)
         .create();
-    QueryResult results = influxDb.query(query);
+    influxDb.query(query);*/
   }
 
   /**
