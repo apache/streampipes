@@ -56,7 +56,6 @@ public class InfluxDb extends EventSink<InfluxDbParameters> {
     } catch (SpRuntimeException e) {
       //TODO: error or warn?
       LOG.error(e.getMessage());
-      //e.printStackTrace();
     }
   }
 

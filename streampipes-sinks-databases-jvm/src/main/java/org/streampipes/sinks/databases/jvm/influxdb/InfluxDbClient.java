@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 import org.influxdb.BatchOptions;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
-import org.influxdb.dto.BoundParameterQuery.QueryBuilder;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Pong;
 import org.influxdb.dto.Query;
@@ -55,7 +54,6 @@ public class InfluxDbClient {
       Integer batchSize,
       Integer flushDuration,
 			Logger logger) throws SpRuntimeException {
-		//TODO: Why are we not just passing an InfluxDbParameters object?
 		this.influxDbHost = influxDbHost;
 		this.influxDbPort = influxDbPort;
 		this.databaseName = databaseName;
@@ -80,10 +78,10 @@ public class InfluxDbClient {
     // Validates the database name and the attributes
     // See following link for regular expressions:
     // https://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
-    String ipRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|"
+    /*String ipRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|"
         + "[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
     String hostnameRegex = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*"
-        + "([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$";
+        + "([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$";*/
     //TODO: replace regex with validation method (import org.apache.commons.validator.routines.InetAddressValidator;)
     // https://stackoverflow.com/questions/3114595/java-regex-for-accepting-a-valid-hostname-ipv4-or-ipv6-address)
     //if (!influxDbHost.matches(ipRegex) && !influxDbHost.matches(hostnameRegex)) {
@@ -100,7 +98,7 @@ public class InfluxDbClient {
    */
 	private void connect() throws SpRuntimeException {
 	  // Connecting to the server
-    //TODO: http:// must be in front
+    // "http://" must be in front
     String urlAndPort = influxDbHost + ":" + influxDbPort;
     influxDb = InfluxDBFactory.connect(urlAndPort, user, password);
 
@@ -130,7 +128,6 @@ public class InfluxDbClient {
    * @return True if the database exists, false otherwise
    */
 	private boolean databaseExists(String dbName) {
-	  //TODO: Check errors and/or catch exceptions
     QueryResult queryResult = influxDb.query(new Query("SHOW DATABASES", ""));
     for(List<Object> a : queryResult.getResults().get(0).getSeries().get(0).getValues()) {
       if(a.get(0).equals(dbName)) {
@@ -146,16 +143,10 @@ public class InfluxDbClient {
    * @param dbName The name of the database which should be created
    */
   private void createDatabase(String dbName) throws SpRuntimeException {
-    //throws exception: "org.influxdb.InfluxDBException: error parsing query: found $dbName, expected identifier at line 1, char 17"
     if(!dbName.matches("^[a-zA-Z_][a-zA-Z0-9_]*$")) {
       throw new SpRuntimeException("Databasename '" + dbName + "' not allowed. Allowed names: ^[a-zA-Z_][a-zA-Z0-9_]*$");
     }
     influxDb.query(new Query("CREATE DATABASE \"" + dbName + "\"", ""));
-    /*Query query = QueryBuilder.newQuery("CREATE DATABASE $dbName")
-        .forDatabase("")
-        .bind("dbName", dbName)
-        .create();
-    influxDb.query(query);*/
   }
 
   /**
@@ -168,11 +159,9 @@ public class InfluxDbClient {
 		if (event == null) {
 			throw new SpRuntimeException("event is null");
 		}
-		//TODO: Check performance
-		//TODO: Choose the timestamp from the parameters
+		//TODO: Choose the timestamp from the parameters (replace System.currentTimeMillis())
     Point.Builder p = Point.measurement(measureName).time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
     for (Map.Entry<String, Object> pair : event.entrySet()) {
-      //TODO: Check regEx
       if(!pair.getKey().matches("^[a-zA-Z_][a-zA-Z0-9_]*$")) {
         throw new SpRuntimeException("Column name '" + pair.getKey() + "' not allowed "
             + "(allowed: '^[a-zA-Z_][a-zA-Z0-9_]*$')");

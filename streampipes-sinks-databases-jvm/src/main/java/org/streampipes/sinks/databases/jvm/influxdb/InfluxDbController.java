@@ -55,12 +55,13 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
         .requiredStream(StreamRequirementsBuilder.create()
             .requiredProperty(EpRequirements.anyProperty())
             .build())
+        //TODO: Timestampmapping currently not working
         /*.requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
             EpRequirements.timestampReq(),
             Labels.from(TIMESTAMP_MAPPING_KEY,
                 "Timestamp Property",
                 "The value which contains a timestamp"),
-            PropertyScope.HEADER_PROPERTY).build())*/
+            PropertyScope.NONE).build())*/
         .supportedFormats(SupportedFormats.jsonFormat())
         .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
         .requiredTextParameter(Labels.from(DATABASE_HOST_KEY,
