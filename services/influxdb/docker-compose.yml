@@ -6,13 +6,18 @@ services:
       - "8083:8083"
       - "8086:8086"
       - "8090:8090"
-    environment:
-      - INFLUXDB_DATA_ENGINE=tsm1
-      - INFLUXDB_REPORTING_DISABLED=false
-      - INFLUXDB_ADMIN_ENABLED=true
+#    environment:
+#      - INFLUXDB_DATA_ENGINE=tsm1
+#      - INFLUXDB_REPORTING_DISABLED=false
+#      - INFLUXDB_ADMIN_ENABLED=true
     volumes:
-      # Data persistency
-      # sudo mkdir -p /srv/docker/influxdb/data
-      - ./config/influxdb/data:/var/lib/influxdb
+#      - ./config/influx:/var/lib/influxdb
+      - data-influx:/var/lib/influxdb
     networks:
       spnet:
+
+volumes:
+  data-influx:
+    external: false
+    driver: local
+
