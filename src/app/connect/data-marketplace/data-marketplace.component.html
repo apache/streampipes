@@ -8,52 +8,74 @@
                 </mat-tab>
             </mat-tab-group>
         </div>
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center"
-             style="padding-left:10px;padding-right: 50px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc" *ngIf="selectedIndex === 0 && newAdapterFromDescription === undefined">
-            <button mat-icon-button id="startAdapterTutorial1"(click)="startAdapterTutorial()" matTooltip="Tutorial 1: Specific Adapter OpenSenseMap">
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center" style="padding-left:10px;padding-right: 50px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc"
+            *ngIf="selectedIndex === 0 && newAdapterFromDescription === undefined">
+            <button mat-icon-button id="startAdapterTutorial1" (click)="startAdapterTutorial()" matTooltip="Tutorial 1: Specific Adapter OpenSenseMap">
                 <i class="material-icons">
                     school
                 </i>
             </button>
             <!--<button  mat-icon-button id="startAdapterTutorial2"(click)="startAdapterTutorial2()" matTooltip="Tutorial 2: Generic Adapter LUBW">-->
-                <!--<i class="material-icons">-->
-                    <!--school-->
-                <!--</i>-->
+            <!--<i class="material-icons">-->
+            <!--school-->
+            <!--</i>-->
             <!--</button>-->
-            <button  mat-icon-button id="startAdapterTutorial3"(click)="startAdapterTutorial3()" matTooltip="Tutorial 2: Generic Adapter">
+            <button mat-icon-button id="startAdapterTutorial3" (click)="startAdapterTutorial3()" matTooltip="Tutorial 2: Generic Adapter">
                 <i class="material-icons">
                     school
                 </i>
             </button>
         </div>
     </div>
-    <div  class="box" class="container-fluid marketplace-container">
+
+    <div class="fixed-height" fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
+
+            <mat-icon class="icon-style" >search</mat-icon>
+
+            <mat-form-field class="form-style">
+                <input matInput placeholder="Find Element" value="" (input)="updateFilterTerm($event.target.value)"
+                    name="something">
+            </mat-form-field>
+
+            <mat-icon class="icon-style" >list</mat-icon>
+
+            <mat-form-field>
+                <mat-select placeholder="Select by categorie" [(value)]="selected" (selectionChange)="filterAdapterCategory($event)">
+                    <mat-option *ngFor="let categorie of categories" [value]="categorie">
+                        {{categorie}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        
+    </div>
+
+    <div class="box" class="container-fluid marketplace-container">
         <div *ngIf="selectedIndex === 0">
 
             <div *ngIf="newAdapterFromDescription===undefined" fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-description-container">
-                <sp-adapter-description attr.id="{{adapterDescription.label.replace(' ', '_')}}" class="adapter-description" fxFlex="33"
-                                        (click)="selectAdapter(adapterDescription)"
-                                        *ngFor="let adapterDescription of adapterDescriptions"
-                                        [adapter]="adapterDescription"
-                                        (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-adapter-description>
+                <sp-adapter-description attr.id="{{adapterDescription.label.replace(' ', '_')}}" class="adapter-description"
+                    fxFlex="33" (click)="selectAdapter(adapterDescription)" *ngFor="let adapterDescription of filteredAdapterDescriptions | filter:filterTerm"
+                    [adapter]="adapterDescription" (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-adapter-description>
             </div>
 
             <!--<div *ngIf="newAdapterFromDescription===undefined" fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-description-container">-->
-                <!--<sp-adapter-description attr.id="{{adapterTemplate.label.replace(' ', '_')}}" class="adapter-description" fxFlex="33"-->
-                                        <!--(click)="selectAdapter(adapterTemplate)"-->
-                                        <!--*ngFor="let adapterTemplate of adapterTemplates"-->
-                                        <!--[adapter]="adapterTemplate"></sp-adapter-description>-->
+            <!--<sp-adapter-description attr.id="{{adapterTemplate.label.replace(' ', '_')}}" class="adapter-description" fxFlex="33"-->
+            <!--(click)="selectAdapter(adapterTemplate)"-->
+            <!--*ngFor="let adapterTemplate of adapterTemplates"-->
+            <!--[adapter]="adapterTemplate"></sp-adapter-description>-->
             <!--</div>-->
 
             <div class="new-adapter-container" fxFlex="100" fxLayout="row" fxLayoutAlign="start start" *ngIf="newAdapterFromDescription!==undefined">
-                <sp-new-adapter fxFlex="100" (removeSelectionEmitter)="removeSelection($event)" [adapter]="newAdapterFromDescription" (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-new-adapter>
+                <sp-new-adapter fxFlex="100" (removeSelectionEmitter)="removeSelection($event)" [adapter]="newAdapterFromDescription"
+                    (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-new-adapter>
             </div>
 
         </div>
         <div *ngIf="selectedIndex === 1">
             <div fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-container">
                 <sp-adapter-description class="adapter-description" fxFlex="33" *ngFor="let adapter of adapters"
-                                        [adapter]="adapter" (createTemplateEmitter)="templateFromRunningAdapter(adapter)" (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-adapter-description>
+                    [adapter]="adapter" (createTemplateEmitter)="templateFromRunningAdapter(adapter)"
+                    (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-adapter-description>
             </div>
         </div>
         <div class="ribbon"><span>Beta</span></div>

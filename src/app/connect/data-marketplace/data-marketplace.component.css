@@ -62,3 +62,20 @@
   border-bottom: 3px solid transparent;
   border-top: 3px solid #f5b53f;
 }
+
+#categoryFilter {
+  margin-top: 20px;
+}
+
+.fixed-height {
+  height: 50px;
+}
+
+.form-style {
+  margin: 0px 5px 0px 0px;
+}
+
+.icon-style {
+  margin: 15px 4px 0px 0px;
+  color:rgb(27, 20, 100);
+}

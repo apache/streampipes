@@ -55,6 +55,9 @@ import { SelectStaticPropertiesComponent } from './select-static-properties-comp
 import { StaticAnyInput } from './static-properties/static-any-input/static-any-input.component';
 import { StaticOneOfInputComponent } from './static-properties/static-one-of-input/static-one-of-input.component';
 
+import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
+
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -96,6 +99,7 @@ import { StaticOneOfInputComponent } from './static-properties/static-one-of-inp
     ConnectComponent,
     SelectStaticPropertiesComponent,
     StaticOneOfInputComponent,
+    FilterPipe
   ],
   providers: [
     RestService,
