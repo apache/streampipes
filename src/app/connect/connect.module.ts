@@ -61,6 +61,9 @@ import {StaticFileRestService} from './static-properties/static-file-input/stati
 import {FileManagementComponent} from './file-management/file-management.component';
 import {FileRestService} from './file-management/service/filerest.service';
 
+import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
+
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -104,6 +107,7 @@ import {FileRestService} from './file-management/service/filerest.service';
     SelectStaticPropertiesComponent,
     StaticOneOfInputComponent,
     FileManagementComponent,
+    FilterPipe
   ],
   providers: [
     RestService,
