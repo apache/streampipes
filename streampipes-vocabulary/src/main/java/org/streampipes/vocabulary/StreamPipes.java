@@ -86,6 +86,7 @@ public class StreamPipes {
   public static final String COLLECTION_STATIC_PROPERTY = NS + "CollectionStaticProperty";
   public static final String DOMAIN_STATIC_PROPERTY = NS + "DomainStaticProperty";
   public static final String FREE_TEXT_STATIC_PROPERTY = NS + "FreeTextStaticProperty";
+  public static final String FILE_STATIC_PROPERTY = NS + "FileStaticProperty";
   public static final String MAPPING_PROPERTY = NS + "MappingProperty";
   public static final String MAPPING_PROPERTY_UNARY = NS + "MappingPropertyUnary";
   public static final String MAPPING_PROPERTY_NARY = NS + "MappingPropertyNary";
@@ -216,6 +217,9 @@ public class StreamPipes {
   public static final String MULTI_LINE = NS + "multiLine";
   public static final String HTML_ALLOWED = NS + "htmlAllowed";
   public static final String PLACEHOLDERS_SUPPORTED = NS + "placeholdersSupported";
+
+  public static final String HAS_ENDPOINT_URL = NS + "endpointUrl";
+  public static final String HAS_LOCATION_PATH = NS + "locationPath";
 
   public static final String MAPS_FROM = NS + "mapsFrom";
 

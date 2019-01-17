@@ -25,6 +25,8 @@ import org.streampipes.connect.adapter.generic.format.csv.CsvFormat;
 import org.streampipes.connect.adapter.generic.format.csv.CsvParser;
 import org.streampipes.connect.adapter.generic.format.geojson.GeoJsonFormat;
 import org.streampipes.connect.adapter.generic.format.geojson.GeoJsonParser;
+import org.streampipes.connect.adapter.generic.format.image.ImageFormat;
+import org.streampipes.connect.adapter.generic.format.image.ImageParser;
 import org.streampipes.connect.adapter.generic.format.json.arraykey.JsonFormat;
 import org.streampipes.connect.adapter.generic.format.json.arraykey.JsonParser;
 import org.streampipes.connect.adapter.generic.format.json.arraynokey.JsonArrayFormat;
@@ -42,6 +44,7 @@ import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.MqttProtocol;
 import org.streampipes.connect.adapter.specific.gdelt.GdeltAdapter;
 import org.streampipes.connect.adapter.specific.nswaustralia.trafficcamera.NswTrafficCameraAdapter;
+import org.streampipes.connect.adapter.specific.ros.RosBridgeAdapter;
 import org.streampipes.connect.adapter.specific.sensemap.OpenSenseMapAdapter;
 import org.streampipes.connect.adapter.specific.twitter.TwitterAdapter;
 import org.streampipes.model.connect.adapter.AdapterDescription;
@@ -63,6 +66,7 @@ public class AdapterRegistry {
         allAdapters.put(OpenSenseMapAdapter.ID, new OpenSenseMapAdapter());
         allAdapters.put(GdeltAdapter.ID, new GdeltAdapter());
         allAdapters.put(NswTrafficCameraAdapter.ID, new NswTrafficCameraAdapter());
+        allAdapters.put(RosBridgeAdapter.ID, new RosBridgeAdapter());
 
         return allAdapters;
     }
@@ -76,6 +80,7 @@ public class AdapterRegistry {
         allFormats.put(CsvFormat.ID, new CsvFormat());
         allFormats.put(GeoJsonFormat.ID, new GeoJsonFormat());
         allFormats.put(XmlFormat.ID, new XmlFormat());
+        allFormats.put(ImageFormat.ID, new ImageFormat());
 
 
         return allFormats;
@@ -90,6 +95,7 @@ public class AdapterRegistry {
         allParsers.put(CsvFormat.ID, new CsvParser());
         allParsers.put(GeoJsonFormat.ID, new GeoJsonParser());
         allParsers.put(XmlFormat.ID, new XmlParser());
+        allParsers.put(ImageFormat.ID, new ImageParser());
 
         return allParsers;
     }

@@ -28,9 +28,10 @@ import java.util.List;
 
 public class FileManagement {
 
-    public void saveFile(InputStream inputStream, String fileName) throws IOException {
+    public String saveFile(InputStream inputStream, String fileName) throws IOException {
         String filePath = getMainFilePath() + fileName;
         saveFile(filePath, inputStream);
+        return filePath;
     }
 
     public List<String> getFilePahts(String username) throws IOException {

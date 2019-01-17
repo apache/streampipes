@@ -26,6 +26,7 @@ import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.staticproperty.FileStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 
 import java.io.*;
@@ -74,21 +75,27 @@ public class FileStreamProtocol extends PullProtocol {
         ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
         long intervalProperty = Long.parseLong(extractor.singleValue("interval"));
 
-        String fileUri = extractor.singleValue("filePath");
+        FileStaticProperty fileStaticProperty = (FileStaticProperty) extractor.getStaticPropertyByName("filePath");
 
+        String fileUri = fileStaticProperty.getLocationPath();
         return new FileStreamProtocol(parser, format, intervalProperty, fileUri);    }
 
     @Override
     public ProtocolDescription declareModel() {
         ProtocolDescription pd = new ProtocolDescription(ID,"File","This is the " +
                 "description for the File Stream protocol");
-        FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("filePath", "File Path",
-                "This property defines the path to the file.");
+
+
+//        FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("filePath", "File Path",
+//                "This property defines the path to the file.");
+        FileStaticProperty fileInput = new FileStaticProperty("filePath", "File", "This property defines the path to the file.");
+
+
         pd.setSourceType("STREAM");
         FreeTextStaticProperty intervalProperty = new FreeTextStaticProperty("interval", "Interval", "This property " +
                 "defines the pull interval in seconds.");
         pd.setIconUrl("file.png");
-        pd.addConfig(urlProperty);
+        pd.addConfig(fileInput);
         pd.addConfig(intervalProperty);
 
         pd.setAppId(ID);

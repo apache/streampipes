@@ -43,7 +43,7 @@ public class ParameterExtractor {
                 .collect(Collectors.toList());
     }
 
-    private StaticProperty getStaticPropertyByName(String name)
+    public StaticProperty getStaticPropertyByName(String name)
     {
         for(StaticProperty p : list)
         {

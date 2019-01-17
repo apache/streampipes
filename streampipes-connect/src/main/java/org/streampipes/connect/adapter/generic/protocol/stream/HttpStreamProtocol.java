@@ -159,14 +159,14 @@ public class HttpStreamProtocol extends PullProtocol {
                 request.setHeader("Authorization", "Bearer " + this.accessToken);
             }
 
-            String s = request
-                    .execute().returnContent().asString();
+            result = request
+                    .execute().returnContent().asStream();
 
-            if (s.startsWith("ï")) {
-                s = s.substring(3);
-            }
+//            if (s.startsWith("ï")) {
+//                s = s.substring(3);
+//            }
 
-            result = IOUtils.toInputStream(s, "UTF-8");
+//            result = IOUtils.toInputStream(s, "UTF-8");
 
         } catch (Exception e) {
             logger.error("Error while fetching data from URL: " + url, e);

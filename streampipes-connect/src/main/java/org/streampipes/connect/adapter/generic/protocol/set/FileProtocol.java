@@ -30,6 +30,7 @@ import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.staticproperty.FileStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.connect.adapter.generic.format.Parser;
 
@@ -58,11 +59,13 @@ public class FileProtocol extends Protocol {
     public ProtocolDescription declareModel() {
         ProtocolDescription pd = new ProtocolDescription(ID,"File","This is the " +
                 "description for the File protocol");
-        FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("fileUri", "fileUri",
-                "This property defines the URL for the http request.");
+
+        FileStaticProperty fileInput = new FileStaticProperty("filePath", "File", "This property defines the path to the file.");
+//        FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("fileUri", "fileUri",
+//                "This property defines the URL for the http request.");
         pd.setSourceType("SET");
         pd.setIconUrl("file.png");
-        pd.addConfig(urlProperty);
+        pd.addConfig(fileInput);
 
         pd.setAppId(ID);
         return pd;
@@ -72,8 +75,11 @@ public class FileProtocol extends Protocol {
     public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
         ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
 
-        String fileUri = extractor.singleValue("fileUri");
+//        String fileUri = extractor.singleValue("fileUri");
 
+        FileStaticProperty fileStaticProperty = (FileStaticProperty) extractor.getStaticPropertyByName("filePath");
+
+        String fileUri = fileStaticProperty.getLocationPath();
         return new FileProtocol(parser, format, fileUri);
     }
 
