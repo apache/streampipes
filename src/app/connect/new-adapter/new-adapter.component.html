@@ -125,7 +125,7 @@
                         </mat-form-field>
 
                         <mat-form-field *ngIf="isEditable" style="width: 50%" (click)="fileInput.click();">
-                          <input  matInput placeholder="File" disabled (value)="fileName">
+                          <input  matInput placeholder="Icon" disabled (value)="fileName">
                           <input #fileInput type="file" style="display:none;"
                                  (change)="handleFileInput($event.target.files)">
                           {{fileName}}

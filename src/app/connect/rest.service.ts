@@ -36,13 +36,14 @@ import { MoveRuleDescription } from './model/connect/rules/MoveRuleDesctiption';
 import { TransformationRuleDescription } from './model/connect/rules/TransformationRuleDescription';
 import {StatusMessage} from "./model/message/StatusMessage";
 import { UnitDescription } from './model/UnitDescription';
-import {AnyStaticProperty} from './model/AnyStaticProperty';
+import { AnyStaticProperty } from './model/AnyStaticProperty';
 import { Option } from './model/Option';
 import { OneOfStaticProperty } from './model/OneOfStaticProperty';
-import {UnitTransformRuleDescription} from './model/connect/rules/UnitTransformRuleDescription';
-import {RemoveDuplicatesRuleDescription} from './model/connect/rules/RemoveDuplicatesRuleDescription';
-import {TimestampTransformationRuleDescription} from './model/connect/rules/TimestampTransformationRuleDescription';
-import {AddValueTransformationRuleDescription} from './model/connect/rules/AddValueTransformationRuleDescription';
+import { UnitTransformRuleDescription } from './model/connect/rules/UnitTransformRuleDescription';
+import { RemoveDuplicatesRuleDescription } from './model/connect/rules/RemoveDuplicatesRuleDescription';
+import { TimestampTransformationRuleDescription } from './model/connect/rules/TimestampTransformationRuleDescription';
+import { AddValueTransformationRuleDescription } from './model/connect/rules/AddValueTransformationRuleDescription';
+import { FileStaticProperty } from './model/FileStaticProperty';
 
 @Injectable()
 export class RestService {
@@ -53,6 +54,7 @@ export class RestService {
     tsonld.addClassMapping(ProtocolDescription);
     tsonld.addClassMapping(ProtocolDescriptionList);
     tsonld.addClassMapping(FreeTextStaticProperty);
+    tsonld.addClassMapping(FileStaticProperty);
     tsonld.addClassMapping(FormatDescriptionList);
     tsonld.addClassMapping(FormatDescription);
     tsonld.addClassMapping(AdapterDescriptionList);

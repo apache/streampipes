@@ -36,16 +36,12 @@ export class NewAdapterComponent implements OnInit {
         this.selectedUploadFile = files[0];
         this.fileName = this.selectedUploadFile.name;
 
-        console.log(this.fileName);
-
-        this.iconService.test(this.selectedUploadFile)
+        this.iconService.toBase64(this.selectedUploadFile)
             .then(
                 data => {
                     this.adapter.icon = (<string> data);
                 }
             );
-
-
     }
 
 
