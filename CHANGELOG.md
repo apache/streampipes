@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- SSL support for UI
+- Connect now supports data sets
+- Add data pre-processing to Connect 
+- Connect allows now to store adapters as templates an share them
+
+### Changed
 
 
 ## [0.60.0] - 2018-11-14
