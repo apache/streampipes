@@ -68,7 +68,7 @@ public class CsvFormat extends Format {
 
     @Override
     public Map<String,Object> parse(byte[] object) {
-        String[] arr = new String(object).split(delimiter);
+        String[] arr = CsvParser.parseLine(new String(object), delimiter);
         Map<String, Object> map =  new HashMap<>();
 
         if (keyValues == null && !header) {
