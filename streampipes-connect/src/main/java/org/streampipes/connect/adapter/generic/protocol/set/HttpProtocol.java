@@ -145,16 +145,16 @@ public class HttpProtocol extends Protocol {
         InputStream result = null;
 
         try {
-            String s = Request.Get(url)
+            result = Request.Get(url)
                     .connectTimeout(1000)
                     .socketTimeout(100000)
-                    .execute().returnContent().asString();
+                    .execute().returnContent().asStream();
 
-            if (s.startsWith("ï")) {
-                s = s.substring(3);
-            }
+//            if (s.startsWith("ï")) {
+//                s = s.substring(3);
+//            }
 
-            result = IOUtils.toInputStream(s, "UTF-8");
+//            result = IOUtils.toInputStream(s, "UTF-8");
 
         } catch (IOException e) {
             e.printStackTrace();

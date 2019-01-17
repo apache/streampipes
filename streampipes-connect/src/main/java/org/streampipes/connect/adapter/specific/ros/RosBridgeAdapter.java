@@ -116,12 +116,14 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
 
         private String topic;
         private String topicType;
+        private Ros ros;
 
         private List<byte[]> events;
 
-        public GetNEvents(String topic, String topicType) {
+        public GetNEvents(String topic, String topicType, Ros ros) {
             this.topic = topic;
             this.topicType = topicType;
+            this.ros = ros;
             this.events = new ArrayList<>();
         }
 
@@ -159,7 +161,12 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
             }
         }
 
-        GetNEvents getNEvents = new GetNEvents(topic, host);
+        Ros ros = new Ros(host);
+        ros.connect();
+
+        String topicType = getMethodType(ros, topic);
+
+        GetNEvents getNEvents = new GetNEvents(topic, topicType, ros);
         Thread t = new Thread(getNEvents);
         t.start();
 
@@ -173,6 +180,9 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
 
         System.out.println(getNEvents.getEvents().get(0));
 
+        t.interrupt();
+
+        ros.disconnect();
 
         EventSchema eventSchema = this.jsonObjectParser.getEventSchema(getNEvents.getEvents());
 

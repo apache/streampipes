@@ -25,6 +25,8 @@ import org.streampipes.connect.adapter.generic.format.csv.CsvFormat;
 import org.streampipes.connect.adapter.generic.format.csv.CsvParser;
 import org.streampipes.connect.adapter.generic.format.geojson.GeoJsonFormat;
 import org.streampipes.connect.adapter.generic.format.geojson.GeoJsonParser;
+import org.streampipes.connect.adapter.generic.format.image.ImageFormat;
+import org.streampipes.connect.adapter.generic.format.image.ImageParser;
 import org.streampipes.connect.adapter.generic.format.json.arraykey.JsonFormat;
 import org.streampipes.connect.adapter.generic.format.json.arraykey.JsonParser;
 import org.streampipes.connect.adapter.generic.format.json.arraynokey.JsonArrayFormat;
@@ -78,6 +80,7 @@ public class AdapterRegistry {
         allFormats.put(CsvFormat.ID, new CsvFormat());
         allFormats.put(GeoJsonFormat.ID, new GeoJsonFormat());
         allFormats.put(XmlFormat.ID, new XmlFormat());
+        allFormats.put(ImageFormat.ID, new ImageFormat());
 
 
         return allFormats;
@@ -92,6 +95,7 @@ public class AdapterRegistry {
         allParsers.put(CsvFormat.ID, new CsvParser());
         allParsers.put(GeoJsonFormat.ID, new GeoJsonParser());
         allParsers.put(XmlFormat.ID, new XmlParser());
+        allParsers.put(ImageFormat.ID, new ImageParser());
 
         return allParsers;
     }

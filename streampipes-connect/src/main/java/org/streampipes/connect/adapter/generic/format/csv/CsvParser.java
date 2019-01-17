@@ -105,11 +105,6 @@ public class CsvParser extends Parser {
         return resultSchema;
     }
 
-    public static void main(String... args) {
-        System.out.println(Boolean.parseBoolean("2"));
-        System.out.println(Integer.parseInt("dd"));
-    }
-
     private String getTypeString(String o) {
 
         try {

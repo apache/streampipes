@@ -17,5 +17,57 @@
 
 package org.streampipes.connect.adapter.generic.format.image;
 
-public class ImageParser {
+import org.apache.commons.io.IOUtils;
+import org.streampipes.connect.EmitBinaryEvent;
+import org.streampipes.connect.adapter.generic.format.Parser;
+import org.streampipes.model.connect.grounding.FormatDescription;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.vocabulary.XSD;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
+
+
+public class ImageParser extends Parser {
+
+    public ImageParser() {
+
+    }
+
+    @Override
+    public Parser getInstance(FormatDescription formatDescription) {
+        return new ImageParser();
+    }
+
+    @Override
+    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(data));
+
+        try {
+            byte[] result = IOUtils.toByteArray(data);
+            System.out.println("Parser " + result.toString());
+            emitBinaryEvent.emit(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public EventSchema getEventSchema(List<byte[]> oneEvent) {
+        EventSchema resultSchema = new EventSchema();
+        EventPropertyPrimitive p = new EventPropertyPrimitive();
+        p.setRuntimeName("image");
+        p.setRuntimeType(XSD._string.toString());
+
+        p.setDomainProperties(Arrays.asList(URI.create("https://image.com")));
+        resultSchema.addEventProperty(p);
+        return resultSchema;
+    }
 }
