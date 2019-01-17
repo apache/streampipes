@@ -1,17 +1,17 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
-import {DataMarketplaceService} from './data-marketplace.service';
-import {AdapterDescription} from '../model/connect/AdapterDescription';
-import {ShepherdService} from "../../services/tour/shepherd.service";
-import {ConnectService} from '../connect.service';
-import {GenericAdapterStreamDescription} from '../model/connect/GenericAdapterStreamDescription';
-import {GenericAdapterSetDescription} from '../model/connect/GenericAdapterSetDescription';
-import {SpecificAdapterSetDescription} from '../model/connect/SpecificAdapterSetDescription';
-import {SpecificAdapterStreamDescription} from '../model/connect/SpecificAdapterStreamDescription';
-import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatButtonModule} from '@angular/material/button';
-import {MatSelectModule} from '@angular/material/select';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { DataMarketplaceService } from './data-marketplace.service';
+import { AdapterDescription } from '../model/connect/AdapterDescription';
+import { ShepherdService } from "../../services/tour/shepherd.service";
+import { ConnectService } from '../connect.service';
+import { GenericAdapterStreamDescription } from '../model/connect/GenericAdapterStreamDescription';
+import { GenericAdapterSetDescription } from '../model/connect/GenericAdapterSetDescription';
+import { SpecificAdapterSetDescription } from '../model/connect/SpecificAdapterSetDescription';
+import { SpecificAdapterStreamDescription } from '../model/connect/SpecificAdapterStreamDescription';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
 import { FilterPipe } from './filter.pipe';
 
 @Component({
@@ -24,19 +24,20 @@ export class DataMarketplaceComponent implements OnInit {
     newAdapterFromDescription: AdapterDescription;
     filteredAdapterDescriptions: AdapterDescription[];
     adapters: AdapterDescription[];
+    filteredAdapters: AdapterDescription[];
     visibleAdapters: AdapterDescription[];
 
     @Output()
     selectAdapterEmitter: EventEmitter<AdapterDescription> = new EventEmitter<AdapterDescription>();
 
     selectedIndex: number = 0;
-    filterTerm: string = ""; //term anpassen
+    filterTerm: string = "";
     pipe: FilterPipe = new FilterPipe();
     categories: string[] = ['All', 'Data Set', 'Data Stream'];
     selected: string = "All";
 
     constructor(private dataMarketplaceService: DataMarketplaceService, private ShepherdService: ShepherdService,
-                private connectService: ConnectService) {
+        private connectService: ConnectService) {
     }
 
     ngOnInit() {
@@ -76,7 +77,7 @@ export class DataMarketplaceComponent implements OnInit {
     getAdaptersRunning(): void {
         this.dataMarketplaceService.getAdapters().subscribe(adapters => {
             this.adapters = adapters;
-            
+            this.filteredAdapters = this.adapters;
         });
     }
 
@@ -115,35 +116,43 @@ export class DataMarketplaceComponent implements OnInit {
     removeSelection() {
         this.newAdapterFromDescription = undefined;
     }
-//e anpassen
+
     updateFilterTerm(inputValue) {
-        this.filterTerm = inputValue;         
-        }
+        this.filterTerm = inputValue;
+    }
 
 
     filterAdapterCategory(categorie) {
-        console.log(categorie.value);
         
         this.filteredAdapterDescriptions = this.adapterDescriptions;
+        this.filteredAdapters = this.adapters;
+        if (this.selected == this.categories[1]) {
+            for (let adapter of this.filteredAdapterDescriptions) {
+                if (!this.connectService.isDataSetDescription(adapter)) {
+                    this.filteredAdapterDescriptions = this.filteredAdapterDescriptions.filter(obj => obj !== adapter);
+                }
+            }
+            for (let adapter of this.filteredAdapters) {
+                if (!this.connectService.isDataSetDescription(adapter)) {
+                    this.filteredAdapters = this.filteredAdapters.filter(obj => obj !== adapter);
+                }
+            }
 
-        if(this.selected == this.categories[1]) {
-            for(let adapter of this.filteredAdapterDescriptions){
-                if(!this.connectService.isDataSetDescription(adapter)){
+        }
+
+        else if (this.selected == this.categories[2]) {
+            for (let adapter of this.filteredAdapterDescriptions) {
+                if (this.connectService.isDataSetDescription(adapter)) {
                     this.filteredAdapterDescriptions = this.filteredAdapterDescriptions.filter(obj => obj !== adapter);
                 }
-            
             }
-        }
-        else if (this.selected == this.categories[2]){
-            for(let adapter of this.filteredAdapterDescriptions){
-                if(this.connectService.isDataSetDescription(adapter)){
-                    this.filteredAdapterDescriptions = this.filteredAdapterDescriptions.filter(obj => obj !== adapter);
+            for (let adapter of this.filteredAdapters) {
+                if (this.connectService.isDataSetDescription(adapter)) {
+                    this.filteredAdapters = this.filteredAdapters.filter(obj => obj !== adapter);
                 }
-            
             }
         }
+
     }
-    
-
 
 }

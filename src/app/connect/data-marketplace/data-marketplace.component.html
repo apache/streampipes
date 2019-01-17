@@ -75,7 +75,7 @@
         </div>
         <div *ngIf="selectedIndex === 1">
             <div fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-container">
-                <sp-adapter-description class="adapter-description" fxFlex="33" *ngFor="let adapter of adapters"
+                <sp-adapter-description class="adapter-description" fxFlex="33" *ngFor="let adapter of filteredAdapters | filter:filterTerm"
                     [adapter]="adapter" (createTemplateEmitter)="templateFromRunningAdapter(adapter)"
                     (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-adapter-description>
             </div>

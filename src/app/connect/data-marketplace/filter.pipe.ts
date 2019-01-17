@@ -10,7 +10,7 @@ export class FilterPipe implements PipeTransform {
 
     transform(adapterDescription: any, filterTerm?: any): any{
         //check if search filterTerm is undefined
-        if(filterTerm == undefined) return adapterDescription;
+        if(filterTerm == undefined || !adapterDescription) return adapterDescription;
         return adapterDescription.filter(function(adapterDescription){
             adapterDescription.label.replace(' ', '_');
             if (adapterDescription.label.toLowerCase().includes(filterTerm.toLowerCase()) || adapterDescription.description.toLowerCase().includes(filterTerm.toLowerCase())) {
