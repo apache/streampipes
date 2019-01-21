@@ -16,6 +16,8 @@
 
 package org.streampipes.sinks.databases.jvm.jdbcclient;
 
+import static org.streampipes.vocabulary.XSD._boolean;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -24,9 +26,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.logging.api.Logger;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.schema.EventPropertyNested;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.vocabulary.XSD;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 // PostgreSql data:
 // driver: "org.postgresql.Driver"
@@ -48,6 +57,7 @@ public class JdbcClient {
 
 	private boolean tableExists = false;
 
+	private List<EventProperty> eventProperties;
 	private Logger logger;
 
 	private Connection c = null;
@@ -78,21 +88,37 @@ public class JdbcClient {
 		 * @param o The object which should be identified
 		 * @return An {@link SqlAttribute} of the identified type
 		 */
-		public static SqlAttribute getFromObject(Object o) {
-			SqlAttribute r;
-			if (o instanceof Integer) {
-				r = SqlAttribute.INTEGER;
-			} else if (o instanceof Long) {
-				r = SqlAttribute.LONG;
-			} else if (o instanceof Float) {
-				r = SqlAttribute.FLOAT;
-			} else if (o instanceof Double) {
-				r = SqlAttribute.DOUBLE;
-			} else {
-				r = SqlAttribute.STRING;
-			}
-			return r;
-		}
+    public static SqlAttribute getFromObject(final Object o) {
+      SqlAttribute r;
+      if (o instanceof Integer) {
+        r = SqlAttribute.INTEGER;
+      } else if (o instanceof Long) {
+        r = SqlAttribute.LONG;
+      } else if (o instanceof Float) {
+        r = SqlAttribute.FLOAT;
+      } else if (o instanceof Double) {
+        r = SqlAttribute.DOUBLE;
+      } else {
+        r = SqlAttribute.STRING;
+      }
+      return r;
+    }
+
+    public static SqlAttribute getFromUri(final String s) {
+      SqlAttribute r;
+      if (s.equals(XSD._integer)) {
+        r = SqlAttribute.INTEGER;
+      } else if (s.equals(XSD._long)) {
+        r = SqlAttribute.LONG;
+      } else if (s.equals(XSD._float)) {
+        r = SqlAttribute.FLOAT;
+      } else if (s.equals(XSD._double)) {
+        r = SqlAttribute.DOUBLE;
+      } else {
+        r = SqlAttribute.STRING;
+      }
+      return r;
+    }
 
 		/**
 		 * Sets the value in the prepardStatement {@code ps}
@@ -140,14 +166,15 @@ public class JdbcClient {
 		private int index;
 		private SqlAttribute type;
 
-		private Parameterinfo(int index, SqlAttribute type) {
+		private Parameterinfo(final int index, final SqlAttribute type) {
 			this.index = index;
 			this.type = type;
 		}
 	}
 
 
-	public JdbcClient(String host,
+	public JdbcClient(List<EventProperty> eventProperties,
+			String host,
 			Integer post,
 			String databaseName,
 			String tableName,
@@ -166,18 +193,20 @@ public class JdbcClient {
 		this.allowedRegEx = allowedRegEx;
 		this.urlName = urlName;
 		this.logger = logger;
+		this.eventProperties = eventProperties;
 		try {
 			Class.forName(driver);
 		} catch (ClassNotFoundException e) {
 			throw new SpRuntimeException("Driver '" + driver + "' not found.");
 		}
+
 		validate();
 		connect();
 	}
 
 	/**
-	 * Checks whether the given {@link JdbcClient#host} and the
-	 * {@link JdbcClient#databaseName} are allowed
+	 * Checks whether the given {@link JdbcClient#host} and the {@link JdbcClient#databaseName}
+   * are allowed
 	 *
 	 * @throws SpRuntimeException If either the hostname or the databasename is not allowed
 	 */
@@ -195,10 +224,7 @@ public class JdbcClient {
 			throw new SpRuntimeException("Error: Hostname '" + postgreSqlHost
 					+ "' not allowed");
 		}*/
-		if (!databaseName.matches(allowedRegEx)) {
-			throw new SpRuntimeException("Error: Databasename '" + databaseName
-					+ "' not allowed (allowed: '" + allowedRegEx + "')");
-		}
+		checkRegEx(databaseName, "Databasename");
 	}
 
 	/**
@@ -210,16 +236,19 @@ public class JdbcClient {
 	 */
 	private void connect() throws SpRuntimeException {
 		try {
+			//TODO: Create table if not exists
 			String u = "jdbc:" + urlName + "://" + host + ":" + port + "/" + databaseName;
 			c = DriverManager.getConnection(u, user, password);
 			st = c.createStatement();
 
-			//TODO: Remove this one?
 			DatabaseMetaData md = c.getMetaData();
 			ResultSet rs = md.getTables(null, null, tableName, null);
 			if (rs.next()) {
-				tableExists = true;
+				//validateTable();
+			} else {
+				createTable();
 			}
+			tableExists = true;
 			rs.close();
 
 		} catch (SQLException e) {
@@ -239,19 +268,14 @@ public class JdbcClient {
 	 * @param event The event which should be saved to the Postgres table
 	 * @throws SpRuntimeException When there was an error in the saving process
 	 */
-	public void save(Map<String, Object> event) throws SpRuntimeException {
+	public void save(final Map<String, Object> event) throws SpRuntimeException {
 		if (event == null) {
 			throw new SpRuntimeException("event is null");
 		}
-		if(!tableExists) {
-			// Creates the table (executeUpdate might throw a SQLException)
-			try {
-				String createQuery = generateCreateStatement(event);
-				st.executeUpdate(createQuery);
-				tableExists = true;
-			} catch (SQLException e) {
-				throw new SpRuntimeException(e.getMessage());
-			}
+		if (!tableExists) {
+			// Creates the table
+			createTable();
+      tableExists = true;
 		}
 		try {
 			executePreparedStatement(event);
@@ -281,13 +305,13 @@ public class JdbcClient {
 	 * @throws SpRuntimeException When the table name is not allowed or it is thrown
 	 * by {@link SqlAttribute#setValue(Parameterinfo, Object, PreparedStatement)}
 	 */
-	private void executePreparedStatement(Map<String, Object> event)
+	private void executePreparedStatement(final Map<String, Object> event)
 			throws SQLException, SpRuntimeException {
-		if(ps != null) {
+		if (ps != null) {
 			ps.clearParameters();
 		}
 		for (Map.Entry<String, Object> pair : event.entrySet()) {
-			if(!parameters.containsKey(pair.getKey())) {
+			if (!parameters.containsKey(pair.getKey())) {
 				//TODO: start the for loop all over again
 				//TODO: Do it with eventSchema instead of the event
 				generatePreparedStatement(event);
@@ -306,26 +330,20 @@ public class JdbcClient {
 	 * @throws SpRuntimeException When the tablename is not allowed
 	 * @throws SQLException When the prepareStatment cannot be evaluated
 	 */
-	private void generatePreparedStatement(Map<String, Object> event)
+	private void generatePreparedStatement(final Map<String, Object> event)
 			throws SQLException, SpRuntimeException {
 		// input: event
 		// wanted: INSERT INTO test4321 ( randomString, randomValue ) VALUES ( ?,? );
 		parameters.clear();
 		StringBuilder statement1 = new StringBuilder("INSERT  INTO ");
 		StringBuilder statement2 = new StringBuilder("VALUES ( ");
-		if(!tableName.matches(allowedRegEx)) {
-			throw new SpRuntimeException("Table name '" + tableName + "' not allowed (allowed: '"
-					+ allowedRegEx + "')");
-		}
+		checkRegEx(tableName, "Tablename");
 		statement1.append(tableName).append(" ( ");
 
 		// Starts at 1, since the parameterIndex in the PreparedStatement starts at 1 as well
 		int i = 1;
 		for (Map.Entry<String, Object> pair : event.entrySet()) {
-			if(!pair.getKey().matches(allowedRegEx)) {
-				throw new SpRuntimeException("Column name '" + pair.getKey() + "' not allowed (allowed: '"
-            + allowedRegEx + "')");
-			}
+		  checkRegEx(pair.getKey(), "Columnname");
 			parameters.put(pair.getKey(),
 					new Parameterinfo(i, SqlAttribute.getFromObject(pair.getValue())));
 			statement1.append(pair.getKey()).append(", ");
@@ -337,36 +355,106 @@ public class JdbcClient {
 		ps = c.prepareStatement(statement1.append(statement2).toString());
 	}
 
-	/**
-	 * Prepares a statement for the creation of a table matched to the event
-	 * (takes care of SQL Injection)
-	 *
-	 * @param  event  an absolute URL giving the base location of the image
-	 * @return      an SQL-Injection save statement, which then can be used in a JDBC-statement
-	 * @throws SpRuntimeException if the event has illegal names for the parameters or if the table
-	 * name is not allowed
-	 */
-	private String generateCreateStatement(Map<String, Object> event) throws SpRuntimeException {
-		// input: event(), tablename
-		// output (example): "CREATE TABLE test4321 ( randomString VARCHAR(255), randomValue INT );"
-		StringBuilder statement = new StringBuilder("CREATE TABLE ");
+  /**
+   * Creates a table with the name {@link JdbcClient#tableName} and the
+   * properties {@link JdbcClient#eventProperties}
+   * 
+   * @throws SpRuntimeException If the {@link JdbcClient#tableName}  is not allowed, if
+   *    executeUpdate throws an SQLException or if {@link JdbcClient#extractEventProperties(List)}
+   *    throws an exception
+   */
+	private void createTable() throws SpRuntimeException {
+	  checkRegEx(tableName, "Tablename");
 
-		if(!tableName.matches(allowedRegEx)) {
-			throw new SpRuntimeException("Table name '" + tableName + "' not allowed (allowed: '"
-					+ allowedRegEx + "')");
-		}
-		statement.append(tableName).append(" ( ");
+	  StringBuilder statement = new StringBuilder("CREATE TABLE ");
+	  statement.append(tableName).append(" ( ");
+	  statement.append(extractEventProperties(eventProperties)).append(" );");
 
-		for (Map.Entry<String, Object> pair : event.entrySet()) {
-			if(!pair.getKey().matches(allowedRegEx)) {
-				throw new SpRuntimeException("Column name '" + pair.getKey() + "' not allowed (allowed: '"
-						+ allowedRegEx + "')");
-			}
-			statement.append(pair.getKey()).append(" ").append(
-					SqlAttribute.getFromObject(pair.getValue())).append(", ");
+    try {
+      st.executeUpdate(statement.toString());
+    } catch (SQLException e) {
+      throw new SpRuntimeException(e.getMessage());
+    }
+  }
 
-		}
-		return statement.delete(statement.length() - 2, statement.length()).append(" );").toString();
+  /**
+   * Creates a SQL-Query with the given Properties (SQL-Injection save). Calls
+   * {@link JdbcClient#extractEventProperties(List, String)} with an empty string
+   *
+   * @param properties The list of properties which should be included in the query
+   * @return A StringBuilder with the query which needs to be executed in order to create the table
+   * @throws SpRuntimeException See {@link JdbcClient#extractEventProperties(List, String)} for details
+   */
+	private StringBuilder extractEventProperties(List<EventProperty> properties)
+      throws SpRuntimeException {
+    return extractEventProperties(properties, "");
+  }
+
+  /**
+   * Creates a SQL-Query with the given Properties (SQL-Injection save). For nested properties it
+   * recursively extracts the information. EventPropertyList are getting converted to a string (so
+   * in SQL to a VARCHAR(255). For each type it uses {@link SqlAttribute#getFromUri(String)}
+   * internally to identify the SQL-type from the runtimeType.
+   *
+   * @param properties The list of properties which should be included in the query
+   * @param preProperty A string which gets prepended to all property runtimeNames
+   * @return A StringBuilder with the query which needs to be executed in order to create the table
+   * @throws SpRuntimeException If the runtimeName of any property is not allowed
+   */
+	private StringBuilder extractEventProperties(List<EventProperty> properties, String preProperty)
+      throws SpRuntimeException {
+	  //TODO: test, if the string is empty and maybe throw an exception (if it is the bottom layer)
+	  // output: "randomString VARCHAR(255), randomValue INT"
+    StringBuilder s = new StringBuilder();
+    String pre = "";
+    for (EventProperty property : properties) {
+      // Protection against SqlInjection
+
+      checkRegEx(property.getRuntimeName(), "Column name");
+      if (property instanceof EventPropertyNested) {
+        // if it is a nested property, recursively extract the needed properties
+        StringBuilder tmp = extractEventProperties(((EventPropertyNested)property).getEventProperties(),
+            preProperty + property.getRuntimeName() + "_");
+        if(tmp.length() > 0) {
+          s.append(pre).append(tmp);
+        }
+      } else {
+        // Adding the name of the property (e.g. "randomString")
+        // Or for properties in a nested structure: input1_randomValue
+        // "pre" is there for the ", " part
+        s.append(pre).append(preProperty).append(property.getRuntimeName()).append(" ");
+
+        // adding the type of the property (e.g. "VARCHAR(255)")
+	      if (property instanceof EventPropertyPrimitive) {
+          s.append(SqlAttribute.getFromUri(((EventPropertyPrimitive)property).getRuntimeType()));
+        } else {
+	        // Must be an EventPropertyList then
+          s.append(SqlAttribute.getFromUri(XSD._string.toString()));
+        }
+        pre = ", ";
+      }
+    }
+
+	  return s;
+	}
+
+  /**
+   * Checks if the input string is allowed (regEx match and length > 0)
+   *
+   * @param input String which is getting matched with the regEx
+   * @param as Information about the use of the input. Gets included in the exception message
+   * @throws SpRuntimeException If {@code input} does not match with {@link JdbcClient#allowedRegEx}
+   * or if the length of {@code input} is 0
+   */
+	private void checkRegEx(String input, String as) throws SpRuntimeException {
+    if (!input.matches(allowedRegEx) || input.length() == 0) {
+      throw new SpRuntimeException(as + " '" + input
+          + "' not allowed (allowed: '" + allowedRegEx + "') with a min length of 1");
+    }
+  }
+
+	private void validateTable() {
+		throw new NotImplementedException();
 	}
 
 	/**
