@@ -30,7 +30,7 @@ import org.streampipes.sinks.databases.jvm.config.DatabasesJvmConfig;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
-public class PostgreSqlController  extends StandaloneEventSinkDeclarer<PostgreSqlParameters> {
+public class HadoopFileSystemController extends StandaloneEventSinkDeclarer<HadoopFileSystemParameters> {
 
   private static final String DATABASE_HOST_KEY = "db_host";
   private static final String DATABASE_PORT_KEY = "db_port";
@@ -76,7 +76,7 @@ public class PostgreSqlController  extends StandaloneEventSinkDeclarer<PostgreSq
 
 
   @Override
-  public ConfiguredEventSink<PostgreSqlParameters> onInvocation(DataSinkInvocation graph,
+  public ConfiguredEventSink<HadoopFileSystemParameters> onInvocation(DataSinkInvocation graph,
                                                              DataSinkParameterExtractor extractor) {
 
     String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);
@@ -86,7 +86,7 @@ public class PostgreSqlController  extends StandaloneEventSinkDeclarer<PostgreSq
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
     String password = extractor.singleValueParameter(DATABASE_PASSWORD_KEY, String.class);
 
-    PostgreSqlParameters params = new PostgreSqlParameters(graph,
+    HadoopFileSystemParameters params = new HadoopFileSystemParameters(graph,
         hostname,
         port,
         dbName,
@@ -94,6 +94,6 @@ public class PostgreSqlController  extends StandaloneEventSinkDeclarer<PostgreSq
         user,
         password);
 
-    return new ConfiguredEventSink<>(params, () -> new PostgreSql(params));
+    return new ConfiguredEventSink<>(params, () -> new HadoopFileSystem(params));
   }
 }

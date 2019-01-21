@@ -19,7 +19,7 @@ package org.streampipes.sinks.databases.jvm.hdfs;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public class PostgreSqlParameters extends EventSinkBindingParams {
+public class HadoopFileSystemParameters extends EventSinkBindingParams {
 
   private String PostgreSqlHost;
   private Integer PostgreSqlPort;
@@ -28,7 +28,7 @@ public class PostgreSqlParameters extends EventSinkBindingParams {
   private String user;
   private String password;
 
-  public PostgreSqlParameters(DataSinkInvocation graph, String PostgreSqlHost, Integer PostgreSqlPort, String databaseName, String tableName, String user, String password) {
+  public HadoopFileSystemParameters(DataSinkInvocation graph, String PostgreSqlHost, Integer PostgreSqlPort, String databaseName, String tableName, String user, String password) {
     super(graph);
     this.PostgreSqlHost = PostgreSqlHost;
     this.PostgreSqlPort = PostgreSqlPort;

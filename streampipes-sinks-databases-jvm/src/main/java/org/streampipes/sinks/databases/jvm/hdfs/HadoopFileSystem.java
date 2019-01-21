@@ -22,35 +22,27 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.wrapper.runtime.EventSink;
 
-public class PostgreSql extends EventSink<PostgreSqlParameters> {
+public class HadoopFileSystem extends EventSink<HadoopFileSystemParameters> {
 
-  private PostgreSqlClient postgreSqlClient;
+  private HadoopFileSystemClient hadoopFileSystemClient;
 
   private static Logger LOG;
 
-  public PostgreSql(PostgreSqlParameters params) {
+  public HadoopFileSystem(HadoopFileSystemParameters params) {
     super(params);
   }
 
   @Override
-  public void bind(PostgreSqlParameters parameters) throws SpRuntimeException {
-    LOG = parameters.getGraph().getLogger(PostgreSql.class);
+  public void bind(HadoopFileSystemParameters parameters) throws SpRuntimeException {
+    LOG = parameters.getGraph().getLogger(HadoopFileSystem.class);
 
-    this.postgreSqlClient = new PostgreSqlClient(
-        parameters.getPostgreSqlHost(),
-        parameters.getPostgreSqlPort(),
-        parameters.getDatabaseName(),
-        parameters.getTableName(),
-        parameters.getUsername(),
-        parameters.getPassword(),
-        LOG
-    );
+    this.hadoopFileSystemClient = new HadoopFileSystemClient(LOG);
   }
 
   @Override
   public void onEvent(Map<String, Object> event, String sourceInfo) {
     try {
-      postgreSqlClient.save(event);
+      hadoopFileSystemClient.save(event);
     } catch (SpRuntimeException e) {
       //TODO: error or warn?
       LOG.error(e.getMessage());
@@ -60,11 +52,6 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
 
   @Override
   public void discard() throws SpRuntimeException {
-    try {
-      postgreSqlClient.stop();
-    } catch (SQLException e) {
-      LOG.warn(e.getMessage());
-      //e.printStackTrace();
-    }
+    hadoopFileSystemClient.stop();
   }
 }
