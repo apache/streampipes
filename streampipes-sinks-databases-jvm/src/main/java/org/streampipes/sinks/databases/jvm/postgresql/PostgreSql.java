@@ -18,6 +18,7 @@ package org.streampipes.sinks.databases.jvm.postgresql;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.logging.api.Logger;
+import org.streampipes.sinks.databases.jvm.jdbcclient.JdbcClient;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.sql.SQLException;
@@ -25,7 +26,7 @@ import java.util.Map;
 
 public class PostgreSql extends EventSink<PostgreSqlParameters> {
 
-  private PostgreSqlClient postgreSqlClient;
+  private JdbcClient jdbcClient;
 
   private static Logger LOG;
 
@@ -37,13 +38,17 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
   public void bind(PostgreSqlParameters parameters) throws SpRuntimeException {
     LOG = parameters.getGraph().getLogger(PostgreSql.class);
 
-    this.postgreSqlClient = new PostgreSqlClient(
+    this.jdbcClient = new JdbcClient(
+        parameters.getGraph().getInputStreams().get(0).getEventSchema().getEventProperties(),
         parameters.getPostgreSqlHost(),
         parameters.getPostgreSqlPort(),
         parameters.getDatabaseName(),
         parameters.getTableName(),
         parameters.getUsername(),
         parameters.getPassword(),
+        "^[a-zA-Z_][a-zA-Z0-9_]*$",
+        "org.postgresql.Driver",
+        "postgresql",
         LOG
     );
   }
@@ -51,7 +56,7 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
   @Override
   public void onEvent(Map<String, Object> event, String sourceInfo) {
     try {
-      postgreSqlClient.save(event);
+      jdbcClient.save(event);
     } catch (SpRuntimeException e) {
       //TODO: error or warn?
       LOG.error(e.getMessage());
@@ -62,7 +67,7 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
   @Override
   public void discard() throws SpRuntimeException {
     try {
-      postgreSqlClient.stop();
+      jdbcClient.stop();
     } catch (SQLException e) {
       LOG.warn(e.getMessage());
       //e.printStackTrace();
