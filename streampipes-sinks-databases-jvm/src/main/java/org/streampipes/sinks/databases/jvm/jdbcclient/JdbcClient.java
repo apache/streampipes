@@ -358,7 +358,7 @@ public class JdbcClient {
   /**
    * Creates a table with the name {@link JdbcClient#tableName} and the
    * properties {@link JdbcClient#eventProperties}
-   * 
+   *
    * @throws SpRuntimeException If the {@link JdbcClient#tableName}  is not allowed, if
    *    executeUpdate throws an SQLException or if {@link JdbcClient#extractEventProperties(List)}
    *    throws an exception
@@ -366,8 +366,8 @@ public class JdbcClient {
 	private void createTable() throws SpRuntimeException {
 	  checkRegEx(tableName, "Tablename");
 
-	  StringBuilder statement = new StringBuilder("CREATE TABLE ");
-	  statement.append(tableName).append(" ( ");
+	  StringBuilder statement = new StringBuilder("CREATE TABLE \"");
+	  statement.append(tableName).append("\" ( ");
 	  statement.append(extractEventProperties(eventProperties)).append(" );");
 
     try {
@@ -422,7 +422,7 @@ public class JdbcClient {
         // Adding the name of the property (e.g. "randomString")
         // Or for properties in a nested structure: input1_randomValue
         // "pre" is there for the ", " part
-        s.append(pre).append(preProperty).append(property.getRuntimeName()).append(" ");
+        s.append(pre).append("\"").append(preProperty).append(property.getRuntimeName()).append("\" ");
 
         // adding the type of the property (e.g. "VARCHAR(255)")
 	      if (property instanceof EventPropertyPrimitive) {
@@ -431,8 +431,8 @@ public class JdbcClient {
 	        // Must be an EventPropertyList then
           s.append(SqlAttribute.getFromUri(XSD._string.toString()));
         }
-        pre = ", ";
       }
+      pre = ", ";
     }
 
 	  return s;
