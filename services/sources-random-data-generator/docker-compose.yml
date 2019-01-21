@@ -1,6 +1,6 @@
 version: "2"
 services:
-  pe-sources-random:
+  sources-random-data-generator:
     image: ${SP_PE_DOCKER_REGISTRY}sources-random-data-generator:${SP_PE_VERSION}
     depends_on:
       - "consul"
