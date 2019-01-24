@@ -4,7 +4,8 @@ export let MappingNaryComponent = {
     templateUrl: 'mappingnary.tmpl.html',
     bindings: {
         staticProperty : "=",
-        displayRecommended: "="
+        displayRecommended: "=",
+        selectedElement: "<"
     },
     controller: MappingNaryController,
     controllerAs: 'ctrl'

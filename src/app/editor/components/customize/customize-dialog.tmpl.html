@@ -13,10 +13,10 @@
                           auto-complete-static-property="ctrl.staticProperty"></domain-concept-input>
 </div>
 <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MappingPropertyUnary'">
-    <mapping-property-unary static-property="ctrl.staticProperty" display-recommended="ctrl.displayRecommended"></mapping-property-unary>
+    <mapping-property-unary selected-element="ctrl.selectedElement" static-property="ctrl.staticProperty" display-recommended="ctrl.displayRecommended"></mapping-property-unary>
 </div>
 <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MappingPropertyNary'">
-    <mapping-property-nary static-property="ctrl.staticProperty" display-recommended="ctrl.displayRecommended"></mapping-property-nary>
+    <mapping-property-nary selected-element="ctrl.selectedElement" static-property="ctrl.staticProperty" display-recommended="ctrl.displayRecommended"></mapping-property-nary>
 </div>
 <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MatchingProperty'">
     <matching-property static-property="ctrl.staticProperty"></matching-property>

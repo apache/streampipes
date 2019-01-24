@@ -4,7 +4,8 @@ export let MappingUnaryComponent = {
     templateUrl: 'mappingunary.tmpl.html',
     bindings: {
         staticProperty : "=",
-        displayRecommended: "="
+        displayRecommended: "=",
+        selectedElement: "=",
     },
     controller: MappingUnaryController,
     controllerAs: 'ctrl'

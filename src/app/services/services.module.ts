@@ -24,6 +24,7 @@ import { downgradeInjectable } from '@angular/upgrade/static';
 import { TransitionService } from "./transition.service";
 import { ShepherdService } from "./tour/shepherd.service";
 import { TourProviderService } from "./tour/tour-provider.service";
+import { PropertySelectorService } from "./property-selector.service";
 
 import CreatePipelineTour from './tour/create-pipeline-tour.constants';
 import DashboardTour from './tour/dashboard-tour.constants';
@@ -52,6 +53,7 @@ export default angular.module('sp.services', [spConstants])
 	.service('TransitionService', TransitionService)
 	.service('ShepherdService', ShepherdService)
 	.service('TourProviderService', TourProviderService)
+	.service('PropertySelectorService', PropertySelectorService)
 	.constant('createPipelineTourConstants', CreatePipelineTour)
 	.constant('dashboardTourConstants', DashboardTour)
 	.constant('adapterTourConstants', AdapterTour)
