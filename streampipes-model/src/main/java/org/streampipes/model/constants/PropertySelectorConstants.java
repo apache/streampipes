@@ -13,11 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.streampipes.manager.selector;
+package org.streampipes.model.constants;
 
 public class PropertySelectorConstants {
 
   public static final String PROPERTY_DELIMITER = "::";
   public static final String FIRST_STREAM_ID_PREFIX = "s0";
   public static final String SECOND_STREAM_ID_PREFIX = "s1";
+
+  public static final String FIRST_REQUIREMENT_PREFIX = "r0";
+  public static final String SECOND_REQUIREMENT_PREFIX = "r1";
+
 }

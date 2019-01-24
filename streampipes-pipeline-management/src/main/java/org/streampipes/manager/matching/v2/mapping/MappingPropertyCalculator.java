@@ -24,59 +24,54 @@ import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MappingPropertyCalculator {
 
-  private List<EventProperty> allMatchingProperties;
 
   public MappingPropertyCalculator() {
-    this.allMatchingProperties = new ArrayList<>();
   }
 
-  public List<EventProperty> matchesProperties(List<EventProperty> offer,
+  public List<EventProperty> matchesProperties(List<EventProperty> offeredProperties,
                                                EventProperty requirement) {
-    offer.forEach(of -> matches(of, requirement, true));
+    List<EventProperty> allMatchingProperties = new ArrayList<>();
+    for (EventProperty offer : offeredProperties) {
+      allMatchingProperties.addAll(matches(offer, requirement));
+    }
+
     return allMatchingProperties;
   }
 
-  public boolean matches(EventProperty offer, EventProperty requirement, boolean addAsMatching) {
-    boolean match = true;
-    if (requirement instanceof EventPropertyPrimitive) {
-      if (offer instanceof EventPropertyList) {
-        match = false;
-      } else if (offer instanceof EventPropertyPrimitive) {
+  private List<EventProperty> matches(EventProperty offer, EventProperty requirement) {
+    if (type(requirement, EventPropertyPrimitive.class)) {
+      if (offer instanceof EventPropertyPrimitive) {
         if (new PropertyMatch().match(offer, requirement, new ArrayList<>())) {
-          if (addAsMatching) {
-            allMatchingProperties.add(offer);
-          }
+            return Collections.singletonList(offer);
         }
       } else if (offer instanceof EventPropertyNested) {
-        List<EventProperty> nestedProperties = ((EventPropertyNested) offer).getEventProperties();
-        if (!matches(nestedProperties, requirement)) {
-          match = false;
-        }
+        EventPropertyNested clonedOffer = new EventPropertyNested((EventPropertyNested) offer);
+        clonedOffer.setEventProperties(matchesProperties(clonedOffer.getEventProperties(), requirement));
+        return Collections.singletonList(clonedOffer);
       }
     } else if (requirement instanceof EventPropertyList) {
-      if (!(offer instanceof EventPropertyList)) {
-        match = false;
-      } else {
-        if (!matchesList((EventPropertyList) offer, (EventPropertyList) requirement)) {
-          match = false;
-        } else if (addAsMatching) {
-          allMatchingProperties.add(offer);
+      if (offer instanceof EventPropertyList) {
+        if (matchesList((EventPropertyList) offer, (EventPropertyList) requirement)) {
+          return Collections.singletonList(offer);
         }
       }
 
     } else if (requirement instanceof EventPropertyNested) {
       EventPropertyNested rightNested = (EventPropertyNested) requirement;
       for (EventProperty nestedProperty : rightNested.getEventProperties()) {
-        if (!matches(offer, nestedProperty, true)) {
-          match = false;
-        }
+        // TODO
       }
     }
-    return match;
+    return Collections.emptyList();
+  }
+
+  private Boolean type(EventProperty eventProperty, Class<? extends EventProperty> clazz) {
+    return clazz.isInstance(eventProperty);
   }
 
   public boolean matchesList(EventPropertyList offer, EventPropertyList requirement) {
@@ -92,9 +87,7 @@ public class MappingPropertyCalculator {
   public boolean matches(List<EventProperty> offer, EventProperty requirement) {
     boolean match = false;
     for (EventProperty of : offer) {
-      if (matches(of, requirement, false)) {
-        match = true;
-      }
+      // TODO
     }
     return match;
   }

@@ -15,7 +15,7 @@ limitations under the License.
 */
 package org.streampipes.manager.selector;
 
-import static org.streampipes.manager.selector.PropertySelectorConstants.*;
+import static org.streampipes.model.constants.PropertySelectorConstants.*;
 
 import org.streampipes.model.output.PropertyRenameRule;
 import org.streampipes.model.schema.EventProperty;

@@ -23,7 +23,6 @@ import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.model.template.PipelineTemplateInvocation;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,10 +65,9 @@ public class PipelineTemplateInvocationGenerator {
             .stream()
             .filter(sp -> sp instanceof MappingPropertyUnary)
             .forEach(mp -> ((MappingPropertyUnary) mp)
-                    .setMapsTo(URI.create(((MappingPropertyUnary) mp)
+                    .setSelectedProperty(((MappingPropertyUnary) mp)
                             .getMapsFromOptions()
-                            .get(0)
-                            .getElementId())));
+                            .get(0)));
 
     return staticProperties;
   }

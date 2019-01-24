@@ -17,11 +17,12 @@
 
 package org.streampipes.sdk.builder;
 
-import org.streampipes.model.graph.DataProcessorDescription;
-import org.streampipes.vocabulary.MhWirth;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.helpers.OutputStrategies;
 import org.junit.Test;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.schema.PropertyScope;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.OutputStrategies;
 
 public class TestProcessingElementBuilder {
 
@@ -34,10 +35,10 @@ public class TestProcessingElementBuilder {
                 .requiredTextParameter("requiredText", "requiredTextLabel", "requiredTextDescription")
                 .requiredIntegerParameter("requiredInteger", "requiredIntegerLabel", "requiredIntegerDescription")
                 .requiredFloatParameter("requiredFloat", "requiredFloatLabel", "requiredFloatDescription")
-                .requiredPropertyStream1(EpRequirements.numberReq())
-                .requiredPropertyStream1WithUnaryMapping(EpRequirements.booleanReq(), "internalName", "label", "description")
-                .requiredPropertyStream1(EpRequirements.domainPropertyReq(MhWirth.DrillingStatus))
-                .requiredPropertyStream2(EpRequirements.booleanReq())
+                .requiredStream(StreamRequirementsBuilder.create().requiredProperty
+                        (EpRequirements.numberReq()).requiredPropertyWithUnaryMapping
+                        (EpRequirements.booleanReq(), Labels.from("internalName", "label",
+                                "description"), PropertyScope.NONE).build())
                 .outputStrategy(OutputStrategies.custom())
                 .build();
     }

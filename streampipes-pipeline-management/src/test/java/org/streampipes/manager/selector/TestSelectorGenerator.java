@@ -26,7 +26,8 @@ public class TestSelectorGenerator {
 
   @Test
   public void test() {
-    List<String> propertySelectors = new PropertySelectorGenerator(TestSelectorUtils.makeSchema())
+    List<String> propertySelectors = new PropertySelectorGenerator(TestSelectorUtils.makeSchema()
+            , false)
             .generateSelectors();
 
     assertEquals(10, propertySelectors.size());
@@ -35,7 +36,7 @@ public class TestSelectorGenerator {
   @Test
   public void testTwoSchemas() {
     List<String> propertySelectors = new PropertySelectorGenerator(TestSelectorUtils.makeSchema()
-            , TestSelectorUtils.makeSchema())
+            , TestSelectorUtils.makeSchema(), false)
             .generateSelectors();
 
     assertEquals(20, propertySelectors.size());

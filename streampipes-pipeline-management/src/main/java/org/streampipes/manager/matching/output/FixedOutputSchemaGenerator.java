@@ -38,7 +38,7 @@ public class FixedOutputSchemaGenerator extends OutputSchemaGenerator<FixedOutpu
     super(strategy);
     this.fixedProperties = strategy.getEventProperties();
   }
-  
+
   @Override
   public Tuple2<EventSchema, FixedOutputStrategy> buildFromOneStream(SpDataStream stream) {
     return makeTuple(new EventSchema(fixedProperties));

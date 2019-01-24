@@ -95,7 +95,7 @@ public class ContainerProvidedOptionsHandler {
     if (mappingProperty.isPresent()) {
       return eventProperties
               .stream()
-              .filter(ep -> ep.getElementId().equals(mappingProperty.get().getMapsTo().toString()))
+              .filter(ep -> ep.getElementId().equals(mappingProperty.get().getSelectedProperty()))
               .findFirst();
     } else {
       return Optional.empty();

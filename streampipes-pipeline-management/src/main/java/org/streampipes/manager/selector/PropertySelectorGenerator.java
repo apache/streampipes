@@ -15,6 +15,7 @@ limitations under the License.
 */
 package org.streampipes.manager.selector;
 
+import org.streampipes.model.constants.PropertySelectorConstants;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventSchema;
@@ -26,14 +27,23 @@ public class PropertySelectorGenerator {
 
   private EventSchema firstSchema;
   private EventSchema secondSchema;
+  private Boolean omitNestedProperties;
 
-  public PropertySelectorGenerator(EventSchema firstSchema) {
-    this.firstSchema = firstSchema;
+  public PropertySelectorGenerator(List<EventProperty> eventProperties, Boolean omitNestedProperties) {
+    this.firstSchema = new EventSchema(eventProperties);
+    this.omitNestedProperties = omitNestedProperties;
   }
 
-  public PropertySelectorGenerator(EventSchema firstSchema, EventSchema secondSchema) {
+  public PropertySelectorGenerator(EventSchema firstSchema, Boolean omitNestedProperties) {
+    this.firstSchema = firstSchema;
+    this.omitNestedProperties = omitNestedProperties;
+  }
+
+  public PropertySelectorGenerator(EventSchema firstSchema, EventSchema secondSchema, Boolean
+          omitNestedProperties) {
     this.firstSchema = firstSchema;
     this.secondSchema = secondSchema;
+    this.omitNestedProperties = omitNestedProperties;
   }
 
   public List<String> generateSelectors() {
@@ -47,6 +57,10 @@ public class PropertySelectorGenerator {
     return propertySelectors;
   }
 
+  public List<String> generateSelectors(String prefix) {
+    return generateSelectors(this.firstSchema.getEventProperties(), prefix);
+  }
+
   private List<String> generateSelectors(List<EventProperty> eventProperties, String prefix) {
     List<String> propertySelectors = new ArrayList<>();
     for (EventProperty ep : eventProperties) {
@@ -55,7 +69,9 @@ public class PropertySelectorGenerator {
                 makeSelector
                         (prefix, ep.getRuntimeName())));
       }
-      propertySelectors.add(makeSelector(prefix, ep.getRuntimeName()));
+      if (!(ep instanceof EventPropertyNested) || !omitNestedProperties) {
+        propertySelectors.add(makeSelector(prefix, ep.getRuntimeName()));
+      }
     }
     return propertySelectors;
   }

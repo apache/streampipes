@@ -71,7 +71,8 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
               dataProcessorInvocation.getStaticProperties());
 
       if (mappingPropertyOpt.isPresent()) {
-        Optional<EventProperty> eventPropertyOpt = findEventProperty(mappingPropertyOpt.get().getMapsTo(), inSchema
+        Optional<EventProperty> eventPropertyOpt = findEventProperty(mappingPropertyOpt.get().getSelectedProperty()
+                , inSchema
                 .getEventProperties());
 
         if (eventPropertyOpt.isPresent()) {
@@ -166,13 +167,18 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
     return eventProperty;
   }
 
-  private Optional<EventProperty> findEventProperty(URI mapsTo, List<EventProperty> eventProperties) {
+  private Optional<EventProperty> findEventProperty(String propertySelector, List<EventProperty>
+          eventProperties) {
 
     return eventProperties
             .stream()
-            .filter(ep -> ep.getElementId().equals(mapsTo.toString()))
+            .filter(ep -> ep.getRuntimeName().equals(removePrefix(propertySelector)))
             .map(this::cloneEp)
             .findFirst();
+  }
+
+  private String removePrefix(String propertySelector) {
+    return propertySelector.split("::")[1];
   }
 
   private EventProperty cloneEp(EventProperty ep) {

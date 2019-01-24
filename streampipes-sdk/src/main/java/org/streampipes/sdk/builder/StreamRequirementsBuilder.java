@@ -27,7 +27,6 @@ import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.sdk.helpers.CollectedStreamRequirements;
 import org.streampipes.sdk.helpers.Label;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,8 +73,9 @@ public class StreamRequirementsBuilder {
    */
   public StreamRequirementsBuilder requiredPropertyWithUnaryMapping(EventProperty propertyRequirement, Label label,
                                                                     PropertyScope propertyScope) {
+    propertyRequirement.setRuntimeName(label.getInternalId());
     this.eventProperties.add(propertyRequirement);
-    MappingPropertyUnary mp = new MappingPropertyUnary(URI.create(propertyRequirement.getElementId()), label
+    MappingPropertyUnary mp = new MappingPropertyUnary(label.getInternalId(), label
             .getInternalId(),
             label.getLabel(),
             label.getDescription());
@@ -98,8 +98,9 @@ public class StreamRequirementsBuilder {
    */
   public StreamRequirementsBuilder requiredPropertyWithNaryMapping(EventProperty propertyRequirement, Label label, PropertyScope
           propertyScope) {
+    propertyRequirement.setRuntimeName(label.getInternalId());
     this.eventProperties.add(propertyRequirement);
-    MappingPropertyNary mp = new MappingPropertyNary(URI.create(propertyRequirement.getElementId()), label
+    MappingPropertyNary mp = new MappingPropertyNary(label.getInternalId(), label
             .getInternalId(), label.getLabel(), label.getDescription());
     mp.setPropertyScope(propertyScope.name());
     this.mappingProperties.add(mp);

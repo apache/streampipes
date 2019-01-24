@@ -20,6 +20,7 @@ package org.streampipes.sdk.extractor;
 import com.github.drapostolos.typeparser.TypeParser;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.constants.PropertySelectorConstants;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
 import org.streampipes.model.schema.EventPropertyNested;
@@ -137,8 +138,8 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   public String mappingPropertyValue(String staticPropertyName) {
-    URI propertyURI = getURIFromStaticProperty(staticPropertyName);
-    return mappingPropertyValues(staticPropertyName, false, propertyURI).get(0);
+    String propertySelector = getURIFromStaticProperty(staticPropertyName);
+    return mappingPropertyValues(staticPropertyName, false, propertySelector).get(0);
   }
 
   public List<String> mappingPropertyValues(String staticPropertyName) {
@@ -153,9 +154,10 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
       List<String> result = new ArrayList<>();
 
       // TODO fix empire which is sometimes not returning a URI
-      for (Object obj : mappingProperty.getMapsTo()) {
+      for (Object obj : mappingProperty.getSelectedProperties()) {
         if (obj.getClass().isAssignableFrom(URI.class)) {
-          result.addAll(mappingPropertyValues(staticPropertyName, false, (URI) obj));
+          // TODO !!! refactor
+          result.addAll(mappingPropertyValues(staticPropertyName, false, null));
         } else {
           if (obj instanceof EventProperty) {
             EventProperty property = (EventProperty) obj;
@@ -197,9 +199,14 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   public List<String> mappingPropertyValues(String staticPropertyName,
-                                            boolean completeNames, URI propertyURI) {
+                                            boolean completeNames, String propertySelector) {
+// TODO !!! refactor
+    if (propertySelector.startsWith(PropertySelectorConstants.FIRST_STREAM_ID_PREFIX)) {
+      return null;
+    }
     for (SpDataStream stream : sepaElement.getInputStreams()) {
-      List<String> matchedProperties = getMappingPropertyName(stream.getEventSchema().getEventProperties(), propertyURI, completeNames, "");
+      List<String> matchedProperties = getMappingPropertyName(stream.getEventSchema()
+              .getEventProperties(), null, completeNames, "");
       if (matchedProperties.size() > 0) {
         return matchedProperties;
       }
@@ -249,14 +256,14 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return result;
   }
 
-  private URI getURIFromStaticProperty(String staticPropertyName) {
+  private String getURIFromStaticProperty(String staticPropertyName) {
     Optional<MappingPropertyUnary> property = sepaElement.getStaticProperties().stream()
             .filter(p -> p instanceof MappingPropertyUnary)
             .map((p -> (MappingPropertyUnary) p))
             .filter(p -> p.getInternalName().equals(staticPropertyName))
             .findFirst();
 
-    return property.map(MappingPropertyUnary::getMapsTo).orElse(null);
+    return property.map(MappingPropertyUnary::getSelectedProperty).orElse(null);
     //TODO: exceptions
   }
 }
