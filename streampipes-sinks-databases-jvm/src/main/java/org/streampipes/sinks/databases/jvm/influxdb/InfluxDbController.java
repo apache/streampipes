@@ -51,7 +51,7 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
         "InfluxDB",
         "Stores events in an InfluxDB.")
         .category(DataSinkType.STORAGE)
-        .iconUrl(DatabasesJvmConfig.getIconUrl("couchdb_icon"))
+        .iconUrl(DatabasesJvmConfig.getIconUrl("influx"))
         .requiredStream(StreamRequirementsBuilder.create()
             .requiredProperty(EpRequirements.anyProperty())
             .build())

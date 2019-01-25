@@ -46,7 +46,7 @@ public class PostgreSqlController  extends StandaloneEventSinkDeclarer<PostgreSq
         "PostgreSQL",
         "Stores events in a Postgres database.")
         .category(DataSinkType.STORAGE)
-            .iconUrl(DatabasesJvmConfig.getIconUrl("couchdb_icon"))
+            .iconUrl(DatabasesJvmConfig.getIconUrl("postgres"))
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
