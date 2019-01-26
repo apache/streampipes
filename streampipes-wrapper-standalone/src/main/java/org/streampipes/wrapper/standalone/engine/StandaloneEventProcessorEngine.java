@@ -23,11 +23,11 @@ import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.util.Map;
-import java.util.Optional;
 
 public abstract class StandaloneEventProcessorEngine<B extends EventProcessorBindingParams> extends EventProcessor<B> {
 
-  private Optional<SpOutputCollector> collectorOpt;
+  private SpOutputCollector collector;
+  private Boolean active;
 
   public StandaloneEventProcessorEngine(B params) {
     super(params);
@@ -35,14 +35,15 @@ public abstract class StandaloneEventProcessorEngine<B extends EventProcessorBin
 
   @Override
   public void bind(B parameters, SpOutputCollector collector) {
-    collectorOpt = Optional.of(collector);
+    this.collector = collector;
+    this.active = true;
     onInvocation(parameters, parameters.getGraph());
   }
 
   @Override
   public void onEvent(Map<String, Object> event, String sourceInfo) {
-      if (collectorOpt.isPresent()) {
-        onEvent(event, sourceInfo, collectorOpt.get());
+      if (active) {
+        onEvent(event, sourceInfo, collector);
       } else {
         throw new IllegalArgumentException("");
       }
@@ -50,7 +51,7 @@ public abstract class StandaloneEventProcessorEngine<B extends EventProcessorBin
 
   @Override
   public void discard() {
-    this.collectorOpt = Optional.empty();
+    this.active = false;
     onDetach();
   }
 
