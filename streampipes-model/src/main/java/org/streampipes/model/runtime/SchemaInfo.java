@@ -15,22 +15,26 @@ limitations under the License.
 */
 package org.streampipes.model.runtime;
 
-public class SourceInfo {
+import org.streampipes.model.output.PropertyRenameRule;
+import org.streampipes.model.schema.EventSchema;
 
-  private String sourceId;
-  private String selectorPrefix;
+import java.util.List;
 
-  public SourceInfo(String sourceId, String selectorPrefix) {
-    this.sourceId = sourceId;
-    this.selectorPrefix = selectorPrefix;
+public class SchemaInfo {
+
+  private EventSchema eventSchema;
+  private List<PropertyRenameRule> renameRules;
+
+  public SchemaInfo(EventSchema eventSchema, List<PropertyRenameRule> renameRules) {
+    this.eventSchema = eventSchema;
+    this.renameRules = renameRules;
   }
 
-  public String getSourceId() {
-    return sourceId;
+  public EventSchema getEventSchema() {
+    return eventSchema;
   }
 
-  public String getSelectorPrefix() {
-    return selectorPrefix;
+  public List<PropertyRenameRule> getRenameRules() {
+    return renameRules;
   }
-
 }

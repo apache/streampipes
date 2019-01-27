@@ -13,24 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.streampipes.model.runtime;
+package org.streampipes.model.runtime.field;
 
-public class SourceInfo {
+public interface FieldParser<FV, T> {
 
-  private String sourceId;
-  private String selectorPrefix;
-
-  public SourceInfo(String sourceId, String selectorPrefix) {
-    this.sourceId = sourceId;
-    this.selectorPrefix = selectorPrefix;
-  }
-
-  public String getSourceId() {
-    return sourceId;
-  }
-
-  public String getSelectorPrefix() {
-    return selectorPrefix;
-  }
-
+  T parseField(FV value);
 }

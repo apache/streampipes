@@ -13,24 +13,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.streampipes.model.runtime;
+package org.streampipes.model.runtime.field;
 
-public class SourceInfo {
+import java.util.Map;
 
-  private String sourceId;
-  private String selectorPrefix;
+public class CompositeField extends AbstractField<Map<String, AbstractField>> {
 
-  public SourceInfo(String sourceId, String selectorPrefix) {
-    this.sourceId = sourceId;
-    this.selectorPrefix = selectorPrefix;
+  public CompositeField(String fieldNameIn, String fieldNameOut, Map<String, AbstractField> value) {
+    super(fieldNameIn, fieldNameOut, value);
   }
 
-  public String getSourceId() {
-    return sourceId;
+  public AbstractField getFieldByRuntimeName(String runtimeName) {
+    return value.get(runtimeName);
   }
-
-  public String getSelectorPrefix() {
-    return selectorPrefix;
-  }
-
 }

@@ -15,22 +15,25 @@ limitations under the License.
 */
 package org.streampipes.model.runtime;
 
-public class SourceInfo {
+import static org.junit.Assert.assertEquals;
 
-  private String sourceId;
-  private String selectorPrefix;
+import org.junit.Test;
 
-  public SourceInfo(String sourceId, String selectorPrefix) {
-    this.sourceId = sourceId;
-    this.selectorPrefix = selectorPrefix;
-  }
+import java.util.List;
 
-  public String getSourceId() {
-    return sourceId;
-  }
+public class TestListField {
 
-  public String getSelectorPrefix() {
-    return selectorPrefix;
+  @Test
+  public void testListParser() {
+    Event event = RuntimeTestUtils.makeSimpleEvent(RuntimeTestUtils.listMap(), RuntimeTestUtils.getSourceInfo());
+
+    List<Integer> integerList = event.getFieldByRuntimeName("list").getAsList().parseAsSimpleType
+            (Integer.class);
+
+    assertEquals(3, integerList.size());
+    assertEquals(Integer.valueOf(1), integerList.get(0));
+    assertEquals(Integer.valueOf(2), integerList.get(1));
+    assertEquals(Integer.valueOf(3), integerList.get(2));
   }
 
 }
