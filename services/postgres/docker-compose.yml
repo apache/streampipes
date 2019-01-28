@@ -3,17 +3,11 @@ services:
   postgres:
     image: postgres
     volumes:
-      - data-postgres:/var/lib/postgresql
-#      - ./config/postgresql/data:/var/lib/postgresql/data
+      - ./config/postgresql/data:/var/lib/postgresql/data
     ports:
       - 5432:5432
-#    environment:
-#      PGDATA: /tmp
-#      PGDATA: /var/lib/postgresql/data
+    environment:
+       POSTGRES_USER: admin
+       POSTGRES_PASSWORD: admin
     networks:
       spnet:
-
-volumes:
-  data-postgres:
-    driver: local
-    external: false
