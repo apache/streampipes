@@ -16,8 +16,6 @@
 
 package org.streampipes.sinks.databases.jvm.jdbcclient;
 
-import static org.streampipes.vocabulary.XSD._boolean;
-
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -31,21 +29,13 @@ import java.util.Map;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.schema.EventPropertyList;
 import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.vocabulary.XSD;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-// PostgreSql data:
-// driver: "org.postgresql.Driver"
-// urlName: "postgres"
 
 public class JdbcClient {
-	// Allowed identifiers for HadoopFileSystem
-	// (https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS)
-	//TODO: Check default for each version
-	private String allowedRegEx = "^[a-zA-Z_][a-zA-Z0-9_]*$";
+	private String allowedRegEx;
 	private String urlName;
 
 	private Integer port;
@@ -57,13 +47,16 @@ public class JdbcClient {
 
 	private boolean tableExists = false;
 
-	private List<EventProperty> eventProperties;
 	private Logger logger;
 
 	private Connection c = null;
 	private Statement st = null;
 	private PreparedStatement ps = null;
 
+  /**
+   * The list of properties extracted from the graph
+   */
+	private List<EventProperty> eventProperties;
 	/**
 	 * The parameters in the prepared statement {@code ps} together with their index and data type
 	 */
@@ -149,7 +142,7 @@ public class JdbcClient {
 					ps.setString(p.index, value.toString());
 					break;
 				default:
-					throw new SpRuntimeException("Unknown SQL Datatype");
+					throw new SpRuntimeException("Unknown SQL datatype");
 			}
 		}
 
@@ -235,28 +228,36 @@ public class JdbcClient {
 	 * wrong identification, missing database etc.)
 	 */
 	private void connect() throws SpRuntimeException {
-		try {
-			//TODO: Create table if not exists
-			String u = "jdbc:" + urlName + "://" + host + ":" + port + "/" + databaseName;
-			c = DriverManager.getConnection(u, user, password);
-			st = c.createStatement();
+    checkRegEx(databaseName, "databasename");
+    String u = "jdbc:" + urlName + "://" + host + ":" + port + "/";
+    try {
+      // Checks whether the database already exists (using catalogs has not worked with postgres)
+      c = DriverManager.getConnection(u, user, password);
+      st = c.createStatement();
+      st.executeUpdate("CREATE DATABASE " + databaseName + ";");
+      logger.info("Created new database '" + databaseName + "'");
+    } catch (SQLException e1) {
+      if (!e1.getSQLState().substring(0, 2).equals("42")) {
+        throw new SpRuntimeException("Error while creating database: " + e1.getMessage());
+      }
+    }
+    closeAll();
 
-			DatabaseMetaData md = c.getMetaData();
-			ResultSet rs = md.getTables(null, null, tableName, null);
+    try {
+      // Database should exist by now
+      c = DriverManager.getConnection(u + databaseName, user, password);
+      st = c.createStatement();
+      ResultSet rs = c.getMetaData().getTables(null, null, tableName, null);;
 			if (rs.next()) {
+			  //TODO: Add validation of an existing table
 				//validateTable();
 			} else {
 				createTable();
 			}
 			tableExists = true;
 			rs.close();
-
 		} catch (SQLException e) {
-			try {
-				stop();
-			} catch (SQLException sqlException) {
-				throw new SpRuntimeException(e.getMessage());
-			}
+      closeAll();
 			throw new SpRuntimeException(e.getMessage());
 		}
 	}
@@ -281,24 +282,27 @@ public class JdbcClient {
 			executePreparedStatement(event);
 		} catch (SQLException e) {
 			if (e.getSQLState().substring(0, 2).equals("42")) {
-				// If the table does not exists (because it got deleted or something) we will try to create
-				// a new one. Otherwise we do not handle the exception
-				// For error codes see: https://www.postgresql.org/docs/current/errcodes-appendix.html
-				//TODO: Possible problem of infinite recursion
-				//TODO: Consider possible other exception handling strategies
-				//TODO: Put in a method to avoid recursion and just create it once
+				// If the table does not exists (because it got deleted or something, will cause the error
+        // code "42") we will try to create a new one. Otherwise we do not handle the exception.
 				logger.warn("Table '" + tableName + "' was unexpectedly not found and gets recreated.");
-				tableExists = false;
-				this.save(event);
-			} else {
+        tableExists = false;
+				createTable();
+        tableExists = true;
+
+        try {
+          executePreparedStatement(event);
+        } catch (SQLException e1) {
+          throw new SpRuntimeException(e1.getMessage());
+        }
+      } else {
 				throw new SpRuntimeException(e.getMessage());
 			}
 		}
 	}
 
 	/**
-	 * Executes the saved prepared statement {@code ps}. In case it is not initialized, it will call
-	 * {@link JdbcClient#generatePreparedStatement(Map)} to prepare it
+	 * Clears, fills and executes the saved prepared statement {@code ps} with the data found in
+   * event. To fill in the values it calls {@link JdbcClient#fillPreparedStatement(Map)}.
 	 *
 	 * @param event Data to be saved in the SQL table
 	 * @throws SQLException When the statement cannot be executed
@@ -310,17 +314,42 @@ public class JdbcClient {
 		if (ps != null) {
 			ps.clearParameters();
 		}
-		for (Map.Entry<String, Object> pair : event.entrySet()) {
-			if (!parameters.containsKey(pair.getKey())) {
-				//TODO: start the for loop all over again
-				//TODO: Do it with eventSchema instead of the event
-				generatePreparedStatement(event);
-			}
-			Parameterinfo p = parameters.get(pair.getKey());
-			SqlAttribute.setValue(p, pair.getValue(), ps);
-		}
+		fillPreparedStatement(event);
 		ps.executeUpdate();
 	}
+
+  private void fillPreparedStatement(final Map<String, Object> event)
+      throws SQLException, SpRuntimeException {
+    fillPreparedStatement(event, "");
+  }
+
+  /**
+   * Fills a prepared statement with the actual values base on {@link JdbcClient#parameters}. If
+   * {@link JdbcClient#parameters} is empty or not complete (which should only happen once in the
+   * begining), it calls {@link JdbcClient#generatePreparedStatement(Map)} to generate a new one.
+   * @param event
+   * @param pre
+   * @throws SQLException
+   * @throws SpRuntimeException
+   */
+  private void fillPreparedStatement(final Map<String, Object> event, String pre)
+      throws SQLException, SpRuntimeException {
+    //TODO: Possible error: when the event does not contain all objects of the parameter list
+    for (Map.Entry<String, Object> pair : event.entrySet()) {
+      String newKey = pre + pair.getKey();
+      if (pair.getValue() instanceof Map) {
+        // recursively extracts nested values
+        fillPreparedStatement((Map<String, Object>)pair.getValue(), newKey + "_");
+      } else {
+        if (!parameters.containsKey(newKey)) {
+          //TODO: start the for loop all over again
+          generatePreparedStatement(event);
+        }
+        Parameterinfo p = parameters.get(newKey);
+        SqlAttribute.setValue(p, pair.getValue(), ps);
+      }
+    }
+  }
 
 	/**
 	 * Initializes the variables {@link JdbcClient#parameters} and {@link JdbcClient#ps}
@@ -340,24 +369,57 @@ public class JdbcClient {
 		checkRegEx(tableName, "Tablename");
 		statement1.append(tableName).append(" ( ");
 
-		// Starts at 1, since the parameterIndex in the PreparedStatement starts at 1 as well
-		int i = 1;
-		for (Map.Entry<String, Object> pair : event.entrySet()) {
-		  checkRegEx(pair.getKey(), "Columnname");
-			parameters.put(pair.getKey(),
-					new Parameterinfo(i, SqlAttribute.getFromObject(pair.getValue())));
-			statement1.append(pair.getKey()).append(", ");
-			statement2.append("?,");
-			i++;
-		}
-		statement1 = statement1.delete(statement1.length() - 2, statement1.length()).append(" ) ");
-		statement2 = statement2.delete(statement2.length() - 1, statement2.length()).append(" );");
-		ps = c.prepareStatement(statement1.append(statement2).toString());
+    // Starts index at 1, since the parameterIndex in the PreparedStatement starts at 1 as well
+		extendPreparedStatement(event, statement1, statement2, 1);
+
+		statement1.append(" ) ");
+		statement2.append(" );");
+		String finalStatement = statement1.append(statement2).toString();
+		ps = c.prepareStatement(finalStatement);
 	}
+
+
+  private int extendPreparedStatement(final Map<String, Object> event,
+    StringBuilder s1, StringBuilder s2, int index) throws SpRuntimeException {
+    return extendPreparedStatement(event, s1, s2, index, "", "");
+  }
+
+  /**
+   *
+   * @param event
+   * @param s1
+   * @param s2
+   * @param index
+   * @param preProperty
+   * @param pre
+   * @return
+   * @throws SpRuntimeException
+   */
+  private int extendPreparedStatement(final Map<String, Object> event,
+      StringBuilder s1, StringBuilder s2, int index, String preProperty, String pre)
+      throws SpRuntimeException {
+	  for (Map.Entry<String, Object> pair : event.entrySet()) {
+	    if (pair.getValue() instanceof Map) {
+	      index = extendPreparedStatement((Map<String, Object>)pair.getValue(), s1, s2, index,
+            pair.getKey() + "_", pre);
+      } else {
+        checkRegEx(pair.getKey(), "Columnname");
+        parameters.put(pair.getKey(),
+            new Parameterinfo(index, SqlAttribute.getFromObject(pair.getValue())));
+        s1.append(pre).append("\"").append(preProperty).append(pair.getKey()).append("\"");
+        s2.append(pre).append("?");
+        index++;
+      }
+      pre = ", ";
+    }
+    return index;
+  }
 
   /**
    * Creates a table with the name {@link JdbcClient#tableName} and the
-   * properties {@link JdbcClient#eventProperties}
+   * properties {@link JdbcClient#eventProperties}. Calls
+   * {@link JdbcClient#extractEventProperties(List)} internally with the
+   * {@link JdbcClient#eventProperties} to extract all possible columns.
    *
    * @throws SpRuntimeException If the {@link JdbcClient#tableName}  is not allowed, if
    *    executeUpdate throws an SQLException or if {@link JdbcClient#extractEventProperties(List)}
@@ -393,7 +455,7 @@ public class JdbcClient {
   /**
    * Creates a SQL-Query with the given Properties (SQL-Injection save). For nested properties it
    * recursively extracts the information. EventPropertyList are getting converted to a string (so
-   * in SQL to a VARCHAR(255). For each type it uses {@link SqlAttribute#getFromUri(String)}
+   * in SQL to a VARCHAR(255)). For each type it uses {@link SqlAttribute#getFromUri(String)}
    * internally to identify the SQL-type from the runtimeType.
    *
    * @param properties The list of properties which should be included in the query
@@ -403,7 +465,7 @@ public class JdbcClient {
    */
 	private StringBuilder extractEventProperties(List<EventProperty> properties, String preProperty)
       throws SpRuntimeException {
-	  //TODO: test, if the string is empty and maybe throw an exception (if it is the bottom layer)
+	  //IDEA: test, if the string is empty and maybe throw an exception (if it is the bottom layer)
 	  // output: "randomString VARCHAR(255), randomValue INT"
     StringBuilder s = new StringBuilder();
     String pre = "";
@@ -453,22 +515,43 @@ public class JdbcClient {
     }
   }
 
-	private void validateTable() {
-		throw new NotImplementedException();
+	private void validateTable() throws SpRuntimeException {
+		if(false) {
+		  throw new SpRuntimeException("Table '" + tableName + "' does not match the eventproperties");
+    }
 	}
 
 	/**
 	 * Closes all open connections and statements of JDBC
 	 */
-	public void stop() throws SQLException {
-		if(st != null) {
-			st.close();
-		}
-		if(c != null) {
-			c.close();
-		}
-		if(ps != null) {
-			ps.close();
-		}
-	}
+	public void closeAll() {
+	  boolean error = false;
+		try {
+      if (st != null) {
+        st.close();
+      }
+    } catch (SQLException e) {
+		  error = true;
+      logger.warn("Exception when closing the statement: " + e.getMessage());
+    }
+    try {
+      if (c != null) {
+        c.close();
+      }
+    } catch (SQLException e) {
+      error = true;
+      logger.warn("Exception when closing the connection: " + e.getMessage());
+    }
+    try {
+      if (ps != null) {
+        ps.close();
+      }
+    } catch (SQLException e) {
+      error = true;
+      logger.warn("Exception when closing the prepared statement: " + e.getMessage());
+    }
+    if(!error) {
+      logger.info("Shutdown all connections successfully.");
+    }
+  }
 }
