@@ -11,7 +11,7 @@
         </div>
         <div fxLayoutAlign="start center" fxLayout="column" class="icon">
             <img *ngIf="adapter.iconUrl && !adapter.icon" [src]="'assets/img/connect/' +adapter.iconUrl" class="iconImg"/>
-            <img *ngIf="adapter.icon" [src]="adapter.icon" class="iconImg"/>
+            <img *ngIf="adapter.icon" [src]="adapter.icon" style="min-height: 50px;" class="iconImg"/>
         </div>
         <h3>{{adapter.label}}</h3>
     </div>
