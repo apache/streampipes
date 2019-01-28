@@ -45,7 +45,7 @@ public abstract class AbstractField<FV> {
   }
 
   public Boolean isComposite() {
-    return isInstance(CompositeField.class);
+    return isInstance(NestedField.class);
   }
 
   public Boolean isList() {
@@ -60,8 +60,8 @@ public abstract class AbstractField<FV> {
     return clazz.isInstance(this);
   }
 
-  public CompositeField getAsComposite() {
-    return (CompositeField) this;
+  public NestedField getAsComposite() {
+    return (NestedField) this;
   }
 
   public ListField getAsList() {

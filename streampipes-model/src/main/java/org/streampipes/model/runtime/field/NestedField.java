@@ -17,13 +17,17 @@ package org.streampipes.model.runtime.field;
 
 import java.util.Map;
 
-public class CompositeField extends AbstractField<Map<String, AbstractField>> {
+public class NestedField extends AbstractField<Map<String, AbstractField>> {
 
-  public CompositeField(String fieldNameIn, String fieldNameOut, Map<String, AbstractField> value) {
+  public NestedField(String fieldNameIn, String fieldNameOut, Map<String, AbstractField> value) {
     super(fieldNameIn, fieldNameOut, value);
   }
 
   public AbstractField getFieldByRuntimeName(String runtimeName) {
     return value.get(runtimeName);
+  }
+
+  public void addField(String key, AbstractField field) {
+    value.put(key, field);
   }
 }

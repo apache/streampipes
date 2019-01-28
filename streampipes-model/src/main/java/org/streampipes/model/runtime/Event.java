@@ -17,6 +17,7 @@ package org.streampipes.model.runtime;
 
 import org.streampipes.model.constants.PropertySelectorConstants;
 import org.streampipes.model.runtime.field.AbstractField;
+import org.streampipes.model.runtime.field.PrimitiveField;
 
 import java.util.List;
 import java.util.Map;
@@ -55,17 +56,14 @@ public class Event {
   }
 
   public AbstractField getFieldByRuntimeName(String runtimeName) {
-    if (fieldMap.containsKey(addSelectorPrefix(runtimeName))) {
-      return fieldMap.get(addSelectorPrefix(runtimeName));
-    } else {
-      throw new IllegalArgumentException("Field " + runtimeName + " not found");
-    }
-  }
-
-  private String addSelectorPrefix(String runtimeName) {
-    return sourceInfo.getSelectorPrefix()
-            + PropertySelectorConstants.PROPERTY_DELIMITER
-            + runtimeName;
+    // TODO this currently only works for first-level properties
+    return fieldMap
+            .entrySet()
+            .stream()
+            .map(Map.Entry::getValue)
+            .filter(entry -> entry.getFieldNameIn().equals(runtimeName))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Field " + runtimeName + " not found"));
   }
 
   public AbstractField getFieldBySelector(String fieldSelector) {
@@ -123,6 +121,10 @@ public class Event {
     return selectorBuilder.toString();
   }
 
+  private String makeSelector(String prefix, String runtimeName) {
+    return prefix + PropertySelectorConstants.PROPERTY_DELIMITER + runtimeName;
+  }
+
   public void updateFieldBySelector(String selector, Integer value) {
     getFieldBySelector(selector).getAsPrimitive().setValue(value);
   }
@@ -141,6 +143,31 @@ public class Event {
 
   public void addField(AbstractField field) {
     this.fieldMap.put(makeKey(field), field);
+  }
+
+  public void addField(String runtimeName, Integer value) {
+   addPrimitive(runtimeName, value);
+  }
+
+  public void addField(String runtimeName, Float value) {
+    addPrimitive(runtimeName, value);
+  }
+
+  public void addField(String runtimeName, Boolean value) {
+    addPrimitive(runtimeName, value);
+  }
+
+  public void addField(String runtimeName, String value) {
+    addPrimitive(runtimeName, value);
+  }
+
+  private void addPrimitive(String runtimeName, Object value) {
+    this.fieldMap.put(runtimeName, new PrimitiveField(runtimeName, runtimeName, value));
+  }
+
+  public void addField(String baseSelector, AbstractField field) {
+    getFieldBySelector(baseSelector).getAsComposite().addField
+            (makeSelector(baseSelector, field.getFieldNameIn()), field);
   }
 
   private String makeKey(AbstractField field) {

@@ -19,8 +19,8 @@ import com.google.gson.internal.LinkedTreeMap;
 import org.streampipes.model.constants.PropertySelectorConstants;
 import org.streampipes.model.output.PropertyRenameRule;
 import org.streampipes.model.runtime.field.AbstractField;
-import org.streampipes.model.runtime.field.CompositeField;
 import org.streampipes.model.runtime.field.ListField;
+import org.streampipes.model.runtime.field.NestedField;
 import org.streampipes.model.runtime.field.PrimitiveField;
 
 import java.util.HashMap;
@@ -66,10 +66,10 @@ public class EventFactory {
     return outMap;
   }
 
-  private static Map<String, AbstractField> makeFieldMap(Map<String,AbstractField> fields,
+  private static Map<String, AbstractField> makeFieldMap(Map<String, AbstractField> fields,
                                                          List<String> fieldSelectors) {
     Map<String, AbstractField> outMap = new HashMap<>();
-    for(String key : fields.keySet()) {
+    for (String key : fields.keySet()) {
       if (contains(key, fieldSelectors)) {
         AbstractField field = fields.get(key);
         if (PrimitiveField.class.isInstance(field) || ListField.class.isInstance(field)) {
@@ -98,7 +98,7 @@ public class EventFactory {
         String selector = makeSelector(key, currentSelector);
         fieldMap.put(selector, makeField(key, items.get(key), selector, schemaInfo));
       }
-      return new CompositeField(runtimeName, getNewRuntimeName(currentSelector, runtimeName,
+      return new NestedField(runtimeName, getNewRuntimeName(currentSelector, runtimeName,
               schemaInfo.getRenameRules()),
               fieldMap);
     } else if (List.class.isInstance(o)) {
