@@ -1,0 +1,19 @@
+version: "2.0"
+services:
+  pgadmin:
+    image: dpage/pgadmin4
+    volumes:
+      - data-pgadmin:/root/.pgadmin
+#      - ./config/pgadmin/data:/root/.pgadmin
+    ports:
+      - 5050:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin
+      PGADMIN_DEFAULT_PASSWORD: admin
+    networks:
+      spnet:
+
+volumes:
+  data-pgadmin:
+    driver: local
+    external: false
