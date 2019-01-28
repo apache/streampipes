@@ -38,6 +38,9 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
   public void bind(PostgreSqlParameters parameters) throws SpRuntimeException {
     LOG = parameters.getGraph().getLogger(PostgreSql.class);
 
+    // get(0) because it is the only input stream of the sink (and not two)
+    // See (https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS)
+    // for allowed postgres identifiers (for the regex)
     this.jdbcClient = new JdbcClient(
         parameters.getGraph().getInputStreams().get(0).getEventSchema().getEventProperties(),
         parameters.getPostgreSqlHost(),
