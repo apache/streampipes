@@ -16,8 +16,10 @@ limitations under the License.
 package org.streampipes.model.runtime;
 
 import org.streampipes.model.constants.PropertySelectorConstants;
+import org.streampipes.model.output.PropertyRenameRule;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,6 +29,15 @@ public class RuntimeTestUtils {
   public static Map<String, Object> simpleMap() {
     Map<String, Object> map = new HashMap<>();
     map.put("timestamp", 1);
+
+    return map;
+  }
+
+  public static Map<String, Object> multiplePropertiesMap() {
+    Map<String, Object> map = new HashMap<>();
+    map.put("timestamp", 1);
+    map.put("sensor1", 2);
+    map.put("sensor2", 3);
 
     return map;
   }
@@ -59,6 +70,20 @@ public class RuntimeTestUtils {
   }
 
   public static Event makeSimpleEvent(Map<String, Object> runtimeMap, SourceInfo sourceInfo) {
-    return EventFactory.fromMap(runtimeMap, sourceInfo, new SchemaInfo(null, null));
+    return EventFactory.fromMap(runtimeMap, sourceInfo, new SchemaInfo(null, Collections.emptyList()));
+  }
+
+  public static Event makeSimpleEventWithRenameRule(Map<String, Object> runtimeMap, SourceInfo
+          sourceInfo) {
+    PropertyRenameRule rule = new PropertyRenameRule("s0::timestamp", "ts");
+    return EventFactory.fromMap(runtimeMap, sourceInfo, new SchemaInfo(null, Collections.singletonList(rule)));
+  }
+
+  public static Event makeNestedEventWithRenameRule(Map<String, Object> runtimeMap, SourceInfo
+          sourceInfo) {
+    PropertyRenameRule rule = new PropertyRenameRule("s0::nested", "ns");
+    PropertyRenameRule rule2 = new PropertyRenameRule("s0::nested::timestamp2", "ts2");
+    return EventFactory.fromMap(runtimeMap, sourceInfo, new SchemaInfo(null, Arrays.asList(rule,
+            rule2)));
   }
 }

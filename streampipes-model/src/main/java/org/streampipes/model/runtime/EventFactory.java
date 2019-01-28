@@ -17,11 +17,13 @@ package org.streampipes.model.runtime;
 
 import com.google.gson.internal.LinkedTreeMap;
 import org.streampipes.model.constants.PropertySelectorConstants;
+import org.streampipes.model.output.PropertyRenameRule;
 import org.streampipes.model.runtime.field.AbstractField;
 import org.streampipes.model.runtime.field.CompositeField;
 import org.streampipes.model.runtime.field.ListField;
 import org.streampipes.model.runtime.field.PrimitiveField;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +42,53 @@ public class EventFactory {
     return new Event(event, fields, sourceInfo, schemaInfo);
   }
 
+  public static Event makeSubset(Event event, List<String> fieldSelectors) {
+    Map<String, Object> runtimeMap = makeRuntimeMapSubset(event.getRaw(), fieldSelectors, event
+            .getSourceInfo().getSelectorPrefix());
+    Map<String, AbstractField> fieldMap = makeFieldMap(event.getFields(), fieldSelectors);
+    return new Event(runtimeMap, fieldMap, event.getSourceInfo(), event.getSchemaInfo());
+  }
+
+  private static Map<String, Object> makeRuntimeMapSubset(Map<String, Object> event, List<String>
+          fieldSelectors, String currentPrefix) {
+    Map<String, Object> outMap = new HashMap<>();
+    for (String key : event.keySet()) {
+      if (contains(makeSelector(key, currentPrefix), fieldSelectors)) {
+        Object object = event.get(key);
+        if (Map.class.isInstance(object)) {
+          Map<String, Object> map = (Map<String, Object>) object;
+          map.put(key, makeRuntimeMapSubset(map, fieldSelectors, makeSelector(key, currentPrefix)));
+        } else {
+          outMap.put(key, object);
+        }
+      }
+    }
+    return outMap;
+  }
+
+  private static Map<String, AbstractField> makeFieldMap(Map<String,AbstractField> fields,
+                                                         List<String> fieldSelectors) {
+    Map<String, AbstractField> outMap = new HashMap<>();
+    for(String key : fields.keySet()) {
+      if (contains(key, fieldSelectors)) {
+        AbstractField field = fields.get(key);
+        if (PrimitiveField.class.isInstance(field) || ListField.class.isInstance(field)) {
+          outMap.put(key, field);
+        } else {
+          field.getAsComposite().setValue(makeFieldMap(field.getAsComposite().getRawValue(),
+                  fieldSelectors));
+          outMap.put(key, field);
+        }
+      }
+    }
+
+    return outMap;
+  }
+
+  private static boolean contains(String key, List<String> fieldSelectors) {
+    return fieldSelectors.stream().anyMatch(f -> f.equals(key));
+  }
+
   private static AbstractField makeField(String runtimeName, Object o, String currentSelector,
                                          SchemaInfo schemaInfo) {
     if (Map.class.isInstance(o)) {
@@ -49,15 +98,26 @@ public class EventFactory {
         String selector = makeSelector(key, currentSelector);
         fieldMap.put(selector, makeField(key, items.get(key), selector, schemaInfo));
       }
-      // TODO get new runtimeName
-      return new CompositeField(runtimeName, runtimeName, fieldMap);
+      return new CompositeField(runtimeName, getNewRuntimeName(currentSelector, runtimeName,
+              schemaInfo.getRenameRules()),
+              fieldMap);
     } else if (List.class.isInstance(o)) {
-      // TODO get new runtimeName
-      return new ListField(runtimeName, runtimeName, (List<Object>) o);
+      return new ListField(runtimeName, getNewRuntimeName(currentSelector, runtimeName, schemaInfo
+              .getRenameRules()), (List<Object>) o);
     } else {
-      // TODO get new runtimeName
-      return new PrimitiveField(runtimeName, runtimeName, o);
+      return new PrimitiveField(runtimeName, getNewRuntimeName(currentSelector, runtimeName,
+              schemaInfo.getRenameRules()), o);
     }
+  }
+
+  private static String getNewRuntimeName(String currentSelector, String
+          runtimeName, List<PropertyRenameRule>
+                                                  renameRules) {
+    return renameRules
+            .stream()
+            .filter(r -> r.getRuntimeId().equals(currentSelector))
+            .findFirst()
+            .map(PropertyRenameRule::getNewRuntimeName).orElse(runtimeName);
   }
 
   private static String makeSelector(String key, String selectorPrefix) {

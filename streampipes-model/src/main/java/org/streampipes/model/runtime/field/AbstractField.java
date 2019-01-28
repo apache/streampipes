@@ -44,6 +44,22 @@ public abstract class AbstractField<FV> {
     return fieldNameOut;
   }
 
+  public Boolean isComposite() {
+    return isInstance(CompositeField.class);
+  }
+
+  public Boolean isList() {
+    return isInstance(ListField.class);
+  }
+
+  public Boolean isPrimitive() {
+    return isInstance(PrimitiveField.class);
+  }
+
+  private Boolean isInstance(Class<? extends AbstractField> clazz) {
+    return clazz.isInstance(this);
+  }
+
   public CompositeField getAsComposite() {
     return (CompositeField) this;
   }

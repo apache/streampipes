@@ -41,6 +41,7 @@ public class Event {
     return fieldMap;
   }
 
+  @Deprecated
   public Map<String, Object> getRaw() {
     return runtimeMap;
   }
@@ -54,7 +55,11 @@ public class Event {
   }
 
   public AbstractField getFieldByRuntimeName(String runtimeName) {
-    return fieldMap.get(addSelectorPrefix(runtimeName));
+    if (fieldMap.containsKey(addSelectorPrefix(runtimeName))) {
+      return fieldMap.get(addSelectorPrefix(runtimeName));
+    } else {
+      throw new IllegalArgumentException("Field " + runtimeName + " not found");
+    }
   }
 
   private String addSelectorPrefix(String runtimeName) {
@@ -83,24 +88,55 @@ public class Event {
     return currentFieldMap.get(key).getAsComposite().getRawValue();
   }
 
-  private AbstractField getField(Integer position, String[] selectorParts, Map<String,
-          AbstractField> map) {
-    if (position == selectorParts.length - 1) {
-      return map.get(selectorParts[position]);
+  public void updateFieldBySelector(String selector, AbstractField field) {
+    if (fieldMap.containsKey(selector)) {
+      fieldMap.put(selector, field);
     } else {
-      return getField(position + 1, selectorParts, map.get(selectorParts[position])
-              .getAsComposite().getRawValue());
+      updateFieldMap(fieldMap.get(makeSelector(selector, 2))
+              .getAsComposite()
+              .getRawValue(), selector, 2, field);
     }
   }
 
-
-  public void updateFieldByRuntimeName(String runtimeName, AbstractField field) {
-    this.runtimeMap.put(runtimeName, field.getRawValue());
+  private void updateFieldMap(Map<String, AbstractField> currentFieldMap,
+                                                  String selector, Integer position,
+                                                  AbstractField field) {
+    if (currentFieldMap.containsKey(selector)) {
+      currentFieldMap.put(selector, field);
+    } else {
+        updateFieldMap(currentFieldMap.get(makeSelector(selector, position + 1))
+                .getAsComposite()
+                .getRawValue(), selector, 2, field);
+    }
   }
 
-  public void updateFieldBySelector(String selector, AbstractField field) {
-    // TODO
+  private String makeSelector(String selector, int position) {
+    String[] selectorParts = selector.split(PropertySelectorConstants.PROPERTY_DELIMITER);
+    StringBuilder selectorBuilder = new StringBuilder();
+    for (int i = 0; i < position; i++) {
+      selectorBuilder.append(selectorParts[i]);
+      if (i != (position - 1)) {
+        selectorBuilder.append(PropertySelectorConstants.PROPERTY_DELIMITER);
+      }
+    }
 
+    return selectorBuilder.toString();
+  }
+
+  public void updateFieldBySelector(String selector, Integer value) {
+    getFieldBySelector(selector).getAsPrimitive().setValue(value);
+  }
+
+  public void updateFieldBySelector(String selector, String value) {
+    getFieldBySelector(selector).getAsPrimitive().setValue(value);
+  }
+
+  public void updateFieldBySelector(String selector, Float value) {
+    getFieldBySelector(selector).getAsPrimitive().setValue(value);
+  }
+
+  public void updateFieldBySelector(String selector, Boolean value) {
+    getFieldBySelector(selector).getAsPrimitive().setValue(value);
   }
 
   public void addField(AbstractField field) {
@@ -108,12 +144,12 @@ public class Event {
   }
 
   private String makeKey(AbstractField field) {
-    return sourceInfo.getSelectorPrefix() + PropertySelectorConstants.PROPERTY_DELIMITER +field
-            .getFieldNameIn();
+    return sourceInfo.getSelectorPrefix()
+            + PropertySelectorConstants.PROPERTY_DELIMITER
+            + field.getFieldNameIn();
   }
 
   public Event getSubset(List<String> fieldSelectors) {
-    // TODO
-    return null;
+    return EventFactory.makeSubset(this, fieldSelectors);
   }
 }

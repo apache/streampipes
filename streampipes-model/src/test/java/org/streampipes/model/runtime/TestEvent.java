@@ -72,9 +72,43 @@ public class TestEvent {
 
     field.setValue(3);
 
-    event.updateFieldBySelector("s0::nested::timestamp2", field);
-
     assertEquals(Integer.valueOf(3), event.getFieldBySelector("s0::nested::timestamp2")
+            .getAsPrimitive()
+            .getAsInt());
+  }
+
+  @Test
+  public void testSimpleFieldUpdate() {
+    Map<String, Object> runtimeMap = RuntimeTestUtils.simpleMap();
+    Event event = RuntimeTestUtils.makeSimpleEvent(runtimeMap, RuntimeTestUtils.getSourceInfo());
+
+    PrimitiveField field = event.getFieldBySelector("s0::timestamp").getAsPrimitive();
+
+    assertEquals(Integer.valueOf(1), field.getAsInt());
+
+    PrimitiveField field2 = new PrimitiveField("timestamp", "timestamp", 5);
+
+    event.updateFieldBySelector("s0::timestamp", field2);
+
+    assertEquals(Integer.valueOf(5), event.getFieldBySelector("s0::timestamp")
+            .getAsPrimitive()
+            .getAsInt());
+  }
+
+  @Test
+  public void testNestedFieldUpdate() {
+    Map<String, Object> runtimeMap = RuntimeTestUtils.nestedMap();
+    Event event = RuntimeTestUtils.makeSimpleEvent(runtimeMap, RuntimeTestUtils.getSourceInfo());
+
+    PrimitiveField field = event.getFieldBySelector("s0::nested::timestamp2").getAsPrimitive();
+
+    assertEquals(Integer.valueOf(2), field.getAsInt());
+
+    PrimitiveField field2 = new PrimitiveField("timestamp2", "timestamp2", 6);
+
+    event.updateFieldBySelector("s0::nested::timestamp2", field2);
+
+    assertEquals(Integer.valueOf(6), event.getFieldBySelector("s0::nested::timestamp2")
             .getAsPrimitive()
             .getAsInt());
   }
