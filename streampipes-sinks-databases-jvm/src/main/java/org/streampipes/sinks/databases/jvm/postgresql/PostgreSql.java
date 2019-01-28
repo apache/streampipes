@@ -69,11 +69,6 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
 
   @Override
   public void discard() throws SpRuntimeException {
-    try {
-      jdbcClient.stop();
-    } catch (SQLException e) {
-      LOG.warn(e.getMessage());
-      //e.printStackTrace();
-    }
+    jdbcClient.closeAll();
   }
 }
