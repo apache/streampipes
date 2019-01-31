@@ -138,24 +138,13 @@ export class KviService {
     }
 
     createPipelineTemplateInvocation(invocation: PipelineTemplateInvocation) {
-        console.log(invocation);
         const tsonld = this.getTsonLd();
-
-
 
         tsonld.toflattenJsonLd(invocation).subscribe(res => {
             this.http
                 .post(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates', res)
                 .subscribe();
         });
-
-
-        // const res = tsonld.toJsonLd(invocation);
-        // return this.http
-        //     .post(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates', res)
-        //     .map(response => {
-        //         return response;
-        //     });
     }
 
 }
