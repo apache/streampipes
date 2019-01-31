@@ -133,8 +133,12 @@ export class NewAdapterComponent implements OnInit {
             this.fromTemplate = true;
             this.isEditable = false;
             this.oldEventSchema = this.eventSchema;
+
+
         }
     }
+
+
 
 
     public triggerDialog(storeAsTemplate: boolean) {
