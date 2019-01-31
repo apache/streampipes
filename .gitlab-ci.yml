@@ -56,7 +56,8 @@ nginx:
 #    - mkdir javadoc && mv target/site/apidocs/* ./javadoc
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
     #    - docker login -u riemer -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST
-    #    - docker build --no-cache --pull -t $HARBOR_IMAGE_NAME -t $IMAGE_NAME .
+    #- docker build --no-cache --pull -t $HARBOR_IMAGE_NAME -t $IMAGE_NAME .
+    - docker build --no-cache --pull -t $IMAGE_NAME .
     - docker push $IMAGE_NAME
     #- docker push $HARBOR_IMAGE_NAME
 
