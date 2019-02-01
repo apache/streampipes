@@ -35,6 +35,7 @@ public class JsonObjectFormat extends AbstractJsonFormat {
     FormatDescription fd = new FormatDescription(ID, "Json Object", "This is the description" +
             "for json format");
 
+    fd.setAppId(ID);
     return fd;
   }
 

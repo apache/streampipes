@@ -52,7 +52,7 @@ public class AdapterWorkerManagement {
         SpDataSet dataSet = adapterSetDescription.getDataSet();
 
         Adapter adapter = AdapterRegistry.getAdapter(adapterSetDescription);
-        RunningAdapterInstances.INSTANCE.addAdapter(dataSet.getDatasetInvocationId(), adapter);
+        RunningAdapterInstances.INSTANCE.addAdapter(adapterSetDescription.getUri(), adapter);
 
 
         // Set adapters run the whole set in one thread, once all data is processed the corresponding pipeline is stopped
@@ -65,7 +65,7 @@ public class AdapterWorkerManagement {
 
             // TODO wait till all components are done with their calculations
             try {
-                Thread.sleep(5000);
+                Thread.sleep(20000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

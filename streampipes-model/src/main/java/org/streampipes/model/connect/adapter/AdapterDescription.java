@@ -24,7 +24,10 @@ import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
+import org.streampipes.model.connect.rules.Schema.SchemaTransformationRuleDescription;
+import org.streampipes.model.connect.rules.Stream.StreamTransformationRuleDescription;
 import org.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
@@ -57,6 +60,12 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     @RdfProperty("sp:grounding")
     private EventGrounding eventGrounding;
+
+    @RdfProperty("sp:adapterType")
+    private String adapterType;
+
+    @RdfProperty("sp:icon")
+    private String icon;
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
@@ -94,6 +103,8 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.adapterId = other.getAdapterId();
         this.userName = other.getUserName();
         this.rules = other.getRules();
+        this.adapterType = other.getAdapterType();
+        this.icon = other.getIcon();
         if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
 
@@ -157,6 +168,49 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     public void setConfig(List<StaticProperty> config) {
         this.config = config;
+    }
+
+    public String getAdapterType() {
+        return adapterType;
+    }
+
+    public void setAdapterType(String adapterType) {
+        this.adapterType = adapterType;
+    }
+
+    public List getValueRules() {
+        List tmp = new ArrayList<>();
+        rules.forEach(rule -> {
+            if(rule instanceof ValueTransformationRuleDescription)
+                tmp.add(rule);
+        });
+        return tmp;
+    }
+
+    public List getStreamRules() {
+        List tmp = new ArrayList<>();
+        rules.forEach(rule -> {
+            if(rule instanceof StreamTransformationRuleDescription)
+                tmp.add(rule);
+        });
+        return tmp;
+    }
+
+    public List getSchemaRules() {
+        List tmp = new ArrayList<>();
+        rules.forEach(rule -> {
+            if(rule instanceof SchemaTransformationRuleDescription)
+                tmp.add(rule);
+        });
+        return tmp;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     @Override

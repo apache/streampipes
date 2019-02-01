@@ -18,7 +18,7 @@ package org.streampipes.connect.adapter.generic.elements;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.streampipes.connect.adapter.generic.pipeline.elements.AddTimestamp;
+import org.streampipes.connect.adapter.generic.pipeline.elements.AddTimestampPipelineElement;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class AddTimestampTest {
     @Test
     public void addTimestamp() {
 
-        AddTimestamp addTimestamp = new AddTimestamp();
+        AddTimestampPipelineElement addTimestamp = new AddTimestampPipelineElement("timestamp");
         Map event = new HashMap<>();
         event = addTimestamp.process(event);
 

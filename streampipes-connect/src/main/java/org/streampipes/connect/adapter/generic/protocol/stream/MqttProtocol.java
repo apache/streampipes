@@ -67,6 +67,8 @@ public class MqttProtocol extends BrokerProtocol {
     FreeTextStaticProperty topic = new FreeTextStaticProperty("topic", "Topic",
             "Topic in the broker");
 
+    pd.setAppId(ID);
+
     pd.addConfig(broker);
     pd.addConfig(topic);
     return pd;

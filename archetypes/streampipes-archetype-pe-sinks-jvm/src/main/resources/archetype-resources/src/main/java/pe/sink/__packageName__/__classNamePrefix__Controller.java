@@ -36,7 +36,7 @@ public class ${classNamePrefix}Controller extends StandaloneEventSinkDeclarer<${
 	}
 
 	@Override
-	public ConfiguredEventSink<${classNamePrefix}Parameters> onInvocation(DataSinkInvocation graph) {
+	public ConfiguredEventSink<${classNamePrefix}Parameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
 
 		String exampleString = extractor.singleValueParameter(EXAMPLE_KEY, String.class);
 

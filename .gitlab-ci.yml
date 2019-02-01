@@ -25,7 +25,8 @@ build:
   script:
     - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn clean package javadoc:aggregate gpg:sign -DskipTests
+   # - mvn clean package javadoc:aggregate gpg:sign -DskipTests
+    - mvn clean package javadoc:aggregate -DskipTests
     - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
     - "echo $MVN_VERSION >> ./target/mvn_version"
   artifacts:
@@ -61,12 +62,14 @@ docker-backend:
    script: 
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
-     - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION -t $HARBOR_IMAGE_NAME/backend:latest -t $HARBOR_IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
+#   Uncomment again when harbor works again
+#     - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
+#     - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION -t $HARBOR_IMAGE_NAME/backend:latest -t $HARBOR_IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
+     - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION  ./streampipes-backend/
      - docker push $IMAGE_NAME/backend:$MVN_VERSION
      - docker push $IMAGE_NAME/backend:latest
-     - docker push $HARBOR_IMAGE_NAME/backend:$MVN_VERSION
-     - docker push $HARBOR_IMAGE_NAME/backend:latest
+#     - docker push $HARBOR_IMAGE_NAME/backend:$MVN_VERSION
+#     - docker push $HARBOR_IMAGE_NAME/backend:latest
    only:
      - dev
 
@@ -78,12 +81,14 @@ docker-connect-container:
    script:
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
-     - docker build --pull -t $IMAGE_NAME/streampipes-connect-container:latest -t $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION -t $HARBOR_IMAGE_NAME/streampipes-connect-container:latest -t $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container/
+#   Uncomment again when harbor works again
+#     - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
+#     - docker build --pull -t $IMAGE_NAME/streampipes-connect-container:latest -t $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION -t $HARBOR_IMAGE_NAME/streampipes-connect-container:latest -t $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container/
+     - docker build --pull -t $IMAGE_NAME/streampipes-connect-container:latest -t $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container/
      - docker push $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
      - docker push $IMAGE_NAME/streampipes-connect-container:latest
-     - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
-     - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:latest
+#     - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
+#     - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:latest
    only:
      - dev
 
@@ -134,7 +139,7 @@ start release:
     - git fetch
     - git checkout master
     - git checkout dev
-    - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS
+    - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS -Drelease=true
     - git push origin --all
   only:
     - dev
@@ -159,7 +164,7 @@ finish release:
     - git checkout master
     - git checkout dev
     - git checkout $CI_BUILD_REF_NAME
-    - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS
+    - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS -Drelease=true
     - git push origin --all
     - git push origin --tags
     - git checkout master
@@ -167,7 +172,6 @@ finish release:
     - git push github $MVN_VERSION
     - git checkout dev
     - git push github dev
-
   when: manual
   except:
     - master
@@ -183,6 +187,9 @@ docker hub:
     - docker push streampipes/backend:$MVN_VERSION
     - docker build --pull -t streampipes/backend ./streampipes-backend/
     - docker push streampipes/backend
+    - docker build --pull -t streampipes/streampipes-connect-container:latest -t streampipes/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container/
+    - docker push streampipes/streampipes-connect-container:$MVN_VERSION
+    - docker push streampipes/streampipes-connect-container:latest
   when: manual
   only:
     - master

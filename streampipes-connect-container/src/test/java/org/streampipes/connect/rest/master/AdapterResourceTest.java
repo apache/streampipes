@@ -30,7 +30,6 @@ import org.streampipes.connect.utils.Utils;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 
-import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;

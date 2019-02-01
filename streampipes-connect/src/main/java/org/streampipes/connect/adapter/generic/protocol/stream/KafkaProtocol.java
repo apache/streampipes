@@ -79,6 +79,7 @@ public class KafkaProtocol extends BrokerProtocol {
         pd.setSourceType("STREAM");
         pd.setIconUrl("kafka.jpg");
 
+        pd.setAppId(ID);
         FreeTextStaticProperty topic = new FreeTextStaticProperty("topic", "Topic",
                 "Topic in the broker");
 

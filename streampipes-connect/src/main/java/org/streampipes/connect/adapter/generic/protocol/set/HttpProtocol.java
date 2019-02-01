@@ -64,6 +64,8 @@ public class HttpProtocol extends Protocol {
 
         pd.setSourceType("SET");
         pd.setIconUrl("rest.png");
+
+        pd.setAppId(ID);
         //TODO remove just for testing
 //        urlProperty.setValue("https://opendata.bonn.de/api/action/datastore/search.json?resource_id=0a41c514-f760-4a17-b0a8-e1b755204fee&limit=100");
 
@@ -108,11 +110,11 @@ public class HttpProtocol extends Protocol {
 
         InputStream dataInputStream = getDataFromEndpoint();
 
-        List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 20);
+        List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 2);
 
         EventSchema eventSchema= parser.getEventSchema(dataByte);
 
-        GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(20));
+        GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(2));
 
         return result;
     }
@@ -143,16 +145,16 @@ public class HttpProtocol extends Protocol {
         InputStream result = null;
 
         try {
-            String s = Request.Get(url)
+            result = Request.Get(url)
                     .connectTimeout(1000)
                     .socketTimeout(100000)
-                    .execute().returnContent().asString();
+                    .execute().returnContent().asStream();
 
-            if (s.startsWith("ï")) {
-                s = s.substring(3);
-            }
+//            if (s.startsWith("ï")) {
+//                s = s.substring(3);
+//            }
 
-            result = IOUtils.toInputStream(s, "UTF-8");
+//            result = IOUtils.toInputStream(s, "UTF-8");
 
         } catch (IOException e) {
             e.printStackTrace();

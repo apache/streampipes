@@ -146,4 +146,29 @@ public abstract class ConnectContainerResourceTest {
                 .assertThat()
                 .statusCode(200);
     }
+
+    protected ValidatableResponseOptions postJsonSuccessRequest(String data, String route, String responseMessage) {
+        return  postJsonRequest(data, route)
+                .body("success", equalTo(true))
+                .body("notifications[0].title", equalTo(responseMessage));
+    }
+
+    protected ValidatableResponseOptions postJsonFailRequest(String data, String route) {
+        return  postJsonFailRequest(data, route, ERROR_MESSAGE);
+    }
+
+    protected ValidatableResponseOptions postJsonFailRequest(String data, String route, String errorMessage) {
+        return  postJsonRequest(data, route)
+                .body("success", equalTo(false))
+                .body("notifications[0].title", equalTo(errorMessage));
+    }
+    protected ValidatableResponseOptions postJsonRequest(String data, String route) {
+        return given().contentType("application/json")
+                .body(data)
+                .when()
+                .post(getApi() + route)
+                .then()
+                .assertThat()
+                .statusCode(200);
+    }
 }

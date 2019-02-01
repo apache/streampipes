@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.management.master.SourcesManagement;
+import org.streampipes.connect.management.master.Utils;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.client.messages.Notifications;
@@ -92,17 +93,19 @@ public class SourcesResource extends AbstractContainerResource {
 
     @POST
 //    @JsonLdSerialized
-    @Consumes(SpMediaType.JSONLD)
+//    @Consumes(SpMediaType.JSONLD)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{streamId}/streams")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAdapter(@PathParam("streamId") String elementId, String dataSetSet) {
+    public Response addAdapter(@PathParam("streamId") String elementId, String dataSetSet, @PathParam("username") String username) {
 
         SpDataSet dataSet = JsonLdUtils.fromJsonLd(dataSetSet, SpDataSet.class, StreamPipes.DATA_SET);
 
         String responseMessage = "Instance of data set " + dataSet.getUri() + " successfully started";
 
+        String newUrl = Utils.addUserNameToApi(ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl(), username);
         try {
-            this.sourcesManagement.addAdapter(elementId, this.connectContainerBaseUrl, dataSet);
+            this.sourcesManagement.addAdapter(newUrl, elementId,  dataSet);
         } catch (AdapterException e) {
             logger.error("Could not set data set instance: " + dataSet.getUri(), e);
             return ok(Notifications.error("Could not set data set instance: " + dataSet.getUri()));
@@ -115,11 +118,13 @@ public class SourcesResource extends AbstractContainerResource {
     @DELETE
     @Path("/{streamId}/streams/{runningInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response detach(@PathParam("streamId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
+    public Response detach(@PathParam("streamId") String elementId, @PathParam("runningInstanceId") String runningInstanceId, @PathParam("username") String username) {
         String responseMessage = "Instance of set id: " + elementId  + " with instance id: "+ runningInstanceId + " successfully started";
 
+        String newUrl = Utils.addUserNameToApi(ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl(), username);
+
         try {
-            this.sourcesManagement.detachAdapter(this.connectContainerBaseUrl, elementId, runningInstanceId);
+            this.sourcesManagement.detachAdapter(newUrl, elementId, runningInstanceId);
         } catch (AdapterException e) {
             logger.error("Could not set set id "+ elementId  + " with instance id: "+ runningInstanceId, e);
             return fail();

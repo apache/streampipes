@@ -26,12 +26,17 @@ import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.adapter.specific.twitter.TwitterAdapter;
 import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.model.SpDataSet;
-import org.streampipes.model.connect.adapter.*;
+import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
+import org.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.sdk.builder.DataSetBuilder;
+
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 import static org.reflections.util.ConfigurationBuilder.build;
@@ -122,6 +127,30 @@ public class AdapterDeserializerTest {
         assertNotNull(((GenericAdapterSetDescription) a).getFormatDescription());
         assertNotNull(((GenericAdapterSetDescription) a).getProtocolDescription());
 
+    }
+
+    @Test
+    public void getRuleDescription() throws AdapterException {
+        GenericAdapterStreamDescription genericAdapterStreamDescription = new GenericAdapterStreamDescription();
+
+        JsonObjectFormat jsonObjectFormat = new JsonObjectFormat();
+        KafkaProtocol kafkaProtocol = new KafkaProtocol(new JsonObjectParser(), jsonObjectFormat, "URL", "broker");
+        UnitTransformRuleDescription unitTransformRuleDescription = new UnitTransformRuleDescription("key","Degree Celsius", "Kelvin");
+
+        FormatDescription formatDescription = jsonObjectFormat.declareModel();
+        ProtocolDescription protocolDescription = kafkaProtocol.declareModel();
+
+        genericAdapterStreamDescription.setProtocolDescription(protocolDescription);
+        genericAdapterStreamDescription.setFormatDescription(formatDescription);
+        genericAdapterStreamDescription.setRules(Collections.singletonList(unitTransformRuleDescription));
+
+        String jsonLd = JsonLdUtils.toJsonLD(genericAdapterStreamDescription);
+
+        AdapterDescription a = AdapterDeserializer.getAdapterDescription(jsonLd);
+
+        assertEquals(1, (a.getRules().size()));
+        assertEquals("Degree Celsius", ((UnitTransformRuleDescription) (a).getRules().get(0)).getFromUnitRessourceURL());
+        assertEquals("Kelvin", ((UnitTransformRuleDescription) (a).getRules().get(0)).getToUnitRessourceURL());
     }
 
     private String getGenericAdapterSetDescripionGeneratedByFrontend() {

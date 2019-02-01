@@ -61,31 +61,40 @@ public class SourcesManagement {
     }
 
     public void addAdapter(String baseUrl, String streamId, SpDataSet dataSet) throws AdapterException {
-        AdapterSetDescription adapterDescription = (AdapterSetDescription) this.adapterStorage.getAdapter(streamId);
+
+        AdapterSetDescription adapterDescription = (AdapterSetDescription) getAdapterDescriptionById(streamId);
         adapterDescription.setDataSet(dataSet);
+
+        String newId = adapterDescription.getUri() + "/streams/" + dataSet.getDatasetInvocationId();
+        adapterDescription.setUri(newId);
+        adapterDescription.setId(newId);
+
 
         WorkerRestClient.invokeSetAdapter(baseUrl, adapterDescription);
     }
 
     public void detachAdapter(String baseUrl, String streamId, String runningInstanceId) throws AdapterException {
-        AdapterSetDescription adapterDescription = (AdapterSetDescription) this.adapterStorage.getAdapter(streamId);
+        AdapterSetDescription adapterDescription = (AdapterSetDescription) getAdapterDescriptionById(streamId);
+
+        String newId = adapterDescription.getUri() + "/streams/" + runningInstanceId;
+        adapterDescription.setUri(newId);
+        adapterDescription.setId(newId);
 
         WorkerRestClient.stopSetAdapter(baseUrl, adapterDescription);
     }
 
 
     public String getAllAdaptersInstallDescription(String user) throws AdapterException {
-        String host = getConnectHost();
+//        String host = getConnectHost();
 
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
         List<Description> allAdapterDescriptions = new ArrayList<>();
 
         for (AdapterDescription ad : allAdapters) {
-            URI uri = null;
+            URI uri;
             String uriString = null;
             try {
-//                uriString = "http://" + host + "/streampipes-connect/api/v1/" + user + "/master/adapters/" + ad.getId();
-                uriString = "http://" + host + "/streampipes-connect/api/v1/" + user + "/master/sources/" + ad.getId();
+                uriString = ad.getUri();
                 uri = new URI(uriString);
             } catch (URISyntaxException e) {
                 logger.error("URI for the sources endpoint is not correct: " + uriString, e);
@@ -108,9 +117,23 @@ public class SourcesManagement {
         return json.buildJson();
     }
 
+    private AdapterDescription getAdapterDescriptionById(String id) {
+        AdapterDescription adapterDescription = null;
+        List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
+        for (AdapterDescription a : allAdapters) {
+            if (a.getUri().endsWith(id)) {
+                adapterDescription = a;
+            }
+        }
+
+        return adapterDescription;
+    }
+
     public DataSourceDescription getAdapterDataSource(String id) throws AdapterException {
 
-        AdapterDescription adapterDescription = new AdapterStorageImpl().getAdapter(id);
+//        AdapterDescription adapterDescription = new AdapterStorageImpl().getAdapter(id);
+        // get all Adapters and check id
+        AdapterDescription adapterDescription = getAdapterDescriptionById(id);
 
         SpDataStream ds;
         if (adapterDescription instanceof AdapterSetDescription) {
@@ -134,7 +157,8 @@ public class SourcesManagement {
         }
 
 
-        String url = adapterDescription.getUri().toString() + "/" + adapterDescription.getId();
+//        String url = adapterDescription.getUri().toString() + "/" + adapterDescription.getId();
+        String url = adapterDescription.getUri().toString();
 
         ds.setName(adapterDescription.getName());
         ds.setDescription("Description");
@@ -150,13 +174,13 @@ public class SourcesManagement {
         return dataSourceDescription;
     }
 
-    public String getConnectHost() {
-        if (connectHost == null) {
-            return ConnectContainerConfig.INSTANCE.getBackendHost() + ":" + ConnectContainerConfig.INSTANCE.getBackendPort();
-        } else {
-            return connectHost;
-        }
-    }
+//    public String getConnectHost() {
+//        if (connectHost == null) {
+//            return ConnectContainerConfig.INSTANCE.getConnectContainerMasterHost() + ":" + ConnectContainerConfig.INSTANCE.getConnectContainerMasterPort();
+//        } else {
+//            return connectHost;
+//        }
+//    }
 
     public void setConnectHost(String connectHost) {
         this.connectHost = connectHost;
