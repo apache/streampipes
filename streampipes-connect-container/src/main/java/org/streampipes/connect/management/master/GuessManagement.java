@@ -29,7 +29,7 @@ import java.util.Arrays;
 
 public class GuessManagement {
 
-    public GuessSchema gTuple2<String, Integer>uessSchema(AdapterDescription adapterDescription) throws AdapterException {
+    public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException {
 
         Adapter adapter = AdapterRegistry.getAdapter(adapterDescription);
 
