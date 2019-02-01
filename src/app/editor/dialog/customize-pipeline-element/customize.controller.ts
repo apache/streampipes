@@ -138,14 +138,14 @@ export class CustomizeController {
 
                 }
             } else if (staticProperty.properties.staticPropertyType === 'MappingPropertyUnary') {
-                if (!staticProperty.properties.mapsTo) {
+                if (!staticProperty.properties.selectedProperty) {
                     valid = false;
                 }
 
             } else if (staticProperty.properties.staticPropertyType === 'MappingPropertyNary') {
                 if (staticProperty.properties.valueRequired) {
-                    if (!staticProperty.properties.mapsTo ||
-                        !(staticProperty.properties.mapsTo.length > 0)) {
+                    if (!staticProperty.properties.selectedProperties ||
+                        !(staticProperty.properties.selectedProperties.length > 0)) {
                         valid = false;
                     }
                 }
