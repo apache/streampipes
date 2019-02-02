@@ -18,9 +18,11 @@
 package org.streampipes.wrapper.runtime;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public abstract class EventSink<B extends EventSinkBindingParams> extends PipelineElement<B> {
+public abstract class EventSink<B extends EventSinkBindingParams> extends PipelineElement<B,
+        DataSinkInvocation> {
 
   public EventSink(B params) {
     super(params);

@@ -16,11 +16,15 @@ limitations under the License.
 package org.streampipes.wrapper.standalone.engine;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 import org.streampipes.wrapper.runtime.EventSink;
 
+import java.util.Map;
+
 public abstract class StandaloneEventSink <B extends EventSinkBindingParams> extends EventSink<B> {
+
+  private Boolean active;
 
   public StandaloneEventSink(B params) {
     super(params);
@@ -28,15 +32,30 @@ public abstract class StandaloneEventSink <B extends EventSinkBindingParams> ext
 
   @Override
   public void bind(B parameters) throws SpRuntimeException {
-    onInvocation(parameters, parameters.getGraph());
+    this.active = true;
+    onInvocation(parameters);
   }
 
   @Override
   public void discard() throws SpRuntimeException {
-
+    this.active = false;
+    onDetach();
   }
 
-  public abstract void onInvocation(B params, DataSinkInvocation graph);
+  @Override
+  public void onEvent(Map<String, Object> event, String sourceInfo) {
+    if (active) {
+      onEvent(makeEvent(event, sourceInfo));
+    } else {
+      throw new IllegalArgumentException("");
+    }
+  }
 
-  public abstract void onDetach();
+  public abstract void onInvocation(B params) throws SpRuntimeException;
+
+  public abstract void onDetach() throws SpRuntimeException;
+
+  public void onEvent(Event event) {
+
+  }
 }

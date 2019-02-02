@@ -31,12 +31,12 @@ public abstract class StandaloneEventSinkDeclarerSingleton<B extends
   @Override
   public StandaloneEventSinkRuntime getRuntime(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
 
-    ConfiguredEventSink<B> configuredEngine = onInvocation(graph);
+    ConfiguredEventSink<B> configuredEngine = onInvocation(graph, extractor);
     StandaloneEventSinkRuntimeParams<B> runtimeParams = new StandaloneEventSinkRuntimeParams<>
             (configuredEngine.getEngineSupplier(), configuredEngine.getBindingParams(), true);
 
     return new StandaloneEventSinkRuntime(runtimeParams);
   }
 
-  public abstract ConfiguredEventSink<B> onInvocation(DataSinkInvocation graph);
+  public abstract ConfiguredEventSink<B> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor);
 }

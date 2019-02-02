@@ -20,11 +20,13 @@ package org.streampipes.wrapper.params.binding;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.output.PropertyRenameRule;
 import org.streampipes.model.util.SchemaUtils;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class EventProcessorBindingParams extends
         BindingParams<DataProcessorInvocation> implements
@@ -38,11 +40,6 @@ public abstract class EventProcessorBindingParams extends
   private final Map<String, Object> outEventType;
 
   private final static String topicPrefix = "topic://";
-
-  protected EventProcessorBindingParams() {
-    super();
-    outEventType = null;
-  }
 
   public EventProcessorBindingParams(DataProcessorInvocation graph) {
     super(new DataProcessorInvocation(graph));
@@ -63,6 +60,12 @@ public abstract class EventProcessorBindingParams extends
 
   public List<String> getOutputProperties() {
     return SchemaUtils.toPropertyList(outputStream.getEventSchema().getEventProperties());
+  }
+
+  @Override
+  public List<PropertyRenameRule> getRenameRules() {
+    return graph.getOutputStrategies().stream().flatMap(o -> o.getRenameRules().stream()).collect
+            (Collectors.toList());
   }
 
 }

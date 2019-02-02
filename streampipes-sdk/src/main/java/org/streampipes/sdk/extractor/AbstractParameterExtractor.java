@@ -138,8 +138,8 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   public String mappingPropertyValue(String staticPropertyName) {
-    String propertySelector = getURIFromStaticProperty(staticPropertyName);
-    return mappingPropertyValues(staticPropertyName, false, propertySelector).get(0);
+    return getURIFromStaticProperty(staticPropertyName);
+    //return mappingPropertyValues(staticPropertyName, false, propertySelector).get(0);
   }
 
   public List<String> mappingPropertyValues(String staticPropertyName) {

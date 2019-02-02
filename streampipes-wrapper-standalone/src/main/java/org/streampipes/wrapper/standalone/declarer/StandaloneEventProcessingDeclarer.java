@@ -28,11 +28,11 @@ import org.streampipes.wrapper.standalone.runtime.StandaloneEventProcessorRuntim
 public abstract class StandaloneEventProcessingDeclarer<B extends
         EventProcessorBindingParams> extends EventProcessorDeclarer<B, StandaloneEventProcessorRuntime> {
 
-  public abstract ConfiguredEventProcessor<B> onInvocation(DataProcessorInvocation graph);
+  public abstract ConfiguredEventProcessor<B> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor);
 
   @Override
   public StandaloneEventProcessorRuntime getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
-    ConfiguredEventProcessor<B> configuredEngine = onInvocation(graph);
+    ConfiguredEventProcessor<B> configuredEngine = onInvocation(graph, extractor);
     StandaloneEventProcessorRuntimeParams<B> runtimeParams = new StandaloneEventProcessorRuntimeParams<>
             (configuredEngine.getEngineSupplier(), configuredEngine.getBindingParams(), false);
 

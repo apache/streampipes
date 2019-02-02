@@ -75,7 +75,7 @@ public abstract class SiddhiEventEngine<T extends EventProcessorBindingParams> e
       @Override
       public void receive(Event[] events) {
         for(Event event : events) {
-          collector.onEvent(toMap(event, parameters));
+          collector.collect(toMap(event, parameters));
         }
       }
     });

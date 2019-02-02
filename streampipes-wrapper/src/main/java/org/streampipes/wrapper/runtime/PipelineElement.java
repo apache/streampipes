@@ -19,23 +19,60 @@ package org.streampipes.wrapper.runtime;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.model.runtime.EventFactory;
+import org.streampipes.model.runtime.SchemaInfo;
+import org.streampipes.model.runtime.SourceInfo;
 import org.streampipes.wrapper.params.binding.BindingParams;
 
+import java.util.HashMap;
 import java.util.Map;
 
-public abstract class PipelineElement<B extends BindingParams> {
+public abstract class PipelineElement<B extends BindingParams<I>, I extends
+        InvocableStreamPipesEntity> {
 
-  InvocableStreamPipesEntity graph;
+  private I graph;
+  private B bindingParameters;
+  private Map<String, Integer> eventInfoMap = new HashMap<>();
 
   public PipelineElement(B params) {
+    this.bindingParameters = params;
     this.graph = params.getGraph();
+    buildEventInfoMap();
   }
 
-  public InvocableStreamPipesEntity getGraph() {
+  private void buildEventInfoMap() {
+    for(int i = 0; i < bindingParameters.getInputStreamParams().size(); i++) {
+      String sourceInfo = bindingParameters.getInputStreamParams().get(i).getSourceInfo()
+              .getSourceId();
+      eventInfoMap.put(sourceInfo, i);
+    }
+  }
+
+  public I getGraph() {
     return this.graph;
   }
 
-  public abstract void onEvent(Map<String, Object> event, String sourceInfo);
+  protected Event makeEvent(Map<String, Object> mapEvent, String sourceId) {
+    return EventFactory.fromMap(mapEvent, getSourceInfo(getIndex(sourceId)), getSchemaInfo
+            (getIndex(sourceId)));
+
+  }
+
+  private SourceInfo getSourceInfo(Integer index) {
+    return bindingParameters.getInputStreamParams().get(index).getSourceInfo();
+  }
+
+  private SchemaInfo getSchemaInfo(Integer index) {
+    return bindingParameters.getInputStreamParams().get(index).getSchemaInfo();
+  }
+
+  private Integer getIndex(String sourceId) {
+    return eventInfoMap.get(sourceId);
+  }
+
+
+  public abstract void onEvent(Map<String, Object> inputEvent, String sourceInfo);
 
   public abstract void discard() throws SpRuntimeException;
 }

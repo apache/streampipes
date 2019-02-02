@@ -28,7 +28,7 @@ import org.streampipes.wrapper.runtime.PipelineElement;
 import org.streampipes.wrapper.standalone.manager.ProtocolManager;
 
 public class StandaloneSpInputCollector<T extends TransportProtocol> extends
-        StandaloneSpCollector<T, PipelineElement<?>>
+        StandaloneSpCollector<T, PipelineElement<?, ?>>
         implements
         InternalEventProcessor<byte[]>, SpInputCollector {
 
@@ -52,7 +52,7 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
     }
   }
 
-  private void send(PipelineElement<?> processor, byte[] event) {
+  private void send(PipelineElement<?, ?> processor, byte[] event) {
     try {
       processor.onEvent(dataFormatDefinition.toMap(event), getTopic());
       InvocableStreamPipesEntity graph = processor.getGraph();

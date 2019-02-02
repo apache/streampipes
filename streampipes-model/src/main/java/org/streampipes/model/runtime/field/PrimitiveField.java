@@ -41,4 +41,8 @@ public class PrimitiveField extends AbstractField<Object> {
     return Boolean.parseBoolean(asString(value));
   }
 
+  public Double getAsDouble() {
+    return Double.parseDouble(asString(value));
+  }
+
 }

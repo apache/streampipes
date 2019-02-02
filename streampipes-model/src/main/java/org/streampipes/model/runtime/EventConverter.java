@@ -33,7 +33,7 @@ public class EventConverter {
   public Map<String, Object> toMap() {
     Map<String, Object> outMap = new HashMap<>();
 
-    event.getFields().entrySet().forEach(entry -> outMap.put(entry.getValue().getFieldNameOut(), makeEntry(entry.getValue())));
+    event.getFields().forEach((key, value) -> outMap.put(value.getFieldNameOut(), makeEntry(value)));
 
     return outMap;
   }

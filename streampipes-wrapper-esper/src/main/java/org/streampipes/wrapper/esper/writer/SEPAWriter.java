@@ -16,7 +16,7 @@ public class SEPAWriter implements Writer {
 	@Override
 	public void onEvent(EventBean bean) {
 		//System.out.println(new Gson().toJson(bean.getUnderlying()));
-		collector.onEvent((Map<String, Object>) bean.getUnderlying());
+		collector.collect((Map<String, Object>) bean.getUnderlying());
 	}
 
 }

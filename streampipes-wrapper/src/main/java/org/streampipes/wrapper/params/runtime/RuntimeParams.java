@@ -18,6 +18,7 @@
 package org.streampipes.wrapper.params.runtime;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.wrapper.params.binding.BindingParams;
 import org.streampipes.wrapper.routing.SpInputCollector;
 import org.streampipes.wrapper.runtime.PipelineElement;
@@ -25,7 +26,9 @@ import org.streampipes.wrapper.runtime.PipelineElement;
 import java.util.List;
 import java.util.function.Supplier;
 
-public abstract class RuntimeParams<B extends BindingParams, P extends PipelineElement<B>> {
+public abstract class RuntimeParams<B extends BindingParams<I>, I extends
+        InvocableStreamPipesEntity, P extends
+        PipelineElement<B, I>> {
 
   protected final B bindingParams;
   protected final P engine;
