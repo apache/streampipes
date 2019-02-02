@@ -59,6 +59,8 @@ public abstract class PullProtocol extends Protocol {
 
     private void executeProtocolLogic(AdapterPipeline adapterPipeline) {
          final Runnable task = () -> {
+
+            format.reset();
             SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
             InputStream data = getDataFromEndpoint();
 

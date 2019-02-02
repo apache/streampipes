@@ -20,7 +20,7 @@ package org.streampipes.connect.adapter.specific;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 
-public abstract class SpecificDataStreamAdapter extends Adapter<SpecificAdapterStreamDescription> {
+public abstract class SpecificDataStreamAdapter extends SpecificAdapter<SpecificAdapterStreamDescription> {
 
     public SpecificDataStreamAdapter() {
         super();

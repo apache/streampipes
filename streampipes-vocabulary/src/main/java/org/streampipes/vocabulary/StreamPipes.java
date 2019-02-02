@@ -86,6 +86,7 @@ public class StreamPipes {
   public static final String COLLECTION_STATIC_PROPERTY = NS + "CollectionStaticProperty";
   public static final String DOMAIN_STATIC_PROPERTY = NS + "DomainStaticProperty";
   public static final String FREE_TEXT_STATIC_PROPERTY = NS + "FreeTextStaticProperty";
+  public static final String FILE_STATIC_PROPERTY = NS + "FileStaticProperty";
   public static final String MAPPING_PROPERTY = NS + "MappingProperty";
   public static final String MAPPING_PROPERTY_UNARY = NS + "MappingPropertyUnary";
   public static final String MAPPING_PROPERTY_NARY = NS + "MappingPropertyNary";
@@ -217,6 +218,9 @@ public class StreamPipes {
   public static final String HTML_ALLOWED = NS + "htmlAllowed";
   public static final String PLACEHOLDERS_SUPPORTED = NS + "placeholdersSupported";
 
+  public static final String HAS_ENDPOINT_URL = NS + "endpointUrl";
+  public static final String HAS_LOCATION_PATH = NS + "locationPath";
+
   public static final String MAPS_FROM = NS + "mapsFrom";
 
   public static final String MATCH_LEFT = NS + "matchLeft";
@@ -269,6 +273,29 @@ public class StreamPipes {
   public static final String HAS_PIPELINE_ELEMENTS = "hasPipelineElements";
   public static final String PIPELINE_ELEMENT_CONTAINER = "PipelineElementContainer" ;
 
+
+  public static final String EVENT_PROPERTY_ID = NS + "eventPropertyId" ;
+  public static final String RUNTIME_KEY = NS + "runtimeKey";
+  public static final String STATIC_VALUE = NS + "staticValue";
+  public static final String FROM_UNIT = NS + "fromUnit";
+  public static final String TO_UNIT = NS + "toUnit" ;
+  public static final String OLD_RUNTIME_NAME = NS + "oldRuntimeKey" ;
+  public static final String NEW_RUNTIME_NAME = NS + "newRuntimeKey" ;
+  public static final String FILTER_TIME_WINDOW = NS + "filterTimeWindow" ;
+
+  //Class
+
+  public static final String TRANSFORM_RULE_DESCRIPTION =  NS + "TransformationRuleDescriptio";
+  public static final String UNIT_TRANSFORM_RULE_DESCRIPTION =  NS + "UnitTransformRuleDescription";
+  public static final String RENAME_RULE_DESCRIPTION =  NS + "RenameRuleDescription";
+  public static final String MOVE_RULE_DESCRIPTION =  NS + "MoveRuleDescription";
+  public static final String DELETE_RULE_DESCRIPTION =  NS + "DeleteRuleDescription";
+  public static final String CREATE_NESTED_RULE_DESCRIPTION =  NS + "CreateNestedRuleDescription";
+
+  public static final String REMOVE_DUPLICATES_RULE_DESCRIPTION =  NS + "RemoveDuplicatesRuleDescription";
+
+  public static final String TIMESTAMP_RULE_DESCRIPTION =  NS + "TimestampTransformationRuleDescription";
+  public static final String ADD_VALUE_TRANSFORMATION_RULE_DESCRIPTION =  NS + "AddValueTransformationRuleDescription";
   public static final String HAS_RENAME_RULE = NS + "hasRenameRule" ;
   public static final String RENAME_RULE = NS + "RenameRule";
   public static final String HAS_NEW_RUNTIME_NAME = NS + "hasNewRuntimeName";

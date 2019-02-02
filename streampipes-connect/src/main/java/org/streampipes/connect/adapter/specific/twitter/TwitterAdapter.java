@@ -59,7 +59,7 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public SpecificAdapterStreamDescription declareModel() {
-        return SpecificDataStreamAdapterBuilder.create(ID, "Twitter", "Follow Hashtag")
+        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "Twitter", "Follow Hashtag")
                 .iconUrl("twitter.png")
                 .requiredTextParameter(Labels.from("access_token", "Access Token",
                         "Access Token for Twitter Rest API."))
@@ -68,6 +68,8 @@ public class TwitterAdapter extends SpecificDataStreamAdapter {
                 .requiredTextParameter(Labels.from("hashtag", "Hashtag",
                         "Follow this Hashtag."))
                 .build();
+        description.setAppId(ID);
+        return description;
     }
 
     @Override

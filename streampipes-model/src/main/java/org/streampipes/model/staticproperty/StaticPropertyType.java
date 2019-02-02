@@ -22,6 +22,7 @@ public enum StaticPropertyType {
     CollectionStaticProperty,
     DomainStaticProperty,
     FreeTextStaticProperty,
+    FileStaticProperty,
     MappingPropertyUnary,
     MappingPropertyNary,
     MatchingStaticProperty,

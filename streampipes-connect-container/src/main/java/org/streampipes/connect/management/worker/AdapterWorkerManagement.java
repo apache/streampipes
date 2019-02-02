@@ -65,7 +65,7 @@ public class AdapterWorkerManagement {
 
             // TODO wait till all components are done with their calculations
             try {
-                Thread.sleep(5000);
+                Thread.sleep(20000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

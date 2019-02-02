@@ -31,6 +31,8 @@ public class SendToKafkaAdapterSink implements AdapterPipelineElement  {
     private SpKafkaProducer producer;
     private ObjectMapper objectMapper;
 
+
+    // TODO Handle multiple Event Groundings and define what happens when none is provided
     public SendToKafkaAdapterSink(AdapterDescription adapterDescription) {
         String brokerUrl = GroundingService.extractBroker(adapterDescription);
         String topic = GroundingService.extractTopic(adapterDescription);

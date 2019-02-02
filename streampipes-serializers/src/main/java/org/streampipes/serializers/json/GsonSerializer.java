@@ -28,6 +28,14 @@ import org.streampipes.model.SpDataStream;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.rules.*;
+import org.streampipes.model.connect.rules.Schema.CreateNestedRuleDescription;
+import org.streampipes.model.connect.rules.Schema.DeleteRuleDescription;
+import org.streampipes.model.connect.rules.Schema.MoveRuleDescription;
+import org.streampipes.model.connect.rules.Schema.RenameRuleDescription;
+import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
+import org.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
+import org.streampipes.model.connect.rules.value.TimestampTransformationRuleDescription;
+import org.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.streampipes.model.grounding.TopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.output.OutputStrategy;
@@ -85,7 +93,11 @@ public class GsonSerializer {
             .registerSubtype(RenameRuleDescription.class, "org.streampipes.model.RenameRuleDescription")
             .registerSubtype(MoveRuleDescription.class, "org.streampipes.model.MoveRuleDescription")
             .registerSubtype(DeleteRuleDescription.class, "org.streampipes.model.DeleteRuleDescription")
-            .registerSubtype(CreateNestedRuleDescription.class, "org.streampipes.model.CreateNestedRuleDescription"));
+            .registerSubtype(CreateNestedRuleDescription.class, "org.streampipes.model.CreateNestedRuleDescription")
+            .registerSubtype(RemoveDuplicatesTransformationRuleDescription.class, "org.streampipes.model.RemoveDuplicatesRuleDescription")
+            .registerSubtype(TimestampTransformationRuleDescription.class, "org.streampipes.model.TimestampTransformationRuleDescription")
+            .registerSubtype(AddValueTransformationRuleDescription.class, "org.streampipes.model.AddValueTransformationRuleDescription")
+            .registerSubtype(UnitTransformRuleDescription.class, "org.streampipes.model.UnitTransformRuleDescription"));
 
     builder.setPrettyPrinting();
     return builder;

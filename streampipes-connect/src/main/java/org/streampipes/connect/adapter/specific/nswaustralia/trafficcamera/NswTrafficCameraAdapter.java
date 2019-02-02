@@ -83,12 +83,15 @@ public class NswTrafficCameraAdapter extends PullAdapter {
 
   @Override
   public SpecificAdapterStreamDescription declareModel() {
-    return SpecificDataStreamAdapterBuilder.create(ID, "NSW Traffic Cameras", "Traffic camera " +
+    SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "NSW Traffic Cameras", "Traffic camera " +
             "images produced by NSW Australia")
             .requiredTextParameter(Labels.from("api-key", "API Key", "The TfNSW " +
                     "API key"))
             .iconUrl("nsw.png")
             .build();
+
+    description.setAppId(ID);
+    return description;
   }
 
   @Override
