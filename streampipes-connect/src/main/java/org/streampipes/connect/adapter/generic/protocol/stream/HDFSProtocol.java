@@ -17,7 +17,11 @@ limitations under the License.
 package org.streampipes.connect.adapter.generic.protocol.stream;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.*;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.LocatedFileStatus;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RemoteIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.SendToPipeline;
@@ -38,7 +42,9 @@ import org.streampipes.model.staticproperty.Option;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -67,6 +73,38 @@ public class HDFSProtocol extends Protocol {
     private long knownNewestFileDate;
 
 
+    public static void main(String... args) throws IOException {
+        String url = "http://server:8020";
+        String path = "/route/to/folder/";
+
+        FileSystem  fs = FileSystem.get(URI.create(url), getHdfsConfig(url));
+
+        List<String> res = getFileNames(fs, path);
+        System.out.println(res);
+
+//        HDFSProtocol protocol = new HDFSProtocol(null, null,0, path, url, false);
+//
+////        List<LocatedFileStatus> res = protocol.getFiles();
+//        List<String> res = protocol.getFileNames(path);
+//        System.out.println(res);
+
+    }
+
+     public static Configuration getHdfsConfig(String hdfsAddress) {
+    // ====== Init HDFS File System Object
+    Configuration conf = new Configuration();
+// Set FileSystem URI
+    conf.set("fs.defaultFS", hdfsAddress);
+// Because of Maven
+    conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
+    conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
+    conf.set("dfs.client.use.datanode.hostname", "true");
+// Set HADOOP user
+    System.setProperty("HADOOP_USER_NAME", "hdfs");
+    System.setProperty("hadoop.home.dir", "/");
+
+    return conf;
+  }
 
 
     public HDFSProtocol() {
@@ -86,12 +124,12 @@ public class HDFSProtocol extends Protocol {
         ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
         long intervalProperty = Long.parseLong(extractor.singleValue(INTERVAL_PROPERTY));
         String urlProperty = extractor.singleValue(URL_PROPERTY);
-    //    String userProperty = extractor.singleValue(USER_PROPERTY);
-    //    String passwordProperty = extractor.singleValue(PASSWORD_PROPERTY);
+        //    String userProperty = extractor.singleValue(USER_PROPERTY);
+        //    String passwordProperty = extractor.singleValue(PASSWORD_PROPERTY);
         String dataPathProperty = extractor.singleValue(DATA_PATH_PROPERTY);
 
-        boolean recursively = extractor.selectedMultiValues(RECURSIVELY_PROPERTY).stream()
-                .anyMatch(o -> o.equals("recursively"));
+//        boolean recursively = extractor.selectedMultiValues(RECURSIVELY_PROPERTY).stream()
+//                .anyMatch(o -> o.equals("recursively"));
 
         return new HDFSProtocol(parser, format, intervalProperty, dataPathProperty, urlProperty, recursively);
 
@@ -105,27 +143,29 @@ public class HDFSProtocol extends Protocol {
         FreeTextStaticProperty intervalProperty = new FreeTextStaticProperty(INTERVAL_PROPERTY, "Interval", "This property " +
                 "defines the pull interval in seconds.");
         FreeTextStaticProperty urlProperty = new FreeTextStaticProperty(URL_PROPERTY, "HDFS-Server URL",
-               "This property defines the path to the file.");
-    //     FreeTextStaticProperty userNameProperty = new FreeTextStaticProperty(USER_PROPERTY, "Username",
-    //            "The Username to login");
-    //    FreeTextStaticProperty passwordProperty = new FreeTextStaticProperty(PASSWORD_PROPERTY, "Password",
-    //            "The Password to login");
+                "This property defines the path to the file.");
+        //     FreeTextStaticProperty userNameProperty = new FreeTextStaticProperty(USER_PROPERTY, "Username",
+        //            "The Username to login");
+        //    FreeTextStaticProperty passwordProperty = new FreeTextStaticProperty(PASSWORD_PROPERTY, "Password",
+        //            "The Password to login");
         FreeTextStaticProperty dataPathProperty = new FreeTextStaticProperty(DATA_PATH_PROPERTY, "Data Path",
                 "The Data Path which should be watched");
 
 
-        AnyStaticProperty offset = new AnyStaticProperty(OPTIONS, "Options for Folders", "");
-        offset.setOptions(Arrays.asList(new Option("Search Recursively","recursively")));
+//        AnyStaticProperty offset = new AnyStaticProperty(OPTIONS, "Options for Folders", "");
+//        offset.setOptions(Arrays.asList(new Option("Search Recursively","recursively")));
 
 
         pd.setSourceType("STREAM");
 
-     //   pd.setIconUrl("ftp.png");
+        //   pd.setIconUrl("ftp.png");
         pd.addConfig(urlProperty);
         pd.addConfig(intervalProperty);
-     //   pd.addConfig(userNameProperty);
-    //    pd.addConfig(passwordProperty);
+        //   pd.addConfig(userNameProperty);
+        //    pd.addConfig(passwordProperty);
         pd.addConfig(dataPathProperty);
+
+        pd.setAppId(ID);
 
         return pd;
     }
@@ -239,7 +279,7 @@ public class HDFSProtocol extends Protocol {
 
     }
 
-    private List<LocatedFileStatus> getFiles() {
+    public List<LocatedFileStatus> getFiles() {
         List<LocatedFileStatus> files = new ArrayList<>();
 
         FileSystem fs = getFilesSystem();
@@ -262,20 +302,51 @@ public class HDFSProtocol extends Protocol {
         return files;
     }
 
+
+    public static List<String> getFileNames(FileSystem fs, String route) throws IOException {
+        List<String> result = new ArrayList<>();
+
+        if (route.endsWith("/")) {
+            Path tmp = new Path(route);
+            RemoteIterator<LocatedFileStatus> i = fs.listFiles(tmp, false);
+
+            while (i.hasNext()) {
+                String path = i.next().getPath().toString();
+                if (path.endsWith("/")) {
+                    result.addAll(getFileNames(fs, path));
+                } else {
+                    result.add(path);
+                }
+            }
+        } else {
+            result.add(route);
+        }
+
+        return result;
+    }
+
     private FileSystem getFilesSystem() {
         FileSystem fs = null;
-        Configuration conf = new Configuration();
-        conf.set("fs.defaultFS", this.urlProperty);
-        conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
-        conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
-        System.setProperty("HADOOP_USER_NAME", "hdfs");
-        System.setProperty("hadoop.home.dir", "/");
+        Configuration conf = getConfigutation();
+
         try {
-             fs = FileSystem.get(URI.create(this.urlProperty), conf);
+            fs = FileSystem.get(URI.create(this.urlProperty), conf);
         } catch (IOException e) {
             logger.error(e.toString());
         }
         return fs;
+    }
+
+    private Configuration getConfigutation() {
+        Configuration conf = new Configuration();
+        conf.set("fs.defaultFS", this.urlProperty);
+        conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
+        conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
+        conf.set("dfs.client.use.datanode.hostname", "true");
+        System.setProperty("HADOOP_USER_NAME", "hdfs");
+        System.setProperty("hadoop.home.dir", "/");
+
+        return conf;
     }
 
     private FSDataInputStream getInputStreamFromFile(LocatedFileStatus locatedFileStatus) {
