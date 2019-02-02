@@ -46,8 +46,7 @@ public abstract class UnnamedStreamPipesEntity extends AbstractStreamPipesEntity
   }
 
   public UnnamedStreamPipesEntity(UnnamedStreamPipesEntity other) {
-    super();
-    this.elementId = other.getElementId();
+    this();
   }
 
   public UnnamedStreamPipesEntity(String elementId) {

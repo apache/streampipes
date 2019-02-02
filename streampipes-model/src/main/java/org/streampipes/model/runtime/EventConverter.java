@@ -16,10 +16,10 @@ limitations under the License.
 package org.streampipes.model.runtime;
 
 import org.streampipes.model.runtime.field.AbstractField;
+import org.streampipes.model.runtime.field.ListField;
 import org.streampipes.model.runtime.field.PrimitiveField;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class EventConverter {
@@ -30,22 +30,32 @@ public class EventConverter {
     this.event = event;
   }
 
-  public Map<String, Object> toMap() {
+  public Map<String, Object> toMap(Boolean renameProperties) {
     Map<String, Object> outMap = new HashMap<>();
 
-    event.getFields().forEach((key, value) -> outMap.put(value.getFieldNameOut(), makeEntry(value)));
+    event.getFields().forEach((key, value) -> outMap.put(getValue(value, renameProperties), makeEntry
+            (value, renameProperties)));
 
     return outMap;
   }
 
-  private Object makeEntry(AbstractField value) {
-    if (PrimitiveField.class.isInstance(value) || List.class.isInstance(value)) {
+  public Map<String, Object> toMap() {
+    return toMap(true);
+  }
+
+  private Object makeEntry(AbstractField value, Boolean renameProperties) {
+    if (PrimitiveField.class.isInstance(value) || ListField.class.isInstance(value)) {
       return value.getRawValue();
     } else {
       Map<String, Object> outMap = new HashMap<>();
-      value.getAsComposite().getRawValue().entrySet().forEach(entry -> outMap.put(entry.getValue
-              ().getFieldNameOut(), makeEntry(entry.getValue())));
+      value.getAsComposite().getRawValue().entrySet().forEach(entry -> outMap.put(getValue(entry
+              .getValue
+              (), renameProperties), makeEntry(entry.getValue(), renameProperties)));
       return outMap;
     }
+  }
+
+  private String getValue(AbstractField field, Boolean renameProperties) {
+    return renameProperties ? field.getFieldNameOut() : field.getFieldNameIn();
   }
 }

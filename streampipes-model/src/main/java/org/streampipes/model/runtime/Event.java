@@ -18,21 +18,19 @@ package org.streampipes.model.runtime;
 import org.streampipes.model.constants.PropertySelectorConstants;
 import org.streampipes.model.runtime.field.AbstractField;
 import org.streampipes.model.runtime.field.PrimitiveField;
+import org.streampipes.model.schema.EventSchema;
 
 import java.util.List;
 import java.util.Map;
 
 public class Event {
 
-  private Map<String, Object> runtimeMap;
   private SourceInfo sourceInfo;
   private SchemaInfo schemaInfo;
   private Map<String, AbstractField> fieldMap;
 
-  public Event(Map<String, Object> runtimeMap, Map<String, AbstractField> fieldMap, SourceInfo
-          sourceInfo,
-               SchemaInfo schemaInfo) {
-    this.runtimeMap = runtimeMap;
+  public Event(Map<String, AbstractField> fieldMap, SourceInfo
+          sourceInfo, SchemaInfo schemaInfo) {
     this.fieldMap = fieldMap;
     this.sourceInfo = sourceInfo;
     this.schemaInfo = schemaInfo;
@@ -42,9 +40,8 @@ public class Event {
     return fieldMap;
   }
 
-  @Deprecated
   public Map<String, Object> getRaw() {
-    return runtimeMap;
+    return new EventConverter(this).toMap(false);
   }
 
   public SourceInfo getSourceInfo() {
@@ -53,6 +50,10 @@ public class Event {
 
   public SchemaInfo getSchemaInfo() {
     return schemaInfo;
+  }
+
+  public Event merge(Event otherEvent, EventSchema outputSchema) {
+    return EventFactory.fromEvents(this, otherEvent, outputSchema);
   }
 
   public AbstractField getFieldByRuntimeName(String runtimeName) {

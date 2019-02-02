@@ -15,6 +15,7 @@ limitations under the License.
 */
 package org.streampipes.model.output;
 
+import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.streampipes.vocabulary.StreamPipes;
@@ -25,9 +26,15 @@ import javax.persistence.Entity;
 @Entity
 public class PropertyRenameRule extends UnnamedStreamPipesEntity {
 
+  @RdfProperty(StreamPipes.HAS_RUNTIME_ID)
   private String runtimeId;
 
+  @RdfProperty(StreamPipes.HAS_NEW_RUNTIME_NAME)
   private String newRuntimeName;
+
+  public PropertyRenameRule() {
+    super();
+  }
 
   public PropertyRenameRule(String runtimeId, String newRuntimeName) {
     super();
@@ -36,6 +43,7 @@ public class PropertyRenameRule extends UnnamedStreamPipesEntity {
   }
 
   public PropertyRenameRule(PropertyRenameRule other) {
+    super(other);
     this.runtimeId = other.getRuntimeId();
     this.newRuntimeName = other.getNewRuntimeName();
   }

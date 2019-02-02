@@ -22,12 +22,35 @@ import org.streampipes.model.runtime.field.AbstractField;
 import org.streampipes.model.runtime.field.ListField;
 import org.streampipes.model.runtime.field.NestedField;
 import org.streampipes.model.runtime.field.PrimitiveField;
+import org.streampipes.model.schema.EventSchema;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class EventFactory {
+
+  public static Event fromEvents(Event firstEvent, Event secondEvent, EventSchema outputSchema) {
+    Map<String, AbstractField> fieldMap = new HashMap<>();
+    fieldMap.putAll(firstEvent.getFields());
+    fieldMap.putAll(secondEvent.getFields());
+
+    return new Event(fieldMap, makeMergedSourceInfo(), makeMergedSchemaInfo(firstEvent, secondEvent,
+            outputSchema));
+  }
+
+  private static SourceInfo makeMergedSourceInfo() {
+    return new SourceInfo(null, null);
+  }
+
+  private static SchemaInfo makeMergedSchemaInfo(Event firstEvent, Event secondEvent, EventSchema
+                                                 outputSchema) {
+    List<PropertyRenameRule> propertyRenameRules = new ArrayList<>();
+    propertyRenameRules.addAll(firstEvent.getSchemaInfo().getRenameRules());
+    propertyRenameRules.addAll(secondEvent.getSchemaInfo().getRenameRules());
+    return new SchemaInfo(outputSchema, propertyRenameRules);
+  }
 
   public static Event fromMap(Map<String, Object> event, SourceInfo sourceInfo, SchemaInfo
           schemaInfo) {
@@ -39,14 +62,14 @@ public class EventFactory {
       fields.put(currentSelector, makeField(key, event.get(key), currentSelector, schemaInfo));
     }
 
-    return new Event(event, fields, sourceInfo, schemaInfo);
+    return new Event(fields, sourceInfo, schemaInfo);
   }
 
   public static Event makeSubset(Event event, List<String> fieldSelectors) {
-    Map<String, Object> runtimeMap = makeRuntimeMapSubset(event.getRaw(), fieldSelectors, event
-            .getSourceInfo().getSelectorPrefix());
+//    Map<String, Object> runtimeMap = makeRuntimeMapSubset(event.getRaw(), fieldSelectors, event
+//            .getSourceInfo().getSelectorPrefix());
     Map<String, AbstractField> fieldMap = makeFieldMap(event.getFields(), fieldSelectors);
-    return new Event(runtimeMap, fieldMap, event.getSourceInfo(), event.getSchemaInfo());
+    return new Event(fieldMap, event.getSourceInfo(), event.getSchemaInfo());
   }
 
   private static Map<String, Object> makeRuntimeMapSubset(Map<String, Object> event, List<String>
