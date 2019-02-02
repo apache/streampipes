@@ -42,6 +42,14 @@ export class MappingNaryController {
         var index = staticProperty.properties.mapsTo.indexOf(property.properties.runtimeId);
         staticProperty.properties.mapsTo.splice(index, 1);
     }
+
+    selectAll() {
+        this.staticProperty.properties.mapsTo = this.staticProperty.properties.mapsFromOptions;
+    }
+
+    deselectAll() {
+        this.staticProperty.properties.mapsTo = [];
+    }
 }
 
 MappingNaryController.$inject=['PropertySelectorService']

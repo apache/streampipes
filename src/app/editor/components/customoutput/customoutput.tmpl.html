@@ -1,10 +1,18 @@
-<h5>{{ctrl.selectedElement.inputStreams[0].name}}</h5>
+<div flex="100" layout="row" layout-align="start center">
+    <h5 style="margin-right:10px;">{{ctrl.selectedElement.inputStreams[0].name}}</h5>
+    <sp-button sp-button-blue sp-button-small-padding ng-click="ctrl.selectAll(ctrl.collectedPropertiesFirstStream)">Select all</sp-button>&nbsp;&nbsp;
+    <sp-button sp-button-gray sp-button-small-padding ng-click="ctrl.deselectAll(ctrl.collectedPropertiesFirstStream)">Select none</sp-button>
+</div>
 <div ng-repeat="(index, property) in ctrl.collectedPropertiesFirstStream track by $index">
     <property-selection output-strategy="ctrl.outputStrategy" event-property="property"
                         layer="0"></property-selection>
 </div>
 <div ng-if="ctrl.collectedPropertiesSecondStream.length > 0">
-    <h5>{{ctrl.selectedElement.inputStreams[1].name}}</h5>
+    <div flex="100" layout="row" layout-align="start center">
+        <h5 style="margin-right:10px;">{{ctrl.selectedElement.inputStreams[1].name}}</h5>
+        <sp-button sp-button-blue sp-button-small-padding ng-click="ctrl.selectAll(ctrl.collectedPropertiesSecondStream)">Select all</sp-button>&nbsp;&nbsp;
+        <sp-button sp-button-gray sp-button-small-padding ng-click="ctrl.deselectAll(ctrl.collectedPropertiesSecondStream)">Select none</sp-button>
+    </div>
     <div ng-repeat="(index, property) in ctrl.collectedPropertiesSecondStream track by $index">
         <property-selection output-strategy="ctrl.outputStrategy" event-property="property"
                             layer="0"></property-selection>
