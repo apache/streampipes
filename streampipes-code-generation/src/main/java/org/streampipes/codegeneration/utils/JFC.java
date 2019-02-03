@@ -28,7 +28,6 @@ import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.schema.EventProperty;
-import org.streampipes.sdk.PrimitivePropertyBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.stream.SchemaBuilder;
 import org.streampipes.sdk.stream.StreamBuilder;
@@ -72,7 +71,8 @@ public abstract class JFC {
 	public static ClassName STREAM_BUILDER = ClassName.get(StreamBuilder.class);
 	public static ClassName SCHEMA_BUILDER = ClassName.get(SchemaBuilder.class);
 	public static ClassName EVENT_PROPERTY = ClassName.get(EventProperty.class);
-	public static ClassName PRIMITIVE_PROPERTY_BUILDER = ClassName.get(PrimitivePropertyBuilder.class);
+	//public static ClassName PRIMITIVE_PROPERTY_BUILDER = ClassName.get(PrimitivePropertyBuilder
+	//				.class);
 	public static ClassName APPEND_OUTPUT_STRATEGY = ClassName.get(AppendOutputStrategy.class);
 	public static ClassName OUTPUT_STRATEGY = ClassName.get(OutputStrategy.class);
 	public static ClassName EP_PROPERTIES = ClassName.get(EpProperties.class);

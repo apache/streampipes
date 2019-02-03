@@ -17,6 +17,7 @@
 
 package org.streampipes.manager.matching.v2.mapping;
 
+import org.streampipes.manager.matching.v2.ListPropertyMatch;
 import org.streampipes.manager.matching.v2.PropertyMatch;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
@@ -45,23 +46,20 @@ public class MappingPropertyCalculator {
 
   private List<EventProperty> matches(EventProperty offer, EventProperty requirement) {
     if (type(requirement, EventPropertyPrimitive.class)) {
-      if (offer instanceof EventPropertyPrimitive) {
+      if (type(offer, EventPropertyPrimitive.class)) {
         if (new PropertyMatch().match(offer, requirement, new ArrayList<>())) {
             return Collections.singletonList(offer);
         }
-      } else if (offer instanceof EventPropertyNested) {
+      } else if (type(offer, EventPropertyNested.class)) {
         EventPropertyNested clonedOffer = new EventPropertyNested((EventPropertyNested) offer);
         clonedOffer.setEventProperties(matchesProperties(clonedOffer.getEventProperties(), requirement));
         return Collections.singletonList(clonedOffer);
       }
-    } else if (requirement instanceof EventPropertyList) {
-      if (offer instanceof EventPropertyList) {
+    } else if (types(offer, requirement, EventPropertyList.class)) {
         if (matchesList((EventPropertyList) offer, (EventPropertyList) requirement)) {
           return Collections.singletonList(offer);
         }
-      }
-
-    } else if (requirement instanceof EventPropertyNested) {
+    } else if (type(requirement, EventPropertyNested.class)) {
       EventPropertyNested rightNested = (EventPropertyNested) requirement;
       for (EventProperty nestedProperty : rightNested.getEventProperties()) {
         // TODO
@@ -74,22 +72,12 @@ public class MappingPropertyCalculator {
     return clazz.isInstance(eventProperty);
   }
 
+  private Boolean types(EventProperty offer, EventProperty requirement, Class<? extends
+          EventProperty> clazz) {
+    return type(offer, clazz) && type(requirement, clazz);
+  }
+
   public boolean matchesList(EventPropertyList offer, EventPropertyList requirement) {
-    boolean match = true;
-    for (EventProperty p : requirement.getEventProperties()) {
-      if (!matches(offer.getEventProperties(), p)) {
-        match = false;
-      }
-    }
-    return match;
+   return new ListPropertyMatch().match(offer, requirement, new ArrayList<>());
   }
-
-  public boolean matches(List<EventProperty> offer, EventProperty requirement) {
-    boolean match = false;
-    for (EventProperty of : offer) {
-      // TODO
-    }
-    return match;
-  }
-
 }

@@ -20,33 +20,29 @@ package org.streampipes.manager.matching.v2;
 import org.streampipes.model.client.matching.MatchingResultMessage;
 import org.streampipes.model.schema.EventPropertyList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ListPropertyMatch implements Matcher<EventPropertyList, EventPropertyList> {
 
-	@Override
-	public boolean match(EventPropertyList offer, EventPropertyList requirement, List<MatchingResultMessage> errorLog) {
-		if (requirement.getEventProperties() == null) {
-			return false;
-		} else if (requirement.getEventProperties().size() == 0) {
+  @Override
+  public boolean match(EventPropertyList offer, EventPropertyList requirement, List<MatchingResultMessage> errorLog) {
+    if (requirement.getEventProperty() == null) {
+      return true;
+    } else {
+      return domainPropertyMatch(offer, requirement, errorLog) && listItemMatch(offer, requirement,
+              errorLog);
+    }
+  }
 
-			// Check if the requirement has no restrictions
-			if (requirement.getDomainProperties() == null || requirement.getDomainProperties().size() == 0) {
-			    if (requirement.getEventProperty() == null && requirement.getEventProperties() != null && requirement.getEventProperties().size() == 0) {
-					return true;
-				}
-			}
+  private boolean domainPropertyMatch(EventPropertyList offer, EventPropertyList requirement,
+                                      List<MatchingResultMessage> errorLog) {
+    return new DomainPropertyMatch().match(offer.getDomainProperties(), requirement.getDomainProperties(),
+            errorLog);
+  }
 
-			// Check if the domain property matches
-			if (requirement.getDomainProperties() != null && offer.getDomainProperties() != null && requirement.getDomainProperties().size() > 0) {
-				return new DomainPropertyMatch().match(offer.getDomainProperties(), requirement.getDomainProperties(), errorLog);
-			} else {
-				return false;
-			}
-		} else {
-			return new PropertyMatch().match(offer.getEventProperties().get(0),
-					requirement.getEventProperties().get(0), errorLog);
-		}
-	}
+  private boolean listItemMatch(EventPropertyList offer, EventPropertyList requirement,
+                                List<MatchingResultMessage> errorLog) {
+    return new PropertyMatch().match(offer.getEventProperty(), requirement.getEventProperty(),
+            errorLog);
+  }
 }

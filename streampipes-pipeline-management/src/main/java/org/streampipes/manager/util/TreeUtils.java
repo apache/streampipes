@@ -18,15 +18,9 @@
 package org.streampipes.manager.util;
 
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.schema.EventPropertyList;
-import org.streampipes.model.staticproperty.MappingProperty;
-import org.streampipes.model.staticproperty.MatchingStaticProperty;
-import org.streampipes.model.staticproperty.StaticProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,52 +61,6 @@ public class TreeUtils {
       }
     }
     //TODO
-    return null;
-  }
-
-  public static EventProperty findEventProperty(String uri, List<SpDataStream> streams) {
-    for (SpDataStream stream : streams) {
-      for (EventProperty p : stream.getEventSchema().getEventProperties()) {
-        if (p instanceof EventPropertyList) {
-          for (EventProperty sp : ((EventPropertyList) p).getEventProperties()) {
-            if (sp.getElementId().equals(uri)) {
-              return sp;
-            }
-          }
-        }
-        if (p.getElementId().equals(uri)) {
-          return p;
-        }
-      }
-    }
-    return null;
-  }
-
-  public static MappingProperty findMappingProperty(String elementId, ConsumableStreamPipesEntity sepa) {
-    for (StaticProperty sp : sepa.getStaticProperties()) {
-      if (sp.getElementId().equals(elementId)) {
-        return (MappingProperty) sp;
-      }
-    }
-    return null;
-  }
-
-  public static MatchingStaticProperty findMatchingProperty(String elementId, ConsumableStreamPipesEntity sepa) {
-    for (StaticProperty sp : sepa.getStaticProperties()) {
-      if (sp.getElementId().equals(elementId)) {
-        return (MatchingStaticProperty) sp;
-      }
-    }
-    return null;
-  }
-
-  public static MappingProperty findMappingProperty(String elementId,
-                                                    DataProcessorInvocation sepa) {
-    for (StaticProperty sp : sepa.getStaticProperties()) {
-      if (sp.getElementId().equals(elementId)) {
-        return (MappingProperty) sp;
-      }
-    }
     return null;
   }
 }

@@ -52,6 +52,13 @@ public class EventFactory {
     return new SchemaInfo(outputSchema, propertyRenameRules);
   }
 
+  public static Event fromMap(Map<String, Object> event) {
+    // TODO provide output event schema through RuntimeContext
+    SourceInfo sourceInfo = new SourceInfo("o", "o");
+    SchemaInfo schemaInfo = new SchemaInfo(null, new ArrayList<>());
+    return fromMap(event, sourceInfo, schemaInfo);
+  }
+
   public static Event fromMap(Map<String, Object> event, SourceInfo sourceInfo, SchemaInfo
           schemaInfo) {
 
@@ -66,8 +73,6 @@ public class EventFactory {
   }
 
   public static Event makeSubset(Event event, List<String> fieldSelectors) {
-//    Map<String, Object> runtimeMap = makeRuntimeMapSubset(event.getRaw(), fieldSelectors, event
-//            .getSourceInfo().getSelectorPrefix());
     Map<String, AbstractField> fieldMap = makeFieldMap(event.getFields(), fieldSelectors);
     return new Event(fieldMap, event.getSourceInfo(), event.getSchemaInfo());
   }

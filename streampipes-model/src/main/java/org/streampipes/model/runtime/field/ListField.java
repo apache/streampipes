@@ -26,7 +26,13 @@ public class ListField extends AbstractField<List<Object>> {
 
   public <T> List<T> parseAsCustomType(FieldParser<Object, T> parser) {
     return value.stream()
-            .map(f -> parser.parseField(value))
+            .map(parser::parseField)
+            .collect(Collectors.toList());
+  }
+
+  public <T> List<T> castItems(Class<T> clazz) {
+    return value.stream()
+            .map(clazz::cast)
             .collect(Collectors.toList());
   }
 

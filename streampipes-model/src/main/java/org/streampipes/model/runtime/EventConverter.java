@@ -43,6 +43,10 @@ public class EventConverter {
     return toMap(true);
   }
 
+  public Map<String, Object> toInputEventMap() {
+    return toMap(false);
+  }
+
   private Object makeEntry(AbstractField value, Boolean renameProperties) {
     if (PrimitiveField.class.isInstance(value) || ListField.class.isInstance(value)) {
       return value.getRawValue();

@@ -20,6 +20,7 @@ import org.streampipes.model.runtime.field.AbstractField;
 import org.streampipes.model.runtime.field.PrimitiveField;
 import org.streampipes.model.schema.EventSchema;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,10 @@ public class Event {
     this.fieldMap = fieldMap;
     this.sourceInfo = sourceInfo;
     this.schemaInfo = schemaInfo;
+  }
+
+  public Event() {
+    this.fieldMap = new HashMap<>();
   }
 
   public Map<String, AbstractField> getFields() {
@@ -166,7 +171,7 @@ public class Event {
     this.fieldMap.put(runtimeName, new PrimitiveField(runtimeName, runtimeName, value));
   }
 
-  public void addField(String baseSelector, AbstractField field) {
+  public void addFieldAtPosition(String baseSelector, AbstractField field) {
     getFieldBySelector(baseSelector).getAsComposite().addField
             (makeSelector(baseSelector, field.getFieldNameIn()), field);
   }
@@ -180,4 +185,5 @@ public class Event {
   public Event getSubset(List<String> fieldSelectors) {
     return EventFactory.makeSubset(this, fieldSelectors);
   }
+
 }

@@ -43,8 +43,7 @@ public class PropertyUtils {
       EventPropertyNested nestedEp = (EventPropertyNested) ep;
       Map<String, Object> propertyMap = new HashMap<>();
       Map<String, Object> subTypes = new HashMap<>();
-      for(EventProperty p : nestedEp.getEventProperties())
-      {
+      for (EventProperty p : nestedEp.getEventProperties()) {
         subTypes.putAll(getUntypedRuntimeFormat(p));
       }
       propertyMap.put(nestedEp.getRuntimeName(), subTypes);
@@ -52,16 +51,14 @@ public class PropertyUtils {
     } else {
       EventPropertyList listEp = (EventPropertyList) ep;
       Map<String, Object> result = new HashMap<>();
-      for(EventProperty p : listEp.getEventProperties())
-      {
-        if (p instanceof EventPropertyPrimitive && listEp.getEventProperties().size() == 1)
-        {
-          result.put(listEp.getRuntimeName(), ModelUtils.getPrimitiveClassAsArray(((EventPropertyPrimitive) p).getRuntimeType()));
-          break;
-        }
-        else
-          result.put(listEp.getRuntimeName(), ModelUtils.asList(PropertyUtils.getUntypedRuntimeFormat(p)));
+      if (listEp.getEventProperty() instanceof EventPropertyPrimitive) {
+        result.put(listEp.getRuntimeName(), ModelUtils.getPrimitiveClassAsArray((
+                (EventPropertyPrimitive) listEp.getEventProperty()).getRuntimeType()));
+      } else {
+        result.put(listEp.getRuntimeName(), ModelUtils.asList(PropertyUtils
+                .getUntypedRuntimeFormat(listEp.getEventProperty())));
       }
+
       return result;
     }
 
@@ -74,9 +71,8 @@ public class PropertyUtils {
       return result;
     } else if (ep instanceof EventPropertyNested) {
       List<String> result = new ArrayList<>();
-      for(EventProperty p : ((EventPropertyNested) ep).getEventProperties())
-      {
-        result.addAll(getFullPropertyName(p, ep.getRuntimeName() +"."));
+      for (EventProperty p : ((EventPropertyNested) ep).getEventProperties()) {
+        result.addAll(getFullPropertyName(p, ep.getRuntimeName() + "."));
       }
       return result;
     } else {

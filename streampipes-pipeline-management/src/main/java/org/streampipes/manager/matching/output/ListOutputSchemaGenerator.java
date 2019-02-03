@@ -55,8 +55,9 @@ public class ListOutputSchemaGenerator extends OutputSchemaGenerator<ListOutputS
   }
 
   private EventSchema makeList(List<EventProperty> schemaProperties) {
+    // TODO SIP08
     EventPropertyList list = new EventPropertyList();
-    list.setEventProperties(schemaProperties);
+    //list.setEventProperties(schemaProperties);
     list.setRuntimeName(propertyName);
     list.setRdfId(new SupportsRdfId.URIKey(URI.create(schemaProperties.get(0).getRdfId() + "-list")));
     EventSchema schema = new EventSchema();
