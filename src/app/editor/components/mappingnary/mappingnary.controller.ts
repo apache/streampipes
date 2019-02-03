@@ -27,28 +27,28 @@ export class MappingNaryController {
     }
 
     exists(property, staticProperty) {
-        if (!staticProperty.properties.mapsTo) return false;
-        return staticProperty.properties.mapsTo.indexOf(property.properties.runtimeId) > -1;
+        if (!staticProperty.properties.selectedProperties) return false;
+        return staticProperty.properties.selectedProperties.indexOf(property.properties.runtimeId) > -1;
     }
 
     add(property, staticProperty) {
-        if (!staticProperty.properties.mapsTo) {
-            staticProperty.properties.mapsTo = [];
+        if (!staticProperty.properties.selectedProperties) {
+            staticProperty.properties.selectedProperties = [];
         }
-        staticProperty.properties.mapsTo.push(property.properties.runtimeId);
+        staticProperty.properties.selectedProperties.push(property.properties.runtimeId);
     }
 
     remove(property, staticProperty) {
-        var index = staticProperty.properties.mapsTo.indexOf(property.properties.runtimeId);
-        staticProperty.properties.mapsTo.splice(index, 1);
+        var index = staticProperty.properties.selectedProperties.indexOf(property.properties.runtimeId);
+        staticProperty.properties.selectedProperties.splice(index, 1);
     }
 
     selectAll() {
-        this.staticProperty.properties.mapsTo = this.staticProperty.properties.mapsFromOptions;
+        this.staticProperty.properties.selectedProperties = this.staticProperty.properties.mapsFromOptions;
     }
 
     deselectAll() {
-        this.staticProperty.properties.mapsTo = [];
+        this.staticProperty.properties.selectedProperties = [];
     }
 }
 
