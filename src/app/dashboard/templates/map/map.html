@@ -1,10 +1,20 @@
 <!--<div style="width:400px;height:600px;">-->
-    <!--<div map-lazy-load="https://maps.google.com/maps/api/js" >-->
-        <!--<ng-map center="[{{currentLocation[1]}},{{currentLocation[0]}}]" zoom="14" style="width:400px;height:600px;">-->
-            <!--<marker position="{{currentLocation[1]}},{{currentLocation[0]}}"></marker>-->
-        <!--</ng-map>-->
-    <!--</div>-->
+<!--<div map-lazy-load="https://maps.google.com/maps/api/js" >-->
+<!--<ng-map center="[{{currentLocation[1]}},{{currentLocation[0]}}]" zoom="14" style="width:400px;height:600px;">-->
+<!--<marker position="{{currentLocation[1]}},{{currentLocation[0]}}"></marker>-->
+<!--</ng-map>-->
 <!--</div>-->
-<div style="height: 1000px; width: 100%;" id="map">
+<!--</div>-->
+<div style="height:100%; min-height: 60vh; width: 100%;">
+    <div id="map" style="height:100%; min-height: 60vh; width: 100%;">
+    </div>
 
+   <sp-button sp-button-flat class="md-icon-button" ng-click="ctrl.toggleRefocus()">
+            <i class="material-icons">
+                center_focus_strong
+            </i>
+            <md-tooltip md-direction="top">
+                Tutorial
+            </md-tooltip>
+   </sp-button>
 </div>
