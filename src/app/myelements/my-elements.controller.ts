@@ -36,7 +36,7 @@ export class MyElementsCtrl {
 
     getElementId(element) {
         if (this.currentTabType === 'source') {
-            return element.uri;
+            return element.elementId;
         } else {
             return element.belongsTo;
         }
