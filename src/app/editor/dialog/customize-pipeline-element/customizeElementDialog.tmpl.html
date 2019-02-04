@@ -1,4 +1,4 @@
-<md-dialog aria-label="Customize" flex="70" style="max-height:80%">
+<md-dialog aria-label="Customize" flex="70" style="max-height:80%" class="colored-frame">
     <md-toolbar ng-if="ctrl.configVisible">
         <div class="md-toolbar-tools">
             <h2>Customize {{ctrl.sepa.name}}</h2>
@@ -8,14 +8,16 @@
             </md-button>
         </div>
     </md-toolbar>
-
+    <div flex="100" layout="row" style="border-bottom:1px solid #ccc;padding-left:10px;padding-right:10px;background-color:#f6f6f6">
+        <div flex="100" layout="column" layout-align="end end">
+            <md-switch ng-model="ctrl.displayRecommended" aria-label="Switch 1">
+                Show only recommended settings
+            </md-switch>
+        </div>
+    </div>
     <md-dialog-content flex="100" class="md-dialog-content" ng-if="ctrl.configVisible">
         <form name="ctrl.customizeForm">
-            <div flex="100" layout="column" layout-align="end end">
-                <md-switch ng-model="ctrl.displayRecommended" aria-label="Switch 1">
-                    Show only recommended settings
-                </md-switch>
-            </div>
+
             <div flex="100" layout="column">
                 <div layout="column" class="customize-item-main-help">
                     <div class="customize-item-title-help" flex="100" layout="row">
@@ -68,9 +70,8 @@
                 </div>
             </div>
             <div ng-repeat="outputStrategy in ctrl.selectedElement.outputStrategies">
-                <div layout="column" class="customize-item-main sp-blue-border-nopadding">
-                    <div ng-if="outputStrategy.type === 'org.streampipes.model.output.ReplaceOutputStrategy'">
-
+                <div ng-if="outputStrategy.type === 'org.streampipes.model.output.ReplaceOutputStrategy'">
+                    <div layout="column" class="customize-item-main sp-blue-border-nopadding">
                         <div class="customize-item-title sp-blue-bg" layout="row" flex="100">
                             <div flex="80" layout="row" layout-align="start center">
                                 Replace property
@@ -79,10 +80,10 @@
                         <div class="customize-item-content">
                             <replace-output output-strategy="outputStrategy"></replace-output>
                         </div>
-
                     </div>
-                    <div ng-if="outputStrategy.type === 'org.streampipes.model.output.CustomOutputStrategy'">
-
+                </div>
+                <div ng-if="outputStrategy.type === 'org.streampipes.model.output.CustomOutputStrategy'">
+                    <div layout="column" class="customize-item-main sp-blue-border-nopadding">
                         <div class="customize-item-title sp-blue-bg" layout="row" flex="100">
                             <div flex="80" layout="row" layout-align="start center">
                                 Select Output
@@ -92,7 +93,8 @@
                             </div>
                         </div>
                         <div class="customize-item-content">
-                            <custom-output output-strategy="outputStrategy" selected-element="ctrl.selectedElement"></custom-output>
+                            <custom-output output-strategy="outputStrategy"
+                                           selected-element="ctrl.selectedElement"></custom-output>
                         </div>
                     </div>
                 </div>
@@ -109,7 +111,8 @@
         <sp-button sp-button-gray ng-click="ctrl.hide()">
             Close
         </sp-button>
-        <sp-button sp-button-blue ng-disabled="ctrl.customizeForm.$invalid" type="submit" ng-click="ctrl.saveProperties()">
+        <sp-button sp-button-blue ng-disabled="ctrl.customizeForm.$invalid" type="submit"
+                   ng-click="ctrl.saveProperties()">
             Save
         </sp-button>
     </md-dialog-actions>

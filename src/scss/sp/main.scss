@@ -23,6 +23,11 @@ body {
     background-attachment: fixed;
 }
 
+md-dialog.colored-frame {
+    border-top: 4px solid $sp-color-primary;
+    border-radius: 10px;
+}
+
 md-dialog-actions {
     border-top: 1px solid #cccccc;
 }
@@ -314,6 +319,16 @@ md-content {
     min-height: calc(100% - 20px);
 }
 
+.page-container-no-border {
+    margin: 10px;
+    min-height: calc(100% - 20px);
+}
+
+.page-container-inner-border {
+    border: 1px solid #cccccc;
+    margin-bottom: 1%;
+}
+
 .page-container-padding {
     padding-bottom: 20px;
 }
@@ -514,7 +529,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 }
 
 .customize-item-main {
-    border-radius: 0px;
+    border-radius: 5px;
     margin: 5px;
 }
 
@@ -530,8 +545,8 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 }
 
 .customize-item-main-help {
-    border: 1px solid $sp-color-accent;
-    border-radius: 0px;
+    border: 2px solid $sp-color-accent;
+    border-radius: 5px;
     margin: 5px;
 }
 
@@ -808,9 +823,8 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 .assemblyOptions {
     color: white;
     padding: 5px;
-    margin-top: 1%;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12);
-
+    //box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12);
+    margin-top:1%;
 }
 
 .assembly-options-preview {
@@ -844,9 +858,8 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
     left: 0px;
     top: 0px;
     overflow: visible;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12);
+    //box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12);
     padding: 5px;
-    border: 1px solid #91BED4;
     height: 80vh;
     width: 100%;
 }
@@ -873,6 +886,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
     height: 300%;
     width: 300%;
     z-index: 0;
+    margin:-1px;
 
     background-color: white;
     background-image: linear-gradient(90deg, rgba(208, 208, 208, .5) 10%, transparent 0%), linear-gradient(rgba(208, 208, 208, .5) 10%, transparent 0%);

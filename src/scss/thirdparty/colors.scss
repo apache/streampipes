@@ -18,7 +18,7 @@
 
 
 .sp-gray-border {
-    border: 1px solid #cccccc;
+    border: 2px solid #cccccc;
 }
 
 .sp-blue {
@@ -27,17 +27,18 @@
 
 .sp-blue-bg {
     background: $sp-color-accent-light;
+    border-radius: 5px 5px 0px 0px;
 }
 
 .sp-blue-border {
-    border: 1px solid $sp-color-accent-light;
+    border: 3px solid $sp-color-accent-light;
     padding-top:20px;
     padding-bottom:20px;
     background: #FAFAFA;
 }
 
 .sp-blue-border-nopadding {
-    border: 1px solid $sp-color-accent-light;
+    border: 3px solid $sp-color-accent-light;
 }
 
 .sp-lightblue {

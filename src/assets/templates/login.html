@@ -13,9 +13,9 @@
             <div flex-sm="100" layout="column">
                 <form name="ctrl.loginForm" ng-submit="ctrl.logIn()" role="form">
                     <div flex layout="column">
-                        <md-input-container><label>Email</label> <input
-                                type="email" ng-model="ctrl.credentials.username" required></md-input-container>
-                        <md-input-container flex><label>Password:</label>
+                        <md-input-container class="sp"><label class="sp">Email</label> <input
+                                type="email" class="sp" ng-model="ctrl.credentials.username" required></md-input-container>
+                        <md-input-container class="sp" flex><label>Password</label>
                             <input type="password" ng-model="ctrl.credentials.password" required>
                         </md-input-container>
                         <md-input-container flex>
@@ -28,7 +28,7 @@
                         <sp-button sp-button-blue type="submit"
                                    ng-disabled="ctrl.loginForm.$pristine || ctrl.loginForm.$invalid || ctrl.loading">Login
                         </sp-button>
-                        <md-progress-circular class="md-accent" md-mode="indeterminate"
+                        <md-progress-circular style="margin-top:10px;" class="md-accent" md-mode="indeterminate"
                                               ng-show="ctrl.loading"></md-progress-circular>
                         <div class="md-warn" ng-show="ctrl.authenticationFailed">
                             <h4>The password you entered is incorrect. Please try again.</h4>

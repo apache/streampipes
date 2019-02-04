@@ -30,6 +30,8 @@
   border: 2px solid $sp-color-accent-light;
   position: relative;
   height: 100%;
+  border-radius: 5px 5px 0px 0px;
+  border-top: 0px;
 }
 .widget-header {
   overflow: hidden;

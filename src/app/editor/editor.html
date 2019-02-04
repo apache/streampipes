@@ -1,45 +1,52 @@
-<div flex class="page-container" ng-controller="EditorCtrl as ctrl">
-    <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+<div flex class="page-container-no-border" ng-controller="EditorCtrl as ctrl">
+    <div class="page-container-inner-border">
+        <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
 
-        <div layout-fill>
-            <md-tabs id="pe-type" md-dynamic-height md-border-bottom md-selected="ctrl.selectedTab">
+            <div layout-fill>
+                <md-tabs id="pe-type" md-dynamic-height md-border-bottom md-selected="ctrl.selectedTab">
 
-                <md-tab ng-repeat="tab in ctrl.tabs"
-                        label="{{tab.title}}"
-                        md-on-select="ctrl.loadCurrentElements(tab.type)">
-                    <md-tab-label>
-                        {{tab.title}}
-                        <md-icon md-svg-icon="navigation:ic_arrow_forward_24px"></md-icon>
-                    </md-tab-label>
-                </md-tab>
-            </md-tabs>
+                    <md-tab ng-repeat="tab in ctrl.tabs"
+                            label="{{tab.title}}"
+                            md-on-select="ctrl.loadCurrentElements(tab.type)">
+                        <md-tab-label>
+                            {{tab.title}}
+                            <md-icon md-svg-icon="navigation:ic_arrow_forward_24px"></md-icon>
+                        </md-tab-label>
+                    </md-tab>
+                </md-tabs>
+            </div>
+            <div flex="30" layout="row" layout-align="end center"
+                 style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+                <sp-button sp-button-flat class="md-icon-button" ng-click="ctrl.startCreatePipelineTour()">
+                    <i class="material-icons">
+                        school
+                    </i>
+                    <md-tooltip md-direction="top">
+                        Tutorial
+                    </md-tooltip>
+                </sp-button>
+                <sp-button sp-button-flat class="md-icon-button" ng-show="!ctrl.minimizedEditorStand"
+                           ng-click="ctrl.toggleEditorStand()">
+                    <i class="material-icons">arrow_drop_up</i>
+                    <md-tooltip md-direction="top">
+                        Hide
+                    </md-tooltip>
+                </sp-button>
+                <sp-button sp-button-flat class="md-icon-button" ng-show="ctrl.minimizedEditorStand"
+                           ng-click="ctrl.toggleEditorStand()">
+                    <i class="material-icons">arrow_drop_down</i>
+                    <md-tooltip md-direction="top">
+                        Show
+                    </md-tooltip>
+                </sp-button>
+            </div>
         </div>
-        <div flex="30" layout="row" layout-align="end center"
-             style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <sp-button sp-button-flat class="md-icon-button" ng-click="ctrl.startCreatePipelineTour()">
-                <i class="material-icons">
-                    school
-                </i>
-                <md-tooltip md-direction="top">
-                    Tutorial
-                </md-tooltip>
-            </sp-button>
-            <sp-button sp-button-flat class="md-icon-button" ng-show="!ctrl.minimizedEditorStand" ng-click="ctrl.toggleEditorStand()">
-                <i class="material-icons">arrow_drop_up</i>
-                <md-tooltip md-direction="top">
-                    Hide
-                </md-tooltip>
-            </sp-button>
-            <sp-button sp-button-flat class="md-icon-button" ng-show="ctrl.minimizedEditorStand" ng-click="ctrl.toggleEditorStand()">
-                <i class="material-icons">arrow_drop_down</i>
-                <md-tooltip md-direction="top">
-                    Show
-                </md-tooltip>
-            </sp-button>
+        <div id="shepherd-test" ng-show="!ctrl.minimizedEditorStand"
+             style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ffffff">
+            <pipeline-element-icon-stand active-type="ctrl.activeType"
+                                         current-elements="ctrl.currentElements"></pipeline-element-icon-stand>
         </div>
     </div>
-    <div id="shepherd-test" ng-show="!ctrl.minimizedEditorStand" style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ccc">
-        <pipeline-element-icon-stand active-type="ctrl.activeType" current-elements="ctrl.currentElements"></pipeline-element-icon-stand>
-    </div>
-    <pipeline-assembly raw-pipeline-model="ctrl.rawPipelineModel" all-elements="ctrl.allElements" current-modified-pipeline-id="ctrl.currentModifiedPipelineId"></pipeline-assembly>
+    <pipeline-assembly raw-pipeline-model="ctrl.rawPipelineModel" all-elements="ctrl.allElements"
+                       current-modified-pipeline-id="ctrl.currentModifiedPipelineId"></pipeline-assembly>
 </div>

@@ -222,7 +222,7 @@ export class EditorCtrl {
                 $('#outerAssemblyArea').css('border', '3px dashed #39b54a');
             },
             stop: function (el, ui) {
-                $('#outerAssemblyArea').css('border', '1px solid #878787');
+                $('#outerAssemblyArea').css('border', '3px solid rgb(156, 156, 156);');
             }
         });
     };
