@@ -35,5 +35,6 @@
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging</artifactId>
         </dependency>
+
     </dependencies>
 </project>

@@ -24,6 +24,7 @@ import org.streampipes.connect.adapter.GroundingService;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.util.Map;
 
@@ -37,7 +38,11 @@ public class SendToKafkaAdapterSink implements AdapterPipelineElement  {
         String brokerUrl = GroundingService.extractBroker(adapterDescription);
         String topic = GroundingService.extractTopic(adapterDescription);
 
-        producer = new SpKafkaProducer(brokerUrl, topic);
+
+//        producer = new SpKafkaProducer(brokerUrl, topic);
+        producer = new SpKafkaProducer();
+        KafkaTransportProtocol kafkaTransportProtocol = (KafkaTransportProtocol) adapterDescription.getEventGrounding().getTransportProtocol();
+        producer.connect(kafkaTransportProtocol);
         objectMapper = new ObjectMapper();
     }
 
