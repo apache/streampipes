@@ -17,27 +17,19 @@ export default function mapWidget(WidgetInstances, NgMap) {
             $scope.markers = {};
             $scope.markersTimeout = {};
 
-            // $scope.mapId = "map_" + Math.floor(Math.random() * 9999);
             WidgetInstances.get($scope.widgetId).then(function (data) {
                 $scope.widgetConfig = data.visualisation.schema.config;
             });
 
-            $scope.map = L.map("map", {
-                center: [51.505, -0.09],
-                zoom: 13
-            });
+            $scope.map = L.map("map");
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo($scope.map);
 
             this.toggleRefocus = function () {
-                console.log("Toggle")
                 $scope.refocus = !$scope.refocus;
             }
-            // WidgetInstances.get($scope.widgetId).then(function (data) {
-            //     $scope.widgetConfig = data.visualisation.schema.config;
-            // });
         },
         link: function postLink(scope) {
             var carIcon = L.icon({
@@ -64,11 +56,16 @@ export default function mapWidget(WidgetInstances, NgMap) {
                     text =  text.concat("<b>" +key +"</b>" +  ": " + data[key] + "<br>");
                 }
 
-                // TODO remove old makers
-
-                var marker = L.marker([lat, long], {icon: carIcon})
-                    .addTo(scope.map)
-                    .bindPopup(text);
+                var marker;
+                if (scope.widgetConfig.selectedMarkerType == "Default") {
+                    marker = L.marker([lat, long])
+                        .addTo(scope.map)
+                        .bindPopup(text);
+                } else {
+                    marker = L.marker([lat, long], {icon: carIcon})
+                        .addTo(scope.map)
+                        .bindPopup(text);
+                }
 
                 return marker;
 

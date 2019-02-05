@@ -1,20 +1,19 @@
-<!--<div style="width:400px;height:600px;">-->
-<!--<div map-lazy-load="https://maps.google.com/maps/api/js" >-->
-<!--<ng-map center="[{{currentLocation[1]}},{{currentLocation[0]}}]" zoom="14" style="width:400px;height:600px;">-->
-<!--<marker position="{{currentLocation[1]}},{{currentLocation[0]}}"></marker>-->
-<!--</ng-map>-->
-<!--</div>-->
-<!--</div>-->
 <div style="height:100%; min-height: 60vh; width: 100%;">
-    <div id="map" style="height:100%; min-height: 60vh; width: 100%;">
+    <div id="map" style="height:100%; min-height: 60vh; width: 100%; z-index: 0;">
     </div>
 
-   <sp-button sp-button-flat class="md-icon-button" ng-click="ctrl.toggleRefocus()">
-            <i class="material-icons">
+   <sp-button  sp-button-flat class="md-icon-button" ng-click="ctrl.toggleRefocus()">
+            <i ng-if="refocus" class="material-icons">
                 center_focus_strong
             </i>
-            <md-tooltip md-direction="top">
-                Toggle refocus
+            <md-tooltip ng-if="refocus" md-direction="top">
+               Deactivate focus on Markers
+            </md-tooltip>
+            <i ng-if="!refocus" class="material-icons">
+                center_focus_weak
+            </i>
+            <md-tooltip ng-if="!refocus" md-direction="top">
+                Activate focus on Markers
             </md-tooltip>
    </sp-button>
 </div>
