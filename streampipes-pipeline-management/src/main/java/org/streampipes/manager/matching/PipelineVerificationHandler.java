@@ -164,12 +164,11 @@ public class PipelineVerificationHandler {
             (rdfRootElement.getStreamRequirements());
     SpDataStream inputStream = selector.getAffectedStream(inputStreams);
 
-    List<EventProperty> supportedProperties = findSupportedEventProperties
-            (inputStream, propertyRequirement);
+    List<String> availablePropertySelectors = new PropertySelectorGenerator(inputStream
+            .getEventSchema(), true).generateSelectors(selector.getAffectedStreamPrefix());
 
-    return new PropertySelectorGenerator
-            (supportedProperties, true).generateSelectors(selector
-            .getAffectedStreamPrefix());
+    return new MappingPropertyCalculator(inputStream.getEventSchema(),
+            availablePropertySelectors, propertyRequirement).matchedPropertySelectors();
   }
 
   private List<String> generateSelectorsWithoutRequirement(List<SpDataStream> inputStreams) {
@@ -185,12 +184,6 @@ public class PipelineVerificationHandler {
     }
 
     return selectors;
-  }
-
-  private List<EventProperty> findSupportedEventProperties(SpDataStream streamOffer,
-                                                           EventProperty propertyRequirement) {
-    return new MappingPropertyCalculator().matchesProperties(streamOffer.getEventSchema()
-            .getEventProperties(), propertyRequirement);
   }
 
   private void updateOutputStrategy(List<SpDataStream> inputStreams) {

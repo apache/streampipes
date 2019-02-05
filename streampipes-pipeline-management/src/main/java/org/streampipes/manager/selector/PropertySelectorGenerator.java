@@ -66,8 +66,7 @@ public class PropertySelectorGenerator {
     for (EventProperty ep : eventProperties) {
       if (ep instanceof EventPropertyNested) {
         propertySelectors.addAll(generateSelectors(((EventPropertyNested) ep).getEventProperties(),
-                makeSelector
-                        (prefix, ep.getRuntimeName())));
+                makeSelector(prefix, ep.getRuntimeName())));
       }
       if (!(ep instanceof EventPropertyNested) || !omitNestedProperties) {
         propertySelectors.add(makeSelector(prefix, ep.getRuntimeName()));
