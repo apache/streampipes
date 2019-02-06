@@ -5,6 +5,7 @@ login:
 modules:
   - spEditor
   - spPipelines
+  - spConnect
   - spDashboard
   - spAppFileDownload
   - spAdd
