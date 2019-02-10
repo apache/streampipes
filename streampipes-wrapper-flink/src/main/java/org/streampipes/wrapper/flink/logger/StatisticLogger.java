@@ -9,9 +9,7 @@ import java.util.Map;
 
 public class StatisticLogger implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
 
-
-    InvocableStreamPipesEntity graph;
-
+    private InvocableStreamPipesEntity graph;
 
     public StatisticLogger(InvocableStreamPipesEntity graph) {
         this.graph = graph;

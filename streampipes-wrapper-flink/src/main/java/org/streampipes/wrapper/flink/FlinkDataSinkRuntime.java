@@ -24,37 +24,34 @@ import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 import java.util.Map;
 
 
-public abstract class FlinkDataSinkRuntime<B extends EventSinkBindingParams> extends FlinkRuntime<B, DataSinkInvocation>{
+public abstract class FlinkDataSinkRuntime<B extends EventSinkBindingParams> extends FlinkRuntime<B, DataSinkInvocation> {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * @deprecated Use {@link #FlinkDataSinkRuntime(EventSinkBindingParams, boolean)} instead
-	 */
-	public FlinkDataSinkRuntime(B params)
-	{
-		super(params);
-	}
+  /**
+   * @deprecated Use {@link #FlinkDataSinkRuntime(EventSinkBindingParams, boolean)} instead
+   */
+  public FlinkDataSinkRuntime(B params) {
+    super(params);
+  }
 
-	public FlinkDataSinkRuntime(B params, boolean debug)
-	{
-		super(params, debug);
-	}
+  public FlinkDataSinkRuntime(B params, boolean debug) {
+    super(params, debug);
+  }
 
-	/**
-	 * @deprecated Use {@link #FlinkDataSinkRuntime(EventSinkBindingParams, boolean)} instead
-	 */
-	public FlinkDataSinkRuntime(B params, FlinkDeploymentConfig config)
-	{
-		super(params, config);
-	}
+  /**
+   * @deprecated Use {@link #FlinkDataSinkRuntime(EventSinkBindingParams, boolean)} instead
+   */
+  public FlinkDataSinkRuntime(B params, FlinkDeploymentConfig config) {
+    super(params, config);
+  }
 
-	@Override
-	public void appendExecutionConfig(DataStream<Map<String, Object>>... convertedStream) {
-		getSink(convertedStream);
+  @Override
+  public void appendExecutionConfig(DataStream<Map<String, Object>>... convertedStream) {
+    getSink(convertedStream);
 
-	}
+  }
 
-	public abstract void getSink(DataStream<Map<String, Object>>... convertedStream1);
+  public abstract void getSink(DataStream<Map<String, Object>>... convertedStream1);
 
 }

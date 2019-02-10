@@ -83,10 +83,6 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
     this.debug = debug;
   }
 
-  protected abstract FlinkDeploymentConfig getDeploymentConfig();
-
-  protected abstract void appendExecutionConfig(DataStream<Map<String, Object>>... convertedStream);
-
   public void run() {
     try {
       env.execute(bindingParams.getGraph().getElementId());
@@ -256,5 +252,10 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
       env.setParallelism(1);
     }
   }
+
+  protected abstract FlinkDeploymentConfig getDeploymentConfig();
+
+  protected abstract void appendExecutionConfig(DataStream<Map<String, Object>>... convertedStream);
+
 
 }

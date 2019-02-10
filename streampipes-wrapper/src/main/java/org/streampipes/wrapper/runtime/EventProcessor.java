@@ -19,16 +19,14 @@ package org.streampipes.wrapper.runtime;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 
-public abstract class EventProcessor<B extends EventProcessorBindingParams> extends
+public interface EventProcessor<B extends EventProcessorBindingParams> extends
         PipelineElement<B, DataProcessorInvocation> {
 
-  public EventProcessor(B params) {
-    super(params);
-  }
 
-  public abstract void bind(B parameters, SpOutputCollector collector) throws SpRuntimeException;
+  void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException;
 
 }

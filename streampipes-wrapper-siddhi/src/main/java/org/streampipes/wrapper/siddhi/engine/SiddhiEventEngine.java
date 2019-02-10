@@ -18,6 +18,7 @@ package org.streampipes.wrapper.siddhi.engine;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
@@ -28,9 +29,14 @@ import org.wso2.siddhi.core.event.Event;
 import org.wso2.siddhi.core.stream.input.InputHandler;
 import org.wso2.siddhi.core.stream.output.StreamCallback;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
 
-public abstract class SiddhiEventEngine<T extends EventProcessorBindingParams> extends EventProcessor<T> {
+public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> implements
+        EventProcessor<B> {
 
   private StringBuilder siddhiAppString;
 
@@ -40,15 +46,14 @@ public abstract class SiddhiEventEngine<T extends EventProcessorBindingParams> e
 
   private static final Logger LOG = LoggerFactory.getLogger(SiddhiEventEngine.class);
 
-  public SiddhiEventEngine(T params) {
-    super(params);
+  public SiddhiEventEngine() {
     this.siddhiAppString = new StringBuilder();
     this.siddhiInputHandlers = new HashMap<>();
     this.inputStreamNames = new ArrayList<>();
   }
 
   @Override
-  public void bind(T parameters, SpOutputCollector collector) {
+  public void onInvocation(B parameters, RuntimeContext runtimeContext) {
     if (parameters.getInEventTypes().size() != parameters.getGraph().getInputStreams().size()) {
       throw new IllegalArgumentException("Input parameters do not match!");
     }
@@ -75,14 +80,15 @@ public abstract class SiddhiEventEngine<T extends EventProcessorBindingParams> e
       @Override
       public void receive(Event[] events) {
         for(Event event : events) {
-          collector.collect(toMap(event, parameters));
+          // TODO provide collector in RuntimeContext
+          // collector.collect(toMap(event, parameters));
         }
       }
     });
 
   }
 
-  private String getOutputTopicName(T parameters) {
+  private String getOutputTopicName(B parameters) {
     return parameters
             .getGraph()
             .getOutputStream()
@@ -92,7 +98,7 @@ public abstract class SiddhiEventEngine<T extends EventProcessorBindingParams> e
             .getActualTopicName();
   }
 
-  private Map<String, Object> toMap(Event event, T parameters) {
+  private Map<String, Object> toMap(Event event, B parameters) {
     Map<String, Object> outMap = new HashMap<>();
     int i = 0;
     // TODO make sure that ordering of event attributes is correct
@@ -149,9 +155,9 @@ public abstract class SiddhiEventEngine<T extends EventProcessorBindingParams> e
   }
 
   @Override
-  public void onEvent(Map<String, Object> event, String sourceInfo) {
+  public void onEvent(org.streampipes.model.runtime.Event event, SpOutputCollector collector) {
     try {
-      siddhiInputHandlers.get(sourceInfo).send(toObjArr(event));
+      siddhiInputHandlers.get(event.getSourceInfo().getSourceId()).send(toObjArr(event.getRaw()));
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
@@ -162,12 +168,12 @@ public abstract class SiddhiEventEngine<T extends EventProcessorBindingParams> e
   }
 
   @Override
-  public void discard() {
+  public void onDetach() {
     this.siddhiAppRuntime.shutdown();
   }
 
-  protected abstract String fromStatement(List<String> inputStreamNames, final T bindingParameters);
-  protected abstract String selectStatement(final T bindingParameters);
+  protected abstract String fromStatement(List<String> inputStreamNames, final B bindingParameters);
+  protected abstract String selectStatement(final B bindingParameters);
 
   private String fixEventName(String eventName) {
     return eventName.replaceAll("\\.", "");

@@ -155,7 +155,15 @@ public class Event {
    addPrimitive(runtimeName, value);
   }
 
+  public void addField(String runtimeName, Long value) {
+    addPrimitive(runtimeName, value);
+  }
+
   public void addField(String runtimeName, Float value) {
+    addPrimitive(runtimeName, value);
+  }
+
+  public void addField(String runtimeName, Double value) {
     addPrimitive(runtimeName, value);
   }
 

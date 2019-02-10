@@ -17,33 +17,14 @@
 
 package org.streampipes.wrapper.params.runtime;
 
-import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
-import org.streampipes.wrapper.routing.SpOutputCollector;
-import org.streampipes.wrapper.runtime.EventProcessor;
 
-import java.util.function.Supplier;
+public class EventProcessorRuntimeParams<B extends EventProcessorBindingParams> extends
+        RuntimeParams<B, DataProcessorInvocation> { // B - Bind Type
 
-public abstract class EventProcessorRuntimeParams<B extends EventProcessorBindingParams> extends
-        RuntimeParams<B, DataProcessorInvocation, EventProcessor<B>> { // B - Bind Type
-
-
-  public EventProcessorRuntimeParams(Supplier<EventProcessor<B>> supplier,
-                                     B bindingParams) {
-    super(supplier, bindingParams);
+  public EventProcessorRuntimeParams(B bindingParams, Boolean singletonEngine) {
+    super(bindingParams, singletonEngine);
   }
-
-  public void bindEngine() throws SpRuntimeException {
-    engine.bind(bindingParams, getOutputCollector());
-  }
-
-  public void discardEngine() throws SpRuntimeException {
-    engine.discard();
-  }
-
-  public abstract SpOutputCollector getOutputCollector()
-          throws
-          SpRuntimeException;
 
 }

@@ -18,46 +18,69 @@
 package org.streampipes.wrapper.standalone.runtime;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.streampipes.wrapper.params.runtime.EventProcessorRuntimeParams;
 import org.streampipes.wrapper.routing.SpInputCollector;
-import org.streampipes.wrapper.standalone.param.StandaloneEventProcessorRuntimeParams;
+import org.streampipes.wrapper.routing.SpOutputCollector;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.manager.ProtocolManager;
 
-public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRuntime<EventProcessorRuntimeParams<?>> {
+import java.util.Map;
+import java.util.function.Supplier;
 
-	public StandaloneEventProcessorRuntime(StandaloneEventProcessorRuntimeParams<?> params) {
-		super(params);
-	}
+public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingParams> extends
+        StandalonePipelineElementRuntime<B, DataProcessorInvocation,
+                EventProcessorRuntimeParams<B>, EventProcessor<B>> {
 
-	@Override
-	public void discardRuntime() throws SpRuntimeException {
-		params.getInputCollectors().forEach(is -> is.unregisterConsumer(instanceId));
-		params.discardEngine();
-		postDiscard();
-	}
+  public StandaloneEventProcessorRuntime(Supplier<EventProcessor<B>> supplier,
+                                         EventProcessorRuntimeParams<B> params) {
+    super(supplier, params);
+  }
 
-	@Override
-	public void bindRuntime() throws SpRuntimeException {
-		params.bindEngine();
-		params.getInputCollectors().forEach(is -> is.registerConsumer(instanceId, params.getEngine()));
-		prepareRuntime();
-	}
 
-	@Override
-	public void prepareRuntime() throws SpRuntimeException {
-		for (SpInputCollector spInputCollector : params.getInputCollectors()) {
-			spInputCollector.connect();
-		}
+  public SpOutputCollector getOutputCollector() throws SpRuntimeException {
+    return ProtocolManager.findOutputCollector(params.getBindingParams().getGraph().getOutputStream()
+            .getEventGrounding().getTransportProtocol(), params.getBindingParams().getGraph().getOutputStream
+            ().getEventGrounding().getTransportFormats().get(0));
+  }
 
-		params.getOutputCollector().connect();
-	}
+  @Override
+  public void discardRuntime() throws SpRuntimeException {
+    getInputCollectors().forEach(is -> is.unregisterConsumer(instanceId));
+    discardEngine();
+    postDiscard();
+  }
 
-	@Override
-	public void postDiscard() throws SpRuntimeException {
-		for(SpInputCollector spInputCollector : params.getInputCollectors()) {
-			spInputCollector.disconnect();
-		}
+  @Override
+  public void process(Map<String, Object> rawEvent, String sourceInfo) throws SpRuntimeException {
+    getEngine().onEvent(params.makeEvent(rawEvent, sourceInfo), getOutputCollector());
+  }
 
-		params.getOutputCollector().disconnect();
-	}
+  @Override
+  public void bindRuntime() throws SpRuntimeException {
+    bindEngine();
+    getInputCollectors().forEach(is -> is.registerConsumer(instanceId, this));
+    prepareRuntime();
+  }
+
+  @Override
+  public void prepareRuntime() throws SpRuntimeException {
+    for (SpInputCollector spInputCollector : getInputCollectors()) {
+      spInputCollector.connect();
+    }
+
+    getOutputCollector().connect();
+  }
+
+  @Override
+  public void postDiscard() throws SpRuntimeException {
+    for (SpInputCollector spInputCollector : getInputCollectors()) {
+      spInputCollector.disconnect();
+    }
+
+    getOutputCollector().disconnect();
+  }
 
 }
