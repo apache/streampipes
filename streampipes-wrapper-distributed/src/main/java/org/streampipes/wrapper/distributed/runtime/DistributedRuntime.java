@@ -22,29 +22,38 @@ import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.wrapper.params.binding.BindingParams;
+import org.streampipes.wrapper.params.runtime.RuntimeParams;
 import org.streampipes.wrapper.runtime.PipelineElementRuntime;
 
 import java.util.Properties;
 import java.util.UUID;
 
-public abstract class DistributedRuntime<B extends BindingParams<I>, I extends InvocableStreamPipesEntity> extends
+public abstract class DistributedRuntime<RP extends RuntimeParams<B, I>, B extends
+        BindingParams<I>, I extends InvocableStreamPipesEntity> extends
         PipelineElementRuntime {
 
+  protected RP runtimeParams;
   protected B bindingParams;
-  protected B params; // backwards compatibility
+
+  @Deprecated
+  protected B params;
+
+  public DistributedRuntime(RP runtimeParams) {
+    super();
+    this.runtimeParams = runtimeParams;
+    this.bindingParams = runtimeParams.getBindingParams();
+    this.params = runtimeParams.getBindingParams();
+  }
 
   public DistributedRuntime(B bindingParams) {
     super();
     this.bindingParams = bindingParams;
     this.params = bindingParams;
-  }
-
-  public DistributedRuntime() {
-
+    this.runtimeParams = makeRuntimeParams();
   }
 
   protected I getGraph() {
-    return bindingParams.getGraph();
+    return runtimeParams.getBindingParams().getGraph();
   }
 
   protected Properties getProperties(KafkaTransportProtocol protocol) {
@@ -98,5 +107,7 @@ public abstract class DistributedRuntime<B extends BindingParams<I>, I extends I
     topic = topic.replaceAll("\\.", "\\\\.");
     return topic.replaceAll("\\*", ".*");
   }
+
+  protected abstract RP makeRuntimeParams();
 
 }

@@ -4,10 +4,9 @@ import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 import org.streampipes.logging.impl.EventStatisticLogger;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.runtime.Event;
 
-import java.util.Map;
-
-public class StatisticLogger implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
+public class StatisticLogger implements FlatMapFunction<Event, Event> {
 
     private InvocableStreamPipesEntity graph;
 
@@ -16,7 +15,7 @@ public class StatisticLogger implements FlatMapFunction<Map<String, Object>, Map
     }
 
     @Override
-    public void flatMap(Map<String, Object> in, Collector<Map<String, Object>> out) throws Exception {
+    public void flatMap(Event in, Collector<Event> out) throws Exception {
         EventStatisticLogger.log(graph.getName(), graph.getCorrespondingPipeline(), graph.getUri());
         out.collect(in);
     }

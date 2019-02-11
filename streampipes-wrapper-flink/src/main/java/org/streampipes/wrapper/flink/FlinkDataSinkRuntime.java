@@ -19,12 +19,13 @@ package org.streampipes.wrapper.flink;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
+import org.streampipes.wrapper.params.runtime.EventSinkRuntimeParams;
 
-import java.util.Map;
 
-
-public abstract class FlinkDataSinkRuntime<B extends EventSinkBindingParams> extends FlinkRuntime<B, DataSinkInvocation> {
+public abstract class FlinkDataSinkRuntime<B extends EventSinkBindingParams> extends
+        FlinkRuntime<EventSinkRuntimeParams<B>, B, DataSinkInvocation> {
 
   private static final long serialVersionUID = 1L;
 
@@ -47,11 +48,15 @@ public abstract class FlinkDataSinkRuntime<B extends EventSinkBindingParams> ext
   }
 
   @Override
-  public void appendExecutionConfig(DataStream<Map<String, Object>>... convertedStream) {
+  public void appendExecutionConfig(DataStream<Event>... convertedStream) {
     getSink(convertedStream);
 
   }
 
-  public abstract void getSink(DataStream<Map<String, Object>>... convertedStream1);
+  public abstract void getSink(DataStream<Event>... convertedStream1);
+
+  protected EventSinkRuntimeParams<B> makeRuntimeParams() {
+    return new EventSinkRuntimeParams<>(bindingParams, false);
+  }
 
 }

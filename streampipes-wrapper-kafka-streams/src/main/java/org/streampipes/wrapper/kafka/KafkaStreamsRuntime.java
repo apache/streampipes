@@ -24,25 +24,30 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.wrapper.distributed.runtime.DistributedRuntime;
 import org.streampipes.wrapper.params.binding.BindingParams;
+import org.streampipes.wrapper.params.runtime.RuntimeParams;
 
 import java.util.Map;
 import java.util.Properties;
 
-public abstract class KafkaStreamsRuntime<B extends BindingParams<I>, I extends InvocableStreamPipesEntity> extends
-        DistributedRuntime<B, I> {
+public abstract class KafkaStreamsRuntime<RP extends RuntimeParams<B, I>, B extends
+        BindingParams<I>, I extends InvocableStreamPipesEntity> extends
+        DistributedRuntime<RP, B, I> {
 
   Properties config;
   KafkaStreams streams;
 
-  KafkaStreamsRuntime(B bindingParams) {
-    super(bindingParams);
+  KafkaStreamsRuntime(RP runtimeParams) {
+    super(runtimeParams);
   }
 
   @Override
   public void prepareRuntime() throws SpRuntimeException {
     config = new Properties();
-    config.put(StreamsConfig.APPLICATION_ID_CONFIG, gneerateApplicationId(params.getGraph().getElementId()));
-    config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, getKafkaUrl(bindingParams.getGraph().getInputStreams().get(0)));
+    config.put(StreamsConfig.APPLICATION_ID_CONFIG, gneerateApplicationId(runtimeParams.getBindingParams()
+            .getGraph()
+            .getElementId()));
+    config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, getKafkaUrl(runtimeParams.getBindingParams().getGraph()
+            .getInputStreams().get(0)));
     config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
     config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
   }

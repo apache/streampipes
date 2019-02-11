@@ -19,13 +19,14 @@ package org.streampipes.wrapper.kafka;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
+import org.streampipes.wrapper.params.runtime.EventSinkRuntimeParams;
 
 public abstract class KafkaStreamsDataSinkRuntime<B extends EventSinkBindingParams>
-        extends KafkaStreamsRuntime<B, DataSinkInvocation> {
+        extends KafkaStreamsRuntime<EventSinkRuntimeParams<B>, B, DataSinkInvocation> {
 
 
-  public KafkaStreamsDataSinkRuntime(B bindingParams) {
-    super(bindingParams);
+  public KafkaStreamsDataSinkRuntime(EventSinkRuntimeParams<B> runtimeParams) {
+    super(runtimeParams);
   }
 
   @Override

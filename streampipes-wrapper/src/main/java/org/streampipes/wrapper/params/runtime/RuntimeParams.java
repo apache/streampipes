@@ -67,11 +67,11 @@ public abstract class RuntimeParams<B extends BindingParams<I>, I extends
 
   }
 
-  private SourceInfo getSourceInfo(Integer index) {
+  public SourceInfo getSourceInfo(Integer index) {
     return bindingParams.getInputStreamParams().get(index).getSourceInfo();
   }
 
-  private SchemaInfo getSchemaInfo(Integer index) {
+  public SchemaInfo getSchemaInfo(Integer index) {
     return bindingParams.getInputStreamParams().get(index).getSchemaInfo();
   }
 
