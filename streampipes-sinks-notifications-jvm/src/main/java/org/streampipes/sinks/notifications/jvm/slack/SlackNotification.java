@@ -17,38 +17,25 @@
 
 package org.streampipes.sinks.notifications.jvm.slack;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.messaging.InternalEventProcessor;
-import org.streampipes.sinks.notifications.jvm.onesignal.OneSignalParameters;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
 
 
-public class SlackNotification extends EventSink<SlackNotificationParameters> {
+public class SlackNotification implements EventSink<SlackNotificationParameters> {
     private SlackNotificationParameters params;
 
-    public SlackNotification(SlackNotificationParameters params) {
-        super(params);
-    }
-
-    public SlackNotificationParameters getParams() {
-        return params;
-    }
-
     @Override
-    public void bind(SlackNotificationParameters parameters) throws SpRuntimeException {
+    public void onInvocation(SlackNotificationParameters parameters, RuntimeContext runtimeContext) throws SpRuntimeException {
         this.params = parameters;
     }
 
     @Override
-    public void onEvent(Map<String, Object> event, String sourceInfo) {
+    public void onEvent(Event inputEvent) {
 
         if (params.isSendToUser()) {
             params.getSession().sendMessageToUser(params.getUserChannel(), params.getMessage(), null);
@@ -59,7 +46,7 @@ public class SlackNotification extends EventSink<SlackNotificationParameters> {
     }
 
     @Override
-    public void discard() throws SpRuntimeException {
+    public void onDetach() throws SpRuntimeException {
         try {
             params.getSession().disconnect();
         } catch (IOException e) {

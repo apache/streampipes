@@ -21,6 +21,7 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
 
 import java.util.Map;
@@ -33,11 +34,11 @@ public class AggregationProgram extends AbstractAggregationProgram<AggregationPa
   }
 
   @Override
-  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
+  protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
     return getKeyedStream(dataStreams[0]);
   }
 
-  private DataStream<Map<String, Object>> getKeyedStream(DataStream<Map<String, Object>> dataStream) {
+  private DataStream<Event> getKeyedStream(DataStream<Event> dataStream) {
     if (params.getGroupBy().size() > 0) {
       return dataStream
               .keyBy(getKeySelector())
@@ -49,13 +50,13 @@ public class AggregationProgram extends AbstractAggregationProgram<AggregationPa
     }
   }
 
-  private KeySelector<Map<String, Object>, String> getKeySelector() {
+  private KeySelector<Event, String> getKeySelector() {
     // TODO allow multiple keys
     String groupBy = params.getGroupBy().get(0);
-    return new KeySelector<Map<String, Object>, String>() {
+    return new KeySelector<Event, String>() {
       @Override
-      public String getKey(Map<String, Object> in) throws Exception {
-        return String.valueOf(in.get(groupBy));
+      public String getKey(Event in) throws Exception {
+        return String.valueOf(in.getFieldBySelector(groupBy));
       }
     };
   }

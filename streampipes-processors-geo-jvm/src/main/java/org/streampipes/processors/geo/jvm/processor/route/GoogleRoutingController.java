@@ -75,9 +75,7 @@ public class GoogleRoutingController extends StandaloneEventProcessingDeclarer<G
         Here you get the Configuration Parameters which the User has entered
     */
     @Override
-    public ConfiguredEventProcessor<GoogleRoutingParameters> onInvocation(DataProcessorInvocation graph) {
-        ProcessingElementParameterExtractor extractor = getExtractor(graph);
-
+    public ConfiguredEventProcessor<GoogleRoutingParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
         String city = extractor.mappingPropertyValue(CITY_MAPPING);
         String street = extractor.mappingPropertyValue(STREET_MAPPING);
         String number = extractor.mappingPropertyValue(STREET_NUMBER_MAPPING);
@@ -85,6 +83,6 @@ public class GoogleRoutingController extends StandaloneEventProcessingDeclarer<G
         String home = extractor.singleValueParameter(START_ADDRESS, String.class);
 
         GoogleRoutingParameters params = new GoogleRoutingParameters(graph, city, street, number, home);
-        return new ConfiguredEventProcessor<>(params, () -> new GoogleRouting(params));
+        return new ConfiguredEventProcessor<>(params, GoogleRouting::new);
     }
 }

@@ -20,6 +20,7 @@ import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.util.Collector;
 import org.apache.http.HttpHost;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.sinks.databases.flink.config.DatabasesFlinkConfig;
 import org.streampipes.sinks.databases.flink.elasticsearch.elastic.ElasticsearchSink;
 import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
@@ -49,7 +50,7 @@ public class ElasticSearchProgram extends FlinkDataSinkRuntime<ElasticSearchPara
 
     @Override
     public void getSink(
-            DataStream<Map<String, Object>>... convertedStream) {
+            DataStream<Event>... convertedStream) {
 
         String indexName = bindingParams.getIndexName();
         String timeName = bindingParams.getTimestampField();
@@ -63,12 +64,14 @@ public class ElasticSearchProgram extends FlinkDataSinkRuntime<ElasticSearchPara
         // This instructs the sink to emit after every element, otherwise they would be buffered
         userConfig.put(ElasticsearchSink.CONFIG_KEY_BULK_FLUSH_MAX_ACTIONS, "1");
 
-        convertedStream[0].flatMap(new FlatMapFunction<Map<String, Object>, Map<String, Object>>() {
+        convertedStream[0].flatMap(new FlatMapFunction<Event, Map<String, Object>>() {
 
             @Override
-            public void flatMap(Map<String, Object> arg0, Collector<Map<String, Object>> arg1) throws Exception {
-                arg0.put("date", new Date((long) arg0.get(timeName)));
-                arg1.collect(arg0);
+            public void flatMap(Event in, Collector<Map<String, Object>> out) throws Exception {
+                Map<String, Object> rawEvent = in.getRaw();
+                rawEvent.put("date", new Date(in.getFieldBySelector(timeName)
+                        .getAsPrimitive().getAsLong()));
+                out.collect(rawEvent);
             }
         }).addSink(new ElasticsearchSink<>(userConfig, httpHosts, new
                 ElasticsearchIndexRequestBuilder(INDEX_NAME_PREFIX +indexName, INDEX_NAME_PREFIX +

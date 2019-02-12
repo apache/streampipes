@@ -21,11 +21,10 @@ import com.github.jqudt.Quantity;
 import com.github.jqudt.Unit;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.units.UnitProvider;
 
-import java.util.Map;
-
-public class MeasurementUnitConverter implements FlatMapFunction<Map<String, Object>, Map<String, Object>>  {
+public class MeasurementUnitConverter implements FlatMapFunction<Event, Event>  {
 
     private String convertProperty;
     private String inputUnitUri;
@@ -40,16 +39,17 @@ public class MeasurementUnitConverter implements FlatMapFunction<Map<String, Obj
     }
 
     @Override
-    public void flatMap(Map<String, Object> in, Collector<Map<String, Object>> out) throws Exception {
+    public void flatMap(Event in, Collector<Event> out) throws Exception {
         Unit inputUnit = UnitProvider.INSTANCE.getUnit(inputUnitUri);
         Unit outputUnit = UnitProvider.INSTANCE.getUnit(outputUnitUri);
-        double value = (double) in.get(convertProperty);
+        Double value = (double) in.getFieldBySelector(convertProperty).getAsPrimitive()
+                .getAsDouble();
 
         // transform old value to new unit
         Quantity obs = new Quantity(value, inputUnit);
-        double newValue = obs.convertTo(outputUnit).getValue();
+        Double newValue = obs.convertTo(outputUnit).getValue();
 
-        in.put(convertProperty, newValue);
+        in.updateFieldBySelector(convertProperty, newValue);
 
         out.collect(in);
     }

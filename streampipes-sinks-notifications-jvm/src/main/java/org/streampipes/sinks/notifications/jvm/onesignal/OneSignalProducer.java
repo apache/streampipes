@@ -24,31 +24,28 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
 
-public class OneSignalProducer extends EventSink<OneSignalParameters> {
+public class OneSignalProducer implements EventSink<OneSignalParameters> {
 
     private String content;
     private String appId;
     private String apiKey;
 
-    public OneSignalProducer(OneSignalParameters params) {
-        super(params);
-    }
-
     @Override
-    public void bind(OneSignalParameters parameters) throws SpRuntimeException {
+    public void onInvocation(OneSignalParameters parameters, RuntimeContext runtimeContext) throws SpRuntimeException {
         this.content = parameters.getContent();
         this.appId = parameters.getAppId();
         this.apiKey = parameters.getApiKey();
     }
 
     @Override
-    public void onEvent(Map<String, Object> event, String sourceInfo) {
+    public void onEvent(Event inputEvent) {
 
         String jsondata = "{\"app_id\": \"" + appId + "\",\"contents\": {\"en\": \"" + content + "\"}, \"included_segments\":[\"All\"]}";
 
@@ -77,6 +74,6 @@ public class OneSignalProducer extends EventSink<OneSignalParameters> {
     }
 
     @Override
-    public void discard() throws SpRuntimeException {
+    public void onDetach() throws SpRuntimeException {
     }
 }

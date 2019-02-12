@@ -22,13 +22,13 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.model.graph.DataSinkInvocation;
-import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.serializers.json.GsonSerializer;
+import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
-import java.util.Map;
-
-public class Dashboard extends EventSink<DashboardParameters> {
+public class Dashboard implements EventSink<DashboardParameters> {
 
     private ActiveMQPublisher publisher;
     private JsonDataFormatDefinition jsonDataFormatDefinition;
@@ -44,13 +44,12 @@ public class Dashboard extends EventSink<DashboardParameters> {
     private String pipelineId;
 
 
-    public Dashboard(DashboardParameters params) {
-        super(params);
+    public Dashboard() {
         this.jsonDataFormatDefinition = new JsonDataFormatDefinition();
     }
 
     @Override
-    public void bind(DashboardParameters parameters) throws SpRuntimeException {
+    public void onInvocation(DashboardParameters parameters, RuntimeContext runtimeContext) throws SpRuntimeException {
         if (!saveToCouchDB(parameters.getGraph())) {
             throw new SpRuntimeException("The schema couldn't be stored in the couchDB");
         }
@@ -60,9 +59,9 @@ public class Dashboard extends EventSink<DashboardParameters> {
     }
 
     @Override
-    public void onEvent(Map<String, Object> event, String sourceInfo) {
+    public void onEvent(Event event) {
         try {
-            publisher.publish(jsonDataFormatDefinition.fromMap(event));
+            publisher.publish(jsonDataFormatDefinition.fromMap(event.getRaw()));
         } catch (SpRuntimeException e) {
             e.printStackTrace();
         }
@@ -90,7 +89,7 @@ public class Dashboard extends EventSink<DashboardParameters> {
     }
 
     @Override
-    public void discard() throws SpRuntimeException {
+    public void onDetach() throws SpRuntimeException {
         this.publisher.disconnect();
         if (!removeFromCouchDB()) {
             throw new SpRuntimeException("There was an error while deleting pipeline: '" + pipelineId + "'");

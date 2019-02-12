@@ -20,25 +20,21 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.GeocodingResult;
-import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.geo.jvm.config.GeoJvmConfig;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
-import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.io.IOException;
-import java.util.Map;
 
-public class Geocoder extends StandaloneEventProcessorEngine<GeocodingParameters> {
+public class Geocoder implements EventProcessor<GeocodingParameters> {
 
   private GeocodingParameters geocodingParameters;
   private GeoApiContext context;
 
-  public Geocoder(GeocodingParameters params) {
-    super(params);
-  }
-
   @Override
-  public void onInvocation(GeocodingParameters geocodingParameters, DataProcessorInvocation dataProcessorInvocation) {
+  public void onInvocation(GeocodingParameters geocodingParameters, RuntimeContext runtimeContext) {
     this.geocodingParameters = geocodingParameters;
     context = new GeoApiContext.Builder()
             .apiKey(GeoJvmConfig.INSTANCE.getGoogleApiKey())
@@ -46,18 +42,19 @@ public class Geocoder extends StandaloneEventProcessorEngine<GeocodingParameters
   }
 
   @Override
-  public void onEvent(Map<String, Object> in, String s, SpOutputCollector spOutputCollector) {
-    String city = String.valueOf(in.get(geocodingParameters.getCity()));
-    String street = String.valueOf(in.get(geocodingParameters.getStreet()));
-    String number = String.valueOf(in.get(geocodingParameters.getNumber()));
+  public void onEvent(Event in, SpOutputCollector spOutputCollector) {
+    String city = in.getFieldBySelector(geocodingParameters.getCity()).getAsPrimitive().getAsString();
+    String street = in.getFieldBySelector(geocodingParameters.getStreet()).getAsPrimitive()
+            .getAsString();
+    String number = in.getFieldBySelector(geocodingParameters.getNumber()).getAsPrimitive().getAsString();
 
     String searchQuery = street + " " +number + ", " +city;
 
     try {
       GeocodingResult[] result = GeocodingApi.geocode(context, searchQuery).await();
       if(result.length > 0) {
-        in.put("latitude", result[0].geometry.location.lat);
-        in.put("longitude", result[0].geometry.location.lng);
+        in.addField("latitude", result[0].geometry.location.lat);
+        in.addField("longitude", result[0].geometry.location.lng);
       }
     } catch (ApiException e) {
       e.printStackTrace();
@@ -67,7 +64,7 @@ public class Geocoder extends StandaloneEventProcessorEngine<GeocodingParameters
       e.printStackTrace();
     }
 
-    spOutputCollector.onEvent(in);
+    spOutputCollector.collect(in);
 
 
   }

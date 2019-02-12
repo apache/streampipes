@@ -27,7 +27,11 @@ import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -36,7 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FieldMapperController extends
-        FlinkDataProcessorDeclarer<FieldMapperParameters> implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation> {
+        FlinkDataProcessorDeclarer<FieldMapperParameters> implements
+        ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   private static final String REPLACE_PROPERTIES = "replaceProperties";
   private static final String FIELD_NAME = "fieldName";
@@ -70,8 +75,8 @@ public class FieldMapperController extends
   }
 
   @Override
-  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(processingElement);
+  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
+                                           ProcessingElementParameterExtractor extractor)  {
 
     List<String> replacePropertyNames = extractor.mappingPropertyValues(REPLACE_PROPERTIES);
     String newFieldName = extractor.singleValueParameter(FIELD_NAME, String.class);

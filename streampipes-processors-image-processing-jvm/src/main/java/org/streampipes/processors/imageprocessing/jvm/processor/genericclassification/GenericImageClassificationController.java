@@ -53,13 +53,12 @@ public class GenericImageClassificationController extends StandaloneEventProcess
   }
 
   @Override
-  public ConfiguredEventProcessor<GenericImageClassificationParameters> onInvocation(DataProcessorInvocation graph) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(graph);
+  public ConfiguredEventProcessor<GenericImageClassificationParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
     String imageProperty = extractor.mappingPropertyValue(IMAGE);
 
     GenericImageClassificationParameters staticParam = new GenericImageClassificationParameters(graph, imageProperty);
 
-    return new ConfiguredEventProcessor<>(staticParam, () -> new GenericImageClassification(staticParam));
+    return new ConfiguredEventProcessor<>(staticParam, GenericImageClassification::new);
   }
 }

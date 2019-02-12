@@ -23,28 +23,26 @@ import com.google.maps.errors.ApiException;
 import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.LatLng;
 import org.streampipes.logging.api.Logger;
-import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.geo.jvm.config.GeoJvmConfig;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
-import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GoogleRouting extends StandaloneEventProcessorEngine<GoogleRoutingParameters> {
+public class GoogleRouting implements EventProcessor<GoogleRoutingParameters> {
 
     private static Logger LOG;
 
     private GoogleRoutingParameters googleRoutingParameters;
     private GeoApiContext context;
 
-    public GoogleRouting(GoogleRoutingParameters params) {
-        super(params);
-    }
-
     @Override
-    public void onInvocation(GoogleRoutingParameters googleRoutingParameters, DataProcessorInvocation dataProcessorInvocation) {
+    public void onInvocation(GoogleRoutingParameters googleRoutingParameters, RuntimeContext
+            runtimeContext) {
         LOG = googleRoutingParameters.getGraph().getLogger(GoogleRouting.class);
 
         this.googleRoutingParameters = googleRoutingParameters;
@@ -54,10 +52,12 @@ public class GoogleRouting extends StandaloneEventProcessorEngine<GoogleRoutingP
     }
 
     @Override
-    public void onEvent(Map<String, Object> in, String s, SpOutputCollector out) {
-        String city = (String) in.get(googleRoutingParameters.getCity());
-        String street = (String) in.get(googleRoutingParameters.getStreet());
-        String number = (String) in.get(googleRoutingParameters.getNumber());
+    public void onEvent(Event in, SpOutputCollector out) {
+        String city = in.getFieldBySelector(googleRoutingParameters.getCity()).getAsPrimitive().getAsString();
+        String street = in.getFieldBySelector(googleRoutingParameters.getStreet()).getAsPrimitive
+                ().getAsString();
+        String number = in.getFieldBySelector(googleRoutingParameters.getNumber()).getAsPrimitive
+                ().getAsString();
         String home = googleRoutingParameters.getHome();
 
         String destinationLocation = city + ", " + street + ", " + number;
@@ -74,9 +74,9 @@ public class GoogleRouting extends StandaloneEventProcessorEngine<GoogleRoutingP
 
                 long l = rest.rows[0].elements[0].distance.inMeters;
 
-                in.put("kvi", l);
+                in.addField("kvi", l);
 
-                out.onEvent(in);
+                out.collect(in);
             }
 
         } catch (ApiException e) {

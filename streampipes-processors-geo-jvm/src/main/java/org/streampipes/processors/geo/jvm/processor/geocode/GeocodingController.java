@@ -36,15 +36,13 @@ public class GeocodingController extends StandaloneEventProcessingDeclarer<Geoco
 
   @Override
   public ConfiguredEventProcessor<GeocodingParameters> onInvocation(DataProcessorInvocation
-                                                                                  graph) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(graph);
-
+                                                                            graph, ProcessingElementParameterExtractor extractor) {
     String city = extractor.mappingPropertyValue(CITY_MAPPING);
     String street = extractor.mappingPropertyValue(STREET_MAPPING);
     String number = extractor.mappingPropertyValue(STREET_NUMBER_MAPPING);
 
     GeocodingParameters params = new GeocodingParameters(graph, city, street, number);
-    return new ConfiguredEventProcessor<>(params, () -> new Geocoder(params));
+    return new ConfiguredEventProcessor<>(params, Geocoder::new);
   }
 
   @Override

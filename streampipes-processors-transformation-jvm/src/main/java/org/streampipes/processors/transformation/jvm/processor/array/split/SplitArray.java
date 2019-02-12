@@ -18,49 +18,48 @@
 package org.streampipes.processors.transformation.jvm.processor.array.split;
 
 import org.streampipes.logging.api.Logger;
-import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.model.runtime.EventFactory;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
-import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.util.List;
 import java.util.Map;
 
-public class SplitArray extends StandaloneEventProcessorEngine<SplitArrayParameters> {
+public class SplitArray implements EventProcessor<SplitArrayParameters> {
 
     private static Logger LOG;
 
     private SplitArrayParameters splitArrayParameters;
 
-    public SplitArray(SplitArrayParameters params) {
-        super(params);
-    }
 
     @Override
-    public void onInvocation(SplitArrayParameters splitArrayParameters, DataProcessorInvocation dataProcessorInvocation) {
+    public void onInvocation(SplitArrayParameters splitArrayParameters, RuntimeContext runtimeContext) {
         LOG = splitArrayParameters.getGraph().getLogger(SplitArray.class);
-
         this.splitArrayParameters = splitArrayParameters;
     }
 
     @Override
-    public void onEvent(Map<String, Object> in, String s, SpOutputCollector out) {
+    public void onEvent(Event inputEvent, SpOutputCollector out) {
         String arrayField  = splitArrayParameters.getArrayField();
         List<String> keepProperties = splitArrayParameters.getKeepProperties();
 
+        List<Map<String, Object>> allEvents = inputEvent.getFieldBySelector(arrayField).getAsList()
+                .parseAsCustomType(value -> (Map<String, Object>) value);
 
-        List<Map<String, Object>> allEvents = (List<Map<String, Object>>) in.get(arrayField);
 
         for (Map<String, Object> event : allEvents) {
-
+            // TODO check null
+            Event outEvent = EventFactory.fromMap(event);
             for (String propertyName : keepProperties) {
-                event.put(propertyName, in.get(propertyName));
+                outEvent.addField(inputEvent.getFieldBySelector(propertyName));
             }
 
-            out.onEvent(event);
+            out.collect(outEvent);
         }
 
     }
-
 
     @Override
     public void onDetach() {

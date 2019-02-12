@@ -22,6 +22,7 @@ import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.sources.random.set.RandomNumberDataSet;
 import org.streampipes.sources.random.stream.ComplexRandomStream;
+import org.streampipes.sources.random.stream.RandomNestedListStream;
 import org.streampipes.sources.random.stream.RandomNumberStreamJson;
 import org.streampipes.sources.random.stream.RandomNumberStreamList;
 import org.streampipes.sources.random.stream.RandomNumberStreamWildcard;
@@ -43,6 +44,7 @@ public class RandomDataProducer implements SemanticEventProducerDeclarer {
             new RandomNumberStreamList(),
             new RandomNumberStreamWildcard(),
             new RandomNumberDataSet(),
-            new ComplexRandomStream());
+            new ComplexRandomStream(),
+            new RandomNestedListStream());
   }
 }

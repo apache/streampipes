@@ -19,37 +19,39 @@ package org.streampipes.sinks.brokers.jvm.kafka;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Map;
 
-public class KafkaPublisher extends EventSink<KafkaParameters> {
+public class KafkaPublisher implements EventSink<KafkaParameters> {
 
-	private SpKafkaProducer producer;
-	private JsonDataFormatDefinition dataFormatDefinition;
+  private SpKafkaProducer producer;
+  private JsonDataFormatDefinition dataFormatDefinition;
 
-	public KafkaPublisher(KafkaParameters params) {
-		super(params);
-		this.dataFormatDefinition = new JsonDataFormatDefinition();
-	}
+  public KafkaPublisher() {
+    this.dataFormatDefinition = new JsonDataFormatDefinition();
+  }
 
-	@Override
-	public void bind(KafkaParameters parameters) throws SpRuntimeException {
-		this.producer = new SpKafkaProducer(parameters.getKafkaHost() +":" +parameters.getKafkaPort(), parameters
-						.getTopic());
-	}
+  @Override
+  public void onInvocation(KafkaParameters parameters, RuntimeContext runtimeContext) throws SpRuntimeException {
+    this.producer = new SpKafkaProducer(parameters.getKafkaHost() + ":" + parameters.getKafkaPort(), parameters
+            .getTopic());
+  }
 
-	@Override
-	public void onEvent(Map<String, Object> event, String sourceInfo) {
-		try {
-			producer.publish(dataFormatDefinition.fromMap(event));
-		} catch (SpRuntimeException e) {
-			e.printStackTrace();
-		}
-	}
+  @Override
+  public void onEvent(Event inputEvent) {
+    try {
+      Map<String, Object> event = inputEvent.getRaw();
+      producer.publish(dataFormatDefinition.fromMap(event));
+    } catch (SpRuntimeException e) {
+      e.printStackTrace();
+    }
+  }
 
-	@Override
-	public void discard() throws SpRuntimeException {
-		this.producer.disconnect();
-	}
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    this.producer.disconnect();
+  }
 }

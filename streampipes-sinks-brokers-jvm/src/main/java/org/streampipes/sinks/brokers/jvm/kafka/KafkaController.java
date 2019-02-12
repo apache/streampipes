@@ -69,7 +69,7 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
 
 		KafkaParameters params = new KafkaParameters(graph, kafkaHost, kafkaPort, topic);
 
-		return new ConfiguredEventSink<>(params, () -> new KafkaPublisher(params));
+		return new ConfiguredEventSink<>(params, KafkaPublisher::new);
 	}
 
 }

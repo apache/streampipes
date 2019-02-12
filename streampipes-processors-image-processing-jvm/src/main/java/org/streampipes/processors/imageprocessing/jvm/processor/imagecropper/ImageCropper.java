@@ -16,11 +16,12 @@
  */
 package org.streampipes.processors.imageprocessing.jvm.processor.imagecropper;
 
-import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.imageprocessing.jvm.processor.commons.ImageTransformer;
 import org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.BoxCoordinates;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
-import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.awt.image.BufferedImage;
 import java.util.Base64;
@@ -28,22 +29,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class ImageCropper extends StandaloneEventProcessorEngine<ImageCropperParameters> {
+public class ImageCropper implements EventProcessor<ImageCropperParameters> {
 
   private ImageCropperParameters params;
 
-  public ImageCropper(ImageCropperParameters params) {
-    super(params);
-  }
-
   @Override
-  public void onInvocation(ImageCropperParameters imageCropperParameters, DataProcessorInvocation dataProcessorInvocation) {
+  public void onInvocation(ImageCropperParameters imageCropperParameters, RuntimeContext runtimeContext) {
     this.params = imageCropperParameters;
   }
 
   @Override
-  public void onEvent(Map<String, Object> in, String s, SpOutputCollector out) {
-    ImageTransformer imageTransformer = new ImageTransformer(in, params);
+  public void onEvent(Event in, SpOutputCollector out) {
+    ImageTransformer imageTransformer = new ImageTransformer(in.getRaw(), params);
     Optional<BufferedImage> imageOpt = imageTransformer.getImage();
 
     if (imageOpt.isPresent()) {
@@ -58,7 +55,7 @@ public class ImageCropper extends StandaloneEventProcessorEngine<ImageCropperPar
       if (finalImage.isPresent()) {
         Map<String, Object> outMap = new HashMap<>();
         outMap.put("image", Base64.getEncoder().encodeToString(finalImage.get()));
-        out.onEvent(outMap);
+        out.collect(outMap);
       }
     }
   }

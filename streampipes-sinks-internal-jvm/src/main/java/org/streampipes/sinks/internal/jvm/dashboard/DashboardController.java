@@ -50,8 +50,7 @@ public class DashboardController extends StandaloneEventSinkDeclarer<DashboardPa
     @Override
     public ConfiguredEventSink<DashboardParameters> onInvocation(DataSinkInvocation invocationGraph,
                                                                  DataSinkParameterExtractor extractor) {
-         return new ConfiguredEventSink<>(new DashboardParameters(invocationGraph), () -> new
-                 Dashboard(new DashboardParameters(invocationGraph)));
+         return new ConfiguredEventSink<>(new DashboardParameters(invocationGraph), Dashboard::new);
     }
 
 }

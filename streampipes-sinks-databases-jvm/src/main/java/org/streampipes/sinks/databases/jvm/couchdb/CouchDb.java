@@ -19,11 +19,11 @@ package org.streampipes.sinks.databases.jvm.couchdb;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
 import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.wrapper.runtime.EventSink;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.model.runtime.EventConverter;
+import org.streampipes.wrapper.standalone.engine.StandaloneEventSink;
 
-import java.util.Map;
-
-public class CouchDb extends EventSink<CouchDbParameters> {
+public class CouchDb extends StandaloneEventSink<CouchDbParameters> {
 
   private CouchDbClient couchDbClient;
 
@@ -32,7 +32,7 @@ public class CouchDb extends EventSink<CouchDbParameters> {
   }
 
   @Override
-  public void bind(CouchDbParameters parameters) throws SpRuntimeException {
+  public void onInvocation(CouchDbParameters parameters) throws SpRuntimeException {
     this.couchDbClient = new CouchDbClient(new CouchDbProperties(
             parameters.getDatabaseName(),
             true,
@@ -45,12 +45,13 @@ public class CouchDb extends EventSink<CouchDbParameters> {
   }
 
   @Override
-  public void onEvent(Map<String, Object> event, String sourceInfo) {
-    couchDbClient.save(event);
+  public void onEvent(Event inputEvent) {
+    couchDbClient.save(new EventConverter(inputEvent).toInputEventMap());
   }
 
   @Override
-  public void discard() throws SpRuntimeException {
+  public void onDetach() throws SpRuntimeException {
+    this.couchDbClient.shutdown();
   }
 
 

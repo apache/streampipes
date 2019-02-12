@@ -19,28 +19,33 @@ package org.streampipes.sinks.notifications.jvm.email;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.logging.api.Logger;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.model.runtime.EventConverter;
 import org.streampipes.sinks.notifications.jvm.config.SinksNotificationsJvmConfig;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.util.Map;
 import java.util.Properties;
 
-public class EmailPublisher extends EventSink<EmailParameters> {
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+public class EmailPublisher implements EventSink<EmailParameters> {
 
     private static Logger LOG;
 
     private MimeMessage message;
     private String content;
 
-    public EmailPublisher(EmailParameters params) {
-        super(params);
-    }
-
     @Override
-    public void bind(EmailParameters parameters) {
+    public void onInvocation(EmailParameters parameters, RuntimeContext runtimeContext) {
         LOG = parameters.getGraph().getLogger(EmailPublisher.class);
 
         String from = SinksNotificationsJvmConfig.INSTANCE.getEmailFrom();
@@ -84,10 +89,11 @@ public class EmailPublisher extends EventSink<EmailParameters> {
     }
 
     @Override
-    public void onEvent(Map<String, Object> event, String sourceInfo) {
+    public void onEvent(Event inputEvent) {
         String contentWithValues = this.content;
+        Map<String, Object> inputMap = new EventConverter(inputEvent).toMap();
         try {
-            for (Map.Entry entry: event.entrySet()) {
+            for (Map.Entry entry: inputMap.entrySet()) {
                 contentWithValues = contentWithValues.replaceAll("#" + entry.getKey() + "#",
                         entry.getValue().toString());
             }
@@ -100,6 +106,6 @@ public class EmailPublisher extends EventSink<EmailParameters> {
     }
 
     @Override
-    public void discard() throws SpRuntimeException {
+    public void onDetach() throws SpRuntimeException {
     }
 }

@@ -1,21 +1,19 @@
 /*
- * Copyright 2018 FZI Forschungszentrum Informatik
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
+Copyright 2019 FZI Forschungszentrum Informatik
 
-package org.streampipes.processors.filters.jvm.processor.projection;
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+package org.streampipes.processors.filters.jvm.processor.compose;
 
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
@@ -33,32 +31,37 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDecl
 
 import java.util.List;
 
-public class ProjectionController extends StandaloneEventProcessingDeclarer<ProjectionParameters> {
+public class ComposeController extends StandaloneEventProcessingDeclarer<ComposeParameters> {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.project", "Projection", "Outputs a selectable subset of an input event type")
+    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.merger",
+            "Compose", "Merges two event streams ")
             .category(DataProcessorType.TRANSFORM)
             .iconUrl(FiltersJvmConfig.getIconUrl("projection"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
-            .outputStrategy(OutputStrategies.custom())
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredProperty(EpRequirements.anyProperty())
+                    .build())
+            .outputStrategy(OutputStrategies.custom(true))
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.jms(), SupportedProtocols.kafka())
             .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<ProjectionParameters>
+  public ConfiguredEventProcessor<ComposeParameters>
   onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
     List<String> outputKeySelectors = extractor.outputKeySelectors();
 
-    ProjectionParameters staticParam = new ProjectionParameters(
+    ComposeParameters staticParam = new ComposeParameters(
             graph, outputKeySelectors);
 
-    return new ConfiguredEventProcessor<>(staticParam, Projection::new);
+    return new ConfiguredEventProcessor<>(staticParam, Compose::new);
   }
 }

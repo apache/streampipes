@@ -20,36 +20,38 @@ package org.streampipes.sinks.brokers.jvm.jms;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Map;
 
-public class JmsPublisher extends EventSink<JmsParameters> {
+public class JmsPublisher implements EventSink<JmsParameters> {
 
-	private ActiveMQPublisher publisher;
-	private JsonDataFormatDefinition jsonDataFormatDefinition;
-	
-	public JmsPublisher(JmsParameters params) {
-		super(params);
-		this.jsonDataFormatDefinition = new JsonDataFormatDefinition();
-	}
+  private ActiveMQPublisher publisher;
+  private JsonDataFormatDefinition jsonDataFormatDefinition;
 
-	@Override
-	public void bind(JmsParameters params) throws SpRuntimeException {
-		this.publisher = new ActiveMQPublisher(params.getJmsHost() +":" +params.getJmsPort(), params.getTopic());
-	}
+  public JmsPublisher() {
+    this.jsonDataFormatDefinition = new JsonDataFormatDefinition();
+  }
 
-	@Override
-	public void onEvent(Map<String, Object> event, String sourceInfo) {
-		try {
-			this.publisher.publish(jsonDataFormatDefinition.fromMap(event));
-		} catch (SpRuntimeException e) {
-			e.printStackTrace();
-		}
-	}
+  @Override
+  public void onInvocation(JmsParameters params, RuntimeContext runtimeContext) throws SpRuntimeException {
+    this.publisher = new ActiveMQPublisher(params.getJmsHost() + ":" + params.getJmsPort(), params.getTopic());
+  }
 
-	@Override
-	public void discard() throws SpRuntimeException {
-		this.publisher.disconnect();
-	}
+  @Override
+  public void onEvent(Event inputEvent) {
+    try {
+      Map<String, Object> event = inputEvent.getRaw();
+      this.publisher.publish(jsonDataFormatDefinition.fromMap(event));
+    } catch (SpRuntimeException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    this.publisher.disconnect();
+  }
 }

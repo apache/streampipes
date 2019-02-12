@@ -23,17 +23,22 @@ import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayF32;
 import boofcv.struct.image.Planar;
 import deepboof.io.DeepBoofDataBaseOps;
-import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.imageprocessing.jvm.processor.commons.PlainImageTransformer;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
-import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-public class GenericImageClassification extends StandaloneEventProcessorEngine<GenericImageClassificationParameters> {
+public class GenericImageClassification implements EventProcessor<GenericImageClassificationParameters> {
 
   private GenericImageClassificationParameters params;
   private ClassifierAndSource cs;
@@ -41,12 +46,8 @@ public class GenericImageClassification extends StandaloneEventProcessorEngine<G
   private ImageClassifier<Planar<GrayF32>> classifier;
   private List<String> categories;
 
-  public GenericImageClassification(GenericImageClassificationParameters params) {
-    super(params);
-  }
-
   @Override
-  public void onInvocation(GenericImageClassificationParameters genericImageClassificationParameters, DataProcessorInvocation dataProcessorInvocation) {
+  public void onInvocation(GenericImageClassificationParameters genericImageClassificationParameters, RuntimeContext runtimeContext) {
     this.params = genericImageClassificationParameters;
     //this.cs = FactoryImageClassifier.vgg_cifar10();  // Test set 89.9% for 10 categories
 		ClassifierAndSource cs = FactoryImageClassifier.nin_imagenet(); // Test set 62.6% for 1000 categories
@@ -63,8 +64,9 @@ public class GenericImageClassification extends StandaloneEventProcessorEngine<G
   }
 
   @Override
-  public void onEvent(Map<String, Object> in, String s, SpOutputCollector out) {
-    PlainImageTransformer<GenericImageClassificationParameters> imageTransformer = new PlainImageTransformer<>(in,
+  public void onEvent(Event in, SpOutputCollector out) {
+    PlainImageTransformer<GenericImageClassificationParameters> imageTransformer = new
+            PlainImageTransformer<>(in.getRaw(),
             params);
 
 
@@ -90,7 +92,7 @@ public class GenericImageClassification extends StandaloneEventProcessorEngine<G
         Map<String, Object> outMap = new HashMap<>();
         outMap.put("score", scores.get(0).score);
         outMap.put("category", categories.get(scores.get(0).category));
-        out.onEvent(outMap);
+        out.collect(outMap);
       }
     }
   }
