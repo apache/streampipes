@@ -15,17 +15,14 @@ limitations under the License.
 */
 package org.streampipes.wrapper.context;
 
-import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.SchemaInfo;
 import org.streampipes.model.runtime.SourceInfo;
 
 import java.util.List;
 
-public interface RuntimeContext {
+public class SpEventSinkRuntimeContext extends SpRuntimeContext implements EventSinkRuntimeContext {
 
-  Logger getLogger();
-
-  List<SchemaInfo> getInputSchemaInfo();
-
-  List<SourceInfo> getInputSourceInfo();
+  public SpEventSinkRuntimeContext(List<SourceInfo> sourceInfo, List<SchemaInfo> inputSchemaInfo) {
+    super(sourceInfo, inputSchemaInfo);
+  }
 }

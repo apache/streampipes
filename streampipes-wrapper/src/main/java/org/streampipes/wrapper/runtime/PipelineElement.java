@@ -19,14 +19,10 @@ package org.streampipes.wrapper.runtime;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
-import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.params.binding.BindingParams;
 
 public interface PipelineElement<B extends BindingParams<I>, I extends
         InvocableStreamPipesEntity> {
-
-  void onInvocation(B parameters, RuntimeContext runtimeContext) throws
-          SpRuntimeException;
 
   void onDetach() throws SpRuntimeException;
 

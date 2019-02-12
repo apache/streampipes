@@ -25,7 +25,5 @@ import java.util.Map;
 public interface SpOutputCollector extends PipelineElementCollector<InternalEventProcessor<Map<String,
         Object>>> {
 
-  void collect(Map<String, Object> event);
-
   void collect(Event event);
 }

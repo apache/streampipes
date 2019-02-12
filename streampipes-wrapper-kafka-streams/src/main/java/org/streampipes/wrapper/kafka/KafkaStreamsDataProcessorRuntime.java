@@ -26,6 +26,7 @@ import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.kafka.converter.JsonToMapFormat;
 import org.streampipes.wrapper.kafka.converter.MapToJsonFormat;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
@@ -37,7 +38,7 @@ import java.util.regex.Pattern;
 public abstract class KafkaStreamsDataProcessorRuntime<B extends
         EventProcessorBindingParams>
         extends KafkaStreamsRuntime<EventProcessorRuntimeParams<B>, B,
-        DataProcessorInvocation> {
+        DataProcessorInvocation, EventProcessorRuntimeContext> {
 
 
   public KafkaStreamsDataProcessorRuntime(EventProcessorRuntimeParams<B> runtimeParams) {

@@ -72,6 +72,10 @@ public class Event {
             .orElseThrow(() -> new IllegalArgumentException("Field " + runtimeName + " not found"));
   }
 
+  public void removeFieldBySelector(String fieldSelector) {
+    this.fieldMap.remove(fieldSelector);
+  }
+
   public AbstractField getFieldBySelector(String fieldSelector) {
     return getFieldBySelector(fieldSelector, fieldMap);
   }
@@ -147,6 +151,10 @@ public class Event {
     getFieldBySelector(selector).getAsPrimitive().setValue(value);
   }
 
+  public void updateFieldBySelector(String selector, Double value) {
+    getFieldBySelector(selector).getAsPrimitive().setValue(value);
+  }
+
   public void addField(AbstractField field) {
     this.fieldMap.put(makeKey(field), field);
   }
@@ -156,6 +164,10 @@ public class Event {
   }
 
   public void addField(String runtimeName, Long value) {
+    addPrimitive(runtimeName, value);
+  }
+
+  public void addField(String runtimeName, Object value) {
     addPrimitive(runtimeName, value);
   }
 

@@ -29,10 +29,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class RuntimeParams<B extends BindingParams<I>, I extends
-        InvocableStreamPipesEntity> {
+        InvocableStreamPipesEntity, RC extends RuntimeContext> {
 
   protected final B bindingParams;
-  private RuntimeContext runtimeContext;
+  protected RC runtimeContext;
 
   private Map<String, Integer> eventInfoMap = new HashMap<>();
 
@@ -42,7 +42,7 @@ public abstract class RuntimeParams<B extends BindingParams<I>, I extends
     this.bindingParams = bindingParams;
     this.singletonEngine = singletonEngine;
     buildEventInfoMap();
-    makeRuntimeContext();
+    this.runtimeContext = makeRuntimeContext();
   }
 
   public B getBindingParams() {
@@ -63,10 +63,6 @@ public abstract class RuntimeParams<B extends BindingParams<I>, I extends
 
   }
 
-  private void makeRuntimeContext() {
-
-  }
-
   public SourceInfo getSourceInfo(Integer index) {
     return bindingParams.getInputStreamParams().get(index).getSourceInfo();
   }
@@ -79,7 +75,7 @@ public abstract class RuntimeParams<B extends BindingParams<I>, I extends
     return eventInfoMap.get(sourceId);
   }
 
-  public RuntimeContext getRuntimeContext() {
+  public RC getRuntimeContext() {
     return runtimeContext;
   }
 
@@ -87,5 +83,6 @@ public abstract class RuntimeParams<B extends BindingParams<I>, I extends
     return singletonEngine;
   }
 
+  protected abstract RC makeRuntimeContext();
 
 }

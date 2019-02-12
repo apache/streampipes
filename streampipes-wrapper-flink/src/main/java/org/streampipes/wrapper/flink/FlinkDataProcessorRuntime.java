@@ -24,6 +24,7 @@ import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.flink.converter.MapGenerator;
 import org.streampipes.wrapper.flink.serializer.SimpleJmsSerializer;
 import org.streampipes.wrapper.flink.serializer.SimpleKafkaSerializer;
@@ -37,7 +38,7 @@ import java.util.UUID;
 
 public abstract class FlinkDataProcessorRuntime<B extends EventProcessorBindingParams> extends
         FlinkRuntime<EventProcessorRuntimeParams<B>, B,
-        DataProcessorInvocation> {
+        DataProcessorInvocation, EventProcessorRuntimeContext> {
 
   private static final long serialVersionUID = 1L;
 

@@ -21,6 +21,7 @@ import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.params.binding.BindingParams;
 import org.streampipes.wrapper.params.runtime.RuntimeParams;
 import org.streampipes.wrapper.runtime.PipelineElementRuntime;
@@ -28,8 +29,8 @@ import org.streampipes.wrapper.runtime.PipelineElementRuntime;
 import java.util.Properties;
 import java.util.UUID;
 
-public abstract class DistributedRuntime<RP extends RuntimeParams<B, I>, B extends
-        BindingParams<I>, I extends InvocableStreamPipesEntity> extends
+public abstract class DistributedRuntime<RP extends RuntimeParams<B, I, RC>, B extends
+        BindingParams<I>, I extends InvocableStreamPipesEntity, RC extends RuntimeContext> extends
         PipelineElementRuntime {
 
   protected RP runtimeParams;

@@ -9,7 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.Utils;
-import org.streampipes.logging.impl.EventStatisticLogger;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.esper.config.EsperEngineConfig;
 import org.streampipes.wrapper.esper.writer.Writer;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
@@ -22,7 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public abstract class EsperEventEngine<T extends EventProcessorBindingParams> extends EventProcessor<T> {
+public abstract class EsperEventEngine<T extends EventProcessorBindingParams> implements
+        EventProcessor<T> {
 
   protected EPServiceProvider epService;
   protected List<EPStatement> epStatements;
@@ -32,12 +34,9 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> ex
 
   private static final Logger LOG = LoggerFactory.getLogger(EsperEventEngine.class);
 
-  public EsperEventEngine(T params) {
-    super(params);
-  }
 
   @Override
-  public void bind(T parameters, SpOutputCollector collector) {
+  public void onInvocation(T parameters, SpOutputCollector collector, EventProcessorRuntimeContext runtimeContext) {
     if (parameters.getInEventTypes().size() != parameters.getGraph().getInputStreams().size()) {
       throw new IllegalArgumentException("Input parameters do not match!");
     }
@@ -55,7 +54,7 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> ex
             .getTransportProtocol().getTopicDefinition().getActualTopicName(), parameters.getOutEventType());
 
     List<String> statements = statements(parameters);
-    registerStatements(statements, collector, parameters);
+    registerStatements(statements, collector, runtimeContext);
 
   }
 
@@ -89,9 +88,10 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> ex
     }
   }
 
-  private void registerStatements(List<String> statements, SpOutputCollector collector, T params) {
+  private void registerStatements(List<String> statements, SpOutputCollector collector,
+                                  EventProcessorRuntimeContext runtimeContext) {
     toEpStatement(statements);
-    queue = new StatementAwareQueue(getWriter(collector, params), 500000);
+    queue = new StatementAwareQueue(getWriter(collector, runtimeContext), 500000);
     queue.start();
     for (EPStatement epStatement : epStatements) {
       LOG.info("Registering statement " + epStatement.getText());
@@ -115,15 +115,14 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> ex
   }
 
   @Override
-  public void onEvent(Map<String, Object> event, String sourceInfo) {
+  public void onEvent(Event event, SpOutputCollector collector) {
     //MapUtils.debugPrint(System.out, "", event);
     //if (i % 10000 == 0) System.out.println(i +" in Esper.");
-    EventStatisticLogger.log(getGraph().getName(), getGraph().getCorrespondingPipeline(), getGraph().getUri());
-    epService.getEPRuntime().sendEvent(event, sourceInfo);
+    epService.getEPRuntime().sendEvent(event.getRaw(), event.getSourceInfo().getSourceId());
   }
 
   @Override
-  public void discard() {
+  public void onDetach() {
     LOG.info("Removing existing statements");
     for (EPStatement epStatement : epStatements) {
       epService.getEPAdministrator().getStatement(epStatement.getName()).removeAllListeners();
@@ -170,7 +169,7 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> ex
     return Utils.createList(statement);
   }
 
-  protected Writer getWriter(SpOutputCollector collector, T params) {
-    return EsperEngineConfig.getDefaultWriter(collector, params);
+  protected Writer getWriter(SpOutputCollector collector, EventProcessorRuntimeContext runtimeContext) {
+    return EsperEngineConfig.getDefaultWriter(collector, runtimeContext);
   }
 }

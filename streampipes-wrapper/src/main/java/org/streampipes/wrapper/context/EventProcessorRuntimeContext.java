@@ -15,17 +15,13 @@ limitations under the License.
 */
 package org.streampipes.wrapper.context;
 
-import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.SchemaInfo;
 import org.streampipes.model.runtime.SourceInfo;
 
-import java.util.List;
+public interface EventProcessorRuntimeContext extends RuntimeContext {
 
-public interface RuntimeContext {
+  SchemaInfo getOutputSchemaInfo();
 
-  Logger getLogger();
+  SourceInfo getOutputSourceInfo();
 
-  List<SchemaInfo> getInputSchemaInfo();
-
-  List<SourceInfo> getInputSourceInfo();
 }

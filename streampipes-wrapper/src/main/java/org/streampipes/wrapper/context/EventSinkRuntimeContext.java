@@ -15,17 +15,5 @@ limitations under the License.
 */
 package org.streampipes.wrapper.context;
 
-import org.streampipes.logging.api.Logger;
-import org.streampipes.model.runtime.SchemaInfo;
-import org.streampipes.model.runtime.SourceInfo;
-
-import java.util.List;
-
-public interface RuntimeContext {
-
-  Logger getLogger();
-
-  List<SchemaInfo> getInputSchemaInfo();
-
-  List<SourceInfo> getInputSourceInfo();
+public interface EventSinkRuntimeContext extends RuntimeContext {
 }

@@ -19,7 +19,7 @@ package org.streampipes.wrapper.standalone.runtime;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.streampipes.wrapper.params.runtime.EventProcessorRuntimeParams;
 import org.streampipes.wrapper.routing.SpInputCollector;
@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 
 public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingParams> extends
         StandalonePipelineElementRuntime<B, DataProcessorInvocation,
-                EventProcessorRuntimeParams<B>, EventProcessor<B>> {
+                EventProcessorRuntimeParams<B>, EventProcessorRuntimeContext, EventProcessor<B>> {
 
   public StandaloneEventProcessorRuntime(Supplier<EventProcessor<B>> supplier,
                                          EventProcessorRuntimeParams<B> params) {
@@ -81,6 +81,11 @@ public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingPara
     }
 
     getOutputCollector().disconnect();
+  }
+
+  @Override
+  public void bindEngine() throws SpRuntimeException {
+    engine.onInvocation(params.getBindingParams(), getOutputCollector() , params.getRuntimeContext());
   }
 
 }

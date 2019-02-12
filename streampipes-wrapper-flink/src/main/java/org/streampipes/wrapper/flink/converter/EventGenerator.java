@@ -22,7 +22,8 @@ import org.streampipes.wrapper.params.runtime.RuntimeParams;
 
 import java.util.Map;
 
-public class EventGenerator<RP extends RuntimeParams<?, ?>> implements FlatMapFunction<Map<String,
+public class EventGenerator<RP extends RuntimeParams<?, ?, ?>> implements
+        FlatMapFunction<Map<String,
         Object>, Event> {
 
   private static final long serialVersionUID = 1L;

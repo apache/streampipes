@@ -20,12 +20,13 @@ package org.streampipes.wrapper.flink;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 import org.streampipes.wrapper.params.runtime.EventSinkRuntimeParams;
 
 
 public abstract class FlinkDataSinkRuntime<B extends EventSinkBindingParams> extends
-        FlinkRuntime<EventSinkRuntimeParams<B>, B, DataSinkInvocation> {
+        FlinkRuntime<EventSinkRuntimeParams<B>, B, DataSinkInvocation, EventSinkRuntimeContext> {
 
   private static final long serialVersionUID = 1L;
 

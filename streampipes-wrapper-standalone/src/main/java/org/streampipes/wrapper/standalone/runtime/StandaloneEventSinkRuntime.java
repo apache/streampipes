@@ -19,6 +19,7 @@ package org.streampipes.wrapper.standalone.runtime;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 import org.streampipes.wrapper.params.runtime.EventSinkRuntimeParams;
 import org.streampipes.wrapper.routing.SpInputCollector;
@@ -29,7 +30,7 @@ import java.util.function.Supplier;
 
 public class StandaloneEventSinkRuntime<B extends EventSinkBindingParams> extends
         StandalonePipelineElementRuntime<B, DataSinkInvocation,
-                EventSinkRuntimeParams<B>, EventSink<B>> {
+                EventSinkRuntimeParams<B>, EventSinkRuntimeContext, EventSink<B>> {
 
   public StandaloneEventSinkRuntime(Supplier<EventSink<B>> supplier, EventSinkRuntimeParams<B>
           params) {
@@ -68,6 +69,11 @@ public class StandaloneEventSinkRuntime<B extends EventSinkBindingParams> extend
     for(SpInputCollector spInputCollector : getInputCollectors()) {
       spInputCollector.disconnect();
     }
+  }
+
+  @Override
+  public void bindEngine() throws SpRuntimeException {
+    engine.onInvocation(params.getBindingParams(), params.getRuntimeContext());
   }
 
 }

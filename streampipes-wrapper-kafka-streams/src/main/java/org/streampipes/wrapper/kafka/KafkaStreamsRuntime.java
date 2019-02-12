@@ -22,6 +22,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.distributed.runtime.DistributedRuntime;
 import org.streampipes.wrapper.params.binding.BindingParams;
 import org.streampipes.wrapper.params.runtime.RuntimeParams;
@@ -29,9 +30,9 @@ import org.streampipes.wrapper.params.runtime.RuntimeParams;
 import java.util.Map;
 import java.util.Properties;
 
-public abstract class KafkaStreamsRuntime<RP extends RuntimeParams<B, I>, B extends
-        BindingParams<I>, I extends InvocableStreamPipesEntity> extends
-        DistributedRuntime<RP, B, I> {
+public abstract class KafkaStreamsRuntime<RP extends RuntimeParams<B, I, RC>, B extends
+        BindingParams<I>, I extends InvocableStreamPipesEntity, RC extends RuntimeContext> extends
+        DistributedRuntime<RP, B, I, RC> {
 
   Properties config;
   KafkaStreams streams;

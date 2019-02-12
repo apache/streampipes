@@ -38,12 +38,15 @@ public abstract class EventProcessorBindingParams extends
   private String outName;
 
   private final Map<String, Object> outEventType;
+  private OutputStreamParams outputStreamParams;
+
 
   private final static String topicPrefix = "topic://";
 
   public EventProcessorBindingParams(DataProcessorInvocation graph) {
     super(new DataProcessorInvocation(graph));
     this.outEventType = SchemaUtils.toRuntimeMap(graph.getOutputStream().getEventSchema().getEventProperties());
+    this.outputStreamParams = new OutputStreamParams(graph.getOutputStream(), getRenameRules());
     outputStream = graph.getOutputStream();
     EventGrounding outputGrounding = outputStream.getEventGrounding();
     outName = outputGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
@@ -66,6 +69,10 @@ public abstract class EventProcessorBindingParams extends
   public List<PropertyRenameRule> getRenameRules() {
     return graph.getOutputStrategies().stream().flatMap(o -> o.getRenameRules().stream()).collect
             (Collectors.toList());
+  }
+
+  public OutputStreamParams getOutputStreamParams() {
+    return outputStreamParams;
   }
 
 }

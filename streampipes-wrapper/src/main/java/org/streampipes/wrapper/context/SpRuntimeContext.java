@@ -21,11 +21,29 @@ import org.streampipes.model.runtime.SourceInfo;
 
 import java.util.List;
 
-public interface RuntimeContext {
+public class SpRuntimeContext implements RuntimeContext {
 
-  Logger getLogger();
+  private List<SchemaInfo> inputSchemaInfo;
+  private List<SourceInfo> sourceInfo;
 
-  List<SchemaInfo> getInputSchemaInfo();
+  public SpRuntimeContext(List<SourceInfo> sourceInfo, List<SchemaInfo> inputSchemaInfo) {
+    this.inputSchemaInfo = inputSchemaInfo;
+    this.sourceInfo = sourceInfo;
+  }
 
-  List<SourceInfo> getInputSourceInfo();
+  @Override
+  public Logger getLogger() {
+    // TODO add logger implementation
+    return null;
+  }
+
+  @Override
+  public List<SchemaInfo> getInputSchemaInfo() {
+    return inputSchemaInfo;
+  }
+
+  @Override
+  public List<SourceInfo> getInputSourceInfo() {
+    return sourceInfo;
+  }
 }

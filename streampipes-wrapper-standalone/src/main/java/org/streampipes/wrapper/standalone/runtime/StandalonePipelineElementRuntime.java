@@ -19,6 +19,7 @@ package org.streampipes.wrapper.standalone.runtime;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.params.binding.BindingParams;
 import org.streampipes.wrapper.params.runtime.RuntimeParams;
 import org.streampipes.wrapper.routing.RawDataProcessor;
@@ -33,7 +34,8 @@ import java.util.function.Supplier;
 
 public abstract class StandalonePipelineElementRuntime<B extends BindingParams<I>,
         I extends InvocableStreamPipesEntity,
-        RP extends RuntimeParams<B, I>,
+        RP extends RuntimeParams<B, I, RC>,
+        RC extends RuntimeContext,
         P extends PipelineElement<B, I>>
         extends PipelineElementRuntime implements RawDataProcessor {
 
@@ -44,10 +46,6 @@ public abstract class StandalonePipelineElementRuntime<B extends BindingParams<I
     super();
     this.engine = supplier.get();
     this.params = runtimeParams;
-  }
-
-  public void bindEngine() throws SpRuntimeException {
-    engine.onInvocation(params.getBindingParams(), params.getRuntimeContext());
   }
 
   public P getEngine() {
@@ -67,5 +65,8 @@ public abstract class StandalonePipelineElementRuntime<B extends BindingParams<I
     }
     return inputCollectors;
   }
+
+  public abstract void bindEngine() throws SpRuntimeException;
+
 
 }

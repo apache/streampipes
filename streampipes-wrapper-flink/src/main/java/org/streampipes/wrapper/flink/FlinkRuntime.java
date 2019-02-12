@@ -31,6 +31,7 @@ import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.distributed.runtime.DistributedRuntime;
 import org.streampipes.wrapper.flink.consumer.JmsConsumer;
 import org.streampipes.wrapper.flink.converter.EventGenerator;
@@ -42,10 +43,10 @@ import org.streampipes.wrapper.params.runtime.RuntimeParams;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
-public abstract class FlinkRuntime<RP extends RuntimeParams<B, I>, B extends BindingParams<I>, I
+public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends BindingParams<I>, I
         extends
-        InvocableStreamPipesEntity> extends
-        DistributedRuntime<RP, B, I> implements Runnable, Serializable {
+        InvocableStreamPipesEntity, RC extends RuntimeContext> extends
+        DistributedRuntime<RP, B, I, RC> implements Runnable, Serializable {
 
   private static final long serialVersionUID = 1L;
 

@@ -20,10 +20,14 @@ package org.streampipes.wrapper.runtime;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public interface EventSink<B extends EventSinkBindingParams> extends PipelineElement<B,
         DataSinkInvocation> {
+
+  void onInvocation(B parameters, EventSinkRuntimeContext runtimeContext) throws
+          SpRuntimeException;
 
   void onEvent(Event event) throws SpRuntimeException;
 
