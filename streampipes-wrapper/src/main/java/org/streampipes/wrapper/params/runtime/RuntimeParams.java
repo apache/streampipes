@@ -25,7 +25,10 @@ import org.streampipes.model.runtime.SourceInfo;
 import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.params.binding.BindingParams;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class RuntimeParams<B extends BindingParams<I>, I extends
@@ -61,6 +64,16 @@ public abstract class RuntimeParams<B extends BindingParams<I>, I extends
     return EventFactory.fromMap(mapEvent, getSourceInfo(getIndex(sourceId)), getSchemaInfo
             (getIndex(sourceId)));
 
+  }
+
+  public List<SourceInfo> getSourceInfo() {
+    return bindingParams.getInputStreamParams().size() == 1 ? Collections.singletonList
+            (getSourceInfo(0)) : Arrays.asList(getSourceInfo(0), getSourceInfo(1));
+  }
+
+  public List<SchemaInfo> getSchemaInfo() {
+    return bindingParams.getInputStreamParams().size() == 1 ? Collections.singletonList
+            (getSchemaInfo(0)) : Arrays.asList(getSchemaInfo(0), getSchemaInfo(1));
   }
 
   public SourceInfo getSourceInfo(Integer index) {

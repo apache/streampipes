@@ -37,15 +37,6 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
    super(protocol, format);
   }
 
-  public void collect(Map<String, Object> outEvent) {
-    try {
-      protocolDefinition.getProducer().publish(dataFormatDefinition.fromMap(outEvent));
-    } catch (SpRuntimeException e) {
-      // TODO handle exception
-      e.printStackTrace();
-    }
-  }
-
   public void collect(Event event) {
     Map<String, Object> outEvent = new EventConverter(event).toMap();
     try {
@@ -54,7 +45,6 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
       e.printStackTrace();
     }
   }
-
 
   @Override
   public void connect() throws SpRuntimeException {

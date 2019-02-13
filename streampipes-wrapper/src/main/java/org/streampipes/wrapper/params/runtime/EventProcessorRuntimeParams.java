@@ -22,8 +22,6 @@ import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.context.SpEventProcessorRuntimeContext;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-import java.util.Arrays;
-
 public class EventProcessorRuntimeParams<B extends EventProcessorBindingParams> extends
         RuntimeParams<B, DataProcessorInvocation, EventProcessorRuntimeContext> { // B - Bind Type
 
@@ -33,8 +31,8 @@ public class EventProcessorRuntimeParams<B extends EventProcessorBindingParams> 
 
   @Override
   protected EventProcessorRuntimeContext makeRuntimeContext() {
-    return new SpEventProcessorRuntimeContext(Arrays.asList(getSourceInfo(0), getSourceInfo(1)),
-            Arrays.asList(getSchemaInfo(0), getSchemaInfo(1)), bindingParams.getOutputStreamParams()
+    return new SpEventProcessorRuntimeContext(getSourceInfo(),
+            getSchemaInfo(), bindingParams.getOutputStreamParams()
                     .getSourceInfo(), bindingParams.getOutputStreamParams().getSchemaInfo());
   }
 

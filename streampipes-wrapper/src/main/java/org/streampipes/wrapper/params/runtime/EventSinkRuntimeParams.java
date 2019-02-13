@@ -22,8 +22,6 @@ import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.context.SpEventSinkRuntimeContext;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-import java.util.Arrays;
-
 public class EventSinkRuntimeParams<B extends EventSinkBindingParams> extends
         RuntimeParams<B, DataSinkInvocation, EventSinkRuntimeContext> {
 
@@ -33,8 +31,7 @@ public class EventSinkRuntimeParams<B extends EventSinkBindingParams> extends
 
   @Override
   protected EventSinkRuntimeContext makeRuntimeContext() {
-    return new SpEventSinkRuntimeContext(Arrays.asList(getSourceInfo(0), getSourceInfo(1)),
-            Arrays.asList(getSchemaInfo(0), getSchemaInfo(1)));
+    return new SpEventSinkRuntimeContext(getSourceInfo(), getSchemaInfo());
   }
 
 }
