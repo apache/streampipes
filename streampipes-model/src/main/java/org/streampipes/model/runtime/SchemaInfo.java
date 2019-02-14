@@ -18,9 +18,10 @@ package org.streampipes.model.runtime;
 import org.streampipes.model.output.PropertyRenameRule;
 import org.streampipes.model.schema.EventSchema;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class SchemaInfo {
+public class SchemaInfo implements Serializable {
 
   private EventSchema eventSchema;
   private List<PropertyRenameRule> renameRules;

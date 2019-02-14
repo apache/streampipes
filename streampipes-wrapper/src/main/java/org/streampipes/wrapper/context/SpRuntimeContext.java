@@ -31,6 +31,10 @@ public class SpRuntimeContext implements RuntimeContext {
     this.sourceInfo = sourceInfo;
   }
 
+  public SpRuntimeContext() {
+
+  }
+
   @Override
   public Logger getLogger() {
     // TODO add logger implementation

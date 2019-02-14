@@ -18,9 +18,11 @@ package org.streampipes.wrapper.context;
 import org.streampipes.model.runtime.SchemaInfo;
 import org.streampipes.model.runtime.SourceInfo;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class SpEventSinkRuntimeContext extends SpRuntimeContext implements EventSinkRuntimeContext {
+public class SpEventSinkRuntimeContext extends SpRuntimeContext implements
+        EventSinkRuntimeContext, Serializable {
 
   public SpEventSinkRuntimeContext(List<SourceInfo> sourceInfo, List<SchemaInfo> inputSchemaInfo) {
     super(sourceInfo, inputSchemaInfo);

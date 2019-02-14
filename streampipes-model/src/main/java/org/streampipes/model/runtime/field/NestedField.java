@@ -15,12 +15,27 @@ limitations under the License.
 */
 package org.streampipes.model.runtime.field;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class NestedField extends AbstractField<Map<String, AbstractField>> {
 
+  private Boolean hasKey;
+
   public NestedField(String fieldNameIn, String fieldNameOut, Map<String, AbstractField> value) {
     super(fieldNameIn, fieldNameOut, value);
+    this.hasKey = true;
+  }
+
+  public NestedField(String fieldNameIn, Boolean hasKey) {
+    super(fieldNameIn);
+    this.hasKey = hasKey;
+    this.value = new HashMap<>();
+  }
+
+  public NestedField() {
+    super();
+    this.value = new HashMap<>();
   }
 
   public AbstractField getFieldByRuntimeName(String runtimeName) {
@@ -29,5 +44,41 @@ public class NestedField extends AbstractField<Map<String, AbstractField>> {
 
   public void addField(String key, AbstractField field) {
     value.put(key, field);
+  }
+
+  public void addField(String runtimeName, Integer value) {
+    addPrimitive(runtimeName, value);
+  }
+
+  public void addField(String runtimeName, Long value) {
+    addPrimitive(runtimeName, value);
+  }
+
+  public void addField(String runtimeName, Object value) {
+    addPrimitive(runtimeName, value);
+  }
+
+  public void addField(String runtimeName, Float value) {
+    addPrimitive(runtimeName, value);
+  }
+
+  public void addField(String runtimeName, Double value) {
+    addPrimitive(runtimeName, value);
+  }
+
+  public void addField(String runtimeName, Boolean value) {
+    addPrimitive(runtimeName, value);
+  }
+
+  public void addField(String runtimeName, String value) {
+    addPrimitive(runtimeName, value);
+  }
+
+  private void addPrimitive(String runtimeName, Object value) {
+    this.value.put(runtimeName, new PrimitiveField(runtimeName, runtimeName, value));
+  }
+
+  public Boolean getHasKey() {
+    return hasKey;
   }
 }

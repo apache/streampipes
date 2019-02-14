@@ -18,9 +18,11 @@ package org.streampipes.wrapper.context;
 import org.streampipes.model.runtime.SchemaInfo;
 import org.streampipes.model.runtime.SourceInfo;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class SpEventProcessorRuntimeContext extends SpRuntimeContext implements EventProcessorRuntimeContext {
+public class SpEventProcessorRuntimeContext extends SpRuntimeContext implements
+        EventProcessorRuntimeContext, Serializable {
 
   private SchemaInfo outputSchemaInfo;
   private SourceInfo outputSourceInfo;
@@ -30,6 +32,10 @@ public class SpEventProcessorRuntimeContext extends SpRuntimeContext implements 
     super(inputSourceInfo, inputSchemaInfo);
     this.outputSchemaInfo = outputSchemaInfo;
     this.outputSourceInfo = outputSourceInfo;
+  }
+
+  public SpEventProcessorRuntimeContext() {
+    super();
   }
 
   @Override

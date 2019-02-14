@@ -26,9 +26,17 @@ public abstract class AbstractField<FV> {
   protected TypeParser typeParser;
 
   public AbstractField(String fieldNameIn, String fieldNameOut, FV value) {
+    this(fieldNameIn);
     this.value = value;
-    this.fieldNameIn = fieldNameIn;
     this.fieldNameOut = fieldNameOut;
+  }
+
+  public AbstractField(String fieldNameIn) {
+    this();
+    this.fieldNameIn = fieldNameIn;
+  }
+
+  public AbstractField() {
     this.typeParser = TypeParser.newBuilder().build();
   }
 

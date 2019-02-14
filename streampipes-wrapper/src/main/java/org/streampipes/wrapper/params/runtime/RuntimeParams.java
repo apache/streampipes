@@ -25,6 +25,7 @@ import org.streampipes.model.runtime.SourceInfo;
 import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.params.binding.BindingParams;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class RuntimeParams<B extends BindingParams<I>, I extends
-        InvocableStreamPipesEntity, RC extends RuntimeContext> {
+        InvocableStreamPipesEntity, RC extends RuntimeContext> implements Serializable {
 
   protected final B bindingParams;
   protected RC runtimeContext;

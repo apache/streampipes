@@ -15,7 +15,9 @@ limitations under the License.
 */
 package org.streampipes.model.runtime;
 
-public class SourceInfo {
+import java.io.Serializable;
+
+public class SourceInfo implements Serializable {
 
   private String sourceId;
   private String selectorPrefix;

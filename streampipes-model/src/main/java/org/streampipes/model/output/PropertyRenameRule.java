@@ -20,11 +20,13 @@ import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.streampipes.vocabulary.StreamPipes;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 
 @RdfsClass(StreamPipes.RENAME_RULE)
 @Entity
-public class PropertyRenameRule extends UnnamedStreamPipesEntity {
+public class PropertyRenameRule extends UnnamedStreamPipesEntity implements Serializable {
 
   @RdfProperty(StreamPipes.HAS_RUNTIME_ID)
   private String runtimeId;

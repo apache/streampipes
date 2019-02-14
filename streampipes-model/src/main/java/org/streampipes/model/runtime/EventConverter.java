@@ -19,7 +19,9 @@ import org.streampipes.model.runtime.field.AbstractField;
 import org.streampipes.model.runtime.field.ListField;
 import org.streampipes.model.runtime.field.PrimitiveField;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EventConverter {
@@ -48,8 +50,14 @@ public class EventConverter {
   }
 
   private Object makeEntry(AbstractField value, Boolean renameProperties) {
-    if (PrimitiveField.class.isInstance(value) || ListField.class.isInstance(value)) {
+    if (PrimitiveField.class.isInstance(value)) {
       return value.getRawValue();
+    } else if (ListField.class.isInstance(value)) {
+      List<Object> objects = new ArrayList<>();
+      for(AbstractField field : value.getAsList().getRawValue()) {
+        objects.add(makeEntry(field, renameProperties));
+      }
+      return objects;
     } else {
       Map<String, Object> outMap = new HashMap<>();
       value.getAsComposite().getRawValue().entrySet().forEach(entry -> outMap.put(getValue(entry

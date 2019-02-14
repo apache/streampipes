@@ -197,9 +197,10 @@ public class Event {
   }
 
   private String makeKey(AbstractField field) {
-    return sourceInfo.getSelectorPrefix()
+    return sourceInfo != null && sourceInfo.getSelectorPrefix() != null ? sourceInfo
+            .getSelectorPrefix()
             + PropertySelectorConstants.PROPERTY_DELIMITER
-            + field.getFieldNameIn();
+            + field.getFieldNameIn() : field.getFieldNameIn();
   }
 
   public Event getSubset(List<String> fieldSelectors) {

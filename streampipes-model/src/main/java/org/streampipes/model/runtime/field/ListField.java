@@ -15,16 +15,28 @@ limitations under the License.
 */
 package org.streampipes.model.runtime.field;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ListField extends AbstractField<List<Object>> {
+public class ListField extends AbstractField<List<AbstractField>> {
 
-  public ListField(String fieldNameIn, String fieldNameOut, List<Object> value) {
+  public ListField(String fieldNameIn, String fieldNameOut, List<AbstractField> value) {
     super(fieldNameIn, fieldNameOut, value);
   }
 
-  public <T> List<T> parseAsCustomType(FieldParser<Object, T> parser) {
+  public ListField(String fieldNameIn) {
+    super(fieldNameIn);
+    this.value = new ArrayList<>();
+  }
+
+  public void add(AbstractField field) {
+    this.value.add(field);
+  }
+
+
+
+  public <T> List<T> parseAsCustomType(FieldParser<AbstractField, T> parser) {
     return value.stream()
             .map(parser::parseField)
             .collect(Collectors.toList());
@@ -32,12 +44,14 @@ public class ListField extends AbstractField<List<Object>> {
 
   public <T> List<T> castItems(Class<T> clazz) {
     return value.stream()
+            .map(v -> v.getAsPrimitive().getRawValue())
             .map(clazz::cast)
             .collect(Collectors.toList());
   }
 
   public <T> List<T> parseAsSimpleType(Class<T> type) {
     return value.stream()
+            .map(v -> v.getAsPrimitive().getRawValue())
             .map(f -> typeParser.parse(asString(f), type))
             .collect(Collectors.toList());
   }

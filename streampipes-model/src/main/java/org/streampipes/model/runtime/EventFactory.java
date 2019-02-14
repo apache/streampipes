@@ -130,8 +130,12 @@ public class EventFactory {
               schemaInfo.getRenameRules()),
               fieldMap);
     } else if (List.class.isInstance(o)) {
+      List<AbstractField> items = new ArrayList<>();
+      for(Integer i = 0; i < ((List) o).size(); i++) {
+        items.add(makeField("", ((List) o).get(i), currentSelector + "::" +i, schemaInfo));
+      }
       return new ListField(runtimeName, getNewRuntimeName(currentSelector, runtimeName, schemaInfo
-              .getRenameRules()), (List<Object>) o);
+              .getRenameRules()), items);
     } else {
       return new PrimitiveField(runtimeName, getNewRuntimeName(currentSelector, runtimeName,
               schemaInfo.getRenameRules()), o);
