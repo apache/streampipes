@@ -2,6 +2,8 @@ import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { AdapterDescription } from '../../model/connect/AdapterDescription';
 import { ConnectService } from '../../connect.service';
 import {DataMarketplaceService} from "../data-marketplace.service";
+import {AdapterExportDialog} from '../adapter-export/adapter-export-dialog.component';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'sp-adapter-description',
@@ -22,7 +24,8 @@ export class AdapterDescriptionComponent {
   adapterToDelete: string;
   deleting: boolean = false;
 
-  constructor(private connectService: ConnectService, private dataMarketplaceService: DataMarketplaceService) {}
+  constructor(private connectService: ConnectService, private dataMarketplaceService: DataMarketplaceService, public dialog: MatDialog) {}
+
 
   isDataStreamDescription(): boolean {
     return this.connectService.isDataStreamDescription(this.adapter);
@@ -49,6 +52,23 @@ export class AdapterDescriptionComponent {
           this.deleting = false;
       });
   }
+
+  shareAdapterTemplate(adapter: AdapterDescription): void {
+
+        let dialogRef = this.dialog.open(AdapterExportDialog, {
+            width: '70%',
+            data: { adapter: adapter
+            },
+            panelClass: 'sp-no-padding-dialog'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+
+        });
+
+
+  }
+
 
   deleteAdapterTemplate(adapter: AdapterDescription): void {
       this.adapterToDelete = adapter.couchDbId;

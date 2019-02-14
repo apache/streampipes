@@ -1,0 +1,28 @@
+<div class="md-dialog" style="height: 80vh;">
+    <div class="md-toolbar">
+        <div class="md-toolbar-tools">
+            <h2>Export Adapter Template</h2>
+            <span fxFlex></span>
+            <button  mat-icon-button (click)="onCloseConfirm()">
+                <i class="material-icons">close</i>
+            </button>
+        </div>
+    </div>
+
+    <div class="md-dialog-content">
+        <!--<button  id="delete-template-description" matTooltip="Download Adapter Template" (click)="">-->
+
+        <pre class="code-container">
+           <i id="delete-template-description" matTooltip="Download Adapter Template" class="material-icons download-icon" (click)="download()">
+               save_alt
+            </i><div>{{adapterJsonLd | json}}</div>
+        </pre>
+    </div>
+
+
+    <div class="md-dialog-actions">
+        <button id="confirm_adapter_started_button" class="mat-basic" mat-raised-button (click)="onCloseConfirm()">Close
+        </button>
+    </div>
+
+</div>

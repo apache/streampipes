@@ -62,6 +62,9 @@ import {FileManagementComponent} from './file-management/file-management.compone
 import {FileRestService} from './file-management/service/filerest.service';
 
 import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
+import { AdapterExportDialog } from './data-marketplace/adapter-export/adapter-export-dialog.component';
+import { AdapterUploadDialog } from './data-marketplace/adapter-upload/adapter-upload-dialog.component';
+import { TsonLdSerializerService } from './tsonld-serializer.service';
 
 
 @NgModule({
@@ -91,6 +94,8 @@ import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
     EventPropoertyListComponent,
     StaticPropertyComponent,
     AdapterStartedDialog,
+    AdapterExportDialog,
+    AdapterUploadDialog,
     StaticNumberInputComponent,
     StaticUrlInputComponent,
     StaticTextInputComponent,
@@ -111,6 +116,7 @@ import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
   ],
   providers: [
     RestService,
+    TsonLdSerializerService,
     ConnectService,
     DataTypesService,
     TransformationRuleService,
@@ -137,6 +143,6 @@ import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
       deps: ['$injector'],
     },
   ],
-  entryComponents: [ConnectComponent, AdapterStartedDialog],
+  entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog],
 })
 export class ConnectModule {}

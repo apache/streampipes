@@ -3,16 +3,11 @@ import { DataMarketplaceService } from './data-marketplace.service';
 import { AdapterDescription } from '../model/connect/AdapterDescription';
 import { ShepherdService } from "../../services/tour/shepherd.service";
 import { ConnectService } from '../connect.service';
-import { GenericAdapterStreamDescription } from '../model/connect/GenericAdapterStreamDescription';
-import { GenericAdapterSetDescription } from '../model/connect/GenericAdapterSetDescription';
-import { SpecificAdapterSetDescription } from '../model/connect/SpecificAdapterSetDescription';
-import { SpecificAdapterStreamDescription } from '../model/connect/SpecificAdapterStreamDescription';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
 import { FilterPipe } from './filter.pipe';
+import {AdapterUploadDialog} from './adapter-upload/adapter-upload-dialog.component';
+import {MatDialog} from '@angular/material';
+import {AdapterDescriptionList} from '../model/connect/AdapterDescriptionList';
+import {TsonLdSerializerService} from '../tsonld-serializer.service';
 
 @Component({
     selector: 'sp-data-marketplace',
@@ -36,8 +31,12 @@ export class DataMarketplaceComponent implements OnInit {
     categories: string[] = ['All', 'Data Set', 'Data Stream'];
     selected: string = "All";
 
-    constructor(private dataMarketplaceService: DataMarketplaceService, private ShepherdService: ShepherdService,
-        private connectService: ConnectService) {
+    constructor(private dataMarketplaceService: DataMarketplaceService,
+                private ShepherdService: ShepherdService,
+                private connectService: ConnectService,
+                public dialog: MatDialog,
+                private tsonLdSerializerService: TsonLdSerializerService,
+    ) {
     }
 
     ngOnInit() {
@@ -67,6 +66,8 @@ export class DataMarketplaceComponent implements OnInit {
         this.dataMarketplaceService.getAdapterTemplates().subscribe(adapterTemplates => {
             adapterTemplates.forEach(function (adapterTemplate) {
                 adapterTemplate.isTemplate = true;
+                console.log("Template: ");
+                console.log(adapterTemplate);
             });
 
             this.adapterDescriptions = this.adapterDescriptions.concat(adapterTemplates);
@@ -121,9 +122,57 @@ export class DataMarketplaceComponent implements OnInit {
         this.filterTerm = inputValue;
     }
 
+    downloadAllAdapterTemplates() {
+        var adapterTemplates: AdapterDescription[] = [];
+        this.adapterDescriptions.forEach(function (adapterTemplate) {
+            if (adapterTemplate.isTemplate) {
+                delete adapterTemplate['userName'];
+                adapterTemplates.push(adapterTemplate);
+            }
+        });
+
+        let adapterDescriptionList: AdapterDescriptionList  = new AdapterDescriptionList("http://streampipes.org/exportedList");
+        adapterDescriptionList.list = adapterTemplates;
+
+
+        // this.tsonLdSerializerService.toJsonLd(this.data.adapter).subscribe(res => {
+        //     var data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(res, null, 2));
+        //     var downloader = document.createElement('a');
+        //
+        //     downloader.setAttribute('href', data);
+        //     downloader.setAttribute('download', this.data.adapter.label + '-adapter-template.json');
+        //     downloader.click();
+        //
+        // });
+
+        // this.adapterJsonLd = this.tsonLdSerializerService.toJsonLd(this.data.adapter);
+        this.tsonLdSerializerService.toJsonLd(adapterDescriptionList).subscribe(res => {
+            let data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(res, null, 2));
+            let downloader = document.createElement('a');
+
+            downloader.setAttribute('href', data);
+            downloader.setAttribute('download', 'all-adapter-templates.json');
+            downloader.click();
+
+        });
+    }
+
+    uploadAdapterTemplates() {
+        let dialogRef = this.dialog.open(AdapterUploadDialog, {
+            width: '70%',
+            data: {
+                // adapter: adapter
+            },
+            panelClass: 'sp-no-padding-dialog'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            this.getAdapterDescriptions()
+        });
+    }
 
     filterAdapterCategory(categorie) {
-        
+
         this.filteredAdapterDescriptions = this.adapterDescriptions;
         this.filteredAdapters = this.adapters;
         if (this.selected == this.categories[1]) {
