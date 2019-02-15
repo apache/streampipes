@@ -37,7 +37,7 @@ export class PropertySelectorService {
     }
 
     makeProperty(eventProperties, propertySelector, originalSelector) {
-        let outputProperty = {};
+        let outputProperty;
         eventProperties.forEach(ep => {
             if (ep.properties.runtimeName === propertySelector[0]) {
                 if (this.isNested(ep)) {
@@ -46,10 +46,15 @@ export class PropertySelectorService {
                 } else {
                     ep.properties.runtimeId = originalSelector;
                     outputProperty = ep;
+                    outputProperty.properties.niceLabel = this.makeNiceLabel(originalSelector);
                 }
             }
         });
         return outputProperty;
+    }
+
+    makeNiceLabel(originalSelector) {
+        return originalSelector.split("::").join(" \u{21D2} ");
     }
 
     isNested(ep) {

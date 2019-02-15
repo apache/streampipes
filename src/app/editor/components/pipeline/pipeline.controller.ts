@@ -20,8 +20,9 @@ export class PipelineController {
     rawPipelineModel: any;
     TransitionService: any;
     ShepherdService: any;
+    $rootScope: any;
 
-    constructor($timeout, JsplumbService, PipelineEditorService, JsplumbBridge, ObjectProvider, DialogBuilder, EditorDialogManager, TransitionService, ShepherdService) {
+    constructor($timeout, JsplumbService, PipelineEditorService, JsplumbBridge, ObjectProvider, DialogBuilder, EditorDialogManager, TransitionService, ShepherdService, $rootScope) {
         this.plumbReady = false;
         this.JsplumbBridge = JsplumbBridge;
         this.JsplumbService = JsplumbService;
@@ -33,6 +34,7 @@ export class PipelineController {
         this.currentMouseOverElement = "";
         this.TransitionService = TransitionService;
         this.ShepherdService = ShepherdService;
+        this.$rootScope = $rootScope;
 
         this.currentPipelineModel = {};
         this.idCounter = 0;
@@ -219,14 +221,21 @@ export class PipelineController {
             var pe = this.objectProvider.findElement(info.target.id, this.rawPipelineModel);
             if (pe.settings.openCustomize) {
                 this.currentPipelineModel = this.objectProvider.makePipeline(this.rawPipelineModel);
+                pe.settings.loadingStatus = true;
                 this.objectProvider.updatePipeline(this.currentPipelineModel)
                     .success(data => {
+                        pe.settings.loadingStatus = false;
                         if (data.success) {
                             info.targetEndpoint.setType("token");
                             this.modifyPipeline(data.pipelineModifications);
                             var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
                             if (this.PipelineEditorService.isFullyConnected(pe)) {
-                                this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload);
+                                if ((pe.payload.staticProperties && pe.payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
+                                    this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload);
+                                } else {
+                                    this.$rootScope.$broadcast("SepaElementConfigured", pe.payload.DOM);
+                                    pe.payload.configured = true;
+                                }
                                 if (this.ShepherdService.isTourActive()) {
                                     this.ShepherdService.trigger("customize-" +pe.type);
                                 }
@@ -260,7 +269,17 @@ export class PipelineController {
         }
     }
 
+    isCustomOutput(pe) {
+        var custom = false;
+        angular.forEach(pe.payload.outputStrategies, strategy => {
+            if (strategy.type == 'org.streampipes.model.output.CustomOutputStrategy') {
+                custom = true;
+            }
+        });
+        return custom;
+    }
+
 
 }
 
-PipelineController.$inject = ['$timeout', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ObjectProvider', 'DialogBuilder', 'EditorDialogManager', 'TransitionService', 'ShepherdService']
+PipelineController.$inject = ['$timeout', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ObjectProvider', 'DialogBuilder', 'EditorDialogManager', 'TransitionService', 'ShepherdService', '$rootScope']

@@ -240,7 +240,9 @@ export class RestApi {
     }
 
     updatePartialPipeline(pipeline) {
-        return this.$http.post(this.urlBase() +"/pipelines/update", pipeline);
+        return this.$http.post(this.urlBase() +"/pipelines/update", pipeline, {
+            ignoreLoadingBar: true
+        });
     }
 
     updateDataSet(dataSet) {

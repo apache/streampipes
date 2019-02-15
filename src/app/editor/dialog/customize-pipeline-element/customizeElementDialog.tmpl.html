@@ -1,5 +1,5 @@
 <md-dialog aria-label="Customize" flex="70" style="max-height:80%" class="colored-frame">
-    <md-toolbar ng-if="ctrl.configVisible">
+    <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Customize {{ctrl.sepa.name}}</h2>
             <span flex></span>
@@ -8,6 +8,7 @@
             </md-button>
         </div>
     </md-toolbar>
+    <md-dialog-content>
     <div flex="100" layout="row" style="border-bottom:1px solid #ccc;padding-left:10px;padding-right:10px;background-color:#f6f6f6">
         <div flex="100" layout="column" layout-align="end end">
             <md-switch ng-model="ctrl.displayRecommended" aria-label="Switch 1">
@@ -15,7 +16,7 @@
             </md-switch>
         </div>
     </div>
-    <md-dialog-content flex="100" class="md-dialog-content" ng-if="ctrl.configVisible">
+    <div flex="100" class="md-dialog-content">
         <form name="ctrl.customizeForm">
 
             <div flex="100" layout="column">
@@ -106,8 +107,9 @@
                 </div>
             </div>
         </form>
+    </div>
     </md-dialog-content>
-    <md-dialog-actions layout="row" ng-if="ctrl.configVisible">
+    <md-dialog-actions layout="row">
         <sp-button sp-button-gray ng-click="ctrl.hide()">
             Close
         </sp-button>

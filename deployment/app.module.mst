@@ -5,6 +5,7 @@ import * as angular from 'angular';
 //import "jquery-ui";
 
 import '@uirouter/angular-hybrid';
+import ngAnimate from 'angular-animate'
 
 import spServices from './services/services.module';
 
@@ -34,6 +35,7 @@ export const Ng1AppModule = angular
         spPipelineDetails,
         'ui.router',
         'ui.router.upgrade',
+        ngAnimate,
         {{#modulesActive}}
         {{^ng5}}
         {{module}},

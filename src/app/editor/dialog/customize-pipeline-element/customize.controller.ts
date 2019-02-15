@@ -34,13 +34,6 @@ export class CustomizeController {
         this.$rootScope = $rootScope;
         this.ShepherdService = ShepherdService;
 
-
-
-        if ((this.selectedElement.staticProperties && this.selectedElement.staticProperties.length > 0) || this.isCustomOutput()) {
-            this.configVisible = true;
-        } else {
-            this.saveProperties();
-        }
     }
 
     toggleHelpDialog() {
@@ -167,15 +160,7 @@ export class CustomizeController {
 
 
 
-    isCustomOutput() {
-        var custom = false;
-        angular.forEach(this.selectedElement.outputStrategies, strategy => {
-            if (strategy.type == 'org.streampipes.model.output.CustomOutputStrategy') {
-                custom = true;
-            }
-        });
-        return custom;
-    }
+
 
 }
 

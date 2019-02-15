@@ -43,11 +43,8 @@ export class AuthService {
                                 }
                             });
                         this.RestApi.getNotifications()
-                            .success(notifications => {
-                                this.$rootScope.unreadNotifications = notifications
-                            })
-                            .error(msg => {
-                                console.log(msg);
+                            .then(notifications => {
+                                this.$rootScope.unreadNotifications = notifications.data;
                             });
 
                     }
