@@ -5,3 +5,16 @@
     line-height: 24px;
     border-bottom: 1px solid #ccc;
 }
+
+.home-margin {
+    margin: 1%;
+}
+
+.home-padding {
+    padding: 15px;
+}
+
+.home-image-small {
+    height:150px;
+    width:100%;
+}

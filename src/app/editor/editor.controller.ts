@@ -218,7 +218,6 @@ export class EditorCtrl {
                     action.type = 'action';
                 });
                 this.allElements["action"] = actions;
-                console.log(this.allElements);
             });
     };
 

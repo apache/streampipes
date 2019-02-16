@@ -189,11 +189,13 @@ md-toolbar:not(.md-menu-toolbar) {
 }
 
 .home-image-caption {
+    top:0px;
     z-index: 2;
-    background: white;
     padding: 5px;
     margin-bottom: 0px;
     text-align: center;
+    color:white;
+    opacity:0.9;
 }
 
 .btn-6a {
@@ -317,6 +319,7 @@ md-content {
     margin: 10px;
     border: 1px solid #cccccc;
     min-height: calc(100% - 20px);
+    height:100%;
 }
 
 .page-container-no-border {

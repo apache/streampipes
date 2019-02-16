@@ -1,0 +1,28 @@
+
+.status-container {
+    height:150px;
+    width:80%;
+    color:white;
+    margin:1%;
+    border-radius: 5px;
+}
+
+.status-container.pipelines {
+    background: rgb(27, 20, 100);
+}
+
+.status-container.pipelines-running {
+    background: rgb(59, 92, 149);
+}
+
+.status-container.pipeline-elements-installed {
+    background: rgb(156, 156, 156);
+}
+
+.status-container-number {
+    font-size:46pt;
+}
+
+.status-container-text {
+    font-size:16pt;
+}

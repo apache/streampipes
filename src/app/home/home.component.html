@@ -2,13 +2,24 @@
     <div fxFlex fxLayout="row" fxLayoutAlign="start start">
         <div fxFlex="100">
             <div class="md-padding">
-                <mat-grid-list cols="3" gutterSize="1em" rowHeight="30:9">
-                    <mat-grid-tile attr.id="{{link.name.replace(' ', '-')}}-link"(click)="openLink(link)" *ngFor="let link of serviceLinks"
-                                   class="sp-darkblue-border home-image-wrapper">
-                        <div class="home-image" [style.background-image]="getBackground(link.imageUrl)"></div>
-                        <h4 class="sp-darkblue-border home-image-caption">{{link.name}}</h4>
-                    </mat-grid-tile>
-                </mat-grid-list>
+                <h1>Welcome to StreamPipes!</h1>
+                <hr>
+                <status></status>
+                <div class="home-margin">
+                    <div class="assemblyOptions sp-blue-bg" style="padding:5px;">
+                        <h4>StreamPipes Modules</h4>
+                    </div>
+                    <div class="sp-blue-border home-padding">
+                        <mat-grid-list cols="3" gutterSize="1em" rowHeight="30:9">
+                            <mat-grid-tile attr.id="{{link.name.replace(' ', '-')}}-link" (click)="openLink(link)"
+                                           *ngFor="let link of serviceLinks"
+                                           class="home-image-wrapper">
+                                <div class="home-image" [style.background-image]="getBackground(link.imageUrl)"></div>
+                                <h4 class="home-image-caption sp-accent-bg">{{link.name}}</h4>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

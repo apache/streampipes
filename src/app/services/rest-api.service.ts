@@ -1,6 +1,9 @@
 //import _ from 'lodash';
 
 
+import {Inject, Injectable} from "@angular/core";
+
+@Injectable()
 export class RestApi {
 
     AuthStatusService: any;
@@ -8,7 +11,7 @@ export class RestApi {
     apiConstants: any;
     encodeURIComponent: any;
     
-    constructor ($http, apiConstants, AuthStatusService) {
+    constructor (@Inject('$http') $http, @Inject('apiConstants') apiConstants, @Inject('AuthStatusService') AuthStatusService) {
         this.AuthStatusService = AuthStatusService;
         this.$http = $http;
         this.apiConstants = apiConstants;
