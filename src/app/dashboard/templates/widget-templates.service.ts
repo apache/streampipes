@@ -67,13 +67,13 @@ export class WidgetTemplates {
                 directive: 'sp-raw-widget',
                 dataModel: RawDataModel,
             },
-            // map: {
-            //     name: 'map',
-            //     label: 'Map',
-            //     icon: 'map',
-            //     directive: 'sp-map-widget',
-            //     dataModel: MapDataModel,
-            // },
+            map: {
+                name: 'map',
+                label: 'Map',
+                icon: 'map',
+                directive: 'sp-map-widget',
+                dataModel: MapDataModel,
+            },
             // heatmap: {
             //     name: 'heatmap',
             //     label: 'Heatmap',

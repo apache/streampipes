@@ -32,6 +32,10 @@ export class SocketConnectionDataModel extends WidgetDataModel {
 				});
 
 				var brokerUrl = element.doc.visualisation['broker'];
+				if(location.protocol === 'https:') {
+					brokerUrl = brokerUrl.replace('ws:', 'wss:');
+					brokerUrl = brokerUrl.replace(':80', '');
+				}
 				var inputTopic = '/topic/' + element.doc.visualisation['pipelineId'];
 
 				self.client = Stomp.client(brokerUrl + inputTopic);
@@ -46,7 +50,7 @@ export class SocketConnectionDataModel extends WidgetDataModel {
 
 					self.client.subscribe(inputTopic, function (message) {
 						self.newData(JSON.parse(message.body));
-					});
+					}, {'Sec-WebSocket-Protocol': 'v10.stomp, v11.stomp'});
 				};
 
 				self.client.connect(login, passcode, onConnect);

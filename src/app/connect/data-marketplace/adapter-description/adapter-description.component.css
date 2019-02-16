@@ -1,47 +1,47 @@
 .adapter-box {
-  height: 100%;
-  box-shadow: 1px 1px 2px #555;
-  border: 1px solid gray;
-  padding: 10px;
+    height: 100%;
+    box-shadow: 1px 1px 2px #555;
+    border: 1px solid gray;
+    padding: 10px;
 }
 .adapter-description-box {
-  height: 100%;
-  box-shadow: 1px 1px 2px #555;
-  border: 1px solid gray;
-  cursor: pointer;
-  padding: 10px;
-  opacity: 0.7;
+    height: 100%;
+    box-shadow: 1px 1px 2px #555;
+    border: 1px solid gray;
+    cursor: pointer;
+    padding: 10px;
+    opacity: 0.7;
 }
 
 .adapter-description-box:hover {
-  opacity: 1;
+    opacity: 1;
 }
 
 .edit {
-  margin-right: 5px;
+    margin-right: 5px;
 }
 
 .delete {
-  cursor: pointer;
+    cursor: pointer;
 }
 .type p {
-  padding: 4px;
-  margin: 0;
+    padding: 4px;
+    margin: 0;
 }
 .iconImg {
-  max-height:50px;
-  max-width:80%;
+    max-height:50px;
+    max-width:80%;
 }
 .historic {
-  cursor: pointer;
-  color: #ffa23b;
+    cursor: pointer;
+    color: #ffa23b;
 }
 .real-time {
-  cursor: pointer;
-  color: #FFEB3B;
+    cursor: pointer;
+    color: #FFEB3B;
 }
 
 .icon {
-  margin-top:20px;
-  height:50px;
+    margin-top:20px;
+    height:50px;
 }

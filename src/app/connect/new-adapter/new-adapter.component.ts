@@ -1,3 +1,4 @@
+///<reference path="../model/connect/AdapterDescription.ts"/>
 import {Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { RestService } from '../rest.service';
@@ -17,6 +18,8 @@ import {TransformationRuleService} from '../transformation-rule.service';
 import {ShepherdService} from '../../services/tour/shepherd.service';
 import {EventSchemaComponent} from '../schema-editor/event-schema/event-schema.component';
 import {ConnectService} from "../connect.service";
+import {RemoveDuplicatesRuleDescription} from '../model/connect/rules/RemoveDuplicatesRuleDescription';
+import {IconService} from './icon.service';
 
 @Component({
     selector: 'sp-new-adapter',
@@ -24,6 +27,24 @@ import {ConnectService} from "../connect.service";
     styleUrls: ['./new-adapter.component.css'],
 })
 export class NewAdapterComponent implements OnInit {
+
+
+    selectedUploadFile: File;
+    fileName;
+
+    handleFileInput(files: any) {
+        this.selectedUploadFile = files[0];
+        this.fileName = this.selectedUploadFile.name;
+
+        this.iconService.toBase64(this.selectedUploadFile)
+            .then(
+                data => {
+                    this.adapter.icon = (<string> data);
+                }
+            );
+    }
+
+
     @Input()
     adapter: AdapterDescription;
 
@@ -40,6 +61,9 @@ export class NewAdapterComponent implements OnInit {
     protocolConfigurationValid: boolean;
     formatConfigurationValid: boolean;
 
+    removeDuplicates: boolean = false;
+    removeDuplicatesTime: number;
+
     startAdapterFormGroup: FormGroup;
 
     eventSchema: EventSchema;
@@ -47,7 +71,11 @@ export class NewAdapterComponent implements OnInit {
 
     hasInput: Boolean[];
 
+    // indicates whether user uses a template or not
     fromTemplate: Boolean = false;
+
+    // deactivates all edit functions when user starts a template
+    isEditable: Boolean = true;
 
     @ViewChild(EventSchemaComponent)
     private eventSchemaComponent: EventSchemaComponent;
@@ -60,10 +88,13 @@ export class NewAdapterComponent implements OnInit {
         public dialog: MatDialog,
         private ShepherdService: ShepherdService,
         private connectService: ConnectService,
-        private _formBuilder: FormBuilder
+        private _formBuilder: FormBuilder,
+        private iconService: IconService
     ) {}
 
     ngOnInit() {
+
+
         this.formatConfigurationValid = false;
 
         if (this.adapter instanceof GenericAdapterSetDescription) {
@@ -100,12 +131,21 @@ export class NewAdapterComponent implements OnInit {
             }, 1);
 
             this.fromTemplate = true;
+            this.isEditable = false;
             this.oldEventSchema = this.eventSchema;
+
+
         }
     }
 
 
+
+
     public triggerDialog(storeAsTemplate: boolean) {
+        if (this.removeDuplicates) {
+            this.adapter.rules.push(new RemoveDuplicatesRuleDescription(this.removeDuplicatesTime));
+        }
+
         let dialogRef = this.dialog.open(AdapterStartedDialog, {
             width: '70%',
             data: { adapter: this.adapter,
@@ -148,7 +188,10 @@ export class NewAdapterComponent implements OnInit {
     }
 
     clickEventSchemaNextButtonButton(stepper: MatStepper) {
-        this.setSchema();
+        if (this.isEditable) {
+            this.setSchema();
+        }
+
         this.ShepherdService.trigger("event-schema-next-button");
         this.goForward(stepper);
     }

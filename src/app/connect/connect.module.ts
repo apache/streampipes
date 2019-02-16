@@ -51,9 +51,21 @@ import { DataMarketplaceService } from './data-marketplace/data-marketplace.serv
 import { FormatComponent } from './format-component/format.component';
 import { FormatListComponent } from './format-list-component/format-list.component';
 import { ProtocolListComponent } from './protocol-list-component/protocol-list.component';
+import { UnitProviderService } from './schema-editor/unit-provider.service';
 import { SelectStaticPropertiesComponent } from './select-static-properties-component/select-static-properties.component';
 import { StaticAnyInput } from './static-properties/static-any-input/static-any-input.component';
 import { StaticOneOfInputComponent } from './static-properties/static-one-of-input/static-one-of-input.component';
+import { IconService } from './new-adapter/icon.service';
+import {StaticFileInputComponent} from './static-properties/static-file-input/static-file-input.component';
+import {StaticFileRestService} from './static-properties/static-file-input/static-file-rest.service';
+import {FileManagementComponent} from './file-management/file-management.component';
+import {FileRestService} from './file-management/service/filerest.service';
+
+import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
+import { AdapterExportDialog } from './data-marketplace/adapter-export/adapter-export-dialog.component';
+import { AdapterUploadDialog } from './data-marketplace/adapter-upload/adapter-upload-dialog.component';
+import { TsonLdSerializerService } from './tsonld-serializer.service';
+
 
 @NgModule({
   imports: [
@@ -82,10 +94,13 @@ import { StaticOneOfInputComponent } from './static-properties/static-one-of-inp
     EventPropoertyListComponent,
     StaticPropertyComponent,
     AdapterStartedDialog,
+    AdapterExportDialog,
+    AdapterUploadDialog,
     StaticNumberInputComponent,
     StaticUrlInputComponent,
     StaticTextInputComponent,
     StaticFreeInputComponent,
+    StaticFileInputComponent,
     StaticAnyInput,
     ProtocolComponent,
     ProtocolListComponent,
@@ -96,15 +111,22 @@ import { StaticOneOfInputComponent } from './static-properties/static-one-of-inp
     ConnectComponent,
     SelectStaticPropertiesComponent,
     StaticOneOfInputComponent,
+    FileManagementComponent,
+    FilterPipe
   ],
   providers: [
     RestService,
+    TsonLdSerializerService,
     ConnectService,
     DataTypesService,
     TransformationRuleService,
     StaticPropertyUtilService,
     DataMarketplaceService,
+    IconService,
     ShepherdService,
+    UnitProviderService,
+    FileRestService,
+    StaticFileRestService,
     {
       provide: '$state',
       useFactory: ($injector: any) => $injector.get('$state'),
@@ -121,6 +143,6 @@ import { StaticOneOfInputComponent } from './static-properties/static-one-of-inp
       deps: ['$injector'],
     },
   ],
-  entryComponents: [ConnectComponent, AdapterStartedDialog],
+  entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog],
 })
 export class ConnectModule {}

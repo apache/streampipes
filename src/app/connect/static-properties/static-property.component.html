@@ -13,8 +13,12 @@
 
 <app-static-free-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).render && (staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty == '' || !staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty) "
     (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
-
 </app-static-free-input>
+
+<app-static-file-input *ngIf="isFileStaticProperty(staticProperty)"
+    (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
+</app-static-file-input>
+
 
 <app-static-any-input *ngIf="isAnyStaticProperty(staticProperty)"
                       (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty"></app-static-any-input>

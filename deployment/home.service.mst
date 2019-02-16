@@ -34,7 +34,7 @@ export class HomeService {
                imageUrl: "assets/img/home/elastic.png",
                link: {
                    newWindow: true,
-                   value: window.location.protocol + '//' + window.location.hostname + ':5601'
+                   value: window.location.protocol + '//' + window.location.hostname + '/kibana'
                }
            }
        ];

@@ -6,7 +6,13 @@ export let spMapWidgetConfig = {
         wid: '='
     },
     controller: class MapConfigCtrl {
-        constructor() {}
+        markerTypes: string[];
+
+        constructor() {
+            this.markerTypes = ['Default', 'Car'];
+        }
+
+
     },
     controllerAs: 'ctrl'
 };

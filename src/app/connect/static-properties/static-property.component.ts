@@ -15,6 +15,7 @@ import {
 import { xsService } from '../../NS/XS.service';
 import { StaticPropertyUtilService } from './static-property-util.service';
 import { AnyStaticProperty } from '../model/AnyStaticProperty';
+import {FileStaticProperty} from '../model/FileStaticProperty';
 
 @Component({
   selector: 'app-static-property',
@@ -72,6 +73,11 @@ export class StaticPropertyComponent implements OnInit {
   isFreeTextStaticProperty(val) {
     return val instanceof FreeTextStaticProperty;
   }
+
+  isFileStaticProperty(val) {
+    return val instanceof FileStaticProperty;
+  }
+
 
   isAnyStaticProperty(val) {
     return val instanceof AnyStaticProperty;
