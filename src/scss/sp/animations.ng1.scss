@@ -32,12 +32,45 @@
   }
 }
 
+@keyframes move-top-enter {
+  from {
+    top:100vh;
+  }
+  to {
+    top:0vh;
+  }
+}
+@keyframes move-top-leave {
+  from {
+    top: 0vh;
+  }
+  to {
+    top: -100vh;
+  }
+}
+
+.sp-move-top.ng-enter {
+  position:absolute;
+  width:100%;
+  animation: 0.75s move-top-enter;
+}
+
+.sp-move-top.ng-leave {
+  position:absolute;
+  width:100%;
+  animation: 0.75s move-top-leave;
+}
+
 .sp-fade-opacity.ng-enter {
   animation: 2s appear-opacity;
 }
 
 .sp-fade-opacity.ng-leave {
   animation: 1s disappear-opacity;
+}
+
+.sp-fade-options.ng-hide {
+  animation: 0.5s disappear;
 }
 
 .sp-fade.ng-enter {
