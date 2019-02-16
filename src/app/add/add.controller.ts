@@ -28,9 +28,12 @@ export class AddCtrl {
         this.endpointItems = [];
         this.endpointItemsLoadingComplete = false;
         this.selectedTab = "MARKETPLACE";
-        this.getEndpointItems();
         this.$templateCache = $templateCache;
         this.$templateCache.put('endpoint-item.tmpl.html', require('./endpoint-item.tmpl.html'));
+    }
+
+    $onInit() {
+        this.getEndpointItems();
     }
 
     iconText(elementName) {
@@ -113,19 +116,18 @@ export class AddCtrl {
     getEndpointItems() {
         this.endpointItemsLoadingComplete = false;
         this.RestApi.getRdfEndpointItems()
-            .success(endpointItems => {
+            .then(msg => {
+                let endpointItems = msg.data;
                 this.endpointItems = endpointItems;
                 this.endpointItemsLoadingComplete = true;
-            })
-            .error(error => {
-                console.log(error);
             });
     }
 
     addFromEndpoint(endpointUrl) {
         this.loading = true;
         this.RestApi.addBatch(endpointUrl, true)
-            .success(data => {
+            .then(msg => {
+                var data = msg.data;
                 this.loading = false;
                 data.forEach((element, index) => {
                     this.results[index] = {};

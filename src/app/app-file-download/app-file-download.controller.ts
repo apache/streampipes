@@ -12,32 +12,30 @@ export class AppFileDownloadCtrl {
         this.newFile = {};
         this.allFiles = [];
         this.availableIndices = [];
+
+    }
+
+    $onInit() {
         this.getFiles();
         this.getAvailableIndices();
 
-        $rootScope.$on("UpdateFiles", (event, item) => {
-           this.getFiles();
+        this.$rootScope.$on("UpdateFiles", (event, item) => {
+            this.getFiles();
         });
     }
 
     getAvailableIndices() {
         this.appFileDownloadRestApiService.getIndices()
-            .success(indices => {
-                this.availableIndices = indices;
-                console.log(indices);
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(indices => {
+                this.availableIndices = indices.data;
+                console.log(indices.data);
             });
     }
 
     getFiles() {
         this.appFileDownloadRestApiService.getAll()
-            .success(allFiles => {
-                this.allFiles = allFiles;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(allFiles => {
+                this.allFiles = allFiles.data;
             });
 
     };
@@ -46,7 +44,7 @@ export class AppFileDownloadCtrl {
         var start = new Date(file.timestampFrom).getTime();
         var end = new Date(file.timestampTo).getTime();
         var output = file.output;
-        this.appFileDownloadRestApiService.createFile(file.index, start, end, output).success((err, res) => {
+        this.appFileDownloadRestApiService.createFile(file.index, start, end, output).then(msg => {
             this.getFiles();
         });
     };

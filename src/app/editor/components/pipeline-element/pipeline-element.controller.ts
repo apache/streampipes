@@ -12,10 +12,11 @@ export class PipelineElementController {
     constructor(ImageChecker, ElementIconText) {
         this.ImageChecker = ImageChecker;
         this.ElementIconText = ElementIconText;
-
         this.showImage = false;
-        this.iconText =  this.ElementIconText.getElementIconText(this.pipelineElement.name);
+    }
 
+    $onInit() {
+        this.iconText =  this.ElementIconText.getElementIconText(this.pipelineElement.name);
         this.checkImageAvailable();
     }
 

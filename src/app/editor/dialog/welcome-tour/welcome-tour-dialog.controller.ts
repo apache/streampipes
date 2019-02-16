@@ -19,7 +19,7 @@ export class WelcomeTourDialogController {
 
     hideTourForever() {
         this.user.hideTutorial = true;
-        this.RestApi.updateUserDetails(this.user).success(data => {
+        this.RestApi.updateUserDetails(this.user).then(data => {
             this.$mdDialog.hide();
         });
     }

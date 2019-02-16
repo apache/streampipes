@@ -8,16 +8,16 @@ export class AppLinksCtrl {
         this.RestApi = RestApi;
         this.$window = $window;
         this.applicationLinks = [];
+    }
+
+    $onInit() {
         this.loadApplicationLinks();
     }
 
     loadApplicationLinks() {
         this.RestApi.getApplicationLinks()
-            .success(applicationLinks => {
-                this.applicationLinks = applicationLinks;
-            })
-            .error(error => {
-                console.log(error);
+            .then(applicationLinks => {
+                this.applicationLinks = applicationLinks.data;
             });
     }
 

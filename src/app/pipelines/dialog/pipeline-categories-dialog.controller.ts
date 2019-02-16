@@ -52,13 +52,10 @@ export class PipelineCategoriesDialogController {
 
     storeUpdatedPipeline(pipeline) {
         this.RestApi.updatePipeline(pipeline)
-            .success(msg => {
+            .then(msg => {
                 this.refreshPipelines();
                 this.getPipelineCategories();
                 this.fetchPipelineCategories();
-            })
-            .error(msg => {
-                console.log(msg);
             });
     }
 
@@ -74,23 +71,17 @@ export class PipelineCategoriesDialogController {
 
     addPipelineCategory() {
         this.RestApi.storePipelineCategory(this.newCategory)
-            .success(data => {
+            .then(data => {
                 this.fetchPipelineCategories();
                 this.getPipelineCategories();
                 this.addSelected = false;
-            })
-            .error(msg => {
-                console.log(msg);
             });
     }
 
     fetchPipelineCategories() {
         this.RestApi.getPipelineCategories()
-            .success(pipelineCategories => {
-                this.pipelineCategories = pipelineCategories;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(pipelineCategories => {
+                this.pipelineCategories = pipelineCategories.data;
             });
     };
 
@@ -101,12 +92,9 @@ export class PipelineCategoriesDialogController {
 
     deletePipelineCategory(pipelineId) {
         this.RestApi.deletePipelineCategory(pipelineId)
-            .success(data => {
+            .then(data => {
                 this.fetchPipelineCategories();
                 this.getPipelineCategories();
-            })
-            .error(msg => {
-                console.log(msg);
             });
     }
 

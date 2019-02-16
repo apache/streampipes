@@ -15,7 +15,9 @@ export class FreeTextController {
         {"id": "http://www.w3.org/2001/XMLSchema#double"},
         {"id": "http://www.w3.org/2001/XMLSchema#float"}];
 
-    constructor() {
+    constructor() { }
+
+    $onInit() {
         if (this.staticProperty.properties.valueSpecification) {
             this.staticProperty.properties.value = (this.staticProperty.properties.value * 1);
         }

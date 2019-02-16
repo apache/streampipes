@@ -59,15 +59,15 @@ export class EndpointInstallationController {
         endpointUri = encodeURIComponent(endpointUri.uri);
 
         this.RestApi.add(endpointUri, true)
-            .success(data => {
+            .then(msg => {
+                let data = msg.data;
                 if (data.success) {
                     this.installationStatus[index].status = "success";
                 } else {
                     this.installationStatus[index].status = "error";
                     this.installationStatus[index].details = data.notifications[0].additionalInformation;
                 }
-            })
-            .error(data => {
+            }, data => {
                 this.installationStatus[index].status = "error";
             })
             .then(() => {
@@ -84,14 +84,14 @@ export class EndpointInstallationController {
 
     uninstallElement(endpointUri, index) {
         this.RestApi.del(endpointUri.uri)
-            .success(data => {
+            .then(msg => {
+                let data = msg.data;
                 if (data.success) {
                     this.installationStatus[index].status = "success";
                 } else {
                     this.installationStatus[index].status = "error";
                 }
-            })
-            .error(data => {
+            }, data => {
                 this.installationStatus[index].status = "error";
             })
             .then(() => {

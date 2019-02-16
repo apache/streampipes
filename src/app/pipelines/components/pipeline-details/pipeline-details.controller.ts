@@ -21,6 +21,9 @@ export class PipelineDetailsController {
         this.VersionService = VersionService;
         this.starting = false;
         this.stopping = false;
+    }
+
+    $onInit() {
         this.toggleRunningOperation = this.toggleRunningOperation.bind(this);
 
         angular.forEach(this.pipelines, pipeline => {

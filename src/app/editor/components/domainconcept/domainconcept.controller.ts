@@ -8,12 +8,12 @@ export class DomainConceptController {
 
     constructor(RestApi) {
         this.RestApi = RestApi;
-        
         this.availableDomainProperties = {};
-
-        this.loadDomainConcepts(this.autoCompleteStaticProperty);
     }
 
+    $onInit() {
+        this.loadDomainConcepts(this.autoCompleteStaticProperty);
+    }
 
     loadDomainConcepts(item) {
         var query = {};
@@ -26,7 +26,8 @@ export class DomainConceptController {
         });
 
         this.RestApi.getDomainKnowledgeItems(query)
-            .success(queryResponse => {
+            .then(msg => {
+                let queryResponse = msg.data;
                 if (!this.availableDomainProperties[item.elementId]) {
                     this.availableDomainProperties[item.elementId] = {};
                 }
@@ -42,9 +43,6 @@ export class DomainConceptController {
                         this.availableDomainProperties[item.elementId][resp.propertyId].push(instanceData);
                     });
                 });
-            })
-            .error(function (msg) {
-                console.log(msg);
             });
     }
 

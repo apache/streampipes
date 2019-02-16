@@ -14,10 +14,11 @@ export class TopicSelectionDialog {
     constructor($mdDialog, RestApi, streamDescription) {
         this.$mdDialog = $mdDialog;
         this.RestApi = RestApi;
-
         this.streamDescription = streamDescription;
-        this.finished = false;
+    }
 
+    $onInit() {
+        this.finished = false;
         this.platformIdMappings = this.getMappingsByType("PLATFORM_IDENTIFIER");
         this.locationIdMappings = this.getMappingsByType("LOCATION_IDENTIFIER");
         this.sensorIdMappings = this.getMappingsByType("SENSOR_IDENTIFIER");
@@ -59,7 +60,8 @@ export class TopicSelectionDialog {
     save() {
         this.RestApi
             .updateStream(this.streamDescription)
-            .success(stream => {
+            .then(msg => {
+                let stream = msg.data;
                 this.streamDescription = stream;
                 this.hide();
             });

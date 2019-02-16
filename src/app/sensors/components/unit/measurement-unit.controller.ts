@@ -6,11 +6,16 @@ export class MeasurementUnitController {
     selectedItem: any;
     items: any;
     property: any;
+    MeasurementUnitsService: any;
 
     constructor(MeasurementUnitsService) {
+        this.MeasurementUnitsService = MeasurementUnitsService;
         this.query = {};
         this.selectedItem = "";
-        this.items = MeasurementUnitsService.getUnits();
+    }
+
+    $onInit() {
+        this.items = this.MeasurementUnitsService.getUnits();
 
         if (this.property != undefined && this.property != "") {
             angular.forEach(this.items, function (item) {

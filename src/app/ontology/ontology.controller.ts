@@ -83,10 +83,11 @@ export class OntologyCtrl {
         this.selectedInstanceProperty = "";
 
         this.selectedTab = "CONCEPTS";
+    }
 
+    $onInit() {
         this.loadProperties();
         this.loadConcepts();
-
     }
 
     setSelectedTab(type) {
@@ -95,31 +96,24 @@ export class OntologyCtrl {
 
     loadProperties() {
         this.RestApi.getOntologyProperties()
-            .success(propertiesData => {
-                this.properties = propertiesData;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(propertiesData => {
+                this.properties = propertiesData.data;
             });
     };
 
     loadConcepts() {
         this.RestApi.getOntologyConcepts()
-            .success(conceptsData => {
-                this.concepts = conceptsData;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(conceptsData => {
+                this.concepts = conceptsData.data;
             });
     };
 
     loadPropertyDetails(propertyId) {
         this.RestApi.getOntologyPropertyDetails(propertyId)
-            .success(propertiesData => {
-                this.propertyDetail = propertiesData;
+            .then(propertiesData => {
+                this.propertyDetail = propertiesData.data;
                 this.propertySelected = true;
-            })
-            .error(msg => {
+            }, msg => {
                 this.propertySelected = false;
                 console.log(msg);
             });
@@ -128,11 +122,10 @@ export class OntologyCtrl {
     loadConceptDetails(conceptId) {
         this.instanceSelected = false;
         this.RestApi.getOntologyConceptDetails(conceptId)
-            .success(conceptData => {
-                this.conceptDetail = conceptData;
+            .then(conceptData => {
+                this.conceptDetail = conceptData.data;
                 this.conceptSelected = true;
-            })
-            .error(msg => {
+            }, msg => {
                 this.conceptSelected = false;
                 console.log(msg);
             });
@@ -140,11 +133,10 @@ export class OntologyCtrl {
 
     loadInstanceDetails(instanceId) {
         this.RestApi.getOntologyInstanceDetails(instanceId)
-            .success(instanceData => {
-                this.instanceDetail = instanceData;
+            .then(instanceData => {
+                this.instanceDetail = instanceData.data;
                 this.instanceSelected = true;
-            })
-            .error(msg => {
+            }, msg => {
                 this.instanceSelected = false;
                 console.log(msg);
             });
@@ -153,10 +145,9 @@ export class OntologyCtrl {
     addPropertyToClass(p) {
         if (!this.conceptDetail.domainProperties) this.conceptDetail.domainProperties = [];
         this.RestApi.getOntologyPropertyDetails(p)
-            .success(propertiesData => {
-                this.conceptDetail.domainProperties.push(propertiesData);
-            })
-            .error(msg => {
+            .then(propertiesData => {
+                this.conceptDetail.domainProperties.push(propertiesData.data);
+            }, msg => {
                 console.log(msg);
             });
     }
@@ -164,11 +155,8 @@ export class OntologyCtrl {
     addPropertyToInstance() {
         if (!this.instanceDetail.domainProperties) this.instanceDetail.domainProperties = [];
         this.RestApi.getOntologyPropertyDetails(this.selectedInstanceProperty)
-            .success(propertiesData => {
-                this.instanceDetail.domainProperties.push(propertiesData);
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(propertiesData => {
+                this.instanceDetail.domainProperties.push(propertiesData.data);
             });
 
     }
@@ -184,11 +172,10 @@ export class OntologyCtrl {
     storeClass() {
         this.loading = true;
         this.RestApi.updateOntologyConcept(this.conceptDetail.elementHeader.id, this.conceptDetail)
-            .success(msg => {
+            .then(msg => {
                 this.loading = false;
                 this.showToast("Concept updated.");
-            })
-            .error(msg => {
+            }, msg => {
                 this.loading = false;
             });
     }
@@ -196,12 +183,11 @@ export class OntologyCtrl {
     storeInstance() {
         this.loading = true;
         this.RestApi.updateOntologyInstance(this.instanceDetail.elementHeader.id, this.instanceDetail)
-            .success(msg => {
+            .then(msg => {
                 this.loading = false;
                 this.showToast("Instance updated.");
                 this.loadConcepts();
-            })
-            .error(msg => {
+            }, msg => {
                 this.loading = false;
             });
     }
@@ -231,13 +217,11 @@ export class OntologyCtrl {
         this.loading = true;
         this.propertyDetail.labelDefined = true;
         this.RestApi.updateOntologyProperty(this.propertyDetail.elementHeader.id, this.propertyDetail)
-            .success(msg => {
+            .then(msg => {
                 this.loading = false;
                 this.showToast("Property updated.");
-            })
-            .error(msg => {
+            }, msg => {
                 this.loading = false;
-
             });
     }
 
@@ -254,34 +238,27 @@ export class OntologyCtrl {
 
     deleteConcept(conceptId) {
         this.RestApi.deleteOntologyConcept(conceptId)
-            .success(msg => {
+            .then(msg => {
                 this.loadConcepts();
                 this.conceptSelected = false;
-            })
-            .error(msg => {
+            }, msg => {
                 console.log(msg);
             });
     };
 
     deleteProperty(propertyId) {
         this.RestApi.deleteOntologyProperty(propertyId)
-            .success(msg => {
+            .then(msg => {
                 this.loadProperties();
                 this.propertySelected = false;
-            })
-            .error(msg => {
-                console.log(msg);
             });
     };
 
     deleteInstance(instanceId) {
         this.RestApi.deleteOntologyInstance(instanceId)
-            .success(msg => {
+            .then(msg => {
                 this.loadConcepts();
                 this.instanceSelected = false;
-            })
-            .error(msg => {
-                console.log(msg);
             });
     };
 

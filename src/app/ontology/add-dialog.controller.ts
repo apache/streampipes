@@ -30,15 +30,17 @@ export class AddDialogController {
         this.elementType = elementType;
         this.conceptId = conceptId;
         this.namespaces = [];
+    }
 
+    $onInit() {
         this.getNamespaces();
     }
 
 
     getNamespaces() {
         this.RestApi.getOntologyNamespaces()
-            .success(namespaces => {
-                this.namespaces = namespaces;
+            .then(namespaces => {
+                this.namespaces = namespaces.data;
             })
             .error(msg => {
                 console.log(msg);
@@ -50,7 +52,7 @@ export class AddDialogController {
         if (this.elementType === 'Property')
         {
             this.RestApi.addOntologyProperty(this.elementData)
-                .success(msg => {
+                .then(msg => {
                     this.loadProperties();
                     this.loadPropertyDetails(this.elementData.namespace + this.elementData.elementName);
                 });
@@ -58,7 +60,7 @@ export class AddDialogController {
         else if (this.elementType === 'Concept')
         {
             this.RestApi.addOntologyConcept(this.elementData)
-                .success(msg => {
+                .then(msg => {
                     this.loadConcepts();
                     this.loadConceptDetails(this.elementData.namespace + this.elementData.elementName);
                 });
@@ -68,7 +70,7 @@ export class AddDialogController {
             // parent: this,
             if (this.conceptId != undefined) this.elementData.instanceOf = this.conceptId;
             this.elementData.id = this.elementData.namespace + this.elementData.elementName
-            this.RestApi.addOntologyInstance(this.elementData).success(msg => {
+            this.RestApi.addOntologyInstance(this.elementData).then(msg => {
                 this.loadConcepts();
                 if (this.conceptId != undefined) this.loadConceptDetails(this.conceptId);
                 this.loadInstanceDetails(this.elementData.namespace + this.elementData.elementName);

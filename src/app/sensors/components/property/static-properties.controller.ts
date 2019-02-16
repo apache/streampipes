@@ -27,7 +27,9 @@ export class StaticPropertiesController {
         this.newStaticPropertyType = this.staticPropertyTypes[0].type;
         this.memberTypeSelected = false;
         this.properties = [];
+    }
 
+    $onInit() {
         this.loadProperties();
     }
 
@@ -103,11 +105,8 @@ export class StaticPropertiesController {
 
     loadProperties() {
         this.RestApi.getOntologyProperties()
-            .success(propertiesData =>  {
-                this.properties = propertiesData;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(propertiesData =>  {
+                this.properties = propertiesData.data;
             });
     }
 }

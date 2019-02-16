@@ -4,7 +4,9 @@ export class OneOfController {
 
     staticProperty: any;
 
-    constructor() {
+    constructor() { }
+
+    $onInit() {
         this.loadSavedProperty();
     }
 

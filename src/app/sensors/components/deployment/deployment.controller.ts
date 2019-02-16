@@ -13,7 +13,6 @@ export class DeploymentController {
     constructor(DeploymentService) {
         this.DeploymentService = DeploymentService;
         this.deployment = {};
-        this.deployment.elementType = this.deploymentSettings.elementType;
 
         this.resultReturned = false;
         this.loading = false;
@@ -21,6 +20,9 @@ export class DeploymentController {
         this.zipFile = "";
     }
 
+    $onInit() {
+        this.deployment.elementType = this.deploymentSettings.elementType;
+    }
 
     generateImplementation() {
         this.resultReturned = false;

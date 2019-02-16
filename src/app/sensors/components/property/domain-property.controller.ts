@@ -1,9 +1,14 @@
 export class DomainPropertyController {
 
     domainProperties: any;
+    DomainPropertiesService: any;
 
     constructor(DomainProperties) {
-        this.domainProperties = DomainProperties.getDomainProperties();
+        this.DomainPropertiesService = DomainProperties;
+    }
+
+    $onInit() {
+        this.domainProperties = this.DomainPropertiesService.getDomainProperties();
     }
 
 }

@@ -50,33 +50,6 @@ export class EditorCtrl {
             this.currentModifiedPipelineId = $stateParams.pipeline;
         }
 
-        this.selectedTab = 1;
-
-        this.minimizedEditorStand = false;
-
-        this.rawPipelineModel = [];
-        this.activeType = "stream";
-
-        angular.element($window).on('scroll', () => {
-            JsplumbBridge.repaintEverything();
-        });
-
-        $rootScope.$on("elements.loaded", () => {
-            this.makeDraggable();
-        });
-
-        if (this.AuthStatusService.email != undefined) {
-            this.RestApi
-                .getUserDetails()
-                .success(user => {
-                    if (!user.hideTutorial || user.hideTutorial == undefined) {
-                        if (this.requiredPipelineElementsForTourPresent()) {
-                            this.EditorDialogManager.showWelcomeDialog(user);
-                        }
-                    }
-                })
-        }
-
         this.tabs = [
             {
                 title: 'Data Sets',
@@ -95,6 +68,39 @@ export class EditorCtrl {
                 type: 'action',
             }
         ];
+
+
+    }
+
+    $onInit() {
+
+        this.selectedTab = 1;
+
+        this.minimizedEditorStand = false;
+
+        this.rawPipelineModel = [];
+        this.activeType = "stream";
+
+        angular.element(this.$window).on('scroll', () => {
+            this.JsplumbBridge.repaintEverything();
+        });
+
+        this.$rootScope.$on("elements.loaded", () => {
+            this.makeDraggable();
+        });
+
+        if (this.AuthStatusService.email != undefined) {
+            this.RestApi
+                .getUserDetails()
+                .then(msg => {
+                    let user = msg.data;
+                    if (!user.hideTutorial || user.hideTutorial == undefined) {
+                        if (this.requiredPipelineElementsForTourPresent()) {
+                            this.EditorDialogManager.showWelcomeDialog(user);
+                        }
+                    }
+                });
+        }
 
         this.loadSources();
         this.loadSepas();
@@ -174,8 +180,9 @@ export class EditorCtrl {
         var tempStreams = [];
         var tempSets = [];
         this.RestApi.getOwnSources()
-            .then((sources) => {
-                sources.data.forEach((source, i, sources) => {
+            .then((msg) => {
+                let sources = msg.data;
+                sources.forEach((source, i, sources) => {
                     source.spDataStreams.forEach(stream => {
                         if (stream.sourceType == 'org.streampipes.model.SpDataSet') {
                             stream.type = "set";
@@ -194,21 +201,24 @@ export class EditorCtrl {
 
     loadSepas() {
         this.RestApi.getOwnSepas()
-            .success(sepas => {
+            .then(msg => {
+                let sepas = msg.data;
                 angular.forEach(sepas, sepa => {
                     sepa.type = 'sepa';
                 });
                 this.allElements["sepa"] = sepas;
-            })
+            });
     };
 
     loadActions() {
         this.RestApi.getOwnActions()
-            .success((actions) => {
+            .then((msg) => {
+                let actions = msg.data;
                 angular.forEach(actions, action => {
                     action.type = 'action';
                 });
                 this.allElements["action"] = actions;
+                console.log(this.allElements);
             });
     };
 

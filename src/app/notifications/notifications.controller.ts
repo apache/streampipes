@@ -12,18 +12,18 @@ export class NotificationsCtrl {
         this.$rootScope = $rootScope;
         this.notifications = [{}];
         this.unreadNotifications = [];
+    }
+
+    $onInit() {
         this.getNotifications();
     }
 
     getNotifications() {
         this.unreadNotifications = [];
         this.RestApi.getNotifications()
-            .success(notifications => {
-                this.notifications = notifications;
+            .then(notifications => {
+                this.notifications = notifications.data;
                 this.getUnreadNotifications();
-            })
-            .error(msg => {
-                console.log(msg);
             });
     };
 
@@ -37,12 +37,9 @@ export class NotificationsCtrl {
 
     changeNotificationStatus(notificationId) {
         this.RestApi.updateNotification(notificationId)
-            .success(success => {
+            .then(success => {
                 this.getNotifications();
                 this.$rootScope.updateUnreadNotifications();
-            })
-            .error(msg => {
-                console.log(msg);
             });
     };
 };

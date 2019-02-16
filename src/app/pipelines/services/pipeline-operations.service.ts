@@ -22,15 +22,15 @@ export class PipelineOperationsService {
     startPipeline(pipelineId, toggleRunningOperation, refreshPipelines) {
         toggleRunningOperation('starting');
         this.RestApi.startPipeline(pipelineId)
-            .success(data => {
+            .then(msg => {
+                let data = msg.data;
                 this.showDialog(data);
                 refreshPipelines();
                 toggleRunningOperation('starting');
                 if (this.ShepherdService.isTourActive()) {
                     this.ShepherdService.trigger("pipeline-started");
                 }
-            })
-            .error(data => {
+            }, error => {
                 toggleRunningOperation('starting');
                 this.showDialog({
                     notifications: [{
@@ -44,12 +44,12 @@ export class PipelineOperationsService {
     stopPipeline(pipelineId, toggleRunningOperation, refreshPipelines) {
         toggleRunningOperation('stopping');
         this.RestApi.stopPipeline(pipelineId)
-            .success(data => {
+            .then(msg => {
+                let data = msg.data;
                 toggleRunningOperation('stopping');
                 this.showDialog(data);
                 refreshPipelines();
-            })
-            .error(data => {
+            }, error => {
                 toggleRunningOperation('stopping');
                 this.showDialog({
                     notifications: [{

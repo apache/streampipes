@@ -1,16 +1,28 @@
+import {PropertySelectorService} from "../../../services/property-selector.service";
+
 export class MappingUnaryController {
 
     staticProperty: any;
     selectedElement: any;
     availableProperties: any;
 
+    $scope: any;
+    $rootScope: any;
+    PropertySelectorService: PropertySelectorService;
+
     constructor($scope, $rootScope, PropertySelectorService) {
-        this.availableProperties = PropertySelectorService.makeFlatProperties(this.getProperties(this.findIndex()), this.staticProperty.properties.mapsFromOptions);
+        this.$scope = $scope;
+        this.$rootScope = $rootScope;
+        this.PropertySelectorService = PropertySelectorService;
+    }
+
+    $onInit() {
+        this.availableProperties = this.PropertySelectorService.makeFlatProperties(this.getProperties(this.findIndex()), this.staticProperty.properties.mapsFromOptions);
         if (!this.staticProperty.properties.selectedProperty) {
             this.staticProperty.properties.selectedProperty = this.availableProperties[0].properties.runtimeId;
         }
-        $scope.$watch(() => this.staticProperty.properties.selectedProperty, () => {
-            $rootScope.$emit(this.staticProperty.properties.internalName);
+        this.$scope.$watch(() => this.staticProperty.properties.selectedProperty, () => {
+            this.$rootScope.$emit(this.staticProperty.properties.internalName);
         });
     }
 

@@ -7,14 +7,17 @@ export class PipelineStatusController {
     constructor(RestApi) {
         this.pipelineStatus = [];
         this.RestApi = RestApi;
+    }
+
+    $onInit() {
         this.getPipelineStatus();
     }
 
     getPipelineStatus() {
         this.RestApi.getPipelineStatusById(this.pipeline._id)
-            .success(data => {
-                this.pipelineStatus = data;
-            })
+            .then(msg => {
+                this.pipelineStatus = msg.data;
+            });
     }
 
 }

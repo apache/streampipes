@@ -19,17 +19,19 @@ export class GeneratedElementImplementationController {
         this.loadingCompleted = false;
 
         this.new_zip = new JSZip();
+    }
 
+    $onInit() {
         this.new_zip.loadAsync(this.zipFile)
             .then(zip => {
                 angular.forEach(zip.files, file => {
                     var filename = file.name;
-                     this.extractedFiles.push({
-                         "fileNameLabel": this.getFileName(filename),
-                         "fileNameDescription": this.getDirectory(filename),
-                         "fileName": filename,
-                         "fileContents": file
-                     });
+                    this.extractedFiles.push({
+                        "fileNameLabel": this.getFileName(filename),
+                        "fileNameDescription": this.getDirectory(filename),
+                        "fileName": filename,
+                        "fileContents": file
+                    });
                 })
             });
     }

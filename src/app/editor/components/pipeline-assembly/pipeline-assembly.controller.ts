@@ -61,11 +61,12 @@ export class PipelineAssemblyController {
             JsplumbBridge.setZoom(scale);
             JsplumbBridge.repaintEverything();
         });
+    }
 
+    $onInit() {
         if (this.currentModifiedPipelineId) {
             this.displayPipelineById();
         }
-
     }
 
     autoLayout() {
@@ -154,7 +155,8 @@ export class PipelineAssemblyController {
 
     displayPipelineById() {
         this.RestApi.getPipelineById(this.currentModifiedPipelineId)
-            .success((pipeline) => {
+            .then((msg) => {
+                let pipeline = msg.data;
                 this.currentPipelineName = pipeline.name;
                 this.currentPipelineDescription = pipeline.description;
                 this.rawPipelineModel = this.JsplumbService.makeRawPipeline(pipeline, false);
@@ -162,7 +164,7 @@ export class PipelineAssemblyController {
                     this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false);
                     this.TransitionService.makePipelineAssemblyEmpty(false);
                 });
-            })
+            });
     };
 
 }

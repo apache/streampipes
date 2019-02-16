@@ -25,8 +25,8 @@ export class SocketConnectionDataModel extends WidgetDataModel {
 		var self = this;
 
 		this.$http.get('/dashboard/_all_docs?include_docs=true')
-			.success(function(data) {
-
+			.then(msg => {
+				let data = msg.data;
 				var element = _.find(data.rows, elem => {
 					return elem.doc.visualisation._id == self.visualisationId;
 				});

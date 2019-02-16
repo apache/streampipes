@@ -11,7 +11,8 @@ export class PipelineElementRecommendationService {
     getRecommendations(allElements, currentPipeline) {
         return new Promise((resolve, reject) => {
             this.RestApi.recommendPipelineElement(currentPipeline)
-                .success(data => {
+                .then(msg => {
+                    let data = msg.data;
                     if (data.success) {
                         var result = {};
                         result["success"] = true;

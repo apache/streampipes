@@ -17,8 +17,10 @@ export class PipelineElementOptionsController {
     allElements: any;
     deleteFunction: any;
     TransitionService: any;
+    $rootScope: any;
 
     constructor($rootScope, ObjectProvider, PipelineElementRecommendationService, InitTooltips, JsplumbBridge, EditorDialogManager, JsplumbService, TransitionService) {
+        this.$rootScope = $rootScope;
         this.ObjectProvider = ObjectProvider;
         this.PipelineElementRecommendationService = PipelineElementRecommendationService;
         this.InitTooltips = InitTooltips;
@@ -31,8 +33,10 @@ export class PipelineElementOptionsController {
         this.possibleElements = [];
         this.recommendedElements = [];
         this.recommendationsShown = false;
+    }
 
-        $rootScope.$on("SepaElementConfigured", (event, item) => {
+    $onInit() {
+        this.$rootScope.$on("SepaElementConfigured", (event, item) => {
             if (item === this.pipelineElement.payload.DOM) {
                 this.initRecs(this.pipelineElement.payload.DOM, this.rawPipelineModel);
             }

@@ -5,12 +5,19 @@ export class CustomOutputController {
     collectedPropertiesFirstStream: any;
     collectedPropertiesSecondStream: any;
 
+    PropertySelectorService: any;
+
     constructor(PropertySelectorService) {
-        this.collectedPropertiesFirstStream = PropertySelectorService
-            .makeProperties(this.getProperties(0), this.outputStrategy.properties.availablePropertyKeys, PropertySelectorService.firstStreamPrefix);
-        this.collectedPropertiesSecondStream = PropertySelectorService
-            .makeProperties(this.getProperties(1), this.outputStrategy.properties.availablePropertyKeys, PropertySelectorService.secondStreamPrefix);
+        this.PropertySelectorService = PropertySelectorService;
     }
+
+    $onInit() {
+        this.collectedPropertiesFirstStream = this.PropertySelectorService
+            .makeProperties(this.getProperties(0), this.outputStrategy.properties.availablePropertyKeys, this.PropertySelectorService.firstStreamPrefix);
+        this.collectedPropertiesSecondStream = this.PropertySelectorService
+            .makeProperties(this.getProperties(1), this.outputStrategy.properties.availablePropertyKeys, this.PropertySelectorService.secondStreamPrefix);
+    }
+
 
     getProperties(streamIndex) {
         return this.selectedElement.inputStreams[streamIndex] === undefined ? [] : this.selectedElement.inputStreams[streamIndex].eventSchema.eventProperties;
@@ -28,4 +35,4 @@ export class CustomOutputController {
     }
 }
 
-CustomOutputController.$inject=['PropertySelectorService']
+CustomOutputController.$inject = ['PropertySelectorService']

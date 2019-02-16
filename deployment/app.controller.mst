@@ -82,17 +82,14 @@ export class AppCtrl {
 
         updateUnreadNotifications() {
             this.RestApi.getNotifications()
-                .success(notifications => {
+                .then(notifications => {
                     var notificationCount = 0;
-                    angular.forEach(notifications, (value, key) => {
+                    angular.forEach(notifications.data, (value, key) => {
                         if (!value.read) {
                             notificationCount++;
                         }
                     });
                     this.notificationCount = notificationCount;
-                })
-                .error(function (msg) {
-                    console.log(msg);
                 });
         };
 

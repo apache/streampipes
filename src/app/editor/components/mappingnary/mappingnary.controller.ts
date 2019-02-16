@@ -3,9 +3,14 @@ export class MappingNaryController {
     staticProperty: any;
     selectedElement: any;
     availableProperties: any;
+    PropertySelectorService: any;
 
     constructor(PropertySelectorService) {
-        this.availableProperties = PropertySelectorService.makeFlatProperties(this.getProperties(this.findIndex()), this.staticProperty.properties.mapsFromOptions);
+        this.PropertySelectorService = PropertySelectorService;
+    }
+
+    $onInit() {
+        this.availableProperties = this.PropertySelectorService.makeFlatProperties(this.getProperties(this.findIndex()), this.staticProperty.properties.mapsFromOptions);
     }
 
     getProperties(streamIndex) {

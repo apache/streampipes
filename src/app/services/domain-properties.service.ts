@@ -9,11 +9,8 @@ export class DomainProperties {
 		this.RestApi = RestApi;
 		this.availableDomainProperties = {};
 		this.RestApi.getOntologyProperties()
-            .success(propertiesData => {
-                this.availableDomainProperties = propertiesData;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(propertiesData => {
+                this.availableDomainProperties = propertiesData.data;
             });
 	}
 

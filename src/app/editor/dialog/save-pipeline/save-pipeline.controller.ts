@@ -34,10 +34,11 @@ export class SavePipelineController {
         this.updateMode = "update";
         this.TransitionService = TransitionService;
         this.ShepherdService = ShepherdService;
-
-        this.getPipelineCategories();
     }
 
+    $onInit() {
+        this.getPipelineCategories();
+    }
 
     displayErrors(data) {
         for (var i = 0, notification; notification = data.notifications[i]; i++) {
@@ -53,11 +54,8 @@ export class SavePipelineController {
 
     getPipelineCategories() {
         this.RestApi.getPipelineCategories()
-            .success(pipelineCategories => {
-                this.pipelineCategories = pipelineCategories;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(pipelineCategories => {
+                this.pipelineCategories = pipelineCategories.data;
             });
 
     };
@@ -70,14 +68,14 @@ export class SavePipelineController {
         }
         
         this.ObjectProvider.storePipeline(this.pipeline)
-            .success(data => {
+            .then(msg => {
+                let data = msg.data;
                 if (data.success) {
                     if (this.modificationMode && this.updateMode === 'update') {
                         this.RestApi.deleteOwnPipeline(this.pipeline._id)
-                            .success(d => {
+                            .then(d => {
                                 this.afterStorage(data, switchTab);
-                            })
-                            .error(d => {
+                            }, d => {
                                 this.showToast("error", "Could not delete Pipeline");
                             })
                     } else {
@@ -86,8 +84,7 @@ export class SavePipelineController {
                 } else {
                     this.displayErrors(data);
                 }
-            })
-            .error(function (data) {
+            }, data => {
                 this.showToast("error", "Could not fulfill request", "Connection Error");
             });
     };

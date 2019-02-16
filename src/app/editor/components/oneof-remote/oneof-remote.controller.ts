@@ -14,8 +14,10 @@ export class OneOfRemoteController {
 
     constructor(RestApi, $rootScope) {
         this.RestApi = RestApi;
-        this.$rootScope = $rootScope
+        this.$rootScope = $rootScope;
+    }
 
+    $onInit() {
         if (this.staticProperty.properties.options.length == 0) {
             this.loadOptionsFromRestApi();
         } else {
@@ -40,7 +42,6 @@ export class OneOfRemoteController {
                 }
             });
         });
-
     }
 
     loadOptionsFromRestApi() {
@@ -51,7 +52,8 @@ export class OneOfRemoteController {
         resolvableOptionsParameterRequest['runtimeResolvableInternalId'] = this.staticProperty.properties.internalName;
 
         this.showOptions = false;
-        this.RestApi.fetchRemoteOptions(resolvableOptionsParameterRequest).success(data => {
+        this.RestApi.fetchRemoteOptions(resolvableOptionsParameterRequest).then(msg => {
+            let data = msg.data;
             this.staticProperty.properties.options = data;
                 this.staticProperty.properties.options[0].selected = true;
                 this.loadSavedProperty();

@@ -57,30 +57,27 @@ export class MyElementsCtrl {
 
     loadOwnActions() {
         this.RestApi.getOwnActions()
-            .success(actions => {
-                this.currentElements = actions;
-            })
-            .error(error => {
+            .then(actions => {
+                this.currentElements = actions.data;
+            }, error => {
                 this.status = 'Unable to load actions: ' + error.message;
             });
     }
 
     loadOwnSepas() {
         this.RestApi.getOwnSepas()
-            .success(sepas => {
-                this.currentElements = sepas;
-            })
-            .error(error => {
+            .then(sepas => {
+                this.currentElements = sepas.data;
+            }, error => {
                 this.status = 'Unable to load sepas: ' + error.message;
             });
     }
 
     loadOwnSources() {
         this.RestApi.getOwnSources()
-            .success(sources => {
-                this.currentElements = sources;
-            })
-            .error(error => {
+            .then(sources => {
+                this.currentElements = sources.data;
+            }, error => {
                 this.status = 'Unable to load sepas: ' + error.message;
             });
     }
@@ -106,8 +103,8 @@ export class MyElementsCtrl {
 
     refresh(elementUri, type) {
         this.RestApi.update(elementUri)
-            .success(msg => {
-                this.showToast(msg.notifications[0].title);
+            .then(msg => {
+                this.showToast(msg.data.notifications[0].title);
             })
             .then(() => {
                 this.loadCurrentElements(type);
@@ -116,26 +113,25 @@ export class MyElementsCtrl {
 
     remove(elementUri, type) {
         this.RestApi.del(elementUri)
-            .success(msg => {
-                this.showToast(msg.notifications[0].title);
+            .then(msg => {
+                this.showToast(msg.data.notifications[0].title);
                 this.loadCurrentElements(type);
             });
     }
 
     jsonld(event, elementUri) {
         this.RestApi.jsonld(elementUri)
-            .success(msg => {
-                this.showAlert(event, elementUri, msg);
+            .then(msg => {
+                this.showAlert(event, elementUri, msg.data);
             });
     }
 
     toggleFavoriteAction(action, type) {
         if (action.favorite) {
             this.RestApi.removePreferredAction(action.elementId)
-                .success(msg => {
-                    this.showToast(msg.notifications[0].title);
-                })
-                .error(error => {
+                .then(msg => {
+                    this.showToast(msg.data.notifications[0].title);
+                }, error => {
                     this.showToast(error.data.name);
                 })
                 .then(() => {
@@ -144,10 +140,9 @@ export class MyElementsCtrl {
         }
         else {
             this.RestApi.addPreferredAction(action.elementId)
-                .success(msg => {
-                    this.showToast(msg.notifications[0].title);
-                })
-                .error(error => {
+                .then(msg => {
+                    this.showToast(msg.data.notifications[0].title);
+                }, error => {
                     this.showToast(error.notifications[0].title);
                 })
                 .then(() => {
@@ -159,11 +154,10 @@ export class MyElementsCtrl {
     toggleFavoriteSepa(sepa, type) {
         if (sepa.favorite) {
             this.RestApi.removePreferredSepa(sepa.elementId)
-                .success(msg => {
-                    this.showToast(msg.notifications[0].title);
-                })
-                .error(error => {
-                    this.showToast(error.notifications[0].title);
+                .then(msg => {
+                    this.showToast(msg.data.notifications[0].title);
+                }, error => {
+                    this.showToast(error.data.notifications[0].title);
                 })
                 .then(() => {
                     this.loadCurrentElements(type);
@@ -171,11 +165,10 @@ export class MyElementsCtrl {
         }
         else {
             this.RestApi.addPreferredSepa(sepa.elementId)
-                .success(msg => {
-                    this.showToast(msg.notifications[0].title);
-                })
-                .error(error => {
-                    this.showToast(error.notifications[0].title);
+                .then(msg => {
+                    this.showToast(msg.data.notifications[0].title);
+                }, error => {
+                    this.showToast(error.data.notifications[0].title);
                 })
                 .then(() => {
                     this.loadCurrentElements(type);
@@ -186,11 +179,10 @@ export class MyElementsCtrl {
     toggleFavoriteSource(source, type) {
         if (source.favorite) {
             this.RestApi.removePreferredSource(source.elementId)
-                .success(msg => {
-                    this.showToast(msg.notifications[0].title);
-                })
-                .error(error => {
-                    this.showToast(error.notifications[0].title);
+                .then(msg => {
+                    this.showToast(msg.data.notifications[0].title);
+                }, error => {
+                    this.showToast(error.data.notifications[0].title);
                 })
                 .then(() => {
                     this.loadCurrentElements(type);
@@ -198,11 +190,10 @@ export class MyElementsCtrl {
         }
         else {
             this.RestApi.addPreferredSource(source.elementId)
-                .success(msg => {
-                    this.showToast(msg.notifications[0].title);
-                })
-                .error(error => {
-                    this.showToast(error.notifications[0].title);
+                .then(msg => {
+                    this.showToast(msg.data.notifications[0].title);
+                }, error => {
+                    this.showToast(error.data.notifications[0].title);
                 })
                 .then(() => {
                     this.loadCurrentElements(type);

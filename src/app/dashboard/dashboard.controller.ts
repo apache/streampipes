@@ -17,6 +17,7 @@ export class DashboardCtrl {
     ShepherdService: any;
     maximized: any = false;
     pipelinePresent: any = false;
+    $templateCache: any;
 
     constructor($http, $mdDialog, WidgetInstances, $scope, $templateCache, ShepherdService) {
         this.$http = $http;
@@ -24,9 +25,12 @@ export class DashboardCtrl {
         this.WidgetInstances = WidgetInstances;
         this.$scope = $scope;
         this.ShepherdService = ShepherdService;
+        this.$templateCache = $templateCache;
+    }
 
-        $templateCache.put('dashboard-frame.html', require('./dashboard-frame.html'));
-        $templateCache.put('dashboard-layout-frame.html', require('./dashboard-layout-frame.html'));
+    $onInit() {
+        this.$templateCache.put('dashboard-frame.html', require('./dashboard-frame.html'));
+        this.$templateCache.put('dashboard-layout-frame.html', require('./dashboard-layout-frame.html'));
 
         // this.visualizablePipelines = [];
         this.layoutOptions = {
@@ -143,7 +147,8 @@ export class DashboardCtrl {
 
     isPipelinePresent() {
         this.$http.get('/visualizablepipeline/_all_docs?include_docs=true')
-            .success(data => {
+            .then(msg => {
+                var data = msg.data;
                 this.pipelinePresent = (data.rows.length > 0);
             });
     }

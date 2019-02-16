@@ -6,8 +6,9 @@ export class TopicSelectionDialogController {
     eventProperties: any;
     streamDescription: any;
 
-    constructor() {
+    constructor() { }
 
+    $onInit() {
         angular.forEach(this.topicMappings, topicMapping => {
             if (!topicMapping.selectedMapping) {
                 topicMapping.selectedMapping = "*";

@@ -14,6 +14,9 @@ export class PipelineActionsController {
         this.starting = false;
         this.stopping = false;
         this.$state = $state;
+    }
+
+    $onInit() {
         this.toggleRunningOperation = this.toggleRunningOperation.bind(this);
         this.reload = this.reload.bind(this);
         this.switchToPipelineView = this.switchToPipelineView.bind(this);

@@ -22,27 +22,23 @@ export class ContextController {
         this.file = {};
 
         this.availableFormats = ["RDFXML", "JSONLD", "TURTLE", "RDFA"];
+    }
 
+    $onInit() {
         this.getContexts();
     }
 
     getContexts() {
         this.RestApi.getAvailableContexts()
-            .success(contexts => {
-                this.contexts = contexts;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(contexts => {
+                this.contexts = contexts.data;
             });
     }
 
     deleteContext(contextId) {
         this.RestApi.deleteContext(contextId)
-            .success(msg => {
+            .then(msg => {
                 this.getContexts();
-            })
-            .error(msg => {
-                console.log(msg);
             });
     }
 

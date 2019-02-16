@@ -9,6 +9,8 @@ export class PipelineElementIconStandController {
     activeType: any;
     currentElementName: any;
     EditorDialogManager: any;
+    currentElements: any;
+    $scope: any;
 
     constructor($scope, $rootScope, RestApi, EditorDialogManager) {
         this.RestApi = RestApi;
@@ -16,12 +18,15 @@ export class PipelineElementIconStandController {
         this.selectedOptions = [];
         this.options = [];
         this.EditorDialogManager = EditorDialogManager;
+        this.$scope = $scope;
+    }
+
+    $onInit() {
         this.loadOptions();
 
-        $scope.$watch(() => this.activeType, () => {
+        this.$scope.$watch(() => this.activeType, () => {
             this.selectAllOptions();
         });
-
     }
 
     openHelpDialog(pipelineElement) {
@@ -34,7 +39,8 @@ export class PipelineElementIconStandController {
 
     loadOptions(type?) {
         this.RestApi.getEpCategories()
-            .then(s => {
+            .then(msg => {
+                let s = msg;
                 this.handleCategoriesSuccess("stream", s);
                 this.handleCategoriesSuccess("set", s);
             });

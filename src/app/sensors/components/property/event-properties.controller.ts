@@ -24,16 +24,16 @@ export class EventPropertiesController {
             }];
 
         this.existingProperties = [];
+    }
+
+    $onInit() {
         this.loadProperties();
     }
 
     loadProperties() {
         this.RestApi.getOntologyProperties()
-            .success(propertiesData => {
-                this.existingProperties = propertiesData;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(propertiesData => {
+                this.existingProperties = propertiesData.data;
             });
     }
 

@@ -11,7 +11,7 @@ export class FileDetailsController {
     }
 
     deleteFile(fileName) {
-        this.appFileDownloadRestApiService.removeFile(fileName).success(() => {
+        this.appFileDownloadRestApiService.removeFile(fileName).then(() => {
             this.$rootScope.$broadcast("UpdateFiles");
         });
     }

@@ -12,28 +12,26 @@ export class DialogController {
     	this.namespaces = [];
 		this.addSelected = false;
 		this.newNamespace = {};
+	}
 
+	$onInit() {
         this.getNamespaces();
 	}
 
 	getNamespaces() {
 		this.RestApi.getOntologyNamespaces()
-			.success(namespaces => {
-				this.namespaces = namespaces;
-			})
-			.error(function(msg){
-				console.log(msg);
+			.then(namespaces => {
+				this.namespaces = namespaces.data;
 			});
 	}
 
 	addNamespace() {
 		this.RestApi.addOntologyNamespace(this.newNamespace)
-			.success(msg => {
+			.then(msg => {
 				this.addSelected = false;
 				this.newNamespace = {};
 				this.getNamespaces();
-			})
-			.error(msg => {
+			}, msg => {
 				this.addSelected = false;
 				console.log(msg);
 			}); 		
@@ -41,12 +39,9 @@ export class DialogController {
 
 	deleteNamespace(prefix) {
 		this.RestApi.deleteOntologyNamespace(prefix)
-			.success(msg => {
+			.then(msg => {
 				this.getNamespaces();
-			})
-			.error(msg => {
-				console.log(msg);
-			}); 	
+			});
 	}
 
 	showAddInput() {

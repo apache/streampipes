@@ -1,15 +1,20 @@
 export class JsonLdDialogController {
 
     $mdDialog: any;
+    $timeout: any;
     title: any;
     content: any;
     loadingCompleted: any;
 
     constructor($mdDialog, $timeout, title, content) {
         this.$mdDialog = $mdDialog;
+        this.$timeout = $timeout;
         this.title = title;
         this.content = content;
-        $timeout(() => {
+    }
+
+    $onInit() {
+        this.$timeout(() => {
             this.loadingCompleted = true;
         });
     }

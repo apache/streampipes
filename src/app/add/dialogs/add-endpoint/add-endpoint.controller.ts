@@ -14,6 +14,9 @@ export class AddEndpointController {
         this.addSelected = false;
         this.newEndpoint = {};
         this.getEndpointItems = getEndpointItems;
+    }
+
+    $onInit() {
         this.loadRdfEndpoints();
     }
 
@@ -23,33 +26,24 @@ export class AddEndpointController {
 
     loadRdfEndpoints() {
         this.RestApi.getRdfEndpoints()
-            .success(rdfEndpoints => {
-                this.rdfEndpoints = rdfEndpoints;
-            })
-            .error(error => {
-                console.log(error);
+            .then(rdfEndpoints => {
+                this.rdfEndpoints = rdfEndpoints.data;
             });
     }
 
     addRdfEndpoint(rdfEndpoint) {
         this.RestApi.addRdfEndpoint(rdfEndpoint)
-            .success(message => {
+            .then(message => {
                 this.loadRdfEndpoints();
                 this.getEndpointItems();
-            })
-            .error(error => {
-                console.log(error);
             });
     }
 
     removeRdfEndpoint(rdfEndpointId) {
         this.RestApi.removeRdfEndpoint(rdfEndpointId)
-            .success(message => {
+            .then(message => {
                 this.loadRdfEndpoints();
                 this.getEndpointItems();
-            })
-            .error(error => {
-                console.log(error);
             });
     }
 

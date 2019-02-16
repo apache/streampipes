@@ -223,7 +223,8 @@ export class PipelineController {
                 this.currentPipelineModel = this.objectProvider.makePipeline(this.rawPipelineModel);
                 pe.settings.loadingStatus = true;
                 this.objectProvider.updatePipeline(this.currentPipelineModel)
-                    .success(data => {
+                    .then(msg => {
+                        let data = msg.data;
                         pe.settings.loadingStatus = false;
                         if (data.success) {
                             info.targetEndpoint.setType("token");
@@ -244,7 +245,7 @@ export class PipelineController {
                             this.JsplumbBridge.detach(info.connection);
                             this.EditorDialogManager.showMatchingErrorDialog(data);
                         }
-                    })
+                    });
             }
         });
 

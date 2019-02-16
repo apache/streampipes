@@ -39,13 +39,15 @@ export class SetupCtrl {
     configure(currentInstallationStep) {
         this.installationRunning = true;
         this.loading = true;
-        this.RestApi.setupInstall(this.setup, currentInstallationStep).success(data => {
+        this.RestApi.setupInstall(this.setup, currentInstallationStep).then(msg => {
+            let data = msg.data;
             this.installationResults = this.installationResults.concat(data.statusMessages);
             this.nextTaskTitle = data.nextTaskTitle;
             let nextInstallationStep = currentInstallationStep + 1;
             if (nextInstallationStep > (data.installationStepCount - 1)) {
                 this.RestApi.configured()
-                    .success(data => {
+                    .then(msg => {
+                        let data = msg.data;
                         if (data.configured) {
                             this.installationFinished = true;
                             this.loading = false;

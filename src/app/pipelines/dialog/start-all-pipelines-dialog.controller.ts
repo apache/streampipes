@@ -29,7 +29,9 @@ export class StartAllPipelinesController {
         this.installationRunning = false;
         this.action = action;
         this.refreshPipelines = refreshPipelines;
+    }
 
+    $onInit() {
         this.getPipelinesToModify();
         if (this.pipelinesToModify.length == 0) {
             this.nextButton = "Close";
@@ -87,14 +89,14 @@ export class StartAllPipelinesController {
 
     startPipeline(pipeline, index) {
         this.RestApi.startPipeline(pipeline._id)
-            .success(data => {
+            .then(msg => {
+                let data = msg.data;
                 if (data.success) {
                     this.installationStatus[index].status = "success";
                 } else {
                     this.installationStatus[index].status = "error";
                 }
-            })
-            .error(data => {
+            }, data => {
                 this.installationStatus[index].status = "error";
             })
             .then(() => {
@@ -112,14 +114,14 @@ export class StartAllPipelinesController {
 
     stopPipeline(pipeline, index) {
         this.RestApi.stopPipeline(pipeline._id)
-            .success(data => {
+            .then(msg => {
+                let data = msg.data;
                 if (data.success) {
                     this.installationStatus[index].status = "success";
                 } else {
                     this.installationStatus[index].status = "error";
                 }
-            })
-            .error(data => {
+            }, data => {
                 this.installationStatus[index].status = "error";
             })
             .then(() => {

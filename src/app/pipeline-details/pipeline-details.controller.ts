@@ -31,11 +31,8 @@ export class PipelineDetailsCtrl {
 
     loadPipeline() {
         this.RestApi.getPipelineById(this.currentPipeline)
-            .success(pipeline => {
-                this.pipeline = pipeline;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(pipeline => {
+                this.pipeline = pipeline.data;
             });
     }
 

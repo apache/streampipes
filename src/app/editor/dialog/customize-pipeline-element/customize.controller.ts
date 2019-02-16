@@ -33,7 +33,6 @@ export class CustomizeController {
         this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.ShepherdService = ShepherdService;
-
     }
 
     toggleHelpDialog() {

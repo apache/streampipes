@@ -47,7 +47,9 @@ export class PipelineCtrl {
         this.activeCategory = "";
 
         this.startPipelineDirectly = $stateParams.pipeline;
+    }
 
+    $onInit() {
         this.getPipelineCategories();
         this.getPipelines();
         this.getSystemPipelines();
@@ -63,8 +65,8 @@ export class PipelineCtrl {
 
     getPipelines() {
         this.RestApi.getOwnPipelines()
-            .success(pipelines => {
-                this.pipelines = pipelines;
+            .then(pipelines => {
+                this.pipelines = pipelines.data;
                 if (this.startPipelineDirectly != "") {
                     angular.forEach(this.pipelines, pipeline => {
                         if (pipeline._id == this.startPipelineDirectly) {
@@ -73,30 +75,21 @@ export class PipelineCtrl {
                     });
                     this.startPipelineDirectly = "";
                 }
-            })
-            .error(msg => {
-                console.log(msg);
             });
 
     };
 
     getSystemPipelines() {
         this.RestApi.getSystemPipelines()
-            .success(pipelines => {
-                this.systemPipelines = pipelines;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(pipelines => {
+                this.systemPipelines = pipelines.data;
             });
     }
 
    getPipelineCategories() {
         this.RestApi.getPipelineCategories()
-            .success(pipelineCategories => {
-                this.pipelineCategories = pipelineCategories;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(pipelineCategories => {
+                this.pipelineCategories = pipelineCategories.data;
             });
 
     };

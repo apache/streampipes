@@ -5,7 +5,7 @@ import * as angular from 'angular';
 //import "jquery-ui";
 
 import '@uirouter/angular-hybrid';
-import ngAnimate from 'angular-animate'
+import 'angular-animate';
 
 import spServices from './services/services.module';
 
@@ -35,7 +35,7 @@ export const Ng1AppModule = angular
         spPipelineDetails,
         'ui.router',
         'ui.router.upgrade',
-        ngAnimate,
+        'ngAnimate',
         {{#modulesActive}}
         {{^ng5}}
         {{module}},
@@ -45,14 +45,14 @@ export const Ng1AppModule = angular
     .run(["$rootScope", "$transitions", "$location", "RestApi", "AuthService", "$state", "$urlRouter", "ObjectProvider", "AuthStatusService", "TransitionService",
     function ($rootScope, $transitions, $location, RestApi, AuthService, $state, $urlRouter, ObjectProvider, AuthStatusService, TransitionService) {
         if (!$location.path().startsWith("/login") && !$location.path().startsWith("/sso")) {
-            RestApi.configured().success(function (msg) {
-                if (msg.configured) {
-                    AuthService.authenticate();
-                }
-                else {
-                    AuthStatusService.authenticated = false;
-                    $state.go("setup");
-                }
+            RestApi.configured().then(msg => {
+                            if (msg.data.configured) {
+                                AuthService.authenticate();
+                            }
+                            else {
+                                AuthStatusService.authenticated = false;
+                                $state.go("setup");
+                            }
             });
         }
         window['loading_screen'].finish();

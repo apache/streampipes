@@ -45,6 +45,10 @@ md-input-container.sp.md-input-focused label:not(.md-no-float), md-input-contain
   color:white;
  }
 
+md-input-container.sp label:not(.md-container-ignore).md-required:after {
+  color:white;
+}
+
 md-input-container.sp.md-input-focused .md-input {
   border-width: 2px;
 }

@@ -29,23 +29,19 @@ export class DeletePipelineDialogController {
         this.isInProgress = true;
         this.currentStatus = "Deleting pipeline...";
         this.RestApi.deleteOwnPipeline(this.pipeline._id)
-            .success(data => {
+            .then(data => {
                 this.refreshPipelines();
                 this.hide();
-            })
-            .error(function (data) {
-                console.log(data);
-            })
+            });
     }
 
     stopAndDeletePipeline() {
         this.isInProgress = true;
         this.currentStatus = "Stopping pipeline...";
         this.RestApi.stopPipeline(this.pipeline._id)
-            .success(data => {
+            .then(data => {
                this.deletePipeline();
-            })
-            .error(data => {
+            }, data => {
                 this.deletePipeline();
             });
     }

@@ -56,13 +56,15 @@ export class AddWidgetCtrl {
         this.visualizablePipelines = [];
 
         this.$http.get('/visualizablepipeline/_all_docs?include_docs=true')
-            .success(data => {
+            .then(msg => {
+                let data = msg.data;
                 var tempVisPipelines = data.rows;
 
                 // get the names for each pipeline
                 angular.forEach(tempVisPipelines, vis => {
                     this.$http.get('/pipeline/' + vis.doc.pipelineId)
-                        .success(pipeline => {
+                        .then(msg => {
+                            let pipeline = msg.data;
                             vis.doc.name = pipeline.name;
                             this.visualizablePipelines.push(vis);
                         });

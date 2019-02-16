@@ -8,7 +8,6 @@ export class MatchingErrorController {
     constructor($mdDialog, elementData) {
         this.$mdDialog = $mdDialog;
         this.elementData = elementData;
-
         this.msg = elementData;
     }
 

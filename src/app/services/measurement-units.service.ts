@@ -18,21 +18,15 @@ export class MeasurementUnits {
 
     updateUnits() {
         this.RestApi.getAllUnits()
-            .success(measurementUnits => {
-                this.allMeasurementUnits = measurementUnits;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(measurementUnits => {
+                this.allMeasurementUnits = measurementUnits.data;
             });
     }
 
     updateUnitTypes() {
         this.RestApi.getAllUnitTypes()
-            .success(measurementUnits => {
-                this.allMeasurementUnitTypes = measurementUnits;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(measurementUnits => {
+                this.allMeasurementUnitTypes = measurementUnits.data;
             });
     }
 

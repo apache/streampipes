@@ -164,7 +164,8 @@ export class JsplumbService {
     };
 
     setDropped($newElement, json, endpoints, preview) {
-        this.RestApi.updateDataSet(json).success(data => {
+        this.RestApi.updateDataSet(json).then(msg => {
+            let data = msg.data;
             json.eventGrounding = data.eventGrounding;
             json.datasetInvocationId = data.invocationId;
             this.streamDropped($newElement, json, endpoints, preview);

@@ -18,6 +18,7 @@ export class PossibleElementsController {
 
     create(possibleElement) {
         this.JsplumbService.createElement(this.rawPipelineModel, possibleElement, this.pipelineElementDomId);
+        this.hide();
     }
 
     iconText(elementId) {

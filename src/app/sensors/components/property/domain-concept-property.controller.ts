@@ -8,28 +8,24 @@ export class DomainConceptPropertyController {
         this.RestApi = RestApi;
         this.concepts = [];
         this.properties = [];
+    }
 
+    $onInit() {
         this.loadProperties();
         this.loadConcepts();
     }
 
     loadProperties() {
         this.RestApi.getOntologyProperties()
-            .success(propertiesData => {
-                this.properties = propertiesData;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(propertiesData => {
+                this.properties = propertiesData.data;
             });
     }
 
     loadConcepts() {
         this.RestApi.getOntologyConcepts()
-            .success(conceptsData => {
-                this.concepts = conceptsData;
-            })
-            .error(msg => {
-                console.log(msg);
+            .then(conceptsData => {
+                this.concepts = conceptsData.data;
             });
     }
 

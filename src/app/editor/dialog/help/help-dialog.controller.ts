@@ -33,6 +33,9 @@ export class HelpDialogController {
         this.$timeout = $timeout;
         this.pollingActive = true;
         this.error = false;
+    }
+
+    $onInit() {
         if (this.pipelineElement.type == 'stream') {
             this.loadCurrentData();
         }
@@ -73,7 +76,8 @@ export class HelpDialogController {
     };
 
     loadCurrentData() {
-        this.RestApi.getRuntimeInfo(this.pipelineElement).success(data => {
+        this.RestApi.getRuntimeInfo(this.pipelineElement).then(msg => {
+            let data = msg.data;
             if (!data.notifications) {
                 this.error = false;
                 this.latestMeasurements = data;
