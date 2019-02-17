@@ -2,14 +2,21 @@ import * as angular from 'angular';
 
 export class CollectionController {
 
+    staticProperty: any;
+
     constructor() {
 
     }
 
+    $onInit() {
+        console.log(this.staticProperty);
+    }
+
     addMember(sp) {
-        sp.properties.members.push(angular.copy(sp.properties.members[0]));
-        sp.properties.members[sp.properties.members.length - 1].properties.elementName =
-            sp.properties.members[sp.properties.members.length - 1].properties.elementName.concat(this.makeId());
+        console.log(sp);
+        let newMember = angular.copy(this.staticProperty.properties.staticPropertyTemplate);
+        newMember.properties.elementId = newMember.properties.elementId.concat(this.makeId());
+        sp.properties.members.push(newMember);
     }
 
     removeMember(sp, index) {
