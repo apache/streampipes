@@ -11,7 +11,7 @@ variables:
 
 stages:
   - build
-#  - github
+  - github
 
 build:
   image: maven:3-jdk-8

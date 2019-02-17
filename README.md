@@ -11,9 +11,12 @@ Read the full documentation at [https://docs.streampipes.org](https://docs.strea
 
 ### StreamPipes Pipeline Elements Examples
 
-The pipeline elements defined in this repository do nothing - they only serve to provide examples on how pipeline 
+The pipeline elements defined in this repository **do nothing** - they only serve to provide examples on how pipeline 
 elements can be created with StreamPipes. The examples are referenced in the SDK guide 
 (https://docs.streampipes.org/docs/dev-guide-introduction)
+
+If you are looking for **real** pipeline elements that can be installed in StreamPipes, have a look at 
+[https://www.github.com/streampipes/streampipes-pipeline-elements](StreamPipes Pipeline Elements).
 
 ### Feedback
 

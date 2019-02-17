@@ -6,7 +6,11 @@
 
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-pipeline-elements-examples</artifactId>
+    <packaging>pom</packaging>
     <version>0.60.2-SNAPSHOT</version>
+    <modules>
+        <module>streampipes-pipeline-elements-examples-processors-jvm</module>
+    </modules>
 
     <properties>
         <streampipes.version>0.60.2-SNAPSHOT</streampipes.version>
