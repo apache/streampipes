@@ -1,0 +1,47 @@
+variables:
+  REGISTRY_HOST: ipe-wim-gitlab.fzi.de:5000
+  IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH
+  DOCKER_HUB_IMAGE_NAME: streampipes
+  MAVEN_CLI_OPTS: -DskipTests --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true
+  HARBOR_REGISTRY_HOST: laus.fzi.de:8201
+  HARBOR_IMAGE_NAME: $HARBOR_REGISTRY_HOST/$CI_PROJECT_PATH
+  GIT_REPO_ORIGIN: ssh://git@ipe-wim-gitlab.fzi.de:2222
+  GIT_STRATEGY: clone
+
+
+stages:
+  - build
+#  - github
+
+build:
+  image: maven:3-jdk-8
+  stage: build
+  script:
+    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    - mvn clean package javadoc:aggregate -U -DskipTests
+    - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
+    - "echo $MVN_VERSION >> ./target/mvn_version"
+  artifacts:
+    paths:
+      - ./*/target/*.jar
+      - ./target/mvn_version
+    expire_in:  1 hour
+  except:
+      - /release-.*$/
+
+
+github:
+  image: maven:3-jdk-8
+  stage: github
+  script:
+    - git config --global user.email 'zehnder@fzi.de'
+    - git config --global user.name 'zehnder'
+    - git checkout $CI_COMMIT_REF_NAME
+    - git pull
+    - git remote add github https://$GITHUB_TOKEN:x-oauth-basic@github.com/streampipes/streampipes-pipeline-elements-examples.git
+    - git push github $CI_COMMIT_REF_NAME
+  only:
+    - dev
+    - master
+
