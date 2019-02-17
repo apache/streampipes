@@ -17,6 +17,7 @@ package org.streampipes.pe.examples.jvm.staticproperty;
 
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.pe.examples.jvm.base.DummyEngine;
 import org.streampipes.pe.examples.jvm.base.DummyParameters;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -30,28 +31,24 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-public class NumberParameterExampleController extends StandaloneEventProcessingDeclarer<DummyParameters> {
+import java.util.List;
 
-  private static final String SP_KEY = "my-example-key";
+public class NaryMappingPropertyExampleController extends
+        StandaloneEventProcessingDeclarer<DummyParameters> {
 
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.examples.staticproperty" +
-            ".numberparameter", "Number Parameter Example", "")
+            ".mappingnary", "Nary Mapping Property Example", "")
             .requiredStream(StreamRequirementsBuilder.
                     create()
-                    .requiredProperty(EpRequirements.anyProperty())
+                    .requiredPropertyWithNaryMapping(EpRequirements.numberReq(),
+                            Labels.from("mp-key", "My Mapping", ""),
+                            PropertyScope.NONE)
                     .build())
             .outputStrategy(OutputStrategies.keep())
             .supportedProtocols(SupportedProtocols.kafka())
             .supportedFormats(SupportedFormats.jsonFormat())
-
-            // create an integer parameter
-            .requiredIntegerParameter(Labels.from(SP_KEY, "Integer Parameter", "Example Description"))
-
-            // create a float parameter
-            .requiredFloatParameter(Labels.from("float-key", "Float Parameter", "Example Description"))
-
 
             .build();
   }
@@ -59,13 +56,8 @@ public class NumberParameterExampleController extends StandaloneEventProcessingD
   @Override
   public ConfiguredEventProcessor<DummyParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-    // Extract the integer parameter value
-    Integer integerParameter = extractor.singleValueParameter(SP_KEY, Integer.class);
-
-    // Extract the float parameter value
-    Float floatParameter = extractor.singleValueParameter("float-key", Float.class);
-
-    // now the parameters would be added to a parameter class (omitted for this example)
+    // Extract the mapping property value
+    List<String> mappingPropertySelectors = extractor.mappingPropertyValues("mp-key");
 
     return new ConfiguredEventProcessor<>(new DummyParameters(graph), DummyEngine::new);
   }

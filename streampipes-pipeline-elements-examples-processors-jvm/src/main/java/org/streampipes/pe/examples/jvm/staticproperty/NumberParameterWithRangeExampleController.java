@@ -30,14 +30,15 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-public class NumberParameterExampleController extends StandaloneEventProcessingDeclarer<DummyParameters> {
+public class NumberParameterWithRangeExampleController extends
+        StandaloneEventProcessingDeclarer<DummyParameters> {
 
   private static final String SP_KEY = "my-example-key";
 
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.examples.staticproperty" +
-            ".numberparameter", "Number Parameter Example", "")
+            ".numberparameterrange", "Number Parameter With Range", "")
             .requiredStream(StreamRequirementsBuilder.
                     create()
                     .requiredProperty(EpRequirements.anyProperty())
@@ -47,11 +48,8 @@ public class NumberParameterExampleController extends StandaloneEventProcessingD
             .supportedFormats(SupportedFormats.jsonFormat())
 
             // create an integer parameter
-            .requiredIntegerParameter(Labels.from(SP_KEY, "Integer Parameter", "Example Description"))
-
-            // create a float parameter
-            .requiredFloatParameter(Labels.from("float-key", "Float Parameter", "Example Description"))
-
+            .requiredIntegerParameter(Labels.from(SP_KEY, "Integer Parameter", "Example " +
+                    "Description"), 0, 100, 1)
 
             .build();
   }
@@ -62,10 +60,7 @@ public class NumberParameterExampleController extends StandaloneEventProcessingD
     // Extract the integer parameter value
     Integer integerParameter = extractor.singleValueParameter(SP_KEY, Integer.class);
 
-    // Extract the float parameter value
-    Float floatParameter = extractor.singleValueParameter("float-key", Float.class);
-
-    // now the parameters would be added to a parameter class (omitted for this example)
+    // now the parameter would be added to a parameter class (omitted for this example)
 
     return new ConfiguredEventProcessor<>(new DummyParameters(graph), DummyEngine::new);
   }

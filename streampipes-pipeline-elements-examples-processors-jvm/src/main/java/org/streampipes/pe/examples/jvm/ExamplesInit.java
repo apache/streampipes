@@ -21,8 +21,15 @@ import org.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.pe.examples.jvm.config.ExamplesJvmConfig;
+import org.streampipes.pe.examples.jvm.staticproperty.CollectionExampleController;
+import org.streampipes.pe.examples.jvm.staticproperty.MultiValueSelectionExampleController;
+import org.streampipes.pe.examples.jvm.staticproperty.NaryMappingPropertyExampleController;
 import org.streampipes.pe.examples.jvm.staticproperty.NumberParameterExampleController;
+import org.streampipes.pe.examples.jvm.staticproperty.NumberParameterWithRangeExampleController;
+import org.streampipes.pe.examples.jvm.staticproperty.RuntimeResolvableSingleValue;
+import org.streampipes.pe.examples.jvm.staticproperty.SingleValueSelectionExampleController;
 import org.streampipes.pe.examples.jvm.staticproperty.TextParameterExampleController;
+import org.streampipes.pe.examples.jvm.staticproperty.UnaryMappingPropertyExampleController;
 
 public class ExamplesInit extends StandaloneModelSubmitter {
 
@@ -30,7 +37,14 @@ public class ExamplesInit extends StandaloneModelSubmitter {
     DeclarersSingleton
             .getInstance()
             .add(new TextParameterExampleController())
-            .add(new NumberParameterExampleController());
+            .add(new NumberParameterExampleController())
+            .add(new NumberParameterWithRangeExampleController())
+            .add(new UnaryMappingPropertyExampleController())
+            .add(new NaryMappingPropertyExampleController())
+            .add(new SingleValueSelectionExampleController())
+            .add(new MultiValueSelectionExampleController())
+            .add(new CollectionExampleController())
+            .add(new RuntimeResolvableSingleValue());
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());

@@ -19,6 +19,7 @@ import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.pe.examples.jvm.base.DummyEngine;
 import org.streampipes.pe.examples.jvm.base.DummyParameters;
+import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -30,14 +31,14 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-public class NumberParameterExampleController extends StandaloneEventProcessingDeclarer<DummyParameters> {
+import java.util.List;
 
-  private static final String SP_KEY = "my-example-key";
+public class CollectionExampleController extends StandaloneEventProcessingDeclarer<DummyParameters> {
 
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.examples.staticproperty" +
-            ".numberparameter", "Number Parameter Example", "")
+            ".collection", "Collection Example", "")
             .requiredStream(StreamRequirementsBuilder.
                     create()
                     .requiredProperty(EpRequirements.anyProperty())
@@ -46,26 +47,20 @@ public class NumberParameterExampleController extends StandaloneEventProcessingD
             .supportedProtocols(SupportedProtocols.kafka())
             .supportedFormats(SupportedFormats.jsonFormat())
 
-            // create an integer parameter
-            .requiredIntegerParameter(Labels.from(SP_KEY, "Integer Parameter", "Example Description"))
-
-            // create a float parameter
-            .requiredFloatParameter(Labels.from("float-key", "Float Parameter", "Example Description"))
-
-
+            // create a collection parameter
+            .requiredParameterAsCollection(Labels.from("collection", "Example Name", "Example " +
+                    "Description"), StaticProperties.stringFreeTextProperty(Labels
+                    .from("text-property","Text","")))
             .build();
   }
 
   @Override
   public ConfiguredEventProcessor<DummyParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-    // Extract the integer parameter value
-    Integer integerParameter = extractor.singleValueParameter(SP_KEY, Integer.class);
+    // Extract the text parameter value
+    List<String> textParameters = extractor.singleValueParameterFromCollection("collection", String.class);
 
-    // Extract the float parameter value
-    Float floatParameter = extractor.singleValueParameter("float-key", Float.class);
-
-    // now the parameters would be added to a parameter class (omitted for this example)
+    // now the text parameter would be added to a parameter class (omitted for this example)
 
     return new ConfiguredEventProcessor<>(new DummyParameters(graph), DummyEngine::new);
   }

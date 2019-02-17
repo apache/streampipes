@@ -18,14 +18,14 @@ package org.streampipes.pe.examples.jvm.base;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
-import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
-public class DummyEngine<B extends EventProcessorBindingParams> implements EventProcessor<B> {
+public class DummyEngine implements EventProcessor<DummyParameters> {
 
   @Override
-  public void onInvocation(B parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(DummyParameters parameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
 
   }
 

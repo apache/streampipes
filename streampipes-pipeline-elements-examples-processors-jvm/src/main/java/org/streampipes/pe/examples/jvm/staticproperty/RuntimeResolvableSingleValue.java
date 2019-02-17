@@ -15,8 +15,11 @@ limitations under the License.
 */
 package org.streampipes.pe.examples.jvm.staticproperty;
 
+import org.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.runtime.RuntimeOptions;
+import org.streampipes.model.schema.EventProperty;
 import org.streampipes.pe.examples.jvm.base.DummyEngine;
 import org.streampipes.pe.examples.jvm.base.DummyParameters;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -30,14 +33,16 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-public class NumberParameterExampleController extends StandaloneEventProcessingDeclarer<DummyParameters> {
+import java.util.Arrays;
+import java.util.List;
 
-  private static final String SP_KEY = "my-example-key";
+public class RuntimeResolvableSingleValue extends
+        StandaloneEventProcessingDeclarer<DummyParameters> implements ResolvesContainerProvidedOptions {
 
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.examples.staticproperty" +
-            ".numberparameter", "Number Parameter Example", "")
+            ".runtimeresolvablesingle", "Runtime-resolvable single value example", "")
             .requiredStream(StreamRequirementsBuilder.
                     create()
                     .requiredProperty(EpRequirements.anyProperty())
@@ -46,12 +51,9 @@ public class NumberParameterExampleController extends StandaloneEventProcessingD
             .supportedProtocols(SupportedProtocols.kafka())
             .supportedFormats(SupportedFormats.jsonFormat())
 
-            // create an integer parameter
-            .requiredIntegerParameter(Labels.from(SP_KEY, "Integer Parameter", "Example Description"))
-
-            // create a float parameter
-            .requiredFloatParameter(Labels.from("float-key", "Float Parameter", "Example Description"))
-
+            // create a single value selection parameter that is resolved at runtime
+            .requiredSingleValueSelectionFromContainer(Labels.from("id", "Example Name", "Example " +
+                    "Description"))
 
             .build();
   }
@@ -59,14 +61,16 @@ public class NumberParameterExampleController extends StandaloneEventProcessingD
   @Override
   public ConfiguredEventProcessor<DummyParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-    // Extract the integer parameter value
-    Integer integerParameter = extractor.singleValueParameter(SP_KEY, Integer.class);
+    // Extract the text parameter value
+    String selectedSingleValue = extractor.selectedSingleValue("id", String.class);
 
-    // Extract the float parameter value
-    Float floatParameter = extractor.singleValueParameter("float-key", Float.class);
-
-    // now the parameters would be added to a parameter class (omitted for this example)
+    // now the text parameter would be added to a parameter class (omitted for this example)
 
     return new ConfiguredEventProcessor<>(new DummyParameters(graph), DummyEngine::new);
+  }
+
+  @Override
+  public List<RuntimeOptions> resolveOptions(String requestId, EventProperty linkedEventProperty) {
+    return Arrays.asList(new RuntimeOptions("I was defined at runtime", ""));
   }
 }
