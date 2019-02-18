@@ -21,6 +21,12 @@ import org.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.pe.examples.jvm.config.ExamplesJvmConfig;
+import org.streampipes.pe.examples.jvm.outputstrategy.AppendOutputController;
+import org.streampipes.pe.examples.jvm.outputstrategy.CustomOutputController;
+import org.streampipes.pe.examples.jvm.outputstrategy.CustomTransformOutputController;
+import org.streampipes.pe.examples.jvm.outputstrategy.FixedOutputController;
+import org.streampipes.pe.examples.jvm.outputstrategy.KeepOutputController;
+import org.streampipes.pe.examples.jvm.outputstrategy.TransformOutputController;
 import org.streampipes.pe.examples.jvm.staticproperty.CollectionExampleController;
 import org.streampipes.pe.examples.jvm.staticproperty.MultiValueSelectionExampleController;
 import org.streampipes.pe.examples.jvm.staticproperty.NaryMappingPropertyExampleController;
@@ -44,7 +50,14 @@ public class ExamplesInit extends StandaloneModelSubmitter {
             .add(new SingleValueSelectionExampleController())
             .add(new MultiValueSelectionExampleController())
             .add(new CollectionExampleController())
-            .add(new RuntimeResolvableSingleValue());
+            .add(new RuntimeResolvableSingleValue())
+
+            .add(new AppendOutputController())
+            .add(new CustomOutputController())
+            .add(new FixedOutputController())
+            .add(new CustomTransformOutputController())
+            .add(new TransformOutputController())
+            .add(new KeepOutputController());
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
