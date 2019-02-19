@@ -58,6 +58,7 @@ public class XmlFormat extends Format {
                 "Tag", "The Tag name of the events");
 
         description.addConfig(tagProperty);
+        description.setAppId(ID);
 
         return  description;
     }

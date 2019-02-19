@@ -58,3 +58,6 @@ dist/
 
 ./target/*
 npm-debug.log
+
+# Test Data from running in local mode
+/test_data/

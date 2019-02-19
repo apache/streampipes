@@ -25,6 +25,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.HttpRequestWithBody;
 import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,15 +73,30 @@ public class Elasticsearch implements IElasticsearch {
     long timestampFrom = data.getTimestampFrom();
     long timeStampTo = data.getTimestampTo();
     String output = data.getOutput();
+    boolean allData = data.isAllData();
 
-    String url = ElasticsearchConfig.INSTANCE.getElasticsearchURL() + "/" + index + "/_search";
     try {
-      HttpResponse<JsonNode> jsonResponse = Unirest.post(url)
+      String countUrl = ElasticsearchConfig.INSTANCE.getElasticsearchURL() + "/" + index + "/_count";
+      HttpResponse<JsonNode> jsonResponse = unirestGet(countUrl);
+      String count = jsonResponse.getBody().getObject().get("count").toString();
+
+      String url = ElasticsearchConfig.INSTANCE.getElasticsearchURL() + "/" + index + "/_search";
+      String response;
+      HttpRequestWithBody request = Unirest.post(url)
               .header("accept", "application/json")
-              .header("Content-Type", "application/json")
-              .body("{\"from\" : 0, \"size\" : 10000, \"query\": {\"range\" : {\"timestamp\" : {\"gte\" : " + timestampFrom + ",\"lte\" : " + timeStampTo + "}}}}")
-              .asJson();
-      String response = jsonResponse.getBody().getObject().toString();
+              .header("Content-Type", "application/json");
+
+      if (allData) {
+        jsonResponse = request.body("{\"from\" : 0, \"size\" :" + count + ", \"query\": { \"match_all\": {} }}")
+                              .asJson();
+        timestampFrom = 0;
+        timeStampTo = 0;
+      } else {
+        jsonResponse = request.body("{\"from\" : 0, \"size\" :" + count + ", \"query\": {\"range\" : {\"timestamp\" : {\"gte\" : " + timestampFrom + ",\"lte\" : " + timeStampTo + "}}}}")
+                             .asJson();
+      }
+
+      response = jsonResponse.getBody().getObject().toString();
 
       if (("csv").equals(output)) {
         response = new JsonConverter(response).convertToCsv();
@@ -138,10 +154,7 @@ public class Elasticsearch implements IElasticsearch {
   public Response getIndices() {
     String url = ElasticsearchConfig.INSTANCE.getElasticsearchURL() + "/_cat/indices?v";
     try {
-      HttpResponse<JsonNode> jsonResponse = Unirest.get(url)
-              .header("accept", "application/json")
-              .header("Content-Type", "application/json")
-              .asJson();
+      HttpResponse<JsonNode> jsonResponse = unirestGet(url);
 
       JsonArray response = new JsonParser().parse(jsonResponse.getBody().toString()).getAsJsonArray();
       List<IndexInfo> availableIndices = new ArrayList<>();
@@ -200,6 +213,14 @@ public class Elasticsearch implements IElasticsearch {
     fileWriter.write(text);
     fileWriter.flush();
     fileWriter.close();
+  }
+
+  private HttpResponse<JsonNode> unirestGet(String url) throws UnirestException {
+    HttpResponse<JsonNode> jsonResponse = Unirest.get(url)
+            .header("accept", "application/json")
+            .header("Content-Type", "application/json")
+            .asJson();
+    return jsonResponse;
   }
 
 }

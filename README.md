@@ -22,7 +22,7 @@ Read the full documentation at [https://docs.streampipes.org](https://docs.strea
 It's easy to get started:
 * Clone the installer script from [https://www.github.com/streampipes/streampipes-installer](https://www.github.com/streampipes/streampipes-installer)
 * Follow the installation guide at [https://docs.streampipes.org/docs/user-guide-installation](https://docs.streampipes.org/docs/user-guide-installation)
-* Check the [tour](https://docs.streampipes.org/user_guide/features) and build your first pipeline!
+* Check the [tour](https://docs.streampipes.org/docs/user-guide-tour) and build your first pipeline!
 
 ### Extending StreamPipes
 
