@@ -34,13 +34,14 @@ export class AppFileDownloadRestApi {
         })
     }
     
-    createFile(index, timestampFrom, timestampTo, output) {
+    createFile(index, timestampFrom, timestampTo, output, allData) {
 
         var postObject = {};
         postObject['index'] = index;
         postObject['timestampFrom'] = timestampFrom;
         postObject['timestampTo'] = timestampTo;
         postObject['output'] = output;
+        postObject['allData'] = allData;
 
         return this.$http({
             method: 'POST',
