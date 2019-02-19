@@ -72,41 +72,6 @@ public class HDFSProtocol extends Protocol {
 
     private long knownNewestFileDate;
 
-
-    public static void main(String... args) throws IOException {
-        String url = "http://server:8020";
-        String path = "/route/to/folder/";
-
-        FileSystem  fs = FileSystem.get(URI.create(url), getHdfsConfig(url));
-
-        List<String> res = getFileNames(fs, path);
-        System.out.println(res);
-
-//        HDFSProtocol protocol = new HDFSProtocol(null, null,0, path, url, false);
-//
-////        List<LocatedFileStatus> res = protocol.getFiles();
-//        List<String> res = protocol.getFileNames(path);
-//        System.out.println(res);
-
-    }
-
-     public static Configuration getHdfsConfig(String hdfsAddress) {
-    // ====== Init HDFS File System Object
-    Configuration conf = new Configuration();
-// Set FileSystem URI
-    conf.set("fs.defaultFS", hdfsAddress);
-// Because of Maven
-    conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
-    conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
-    conf.set("dfs.client.use.datanode.hostname", "true");
-// Set HADOOP user
-    System.setProperty("HADOOP_USER_NAME", "hdfs");
-    System.setProperty("hadoop.home.dir", "/");
-
-    return conf;
-  }
-
-
     public HDFSProtocol() {
 
     }
@@ -152,13 +117,13 @@ public class HDFSProtocol extends Protocol {
                 "The Data Path which should be watched");
 
 
-//        AnyStaticProperty offset = new AnyStaticProperty(OPTIONS, "Options for Folders", "");
-//        offset.setOptions(Arrays.asList(new Option("Search Recursively","recursively")));
+        // AnyStaticProperty offset = new AnyStaticProperty(OPTIONS, "Options for Folders", "");
+        // offset.setOptions(Arrays.asList(new Option("Search Recursively","recursively")));
 
 
         pd.setSourceType("STREAM");
 
-        //   pd.setIconUrl("ftp.png");
+        pd.setIconUrl("hdfs.png");
         pd.addConfig(urlProperty);
         pd.addConfig(intervalProperty);
         //   pd.addConfig(userNameProperty);
@@ -172,7 +137,7 @@ public class HDFSProtocol extends Protocol {
 
     @Override
     public GuessSchema getGuessSchema() {
-        int n = 1;
+        int n = 2;
         GuessSchema result = null;
 
         InputStream inputStream = getInputStreamFromFile(getFiles().get(0));
@@ -287,9 +252,9 @@ public class HDFSProtocol extends Protocol {
 
         RemoteIterator<LocatedFileStatus> iter = null;
         try {
-            RemoteIterator<LocatedFileStatus> inter = fs.listFiles(hdfsreadpath, this.recursively);
+            iter = fs.listFiles(hdfsreadpath, this.recursively);
             while (iter.hasNext())
-                files.add(inter.next());
+                files.add(iter.next());
         } catch (IOException e) {
             logger.error(e.toString());
         } finally {
@@ -354,7 +319,6 @@ public class HDFSProtocol extends Protocol {
         FSDataInputStream inputStream = null;
         try {
             inputStream = fs.open(locatedFileStatus.getPath());
-            fs.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

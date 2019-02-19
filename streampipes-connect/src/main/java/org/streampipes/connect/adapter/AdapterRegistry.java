@@ -106,6 +106,7 @@ public class AdapterRegistry {
         allProtocols.put(MqttProtocol.ID, new MqttProtocol());
         allProtocols.put(HttpStreamProtocol.ID, new HttpStreamProtocol());
         allProtocols.put(FileStreamProtocol.ID, new FileStreamProtocol());
+        allProtocols.put(HDFSProtocol.ID, new HDFSProtocol());
 
         return allProtocols;
     }
