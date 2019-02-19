@@ -27,14 +27,17 @@ public class ElasticsearchAppData {
 
     private String output;
 
+    private boolean allData;
+
     public ElasticsearchAppData() {
     }
 
-    public ElasticsearchAppData(String index, long timestampFrom, long timeStampTo, String output) {
+    public ElasticsearchAppData(String index, long timestampFrom, long timeStampTo, String output, boolean allData) {
         this.index = index;
         this.timestampFrom = timestampFrom;
         this.timestampTo = timeStampTo;
         this.output = output;
+        this.allData = allData;
     }
 
     public String getIndex() {
@@ -67,5 +70,13 @@ public class ElasticsearchAppData {
 
     public void setOutput(String output) {
         this.output = output;
+    }
+
+    public boolean isAllData() {
+        return allData;
+    }
+
+    public void setAllData(boolean allData) {
+        this.allData = allData;
     }
 }
