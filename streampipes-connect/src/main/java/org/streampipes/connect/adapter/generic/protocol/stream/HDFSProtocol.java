@@ -107,8 +107,8 @@ public class HDFSProtocol extends Protocol {
 
         FreeTextStaticProperty intervalProperty = new FreeTextStaticProperty(INTERVAL_PROPERTY, "Interval", "This property " +
                 "defines the pull interval in seconds.");
-        FreeTextStaticProperty urlProperty = new FreeTextStaticProperty(URL_PROPERTY, "HDFS-Server URL",
-                "This property defines the path to the file.");
+        FreeTextStaticProperty urlProperty = new FreeTextStaticProperty(URL_PROPERTY, "HDFS-Server URL e.g. hdfs://server:8020",
+                "This property defines the HDFS URL e.g. hdfs://server:8020");
         //     FreeTextStaticProperty userNameProperty = new FreeTextStaticProperty(USER_PROPERTY, "Username",
         //            "The Username to login");
         //    FreeTextStaticProperty passwordProperty = new FreeTextStaticProperty(PASSWORD_PROPERTY, "Password",
