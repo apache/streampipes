@@ -64,7 +64,11 @@ public abstract class PullProtocol extends Protocol {
             SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
             InputStream data = getDataFromEndpoint();
 
-            parser.parse(data, stk);
+            if(data != null) {
+                parser.parse(data, stk);
+            } else {
+                logger.warn("Could not receive data from Endpoint. Try again in " + interval + " seconds.");
+            }
         };
 
         scheduler = Executors.newScheduledThreadPool(1);
