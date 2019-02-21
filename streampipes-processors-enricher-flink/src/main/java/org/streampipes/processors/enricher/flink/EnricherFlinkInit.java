@@ -17,6 +17,8 @@
 package org.streampipes.processors.enricher.flink;
 
 import org.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
+import org.streampipes.processors.enricher.flink.processor.math.mathop.MathOpController;
+import org.streampipes.processors.enricher.flink.processor.math.staticmathop.StaticMathOpController;
 import org.streampipes.processors.enricher.flink.processor.timestamp.TimestampController;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
@@ -25,7 +27,9 @@ public class EnricherFlinkInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton.getInstance()
-            .add(new TimestampController());
+            .add(new TimestampController())
+            .add(new MathOpController())
+            .add(new StaticMathOpController());
 
     new EnricherFlinkInit().init(EnricherFlinkConfig.INSTANCE);
   }
