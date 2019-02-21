@@ -20,12 +20,14 @@ import org.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
 import org.streampipes.processors.enricher.flink.processor.timestamp.TimestampController;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.processors.enricher.flink.processor.urldereferencing.UrlDereferencingController;
 
 public class EnricherFlinkInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton.getInstance()
-            .add(new TimestampController());
+            .add(new TimestampController())
+            .add(new UrlDereferencingController());
 
     new EnricherFlinkInit().init(EnricherFlinkConfig.INSTANCE);
   }
