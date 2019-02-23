@@ -5,6 +5,7 @@ export class AppFileDownloadCtrl {
     allFiles: any;
     availableIndices: any;
     $rootScope: any;
+    searchIndex: any;
 
     constructor($rootScope, AppFileDownloadRestApi) {
         this.$rootScope = $rootScope;
@@ -14,6 +15,12 @@ export class AppFileDownloadCtrl {
         this.availableIndices = [];
         this.getFiles();
         this.getAvailableIndices();
+
+
+        $rootScope.newFile = {
+            allData: 'true',
+            output: 'json'
+        }
 
         $rootScope.$on("UpdateFiles", (event, item) => {
            this.getFiles();
@@ -43,13 +50,22 @@ export class AppFileDownloadCtrl {
     };
 
     createNewFile(file) {
-        var start = new Date(file.timestampFrom).getTime();
-        var end = new Date(file.timestampTo).getTime();
-        var output = file.output;
-        this.appFileDownloadRestApiService.createFile(file.index, start, end, output).success((err, res) => {
-            this.getFiles();
-        });
+        if(file.index !== null) {
+            var start = new Date(file.timestampFrom).getTime();
+            var end = new Date(file.timestampTo).getTime();
+            var output = file.output;
+            var allData = file.allData;
+            this.appFileDownloadRestApiService.createFile(file.index.indexName, start, end, output, allData).success((err, res) => {
+                this.getFiles();
+            });
+        }
     };
+
+    querySearch (query) {
+        var filterValue = query.toLowerCase();
+
+        return this.availableIndices.filter(index => index.indexName.toLowerCase().indexOf(filterValue) >= 0);
+    }
 }
 
 AppFileDownloadCtrl.$inject = ['$rootScope', 'AppFileDownloadRestApi'];

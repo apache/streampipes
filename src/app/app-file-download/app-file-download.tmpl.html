@@ -15,28 +15,46 @@
                     </div>
                     <div class="sp-blue-border">
                         <div layout="column" layout-padding>
-                            <md-input-container>
-                                <label>Index</label>
-                                <md-select ng-model="newFile.index">
-                                    <md-option ng-repeat="availableIndex in ctrl.availableIndices"
-                                               ng-value="availableIndex.indexName">
-                                        <div><b>{{availableIndex.indexName}} ({{availableIndex.documentCount}} entries)</b><br/>
-                                        </div>
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>
+                            <md-autocomplete required
+                                             md-min-length="0"
+                                             md-selected-item="newFile.index"
+                                             md-search-text="ctrl.searchIndex"
+                                             md-items="item in ctrl.querySearch(ctrl.searchIndex)"
+                                             md-item-text="item.indexName"
+                                             md-require-match
+                                             md-floating-label="Index"
+                                            >
+                                <md-item-template>
+                                    <span md-highlight-text="ctrl.searchIndex">{{item.indexName}} ({{item.documentCount}} entries)</span>
+                                </md-item-template>
+                                <md-not-found>
+                                    No states matching "{{ctrl.searchIndex}}" were found.
+                                </md-not-found>
+                            </md-autocomplete>
+
+
+                            <md-radio-group class="md-accent" ng-model="newFile.allData">
+                                <div>
+                                    <md-radio-button value="true">
+                                        <b>All data</b>
+                                    </md-radio-button>
+                                </div>
+                                <md-radio-button value="false">
+                                    <b>Time range</b>
+                                </md-radio-button>
+                                <div layout="row" style="padding-left: 20px">
+                                    <md-input-container style="margin-top: 5px">
+                                        <label>Start date</label>
+                                        <input datetime-picker ng-model="newFile.timestampFrom"/>
+                                    </md-input-container>
+                                    <md-input-container style="margin-top: 5px">
+                                        <label>End date</label>
+                                        <input datetime-picker ng-model="newFile.timestampTo"/>
+                                    </md-input-container>
+                                </div>
+                            </md-radio-group>
                             <div layout="row">
-                                <md-input-container>
-                                    <label>Start date</label>
-                                    <input datetime-picker ng-model="newFile.timestampFrom"/>
-                                </md-input-container>
-                                <md-input-container>
-                                    <label>End date</label>
-                                    <input datetime-picker ng-model="newFile.timestampTo"/>
-                                </md-input-container>
-                            </div>
-                            <div layout="row">
-                                <md-radio-group layout="row" class="md-accent" ng-model="newFile.output">
+                                <md-radio-group layout="row" class="md-accent" ng-model="newFile.output" required>
                                     <md-radio-button value="json">
                                         <b>JSON</b>
                                     </md-radio-button>
@@ -51,8 +69,6 @@
                                 </sp-button>
                             </section>
                         </div>
-
-
                     </div>
 
 
