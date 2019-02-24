@@ -19,14 +19,12 @@ package org.streampipes.processors.imageprocessing.jvm.processor.imagecropper;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.imageprocessing.jvm.processor.commons.ImageTransformer;
 import org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.BoxCoordinates;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.awt.image.BufferedImage;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 public class ImageCropper implements EventProcessor<ImageCropperParameters> {
@@ -34,7 +32,7 @@ public class ImageCropper implements EventProcessor<ImageCropperParameters> {
   private ImageCropperParameters params;
 
   @Override
-  public void onInvocation(ImageCropperParameters imageCropperParameters, RuntimeContext runtimeContext) {
+  public void onInvocation(ImageCropperParameters imageCropperParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     this.params = imageCropperParameters;
   }
 
@@ -53,9 +51,9 @@ public class ImageCropper implements EventProcessor<ImageCropperParameters> {
       Optional<byte[]> finalImage = imageTransformer.makeImage(dest);
 
       if (finalImage.isPresent()) {
-        Map<String, Object> outMap = new HashMap<>();
-        outMap.put("image", Base64.getEncoder().encodeToString(finalImage.get()));
-        out.collect(outMap);
+        Event outEvent = new Event();
+        outEvent.addField("image", Base64.getEncoder().encodeToString(finalImage.get()));
+        out.collect(outEvent);
       }
     }
   }

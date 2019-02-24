@@ -18,7 +18,7 @@
 package org.streampipes.processors.filters.jvm.processor.projection;
 
 import org.streampipes.model.runtime.Event;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
@@ -30,7 +30,7 @@ public class Projection implements EventProcessor<ProjectionParameters> {
 
 
   @Override
-  public void onInvocation(ProjectionParameters projectionParameters, RuntimeContext runtimeContext) {
+  public void onInvocation(ProjectionParameters projectionParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     this.outputKeys = projectionParameters.getOutputKeys();
   }
 

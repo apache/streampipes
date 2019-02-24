@@ -21,18 +21,16 @@ import org.lightcouch.CouchDbProperties;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.model.runtime.EventConverter;
-import org.streampipes.wrapper.standalone.engine.StandaloneEventSink;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
+import org.streampipes.wrapper.runtime.EventSink;
 
-public class CouchDb extends StandaloneEventSink<CouchDbParameters> {
+public class CouchDb implements EventSink<CouchDbParameters> {
 
   private CouchDbClient couchDbClient;
 
-  public CouchDb(CouchDbParameters params) {
-    super(params);
-  }
-
   @Override
-  public void onInvocation(CouchDbParameters parameters) throws SpRuntimeException {
+  public void onInvocation(CouchDbParameters parameters, EventSinkRuntimeContext runtimeContext) throws
+          SpRuntimeException {
     this.couchDbClient = new CouchDbClient(new CouchDbProperties(
             parameters.getDatabaseName(),
             true,

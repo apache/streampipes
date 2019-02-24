@@ -19,7 +19,8 @@ package org.streampipes.processors.transformation.jvm.processor.array.count;
 
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.model.runtime.field.AbstractField;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
@@ -32,7 +33,7 @@ public class CountArray implements EventProcessor<CountArrayParameters> {
     private CountArrayParameters splitArrayParameters;
 
     @Override
-    public void onInvocation(CountArrayParameters params, RuntimeContext runtimeContext) {
+    public void onInvocation(CountArrayParameters params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
         LOG = params.getGraph().getLogger(CountArray.class);
 
         this.splitArrayParameters = params;
@@ -42,7 +43,7 @@ public class CountArray implements EventProcessor<CountArrayParameters> {
     public void onEvent(Event event, SpOutputCollector out) {
         String arrayField = splitArrayParameters.getArrayField();
 
-        List<Object> allEvents = event.getFieldBySelector(arrayField).getAsList().getRawValue();
+        List<AbstractField> allEvents = event.getFieldBySelector(arrayField).getAsList().getRawValue();
 
         event.addField(CountArrayController.COUNT_NAME, allEvents.size());
 

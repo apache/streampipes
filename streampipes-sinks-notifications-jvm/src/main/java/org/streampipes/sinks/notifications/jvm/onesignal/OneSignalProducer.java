@@ -25,7 +25,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.runtime.Event;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class OneSignalProducer implements EventSink<OneSignalParameters> {
     private String apiKey;
 
     @Override
-    public void onInvocation(OneSignalParameters parameters, RuntimeContext runtimeContext) throws SpRuntimeException {
+    public void onInvocation(OneSignalParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
         this.content = parameters.getContent();
         this.appId = parameters.getAppId();
         this.apiKey = parameters.getApiKey();

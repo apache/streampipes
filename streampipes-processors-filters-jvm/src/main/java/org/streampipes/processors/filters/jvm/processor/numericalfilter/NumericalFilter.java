@@ -17,7 +17,7 @@
 package org.streampipes.processors.filters.jvm.processor.numericalfilter;
 
 import org.streampipes.model.runtime.Event;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
@@ -26,7 +26,7 @@ public class NumericalFilter implements EventProcessor<NumericalFilterParameters
   private NumericalFilterParameters params;
 
   @Override
-  public void onInvocation(NumericalFilterParameters numericalFilterParameters, RuntimeContext
+  public void onInvocation(NumericalFilterParameters numericalFilterParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext
           runtimeContext) {
     this.params = numericalFilterParameters;
   }

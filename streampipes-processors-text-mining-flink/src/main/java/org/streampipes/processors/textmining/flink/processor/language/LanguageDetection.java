@@ -26,12 +26,12 @@ import com.optimaize.langdetect.text.TextObject;
 import com.optimaize.langdetect.text.TextObjectFactory;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
-public class LanguageDetection implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
+public class LanguageDetection implements FlatMapFunction<Event, Event> {
 
   private static final String LANGUAGE_KEY = "language";
 
@@ -56,15 +56,16 @@ public class LanguageDetection implements FlatMapFunction<Map<String, Object>, M
   }
 
   @Override
-  public void flatMap(Map<String, Object> in, Collector<Map<String, Object>> out)  {
+  public void flatMap(Event in, Collector<Event> out)  {
 
-    TextObject textObject = textObjectFactory.forText(String.valueOf(in.get(fieldName)));
+    TextObject textObject = textObjectFactory.forText(in.getFieldBySelector(fieldName)
+            .getAsPrimitive().getAsString());
     com.google.common.base.Optional<LdLocale> lang = languageDetector.detect(textObject);
 
     if (lang.isPresent()) {
-      in.put(LANGUAGE_KEY, lang.get().getLanguage());
+      in.addField(LANGUAGE_KEY, lang.get().getLanguage());
     } else {
-      in.put(LANGUAGE_KEY, "unknown");
+      in.addField(LANGUAGE_KEY, "unknown");
     }
 
     out.collect(in);

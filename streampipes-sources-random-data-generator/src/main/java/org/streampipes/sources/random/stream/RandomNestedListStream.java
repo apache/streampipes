@@ -91,8 +91,12 @@ public class RandomNestedListStream extends RandomNumberStream {
   private JSONObject buildJson(long timestamp) throws JSONException {
     JSONObject json = new JSONObject();
 
+    JSONObject nested = new JSONObject();
+    nested.put("locations2", buildLocations());
+
     json.put("timestamp", timestamp);
     json.put("locations", buildLocations());
+    json.put("nested1", nested);
 
     return json;
   }

@@ -25,7 +25,7 @@ import com.google.maps.model.LatLng;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.geo.jvm.config.GeoJvmConfig;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
@@ -41,7 +41,7 @@ public class GoogleRouting implements EventProcessor<GoogleRoutingParameters> {
     private GeoApiContext context;
 
     @Override
-    public void onInvocation(GoogleRoutingParameters googleRoutingParameters, RuntimeContext
+    public void onInvocation(GoogleRoutingParameters googleRoutingParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext
             runtimeContext) {
         LOG = googleRoutingParameters.getGraph().getLogger(GoogleRouting.class);
 

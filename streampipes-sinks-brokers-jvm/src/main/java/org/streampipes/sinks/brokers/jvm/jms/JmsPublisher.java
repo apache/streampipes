@@ -21,7 +21,7 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.model.runtime.Event;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Map;
@@ -36,7 +36,7 @@ public class JmsPublisher implements EventSink<JmsParameters> {
   }
 
   @Override
-  public void onInvocation(JmsParameters params, RuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(JmsParameters params, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     this.publisher = new ActiveMQPublisher(params.getJmsHost() + ":" + params.getJmsPort(), params.getTopic());
   }
 

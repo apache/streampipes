@@ -25,7 +25,7 @@ import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 public class Dashboard implements EventSink<DashboardParameters> {
@@ -49,7 +49,7 @@ public class Dashboard implements EventSink<DashboardParameters> {
     }
 
     @Override
-    public void onInvocation(DashboardParameters parameters, RuntimeContext runtimeContext) throws SpRuntimeException {
+    public void onInvocation(DashboardParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
         if (!saveToCouchDB(parameters.getGraph())) {
             throw new SpRuntimeException("The schema couldn't be stored in the couchDB");
         }

@@ -25,14 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.imageprocessing.jvm.processor.commons.PlainImageTransformer;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class QrCodeReader implements EventProcessor<QrCodeReaderParameters> {
@@ -41,7 +39,7 @@ public class QrCodeReader implements EventProcessor<QrCodeReaderParameters> {
   private static final Logger LOG = LoggerFactory.getLogger(QrCodeReader.class);
 
   @Override
-  public void onInvocation(QrCodeReaderParameters qrCodeReaderParameters, RuntimeContext runtimeContext) {
+  public void onInvocation(QrCodeReaderParameters qrCodeReaderParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     this.params = qrCodeReaderParameters;
   }
 
@@ -54,19 +52,19 @@ public class QrCodeReader implements EventProcessor<QrCodeReaderParameters> {
     if (imageOpt.isPresent()) {
       BufferedImage input = imageOpt.get();
 
-      GrayU8 gray = ConvertBufferedImage.convertFrom(input,(GrayU8)null);
+      GrayU8 gray = ConvertBufferedImage.convertFrom(input, (GrayU8) null);
 
-      QrCodeDetector<GrayU8> detector = FactoryFiducial.qrcode(null,GrayU8.class);
+      QrCodeDetector<GrayU8> detector = FactoryFiducial.qrcode(null, GrayU8.class);
 
       detector.process(gray);
       List<QrCode> detections = detector.getDetections();
 
       if (detections.size() > 0) {
         LOG.info(detections.get(0).message);
-        Map<String, Object> outMap = new HashMap<>();
-        outMap.put("qrvalue", detections.get(0).message);
-        outMap.put("timestamp", System.currentTimeMillis());
-        out.collect(outMap);
+        Event event = new Event();
+        event.addField("qrvalue", detections.get(0).message);
+        event.addField("timestamp", System.currentTimeMillis());
+        out.collect(event);
       } else {
         LOG.info("Could not find any QR code");
       }

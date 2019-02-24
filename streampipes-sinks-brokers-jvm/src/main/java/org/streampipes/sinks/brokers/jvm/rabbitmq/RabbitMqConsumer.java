@@ -23,7 +23,7 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.pe.shared.PlaceholderExtractor;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Map;
@@ -43,7 +43,7 @@ public class RabbitMqConsumer implements EventSink<RabbitMqParameters> {
   }
 
   @Override
-  public void onInvocation(RabbitMqParameters parameters, RuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(RabbitMqParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     this.publisher = new RabbitMqPublisher(parameters);
     this.topic = parameters.getRabbitMqTopic();
   }

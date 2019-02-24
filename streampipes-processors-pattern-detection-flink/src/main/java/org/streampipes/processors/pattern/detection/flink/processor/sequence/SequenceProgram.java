@@ -18,9 +18,8 @@ package org.streampipes.processors.pattern.detection.flink.processor.sequence;
 
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
-
-import java.util.Map;
 
 public class SequenceProgram extends AbstractPatternDetectionProgram<SequenceParameters> {
 
@@ -29,7 +28,7 @@ public class SequenceProgram extends AbstractPatternDetectionProgram<SequencePar
   }
 
   @Override
-  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
+  protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
     return dataStreams[0].keyBy(getKeySelector()).connect(dataStreams[1].keyBy(getKeySelector())).process(new Sequence(params
             .getTimeUnit(),
             params
@@ -37,10 +36,10 @@ public class SequenceProgram extends AbstractPatternDetectionProgram<SequencePar
             ()));
   }
 
-  private KeySelector<Map<String,Object>, String> getKeySelector() {
-    return new KeySelector<Map<String,Object>, String>() {
+  private KeySelector<Event, String> getKeySelector() {
+    return new KeySelector<Event, String>() {
       @Override
-      public String getKey(Map<String, Object> value) throws Exception {
+      public String getKey(Event value) throws Exception {
         return "dummy-key";
       }
     };

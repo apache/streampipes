@@ -23,7 +23,7 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class RestPublisher implements EventSink<RestParameters> {
   private JsonDataFormatDefinition jsonDataFormatDefinition;
 
   @Override
-  public void onInvocation(RestParameters params, RuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(RestParameters params, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     this.url = params.getUrl();
     logger = params.getGraph().getLogger(RestPublisher.class);
     jsonDataFormatDefinition = new JsonDataFormatDefinition();

@@ -20,11 +20,11 @@ import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 import org.streampipes.processors.pattern.detection.flink.processor.peak.utils.SlidingBatchWindow;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by riemer on 20.04.2017.
@@ -36,7 +36,7 @@ public class PeakDetectionProgram extends AbstractPatternDetectionProgram<PeakDe
   }
 
   @Override
-  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>[] messageStream) {
+  protected DataStream<Event> getApplicationLogic(DataStream<Event>[] messageStream) {
 
     Integer lag = params.getLag();
     String groupBy = params.getGroupBy();
@@ -49,7 +49,7 @@ public class PeakDetectionProgram extends AbstractPatternDetectionProgram<PeakDe
             .keyBy(getKeySelector())
             .transform
                     ("sliding-batch-window-shift",
-                            TypeInformation.of(new TypeHint<List<Map<String, Object>>>() {
+                            TypeInformation.of(new TypeHint<List<Event>>() {
                             }), new SlidingBatchWindow<>(countWindowSize))
             .flatMap(new PeakDetectionCalculator(groupBy,
                     valueToObserve,
@@ -58,12 +58,12 @@ public class PeakDetectionProgram extends AbstractPatternDetectionProgram<PeakDe
                     influence));
   }
 
-  private KeySelector<Map<String, Object>, String> getKeySelector() {
+  private KeySelector<Event, String> getKeySelector() {
     String groupBy = params.getGroupBy();
-    return new KeySelector<Map<String, Object>, String>() {
+    return new KeySelector<Event, String>() {
       @Override
-      public String getKey(Map<String, Object> in) throws Exception {
-        return String.valueOf(in.get(groupBy));
+      public String getKey(Event in) throws Exception {
+        return in.getFieldBySelector(groupBy).getAsPrimitive().getAsString();
       }
     };
   }

@@ -25,7 +25,7 @@ import boofcv.struct.image.Planar;
 import deepboof.io.DeepBoofDataBaseOps;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.imageprocessing.jvm.processor.commons.PlainImageTransformer;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
@@ -33,9 +33,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class GenericImageClassification implements EventProcessor<GenericImageClassificationParameters> {
@@ -47,7 +45,7 @@ public class GenericImageClassification implements EventProcessor<GenericImageCl
   private List<String> categories;
 
   @Override
-  public void onInvocation(GenericImageClassificationParameters genericImageClassificationParameters, RuntimeContext runtimeContext) {
+  public void onInvocation(GenericImageClassificationParameters genericImageClassificationParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     this.params = genericImageClassificationParameters;
     //this.cs = FactoryImageClassifier.vgg_cifar10();  // Test set 89.9% for 10 categories
 		ClassifierAndSource cs = FactoryImageClassifier.nin_imagenet(); // Test set 62.6% for 1000 categories
@@ -89,10 +87,10 @@ public class GenericImageClassification implements EventProcessor<GenericImageCl
       if (scores.size() > 0) {
         System.out.println(scores.get(0).score +":" +categories.get(scores.get(0).category));
         //scores.forEach(score -> System.out.println(score.category +":" +categories.get(score.category) +":" +score));
-        Map<String, Object> outMap = new HashMap<>();
-        outMap.put("score", scores.get(0).score);
-        outMap.put("category", categories.get(scores.get(0).category));
-        out.collect(outMap);
+        Event outEvent = new Event();
+        outEvent.addField("score", scores.get(0).score);
+        outEvent.addField("category", categories.get(scores.get(0).category));
+        out.collect(outEvent);
       }
     }
   }

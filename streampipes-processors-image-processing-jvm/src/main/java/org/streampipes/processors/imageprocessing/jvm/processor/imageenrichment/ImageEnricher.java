@@ -16,7 +16,7 @@
  */
 package org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment;
 
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
@@ -27,7 +27,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,7 +39,7 @@ public class ImageEnricher implements EventProcessor<ImageEnrichmentParameters> 
 
 
     @Override
-    public void onInvocation(ImageEnrichmentParameters params, RuntimeContext runtimeContext) {
+    public void onInvocation(ImageEnrichmentParameters params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
         this.params = params;
     }
 
@@ -74,9 +73,9 @@ public class ImageEnricher implements EventProcessor<ImageEnrichmentParameters> 
             Optional<byte[]> finalImage = makeImage(image);
 
             if (finalImage.isPresent()) {
-                Map<String, Object> outMap = new HashMap<>();
-                outMap.put("image", Base64.getEncoder().encodeToString(finalImage.get()));
-                out.collect(outMap);
+                org.streampipes.model.runtime.Event event = new org.streampipes.model.runtime.Event();
+                event.addField("image", Base64.getEncoder().encodeToString(finalImage.get()));
+                out.collect(event);
             }
         }
 

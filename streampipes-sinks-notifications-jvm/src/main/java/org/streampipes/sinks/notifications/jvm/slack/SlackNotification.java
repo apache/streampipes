@@ -20,7 +20,7 @@ package org.streampipes.sinks.notifications.jvm.slack;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.runtime.Event;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class SlackNotification implements EventSink<SlackNotificationParameters>
     private SlackNotificationParameters params;
 
     @Override
-    public void onInvocation(SlackNotificationParameters parameters, RuntimeContext runtimeContext) throws SpRuntimeException {
+    public void onInvocation(SlackNotificationParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
         this.params = parameters;
     }
 

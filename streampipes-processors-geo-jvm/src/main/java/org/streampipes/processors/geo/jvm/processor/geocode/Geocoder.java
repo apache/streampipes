@@ -22,7 +22,7 @@ import com.google.maps.errors.ApiException;
 import com.google.maps.model.GeocodingResult;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.geo.jvm.config.GeoJvmConfig;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
@@ -34,7 +34,7 @@ public class Geocoder implements EventProcessor<GeocodingParameters> {
   private GeoApiContext context;
 
   @Override
-  public void onInvocation(GeocodingParameters geocodingParameters, RuntimeContext runtimeContext) {
+  public void onInvocation(GeocodingParameters geocodingParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     this.geocodingParameters = geocodingParameters;
     context = new GeoApiContext.Builder()
             .apiKey(GeoJvmConfig.INSTANCE.getGoogleApiKey())

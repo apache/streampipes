@@ -17,7 +17,7 @@
 package org.streampipes.processors.imageprocessing.jvm.processor.imagerectification;
 
 import org.streampipes.model.runtime.Event;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
@@ -27,7 +27,7 @@ public class ImageRectifier implements EventProcessor<ImageRectificationParamete
 
 
   @Override
-  public void onInvocation(ImageRectificationParameters imageRectificationParameters, RuntimeContext runtimeContext) {
+  public void onInvocation(ImageRectificationParameters imageRectificationParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     this.params = imageRectificationParameters;
   }
 

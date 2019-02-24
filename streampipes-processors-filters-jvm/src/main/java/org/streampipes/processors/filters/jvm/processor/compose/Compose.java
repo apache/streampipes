@@ -19,7 +19,7 @@ import org.streampipes.model.constants.PropertySelectorConstants;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.model.runtime.EventFactory;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
@@ -35,7 +35,7 @@ public class Compose implements EventProcessor<ComposeParameters> {
 
 
   @Override
-  public void onInvocation(ComposeParameters composeParameters, RuntimeContext runtimeContext) {
+  public void onInvocation(ComposeParameters composeParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     this.outputSchema = composeParameters.getGraph().getOutputStream().getEventSchema();
     this.outputKeySelectors = composeParameters.getOutputKeySelectors();
     this.lastEvents = new HashMap<>();

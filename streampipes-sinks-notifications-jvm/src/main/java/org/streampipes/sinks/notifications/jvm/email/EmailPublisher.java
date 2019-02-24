@@ -22,7 +22,7 @@ import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.model.runtime.EventConverter;
 import org.streampipes.sinks.notifications.jvm.config.SinksNotificationsJvmConfig;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Map;
@@ -45,7 +45,7 @@ public class EmailPublisher implements EventSink<EmailParameters> {
     private String content;
 
     @Override
-    public void onInvocation(EmailParameters parameters, RuntimeContext runtimeContext) {
+    public void onInvocation(EmailParameters parameters, EventSinkRuntimeContext runtimeContext) {
         LOG = parameters.getGraph().getLogger(EmailPublisher.class);
 
         String from = SinksNotificationsJvmConfig.INSTANCE.getEmailFrom();

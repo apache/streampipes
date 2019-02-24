@@ -65,7 +65,7 @@ public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters
 
     EmailParameters params = new EmailParameters(graph, toEmail, subject, content);
 
-    return new ConfiguredEventSink<>(params, () -> new EmailPublisher(params));
+    return new ConfiguredEventSink<>(params, EmailPublisher::new);
   }
 }
 

@@ -17,7 +17,7 @@
 package org.streampipes.processors.filters.jvm.processor.textfilter;
 
 import org.streampipes.model.runtime.Event;
-import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
@@ -26,7 +26,7 @@ public class TextFilter implements EventProcessor<TextFilterParameters> {
   private TextFilterParameters params;
 
   @Override
-  public void onInvocation(TextFilterParameters textFilterParameters, RuntimeContext runtimeContext) {
+  public void onInvocation(TextFilterParameters textFilterParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     this.params = textFilterParameters;
   }
 

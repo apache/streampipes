@@ -24,9 +24,12 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.test.generator.InvocationGraphGenerator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @RunWith(Parameterized.class)
 public class TestConverterProgram extends DataStreamTestBase {
@@ -55,25 +58,25 @@ public class TestConverterProgram extends DataStreamTestBase {
 
     FieldConverterProgram program = new FieldConverterProgram(params, true);
 
-    DataStream<Map<String, Object>> stream = program.getApplicationLogic(createTestStream(makeInputData(inputValue)));
+    DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData(inputValue)));
 
-    ExpectedRecords<Map<String, Object>> expected =
-            new ExpectedRecords<Map<String, Object>>().expect(makeTestData(expectedValue).get(0));
+    ExpectedRecords<Event> expected =
+            new ExpectedRecords<Event>().expect(makeTestData(expectedValue).get(0));
 
     assertStream(stream, expected);
   }
 
-  private EventTimeInput<Map<String, Object>> makeInputData(String inputValue) {
-    List<Map<String, Object>> testData = makeTestData(inputValue);
-    EventTimeInputBuilder<Map<String, Object>> builder = EventTimeInputBuilder.startWith(testData.get(0));
+  private EventTimeInput<Event> makeInputData(String inputValue) {
+    List<Event> testData = makeTestData(inputValue);
+    EventTimeInputBuilder<Event> builder = EventTimeInputBuilder.startWith(testData.get(0));
 
     return builder;
   }
 
-  private List<Map<String, Object>> makeTestData(Object inputValue) {
-    List<Map<String, Object>> allEvents = new ArrayList<>();
-    Map<String, Object> event = new HashMap<>();
-    event.put("field", inputValue);
+  private List<Event> makeTestData(Object inputValue) {
+    List<Event> allEvents = new ArrayList<>();
+    Event event = new Event();
+    event.addField("field", inputValue);
 
     allEvents.add(event);
 

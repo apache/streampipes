@@ -60,7 +60,7 @@ public class OneSignalController extends StandaloneEventSinkDeclarer<OneSignalPa
 
         OneSignalParameters params = new OneSignalParameters(graph, content, appId, apiKey);
 
-        return new ConfiguredEventSink<>(params, () -> new OneSignalProducer(params));
+        return new ConfiguredEventSink<>(params, OneSignalProducer::new);
     }
 
 }

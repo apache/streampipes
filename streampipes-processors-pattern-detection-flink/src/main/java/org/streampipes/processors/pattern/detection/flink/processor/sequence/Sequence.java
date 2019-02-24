@@ -17,14 +17,11 @@
 package org.streampipes.processors.pattern.detection.flink.processor.sequence;
 
 import org.apache.flink.api.common.state.ValueState;
-import org.apache.flink.api.common.state.ValueStateDescriptor;
-import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.co.CoProcessFunction;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 
-import java.util.Map;
-
-public class Sequence extends CoProcessFunction<Map<String, Object>, Map<String, Object>, Map<String, Object>> {
+public class Sequence extends CoProcessFunction<Event, Event, Event> {
 
   private String timeUnit;
   private Integer timeWindow;
@@ -36,27 +33,29 @@ public class Sequence extends CoProcessFunction<Map<String, Object>, Map<String,
     this.timeWindow = timeWindow;
   }
 
-  @Override
-  public void open(Configuration parameters) throws Exception {
-    state = getRuntimeContext().getState(new ValueStateDescriptor<>("sequence-event-storage", EventStorage.class));
-  }
+  //@Override
+  //public void open(Configuration parameters) throws Exception {
+    // TODO: add RuntimeContext
+    //state = getRuntimeContext().getState(new ValueStateDescriptor<>("sequence-event-storage",
+    //        EventStorage.class));
+  //}
 
 
   @Override
-  public void processElement1(Map<String, Object> value, Context ctx, Collector<Map<String, Object>> out) throws Exception {
+  public void processElement1(Event value, Context ctx, Collector<Event> out) throws Exception {
     state.update(new EventStorage(System.currentTimeMillis(), value));
   }
 
   @Override
-  public void processElement2(Map<String, Object> value, Context ctx, Collector<Map<String, Object>> out) throws Exception {
+  public void processElement2(Event value, Context ctx, Collector<Event> out) throws Exception {
     EventStorage previousElementStream1 = state.value();
     if (previousElementStream1 != null && isSequence(previousElementStream1, value)) {
-      value.putAll(previousElementStream1.getEvent());
+      previousElementStream1.getEvent().getFields().forEach((key, v) -> value.addField(v));
       out.collect(value);
     }
   }
 
-  private Boolean isSequence(EventStorage previousElementStream1, Map<String, Object> value) {
+  private Boolean isSequence(EventStorage previousElementStream1, Event value) {
     Long currentTime = System.currentTimeMillis();
     Long earliestAllowedStartTime = getEarliestStartTime(currentTime);
 
@@ -78,7 +77,7 @@ public class Sequence extends CoProcessFunction<Map<String, Object>, Map<String,
   }
 
   @Override
-  public void onTimer(long timestamp, OnTimerContext ctx, Collector<Map<String, Object>> out) throws Exception {
+  public void onTimer(long timestamp, OnTimerContext ctx, Collector<Event> out) throws Exception {
 
   }
 }
