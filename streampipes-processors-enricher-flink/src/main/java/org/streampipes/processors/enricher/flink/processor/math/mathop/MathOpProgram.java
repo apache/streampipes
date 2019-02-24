@@ -17,9 +17,8 @@ limitations under the License.
 package org.streampipes.processors.enricher.flink.processor.math.mathop;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.enricher.flink.AbstractEnricherProgram;
-
-import java.util.Map;
 
 public class MathOpProgram extends AbstractEnricherProgram<MathOpParameters> {
 
@@ -28,7 +27,7 @@ public class MathOpProgram extends AbstractEnricherProgram<MathOpParameters> {
     }
 
     @Override
-    protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
+    protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
         return dataStreams[0]
                 .flatMap(new MathOp(params.getOperation(), params.getLeftOperand(),
                                     params.getRightOperand(), params.getResultField()));
