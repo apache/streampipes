@@ -44,7 +44,6 @@ import java.util.stream.Collectors;
 
 public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<TransformOutputStrategy> {
 
-  private TransformOutputStrategy strategy;
   private DataProcessorInvocation dataProcessorInvocation;
 
   protected static final String prefix = "urn:streampipes.org:spi:";
@@ -66,7 +65,7 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
     Map<String, EventProperty> modifiedEventProperties = new HashMap<>();
     EventSchema outSchema = new EventSchema();
     EventSchema inSchema = stream.getEventSchema();
-    strategy.getTransformOperations().forEach(to -> {
+    outputStrategy.getTransformOperations().forEach(to -> {
       Optional<MappingPropertyUnary> mappingPropertyOpt = findMappingProperty(to.getMappingPropertyInternalName(),
               dataProcessorInvocation.getStaticProperties());
 

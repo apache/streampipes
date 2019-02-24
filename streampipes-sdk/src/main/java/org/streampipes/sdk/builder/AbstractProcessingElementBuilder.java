@@ -97,7 +97,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
             PropertySelectorConstants.SECOND_REQUIREMENT_PREFIX;
   }
 
-  public BU requiredSingleValueSelectionFromRemote(Label label) {
+  public BU requiredSingleValueSelectionFromContainer(Label label) {
     RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
             .getLabel(), label.getDescription());
 
