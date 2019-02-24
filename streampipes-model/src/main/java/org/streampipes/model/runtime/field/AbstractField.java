@@ -34,6 +34,7 @@ public abstract class AbstractField<FV> {
   public AbstractField(String fieldNameIn) {
     this();
     this.fieldNameIn = fieldNameIn;
+    this.fieldNameOut = fieldNameIn;
   }
 
   public AbstractField() {
