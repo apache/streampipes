@@ -20,14 +20,11 @@ export class AppFileDownloadCtrl {
         this.getFiles();
         this.getAvailableIndices();
 
-
-        $rootScope.newFile = {
+        this.$rootScope.newFile = {
             allData: 'true',
             output: 'json'
         }
 
-        $rootScope.$on("UpdateFiles", (event, item) => {
-           this.getFiles();
         this.$rootScope.$on("UpdateFiles", (event, item) => {
             this.getFiles();
         });
@@ -50,18 +47,12 @@ export class AppFileDownloadCtrl {
     };
 
     createNewFile(file) {
-        var start = new Date(file.timestampFrom).getTime();
-        var end = new Date(file.timestampTo).getTime();
-        var output = file.output;
-        this.appFileDownloadRestApiService.createFile(file.index, start, end, output).then(msg => {
-            this.getFiles();
-        });
         if(file.index !== null) {
             var start = new Date(file.timestampFrom).getTime();
             var end = new Date(file.timestampTo).getTime();
             var output = file.output;
             var allData = file.allData;
-            this.appFileDownloadRestApiService.createFile(file.index.indexName, start, end, output, allData).success((err, res) => {
+            this.appFileDownloadRestApiService.createFile(file.index.indexName, start, end, output, allData).then((msg) => {
                 this.getFiles();
             });
         }
