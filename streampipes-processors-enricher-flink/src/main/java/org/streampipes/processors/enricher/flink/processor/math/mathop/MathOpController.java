@@ -40,7 +40,7 @@ public class MathOpController extends FlinkDataProcessorDeclarer<MathOpParameter
     @Override
     public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.math.mathop",
-                "Math","Performs calculations on event properties (+, -, *, /)")
+                "Math","Performs calculations on event properties (+, -, *, /, %)")
                 .iconUrl(EnricherFlinkConfig.getIconUrl("math-icon"))
                 .category(DataProcessorType.ALGORITHM)
                 .requiredStream(StreamRequirementsBuilder
@@ -55,7 +55,7 @@ public class MathOpController extends FlinkDataProcessorDeclarer<MathOpParameter
                 .outputStrategy(
                         OutputStrategies.append(
                                 EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
-                .requiredSingleValueSelection(OPERATION, "Select Operation", "", Options.from("+", "-", "/", "*"))
+                .requiredSingleValueSelection(OPERATION, "Select Operation", "", Options.from("+", "-", "/", "*", "%"))
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .supportedProtocols(SupportedProtocols.kafka())
                 .build();
@@ -76,6 +76,8 @@ public class MathOpController extends FlinkDataProcessorDeclarer<MathOpParameter
             case "*": arithmeticOperation = new OperationMultiply();
                 break;
             case "/": arithmeticOperation = new OperationDivide();
+                break;
+            case "%": arithmeticOperation = new OperationModulo();
         }
 
         MathOpParameters parameters = new MathOpParameters(graph, arithmeticOperation, leftOperand, rightOperand, RESULT_FIELD);
