@@ -18,9 +18,9 @@
 package org.streampipes.processors.statistics.flink.extensions;
 
 import org.apache.flink.api.java.functions.KeySelector;
+import org.streampipes.model.runtime.Event;
 
 import java.io.Serializable;
-import java.util.Map;
 
 public class MapKeySelector implements Serializable {
 
@@ -30,11 +30,11 @@ public class MapKeySelector implements Serializable {
     this.groupBy = groupBy;
   }
 
-  public KeySelector<Map<String, Object>, String> getKeySelector() {
-    return new KeySelector<Map<String, Object>, String>() {
+  public KeySelector<Event, String> getKeySelector() {
+    return new KeySelector<Event, String>() {
       @Override
-      public String getKey(Map<String, Object> in) throws Exception {
-        return String.valueOf(in.get(groupBy));
+      public String getKey(Event in) throws Exception {
+        return in.getFieldBySelector(groupBy).getAsPrimitive().getAsString();
       }
     };
   }

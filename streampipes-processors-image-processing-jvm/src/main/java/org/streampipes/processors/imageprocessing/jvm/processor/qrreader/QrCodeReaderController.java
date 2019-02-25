@@ -57,14 +57,12 @@ public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<Qr
   }
 
   @Override
-  public ConfiguredEventProcessor<QrCodeReaderParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(dataProcessorInvocation);
-
+  public ConfiguredEventProcessor<QrCodeReaderParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation, ProcessingElementParameterExtractor extractor) {
     String imagePropertyName = extractor.mappingPropertyValue(IMAGE_PROPERTY);
 
     QrCodeReaderParameters params = new QrCodeReaderParameters(dataProcessorInvocation, imagePropertyName);
 
-    return new ConfiguredEventProcessor<>(params, () -> new QrCodeReader(params));
+    return new ConfiguredEventProcessor<>(params, QrCodeReader::new);
   }
 
 }

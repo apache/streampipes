@@ -18,38 +18,36 @@
 package org.streampipes.processors.transformation.jvm.processor.array.count;
 
 import org.streampipes.logging.api.Logger;
-import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.model.runtime.field.AbstractField;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
-import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.util.List;
-import java.util.Map;
 
-public class CountArray extends StandaloneEventProcessorEngine<CountArrayParameters> {
+public class CountArray implements EventProcessor<CountArrayParameters> {
 
     private static Logger LOG;
 
     private CountArrayParameters splitArrayParameters;
 
-    public CountArray(CountArrayParameters params) {
-        super(params);
+    @Override
+    public void onInvocation(CountArrayParameters params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+        LOG = params.getGraph().getLogger(CountArray.class);
+
+        this.splitArrayParameters = params;
     }
 
     @Override
-    public void onInvocation(CountArrayParameters googleRoutingParameters, DataProcessorInvocation dataProcessorInvocation) {
-        LOG = googleRoutingParameters.getGraph().getLogger(CountArray.class);
+    public void onEvent(Event event, SpOutputCollector out) {
+        String arrayField = splitArrayParameters.getArrayField();
 
-        this.splitArrayParameters = googleRoutingParameters;
-    }
+        List<AbstractField> allEvents = event.getFieldBySelector(arrayField).getAsList().getRawValue();
 
-    @Override
-    public void onEvent(Map<String, Object> in, String s, SpOutputCollector out) {
-        String arrayField  = splitArrayParameters.getArrayField();
+        event.addField(CountArrayController.COUNT_NAME, allEvents.size());
 
-        List<Map<String, Object>> allEvents = (List<Map<String, Object>>) in.get(arrayField);
-        in.put(CountArrayController.COUNT_NAME, allEvents.size());
-
-        out.onEvent(in);
+        out.collect(event);
     }
 
 

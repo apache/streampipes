@@ -18,24 +18,22 @@ package org.streampipes.processors.enricher.flink.processor.timestamp;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 
-import java.util.Map;
+public class TimestampEnricher implements FlatMapFunction<Event, Event> {
 
-public class TimestampEnricher implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
+  private String appendTimePropertyName;
 
-	private String appendTimePropertyName;
-	
-	public TimestampEnricher(String appendTimePropertyName) {
-		this.appendTimePropertyName = appendTimePropertyName;
-	}
+  public TimestampEnricher(String appendTimePropertyName) {
+    this.appendTimePropertyName = appendTimePropertyName;
+  }
 
-	@Override
-	public void flatMap(Map<String, Object> in,
-			Collector<Map<String, Object>> out) throws Exception {
-		in.put(appendTimePropertyName, System.currentTimeMillis());
-		out.collect(in);
-	}
-	
-	
+  @Override
+  public void flatMap(Event in,
+                      Collector<Event> out) throws Exception {
+    in.addField(appendTimePropertyName, System.currentTimeMillis());
+    out.collect(in);
+  }
+
 
 }

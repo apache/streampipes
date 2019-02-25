@@ -33,8 +33,7 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
   private static final String OPERATION = "operation";
 
   @Override
-  public ConfiguredEventProcessor<NumericalFilterParameters> onInvocation(DataProcessorInvocation graph) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(graph);
+  public ConfiguredEventProcessor<NumericalFilterParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
     Double threshold = extractor.singleValueParameter(VALUE, Double.class);
     String stringOperation = extractor.selectedSingleValue(OPERATION, String.class);
@@ -57,7 +56,7 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
             (operation)
             , filterProperty);
 
-    return new ConfiguredEventProcessor<>(staticParam, () -> new NumericalFilter(staticParam));
+    return new ConfiguredEventProcessor<>(staticParam, NumericalFilter::new);
   }
 
   @Override

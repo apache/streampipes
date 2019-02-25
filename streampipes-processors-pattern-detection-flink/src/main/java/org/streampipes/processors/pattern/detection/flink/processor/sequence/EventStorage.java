@@ -16,14 +16,14 @@
 
 package org.streampipes.processors.pattern.detection.flink.processor.sequence;
 
-import java.util.Map;
+import org.streampipes.model.runtime.Event;
 
 public class EventStorage {
 
   private Long timestamp;
-  private Map<String, Object> event;
+  private Event event;
 
-  public EventStorage(Long timestamp, Map<String, Object> event) {
+  public EventStorage(Long timestamp, Event event) {
     this.timestamp = timestamp;
     this.event = event;
   }
@@ -32,7 +32,7 @@ public class EventStorage {
     return timestamp;
   }
 
-  public Map<String, Object> getEvent() {
+  public Event getEvent() {
     return event;
   }
 

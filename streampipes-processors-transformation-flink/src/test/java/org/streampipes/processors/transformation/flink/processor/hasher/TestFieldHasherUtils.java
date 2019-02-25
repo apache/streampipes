@@ -16,21 +16,26 @@
  */
 package org.streampipes.processors.transformation.flink.processor.hasher;
 
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithm;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TestFieldHasherUtils {
 
   public static List<String> testData = Arrays.asList("test1", "test2", "test3", "test4");
 
-  public static List<Map<String, Object>> makeTestData(boolean originalValue, HashAlgorithm hashAlgorithm) {
-    List<Map<String, Object>> data = new ArrayList<>();
+  public static List<Event> makeTestData(boolean originalValue, HashAlgorithm hashAlgorithm) {
+    List<Event> data = new ArrayList<>();
     for(int i = 0; i < 3; i++) {
-      Map<String, Object> testData = new HashMap<>();
-      testData.put("timestamp", i);
-      testData.put("field", originalValue ? testData.get(i) : hashAlgorithm.toHashValue(testData.get(i)));
-      data.add(testData);
+      Event event = new Event();
+      event.addField("timestamp", i);
+      event.addField("field", originalValue ? testData.get(i) : hashAlgorithm.toHashValue
+              (testData
+              .get(i)));
+      data.add(event);
     }
     return data;
   }

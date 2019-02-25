@@ -21,10 +21,6 @@ import java.util.List;
 
 public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters> {
 
-  public NumericalFilter(NumericalFilterParameters params) {
-    super(params);
-  }
-
   @Override
   protected String fromStatement(List<String> inputStreamNames, NumericalFilterParameters params) {
     return "from " +inputStreamNames.get(0) +"[" +params.getFilterProperty() +"<" +params.getThreshold() +"]";

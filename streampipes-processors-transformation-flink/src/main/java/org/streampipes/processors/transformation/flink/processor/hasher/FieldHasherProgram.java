@@ -18,6 +18,7 @@
 package org.streampipes.processors.transformation.flink.processor.hasher;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.transformation.flink.AbstractFlinkTransformationProgram;
 
 import java.io.Serializable;
@@ -35,8 +36,8 @@ public class FieldHasherProgram extends AbstractFlinkTransformationProgram<Field
 	}
 
 	@Override
-	protected DataStream<Map<String, Object>> getApplicationLogic(
-			DataStream<Map<String, Object>>... messageStream) {
+	protected DataStream<Event> getApplicationLogic(
+			DataStream<Event>... messageStream) {
 		return messageStream[0].flatMap(new FieldHasher(bindingParams.getPropertyName(),
 				bindingParams.getHashAlgorithmType().hashAlgorithm()));
 	}

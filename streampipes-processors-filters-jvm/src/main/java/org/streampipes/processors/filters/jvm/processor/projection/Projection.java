@@ -17,34 +17,26 @@
 
 package org.streampipes.processors.filters.jvm.processor.projection;
 
-import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
-import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class Projection extends StandaloneEventProcessorEngine<ProjectionParameters> {
+public class Projection implements EventProcessor<ProjectionParameters> {
 
   private List<String> outputKeys;
 
-  public Projection(ProjectionParameters params) {
-    super(params);
-  }
 
   @Override
-  public void onInvocation(ProjectionParameters projectionParameters, DataProcessorInvocation dataProcessorInvocation) {
+  public void onInvocation(ProjectionParameters projectionParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     this.outputKeys = projectionParameters.getOutputKeys();
   }
 
   @Override
-  public void onEvent(Map<String, Object> in, String sourceInfo, SpOutputCollector out) {
-    Map<String, Object> outEvent = new HashMap<>();
-    for(String outputKey : outputKeys) {
-      outEvent.put(outputKey, in.get(outputKey));
-    }
-    out.onEvent(outEvent);
+  public void onEvent(Event event, SpOutputCollector out) {
+    out.collect(event.getSubset(outputKeys));
   }
 
   @Override

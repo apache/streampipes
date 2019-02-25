@@ -19,27 +19,27 @@ package org.streampipes.processors.transformation.flink.processor.rename;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 
-import java.util.Map;
+public class FieldRenamer implements FlatMapFunction<Event, Event> {
 
-public class FieldRenamer implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
+  private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
-	
-	private String oldPropertyName;
-	private String newPropertyName;
-	
-	public FieldRenamer(String oldPropertyName, String newPropertyName) {
-		this.oldPropertyName = oldPropertyName;
-		this.newPropertyName = newPropertyName;
-	}
-	@Override
-	public void flatMap(Map<String, Object> in,
-			Collector<Map<String, Object>> out) throws Exception {
-		Object propertyValue = in.get(oldPropertyName);
-		in.remove(oldPropertyName);
-		in.put(newPropertyName, propertyValue);
-		out.collect(in);
-	}
+  private String oldPropertyName;
+  private String newPropertyName;
+
+  public FieldRenamer(String oldPropertyName, String newPropertyName) {
+    this.oldPropertyName = oldPropertyName;
+    this.newPropertyName = newPropertyName;
+  }
+
+  @Override
+  public void flatMap(Event in,
+                      Collector<Event> out) throws Exception {
+    Object propertyValue = in.getFieldBySelector(oldPropertyName);
+    in.removeFieldBySelector(oldPropertyName);
+    in.addField(newPropertyName, propertyValue);
+    out.collect(in);
+  }
 
 }

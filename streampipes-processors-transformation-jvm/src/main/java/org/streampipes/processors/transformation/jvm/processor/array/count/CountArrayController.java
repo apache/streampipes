@@ -44,7 +44,6 @@ public class CountArrayController extends StandaloneEventProcessingDeclarer<Coun
         return ProcessingElementBuilder.create("org.streampipes.processors" +
                 ".transformation.jvm.count-array", "Count Array", "This processor takes " +
                 "an array of event properties counts them and appends the result to the event")
-
                 .iconUrl(TransformationJvmConfig.getIconUrl( "countarray"))
                 .requiredStream(
                         StreamRequirementsBuilder.create()
@@ -60,13 +59,11 @@ public class CountArrayController extends StandaloneEventProcessingDeclarer<Coun
     }
 
     @Override
-    public ConfiguredEventProcessor<CountArrayParameters> onInvocation(DataProcessorInvocation graph) {
-        ProcessingElementParameterExtractor extractor = getExtractor(graph);
-
+    public ConfiguredEventProcessor<CountArrayParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
         String arrayField = extractor.mappingPropertyValue(ARRAY_FIELD);
 
         CountArrayParameters params = new CountArrayParameters(graph, arrayField);
-        return new ConfiguredEventProcessor<>(params, () -> new CountArray(params));
+        return new ConfiguredEventProcessor<>(params, CountArray::new);
     }
 
 }

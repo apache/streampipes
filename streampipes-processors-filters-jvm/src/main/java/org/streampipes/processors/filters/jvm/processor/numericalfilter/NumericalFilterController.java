@@ -42,8 +42,7 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from(NUMBER_MAPPING, "Specifies the field name where the filter operation should" +
-                    " be applied " +
-                    "on.", ""), PropertyScope.NONE).build())
+                    " be applied on.", ""), PropertyScope.NONE).build())
             .outputStrategy(OutputStrategies.keep())
             .requiredSingleValueSelection(Labels.from(OPERATION, "Filter Operation", "Specifies the filter " +
                     "operation that should be applied on the field"), Options.from("<", "<=", ">", ">=", "=="))
@@ -56,9 +55,7 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
 
   @Override
   public ConfiguredEventProcessor<NumericalFilterParameters> onInvocation
-          (DataProcessorInvocation sepa) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
-
+          (DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
     Double threshold = extractor.singleValueParameter(VALUE, Double.class);
     String stringOperation = extractor.selectedSingleValue(OPERATION, String.class);
 
@@ -76,10 +73,11 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
 
     String filterProperty = extractor.mappingPropertyValue(NUMBER_MAPPING);
 
-    NumericalFilterParameters staticParam = new NumericalFilterParameters(sepa, threshold, NumericalOperator.valueOf
-            (operation)
-            , filterProperty);
+    NumericalFilterParameters staticParam = new NumericalFilterParameters(sepa,
+            threshold,
+            NumericalOperator.valueOf(operation),
+            filterProperty);
 
-    return new ConfiguredEventProcessor<>(staticParam, () -> new NumericalFilter(staticParam));
+    return new ConfiguredEventProcessor<>(staticParam, NumericalFilter::new);
   }
 }

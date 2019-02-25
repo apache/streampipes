@@ -19,13 +19,12 @@ package org.streampipes.processors.pattern.detection.flink.processor.increase;
 import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class Increase implements WindowFunction<Map<String, Object>, Map<String, Object>, String, TimeWindow> {
+public class Increase implements WindowFunction<Event, Event, String, TimeWindow> {
 
   private String propertyFieldName;
   private Integer increaseValue;
@@ -43,16 +42,16 @@ public class Increase implements WindowFunction<Map<String, Object>, Map<String,
   }
 
   @Override
-  public void apply(String key, TimeWindow window, Iterable<Map<String, Object>> input, Collector<Map<String, Object>>
+  public void apply(String key, TimeWindow window, Iterable<Event> input, Collector<Event>
           out) throws Exception {
 
     List<Double> values = new ArrayList<>();
-    Map<String, Object> lastEvent = new HashMap<>();
+    Event lastEvent = new Event();
 
-    for (Map<String, Object> anInput : input) {
+    for (Event anInput : input) {
       lastEvent = anInput;
-      if (String.valueOf(lastEvent.get(groupByFieldName)).equals(key)) {
-        values.add(Double.parseDouble(String.valueOf(lastEvent.get(propertyFieldName))));
+      if (lastEvent.getFieldBySelector(groupByFieldName).getAsPrimitive().getAsString().equals(key)) {
+        values.add(lastEvent.getFieldBySelector(propertyFieldName).getAsPrimitive().getAsDouble());
       }
     }
     if (values.size() > 0) {
@@ -69,10 +68,10 @@ public class Increase implements WindowFunction<Map<String, Object>, Map<String,
     }
   }
 
-  private void buildOutput(Collector<Map<String, Object>> out, Map<String, Object> lastEvent) {
-    Map<String, Object> outEvent = new HashMap<>();
+  private void buildOutput(Collector<Event> out, Event lastEvent) {
+    Event outEvent = new Event();
     for(String outputProperty : outputProperties) {
-      outEvent.put(outputProperty, lastEvent.get(outputProperty));
+      outEvent.addField(outputProperty, lastEvent.getFieldBySelector(outputProperty));
     }
 
     out.collect(outEvent);

@@ -16,10 +16,9 @@ limitations under the License.
 package org.streampipes.processors.pattern.detection.flink.processor.common;
 
 import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;
+import org.streampipes.model.runtime.Event;
 
-import java.util.Map;
-
-public class TimestampExtractor extends AscendingTimestampExtractor<Map<String, Object>> {
+public class TimestampExtractor extends AscendingTimestampExtractor<Event> {
 
   private String timestampField;
 
@@ -28,7 +27,7 @@ public class TimestampExtractor extends AscendingTimestampExtractor<Map<String, 
   }
 
   @Override
-  public long extractAscendingTimestamp(Map<String, Object> in) {
-    return Long.parseLong(String.valueOf(in.get(timestampField)));
+  public long extractAscendingTimestamp(Event in) {
+    return in.getFieldBySelector(timestampField).getAsPrimitive().getAsLong();
   }
 }

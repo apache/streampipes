@@ -55,8 +55,7 @@ public class ImageCropperController extends StandaloneEventProcessingDeclarer<Im
   }
 
   @Override
-  public ConfiguredEventProcessor<ImageCropperParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(dataProcessorInvocation);
+  public ConfiguredEventProcessor<ImageCropperParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation, ProcessingElementParameterExtractor extractor) {
 
     String imageProperty = extractor.mappingPropertyValue(IMAGE_PROPERTY);
     String boxWidthProperty = extractor.mappingPropertyValue(BOX_WIDTH_PROPERTY);
@@ -67,7 +66,7 @@ public class ImageCropperController extends StandaloneEventProcessingDeclarer<Im
     ImageCropperParameters params = new ImageCropperParameters(dataProcessorInvocation, imageProperty,
             boxWidthProperty, boxHeightProperty, boxXProperty, boxYProperty);
 
-    return new ConfiguredEventProcessor<>(params, () -> new ImageCropper(params));
+    return new ConfiguredEventProcessor<>(params, ImageCropper::new);
   }
 
 }

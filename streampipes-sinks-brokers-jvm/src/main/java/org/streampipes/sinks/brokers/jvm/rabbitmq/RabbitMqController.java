@@ -82,7 +82,7 @@ public class RabbitMqController extends StandaloneEventSinkDeclarer<RabbitMqPara
     RabbitMqParameters params = new RabbitMqParameters(graph, rabbitMqHost, rabbitMqPort, publisherTopic,
             rabbitMqUser, rabbitMqPassword, exchangeName);
 
-    return new ConfiguredEventSink<>(params, () -> new RabbitMqConsumer(params));
+    return new ConfiguredEventSink<>(params, RabbitMqConsumer::new);
 
 
 

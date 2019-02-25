@@ -21,13 +21,14 @@ import com.google.gson.Gson;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.model.Notification;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Date;
-import java.util.Map;
 
-public class NotificationProducer extends EventSink<NotificationParameters> {
+public class NotificationProducer implements EventSink<NotificationParameters> {
 
   private String title;
   private String content;
@@ -36,13 +37,9 @@ public class NotificationProducer extends EventSink<NotificationParameters> {
   private Gson gson;
 
 
-  public NotificationProducer(NotificationParameters params) {
-    super(params);
-
-  }
-
   @Override
-  public void bind(NotificationParameters parameters) throws SpRuntimeException {
+  public void onInvocation(NotificationParameters parameters, EventSinkRuntimeContext runtimeContext) throws
+          SpRuntimeException {
     this.publisher = new ActiveMQPublisher(SinksInternalJvmConfig.INSTANCE.getJmsHost() + ":" + SinksInternalJvmConfig.INSTANCE.getJmsPort(),
             "org.streampipes.notifications");
     this.gson = new Gson();
@@ -51,7 +48,7 @@ public class NotificationProducer extends EventSink<NotificationParameters> {
   }
 
   @Override
-  public void onEvent(Map<String, Object> event, String sourceInfo) {
+  public void onEvent(Event inputEvent) {
     Notification notification = new Notification();
     notification.setTitle(title);
     notification.setMessage(content);
@@ -63,7 +60,7 @@ public class NotificationProducer extends EventSink<NotificationParameters> {
   }
 
   @Override
-  public void discard() throws SpRuntimeException {
+  public void onDetach() throws SpRuntimeException {
     this.publisher.disconnect();
   }
 }
