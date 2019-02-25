@@ -20,11 +20,9 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
-import org.apache.http.conn.HttpHostConnectException;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.graph.DataProcessorInvocation;
 
-import java.net.URL;
 import java.util.Map;
 
 public class UrlDereferencing implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
