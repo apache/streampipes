@@ -22,6 +22,7 @@ import org.streampipes.processors.enricher.flink.processor.math.staticmathop.Sta
 import org.streampipes.processors.enricher.flink.processor.timestamp.TimestampController;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.processors.enricher.flink.processor.trigonometry.TrigonometryController;
 import org.streampipes.processors.enricher.flink.processor.urldereferencing.UrlDereferencingController;
 
 public class EnricherFlinkInit extends StandaloneModelSubmitter {
@@ -31,7 +32,8 @@ public class EnricherFlinkInit extends StandaloneModelSubmitter {
             .add(new TimestampController())
             .add(new MathOpController())
             .add(new StaticMathOpController())
-            .add(new UrlDereferencingController());
+            .add(new UrlDereferencingController())
+            .add(new TrigonometryController());
 
     new EnricherFlinkInit().init(EnricherFlinkConfig.INSTANCE);
   }
