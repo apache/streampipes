@@ -19,6 +19,7 @@ package org.streampipes.processors.enricher.flink.processor.urldereferencing;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -27,9 +28,6 @@ import org.streampipes.sdk.helpers.*;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class UrlDereferencingController extends FlinkDataProcessorDeclarer<UrlDereferencingParameter> {
 
@@ -44,12 +42,13 @@ public class UrlDereferencingController extends FlinkDataProcessorDeclarer<UrlDe
                 .category(DataProcessorType.ENRICH)
                 .requiredStream(StreamRequirementsBuilder
                         .create()
-                        .requiredProperty(EpRequirements.anyProperty())
+                        .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
+                                Labels.from(URL, "URL", "The server URL"),
+                                PropertyScope.NONE)
                         .build())
                 .outputStrategy(
                         OutputStrategies.append(
                                 EpProperties.numberEp(Labels.empty(), APPEND_HTML, SO.Text)))
-                .requiredTextParameter(Labels.from(URL, "URL", "The server URL"))
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .supportedProtocols(SupportedProtocols.kafka())
                 .build();
@@ -58,17 +57,17 @@ public class UrlDereferencingController extends FlinkDataProcessorDeclarer<UrlDe
 
     @Override
     public FlinkDataProcessorRuntime<UrlDereferencingParameter> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
-        String urlString = extractor.singleValueParameter(URL, String.class);
+        String urlString = extractor.mappingPropertyValue(URL);
 
-        java.net.URL url = null;
-        try {
+//        java.net.URL url = null;
+/*        try {
              url = new URL(urlString);
         } catch (MalformedURLException e) {
             logger.error("Malformed URL:" + urlString);
             throw new IllegalArgumentException("Malformed URL:" + urlString);
         }
-
-        UrlDereferencingParameter staticParam = new UrlDereferencingParameter(graph, url, APPEND_HTML);
+*/
+        UrlDereferencingParameter staticParam = new UrlDereferencingParameter(graph, urlString, APPEND_HTML);
 
         return  new UrlDereferencingProgram(staticParam, EnricherFlinkConfig.INSTANCE.getDebug());
     }

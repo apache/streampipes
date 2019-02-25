@@ -29,12 +29,12 @@ import java.util.Map;
 
 public class UrlDereferencing implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
 
-    private URL url;
+    private String urlString;
     private String appendHtml;
     private Logger logger;
 
-    public UrlDereferencing(URL url, String appendHtml, DataProcessorInvocation graph) {
-        this.url = url;
+    public UrlDereferencing(String urlString, String appendHtml, DataProcessorInvocation graph) {
+        this.urlString = urlString;
         this.appendHtml = appendHtml;
         this.logger = graph.getLogger(UrlDereferencing.class);
     }
@@ -42,14 +42,15 @@ public class UrlDereferencing implements FlatMapFunction<Map<String, Object>, Ma
     @Override
     public void flatMap(Map<String, Object> in, Collector<Map<String, Object>> out) throws Exception {
         HttpResponse<String> response;
+
         try {
-            response = Unirest.get(url.toString()).asString();
+            response = Unirest.get(in.get(urlString).toString()).asString();
             String body = response.getBody();
 
             in.put(appendHtml, body);
         } catch (Exception e) {
-            logger.error("Error while fetching data from URL: " + url);
-            in.put(appendHtml, "Error while fetching data from URL: " + url);
+            logger.error("Error while fetching data from URL: " + urlString);
+            in.put(appendHtml, "Error while fetching data from URL: " + urlString);
         }
 
         out.collect(in);

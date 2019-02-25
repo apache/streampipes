@@ -19,21 +19,19 @@ package org.streampipes.processors.enricher.flink.processor.urldereferencing;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-import java.net.URL;
-
 public class UrlDereferencingParameter extends EventProcessorBindingParams {
 
-    private URL url;
+    private String urlString;
     private String appendHtml;
 
-    public UrlDereferencingParameter(DataProcessorInvocation graph, URL url, String appendHtml) {
+    public UrlDereferencingParameter(DataProcessorInvocation graph, String urlString, String appendHtml) {
         super(graph);
-        this.url = url;
+        this.urlString = urlString;
         this.appendHtml = appendHtml;
     }
 
-    public URL getUrl() {
-        return url;
+    public String getUrl() {
+        return urlString;
     }
 
     public String getAppendHtml() {
