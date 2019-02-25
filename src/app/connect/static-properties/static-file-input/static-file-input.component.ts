@@ -4,6 +4,7 @@ import { StaticProperty } from '../../model/StaticProperty';
 import { StaticPropertyUtilService } from '../static-property-util.service';
 import {StaticFileRestService} from './static-file-rest.service';
 import {FileStaticProperty} from '../../model/FileStaticProperty';
+import {HttpEventType, HttpResponse} from '@angular/common/http';
 
 
 @Component({
@@ -26,6 +27,8 @@ export class StaticFileInputComponent implements OnInit {
     private hasInput: Boolean;
     private errorMessage = "Please enter a value";
 
+    private uploadStatus = 0;
+
     constructor(private staticPropertyUtil: StaticPropertyUtilService, private staticFileRestService: StaticFileRestService){
 
     }
@@ -36,18 +39,26 @@ export class StaticFileInputComponent implements OnInit {
     handleFileInput(files: any) {
         this.selectedUploadFile = files[0];
         this.fileName = this.selectedUploadFile.name;
+        this.uploadStatus = 0;
     }
 
     upload() {
+        this.uploadStatus = 0;
         if (this.selectedUploadFile !== undefined) {
             this.staticFileRestService.upload(this.selectedUploadFile).subscribe(
-                result => {
-                    (<FileStaticProperty> (this.staticProperty)).locationPath = result.notifications[0].title;
-                    this.valueChange(true);
+                event => {
+                    if (event.type == HttpEventType.UploadProgress) {
+                        this.uploadStatus = Math.round(100 * event.loaded / event.total);
+                    } else if (event instanceof HttpResponse) {
+                        (<FileStaticProperty> (this.staticProperty)).locationPath = event.body.notifications[0].title;
+                               this.valueChange(true);
+                        console.log('File is completely loaded!');
+                    }
                 },
                 error => {
                     this.valueChange(false);
                 },
+
             );
         }
     }

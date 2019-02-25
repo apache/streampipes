@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpEvent, HttpParams, HttpRequest} from '@angular/common/http';
 import {AuthStatusService} from '../../../services/auth-status.service';
 
 @Injectable()
@@ -24,14 +24,19 @@ export class StaticFileRestService {
 
 
 
-    upload(file: File): Observable<any> {
+    upload(file: File): Observable<HttpEvent<any>> {
         const data: FormData = new FormData();
         data.append('file_upload', file, file.name);
-        return this.http.post(this.url, data)
-            .map(res => {
-                return res;
-            });
-    }
+
+        let params = new HttpParams();
+        const options = {
+            params: params,
+            reportProgress: true,
+        };
+
+        const req = new HttpRequest('POST', this.url, data, options);
+        return this.http.request(req);
+           }
 
     delete(id: string) {
         return this.http.delete(this.url + '/' + id);

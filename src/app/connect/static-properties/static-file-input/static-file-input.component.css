@@ -11,3 +11,10 @@ form {
     float: left;
 }
 
+.white-icon {
+    color: green;
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.white-icon svg {
+    fill: green;
+}
