@@ -66,6 +66,10 @@ import { spImageWidgetConfig } from './templates/image/image-config.component';
 import { ImageDataModel } from './templates/image/image-data-model.service';
 import {DomainConceptComponent} from "../editor/components/domainconcept/domainconcept.component";
 
+import spHtmlWidget from './templates/html/html.directive';
+import {HtmlDataModel} from './templates/html/html-data-model.service';
+import {spHtmlWidgetConfig} from './templates/html/html-config.component';
+
 export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhrTable', 'ngMap'])
 
     .component('configItem', ConfigItemComponent)
@@ -121,5 +125,9 @@ export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhr
     .directive('spImageWidget', spImageWidget)
     .component('spImageWidgetConfig', spImageWidgetConfig)
     .service('ImageDataModel', ImageDataModel)
+
+    .directive('spHtmlWidget', spHtmlWidget)
+    .component('spHtmlWidgetConfig', spHtmlWidgetConfig)
+    .service('HtmlDataModel', HtmlDataModel)
 
 	.name;

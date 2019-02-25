@@ -13,7 +13,8 @@ export class WidgetTemplates {
                 RawDataModel,
                 MapDataModel,
                 HeatmapDataModel,
-                ImageDataModel) {
+                ImageDataModel,
+                HtmlDataModel) {
 
 
         //Register the new widgets here
@@ -87,6 +88,13 @@ export class WidgetTemplates {
                 icon: 'image',
                 directive: 'sp-image-widget',
                 dataModel: ImageDataModel,
+            },
+            html: {
+                name: 'html',
+                label: 'HTML',
+                icon: 'web_asset',
+                directive: 'sp-html-widget',
+                dataModel: HtmlDataModel,
             }
 
         }
@@ -125,6 +133,7 @@ WidgetTemplates.$inject = [
     'RawDataModel',
     'MapDataModel',
     'HeatmapDataModel',
-    'ImageDataModel'
+    'ImageDataModel',
+    'HtmlDataModel'
 ];
 
