@@ -17,9 +17,8 @@ limitations under the License.
 package org.streampipes.processors.enricher.flink.processor.urldereferencing;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.enricher.flink.AbstractEnricherProgram;
-
-import java.util.Map;
 
 public class UrlDereferencingProgram extends AbstractEnricherProgram<UrlDereferencingParameter> {
 
@@ -28,8 +27,9 @@ public class UrlDereferencingProgram extends AbstractEnricherProgram<UrlDerefere
     }
 
     @Override
-    protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
-            return dataStreams[0]
-                    .flatMap(new UrlDereferencing(params.getUrl(), params.getAppendHtml(), params.getGraph()));
+    protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
+        return dataStreams[0]
+                .flatMap(new UrlDereferencing(params.getUrl(), params.getAppendHtml(), params.getGraph()));
     }
+
 }

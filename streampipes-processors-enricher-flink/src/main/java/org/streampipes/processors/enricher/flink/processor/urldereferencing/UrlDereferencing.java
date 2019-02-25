@@ -22,10 +22,9 @@ import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.runtime.Event;
 
-import java.util.Map;
-
-public class UrlDereferencing implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
+public class UrlDereferencing implements FlatMapFunction<Event, Event> {
 
     private String urlString;
     private String appendHtml;
@@ -38,17 +37,19 @@ public class UrlDereferencing implements FlatMapFunction<Map<String, Object>, Ma
     }
 
     @Override
-    public void flatMap(Map<String, Object> in, Collector<Map<String, Object>> out) throws Exception {
+    public void flatMap(Event in, Collector<Event> out) throws Exception {
         HttpResponse<String> response;
 
         try {
-            response = Unirest.get(in.get(urlString).toString()).asString();
+            response = Unirest.get(
+                        in.getFieldBySelector(urlString).getAsPrimitive().getAsString()
+                    ).asString();
             String body = response.getBody();
 
-            in.put(appendHtml, body);
+            in.addField(appendHtml, body);
         } catch (Exception e) {
             logger.error("Error while fetching data from URL: " + urlString);
-            in.put(appendHtml, "Error while fetching data from URL: " + urlString);
+            in.addField(appendHtml, "Error while fetching data from URL: " + urlString);
         }
 
         out.collect(in);
