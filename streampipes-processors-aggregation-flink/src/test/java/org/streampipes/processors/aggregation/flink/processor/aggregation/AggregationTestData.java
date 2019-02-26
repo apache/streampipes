@@ -32,23 +32,23 @@ public class AggregationTestData {
 
   private void buildOutput() {
     this.expectedOutput = new ArrayList<>();
-    this.expectedOutput.add(buildOutputMap(1, 1.0));
-    this.expectedOutput.add(buildOutputMap(2, 1.5));
+    this.expectedOutput.add(buildOutputMap(1.0f, 1.0f));
+    this.expectedOutput.add(buildOutputMap(2.0f, 1.5f));
   }
 
   private void buildInput() {
     this.input = new ArrayList<>();
-    input.add(buildEvent(1));
-    input.add(buildEvent(2));
+    input.add(buildEvent(1.0f));
+    input.add(buildEvent(2.0f));
   }
 
-  private Event buildOutputMap(Object value, Object aggregatedValue) {
+  private Event buildOutputMap(Float value, Float aggregatedValue) {
     Event event = buildEvent(value);
     event.addField("aggregatedValue", aggregatedValue);
     return event;
   }
 
-  private Event buildEvent(Object value) {
+  private Event buildEvent(Float value) {
    Event event = new Event();
     event.addField("sensorId", "a");
     event.addField("value", value);
