@@ -14,14 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package org.streampipes.processors.enricher.flink.processor.math.staticmathop;
+package org.streampipes.processors.enricher.flink.processor.trigonometry;
 
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
-import org.streampipes.processors.enricher.flink.processor.math.operation.*;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -30,58 +29,52 @@ import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
-public class StaticMathOpController extends FlinkDataProcessorDeclarer<StaticMathOpParameters> {
+public class TrigonometryController extends FlinkDataProcessorDeclarer<TrigonometryParameters> {
 
-    private final String RESULT_FIELD = "calculationResultStatic";
-    private final String LEFT_OPERAND = "leftOperand";
-    private final String RIGHT_OPERAND_VALUE = "rightOperandValue";
+    private final String OPERAND = "operand";
     private final String OPERATION = "operation";
+    private final String RESULT_FIELD = "trigonometryResult";
+
 
     @Override
     public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.math.staticmathop",
-                "Static Math", "Performs calculation on an event property with a static value (+, -, *, /, %)")
-                 .iconUrl(EnricherFlinkConfig.getIconUrl("math-icon-static"))
+        return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.trigonometry",
+                "Trigonometry","Performs Trigonometric function on event properties")
+                .iconUrl(EnricherFlinkConfig.getIconUrl("trigonometry_icon"))
                 .category(DataProcessorType.ALGORITHM)
                 .requiredStream(StreamRequirementsBuilder
                         .create()
                         .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                                Labels.from(LEFT_OPERAND, "Left operand", "Select left operand"),
+                                Labels.from(OPERAND, "Alpha", "Select the alpha parameter"),
                                 PropertyScope.NONE)
                         .build())
-                .requiredFloatParameter(Labels.from(RIGHT_OPERAND_VALUE, "Right operand value",
-                        "Specify the value of the right operand."))
                 .outputStrategy(
                         OutputStrategies.append(
                                 EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
-                .requiredSingleValueSelection(OPERATION, "Select Operation", "", Options.from("+", "-", "/", "*", "%"))
+                .requiredSingleValueSelection(Labels.from(OPERATION, "Select function", ""), Options.from("sin(a)", "cos(a)", "tan(a)" ))
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .supportedProtocols(SupportedProtocols.kafka())
                 .build();
     }
 
     @Override
-    public FlinkDataProcessorRuntime<StaticMathOpParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
-        String leftOperand = extractor.mappingPropertyValue(LEFT_OPERAND);
-        double rightOperand = extractor.singleValueParameter(RIGHT_OPERAND_VALUE, Double.class);
+    public FlinkDataProcessorRuntime<TrigonometryParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+        String operand = extractor.mappingPropertyValue(OPERAND);
         String operation = extractor.selectedSingleValue(OPERATION, String.class);
 
-        Operation arithmeticOperation = null;
+        Operation trigonometryFunction = null;
         switch (operation) {
-            case "+": arithmeticOperation = new OperationAddition();
+            case "sin(a)": trigonometryFunction = Operation.SIN;
                 break;
-            case "-": arithmeticOperation = new OperationSubtracting();
+            case "cos(a)": trigonometryFunction = Operation.COS;
                 break;
-            case "*": arithmeticOperation = new OperationMultiply();
-                break;
-            case "/": arithmeticOperation = new OperationDivide();
-                break;
-            case "%": arithmeticOperation = new OperationModulo();
+            case "tan(a)": trigonometryFunction = Operation.TAN;
+
         }
 
-        StaticMathOpParameters parameters = new StaticMathOpParameters(graph, arithmeticOperation, leftOperand, rightOperand, RESULT_FIELD);
 
-        return new StaticMathOpProgram(parameters, EnricherFlinkConfig.INSTANCE.getDebug());
+        TrigonometryParameters parameters = new TrigonometryParameters(graph, operand, trigonometryFunction, RESULT_FIELD);
 
+        return new TrigonometryProgram(parameters, EnricherFlinkConfig.INSTANCE.getDebug());
     }
 }
