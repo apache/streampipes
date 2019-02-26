@@ -167,9 +167,13 @@ public class Event {
     addPrimitive(runtimeName, value);
   }
 
-//  public void addField(String runtimeName, Object value) {
-//    addPrimitive(runtimeName, value);
-//  }
+  public void addField(String runtimeName, Object value) {
+    if (AbstractField.class.isInstance(value)) {
+     addField((AbstractField) value);
+    } else {
+      addPrimitive(runtimeName, value);
+    }
+  }
 
   public void addField(String runtimeName, Float value) {
     addPrimitive(runtimeName, value);
