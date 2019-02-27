@@ -14,10 +14,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * Modifications copyright (C) 2019 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.kohlschutter.boilerpipe.sax;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.BitSet;
@@ -33,18 +48,18 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.cyberneko.html.HTMLConfiguration;
 
 import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
 import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
 import com.kohlschutter.boilerpipe.document.TextBlock;
 import com.kohlschutter.boilerpipe.document.TextDocument;
-import org.cyberneko.html.HTMLConfiguration;
 
 /**
  * Highlights text blocks in an HTML document that have been marked as "content" in the
  * corresponding {@link TextDocument}.
  */
-public final class HTMLHighlighter {
+public final class HTMLHighlighter implements Serializable {
 
   private Map<String, Set<String>> tagWhitelist = null;
 
