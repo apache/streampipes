@@ -71,7 +71,7 @@ public class Increase implements WindowFunction<Event, Event, String, TimeWindow
   private void buildOutput(Collector<Event> out, Event lastEvent) {
     Event outEvent = new Event();
     for(String outputProperty : outputProperties) {
-      outEvent.addField(outputProperty, lastEvent.getFieldBySelector(outputProperty));
+      outEvent.addField(lastEvent.getFieldBySelector(outputProperty));
     }
 
     out.collect(outEvent);

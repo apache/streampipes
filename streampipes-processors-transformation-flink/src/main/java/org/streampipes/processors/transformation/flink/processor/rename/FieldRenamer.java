@@ -20,6 +20,7 @@ package org.streampipes.processors.transformation.flink.processor.rename;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 import org.streampipes.model.runtime.Event;
+import org.streampipes.model.runtime.field.AbstractField;
 
 public class FieldRenamer implements FlatMapFunction<Event, Event> {
 
@@ -36,7 +37,7 @@ public class FieldRenamer implements FlatMapFunction<Event, Event> {
   @Override
   public void flatMap(Event in,
                       Collector<Event> out) throws Exception {
-    Object propertyValue = in.getFieldBySelector(oldPropertyName);
+    AbstractField<?> propertyValue = in.getFieldBySelector(oldPropertyName);
     in.removeFieldBySelector(oldPropertyName);
     in.addField(newPropertyName, propertyValue);
     out.collect(in);
