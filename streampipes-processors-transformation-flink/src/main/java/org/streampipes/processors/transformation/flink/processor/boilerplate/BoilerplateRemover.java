@@ -60,8 +60,7 @@ public class BoilerplateRemover implements FlatMapFunction<Event, Event> {
             case  HTML: result = getHTMLHighligther(true).process(textDoc, htmlDoc.toInputSource());
         }
 
-        event.removeFieldBySelector(htmlProperty);
-        event.addField(htmlProperty, result);
+        event.updateFieldBySelector(htmlProperty, result);
 
         collector.collect(event);
     }
