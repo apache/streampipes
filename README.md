@@ -16,7 +16,7 @@ elements can be created with StreamPipes. The examples are referenced in the SDK
 (https://docs.streampipes.org/docs/dev-guide-introduction)
 
 If you are looking for **real** pipeline elements that can be installed in StreamPipes, have a look at 
-[https://www.github.com/streampipes/streampipes-pipeline-elements](StreamPipes Pipeline Elements).
+[StreamPipes Pipeline Elements](https://www.github.com/streampipes/streampipes-pipeline-elements).
 
 ### Feedback
 
