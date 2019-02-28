@@ -27,11 +27,11 @@ then
 		curl https://raw.githubusercontent.com/streampipes/preview-docker/master/docker-compose.yml > ./tmpl-docker-compose.yml
 	fi
 
-	if command -v ifconfig;
+	if command -v ip;
 	then
 		# If Unix
 		#        ip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -1)
-		rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+		rawip=$(ip address list | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
 		rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
 		IFS=' ' declare -a 'allips=($rawip)'
