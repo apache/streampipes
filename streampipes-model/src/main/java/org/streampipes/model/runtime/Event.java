@@ -169,6 +169,7 @@ public class Event {
 
   public void addField(String runtimeName, Object value) {
     if (AbstractField.class.isInstance(value)) {
+     ((AbstractField<?>) value).rename(runtimeName);
      addField((AbstractField) value);
     } else {
       addPrimitive(runtimeName, value);

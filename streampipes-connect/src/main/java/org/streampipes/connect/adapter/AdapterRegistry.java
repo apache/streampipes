@@ -43,7 +43,6 @@ import org.streampipes.connect.adapter.specific.gdelt.GdeltAdapter;
 import org.streampipes.connect.adapter.specific.nswaustralia.trafficcamera.NswTrafficCameraAdapter;
 import org.streampipes.connect.adapter.specific.ros.RosBridgeAdapter;
 import org.streampipes.connect.adapter.specific.sensemap.OpenSenseMapAdapter;
-import org.streampipes.connect.adapter.specific.twitter.TwitterAdapter;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.HashMap;
@@ -59,7 +58,6 @@ public class AdapterRegistry {
 
         allAdapters.put(GenericDataSetAdapter.ID, new GenericDataSetAdapter());
         allAdapters.put(GenericDataStreamAdapter.ID, new GenericDataStreamAdapter());
-        allAdapters.put(TwitterAdapter.ID, new TwitterAdapter());
         allAdapters.put(OpenSenseMapAdapter.ID, new OpenSenseMapAdapter());
         allAdapters.put(GdeltAdapter.ID, new GdeltAdapter());
         allAdapters.put(NswTrafficCameraAdapter.ID, new NswTrafficCameraAdapter());

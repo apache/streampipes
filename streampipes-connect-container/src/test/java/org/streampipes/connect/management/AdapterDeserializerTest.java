@@ -24,7 +24,7 @@ import org.streampipes.connect.adapter.generic.format.xml.XmlFormat;
 import org.streampipes.connect.adapter.generic.format.xml.XmlParser;
 import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
-import org.streampipes.connect.adapter.specific.twitter.TwitterAdapter;
+import org.streampipes.connect.adapter.specific.sensemap.OpenSenseMapAdapter;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
@@ -34,12 +34,10 @@ import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.streampipes.rest.shared.util.JsonLdUtils;
-import org.streampipes.sdk.builder.DataSetBuilder;
 
 import java.util.Collections;
 
 import static org.junit.Assert.*;
-import static org.reflections.util.ConfigurationBuilder.build;
 
 public class AdapterDeserializerTest {
 
@@ -67,13 +65,13 @@ public class AdapterDeserializerTest {
 
     @Test
     public void getSpecificAdapterStreamDescription() throws AdapterException {
-        AdapterDescription specificAdapterStreamDescription = new TwitterAdapter().declareModel();
+        AdapterDescription specificAdapterStreamDescription = new OpenSenseMapAdapter().declareModel();
         String jsonLd = JsonLdUtils.toJsonLD(specificAdapterStreamDescription);
 
         AdapterDescription a = AdapterDeserializer.getAdapterDescription(jsonLd);
 
         assertTrue(a instanceof SpecificAdapterStreamDescription);
-        assertEquals(TwitterAdapter.ID, a.getUri());
+        assertEquals(OpenSenseMapAdapter.ID, a.getUri());
     }
 
     @Test

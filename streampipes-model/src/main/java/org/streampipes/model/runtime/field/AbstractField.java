@@ -92,4 +92,9 @@ public abstract class AbstractField<FV> {
   public void setValue(FV value) {
     this.value = value;
   }
+
+  public void rename(String newFieldName) {
+    this.fieldNameIn = newFieldName;
+    this.fieldNameOut = newFieldName;
+  }
 }
