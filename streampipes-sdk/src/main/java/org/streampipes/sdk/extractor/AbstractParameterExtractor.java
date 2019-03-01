@@ -247,6 +247,58 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   private String getStreamSelector(String selector) {
     return selector.split(PropertySelectorConstants.PROPERTY_DELIMITER)[0];
   }
+
+  public List<EventProperty> getNoneInputStreamEventPropertySubset(List<String> propertySelectors) {
+    List<EventProperty> properties = new ArrayList<>();
+    for(SpDataStream stream : sepaElement.getInputStreams()) {
+      properties.addAll(getNoneInputStreamEventPropertySubset(propertySelectors, sepaElement.getInputStreams().indexOf(stream)));
+    }
+    return properties;
+  }
+
+  private List<EventProperty> getNoneInputStreamEventPropertySubset(List<String> propertySelectors, Integer streamIndex) {
+    return sepaElement
+            .getInputStreams()
+            .get(streamIndex)
+            .getEventSchema()
+            .getEventProperties()
+            .stream()
+            .filter(ep -> propertySelectors
+                    .stream()
+                    .noneMatch(ps -> getBySelector(ep.getRuntimeName(), streamIndex).equals(ps)))
+            .collect(Collectors.toList());
+  }
+
+
+  public List<EventProperty> getInputStreamEventPropertySubset(List<String> propertySelectors) {
+    List<EventProperty> properties = new ArrayList<>();
+    for(SpDataStream stream : sepaElement.getInputStreams()) {
+      properties.addAll(getInputStreamEventPropertySubset(propertySelectors, sepaElement.getInputStreams().indexOf(stream)));
+    }
+    return properties;
+  }
+
+  private List<EventProperty> getInputStreamEventPropertySubset(List<String> propertySelectors, Integer streamIndex) {
+    return sepaElement
+            .getInputStreams()
+            .get(streamIndex)
+            .getEventSchema()
+            .getEventProperties()
+            .stream()
+            .filter(ep -> propertySelectors
+                    .stream()
+                    .anyMatch(ps -> getBySelector(ep.getRuntimeName(), streamIndex).equals(ps)))
+            .collect(Collectors.toList());
+  }
+
+  private String getBySelector(String runtimeName, Integer streamIndex) {
+    return getStreamIndex(streamIndex) + PropertySelectorConstants.PROPERTY_DELIMITER + runtimeName;
+  }
+
+  private String getStreamIndex(Integer streamIndex) {
+    return "s" + streamIndex;
+  }
+
   private String getPropertySelectorFromUnaryMapping(String staticPropertyName) {
     Optional<MappingPropertyUnary> property = sepaElement.getStaticProperties().stream()
             .filter(p -> p instanceof MappingPropertyUnary)
