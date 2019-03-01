@@ -35,13 +35,13 @@ public class FieldMapper implements FlatMapFunction<Event, Event> {
   }
 
   @Override
-  public void flatMap(Event in, Collector<Event> out) throws Exception {
+  public void flatMap(Event in, Collector<Event> out) {
     Event event = new Event();
     StringBuilder hashValue = new StringBuilder();
 
     for (String key : in.getFields().keySet()) {
       if (replacePropertyNames.stream().noneMatch(r -> r.equals(key))) {
-        event.addField(key, in.getFieldBySelector(key));
+        event.addField(in.getFieldBySelector(key));
       } else {
         hashValue.append(in.getFieldBySelector((key)).getAsPrimitive().getAsString());
       }
