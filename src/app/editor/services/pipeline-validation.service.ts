@@ -9,6 +9,7 @@ export class PipelineValidationService {
     }
 
     isValidPipeline(rawPipelineModel) {
+        console.log(rawPipelineModel);
         return this.isStreamInAssembly(rawPipelineModel) &&
             this.isActionInAssembly(rawPipelineModel) &&
             this.allElementsConnected((rawPipelineModel));
@@ -31,7 +32,7 @@ export class PipelineValidationService {
     isInAssembly(rawPipelineModel, type) {
         var isElementInAssembly = false;
         angular.forEach(rawPipelineModel, pe => {
-            if (pe.type === type) {
+            if (pe.type === type && !pe.settings.disabled) {
                 isElementInAssembly = true;
             }
         });
