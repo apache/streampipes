@@ -19,6 +19,7 @@ import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.staticproperty.AnyStaticProperty;
 import org.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
+import org.streampipes.model.staticproperty.FileStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
@@ -588,6 +589,22 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     return me();
   }
 
+  /**
+   *
+   * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *    user-friendly manner.
+   * @return this
+   */
+  public BU requiredFile(Label label) {
+    FileStaticProperty fp =  new FileStaticProperty(label.getInternalId(), label.getLabel(), label
+            .getDescription());
+
+    this.staticProperties.add(fp);
+
+    return me();
+
+  }
+
   private FreeTextStaticProperty prepareFreeTextStaticProperty(String internalId, String label, String description, String type) {
     return new FreeTextStaticProperty(internalId,
             label,
@@ -599,8 +616,15 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     return prepareFreeTextStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription(), type);
   }
 
+  private List<StaticProperty> sortStaticProperties(List<StaticProperty> staticProperties) {
+    for(int i = 0; i < staticProperties.size(); i++) {
+      staticProperties.get(i).setIndex(i);
+    }
+    return staticProperties;
+  }
+
   protected List<StaticProperty> getStaticProperties() {
-    return this.staticProperties;
+    return sortStaticProperties(this.staticProperties);
   }
 
 

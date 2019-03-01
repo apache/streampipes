@@ -25,7 +25,9 @@ import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
+import org.streampipes.sdk.helpers.AdapterSourceType;
+import org.streampipes.sdk.helpers.Labels;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,25 +58,15 @@ public class MqttProtocol extends BrokerProtocol {
 
   @Override
   public ProtocolDescription declareModel() {
-    ProtocolDescription pd = new ProtocolDescription(ID, "MQTT", "This is the " +
-            "description for the MQTT protocol");
-    FreeTextStaticProperty broker = new FreeTextStaticProperty("broker_url", "Broker URL",
-            "This property defines the URL of the MQTT broker.");
-
-    pd.setSourceType("STREAM");
-    pd.setIconUrl("mqtt.png");
-
-    FreeTextStaticProperty topic = new FreeTextStaticProperty("topic", "Topic",
-            "Topic in the broker");
-
-    pd.setAppId(ID);
-
-    pd.addConfig(broker);
-    pd.addConfig(topic);
-    return pd;
+    return ProtocolDescriptionBuilder.create(ID, "MQTT", "Consumes messages from a broker using " +
+            "the MQTT protocol")
+            .iconUrl("mqtt.png")
+            .sourceType(AdapterSourceType.STREAM)
+            .requiredTextParameter(Labels.from("broker_url", "Broker URL",
+                    "This property defines the URL of the MQTT broker."))
+            .requiredTextParameter(Labels.from("topic", "Topic","The topic to subscribe to"))
+            .build();
   }
-
-
 
   @Override
   protected List<byte[]> getNByteElements(int n) {

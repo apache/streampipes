@@ -34,10 +34,9 @@ import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.staticproperty.AnyStaticProperty;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.staticproperty.Option;
-
+import org.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
+import org.streampipes.sdk.helpers.AdapterSourceType;
+import org.streampipes.sdk.helpers.Labels;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +44,11 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class HDFSProtocol extends Protocol {
@@ -102,37 +105,22 @@ public class HDFSProtocol extends Protocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        ProtocolDescription pd = new ProtocolDescription(ID, "HDFS", "This is the " +
-                "description for the HDFS Stream protocol.");
-
-        FreeTextStaticProperty intervalProperty = new FreeTextStaticProperty(INTERVAL_PROPERTY, "Interval", "This property " +
-                "defines the pull interval in seconds.");
-        FreeTextStaticProperty urlProperty = new FreeTextStaticProperty(URL_PROPERTY, "HDFS-Server URL e.g. hdfs://server:8020",
-                "This property defines the HDFS URL e.g. hdfs://server:8020");
-        //     FreeTextStaticProperty userNameProperty = new FreeTextStaticProperty(USER_PROPERTY, "Username",
-        //            "The Username to login");
-        //    FreeTextStaticProperty passwordProperty = new FreeTextStaticProperty(PASSWORD_PROPERTY, "Password",
-        //            "The Password to login");
-        FreeTextStaticProperty dataPathProperty = new FreeTextStaticProperty(DATA_PATH_PROPERTY, "Data Path",
-                "The Data Path which should be watched");
-
-
-        // AnyStaticProperty offset = new AnyStaticProperty(OPTIONS, "Options for Folders", "");
-        // offset.setOptions(Arrays.asList(new Option("Search Recursively","recursively")));
-
-
-        pd.setSourceType("STREAM");
-
-        pd.setIconUrl("hdfs.png");
-        pd.addConfig(urlProperty);
-        pd.addConfig(intervalProperty);
-        //   pd.addConfig(userNameProperty);
-        //    pd.addConfig(passwordProperty);
-        pd.addConfig(dataPathProperty);
-
-        pd.setAppId(ID);
-
-        return pd;
+        return ProtocolDescriptionBuilder.create(ID, "HDFS", "Reads messages from the Hadoop " +
+                "Distributed File" +
+                " System")
+                .sourceType(AdapterSourceType.STREAM)
+                .iconUrl("hdfs.png")
+                .requiredTextParameter(Labels.from(URL_PROPERTY, "HDFS-Server URL e.g. hdfs://server:8020",
+                        "This property defines the HDFS URL e.g. hdfs://server:8020"))
+                .requiredIntegerParameter(Labels.from(INTERVAL_PROPERTY, "Interval", "This property " +
+                        "defines the pull interval in seconds."))
+                .requiredTextParameter(Labels.from(DATA_PATH_PROPERTY, "Data Path",
+                        "The Data Path which should be watched"))
+//                .requiredTextParameter(Labels.from(USER_PROPERTY, "Username", "The Username to " +
+//                        "login"))
+//                .requiredTextParameter(Labels.from(PASSWORD_PROPERTY, "Password","The Password to" +
+//                        " login"))
+                .build();
     }
 
     @Override

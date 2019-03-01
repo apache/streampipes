@@ -32,6 +32,9 @@ import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FileStaticProperty;
+import org.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
+import org.streampipes.sdk.helpers.AdapterSourceType;
+import org.streampipes.sdk.helpers.Labels;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -61,19 +64,12 @@ public class FileProtocol extends Protocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        ProtocolDescription pd = new ProtocolDescription(ID,"File","This is the " +
-                "description for the File protocol");
-
-        FileStaticProperty fileInput = new FileStaticProperty("filePath", "File", "This " +
-                "property defines the path to the file.");
-//        FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("fileUri", "fileUri",
-//                "This property defines the URL for the http request.");
-        pd.setSourceType("SET");
-        pd.setIconUrl("file.png");
-        pd.addConfig(fileInput);
-
-        pd.setAppId(ID);
-        return pd;
+        return ProtocolDescriptionBuilder.create(ID, "File", "Reads the content from a local file.")
+                .sourceType(AdapterSourceType.SET)
+                .iconUrl("file.png")
+                .requiredFile(Labels.from("filePath", "File", "This " +
+                        "property defines the path to the file."))
+                .build();
     }
 
     @Override

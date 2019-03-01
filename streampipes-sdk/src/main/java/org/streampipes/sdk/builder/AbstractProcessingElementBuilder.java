@@ -30,7 +30,6 @@ import org.streampipes.model.staticproperty.MappingProperty;
 import org.streampipes.model.staticproperty.MappingPropertyNary;
 import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
-import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.sdk.helpers.CollectedStreamRequirements;
 import org.streampipes.sdk.helpers.Label;
 
@@ -268,8 +267,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
 
   @Override
   public void prepareBuild() {
-    List<StaticProperty> sortedStaticProperties = sortStaticProperties(getStaticProperties());
-    this.elementDescription.setStaticProperties(sortedStaticProperties);
+    this.elementDescription.setStaticProperties(getStaticProperties());
 
     if (stream1Properties.size() > 0 || stream1) {
       this.streamRequirements.add(buildStream(stream1Properties));
@@ -282,13 +280,6 @@ public abstract class AbstractProcessingElementBuilder<BU extends
     this.elementDescription.setSupportedGrounding(supportedGrounding);
     this.elementDescription.setSpDataStreams(streamRequirements);
 
-  }
-
-  private List<StaticProperty> sortStaticProperties(List<StaticProperty> staticProperties) {
-    for(int i = 0; i < staticProperties.size(); i++) {
-      staticProperties.get(i).setIndex(i);
-    }
-    return staticProperties;
   }
 
   private SpDataStream buildStream(List<EventProperty> streamProperties) {
