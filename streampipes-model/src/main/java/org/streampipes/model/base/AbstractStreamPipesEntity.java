@@ -43,8 +43,7 @@ public class AbstractStreamPipesEntity implements SupportsRdfId, Serializable {
 
 	private transient SupportsRdfIdImpl myId;
 	
-	AbstractStreamPipesEntity()
-	{
+	AbstractStreamPipesEntity() {
 		myId = new SupportsRdfIdImpl();
 	}
 

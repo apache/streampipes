@@ -17,46 +17,45 @@
 
 package org.streampipes.manager.matching.output;
 
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.output.KeepOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.sdk.helpers.Tuple2;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RenameOutputSchemaGenerator implements OutputSchemaGenerator<KeepOutputStrategy> {
+public class RenameOutputSchemaGenerator extends OutputSchemaGenerator<KeepOutputStrategy> {
 
-	private KeepOutputStrategy strategy;
 
-	public RenameOutputSchemaGenerator(KeepOutputStrategy strategy) {
-		this.strategy = strategy;
-	}
+  public static RenameOutputSchemaGenerator from(OutputStrategy strategy) {
+    return new RenameOutputSchemaGenerator((KeepOutputStrategy) strategy);
+  }
 
-	@Override
-	public EventSchema buildFromOneStream(SpDataStream stream) {
-		return stream.getEventSchema();
-	}
+  public RenameOutputSchemaGenerator(KeepOutputStrategy strategy) {
+    super(strategy);
+  }
 
-	@Override
-	public EventSchema buildFromTwoStreams(SpDataStream stream1,
-			SpDataStream stream2) {
-		EventSchema resultSchema = new EventSchema();
-		List<EventProperty> properties = new ArrayList<>();
-		properties.addAll(stream1.getEventSchema().getEventProperties());
-		if (strategy.isKeepBoth()) {
-			properties.addAll(new PropertyDuplicateRemover(properties,
-							stream2.getEventSchema().getEventProperties()).rename());
-		}
-		
-		resultSchema.setEventProperties(properties);
-		return resultSchema;
-	}
+  @Override
+  public Tuple2<EventSchema, KeepOutputStrategy> buildFromOneStream(SpDataStream stream) {
+    return makeTuple(stream.getEventSchema());
+  }
 
-	@Override
-	public KeepOutputStrategy getModifiedOutputStrategy(
-			KeepOutputStrategy strategy) {
-		return strategy;
-	}
+  @Override
+  public Tuple2<EventSchema, KeepOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
+                                                                     SpDataStream stream2) {
+    EventSchema resultSchema = new EventSchema();
+    List<EventProperty> properties = new ArrayList<>();
+    properties.addAll(stream1.getEventSchema().getEventProperties());
+    if (outputStrategy.isKeepBoth()) {
+      properties.addAll(new PropertyDuplicateRemover(properties,
+              stream2.getEventSchema().getEventProperties()).rename());
+    }
+
+    resultSchema.setEventProperties(properties);
+    return makeTuple(resultSchema);
+  }
 
 }

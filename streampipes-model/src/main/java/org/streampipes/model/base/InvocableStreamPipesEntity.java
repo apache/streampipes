@@ -26,137 +26,143 @@ import org.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
+
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import java.util.List;
 
 public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity {
 
-	private static final long serialVersionUID = 2727573914765473470L;
+  private static final long serialVersionUID = 2727573914765473470L;
 
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.RECEIVES_STREAM)
-	protected List<SpDataStream> inputStreams;
-	
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.HAS_STATIC_PROPERTY)
-	protected List<StaticProperty> staticProperties;
-	
-	@RdfProperty(StreamPipes.BELONGS_TO)
-	private String belongsTo;
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.RECEIVES_STREAM)
+  protected List<SpDataStream> inputStreams;
 
-	@OneToOne(fetch = FetchType.EAGER,
-					cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@RdfProperty(StreamPipes.STATUS_INFO_SETTINGS)
-	private ElementStatusInfoSettings statusInfoSettings;
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.HAS_STATIC_PROPERTY)
+  protected List<StaticProperty> staticProperties;
 
-	private EventGrounding supportedGrounding;
-	
-	@RdfProperty(StreamPipes.CORRESPONDING_PIPELINE)
-	private String correspondingPipeline;
+  @RdfProperty(StreamPipes.BELONGS_TO)
+  private String belongsTo;
 
-	private List<SpDataStream> streamRequirements;
+  @OneToOne(fetch = FetchType.EAGER,
+          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @RdfProperty(StreamPipes.STATUS_INFO_SETTINGS)
+  private ElementStatusInfoSettings statusInfoSettings;
 
-	private boolean configured;
+  private EventGrounding supportedGrounding;
 
-	public InvocableStreamPipesEntity() {
-		super();
-	}
-	
-	public InvocableStreamPipesEntity(InvocableStreamPipesEntity other)
-	{
-		super(other);
-		this.belongsTo = other.getBelongsTo();
-		this.correspondingPipeline = other.getCorrespondingPipeline();
-		this.inputStreams = new Cloner().streams(other.getInputStreams());
-		this.configured = other.isConfigured();
-        if (other.getStreamRequirements() != null) this.streamRequirements = new Cloner().streams(other.getStreamRequirements());
-		if (other.getStaticProperties() != null) this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
-		this.DOM = other.getDOM();
-		if (other.getSupportedGrounding() != null) this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
-	}
-	
-	public InvocableStreamPipesEntity(String uri, String name, String description, String iconUrl) {
-		super(uri, name, description, iconUrl);
-		this.configured = false;
-	}
+  @RdfProperty(StreamPipes.CORRESPONDING_PIPELINE)
+  private String correspondingPipeline;
 
-	public boolean addStaticProperty(StaticProperty staticProperty)
-	{
-		return staticProperties.add(staticProperty);
-	}
+  private List<SpDataStream> streamRequirements;
 
-	public List<SpDataStream> getInputStreams() {
-		return inputStreams;
-	}
+  private boolean configured;
 
-	public void setInputStreams(List<SpDataStream> inputStreams) {
-		this.inputStreams = inputStreams;
-	}
+  public InvocableStreamPipesEntity() {
+    super();
+  }
 
-	public List<StaticProperty> getStaticProperties() {
-		return staticProperties;
-	}
+  public InvocableStreamPipesEntity(InvocableStreamPipesEntity other) {
+    super(other);
+    this.belongsTo = other.getBelongsTo();
+    this.correspondingPipeline = other.getCorrespondingPipeline();
+    this.inputStreams = new Cloner().streams(other.getInputStreams());
+    this.configured = other.isConfigured();
+    if (other.getStreamRequirements() != null) {
+      this.streamRequirements = new Cloner().streams(other.getStreamRequirements());
+    }
+    if (other.getStaticProperties() != null) {
+      this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
+    }
+    this.DOM = other.getDOM();
+    if (other.getSupportedGrounding() != null) {
+      this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
+    }
+  }
 
-	public void setStaticProperties(List<StaticProperty> staticProperties) {
-		this.staticProperties = staticProperties;
-	}
+  public InvocableStreamPipesEntity(String uri, String name, String description, String iconUrl) {
+    super(uri, name, description, iconUrl);
+    this.configured = false;
+  }
 
-	public String getBelongsTo() {
-		return belongsTo;
-	}
+  public boolean addStaticProperty(StaticProperty staticProperty) {
+    return staticProperties.add(staticProperty);
+  }
 
-	public void setBelongsTo(String belongsTo) {
-		this.belongsTo = belongsTo;
-	}
+  public List<SpDataStream> getInputStreams() {
+    return inputStreams;
+  }
 
-	public EventGrounding getSupportedGrounding() {
-		return supportedGrounding;
-	}
+  public void setInputStreams(List<SpDataStream> inputStreams) {
+    this.inputStreams = inputStreams;
+  }
 
-	public void setSupportedGrounding(EventGrounding supportedGrounding) {
-		this.supportedGrounding = supportedGrounding;
-	}
+  public List<StaticProperty> getStaticProperties() {
+    return staticProperties;
+  }
 
-	public String getCorrespondingPipeline() {
-		return correspondingPipeline;
-	}
+  public void setStaticProperties(List<StaticProperty> staticProperties) {
+    this.staticProperties = staticProperties;
+  }
 
-	public void setCorrespondingPipeline(String correspondingPipeline) {
-		this.correspondingPipeline = correspondingPipeline;
-	}
+  public String getBelongsTo() {
+    return belongsTo;
+  }
 
-	public List<SpDataStream> getStreamRequirements() {
-		return streamRequirements;
-	}
+  public void setBelongsTo(String belongsTo) {
+    this.belongsTo = belongsTo;
+  }
 
-	public void setStreamRequirements(List<SpDataStream> streamRequirements) {
-		this.streamRequirements = streamRequirements;
-	}
+  public EventGrounding getSupportedGrounding() {
+    return supportedGrounding;
+  }
 
-	public boolean isConfigured() {
-		return configured;
-	}
+  public void setSupportedGrounding(EventGrounding supportedGrounding) {
+    this.supportedGrounding = supportedGrounding;
+  }
 
-	public void setConfigured(boolean configured) {
-		this.configured = configured;
-	}
+  public String getCorrespondingPipeline() {
+    return correspondingPipeline;
+  }
 
-	public ElementStatusInfoSettings getStatusInfoSettings() {
-		return statusInfoSettings;
-	}
+  public void setCorrespondingPipeline(String correspondingPipeline) {
+    this.correspondingPipeline = correspondingPipeline;
+  }
 
-	public void setStatusInfoSettings(ElementStatusInfoSettings statusInfoSettings) {
-		this.statusInfoSettings = statusInfoSettings;
-	}
+  public List<SpDataStream> getStreamRequirements() {
+    return streamRequirements;
+  }
 
-	//public Logger getLogger(Class clazz, PeConfig peConfig) {
-	public Logger getLogger(Class clazz) {
-	//	return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri(), peConfig);
-		return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri());
-	}
+  public void setStreamRequirements(List<SpDataStream> streamRequirements) {
+    this.streamRequirements = streamRequirements;
+  }
+
+  public boolean isConfigured() {
+    return configured;
+  }
+
+  public void setConfigured(boolean configured) {
+    this.configured = configured;
+  }
+
+  public ElementStatusInfoSettings getStatusInfoSettings() {
+    return statusInfoSettings;
+  }
+
+  public void setStatusInfoSettings(ElementStatusInfoSettings statusInfoSettings) {
+    this.statusInfoSettings = statusInfoSettings;
+  }
+
+  //public Logger getLogger(Class clazz, PeConfig peConfig) {
+  public Logger getLogger(Class clazz) {
+    //	return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri(), peConfig);
+    return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri());
+  }
 }

@@ -19,42 +19,45 @@ package org.streampipes.wrapper.flink;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
+import org.streampipes.wrapper.params.runtime.EventSinkRuntimeParams;
 
-import java.util.Map;
 
+public abstract class FlinkDataSinkRuntime<B extends EventSinkBindingParams> extends
+        FlinkRuntime<EventSinkRuntimeParams<B>, B, DataSinkInvocation, EventSinkRuntimeContext> {
 
-public abstract class FlinkDataSinkRuntime<B extends EventSinkBindingParams> extends FlinkRuntime<B, DataSinkInvocation>{
+  private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+  /**
+   * @deprecated Use {@link #FlinkDataSinkRuntime(EventSinkBindingParams, boolean)} instead
+   */
+  public FlinkDataSinkRuntime(B params) {
+    super(params);
+  }
 
-	/**
-	 * @deprecated Use {@link #FlinkDataSinkRuntime(EventSinkBindingParams, boolean)} instead
-	 */
-	public FlinkDataSinkRuntime(B params)
-	{
-		super(params);
-	}
+  public FlinkDataSinkRuntime(B params, boolean debug) {
+    super(params, debug);
+  }
 
-	public FlinkDataSinkRuntime(B params, boolean debug)
-	{
-		super(params, debug);
-	}
+  /**
+   * @deprecated Use {@link #FlinkDataSinkRuntime(EventSinkBindingParams, boolean)} instead
+   */
+  public FlinkDataSinkRuntime(B params, FlinkDeploymentConfig config) {
+    super(params, config);
+  }
 
-	/**
-	 * @deprecated Use {@link #FlinkDataSinkRuntime(EventSinkBindingParams, boolean)} instead
-	 */
-	public FlinkDataSinkRuntime(B params, FlinkDeploymentConfig config)
-	{
-		super(params, config);
-	}
+  @Override
+  public void appendExecutionConfig(DataStream<Event>... convertedStream) {
+    getSink(convertedStream);
 
-	@Override
-	public void appendExecutionConfig(DataStream<Map<String, Object>>... convertedStream) {
-		getSink(convertedStream);
+  }
 
-	}
+  public abstract void getSink(DataStream<Event>... convertedStream1);
 
-	public abstract void getSink(DataStream<Map<String, Object>>... convertedStream1);
+  protected EventSinkRuntimeParams<B> makeRuntimeParams() {
+    return new EventSinkRuntimeParams<>(bindingParams, false);
+  }
 
 }

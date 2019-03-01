@@ -17,29 +17,21 @@
 
 package org.streampipes.wrapper.params.runtime;
 
-import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
+import org.streampipes.wrapper.context.SpEventSinkRuntimeContext;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
-import org.streampipes.wrapper.runtime.EventSink;
 
-import java.util.function.Supplier;
+public class EventSinkRuntimeParams<B extends EventSinkBindingParams> extends
+        RuntimeParams<B, DataSinkInvocation, EventSinkRuntimeContext> {
 
-public abstract class EventSinkRuntimeParams<B extends EventSinkBindingParams> extends
-        RuntimeParams<B, EventSink<B>> {
-
-  public EventSinkRuntimeParams(Supplier<EventSink<B>> supplier, B bindingParams) {
-    super(supplier, bindingParams);
+  public EventSinkRuntimeParams(B bindingParams, Boolean singletonEngine) {
+    super(bindingParams, singletonEngine);
   }
 
   @Override
-  public void bindEngine() throws SpRuntimeException {
-    engine.bind(bindingParams);
+  protected EventSinkRuntimeContext makeRuntimeContext() {
+    return new SpEventSinkRuntimeContext(getSourceInfo(), getSchemaInfo());
   }
-
-  public void discardEngine() throws SpRuntimeException {
-    engine.discard();
-  }
-
-
-
 
 }

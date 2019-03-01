@@ -26,19 +26,23 @@ import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.kafka.converter.JsonToMapFormat;
 import org.streampipes.wrapper.kafka.converter.MapToJsonFormat;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.streampipes.wrapper.params.runtime.EventProcessorRuntimeParams;
 
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public abstract class KafkaStreamsDataProcessorRuntime<B extends EventProcessorBindingParams>
-        extends KafkaStreamsRuntime<B, DataProcessorInvocation> {
+public abstract class KafkaStreamsDataProcessorRuntime<B extends
+        EventProcessorBindingParams>
+        extends KafkaStreamsRuntime<EventProcessorRuntimeParams<B>, B,
+        DataProcessorInvocation, EventProcessorRuntimeContext> {
 
 
-  public KafkaStreamsDataProcessorRuntime(B bindingParams) {
-    super(bindingParams);
+  public KafkaStreamsDataProcessorRuntime(EventProcessorRuntimeParams<B> runtimeParams) {
+    super(runtimeParams);
   }
 
 
@@ -47,7 +51,7 @@ public abstract class KafkaStreamsDataProcessorRuntime<B extends EventProcessorB
     try {
       prepareRuntime();
       StreamsBuilder builder = new StreamsBuilder();
-      SpDataStream inputStream = bindingParams.getGraph().getInputStreams().get(0);
+      SpDataStream inputStream = runtimeParams.getBindingParams().getGraph().getInputStreams().get(0);
       TransportProtocol protocol = protocol(inputStream);
       KStream<String, String> stream ;
 
@@ -62,7 +66,8 @@ public abstract class KafkaStreamsDataProcessorRuntime<B extends EventProcessorB
 
       KStream<String, String> outStream = getApplicationLogic(mapFormat).flatMapValues(new
               MapToJsonFormat());
-      outStream.to(Serdes.String(), Serdes.String(), getTopic(bindingParams.getGraph().getOutputStream()));
+      outStream.to(Serdes.String(), Serdes.String(), getTopic(runtimeParams.getBindingParams().getGraph()
+              .getOutputStream()));
       streams = new KafkaStreams(builder.build(), config);
 
       streams.start();

@@ -149,7 +149,8 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             UnitTransformRuleDescription.class,
             RemoveDuplicatesTransformationRuleDescription.class,
             AddValueTransformationRuleDescription.class,
-            TimestampTransformationRuleDescription.class
+            TimestampTransformationRuleDescription.class,
+            PropertyRenameRule.class
     );
   }
 }

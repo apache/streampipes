@@ -26,8 +26,8 @@ import java.util.Map;
 
 public class TemporaryGraphStorage {
 
-	public static Map<String, List<InvocableStreamPipesEntity>> graphStorage = new HashMap<>();
+  public static Map<String, List<InvocableStreamPipesEntity>> graphStorage = new HashMap<>();
 
-	public static Map<String, List<SpDataSet>> datasetStorage = new HashMap<>();
-	
+  public static Map<String, List<SpDataSet>> datasetStorage = new HashMap<>();
+
 }

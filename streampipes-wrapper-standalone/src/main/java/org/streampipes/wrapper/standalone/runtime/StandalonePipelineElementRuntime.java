@@ -16,15 +16,57 @@
  */
 package org.streampipes.wrapper.standalone.runtime;
 
-import org.streampipes.wrapper.runtime.PipelineElementRuntime;
+import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.wrapper.context.RuntimeContext;
+import org.streampipes.wrapper.params.binding.BindingParams;
 import org.streampipes.wrapper.params.runtime.RuntimeParams;
+import org.streampipes.wrapper.routing.RawDataProcessor;
+import org.streampipes.wrapper.routing.SpInputCollector;
+import org.streampipes.wrapper.runtime.PipelineElement;
+import org.streampipes.wrapper.runtime.PipelineElementRuntime;
+import org.streampipes.wrapper.standalone.manager.ProtocolManager;
 
-public abstract class StandalonePipelineElementRuntime<RP extends RuntimeParams> extends PipelineElementRuntime {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+
+public abstract class StandalonePipelineElementRuntime<B extends BindingParams<I>,
+        I extends InvocableStreamPipesEntity,
+        RP extends RuntimeParams<B, I, RC>,
+        RC extends RuntimeContext,
+        P extends PipelineElement<B, I>>
+        extends PipelineElementRuntime implements RawDataProcessor {
 
   protected RP params;
+  protected final P engine;
 
-  public StandalonePipelineElementRuntime(RP runtimeParams) {
+  public StandalonePipelineElementRuntime(Supplier<P> supplier, RP runtimeParams) {
     super();
+    this.engine = supplier.get();
     this.params = runtimeParams;
   }
+
+  public P getEngine() {
+    return engine;
+  }
+
+  public void discardEngine() throws SpRuntimeException {
+    engine.onDetach();
+  }
+
+  public List<SpInputCollector> getInputCollectors() throws SpRuntimeException {
+    List<SpInputCollector> inputCollectors = new ArrayList<>();
+    for (SpDataStream is : params.getBindingParams().getGraph().getInputStreams()) {
+      inputCollectors.add(ProtocolManager.findInputCollector(is.getEventGrounding()
+                      .getTransportProtocol(), is.getEventGrounding().getTransportFormats().get(0),
+              params.isSingletonEngine()));
+    }
+    return inputCollectors;
+  }
+
+  public abstract void bindEngine() throws SpRuntimeException;
+
+
 }

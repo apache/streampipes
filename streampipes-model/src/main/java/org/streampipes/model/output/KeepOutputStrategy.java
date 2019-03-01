@@ -27,51 +27,49 @@ import javax.persistence.Entity;
 @Entity
 public class KeepOutputStrategy extends OutputStrategy {
 
-	private static final long serialVersionUID = 7643705399683055563L;
+  private static final long serialVersionUID = 7643705399683055563L;
 
-	@Deprecated
-	@RdfProperty(StreamPipes.EVENT_NAME)
-	String eventName;
+  @Deprecated
+  @RdfProperty(StreamPipes.EVENT_NAME)
+  String eventName;
 
-	@RdfProperty(StreamPipes.KEEP_BOTH)
-	private boolean keepBoth;
+  @RdfProperty(StreamPipes.KEEP_BOTH)
+  private boolean keepBoth;
 
-	public KeepOutputStrategy()
-	{
-		super();
-	}
-	
-	public KeepOutputStrategy(KeepOutputStrategy other)
-	{
-		super(other);
-		this.eventName = other.getEventName();
-		this.keepBoth = other.isKeepBoth();
-	}
-	
-	public KeepOutputStrategy(String name, String eventName) {
-		super(name);
-		this.eventName = eventName;
-		this.keepBoth = true;
-	}
+  public KeepOutputStrategy() {
+    super();
+  }
 
-	public KeepOutputStrategy(String name, boolean keepBoth) {
-		super(name);
-		this.keepBoth = keepBoth;
-	}
+  public KeepOutputStrategy(KeepOutputStrategy other) {
+    super(other);
+    this.eventName = other.getEventName();
+    this.keepBoth = other.isKeepBoth();
+  }
 
-	public String getEventName() {
-		return eventName;
-	}
+  public KeepOutputStrategy(String name, String eventName) {
+    super(name);
+    this.eventName = eventName;
+    this.keepBoth = true;
+  }
 
-	public void setEventName(String eventName) {
-		this.eventName = eventName;
-	}
+  public KeepOutputStrategy(String name, boolean keepBoth) {
+    super(name);
+    this.keepBoth = keepBoth;
+  }
 
-	public boolean isKeepBoth() {
-		return keepBoth;
-	}
+  public String getEventName() {
+    return eventName;
+  }
 
-	public void setKeepBoth(boolean keepBoth) {
-		this.keepBoth = keepBoth;
-	}
+  public void setEventName(String eventName) {
+    this.eventName = eventName;
+  }
+
+  public boolean isKeepBoth() {
+    return keepBoth;
+  }
+
+  public void setKeepBoth(boolean keepBoth) {
+    this.keepBoth = keepBoth;
+  }
 }

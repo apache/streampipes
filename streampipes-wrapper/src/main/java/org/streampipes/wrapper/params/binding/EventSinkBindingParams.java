@@ -18,8 +18,11 @@
 package org.streampipes.wrapper.params.binding;
 
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.output.PropertyRenameRule;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 public class EventSinkBindingParams extends BindingParams<DataSinkInvocation> implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -28,6 +31,8 @@ public class EventSinkBindingParams extends BindingParams<DataSinkInvocation> im
     super(new DataSinkInvocation(graph));
   }
 
-  public EventSinkBindingParams() {
+  @Override
+  protected List<PropertyRenameRule> getRenameRules() {
+    return Collections.emptyList();
   }
 }

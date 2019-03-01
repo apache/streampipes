@@ -20,12 +20,22 @@ package org.streampipes.manager.matching.output;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.sdk.helpers.Tuple2;
 
-public interface OutputSchemaGenerator<T extends OutputStrategy> {
+public abstract class OutputSchemaGenerator<T extends OutputStrategy> {
 
-  EventSchema buildFromOneStream(SpDataStream stream);
+  protected T outputStrategy;
 
-  EventSchema buildFromTwoStreams(SpDataStream stream1, SpDataStream stream2);
+  public OutputSchemaGenerator(T outputStrategy) {
+    this.outputStrategy = outputStrategy;
+  }
 
-  OutputStrategy getModifiedOutputStrategy(T outputStrategy);
+  public abstract Tuple2<EventSchema, T> buildFromOneStream(SpDataStream stream);
+
+  public abstract Tuple2<EventSchema, T> buildFromTwoStreams(SpDataStream stream1,
+                                                                          SpDataStream stream2);
+
+  public Tuple2<EventSchema, T> makeTuple(EventSchema eventSchema) {
+    return new Tuple2<>(eventSchema, outputStrategy);
+  }
 }

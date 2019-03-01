@@ -30,18 +30,23 @@ import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.distributed.runtime.DistributedRuntime;
 import org.streampipes.wrapper.flink.consumer.JmsConsumer;
+import org.streampipes.wrapper.flink.converter.EventGenerator;
 import org.streampipes.wrapper.flink.converter.JsonToMapFormat;
 import org.streampipes.wrapper.flink.logger.StatisticLogger;
 import org.streampipes.wrapper.params.binding.BindingParams;
+import org.streampipes.wrapper.params.runtime.RuntimeParams;
 
 import java.io.Serializable;
-import java.util.Map;
 import java.util.regex.Pattern;
 
-public abstract class FlinkRuntime<B extends BindingParams<I>, I extends InvocableStreamPipesEntity> extends
-        DistributedRuntime<B, I> implements Runnable, Serializable {
+public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends BindingParams<I>, I
+        extends
+        InvocableStreamPipesEntity, RC extends RuntimeContext> extends
+        DistributedRuntime<RP, B, I, RC> implements Runnable, Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -82,10 +87,6 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
     this.config = config;
     this.debug = debug;
   }
-
-  protected abstract FlinkDeploymentConfig getDeploymentConfig();
-
-  protected abstract void appendExecutionConfig(DataStream<Map<String, Object>>... convertedStream);
 
   public void run() {
     try {
@@ -164,20 +165,28 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
 
     appendEnvironmentConfig(this.env);
     // Add the first source to the topology
-    DataStream<Map<String, Object>> messageStream1;
+    DataStream<Event> messageStream1;
     SourceFunction<String> source1 = getStream1Source();
     if (source1 != null) {
       messageStream1 = env
-              .addSource(source1).flatMap(new JsonToMapFormat()).flatMap(new StatisticLogger(getGraph()));
+              .addSource(source1)
+              .flatMap(new JsonToMapFormat())
+              .flatMap(new EventGenerator<>(runtimeParams.getSourceInfo(0).getSourceId(),
+                      runtimeParams))
+              .flatMap(new StatisticLogger(getGraph()));
     } else {
       throw new SpRuntimeException("At least one source must be defined for a flink sepa");
     }
 
-    DataStream<Map<String, Object>> messageStream2;
+    DataStream<Event> messageStream2;
     SourceFunction<String> source2 = getStream2Source();
     if (source2 != null) {
       messageStream2 = env
-              .addSource(source2).flatMap(new JsonToMapFormat()).flatMap(new StatisticLogger(getGraph()));
+              .addSource(source2)
+              .flatMap(new JsonToMapFormat())
+              .flatMap(new EventGenerator<>(runtimeParams.getSourceInfo(1).getSourceId(),
+                      runtimeParams))
+              .flatMap(new StatisticLogger(getGraph()));
 
       appendExecutionConfig(messageStream1, messageStream2);
     } else {
@@ -256,5 +265,10 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
       env.setParallelism(1);
     }
   }
+
+  protected abstract FlinkDeploymentConfig getDeploymentConfig();
+
+  protected abstract void appendExecutionConfig(DataStream<Event>... convertedStream);
+
 
 }

@@ -17,60 +17,51 @@
 
 package org.streampipes.manager.matching.output;
 
-import org.streampipes.empire.core.empire.SupportsRdfId;
-import org.streampipes.model.schema.EventSchema;
+import org.streampipes.manager.selector.PropertySelector;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.output.PropertyRenameRule;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.sdk.helpers.Tuple2;
 
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
-public class CustomOutputSchemaGenerator implements OutputSchemaGenerator<CustomOutputStrategy> {
+public class CustomOutputSchemaGenerator extends OutputSchemaGenerator<CustomOutputStrategy> {
 
-	private List<EventProperty> customProperties;
-	
-	public CustomOutputSchemaGenerator(List<EventProperty> customProperties) {
-		this.customProperties = rewrite(customProperties);
-	}
-	
-	private List<EventProperty> rewrite(List<EventProperty> customProperties2) {
-		List<EventProperty> newCustomProperties = new ArrayList<>();
-		for(int i = 0; i < customProperties2.size(); i++) {
-			if (customProperties2.get(i) instanceof EventPropertyPrimitive) {
-				EventPropertyPrimitive prop = (EventPropertyPrimitive) customProperties2.get(i);
-				if (newCustomProperties.stream().anyMatch(nc -> nc.getRuntimeName().equals(prop.getRuntimeName()))) {
-					EventPropertyPrimitive newp = new EventPropertyPrimitive(prop);
-					newp.setRuntimeName(prop.getRuntimeName() +"1");
-					newp.setRdfId(new SupportsRdfId.URIKey(URI.create(prop.getElementId() +"1")));
-					newCustomProperties.add(newp);
-				}
-				else
-					newCustomProperties.add(prop);
-			} 
-			else
-				newCustomProperties.add(customProperties2.get(i));
-		}
-		
-		return newCustomProperties;
-	}
+  private List<String> selectedPropertyKeys;
 
-	@Override
-	public EventSchema buildFromOneStream(SpDataStream stream) {
-		return new EventSchema(customProperties);
-	}
+  public static CustomOutputSchemaGenerator from(OutputStrategy strategy) {
+    return new CustomOutputSchemaGenerator((CustomOutputStrategy) strategy);
+  }
 
-	@Override
-	public EventSchema buildFromTwoStreams(SpDataStream stream1,
-			SpDataStream stream2) {
-		return buildFromOneStream(stream1);
-	}
+  public CustomOutputSchemaGenerator(CustomOutputStrategy strategy) {
+    super(strategy);
+    this.selectedPropertyKeys = strategy.getSelectedPropertyKeys();
+  }
 
-	@Override
-	public CustomOutputStrategy getModifiedOutputStrategy(
-			CustomOutputStrategy strategy) {
-		return strategy;
-	}
+  @Override
+  public Tuple2<EventSchema, CustomOutputStrategy> buildFromOneStream(SpDataStream stream) {
+    return new Tuple2<>(new EventSchema(new PropertySelector(stream.getEventSchema())
+            .createPropertyList(selectedPropertyKeys)), outputStrategy);
+  }
+
+  @Override
+  public Tuple2<EventSchema, CustomOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
+                                         SpDataStream stream2) {
+
+    Tuple2<List<EventProperty>, List<PropertyRenameRule>> generatedOutputProperties = new
+            PropertySelector(stream1.getEventSchema(),
+            stream2.getEventSchema()).createRenamedPropertyList(selectedPropertyKeys);
+
+    EventSchema outputSchema = new EventSchema(generatedOutputProperties.a);
+
+    return new Tuple2<>(outputSchema, getModifiedOutputStrategy(generatedOutputProperties.b));
+  }
+
+  private CustomOutputStrategy getModifiedOutputStrategy(List<PropertyRenameRule> propertyRenameRules) {
+    outputStrategy.setRenameRules(propertyRenameRules);
+    return outputStrategy;
+  }
 }

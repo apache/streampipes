@@ -18,11 +18,12 @@
 package org.streampipes.wrapper.routing;
 
 import org.streampipes.messaging.InternalEventProcessor;
+import org.streampipes.model.runtime.Event;
 
 import java.util.Map;
 
 public interface SpOutputCollector extends PipelineElementCollector<InternalEventProcessor<Map<String,
         Object>>> {
 
-  void onEvent(Map<String, Object> event);
+  void collect(Event event);
 }

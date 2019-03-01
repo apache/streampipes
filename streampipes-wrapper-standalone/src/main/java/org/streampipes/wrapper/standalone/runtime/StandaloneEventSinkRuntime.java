@@ -18,32 +18,47 @@
 package org.streampipes.wrapper.standalone.runtime;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
+import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 import org.streampipes.wrapper.params.runtime.EventSinkRuntimeParams;
 import org.streampipes.wrapper.routing.SpInputCollector;
+import org.streampipes.wrapper.runtime.EventSink;
 
-public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime<EventSinkRuntimeParams<?>> {
+import java.util.Map;
+import java.util.function.Supplier;
 
-  public StandaloneEventSinkRuntime(EventSinkRuntimeParams<?> params) {
-    super(params);
+public class StandaloneEventSinkRuntime<B extends EventSinkBindingParams> extends
+        StandalonePipelineElementRuntime<B, DataSinkInvocation,
+                EventSinkRuntimeParams<B>, EventSinkRuntimeContext, EventSink<B>> {
+
+  public StandaloneEventSinkRuntime(Supplier<EventSink<B>> supplier, EventSinkRuntimeParams<B>
+          params) {
+    super(supplier, params);
   }
 
   @Override
   public void discardRuntime() throws SpRuntimeException {
-    params.getInputCollectors().forEach(is -> is.unregisterConsumer(instanceId));
-    params.discardEngine();
+    getInputCollectors().forEach(is -> is.unregisterConsumer(instanceId));
+    discardEngine();
     postDiscard();
   }
 
   @Override
+  public void process(Map rawEvent, String sourceInfo) throws SpRuntimeException {
+    getEngine().onEvent(params.makeEvent(rawEvent, sourceInfo));
+  }
+
+  @Override
   public void bindRuntime() throws SpRuntimeException {
-    params.bindEngine();
-    params.getInputCollectors().forEach(is -> is.registerConsumer(instanceId, params.getEngine()));
+    bindEngine();
+    getInputCollectors().forEach(is -> is.registerConsumer(instanceId, this));
     prepareRuntime();
   }
 
   @Override
   public void prepareRuntime() throws SpRuntimeException {
-    for (SpInputCollector spInputCollector : params.getInputCollectors()) {
+    for (SpInputCollector spInputCollector : getInputCollectors()) {
       spInputCollector.connect();
     }
 
@@ -51,9 +66,14 @@ public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime
 
   @Override
   public void postDiscard() throws SpRuntimeException {
-    for(SpInputCollector spInputCollector : params.getInputCollectors()) {
+    for(SpInputCollector spInputCollector : getInputCollectors()) {
       spInputCollector.disconnect();
     }
+  }
+
+  @Override
+  public void bindEngine() throws SpRuntimeException {
+    engine.onInvocation(params.getBindingParams(), params.getRuntimeContext());
   }
 
 }

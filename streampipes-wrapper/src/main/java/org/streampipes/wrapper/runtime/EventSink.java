@@ -18,14 +18,17 @@
 package org.streampipes.wrapper.runtime;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public abstract class EventSink<B extends EventSinkBindingParams> extends PipelineElement<B> {
+public interface EventSink<B extends EventSinkBindingParams> extends PipelineElement<B,
+        DataSinkInvocation> {
 
-  public EventSink(B params) {
-    super(params);
-  }
+  void onInvocation(B parameters, EventSinkRuntimeContext runtimeContext) throws
+          SpRuntimeException;
 
-  public abstract void bind(B parameters) throws SpRuntimeException;
+  void onEvent(Event event) throws SpRuntimeException;
 
 }

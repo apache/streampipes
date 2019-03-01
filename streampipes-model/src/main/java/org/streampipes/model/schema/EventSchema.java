@@ -37,41 +37,39 @@ import javax.persistence.OneToMany;
 @Entity
 public class EventSchema extends UnnamedStreamPipesEntity {
 
-	private static final long serialVersionUID = -3994041794693686406L;
-	
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.HAS_EVENT_PROPERTY)
-	private List<EventProperty> eventProperties;
-	
-	public EventSchema(List<EventProperty> eventProperties) {
-		super();
-		this.eventProperties = eventProperties;
-	}
-	
-	public EventSchema()
-	{
-		super();
-		this.eventProperties = new ArrayList<>();
-	}
+  private static final long serialVersionUID = -3994041794693686406L;
 
-	public EventSchema(EventSchema other) {
-		super(other);
-		this.eventProperties = new Cloner().properties(other.getEventProperties());
-	}
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.HAS_EVENT_PROPERTY)
+  private List<EventProperty> eventProperties;
 
-	public List<EventProperty> getEventProperties() {
-		return eventProperties;
-	}
+  public EventSchema(List<EventProperty> eventProperties) {
+    super();
+    this.eventProperties = eventProperties;
+  }
 
-	public void setEventProperties(List<EventProperty> eventProperties) {
-		this.eventProperties = eventProperties;
-	}
-	
-	
-	public boolean addEventProperty(EventProperty p)
-	{
-		return eventProperties.add(p);
-	}
-	
+  public EventSchema() {
+    super();
+    this.eventProperties = new ArrayList<>();
+  }
+
+  public EventSchema(EventSchema other) {
+    super(other);
+    this.eventProperties = new Cloner().properties(other.getEventProperties());
+  }
+
+  public List<EventProperty> getEventProperties() {
+    return eventProperties;
+  }
+
+  public void setEventProperties(List<EventProperty> eventProperties) {
+    this.eventProperties = eventProperties;
+  }
+
+
+  public boolean addEventProperty(EventProperty p) {
+    return eventProperties.add(p);
+  }
+
 }

@@ -17,36 +17,36 @@
 
 package org.streampipes.manager.matching.output;
 
-import java.util.List;
-
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.output.FixedOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.sdk.helpers.Tuple2;
 
-public class FixedOutputSchemaGenerator implements OutputSchemaGenerator<FixedOutputStrategy> {
+import java.util.List;
 
-	private List<EventProperty> fixedProperties;
-	
-	public FixedOutputSchemaGenerator(List<EventProperty> fixedProperties) {
-		this.fixedProperties = fixedProperties;
-	}
-	
-	@Override
-	public EventSchema buildFromOneStream(SpDataStream stream) {
-		return new EventSchema(fixedProperties);
-	}
+public class FixedOutputSchemaGenerator extends OutputSchemaGenerator<FixedOutputStrategy> {
 
-	@Override
-	public EventSchema buildFromTwoStreams(SpDataStream stream1,
-			SpDataStream stream2) {
-		return buildFromOneStream(stream1);
-	}
+  private List<EventProperty> fixedProperties;
 
-	@Override
-	public FixedOutputStrategy getModifiedOutputStrategy(
-			FixedOutputStrategy strategy) {
-		return strategy;
-	}
+  public static FixedOutputSchemaGenerator from(OutputStrategy strategy) {
+    return new FixedOutputSchemaGenerator((FixedOutputStrategy) strategy);
+  }
 
+  public FixedOutputSchemaGenerator(FixedOutputStrategy strategy) {
+    super(strategy);
+    this.fixedProperties = strategy.getEventProperties();
+  }
+
+  @Override
+  public Tuple2<EventSchema, FixedOutputStrategy> buildFromOneStream(SpDataStream stream) {
+    return makeTuple(new EventSchema(fixedProperties));
+  }
+
+  @Override
+  public Tuple2<EventSchema, FixedOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
+                                         SpDataStream stream2) {
+    return buildFromOneStream(stream1);
+  }
 }

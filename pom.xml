@@ -25,7 +25,7 @@
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <rdf4j.version>2.2.4</rdf4j.version>
+        <rdf4j.version>2.4.5</rdf4j.version>
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
         <javassist.version>3.19.0-GA</javassist.version>
         <logback-classic.version>1.1.9</logback-classic.version>
@@ -36,7 +36,7 @@
         <junit.version>4.12</junit.version>
         <kafka.version>1.0.0</kafka.version>
         <shiro.version>1.2.3</shiro.version>
-        <streampipes-empire.version>1.9.8</streampipes-empire.version>
+        <streampipes-empire.version>1.9.9</streampipes-empire.version>
         <dependency.locations.enabled>false</dependency.locations.enabled>
         <mockito.version>2.18.3</mockito.version>
         <powermock.version>2.0.0-beta.5</powermock.version>

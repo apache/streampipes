@@ -32,24 +32,24 @@ import java.util.logging.Logger;
 @SuppressWarnings("deprecation")
 public class HttpJsonParser {
 
-	public static String getContentFromUrl(URI uri) throws ClientProtocolException, IOException
-	{
-		return getContentFromUrl(uri, null);
-	}
-	
-	public static String getContentFromUrl(URI uri, String header) throws ClientProtocolException, IOException
-	{
-		HttpGet request = new HttpGet(uri);
-		if (header != null) request.addHeader("Accept", header);
-		
-		@SuppressWarnings("resource")
-		HttpClient client = new DefaultHttpClient();
-		HttpResponse response = client.execute(request);
-		
-		String pageContent = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
-		Logger.getAnonymousLogger().info("Content: " +pageContent);
-	
-		return pageContent;
-		
-	}
+  public static String getContentFromUrl(URI uri) throws ClientProtocolException, IOException {
+    return getContentFromUrl(uri, null);
+  }
+
+  public static String getContentFromUrl(URI uri, String header) throws ClientProtocolException, IOException {
+    HttpGet request = new HttpGet(uri);
+    if (header != null) {
+      request.addHeader("Accept", header);
+    }
+
+    @SuppressWarnings("resource")
+    HttpClient client = new DefaultHttpClient();
+    HttpResponse response = client.execute(request);
+
+    String pageContent = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
+    Logger.getAnonymousLogger().info("Content: " + pageContent);
+
+    return pageContent;
+
+  }
 }

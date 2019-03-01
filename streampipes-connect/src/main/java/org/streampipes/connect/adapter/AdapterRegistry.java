@@ -38,10 +38,7 @@ import org.streampipes.connect.adapter.generic.format.xml.XmlParser;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.protocol.set.FileProtocol;
 import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
-import org.streampipes.connect.adapter.generic.protocol.stream.FileStreamProtocol;
-import org.streampipes.connect.adapter.generic.protocol.stream.HttpStreamProtocol;
-import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
-import org.streampipes.connect.adapter.generic.protocol.stream.MqttProtocol;
+import org.streampipes.connect.adapter.generic.protocol.stream.*;
 import org.streampipes.connect.adapter.specific.gdelt.GdeltAdapter;
 import org.streampipes.connect.adapter.specific.nswaustralia.trafficcamera.NswTrafficCameraAdapter;
 import org.streampipes.connect.adapter.specific.ros.RosBridgeAdapter;
@@ -109,6 +106,7 @@ public class AdapterRegistry {
         allProtocols.put(MqttProtocol.ID, new MqttProtocol());
         allProtocols.put(HttpStreamProtocol.ID, new HttpStreamProtocol());
         allProtocols.put(FileStreamProtocol.ID, new FileStreamProtocol());
+        allProtocols.put(HDFSProtocol.ID, new HDFSProtocol());
 
         return allProtocols;
     }
