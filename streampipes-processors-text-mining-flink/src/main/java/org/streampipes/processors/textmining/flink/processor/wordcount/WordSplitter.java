@@ -2,28 +2,24 @@ package org.streampipes.processors.textmining.flink.processor.wordcount;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 
-import java.util.Map;
+public class WordSplitter implements FlatMapFunction<Event, Word> {
 
-public class WordSplitter implements FlatMapFunction<Map<String, Object>, Word> {
+  private String mappingPropertyName;
 
-	private String mappingPropertyName;
-	
-	public WordSplitter(String mappingPropertyName) {
-		this.mappingPropertyName = mappingPropertyName;
-	}
-	
-	@Override
-	public void flatMap(Map<String, Object> in,
-			Collector<Word> out) throws Exception {
-		
-		String propertyValue = (String) in.get(mappingPropertyName);
-		for(String word : propertyValue.split(" "))
-		{
-			out.collect(new Word(word, 1));
-		}
-	}
+  public WordSplitter(String mappingPropertyName) {
+    this.mappingPropertyName = mappingPropertyName;
+  }
 
-	
+  @Override
+  public void flatMap(Event in,
+                      Collector<Word> out) throws Exception {
+
+    String propertyValue = in.getFieldBySelector(mappingPropertyName).getAsPrimitive().getAsString();
+    for (String word : propertyValue.split(" ")) {
+      out.collect(new Word(word, 1));
+    }
+  }
 
 }

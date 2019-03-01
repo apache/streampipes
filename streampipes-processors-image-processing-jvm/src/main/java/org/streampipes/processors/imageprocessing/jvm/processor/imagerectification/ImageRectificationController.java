@@ -51,14 +51,12 @@ public class ImageRectificationController extends StandaloneEventProcessingDecla
   }
 
   @Override
-  public ConfiguredEventProcessor<ImageRectificationParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(dataProcessorInvocation);
-
+  public ConfiguredEventProcessor<ImageRectificationParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation, ProcessingElementParameterExtractor extractor) {
     String imagePropertyName = extractor.mappingPropertyValue(IMAGE_PROPERTY);
 
     ImageRectificationParameters params = new ImageRectificationParameters(dataProcessorInvocation, imagePropertyName);
 
-    return new ConfiguredEventProcessor<>(params, () -> new ImageRectifier(params));
+    return new ConfiguredEventProcessor<>(params, ImageRectifier::new);
   }
 
 }

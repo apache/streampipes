@@ -22,50 +22,48 @@ import org.apache.http.entity.ContentType;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.logging.api.Logger;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.io.IOException;
-import java.util.Map;
 
-public class RestPublisher extends EventSink<RestParameters> {
-	private static Logger logger;
+public class RestPublisher implements EventSink<RestParameters> {
+  private static Logger logger;
 
-	private String url;
-	private JsonDataFormatDefinition jsonDataFormatDefinition;
+  private String url;
+  private JsonDataFormatDefinition jsonDataFormatDefinition;
 
-	public RestPublisher(RestParameters params) {
-		super(params);
-		this.url = params.getUrl();
-	}
+  @Override
+  public void onInvocation(RestParameters params, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    this.url = params.getUrl();
+    logger = params.getGraph().getLogger(RestPublisher.class);
+    jsonDataFormatDefinition = new JsonDataFormatDefinition();
+  }
 
-	@Override
-	public void bind(RestParameters params) throws SpRuntimeException {
-		logger = params.getGraph().getLogger(RestPublisher.class);
-		jsonDataFormatDefinition = new JsonDataFormatDefinition();
-	}
+  @Override
+  public void onEvent(Event inputEvent) {
 
-	@Override
-	public void onEvent(Map<String, Object> event, String sourceInfo) {
+    byte[] json = null;
+    try {
+      json = jsonDataFormatDefinition.fromMap(inputEvent.getRaw());
+    } catch (SpRuntimeException e) {
+      logger.error("Error while serializing event: " + inputEvent.getSourceInfo().getSourceId() + " Exception:" +
+              " " + e);
+    }
 
-		byte[] json = null;
-		try {
-			json = jsonDataFormatDefinition.fromMap(event);
-		} catch (SpRuntimeException e) {
-			logger.error("Error while serializing event: " + event + " Exception: " + e);
-		}
+    try {
+      Request.Post(url)
+              .bodyByteArray(json, ContentType.APPLICATION_JSON)
+              .connectTimeout(1000)
+              .socketTimeout(100000)
+              .execute().returnContent().asString();
+    } catch (IOException e) {
+      logger.error("Error while sending data to endpoint: " + url + " Exception: " + e);
+    }
+  }
 
-		try {
-			Request.Post(url)
-					.bodyByteArray(json, ContentType.APPLICATION_JSON)
-					.connectTimeout(1000)
-					.socketTimeout(100000)
-					.execute().returnContent().asString();
-		} catch (IOException e) {
-			logger.error("Error while sending data to endpoint: " + url + " Exception: " + e);
-		}
-	}
-
-	@Override
-	public void discard() throws SpRuntimeException {
-	}
+  @Override
+  public void onDetach() throws SpRuntimeException {
+  }
 }

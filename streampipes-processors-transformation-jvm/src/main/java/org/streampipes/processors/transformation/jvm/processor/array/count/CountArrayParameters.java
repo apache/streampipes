@@ -23,8 +23,6 @@ import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 public class CountArrayParameters extends EventProcessorBindingParams {
     private String arrayField;
 
-    public CountArrayParameters() {
-    }
 
     public CountArrayParameters(DataProcessorInvocation graph, String arrayField) {
         super(graph);

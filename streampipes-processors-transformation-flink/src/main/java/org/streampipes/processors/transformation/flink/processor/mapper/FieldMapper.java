@@ -19,13 +19,12 @@ package org.streampipes.processors.transformation.flink.processor.mapper;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithmType;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class FieldMapper implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
+public class FieldMapper implements FlatMapFunction<Event, Event> {
 
   private List<String> replacePropertyNames;
   private String newFieldName;
@@ -36,19 +35,21 @@ public class FieldMapper implements FlatMapFunction<Map<String, Object>, Map<Str
   }
 
   @Override
-  public void flatMap(Map<String, Object> in, Collector<Map<String, Object>> out) throws Exception {
-    Map<String, Object> outMap = new HashMap<>();
+  public void flatMap(Event in, Collector<Event> out) throws Exception {
+    Event event = new Event();
     StringBuilder hashValue = new StringBuilder();
 
-    for (String key : in.keySet()) {
+    for (String key : in.getFields().keySet()) {
       if (replacePropertyNames.stream().noneMatch(r -> r.equals(key))) {
-        outMap.put(key, in.get(key));
+        event.addField(key, in.getFieldBySelector(key));
       } else {
-        hashValue.append(String.valueOf(outMap.get(key)));
+        hashValue.append(in.getFieldBySelector((key)).getAsPrimitive().getAsString());
       }
     }
 
-    outMap.put(newFieldName, HashAlgorithmType.MD5.hashAlgorithm().toHashValue(hashValue.toString()));
-    out.collect(outMap);
+    event.addField(newFieldName, HashAlgorithmType.MD5.hashAlgorithm().toHashValue(hashValue
+            .toString
+            ()));
+    out.collect(event);
   }
 }

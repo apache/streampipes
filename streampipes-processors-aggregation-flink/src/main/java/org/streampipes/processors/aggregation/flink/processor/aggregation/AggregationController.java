@@ -56,10 +56,14 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
                             EpRequirements.numberReq(),
                             getLabel(AGGREGATE_KEY),
                             PropertyScope.MEASUREMENT_PROPERTY)
+                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.from
+                            ("test-mapping", "Test", "Test"), PropertyScope.NONE)
                     .build())
             .naryMappingPropertyWithoutRequirement(
                     getLabel(GROUP_BY_KEY),
                     PropertyScope.DIMENSION_PROPERTY)
+            .unaryMappingPropertyWithoutRequirement(Labels.from("test-unary", "Test-Unary", ""),
+                    PropertyScope.NONE)
             .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(
                     getLabel(AGGREGATED_VALUE_KEY),
                     "aggregatedValue",

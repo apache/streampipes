@@ -16,27 +16,23 @@
  */
 package org.streampipes.processors.imageprocessing.jvm.processor.imagerectification;
 
-import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
-import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 
-import java.util.Map;
-
-public class ImageRectifier extends StandaloneEventProcessorEngine<ImageRectificationParameters> {
+public class ImageRectifier implements EventProcessor<ImageRectificationParameters> {
 
   private ImageRectificationParameters params;
 
-  public ImageRectifier(ImageRectificationParameters params) {
-    super(params);
-  }
 
   @Override
-  public void onInvocation(ImageRectificationParameters imageRectificationParameters, DataProcessorInvocation dataProcessorInvocation) {
+  public void onInvocation(ImageRectificationParameters imageRectificationParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     this.params = imageRectificationParameters;
   }
 
   @Override
-  public void onEvent(Map<String, Object> map, String s, SpOutputCollector spOutputCollector) {
+  public void onEvent(Event event, SpOutputCollector spOutputCollector) {
     // TODO add logic here
   }
 

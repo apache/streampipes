@@ -22,6 +22,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.triggers.Trigger;
 import org.apache.flink.streaming.api.windowing.triggers.TriggerResult;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
 
 import java.util.Map;
@@ -34,7 +35,7 @@ public class CountProgram extends AbstractAggregationProgram<CountParameters> {
   }
 
   @Override
-  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
+  protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
     return dataStreams[0]
             .map(new CountMapper(params.getFieldToCount()))
             .keyBy(1)

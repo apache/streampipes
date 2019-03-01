@@ -17,12 +17,11 @@
 
 package org.streampipes.processors.transformation.jvm.processor.array.split;
 
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.container.api.ResolvesContainerProvidedOutputStrategy;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.schema.EventPropertyList;
-import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.processors.transformation.jvm.config.TransformationJvmConfig;
@@ -40,70 +39,57 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDecl
 import java.util.ArrayList;
 import java.util.List;
 
-public class SplitArrayController extends StandaloneEventProcessingDeclarer<SplitArrayParameters> implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation> {
+public class SplitArrayController extends StandaloneEventProcessingDeclarer<SplitArrayParameters>
+        implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
-    public static final String KEEP_PROPERTIES_ID = "keep";
-    public static final String ARRAY_FIELD_ID = "array_field";
+  public static final String KEEP_PROPERTIES_ID = "keep";
+  public static final String ARRAY_FIELD_ID = "array_field";
 
-    @Override
-    public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.streampipes.processors" +
-                ".transformation.jvm.split-array", "Split Array", "This processor takes " +
-                "an array of event properties and creates an event for each of them. Further property of the events can be added to each element")
-                .iconUrl(TransformationJvmConfig.getIconUrl("splitarray"))
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.streampipes.processors" +
+            ".transformation.jvm.split-array", "Split Array", "This processor takes " +
+            "an array of event properties and creates an event for each of them. Further property of the events can be added to each element")
+            .iconUrl(TransformationJvmConfig.getIconUrl("splitarray"))
+            .requiredStream(StreamRequirementsBuilder.create()
+                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
+                            Labels.from(KEEP_PROPERTIES_ID, "Keep Properties", "The " +
+                                    "properties that should be added to the events of array"),
+                            PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(),
+                            Labels.from(ARRAY_FIELD_ID, "Array of Events", "Contains an array with events"),
+                            PropertyScope.NONE)
+                    .build())
+            .outputStrategy(OutputStrategies.customTransformation())
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+            .build();
+  }
 
-                .requiredStream(StreamRequirementsBuilder.create()
-                        .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
-                                Labels.from(KEEP_PROPERTIES_ID, "Keep Proeprties", "The properties that should be added to the events of array"),
-                                PropertyScope.NONE)
-                        .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(),
-                                Labels.from(ARRAY_FIELD_ID, "Array of Events", "Contains an array with events"),
-                                PropertyScope.NONE)
-                        .build())
+  @Override
+  public ConfiguredEventProcessor<SplitArrayParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-                .outputStrategy(OutputStrategies.customTransformation())
-                .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-                .build();
-    }
+    String arrayField = extractor.mappingPropertyValue(ARRAY_FIELD_ID);
+    List<String> keepProperties = extractor.mappingPropertyValues(KEEP_PROPERTIES_ID);
 
-    @Override
-    public ConfiguredEventProcessor<SplitArrayParameters> onInvocation(DataProcessorInvocation graph) {
-        ProcessingElementParameterExtractor extractor = getExtractor(graph);
+    SplitArrayParameters params = new SplitArrayParameters(graph, arrayField, keepProperties);
+    return new ConfiguredEventProcessor<>(params, SplitArray::new);
+  }
 
-//        List<String> keepProperties = SepaUtils.getMultipleMappingPropertyNames(graph,
-//                KEEP_PROPERTIES_ID, true);
+  @Override
+  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
+                                           ProcessingElementParameterExtractor extractor)
+          throws SpRuntimeException {
+    String arrayFieldSelector = extractor.mappingPropertyValue(ARRAY_FIELD_ID);
+    List<String> keepPropertySelectors = extractor.mappingPropertyValues(KEEP_PROPERTIES_ID);
 
+    List<EventProperty> outProperties = new ArrayList<>();
+    EventProperty arrayProperty = extractor.getEventPropertyBySelector(arrayFieldSelector);
+    List<EventProperty> keepProperties = extractor.getEventPropertiesBySelector
+            (keepPropertySelectors);
+   outProperties.add(arrayProperty);
+   outProperties.addAll(keepProperties);
 
-        String arrayField = extractor.mappingPropertyValue(ARRAY_FIELD_ID);
-        List<String> keepProperties = extractor.mappingPropertyValues(KEEP_PROPERTIES_ID);
-
-        SplitArrayParameters params = new SplitArrayParameters(graph, arrayField, keepProperties);
-        return new ConfiguredEventProcessor<>(params, () -> new SplitArray(params));
-    }
-
-    @Override
-    public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement) {
-        ProcessingElementParameterExtractor extractor = getExtractor(processingElement);
-        String arrayField = extractor.mappingPropertyValue(ARRAY_FIELD_ID);
-        List<String> keepProperties = extractor.mappingPropertyValues(KEEP_PROPERTIES_ID);
-
-        List<EventProperty> outProperties = new ArrayList<>();
-        for(EventProperty prop : processingElement.getInputStreams().get(0).getEventSchema().getEventProperties()) {
-            if (prop.getRuntimeName().equals(arrayField)) {
-                EventPropertyNested epn = (EventPropertyNested) ((EventPropertyList) prop).getEventProperties().get(0);
-                outProperties.addAll(epn.getEventProperties());
-            }
-
-            for (String name : keepProperties) {
-                if (prop.getRuntimeName() == name) {
-                    outProperties.add(prop);
-                }
-            }
-        }
-
-
-
-        return new EventSchema(outProperties);
-    }
+    return new EventSchema(outProperties);
+  }
 }

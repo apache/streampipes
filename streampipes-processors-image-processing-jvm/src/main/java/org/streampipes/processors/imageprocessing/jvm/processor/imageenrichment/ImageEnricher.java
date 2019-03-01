@@ -16,39 +16,41 @@
  */
 package org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment;
 
-import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
-import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Base64;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-public class ImageEnricher extends StandaloneEventProcessorEngine<ImageEnrichmentParameters> {
+import javax.imageio.ImageIO;
+
+public class ImageEnricher implements EventProcessor<ImageEnrichmentParameters> {
 
     private ImageEnrichmentParameters params;
 
-    public ImageEnricher(ImageEnrichmentParameters params) {
-        super(params);
-    }
 
     @Override
-    public void onInvocation(ImageEnrichmentParameters params, DataProcessorInvocation graph) {
+    public void onInvocation(ImageEnrichmentParameters params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
         this.params = params;
     }
 
     @Override
-    public void onEvent(Map<String, Object> in, String s, SpOutputCollector out) {
+    public void onEvent(org.streampipes.model.runtime.Event in, SpOutputCollector out) {
+// TODO
+        List<Map<String, Object>> allBoxes = in.getFieldBySelector(params.getBoxArray()).getAsList()
+                .parseAsCustomType(value -> (Map<String, Object>) value);
 
-        List<Map<String, Object>> allBoxes = (List<Map<String, Object>>) in.get(params.getBoxArray());
-
-        Optional<BufferedImage> imageOpt = getImage(in.get(params.getImageProperty()));
+        Optional<BufferedImage> imageOpt = getImage(in.getFieldBySelector(params.getImageProperty
+                ()).getAsPrimitive().getRawValue());
 
         if (imageOpt.isPresent()) {
             BufferedImage image = imageOpt.get();
@@ -71,9 +73,9 @@ public class ImageEnricher extends StandaloneEventProcessorEngine<ImageEnrichmen
             Optional<byte[]> finalImage = makeImage(image);
 
             if (finalImage.isPresent()) {
-                Map<String, Object> outMap = new HashMap<>();
-                outMap.put("image", Base64.getEncoder().encodeToString(finalImage.get()));
-                out.onEvent(outMap);
+                org.streampipes.model.runtime.Event event = new org.streampipes.model.runtime.Event();
+                event.addField("image", Base64.getEncoder().encodeToString(finalImage.get()));
+                out.collect(event);
             }
         }
 
@@ -125,6 +127,4 @@ public class ImageEnricher extends StandaloneEventProcessorEngine<ImageEnrichmen
     public void onDetach() {
 
     }
-
-
 }

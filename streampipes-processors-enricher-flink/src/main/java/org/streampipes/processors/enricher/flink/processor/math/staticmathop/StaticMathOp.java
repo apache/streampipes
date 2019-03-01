@@ -18,11 +18,10 @@ package org.streampipes.processors.enricher.flink.processor.math.staticmathop;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.enricher.flink.processor.math.operation.Operation;
 
-import java.util.Map;
-
-public class StaticMathOp implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
+public class StaticMathOp implements FlatMapFunction<Event, Event> {
 
     private Operation operation;
     private String leftOperand;
@@ -37,11 +36,12 @@ public class StaticMathOp implements FlatMapFunction<Map<String, Object>, Map<St
     }
 
     @Override
-    public void flatMap(Map<String, Object> in, Collector<Map<String, Object>> out) throws Exception {
-        Double leftValue  = Double.parseDouble(String.valueOf(in.get(leftOperand)));
+    public void flatMap(Event in, Collector<Event> out) throws Exception {
+        Double leftValue  = Double.parseDouble(String.valueOf(in.getFieldBySelector(leftOperand)
+                .getAsPrimitive().getAsDouble()));
 
         Double result = operation.operate(leftValue, rightOperandValue);
-        in.put(resulField, result);
+        in.addField(resulField, result);
 
         out.collect(in);
     }

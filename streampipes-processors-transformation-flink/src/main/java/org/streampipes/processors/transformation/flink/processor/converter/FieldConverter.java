@@ -20,11 +20,10 @@ import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.vocabulary.XSD;
 
-import java.util.Map;
-
-public class FieldConverter implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
+public class FieldConverter implements FlatMapFunction<Event, Event> {
 
   private static Logger LOG = LoggerFactory.getLogger(FieldConverter.class);
 
@@ -38,13 +37,13 @@ public class FieldConverter implements FlatMapFunction<Map<String, Object>, Map<
 
 
   @Override
-  public void flatMap(Map<String, Object> in, Collector<Map<String, Object>> out) {
-      String value = String.valueOf(in.get(convertProperty));
+  public void flatMap(Event in, Collector<Event> out) {
+      String value = in.getFieldBySelector(convertProperty).getAsPrimitive().getAsString();
       try {
           if (targetDatatype.equals(XSD._float.toString())) {
-              in.put(convertProperty, Float.parseFloat(value));
+              in.updateFieldBySelector(convertProperty, Float.parseFloat(value));
           } else {
-              in.put(convertProperty, Integer.parseInt(value));
+              in.updateFieldBySelector(convertProperty, Integer.parseInt(value));
           }
           
           out.collect(in);

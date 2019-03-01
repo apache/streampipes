@@ -17,21 +17,21 @@
 package org.streampipes.processors.transformation.flink.utils;
 
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class DummyCollector implements Collector<Map<String, Object>> {
+public class DummyCollector implements Collector<Event> {
 
-  List<Map<String, Object>> output;
+  List<Event> output;
 
   public DummyCollector() {
     this.output = new ArrayList<>();
   }
 
   @Override
-  public void collect(Map<String, Object> stringObjectMap) {
+  public void collect(Event stringObjectMap) {
     this.output.add(stringObjectMap);
   }
 
@@ -40,7 +40,7 @@ public class DummyCollector implements Collector<Map<String, Object>> {
 
   }
 
-  public List<Map<String, Object>> getOutput() {
+  public List<Event> getOutput() {
     return output;
   }
 }

@@ -16,6 +16,8 @@
  */
 package org.streampipes.processors.pattern.detection.processor.and;
 
+import static org.hamcrest.core.IsEqual.equalTo;
+
 import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
@@ -23,15 +25,17 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.pattern.detection.flink.processor.and.AndController;
 import org.streampipes.processors.pattern.detection.flink.processor.and.AndParameters;
 import org.streampipes.processors.pattern.detection.flink.processor.and.AndProgram;
 import org.streampipes.processors.pattern.detection.flink.processor.and.TimeUnit;
 import org.streampipes.test.generator.InvocationGraphGenerator;
 
-import java.util.*;
-
-import static org.hamcrest.core.IsEqual.equalTo;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 @RunWith(Parameterized.class)
 public class TestAnd extends DataStreamTestBase {
@@ -77,37 +81,37 @@ public class TestAnd extends DataStreamTestBase {
 
     AndProgram program = new AndProgram(params, true);
 
-    DataStream<Map<String, Object>> stream = program.getApplicationLogic(createTestStream(makeInputData(delayFirstEvent, makeMap("field1"))), createTestStream(makeInputData(delaySecondEvent, makeMap("field2"))));
+    DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData(delayFirstEvent, makeMap("field1"))), createTestStream(makeInputData(delaySecondEvent, makeMap("field2"))));
 
     assertStream(stream, equalTo(getOutput(shouldMatch)));
   }
 
-  private Collection<Map<String, Object>> getOutput(Boolean shouldMatch) {
-    List<Map<String, Object>> allEvents = new ArrayList<>();
+  private Collection<Event> getOutput(Boolean shouldMatch) {
+    List<Event> allEvents = new ArrayList<>();
 
     if (shouldMatch) {
-      Map<String, Object> outMap = new HashMap<>();
-      outMap.put("id", "a");
-      outMap.put("field1", 1);
-      outMap.put("field2", 1);
+      Event outMap = new Event();
+      outMap.addField("id", "a");
+      outMap.addField("field1", 1);
+      outMap.addField("field2", 1);
       allEvents.add(outMap);
     }
 
     return allEvents;
   }
 
-  private EventTimeInput<Map<String, Object>> makeInputData(Integer delayEvent, List<Map<String, Object>> inputMap) {
-    List<Map<String, Object>> testData = inputMap;
-    EventTimeInputBuilder<Map<String, Object>> builder = EventTimeInputBuilder.startWith(testData.get(0), after(delayEvent, seconds));
+  private EventTimeInput<Event> makeInputData(Integer delayEvent, List<Event> inputMap) {
+    List<Event> testData = inputMap;
+    EventTimeInputBuilder<Event> builder = EventTimeInputBuilder.startWith(testData.get(0), after(delayEvent, seconds));
 
     return builder;
   }
 
-  private List<Map<String, Object>> makeMap(String fieldName) {
-    List<Map<String, Object>> allEvents = new ArrayList<>();
-    Map<String, Object> event = new HashMap<>();
-    event.put("id", "a");
-    event.put(fieldName, 1);
+  private List<Event> makeMap(String fieldName) {
+    List<Event> allEvents = new ArrayList<>();
+    Event event = new Event();
+    event.addField("id", "a");
+    event.addField(fieldName, 1);
 
     allEvents.add(event);
 

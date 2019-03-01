@@ -92,9 +92,10 @@ public class SlackNotificationController extends StandaloneEventSinkDeclarer<Sla
         }
       }
 
-      SlackNotificationParameters params = new SlackNotificationParameters(authToken, sendToUser, userChannel, message, session);
+      SlackNotificationParameters params = new SlackNotificationParameters(graph, authToken,
+              sendToUser, userChannel, message, session);
 
-      return new ConfiguredEventSink<>(params, () -> new SlackNotification(params));
+      return new ConfiguredEventSink<>(params, SlackNotification::new);
 
     } else {
       // TODO Exception handling of onInvocation

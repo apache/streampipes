@@ -20,11 +20,10 @@ import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class AndProgram extends AbstractPatternDetectionProgram<AndParameters> {
@@ -34,25 +33,25 @@ public class AndProgram extends AbstractPatternDetectionProgram<AndParameters> {
   }
 
   @Override
-  public DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
+  public DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
     // A AND B within x minutes
     List<String> leftMappings = params.getLeftMappings();
     List<String> rightMappings = params.getRightMappings();
     Time time = TimeUnitConverter.toTime(params.getTimeUnit(), params.getTimeWindow());
 
     return messageStream[0].join(messageStream[1])
-            .where(new KeySelector<Map<String,Object>, String>() {
+            .where(new KeySelector<Event, String>() {
               @Override
-              public String getKey(Map<String, Object> stringObjectMap) throws Exception {
+              public String getKey(Event stringObjectMap) throws Exception {
                 StringBuilder builder = new StringBuilder();
                 for (String key : leftMappings) {
                   builder.append(key);
                 }
                 return builder.toString();
               }
-            }).equalTo(new KeySelector<Map<String,Object>, String>() {
+            }).equalTo(new KeySelector<Event, String>() {
               @Override
-              public String getKey(Map<String, Object> stringObjectMap) throws Exception {
+              public String getKey(Event stringObjectMap) throws Exception {
                 StringBuilder builder = new StringBuilder();
                 for (String key : rightMappings) {
                   builder.append(key);
@@ -60,12 +59,12 @@ public class AndProgram extends AbstractPatternDetectionProgram<AndParameters> {
                 return builder.toString();
               }
             }).window(TumblingEventTimeWindows.of(time))
-            .apply(new JoinFunction<Map<String,Object>, Map<String,Object>, Map<String, Object>>() {
+            .apply(new JoinFunction<Event, Event, Event>() {
               @Override
-              public Map<String, Object> join(Map<String, Object> e1, Map<String, Object> e2) throws Exception {
-                Map<String, Object> map = new HashMap<>();
-                map.putAll(e1);
-                map.putAll(e2);
+              public Event join(Event e1, Event e2) throws Exception {
+                Event map = new Event();
+                e1.getFields().forEach((key, value) -> map.addField(value));
+                e2.getFields().forEach((key, value) -> map.addField(value));
                 return map;
               }
             });

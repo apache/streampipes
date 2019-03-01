@@ -17,9 +17,8 @@
 package org.streampipes.processors.transformation.flink.processor.mapper;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.transformation.flink.AbstractFlinkTransformationProgram;
-
-import java.util.Map;
 
 public class FieldMapperProgram extends AbstractFlinkTransformationProgram<FieldMapperParameters> {
 
@@ -32,7 +31,8 @@ public class FieldMapperProgram extends AbstractFlinkTransformationProgram<Field
   }
 
   @Override
-  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
+  protected DataStream<Event> getApplicationLogic(DataStream<Event>...
+                                                            messageStream) {
     return messageStream[0].flatMap(new FieldMapper(params.getReplacePropertyNames(), params.getNewFieldName()));
   }
 }

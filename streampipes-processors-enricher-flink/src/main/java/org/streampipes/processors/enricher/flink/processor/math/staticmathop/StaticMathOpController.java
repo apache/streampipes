@@ -40,7 +40,7 @@ public class StaticMathOpController extends FlinkDataProcessorDeclarer<StaticMat
     @Override
     public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.math.staticmathop",
-                "Static Math", "Performs calculation on an event property with a static value (+, -, *, /)")
+                "Static Math", "Performs calculation on an event property with a static value (+, -, *, /, %)")
                  .iconUrl(EnricherFlinkConfig.getIconUrl("math-icon-static"))
                 .category(DataProcessorType.ALGORITHM)
                 .requiredStream(StreamRequirementsBuilder
@@ -54,7 +54,7 @@ public class StaticMathOpController extends FlinkDataProcessorDeclarer<StaticMat
                 .outputStrategy(
                         OutputStrategies.append(
                                 EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
-                .requiredSingleValueSelection(OPERATION, "Select Operation", "", Options.from("+", "-", "/", "*"))
+                .requiredSingleValueSelection(OPERATION, "Select Operation", "", Options.from("+", "-", "/", "*", "%"))
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .supportedProtocols(SupportedProtocols.kafka())
                 .build();
@@ -75,6 +75,8 @@ public class StaticMathOpController extends FlinkDataProcessorDeclarer<StaticMat
             case "*": arithmeticOperation = new OperationMultiply();
                 break;
             case "/": arithmeticOperation = new OperationDivide();
+                break;
+            case "%": arithmeticOperation = new OperationModulo();
         }
 
         StaticMathOpParameters parameters = new StaticMathOpParameters(graph, arithmeticOperation, leftOperand, rightOperand, RESULT_FIELD);

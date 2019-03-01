@@ -18,10 +18,9 @@ package org.streampipes.processors.aggregation.flink.processor.count;
 
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple3;
+import org.streampipes.model.runtime.Event;
 
-import java.util.Map;
-
-public class CountMapper implements MapFunction<Map<String, Object>, Tuple3<String, String, Integer>> {
+public class CountMapper implements MapFunction<Event, Tuple3<String, String, Integer>> {
 
   private String fieldToCount;
 
@@ -30,7 +29,8 @@ public class CountMapper implements MapFunction<Map<String, Object>, Tuple3<Stri
   }
 
   @Override
-  public Tuple3<String, String, Integer> map(Map<String, Object> stringObjectMap) throws Exception {
-    return new Tuple3<>(fieldToCount, (String) stringObjectMap.get(fieldToCount), 1);
+  public Tuple3<String, String, Integer> map(Event stringObjectMap) throws Exception {
+    return new Tuple3<>(fieldToCount, stringObjectMap.getFieldBySelector(fieldToCount)
+            .getAsPrimitive().getAsString(), 1);
   }
 }

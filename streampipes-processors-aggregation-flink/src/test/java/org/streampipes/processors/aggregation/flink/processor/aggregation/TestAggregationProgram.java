@@ -21,9 +21,10 @@ import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.junit.Test;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.test.generator.InvocationGraphGenerator;
 
-import java.util.*;
+import java.util.Arrays;
 
 //@RunWith(Parameterized.class)
 public class TestAggregationProgram extends DataStreamTestBase {
@@ -44,10 +45,11 @@ public class TestAggregationProgram extends DataStreamTestBase {
     AggregationProgram program = new AggregationProgram(params, true);
     AggregationTestData testData = new AggregationTestData();
 
-    DataStream<Map<String, Object>> stream = program.getApplicationLogic(createTestStream(makeInputData(testData)));
+    DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData
+            (testData)));
 
-    ExpectedRecords<Map<String, Object>> expected =
-            new ExpectedRecords<Map<String, Object>>().expectAll(testData.getExpectedOutput());
+    ExpectedRecords<Event> expected =
+            new ExpectedRecords<Event>().expectAll(testData.getExpectedOutput());
 
     assertStream(stream, expected);
   }
@@ -62,7 +64,7 @@ public class TestAggregationProgram extends DataStreamTestBase {
             Arrays.asList("value"));
   }
 
-  private EventTimeInput<Map<String, Object>> makeInputData(AggregationTestData testData) {
+  private EventTimeInput<Event> makeInputData(AggregationTestData testData) {
     return EventTimeInputBuilder.startWith(testData.getInput().get(0))
             .emit(testData.getInput().get(1), after(1, seconds));
   }
