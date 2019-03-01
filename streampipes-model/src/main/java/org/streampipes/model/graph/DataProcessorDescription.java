@@ -19,8 +19,8 @@ package org.streampipes.model.graph;
 
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
-import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.Cloner;
@@ -38,84 +38,78 @@ import javax.persistence.OneToMany;
 @Entity
 public class DataProcessorDescription extends ConsumableStreamPipesEntity {
 
-	private static final long serialVersionUID = 3995767921861518597L;
+  private static final long serialVersionUID = 3995767921861518597L;
 
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.HAS_OUTPUT_STRATEGY)
-	private List<OutputStrategy> outputStrategies;
-	
-	private String pathName;
-	
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.HAS_EPA_TYPE)
-	private List<String> category;
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.HAS_OUTPUT_STRATEGY)
+  private List<OutputStrategy> outputStrategies;
 
-	public DataProcessorDescription(DataProcessorDescription other)
-	{
-		super(other);
-		this.outputStrategies = new Cloner().strategies(other.getOutputStrategies());
-		this.pathName = other.getPathName();
-		this.category = new Cloner().epaTypes(other.getCategory());
-	}
-	
-	public DataProcessorDescription()
-	{
-		super();
-		this.outputStrategies = new ArrayList<>();
-		this.category = new ArrayList<>();
-	}
-	
-	public DataProcessorDescription(String uri, String name, String description, String iconUrl, List<SpDataStream> spDataStreams, List<StaticProperty> staticProperties, List<OutputStrategy> outputStrategies)
-	{
-		super(uri, name, description, iconUrl);
-		this.pathName = uri;
-		this.spDataStreams = spDataStreams;
-		this.staticProperties = staticProperties;
-		this.outputStrategies = outputStrategies;
-	}
-	
-	public DataProcessorDescription(String pathName, String name, String description, String iconUrl)
-	{
-		super(pathName, name, description, iconUrl);
-		this.pathName = pathName;
-		spDataStreams = new ArrayList<>();
-		staticProperties = new ArrayList<>();
-	}
-	
-	public DataProcessorDescription(String pathName, String name, String description)
-	{
-		super(pathName, name, description, "");
-		this.pathName = pathName;
-		spDataStreams = new ArrayList<>();
-		staticProperties = new ArrayList<>();
-	}
+  private String pathName;
 
-	
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.HAS_EPA_TYPE)
+  private List<String> category;
 
-	public List<String> getCategory() {
-		return category;
-	}
+  public DataProcessorDescription(DataProcessorDescription other) {
+    super(other);
+    this.outputStrategies = new Cloner().strategies(other.getOutputStrategies());
+    this.pathName = other.getPathName();
+    this.category = new Cloner().epaTypes(other.getCategory());
+  }
 
-	public void setCategory(List<String> category) {
-		this.category = category;
-	}
+  public DataProcessorDescription() {
+    super();
+    this.outputStrategies = new ArrayList<>();
+    this.category = new ArrayList<>();
+  }
 
-	public String getPathName() {
-		return pathName;
-	}
+  public DataProcessorDescription(String uri, String name, String description, String iconUrl, List<SpDataStream> spDataStreams, List<StaticProperty> staticProperties, List<OutputStrategy> outputStrategies) {
+    super(uri, name, description, iconUrl);
+    this.pathName = uri;
+    this.spDataStreams = spDataStreams;
+    this.staticProperties = staticProperties;
+    this.outputStrategies = outputStrategies;
+  }
 
-	public void setPathName(String pathName) {
-		this.pathName = pathName;
-	}
+  public DataProcessorDescription(String pathName, String name, String description, String iconUrl) {
+    super(pathName, name, description, iconUrl);
+    this.pathName = pathName;
+    spDataStreams = new ArrayList<>();
+    staticProperties = new ArrayList<>();
+  }
 
-	public List<OutputStrategy> getOutputStrategies() {
-		return outputStrategies;
-	}
+  public DataProcessorDescription(String pathName, String name, String description) {
+    super(pathName, name, description, "");
+    this.pathName = pathName;
+    spDataStreams = new ArrayList<>();
+    staticProperties = new ArrayList<>();
+  }
 
-	public void setOutputStrategies(List<OutputStrategy> outputStrategies) {
-		this.outputStrategies = outputStrategies;
-	}
+
+  public List<String> getCategory() {
+    return category;
+  }
+
+  public void setCategory(List<String> category) {
+    this.category = category;
+  }
+
+  public String getPathName() {
+    return pathName;
+  }
+
+  public void setPathName(String pathName) {
+    this.pathName = pathName;
+  }
+
+  public List<OutputStrategy> getOutputStrategies() {
+    return outputStrategies;
+  }
+
+  public void setOutputStrategies(List<OutputStrategy> outputStrategies) {
+    this.outputStrategies = outputStrategies;
+  }
 
 }

@@ -300,4 +300,6 @@ public class StreamPipes {
   public static final String RENAME_RULE = NS + "RenameRule";
   public static final String HAS_NEW_RUNTIME_NAME = NS + "hasNewRuntimeName";
   public static final String HAS_RUNTIME_ID = NS + "hasRuntimeId" ;
+
+  public static final String INDEX = NS + "hasIndex";
 }

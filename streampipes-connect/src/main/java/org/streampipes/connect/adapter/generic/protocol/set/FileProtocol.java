@@ -19,22 +19,26 @@ package org.streampipes.connect.adapter.generic.protocol.set;
 
 
 
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.connect.SendToPipeline;
 import org.streampipes.connect.adapter.generic.format.Format;
+import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
-import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
+import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FileStaticProperty;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.streampipes.connect.adapter.generic.format.Parser;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +64,8 @@ public class FileProtocol extends Protocol {
         ProtocolDescription pd = new ProtocolDescription(ID,"File","This is the " +
                 "description for the File protocol");
 
-        FileStaticProperty fileInput = new FileStaticProperty("filePath", "File", "This property defines the path to the file.");
+        FileStaticProperty fileInput = new FileStaticProperty("filePath", "File", "This " +
+                "property defines the path to the file.");
 //        FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("fileUri", "fileUri",
 //                "This property defines the URL for the http request.");
         pd.setSourceType("SET");
