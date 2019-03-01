@@ -26,7 +26,6 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
-import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -52,8 +51,8 @@ public class StaticMathOpController extends FlinkDataProcessorDeclarer<StaticMat
                 .requiredFloatParameter(Labels.from(RIGHT_OPERAND_VALUE, "Right operand value",
                         "Specify the value of the right operand."))
                 .outputStrategy(
-                        OutputStrategies.append(
-                                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
+                        OutputStrategies.keep())
+//                                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
                 .requiredSingleValueSelection(OPERATION, "Select Operation", "", Options.from("+", "-", "/", "*", "%"))
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .supportedProtocols(SupportedProtocols.kafka())

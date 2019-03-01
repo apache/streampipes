@@ -48,6 +48,11 @@
             <artifactId>amqp-client</artifactId>
             <version>4.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
+            <version>4.5.5</version>
+        </dependency>
     </dependencies>
 
     <build>
