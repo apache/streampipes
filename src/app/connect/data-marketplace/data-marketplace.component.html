@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <div class="fixed-height" fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
+    <div class="fixed-height" fxLayout="row" class="data-marketplace-options">
 
             <mat-icon class="icon-style" >search</mat-icon>
 
@@ -42,7 +42,7 @@
             <mat-icon class="icon-style" >list</mat-icon>
 
             <mat-form-field>
-                <mat-select placeholder="Select by categorie" [(value)]="selected" (selectionChange)="filterAdapterCategory($event)">
+                <mat-select [(value)]="selected" (selectionChange)="filterAdapterCategory($event)">
                     <mat-option *ngFor="let categorie of categories" [value]="categorie">
                         {{categorie}}
                     </mat-option>
@@ -50,8 +50,8 @@
             </mat-form-field>
         <span fxFlex></span>
 
-        <mat-icon class="icon-style" matTooltip="Download All Adapter Templates" (click)="downloadAllAdapterTemplates()" style="margin-right: 15px; cursor: pointer;">vertical_align_bottom</mat-icon>
-        <mat-icon class="icon-style" matTooltip="Upload Adapter Templates" (click)="uploadAdapterTemplates()" style="margin-right: 15px; cursor: pointer;">vertical_align_top</mat-icon>
+        <mat-icon class="icon-style" matTooltip="Download All Adapter Templates" (click)="downloadAllAdapterTemplates()" style="margin-right: 15px; cursor: pointer;">cloud_download</mat-icon>
+        <mat-icon class="icon-style" matTooltip="Upload Adapter Templates" (click)="uploadAdapterTemplates()" style="margin-right: 15px; cursor: pointer;">cloud_upload</mat-icon>
 
     </div>
 

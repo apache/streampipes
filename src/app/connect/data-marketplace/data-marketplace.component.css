@@ -78,3 +78,9 @@
   margin: 15px 4px 0px 0px;
   color:rgb(27, 20, 100);
 }
+
+.data-marketplace-options {
+  padding:0px;
+  background-color:#f6f6f6;
+  border-bottom: 1px solid #cccccc;
+}

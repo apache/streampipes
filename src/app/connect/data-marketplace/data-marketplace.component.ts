@@ -28,8 +28,8 @@ export class DataMarketplaceComponent implements OnInit {
     selectedIndex: number = 0;
     filterTerm: string = "";
     pipe: FilterPipe = new FilterPipe();
-    categories: string[] = ['All', 'Data Set', 'Data Stream'];
-    selected: string = "All";
+    categories: string[] = ['All Adapters', 'Data Set', 'Data Stream'];
+    selected: string = "All Adapters";
 
     constructor(private dataMarketplaceService: DataMarketplaceService,
                 private ShepherdService: ShepherdService,

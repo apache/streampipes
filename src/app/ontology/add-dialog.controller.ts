@@ -36,19 +36,14 @@ export class AddDialogController {
         this.getNamespaces();
     }
 
-
     getNamespaces() {
         this.RestApi.getOntologyNamespaces()
             .then(namespaces => {
                 this.namespaces = namespaces.data;
-            })
-            .error(msg => {
-                console.log(msg);
             });
     }
 
     add() {
-        var promise;
         if (this.elementType === 'Property')
         {
             this.RestApi.addOntologyProperty(this.elementData)
