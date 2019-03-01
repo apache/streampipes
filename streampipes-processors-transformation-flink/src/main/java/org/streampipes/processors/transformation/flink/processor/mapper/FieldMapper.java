@@ -43,7 +43,7 @@ public class FieldMapper implements FlatMapFunction<Event, Event> {
       if (replacePropertyNames.stream().noneMatch(r -> r.equals(key))) {
         event.addField(key, in.getFieldBySelector(key));
       } else {
-        hashValue.append(event.getFieldBySelector((key)).getAsPrimitive().getAsString());
+        hashValue.append(in.getFieldBySelector((key)).getAsPrimitive().getAsString());
       }
     }
 
