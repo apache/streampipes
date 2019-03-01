@@ -37,9 +37,7 @@ public class FieldRenamer implements FlatMapFunction<Event, Event> {
   @Override
   public void flatMap(Event in,
                       Collector<Event> out) throws Exception {
-    AbstractField<?> propertyValue = in.getFieldBySelector(oldPropertyName);
-    in.removeFieldBySelector(oldPropertyName);
-    in.addField(newPropertyName, propertyValue);
+    in.getFieldBySelector(oldPropertyName).rename(newPropertyName);
     out.collect(in);
   }
 
