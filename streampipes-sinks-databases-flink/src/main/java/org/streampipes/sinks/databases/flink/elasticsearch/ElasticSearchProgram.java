@@ -61,8 +61,8 @@ public class ElasticSearchProgram extends FlinkDataSinkRuntime<ElasticSearchPara
                 "http"));
 
         Map<String, String> userConfig = new HashMap<>();
-        // This instructs the sink to emit after every element, otherwise they would be buffered
-        userConfig.put(ElasticsearchSink.CONFIG_KEY_BULK_FLUSH_MAX_ACTIONS, "1");
+        // This instructs the sink to emit after 10 elements
+        userConfig.put(ElasticsearchSink.CONFIG_KEY_BULK_FLUSH_MAX_ACTIONS, "10");
 
         convertedStream[0].flatMap(new FlatMapFunction<Event, Map<String, Object>>() {
 
