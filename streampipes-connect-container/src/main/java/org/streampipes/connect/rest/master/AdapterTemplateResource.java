@@ -30,10 +30,14 @@ import org.streampipes.rest.shared.annotation.GsonWithIds;
 import org.streampipes.rest.shared.annotation.JsonLdSerialized;
 import org.streampipes.rest.shared.util.SpMediaType;
 
-import javax.ws.rs.*;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Path("/api/v1/{username}/master/adapters/template")
 public class AdapterTemplateResource extends AbstractContainerResource {

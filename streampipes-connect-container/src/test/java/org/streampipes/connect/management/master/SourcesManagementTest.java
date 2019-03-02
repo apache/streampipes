@@ -17,6 +17,13 @@
 
 package org.streampipes.connect.management.master;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,22 +33,11 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
-
-import static groovy.xml.Entity.iexcl;
-import static groovy.xml.Entity.times;
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ WorkerRestClient.class })

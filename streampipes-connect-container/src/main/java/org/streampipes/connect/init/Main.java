@@ -17,30 +17,34 @@
 
 package org.streampipes.connect.init;
 
-import org.apache.http.client.fluent.Request;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
-import org.streampipes.connect.rest.master.*;
+import org.streampipes.connect.rest.master.AdapterResource;
+import org.streampipes.connect.rest.master.AdapterTemplateResource;
+import org.streampipes.connect.rest.master.DescriptionResource;
+import org.streampipes.connect.rest.master.FileResource;
+import org.streampipes.connect.rest.master.GuessResource;
+import org.streampipes.connect.rest.master.SourcesResource;
+import org.streampipes.connect.rest.master.UnitResource;
+import org.streampipes.connect.rest.master.WelcomePageMaster;
 import org.streampipes.connect.rest.worker.WelcomePageWorker;
 import org.streampipes.connect.rest.worker.WorkerResource;
 import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
 import org.streampipes.rest.shared.serializer.JsonLdProvider;
-import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
-import org.streampipes.storage.couchdb.utils.Utils;
 
-import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.ws.rs.core.UriBuilder;
 
 public class Main {
 

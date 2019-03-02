@@ -19,18 +19,9 @@ package org.streampipes.connect.adapter.specific;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
-import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
-import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
-import org.streampipes.connect.adapter.generic.pipeline.elements.TransformValueAdapterPipelineElement;
 import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

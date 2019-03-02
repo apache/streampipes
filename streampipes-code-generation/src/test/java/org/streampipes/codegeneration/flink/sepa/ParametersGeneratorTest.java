@@ -17,10 +17,6 @@
 
 package org.streampipes.codegeneration.flink.sepa;
 
-import static org.junit.Assert.assertEquals;
-
-import org.streampipes.model.schema.EventProperty;
-
 public class ParametersGeneratorTest {
 //
 //	@Test

@@ -1,22 +1,14 @@
 package org.streampipes.storage.couchdb.impl;
 
-
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.model.connect.adapter.*;
-import org.streampipes.serializers.json.GsonSerializer;
+import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.storage.api.IAdapterStorage;
 import org.streampipes.storage.couchdb.dao.AbstractDao;
 import org.streampipes.storage.couchdb.dao.DbCommand;
-import org.streampipes.storage.couchdb.dao.DeleteCommand;
 import org.streampipes.storage.couchdb.dao.FindCommand;
 import org.streampipes.storage.couchdb.utils.Utils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.List;
 import java.util.Optional;
 

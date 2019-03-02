@@ -17,21 +17,7 @@
 
 package org.streampipes.codegeneration.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import com.google.common.io.Files;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.TypeSpec;
 
 public class UtilsTest {
 	private static File temp;

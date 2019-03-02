@@ -17,6 +17,10 @@
 
 package org.streampipes.connect.rest.master;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 import com.jayway.restassured.RestAssured;
 import org.eclipse.jetty.server.Server;
 import org.junit.After;
@@ -30,22 +34,16 @@ import org.streampipes.connect.utils.Utils;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 public class AdapterResourceTest extends ConnectContainerResourceTest {
+
+    private AdapterResource adapterResource;
+    private Server server;
+    private AdapterMasterManagement adapterMasterManagement;
 
     @Override
     protected String getApi() {
         return "/api/v1/admin@fzi.de/master/adapters";
     }
-
-    private AdapterResource adapterResource;
-
-    private Server server;
-
-    private AdapterMasterManagement adapterMasterManagement;
 
     @Before
     public  void before() {

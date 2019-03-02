@@ -30,18 +30,18 @@ public class EndpointFetcher {
 
   public List<RdfEndpoint> getEndpoints() {
     List<String> endpoints = ConsulUtil.getActivePEServicesEndPoints();
-    List<org.streampipes.model.client.endpoint.RdfEndpoint> servicerdRdfEndpoints = new LinkedList<>();
+    List<RdfEndpoint> servicerdRdfEndpoints = new LinkedList<>();
 
     for (String endpoint : endpoints) {
-      org.streampipes.model.client.endpoint.RdfEndpoint rdfEndpoint =
-              new org.streampipes.model.client.endpoint.RdfEndpoint(endpoint);
+      RdfEndpoint rdfEndpoint =
+              new RdfEndpoint(endpoint);
       servicerdRdfEndpoints.add(rdfEndpoint);
     }
-    List<org.streampipes.model.client.endpoint.RdfEndpoint> databasedRdfEndpoints = StorageDispatcher.INSTANCE.getNoSqlStore()
+    List<RdfEndpoint> databasedRdfEndpoints = StorageDispatcher.INSTANCE.getNoSqlStore()
             .getRdfEndpointStorage()
             .getRdfEndpoints();
 
-    List<org.streampipes.model.client.endpoint.RdfEndpoint> concatList =
+    List<RdfEndpoint> concatList =
             Stream.of(databasedRdfEndpoints, servicerdRdfEndpoints)
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());

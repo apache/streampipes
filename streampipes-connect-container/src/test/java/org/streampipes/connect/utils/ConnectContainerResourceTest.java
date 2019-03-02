@@ -17,7 +17,8 @@
 
 package org.streampipes.connect.utils;
 
-import java.net.URI;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ValidatableResponseOptions;
@@ -32,8 +33,7 @@ import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
 import org.streampipes.rest.shared.serializer.JsonLdProvider;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 
-import static org.hamcrest.core.IsEqual.equalTo;
-import static com.jayway.restassured.RestAssured.given;
+import java.net.URI;
 
 import javax.ws.rs.core.UriBuilder;
 
@@ -85,7 +85,7 @@ public abstract class ConnectContainerResourceTest {
         String resultString = response.body().print();
 
         T resultObject;
-        if (rootElement.equals("")) {
+        if ("".equals(rootElement)) {
             resultObject = JsonLdUtils.fromJsonLd(resultString, clazz);
         } else {
             resultObject = JsonLdUtils.fromJsonLd(resultString, clazz, rootElement);

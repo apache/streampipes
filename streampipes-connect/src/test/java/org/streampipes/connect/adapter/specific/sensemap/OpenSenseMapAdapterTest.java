@@ -17,18 +17,17 @@
 
 package org.streampipes.connect.adapter.specific.sensemap;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.google.gson.Gson;
 import org.junit.Rule;
 import org.junit.Test;
-import org.streampipes.connect.adapter.specific.sensemap.model.SenseBox;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.junit.Assert.*;
 
 public class OpenSenseMapAdapterTest {
 
@@ -36,8 +35,6 @@ public class OpenSenseMapAdapterTest {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(senseMapMockPort);
-
-
 
     @Test
     public void pullData() {

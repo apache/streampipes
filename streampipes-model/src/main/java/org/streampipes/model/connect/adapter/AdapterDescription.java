@@ -22,8 +22,6 @@ import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.NamedStreamPipesEntity;
-import org.streampipes.model.connect.grounding.FormatDescription;
-import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.rules.Schema.SchemaTransformationRuleDescription;
 import org.streampipes.model.connect.rules.Stream.StreamTransformationRuleDescription;
 import org.streampipes.model.connect.rules.TransformationRuleDescription;
@@ -34,13 +32,13 @@ import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.staticproperty.StaticProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:AdapterDescription")
