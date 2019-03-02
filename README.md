@@ -1,5 +1,6 @@
 <img src="https://www.streampipes.org/images/screenshot.png" alt="StreamPipes Pipeline Editor"/>
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/34a7e26be4fc4fa284ee5201b6d386ea)](https://www.codacy.com/app/dominikriemer/streampipes-ce?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=streampipes/streampipes-ce&amp;utm_campaign=Badge_Grade)
 [![Docker pulls](https://img.shields.io/docker/pulls/streampipes/backend.svg)](https://hub.docker.com/r/streampipes/backend/)
 [![License](https://img.shields.io/github/license/streampipes/streampipes-ce.svg)](https://docs.streampipes.org/license/)
 [![License](https://img.shields.io/github/last-commit/streampipes/streampipes-ce.svg)]()
@@ -15,6 +16,20 @@ toolbox of data sources, data processors and data sinks. StreamPipes has an exch
 Learn more about StreamPipes at [https://www.streampipes.org/](https://www.streampipes.org/)
 
 Read the full documentation at [https://docs.streampipes.org](https://docs.streampipes.org)
+
+### Use Cases
+
+StreamPipes allows you to connect IoT data sources using the SDK or the built-in graphical tool StreamPipes 
+Connect.
+
+The extensible toolbox of data processors and sinks supports use cases such as
+* Continuously **store** IoT data streams to third party systems (e.g., databases)
+* **Filter** measurements on streams (e.g., based on thresholds or value ranges)
+* **Harmonize** data by using data processors for transformations (e.g., by converting measurement units and data types
+ or by aggregating measurements)
+* **Detect situations** that should be avoided (e.g., patterns based on time windows)
+* Wrap **Machine Learning models** into data processors to perform classifications or predictions on sensor and image data
+* **Visualize** real-time data from sensors and machines using the built-in Live Dashboard
 
 
 ### Getting started
