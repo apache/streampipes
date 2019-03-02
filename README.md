@@ -1,5 +1,6 @@
 <img src="https://www.streampipes.org/images/screenshot.png" alt="StreamPipes Pipeline Editor"/>
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4fdeaa97e9b74907a179bf6d333db08b)](https://app.codacy.com/app/dominikriemer/streampipes-ce?utm_source=github.com&utm_medium=referral&utm_content=streampipes/streampipes-ce&utm_campaign=Badge_Grade_Settings)
 [![Docker pulls](https://img.shields.io/docker/pulls/streampipes/backend.svg)](https://hub.docker.com/r/streampipes/backend/)
 [![License](https://img.shields.io/github/license/streampipes/streampipes-ce.svg)](https://docs.streampipes.org/license/)
 [![License](https://img.shields.io/github/last-commit/streampipes/streampipes-ce.svg)]()
