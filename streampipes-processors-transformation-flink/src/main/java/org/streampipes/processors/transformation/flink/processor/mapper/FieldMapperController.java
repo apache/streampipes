@@ -36,7 +36,6 @@ import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FieldMapperController extends
@@ -81,13 +80,7 @@ public class FieldMapperController extends
     List<String> replacePropertyNames = extractor.mappingPropertyValues(REPLACE_PROPERTIES);
     String newFieldName = extractor.singleValueParameter(FIELD_NAME, String.class);
 
-    List<EventProperty> outProperties = new ArrayList<>();
-
-    for(EventProperty prop : processingElement.getInputStreams().get(0).getEventSchema().getEventProperties()) {
-      if (replacePropertyNames.stream().anyMatch(n -> prop.getRuntimeName().equals(n))) {
-        outProperties.add(prop);
-      }
-    }
+    List<EventProperty> outProperties = extractor.getNoneInputStreamEventPropertySubset(replacePropertyNames);
 
     EventPropertyPrimitive newProperty = PrimitivePropertyBuilder.create(Datatypes.String, newFieldName).build();
     outProperties.add(newProperty);

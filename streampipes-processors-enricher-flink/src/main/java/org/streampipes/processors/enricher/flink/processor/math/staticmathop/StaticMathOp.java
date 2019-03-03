@@ -41,7 +41,7 @@ public class StaticMathOp implements FlatMapFunction<Event, Event> {
                 .getAsPrimitive().getAsDouble()));
 
         Double result = operation.operate(leftValue, rightOperandValue);
-        in.addField(resulField, result);
+        in.updateFieldBySelector(leftOperand, result);
 
         out.collect(in);
     }
