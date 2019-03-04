@@ -31,3 +31,9 @@ ul {
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
 }
+.error-message {
+  background-color: black;
+  color: white;
+  padding: 10px;
+  width: 95%;
+}

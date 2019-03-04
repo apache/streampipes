@@ -81,7 +81,10 @@ export class RestService {
 
                             resolve(r);
                         })
-                        .subscribe();
+                        .subscribe(
+                            data =>  data,
+                            error => reject(error),
+                        );
                 });
             })
         );

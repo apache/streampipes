@@ -35,6 +35,9 @@ export class EventSchemaComponent implements OnInit {
   public schemaGuess: GuessSchema = new GuessSchema();
 
   public isLoading: boolean = false;
+  public isError: boolean = false;
+  public showErrorMessage: boolean = false;
+  public errorMessage: string;
 
   constructor(
     private restService: RestService,
@@ -42,20 +45,26 @@ export class EventSchemaComponent implements OnInit {
 
   public guessSchema(): void {
     this.isLoading = true;
-    this.restService.getGuessSchema(this.adapterDescription).subscribe(x => {
-      this.isLoading = false;
-      this.eventSchema = x.eventSchema;
-      this.eventSchemaChange.emit(this.eventSchema);
-      this.schemaGuess = x;
+    this.isError = false;
+        this.restService.getGuessSchema(this.adapterDescription).subscribe(x => {
+                this.isLoading = false;
+                this.eventSchema = x.eventSchema;
+                this.eventSchemaChange.emit(this.eventSchema);
+                this.schemaGuess = x;
 
-      this.oldEventSchema = this.eventSchema.copy();
-      this.oldEventSchemaChange.emit(this.oldEventSchema);
+                this.oldEventSchema = this.eventSchema.copy();
+                this.oldEventSchemaChange.emit(this.oldEventSchema);
 
-      this.isEditable = true;
-      this.isEditableChange.emit(true);
+                this.isEditable = true;
+                this.isEditableChange.emit(true);
+            },
+            error => {
+                this.errorMessage = error.error;
+                this.isError = true;
+                this.isLoading = false;
+                this.eventSchema = new EventSchema();
+            });
 
-
-    });
   }
 
   ngOnInit() {
