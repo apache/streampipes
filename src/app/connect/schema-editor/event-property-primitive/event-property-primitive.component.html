@@ -4,6 +4,7 @@
             <b>
                 {{getLabel()}}
             </b>
+            <mat-icon *ngIf="isTimestampProperty()" style="font-size: 15px; padding: 4px;">access_time</mat-icon>
         </div>
         <div fxFlex="20" fxLayoutAlign="end">
             <button [disabled]="!isEditable" mat-button (click)=OnClickDeleteProperty()>
@@ -24,7 +25,7 @@
     <app-event-property [(property)]="property" [domainPropertyGuess]="domainPropertyGuess"></app-event-property>
 
 
-    <mat-form-field class="doubleWidth">
+    <mat-form-field class="doubleWidth" *ngIf="!isTimestampProperty()">
         <mat-select placeholder="Runtime Type" [(ngModel)]="property.runtimeType">
             <mat-option *ngFor="let dataType of runtimeDataTypes" [value]="dataType.url">
                 {{ dataType.label }}
@@ -48,7 +49,7 @@
     <!--</form>-->
 
 
-    <div fxLayout="row" fxLayoutAlign="start">
+    <div fxLayout="row" fxLayoutAlign="start" *ngIf="!isTimestampProperty()">
         <div class="form-group" fxFlexAlign="center" style="width: 155px">
             <mat-form-field   *ngIf="!hadMesarumentUnit" class="example-full-width" style="width: 155px">
                 <input matInput placeholder="Unit" [matAutocomplete]="auto" [formControl]="stateCtrl" [attr.disabled]="transformUnitEnable ? '' : null">
@@ -74,7 +75,41 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
+    </div>
 
+    {{timeConverter}}
+    <div fxLayout="row" fxLayoutAlign="start" *ngIf="isTimestampProperty()">
+        <div  class="form-group" fxFlexAlign="center">
+            <mat-form-field
+                    [class.example-full-width]="timeConverter !== undefined " style="margin-right: 10px"
+                    [class.doubleWidth]="timeConverter === undefined"
+                    [class.aThirdWidth]="selectedTimeMultiplier === 'custom' && timeConverter === 'timeunit'" >
+                <mat-select placeholder="Timestamp converter (unix timestamp)"  [(value)]="timeConverter">
+                    <mat-option>None</mat-option>
+                    <mat-option value="formatstring">Format String</mat-option>
+                    <mat-option value="timeunit">Time unit</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div  class="form-group" fxFlexAlign="center">
+            <mat-form-field *ngIf="timeConverter === 'formatstring'">
+                <input matInput placeholder="E.g. yyyy-MM-dd HH:mm:ss.SSSZ">
+            </mat-form-field>
+            <mat-form-field  *ngIf="timeConverter === 'timeunit'"
+                    [class.example-full-width]="selectedTimeMultiplier !== 'custom'"
+                    [class.aThirdWidth]="selectedTimeMultiplier === 'custom'" >
+                <mat-select placeholder="Current time unit" [(value)]="selectedTimeMultiplier">
+                    <mat-option value="second"  (click)="selectedTimeMultiplierNumber = 1000">Seconds</mat-option>
+                    <mat-option value="minutes" (click)="selectedTimeMultiplierNumber = 60000">Minutes</mat-option>
+                    <mat-option value="hours"   (click)="selectedTimeMultiplierNumber = 3600000">Hours</mat-option>
+                    <mat-option value="days"    (click)="selectedTimeMultiplierNumber = 86400000">Days</mat-option>
+                    <mat-option value="custom" ><i>Custom</i></mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="aThirdWidth" *ngIf="selectedTimeMultiplier === 'custom' && timeConverter === 'timeunit'">
+                <input matInput placeholder="Set multiplier" type="number" [(ngModel)]="selectedTimeMultiplierNumber">
+            </mat-form-field>
+        </div>
     </div>
 
     <mat-form-field *ngIf="staticValueAddedByUser()" class="doubleWidth">

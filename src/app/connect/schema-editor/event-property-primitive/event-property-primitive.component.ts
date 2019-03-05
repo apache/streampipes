@@ -47,7 +47,18 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   private hadMesarumentUnit = false;
   private oldMeasurementUnitDipsplay;
 
-  constructor(private formBuilder: FormBuilder,
+  // Todo:
+  // Set in property to create tranformationrule
+  // Make sure, that just create tranfomationrule if timestamp!
+  private timeConverter;
+  private customTimeMultiplier;
+  private selectedTimeMultiplierNumber = 1000;
+  private useCustomMultiplier;
+    // Don't add
+  private selectedTimeMultiplier = "second";
+
+
+    constructor(private formBuilder: FormBuilder,
               private dataTypeService: DataTypesService,
               private ShepherdService: ShepherdService,
               private restService: RestService,
@@ -176,4 +187,9 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
       }
 
   }
+
+  isTimestampProperty() {
+      return this.property.domainProperty === "http://schema.org/DateTime"
+  }
+
 }
