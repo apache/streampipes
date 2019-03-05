@@ -6,17 +6,16 @@ package ${package}.pe.sink.${packageName};
 import ${package}.config.Config;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
 import java.io.Serializable;
-import java.util.Map;
 
 public class ${classNamePrefix}Program extends FlinkDataSinkRuntime<${classNamePrefix}Parameters>
 implements Serializable {
 
   private static final long serialVersionUID = 1L;
-  private static final String INDEX_NAME_PREFIX = "sp_";
 
   public ${classNamePrefix}Program(${classNamePrefix}Parameters params, boolean debug) {
     super(params, debug);
@@ -30,7 +29,7 @@ implements Serializable {
 
   @Override
   public void getSink(
-          DataStream<Map<String, Object>>... convertedStream) {
+          DataStream<Event>... convertedStream) {
 
     // TODO add logic here
   }

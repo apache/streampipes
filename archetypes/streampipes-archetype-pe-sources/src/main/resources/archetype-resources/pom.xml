@@ -7,7 +7,7 @@
     <version>${version}</version>
 
     <properties>
-        <sp.version>0.60.1</sp.version>
+        <sp.version>${project.version}</sp.version>
     </properties>
 
     <dependencies>

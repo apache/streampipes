@@ -4,31 +4,26 @@
 
 package ${package}.pe.processor.${packageName};
 
-import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
-import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 
 import org.slf4j.Logger;
 
-import java.util.Map;
-
-public class ${classNamePrefix} extends StandaloneEventProcessorEngine<${classNamePrefix}Parameters> {
+public class ${classNamePrefix} implements
+        EventProcessor<${classNamePrefix}Parameters> {
 
   private static Logger LOG;
 
-  public ${classNamePrefix}(${classNamePrefix}Parameters params) {
-        super(params);
-  }
-
   @Override
   public void onInvocation(${classNamePrefix}Parameters parameters,
-        DataProcessorInvocation graph) {
+        SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
 
   }
 
   @Override
-  public void onEvent(Map<String, Object> in, String sourceInfo, SpOutputCollector out) {
+  public void onEvent(Event event, SpOutputCollector out) {
 
   }
 

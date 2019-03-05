@@ -42,7 +42,7 @@ public class ${classNamePrefix}Controller extends StandaloneEventSinkDeclarer<${
 
 		${classNamePrefix}Parameters params = new ${classNamePrefix}Parameters(graph, exampleString);
 
-		return new ConfiguredEventSink<>(params, () -> new ${classNamePrefix}(params));
+		return new ConfiguredEventSink<>(params, ${classNamePrefix}::new);
 	}
 
 }

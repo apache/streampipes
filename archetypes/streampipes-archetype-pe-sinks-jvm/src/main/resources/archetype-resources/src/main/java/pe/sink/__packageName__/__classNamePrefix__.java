@@ -4,33 +4,29 @@
 
 package ${package}.pe.sink.${packageName};
 
-import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import org.slf4j.Logger;
 
-import java.util.Map;
 
-public class ${classNamePrefix} extends EventSink<${classNamePrefix}Parameters> {
+public class ${classNamePrefix} implements EventSink<${classNamePrefix}Parameters> {
 
 private static Logger LOG;
 
-  public ${classNamePrefix}(${classNamePrefix}Parameters params) {
-        super(params);
-  }
-
   @Override
-  public void bind(${classNamePrefix}Parameters parameters) throws SpRuntimeException {
+  public void onInvocation(${classNamePrefix}Parameters parameters, EventSinkRuntimeContext runtimeContext) {
 
   }
 
   @Override
-  public void onEvent(Map<String, Object> event, String sourceInfo) {
+  public void onEvent(Event event) {
 
   }
 
   @Override
-  public void discard() throws SpRuntimeException {
+  public void onDetach() {
 
   }
 }
