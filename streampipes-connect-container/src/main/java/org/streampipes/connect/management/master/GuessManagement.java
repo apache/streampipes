@@ -33,7 +33,12 @@ public class GuessManagement {
 
         Adapter adapter = AdapterRegistry.getAdapter(adapterDescription);
 
-        GuessSchema guessSchema = adapter.getSchema(adapterDescription);
+        GuessSchema guessSchema;
+        try {
+            guessSchema = adapter.getSchema(adapterDescription);
+        } catch (Exception e) {
+            throw new AdapterException("Unknown Error: " + e);
+        }
 
         return guessSchema;
 

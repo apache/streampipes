@@ -64,15 +64,15 @@ public class GuessResource extends AbstractContainerResource {
     @Path("/schema")
     @Produces(SpMediaType.JSONLD)
     public Response guessSchema(String s, @PathParam("username") String userName) {
-
         try {
-         AdapterDescription  adapterDescription = AdapterDeserializer.getAdapterDescription(s);
+            AdapterDescription adapterDescription = AdapterDeserializer.getAdapterDescription(s);
             GuessSchema result = guessManagement.guessSchema(adapterDescription);
 
             return ok(result);
-        } catch (AdapterException e) {
-            logger.error("Could not deserialize AdapterDescription: " + s, e);
-            return fail();
+        }
+        catch (AdapterException e) {
+            logger.error("Error while guess schema for AdapterDescription: " + s, e);
+            return fail(e.getMessage());
         }
 
     }

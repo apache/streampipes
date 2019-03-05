@@ -19,6 +19,7 @@ package org.streampipes.connect.adapter.generic.format.json.xml;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.streampipes.connect.adapter.generic.format.xml.XmlParser;
+import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.schema.EventSchema;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ import static org.junit.Assert.assertEquals;
 public class XmlTest {
 
     @Test
-    public void parseEventCarPark() {
+    public void parseEventCarPark() throws AdapterException {
 
         String jo = getCarParkExample();
 
@@ -51,7 +52,7 @@ public class XmlTest {
     }
 
     @Test
-    public void parseEventParkingFaciltyStatus() {
+    public void parseEventParkingFaciltyStatus() throws AdapterException {
 
         String jo = getDatex2ParkingFacilityStatus();
 

@@ -20,6 +20,7 @@ import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
+import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
 
@@ -43,7 +44,7 @@ public abstract class BrokerProtocol extends Protocol {
   }
 
   @Override
-  public GuessSchema getGuessSchema() {
+  public GuessSchema getGuessSchema() throws AdapterException {
 
     List<byte[]> eventByte = getNByteElements(1);
     EventSchema eventSchema = parser.getEventSchema(eventByte);
@@ -52,7 +53,7 @@ public abstract class BrokerProtocol extends Protocol {
   }
 
   @Override
-  public List<Map<String, Object>> getNElements(int n) {
+  public List<Map<String, Object>> getNElements(int n) throws AdapterException {
     List<byte[]> resultEventsByte = getNByteElements(n);
     List<Map<String, Object>> result = new ArrayList<>();
     for (byte[] event : resultEventsByte) {
@@ -62,6 +63,6 @@ public abstract class BrokerProtocol extends Protocol {
     return result;
   }
 
-  protected abstract List<byte[]> getNByteElements(int n);
+  protected abstract List<byte[]> getNByteElements(int n) throws AdapterException;
 
 }

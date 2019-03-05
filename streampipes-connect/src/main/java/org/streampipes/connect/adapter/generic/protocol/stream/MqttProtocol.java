@@ -23,6 +23,7 @@ import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
@@ -77,7 +78,7 @@ public class MqttProtocol extends BrokerProtocol {
 
 
   @Override
-  protected List<byte[]> getNByteElements(int n) {
+  protected List<byte[]> getNByteElements(int n) throws AdapterException {
     List<byte[]> elements = new ArrayList<>();
     int i = 0;
 

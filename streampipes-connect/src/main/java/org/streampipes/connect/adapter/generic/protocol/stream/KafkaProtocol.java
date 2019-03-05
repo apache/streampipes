@@ -33,6 +33,7 @@ import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectPars
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.model.connect.guess.GuessSchema;
@@ -93,7 +94,7 @@ public class KafkaProtocol extends BrokerProtocol {
     }
 
     @Override
-    protected List<byte[]> getNByteElements(int n) {
+    protected List<byte[]> getNByteElements(int n) throws AdapterException {
         final Consumer<Long, String> consumer = createConsumer(this.brokerUrl, this.topic);
 
         consumer.subscribe(Arrays.asList(this.topic), new ConsumerRebalanceListener() {
@@ -121,7 +122,9 @@ public class KafkaProtocol extends BrokerProtocol {
                     InputStream inputStream = IOUtils.toInputStream(record.value(), "UTF-8");
 
                     nEventsByte.addAll(parser.parseNEvents(inputStream, n));
-                } catch (IOException e) {
+                } catch (IOException | AdapterException e) {
+                    // Todo: Throw AdapterException, but the exception must be instance of runtimeException
+                    // throw new AdapterException(e.getMessage())
                     e.printStackTrace();
                 }
             });
@@ -142,7 +145,7 @@ public class KafkaProtocol extends BrokerProtocol {
         return resultEventsByte;
     }
 
-    public static void main(String... args) {
+    public static void main(String... args) throws AdapterException {
         Parser parser = new JsonObjectParser();
         Format format = new JsonObjectFormat();
         KafkaProtocol kp = new KafkaProtocol(parser, format, "localhost:9092", "org.streampipes.examples.flowrate-1");

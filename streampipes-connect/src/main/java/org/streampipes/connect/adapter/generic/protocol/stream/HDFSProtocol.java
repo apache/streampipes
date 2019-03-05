@@ -31,6 +31,7 @@ import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
@@ -136,11 +137,13 @@ public class HDFSProtocol extends Protocol {
     }
 
     @Override
-    public GuessSchema getGuessSchema() {
+    public GuessSchema getGuessSchema() throws AdapterException {
         int n = 2;
         GuessSchema result = null;
 
         InputStream inputStream = getInputStreamFromFile(getFiles().get(0));
+        if (inputStream == null)
+            throw new AdapterException("Could not receive data from file: " + dataPathProperty);
 
         List<byte[]> dataByte = parser.parseNEvents(inputStream, n);
         if (dataByte.size() < n) {
@@ -157,10 +160,12 @@ public class HDFSProtocol extends Protocol {
     }
 
     @Override
-    public List<Map<String, Object>> getNElements(int n) {
+    public List<Map<String, Object>> getNElements(int n) throws AdapterException {
         List<Map<String, Object>> result = new ArrayList<>();
 
         InputStream inputStream = getInputStreamFromFile(getFiles().get(0));
+        if (inputStream == null)
+            throw new AdapterException("Could not receive data from file: " + dataPathProperty);
 
         List<byte[]> dataByte = parser.parseNEvents(inputStream, n);
 
