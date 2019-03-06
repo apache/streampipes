@@ -300,4 +300,21 @@ public class StreamPipes {
   public static final String RENAME_RULE = NS + "RenameRule";
   public static final String HAS_NEW_RUNTIME_NAME = NS + "hasNewRuntimeName";
   public static final String HAS_RUNTIME_ID = NS + "hasRuntimeId" ;
+
+
+  public static final String NOTIFICATION = NS + "notification" ;
+  public static final String NOTIFICATIONS = NS + "notifications" ;
+  public static final String NOTIFICATION_TITLE = NS + "notificationTitle" ;
+  public static final String NOTIFICATION_DESCRIPTION = NS + "notificationDescription" ;
+  public static final String NOTIFICATION_ADDITIONAL_INFORMATION = NS + "notificationAdditionalInformation" ;
+
+
+  public static final String MESSAGE = NS + "message" ;
+  public static final String MESSAGE_SUCCESS = NS + "messsageSuccess" ;
+  public static final String MESSAGE_ELEMENT_NAME = NS + "messageElementName" ;
+
+  public static final String ERROR_MESSAGE = NS + "errorMessage" ;
+  public static final String SUCCESS_MESSAGE = NS + "successMessage" ;
+
+
 }

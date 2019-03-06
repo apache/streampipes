@@ -22,6 +22,10 @@ import org.streampipes.model.ApplicationLink;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.SpDataStreamContainer;
+import org.streampipes.model.client.messages.ErrorMessageLd;
+import org.streampipes.model.client.messages.MessageLd;
+import org.streampipes.model.client.messages.NotificationLd;
+import org.streampipes.model.client.messages.SuccessMessageLd;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.streampipes.model.connect.grounding.FormatDescription;
@@ -150,7 +154,11 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             RemoveDuplicatesTransformationRuleDescription.class,
             AddValueTransformationRuleDescription.class,
             TimestampTransformationRuleDescription.class,
-            PropertyRenameRule.class
+            PropertyRenameRule.class,
+            ErrorMessageLd.class,
+            SuccessMessageLd.class,
+            MessageLd.class,
+            NotificationLd.class
     );
   }
 }
