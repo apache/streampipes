@@ -18,15 +18,12 @@
 package org.streampipes.connect.adapter.generic.format;
 
 
-import org.apache.commons.io.IOUtils;
 import org.streampipes.connect.GetNEvents;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.connect.EmitBinaryEvent;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -34,38 +31,19 @@ public abstract class Parser {
 
     public abstract Parser getInstance(FormatDescription formatDescription);
 
-    public abstract void parse(InputStream data, EmitBinaryEvent emitBinaryEvent);
+    public abstract void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException;
 
-    public List<byte[]> parseNEvents(InputStream data, int n) throws AdapterException {
+    public List<byte[]> parseNEvents(InputStream data, int n) throws ParseException {
         GetNEvents gne = new GetNEvents(n);
-
-
-        // TODO: Decide if want use this
-        // Clone inputstream to print data if there is an parse exception
-        byte[] byteArray = new byte[0];
-        try {
-            byteArray = IOUtils.toByteArray(data);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new AdapterException("");
-        }
-        data = new ByteArrayInputStream(byteArray);
-
 
         try {
             parse(data, gne);
-        } catch (Exception e) {
-            try {
-                // TODO: print all?
-                throw new AdapterException("Error while parse following data with the "
-                        + this.getClass().getSimpleName()
-                        + " : " + IOUtils.toString(byteArray));
-            } catch (IOException e1) {
-                throw new AdapterException("Error while parse the data with the "
-                        + this.getClass().getSimpleName());
-            }
-        }
+        } catch (ParseException e) {
 
+        } catch (Exception e) {
+            throw new ParseException("Error while parse the data with the "
+                    + this.getClass().getSimpleName());
+        }
 
         return gne.getEvents();
     }

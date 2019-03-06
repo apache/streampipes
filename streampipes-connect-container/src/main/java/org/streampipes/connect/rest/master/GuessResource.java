@@ -19,29 +19,20 @@ package org.streampipes.connect.rest.master;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.exception.AdapterException;
+
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.connect.management.AdapterDeserializer;
-import org.streampipes.connect.management.master.AdapterMasterManagement;
 import org.streampipes.connect.management.master.GuessManagement;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
-import org.streampipes.model.schema.EventPropertyPrimitive;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.rest.shared.util.SpMediaType;
-import org.streampipes.serializers.jsonld.JsonLdTransformer;
 
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
 
 
 @Path("/api/v1/{username}/master/guess")
@@ -69,10 +60,12 @@ public class GuessResource extends AbstractContainerResource {
             GuessSchema result = guessManagement.guessSchema(adapterDescription);
 
             return ok(result);
-        }
-        catch (AdapterException e) {
+        } catch (ParseException e) {
+            logger.error("Error while parsing events: ", e);
+            return ok(Notifications.errorLd(e.getMessage()));
+        } catch (Exception e) {
             logger.error("Error while guess schema for AdapterDescription: " + s, e);
-            return fail(e.getMessage());
+            return ok(Notifications.errorLd(e.getMessage()));
         }
 
     }

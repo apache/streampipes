@@ -16,7 +16,6 @@ limitations under the License.
 
 package org.streampipes.connect.adapter.generic.protocol.stream;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,7 @@ import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
@@ -102,12 +101,10 @@ public class HttpStreamProtocol extends PullProtocol {
     }
 
     @Override
-    public GuessSchema getGuessSchema() throws AdapterException {
+    public GuessSchema getGuessSchema() throws ParseException {
         int n = 2;
 
         InputStream dataInputStream = getDataFromEndpoint();
-        if (dataInputStream == null)
-            throw new AdapterException("Could not receive data from Endpoint: " + url);
 
         List<byte[]> dataByte = parser.parseNEvents(dataInputStream, n);
         if (dataByte.size() < n) {
@@ -123,12 +120,10 @@ public class HttpStreamProtocol extends PullProtocol {
     }
 
     @Override
-    public List<Map<String, Object>> getNElements(int n) throws AdapterException {
+    public List<Map<String, Object>> getNElements(int n) throws ParseException {
         List<Map<String, Object>> result = new ArrayList<>();
 
-        InputStream   dataInputStream = getDataFromEndpoint();
-        if (dataInputStream == null)
-            throw new AdapterException("Could not receive data from Endpoint: " + url);
+        InputStream dataInputStream = getDataFromEndpoint();
 
         List<byte[]> dataByte = parser.parseNEvents(dataInputStream, n);
 

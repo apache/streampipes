@@ -24,6 +24,7 @@ import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.pipeline.elements.*;
 import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
@@ -71,7 +72,7 @@ public abstract class Adapter<T extends AdapterDescription> {
 
     public abstract Adapter getInstance(T adapterDescription);
 
-    public abstract GuessSchema getSchema(T adapterDescription) throws AdapterException;
+    public abstract GuessSchema getSchema(T adapterDescription) throws AdapterException, ParseException;
 
     public abstract String getId();
 
