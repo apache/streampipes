@@ -21,6 +21,7 @@ export class PipelineAssemblyController {
     currentModifiedPipelineId: any;
     TransitionService: any;
     ShepherdService: any;
+    errorMessagesDisplayed: any = false;
 
     constructor(JsplumbBridge,
                 PipelinePositioningService,
@@ -166,6 +167,10 @@ export class PipelineAssemblyController {
                 });
             });
     };
+
+    toggleErrorMessagesDisplayed() {
+        this.errorMessagesDisplayed = !(this.errorMessagesDisplayed);
+    }
 
 }
 

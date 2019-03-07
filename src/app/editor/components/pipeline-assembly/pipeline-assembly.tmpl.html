@@ -39,6 +39,27 @@
                 </md-tooltip>
             </md-button>
             <span flex></span>
+            <div style="position:relative;">
+                <md-button class="md-icon-button" ng-click="ctrl.toggleErrorMessagesDisplayed()" ng-disabled="ctrl.PipelineValidationService.errorMessages.length == 0">
+                    <i class="material-icons">
+                        notification_important
+                        <md-tooltip md-direction="top">
+                            Pipeline Errors
+                        </md-tooltip>
+                    </i>
+                </md-button>
+                <div class="editor-error-notifications" ng-if="ctrl.PipelineValidationService.errorMessages.length > 0 && ctrl.errorMessagesDisplayed">
+                    <h5 style="color:darkred"><b>{{ctrl.PipelineValidationService.errorMessages.length}} {{ctrl.PipelineValidationService.errorMessages.length == 1 ? "error" : "errors"}} found.</b></h5>
+                    <hr/>
+                    <div ng-repeat="errorMessage in ctrl.PipelineValidationService.errorMessages">
+                        <p>
+                            <b>{{errorMessage.title}}</b>
+                            <div>{{errorMessage.content}}</div>
+                        </p>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
             <md-button class="md-icon-button" ng-click="ctrl.showClearAssemblyConfirmDialog($event)">
                 <i class="material-icons">clear</i>
                 <md-tooltip md-direction="top">
