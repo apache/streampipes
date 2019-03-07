@@ -6,7 +6,7 @@
 <h1 align="center">
   <br>
    <img src="https://docs.streampipes.org/img/logo.png" 
-   alt="StreamPipes Logo" title="StreamPipes Logo" width="70%"/>
+   alt="StreamPipes Logo" title="StreamPipes Logo" width="50%"/>
   <br>
 </h1>
 <h3 align="center">Self-Service Data Analytics for the (Industrial) IoT</h3>
@@ -107,4 +107,4 @@ We'd love to hear your feedback! Contact us at [feedback@streampipes.org](mailto
 
 [Apache License 2.0](LICENSE)
 
-StreamPipes is actively developed by a dedicated group of people at [FZI Research Center for Information Technology](https://www.fzi.de).
+StreamPipes is actively being developed by a dedicated group of people at [FZI Research Center for Information Technology](https://www.fzi.de).
