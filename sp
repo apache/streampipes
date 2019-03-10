@@ -4,7 +4,7 @@
 # ARG_OPTIONAL_BOOLEAN([defaultip],[d],[When set the first ip is used as default])
 # ARG_OPTIONAL_BOOLEAN([all],[a],[Select all available StreamPipes services])
 # ARG_POSITIONAL_MULTI([operation],[The StreamPipes operation (operation-name) (service-name (optional))],[3],[],[])
-# ARG_TYPE_GROUP_SET([operation],[type string],[operation],[start,stop,restart,update,set-template,log,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,set-env,unset-env,create-compose])
+# ARG_TYPE_GROUP_SET([operation],[type string],[operation],[start,stop,restart,update,set-template,log,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,set-env,unset-env,create-compose,set-version])
 # ARG_DEFAULTS_POS()
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -29,12 +29,12 @@ die()
 
 operation()
 {
-	local _allowed=("start" "stop" "restart" "update" "set-template" "log" "list-available" "list-active" "list-templates" "activate" "add" "deactivate" "clean" "remove-settings" "set-env" "unset-env" "create-compose") _seeking="$1"
+	local _allowed=("start" "stop" "restart" "update" "set-template" "log" "list-available" "list-active" "list-templates" "activate" "add" "deactivate" "clean" "remove-settings" "set-env" "unset-env" "create-compose" "set-version") _seeking="$1"
 	for element in "${_allowed[@]}"
 	do
 		test "$element" = "$_seeking" && echo "$element" && return 0
 	done
-	die "Value '$_seeking' (of argument '$2') doesn't match the list of allowed values: 'start', 'stop', 'restart', 'update', 'set-template', 'log', 'list-available', 'list-active', 'list-templates', 'activate', 'add', 'deactivate', 'clean', 'remove-settings', 'set-env', 'unset-env' and 'create-compose'" 4
+	die "Value '$_seeking' (of argument '$2') doesn't match the list of allowed values: 'start', 'stop', 'restart', 'update', 'set-template', 'log', 'list-available', 'list-active', 'list-templates', 'activate', 'add', 'deactivate', 'clean', 'remove-settings', 'set-env', 'unset-env', 'create-compose' and 'set-version'" 4
 }
 
 
@@ -290,6 +290,19 @@ moveSystemConfig() {
 	fi
 }
 
+setVersion() {
+	# change pe version
+	version=SP_PE_VERSION=${_arg_operation[1]}
+	sed "s/SP_PE_VERSION=.*/${version}/g" ./tmpl_env > ./del_tmpl_env
+	mv ./del_tmpl_env ./tmpl_env
+
+	# change backend version
+	version=SP_BACKEND_VERSION=${_arg_operation[1]}
+	sed "s/SP_BACKEND_VERSION=.*/${version}/g" ./tmpl_env > ./del_tmpl_env
+	mv ./del_tmpl_env ./tmpl_env
+
+	echo "Change StreamPipes version to ${_arg_operation[1]}"
+}
 
 getCommand() {
     command="docker-compose -f docker-compose.yml"
@@ -546,6 +559,11 @@ fi
 if [ "$_arg_operation" = "create-compose" ];
 then
    createCompose
+fi
+
+if [ "$_arg_operation" = "set-version" ];
+then
+   setVersion
 fi
 
 if [ "$_arg_operation" = "nil" ];
