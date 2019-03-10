@@ -33,7 +33,7 @@ import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.vocabulary.StreamPipes;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.ws.rs.Consumes;
@@ -49,7 +49,7 @@ import javax.ws.rs.core.MediaType;
 public class SepElement extends Element<SemanticEventProducerDeclarer> {
 
   @Override
-  protected List<SemanticEventProducerDeclarer> getElementDeclarers() {
+  protected Map<String, SemanticEventProducerDeclarer> getElementDeclarers() {
     return DeclarersSingleton.getInstance().getProducerDeclarers();
   }
 

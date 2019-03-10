@@ -17,23 +17,29 @@
 
 package org.streampipes.container.init;
 
-import org.streampipes.container.declarer.*;
+import org.streampipes.container.declarer.DataStreamDeclarer;
+import org.streampipes.container.declarer.Declarer;
+import org.streampipes.container.declarer.PipelineTemplateDeclarer;
+import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
+import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
+import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.dataformat.SpDataFormatFactory;
 import org.streampipes.dataformat.SpDataFormatManager;
 import org.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.streampipes.messaging.SpProtocolManager;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DeclarersSingleton {
   private static DeclarersSingleton instance;
 
-  private List<SemanticEventProcessingAgentDeclarer> epaDeclarers;
-  private List<SemanticEventProducerDeclarer> producerDeclarers;
-  private List<SemanticEventConsumerDeclarer> consumerDeclarers;
-  private List<PipelineTemplateDeclarer> pipelineTemplateDeclarers;
-  private List<DataStreamDeclarer> streamDeclarers;
+  private Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers;
+  private Map<String, SemanticEventProducerDeclarer> producerDeclarers;
+  private Map<String, SemanticEventConsumerDeclarer> consumerDeclarers;
+  private Map<String, PipelineTemplateDeclarer> pipelineTemplateDeclarers;
+  private Map<String, DataStreamDeclarer> streamDeclarers;
 
   private int port;
   private String route;
@@ -41,11 +47,11 @@ public class DeclarersSingleton {
 
 
   private DeclarersSingleton() {
-    this.epaDeclarers = new ArrayList<>();
-    this.producerDeclarers = new ArrayList<>();
-    this.consumerDeclarers = new ArrayList<>();
-    this.streamDeclarers = new ArrayList<>();
-    this.pipelineTemplateDeclarers = new ArrayList<>();
+    this.epaDeclarers = new HashMap<>();
+    this.producerDeclarers = new HashMap<>();
+    this.consumerDeclarers = new HashMap<>();
+    this.streamDeclarers = new HashMap<>();
+    this.pipelineTemplateDeclarers = new HashMap<>();
     this.route = "/";
   }
 
@@ -76,12 +82,12 @@ public class DeclarersSingleton {
     return getInstance();
   }
 
-  public List<Declarer> getDeclarers() {
-    List<Declarer> result = new ArrayList<>();
-    result.addAll(epaDeclarers);
-    result.addAll(producerDeclarers);
-    result.addAll(consumerDeclarers);
-    result.addAll(pipelineTemplateDeclarers);
+  public Map<String, Declarer> getDeclarers() {
+    Map<String, Declarer> result = new HashMap<>();
+    result.putAll(epaDeclarers);
+    result.putAll(producerDeclarers);
+    result.putAll(consumerDeclarers);
+    result.putAll(pipelineTemplateDeclarers);
     return result;
   }
 
@@ -94,40 +100,43 @@ public class DeclarersSingleton {
   }
 
   private void addEpaDeclarer(SemanticEventProcessingAgentDeclarer epaDeclarer) {
-    epaDeclarers.add(epaDeclarer);
+    epaDeclarers.put(epaDeclarer.declareModel().getAppId(), epaDeclarer);
   }
 
   private void addProducerDeclarer(SemanticEventProducerDeclarer sourceDeclarer) {
     checkAndStartExecutableStreams(sourceDeclarer);
-    producerDeclarers.add(sourceDeclarer);
-    streamDeclarers.addAll(sourceDeclarer.getEventStreams());
+    producerDeclarers.put(sourceDeclarer.declareModel().getAppId(), sourceDeclarer);
+    sourceDeclarer.getEventStreams().forEach(sd -> {
+      streamDeclarers.put(sd.declareModel(sourceDeclarer.declareModel()).getAppId(), sd);
+    });
   }
 
   private void addConsumerDeclarer(SemanticEventConsumerDeclarer consumerDeclarer) {
-    consumerDeclarers.add(consumerDeclarer);
+    consumerDeclarers.put(consumerDeclarer.declareModel().getAppId(), consumerDeclarer);
   }
 
   private void addPipelineTemplateDeclarer(PipelineTemplateDeclarer pipelineTemplateDeclarer) {
-    pipelineTemplateDeclarers.add(pipelineTemplateDeclarer);
+    pipelineTemplateDeclarers.put(pipelineTemplateDeclarer.declareModel().getAppId(),
+            pipelineTemplateDeclarer);
   }
 
-  public List<SemanticEventProcessingAgentDeclarer> getEpaDeclarers() {
+  public Map<String, SemanticEventProcessingAgentDeclarer> getEpaDeclarers() {
     return epaDeclarers;
   }
 
-  public List<SemanticEventProducerDeclarer> getProducerDeclarers() {
+  public Map<String, SemanticEventProducerDeclarer> getProducerDeclarers() {
     return producerDeclarers;
   }
 
-  public List<SemanticEventConsumerDeclarer> getConsumerDeclarers() {
+  public Map<String, SemanticEventConsumerDeclarer> getConsumerDeclarers() {
     return consumerDeclarers;
   }
 
-  public List<PipelineTemplateDeclarer> getPipelineTemplateDeclarers() {
+  public Map<String, PipelineTemplateDeclarer> getPipelineTemplateDeclarers() {
     return pipelineTemplateDeclarers;
   }
 
-  public List<DataStreamDeclarer> getStreamDeclarers() {
+  public Map<String, DataStreamDeclarer> getStreamDeclarers() {
     return streamDeclarers;
   }
 

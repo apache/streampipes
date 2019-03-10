@@ -302,4 +302,5 @@ public class StreamPipes {
   public static final String HAS_RUNTIME_ID = NS + "hasRuntimeId" ;
 
   public static final String INDEX = NS + "hasIndex";
+  public static final String INCLUDES_ASSETS = NS + "includesAssets";
 }

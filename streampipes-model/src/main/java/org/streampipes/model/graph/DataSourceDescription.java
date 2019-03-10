@@ -35,65 +35,61 @@ import javax.persistence.OneToMany;
 
 /**
  * class that represents Semantic Event Producers.
- *
  */
 @RdfsClass(StreamPipes.DATA_SOURCE_DESCRIPTION)
 @Entity
 public class DataSourceDescription extends NamedStreamPipesEntity {
-	
-	private static final long serialVersionUID = 5607030219013954697L;
 
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.PRODUCES)
-	private List<SpDataStream> spDataStreams;
+  private static final long serialVersionUID = 5607030219013954697L;
 
-	private String correspondingSourceId;
-		
-	public DataSourceDescription() {
-		super();
-		spDataStreams = new ArrayList<>();
-	}
-	
-	public DataSourceDescription(DataSourceDescription other)
-	{
-		super(other);
-		this.spDataStreams = new Cloner().seq(other.getSpDataStreams());
-		this.spDataStreams.forEach(e -> e.setCategory(Arrays.asList(this.getElementId())));
-	}
-	
-	public DataSourceDescription(String uri, String name, String description, String iconUrl, List<SpDataStream> spDataStreams)
-	{
-		super(uri, name, description, iconUrl);
-		this.spDataStreams = spDataStreams;
-	}
-	
-	public DataSourceDescription(String uri, String name2, String description2, String iconUrl) {
-		this(uri, name2, description2, iconUrl, new ArrayList<>());
-	}
-	
-	public DataSourceDescription(String uri, String name, String description) {
-		this(uri, name, description, "", new ArrayList<>());
-	}
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.PRODUCES)
+  private List<SpDataStream> spDataStreams;
 
-	public List<SpDataStream> getSpDataStreams() {
-		return spDataStreams;
-	}
+  private String correspondingSourceId;
 
-	public void setSpDataStreams(List<SpDataStream> spDataStreams) {
-		this.spDataStreams = spDataStreams;
-	}
-	
-	public void addEventStream(SpDataStream spDataStream)
-	{
-		spDataStreams.add(spDataStream);
-	}
+  public DataSourceDescription() {
+    super();
+    spDataStreams = new ArrayList<>();
+  }
 
-	public String getCorrespondingSourceId() {
-		return correspondingSourceId;
-	}
+  public DataSourceDescription(DataSourceDescription other) {
+    super(other);
+    this.spDataStreams = new Cloner().seq(other.getSpDataStreams());
+    this.spDataStreams.forEach(e -> e.setCategory(Arrays.asList(this.getElementId())));
+  }
 
-	public void setCorrespondingSourceId(String correspondingSourceId) {
-		this.correspondingSourceId = correspondingSourceId;
-	}
+  public DataSourceDescription(String uri, String name, String description, String iconUrl, List<SpDataStream> spDataStreams) {
+    super(uri, name, description, iconUrl);
+    this.spDataStreams = spDataStreams;
+  }
+
+  public DataSourceDescription(String uri, String name2, String description2, String iconUrl) {
+    this(uri, name2, description2, iconUrl, new ArrayList<>());
+  }
+
+  public DataSourceDescription(String uri, String name, String description) {
+    this(uri, name, description, "", new ArrayList<>());
+  }
+
+  public List<SpDataStream> getSpDataStreams() {
+    return spDataStreams;
+  }
+
+  public void setSpDataStreams(List<SpDataStream> spDataStreams) {
+    this.spDataStreams = spDataStreams;
+  }
+
+  public void addEventStream(SpDataStream spDataStream) {
+    spDataStreams.add(spDataStream);
+  }
+
+  public String getCorrespondingSourceId() {
+    return correspondingSourceId;
+  }
+
+  public void setCorrespondingSourceId(String correspondingSourceId) {
+    this.correspondingSourceId = correspondingSourceId;
+  }
 }

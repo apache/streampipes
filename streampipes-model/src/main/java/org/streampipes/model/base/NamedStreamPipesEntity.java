@@ -33,7 +33,7 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
 /**
- * named SEPA elements, can be accessed via the URI provided in @RdfId
+ * named pipeline element, can be accessed via the URI provided in @RdfId
  */
 public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
@@ -54,6 +54,9 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   @RdfProperty(StreamPipes.HAS_APP_ID)
   private String appId;
+
+  @RdfProperty(StreamPipes.INCLUDES_ASSETS)
+  private boolean includesAssets;
 
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
@@ -101,6 +104,7 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
       this.applicationLinks = new Cloner().al(other.getApplicationLinks());
     }
     this.appId = other.getAppId();
+    this.includesAssets = other.isIncludesAssets();
   }
 
   public String getName() {
@@ -175,6 +179,14 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   public void setAppId(String appId) {
     this.appId = appId;
+  }
+
+  public boolean isIncludesAssets() {
+    return includesAssets;
+  }
+
+  public void setIncludesAssets(boolean includesAssets) {
+    this.includesAssets = includesAssets;
   }
 
   @Deprecated
