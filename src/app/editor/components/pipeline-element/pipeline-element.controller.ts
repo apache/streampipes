@@ -8,10 +8,13 @@ export class PipelineElementController {
     preview: any;
     iconSize: any;
     iconStandSize: any;
+    iconUrl: any;
+    RestApi: any;
 
-    constructor(ImageChecker, ElementIconText) {
+    constructor(ImageChecker, ElementIconText, RestApi) {
         this.ImageChecker = ImageChecker;
         this.ElementIconText = ElementIconText;
+        this.RestApi = RestApi;
         this.showImage = false;
     }
 
@@ -21,9 +24,22 @@ export class PipelineElementController {
     }
 
     checkImageAvailable() {
-        this.ImageChecker.imageExists(this.pipelineElement.iconUrl, (exists) => {
+        if (this.pipelineElement.includesAssets) {
+            this.fetchImage(this.makeAssetIconUrl())
+        } else {
+            this.fetchImage(this.pipelineElement.iconUrl);
+        }
+    }
+
+    fetchImage(imageUrl) {
+        this.ImageChecker.imageExists(imageUrl, (exists) => {
+            this.iconUrl = imageUrl;
             this.showImage = exists;
         })
+    }
+
+    makeAssetIconUrl() {
+        return this.RestApi.getAssetUrl(this.pipelineElement.appId) +"/icon";
     }
 
     iconSizeCss() {
@@ -40,4 +56,4 @@ export class PipelineElementController {
     }
 }
 
-PipelineElementController.$inject=['ImageChecker', 'ElementIconText']
+PipelineElementController.$inject=['ImageChecker', 'ElementIconText', 'RestApi'];

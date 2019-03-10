@@ -11,6 +11,7 @@ import 'jquery.panzoom';
 import 'npm/bootstrap';
 import 'npm/angular-trix';
 import 'npm/angular-datatables';
+import 'npm/ng-showdown';
 
 import {EditorCtrl} from './editor.controller';
 import myDataBind from './my-data-bind.directive';
@@ -48,9 +49,10 @@ import {TextValidatorDirective} from "./validator/text/text-validator.directive"
 import selectFilter from './filter/select.filter';
 import elementNameFilter from './filter/element-name.filter';
 import {PropertySelectionComponent} from "./components/customoutput/propertyselection/property-selection.component";
+import {PipelineElementDocumentationComponent} from "./components/pipeline-element-documentation/pipeline-element-documentation.component";
 
 
-export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate', 'datatables'])
+export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate', 'datatables', 'ng-showdown'])
     .controller('EditorCtrl', EditorCtrl)
     .directive('myDataBind', myDataBind)
     .directive('imageBind', imageBind)
@@ -79,6 +81,7 @@ export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimat
     .component('pipelineAssembly', PipelineAssemblyComponent)
     .component('pipelineElementIconStand', PipelineElementIconStandComponent)
     .component('pipelineElementOptions', PipelineElementOptionsComponent)
+    .component('pipelineElementDocumentation', PipelineElementDocumentationComponent)
     .service('EditorDialogManager', EditorDialogManager)
     .service('PipelineElementRecommendationService', PipelineElementRecommendationService)
     .service('PipelineValidationService', PipelineValidationService)

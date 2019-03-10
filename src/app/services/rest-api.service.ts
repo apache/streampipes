@@ -25,6 +25,10 @@ export class RestApi {
         return this.getServerUrl() +'/users/' + this.AuthStatusService.email;
     };
 
+    getAssetUrl(appId) {
+        return this.getServerUrl() +"/pe/" +appId +"/assets";
+    }
+
     getUserDetails() {
         return this.$http.get(this.urlBase());
     }
@@ -517,6 +521,10 @@ export class RestApi {
         return this.$http.post(this.urlBase() +"/pipeline-element/runtime", dataStream, {
             ignoreLoadingBar: true
         });
+    }
+
+    getDocumentation(appId) {
+        return this.$http.get(this.getAssetUrl(appId) +"/documentation");
     }
 }
 

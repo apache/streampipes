@@ -1,0 +1,16 @@
+.note {
+  float: left;
+  display: block;
+  position: relative;
+  padding: 1em;
+  width: 100%;
+  min-height:100%;
+  background-color: white;
+  box-shadow: 5px 5px 10px -2px rgba(33, 33, 33, .3);
+  transition: transform .15s;
+  z-index: 1;
+  border-radius: 10px;
+  margin-left: 5px;
+  max-height:100%;
+  overflow: auto;
+}

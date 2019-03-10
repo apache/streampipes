@@ -70,6 +70,7 @@
     "ng-file-upload": "9.0.13",
     "ng-prettyjson": "0.1.8",
     "ng2-dragula": "^1.5.0",
+    "ng-showdown": "^1.1.0",
     "ngmap": "1.18.0",
     "prismjs": "^1.13.0",
     "rxjs": "5.5.6",

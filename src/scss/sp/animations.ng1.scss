@@ -94,3 +94,7 @@
   opacity:1;
   max-height:20px;
 }
+
+.sp-fade-only-enter.ng-enter {
+  animation: 1s appear;
+}
