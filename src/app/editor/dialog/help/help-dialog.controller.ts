@@ -8,6 +8,7 @@ export class HelpDialogController {
     $timeout: any;
     pollingActive;
     error: any;
+    ctrl: any;
 
     dtOptions = {paging: false, searching: false};
     nsPrefix = "http://www.w3.org/2001/XMLSchema#";
@@ -15,14 +16,22 @@ export class HelpDialogController {
         {
             title: 'Fields',
             type: 'fields',
+            targets: ['set', 'stream']
         },
         {
             title: 'Values',
             type: 'values',
+            targets: ['set', 'stream']
         },
         {
             title: 'Raw',
             type: 'raw',
+            targets: ['set', 'stream']
+        },
+        {
+            title: 'Documentation',
+            type: 'documentation',
+            targets: ['set', 'stream', 'sepa', 'action']
         }
     ];
 
@@ -42,7 +51,7 @@ export class HelpDialogController {
     }
 
     setSelectedTab(type) {
-        //this.selectedTab = type;
+        this.selectedTab = type;
     }
 
     getFriendlyRuntimeType(runtimeType) {
@@ -90,6 +99,10 @@ export class HelpDialogController {
                 }, 1000)
             }
         });
+    }
+
+    filterTab(tab) {
+        return tab.targets.indexOf(this.ctrl.pipelineElement.type) != -1;
     }
 
 

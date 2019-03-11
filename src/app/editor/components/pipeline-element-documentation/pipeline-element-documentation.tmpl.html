@@ -1,3 +1,6 @@
-<p markdown-to-html="ctrl.documentationMarkdown" ng-if="ctrl.documentationMarkdown" class="note">
+<p markdown-to-html="ctrl.documentationMarkdown" ng-if="ctrl.documentationMarkdown && !ctrl.error" ng-class="ctrl.useStyling ? 'note' : ''">
 
+</p>
+<p ng-if="ctrl.error">
+    (no documentation available)
 </p>

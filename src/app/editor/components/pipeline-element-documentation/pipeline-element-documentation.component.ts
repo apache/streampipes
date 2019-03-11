@@ -3,7 +3,8 @@ import {PipelineElementDocumentationController} from "./pipeline-element-documen
 export let PipelineElementDocumentationComponent = {
     templateUrl: 'pipeline-element-documentation.tmpl.html',
     bindings: {
-        appId: "="
+        appId: "=",
+        useStyling: "="
     },
     controller: PipelineElementDocumentationController,
     controllerAs: 'ctrl'
