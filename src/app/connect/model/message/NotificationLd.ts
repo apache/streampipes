@@ -2,7 +2,7 @@ import {RdfsClass} from '../../tsonld/RdfsClass';
 import {RdfId} from '../../tsonld/RdfId';
 import {RdfProperty} from '../../tsonld/RdfsProperty';
 
-@RdfsClass("sp:notification")
+@RdfsClass("sp:Notification")
 export class NotificationLd {
 
     @RdfId

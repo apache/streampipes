@@ -31,7 +31,10 @@
     </div>
     <div fxLayoutAlign="center center" *ngIf="showErrorMessage">
         <div class="error-message">
-            {{errorMessage}}
+            <div *ngFor="let error of errorMessages" style="margin-bottom: 5px; margin-top: 5px">
+                <div>{{error.title}}</div>
+                <div>{{error.description}}</div>
+            </div>
         </div>
     </div>
 </div>

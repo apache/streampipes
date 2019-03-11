@@ -3,7 +3,7 @@ import {RdfId} from '../../tsonld/RdfId';
 import {RdfProperty} from '../../tsonld/RdfsProperty';
 import {NotificationLd} from './NotificationLd';
 
-@RdfsClass("sp:message")
+@RdfsClass("sp:Message")
 export class MessageLd {
 
     @RdfId
@@ -16,7 +16,7 @@ export class MessageLd {
     public elementName: string;
 
     @RdfProperty('sp:notifications')
-    public notifications: NotificationLd;
+    public notifications: NotificationLd[] = [];
 
     constructor(id: string) {
         this.id = id;

@@ -1,7 +1,7 @@
 import {RdfsClass} from '../../tsonld/RdfsClass';
 import {MessageLd} from './MessageLd';
 
-@RdfsClass("sp:successMessage")
+@RdfsClass("sp:SuccessMessage")
 export class SuccessMessageLd extends MessageLd {
 
 

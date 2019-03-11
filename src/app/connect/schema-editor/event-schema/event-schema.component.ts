@@ -3,6 +3,7 @@ import { RestService } from '../../rest.service';
 import { EventSchema } from '../model/EventSchema';
 import { AdapterDescription } from '../../model/connect/AdapterDescription';
 import { GuessSchema } from '../model/GuessSchema';
+import {NotificationLd} from '../../model/message/NotificationLd';
 
 @Component({
   selector: 'app-event-schema',
@@ -37,7 +38,7 @@ export class EventSchemaComponent implements OnInit {
   public isLoading: boolean = false;
   public isError: boolean = false;
   public showErrorMessage: boolean = false;
-  public errorMessage: string;
+  public errorMessages: NotificationLd[];
 
   constructor(
     private restService: RestService,
@@ -59,7 +60,7 @@ export class EventSchemaComponent implements OnInit {
                 this.isEditableChange.emit(true);
             },
             error => {
-                this.errorMessage = error.error;
+                this.errorMessages = error.notifications;
                 this.isError = true;
                 this.isLoading = false;
                 this.eventSchema = new EventSchema();
