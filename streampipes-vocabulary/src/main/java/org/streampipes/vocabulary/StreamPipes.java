@@ -295,6 +295,7 @@ public class StreamPipes {
   public static final String REMOVE_DUPLICATES_RULE_DESCRIPTION =  NS + "RemoveDuplicatesRuleDescription";
 
   public static final String TIMESTAMP_RULE_DESCRIPTION =  NS + "TimestampTransformationRuleDescription";
+  public static final String ADD_TIMESTAMP_RULE_DESCRIPTION =  NS + "AddTimestampRuleDescription";
   public static final String ADD_VALUE_TRANSFORMATION_RULE_DESCRIPTION =  NS + "AddValueTransformationRuleDescription";
   public static final String HAS_RENAME_RULE = NS + "hasRenameRule" ;
   public static final String RENAME_RULE = NS + "RenameRule";
