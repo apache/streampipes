@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.EventSchema;
@@ -69,7 +70,7 @@ public class XmlFormat extends Format {
     }
 
     @Override
-    public Map<String, Object> parse(byte[] object) {
+    public Map<String, Object> parse(byte[] object) throws ParseException {
         EventSchema resultSchema = new EventSchema();
 
         JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
@@ -79,7 +80,7 @@ public class XmlFormat extends Format {
         try {
             result = jsonDefinition.toMap(object);
         } catch (SpRuntimeException e) {
-            e.printStackTrace();
+            throw new ParseException("Could not parse Data : " + e.toString());
         }
 
         return  result;

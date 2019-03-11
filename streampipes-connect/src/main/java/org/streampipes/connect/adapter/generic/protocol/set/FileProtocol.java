@@ -125,7 +125,6 @@ public class FileProtocol extends Protocol {
 
 
         InputStream dataInputStream = getDataFromEndpoint();
-        new AdapterException("Could not receive data from Endpoint: " + fileUri);
 
         List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 20);
 
@@ -157,7 +156,7 @@ public class FileProtocol extends Protocol {
     }
 
 
-    public InputStream getDataFromEndpoint() {
+    public InputStream getDataFromEndpoint() throws ParseException {
         FileReader fr = null;
         InputStream inn = null;
 
@@ -168,10 +167,10 @@ public class FileProtocol extends Protocol {
             inn = new FileInputStream(fileUri);
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            throw new ParseException("File not found: " + fileUri);
         }
+        if (inn == null)
+            throw new ParseException("Could not receive Data from file: " + fileUri);
 
         return inn;
     }

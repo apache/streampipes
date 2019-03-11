@@ -64,6 +64,8 @@ public class JsonArrayParser extends Parser {
                 foundBeginning = true;
             }
         }
+        if (!foundBeginning)
+            throw new ParseException("No JSON Array found");
 
         // Parse all events
         JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
@@ -77,7 +79,7 @@ public class JsonArrayParser extends Parser {
                 try {
                     tmp = jsonDefinition.fromMap(objectMap);
                 } catch (SpRuntimeException e) {
-                    e.printStackTrace();
+                   throw new ParseException(e.toString());
                 }
 //                    handleEvent(new EventObjectEndEvent(parseObject(tmp)));
                 // TODO decide what happens id emit returns false

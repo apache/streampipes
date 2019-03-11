@@ -17,6 +17,8 @@
 
 package org.streampipes.connect.management.master;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.exception.AdapterException;
@@ -24,7 +26,12 @@ import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public class GuessManagement {
+
+    private static Logger logger = LoggerFactory.getLogger(GuessSchema.class);
 
     public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
 
@@ -34,9 +41,19 @@ public class GuessManagement {
         try {
             guessSchema = adapter.getSchema(adapterDescription);
         } catch (ParseException e) {
-            throw new ParseException(e.getMessage());
+            logger.error(e.toString());
+
+            String errorClass = "";
+            Optional<StackTraceElement> stackTraceElement = Arrays.stream(e.getStackTrace()).findFirst();
+            if(stackTraceElement.isPresent()) {
+                String[] errorClassLong = stackTraceElement.get().getClassName().split("\\.");
+                errorClass = errorClassLong[errorClassLong.length - 1] + ": ";
+            }
+
+            throw new ParseException(errorClass + e.getMessage());
         } catch (Exception e) {
-            throw new AdapterException("Unknown Error: " + e);
+            logger.error("Unknown Error: " + e.toString());
+            throw new AdapterException(e.toString());
         }
 
         return guessSchema;
@@ -51,6 +68,7 @@ public class GuessManagement {
     public void  guessFormatDescription() {
         // TODO implement
     }
+
 
 
 }

@@ -52,7 +52,7 @@ public class FileStreamProtocol extends PullProtocol {
     }
 
     @Override
-    InputStream getDataFromEndpoint() {
+    InputStream getDataFromEndpoint() throws ParseException {
         FileReader fr = null;
         InputStream inn = null;
         try {
@@ -63,10 +63,12 @@ public class FileStreamProtocol extends PullProtocol {
             inn = new FileInputStream(filePath);
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            throw new ParseException("Could not find file: " + filePath);
         }
+
+        if (inn == null)
+            throw new ParseException("Could not receive Data from file: " + filePath);
+
 
         return inn;
     }

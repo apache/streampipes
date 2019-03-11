@@ -144,7 +144,7 @@ public class HttpProtocol extends Protocol {
         return result;
     }
 
-    public InputStream getDataFromEndpoint() {
+    public InputStream getDataFromEndpoint() throws ParseException {
         InputStream result = null;
 
         try {
@@ -160,8 +160,11 @@ public class HttpProtocol extends Protocol {
 //            result = IOUtils.toInputStream(s, "UTF-8");
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ParseException("Could not receive Data from: " + url);
         }
+
+        if (result == null)
+            throw new ParseException("Could not receive Data from: " + url);
 
         return result;
     }

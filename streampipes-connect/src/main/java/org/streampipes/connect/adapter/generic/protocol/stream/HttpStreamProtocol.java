@@ -147,7 +147,7 @@ public class HttpStreamProtocol extends PullProtocol {
     }
 
     @Override
-    InputStream getDataFromEndpoint() {
+    InputStream getDataFromEndpoint() throws ParseException {
         InputStream result = null;
 
         try {
@@ -170,9 +170,11 @@ public class HttpStreamProtocol extends PullProtocol {
 
         } catch (Exception e) {
             logger.error("Error while fetching data from URL: " + url, e);
-
+            throw new ParseException("Error while fetching data from URL: " + url);
 //            throw new AdapterException();
         }
+        if (result == null)
+            throw new ParseException("Could not receive Data from file: " + url);
 
         return result;
     }

@@ -319,13 +319,14 @@ public class HDFSProtocol extends Protocol {
         return conf;
     }
 
-    private FSDataInputStream getInputStreamFromFile(LocatedFileStatus locatedFileStatus) {
+    private FSDataInputStream getInputStreamFromFile(LocatedFileStatus locatedFileStatus) throws ParseException {
         FileSystem fs = getFilesSystem();
         FSDataInputStream inputStream = null;
         try {
             inputStream = fs.open(locatedFileStatus.getPath());
         } catch (IOException e) {
-            e.printStackTrace();
+            if (inputStream == null)
+                throw new ParseException(e.getMessage());
         }
         return inputStream;
     }
