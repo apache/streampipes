@@ -109,6 +109,8 @@ public class FileProtocol extends Protocol {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }  catch (ParseException e) {
+            logger.error("Error while parsing: " + e.getMessage());
         }
     }
 

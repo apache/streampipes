@@ -29,6 +29,7 @@ import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.format.util.JsonEventProperty;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.EventProperty;
@@ -62,7 +63,7 @@ public class XmlParser extends Parser {
     }
 
     @Override
-    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) {
+    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
 
         try {
             String dataString = CharStreams.toString(new InputStreamReader(data, Charsets.UTF_8));
@@ -72,8 +73,10 @@ public class XmlParser extends Parser {
 
         } catch (JSONException e) {
             logger.error(e.toString());
+            throw new ParseException(e.getMessage());
         } catch (IOException e) {
             logger.error(e.toString());
+            throw new ParseException(e.getMessage());
         }
 
     }

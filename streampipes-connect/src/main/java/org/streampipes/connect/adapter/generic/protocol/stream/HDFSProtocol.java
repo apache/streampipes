@@ -205,7 +205,11 @@ public class HDFSProtocol extends Protocol {
                 logger.info("+++ New files found, newest file Date: " + this.knownNewestFileDate + " (in milliseconds form 1970)");
             } else
                 logger.info("No new files found");
-            files.forEach(file -> parser.parse(getInputStreamFromFile(file), stk));
+            try {
+                files.forEach(file -> parser.parse(getInputStreamFromFile(file), stk));
+            } catch (ParseException e) {
+                logger.error("Error while parsing: " + e.getMessage());
+            }
         };
 
 

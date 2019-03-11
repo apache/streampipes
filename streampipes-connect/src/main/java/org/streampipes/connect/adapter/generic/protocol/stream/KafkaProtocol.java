@@ -217,7 +217,9 @@ public class KafkaProtocol extends BrokerProtocol {
                 parser.parse(IOUtils.toInputStream(new String(payload), "UTF-8"), stk);
             } catch (IOException e) {
                 logger.error("Adapter " + ID + " could not read value!",e);
-            }
+            } catch (ParseException e) {
+                logger.error("Error while parsing: " + e.getMessage());
+        }
         }
     }
 

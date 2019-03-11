@@ -24,6 +24,7 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.format.util.JsonEventProperty;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.EventProperty;
@@ -55,7 +56,7 @@ public class JsonObjectParser extends Parser {
     }
 
     @Override
-    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) {
+    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
         JsonParserFactory factory = Json.createParserFactory(null);
         javax.json.stream.JsonParser jsonParser = factory.createParser(data);
 
@@ -64,6 +65,9 @@ public class JsonObjectParser extends Parser {
         boolean isEvent = true;
         boolean result = true;
         int objectCount = 0;
+
+        if (!jsonParser.hasNext())
+            throw new ParseException("No JSONObject found");
 
         try {
             while (jsonParser.hasNext() && isEvent && result) {
@@ -84,8 +88,9 @@ public class JsonObjectParser extends Parser {
             }
 
         } catch(JsonParsingException e) {
-            logger.error("Error. Currently just one Object is supported in JSONObjectParser");
-
+          //  logger.error("Error. Currently just one Object is supported in JSONObjectParser");
+            logger.error("Could not parse Data to JSONObject");
+            throw new ParseException("Could not parse Data to JSONObject.");
         }
 
 

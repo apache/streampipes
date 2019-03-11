@@ -94,8 +94,12 @@ public class HttpProtocol extends Protocol {
         SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
 
         InputStream data = getDataFromEndpoint();
+        try {
+            parser.parse(data, stk);
 
-        parser.parse(data, stk);
+        } catch (ParseException e) {
+            logger.error("Error while parsing: " + e.getMessage());
+        }
     }
 
     @Override

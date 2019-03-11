@@ -21,6 +21,7 @@ package org.streampipes.connect.adapter.generic.format.csv;
 import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
@@ -49,7 +50,7 @@ public class CsvParser extends Parser {
     }
 
     @Override
-    public Parser getInstance(FormatDescription formatDescription) {
+    public Parser getInstance(FormatDescription formatDescription) throws ParseException {
         ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
 
         boolean header = extractor.selectedMultiValues(CsvFormat.HEADER_NAME).stream()
@@ -74,7 +75,7 @@ public class CsvParser extends Parser {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ParseException(e.getMessage());
         }
 
     }

@@ -39,10 +39,10 @@ public abstract class Parser {
         try {
             parse(data, gne);
         } catch (ParseException e) {
-
+            throw new ParseException(e.getMessage());
         } catch (Exception e) {
             throw new ParseException("Error while parse the data with the "
-                    + this.getClass().getSimpleName());
+                    + this.getClass().getSimpleName() + ": " + e.getMessage());
         }
 
         return gne.getEvents();

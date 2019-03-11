@@ -133,7 +133,9 @@ public class MqttProtocol extends BrokerProtocol {
       } catch (IOException e) {
         e.printStackTrace();
         //logger.error("Adapter " + ID + " could not read value!",e);
-      }
+      } catch (ParseException e) {
+        e.printStackTrace();
+    }
     }
   }
 }
