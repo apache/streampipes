@@ -34,7 +34,7 @@ import {DataSetDescription} from '../model/DataSetDescription';
 import {OneOfStaticProperty} from '../model/OneOfStaticProperty';
 import {UnitTransformRuleDescription} from '../model/connect/rules/UnitTransformRuleDescription';
 import {RemoveDuplicatesRuleDescription} from '../model/connect/rules/RemoveDuplicatesRuleDescription';
-import {TimestampTransformationRuleDescription} from '../model/connect/rules/TimestampTransformationRuleDescription';
+import {AddTimestampRuleDescription} from '../model/connect/rules/AddTimestampRuleDescription';
 import {AddValueTransformationRuleDescription} from '../model/connect/rules/AddValueTransformationRuleDescription';
 import {FileStaticProperty} from '../model/FileStaticProperty';
 
@@ -84,7 +84,7 @@ export class DataMarketplaceService {
     tsonld.addClassMapping(MoveRuleDescription);
     tsonld.addClassMapping(UnitTransformRuleDescription);
     tsonld.addClassMapping(RemoveDuplicatesRuleDescription);
-    tsonld.addClassMapping(TimestampTransformationRuleDescription);
+    tsonld.addClassMapping(AddTimestampRuleDescription);
     tsonld.addClassMapping(AddValueTransformationRuleDescription);
 
     return tsonld;

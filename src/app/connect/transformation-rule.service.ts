@@ -11,7 +11,7 @@ import {k} from '@angular/core/src/render3';
 import {MoveRuleDescription} from './model/connect/rules/MoveRuleDesctiption';
 import {DeleteRuleDescription} from './model/connect/rules/DeleteRuleDescription';
 import {UnitTransformRuleDescription} from './model/connect/rules/UnitTransformRuleDescription';
-import {TimestampTransformationRuleDescription} from './model/connect/rules/TimestampTransformationRuleDescription';
+import {AddTimestampRuleDescription} from './model/connect/rules/AddTimestampRuleDescription';
 import {AddValueTransformationRuleDescription} from './model/connect/rules/AddValueTransformationRuleDescription';
 
 @Injectable()
@@ -42,7 +42,7 @@ export class TransformationRuleService {
                 // add to old event schema for the case users moved the property to a nested property
                 this.oldEventSchema.eventProperties.push(timestampProperty);
 
-                transformationRuleDescription.push(new TimestampTransformationRuleDescription(timestampProperty.getRuntimeName()));
+                transformationRuleDescription.push(new AddTimestampRuleDescription(timestampProperty.getRuntimeName()));
             }
 
             let staticValueProperties = this.getStaticValueProperties(this.newEventSchema.eventProperties);

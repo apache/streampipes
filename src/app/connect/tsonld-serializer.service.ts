@@ -26,7 +26,7 @@ import { RenameRuleDescription } from './model/connect/rules/RenameRuleDescripti
 import { DeleteRuleDescription } from './model/connect/rules/DeleteRuleDescription';
 import { AddNestedRuleDescription } from './model/connect/rules/AddNestedRuleDescription';
 import { RemoveDuplicatesRuleDescription } from './model/connect/rules/RemoveDuplicatesRuleDescription';
-import { TimestampTransformationRuleDescription } from './model/connect/rules/TimestampTransformationRuleDescription';
+import { AddTimestampRuleDescription } from './model/connect/rules/AddTimestampRuleDescription';
 import { AddValueTransformationRuleDescription } from './model/connect/rules/AddValueTransformationRuleDescription';
 import { MoveRuleDescription } from './model/connect/rules/MoveRuleDesctiption';
 import { UnitTransformRuleDescription } from './model/connect/rules/UnitTransformRuleDescription';
@@ -72,7 +72,7 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(AddNestedRuleDescription);
         tsonld.addClassMapping(TransformationRuleDescription);
         tsonld.addClassMapping(RemoveDuplicatesRuleDescription);
-        tsonld.addClassMapping(TimestampTransformationRuleDescription);
+        tsonld.addClassMapping(AddTimestampRuleDescription);
         tsonld.addClassMapping(AddValueTransformationRuleDescription);
         tsonld.addClassMapping(MoveRuleDescription);
         tsonld.addClassMapping(UnitTransformRuleDescription);

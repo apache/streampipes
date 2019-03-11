@@ -3,8 +3,8 @@ import {RdfId} from '../../../tsonld/RdfId';
 import {RdfProperty} from '../../../tsonld/RdfsProperty';
 import {TransformationRuleDescription} from './TransformationRuleDescription';
 
-@RdfsClass('sp:TimestampTransformationRuleDescription')
-export class TimestampTransformationRuleDescription extends TransformationRuleDescription {
+@RdfsClass('sp:AddTimestampRuleDescription')
+export class AddTimestampRuleDescription extends TransformationRuleDescription {
 
     @RdfId
     public id: string;
