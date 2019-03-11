@@ -35,6 +35,7 @@ public class RandomNumberStreamJson extends RandomNumberStream {
   public SpDataStream declareModel(DataSourceDescription sep) {
     return DataStreamBuilder.create("org.streampipes.pe.random.number.json", "Random Number "
             + "Stream (JSON)", "Publishes randomly generated data and nothing more.")
+            .providesAssets()
             .properties(getEventPropertyDescriptions())
             .format(Formats.jsonFormat())
             .protocol(SampleSettings.kafkaProtocol(TOPIC))
