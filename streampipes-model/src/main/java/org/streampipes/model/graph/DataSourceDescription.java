@@ -63,6 +63,7 @@ public class DataSourceDescription extends NamedStreamPipesEntity {
   public DataSourceDescription(String uri, String name, String description, String iconUrl, List<SpDataStream> spDataStreams) {
     super(uri, name, description, iconUrl);
     this.spDataStreams = spDataStreams;
+    this.setAppId(uri);
   }
 
   public DataSourceDescription(String uri, String name2, String description2, String iconUrl) {

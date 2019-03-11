@@ -19,6 +19,7 @@ package org.streampipes.container.api;
 
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
+import org.streampipes.container.assets.AssetZipGenerator;
 import org.streampipes.container.declarer.DataSetDeclarer;
 import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
@@ -64,6 +65,17 @@ public class SepElement extends Element<SemanticEventProducerDeclarer> {
     } else {
       return "{}";
     }
+  }
+
+  @GET
+  @Path("{sourceId}/{streamId}/assets")
+  @Produces("application/zip")
+  public javax.ws.rs.core.Response getAssets(@PathParam("sourceId") String sourceId, @PathParam
+          ("streamId") String streamId) {
+    return javax.ws.rs.core.Response
+            .ok()
+            .entity(new AssetZipGenerator(streamId).makeZip())
+            .build();
   }
 
   private Optional<SpDataStream> getStreamBySourceId(String sourceId, String streamId) {

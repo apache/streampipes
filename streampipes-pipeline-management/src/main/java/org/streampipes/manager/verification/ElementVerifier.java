@@ -21,7 +21,6 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 import org.streampipes.commons.exceptions.SepaParseException;
-import org.streampipes.manager.assets.AssetManager;
 import org.streampipes.manager.storage.UserManagementService;
 import org.streampipes.manager.storage.UserService;
 import org.streampipes.manager.verification.messages.VerificationError;
@@ -127,19 +126,9 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
   }
 
-  private void storeAssets() throws IOException {
-    if (elementDescription.isIncludesAssets()) {
-      AssetManager.storeAsset(elementDescription.getElementId(), elementDescription.getAppId());
-    }
-  }
+  protected abstract void storeAssets() throws IOException;
 
-  private void updateAssets() throws IOException {
-    if (elementDescription.isIncludesAssets()) {
-      AssetManager.deleteAsset(elementDescription.getAppId());
-      storeAssets();
-    }
-  }
-
+  protected abstract void updateAssets() throws IOException;
 
   private Message errorMessage() {
     return new ErrorMessage(elementDescription.getName(), collectNotifications());
