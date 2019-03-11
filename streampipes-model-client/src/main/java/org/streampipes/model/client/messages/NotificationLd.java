@@ -50,6 +50,7 @@ public class NotificationLd {
                 + this.getClass().getSimpleName().toLowerCase()
                 + ":"
                 + RandomStringUtils.randomAlphabetic(6);
+        this.additionalInformation = "";
     }
 
     public NotificationLd(NotificationLd other) {

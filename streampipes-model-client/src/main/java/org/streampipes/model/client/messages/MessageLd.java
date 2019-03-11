@@ -59,6 +59,7 @@ public class MessageLd {
 				+ this.getClass().getSimpleName().toLowerCase()
 				+ ":"
 				+ RandomStringUtils.randomAlphabetic(6);
+		this.elementName = "";
 	}
 
 	public MessageLd(MessageLd other) {
