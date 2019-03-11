@@ -21,11 +21,16 @@ import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.Entity;
 import java.util.List;
 
 @Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
 @RdfsClass(StreamPipes.ERROR_MESSAGE)
 public class ErrorMessageLd extends MessageLd {
+
+	public ErrorMessageLd() {
+		super(false);
+	}
 
 	public ErrorMessageLd(NotificationLd...notifications) {
 		super(false, notifications);

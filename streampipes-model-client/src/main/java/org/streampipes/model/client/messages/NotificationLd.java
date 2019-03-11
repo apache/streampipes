@@ -53,6 +53,7 @@ public class NotificationLd {
     }
 
     public NotificationLd(NotificationLd other) {
+        this();
         this.title = other.getTitle();
         this.description = other.getDescription();
         this.additionalInformation = other.getAdditionalInformation();

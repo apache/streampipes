@@ -24,7 +24,10 @@ import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +35,7 @@ import java.util.List;
 @Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
 @RdfsClass(StreamPipes.MESSAGE)
 @Entity
-public abstract class MessageLd {
+public class MessageLd {
 
 	private static final String prefix = "urn:streampipes.org:spi:";
 
@@ -46,6 +49,8 @@ public abstract class MessageLd {
 	@RdfProperty(StreamPipes.MESSAGE_ELEMENT_NAME)
 	private String elementName;
 
+	@OneToMany(fetch = FetchType.EAGER,
+			cascade = {CascadeType.ALL})
 	@RdfProperty(StreamPipes.NOTIFICATIONS)
 	private List<NotificationLd> notifications;
 
