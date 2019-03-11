@@ -75,16 +75,23 @@ export class RestService {
                     return self.http
                         .post('/streampipes-connect/api/v1/' + self.authStatusService.email + '/master/guess/schema', res)
                         .map(response => {
-                            const r = self.tsonLdSerializerService.fromJsonLd(response, 'sp:GuessSchema');
+                            console.log(response);
+                            try {
+                                const r = self.tsonLdSerializerService.fromJsonLd(response, 'sp:GuessSchema');
+                                console.log(r);
+                                self.removeHeaderKeys(r.eventSchema.eventProperties);
 
-                            self.removeHeaderKeys(r.eventSchema.eventProperties);
+                                resolve(r);
+                            } catch (e) {
+                                console.log("######")
+                                const r = self.tsonLdSerializerService.fromJsonLd(response, 'sp:message');
+                                console.log(r);
+                                reject(r);
+                            }
 
-                            resolve(r);
+
                         })
-                        .subscribe(
-                            data =>  data,
-                            error => reject(error),
-                        );
+                        .subscribe();
                 });
             })
         );
