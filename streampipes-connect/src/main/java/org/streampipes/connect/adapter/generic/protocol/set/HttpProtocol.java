@@ -27,6 +27,7 @@ import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
@@ -88,8 +89,12 @@ public class HttpProtocol extends Protocol {
         SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
 
         InputStream data = getDataFromEndpoint();
+        try {
+            parser.parse(data, stk);
 
-        parser.parse(data, stk);
+        } catch (ParseException e) {
+            logger.error("Error while parsing: " + e.getMessage());
+        }
     }
 
     @Override
@@ -99,8 +104,7 @@ public class HttpProtocol extends Protocol {
 
 
     @Override
-    public GuessSchema getGuessSchema() {
-
+    public GuessSchema getGuessSchema() throws ParseException {
 
         InputStream dataInputStream = getDataFromEndpoint();
 
@@ -114,7 +118,7 @@ public class HttpProtocol extends Protocol {
     }
 
     @Override
-    public List<Map<String, Object>> getNElements(int n) {
+    public List<Map<String, Object>> getNElements(int n) throws ParseException {
 
         List<Map<String, Object>> result = new ArrayList<>();
 
@@ -135,7 +139,7 @@ public class HttpProtocol extends Protocol {
         return result;
     }
 
-    public InputStream getDataFromEndpoint() {
+    public InputStream getDataFromEndpoint() throws ParseException {
         InputStream result = null;
 
         try {
@@ -151,8 +155,11 @@ public class HttpProtocol extends Protocol {
 //            result = IOUtils.toInputStream(s, "UTF-8");
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ParseException("Could not receive Data from: " + url);
         }
+
+        if (result == null)
+            throw new ParseException("Could not receive Data from: " + url);
 
         return result;
     }

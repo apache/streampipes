@@ -23,6 +23,7 @@ import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
@@ -69,7 +70,7 @@ public class MqttProtocol extends BrokerProtocol {
   }
 
   @Override
-  protected List<byte[]> getNByteElements(int n) {
+  protected List<byte[]> getNByteElements(int n) throws ParseException {
     List<byte[]> elements = new ArrayList<>();
     int i = 0;
 
@@ -124,7 +125,9 @@ public class MqttProtocol extends BrokerProtocol {
       } catch (IOException e) {
         e.printStackTrace();
         //logger.error("Adapter " + ID + " could not read value!",e);
-      }
+      } catch (ParseException e) {
+        e.printStackTrace();
+    }
     }
   }
 }

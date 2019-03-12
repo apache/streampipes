@@ -20,6 +20,7 @@ package org.streampipes.connect.adapter.generic.format.image;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.fluent.Request;
 import org.streampipes.connect.adapter.generic.format.Format;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.FormatDescription;
 
 import java.io.IOException;
@@ -79,7 +80,7 @@ public class ImageFormat extends Format {
     }
 
     @Override
-    public Map<String, Object> parse(byte[] object) {
+    public Map<String, Object> parse(byte[] object) throws ParseException {
         Map<String, Object> result = new HashMap<>();
 
         String resultImage = Base64.getEncoder().encodeToString(object);

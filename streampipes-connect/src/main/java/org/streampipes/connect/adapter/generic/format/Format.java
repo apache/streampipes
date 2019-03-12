@@ -18,6 +18,7 @@
 package org.streampipes.connect.adapter.generic.format;
 
 
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.FormatDescription;
 
 import java.util.Map;
@@ -34,7 +35,7 @@ public abstract class Format {
      * This method parses a byte[] and transforms the event object into a serialized version of the internal
      * representation
      */
-    public abstract Map<String, Object> parse(byte[] object);
+    public abstract Map<String, Object> parse(byte[] object) throws ParseException;
 
     /**
      * Needed for example for the CSV format in iterative protocols to ensure header is not send again

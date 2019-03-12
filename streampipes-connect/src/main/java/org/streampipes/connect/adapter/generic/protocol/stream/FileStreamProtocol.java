@@ -23,6 +23,7 @@ import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
@@ -58,7 +59,7 @@ public class FileStreamProtocol extends PullProtocol {
   }
 
   @Override
-  InputStream getDataFromEndpoint() {
+  InputStream getDataFromEndpoint() throws ParseException {
     FileReader fr = null;
     InputStream inn = null;
     try {
@@ -69,10 +70,12 @@ public class FileStreamProtocol extends PullProtocol {
       inn = new FileInputStream(filePath);
 
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
+        throw new ParseException("Could not find file: " + filePath);
     }
+
+    if (inn == null)
+        throw new ParseException("Could not receive Data from file: " + filePath);
+
 
     return inn;
   }
@@ -101,8 +104,8 @@ public class FileStreamProtocol extends PullProtocol {
   }
 
   @Override
-  public GuessSchema getGuessSchema() {
-    InputStream dataInputStream = getDataFromEndpoint();
+  public GuessSchema getGuessSchema() throws ParseException {
+     InputStream dataInputStream = getDataFromEndpoint();
 
     List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 2);
 
@@ -114,7 +117,7 @@ public class FileStreamProtocol extends PullProtocol {
   }
 
   @Override
-  public List<Map<String, Object>> getNElements(int n) {
+  public List<Map<String, Object>> getNElements(int n) throws ParseException {
     List<Map<String, Object>> result = new ArrayList<>();
 
     InputStream dataInputStream = getDataFromEndpoint();

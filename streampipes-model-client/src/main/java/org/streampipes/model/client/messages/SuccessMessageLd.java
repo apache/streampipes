@@ -17,23 +17,25 @@
 
 package org.streampipes.model.client.messages;
 
+import org.streampipes.empire.annotations.Namespaces;
+import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.vocabulary.StreamPipes;
+
 import java.util.List;
 
-public class SuccessMessage extends Message {
+@Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
+@RdfsClass(StreamPipes.SUCCESS_MESSAGE)
+public class SuccessMessageLd extends MessageLd {
 
-	public SuccessMessage() {
-		super(true);
-	}
-
-	public SuccessMessage(Notification... notifications) {
+	public SuccessMessageLd(NotificationLd... notifications) {
 		super(true, notifications);
 	}
 
-	public SuccessMessage(List<Notification> notifications) {
-		super(true, notifications.toArray(new Notification[0]));
+	public SuccessMessageLd(List<NotificationLd> notifications) {
+		super(true, notifications.toArray(new NotificationLd[0]));
 	}
-	
-	public SuccessMessage(String elementName, List<Notification> notifications) {
+
+	public SuccessMessageLd(String elementName, List<NotificationLd> notifications) {
 		super(true, notifications, elementName);
 	}
 }

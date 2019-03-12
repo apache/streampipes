@@ -24,6 +24,7 @@ import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.adapter.generic.Mock;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
+import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.EventSchema;
 
@@ -91,7 +92,7 @@ public class HttpProtocolTest {
     }
 
     @Test
-    public void getNElementsTest() {
+    public void getNElementsTest() throws AdapterException {
 
         stubFor(get(urlEqualTo("/"))
                 .willReturn(aResponse()

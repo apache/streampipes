@@ -23,19 +23,12 @@ import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
-import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
-import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
-import org.streampipes.connect.adapter.generic.pipeline.elements.TransformValueAdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class GenericAdapter<T extends AdapterDescription> extends Adapter<T> {
 
@@ -76,7 +69,7 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
 
 
     @Override
-    public GuessSchema getSchema(T adapterDescription) throws AdapterException {
+    public GuessSchema getSchema(T adapterDescription) throws AdapterException, ParseException {
         Parser parser = getParser((GenericAdapterDescription) adapterDescription);
         Format format = getFormat((GenericAdapterDescription) adapterDescription);
 

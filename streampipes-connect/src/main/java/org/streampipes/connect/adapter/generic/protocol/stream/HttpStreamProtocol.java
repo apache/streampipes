@@ -24,6 +24,7 @@ import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
@@ -93,7 +94,7 @@ public class HttpStreamProtocol extends PullProtocol {
     }
 
     @Override
-    public GuessSchema getGuessSchema() {
+    public GuessSchema getGuessSchema() throws ParseException {
         int n = 2;
 
         InputStream dataInputStream = getDataFromEndpoint();
@@ -112,10 +113,10 @@ public class HttpStreamProtocol extends PullProtocol {
     }
 
     @Override
-    public List<Map<String, Object>> getNElements(int n) {
+    public List<Map<String, Object>> getNElements(int n) throws ParseException {
         List<Map<String, Object>> result = new ArrayList<>();
 
-         InputStream   dataInputStream = getDataFromEndpoint();
+        InputStream dataInputStream = getDataFromEndpoint();
 
         List<byte[]> dataByte = parser.parseNEvents(dataInputStream, n);
 
@@ -139,7 +140,7 @@ public class HttpStreamProtocol extends PullProtocol {
     }
 
     @Override
-    InputStream getDataFromEndpoint() {
+    InputStream getDataFromEndpoint() throws ParseException {
         InputStream result = null;
 
         try {
@@ -162,9 +163,11 @@ public class HttpStreamProtocol extends PullProtocol {
 
         } catch (Exception e) {
             logger.error("Error while fetching data from URL: " + url, e);
-
+            throw new ParseException("Error while fetching data from URL: " + url);
 //            throw new AdapterException();
         }
+        if (result == null)
+            throw new ParseException("Could not receive Data from file: " + url);
 
         return result;
     }

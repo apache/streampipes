@@ -18,6 +18,7 @@ package org.streampipes.connect.adapter.generic.format.json;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.adapter.generic.format.Format;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.model.schema.EventSchema;
 
@@ -26,7 +27,7 @@ import java.util.Map;
 public abstract class AbstractJsonFormat extends Format {
 
   @Override
-  public Map<String, Object> parse(byte[] object) {
+  public Map<String, Object> parse(byte[] object) throws ParseException {
     EventSchema resultSchema = new EventSchema();
 
     JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
@@ -36,7 +37,7 @@ public abstract class AbstractJsonFormat extends Format {
     try {
       result = jsonDefinition.toMap(object);
     } catch (SpRuntimeException e) {
-      e.printStackTrace();
+      throw new ParseException("Could not parse Data: " + e.toString());
     }
 
     return  result;

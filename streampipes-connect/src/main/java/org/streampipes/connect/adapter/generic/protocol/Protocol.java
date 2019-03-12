@@ -20,6 +20,7 @@ package org.streampipes.connect.adapter.generic.protocol;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 
@@ -45,9 +46,9 @@ public abstract class Protocol {
 
     public abstract ProtocolDescription declareModel();
 
-    public abstract GuessSchema getGuessSchema();
+    public abstract GuessSchema getGuessSchema() throws ParseException;
 
-    public abstract List<Map<String, Object>> getNElements(int n);
+    public abstract List<Map<String, Object>> getNElements(int n) throws ParseException;
 
     public abstract void run(AdapterPipeline adapterPipeline);
 
