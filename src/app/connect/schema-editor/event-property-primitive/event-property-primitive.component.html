@@ -4,6 +4,7 @@
             <b>
                 {{getLabel()}}
             </b>
+            <mat-icon *ngIf="property.isTimestampProperty()" style="font-size: 15px; padding: 4px;">access_time</mat-icon>
         </div>
         <div fxFlex="20" fxLayoutAlign="end">
             <button [disabled]="!isEditable" mat-button (click)=OnClickDeleteProperty()>
@@ -25,7 +26,7 @@
 
 
     <mat-form-field class="doubleWidth">
-        <mat-select placeholder="Runtime Type" [(ngModel)]="property.runtimeType">
+        <mat-select placeholder="Runtime Type" [(ngModel)]="property.runtimeType" [disabled]="property.isTimestampProperty()">
             <mat-option *ngFor="let dataType of runtimeDataTypes" [value]="dataType.url">
                 {{ dataType.label }}
             </mat-option>
@@ -48,7 +49,7 @@
     <!--</form>-->
 
 
-    <div fxLayout="row" fxLayoutAlign="start">
+    <div fxLayout="row" fxLayoutAlign="start" *ngIf="!property.isTimestampProperty()">
         <div class="form-group" fxFlexAlign="center" style="width: 155px">
             <mat-form-field   *ngIf="!hadMesarumentUnit" class="example-full-width" style="width: 155px">
                 <input matInput placeholder="Unit" [matAutocomplete]="auto" [formControl]="stateCtrl" [attr.disabled]="transformUnitEnable ? '' : null">
@@ -74,7 +75,45 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
+    </div>
 
+    <div fxLayout="row" fxLayoutAlign="start" *ngIf="property.isTimestampProperty()">
+        <div  class="form-group" fxFlexAlign="center">
+            <mat-form-field
+                    [class.example-full-width]="property.timestampTransformationMode !== undefined " style="margin-right: 10px"
+                    [class.doubleWidth]="property.timestampTransformationMode === undefined"
+                    [class.aThirdWidth]="selectedTimeMultiplier === 'custom' && property.timestampTransformationMode === 'timeUnit'" >
+                <mat-select placeholder="Timestamp converter (unix timestamp)"  [(value)]="property.timestampTransformationMode">
+                    <mat-option>None</mat-option>
+                    <mat-option value="formatString">Format String</mat-option>
+                    <mat-option value="timeUnit">Time Unit</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div  class="form-group" fxFlexAlign="center">
+            <mat-form-field *ngIf="property.timestampTransformationMode === 'formatString'">
+                <input matInput placeholder="E.g. yyyy-MM-dd HH:mm:ss.SSSZ" [(ngModel)]="property.timestampTransformationFormatString">
+            </mat-form-field>
+            <mat-form-field  *ngIf="property.timestampTransformationMode === 'timeUnit'"
+                    [class.example-full-width]="selectedTimeMultiplier !== 'custom'"
+                    [class.aThirdWidth]="selectedTimeMultiplier === 'custom'" >
+                <mat-select placeholder="Current time unit" [(value)]="selectedTimeMultiplier">
+                   <mat-option value="milliseconds"  (click)="property.timestampTransformationMultiplier = 0">Millisecondss</mat-option>
+                   <mat-option value="second"  (click)="property.timestampTransformationMultiplier = 1000">Seconds</mat-option>
+             <!-- More transformation Options, there is any use case for them?
+                    <mat-option value="minutes" (click)="property.timestampTransformationMultiplier = 60000">Minutes</mat-option>
+                    <mat-option value="hours"   (click)="property.timestampTransformationMultiplier = 3600000">Hours</mat-option>
+                    <mat-option value="days"    (click)="property.timestampTransformationMultiplier = 86400000">Days</mat-option>
+                    <mat-option value="custom" ><i>Custom</i></mat-option>
+                    -->
+                </mat-select>
+            </mat-form-field>
+            <!-- To set custom time transformation multiplier -> If use: set multiplier to event
+            <mat-form-field class="aThirdWidth" *ngIf="selectedTimeMultiplier === 'custom' && property.timestampTransformationMode === 'timeUnit'">
+                <input matInput placeholder="Set multiplier" type="number">
+            </mat-form-field>
+            -->
+        </div>
     </div>
 
     <mat-form-field *ngIf="staticValueAddedByUser()" class="doubleWidth">

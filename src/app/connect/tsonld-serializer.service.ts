@@ -26,7 +26,7 @@ import { RenameRuleDescription } from './model/connect/rules/RenameRuleDescripti
 import { DeleteRuleDescription } from './model/connect/rules/DeleteRuleDescription';
 import { AddNestedRuleDescription } from './model/connect/rules/AddNestedRuleDescription';
 import { RemoveDuplicatesRuleDescription } from './model/connect/rules/RemoveDuplicatesRuleDescription';
-import { TimestampTransformationRuleDescription } from './model/connect/rules/TimestampTransformationRuleDescription';
+import { AddTimestampRuleDescription } from './model/connect/rules/AddTimestampRuleDescription';
 import { AddValueTransformationRuleDescription } from './model/connect/rules/AddValueTransformationRuleDescription';
 import { MoveRuleDescription } from './model/connect/rules/MoveRuleDesctiption';
 import { UnitTransformRuleDescription } from './model/connect/rules/UnitTransformRuleDescription';
@@ -37,6 +37,7 @@ import {GenericAdapterSetDescription} from './model/connect/GenericAdapterSetDes
 import {SpecificAdapterSetDescription} from './model/connect/SpecificAdapterSetDescription';
 import {GenericAdapterStreamDescription} from './model/connect/GenericAdapterStreamDescription';
 import {SpecificAdapterStreamDescription} from './model/connect/SpecificAdapterStreamDescription';
+import {TimestampTransformationRuleDescription} from './model/connect/rules/TimestampTransformationRuleDescription';
 
 @Injectable()
 export class TsonLdSerializerService {
@@ -72,13 +73,14 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(AddNestedRuleDescription);
         tsonld.addClassMapping(TransformationRuleDescription);
         tsonld.addClassMapping(RemoveDuplicatesRuleDescription);
-        tsonld.addClassMapping(TimestampTransformationRuleDescription);
+        tsonld.addClassMapping(AddTimestampRuleDescription);
         tsonld.addClassMapping(AddValueTransformationRuleDescription);
         tsonld.addClassMapping(MoveRuleDescription);
         tsonld.addClassMapping(UnitTransformRuleDescription);
         tsonld.addClassMapping(Option);
         tsonld.addClassMapping(AnyStaticProperty);
         tsonld.addClassMapping(OneOfStaticProperty);
+        tsonld.addClassMapping(TimestampTransformationRuleDescription);
 
         tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
         tsonld.addContext('spi', 'urn:streampipes.org:spi:');
