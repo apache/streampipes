@@ -17,6 +17,28 @@
     </div>
 </div>
 
+<div fxLayout="column"  *ngIf="isError">
+    <div fxLayout="row" fxLayoutAlign="center center">
+        <mat-icon style="margin-top: 10px" class="md-accent">warning</mat-icon>
+        <span style="width: 10px;"></span>
+        <h3>System error while guess the schema of the data</h3>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center" >
+        <button mat-button class="md-accent">
+            <div *ngIf="!showErrorMessage" (click)="showErrorMessage = true">Show Details</div>
+            <div *ngIf="showErrorMessage" (click)="showErrorMessage = false">Hide Details</div>
+        </button>
+    </div>
+    <div fxLayoutAlign="center center" *ngIf="showErrorMessage">
+        <div class="error-message">
+            <div *ngFor="let error of errorMessages" style="margin-bottom: 5px; margin-top: 5px">
+                <div>{{error.title}}</div>
+                <div>{{error.description}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div fxLayout="column" fxLayoutAlign="space-evenly stretched" >
     <app-event-property-bag [(eventProperties)]="eventSchema.eventProperties" [domainPropertyGuesses]="schemaGuess.eventProperties" [isEditable]="isEditable">
     </app-event-property-bag>

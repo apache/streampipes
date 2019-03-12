@@ -37,6 +37,10 @@ import {GenericAdapterSetDescription} from './model/connect/GenericAdapterSetDes
 import {SpecificAdapterSetDescription} from './model/connect/SpecificAdapterSetDescription';
 import {GenericAdapterStreamDescription} from './model/connect/GenericAdapterStreamDescription';
 import {SpecificAdapterStreamDescription} from './model/connect/SpecificAdapterStreamDescription';
+import {MessageLd} from './model/message/MessageLd';
+import {NotificationLd} from './model/message/NotificationLd';
+import {SuccessMessageLd} from './model/message/SuccessMessage';
+import {ErrorMessageLd} from './model/message/ErrorMessage';
 import {TimestampTransformationRuleDescription} from './model/connect/rules/TimestampTransformationRuleDescription';
 
 @Injectable()
@@ -81,6 +85,10 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(AnyStaticProperty);
         tsonld.addClassMapping(OneOfStaticProperty);
         tsonld.addClassMapping(TimestampTransformationRuleDescription);
+        tsonld.addClassMapping(NotificationLd);
+        tsonld.addClassMapping(MessageLd);
+        tsonld.addClassMapping(SuccessMessageLd);
+        tsonld.addClassMapping(ErrorMessageLd);
 
         tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
         tsonld.addContext('spi', 'urn:streampipes.org:spi:');
