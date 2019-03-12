@@ -294,12 +294,16 @@ public class StreamPipes {
 
   public static final String REMOVE_DUPLICATES_RULE_DESCRIPTION =  NS + "RemoveDuplicatesRuleDescription";
 
-  public static final String TIMESTAMP_RULE_DESCRIPTION =  NS + "TimestampTransformationRuleDescription";
+  public static final String TIMESTAMP_TRANSFORMATION_RULE_DESCRIPTION =  NS + "TimestampTransformationRuleDescription";
+  public static final String ADD_TIMESTAMP_RULE_DESCRIPTION =  NS + "AddTimestampRuleDescription";
   public static final String ADD_VALUE_TRANSFORMATION_RULE_DESCRIPTION =  NS + "AddValueTransformationRuleDescription";
   public static final String HAS_RENAME_RULE = NS + "hasRenameRule" ;
   public static final String RENAME_RULE = NS + "RenameRule";
   public static final String HAS_NEW_RUNTIME_NAME = NS + "hasNewRuntimeName";
   public static final String HAS_RUNTIME_ID = NS + "hasRuntimeId" ;
+  public static final String HAS_MODE = NS + "mode" ;
+  public static final String FORMAT_STRING = NS + "formatString" ;
+  public static final String MULTIPLIER = NS + "multiplier" ;
 
   public static final String INDEX = NS + "hasIndex";
 

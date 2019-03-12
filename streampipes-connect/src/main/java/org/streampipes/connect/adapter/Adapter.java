@@ -29,9 +29,8 @@ import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
 import org.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
-import org.streampipes.model.connect.rules.value.TimestampTransformationRuleDescription;
-import org.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +80,7 @@ public abstract class Adapter<T extends AdapterDescription> {
         List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
 
         // Must be before the schema transformations to ensure that user can move this event property
-        TimestampTransformationRuleDescription timestampTransformationRuleDescription = getTimestampRule(adapterDescription);
+        AddTimestampRuleDescription timestampTransformationRuleDescription = getTimestampRule(adapterDescription);
         if (timestampTransformationRuleDescription != null) {
             pipelineElements.add(new AddTimestampPipelineElement(timestampTransformationRuleDescription.getRuntimeKey()));
         }
@@ -117,8 +116,8 @@ public abstract class Adapter<T extends AdapterDescription> {
         return getRule(adapterDescription, RemoveDuplicatesTransformationRuleDescription.class);
     }
 
-    private TimestampTransformationRuleDescription getTimestampRule(T adapterDescription) {
-        return getRule(adapterDescription, TimestampTransformationRuleDescription.class);
+    private AddTimestampRuleDescription getTimestampRule(T adapterDescription) {
+        return getRule(adapterDescription, AddTimestampRuleDescription.class);
     }
 
     private AddValueTransformationRuleDescription getAddValueRule(T adapterDescription) {
