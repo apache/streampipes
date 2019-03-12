@@ -13,6 +13,7 @@ import {UnitDescription} from '../../model/UnitDescription';
 import {UnitProviderService} from '../unit-provider.service';
 import {Observable} from 'rxjs/Observable';
 import {map, startWith} from 'rxjs/operators';
+import {TimestampTransformationRuleMode} from '../../model/connect/rules/TimestampTransformationRuleMode';
 
 // import {DataTypesService} from '../data-type.service';
 
@@ -47,23 +48,15 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   private hadMesarumentUnit = false;
   private oldMeasurementUnitDipsplay;
 
-  // Todo:
-  // Set in property to create tranformationrule
-  // Make sure, that just create tranfomationrule if timestamp!
-  private timeConverter;
-  private customTimeMultiplier;
-  private selectedTimeMultiplierNumber = 1000;
-  private useCustomMultiplier;
-    // Don't add
-  private selectedTimeMultiplier = "second";
+   private selectedTimeMultiplier;
+
 
 
     constructor(private formBuilder: FormBuilder,
               private dataTypeService: DataTypesService,
               private ShepherdService: ShepherdService,
               private restService: RestService,
-              private unitProviderService: UnitProviderService
-  ) {
+              private unitProviderService: UnitProviderService) {
       this.dataTypeService = dataTypeService;
       // constructor(private dragulaService: DragulaService, private formBuilder: FormBuilder) {
       // constructor(private dragulaService: DragulaService, private formBuilder: FormBuilder, private dataTypesService: DataTypesService) {
@@ -80,7 +73,8 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
             map(unit => unit ? this._filteredUnits(unit) : this.allUnits.slice())
         );
 
-
+    // Set preselected value
+    this.selectedTimeMultiplier = "second";
   }
 
   protected open = false;
@@ -99,6 +93,8 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
           this.oldMeasurementUnitDipsplay = unit.label;
           this.stateCtrl.setValue(unit.label);
       }
+      this.property.timestampTransformationMultiplier = 1000;
+
   }
 
   ngDoCheck() {
@@ -186,10 +182,6 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
           return false;
       }
 
-  }
-
-  isTimestampProperty() {
-      return this.property.domainProperty === "http://schema.org/DateTime"
   }
 
 }

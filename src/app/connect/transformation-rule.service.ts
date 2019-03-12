@@ -13,6 +13,8 @@ import {DeleteRuleDescription} from './model/connect/rules/DeleteRuleDescription
 import {UnitTransformRuleDescription} from './model/connect/rules/UnitTransformRuleDescription';
 import {AddTimestampRuleDescription} from './model/connect/rules/AddTimestampRuleDescription';
 import {AddValueTransformationRuleDescription} from './model/connect/rules/AddValueTransformationRuleDescription';
+import {TimestampTransformationRuleMode} from './model/connect/rules/TimestampTransformationRuleMode';
+import {TimestampTransformationRuleDescription} from './model/connect/rules/TimestampTransformationRuleDescription';
 
 @Injectable()
 export class TransformationRuleService {
@@ -37,12 +39,12 @@ export class TransformationRuleService {
             this.logger.error("Old and new schema must be defined")
         } else {
 
-            let timestampProperty = this.getTimestampProperty(this.newEventSchema.eventProperties);
-            if (timestampProperty) {
+            let addedTimestampProperties = this.getTimestampProperty(this.newEventSchema.eventProperties);
+            if (addedTimestampProperties) {
                 // add to old event schema for the case users moved the property to a nested property
-                this.oldEventSchema.eventProperties.push(timestampProperty);
+                this.oldEventSchema.eventProperties.push(addedTimestampProperties);
 
-                transformationRuleDescription.push(new AddTimestampRuleDescription(timestampProperty.getRuntimeName()));
+                transformationRuleDescription.push(new AddTimestampRuleDescription(addedTimestampProperties.getRuntimeName()));
             }
 
             let staticValueProperties = this.getStaticValueProperties(this.newEventSchema.eventProperties);
@@ -70,6 +72,10 @@ export class TransformationRuleService {
 
             // Unit
             transformationRuleDescription = transformationRuleDescription.concat(this.getUnitTransformRules(
+                this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
+
+            // Timestmap
+            transformationRuleDescription = transformationRuleDescription.concat(this.getTimestampTransformRules(
                 this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
             return transformationRuleDescription;
@@ -351,5 +357,47 @@ export class TransformationRuleService {
         }
 
         return result;
+    }
+
+    public getTimestampTransformRules(newEventProperties: EventProperty[],
+                                 oldEventSchema: EventSchema,
+                                 newEventSchema: EventSchema): TimestampTransformationRuleDescription[] {
+        var result: TimestampTransformationRuleDescription[] = [];
+
+        for (let eventProperty of newEventProperties) {
+
+            if (eventProperty instanceof EventPropertyPrimitive) {
+                const eventPropertyPrimitive = eventProperty as EventPropertyPrimitive;
+                const keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventPropertyPrimitive.id);
+
+                if (eventProperty.isTimestampProperty()) {
+                    result.push(new TimestampTransformationRuleDescription(
+                        keyNew,
+                        eventProperty.timestampTransformationMode,
+                        eventProperty.timestampTransformationFormatString,
+                        eventProperty.timestampTransformationMultiplier));
+                }
+            } else if (eventProperty instanceof EventPropertyNested) {
+                const tmpResults: TimestampTransformationRuleDescription[] =
+                    this.getTimestampTransformRules((<EventPropertyNested> eventProperty).eventProperties,  oldEventSchema, newEventSchema);
+                result = result.concat(tmpResults);
+            }
+
+
+        }
+
+        var filteredResult: TimestampTransformationRuleDescription[] = [];
+        for (let res of result) {
+            // TODO: better solution to check if the mode is valid
+            if (res.mode === TimestampTransformationRuleMode.FORMAT_STRING
+                || (res.multiplier != 0 && res.mode === TimestampTransformationRuleMode.TIME_UNIT))
+                 {
+                filteredResult.push(res);
+            }
+        }
+
+        return filteredResult;
+
+
     }
 }

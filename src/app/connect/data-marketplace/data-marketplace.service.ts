@@ -37,6 +37,7 @@ import {RemoveDuplicatesRuleDescription} from '../model/connect/rules/RemoveDupl
 import {AddTimestampRuleDescription} from '../model/connect/rules/AddTimestampRuleDescription';
 import {AddValueTransformationRuleDescription} from '../model/connect/rules/AddValueTransformationRuleDescription';
 import {FileStaticProperty} from '../model/FileStaticProperty';
+import {TimestampTransformationRuleDescription} from '../model/connect/rules/TimestampTransformationRuleDescription';
 
 @Injectable()
 export class DataMarketplaceService {
@@ -86,6 +87,7 @@ export class DataMarketplaceService {
     tsonld.addClassMapping(RemoveDuplicatesRuleDescription);
     tsonld.addClassMapping(AddTimestampRuleDescription);
     tsonld.addClassMapping(AddValueTransformationRuleDescription);
+    tsonld.addClassMapping(TimestampTransformationRuleDescription);
 
     return tsonld;
   }
