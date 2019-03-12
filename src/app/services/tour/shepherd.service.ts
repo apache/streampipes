@@ -1,5 +1,5 @@
 import Shepherd from 'shepherd.js';
-import "shepherd.js/dist/css/shepherd-theme-arrows.css";
+//import "shepherd.js/dist/css/shepherd-theme-arrows.css";
 import {Inject, Injectable} from "@angular/core";
 
 @Injectable()

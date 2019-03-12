@@ -12,14 +12,14 @@
     min-height: 100%;
   }
   
-  p {
-    width: 100%;
-    height: 100%;
-    margin-top: 30px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.3em;
-  } 
+  /*p {*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /*margin-top: 30px;*/
+    /*text-align: center;*/
+    /*font-weight: bold;*/
+    /*font-size: 1.3em;*/
+  /*} */
   .cover {
       width: 100%;
       height: 100%;
