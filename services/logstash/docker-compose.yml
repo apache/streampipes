@@ -1,7 +1,7 @@
 version: "2"
 services:
   logstash:
-    image: ${SP_DOCKER_REGISTRY}/streampipes/services/logstash
+    image: ${SP_DOCKER_REGISTRY}streampipes/services/logstash
     depends_on:
       - kafka
     ports:
