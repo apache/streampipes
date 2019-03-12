@@ -85,8 +85,8 @@
                     [class.aThirdWidth]="selectedTimeMultiplier === 'custom' && property.timestampTransformationMode === 'timeUnit'" >
                 <mat-select placeholder="Timestamp converter (unix timestamp)"  [(value)]="property.timestampTransformationMode">
                     <mat-option>None</mat-option>
-                    <mat-option value="formatString">Format String</mat-option>
-                    <mat-option value="timeUnit">Time Unit</mat-option>
+                    <mat-option value="formatString">Date String</mat-option>
+                    <mat-option value="timeUnit">Date Number</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
@@ -98,7 +98,7 @@
                     [class.example-full-width]="selectedTimeMultiplier !== 'custom'"
                     [class.aThirdWidth]="selectedTimeMultiplier === 'custom'" >
                 <mat-select placeholder="Current time unit" [(value)]="selectedTimeMultiplier">
-                   <mat-option value="milliseconds"  (click)="property.timestampTransformationMultiplier = 0">Millisecondss</mat-option>
+                   <mat-option value="milliseconds"  (click)="property.timestampTransformationMultiplier = 0">Milliseconds</mat-option>
                    <mat-option value="second"  (click)="property.timestampTransformationMultiplier = 1000">Seconds</mat-option>
              <!-- More transformation Options, there is any use case for them?
                     <mat-option value="minutes" (click)="property.timestampTransformationMultiplier = 60000">Minutes</mat-option>
