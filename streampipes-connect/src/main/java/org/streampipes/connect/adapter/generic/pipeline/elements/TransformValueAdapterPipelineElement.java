@@ -20,10 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.pipeline.Util;
-import org.streampipes.connect.adapter.generic.transform.value.UnitTransformationRule;
-import org.streampipes.connect.adapter.generic.transform.value.ValueEventTransformer;
-import org.streampipes.connect.adapter.generic.transform.value.ValueTransformationRule;
+import org.streampipes.connect.adapter.generic.transform.value.*;
 import org.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 import org.streampipes.model.schema.EventSchema;
@@ -35,7 +34,7 @@ import java.util.Map;
 public class TransformValueAdapterPipelineElement implements AdapterPipelineElement {
 
     private ValueEventTransformer eventTransformer;
-    Logger logger = LoggerFactory.getLogger(TransformValueAdapterPipelineElement.class);
+    private Logger logger = LoggerFactory.getLogger(TransformValueAdapterPipelineElement.class);
 
     public TransformValueAdapterPipelineElement(List<ValueTransformationRuleDescription> transformationRuleDescriptions) {
         List<ValueTransformationRule> rules = new ArrayList<>();
@@ -46,7 +45,19 @@ public class TransformValueAdapterPipelineElement implements AdapterPipelineElem
                 UnitTransformRuleDescription tmp = (UnitTransformRuleDescription) ruleDescription;
                 rules.add(new UnitTransformationRule(Util.toKeyArray(tmp.getRuntimeKey()),
                         tmp.getFromUnitRessourceURL(), tmp.getToUnitRessourceURL()));
-            } else {
+            } if(ruleDescription instanceof TimestampTranfsformationRuleDescription) {
+                TimestampTranfsformationRuleDescription tmp = (TimestampTranfsformationRuleDescription) ruleDescription;
+                TimestampTranformationRuleMode mode = null;
+                switch (tmp.getMode()) {
+                    case "formatString": mode = TimestampTranformationRuleMode.FORMAT_STRING;
+                        break;
+                    case "timeUnit": mode = TimestampTranformationRuleMode.TIME_UNIT;
+                }
+                rules.add(new TimestampTranformationRule(Util.toKeyArray(tmp.getRuntimeKey()), mode,
+                        tmp.getFormatString(), tmp.getMultiplier()));
+            }
+
+            else {
                 logger.error("Could not find the class for the rule description. This should never happen. Talk to admins to extend the rule implementations to get rid of this error!");
             }
         }

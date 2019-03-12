@@ -38,6 +38,7 @@ import org.streampipes.model.connect.rules.Schema.RenameRuleDescription;
 import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
 import org.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
+import org.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.streampipes.model.graph.*;
 import org.streampipes.model.grounding.*;
@@ -150,7 +151,8 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             RemoveDuplicatesTransformationRuleDescription.class,
             AddValueTransformationRuleDescription.class,
             AddTimestampRuleDescription.class,
-            PropertyRenameRule.class
+            PropertyRenameRule.class,
+            TimestampTranfsformationRuleDescription.class
     );
   }
 }
