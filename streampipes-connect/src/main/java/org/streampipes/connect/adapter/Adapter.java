@@ -31,6 +31,7 @@ import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformation
 import org.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
+import org.streampipes.model.grounding.TransportProtocol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +75,12 @@ public abstract class Adapter<T extends AdapterDescription> {
     public abstract GuessSchema getSchema(T adapterDescription) throws AdapterException, ParseException;
 
     public abstract String getId();
+
+    public void changeEventGrounding(TransportProtocol transportProtocol) {
+        List<AdapterPipelineElement> pipelineElements =  this.adapterPipeline.getPipelineElements();
+        SendToKafkaAdapterSink sink = (SendToKafkaAdapterSink) pipelineElements.get(pipelineElements.size() - 1);
+        sink.changeTransportProtocol(transportProtocol);
+    }
 
     private AdapterPipeline getAdapterPipeline(T adapterDescription) {
 
