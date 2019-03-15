@@ -42,6 +42,7 @@ import {NotificationLd} from './model/message/NotificationLd';
 import {SuccessMessageLd} from './model/message/SuccessMessage';
 import {ErrorMessageLd} from './model/message/ErrorMessage';
 import {TimestampTransformationRuleDescription} from './model/connect/rules/TimestampTransformationRuleDescription';
+import {DataStreamDescription} from './model/DataStreamDescription';
 
 @Injectable()
 export class TsonLdSerializerService {
@@ -63,6 +64,7 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(GenericAdapterStreamDescription);
         tsonld.addClassMapping(SpecificAdapterStreamDescription);
         tsonld.addClassMapping(DataSetDescription);
+        tsonld.addClassMapping(DataStreamDescription);
         tsonld.addClassMapping(EventSchema);
         tsonld.addClassMapping(EventProperty);
         tsonld.addClassMapping(EventPropertyNested);
