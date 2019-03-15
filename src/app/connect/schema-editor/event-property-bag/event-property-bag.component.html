@@ -11,13 +11,18 @@
                                    (delete)=deletePropertyNested($event)></app-event-property-nested>
       </div>
       <div *ngIf="isEventPropertyPrimitive(property)">
-        <!-- placeholder for event-properties -->
         <app-event-property-primitive (delete)=deletePropertyPrimitive($event)
                                       (addPrimitive)="addStaticValueProperty($event)"
                                       [domainPropertyGuess]="getDomainProbability(property.runTimeName)"
                                       [isEditable]="isEditable"
                                       [property]="property">
         </app-event-property-primitive>
+      </div>
+      <div *ngIf="isEventPropertyList(property)">
+        <app-event-property-list (delete)=deletePropertyList($event)
+                                      [isEditable]="isEditable"
+                                      [property]="property">
+        </app-event-property-list>
       </div>
       <!--<app-event-propoerty-list (delete)=// deleteProperty($event)-->
       <!--[eventPropertyList]="property"-->

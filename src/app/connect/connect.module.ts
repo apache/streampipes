@@ -19,7 +19,6 @@ import { SelectProtocolComponent } from './select-protocol-component/select-prot
 import { EventPropertyNestedComponent } from './schema-editor/event-property-nested/event-property-nested.component';
 import { EventPropertyPrimitiveComponent } from './schema-editor/event-property-primitive/event-property-primitive.component';
 import { EventPropertyComponent } from './schema-editor/event-property/event-property.component';
-import { EventPropoertyListComponent } from './schema-editor/event-propoerty-list/event-propoerty-list.component';
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
 
 import { EventPropertyBagComponent } from './schema-editor/event-property-bag/event-property-bag.component';
@@ -56,15 +55,16 @@ import { SelectStaticPropertiesComponent } from './select-static-properties-comp
 import { StaticAnyInput } from './static-properties/static-any-input/static-any-input.component';
 import { StaticOneOfInputComponent } from './static-properties/static-one-of-input/static-one-of-input.component';
 import { IconService } from './new-adapter/icon.service';
-import {StaticFileInputComponent} from './static-properties/static-file-input/static-file-input.component';
-import {StaticFileRestService} from './static-properties/static-file-input/static-file-rest.service';
-import {FileManagementComponent} from './file-management/file-management.component';
-import {FileRestService} from './file-management/service/filerest.service';
+import { StaticFileInputComponent } from './static-properties/static-file-input/static-file-input.component';
+import { StaticFileRestService } from './static-properties/static-file-input/static-file-rest.service';
+import { FileManagementComponent } from './file-management/file-management.component';
+import { FileRestService } from './file-management/service/filerest.service';
 
 import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
 import { AdapterExportDialog } from './data-marketplace/adapter-export/adapter-export-dialog.component';
 import { AdapterUploadDialog } from './data-marketplace/adapter-upload/adapter-upload-dialog.component';
 import { TsonLdSerializerService } from './tsonld-serializer.service';
+import { EventPropertyListComponent } from './schema-editor/event-property-list/event-property-list.component';
 
 
 @NgModule({
@@ -91,7 +91,7 @@ import { TsonLdSerializerService } from './tsonld-serializer.service';
     EventPropertyPrimitiveComponent,
     EventPropertyComponent,
     EventPropertyNestedComponent,
-    EventPropoertyListComponent,
+    EventPropertyListComponent,
     StaticPropertyComponent,
     AdapterStartedDialog,
     AdapterExportDialog,

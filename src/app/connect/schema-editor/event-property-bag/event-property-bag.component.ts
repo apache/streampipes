@@ -122,6 +122,16 @@ export class EventPropertyBagComponent implements OnInit {
 
     }
 
+    public deletePropertyList(e) {
+
+        var property: EventPropertyList = <EventPropertyList> e;
+
+        var index = this.eventProperties.indexOf(property, 0);
+        if (index > -1) {
+            this.eventProperties.splice(index, 1);
+        }
+
+    }
 
 
 

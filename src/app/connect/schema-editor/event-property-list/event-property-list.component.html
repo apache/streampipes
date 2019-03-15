@@ -4,6 +4,7 @@
             <b>
                 {{getLabel()}}
             </b>
+            <p style="margin: 0px 10px 10px;">[List]</p>
         </div>
         <div fxFlex="20" fxLayoutAlign="end">
             <button mat-button (click)=OnClickDeleteProperty()>
@@ -22,6 +23,14 @@
 </div>
 <div class="body" [hidden]=!open>
     <app-event-property
-            [property]="eventPropertyList"></app-event-property>
+            [property]="property"></app-event-property>
+
+        <mat-form-field class="doubleWidth">
+        <mat-select placeholder="Runtime Type" [(ngModel)]="property.eventProperty.runtimeType">
+            <mat-option *ngFor="let dataType of runtimeDataTypes" [value]="dataType.url">
+                {{ dataType.label }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
 </div>
 <!-- (save)=saveThisProperty($event) nach Angular 5 update -->
