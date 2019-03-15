@@ -22,7 +22,6 @@ import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
 import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventPropertyPrimitive;
-import org.streampipes.vocabulary.SO;
 import org.streampipes.vocabulary.XSD;
 
 import java.util.ArrayList;
@@ -74,6 +73,20 @@ public class JsonEventProperty {
 
         } else if (o.getClass().equals(ArrayList.class)) {
             resultProperty = new EventPropertyList();
+            ArrayList content = (ArrayList) o;
+
+            EventPropertyPrimitive arrayContent = new EventPropertyPrimitive();
+            if (content.size() == 0) {
+                arrayContent.setRuntimeType(XSD._string.toString());
+            } else if (content.get(0) instanceof Integer || content.get(0) instanceof Double || content.get(0) instanceof Long) {
+                arrayContent.setRuntimeType(XSD._float.toString());
+            } else if (content.get(0) instanceof Boolean) {
+                arrayContent.setRuntimeType(XSD._boolean.toString());
+            } else {
+                arrayContent.setRuntimeType(XSD._string.toString());
+            }
+
+            ((EventPropertyList) resultProperty).setEventProperty(arrayContent);
             resultProperty.setRuntimeName(key);
         }
 

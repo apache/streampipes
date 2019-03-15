@@ -30,15 +30,14 @@ import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
 
+import javax.json.Json;
+import javax.json.stream.JsonParserFactory;
+import javax.json.stream.JsonParsingException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.json.Json;
-import javax.json.stream.JsonParserFactory;
-import javax.json.stream.JsonParsingException;
 
 public class JsonObjectParser extends Parser {
 
