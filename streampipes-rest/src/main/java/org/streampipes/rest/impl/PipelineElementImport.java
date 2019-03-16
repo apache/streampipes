@@ -129,11 +129,13 @@ public class PipelineElementImport extends AbstractRestInterface {
         requestor.deleteSEC(requestor.getSECById(elementId));
         userService.deleteOwnAction(username, elementId);
       } else {
-        return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
+        return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(),
+                NotificationType.STORAGE_ERROR.description()));
       }
       AssetManager.deleteAsset(appId);
     } catch (URISyntaxException | IOException e) {
-      return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
+      return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(),
+              NotificationType.STORAGE_ERROR.description()));
     }
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
@@ -155,7 +157,8 @@ public class PipelineElementImport extends AbstractRestInterface {
         return ok(Notifications.create(NotificationType.UNKNOWN_ERROR));
       }
     } catch (URISyntaxException e) {
-      return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+      return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(),
+              NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
     }
   }
 }
