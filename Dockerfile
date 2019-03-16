@@ -8,6 +8,7 @@ COPY dist/assets/fonts/ /usr/share/nginx/html/assets/fonts/
 COPY dist/index.html /usr/share/nginx/html/
 COPY dist/main.bundle.js /usr/share/nginx/html/
 COPY dist/polyfills.bundle.js /usr/share/nginx/html/
+COPY dist/runtime.bundle.js /usr/share/nginx/html/
 COPY dist/style.bundle.js /usr/share/nginx/html/
 COPY dist/style.css /usr/share/nginx/html/
 
