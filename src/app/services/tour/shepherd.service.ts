@@ -22,7 +22,7 @@ export class ShepherdService {
     makeTour(currentTourSettings) {
         let tour = new Shepherd.Tour({
             defaults: {
-                classes: 'shepherd-theme-arrows',
+                classes: 'shadow-md bg-purple-dark',
                 showCancelLink: true
             }
         });
