@@ -19,14 +19,15 @@ package org.streampipes.container.api;
 import org.streampipes.container.declarer.PipelineTemplateDeclarer;
 import org.streampipes.container.init.DeclarersSingleton;
 
+import java.util.Map;
+
 import javax.ws.rs.Path;
-import java.util.List;
 
 @Path("/template")
 public class PipelineTemplateElement extends Element<PipelineTemplateDeclarer> {
 
   @Override
-  protected List<PipelineTemplateDeclarer> getElementDeclarers() {
+  protected Map<String, PipelineTemplateDeclarer> getElementDeclarers() {
     return DeclarersSingleton.getInstance().getPipelineTemplateDeclarers();
   }
 }

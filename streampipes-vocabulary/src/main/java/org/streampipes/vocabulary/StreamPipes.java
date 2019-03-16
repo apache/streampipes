@@ -306,6 +306,7 @@ public class StreamPipes {
   public static final String MULTIPLIER = NS + "multiplier" ;
 
   public static final String INDEX = NS + "hasIndex";
+  public static final String INCLUDES_ASSETS = NS + "includesAssets";
 
   public static final String NOTIFICATION = NS + "Notification" ;
   public static final String NOTIFICATIONS = NS + "notifications" ;

@@ -26,7 +26,7 @@ import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 
-import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -44,7 +44,7 @@ public class SecElement extends InvocableElement<DataSinkInvocation,
     }
 
     @Override
-    protected List<SemanticEventConsumerDeclarer> getElementDeclarers() {
+    protected Map<String, SemanticEventConsumerDeclarer> getElementDeclarers() {
         return DeclarersSingleton.getInstance().getConsumerDeclarers();
     }
 

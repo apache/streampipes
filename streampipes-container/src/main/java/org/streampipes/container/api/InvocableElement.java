@@ -35,6 +35,7 @@ import org.streampipes.serializers.json.GsonSerializer;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -47,7 +48,7 @@ import javax.ws.rs.core.MediaType;
 public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D extends Declarer,
         P extends AbstractParameterExtractor<I>> extends Element<D> {
 
-    protected abstract List<D> getElementDeclarers();
+    protected abstract Map<String, D> getElementDeclarers();
     protected abstract String getInstanceId(String uri, String elementId);
 
     protected Class<I> clazz;
