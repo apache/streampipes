@@ -181,6 +181,11 @@ export class NewAdapterComponent implements OnInit {
         this.removeSelectionEmitter.emit();
     }
 
+    clickProtocolSettingsNextButton(stepper: MatStepper) {
+        this.ShepherdService.trigger("specific-settings-next-button");
+        this.goForward(stepper);
+    }
+
     clickSpecificSettingsNextButton(stepper: MatStepper) {
         this.ShepherdService.trigger("specific-settings-next-button");
         this.guessEventSchema();

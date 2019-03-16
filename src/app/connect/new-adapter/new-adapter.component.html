@@ -41,7 +41,7 @@
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                 <div id="specific-settings-next-button">
-                    <button class="stepper-button" *ngIf="isGenericAdapter()" [disabled]="!protocolConfigurationValid"  (click)="clickSpecificSettingsNextButton(stepper)" color="primary"
+                    <button class="stepper-button" *ngIf="isGenericAdapter()" [disabled]="!protocolConfigurationValid"  (click)="clickProtocolSettingsNextButton(stepper)" color="primary"
                             mat-raised-button>Next
                     </button>
                     <button class="stepper-button" *ngIf="!isGenericAdapter()" (click)="clickSpecificSettingsNextButton(stepper)" color="primary"

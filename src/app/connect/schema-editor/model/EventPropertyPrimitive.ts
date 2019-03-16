@@ -1,6 +1,7 @@
 import {EventProperty} from './EventProperty';
 import {RdfsClass} from '../../tsonld/RdfsClass';
 import {RdfProperty} from '../../tsonld/RdfsProperty';
+import {createElementCssSelector} from '@angular/compiler';
 
 
 @RdfsClass('sp:EventPropertyPrimitive')
@@ -26,6 +27,13 @@ export class EventPropertyPrimitive extends EventProperty {
     @RdfProperty('sp:hasValueSpecification')
     public valueSpecification: string;
 
+    //Use for the timestamp tranformation
+    timestampTransformationMode: string;
+
+    timestampTransformationFormatString: string;
+
+    timestampTransformationMultiplier: number;
+
 
     public copy(): EventProperty {
         const result = new EventPropertyPrimitive(this.id, null);
@@ -41,11 +49,24 @@ export class EventPropertyPrimitive extends EventProperty {
 
         result.staticValue = this.staticValue;
 
+        this.timestampTransformationMode = this.timestampTransformationMode;
+        this.timestampTransformationFormatString = this.timestampTransformationFormatString;
+        this.timestampTransformationMultiplier = this.timestampTransformationMultiplier;
+
         return result;
     }
 
     public setRuntimeType(runtimeType: string): void {
         this.runtimeType = runtimeType;
+    }
+
+    isTimestampProperty() {
+        if (this.domainProperty === "http://schema.org/DateTime") {
+            this.runtimeType = "http://www.w3.org/2001/XMLSchema#float";
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

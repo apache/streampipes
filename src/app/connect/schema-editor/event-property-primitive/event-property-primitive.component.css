@@ -17,3 +17,7 @@
 .onhover:hover {
   background-color: darkgrey;
 }
+
+.aThirdWidth {
+  width: 120px !important;
+}

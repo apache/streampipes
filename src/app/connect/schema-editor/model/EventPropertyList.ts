@@ -7,11 +7,10 @@ import {RdfProperty} from '../../tsonld/RdfsProperty';
 export class EventPropertyList extends EventProperty {
 
     @RdfProperty('sp:hasEventProperty')
-    eventProperties: EventProperty[];
+    eventProperty: EventProperty;
 
     constructor(propertyID: string, parent: EventProperty) {
         super(propertyID, parent);
-        this.eventProperties = new Array(0);
     }
 
     public copy(): EventProperty {
@@ -21,7 +20,7 @@ export class EventPropertyList extends EventProperty {
         result.description = this.description;
         result.runTimeName = this.runTimeName;
         result.domainProperty = this.domainProperty;
-
+        result.eventProperty = this.eventProperty;
 
         return result;
     }
