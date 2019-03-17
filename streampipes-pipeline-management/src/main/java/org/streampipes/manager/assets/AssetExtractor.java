@@ -17,16 +17,12 @@ package org.streampipes.manager.assets;
 
 import org.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.streampipes.commons.zip.ZipFileExtractor;
-import org.streampipes.config.backend.BackendConfig;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class AssetExtractor {
-
-  private static final String ASSET_BASE_DIR = BackendConfig.INSTANCE.getAssetDir();
-
 
   private InputStream zipInputStream;
   private String appId;
@@ -46,7 +42,8 @@ public class AssetExtractor {
   }
 
   private String makeAssetLocation(String appId) {
-    return ASSET_BASE_DIR + File.separator + appId;
+    return AssetConstants.ASSET_BASE_DIR
+            + File.separator + appId;
   }
 
   private String makeDocumentationAssetPath(String appId) {

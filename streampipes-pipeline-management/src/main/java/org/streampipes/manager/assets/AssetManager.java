@@ -17,7 +17,6 @@ package org.streampipes.manager.assets;
 
 import org.apache.commons.io.FileUtils;
 import org.streampipes.commons.constants.GlobalStreamPipesConstants;
-import org.streampipes.config.backend.BackendConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,10 +65,7 @@ public class AssetManager {
   }
 
   private static String getAssetDir(String appId) {
-    return getAssetBaseDir() + File.separator + appId;
+    return AssetConstants.ASSET_BASE_DIR + File.separator + appId;
   }
 
-  private static String getAssetBaseDir() {
-    return BackendConfig.INSTANCE.getAssetDir();
-  }
 }

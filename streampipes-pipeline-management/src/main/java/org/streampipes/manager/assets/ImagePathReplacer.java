@@ -24,7 +24,7 @@ public class ImagePathReplacer {
   private static final Pattern pattern = Pattern.compile(IMAGE_REGEX);
 
   private static final String API_PREFIX = "streampipes-backend/api/v2/pe/";
-   private static final String API_APPENDIX = "/assets/";
+  private static final String API_APPENDIX = "/assets/";
 
   private String originalContent;
   private String appId;
@@ -35,12 +35,10 @@ public class ImagePathReplacer {
   }
 
   public String replaceContent() {
-    String newContent = originalContent;
+    String newContent;
     Matcher matcher = pattern.matcher(originalContent);
-    //while(matcher.find()) {
-      newContent = matcher.replaceAll("$1" + getUrl() + "$2$3");
-      System.out.println(newContent);
-    //}
+    newContent = matcher.replaceAll("$1" + getUrl() + "$2$3");
+
     return newContent;
   }
 
