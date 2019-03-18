@@ -116,8 +116,18 @@ export default {
             },
             {
                 stepId: "step-12",
+                title: "Enter pipeline name",
+                text: "<p>Enter a name and an optional description of your pipeline.</p><p>Afterwards, make sure that <b>Start pipeline immediately</b> is checked.</p>",
+                attachToElement: '[name^="pipelineName"]',
+                attachPosition: "left",
+                buttons: [
+                    "cancel"
+                ]
+            },
+            {
+                stepId: "step-13",
                 title: "Save Pipeline Dialog",
-                text: "<p>Enter a name and an optional description of your pipeline.</p><p>Afterwards, make sure that <b>Start pipeline immediately</b> is checked.</p><p>Click on <b>Save and go to pipeline view</b> to start the pipeline.</p>",
+                text: "<p>Click on <b>Save and go to pipeline view</b> to start the pipeline.</p>",
                 attachToElement: "md-dialog>md-dialog-actions>button:nth-of-type(3)",
                 attachPosition: "bottom",
                 buttons: [
@@ -125,7 +135,7 @@ export default {
                 ]
             },
             {
-                stepId: "step-13",
+                stepId: "step-14",
                 title: "Pipeline Started",
                 text: "<p>Congratulations!</p><p>You've completed the first tutorial. The next step would be to add a visualization in the <b>Dashboard</b>. If you wish to see how it works, start the second tutorial.</p>",
                 attachToElement: "md-dialog>form>md-dialog-actions>button:nth-of-type(1)",
@@ -143,8 +153,9 @@ export default {
             {actionId: "save-sepa", currentStep: "step-8"},
             {actionId: "select-action", currentStep: "step-9"},
             {actionId: "customize-action", currentStep: "step-10"},
-            {actionId: "save-pipeline-dialog", currentStep: "step-11"},
-            {actionId: "pipeline-started", currentStep: "step-12"},
+            {actionId: "enter-pipeline-name", currentStep: "step-11"},
+            {actionId: "save-pipeline-dialog", currentStep: "step-12"},
+            {actionId: "pipeline-started", currentStep: "step-13"},
         ]
     }
 }

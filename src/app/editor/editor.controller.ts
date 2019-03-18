@@ -19,6 +19,7 @@ export class EditorCtrl {
     tabs: any;
     currentlyFocusedElement: any;
     ShepherdService: any;
+    isTutorialOpen: boolean = false;
 
     requiredStreamForTutorialAppId: any = "org.streampipes.pe.random.number.json";
     requiredProcessorForTutorialAppId: any = "org.streampipes.processors.transformation.flink.fieldhasher";
@@ -89,22 +90,25 @@ export class EditorCtrl {
             this.makeDraggable();
         });
 
+        this.loadSources();
+        this.loadSepas();
+        this.loadActions();
+    }
+
+    checkForTutorial() {
         if (this.AuthStatusService.email != undefined) {
             this.RestApi
                 .getUserDetails()
                 .then(msg => {
                     let user = msg.data;
-                    if (!user.hideTutorial || user.hideTutorial == undefined) {
+                    if ((!user.hideTutorial || user.hideTutorial == undefined) && !this.isTutorialOpen) {
                         if (this.requiredPipelineElementsForTourPresent()) {
+                            this.isTutorialOpen = true;
                             this.EditorDialogManager.showWelcomeDialog(user);
                         }
                     }
                 });
         }
-
-        this.loadSources();
-        this.loadSepas();
-        this.loadActions();
     }
 
     startCreatePipelineTour() {
@@ -195,6 +199,7 @@ export class EditorCtrl {
                     this.allElements["stream"] = tempStreams;
                     this.allElements["set"] = tempSets;
                     this.currentElements = this.allElements["stream"];
+                    this.checkForTutorial();
                 });
             });
     };
@@ -207,6 +212,7 @@ export class EditorCtrl {
                     sepa.type = 'sepa';
                 });
                 this.allElements["sepa"] = sepas;
+                this.checkForTutorial();
             });
     };
 
@@ -218,6 +224,7 @@ export class EditorCtrl {
                     action.type = 'action';
                 });
                 this.allElements["action"] = actions;
+                this.checkForTutorial();
             });
     };
 

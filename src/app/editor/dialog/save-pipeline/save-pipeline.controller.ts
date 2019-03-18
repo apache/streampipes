@@ -38,6 +38,16 @@ export class SavePipelineController {
 
     $onInit() {
         this.getPipelineCategories();
+        if (this.ShepherdService.isTourActive()) {
+            this.ShepherdService.trigger("enter-pipeline-name");
+        }
+
+    }
+
+    triggerTutorial() {
+        if (this.ShepherdService.isTourActive()) {
+            this.ShepherdService.trigger("save-pipeline-dialog");
+        }
     }
 
     displayErrors(data) {

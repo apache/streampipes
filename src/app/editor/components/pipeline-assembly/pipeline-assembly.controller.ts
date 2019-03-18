@@ -144,9 +144,6 @@ export class PipelineAssemblyController {
         }
 
         this.openPipelineNameModal(pipeline, (!!this.currentModifiedPipelineId));
-        if (this.ShepherdService.isTourActive()) {
-            this.ShepherdService.trigger("save-pipeline-dialog");
-        }
     }
 
 

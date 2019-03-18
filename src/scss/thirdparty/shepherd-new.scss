@@ -1,3 +1,5 @@
+@import '../_variables.scss';
+
 html,
 body {
   height: 100%;
@@ -7,6 +9,10 @@ body {
 .tippy-tooltip {
   font-size: 1.3rem;
   padding: 0.3rem 0.6rem;
+}
+
+.shepherd-element.shepherd-has-title .shepherd-content header {
+  background: $sp-color-accent;
 }
 
 .button {
@@ -128,6 +134,8 @@ pre {
 }
 
 .shepherd-element .shepherd-content {
+  border: 2px solid $sp-color-accent;
+  border-radius: 7px;
   background: none;
   font-size: inherit;
 }
@@ -162,7 +170,7 @@ pre {
 
 .shepherd-element .shepherd-content header .shepherd-title,
 .shepherd-element .shepherd-content .shepherd-header .shepherd-title {
-  color: rgba(0, 0, 0, 0.75);
+  color: white;
   float: left;
   font-size: 1.1em;
 }

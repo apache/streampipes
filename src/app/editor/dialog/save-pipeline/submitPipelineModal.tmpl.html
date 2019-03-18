@@ -33,7 +33,7 @@
                         <span ng-show="ctrl.submitPipelineForm.pipelineDescription.$error.maxlength">Please provide a shorter description.</span>
                     </md-input-container>
                 </div>
-                <md-checkbox ng-disabled="false" aria-label="Start Pipeline" ng-model="ctrl.startPipelineAfterStorage">
+                <md-checkbox ng-click="ctrl.triggerTutorial()" ng-disabled="false" aria-label="Start Pipeline" ng-model="ctrl.startPipelineAfterStorage">
                     Start pipeline immediately
                 </md-checkbox>
             </div>
