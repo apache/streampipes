@@ -32,4 +32,6 @@ public interface INoSqlStorage {
   IVisualizationStorage getVisualizationStorageApi();
 
   IRdfEndpointStorage getRdfEndpointStorage();
+
+  IAssetDashboardStorage getAssetDashboardStorage();
 }

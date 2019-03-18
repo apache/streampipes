@@ -170,6 +170,10 @@ public abstract class AbstractRestInterface {
             .build();
   }
 
+  protected Response ok() {
+    return Response.ok().build();
+  }
+
   protected Response fail() {
     return Response.serverError().build();
   }
