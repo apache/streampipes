@@ -1,0 +1,18 @@
+<div fxLayout="column" fxFlex="100" class="page-container page-container-padding page-container-connect">
+    <div fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
+        <div fxLayout="fill" style="line-height:24px;border-bottom:1px solid #ccc">
+            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)">
+                <mat-tab label="Asset Monitoring">
+                </mat-tab>
+                <mat-tab id="all-adapters" label="New Asset">
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+
+    <div class="fixed-height page-container-padding" fxLayout="column" fxFlex="100">
+        <asset-dashboard-overview *ngIf="selectedIndex == 0 && !dashboardSelected" fxFlex="100" (selectedDashboard)="openDashboard($event)"></asset-dashboard-overview>
+        <view-asset fxFlex="100" *ngIf="selectedIndex == 0 && dashboardSelected" [dashboardConfig]="selectedDashboard" (dashboardClosed)="closeDashboard($event)"></view-asset>
+        <create-asset *ngIf="selectedIndex == 1" fxFlex="100"></create-asset>
+    </div>
+</div>

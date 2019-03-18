@@ -1,0 +1,33 @@
+.element-margin {
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+mat-toolbar {
+    background: #39b54a;
+    color:white;
+}
+
+mat-dialog-content {
+    padding: 24px;
+    -webkit-box-ordinal-group: 2;
+    -webkit-order: 1;
+    order: 1;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.mat-dialog-content {
+    width:100%;
+    height:74%;
+    margin: 0px;
+}
+
+.mat-dialog-actions {
+    margin-bottom:0px;
+    padding-right:10px;
+}

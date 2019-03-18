@@ -1,0 +1,28 @@
+<div fxLayout="column" fxFlex="100" >
+    <input type="file" (change)="handleFileInput($event.target.files)" accept="image/*" #file style="display:none;">
+    <div class="assemblyOptions sp-blue-bg">
+        <div layout="row" layout-align="start center">
+            <button mat-icon-button (click)="prepareDashboard()" type="submit">
+                <i class="material-icons">save</i>
+            </button>
+            <button mat-icon-button (click)="file.click()" type="submit">
+                <i class="material-icons">file_upload</i>
+            </button>
+            <button mat-icon-button (click)="openAddPipelineDialog()" >
+                <i class="material-icons">add</i>
+            </button>
+            <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+                <button mat-icon-button (click)="clearCanvas()" matTooltip="Clear">
+                    <i class="material-icons">
+                        clear
+                    </i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="outerAssemblyArea" class="sp-blue-border-nopadding asset-configuration-board-panel">
+        <div id="asset-configuration-board-canvas" class="asset-configuration-board-canvas" fxLayoutAlign="center center">
+
+        </div>
+    </div>
+</div>

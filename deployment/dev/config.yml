@@ -14,3 +14,4 @@ modules:
   - spMyElements
   - spFileUpload
   - spConfiguration
+  - spAppAssetMonitoring

@@ -182,3 +182,18 @@ spFileUpload:
   icon: 'file:ic_file_upload_24px'
   homeImage: '/assets/img/home/configuration.png'
   admin: false
+spAppAssetMonitoring:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'AppAssetMonitoringModule'
+  ng5_component: 'AppAssetMonitoringComponent'
+  ng5_componentPath: '../app-asset-monitoring/app-asset-monitoring.component'
+  path: './app-asset-monitoring/app-asset-monitoring.module'
+  link: 'streampipes.asset-monitoring'
+  url: '/asset-monitoring'
+  title: 'Asset Monitoring'
+  description: 'asset-monitoring'
+  icon: 'av:ic_web_asset_24px'
+  homeImage: '/assets/img/home/configuration.png'
+  admin: false
