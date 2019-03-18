@@ -35,60 +35,58 @@ import javax.persistence.OneToMany;
 @Entity
 public class DataSinkInvocation extends InvocableStreamPipesEntity {
 
-	private static final long serialVersionUID = -2345635798917416757L;
-		
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.HAS_EC_TYPE)
-	private List<String> category;
+  private static final long serialVersionUID = -2345635798917416757L;
 
-	public DataSinkInvocation(DataSinkInvocation sec) {
-		super(sec);
-		this.category = sec.getCategory();
-	}
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.HAS_EC_TYPE)
+  private List<String> category;
 
-	public DataSinkInvocation(DataSinkDescription sec)
-	{
-		super();
-		this.setName(sec.getName());
-		this.setDescription(sec.getDescription());
-		this.setIconUrl(sec.getIconUrl());
-		this.setInputStreams(sec.getSpDataStreams());
-		this.setSupportedGrounding(sec.getSupportedGrounding());
-		this.setStaticProperties(sec.getStaticProperties());
-		this.setBelongsTo(sec.getElementId());
-		this.category = sec.getCategory();
-		this.setStreamRequirements(sec.getSpDataStreams());
-		this.setAppId(sec.getAppId());
-		//this.setUri(belongsTo +"/" +getElementId());
-	}
-	
-	public DataSinkInvocation(DataSinkDescription sec, String domId)
-	{
-		this(sec);
-		this.setDOM(domId);
-	}
-	
-	public DataSinkInvocation()
-	{
-		super();
-		inputStreams = new ArrayList<>();
-	}
-	
-	public List<StaticProperty> getStaticProperties() {
-		return staticProperties;
-	}
+  public DataSinkInvocation(DataSinkInvocation sec) {
+    super(sec);
+    this.category = sec.getCategory();
+  }
 
-	public void setStaticProperties(List<StaticProperty> staticProperties) {
-		this.staticProperties = staticProperties;
-	}
+  public DataSinkInvocation(DataSinkDescription sec) {
+    super();
+    this.setName(sec.getName());
+    this.setDescription(sec.getDescription());
+    this.setIconUrl(sec.getIconUrl());
+    this.setInputStreams(sec.getSpDataStreams());
+    this.setSupportedGrounding(sec.getSupportedGrounding());
+    this.setStaticProperties(sec.getStaticProperties());
+    this.setBelongsTo(sec.getElementId());
+    this.category = sec.getCategory();
+    this.setStreamRequirements(sec.getSpDataStreams());
+    this.setAppId(sec.getAppId());
+    this.setIncludesAssets(sec.isIncludesAssets());
+    //this.setUri(belongsTo +"/" +getElementId());
+  }
 
-	public List<String> getCategory() {
-		return category;
-	}
+  public DataSinkInvocation(DataSinkDescription sec, String domId) {
+    this(sec);
+    this.setDOM(domId);
+  }
 
-	public void setCategory(List<String> category) {
-		this.category = category;
-	}
-		
+  public DataSinkInvocation() {
+    super();
+    inputStreams = new ArrayList<>();
+  }
+
+  public List<StaticProperty> getStaticProperties() {
+    return staticProperties;
+  }
+
+  public void setStaticProperties(List<StaticProperty> staticProperties) {
+    this.staticProperties = staticProperties;
+  }
+
+  public List<String> getCategory() {
+    return category;
+  }
+
+  public void setCategory(List<String> category) {
+    this.category = category;
+  }
+
 }

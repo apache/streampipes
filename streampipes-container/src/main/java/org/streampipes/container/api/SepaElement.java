@@ -23,7 +23,7 @@ import org.streampipes.container.util.Util;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 
-import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Path;
 
@@ -37,7 +37,7 @@ public class SepaElement extends InvocableElement<DataProcessorInvocation,
     }
 
     @Override
-    protected List<SemanticEventProcessingAgentDeclarer> getElementDeclarers() {
+    protected Map<String, SemanticEventProcessingAgentDeclarer> getElementDeclarers() {
         return DeclarersSingleton.getInstance().getEpaDeclarers();
     }
 

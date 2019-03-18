@@ -20,16 +20,17 @@ package org.streampipes.container.html.page;
 import org.streampipes.container.html.model.Description;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
 public abstract class WelcomePageGenerator<T> {
 
   protected List<Description> descriptions;
-  protected List<T> declarers;
+  protected Collection<T> declarers;
   protected String baseUri;
 
-  public WelcomePageGenerator(String baseUri, List<T> declarers) {
+  public WelcomePageGenerator(String baseUri, Collection<T> declarers) {
     this.declarers = declarers;
     this.baseUri = baseUri;
     this.descriptions = new ArrayList<>();

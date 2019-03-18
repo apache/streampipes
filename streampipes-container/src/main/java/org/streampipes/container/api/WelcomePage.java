@@ -33,7 +33,12 @@ public class WelcomePage {
   @GET
   @Produces(MediaType.TEXT_HTML)
   public String getWelcomePageHtml() {
-    WelcomePageGeneratorImpl welcomePage = new WelcomePageGeneratorImpl(DeclarersSingleton.getInstance().getBaseUri(), DeclarersSingleton.getInstance().getDeclarers());
+    WelcomePageGeneratorImpl welcomePage = new WelcomePageGeneratorImpl(DeclarersSingleton
+            .getInstance()
+            .getBaseUri(), DeclarersSingleton
+            .getInstance()
+            .getDeclarers()
+            .values());
     HTMLGenerator html = new HTMLGenerator(welcomePage.buildUris());
     return html.buildHtml();
   }
@@ -41,7 +46,12 @@ public class WelcomePage {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public String getWelcomePageJson() {
-    WelcomePageGeneratorImpl welcomePage = new WelcomePageGeneratorImpl(DeclarersSingleton.getInstance().getBaseUri(), DeclarersSingleton.getInstance().getDeclarers());
+    WelcomePageGeneratorImpl welcomePage = new WelcomePageGeneratorImpl(DeclarersSingleton
+            .getInstance()
+            .getBaseUri(), DeclarersSingleton
+            .getInstance()
+            .getDeclarers()
+            .values());
     JSONGenerator json = new JSONGenerator(welcomePage.buildUris());
     return json.buildJson();
   }

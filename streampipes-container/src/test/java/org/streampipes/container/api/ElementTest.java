@@ -20,24 +20,24 @@ package org.streampipes.container.api;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Test;
-
 import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.InvocableDeclarer;
-import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.Response;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ElementTest {;
     @Test
     public void getByIdTest() {
         String id = "sepapathName1";
-        List<Declarer> declarers = Arrays.asList(getDeclarerImpl(id), getDeclarerImpl("sepapathName2"));
+        Map<String, Declarer> declarers = new HashMap<>();
+        declarers.put(id, getDeclarerImpl(id));
+        declarers.put("sepapathName2", getDeclarerImpl("sepapathName2"));
         TestElementImpl elem = new TestElementImpl();
         elem.setDeclarers(declarers);
 
@@ -50,7 +50,7 @@ public class ElementTest {;
     @Test
     public void getByIdIsNullTest() {
         TestElementImpl elem = new TestElementImpl();
-        elem.setDeclarers(new ArrayList<>());
+        elem.setDeclarers(new HashMap<>());
 
         NamedStreamPipesEntity actual = elem.getById("");
         assertNull(actual);
@@ -92,18 +92,18 @@ public class ElementTest {;
     }
 
     private class TestElementImpl extends Element<Declarer> {
-        private List<Declarer> declarers = new ArrayList<>();
+        private Map<String, Declarer> declarers = new HashMap<>();
 
-        public List<Declarer> getDeclarers() {
+        public Map<String, Declarer> getDeclarers() {
             return declarers;
         }
 
-        public void setDeclarers(List<Declarer> declarers) {
+        public void setDeclarers(Map<String, Declarer> declarers) {
             this.declarers = declarers;
         }
 
         @Override
-        protected List<Declarer> getElementDeclarers() {
+        protected Map<String, Declarer> getElementDeclarers() {
             return declarers;
         }
     }

@@ -22,6 +22,7 @@ import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SepaParseException;
+import org.streampipes.manager.assets.AssetManager;
 import org.streampipes.manager.endpoint.EndpointItemParser;
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.manager.storage.UserService;
@@ -113,21 +114,28 @@ public class PipelineElementImport extends AbstractRestInterface {
 
     UserService userService = getUserService();
     IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
+    String appId;
     try {
       if (requestor.getSEPAById(elementId) != null) {
+        appId = requestor.getSEPAById(elementId).getAppId();
         requestor.deleteSEPA(requestor.getSEPAById(elementId));
         userService.deleteOwnSepa(username, elementId);
       } else if (requestor.getSEPById(elementId) != null) {
+        appId = requestor.getSEPById(elementId).getAppId();
         requestor.deleteSEP(requestor.getSEPById(elementId));
         userService.deleteOwnSource(username, elementId);
       } else if (requestor.getSECById(elementId) != null) {
+        appId = requestor.getSEPById(elementId).getAppId();
         requestor.deleteSEC(requestor.getSECById(elementId));
         userService.deleteOwnAction(username, elementId);
       } else {
-        return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
+        return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(),
+                NotificationType.STORAGE_ERROR.description()));
       }
-    } catch (URISyntaxException e) {
-      return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
+      AssetManager.deleteAsset(appId);
+    } catch (URISyntaxException | IOException e) {
+      return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(),
+              NotificationType.STORAGE_ERROR.description()));
     }
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
@@ -149,7 +157,8 @@ public class PipelineElementImport extends AbstractRestInterface {
         return ok(Notifications.create(NotificationType.UNKNOWN_ERROR));
       }
     } catch (URISyntaxException e) {
-      return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+      return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(),
+              NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
     }
   }
 }
