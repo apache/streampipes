@@ -1,6 +1,6 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/34a7e26be4fc4fa284ee5201b6d386ea)](https://www.codacy.com/app/dominikriemer/streampipes-ce?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=streampipes/streampipes-ce&amp;utm_campaign=Badge_Grade)
 [![Docker pulls](https://img.shields.io/docker/pulls/streampipes/backend.svg)](https://hub.docker.com/r/streampipes/backend/)
-![Maven central](https://img.shields.io/maven-central/v/org.streampipes/streampipes-backend.svg)
+[![Maven central](https://img.shields.io/maven-central/v/org.streampipes/streampipes-backend.svg)](https://img.shields.io/maven-central/v/org.streampipes/streampipes-backend.svg)
 [![License](https://img.shields.io/github/license/streampipes/streampipes-ce.svg)](https://docs.streampipes.org/license/)
 [![License](https://img.shields.io/github/last-commit/streampipes/streampipes-ce.svg)]()
 <h1 align="center">
