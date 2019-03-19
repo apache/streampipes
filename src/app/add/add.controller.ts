@@ -101,7 +101,7 @@ export class AddCtrl {
         this.$mdDialog.show({
             controller: AddEndpointController,
             controllerAs: 'ctrl',
-            templateUrl: 'dialogs/add-endpoint/add-endpoint.tmpl.html',
+            template: require('./dialogs/add-endpoint/add-endpoint.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             locals: {
@@ -182,7 +182,7 @@ export class AddCtrl {
         this.$mdDialog.show({
             controller: EndpointInstallationController,
             controllerAs: 'ctrl',
-            templateUrl: 'dialogs/endpoint-installation/endpoint-installation.tmpl.html',
+            template: require('./dialogs/endpoint-installation/endpoint-installation.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: false,
             locals: {

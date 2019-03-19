@@ -6,7 +6,6 @@ import { AppAssetMonitoringComponent } from './app-asset-monitoring.component';
 
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
-import { KonvaModule } from 'ng2-konva';
 import { ViewAssetComponent } from "./components/view-asset/view-asset.component";
 import { CreateAssetComponent } from "./components/create-asset/create-asset.component";
 import { WebsocketService } from "./services/websocket.service";
@@ -25,7 +24,6 @@ import {AssetDashboardOverviewComponent} from "./components/dashboard-overview/d
         CommonModule,
         FlexLayoutModule,
         CustomMaterialModule,
-        KonvaModule,
         MatGridListModule,
         MatInputModule,
         MatFormFieldModule,

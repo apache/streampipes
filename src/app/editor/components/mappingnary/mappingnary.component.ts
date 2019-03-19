@@ -1,7 +1,8 @@
 import {MappingNaryController} from "./mappingnary.controller";
+declare const require: any;
 
 export let MappingNaryComponent = {
-    templateUrl: 'mappingnary.tmpl.html',
+    template: require('./mappingnary.tmpl.html'),
     bindings: {
         staticProperty : "=",
         displayRecommended: "=",

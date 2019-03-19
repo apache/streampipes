@@ -1,7 +1,8 @@
 import {PipelineElementRecommendationController} from "./pipeline-element-recommendation.controller";
+declare const require: any;
 
 export let PipelineElementRecommendationComponent = {
-    templateUrl: 'pipeline-element-recommendation.tmpl.html',
+    template: require('./pipeline-element-recommendation.tmpl.html'),
     bindings: {
         recommendedElements: "<",
         recommendationsShown: "<",

@@ -1,12 +1,13 @@
 import { WidgetInstances } from '../../widget-instances.service'
 'use strict';
+declare const require: any;
 trafficlightWidget.$inject = ['WidgetInstances'];
 
 export default function trafficlightWidget(WidgetInstances) {
     return {
         restrict: 'A',
         replace: true,
-        templateUrl: 'trafficlight.html',
+        template: require('./trafficlight.html'),
         scope: {
             data: '=',
             widgetId: '@'

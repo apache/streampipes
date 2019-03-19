@@ -1,7 +1,8 @@
 import {OneOfRemoteController} from "./oneof-remote.controller";
+declare const require: any;
 
 export let OneOfRemoteComponent = {
-    templateUrl: 'oneof-remote.tmpl.html',
+    template: require('./oneof-remote.tmpl.html'),
     bindings: {
         staticProperty : "=",
         eventProperties : "=",

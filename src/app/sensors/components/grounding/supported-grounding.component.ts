@@ -1,7 +1,8 @@
 import {SupportedGroundingController} from "./supported-grounding.controller";
+declare const require: any;
 
 export let SupportedGroundingComponent = {
-    templateUrl: 'supported-grounding.tmpl.html',
+    template: require('./supported-grounding.tmpl.html'),
     bindings: {
         disabled : "<",
         grounding : "="

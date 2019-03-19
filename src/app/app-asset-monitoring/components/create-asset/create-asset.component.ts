@@ -103,7 +103,7 @@ export class CreateAssetComponent {
             width: '70%',
             height: '500px',
             panelClass: 'custom-dialog-container',
-            data: {dashboardCanvas: this.mainCanvasStage as DashboardConfiguration, file: this.selectedUploadFile}
+            data: {dashboardCanvas: this.mainCanvasStage as any, file: this.selectedUploadFile}
         });
     }
 

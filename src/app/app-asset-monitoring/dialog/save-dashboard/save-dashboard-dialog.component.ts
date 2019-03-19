@@ -54,12 +54,12 @@ export class SaveDashboardDialogComponent {
 
     makeDashboardConfig(): DashboardConfiguration {
         let canvas = this.data.dashboardCanvas;
-        let transformerShapes = canvas.find('Transformer');
+        let transformerShapes = Array.from(canvas.find('Transformer'));
         transformerShapes.forEach(shape => {
             shape.destroy();
         });
 
-        let mainShape = canvas.find("#main-image");
+        let mainShape = canvas.findOne("#main-image");
         mainShape.destroy();
 
         return JSON.parse(canvas.toJSON());

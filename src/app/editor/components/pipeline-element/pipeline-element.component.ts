@@ -1,7 +1,8 @@
 import {PipelineElementController} from "./pipeline-element.controller";
+declare const require: any;
 
 export let PipelineElementComponent = {
-    templateUrl: 'pipeline-element.tmpl.html',
+    template: require('./pipeline-element.tmpl.html'),
     bindings: {
         pipelineElement : "<",
         preview: "<",

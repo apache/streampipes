@@ -1,7 +1,8 @@
 import {CollapsibleController} from "./collapsible.controller";
+declare const require: any;
 
 export let CollapsibleComponent = {
-    templateUrl: 'collapsible.tmpl.html',
+    template: require('./collapsible.tmpl.html'),
     bindings: {
         list : "<",
         ctr: "<",

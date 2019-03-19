@@ -31,7 +31,7 @@ import { AddValueTransformationRuleDescription } from './model/connect/rules/Add
 import { MoveRuleDescription } from './model/connect/rules/MoveRuleDesctiption';
 import { UnitTransformRuleDescription } from './model/connect/rules/UnitTransformRuleDescription';
 import {TsonLd} from './tsonld';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {TransformationRuleDescription} from './model/connect/rules/TransformationRuleDescription';
 import {GenericAdapterSetDescription} from './model/connect/GenericAdapterSetDescription';
 import {SpecificAdapterSetDescription} from './model/connect/SpecificAdapterSetDescription';

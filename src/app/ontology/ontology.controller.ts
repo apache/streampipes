@@ -4,6 +4,7 @@ import {AddDialogController} from './add-dialog.controller';
 import {DialogController} from './dialog.controller';
 import {ContextController} from './context.controller';
 
+declare const require: any;
 
 // export default function OntologyCtrl($scope, RestApi, $mdToast, $mdDialog) {
 export class OntologyCtrl {
@@ -229,7 +230,7 @@ export class OntologyCtrl {
         this.$mdDialog.show({
             controller: DialogController,
             controllerAs: 'ctrl',
-            templateUrl: 'templates/manageNamespacesDialog.tmpl.html',
+            template: require('./templates/manageNamespacesDialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: true,
         })
@@ -281,7 +282,7 @@ export class OntologyCtrl {
         this.$mdDialog.show({
             controller: ContextController,
             controllerAs: 'ctrl',
-            templateUrl: 'templates/manageVocabulariesDialog.tmpl.html',
+            template: require('./templates/manageVocabulariesDialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: true,
         })
@@ -291,7 +292,7 @@ export class OntologyCtrl {
         this.$mdDialog.show({
             controller: AddDialogController,
             controllerAs: 'ctrl',
-            templateUrl: 'templates/createElementDialog.tmpl.html',
+            template: require('./templates/createElementDialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             // scope: this,

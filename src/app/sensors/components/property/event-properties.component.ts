@@ -1,7 +1,8 @@
 import {EventPropertiesController} from "./event-properties.controller";
+declare const require: any;
 
 export let EventPropertiesComponent = {
-    templateUrl: 'event-properties.tmpl.html',
+    template: require('./event-properties.tmpl.html'),
     bindings: {
         disabled : "<",
         properties : "="

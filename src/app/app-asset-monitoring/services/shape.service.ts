@@ -36,8 +36,7 @@ export class ShapeService {
         return new Konva.Group({
             x: 120,
             y: 40,
-            draggable: draggable,
-            pipelineId: "123"
+            draggable: draggable
         });
     }
 

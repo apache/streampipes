@@ -1,7 +1,8 @@
 import {PropertyQualityDefinitionsController} from "./property-quality-definitions.controller";
+declare const require: any;
 
 export let PropertyQualityDefinitionsComponent = {
-    templateUrl: 'property-quality-definitions.tmpl.html',
+    template: require('./property-quality-definitions.tmpl.html'),
     bindings: {
         disabled : "<",
         property : "=",

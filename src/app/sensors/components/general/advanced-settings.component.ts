@@ -1,7 +1,8 @@
 import {AdvancedSettingsController} from "./advanced-settings.controller";
+declare const require: any;
 
 export let AdvancedSettingsComponent = {
-    templateUrl: 'advanced-settings.tmpl.html',
+    template: require('./advanced-settings.tmpl.html'),
     bindings: {
         disabled : "<"
     },

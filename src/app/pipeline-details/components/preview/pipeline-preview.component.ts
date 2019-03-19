@@ -1,7 +1,8 @@
 import {PipelinePreviewController} from "./pipeline-preview.controller";
+declare const require: any;
 
 export let PipelinePreviewComponent = {
-    templateUrl: 'pipeline-preview.tmpl.html',
+    template: require('./pipeline-preview.tmpl.html'),
     bindings: {
         pipeline: "<",
         name: "@",

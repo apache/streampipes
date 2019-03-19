@@ -1,7 +1,8 @@
 import {TopicSelectionDialogController} from "./topic-selection-dialog.controller";
+declare const require: any;
 
 export let TopicSelectionDialogComponent = {
-    templateUrl: 'topic-selection-dialog.tmpl.html',
+    template: require('./topic-selection-dialog.tmpl.html'),
     bindings: {
         streamDescription: "=",
         titleField: "=",

@@ -1,7 +1,7 @@
 import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {map} from "rxjs/operators";
-import {Observable} from "rxjs/Observable";
+import {Observable} from "rxjs";
 import {AuthStatusService} from "../../services/auth-status.service";
 import {DashboardConfiguration} from "../model/dashboard-configuration.model";
 
@@ -24,9 +24,9 @@ export class RestService {
         const data: FormData = new FormData();
         data.append('file_upload', file, file.name);
         return this.http.post(this.imagePath, data)
-            .map(res => {
+            .pipe(map(res => {
                 return res;
-            });
+            }));
     }
 
     deleteDashboard(dashboardId: string) {
@@ -38,9 +38,9 @@ export class RestService {
     }
 
     getDashboards(): Observable<DashboardConfiguration[]> {
-        return this.http.get(this.url).map(response => {
+        return this.http.get(this.url).pipe(map(response => {
             return response as DashboardConfiguration[];
-        });
+        }));
     }
 
     getImageUrl(imageName: string): string {

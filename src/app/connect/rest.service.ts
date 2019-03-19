@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, Subscribable } from 'rxjs/Observable';
+import { Observable, Subscribable, from } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/fromPromise';
+
 
 import { ProtocolDescriptionList } from './model/connect/grounding/ProtocolDescriptionList';
 import { AdapterDescription } from './model/connect/AdapterDescription';
@@ -41,8 +41,7 @@ export class RestService {
         var self = this;
 
 
-        return Observable.fromPromise(
-            new Promise(function(resolve, reject) {
+        let promise = new Promise<StatusMessage>(function(resolve, reject) {
                 self.tsonLdSerializerService.toJsonLd(adapter).subscribe(res => {
                     const httpOptions = {
                         headers: new HttpHeaders({
@@ -55,26 +54,26 @@ export class RestService {
                             res,
                             httpOptions
                         )
-                        .map(response => {
+                        .pipe(map(response => {
                             var statusMessage = response as StatusMessage;
                             resolve(statusMessage);
-                        })
+                        }))
                         .subscribe();
                 });
-            })
-        );
+            });
+        return from(promise);
     }
 
 
     getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
         const self = this;
 
-        return Observable.fromPromise(
-            new Promise(function(resolve, reject) {
+
+       let promise = new Promise<GuessSchema>(function(resolve, reject) {
                 self.tsonLdSerializerService.toJsonLd(adapter).subscribe(res => {
                     return self.http
                         .post('/streampipes-connect/api/v1/' + self.authStatusService.email + '/master/guess/schema', res)
-                        .map(response => {
+                        .pipe(map(response => {
                             if (JSON.stringify(response).includes('sp:GuessSchema')) {
                                 const r = self.tsonLdSerializerService.fromJsonLd(response, 'sp:GuessSchema');
                                 self.removeHeaderKeys(r.eventSchema.eventProperties);
@@ -85,11 +84,11 @@ export class RestService {
                                 reject(r);
                             }
 
-                        })
+                        }))
                         .subscribe();
                 });
-            })
-        );
+            });
+        return from(promise);
     }
 
     removeHeaderKeys(eventProperties: EventProperty[]) {
@@ -126,32 +125,32 @@ export class RestService {
             .get(
                 '/streampipes-connect/api/v1/riemer@fzi.de/master/description/formats'
             )
-            .map(response => {
+            .pipe(map(response => {
                 const res = self.tsonLdSerializerService.fromJsonLd(response, 'sp:FormatDescriptionList');
                 return res;
-            });
+            }));
     }
 
     getProtocols(): Observable<ProtocolDescriptionList> {
         var self = this;
         return this.http
             .get(this.host + 'api/v2/adapter/allProtocols')
-            .map(response => {
+            .pipe(map(response => {
                const res = this.tsonLdSerializerService.fromJsonLd(
                     response,
                     'sp:ProtocolDescriptionList'
                 );
                 return res;
-            });
+            }));
     }
 
     getFittingUnits(unitDescription: UnitDescription): Observable<UnitDescription[]> {
         return this.http
             .post<UnitDescription[]>('/streampipes-connect/api/v1/' + this.authStatusService.email + '/master/unit', unitDescription)
-            .map(response => {
+            .pipe(map(response => {
                 const descriptions = response as UnitDescription[];
                 return descriptions.filter(entry => entry.resource != unitDescription.resource)
-            });
+            }));
     }
 
 

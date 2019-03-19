@@ -1,7 +1,8 @@
 import {MeasurementUnitController} from "./measurement-unit.controller";
+declare const require: any;
 
 export let MeasurementUnitComponent = {
-    templateUrl: 'measurement-unit.tmpl.html',
+    template: require('./measurement-unit.tmpl.html'),
     bindings: {
         disabled : "<",
         property : "="

@@ -1,7 +1,8 @@
 import {PipelineStatusController} from "./pipeline-status.controller";
+declare const require: any;
 
 export let PipelineStatusComponent = {
-    templateUrl: 'pipeline-status.tmpl.html',
+    template: require('./pipeline-status.tmpl.html'),
     bindings: {
         pipeline: "<",
     },

@@ -1,7 +1,8 @@
 import {PipelineElementOptionsController} from "./pipeline-element-options.controller";
+declare const require: any;
 
 export let PipelineElementOptionsComponent = {
-    templateUrl: 'pipeline-element-options.tmpl.html',
+    template: require('./pipeline-element-options.tmpl.html'),
     bindings: {
         pipelineElementId: "@",
         internalId: "@",

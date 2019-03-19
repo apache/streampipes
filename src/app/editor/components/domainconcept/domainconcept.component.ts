@@ -1,7 +1,8 @@
 import {DomainConceptController} from "./domainconcept.controller";
+declare const require: any;
 
 export let DomainConceptComponent = {
-    templateUrl: 'domainconcept.tmpl.html',
+    template: require('./domainconcept.tmpl.html'),
     bindings: {
         staticProperty : "=",
         autoCompleteStaticProperty : "="

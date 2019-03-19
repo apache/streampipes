@@ -1,12 +1,13 @@
 import { WidgetInstances } from '../../widget-instances.service'
 'use strict';
 imageWidget.$inject = ['WidgetInstances'];
+declare const require: any;
 
 export default function imageWidget(WidgetInstances) {
     return {
         restrict: 'A',
         replace: true,
-        templateUrl: 'image.html',
+        template: require('./image.html'),
         scope: {
             data: '=',
             widgetId: '@'

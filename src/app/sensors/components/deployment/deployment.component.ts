@@ -1,7 +1,8 @@
 import {DeploymentController} from "./deployment.controller";
+declare const require: any;
 
 export let DeploymentComponent = {
-    templateUrl: 'deployment.tmpl.html',
+    template: './deployment.tmpl.html',
     bindings: {
         disabled : "<",
         deploymentSettings : "=",

@@ -1,12 +1,13 @@
 import { WidgetInstances } from '../../widget-instances.service'
 'use strict';
+declare const require: any;
 verticalbarWidget.$inject = ['WidgetInstances'];
 
 export default function verticalbarWidget(WidgetInstances) {
 	return {
 		restrict: 'A',
 		replace: true,
-		templateUrl: 'verticalbar.html',
+		template: require('./verticalbar.html'),
 		scope: {
 			data: '=',
 			widgetId: '@'

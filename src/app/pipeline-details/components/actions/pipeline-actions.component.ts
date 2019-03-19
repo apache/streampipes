@@ -1,7 +1,8 @@
 import {PipelineActionsController} from "./pipeline-actions.controller";
+declare const require: any;
 
 export let PipelineActionsComponent = {
-    templateUrl: 'pipeline-actions.tmpl.html',
+    template: require('./pipeline-actions.tmpl.html'),
     bindings: {
         pipeline: "=",
         loadPipeline: "&"

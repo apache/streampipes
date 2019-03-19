@@ -2,7 +2,7 @@ import {Component, DoCheck, EventEmitter, Input, OnInit, Output} from '@angular/
 import {EventProperty} from '../model/EventProperty';
 // import {DragulaService} from 'ng2-dragula';
 // import {DragDropService} from '../drag-drop.service';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription, Observable} from 'rxjs';
 import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {DataTypesService} from '../data-type.service';
@@ -11,7 +11,6 @@ import {ShepherdService} from '../../../services/tour/shepherd.service';
 import {RestService} from '../../rest.service';
 import {UnitDescription} from '../../model/UnitDescription';
 import {UnitProviderService} from '../unit-provider.service';
-import {Observable} from 'rxjs/Observable';
 import {map, startWith} from 'rxjs/operators';
 import {TimestampTransformationRuleMode} from '../../model/connect/rules/TimestampTransformationRuleMode';
 

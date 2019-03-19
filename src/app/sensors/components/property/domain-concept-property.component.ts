@@ -1,7 +1,8 @@
 import {DomainConceptPropertyController} from "./domain-concept-property.controller";
+declare const require: any;
 
 export let DomainConceptPropertyComponent = {
-    templateUrl: 'domain-concept-property.tmpl.html',
+    template: require('./domain-concept-property.tmpl.html'),
     bindings: {
         disabled : "<",
         domainProperty : "="

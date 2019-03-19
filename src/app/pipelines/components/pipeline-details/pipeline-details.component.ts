@@ -1,7 +1,8 @@
 import {PipelineDetailsController} from "./pipeline-details.controller";
+declare const require: any;
 
 export let PipelineDetailsComponent = {
-    templateUrl: 'pipeline-details.tmpl.html',
+    template: require('./pipeline-details.tmpl.html'),
     bindings: {
         pipelines: "<",
         refreshPipelines: "&",

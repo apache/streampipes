@@ -1,7 +1,8 @@
 import {PipelineElementIconStandController} from "./pipeline-element-icon-stand.controller";
+declare const require: any;
 
 export let PipelineElementIconStandComponent = {
-    templateUrl: 'pipeline-element-icon-stand.tmpl.html',
+    template: require('./pipeline-element-icon-stand.tmpl.html'),
     bindings: {
        currentElements: "=",
        activeType: "="

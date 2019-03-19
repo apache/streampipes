@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Observable ,  of } from 'rxjs';
 
 import { StreampipesPeContainer } from './streampipes-pe-container.model';
 import { StreampipesPeContainerConifgs } from './streampipes-pe-container-configs';

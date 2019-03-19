@@ -1,7 +1,5 @@
 import {Component, ElementRef, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren} from "@angular/core";
-import {KonvaComponent, StageComponent} from "ng2-konva";
-import {Observable} from "rxjs/Observable";
-import {of} from "rxjs/observable/of";
+import {Observable, of} from "rxjs";
 
 import Konva from "konva";
 import {WebsocketService} from "../../services/websocket.service";

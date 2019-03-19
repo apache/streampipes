@@ -1,8 +1,10 @@
 import {FileDetailsController} from "./file-details.controller";
 
+declare const require: any;
+
 export let FileDetails = {
     restrict: 'E',
-    templateUrl: 'file-details.tmpl.html',
+    template: require('./file-details.tmpl.html'),
     bindings: {
         file: "=",
         getFiles: "&"

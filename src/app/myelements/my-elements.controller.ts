@@ -1,6 +1,7 @@
 import * as angular from 'angular';
 
 import {JsonLdDialogController} from "./dialog/jsonldDialog.controller";
+declare const require: any;
 
 export class MyElementsCtrl {
 
@@ -214,7 +215,7 @@ export class MyElementsCtrl {
         this.$mdDialog.show({
             controller: JsonLdDialogController,
             controllerAs: 'ctrl',
-            templateUrl: 'dialog/jsonldDialog.tmpl.html',
+            template: require('./dialog/jsonldDialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             locals: {

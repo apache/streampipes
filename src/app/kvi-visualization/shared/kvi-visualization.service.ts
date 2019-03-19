@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class KviVisualizationService {
@@ -15,9 +16,9 @@ export class KviVisualizationService {
 
     getKviData(): Observable<any> {
         return this.http.get(this.getServerUrl() + '/api/v2/couchdb/kvi')
-            .map(response => {
+            .pipe(map(response => {
                 return response;
-            });
+            }));
     }
 
 }

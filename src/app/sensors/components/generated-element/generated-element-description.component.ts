@@ -1,7 +1,8 @@
 import {GeneratedElementDescriptionController} from "./generated-element-description.controller";
+declare const require: any;
 
 export let GeneratedElementDescriptionComponent = {
-    templateUrl: 'generated-element-description.tmpl.html',
+    template: require('./generated-element-description.tmpl.html'),
     bindings: {
         jsonld : "<",
         java : "<",

@@ -1,7 +1,8 @@
 import {ValueSpecificationController} from "./value-specification.controller";
+declare const require: any;
 
 export let ValueSpecificationComponent = {
-    templateUrl: 'value-specification.tmpl.html',
+    template: require('./value-specification.tmpl.html'),
     bindings: {
         disabled : "<",
         property : "<",

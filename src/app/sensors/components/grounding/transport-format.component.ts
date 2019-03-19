@@ -1,7 +1,8 @@
 import {TransportFormatController} from "./transport-format.controller";
+declare const require: any;
 
 export let TransportFormatComponent = {
-    templateUrl: 'transport-format.tmpl.html',
+    template: require('./transport-format.tmpl.html'),
     bindings: {
         disabled : "<",
         grounding : "="

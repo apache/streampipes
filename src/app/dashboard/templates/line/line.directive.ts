@@ -1,12 +1,13 @@
 import { WidgetInstances } from '../../widget-instances.service'
 'use strict';
 lineWidget.$inject = ['WidgetInstances'];
+declare const require: any;
 
 export default function lineWidget(WidgetInstances) {
 	return {
 		restrict: 'A',
 		replace: true,
-		templateUrl: 'line.html',
+		template: require('./line.html'),
 		scope: {
 			data: '=',
 			widgetId: '@'
