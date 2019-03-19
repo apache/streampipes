@@ -3,8 +3,8 @@
 #set( $symbol_escape = '\' )
 package ${package}.main;
 
-import ${groupId}.container.init.DeclarersSingleton;
-import ${groupId}.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.container.init.DeclarersSingleton;
+import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import ${package}.config.Config;
 import ${package}.pe.${packageName}.DataSource;
 
@@ -14,7 +14,7 @@ public class Init extends StandaloneModelSubmitter {
     DeclarersSingleton.getInstance()
             .add(new DataSource());
 
-    new Init().init(ActionConfig.INSTANCE);
+    new Init().init(Config.INSTANCE);
 
   }
 }

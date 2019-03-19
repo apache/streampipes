@@ -2,7 +2,7 @@
 #set($symbol_dollar='$')
 #set($symbol_escape='\' )
 
-package ${package}.pe.${elementName};
+package ${package}.pe.${packageName};
 
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
@@ -23,8 +23,7 @@ public class ${classNamePrefix}Stream extends AbstractAdapterIncludedStream {
             // configure your stream here
 
             .format(Formats.jsonFormat())
-            .protocol(Protocols.kafka(VehicleSimulatorConfig.INSTANCE.getKafkaHost(), VehicleSimulatorConfig.INSTANCE.getKafkaPort(),
-                    "TOPIC_SHOULD_BE_CHANGED"))
+            .protocol(Protocols.kafka("localhost", 9092, "TOPIC_SHOULD_BE_CHANGED"))
             .build();
   }
 

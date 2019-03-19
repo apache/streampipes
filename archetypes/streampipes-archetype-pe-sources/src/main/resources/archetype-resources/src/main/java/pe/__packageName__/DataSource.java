@@ -1,5 +1,5 @@
 
-package ${package}.pe.${elementName};
+package ${package}.pe.${packageName};
 
 import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class ${classNamePrefix}Source implements SemanticEventProducerDeclarer {
+public class DataSource implements SemanticEventProducerDeclarer {
 
   public DataSourceDescription declareModel() {
     return DataSourceBuilder.create("${package}.${packageName}.source", "${classNamePrefix} " +
