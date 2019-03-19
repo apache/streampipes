@@ -38,11 +38,13 @@ import org.streampipes.connect.adapter.generic.format.xml.XmlParser;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.protocol.set.FileProtocol;
 import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
-import org.streampipes.connect.adapter.generic.protocol.stream.*;
+import org.streampipes.connect.adapter.generic.protocol.stream.FileStreamProtocol;
+import org.streampipes.connect.adapter.generic.protocol.stream.HDFSProtocol;
+import org.streampipes.connect.adapter.generic.protocol.stream.HttpStreamProtocol;
+import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
+import org.streampipes.connect.adapter.generic.protocol.stream.MqttProtocol;
 import org.streampipes.connect.adapter.specific.gdelt.GdeltAdapter;
-import org.streampipes.connect.adapter.specific.nswaustralia.trafficcamera.NswTrafficCameraAdapter;
 import org.streampipes.connect.adapter.specific.ros.RosBridgeAdapter;
-import org.streampipes.connect.adapter.specific.sensemap.OpenSenseMapAdapter;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.HashMap;
@@ -58,9 +60,9 @@ public class AdapterRegistry {
 
         allAdapters.put(GenericDataSetAdapter.ID, new GenericDataSetAdapter());
         allAdapters.put(GenericDataStreamAdapter.ID, new GenericDataStreamAdapter());
-        allAdapters.put(OpenSenseMapAdapter.ID, new OpenSenseMapAdapter());
+        //allAdapters.put(OpenSenseMapAdapter.ID, new OpenSenseMapAdapter());
         allAdapters.put(GdeltAdapter.ID, new GdeltAdapter());
-        allAdapters.put(NswTrafficCameraAdapter.ID, new NswTrafficCameraAdapter());
+        //allAdapters.put(NswTrafficCameraAdapter.ID, new NswTrafficCameraAdapter());
         allAdapters.put(RosBridgeAdapter.ID, new RosBridgeAdapter());
 
         return allAdapters;
