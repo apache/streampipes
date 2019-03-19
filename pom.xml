@@ -266,9 +266,9 @@
 
     <distributionManagement>
         <repository>
-            <id>sonatype</id>
-            <name>Releases</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+            <id>deployment</id>
+            <name>Internal Releases</name>
+            <url>https://laus.fzi.de/nexus/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
             <id>deployment</id>
