@@ -32,7 +32,7 @@
     </modules>
 
     <properties>
-        <streampipes.version>0.60.2-SNAPSHOT</streampipes.version>
+        <streampipes.version>0.61.0</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
     </properties>
 
