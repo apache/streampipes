@@ -32,103 +32,113 @@ import javax.persistence.MappedSuperclass;
 @Entity
 public abstract class StaticProperty extends UnnamedStreamPipesEntity {
 
-	private static final long serialVersionUID = 2509153122084646025L;
+  private static final long serialVersionUID = 2509153122084646025L;
 
-	@RdfProperty(RDFS.LABEL)
-	private String label;
-	
-	@RdfProperty(RDFS.DESCRIPTION)
-	private String description;
-	
-	@RdfProperty(StreamPipes.INTERNAL_NAME)
-	private String internalName;
-	
-	@RdfProperty(SO.ValueRequired)
-	protected boolean valueRequired;
+  @RdfProperty(StreamPipes.INDEX)
+  private int index;
 
-	@RdfProperty(StreamPipes.IS_PREDEFINED)
-	private boolean predefined;
+  @RdfProperty(RDFS.LABEL)
+  private String label;
 
-	protected StaticPropertyType staticPropertyType;
-	
-	
-	public StaticProperty()
-	{
-		super();
-	}
+  @RdfProperty(RDFS.DESCRIPTION)
+  private String description;
 
-	public StaticProperty(StaticPropertyType type) {
-		super();
-		this.staticPropertyType = type;
-		this.predefined = false;
-	}
-	
-	public StaticProperty(StaticProperty other)
-	{
-		super(other);
-		this.description = other.getDescription();
-		this.internalName = other.getInternalName();
-		this.valueRequired = other.isValueRequired();
-		this.staticPropertyType = other.getStaticPropertyType();
-		this.label = other.getLabel();
-		this.predefined = other.isPredefined();
-	}
-	
-	public StaticProperty(StaticPropertyType type, String internalName, String label, String description)
-	{
-		super();
-		this.staticPropertyType = type;
-		this.internalName = internalName;
-		this.label = label;
-		this.description = description;
-		this.predefined = false;
-	}
+  @RdfProperty(StreamPipes.INTERNAL_NAME)
+  private String internalName;
 
-	public String getInternalName() {
-		return internalName;
-	}
+  @RdfProperty(SO.ValueRequired)
+  protected boolean valueRequired;
 
-	public void setInternalName(String name) {
-		this.internalName = name;
-	}
+  @RdfProperty(StreamPipes.IS_PREDEFINED)
+  private boolean predefined;
 
-	public String getDescription() {
-		return description;
-	}
+  protected StaticPropertyType staticPropertyType;
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
 
-	public String getLabel() {
-		return label;
-	}
+  public StaticProperty() {
+    super();
+  }
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
+  public StaticProperty(StaticPropertyType type) {
+    super();
+    this.staticPropertyType = type;
+    this.predefined = false;
+  }
 
-	public boolean isValueRequired() {
-		return valueRequired;
-	}
+  public StaticProperty(StaticProperty other) {
+    super(other);
+    this.index = other.getIndex();
+    this.description = other.getDescription();
+    this.internalName = other.getInternalName();
+    this.valueRequired = other.isValueRequired();
+    this.staticPropertyType = other.getStaticPropertyType();
+    this.label = other.getLabel();
+    this.predefined = other.isPredefined();
+  }
 
-	public void setValueRequired(boolean valueRequired) {
-		this.valueRequired = valueRequired;
-	}
+  public StaticProperty(StaticPropertyType type, String internalName, String label,
+                        String description) {
+    super();
+    this.staticPropertyType = type;
+    this.internalName = internalName;
+    this.label = label;
+    this.description = description;
+    this.predefined = false;
+  }
 
-	public StaticPropertyType getStaticPropertyType() {
-		return staticPropertyType;
-	}
+  public String getInternalName() {
+    return internalName;
+  }
 
-	public void setStaticPropertyType(StaticPropertyType staticPropertyType) {
-		this.staticPropertyType = staticPropertyType;
-	}
+  public void setInternalName(String name) {
+    this.internalName = name;
+  }
 
-	public boolean isPredefined() {
-		return predefined;
-	}
+  public String getDescription() {
+    return description;
+  }
 
-	public void setPredefined(boolean predefined) {
-		this.predefined = predefined;
-	}
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public String getLabel() {
+    return label;
+  }
+
+  public void setLabel(String label) {
+    this.label = label;
+  }
+
+  public boolean isValueRequired() {
+    return valueRequired;
+  }
+
+  public void setValueRequired(boolean valueRequired) {
+    this.valueRequired = valueRequired;
+  }
+
+  public StaticPropertyType getStaticPropertyType() {
+    return staticPropertyType;
+  }
+
+  public void setStaticPropertyType(StaticPropertyType staticPropertyType) {
+    this.staticPropertyType = staticPropertyType;
+  }
+
+  public boolean isPredefined() {
+    return predefined;
+  }
+
+  public void setPredefined(boolean predefined) {
+    this.predefined = predefined;
+  }
+
+  public int getIndex() {
+    return index;
+  }
+
+  public void setIndex(int index) {
+    this.index = index;
+  }
 }

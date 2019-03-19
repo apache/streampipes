@@ -24,8 +24,9 @@ import org.streampipes.container.init.RunningInstances;
 import org.streampipes.container.util.Util;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 
-import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -35,20 +36,26 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/sec")
-public class SecElement extends InvocableElement<DataSinkInvocation, SemanticEventConsumerDeclarer> {
+public class SecElement extends InvocableElement<DataSinkInvocation,
+        SemanticEventConsumerDeclarer, DataSinkParameterExtractor> {
 
     public SecElement() {
         super(DataSinkInvocation.class);
     }
 
     @Override
-    protected List<SemanticEventConsumerDeclarer> getElementDeclarers() {
+    protected Map<String, SemanticEventConsumerDeclarer> getElementDeclarers() {
         return DeclarersSingleton.getInstance().getConsumerDeclarers();
     }
 
     @Override
     protected String getInstanceId(String uri, String elementId) {
         return Util.getInstanceId(uri, "sec", elementId);
+    }
+
+    @Override
+    protected DataSinkParameterExtractor getExtractor(DataSinkInvocation graph) {
+        return new DataSinkParameterExtractor(graph);
     }
 
     @GET

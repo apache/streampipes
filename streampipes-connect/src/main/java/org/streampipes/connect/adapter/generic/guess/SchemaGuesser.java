@@ -40,10 +40,10 @@ public class SchemaGuesser {
     public static GuessSchema guessSchma(EventSchema eventSchema, List<Map<String, Object>> nElements) {
         GuessSchema result = new GuessSchema();
 
-        List<DomainPropertyProbabilityList> allDomainPropertyProbabilities = getDomainPropertyProbabitlyList(eventSchema.getEventProperties(), nElements, new ArrayList<>());
+//        List<DomainPropertyProbabilityList> allDomainPropertyProbabilities = getDomainPropertyProbabitlyList(eventSchema.getEventProperties(), nElements, new ArrayList<>());
 
         result.setEventSchema(eventSchema);
-        result.setPropertyProbabilityList(allDomainPropertyProbabilities);
+        result.setPropertyProbabilityList(new ArrayList<>());
 
 
         return result;

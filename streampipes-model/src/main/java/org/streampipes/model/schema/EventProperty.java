@@ -47,8 +47,6 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
 
   protected static final String prefix = "urn:streampipes.org:spi:";
 
-  private String propertyId;
-
   @RdfProperty(RDFS.LABEL)
   private String label;
 
@@ -81,9 +79,10 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
   @RdfProperty(StreamPipes.HAS_PROPERTY_SCOPE)
   private String propertyScope;
 
+  private String runtimeId;
+
   public EventProperty() {
     super(prefix + UUID.randomUUID().toString());
-    this.propertyId = UUID.randomUUID().toString();
     this.requiresEventPropertyQualities = new ArrayList<>();
     this.eventPropertyQualities = new ArrayList<>();
   }
@@ -92,7 +91,6 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
     super(other);
     this.label = other.getLabel();
     this.description = other.getDescription();
-    this.propertyId = other.getPropertyId();
     this.required = other.isRequired();
     if (other.getRequiresEventPropertyQualities() != null) {
       this.requiresEventPropertyQualities = new Cloner()
@@ -106,6 +104,7 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
     }
     this.domainProperties = other.getDomainProperties();
     this.propertyScope = other.getPropertyScope();
+    this.runtimeId = other.getRuntimeId();
   }
 
   public EventProperty(List<URI> subClassOf) {
@@ -147,14 +146,6 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
 
   public void setRuntimeName(String propertyName) {
     this.runtimeName = propertyName;
-  }
-
-  public String getPropertyId() {
-    return propertyId;
-  }
-
-  public void setPropertyId(String propertyId) {
-    this.propertyId = propertyId;
   }
 
   public boolean isRequired() {
@@ -210,4 +201,11 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
     return prefix;
   }
 
+  public String getRuntimeId() {
+    return runtimeId;
+  }
+
+  public void setRuntimeId(String runtimeId) {
+    this.runtimeId = runtimeId;
+  }
 }

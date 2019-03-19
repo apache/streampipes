@@ -21,21 +21,9 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.wrapper.params.binding.BindingParams;
 
-import java.util.Map;
+public interface PipelineElement<B extends BindingParams<I>, I extends
+        InvocableStreamPipesEntity> {
 
-public abstract class PipelineElement<B extends BindingParams> {
+  void onDetach() throws SpRuntimeException;
 
-  InvocableStreamPipesEntity graph;
-
-  public PipelineElement(B params) {
-    this.graph = params.getGraph();
-  }
-
-  public InvocableStreamPipesEntity getGraph() {
-    return this.graph;
-  }
-
-  public abstract void onEvent(Map<String, Object> event, String sourceInfo);
-
-  public abstract void discard() throws SpRuntimeException;
 }

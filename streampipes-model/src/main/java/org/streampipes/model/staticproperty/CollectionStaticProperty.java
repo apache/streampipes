@@ -22,56 +22,76 @@ import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.COLLECTION_STATIC_PROPERTY)
 @Entity
 public class CollectionStaticProperty extends StaticProperty {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.MEMBER)
-	private List<StaticProperty> members;
-	
-	@RdfProperty(StreamPipes.MEMBER_TYPE)
-	private String memberType;
+  @OneToOne(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.HAS_STATIC_PROPERTY)
+  private StaticProperty staticPropertyTemplate;
 
-	public CollectionStaticProperty() {
-		super(StaticPropertyType.CollectionStaticProperty);
-	}
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.MEMBER)
+  private List<StaticProperty> members;
 
-	public CollectionStaticProperty(String internalName, String label, String description, List<StaticProperty> members, String memberType) {
-		super(StaticPropertyType.CollectionStaticProperty, internalName, label, description);
-		this.members = members;
-		this.memberType = memberType;
-	}
+  @RdfProperty(StreamPipes.MEMBER_TYPE)
+  private String memberType;
 
-	public CollectionStaticProperty(CollectionStaticProperty other) {
-		super(other);
-		this.members = new Cloner().staticProperties(other.getMembers());
-		this.memberType = other.getMemberType();
-	}
+  public CollectionStaticProperty() {
+    super(StaticPropertyType.CollectionStaticProperty);
+    this.members = new ArrayList<>();
+  }
 
-	public List<StaticProperty> getMembers() {
-		return members;
-	}
+  public CollectionStaticProperty(String internalName, String label, String description, List<StaticProperty> members, String memberType) {
+    super(StaticPropertyType.CollectionStaticProperty, internalName, label, description);
+    this.members = members;
+    this.memberType = memberType;
+  }
 
-	public void setMembers(List<StaticProperty> members) {
-		this.members = members;
-	}
+  public CollectionStaticProperty(CollectionStaticProperty other) {
+    super(other);
+    this.members = new Cloner().staticProperties(other.getMembers());
+    if (other.getStaticPropertyTemplate() != null) {
+      this.staticPropertyTemplate = new Cloner()
+              .staticProperty(other.getStaticPropertyTemplate());
+    }
+    this.memberType = other.getMemberType();
+  }
 
-	public String getMemberType() {
-		return memberType;
-	}
+  public List<StaticProperty> getMembers() {
+    return members;
+  }
 
-	public void setMemberType(String memberType) {
-		this.memberType = memberType;
-	}
+  public void setMembers(List<StaticProperty> members) {
+    this.members = members;
+  }
+
+  public String getMemberType() {
+    return memberType;
+  }
+
+  public void setMemberType(String memberType) {
+    this.memberType = memberType;
+  }
+
+  public StaticProperty getStaticPropertyTemplate() {
+    return staticPropertyTemplate;
+  }
+
+  public void setStaticPropertyTemplate(StaticProperty staticPropertyTemplate) {
+    this.staticPropertyTemplate = staticPropertyTemplate;
+  }
 }

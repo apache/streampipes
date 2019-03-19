@@ -35,4 +35,5 @@ public abstract class PipelineElementRuntime {
   public abstract void bindRuntime() throws SpRuntimeException;
 
   public abstract void discardRuntime() throws SpRuntimeException;
+
 }

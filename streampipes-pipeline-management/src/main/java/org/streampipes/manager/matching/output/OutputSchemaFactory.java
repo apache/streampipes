@@ -29,34 +29,31 @@ import org.streampipes.model.output.TransformOutputStrategy;
 
 public class OutputSchemaFactory {
 
-	private OutputStrategy firstOutputStrategy;
-	private DataProcessorInvocation dataProcessorInvocation;
-	
-	public OutputSchemaFactory(DataProcessorInvocation dataProcessorInvocation)
-	{
-		this.dataProcessorInvocation = dataProcessorInvocation;
-		this.firstOutputStrategy = dataProcessorInvocation.getOutputStrategies().get(0);
-	}
-	
-	public OutputSchemaGenerator<?> getOuputSchemaGenerator()
-	{
-		if (firstOutputStrategy instanceof AppendOutputStrategy)
-			return new AppendOutputSchemaGenerator(((AppendOutputStrategy) firstOutputStrategy).getEventProperties());
-		else if (firstOutputStrategy instanceof KeepOutputStrategy)
-			return new RenameOutputSchemaGenerator((KeepOutputStrategy) firstOutputStrategy);
-		else if (firstOutputStrategy instanceof FixedOutputStrategy)
-			return new FixedOutputSchemaGenerator(((FixedOutputStrategy) firstOutputStrategy).getEventProperties());
-		else if (firstOutputStrategy instanceof CustomOutputStrategy)
-			return new CustomOutputSchemaGenerator(((CustomOutputStrategy) firstOutputStrategy).getEventProperties());
-		else if (firstOutputStrategy instanceof ListOutputStrategy)
-			return new ListOutputSchemaGenerator(((ListOutputStrategy) firstOutputStrategy).getPropertyName());
-		else if (firstOutputStrategy instanceof TransformOutputStrategy) {
-			return new TransformOutputSchemaGenerator(dataProcessorInvocation, (TransformOutputStrategy) firstOutputStrategy);
-		} else if (firstOutputStrategy instanceof CustomTransformOutputStrategy) {
-			return new CustomTransformOutputSchemaGenerator(dataProcessorInvocation, (CustomTransformOutputStrategy)
-							firstOutputStrategy);
-		} else {
-			throw new IllegalArgumentException();
-		}
-	}
+  private OutputStrategy outputStrategy;
+  private DataProcessorInvocation dataProcessorInvocation;
+
+  public OutputSchemaFactory(DataProcessorInvocation dataProcessorInvocation) {
+    this.dataProcessorInvocation = dataProcessorInvocation;
+    this.outputStrategy = dataProcessorInvocation.getOutputStrategies().get(0);
+  }
+
+  public OutputSchemaGenerator<?> getOuputSchemaGenerator() {
+    if (outputStrategy instanceof AppendOutputStrategy) {
+      return AppendOutputSchemaGenerator.from(outputStrategy);
+    } else if (outputStrategy instanceof KeepOutputStrategy) {
+      return RenameOutputSchemaGenerator.from(outputStrategy);
+    } else if (outputStrategy instanceof FixedOutputStrategy) {
+      return FixedOutputSchemaGenerator.from(outputStrategy);
+    } else if (outputStrategy instanceof CustomOutputStrategy) {
+      return CustomOutputSchemaGenerator.from(outputStrategy);
+    } else if (outputStrategy instanceof ListOutputStrategy) {
+      return ListOutputSchemaGenerator.from(outputStrategy);
+    } else if (outputStrategy instanceof TransformOutputStrategy) {
+      return TransformOutputSchemaGenerator.from(outputStrategy, dataProcessorInvocation);
+    } else if (outputStrategy instanceof CustomTransformOutputStrategy) {
+      return CustomTransformOutputSchemaGenerator.from(outputStrategy, dataProcessorInvocation);
+    } else {
+      throw new IllegalArgumentException();
+    }
+  }
 }

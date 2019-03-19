@@ -19,20 +19,20 @@ package org.streampipes.sdk.builder;
 
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.streampipes.model.constants.PropertySelectorConstants;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.schema.PropertyScope;
+import org.streampipes.model.staticproperty.MappingProperty;
 import org.streampipes.model.staticproperty.MappingPropertyNary;
 import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.sdk.helpers.CollectedStreamRequirements;
 import org.streampipes.sdk.helpers.Label;
-import org.streampipes.sdk.helpers.StreamIdentifier;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,7 +61,6 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   }
 
   /**
-   *
    * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
    */
   @Deprecated
@@ -73,131 +72,32 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   /**
    * Set a new stream requirement by adding restrictions on this stream. Use
    * {@link StreamRequirementsBuilder} to create requirements for a single stream.
+   *
    * @param streamRequirements: A bundle of collected {@link CollectedStreamRequirements}
    * @return this
    */
   public BU requiredStream(CollectedStreamRequirements streamRequirements) {
+
     this.streamRequirements.add(streamRequirements.getStreamRequirements());
-    this.staticProperties.addAll(streamRequirements.getMappingProperties());
+    this.staticProperties.addAll(rewrite(streamRequirements.getMappingProperties(), this
+            .streamRequirements.size()));
 
     return me();
   }
 
-  /**
-   *
-   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
-   */
-  @Deprecated
-  public BU requiredPropertyStream1WithNaryMapping(EventProperty propertyRequirement, Label label, PropertyScope
-          propertyScope) {
-    this.stream1Properties.add(propertyRequirement);
-    MappingPropertyNary mp = new MappingPropertyNary(URI.create(propertyRequirement.getElementId()), label
-            .getInternalId(), label.getLabel(), label.getDescription());
-    mp.setPropertyScope(propertyScope.name());
-    this.staticProperties.add(mp);
-    return me();
+  private List<MappingProperty> rewrite(List<MappingProperty> mappingProperties, int index) {
+    mappingProperties.stream().forEach(mp -> mp.setRequirementSelector
+            (getIndex(index) + PropertySelectorConstants.PROPERTY_DELIMITER + mp
+                    .getRequirementSelector()));
+    return mappingProperties;
   }
 
-  /**
-   *
-   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
-   */
-  @Deprecated
-  public BU requiredPropertyStream2(EventProperty propertyRequirement) {
-    this.stream2Properties.add(propertyRequirement);
-
-    return me();
+  private String getIndex(int index) {
+    return index == 1 ? PropertySelectorConstants.FIRST_REQUIREMENT_PREFIX :
+            PropertySelectorConstants.SECOND_REQUIREMENT_PREFIX;
   }
 
-  /**
-   *
-   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
-   */
-  @Deprecated
-  public BU requiredPropertyStream2WithUnaryMapping(EventProperty propertyRequirement, String internalName, String label, String description) {
-    this.stream2Properties.add(propertyRequirement);
-    this.staticProperties.add(new MappingPropertyUnary(URI.create(propertyRequirement.getElementId()), internalName, label, description));
-    return me();
-  }
-
-  /**
-   *
-   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
-   */
-  @Deprecated
-  public BU requiredPropertyStream2WithNaryMapping(EventProperty propertyRequirement, String internalName, String label, String description) {
-    this.stream2Properties.add(propertyRequirement);
-    this.staticProperties.add(new MappingPropertyNary(URI.create(propertyRequirement.getElementId()), internalName, label, description));
-    return me();
-  }
-
-  /**
-   *
-   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
-   */
-  @Deprecated
-  public BU requiredPropertyStream1(EventProperty propertyRequirement) {
-    this.stream1Properties.add(propertyRequirement);
-
-    return me();
-  }
-
-  /**
-   *
-   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
-   */
-  @Deprecated
-  public BU requiredPropertyStream1WithUnaryMapping(EventProperty propertyRequirement, String internalName, String label, String description) {
-    this.stream1Properties.add(propertyRequirement);
-    this.staticProperties.add(new MappingPropertyUnary(URI.create(propertyRequirement.getElementId()), internalName, label, description));
-    return me();
-  }
-
-  /**
-   *
-   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
-   */
-  @Deprecated
-  public BU requiredPropertyStream1WithNaryMapping(EventProperty propertyRequirement, String internalName, String label, String description) {
-    this.stream1Properties.add(propertyRequirement);
-    this.staticProperties.add(new MappingPropertyNary(URI.create(propertyRequirement.getElementId()), internalName, label, description));
-    return me();
-  }
-
-  /**
-   * Set a new event property requirement linked to a unary mapping.
-   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
-   */
-  @Deprecated
-  public BU requiredPropertyStream1WithUnaryMapping(EventProperty propertyRequirement, Label label, PropertyScope
-          propertyScope) {
-    this.stream1Properties.add(propertyRequirement);
-    MappingPropertyUnary mp = new MappingPropertyUnary(URI.create(propertyRequirement.getElementId()),
-            label.getInternalId(), label.getLabel(), label.getDescription());
-    mp.setPropertyScope(propertyScope.name());
-    this.staticProperties.add(mp);
-    return me();
-  }
-
-  public BU unaryMappingProperty(StreamIdentifier streamIdentifier, Integer propertyIndex, Label label) {
-    EventProperty propertyRequirement;
-
-    // TODO we need proper exception handling for the sdk
-    if (streamIdentifier == StreamIdentifier.Stream0) {
-      propertyRequirement = this.stream1Properties.get(propertyIndex);
-
-    } else {
-      propertyRequirement = this.stream2Properties.get(propertyIndex);
-    }
-
-    this.staticProperties.add(new MappingPropertyUnary(URI.create(propertyRequirement.getElementId()), label
-            .getInternalId(), label.getLabel(), label.getDescription()));
-
-    return me();
-  }
-
-
-  public BU requiredSingleValueSelectionFromRemote(Label label) {
+  public BU requiredSingleValueSelectionFromContainer(Label label) {
     RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
             .getLabel(), label.getDescription());
 
@@ -215,14 +115,12 @@ public abstract class AbstractProcessingElementBuilder<BU extends
     return me();
   }
 
-
-
   /**
-   * @deprecated Use {@link #naryMappingPropertyWithoutRequirement(Label, PropertyScope)} instead.
    * @param internalName
    * @param label
    * @param description
    * @return
+   * @deprecated Use {@link #naryMappingPropertyWithoutRequirement(Label, PropertyScope)} instead.
    */
   public BU naryMappingPropertyWithoutRequirement(String internalName, String label, String
           description) {
@@ -235,9 +133,10 @@ public abstract class AbstractProcessingElementBuilder<BU extends
    * which is not linked to a specific input property.
    * Use this method if you want to present users a selection (in form of a Checkbox Group) of all available input
    * event properties.
-   * @param label A human-readable label that is displayed to users in the StreamPipes UI.
+   *
+   * @param label         A human-readable label that is displayed to users in the StreamPipes UI.
    * @param propertyScope Only input event properties that match the
-   * {@link org.streampipes.model.schema.PropertyScope} are displayed.
+   *                      {@link org.streampipes.model.schema.PropertyScope} are displayed.
    * @return
    */
   public BU naryMappingPropertyWithoutRequirement(Label label, PropertyScope propertyScope) {
@@ -250,11 +149,12 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   /**
    * Adds a new {@link org.streampipes.model.staticproperty.MappingPropertyUnary} to the pipeline element definition
    * which is not linked to a specific input property.
+   *
+   * @param label A human-readable label
+   * @return this
    * @deprecated Use {@link #unaryMappingPropertyWithoutRequirement(Label)} instead.
    * Use this method if you want to present users a single-value selection of all available input
    * event properties.
-   * @param label A human-readable label
-   * @return this
    */
   public BU unaryMappingPropertyWithoutRequirement(String internalName, String label, String
           description) {
@@ -265,11 +165,11 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   /**
    * Adds a new {@link org.streampipes.model.staticproperty.MappingPropertyUnary} to the pipeline element definition
    * which is not linked to a specific input property.
-   * @deprecated
-   * Use this method if you want to present users a single-value selection of all available input
-   * event properties.
+   *
    * @param label
    * @return this
+   * @deprecated Use this method if you want to present users a single-value selection of all available input
+   * event properties.
    */
   public BU unaryMappingPropertyWithoutRequirement(Label label) {
     this.staticProperties.add(new MappingPropertyUnary(label.getInternalId(), label.getLabel(), label.getDescription()));
@@ -279,13 +179,13 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   /**
    * Adds a new {@link org.streampipes.model.staticproperty.MappingPropertyUnary} to the pipeline element definition
    * which is not linked to a specific input property.
-   * @deprecated
+   *
+   * @param label         A human-readable label that is displayed to users in the StreamPipes UI.
+   * @param propertyScope Only input event properties that match the
+   *                      {@link org.streampipes.model.schema.PropertyScope} are displayed.
+   * @return this
    * Use this method if you want to present users a single-value selection of all available input
    * event properties.
-   * @param label A human-readable label that is displayed to users in the StreamPipes UI.
-   * @param propertyScope Only input event properties that match the
-   * {@link org.streampipes.model.schema.PropertyScope} are displayed.
-   * @return this
    */
   public BU unaryMappingPropertyWithoutRequirement(Label label, PropertyScope propertyScope) {
     MappingPropertyUnary mp = new MappingPropertyUnary(label.getInternalId(), label.getLabel(), label.getDescription());
@@ -297,9 +197,10 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   /**
    * Assigns supported transport formats to the pipeline elements that can be handled at runtime (e.g.,
    * JSON or XMl).
+   *
    * @param format An arbitrary number of supported {@link org.streampipes.model.grounding.TransportFormat}s. Use
-   *                {@link org.streampipes.sdk.helpers.SupportedFormats} to assign formats from some pre-defined
-   *                 ones or create your own by following the developer guide.
+   *               {@link org.streampipes.sdk.helpers.SupportedFormats} to assign formats from some pre-defined
+   *               ones or create your own by following the developer guide.
    * @return this
    */
   public BU supportedFormats(TransportFormat... format) {
@@ -309,9 +210,10 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   /**
    * Assigns supported transport formats to the pipeline elements that can be handled at runtime (e.g.,
    * JSON or XMl).
+   *
    * @param formats A list of supported {@link org.streampipes.model.grounding.TransportFormat}s. Use
    *                {@link org.streampipes.sdk.helpers.SupportedFormats} to assign formats from some pre-defined
-   *                 ones or create your own by following the developer guide.
+   *                ones or create your own by following the developer guide.
    * @return this
    */
   public BU supportedFormats(List<TransportFormat> formats) {
@@ -322,8 +224,9 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   /**
    * Assigns supported communication/transport protocols to the pipeline elements that can be handled at runtime (e.g.,
    * Kafka or JMS).
+   *
    * @param protocol An arbitrary number of supported {@link org.streampipes.model.grounding.TransportProtocol}s. Use
-   *                {@link org.streampipes.sdk.helpers.SupportedProtocols} to assign protocols from some pre-defined
+   *                 {@link org.streampipes.sdk.helpers.SupportedProtocols} to assign protocols from some pre-defined
    *                 ones or create your own by following the developer guide.
    * @return this
    */
@@ -334,9 +237,10 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   /**
    * Assigns supported communication/transport protocols to the pipeline elements that can be handled at runtime (e.g.,
    * Kafka or JMS).
+   *
    * @param protocols A list of supported {@link org.streampipes.model.grounding.TransportProtocol}s. Use
-   *                {@link org.streampipes.sdk.helpers.SupportedProtocols} to assign protocols from some pre-defined
-   *                 ones or create your own by following the developer guide.
+   *                  {@link org.streampipes.sdk.helpers.SupportedProtocols} to assign protocols from some pre-defined
+   *                  ones or create your own by following the developer guide.
    * @return this
    */
   public BU supportedProtocols(List<TransportProtocol> protocols) {
@@ -345,7 +249,6 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   }
 
   /**
-   *
    * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
    */
   public BU setStream1() {
@@ -354,7 +257,6 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   }
 
   /**
-   *
    * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
    */
   public BU setStream2() {

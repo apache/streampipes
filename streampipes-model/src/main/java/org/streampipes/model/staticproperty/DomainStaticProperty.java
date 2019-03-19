@@ -33,54 +33,50 @@ import javax.persistence.OneToMany;
 @Entity
 public class DomainStaticProperty extends StaticProperty {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	@RdfProperty(StreamPipes.REQUIRED_CLASS)
-	private String requiredClass;
+  @RdfProperty(StreamPipes.REQUIRED_CLASS)
+  private String requiredClass;
 
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.HAS_SUPPORTED_PROPERTY)
-	private List<SupportedProperty> supportedProperties;
-	
-	public DomainStaticProperty()
-	{
-		super(StaticPropertyType.DomainStaticProperty);
-	}
-	
-	public DomainStaticProperty(String internalName, String label, String description, List<SupportedProperty> supportedProperties)
-	{
-		super(StaticPropertyType.DomainStaticProperty, internalName, label, description);
-		this.supportedProperties = supportedProperties;
-	}
-	
-	public DomainStaticProperty(String internalName, String label, String description, String requiredClass, List<SupportedProperty> supportedProperties)
-	{
-		this(internalName, label, description, supportedProperties);
-		this.requiredClass = requiredClass;
-	}
-	
-	public DomainStaticProperty(DomainStaticProperty other)
-	{
-		super(other);
-		this.requiredClass = other.getRequiredClass();
-		this.supportedProperties = new Cloner().supportedProperties(other.getSupportedProperties());
-	}
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.HAS_SUPPORTED_PROPERTY)
+  private List<SupportedProperty> supportedProperties;
 
-	public String getRequiredClass() {
-		return requiredClass;
-	}
+  public DomainStaticProperty() {
+    super(StaticPropertyType.DomainStaticProperty);
+  }
 
-	public void setRequiredClass(String requiredClass) {
-		this.requiredClass = requiredClass;
-	}
+  public DomainStaticProperty(String internalName, String label, String description, List<SupportedProperty> supportedProperties) {
+    super(StaticPropertyType.DomainStaticProperty, internalName, label, description);
+    this.supportedProperties = supportedProperties;
+  }
 
-	public List<SupportedProperty> getSupportedProperties() {
-		return supportedProperties;
-	}
+  public DomainStaticProperty(String internalName, String label, String description, String requiredClass, List<SupportedProperty> supportedProperties) {
+    this(internalName, label, description, supportedProperties);
+    this.requiredClass = requiredClass;
+  }
 
-	public void setSupportedProperties(List<SupportedProperty> supportedProperties) {
-		this.supportedProperties = supportedProperties;
-	}
-	
+  public DomainStaticProperty(DomainStaticProperty other) {
+    super(other);
+    this.requiredClass = other.getRequiredClass();
+    this.supportedProperties = new Cloner().supportedProperties(other.getSupportedProperties());
+  }
+
+  public String getRequiredClass() {
+    return requiredClass;
+  }
+
+  public void setRequiredClass(String requiredClass) {
+    this.requiredClass = requiredClass;
+  }
+
+  public List<SupportedProperty> getSupportedProperties() {
+    return supportedProperties;
+  }
+
+  public void setSupportedProperties(List<SupportedProperty> supportedProperties) {
+    this.supportedProperties = supportedProperties;
+  }
+
 }

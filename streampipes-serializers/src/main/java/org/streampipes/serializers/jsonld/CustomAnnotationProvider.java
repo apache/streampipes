@@ -22,6 +22,10 @@ import org.streampipes.model.ApplicationLink;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.SpDataStreamContainer;
+import org.streampipes.model.client.messages.ErrorMessageLd;
+import org.streampipes.model.client.messages.MessageLd;
+import org.streampipes.model.client.messages.NotificationLd;
+import org.streampipes.model.client.messages.SuccessMessageLd;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.streampipes.model.connect.grounding.FormatDescription;
@@ -31,10 +35,15 @@ import org.streampipes.model.connect.grounding.ProtocolDescriptionList;
 import org.streampipes.model.connect.guess.DomainPropertyProbability;
 import org.streampipes.model.connect.guess.DomainPropertyProbabilityList;
 import org.streampipes.model.connect.guess.GuessSchema;
-import org.streampipes.model.connect.rules.CreateNestedRuleDescription;
-import org.streampipes.model.connect.rules.DeleteRuleDescription;
-import org.streampipes.model.connect.rules.MoveRuleDescription;
-import org.streampipes.model.connect.rules.RenameRuleDescription;
+import org.streampipes.model.connect.rules.Schema.CreateNestedRuleDescription;
+import org.streampipes.model.connect.rules.Schema.DeleteRuleDescription;
+import org.streampipes.model.connect.rules.Schema.MoveRuleDescription;
+import org.streampipes.model.connect.rules.Schema.RenameRuleDescription;
+import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
+import org.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
+import org.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
+import org.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
+import org.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.streampipes.model.graph.*;
 import org.streampipes.model.grounding.*;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
@@ -100,6 +109,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             RemoteOneOfStaticProperty.class,
             AnyStaticProperty.class,
             FreeTextStaticProperty.class,
+            FileStaticProperty.class,
             Option.class,
             MappingProperty.class,
             DataSinkInvocation.class,
@@ -140,7 +150,19 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             DeleteRuleDescription.class,
             CreateNestedRuleDescription.class,
             MoveRuleDescription.class,
-            RenameRuleDescription.class
+            RenameRuleDescription.class,
+            UnitTransformRuleDescription.class,
+            RemoveDuplicatesTransformationRuleDescription.class,
+            AddValueTransformationRuleDescription.class,
+            AddValueTransformationRuleDescription.class,
+            PropertyRenameRule.class,
+            ErrorMessageLd.class,
+            SuccessMessageLd.class,
+            MessageLd.class,
+            NotificationLd.class,
+            AddTimestampRuleDescription.class,
+            PropertyRenameRule.class,
+            TimestampTranfsformationRuleDescription.class
     );
   }
 }

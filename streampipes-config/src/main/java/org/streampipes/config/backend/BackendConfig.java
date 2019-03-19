@@ -47,7 +47,8 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
     config.register(BackendConfigKeys.KAFKA_REST_PORT, 8082, "The port of the kafka-rest module");
     config.register(BackendConfigKeys.KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
-
+    config.register(BackendConfigKeys.ASSETS_DIR, "/streampipes-assets", "The directory where " +
+            "pipeline element assets are stored.");
 
   }
 
@@ -133,6 +134,10 @@ public enum BackendConfig {
 
   public String getKafkaRestUrl() {
     return "http://" +getKafkaRestHost() +":" +getKafkaRestPort();
+  }
+
+  public String getAssetDir() {
+    return config.getString(BackendConfigKeys.ASSETS_DIR);
   }
 
 

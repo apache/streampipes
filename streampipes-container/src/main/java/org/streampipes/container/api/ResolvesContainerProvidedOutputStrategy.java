@@ -16,10 +16,13 @@
  */
 package org.streampipes.container.api;
 
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.sdk.extractor.AbstractParameterExtractor;
 
-public interface ResolvesContainerProvidedOutputStrategy<T extends InvocableStreamPipesEntity> {
+public interface ResolvesContainerProvidedOutputStrategy<T extends InvocableStreamPipesEntity, P
+        extends AbstractParameterExtractor<T>> {
 
-  EventSchema resolveOutputStrategy(T processingElement);
+  EventSchema resolveOutputStrategy(T processingElement, P parameterExtractor) throws SpRuntimeException;
 }

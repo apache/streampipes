@@ -61,8 +61,8 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
 
     private String standartKeys[] = {"id", "timestamp", "model", "latitude", "longitude"};
 
-    private String url = "https://api.opensensemap.org/boxes";
-//    private String url = "http://localhost:3001/opensensemap";
+//    private String url = "https://api.opensensemap.org/boxes";
+    private String url = "http://localhost:3001/opensensemap";
 //    private String url = "http://test-connect-datasources-rest:3001/opensensemap";
 
 
@@ -78,7 +78,8 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
 
     @Override
     public SpecificAdapterStreamDescription declareModel() {
-          return SpecificDataStreamAdapterBuilder.create(ID, "OpenSenseMap", "Environment Sensors")
+
+        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "OpenSenseMap", "Environment Sensors")
                 .iconUrl("openSenseMap.png")
                 .requiredMultiValueSelection(Labels.from("sensors", "Sensors", "Select the " +
                         "sensors that are included in the data stream"), Stream
@@ -86,6 +87,9 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
                         .map(s -> new Option(s, SensorNames.getKeyFromLabel(s)))
                         .collect(Collectors.toList()))
                 .build();
+
+        description.setAppId(ID);
+        return description;
     }
 
     @Override
@@ -290,7 +294,7 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
 
     @Override
     protected PollingSettings getPollingInterval() {
-        return PollingSettings.from(TimeUnit.SECONDS, POLLING_INTERVALL);
+        return PollingSettings.from(TimeUnit.MINUTES, POLLING_INTERVALL);
     }
 
     private void activateSensors(List<Option> config) {

@@ -17,13 +17,6 @@
 
 package org.streampipes.codegeneration.flink.sepa;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
-import org.streampipes.codegeneration.utils.TV;
-import org.streampipes.codegeneration.utils.Utils;
-
 public class FlinkSepaProgramGeneratorTest {
 
 //	@Test

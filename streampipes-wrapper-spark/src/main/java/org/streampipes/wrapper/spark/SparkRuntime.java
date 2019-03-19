@@ -30,21 +30,17 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
-import org.streampipes.logging.impl.EventStatisticLogger;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.wrapper.spark.converter.JsonToMapFormat;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Jochen Lutz on 2017-12-07.
- */
 public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> implements Runnable, Serializable {
     private static final long serialVersionUID = 1L;
     protected final SparkDeploymentConfig deploymentConfig;

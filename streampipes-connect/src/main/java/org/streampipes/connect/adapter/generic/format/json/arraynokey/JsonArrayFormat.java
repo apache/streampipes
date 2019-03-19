@@ -36,6 +36,7 @@ public class JsonArrayFormat extends AbstractJsonFormat {
         FormatDescription fd = new FormatDescription(ID, "Json Array No Key", "This is the description" +
                 "for json format");
 
+        fd.setAppId(ID);
         return fd;
     }
 

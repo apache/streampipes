@@ -23,6 +23,7 @@ import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
+import org.streampipes.connect.exception.ParseException;
 
 import java.io.InputStream;
 import java.util.concurrent.*;
@@ -59,10 +60,20 @@ public abstract class PullProtocol extends Protocol {
 
     private void executeProtocolLogic(AdapterPipeline adapterPipeline) {
          final Runnable task = () -> {
+
+            format.reset();
             SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
             InputStream data = getDataFromEndpoint();
+            try {
+                if(data != null) {
+                    parser.parse(data, stk);
+                } else {
+                    logger.warn("Could not receive data from Endpoint. Try again in " + interval + " seconds.");
+                }
+            } catch (ParseException e) {
+                logger.error("Error while parsing: " + e.getMessage());
+            }
 
-            parser.parse(data, stk);
         };
 
         scheduler = Executors.newScheduledThreadPool(1);

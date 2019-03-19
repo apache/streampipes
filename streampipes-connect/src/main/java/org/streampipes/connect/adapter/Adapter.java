@@ -20,26 +20,35 @@ package org.streampipes.connect.adapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
+import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
+import org.streampipes.connect.adapter.generic.pipeline.elements.*;
 import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
+import org.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
+import org.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
+import org.streampipes.model.grounding.TransportProtocol;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Adapter<T extends AdapterDescription> {
     Logger logger = LoggerFactory.getLogger(Adapter.class);
 
-    @Deprecated
-    protected String kafkaUrl;
-
-    @Deprecated
-    protected String topic;
-
     private boolean debug;
+
+    protected AdapterPipeline adapterPipeline;
 
     protected T adapterDescription;
 
     public Adapter(T adapterDescription, boolean debug) {
         this.adapterDescription = adapterDescription;
         this.debug = debug;
+        this.adapterPipeline = getAdapterPipeline(adapterDescription);
     }
 
     public Adapter(T adapterDescription) {
@@ -54,18 +63,6 @@ public abstract class Adapter<T extends AdapterDescription> {
         this(false);
     }
 
-    @Deprecated
-    public Adapter(String kafkaUrl, String topic, boolean debug) {
-        this.kafkaUrl = kafkaUrl;
-        this.topic = topic;
-        this.debug = debug;
-    }
-
-    @Deprecated
-    public Adapter(String kafkaUrl, String topic) {
-        this(kafkaUrl, topic, false);
-    }
-
     public abstract T declareModel();
 
     // Decide which adapter to call
@@ -75,9 +72,76 @@ public abstract class Adapter<T extends AdapterDescription> {
 
     public abstract Adapter getInstance(T adapterDescription);
 
-    public abstract GuessSchema getSchema(T adapterDescription) throws AdapterException;
+    public abstract GuessSchema getSchema(T adapterDescription) throws AdapterException, ParseException;
 
     public abstract String getId();
+
+    public void changeEventGrounding(TransportProtocol transportProtocol) {
+        List<AdapterPipelineElement> pipelineElements =  this.adapterPipeline.getPipelineElements();
+        SendToKafkaAdapterSink sink = (SendToKafkaAdapterSink) pipelineElements.get(pipelineElements.size() - 1);
+        sink.changeTransportProtocol(transportProtocol);
+    }
+
+    private AdapterPipeline getAdapterPipeline(T adapterDescription) {
+
+        List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
+
+        // Must be before the schema transformations to ensure that user can move this event property
+        AddTimestampRuleDescription timestampTransformationRuleDescription = getTimestampRule(adapterDescription);
+        if (timestampTransformationRuleDescription != null) {
+            pipelineElements.add(new AddTimestampPipelineElement(timestampTransformationRuleDescription.getRuntimeKey()));
+        }
+
+        AddValueTransformationRuleDescription valueTransformationRuleDescription = getAddValueRule(adapterDescription);
+        if (valueTransformationRuleDescription != null) {
+            pipelineElements.add(new AddValuePipelineElement(valueTransformationRuleDescription.getRuntimeKey(), valueTransformationRuleDescription.getStaticValue()));
+        }
+
+
+        // first transform schema before transforming vales
+        // value rules should use unique keys for of new schema
+        pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getSchemaRules()));
+        pipelineElements.add(new TransformValueAdapterPipelineElement(adapterDescription.getValueRules()));
+
+
+        RemoveDuplicatesTransformationRuleDescription duplicatesTransformationRuleDescription = getRemoveDuplicateRule(adapterDescription);
+        if (duplicatesTransformationRuleDescription != null) {
+            pipelineElements.add(new DuplicateFilterPipelineElement(duplicatesTransformationRuleDescription.getFilterTimeWindow()));
+        }
+
+
+        // Needed when adapter is
+        if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
+        && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
+            pipelineElements.add(new SendToKafkaAdapterSink( adapterDescription));
+        }
+
+       return new AdapterPipeline(pipelineElements);
+    }
+
+    private RemoveDuplicatesTransformationRuleDescription getRemoveDuplicateRule(T adapterDescription) {
+        return getRule(adapterDescription, RemoveDuplicatesTransformationRuleDescription.class);
+    }
+
+    private AddTimestampRuleDescription getTimestampRule(T adapterDescription) {
+        return getRule(adapterDescription, AddTimestampRuleDescription.class);
+    }
+
+    private AddValueTransformationRuleDescription getAddValueRule(T adapterDescription) {
+        return getRule(adapterDescription, AddValueTransformationRuleDescription.class);
+    }
+
+
+    private <G extends TransformationRuleDescription> G getRule(T adapterDescription, Class<G> type) {
+
+        for (TransformationRuleDescription tr : adapterDescription.getRules()) {
+            if (type.isInstance(tr)) {
+                return type.cast(tr);
+            }
+        }
+
+        return null;
+    }
 
     public boolean isDebug() {
         return debug;

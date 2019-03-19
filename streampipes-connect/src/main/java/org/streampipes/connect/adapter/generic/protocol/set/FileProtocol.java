@@ -19,21 +19,32 @@ package org.streampipes.connect.adapter.generic.protocol.set;
 
 
 
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.connect.SendToPipeline;
 import org.streampipes.connect.adapter.generic.format.Format;
+import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
+import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.streampipes.connect.adapter.generic.format.Parser;
+import org.streampipes.model.staticproperty.FileStaticProperty;
+import org.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
+import org.streampipes.sdk.helpers.AdapterSourceType;
+import org.streampipes.sdk.helpers.Labels;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,22 +67,23 @@ public class FileProtocol extends Protocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        ProtocolDescription pd = new ProtocolDescription(ID,"File","This is the " +
-                "description for the File protocol");
-        FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("fileUri", "fileUri",
-                "This property defines the URL for the http request.");
-        pd.setSourceType("SET");
-        pd.setIconUrl("file.png");
-        pd.addConfig(urlProperty);
-        return pd;
+        return ProtocolDescriptionBuilder.create(ID, "File", "Reads the content from a local file.")
+                .sourceType(AdapterSourceType.SET)
+                .iconUrl("file.png")
+                .requiredFile(Labels.from("filePath", "File", "This " +
+                        "property defines the path to the file."))
+                .build();
     }
 
     @Override
     public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
         ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
 
-        String fileUri = extractor.singleValue("fileUri");
+//        String fileUri = extractor.singleValue("fileUri");
 
+        FileStaticProperty fileStaticProperty = (FileStaticProperty) extractor.getStaticPropertyByName("filePath");
+
+        String fileUri = fileStaticProperty.getLocationPath();
         return new FileProtocol(parser, format, fileUri);
     }
 
@@ -99,6 +111,8 @@ public class FileProtocol extends Protocol {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }  catch (ParseException e) {
+            logger.error("Error while parsing: " + e.getMessage());
         }
     }
 
@@ -109,7 +123,7 @@ public class FileProtocol extends Protocol {
 
 
     @Override
-    public GuessSchema getGuessSchema() {
+    public GuessSchema getGuessSchema() throws ParseException {
 
 
         InputStream dataInputStream = getDataFromEndpoint();
@@ -144,7 +158,7 @@ public class FileProtocol extends Protocol {
     }
 
 
-    public InputStream getDataFromEndpoint() {
+    public InputStream getDataFromEndpoint() throws ParseException {
         FileReader fr = null;
         InputStream inn = null;
 
@@ -155,15 +169,15 @@ public class FileProtocol extends Protocol {
             inn = new FileInputStream(fileUri);
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            throw new ParseException("File not found: " + fileUri);
         }
+        if (inn == null)
+            throw new ParseException("Could not receive Data from file: " + fileUri);
 
         return inn;
     }
     @Override
-    public List<Map<String, Object>> getNElements(int n) {
+    public List<Map<String, Object>> getNElements(int n) throws ParseException {
         List<Map<String, Object>> result = new ArrayList<>();
 
         InputStream dataInputStream = getDataFromEndpoint();

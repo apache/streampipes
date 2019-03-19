@@ -49,6 +49,7 @@ public class GenericDataStreamAdapter extends GenericAdapter<GenericAdapterStrea
         GenericAdapterStreamDescription adapterDescription = new GenericAdapterStreamDescription();
         adapterDescription.setAdapterId(GenericAdapterStreamDescription.ID);
         adapterDescription.setUri(GenericAdapterStreamDescription.ID);
+        adapterDescription.setAppId(GenericAdapterStreamDescription.ID);
         return adapterDescription;
     }
 

@@ -19,6 +19,7 @@ package org.streampipes.container.api;
 
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.InvocableDeclarer;
 import org.streampipes.container.init.RunningInstances;
@@ -29,10 +30,12 @@ import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.runtime.RuntimeOptions;
 import org.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.streampipes.serializers.json.GsonSerializer;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -42,9 +45,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D extends Declarer> extends Element<D> {
+public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D extends Declarer,
+        P extends AbstractParameterExtractor<I>> extends Element<D> {
 
-    protected abstract List<D> getElementDeclarers();
+    protected abstract Map<String, D> getElementDeclarers();
     protected abstract String getInstanceId(String uri, String elementId);
 
     protected Class<I> clazz;
@@ -102,11 +106,18 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
     public String fetchOutputStrategy(@PathParam("elementId") String elementId, String payload) {
 
         I runtimeOptionsRequest = GsonSerializer.getGsonWithIds().fromJson(payload, clazz);
-        ResolvesContainerProvidedOutputStrategy<I> resolvesOutput = (ResolvesContainerProvidedOutputStrategy<I>)
+        ResolvesContainerProvidedOutputStrategy<I, P> resolvesOutput =
+                (ResolvesContainerProvidedOutputStrategy<I, P>)
                 getDeclarerById
                 (elementId);
 
-        return GsonSerializer.getGsonWithIds().toJson(resolvesOutput.resolveOutputStrategy(runtimeOptionsRequest));
+        try {
+            return GsonSerializer.getGsonWithIds().toJson(resolvesOutput.resolveOutputStrategy
+                    (runtimeOptionsRequest, getExtractor(runtimeOptionsRequest)));
+        } catch (SpRuntimeException e) {
+            e.printStackTrace();
+            return Util.toResponseString(runtimeOptionsRequest.getElementId(), false);
+        }
     }
 
 
@@ -130,5 +141,7 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
 
         return Util.toResponseString(elementId, false, "Could not find the running instance with id: " + runningInstanceId);
     }
+
+    protected abstract P getExtractor(I graph);
 }
 

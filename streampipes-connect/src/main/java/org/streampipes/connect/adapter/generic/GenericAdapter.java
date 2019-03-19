@@ -23,18 +23,12 @@ import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
-import org.streampipes.connect.adapter.generic.pipeline.elements.SendToKafkaAdapterSink;
-import org.streampipes.connect.adapter.generic.pipeline.elements.TransformSchemaAdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class GenericAdapter<T extends AdapterDescription> extends Adapter<T> {
 
@@ -70,19 +64,12 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
 
         logger.debug("Start adatper with format: " + format.getId() + " and " + protocol.getId());
 
-
-        List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
-        pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getRules()));
-        pipelineElements.add(new SendToKafkaAdapterSink((AdapterDescription) adapterDescription));
-
-        AdapterPipeline adapterPipeline = new AdapterPipeline(pipelineElements);
-
         protocol.run(adapterPipeline);
     }
 
 
     @Override
-    public GuessSchema getSchema(T adapterDescription) throws AdapterException {
+    public GuessSchema getSchema(T adapterDescription) throws AdapterException, ParseException {
         Parser parser = getParser((GenericAdapterDescription) adapterDescription);
         Format format = getFormat((GenericAdapterDescription) adapterDescription);
 
@@ -95,14 +82,15 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
 
     private Parser getParser(GenericAdapterDescription adapterDescription) throws AdapterException {
          if (adapterDescription.getFormatDescription() == null) throw new AdapterException("Format description of Adapter ist empty");
-         return AdapterRegistry.getAllParsers().get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
+         return AdapterRegistry.getAllParsers().get(adapterDescription.getFormatDescription().getAppId()).getInstance(adapterDescription.getFormatDescription());
     }
 
     private Format getFormat(GenericAdapterDescription adapterDescription) {
-        return AdapterRegistry.getAllFormats().get(adapterDescription.getFormatDescription().getUri()).getInstance(adapterDescription.getFormatDescription());
+        return AdapterRegistry.getAllFormats().get(adapterDescription.getFormatDescription().getAppId()).getInstance(adapterDescription.getFormatDescription());
     }
 
     private Protocol getProtocol(GenericAdapterDescription adapterDescription, Format format, Parser parser) {
-        return AdapterRegistry.getAllProtocols().get(adapterDescription.getProtocolDescription().getUri()).getInstance(adapterDescription.getProtocolDescription(), parser, format);
+        return AdapterRegistry.getAllProtocols().get(adapterDescription.getProtocolDescription().getAppId()).getInstance(adapterDescription.getProtocolDescription(), parser, format);
     }
+
 }

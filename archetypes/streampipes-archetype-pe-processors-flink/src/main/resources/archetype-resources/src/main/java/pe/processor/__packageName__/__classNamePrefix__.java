@@ -7,14 +7,12 @@ package ${package}.pe.processor.${packageName};
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
-import java.util.Map;
+import org.streampipes.model.runtime.Event;
 
-public class ${classNamePrefix} implements FlatMapFunction<Map<String, Object>, Map<String,
-        Object>> {
+public class ${classNamePrefix} implements FlatMapFunction<Event, Event> {
 
   @Override
-  public void flatMap(Map<String, Object> in,
-                      Collector<Map<String, Object>> out) throws Exception {
+  public void flatMap(Event in, Collector<Event> out) throws Exception {
 
     out.collect(in);
   }

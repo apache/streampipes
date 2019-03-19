@@ -17,8 +17,8 @@
 
 package org.streampipes.manager.data;
 
-import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,9 +37,8 @@ public class PipelineGraphHelpers {
         return pipelineGraph
                 .vertexSet()
                 .stream()
-                .filter(v -> clazz.isInstance(v))
-                .map(s -> clazz.cast(s))
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
                 .collect(Collectors.toList());
     }
-
 }

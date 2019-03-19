@@ -16,9 +16,7 @@
  */
 package org.streampipes.manager.template;
 
-import org.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
 import org.streampipes.commons.exceptions.NoSepaInPipelineException;
-import org.streampipes.commons.exceptions.RemoteServerNotAccessibleException;
 import org.streampipes.manager.matching.DataSetGroundingSelector;
 import org.streampipes.manager.matching.PipelineVerificationHandler;
 import org.streampipes.model.SpDataSet;
@@ -34,7 +32,10 @@ import org.streampipes.model.template.BoundPipelineElement;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.storage.management.StorageDispatcher;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 public class PipelineGenerator {
 
@@ -96,7 +97,7 @@ public class PipelineGenerator {
           entity.setConfigured(true);
           entity.setStaticProperties(message.getPipelineModifications().get(0).getStaticProperties());
           pipeline.getSepas().add((DataProcessorInvocation) entity);
-        } catch (RemoteServerNotAccessibleException | NoMatchingJsonSchemaException | NoSepaInPipelineException | InvalidConnectionException e) {
+        } catch (NoSepaInPipelineException | InvalidConnectionException e) {
           e.printStackTrace();
         }
         if (pipelineElement.getConnectedTo().size() > 0) {
@@ -111,7 +112,7 @@ public class PipelineGenerator {
           entity.setConfigured(true);
           entity.setStaticProperties(message.getPipelineModifications().get(0).getStaticProperties());
           pipeline.getActions().add((DataSinkInvocation) entity);
-        } catch (RemoteServerNotAccessibleException | NoMatchingJsonSchemaException | NoSepaInPipelineException | InvalidConnectionException e) {
+        } catch (  NoSepaInPipelineException | InvalidConnectionException e) {
           e.printStackTrace();
         }
       }

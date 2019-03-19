@@ -21,6 +21,8 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.model.runtime.EventConverter;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.standalone.manager.ProtocolManager;
 
@@ -35,15 +37,14 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
    super(protocol, format);
   }
 
-  public void onEvent(Map<String, Object> outEvent) {
+  public void collect(Event event) {
+    Map<String, Object> outEvent = new EventConverter(event).toMap();
     try {
       protocolDefinition.getProducer().publish(dataFormatDefinition.fromMap(outEvent));
     } catch (SpRuntimeException e) {
-      // TODO handle exception
       e.printStackTrace();
     }
   }
-
 
   @Override
   public void connect() throws SpRuntimeException {
@@ -59,4 +60,5 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
       ProtocolManager.removeOutputCollector(transportProtocol);
     }
   }
+
 }

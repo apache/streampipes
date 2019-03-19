@@ -18,6 +18,10 @@
 package org.streampipes.sdk.extractor;
 
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.CustomOutputStrategy;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProcessingElementParameterExtractor extends AbstractParameterExtractor<DataProcessorInvocation> {
 
@@ -36,6 +40,18 @@ public class ProcessingElementParameterExtractor extends AbstractParameterExtrac
             .getTransportProtocol()
             .getTopicDefinition()
             .getActualTopicName();
+  }
+
+  public List<String> outputKeySelectors() {
+    return sepaElement
+            .getOutputStrategies()
+            .stream()
+            .filter(CustomOutputStrategy.class::isInstance)
+            .map(o -> (CustomOutputStrategy) o)
+            .findFirst()
+            .map(CustomOutputStrategy::getSelectedPropertyKeys)
+            .orElse(new ArrayList<>());
+
   }
 
 }

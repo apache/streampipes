@@ -29,10 +29,12 @@ import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
+import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.sdk.helpers.Tuple2;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -48,6 +50,7 @@ public class InvocationGraphBuilder {
     this.graphs = new ArrayList<>();
     this.pipelineGraph = pipelineGraph;
     this.pipelineId = pipelineId;
+
   }
 
   public List<InvocableStreamPipesEntity> buildGraphs() {
@@ -62,7 +65,7 @@ public class InvocationGraphBuilder {
     return graphs;
   }
 
-  public void configure(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
+  private void configure(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
 
     EventGrounding inputGrounding = new GroundingBuilder(source, targets)
             .getEventGrounding();
@@ -71,32 +74,29 @@ public class InvocationGraphBuilder {
       if (source instanceof DataProcessorInvocation) {
 
         DataProcessorInvocation dataProcessorInvocation = (DataProcessorInvocation) source;
-        EventSchema outputSchema = new EventSchema();
-        OutputSchemaGenerator schemaGenerator = new OutputSchemaFactory(dataProcessorInvocation)
+        Tuple2<EventSchema, ? extends OutputStrategy> outputSettings;
+        OutputSchemaGenerator<?> schemaGenerator = new OutputSchemaFactory(dataProcessorInvocation)
                 .getOuputSchemaGenerator();
 
         if (((DataProcessorInvocation) source).getInputStreams().size() == 1) {
-          outputSchema = schemaGenerator.buildFromOneStream(dataProcessorInvocation
+          outputSettings = schemaGenerator.buildFromOneStream(dataProcessorInvocation
                   .getInputStreams()
                   .get(0));
         } else if (graphExists(dataProcessorInvocation.getDOM())) {
           DataProcessorInvocation existingInvocation = (DataProcessorInvocation) find(dataProcessorInvocation.getDOM());
 
-          outputSchema = schemaGenerator.buildFromTwoStreams(existingInvocation
+          outputSettings = schemaGenerator.buildFromTwoStreams(existingInvocation
                   .getInputStreams().get(0), dataProcessorInvocation.getInputStreams().get(1));
           graphs.remove(existingInvocation);
+        } else {
+          outputSettings = new Tuple2<>(new EventSchema(), dataProcessorInvocation
+                  .getOutputStrategies().get(0));
         }
 
-        dataProcessorInvocation.setOutputStrategies(Arrays
-                .asList(schemaGenerator
-                        .getModifiedOutputStrategy(dataProcessorInvocation
-                                .getOutputStrategies()
-                                .get(0))));
-
         SpDataStream outputStream = new SpDataStream();
-        outputStream.setEventSchema(outputSchema);
         outputStream.setEventGrounding(inputGrounding);
-
+        dataProcessorInvocation.setOutputStrategies(Collections.singletonList(outputSettings.b));
+        outputStream.setEventSchema(outputSettings.a);
         ((DataProcessorInvocation) source).setOutputStream(outputStream);
       }
 
@@ -107,17 +107,17 @@ public class InvocationGraphBuilder {
 
     targets.forEach(t -> {
       t.getInputStreams()
-              .get(getIndex(t))
+              .get(getIndex(source.getDOM(), t))
               .setEventGrounding(inputGrounding);
 
       t.getInputStreams()
-              .get(getIndex(t))
-              .setEventSchema(getInputSchema(source, getIndex(t)));
+              .get(getIndex(source.getDOM(), t))
+              .setEventSchema(getInputSchema(source));
 
       String elementIdentifier = makeElementIdentifier(pipelineId, inputGrounding
               .getTransportProtocol().getTopicDefinition().getActualTopicName(), t.getName());
 
-      t.setUri(t.getBelongsTo() + "/" + elementIdentifier);
+      t.setElementId(t.getBelongsTo() + "/" + elementIdentifier);
       t.setCorrespondingPipeline(pipelineId);
       t.setStatusInfoSettings(makeStatusInfoSettings(elementIdentifier));
 
@@ -145,7 +145,7 @@ public class InvocationGraphBuilder {
             RandomStringUtils.randomAlphabetic(5);
   }
 
-  private EventSchema getInputSchema(NamedStreamPipesEntity source, Integer index) {
+  private EventSchema getInputSchema(NamedStreamPipesEntity source) {
     if (source instanceof SpDataStream) {
       return ((SpDataStream) source).getEventSchema();
     } else if (source instanceof DataProcessorInvocation) {
@@ -167,12 +167,8 @@ public class InvocationGraphBuilder {
 
   }
 
-  private Integer getIndex(InvocableStreamPipesEntity element) {
-    if (element.getStreamRequirements().size() == 1) {
-      return 0;
-    } else {
-      return graphExists(element.getDOM()) ? 1 : 0;
-    }
+  private Integer getIndex(String sourceDomId, InvocableStreamPipesEntity targetElement) {
+    return targetElement.getConnectedTo().indexOf(sourceDomId);
   }
 
   private boolean graphExists(String domId) {

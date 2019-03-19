@@ -19,85 +19,100 @@ package org.streampipes.model.staticproperty;
 
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
-import javax.persistence.*;
-import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.MAPPING_PROPERTY)
 @MappedSuperclass
 @Entity
 public abstract class MappingProperty extends StaticProperty {
 
-	private static final long serialVersionUID = -7849999126274124847L;
-	
-	@RdfProperty(StreamPipes.MAPS_FROM)
-	protected URI mapsFrom;
+  private static final long serialVersionUID = -7849999126274124847L;
 
-	@RdfProperty(StreamPipes.MAPS_FROM_OPTIONS)
-	@OneToMany(fetch = FetchType.EAGER,
-					cascade = {CascadeType.ALL})
-	private List<EventProperty> mapsFromOptions;
+  /**
+   * The assigned requirementSelector links to the runtime name of a property requirement. The
+   * internal id of the mapping property is assigned to the runtime name of the property
+   * requirement as follows: r(streamIndex)::runtimeName
+   *
+   * Example: The mapping property internal Id is number-mapping, and a property requirement
+   * exists that declares the requirement for a number datatype. The processor has one input node.
+   *
+   * The value of the requirementSelector will be r0::number-mapping.
+   *
+   */
+  @RdfProperty(StreamPipes.MAPS_FROM)
+  private String requirementSelector;
 
-	@OneToOne(fetch = FetchType.EAGER,
-					cascade = {CascadeType.ALL})
-	@RdfProperty(StreamPipes.HAS_PROPERTY_SCOPE)
-	private String propertyScope;
-	
-	public MappingProperty()
-	{
-		super();
-	}
+  @RdfProperty(StreamPipes.MAPS_FROM_OPTIONS)
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  private List<String> mapsFromOptions;
 
-	public MappingProperty(StaticPropertyType type) {
-		super(type);
-	}
-	
-	public MappingProperty(MappingProperty other)
-	{
-		super(other);
-		this.mapsFrom = other.getMapsFrom();
-		this.propertyScope = other.getPropertyScope();
-		if (other.getMapsFromOptions() != null) {
-			this.mapsFromOptions = new Cloner().properties(other.getMapsFromOptions());
-		}
-	}
-	
-	protected MappingProperty(StaticPropertyType type, URI mapsFrom, String internalName, String label, String description)
-	{
-		super(type, internalName, label, description);
-		this.mapsFrom = mapsFrom;
-	}
-	
-	protected MappingProperty(StaticPropertyType type, String internalName, String label, String description)
-	{
-		super(type, internalName, label, description);
-	}
+  @OneToOne(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.HAS_PROPERTY_SCOPE)
+  private String propertyScope;
 
-	public URI getMapsFrom() {
-		return mapsFrom;
-	}
+  public MappingProperty() {
+    super();
+    this.mapsFromOptions = new ArrayList<>();
+    this.requirementSelector = "";
+  }
 
-	public void setMapsFrom(URI mapsFrom) {
-		this.mapsFrom = mapsFrom;
-	}
+  public MappingProperty(StaticPropertyType type) {
+    super(type);
+    this.mapsFromOptions = new ArrayList<>();
+    this.requirementSelector = "";
+  }
 
-	public List<EventProperty> getMapsFromOptions() {
-		return mapsFromOptions;
-	}
+  public MappingProperty(MappingProperty other) {
+    super(other);
+    this.requirementSelector = other.getRequirementSelector();
+    this.propertyScope = other.getPropertyScope();
+    this.mapsFromOptions = other.getMapsFromOptions();
+  }
 
-	public void setMapsFromOptions(List<EventProperty> mapsFromOptions) {
-		this.mapsFromOptions = mapsFromOptions;
-	}
+  protected MappingProperty(StaticPropertyType type, String requirementSelector, String
+          internalName, String label, String description) {
+    this(type, internalName, label, description);
+    this.requirementSelector = requirementSelector;
+  }
 
-	public String getPropertyScope() {
-		return propertyScope;
-	}
+  protected MappingProperty(StaticPropertyType type, String internalName, String label, String description) {
+    super(type, internalName, label, description);
+    this.requirementSelector = "";
+  }
 
-	public void setPropertyScope(String propertyScope) {
-		this.propertyScope = propertyScope;
-	}
+  public String getRequirementSelector() {
+    return requirementSelector;
+  }
+
+  public void setRequirementSelector(String requirementSelector) {
+    this.requirementSelector = requirementSelector;
+  }
+
+  public List<String> getMapsFromOptions() {
+    return mapsFromOptions;
+  }
+
+  public void setMapsFromOptions(List<String> mapsFromOptions) {
+    this.mapsFromOptions = mapsFromOptions;
+  }
+
+  public String getPropertyScope() {
+    return propertyScope;
+  }
+
+  public void setPropertyScope(String propertyScope) {
+    this.propertyScope = propertyScope;
+  }
 }

@@ -3,11 +3,15 @@
     <parent>
         <groupId>org.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.60.1</version>
+        <version>0.61.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>streampipes-connect</artifactId>
+
+    <properties>
+        <jsrosbridge.version>0.2.0</jsrosbridge.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -28,13 +32,19 @@
         </dependency>
 
         <dependency>
-			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-rest-shared</artifactId>
-		</dependency>
+            <groupId>edu.wpi.rail</groupId>
+            <artifactId>jrosbridge</artifactId>
+            <version>${jsrosbridge.version}</version>
+        </dependency>
+
         <dependency>
-			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-measurement-units</artifactId>
-		</dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-rest-shared</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-measurement-units</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.json</artifactId>
@@ -86,20 +96,33 @@
             <version>20171018</version>
         </dependency>
         <dependency>
-            <groupId>org.twitter4j</groupId>
-            <artifactId>twitter4j-core</artifactId>
-            <version>[4.0,)</version>
-        </dependency>
-        <dependency>
-            <groupId>org.twitter4j</groupId>
-            <artifactId>twitter4j-stream</artifactId>
-            <version>4.0.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
+            <version>4.5.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>3.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-servlet</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>

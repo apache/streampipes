@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.management.master.FileManagement;
 import org.streampipes.connect.rest.AbstractContainerResource;
+import org.streampipes.model.client.messages.Notifications;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -51,13 +52,15 @@ public class FileResource extends AbstractContainerResource {
         @FormDataParam("file_upload") FormDataContentDisposition fileDetail) {
 
         try {
-            fileManagement.saveFile(uploadedInputStream, fileDetail.getFileName());
-            return ok();
+            String filePath = fileManagement.saveFile(uploadedInputStream, fileDetail.getFileName());
+//            return ok("{fileName: " + filePath + "}");
+            return ok(Notifications.success(filePath));
         } catch (Exception e) {
             logger.error(e.toString());
             return fail();
         }
     }
+
 
     @GET
   //  @Produces({MediaType.F})

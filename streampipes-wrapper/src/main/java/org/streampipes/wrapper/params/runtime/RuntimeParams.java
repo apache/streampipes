@@ -17,40 +17,86 @@
 
 package org.streampipes.wrapper.params.runtime;
 
-import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.model.runtime.EventFactory;
+import org.streampipes.model.runtime.SchemaInfo;
+import org.streampipes.model.runtime.SourceInfo;
+import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.params.binding.BindingParams;
-import org.streampipes.wrapper.routing.SpInputCollector;
-import org.streampipes.wrapper.runtime.PipelineElement;
 
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.Map;
 
-public abstract class RuntimeParams<B extends BindingParams, P extends PipelineElement<B>> {
+public abstract class RuntimeParams<B extends BindingParams<I>, I extends
+        InvocableStreamPipesEntity, RC extends RuntimeContext> implements Serializable {
 
   protected final B bindingParams;
-  protected final P engine;
+  protected RC runtimeContext;
 
+  private Map<String, Integer> eventInfoMap = new HashMap<>();
 
-  public RuntimeParams(Supplier<P> supplier, B bindingParams)
-  {
-    this.engine = supplier.get();
+  private Boolean singletonEngine;
+
+  public RuntimeParams(B bindingParams, Boolean singletonEngine) {
     this.bindingParams = bindingParams;
-  }
-
-  public P getEngine() {
-    return engine;
+    this.singletonEngine = singletonEngine;
+    buildEventInfoMap();
+    this.runtimeContext = makeRuntimeContext();
   }
 
   public B getBindingParams() {
     return bindingParams;
   }
 
-  public abstract void bindEngine() throws SpRuntimeException;
+  private void buildEventInfoMap() {
+    for (int i = 0; i < bindingParams.getInputStreamParams().size(); i++) {
+      String sourceInfo = bindingParams.getInputStreamParams().get(i).getSourceInfo()
+              .getSourceId();
+      eventInfoMap.put(sourceInfo, i);
+    }
+  }
 
-  public abstract void discardEngine() throws SpRuntimeException;
+  public Event makeEvent(Map<String, Object> mapEvent, String sourceId) {
+    return EventFactory.fromMap(mapEvent, getSourceInfo(getIndex(sourceId)), getSchemaInfo
+            (getIndex(sourceId)));
 
-  public abstract List<SpInputCollector> getInputCollectors() throws
-          SpRuntimeException;
+  }
 
+  public List<SourceInfo> getSourceInfo() {
+    return bindingParams.getInputStreamParams().size() == 1 ? Collections.singletonList
+            (getSourceInfo(0)) : Arrays.asList(getSourceInfo(0), getSourceInfo(1));
+  }
+
+  public List<SchemaInfo> getSchemaInfo() {
+    return bindingParams.getInputStreamParams().size() == 1 ? Collections.singletonList
+            (getSchemaInfo(0)) : Arrays.asList(getSchemaInfo(0), getSchemaInfo(1));
+  }
+
+  public SourceInfo getSourceInfo(Integer index) {
+    return bindingParams.getInputStreamParams().get(index).getSourceInfo();
+  }
+
+  public SchemaInfo getSchemaInfo(Integer index) {
+    return bindingParams.getInputStreamParams().get(index).getSchemaInfo();
+  }
+
+  private Integer getIndex(String sourceId) {
+    return eventInfoMap.get(sourceId);
+  }
+
+  public RC getRuntimeContext() {
+    return runtimeContext;
+  }
+
+  public Boolean isSingletonEngine() {
+    return singletonEngine;
+  }
+
+  protected abstract RC makeRuntimeContext();
 
 }

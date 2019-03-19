@@ -17,16 +17,25 @@
 
 package org.streampipes.messaging.kafka;
 
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.CreateTopicsResult;
+import org.apache.kafka.clients.admin.KafkaAdminClient;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.utils.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, Serializable {
 
@@ -74,10 +83,42 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
     @Override
     public void connect(KafkaTransportProtocol protocolSettings) {
         LOG.info("Kafka producer: Connecting to " +protocolSettings.getTopicDefinition().getActualTopicName());
-        this.brokerUrl = protocolSettings.getBrokerHostname() +":" +protocolSettings.getKafkaPort();
+        this.brokerUrl = protocolSettings.getBrokerHostname() +":" + protocolSettings.getKafkaPort();
         this.topic = protocolSettings.getTopicDefinition().getActualTopicName();
+
+        createKafaTopic(protocolSettings);
+
         this.producer = new KafkaProducer<>(getProperties());
         this.connected = true;
+    }
+
+    /**
+     * Create a new topic and define number partitions, replicas, and retention time
+     * @param settings
+     */
+    private void createKafaTopic(KafkaTransportProtocol settings) {
+        String zookeeperHost = settings.getZookeeperHost() + ":" + settings.getZookeeperPort();
+
+        Properties props = new Properties();
+        props.put("bootstrap.servers", brokerUrl);
+
+        Map<String, String> topicConfig = new HashMap<>();
+        topicConfig.put("retention.ms", "600000");
+
+        AdminClient adminClient = KafkaAdminClient.create(props);
+
+        final NewTopic newTopic = new NewTopic(topic, 1, (short) 1);
+        newTopic.configs(topicConfig);
+
+        final CreateTopicsResult createTopicsResult = adminClient.createTopics(Collections.singleton(newTopic));
+
+        try {
+            createTopicsResult.values().get(topic).get();
+        } catch (InterruptedException e) {
+            LOG.error("Could not create topic: " + topic + " on broker " + zookeeperHost);
+        } catch (ExecutionException e) {
+            LOG.error("Could not create topic: " + topic + " on broker " + zookeeperHost);
+        }
     }
 
     @Override

@@ -24,12 +24,13 @@ import org.streampipes.model.graph.DataSinkDescription;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
 
 
-    public WelcomePageGeneratorImpl(String baseUri, List<Declarer> declarers) {
+    public WelcomePageGeneratorImpl(String baseUri, Collection<Declarer> declarers) {
         super(baseUri, declarers);
     }
 

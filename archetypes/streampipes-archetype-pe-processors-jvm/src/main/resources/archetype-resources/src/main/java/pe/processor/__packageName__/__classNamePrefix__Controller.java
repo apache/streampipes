@@ -40,14 +40,13 @@ public class ${classNamePrefix}Controller extends StandaloneEventProcessingDecla
 
 	@Override
 	public ConfiguredEventProcessor<${classNamePrefix}Parameters> onInvocation
-				(DataProcessorInvocation graph) {
-		ProcessingElementParameterExtractor extractor = getExtractor(graph);
+				(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
 		String exampleString = extractor.singleValueParameter(EXAMPLE_KEY, String.class);
 
 		${classNamePrefix}Parameters params = new ${classNamePrefix}Parameters(graph, exampleString);
 
-		return new ConfiguredEventProcessor<>(params, () -> new ${classNamePrefix}(params));
+		return new ConfiguredEventProcessor<>(params, ${classNamePrefix}::new);
 	}
 
 }

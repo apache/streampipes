@@ -17,7 +17,6 @@
 
 package org.streampipes.connect.adapter.generic.protocol.set;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +27,13 @@ import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
+import org.streampipes.sdk.helpers.AdapterSourceType;
+import org.streampipes.sdk.helpers.Labels;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,18 +59,13 @@ public class HttpProtocol extends Protocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        ProtocolDescription pd = new ProtocolDescription(ID,"HTTP Set","This is the " +
-                "description for the http protocol");
-        FreeTextStaticProperty urlProperty = new FreeTextStaticProperty("url", "url",
-                "This property defines the URL for the http request.");
-
-        pd.setSourceType("SET");
-        pd.setIconUrl("rest.png");
-        //TODO remove just for testing
-//        urlProperty.setValue("https://opendata.bonn.de/api/action/datastore/search.json?resource_id=0a41c514-f760-4a17-b0a8-e1b755204fee&limit=100");
-
-        pd.addConfig(urlProperty);
-        return pd;
+        return ProtocolDescriptionBuilder.create(ID, "HTTP Set", "Reads the content from an HTTP " +
+                "endpoint.")
+                .sourceType(AdapterSourceType.SET)
+                .iconUrl("rest.png")
+                .requiredTextParameter(Labels.from("url", "url", "This property defines the URL " +
+                        "for the http request."))
+                .build();
     }
 
     @Override
@@ -92,8 +89,12 @@ public class HttpProtocol extends Protocol {
         SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
 
         InputStream data = getDataFromEndpoint();
+        try {
+            parser.parse(data, stk);
 
-        parser.parse(data, stk);
+        } catch (ParseException e) {
+            logger.error("Error while parsing: " + e.getMessage());
+        }
     }
 
     @Override
@@ -103,22 +104,21 @@ public class HttpProtocol extends Protocol {
 
 
     @Override
-    public GuessSchema getGuessSchema() {
-
+    public GuessSchema getGuessSchema() throws ParseException {
 
         InputStream dataInputStream = getDataFromEndpoint();
 
-        List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 20);
+        List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 2);
 
         EventSchema eventSchema= parser.getEventSchema(dataByte);
 
-        GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(20));
+        GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(2));
 
         return result;
     }
 
     @Override
-    public List<Map<String, Object>> getNElements(int n) {
+    public List<Map<String, Object>> getNElements(int n) throws ParseException {
 
         List<Map<String, Object>> result = new ArrayList<>();
 
@@ -139,24 +139,27 @@ public class HttpProtocol extends Protocol {
         return result;
     }
 
-    public InputStream getDataFromEndpoint() {
+    public InputStream getDataFromEndpoint() throws ParseException {
         InputStream result = null;
 
         try {
-            String s = Request.Get(url)
+            result = Request.Get(url)
                     .connectTimeout(1000)
                     .socketTimeout(100000)
-                    .execute().returnContent().asString();
+                    .execute().returnContent().asStream();
 
-            if (s.startsWith("ï")) {
-                s = s.substring(3);
-            }
+//            if (s.startsWith("ï")) {
+//                s = s.substring(3);
+//            }
 
-            result = IOUtils.toInputStream(s, "UTF-8");
+//            result = IOUtils.toInputStream(s, "UTF-8");
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ParseException("Could not receive Data from: " + url);
         }
+
+        if (result == null)
+            throw new ParseException("Could not receive Data from: " + url);
 
         return result;
     }

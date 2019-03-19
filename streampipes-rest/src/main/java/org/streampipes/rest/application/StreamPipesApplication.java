@@ -32,6 +32,7 @@ import org.streampipes.rest.impl.OntologyKnowledge;
 import org.streampipes.rest.impl.OntologyMeasurementUnit;
 import org.streampipes.rest.impl.OntologyPipelineElement;
 import org.streampipes.rest.impl.PipelineCategory;
+import org.streampipes.rest.impl.PipelineElementAsset;
 import org.streampipes.rest.impl.PipelineElementCategory;
 import org.streampipes.rest.impl.PipelineElementImport;
 import org.streampipes.rest.impl.PipelineElementRuntimeInfo;
@@ -98,6 +99,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(InternalPipelineTemplates.class);
         apiClasses.add(PipelineElementRuntimeInfo.class);
         apiClasses.add(Version.class);
+        apiClasses.add(PipelineElementAsset.class);
 
 
         // Serializers

@@ -18,19 +18,19 @@ package org.streampipes.sdk.helpers;
 
 import org.streampipes.model.output.TransformOperation;
 import org.streampipes.model.output.TransformOperationType;
+import org.streampipes.sdk.utils.Datatypes;
 
 public class TransformOperations {
 
-  public static TransformOperation staticDatatypeTransformation(String mappingPropertyInternalName, String
-          targetValue) {
+  public static TransformOperation staticDatatypeTransformation(String mappingPropertyInternalName, Datatypes targetDatatype) {
     return staticTransformOperation(TransformOperationType.DATATYPE_TRANSFORMATION, mappingPropertyInternalName,
-            targetValue);
+            targetDatatype.toString());
   }
 
   public static TransformOperation dynamicDatatypeTransformation(String mappingPropertyInternalName, String
-          targetValue) {
+          linkedStaticProperty) {
     return dynamicTransformOperation(TransformOperationType.DATATYPE_TRANSFORMATION, mappingPropertyInternalName,
-            targetValue);
+            linkedStaticProperty);
   }
 
   public static TransformOperation staticDomainPropertyTransformation(String mappingPropertyInternalName, String
@@ -40,9 +40,9 @@ public class TransformOperations {
   }
 
   public static TransformOperation dynamicDomainPropertyTransformation(String mappingPropertyInternalName, String
-          targetValue) {
+          linkedStaticProperty) {
     return dynamicTransformOperation(TransformOperationType.DOMAIN_PROPERTY_TRANSFORMATION, mappingPropertyInternalName,
-            targetValue);
+            linkedStaticProperty);
   }
 
   public static TransformOperation staticRuntimeNameTransformation(String mappingPropertyInternalName, String
@@ -52,9 +52,9 @@ public class TransformOperations {
   }
 
   public static TransformOperation dynamicRuntimeNameTransformation(String mappingPropertyInternalName, String
-          targetValue) {
+          linkedStaticProperty) {
     return dynamicTransformOperation(TransformOperationType.RUNTIME_NAME_TRANSFORMATION, mappingPropertyInternalName,
-            targetValue);
+            linkedStaticProperty);
   }
 
   public static TransformOperation staticMeasurementUnitTransformation(String mappingPropertyInternalName, String
@@ -79,8 +79,7 @@ public class TransformOperations {
   }
 
   private static TransformOperation dynamicTransformOperation(TransformOperationType transformationScope, String
-          mappingPropertyInternalName, String
-                                                                      sourceStaticPropertyInternalName) {
+          mappingPropertyInternalName, String sourceStaticPropertyInternalName) {
     TransformOperation to = prepareTransformOperation(transformationScope.name()
             , mappingPropertyInternalName);
     to.setSourceStaticProperty(sourceStaticPropertyInternalName);

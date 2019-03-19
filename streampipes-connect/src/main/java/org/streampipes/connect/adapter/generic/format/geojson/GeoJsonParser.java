@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.format.util.JsonEventProperty;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.*;
 import org.streampipes.vocabulary.SO;
@@ -47,7 +48,7 @@ public class GeoJsonParser extends Parser {
     }
 
     @Override
-    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) {
+    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
         FeatureCollection geoFeature;
         Gson gson = new Gson();
 
@@ -61,7 +62,7 @@ public class GeoJsonParser extends Parser {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ParseException(e.getMessage());
         }
     }
 
@@ -93,8 +94,8 @@ public class GeoJsonParser extends Parser {
 
         if(geoFeature.getGeometry() instanceof Point) {
             Point point = (Point) geoFeature.getGeometry();
-            eventProperties.add(getEventPropertyGeoJson("longitude", point.getCoordinates().getLongitude(), SO.Longitude));
-            eventProperties.add(getEventPropertyGeoJson("latitude", point.getCoordinates().getLatitude(), SO.Latitude));
+            eventProperties.add(getEventPropertyGeoJson("longitude", point.getCoordinates().getLongitude(), "http://www.w3.org/2003/01/geo/wgs84_pos#long"));
+            eventProperties.add(getEventPropertyGeoJson("latitude", point.getCoordinates().getLatitude(), "http://www.w3.org/2003/01/geo/wgs84_pos#lat"));
             if (point.getCoordinates().hasAltitude()) {
                 eventProperties.add(getEventPropertyGeoJson("altitude", point.getCoordinates().getAltitude(), SO.Altitude));
             }

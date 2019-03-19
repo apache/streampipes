@@ -19,7 +19,8 @@ package org.streampipes.connect.rest.master;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.Adapter;
+
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.management.AdapterDeserializer;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
@@ -37,66 +38,70 @@ import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.rest.shared.util.SpMediaType;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
 
 
 @Path("/api/v1/{username}/master/guess")
 public class GuessResource extends AbstractContainerResource {
 
-    private static final Logger logger = LoggerFactory.getLogger(GuessResource.class);
+  private static final Logger logger = LoggerFactory.getLogger(GuessResource.class);
 
-    private GuessManagement guessManagement;
+  private GuessManagement guessManagement;
 
-    public GuessResource() {
-        this.guessManagement = new GuessManagement();
-    }
+  public GuessResource() {
+    this.guessManagement = new GuessManagement();
+  }
 
-    public GuessResource(GuessManagement guessManagement) {
-        this.guessManagement = guessManagement;
-    }
+  public GuessResource(GuessManagement guessManagement) {
+    this.guessManagement = guessManagement;
+  }
 
-    @POST
-    @JsonLdSerialized
-    @Path("/schema")
-    @Produces(SpMediaType.JSONLD)
-    public Response guessSchema(String s, @PathParam("username") String userName) {
+  @POST
+  @JsonLdSerialized
+  @Path("/schema")
+  @Produces(SpMediaType.JSONLD)
+  public Response guessSchema(String s, @PathParam("username") String userName) {
 
-        try {
-         AdapterDescription  adapterDescription = AdapterDeserializer.getAdapterDescription(s);
-            GuessSchema result = guessManagement.guessSchema(adapterDescription);
+      try {
+          AdapterDescription adapterDescription = AdapterDeserializer.getAdapterDescription(s);
+          GuessSchema result = guessManagement.guessSchema(adapterDescription);
 
-            return ok(result);
-        } catch (AdapterException e) {
-            logger.error("Could not deserialize AdapterDescription: " + s, e);
-            return fail();
-        }
+          return ok(result);
+      } catch (ParseException e) {
+          logger.error("Error while parsing events: ", e);
+          return ok(Notifications.errorLd(e.getMessage()));
+      } catch (Exception e) {
+          logger.error("Error while guess schema for AdapterDescription: " + s, e);
+          return ok(Notifications.errorLd(e.getMessage()));
+      }
 
-    }
+  }
 
-    @GET
-    @Produces(SpMediaType.JSONLD)
-    @Path("/format")
-    public Response guessFormat() {
-        //TODO
-        return ok(true);
-    }
+  @GET
+  @Produces(SpMediaType.JSONLD)
+  @Path("/format")
+  public Response guessFormat() {
+    //TODO
+    return ok(true);
+  }
 
 
-    @GET
-    @Produces(SpMediaType.JSONLD)
-    @Path("/formatdescription")
-    public Response guessFormatDescription() {
-        //TODO
-        return ok(true);
-    }
+  @GET
+  @Produces(SpMediaType.JSONLD)
+  @Path("/formatdescription")
+  public Response guessFormatDescription() {
+    //TODO
+    return ok(true);
+  }
 
-    public void setGuessManagement(GuessManagement guessManagement) {
-        this.guessManagement = guessManagement;
-    }
+  public void setGuessManagement(GuessManagement guessManagement) {
+    this.guessManagement = guessManagement;
+  }
 
 }
 

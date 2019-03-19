@@ -44,4 +44,11 @@ public abstract class AbstractContainerResource {
     protected Response fail() {
        return Response.serverError().build();
     }
+
+    protected <T> Response fail(T entity) {
+        return Response
+                .serverError()
+                .entity(entity)
+                .build();
+    }
 }

@@ -54,7 +54,7 @@ public class PipelineGraphBuilder {
 
     public PipelineGraph buildGraph() {
         PipelineGraph pipelineGraph = new PipelineGraph();
-        allPipelineElements.forEach(p -> pipelineGraph.addVertex(p));
+        allPipelineElements.forEach(pipelineGraph::addVertex);
 
         for(NamedStreamPipesEntity source : allPipelineElements) {
             List<InvocableStreamPipesEntity> targets = findTargets(source.getDOM());

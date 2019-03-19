@@ -17,19 +17,13 @@
 
 package org.streampipes.manager.matching;
 
-import org.apache.http.HttpVersion;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
-import org.apache.sling.commons.json.JSONArray;
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
-import org.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
 import org.streampipes.commons.exceptions.NoSepaInPipelineException;
-import org.streampipes.commons.exceptions.RemoteServerNotAccessibleException;
 import org.streampipes.manager.data.PipelineGraph;
 import org.streampipes.manager.data.PipelineGraphBuilder;
 import org.streampipes.manager.matching.v2.ElementVerification;
 import org.streampipes.manager.matching.v2.mapping.MappingPropertyCalculator;
+import org.streampipes.manager.selector.PropertyRequirementSelector;
+import org.streampipes.manager.selector.PropertySelectorGenerator;
 import org.streampipes.manager.util.PipelineVerificationUtils;
 import org.streampipes.manager.util.TreeUtils;
 import org.streampipes.model.SpDataStream;
@@ -40,23 +34,15 @@ import org.streampipes.model.client.exception.InvalidConnectionException;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.pipeline.PipelineModification;
 import org.streampipes.model.client.pipeline.PipelineModificationMessage;
+import org.streampipes.model.constants.PropertySelectorConstants;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.output.CustomOutputStrategy;
 import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.schema.EventPropertyList;
-import org.streampipes.model.schema.EventPropertyNested;
-import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.staticproperty.MappingProperty;
-import org.streampipes.model.staticproperty.Option;
-import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
-import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.storage.management.StorageDispatcher;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PipelineVerificationHandler {
 
@@ -66,33 +52,20 @@ public class PipelineVerificationHandler {
   private InvocableStreamPipesEntity rdfRootElement;
 
   public PipelineVerificationHandler(Pipeline pipeline) throws NoSepaInPipelineException {
-
     this.pipeline = pipeline;
     this.rdfRootElement = PipelineVerificationUtils.getRootNode(pipeline);
     this.invocationGraphs = new ArrayList<>();
-
-    // prepare a list of all pipeline elements without the root element
-    List<NamedStreamPipesEntity> sepaElements = new ArrayList<>();
-    sepaElements.addAll(pipeline.getSepas());
-    sepaElements.addAll(pipeline.getStreams());
-    sepaElements.addAll(pipeline.getActions());
-    sepaElements.remove(rdfRootElement);
-
-    pipelineModificationMessage = new PipelineModificationMessage();
+    this.pipelineModificationMessage = new PipelineModificationMessage();
   }
 
   public PipelineVerificationHandler validateConnection() throws InvalidConnectionException {
 
     ElementVerification verifier = new ElementVerification();
     boolean verified = true;
-    // current root element can be either an action or a SEPA
     InvocableStreamPipesEntity rightElement = rdfRootElement;
     List<String> connectedTo = rdfRootElement.getConnectedTo();
 
-    Iterator<String> it = connectedTo.iterator();
-
-    while (it.hasNext()) {
-      String domId = it.next();
+    for (String domId : connectedTo) {
       NamedStreamPipesEntity element = TreeUtils.findSEPAElement(domId, pipeline.getSepas(), pipeline.getStreams());
       if (element instanceof SpDataStream) {
         SpDataStream leftSpDataStream = (SpDataStream) element;
@@ -101,7 +74,7 @@ public class PipelineVerificationHandler {
           verified = false;
         }
       } else {
-        invocationGraphs.addAll(makeInvocationGraphs(element));
+        invocationGraphs.addAll(makeInvocationGraphs());
         DataProcessorInvocation ancestor = findInvocationGraph(invocationGraphs, element.getDOM());
         if (!(verifier.verify(ancestor, rightElement))) {
           verified = false;
@@ -116,24 +89,11 @@ public class PipelineVerificationHandler {
   }
 
   /**
-   * dummy method to compute mapping properties (based on EXACT input/output
-   * matching)
+   * computes mapping properties (based on input/output matching)
    *
    * @return PipelineValidationHandler
    */
-  public PipelineVerificationHandler computeMappingProperties() throws RemoteServerNotAccessibleException, NoMatchingJsonSchemaException {
-    return computeMappingProperties("");
-  }
-
-  /**
-   * The username in the signature is used for the streamsets integration. Remove when it is no longer required
-   * dummy method to compute mapping properties (based on EXACT input/output
-   * matching)
-   *
-   * @return PipelineValidationHandler
-   */
-
-  public PipelineVerificationHandler computeMappingProperties(String username) throws RemoteServerNotAccessibleException, NoMatchingJsonSchemaException {
+  public PipelineVerificationHandler computeMappingProperties() {
     List<String> connectedTo = rdfRootElement.getConnectedTo();
     String domId = rdfRootElement.getDOM();
 
@@ -147,157 +107,86 @@ public class PipelineVerificationHandler {
       SpDataStream incomingStream;
 
       if (element instanceof DataProcessorInvocation || element instanceof SpDataStream) {
-
         if (element instanceof DataProcessorInvocation) {
-
           DataProcessorInvocation ancestor = (DataProcessorInvocation) TreeUtils.findByDomId(
                   connectedTo.get(i), invocationGraphs);
 
           incomingStream = ancestor.getOutputStream();
-          updateStaticProperties(ancestor.getOutputStream(), i, username);
-          updateOutputStrategy(ancestor.getOutputStream(), i);
-
         } else {
-
-          SpDataStream stream = (SpDataStream) element;
-          incomingStream = stream;
-          updateStaticProperties(stream, i, username);
-          updateOutputStrategy(stream, i);
-
+          incomingStream = (SpDataStream) element;
         }
 
         tempStreams.add(incomingStream);
         if (rdfRootElement.getStreamRequirements().size() - 1 == i) {
+          updateStaticProperties(tempStreams);
           PipelineModification modification = new PipelineModification(
                   domId,
                   rdfRootElement.getElementId(),
                   rdfRootElement.getStaticProperties());
           modification.setInputStreams(tempStreams);
+          updateOutputStrategy(tempStreams);
           if (rdfRootElement instanceof DataProcessorInvocation) {
             modification.setOutputStrategies(((DataProcessorInvocation) rdfRootElement).getOutputStrategies());
           }
-          pipelineModificationMessage
-                  .addPipelineModification(modification);
+          pipelineModificationMessage.addPipelineModification(modification);
         }
       }
     }
     return this;
   }
 
-  public void updateStaticProperties(SpDataStream stream, Integer count, String username) throws RemoteServerNotAccessibleException, NoMatchingJsonSchemaException {
+  private void updateStaticProperties(List<SpDataStream> inputStreams) {
 
     rdfRootElement
             .getStaticProperties()
             .stream()
             .filter(property -> property instanceof MappingProperty)
             .forEach(property -> {
-              try {
 
-                MappingProperty mappingProperty = (MappingProperty) property;
-                if (mappingProperty.getMapsFrom() != null) {
-                  if (inStream(rdfRootElement.getStreamRequirements().get(count), mappingProperty.getMapsFrom())) {
-                    mappingProperty.setMapsFromOptions(new ArrayList<>());
-                    ((MappingProperty) property)
-                            .setMapsFromOptions(findSupportedEventProperties(stream,
-                                    rdfRootElement.getStreamRequirements(),
-                                    mappingProperty.getMapsFrom()));
-                  }
-                } else {
-                  mappingProperty.setMapsFromOptions(new ArrayList<>());
-                  for (EventProperty streamProperty : stream
-                          .getEventSchema().getEventProperties()) {
+              MappingProperty mappingProperty = (MappingProperty) property;
 
-                    if ((streamProperty instanceof EventPropertyPrimitive) || streamProperty instanceof EventPropertyList) {
-                      mappingProperty.getMapsFromOptions().add(streamProperty);
-                    } else {
-                      mappingProperty.getMapsFromOptions().addAll(addNestedProperties((EventPropertyNested) streamProperty));
-                    }
-                  }
-                }
-
-              } catch (Exception e) {
-                e.printStackTrace();
+              if (!mappingProperty.getRequirementSelector().equals("")) {
+                mappingProperty.setMapsFromOptions(generateSelectorsFromRequirement
+                        (inputStreams, mappingProperty.getRequirementSelector()));
+              } else {
+                mappingProperty.setMapsFromOptions(generateSelectorsWithoutRequirement
+                        (inputStreams));
               }
             });
+  }
 
+  private List<String> generateSelectorsFromRequirement(List<SpDataStream> inputStreams, String
+          requirementSelector) {
+    PropertyRequirementSelector selector = new PropertyRequirementSelector
+            (requirementSelector);
 
-    List<StaticProperty> allProperties = rdfRootElement
-            .getStaticProperties()
-            .stream()
-            .filter(property -> property instanceof RemoteOneOfStaticProperty)
-            .collect(Collectors.toList());
+    EventProperty propertyRequirement = selector.findPropertyRequirement
+            (rdfRootElement.getStreamRequirements());
+    SpDataStream inputStream = selector.getAffectedStream(inputStreams);
 
-    for (StaticProperty property : allProperties) {
-      updateRemoteOneOfStaticProperty((RemoteOneOfStaticProperty) property, username);
+    List<String> availablePropertySelectors = new PropertySelectorGenerator(inputStream
+            .getEventSchema(), true).generateSelectors(selector.getAffectedStreamPrefix());
+
+    return new MappingPropertyCalculator(inputStream.getEventSchema(),
+            availablePropertySelectors, propertyRequirement).matchedPropertySelectors();
+  }
+
+  private List<String> generateSelectorsWithoutRequirement(List<SpDataStream> inputStreams) {
+
+    List<String> selectors = new ArrayList<>(new PropertySelectorGenerator(inputStreams
+            .get(0).getEventSchema().getEventProperties(), true)
+            .generateSelectors(PropertySelectorConstants.FIRST_STREAM_ID_PREFIX));
+
+    if (inputStreams.size() > 1) {
+      selectors.addAll(new PropertySelectorGenerator(inputStreams
+              .get(1).getEventSchema().getEventProperties(), true)
+              .generateSelectors(PropertySelectorConstants.SECOND_STREAM_ID_PREFIX));
     }
 
+    return selectors;
   }
 
-  /**
-   * Calls the remote URL and uses the result to set the options of the OneOfStaticProperty
-   *
-   * @param property
-   */
-  private void updateRemoteOneOfStaticProperty(RemoteOneOfStaticProperty property, String username) throws RemoteServerNotAccessibleException, NoMatchingJsonSchemaException {
-
-    String label = property.getLabelFieldName();
-    String description = property.getDescriptionFieldName();
-    String value = property.getValueFieldName();
-
-    try {
-      //TODO make this part generic currently it just works with the streamstory component
-      String operation = "";
-      if (rdfRootElement.getBelongsTo().contains("activity")) {
-        operation = "Activity";
-      } else {
-        operation = "Prediction";
-      }
-
-      String url = property.getRemoteUrl() + "streampipes/models?username=" + username + "&analyticsOperation=" + operation;
-      Response res = Request.Get(url).useExpectContinue().addHeader("Content-Type", "application/json")
-              .version(HttpVersion.HTTP_1_1)
-              .execute();
-
-
-      JSONArray data = new JSONArray(res.returnContent().toString());
-
-      List<Option> options = new ArrayList<>();
-      for (int i = 0; i < data.length(); i++) {
-        JSONObject object = data.getJSONObject(i);
-        options.add(new Option(object.getString(value)));
-      }
-
-      property.setOptions(options);
-    } catch (JSONException e) {
-      e.printStackTrace();
-      throw new NoMatchingJsonSchemaException();
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new RemoteServerNotAccessibleException(e.toString(), property.getRemoteUrl());
-    }
-
-  }
-
-  private boolean inStream(SpDataStream stream, URI mapsFrom) {
-    return stream
-            .getEventSchema()
-            .getEventProperties()
-            .stream().anyMatch(ep -> ep.getElementId().equals(mapsFrom.toString()));
-  }
-
-  private List<EventProperty> findSupportedEventProperties(SpDataStream streamOffer, List<SpDataStream> streamRequirements, URI mapsFrom) {
-    EventProperty mapsFromProperty = findPropertyRequirement(mapsFrom);
-
-    return new MappingPropertyCalculator().matchesProperties(streamOffer.getEventSchema().getEventProperties(), mapsFromProperty);
-  }
-
-  private EventProperty findPropertyRequirement(URI mapsFrom) {
-    return TreeUtils
-            .findEventProperty(mapsFrom.toString(), rdfRootElement.getStreamRequirements());
-  }
-
-  private void updateOutputStrategy(SpDataStream stream, Integer count) {
+  private void updateOutputStrategy(List<SpDataStream> inputStreams) {
 
     if (rdfRootElement instanceof DataProcessorInvocation) {
       ((DataProcessorInvocation) rdfRootElement)
@@ -306,31 +195,18 @@ public class PipelineVerificationHandler {
               .filter(strategy -> strategy instanceof CustomOutputStrategy)
               .forEach(strategy -> {
                 CustomOutputStrategy outputStrategy = (CustomOutputStrategy) strategy;
-                if (count == 0) {
-                  outputStrategy.setProvidesProperties(new ArrayList<>());
-                }
-                if (outputStrategy.isOutputRight() && count > 0) {
-                  outputStrategy.setProvidesProperties(stream.getEventSchema().getEventProperties());
+                if (inputStreams.size() == 1 || (inputStreams.size() > 1 && !(outputStrategy
+                        .isOutputRight()))) {
+                  outputStrategy.setAvailablePropertyKeys(new PropertySelectorGenerator
+                          (inputStreams.get(0).getEventSchema(), false).generateSelectors());
                 } else {
-                  if (outputStrategy.getProvidesProperties() == null) {
-                    outputStrategy.setProvidesProperties(new ArrayList<>());
-                  }
-                  outputStrategy.getProvidesProperties().addAll(stream.getEventSchema().getEventProperties());
+                  outputStrategy.setAvailablePropertyKeys(new PropertySelectorGenerator
+                          (inputStreams.get(0).getEventSchema(), inputStreams.get(1)
+                                  .getEventSchema(), false)
+                          .generateSelectors());
                 }
               });
     }
-  }
-
-  private List<EventProperty> addNestedProperties(EventPropertyNested properties) {
-    List<EventProperty> options = new ArrayList<>();
-    for (EventProperty p : properties.getEventProperties()) {
-      if (p instanceof EventPropertyPrimitive) {
-        options.add(p);
-      } else {
-        options.addAll(addNestedProperties(properties));
-      }
-    }
-    return options;
   }
 
   public PipelineVerificationHandler storeConnection() {
@@ -351,9 +227,7 @@ public class PipelineVerificationHandler {
     return pipelineModificationMessage;
   }
 
-
-  public List<InvocableStreamPipesEntity> makeInvocationGraphs(NamedStreamPipesEntity
-                                                                       rootElement) {
+  public List<InvocableStreamPipesEntity> makeInvocationGraphs() {
     PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
     return new InvocationGraphBuilder(pipelineGraph, null).buildGraphs();
   }
@@ -361,5 +235,4 @@ public class PipelineVerificationHandler {
   private DataProcessorInvocation findInvocationGraph(List<InvocableStreamPipesEntity> graphs, String domId) {
     return (DataProcessorInvocation) TreeUtils.findByDomId(domId, graphs);
   }
-
 }

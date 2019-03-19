@@ -40,6 +40,7 @@ import org.streampipes.model.output.FixedOutputStrategy;
 import org.streampipes.model.output.KeepOutputStrategy;
 import org.streampipes.model.output.ListOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.output.PropertyRenameRule;
 import org.streampipes.model.output.TransformOperation;
 import org.streampipes.model.output.TransformOutputStrategy;
 import org.streampipes.model.quality.Accuracy;
@@ -299,5 +300,12 @@ public class Cloner {
       LOG.error("Description is of unknown type: " +pe.getClass().getCanonicalName());
       return pe;
     }
+  }
+
+  public List<PropertyRenameRule> renameRules(List<PropertyRenameRule> renameRules) {
+    return renameRules
+            .stream()
+            .map(PropertyRenameRule::new)
+            .collect(Collectors.toList());
   }
 }

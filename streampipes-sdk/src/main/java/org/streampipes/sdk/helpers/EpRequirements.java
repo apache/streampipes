@@ -20,112 +20,111 @@ package org.streampipes.sdk.helpers;
 import org.streampipes.commons.Utils;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.vocabulary.XSD;
-import org.streampipes.sdk.utils.Datatypes;
 
 public class EpRequirements {
 
-	public static EventPropertyList listRequirement() {
-		return new EventPropertyList();
-	}
+  public static EventPropertyList listRequirement() {
+    return new EventPropertyList();
+  }
 
-	public static EventPropertyList listRequirement(Datatypes datatype) {
-		return new EventPropertyList("", datatypeReq(datatype));
-	}
+  public static EventPropertyList nestedListRequirement() {
+    EventPropertyList listEp = new EventPropertyList();
+    listEp.setEventProperty(new EventPropertyNested());
+    return listEp;
+  }
 
-	public static EventPropertyPrimitive datatypeReq(String datatype)
-	{
-		EventPropertyPrimitive ep = new EventPropertyPrimitive();
-		ep.setRuntimeType(datatype);
-		return ep;
-	}
+  public static EventPropertyList listRequirement(Datatypes datatype) {
+    return new EventPropertyList("", datatypeReq(datatype));
+  }
 
-	public static EventPropertyPrimitive datatypeReq(Datatypes datatype) {
-		return datatypeReq(datatype.toString());
-	}
-	
-	public static EventPropertyPrimitive booleanReq()
-	{
-		return datatypeReq(XSD._boolean.toString());
-	}
-	
-	public static EventPropertyPrimitive integerReq()
-	{
-		return datatypeReq(XSD._integer.toString());
-	}
-	
-	public static EventPropertyPrimitive doubleReq()
-	{
-		return datatypeReq(XSD._double.toString());
-	}
-	
-	public static EventPropertyPrimitive stringReq()
-	{
-		return datatypeReq(XSD._string.toString());
-	}
-	
-	public static EventPropertyPrimitive numberReq() {
-		return datatypeReq(SO.Number);
-	}
+  public static EventProperty listRequirement(EventProperty listItemType) {
+    return new EventPropertyList(listItemType);
+  }
 
-	public static EventPropertyPrimitive anyProperty() {
-	    return new EventPropertyPrimitive();
+  public static EventPropertyPrimitive datatypeReq(String datatype) {
+    EventPropertyPrimitive ep = new EventPropertyPrimitive();
+    ep.setRuntimeType(datatype);
+    return ep;
+  }
+
+  public static EventPropertyPrimitive datatypeReq(Datatypes datatype) {
+    return datatypeReq(datatype.toString());
+  }
+
+  public static EventPropertyPrimitive booleanReq() {
+    return datatypeReq(XSD._boolean.toString());
+  }
+
+  public static EventPropertyPrimitive integerReq() {
+    return datatypeReq(XSD._integer.toString());
+  }
+
+  public static EventPropertyPrimitive doubleReq() {
+    return datatypeReq(XSD._double.toString());
+  }
+
+  public static EventPropertyPrimitive stringReq() {
+    return datatypeReq(XSD._string.toString());
+  }
+
+  public static EventPropertyPrimitive numberReq() {
+    return datatypeReq(SO.Number);
+  }
+
+  public static EventPropertyPrimitive anyProperty() {
+    return new EventPropertyPrimitive();
+  }
+
+  public static EventPropertyPrimitive booleanReq(String domainProperty) {
+    return appendDomainProperty(datatypeReq(XSD._boolean.toString()), domainProperty);
+  }
+
+  public static EventPropertyPrimitive integerReq(String domainProperty) {
+    return appendDomainProperty(datatypeReq(XSD._integer.toString()), domainProperty);
+  }
+
+  public static EventPropertyPrimitive doubleReq(String domainProperty) {
+    return appendDomainProperty(datatypeReq(XSD._double.toString()), domainProperty);
+  }
+
+  public static EventPropertyPrimitive stringReq(String domainProperty) {
+    return appendDomainProperty(datatypeReq(XSD._string.toString()), domainProperty);
+  }
+
+  public static EventPropertyPrimitive numberReq(String domainProperty) {
+    return appendDomainProperty(datatypeReq(SO.Number), domainProperty);
+  }
+
+  private static <T extends EventProperty> EventProperty domainPropertyReq(String domainProperty, Class<T> eventProperty) {
+    EventProperty ep = null;
+    try {
+      ep = eventProperty.newInstance();
+    } catch (InstantiationException | IllegalAccessException e) {
+      e.printStackTrace();
     }
+    ep.setDomainProperties(Utils.createURI(domainProperty));
+    return ep;
+  }
 
-	public static EventPropertyPrimitive booleanReq(String domainProperty)
-	{
-		return appendDomainProperty(datatypeReq(XSD._boolean.toString()), domainProperty);
-	}
+  public static EventPropertyPrimitive domainPropertyReq(String domainProperty) {
+    return (EventPropertyPrimitive) domainPropertyReq(domainProperty, EventPropertyPrimitive.class);
+  }
 
-	public static EventPropertyPrimitive integerReq(String domainProperty)
-	{
-		return appendDomainProperty(datatypeReq(XSD._integer.toString()), domainProperty);
-	}
+  public static EventPropertyList domainPropertyReqList(String domainProperty) {
+    return (EventPropertyList) domainPropertyReq(domainProperty, EventPropertyList.class);
+  }
 
-	public static EventPropertyPrimitive doubleReq(String domainProperty)
-	{
-		return appendDomainProperty(datatypeReq(XSD._double.toString()), domainProperty);
-	}
-
-	public static EventPropertyPrimitive stringReq(String domainProperty)
-	{
-		return appendDomainProperty(datatypeReq(XSD._string.toString()), domainProperty);
-	}
-
-	public static EventPropertyPrimitive numberReq(String domainProperty) {
-		return appendDomainProperty(datatypeReq(SO.Number), domainProperty);
-	}
-
-	private static <T extends EventProperty> EventProperty domainPropertyReq(String domainProperty, Class<T> eventProperty)
-	{
-		EventProperty ep = null;
-		try {
-			ep = eventProperty.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		ep.setDomainProperties(Utils.createURI(domainProperty));
-		return ep;
-	}
-
-	public static EventPropertyPrimitive domainPropertyReq(String domainProperty)
-	{
-	    return (EventPropertyPrimitive) domainPropertyReq(domainProperty, EventPropertyPrimitive.class);
-	}
-
-	public static EventPropertyList domainPropertyReqList(String domainProperty)
-	{
-		return (EventPropertyList) domainPropertyReq(domainProperty, EventPropertyList.class);
-	}
-
-	private static EventPropertyPrimitive appendDomainProperty(EventPropertyPrimitive property, String domainProperty) {
-		property.setDomainProperties(Utils.createURI(domainProperty));
-		return property;
-	}
+  private static EventPropertyPrimitive appendDomainProperty(EventPropertyPrimitive property, String domainProperty) {
+    property.setDomainProperties(Utils.createURI(domainProperty));
+    return property;
+  }
 
   public static EventPropertyPrimitive timestampReq() {
-		return domainPropertyReq("http://schema.org/DateTime");
+    return domainPropertyReq("http://schema.org/DateTime");
   }
 }

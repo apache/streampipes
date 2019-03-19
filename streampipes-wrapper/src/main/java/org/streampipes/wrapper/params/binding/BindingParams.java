@@ -18,6 +18,7 @@
 package org.streampipes.wrapper.params.binding;
 
 import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.output.PropertyRenameRule;
 import org.streampipes.model.util.SchemaUtils;
 
 import java.io.Serializable;
@@ -37,16 +38,22 @@ public abstract class BindingParams<I extends InvocableStreamPipesEntity> implem
   BindingParams(I graph) {
     this.graph = graph;
     this.inEventTypes = new HashMap<>();
+    buildInEventTypes();
+    buildInputStreamParams();
+  }
+
+  private void buildInEventTypes() {
     graph.getInputStreams().forEach(is ->
             inEventTypes.put(is.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName(), SchemaUtils
                     .toRuntimeMap
-                    (is.getEventSchema().getEventProperties())));
-
-    graph.getInputStreams().forEach(s -> inputStreamParams.add(new InputStreamParams(s)));
+                            (is.getEventSchema().getEventProperties())));
   }
 
-  protected BindingParams() {
-    inEventTypes = null;
+  private void buildInputStreamParams() {
+    for (int i = 0; i < graph.getInputStreams().size(); i++) {
+      inputStreamParams.add(new InputStreamParams(i, graph.getInputStreams().get(i),
+              getRenameRules()));
+    }
   }
 
   public I getGraph() {
@@ -61,4 +68,5 @@ public abstract class BindingParams<I extends InvocableStreamPipesEntity> implem
     return inEventTypes;
   }
 
+  protected abstract List<PropertyRenameRule> getRenameRules();
 }

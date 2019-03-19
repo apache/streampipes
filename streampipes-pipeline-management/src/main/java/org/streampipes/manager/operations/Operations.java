@@ -75,7 +75,7 @@ public class Operations {
             pipeline);
     return validator
             .validateConnection()
-            .computeMappingProperties(username)
+            .computeMappingProperties()
             .storeConnection()
             .getPipelineModificationMessage();
   }

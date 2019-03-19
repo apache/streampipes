@@ -17,9 +17,13 @@
 
 package org.streampipes.wrapper.params.binding;
 
-import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.constants.PropertySelectorConstants;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.output.PropertyRenameRule;
+import org.streampipes.model.runtime.SchemaInfo;
+import org.streampipes.model.runtime.SourceInfo;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.util.SchemaUtils;
 
 import java.io.Serializable;
@@ -27,29 +31,55 @@ import java.util.List;
 
 public class InputStreamParams implements Serializable {
 
-	private static final long serialVersionUID = -240772928651344246L;
-	
-	private EventGrounding eventGrounding;
-	private EventSchema eventSchema;
-	private String inName;
+  private static final long serialVersionUID = -240772928651344246L;
 
-	public InputStreamParams(SpDataStream inputStream) {
-		super();
-		this.eventGrounding = inputStream.getEventGrounding();
-		this.inName = eventGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
-		this.eventSchema = inputStream.getEventSchema();
-	}
-	
-	public EventGrounding getEventGrounding() {
-		return eventGrounding;
-	}
-	
-	public String getInName() {
-		return inName;
-	}
-	
-	public List<String> getAllProperties() {
-		return SchemaUtils.toPropertyList(eventSchema.getEventProperties());
-	}
-	
+  private EventGrounding eventGrounding;
+  private EventSchema eventSchema;
+  private String inName;
+  private SourceInfo sourceInfo;
+  private SchemaInfo schemaInfo;
+
+  public InputStreamParams(Integer streamId, SpDataStream inputStream, List<PropertyRenameRule>
+          propertyRenameRules) {
+    super();
+    this.eventGrounding = inputStream.getEventGrounding();
+    this.inName = eventGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
+    this.eventSchema = inputStream.getEventSchema();
+    this.sourceInfo = makeSourceInfo(streamId);
+    this.schemaInfo = makeSchemaInfo(propertyRenameRules);
+  }
+
+  private SchemaInfo makeSchemaInfo(List<PropertyRenameRule> renameRules) {
+    return new SchemaInfo(eventSchema, renameRules);
+  }
+
+  private SourceInfo makeSourceInfo(Integer streamId) {
+    return new SourceInfo(eventGrounding.getTransportProtocol().getTopicDefinition()
+            .getActualTopicName(), makeStreamPrefix(streamId));
+  }
+
+  private String makeStreamPrefix(Integer streamId) {
+    return streamId == 0 ? PropertySelectorConstants.FIRST_STREAM_ID_PREFIX :
+            PropertySelectorConstants.SECOND_STREAM_ID_PREFIX;
+  }
+
+  public EventGrounding getEventGrounding() {
+    return eventGrounding;
+  }
+
+  public String getInName() {
+    return inName;
+  }
+
+  public List<String> getAllProperties() {
+    return SchemaUtils.toPropertyList(eventSchema.getEventProperties());
+  }
+
+  public SourceInfo getSourceInfo() {
+    return sourceInfo;
+  }
+
+  public SchemaInfo getSchemaInfo() {
+    return schemaInfo;
+  }
 }

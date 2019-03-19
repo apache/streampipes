@@ -17,6 +17,11 @@
 
 package org.streampipes.connect.rest.master;
 
+import static com.jayway.restassured.RestAssured.get;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.jayway.restassured.RestAssured;
 import org.eclipse.jetty.server.Server;
@@ -29,16 +34,13 @@ import org.streampipes.connect.management.master.AdapterMasterManagement;
 import org.streampipes.connect.utils.ConnectContainerResourceTest;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.streampipes.model.grounding.*;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.SimpleTopicDefinition;
+import org.streampipes.model.grounding.TopicDefinition;
+import org.streampipes.model.grounding.TransportProtocol;
 
 import java.util.Arrays;
-
-import static com.jayway.restassured.RestAssured.get;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class WelcomePageMasterTest extends ConnectContainerResourceTest {
     private Server server;

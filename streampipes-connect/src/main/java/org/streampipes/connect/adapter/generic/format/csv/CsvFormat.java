@@ -20,6 +20,7 @@ package org.streampipes.connect.adapter.generic.format.csv;
 
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.staticproperty.AnyStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
@@ -62,8 +63,13 @@ public class CsvFormat extends Format {
     }
 
     @Override
-    public Map<String,Object> parse(byte[] object) {
-        String[] arr = new String(object).split(delimiter);
+    public void reset() {
+        this.keyValues = null;
+    }
+
+    @Override
+    public Map<String,Object> parse(byte[] object) throws ParseException {
+        String[] arr = CsvParser.parseLine(new String(object), delimiter);
         Map<String, Object> map =  new HashMap<>();
 
         if (keyValues == null && !header) {
@@ -100,10 +106,11 @@ public class CsvFormat extends Format {
         FreeTextStaticProperty delimiterProperty = new FreeTextStaticProperty("delimiter",
                 "Delimiter", "The delimiter for json. Mostly either , or ;");
 
+        fd.setAppId(ID);
 
         AnyStaticProperty offset = new AnyStaticProperty("header", "Header", "Does the CSV file include a header or not");
         offset.setOptions(Arrays.asList(new Option("Header","Header")));
-
+//
 //        FreeTextStaticProperty offset = new FreeTextStaticProperty("header",
 //                "Includes Header", "Description");
 

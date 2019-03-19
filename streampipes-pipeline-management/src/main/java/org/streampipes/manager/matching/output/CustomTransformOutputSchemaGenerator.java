@@ -23,34 +23,37 @@ import org.apache.http.entity.ContentType;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.output.CustomTransformOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.sdk.helpers.Tuple2;
 import org.streampipes.serializers.json.GsonSerializer;
 
 import java.io.IOException;
 
-public class CustomTransformOutputSchemaGenerator implements OutputSchemaGenerator<CustomTransformOutputStrategy> {
+public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<CustomTransformOutputStrategy> {
 
   private DataProcessorInvocation dataProcessorInvocation;
   private CustomTransformOutputStrategy outputStrategy;
 
-  public CustomTransformOutputSchemaGenerator(DataProcessorInvocation dataProcessorInvocation, CustomTransformOutputStrategy firstOutputStrategy) {
-    this.dataProcessorInvocation = dataProcessorInvocation;
-    this.outputStrategy = firstOutputStrategy;
+  public static CustomTransformOutputSchemaGenerator from(OutputStrategy strategy, DataProcessorInvocation invocation) {
+    return new CustomTransformOutputSchemaGenerator((CustomTransformOutputStrategy) strategy, invocation);
+  }
+
+  public CustomTransformOutputSchemaGenerator(CustomTransformOutputStrategy strategy,
+                                              DataProcessorInvocation invocation) {
+    super(strategy);
+    this.dataProcessorInvocation = invocation;
+  }
+
+
+  @Override
+  public Tuple2<EventSchema, CustomTransformOutputStrategy> buildFromOneStream(SpDataStream stream) {
+    return makeTuple(makeRequest());
   }
 
   @Override
-  public EventSchema buildFromOneStream(SpDataStream stream) {
-    return makeRequest();
-  }
-
-  @Override
-  public EventSchema buildFromTwoStreams(SpDataStream stream1, SpDataStream stream2) {
-    return makeRequest();
-  }
-
-  @Override
-  public CustomTransformOutputStrategy getModifiedOutputStrategy(CustomTransformOutputStrategy outputStrategy) {
-    return outputStrategy;
+  public Tuple2<EventSchema, CustomTransformOutputStrategy> buildFromTwoStreams(SpDataStream stream1, SpDataStream stream2) {
+    return makeTuple(makeRequest());
   }
 
   private EventSchema makeRequest() {
@@ -59,7 +62,7 @@ public class CustomTransformOutputSchemaGenerator implements OutputSchemaGenerat
     try {
       Response httpResp = Request.Post(dataProcessorInvocation.getBelongsTo() + "/output").bodyString(httpRequestBody,
               ContentType
-              .APPLICATION_JSON).execute();
+                      .APPLICATION_JSON).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       e.printStackTrace();

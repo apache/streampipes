@@ -149,7 +149,7 @@ public class SourcesResourceTest extends ConnectContainerResourceTest {
         sourcesResource.setSourcesManagement(sourcesManagement);
 
         String data = getMinimalDataSetJsonLd();
-        postJsonLdSuccessRequest(data, "/id/streams", "Instance of data set http://dataset.de/1 successfully started");
+        postJsonSuccessRequest(data, "/id/streams", "Instance of data set http://dataset.de/1 successfully started");
 
         verify(sourcesManagement, times(1)).addAdapter(anyString(), anyString(), any());
     }
@@ -161,7 +161,7 @@ public class SourcesResourceTest extends ConnectContainerResourceTest {
         sourcesResource.setSourcesManagement(sourcesManagement);
 
         String data = getMinimalDataSetJsonLd();
-        postJsonLdFailRequest(data, "/id/streams", "Could not set data set instance: http://dataset.de/1");
+        postJsonFailRequest(data, "/id/streams", "Could not set data set instance: http://dataset.de/1");
 
     }
 

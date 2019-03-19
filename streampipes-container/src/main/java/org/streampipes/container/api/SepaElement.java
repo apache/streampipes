@@ -21,13 +21,15 @@ import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.util.Util;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 
-import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Path;
 
 @Path("/sepa")
-public class SepaElement extends InvocableElement<DataProcessorInvocation, SemanticEventProcessingAgentDeclarer> {
+public class SepaElement extends InvocableElement<DataProcessorInvocation,
+        SemanticEventProcessingAgentDeclarer, ProcessingElementParameterExtractor> {
 
     public SepaElement() {
 
@@ -35,12 +37,17 @@ public class SepaElement extends InvocableElement<DataProcessorInvocation, Seman
     }
 
     @Override
-    protected List<SemanticEventProcessingAgentDeclarer> getElementDeclarers() {
+    protected Map<String, SemanticEventProcessingAgentDeclarer> getElementDeclarers() {
         return DeclarersSingleton.getInstance().getEpaDeclarers();
     }
 
     @Override
     protected String getInstanceId(String uri, String elementId) {
         return Util.getInstanceId(uri, "sepa", elementId);
+    }
+
+    @Override
+    protected ProcessingElementParameterExtractor getExtractor(DataProcessorInvocation graph) {
+        return new ProcessingElementParameterExtractor(graph);
     }
 }

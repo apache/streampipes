@@ -25,38 +25,53 @@ import org.streampipes.model.output.TransformOutputStrategy;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.staticproperty.*;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.SelectionStaticProperty;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.Cloner;
+import org.streampipes.sdk.helpers.Tuple2;
 
 import java.net.URI;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class TransformOutputSchemaGenerator implements OutputSchemaGenerator<TransformOutputStrategy> {
+public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<TransformOutputStrategy> {
 
-  private TransformOutputStrategy strategy;
   private DataProcessorInvocation dataProcessorInvocation;
 
   protected static final String prefix = "urn:streampipes.org:spi:";
 
-  public TransformOutputSchemaGenerator(DataProcessorInvocation dataProcessorInvocation, TransformOutputStrategy
-          strategy) {
-    this.strategy = strategy;
-    this.dataProcessorInvocation = dataProcessorInvocation;
+  public static TransformOutputSchemaGenerator from(OutputStrategy strategy,
+                                                    DataProcessorInvocation invocation) {
+    return new TransformOutputSchemaGenerator((TransformOutputStrategy) strategy, invocation);
+  }
+
+  public TransformOutputSchemaGenerator(TransformOutputStrategy strategy, DataProcessorInvocation
+   invocation) {
+    super(strategy);
+    this.dataProcessorInvocation = invocation;
   }
 
   @Override
-  public EventSchema buildFromOneStream(SpDataStream stream) {
+  public Tuple2<EventSchema, TransformOutputStrategy> buildFromOneStream(SpDataStream stream) {
     // TODO exceptions
     Map<String, EventProperty> modifiedEventProperties = new HashMap<>();
     EventSchema outSchema = new EventSchema();
     EventSchema inSchema = stream.getEventSchema();
-    strategy.getTransformOperations().forEach(to -> {
+    outputStrategy.getTransformOperations().forEach(to -> {
       Optional<MappingPropertyUnary> mappingPropertyOpt = findMappingProperty(to.getMappingPropertyInternalName(),
               dataProcessorInvocation.getStaticProperties());
 
       if (mappingPropertyOpt.isPresent()) {
-        Optional<EventProperty> eventPropertyOpt = findEventProperty(mappingPropertyOpt.get().getMapsTo(), inSchema
+        Optional<EventProperty> eventPropertyOpt = findEventProperty(mappingPropertyOpt.get().getSelectedProperty()
+                , inSchema
                 .getEventProperties());
 
         if (eventPropertyOpt.isPresent()) {
@@ -78,7 +93,7 @@ public class TransformOutputSchemaGenerator implements OutputSchemaGenerator<Tra
     }).collect(Collectors.toList());
 
     outSchema.setEventProperties(newProperties);
-    return outSchema;
+    return makeTuple(outSchema);
   }
 
   private EventProperty modifyEventProperty(EventProperty eventProperty, TransformOperation to, List<StaticProperty>
@@ -151,13 +166,18 @@ public class TransformOutputSchemaGenerator implements OutputSchemaGenerator<Tra
     return eventProperty;
   }
 
-  private Optional<EventProperty> findEventProperty(URI mapsTo, List<EventProperty> eventProperties) {
+  private Optional<EventProperty> findEventProperty(String propertySelector, List<EventProperty>
+          eventProperties) {
 
     return eventProperties
             .stream()
-            .filter(ep -> ep.getElementId().equals(mapsTo.toString()))
+            .filter(ep -> ep.getRuntimeName().equals(removePrefix(propertySelector)))
             .map(this::cloneEp)
             .findFirst();
+  }
+
+  private String removePrefix(String propertySelector) {
+    return propertySelector.split("::")[1];
   }
 
   private EventProperty cloneEp(EventProperty ep) {
@@ -175,13 +195,10 @@ public class TransformOutputSchemaGenerator implements OutputSchemaGenerator<Tra
   }
 
   @Override
-  public EventSchema buildFromTwoStreams(SpDataStream stream1, SpDataStream stream2) {
+  public Tuple2<EventSchema, TransformOutputStrategy> buildFromTwoStreams(SpDataStream stream1, SpDataStream
+          stream2) {
     // TODO
     return buildFromOneStream(stream1);
   }
 
-  @Override
-  public OutputStrategy getModifiedOutputStrategy(TransformOutputStrategy outputStrategy) {
-    return outputStrategy;
-  }
 }

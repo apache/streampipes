@@ -62,8 +62,12 @@ public class AdapterMasterManagement {
                 ConnectContainerConfig.INSTANCE.getKafkaHost(), ConnectContainerConfig.INSTANCE.getKafkaPort(), null);
         ad.setEventGrounding(eventGrounding);
 
-        String newId = ad.getElementId() + UUID.randomUUID().toString();
-        ad.changeElementId(newId);
+        // Old dele
+//        String newId = ad.getElementId() + UUID.randomUUID().toString();
+        String uuid =  UUID.randomUUID().toString();
+
+        String newId = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() + "api/v1/" + username + "/master/sources/" + uuid;
+
         ad.setElementId(newId);
 
         // store in db
@@ -85,17 +89,24 @@ public class AdapterMasterManagement {
            }
         }
 
+
+        // backend url is used to install data source in streampipes
         String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() +"api/v2/";
-//        String userName = ad.getUserName();
         String requestUrl = backendBaseUrl +  "noauth/users/" + username + "/element";
-        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() +
-                "api/v1/" + username + "/master/sources/" + adapterCouchdbId;
+
+        // the backend can install the data source via the element url
+//        String elementUrl = newId;
+
+//        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() +
+//                "api/v1/" + username + "/master/sources/" + adapterCouchdbId;
+
+        String elementUrl = newId;
 
         logger.info("Install source (source URL: " + elementUrl +" in backend over URL: " + requestUrl);
 
         installDataSource(requestUrl, elementUrl);
 
-        return new SourcesManagement().getAdapterDataSource(adapterCouchdbId).getElementId();
+        return new SourcesManagement().getAdapterDataSource(elementUrl).getElementId();
     }
 
     public boolean installDataSource(String requestUrl, String elementIdUrl) throws AdapterException {
@@ -150,7 +161,8 @@ public class AdapterMasterManagement {
         String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() + "api/v2/noauth/users/"+ username + "/element/delete";
 
 //        String elementUrl = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl() + "api/v1/" + username + "/master/sources/" + id;
-        String elementUrl = ad.getUri() + "/" + ad.getId();
+//        String elementUrl = ad.getUri() + "/" + ad.getId();
+        String elementUrl = ad.getUri();
 
 //        deleteDataSource(backendBaseUrl, elementUrl);
 

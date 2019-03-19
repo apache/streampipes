@@ -43,9 +43,11 @@ public class GdeltAdapter extends PullAdapter {
 
     @Override
     public SpecificAdapterStreamDescription declareModel() {
-        return SpecificDataStreamAdapterBuilder.create(ID, "GDELT", "Global Database of Society")
+        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "GDELT", "Global Database of Society")
                 .iconUrl("gdelt.png")
                 .build();
+        description.setAppId(ID);
+        return  description;
     }
 
     public List<Map<String, Object>> getEvents() {
@@ -99,6 +101,7 @@ public class GdeltAdapter extends PullAdapter {
                 event.put("actor_2_type_2_code", nextRecord[23]);
                 event.put("actor_2_type_3_code", nextRecord[24]);
 
+                event.put("source_url", nextRecord[60]);
                 adapterPipeline.process(event);
 
             }
@@ -151,6 +154,8 @@ public class GdeltAdapter extends PullAdapter {
         allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_type_1_code").label("Actor2Type1Code").description("The 3-character CAMEO code of the CAMEO “type” or “role” of Actor2").build());
         allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_type_2_code").label("Actor2Type2Code").description("The 3-character CAMEO code of the CAMEO “type” or “role” of Actor2").build());
         allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, "actor_2_type_3_code").label("Actor2Type3Code").description("The 3-character CAMEO code of the CAMEO “type” or “role” of Actor2").build());
+
+        allProperties.add(PrimitivePropertyBuilder.create(Datatypes.String, "source_url").label("URL").description("The url of the source of the article").build());
 
         eventSchema.setEventProperties(allProperties);
         guessSchema.setEventSchema(eventSchema);

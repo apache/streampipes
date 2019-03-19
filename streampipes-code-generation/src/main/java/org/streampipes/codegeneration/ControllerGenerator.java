@@ -30,8 +30,9 @@ import org.streampipes.model.output.CustomOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.schema.EventProperty;
 
-import javax.lang.model.element.Modifier;
 import java.util.List;
+
+import javax.lang.model.element.Modifier;
 
 public abstract class ControllerGenerator extends Generator {
 	public ControllerGenerator(ConsumableStreamPipesEntity element, String name, String packageName) {
@@ -55,8 +56,8 @@ public abstract class ControllerGenerator extends Generator {
 		for (int i = 0; i < eventProperties.size(); i++) {
 			// TODO check for type
 			if (eventProperties.get(i).getDomainProperties() != null && eventProperties.get(i).getDomainProperties().size() > 0) {
-				b.addStatement("$T e$L = $T.createPropertyRestriction($S).build()", JFC.EVENT_PROPERTY, i,
-						JFC.PRIMITIVE_PROPERTY_BUILDER, eventProperties.get(i).getDomainProperties().get(0));
+//				b.addStatement("$T e$L = $T.createPropertyRestriction($S).build()", JFC.EVENT_PROPERTY, i,
+//						JFC.PRIMITIVE_PROPERTY_BUILDER, eventProperties.get(i).getDomainProperties().get(0));
 				b.addStatement("eventProperties$L.add(e$L)", n, i);
 			}
 		}

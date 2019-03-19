@@ -23,7 +23,6 @@ import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -34,61 +33,45 @@ import javax.persistence.OneToOne;
 @RdfsClass(StreamPipes.EVENT_PROPERTY_LIST)
 @Entity
 public class EventPropertyList extends EventProperty {
-	
-	private static final long serialVersionUID = -2636018143426727534L;
 
-	// TODO : change list<eventproperty> to eventproperty!
-	@Deprecated
-	@RdfProperty(StreamPipes.HAS_EVENT_PROPERTY)
-	@OneToOne (fetch = FetchType.EAGER,
-	   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	private List<EventProperty> eventProperties;
+  private static final long serialVersionUID = -2636018143426727534L;
 
-	@RdfProperty(StreamPipes.HAS_EVENT_PROPERTY)
-	private EventProperty eventProperty;
+  @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.HAS_EVENT_PROPERTY)
+  private EventProperty eventProperty;
 
-	public EventPropertyList()
-	{
-		super();
-		eventProperties = new ArrayList<>();
-	}
-	
-	public EventPropertyList(EventPropertyList other)
-	{
-		super(other);
-		this.eventProperty = eventProperty;
-		this.eventProperties = new Cloner().properties(other.getEventProperties());
-	}
-	
-	public EventPropertyList(String propertyName, EventProperty eventProperty) {
-		super(propertyName);
-		this.eventProperty = eventProperty;
-		eventProperties = new ArrayList<>();
-		eventProperties.add(eventProperty);
-	}
+  public EventPropertyList() {
+    super();
+  }
 
-	public EventPropertyList(String propertyName, EventProperty eventProperty, List<URI> domainProperties) {
-		super(propertyName);
-		this.eventProperty = eventProperty;
-		this.setDomainProperties(domainProperties);
-	}
+  public EventPropertyList(EventPropertyList other) {
+    super(other);
+    if (other.getEventProperty() != null) {
+      this.eventProperty = new Cloner().property(other.getEventProperty());
+    }
+  }
 
-	public EventProperty getEventProperty() {
-		return eventProperty;
-	}
+  public EventPropertyList(String propertyName, EventProperty listProperty) {
+    super(propertyName);
+    this.eventProperty = listProperty;
+  }
 
-	public void setEventProperty(EventProperty eventProperty) {
-		this.eventProperty = eventProperty;
-	}
+  public EventPropertyList(EventProperty listProperty) {
+    super();
+    this.eventProperty = listProperty;
+  }
 
-	@Deprecated
-	public List<EventProperty> getEventProperties() {
-		return eventProperties;
-	}
+  public EventPropertyList(String propertyName, EventProperty eventProperty, List<URI> domainProperties) {
+    super(propertyName);
+    this.eventProperty = eventProperty;
+    this.setDomainProperties(domainProperties);
+  }
 
-	@Deprecated
-	public void setEventProperties(List<EventProperty> eventProperties) {
-		this.eventProperties = eventProperties;
-	}
-	
+  public EventProperty getEventProperty() {
+    return eventProperty;
+  }
+
+  public void setEventProperty(EventProperty eventProperty) {
+    this.eventProperty = eventProperty;
+  }
 }

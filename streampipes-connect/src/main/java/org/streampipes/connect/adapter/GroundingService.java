@@ -18,6 +18,8 @@
 package org.streampipes.connect.adapter;
 
 import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
@@ -29,13 +31,30 @@ import java.util.UUID;
 public class GroundingService {
 
     public static String extractBroker(AdapterDescription adapterDescription) {
-        String host = adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname();
-        int port = ((KafkaTransportProtocol) adapterDescription.getEventGrounding().getTransportProtocol()).getKafkaPort();
+        EventGrounding eventGrounding = getEventGrounding(adapterDescription);
+
+        String host = eventGrounding.getTransportProtocol().getBrokerHostname();
+        int port = ((KafkaTransportProtocol) eventGrounding.getTransportProtocol()).getKafkaPort();
         return host + ":" + port;
     }
 
     public static String extractTopic(AdapterDescription adapterDescription) {
-        return adapterDescription.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
+        EventGrounding eventGrounding = getEventGrounding(adapterDescription);
+        return eventGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
+    }
+
+    private static EventGrounding getEventGrounding(AdapterDescription adapterDescription) {
+        EventGrounding eventGrounding = null;
+
+        if (adapterDescription instanceof SpecificAdapterSetDescription) {
+            eventGrounding = ((SpecificAdapterSetDescription) adapterDescription).getDataSet().getEventGrounding();
+        } else if (adapterDescription instanceof GenericAdapterSetDescription) {
+            eventGrounding = ((GenericAdapterSetDescription) adapterDescription).getDataSet().getEventGrounding();
+        } else {
+            eventGrounding = adapterDescription.getEventGrounding();
+        }
+
+        return eventGrounding;
     }
 
     public static EventGrounding createEventGrounding(String kafkaHost, int kafkaPort, EventSchema eventSchema) {

@@ -86,6 +86,7 @@ public class StreamPipes {
   public static final String COLLECTION_STATIC_PROPERTY = NS + "CollectionStaticProperty";
   public static final String DOMAIN_STATIC_PROPERTY = NS + "DomainStaticProperty";
   public static final String FREE_TEXT_STATIC_PROPERTY = NS + "FreeTextStaticProperty";
+  public static final String FILE_STATIC_PROPERTY = NS + "FileStaticProperty";
   public static final String MAPPING_PROPERTY = NS + "MappingProperty";
   public static final String MAPPING_PROPERTY_UNARY = NS + "MappingPropertyUnary";
   public static final String MAPPING_PROPERTY_NARY = NS + "MappingPropertyNary";
@@ -217,6 +218,9 @@ public class StreamPipes {
   public static final String HTML_ALLOWED = NS + "htmlAllowed";
   public static final String PLACEHOLDERS_SUPPORTED = NS + "placeholdersSupported";
 
+  public static final String HAS_ENDPOINT_URL = NS + "endpointUrl";
+  public static final String HAS_LOCATION_PATH = NS + "locationPath";
+
   public static final String MAPS_FROM = NS + "mapsFrom";
 
   public static final String MATCH_LEFT = NS + "matchLeft";
@@ -249,24 +253,72 @@ public class StreamPipes {
   public static final String HAS_WILDCARD_TOPIC_MAPPING = NS + "hasWildcardTopicMapping";
   public static final String HAS_ACTUAL_TOPIC_NAME = NS + "hasActualTopicName";
 
-  public static final String HAS_TOPIC_PARAMETER_TYPE = NS + "hasTopicParameterType" ;
+  public static final String HAS_TOPIC_PARAMETER_TYPE = NS + "hasTopicParameterType";
   public static final String HAS_TOPIC_MAPPING_ID = NS + "hasTopicMappingId";
   public static final String HAS_MAPPED_RUNTIME_NAME = NS + "hasMappedRuntimeName";
 
   public static final String HAS_LINKED_MAPPING_PROPERTY_ID = NS + "hasLinkedMappingPropertyId";
   public static final String BOUND_PIPELINE_ELEMENT = NS + "BoundPipelineElement";
-  public static final String HAS_PIPELINE_ELEMENT_TEMPLATE = NS + "hasPipelineElementTemplate" ;
+  public static final String HAS_PIPELINE_ELEMENT_TEMPLATE = NS + "hasPipelineElementTemplate";
   public static final String IS_CONNECTED_TO = NS + "isConnectedTo";
   public static final String PIPELINE_TEMPLATE_DESCRIPTION = NS + "PipelineTemplateDescription";
   public static final String PIPELINE_TEMPLATE_INVOCATION = NS + "PipelineTemplateInvocation";
   public static final String HAS_DATASET_ID = NS + "hasDataSetId";
-  public static final String IS_PREDEFINED = NS + "isPredefined" ;
-  public static final String HAS_PIPELINE_TEMPLATE_DESCRIPTION = NS + "hasPipelineTemplateDescription" ;
+  public static final String IS_PREDEFINED = NS + "isPredefined";
+  public static final String HAS_PIPELINE_TEMPLATE_DESCRIPTION = NS + "hasPipelineTemplateDescription";
   public static final String DATA_STREAM_CONTAINER = NS + "DataStreamContainer";
-  public static final String PIPELINE_TEMPLATE_DESCRIPTION_CONTAINER = NS + "PipelineTemplateDescriptionContainer" ;
+  public static final String PIPELINE_TEMPLATE_DESCRIPTION_CONTAINER = NS + "PipelineTemplateDescriptionContainer";
   public static final String MAPS_FROM_OPTIONS = NS + "hasMapsFromOptions";
   public static final String HAS_APP_ID = NS + "hasAppId";
   public static final String HAS_PIPELINE_ELEMENTS = "hasPipelineElements";
-  public static final String PIPELINE_ELEMENT_CONTAINER = "PipelineElementContainer" ;
+  public static final String PIPELINE_ELEMENT_CONTAINER = "PipelineElementContainer";
+
+
+  public static final String EVENT_PROPERTY_ID = NS + "eventPropertyId";
+  public static final String RUNTIME_KEY = NS + "runtimeKey";
+  public static final String STATIC_VALUE = NS + "staticValue";
+  public static final String FROM_UNIT = NS + "fromUnit";
+  public static final String TO_UNIT = NS + "toUnit";
+  public static final String OLD_RUNTIME_NAME = NS + "oldRuntimeKey";
+  public static final String NEW_RUNTIME_NAME = NS + "newRuntimeKey";
+  public static final String FILTER_TIME_WINDOW = NS + "filterTimeWindow";
+
+  //Class
+
+  public static final String TRANSFORM_RULE_DESCRIPTION = NS + "TransformationRuleDescriptio";
+  public static final String UNIT_TRANSFORM_RULE_DESCRIPTION = NS + "UnitTransformRuleDescription";
+  public static final String RENAME_RULE_DESCRIPTION = NS + "RenameRuleDescription";
+  public static final String MOVE_RULE_DESCRIPTION = NS + "MoveRuleDescription";
+  public static final String DELETE_RULE_DESCRIPTION = NS + "DeleteRuleDescription";
+  public static final String CREATE_NESTED_RULE_DESCRIPTION = NS + "CreateNestedRuleDescription";
+
+  public static final String REMOVE_DUPLICATES_RULE_DESCRIPTION = NS + "RemoveDuplicatesRuleDescription";
+
+  public static final String TIMESTAMP_TRANSFORMATION_RULE_DESCRIPTION = NS + "TimestampTransformationRuleDescription";
+  public static final String ADD_TIMESTAMP_RULE_DESCRIPTION = NS + "AddTimestampRuleDescription";
+  public static final String ADD_VALUE_TRANSFORMATION_RULE_DESCRIPTION = NS + "AddValueTransformationRuleDescription";
+  public static final String HAS_RENAME_RULE = NS + "hasRenameRule";
+  public static final String RENAME_RULE = NS + "RenameRule";
+  public static final String HAS_NEW_RUNTIME_NAME = NS + "hasNewRuntimeName";
+  public static final String HAS_RUNTIME_ID = NS + "hasRuntimeId";
+  public static final String HAS_MODE = NS + "mode";
+  public static final String FORMAT_STRING = NS + "formatString";
+  public static final String MULTIPLIER = NS + "multiplier";
+
+  public static final String INDEX = NS + "hasIndex";
+  public static final String INCLUDES_ASSETS = NS + "includesAssets";
+
+  public static final String NOTIFICATION = NS + "Notification";
+  public static final String NOTIFICATIONS = NS + "notifications";
+  public static final String NOTIFICATION_TITLE = NS + "notificationTitle";
+  public static final String NOTIFICATION_DESCRIPTION = NS + "notificationDescription";
+  public static final String NOTIFICATION_ADDITIONAL_INFORMATION = NS + "notificationAdditionalInformation";
+
+  public static final String MESSAGE = NS + "Message";
+  public static final String MESSAGE_SUCCESS = NS + "messsageSuccess";
+  public static final String MESSAGE_ELEMENT_NAME = NS + "messageElementName";
+  public static final String ERROR_MESSAGE = NS + "ErrorMessage";
+  public static final String SUCCESS_MESSAGE = NS + "SuccessMessage";
+
 
 }

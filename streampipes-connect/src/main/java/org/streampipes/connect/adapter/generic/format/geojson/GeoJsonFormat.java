@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.adapter.generic.format.Format;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.model.connect.grounding.FormatDescription;
 
@@ -36,6 +37,8 @@ public class GeoJsonFormat extends Format {
     public FormatDescription declareModel() {
         FormatDescription description = new FormatDescription(ID, "GeoJSON", "This is the description " +
                 "for the geoJSON format");
+
+        description.setAppId(ID);
         return description;
     }
 
@@ -50,14 +53,14 @@ public class GeoJsonFormat extends Format {
     }
 
     @Override
-    public Map<String, Object> parse(byte[] object) {
+    public Map<String, Object> parse(byte[] object) throws ParseException {
         JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
         Map<String, Object> result = null;
 
         try {
             result = jsonDefinition.toMap(object);
         } catch (SpRuntimeException e) {
-            e.printStackTrace();
+            throw new ParseException("Could not parse Data: " + e.toString());
         }
 
         return  geoJsonFormatter(result);

@@ -42,6 +42,7 @@ public class JsonFormat extends AbstractJsonFormat {
 
         fd.addConfig(keyProperty);
 
+        fd.setAppId(ID);
         return fd;
     }
 

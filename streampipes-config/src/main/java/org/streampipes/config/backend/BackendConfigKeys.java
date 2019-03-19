@@ -18,20 +18,21 @@
 package org.streampipes.config.backend;
 
 public class BackendConfigKeys {
-  final static String BACKEND_HOST = "SP_BACKEND_HOST";
-  final static String BACKEND_PORT = "SP_BACKEND_PORT";
-  final static String JMS_HOST = "SP_JMS_HOST";
-  final static String JMS_PORT = "SP_JMS_PORT";
-  final static String KAFKA_HOST = "SP_KAFKA_HOST";
-  final static String KAFKA_PORT = "SP_KAFKA_PORT";
-  final static String ZOOKEEPER_HOST = "SP_ZOOKEEPER_HOST";
-  final static String ZOOKEEPER_PORT = "SP_ZOOKEEPER_PORT";
-  final static String ELASTICSEARCH_HOST = "SP_ELASTICSEARCH_HOST";
-  final static String ELASTICSEARCH_PORT = "SP_ELASTICSEARCH_PORT";
-  final static String ELASTICSEARCH_PROTOCOL = "SP_ELASTICSEARCH_PROTOCOL";
-  final static String IS_CONFIGURED = "SP_IS_CONFIGURED";
-  final static String KAFKA_REST_HOST = "SP_KAFKA_REST_HOST";
-  final static String KAFKA_REST_PORT = "SP_KAFKA_REST_PORT";
+  public static final String BACKEND_HOST = "SP_BACKEND_HOST";
+  public static final String BACKEND_PORT = "SP_BACKEND_PORT";
+  public static final String JMS_HOST = "SP_JMS_HOST";
+  public static final String JMS_PORT = "SP_JMS_PORT";
+  public static final String KAFKA_HOST = "SP_KAFKA_HOST";
+  public static final String KAFKA_PORT = "SP_KAFKA_PORT";
+  public static final String ZOOKEEPER_HOST = "SP_ZOOKEEPER_HOST";
+  public static final String ZOOKEEPER_PORT = "SP_ZOOKEEPER_PORT";
+  public static final String ELASTICSEARCH_HOST = "SP_ELASTICSEARCH_HOST";
+  public static final String ELASTICSEARCH_PORT = "SP_ELASTICSEARCH_PORT";
+  public static final String ELASTICSEARCH_PROTOCOL = "SP_ELASTICSEARCH_PROTOCOL";
+  public static final String IS_CONFIGURED = "SP_IS_CONFIGURED";
+  public static final String KAFKA_REST_HOST = "SP_KAFKA_REST_HOST";
+  public static final String KAFKA_REST_PORT = "SP_KAFKA_REST_PORT";
+  public static final String ASSETS_DIR = "SP_ASSETS_DIR";
 
-  final static String SERVICE_NAME = "SP_SERVICE_NAME";
+  public static final String SERVICE_NAME = "SP_SERVICE_NAME";
 }
