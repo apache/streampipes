@@ -16,30 +16,29 @@
 
 package org.streampipes.processors.filters.jvm.processor.numericalfilter;
 
-import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
-import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 
-import java.util.Map;
-
-public class NumericalFilter extends StandaloneEventProcessorEngine<NumericalFilterParameters> {
+public class NumericalFilter implements EventProcessor<NumericalFilterParameters> {
 
   private NumericalFilterParameters params;
 
-  public NumericalFilter(NumericalFilterParameters params) {
-    super(params);
-  }
-
   @Override
-  public void onInvocation(NumericalFilterParameters numericalFilterParameters, DataProcessorInvocation dataProcessorInvocation) {
+  public void onInvocation(NumericalFilterParameters numericalFilterParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext
+          runtimeContext) {
     this.params = numericalFilterParameters;
   }
 
   @Override
-  public void onEvent(Map<String, Object> in, String s, SpOutputCollector out) {
+  public void onEvent(Event event, SpOutputCollector out) {
     Boolean satisfiesFilter = false;
 
-    Double value = Double.parseDouble(String.valueOf(in.get(params.getFilterProperty())));
+    Double value = event.getFieldBySelector(params.getFilterProperty()).getAsPrimitive()
+            .getAsDouble();
+
+    //Double value = Double.parseDouble(String.valueOf(in.get(params.getFilterProperty())));
     Double threshold = params.getThreshold();
 
     if (params.getNumericalOperator() == NumericalOperator.EQ) {
@@ -55,7 +54,7 @@ public class NumericalFilter extends StandaloneEventProcessorEngine<NumericalFil
     }
 
     if (satisfiesFilter) {
-      out.onEvent(in);
+      out.collect(event);
     }
   }
 

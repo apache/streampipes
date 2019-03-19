@@ -19,18 +19,16 @@ package org.streampipes.processors.pattern.detection.flink.processor.peak;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * Created by riemer on 20.04.2017.
  */
-public class PeakDetectionCalculator implements FlatMapFunction<List<Map<String,
-        Object>>, Map<String, Object>> {
+public class PeakDetectionCalculator implements FlatMapFunction<List<Event>, Event> {
 
   private String groupBy;
   private String valueToObserve;
@@ -49,11 +47,11 @@ public class PeakDetectionCalculator implements FlatMapFunction<List<Map<String,
 
 
   @Override
-  public void flatMap(List<Map<String, Object>> in, Collector<Map<String, Object>> out)
+  public void flatMap(List<Event> in, Collector<Event> out)
           throws Exception {
     List<Double> y = in
             .stream()
-            .map(m -> Double.parseDouble(String.valueOf(m.get(valueToObserve))))
+            .map(m -> m.getFieldBySelector(valueToObserve).getAsPrimitive().getAsDouble())
             .collect(Collectors.toList());
 
     Integer[] signals = makeIntegerArray(y.size());
@@ -90,10 +88,10 @@ public class PeakDetectionCalculator implements FlatMapFunction<List<Map<String,
         }
       }
 
-      Map<String, Object> outMap = new HashMap<>();
-      outMap.put("id", in.get(in.size() - 1).get(groupBy));
-      outMap.put("timestamp", System.currentTimeMillis());
-      outMap.put("signal", signals[signals.length - 1]);
+      Event outMap = new Event();
+      outMap.addField("id", in.get(in.size() - 1).getFieldBySelector(groupBy).getAsPrimitive().getAsString());
+      outMap.addField("timestamp", System.currentTimeMillis());
+      outMap.addField("signal", signals[signals.length - 1]);
 
       out.collect(outMap);
     }

@@ -35,9 +35,6 @@ public enum EnricherFlinkConfig implements PeConfig {
     config.register(ConfigKeys.PORT, 8090, "Port for the pe mixed flink component");
     config.register(ConfigKeys.FLINK_HOST, "jobmanager", "Host for the flink cluster");
     config.register(ConfigKeys.FLINK_PORT, 6123, "Port for the flink cluster");
-    config.register(ConfigKeys.ELASTIC_HOST, "elasticsearch", "Elastic search host address");
-    config.register(ConfigKeys.ELASTIC_PORT, 9300, "Elasitc search port");
-    config.register(ConfigKeys.ELASTIC_PORT_REST, 9200, "Elasitc search rest port");
 
     config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
@@ -66,15 +63,6 @@ public enum EnricherFlinkConfig implements PeConfig {
     return config.getInteger(ConfigKeys.FLINK_PORT);
   }
 
-  public String getElasticsearchHost() {
-    return config.getString(ConfigKeys.ELASTIC_HOST);
-  }
-
-  public int getElasticsearchPort() {
-    return config.getInteger(ConfigKeys.ELASTIC_PORT);
-  }
-
-
   public static final String iconBaseUrl = "http://" + EnricherFlinkConfig.INSTANCE.getIconHost() + ":" + EnricherFlinkConfig.INSTANCE.getIconPort() + "/assets/img/pe_icons";
 
   public static final String getIconUrl(String pictureName) {
@@ -87,10 +75,6 @@ public enum EnricherFlinkConfig implements PeConfig {
 
   public int getIconPort() {
     return config.getInteger(ConfigKeys.ICON_PORT);
-  }
-
-  public int getElasticsearchPortRest() {
-    return config.getInteger(ConfigKeys.ELASTIC_PORT_REST);
   }
 
   public boolean getDebug() {

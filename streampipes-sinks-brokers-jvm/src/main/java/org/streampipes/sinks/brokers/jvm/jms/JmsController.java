@@ -23,50 +23,54 @@ import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.OntologyProperties;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sinks.brokers.jvm.config.BrokersJvmConfig;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
 
-	private static final String JMS_BROKER_SETTINGS_KEY = "broker-settings";
-	private static final String TOPIC_KEY = "topic";
+  private static final String JMS_BROKER_SETTINGS_KEY = "broker-settings";
+  private static final String TOPIC_KEY = "topic";
 
-	private static final String JMS_HOST_URI = "http://schema.org/jmsHost";
-	private static final String JMS_PORT_URI = "http://schema.org/jmsPort";
-	
-	@Override
-	public DataSinkDescription declareModel() {
-		return DataSinkBuilder.create("org.streampipes.sinks.brokers.jvm.jms", "JMS Publisher", "Publishes events to a JMS topic")
-						.iconUrl(BrokersJvmConfig.getIconUrl("jms_logo"))
-						.requiredStream(StreamRequirementsBuilder
-										.create()
-										.requiredProperty(EpRequirements.anyProperty())
-										.build())
-						.requiredTextParameter(Labels.from(TOPIC_KEY, "JMS Topic", "Select a JMS " +
-										"topic"), false, false)
-						.requiredOntologyConcept(Labels.from(JMS_BROKER_SETTINGS_KEY, "JMS Broker Settings", "Provide" +
-														" settings of the JMS broker to connect with."),
-										OntologyProperties.mandatory(JMS_HOST_URI),
-										OntologyProperties.mandatory(JMS_PORT_URI))
-						.supportedFormats(SupportedFormats.jsonFormat())
-						.supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-						.build();
-	}
+  private static final String JMS_HOST_URI = "http://schema.org/jmsHost";
+  private static final String JMS_PORT_URI = "http://schema.org/jmsPort";
 
-	@Override
-	public ConfiguredEventSink<JmsParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
+  @Override
+  public DataSinkDescription declareModel() {
+    return DataSinkBuilder.create("org.streampipes.sinks.brokers.jvm.jms", "JMS Publisher", "Publishes events to a JMS topic")
+            .iconUrl(BrokersJvmConfig.getIconUrl("jms_logo"))
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredProperty(EpRequirements.anyProperty())
+                    .build())
+            .requiredTextParameter(Labels.from(TOPIC_KEY, "JMS Topic", "Select a JMS " +
+                    "topic"), false, false)
+            .requiredOntologyConcept(Labels.from(JMS_BROKER_SETTINGS_KEY, "JMS Broker Settings", "Provide" +
+                            " settings of the JMS broker to connect with."),
+                    OntologyProperties.mandatory(JMS_HOST_URI),
+                    OntologyProperties.mandatory(JMS_PORT_URI))
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+            .build();
+  }
 
-		String topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
+  @Override
+  public ConfiguredEventSink<JmsParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
 
-		String jmsHost = extractor.supportedOntologyPropertyValue(JMS_BROKER_SETTINGS_KEY, JMS_HOST_URI,
-						String.class);
-		Integer jmsPort = extractor.supportedOntologyPropertyValue(JMS_BROKER_SETTINGS_KEY, JMS_PORT_URI,
-						Integer.class);
+    String topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
 
-		JmsParameters params = new JmsParameters(graph, jmsHost, jmsPort, topic);
+    String jmsHost = extractor.supportedOntologyPropertyValue(JMS_BROKER_SETTINGS_KEY, JMS_HOST_URI,
+            String.class);
+    Integer jmsPort = extractor.supportedOntologyPropertyValue(JMS_BROKER_SETTINGS_KEY, JMS_PORT_URI,
+            Integer.class);
 
-		return new ConfiguredEventSink<>(params, () -> new JmsPublisher(params));
-	}
+    JmsParameters params = new JmsParameters(graph, jmsHost, jmsPort, topic);
+
+    return new ConfiguredEventSink<>(params, JmsPublisher::new);
+  }
 }

@@ -16,19 +16,23 @@
  */
 package org.streampipes.processors.transformation.flink.processor.hasher;
 
+import static org.streampipes.processors.transformation.flink.processor.hasher.TestFieldHasherUtils.makeTestData;
+
 import io.flinkspector.core.collection.ExpectedRecords;
 import io.flinkspector.datastream.DataStreamTestBase;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.*;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithm;
+import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithmType;
+import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.Md5HashAlgorithm;
+import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.Sha1HashAlgorithm;
+import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.Sha2HashAlgorithm;
 import org.streampipes.test.generator.InvocationGraphGenerator;
 
 import java.util.Arrays;
-import java.util.Map;
-
-import static org.streampipes.processors.transformation.flink.processor.hasher.TestFieldHasherUtils.makeTestData;
 
 @RunWith(Parameterized.class)
 public class TestFieldHasherProgram extends DataStreamTestBase {
@@ -54,10 +58,10 @@ public class TestFieldHasherProgram extends DataStreamTestBase {
     FieldHasherParameters params = makeParams();
     FieldHasherProgram program = new FieldHasherProgram(params);
 
-    DataStream<Map<String, Object>> stream = program.getApplicationLogic(createTestStream(makeTestData(true, hashAlgorithm)));
+    DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeTestData(true, hashAlgorithm)));
 
-    ExpectedRecords<Map<String, Object>> expected =
-            new ExpectedRecords<Map<String, Object>>().expectAll(makeTestData(false, hashAlgorithm));
+    ExpectedRecords<Event> expected =
+            new ExpectedRecords<Event>().expectAll(makeTestData(false, hashAlgorithm));
 
     assertStream(stream, expected);
   }

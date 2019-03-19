@@ -110,7 +110,7 @@ start release:
     - git fetch
     - git checkout master
     - git checkout dev
-    - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS
+    - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS -Drelease=true
     - git push origin --all
   only:
     - dev
@@ -135,7 +135,7 @@ finish release:
     - git checkout master
     - git checkout dev
     - git checkout $CI_BUILD_REF_NAME
-    - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS
+    - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS -Drelease=true
     - git push origin --all
     - git push origin --tags
     - git checkout master
@@ -273,10 +273,10 @@ docker-hub-processors-pattern-detection-flink:
     variables:
       CONTAINER_NAME: "processors-pattern-detection-flink"
 
-docker-hub-processors-filters-siddhi:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "processors-filters-siddhi"
+#docker-hub-processors-filters-siddhi:
+#    <<: *docker_hub_script
+#    variables:
+#      CONTAINER_NAME: "processors-filters-siddhi"
 
 docker-hub-processors-statistics-flink:
     <<: *docker_hub_script

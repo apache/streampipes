@@ -20,11 +20,15 @@ import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.processors.filters.jvm.config.FiltersJvmConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Options;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -38,12 +42,11 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.numericalfilter", "Numerical Filter", "Numerical Filter Description")
             .category(DataProcessorType.FILTER)
-            .iconUrl(FiltersJvmConfig.getIconUrl("Numerical_Filter_Icon_HQ"))
+            .providesAssets()
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from(NUMBER_MAPPING, "Specifies the field name where the filter operation should" +
-                    " be applied " +
-                    "on.", ""), PropertyScope.NONE).build())
+                    " be applied on.", ""), PropertyScope.NONE).build())
             .outputStrategy(OutputStrategies.keep())
             .requiredSingleValueSelection(Labels.from(OPERATION, "Filter Operation", "Specifies the filter " +
                     "operation that should be applied on the field"), Options.from("<", "<=", ">", ">=", "=="))
@@ -56,9 +59,7 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
 
   @Override
   public ConfiguredEventProcessor<NumericalFilterParameters> onInvocation
-          (DataProcessorInvocation sepa) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
-
+          (DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
     Double threshold = extractor.singleValueParameter(VALUE, Double.class);
     String stringOperation = extractor.selectedSingleValue(OPERATION, String.class);
 
@@ -76,10 +77,11 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
 
     String filterProperty = extractor.mappingPropertyValue(NUMBER_MAPPING);
 
-    NumericalFilterParameters staticParam = new NumericalFilterParameters(sepa, threshold, NumericalOperator.valueOf
-            (operation)
-            , filterProperty);
+    NumericalFilterParameters staticParam = new NumericalFilterParameters(sepa,
+            threshold,
+            NumericalOperator.valueOf(operation),
+            filterProperty);
 
-    return new ConfiguredEventProcessor<>(staticParam, () -> new NumericalFilter(staticParam));
+    return new ConfiguredEventProcessor<>(staticParam, NumericalFilter::new);
   }
 }

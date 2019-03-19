@@ -18,16 +18,14 @@ package org.streampipes.processors.aggregation.flink.processor.count;
 
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple3;
+import org.streampipes.model.runtime.Event;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class Tuple2MapMapper implements MapFunction<Tuple3<String, String, Integer>, Map<String, Object>> {
+public class Tuple2MapMapper implements MapFunction<Tuple3<String, String, Integer>, Event> {
   @Override
-  public Map<String, Object> map(Tuple3<String, String, Integer> in) throws Exception {
-    Map<String, Object> outMap = new HashMap<>();
-    outMap.put("value", in.f1);
-    outMap.put("count", in.f2);
-    return outMap;
+  public Event map(Tuple3<String, String, Integer> in) throws Exception {
+    Event outEvent = new Event();
+    outEvent.addField("value", in.f1);
+    outEvent.addField("count", in.f2);
+    return outEvent;
   }
 }

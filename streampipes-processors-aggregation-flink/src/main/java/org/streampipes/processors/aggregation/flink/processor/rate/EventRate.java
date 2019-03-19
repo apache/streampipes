@@ -19,10 +19,9 @@ import org.apache.flink.shaded.guava18.com.google.common.collect.Iterables;
 import org.apache.flink.streaming.api.functions.windowing.AllWindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 
-import java.util.Map;
-
-public class EventRate implements AllWindowFunction<Map<String, Object>, Float, TimeWindow>{
+public class EventRate implements AllWindowFunction<Event, Float, TimeWindow>{
 
   private Integer timeWindowSize;
 
@@ -31,7 +30,8 @@ public class EventRate implements AllWindowFunction<Map<String, Object>, Float, 
   }
 
   @Override
-  public void apply(TimeWindow timeWindow, Iterable<Map<String, Object>> iterable, Collector<Float> collector) throws Exception {
+  public void apply(TimeWindow timeWindow, Iterable<Event> iterable, Collector<Float> collector)
+          throws Exception {
     collector.collect((float) Iterables.size(iterable) / timeWindowSize);
   }
 }

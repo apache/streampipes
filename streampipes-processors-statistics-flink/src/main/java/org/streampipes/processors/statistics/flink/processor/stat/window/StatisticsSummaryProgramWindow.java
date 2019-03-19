@@ -21,13 +21,13 @@ import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.statistics.flink.AbstractStatisticsProgram;
 import org.streampipes.processors.statistics.flink.extensions.MapKeySelector;
 import org.streampipes.processors.statistics.flink.extensions.SlidingEventTimeWindow;
 import org.streampipes.processors.statistics.flink.extensions.TimestampMappingFunction;
 
 import java.util.List;
-import java.util.Map;
 
 public class StatisticsSummaryProgramWindow extends
         AbstractStatisticsProgram<StatisticsSummaryParametersWindow> {
@@ -47,20 +47,21 @@ public class StatisticsSummaryProgramWindow extends
   }
 
   @Override
-  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
+  protected DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
 
     StatisticsSummaryParamsSerializable sp = new
             StatisticsSummaryParamsSerializable(serializableParams.getValueToObserve(),
             serializableParams.getTimestampMapping(), serializableParams.getGroupBy(),
             serializableParams.getTimeWindowSize(), serializableParams.getTimeUnit());
-    DataStream<Map<String, Object>> output = messageStream[0]
+    DataStream<Event> output = messageStream[0]
             .keyBy(new MapKeySelector(sp.getGroupBy()).getKeySelector())
             .transform
                     ("sliding-window-event-shift",
-                            TypeInformation.of(new TypeHint<List<Map<String, Object>>>() {
+                            TypeInformation.of(new TypeHint<List<Event>>() {
                             }), new SlidingEventTimeWindow<>(sp.getTimeWindowSize(), sp.getTimeUnit(),
-                                    (TimestampMappingFunction<Map<String, Object>>) in ->
-                                            Long.parseLong(String.valueOf(in.get(sp.getTimestampMapping())))))
+                                    (TimestampMappingFunction<Event>) in ->
+                                            in.getFieldBySelector(sp.getTimestampMapping())
+                                                    .getAsPrimitive().getAsLong()))
             .flatMap(new StatisticsSummaryCalculatorWindow(sp.getGroupBy(), sp.getValueToObserve()));
 
     return output;

@@ -45,8 +45,6 @@ public enum VehicleSimulatorConfig implements PeConfig {
     config.register(ConfigKeys.PORT, 8090, "Port of the sources project");
     config.register(ConfigKeys.KAFKA_HOST, "kafka", "Host for kafka of the pe demonstrator project");
     config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the pe demonstrator project");
-    config.register(ConfigKeys.ZOOKEEPER_HOST, "zookeeper", "Host for zookeeper of the pe demonstrator project");
-    config.register(ConfigKeys.ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe demonstrator project");
     config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
     config.register(ConfigKeys.SERVICE_NAME, service_name, "StreamPipes example sources");
@@ -74,18 +72,6 @@ public enum VehicleSimulatorConfig implements PeConfig {
 
   public int getKafkaPort() {
     return config.getInteger(ConfigKeys.KAFKA_PORT);
-  }
-
-  public String getKafkaUrl() {
-    return getKafkaHost() + ":" + getKafkaPort();
-  }
-
-  public String getZookeeperHost() {
-    return config.getString(ConfigKeys.ZOOKEEPER_HOST);
-  }
-
-  public int getZookeeperPort() {
-    return config.getInteger(ConfigKeys.ZOOKEEPER_PORT);
   }
 
   public String getIconHost() {

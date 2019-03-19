@@ -20,10 +20,8 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class EventRateProgram extends AbstractAggregationProgram<EventRateParameter> {
 
@@ -33,16 +31,16 @@ public class EventRateProgram extends AbstractAggregationProgram<EventRateParame
   }
 
   @Override
-  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
+  protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
     return dataStreams[0]
             .timeWindowAll(Time.seconds(params.getAvgRate()))
             .apply(new EventRate(params.getAvgRate()))
-            .flatMap(new FlatMapFunction<Float, Map<String, Object>>() {
+            .flatMap(new FlatMapFunction<Float, Event>() {
               @Override
-              public void flatMap(Float rate, Collector<Map<String, Object>> out) throws Exception {
-                Map<String, Object> outMap = new HashMap<>();
-                outMap.put("rate", rate);
-                out.collect(outMap);
+              public void flatMap(Float rate, Collector<Event> out) throws Exception {
+                Event event = new Event();
+                event.addField("rate", rate);
+                out.collect(event);
               }
             });
   }

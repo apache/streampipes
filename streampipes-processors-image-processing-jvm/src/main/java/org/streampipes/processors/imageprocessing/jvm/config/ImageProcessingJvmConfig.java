@@ -42,17 +42,6 @@ public enum ImageProcessingJvmConfig implements PeConfig {
 
 		config.register(ICON_HOST, "backend", "Hostname for the icon host");
 		config.register(ICON_PORT, 80, "Port for the icons in nginx");
-		config.register(ConfigKeys.NGINX_HOST, System.getenv("STREAMPIPES_HOST"), "External hostname of " +
-						"StreamPipes Nginx");
-		config.register(ConfigKeys.NGINX_PORT, 80, "External port of StreamPipes Nginx");
-		config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");
-		config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the pe sinks project");
-		config.register(ConfigKeys.ZOOKEEPER_HOST, "zookeeper", "Host for zookeeper of the pe sinks project");
-		config.register(ConfigKeys.ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe sinks project");
-		config.register(ConfigKeys.JMS_HOST, "tcp://activemq", "Hostname for pe actions service for active mq");
-		config.register(ConfigKeys.JMS_PORT, 61616, "Port for pe actions service for active mq");
-
-		config.register(MODEL_DIRECTORY, "/model-repository/", "The directory location for the folders of the image classification models");
 
 		config.register(ConfigKeys.SERVICE_NAME_KEY, service_name, "The name of the service");
 
@@ -84,50 +73,6 @@ public enum ImageProcessingJvmConfig implements PeConfig {
 
 	public int getIconPort() {
 		return config.getInteger(ICON_PORT);
-	}
-
-	public String getKafkaHost() {
-		return config.getString(KAFKA_HOST);
-	}
-
-	public int getKafkaPort() {
-		return config.getInteger(KAFKA_PORT);
-	}
-
-	public String getKafkaUrl() {
-		return getKafkaHost() + ":" + getKafkaPort();
-	}
-
-	public String getZookeeperHost() {
-		return config.getString(ZOOKEEPER_HOST);
-	}
-
-	public int getZookeeperPort() {
-		return config.getInteger(ZOOKEEPER_PORT);
-	}
-
-	public String getJmsHost() {
-		return config.getString(JMS_HOST);
-	}
-
-	public int getJmsPort() {
-		return config.getInteger(JMS_PORT);
-	}
-
-	public String getJmsUrl() {
-		return getJmsHost() + ":" + getJmsPort();
-	}
-
-	public String getNginxHost() {
-		return config.getString(NGINX_HOST);
-	}
-
-	public Integer getNginxPort() {
-		return config.getInteger(NGINX_PORT);
-	}
-
-	public String getModelDirectory() {
-		return config.getString(MODEL_DIRECTORY);
 	}
 
 	@Override

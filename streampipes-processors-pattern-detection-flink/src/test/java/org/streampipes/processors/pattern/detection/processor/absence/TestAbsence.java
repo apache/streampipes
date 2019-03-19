@@ -16,6 +16,8 @@
  */
 package org.streampipes.processors.pattern.detection.processor.absence;
 
+import static org.hamcrest.core.IsEqual.equalTo;
+
 import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
@@ -23,15 +25,17 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.pattern.detection.flink.processor.absence.AbsenceController;
 import org.streampipes.processors.pattern.detection.flink.processor.absence.AbsenceParameters;
 import org.streampipes.processors.pattern.detection.flink.processor.absence.AbsenceProgram;
 import org.streampipes.processors.pattern.detection.flink.processor.and.TimeUnit;
 import org.streampipes.test.generator.InvocationGraphGenerator;
 
-import java.util.*;
-
-import static org.hamcrest.core.IsEqual.equalTo;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 @RunWith(Parameterized.class)
 public class TestAbsence extends DataStreamTestBase {
@@ -70,13 +74,13 @@ public class TestAbsence extends DataStreamTestBase {
 
     AbsenceProgram program = new AbsenceProgram(params, true);
 
-    DataStream<Map<String, Object>> stream = program.getApplicationLogic(createTestStream(makeInputData(1, makeMap(), 0)), createTestStream(makeInputData(waitForMs, makeMap(), 1)));
+    DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData(1, makeMap(), 0)), createTestStream(makeInputData(waitForMs, makeMap(), 1)));
 
     assertStream(stream, equalTo(getOutput(shouldMatch)));
   }
 
-  private Collection<Map<String, Object>> getOutput(Boolean shouldMatch) {
-    List<Map<String, Object>> allEvents = new ArrayList<>();
+  private Collection<Event> getOutput(Boolean shouldMatch) {
+    List<Event> allEvents = new ArrayList<>();
 
     if (shouldMatch) {
       allEvents.add(makeMap().get(0));
@@ -85,24 +89,24 @@ public class TestAbsence extends DataStreamTestBase {
     return allEvents;
   }
 
-  private EventTimeInput<Map<String, Object>> makeInputData(Integer delayEvent, List<Map<String, Object>> inputMap, Integer i) {
-    List<Map<String, Object>> testData = inputMap;
-    EventTimeInputBuilder<Map<String, Object>> builder = EventTimeInputBuilder.startWith(testData.get(i), after(delayEvent, seconds));
+  private EventTimeInput<Event> makeInputData(Integer delayEvent, List<Event> inputMap, Integer i) {
+    List<Event> testData = inputMap;
+    EventTimeInputBuilder<Event> builder = EventTimeInputBuilder.startWith(testData.get(i), after(delayEvent, seconds));
 
     return builder;
   }
 
-  private List<Map<String, Object>> makeMap() {
-    List<Map<String, Object>> allEvents = new ArrayList<>();
-    Map<String, Object> event1 = new HashMap<>();
-    event1.put("id", "a");
-    event1.put("timestamp", 0);
+  private List<Event> makeMap() {
+    List<Event> allEvents = new ArrayList<>();
+    Event event1 = new Event();
+    event1.addField("id", "a");
+    event1.addField("timestamp", 0);
 
     allEvents.add(event1);
 
-    Map<String, Object> event2 = new HashMap<>();
-    event2.put("id", "a");
-    event2.put("timestamp", waitForMs);
+    Event event2 = new Event();
+    event2.addField("id", "a");
+    event2.addField("timestamp", waitForMs);
 
     allEvents.add(event2);
 

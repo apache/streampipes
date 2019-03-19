@@ -17,6 +17,7 @@
 package org.streampipes.processors.enricher.flink.processor.timestamp;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.enricher.flink.AbstractEnricherProgram;
 
 import java.util.Map;
@@ -28,8 +29,7 @@ public class TimestampProgram extends AbstractEnricherProgram<TimestampParameter
 	}
 
 	@Override
-	protected DataStream<Map<String, Object>> getApplicationLogic(
-			DataStream<Map<String, Object>>... messageStream) {
+	protected DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
 		return messageStream[0]
 				.flatMap(new TimestampEnricher(params.getAppendTimePropertyName()));
 	}

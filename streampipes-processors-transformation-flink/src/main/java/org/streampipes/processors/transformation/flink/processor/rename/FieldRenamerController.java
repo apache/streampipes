@@ -24,41 +24,46 @@ import org.streampipes.processors.transformation.flink.config.TransformationFlin
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.helpers.TransformOperations;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 public class FieldRenamerController extends FlinkDataProcessorDeclarer<FieldRenamerParameters> {
 
-	private static final String CONVERT_PROPERTY = "convert-property";
-	private static final String FIELD_NAME = "field-name";
+  private static final String CONVERT_PROPERTY = "convert-property";
+  private static final String FIELD_NAME = "field-name";
 
-	@Override
-	public DataProcessorDescription declareModel() {
-		return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.field-renamer", "Field Renamer", "Replaces the runtime name of an event property with a custom defined name. Useful for data ingestion purposes where a specific event schema is needed.")
-						.iconUrl(TransformationFlinkConfig.getIconUrl("field_renamer"))
-						.requiredStream(StreamRequirementsBuilder
-										.create()
-										.requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.from
-														(CONVERT_PROPERTY,"Property", "The" +
-																		" property to convert"), PropertyScope.NONE)
-										.build())
-						.requiredTextParameter(Labels.from(FIELD_NAME, "The new field name", ""))
-						.supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-						.supportedFormats(SupportedFormats.jsonFormat())
-						.outputStrategy(OutputStrategies.transform(TransformOperations
-										.dynamicRuntimeNameTransformation(CONVERT_PROPERTY, FIELD_NAME)))
-						.build();
-	}
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.field-renamer", "Field Renamer", "Replaces the runtime name of an event property with a custom defined name. Useful for data ingestion purposes where a specific event schema is needed.")
+            .iconUrl(TransformationFlinkConfig.getIconUrl("field_renamer"))
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.from
+                            (CONVERT_PROPERTY, "Property", "The" +
+                                    " property to convert"), PropertyScope.NONE)
+                    .build())
+            .requiredTextParameter(Labels.from(FIELD_NAME, "The new field name", ""))
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .outputStrategy(OutputStrategies.transform(TransformOperations
+                    .dynamicRuntimeNameTransformation(CONVERT_PROPERTY, FIELD_NAME)))
+            .build();
+  }
 
-	@Override
-	public FlinkDataProcessorRuntime<FieldRenamerParameters> getRuntime(
-					DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
-		String oldPropertyName = extractor.mappingPropertyValue(CONVERT_PROPERTY);
-		String newPropertyName = extractor.singleValueParameter(FIELD_NAME, String.class);
-		
-		return new FieldRenamerProgram (
-				new FieldRenamerParameters(graph, oldPropertyName, newPropertyName));
-	}
+  @Override
+  public FlinkDataProcessorRuntime<FieldRenamerParameters> getRuntime(
+          DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+    String oldPropertyName = extractor.mappingPropertyValue(CONVERT_PROPERTY);
+    String newPropertyName = extractor.singleValueParameter(FIELD_NAME, String.class);
+
+    return new FieldRenamerProgram(
+            new FieldRenamerParameters(graph, oldPropertyName, newPropertyName));
+  }
 
 }

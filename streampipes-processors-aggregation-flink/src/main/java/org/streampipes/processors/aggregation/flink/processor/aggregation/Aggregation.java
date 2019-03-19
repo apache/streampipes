@@ -20,11 +20,12 @@ import org.apache.flink.streaming.api.functions.windowing.AllWindowFunction;
 import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 
 import java.util.*;
 
-public class Aggregation implements WindowFunction<Map<String, Object>, Map<String, Object>, String, TimeWindow>,
-        AllWindowFunction<Map<String, Object>, Map<String, Object>, TimeWindow> {
+public class Aggregation implements WindowFunction<Event, Event, String, TimeWindow>,
+        AllWindowFunction<Event, Event, TimeWindow> {
 
   private AggregationType aggregationType;
   private String fieldToAggregate;
@@ -43,7 +44,7 @@ public class Aggregation implements WindowFunction<Map<String, Object>, Map<Stri
   }
 
   @Override
-  public void apply(String key, TimeWindow window, Iterable<Map<String, Object>> input, Collector<Map<String, Object>>
+  public void apply(String key, TimeWindow window, Iterable<Event> input, Collector<Event>
           out) throws Exception {
     process(input, out, key);
   }
@@ -62,23 +63,26 @@ public class Aggregation implements WindowFunction<Map<String, Object>, Map<Stri
   }
 
   @Override
-  public void apply(TimeWindow window, Iterable<Map<String, Object>> input, Collector<Map<String, Object>> out) throws
+  public void apply(TimeWindow window, Iterable<Event> input, Collector<Event> out)
+          throws
           Exception {
     process(input, out, null);
   }
 
-  private void process(Iterable<Map<String, Object>> input, Collector<Map<String, Object>> out, String key) {
+  private void process(Iterable<Event> input, Collector<Event> out, String key) {
     List<Double> values = new ArrayList<>();
-    Map<String, Object> lastEvent = new HashMap<>();
+    Event lastEvent = new Event();
 
-    for (Map<String, Object> anInput : input) {
+    for (Event anInput : input) {
       lastEvent = anInput;
-      if (!keyedStream || String.valueOf(lastEvent.get(keyIdentifier)).equals(key)) {
-        values.add(Double.parseDouble(String.valueOf(lastEvent.get(fieldToAggregate))));
+      if (!keyedStream || (lastEvent.getFieldBySelector(keyIdentifier).getAsPrimitive().getAsString())
+              .equals(key)) {
+        values.add(lastEvent.getFieldBySelector
+                (fieldToAggregate).getAsPrimitive().getAsDouble());
       }
     }
 
-    lastEvent.put("aggregatedValue", getAggregate(values));
+    lastEvent.addField("aggregatedValue", getAggregate(values));
     out.collect(lastEvent);
   }
 }

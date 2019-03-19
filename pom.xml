@@ -5,7 +5,7 @@
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-pipeline-elements</artifactId>
     <packaging>pom</packaging>
-    <version>0.60.1</version>
+    <version>0.61.0</version>
     <modules>
         <module>streampipes-sinks-databases-jvm</module>
         <module>streampipes-sinks-internal-jvm</module>
@@ -31,7 +31,7 @@
     </modules>
 
     <properties>
-        <streampipes.version>0.60.1</streampipes.version>
+        <streampipes.version>0.61.0</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
     </properties>
 
@@ -126,6 +126,78 @@
         </dependencies>
     </dependencyManagement>
 
+    <profiles>
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <failOnError>false</failOnError>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>external.atlassian.jgitflow</groupId>
+                        <artifactId>jgitflow-maven-plugin</artifactId>
+                        <version>1.0-m5.1</version>
+                        <configuration>
+                            <flowInitContext>
+                                <masterBranchName>master</masterBranchName>
+                                <developBranchName>dev</developBranchName>
+                                <featureBranchPrefix>feature-</featureBranchPrefix>
+                                <releaseBranchPrefix>release-</releaseBranchPrefix>
+                                <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
+                            </flowInitContext>
+                            <noDeploy>true</noDeploy>
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                            <pushReleases>false</pushReleases>
+                            <localOnly>true</localOnly>
+                            <squash>false</squash>
+                            <scmCommentPrefix>[RELEASE] [skip-ci]</scmCommentPrefix>
+                            <enableSshAgent>true</enableSshAgent>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -146,71 +218,13 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <failOnError>false</failOnError>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>external.atlassian.jgitflow</groupId>
-                <artifactId>jgitflow-maven-plugin</artifactId>
-                <version>1.0-m5.1</version>
-                <configuration>
-                    <flowInitContext>
-                        <masterBranchName>master</masterBranchName>
-                        <developBranchName>dev</developBranchName>
-                        <featureBranchPrefix>feature-</featureBranchPrefix>
-                        <releaseBranchPrefix>release-</releaseBranchPrefix>
-                        <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
-                    </flowInitContext>
-                    <noDeploy>true</noDeploy>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <pushReleases>false</pushReleases>
-                    <localOnly>true</localOnly>
-                    <squash>false</squash>
-                    <scmCommentPrefix>[RELEASE] [skip-ci]</scmCommentPrefix>
-                    <enableSshAgent>true</enableSshAgent>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <gpgArguments>
-                        <arg>--pinentry-mode</arg>
-                        <arg>loopback</arg>
-                    </gpgArguments>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
 
     <scm>
         <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-pipeline-elements.git
         </developerConnection>
-        <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-pipeline-elements.git</connection>
+        <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-pipeline-elements.git
+        </connection>
         <url>https://github.com/streampipes/streampipes-pipeline-elements</url>
     </scm>
 
@@ -251,9 +265,9 @@
 
     <distributionManagement>
         <repository>
-            <id>sonatype</id>
-            <name>Releases</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+            <id>deployment</id>
+            <name>Internal Releases</name>
+            <url>https://laus.fzi.de/nexus/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
             <id>deployment</id>
