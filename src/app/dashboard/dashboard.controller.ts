@@ -47,7 +47,7 @@ export class DashboardCtrl {
         this.$mdDialog.show({
             controller: AddWidgetCtrl,
             controllerAs: 'ctrl',
-            templateUrl: 'add-widget-template.html',
+            template: require('./add-widget-template.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: false,
             bindToController: true,
@@ -137,7 +137,7 @@ export class DashboardCtrl {
             this.$mdDialog.show({
                 controller: NoPipelinePresentDialogController,
                 controllerAs: 'ctrl',
-                templateUrl: 'dialog/no-pipeline-present-dialog.tmpl.html',
+                template: require('./dialog/no-pipeline-present-dialog.tmpl.html'),
                 parent: angular.element(document.body),
                 clickOutsideToClose: false,
                 bindToController: true

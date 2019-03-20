@@ -1,7 +1,8 @@
 import {PipelineElementsRowController} from "./pipeline-elements-row.controller";
+declare const require: any;
 
 export let PipelineElementsRowComponent = {
-    templateUrl: 'pipeline-elements-row.tmpl.html',
+    template: require('./pipeline-elements-row.tmpl.html'),
     bindings: {
         element: "<",
         pipeline: "<"

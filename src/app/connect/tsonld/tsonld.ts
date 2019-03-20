@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
+import {Observable, from} from 'rxjs';
+
 import * as jsonld from 'jsonld';
 
 import {isUndefined} from 'util';
@@ -36,13 +36,15 @@ export class TsonLd {
     const context = obj['@context'];
     delete obj['@context'];
 
-    return Observable.fromPromise(new Promise(function (resolve, reject) {
+    let promise = new Promise(function (resolve, reject) {
       (jsonld as any).flatten(obj, context, function (err, data) {
 
         // console.log('flatten data: bla bla bla: ' + JSON.stringify(data, null, 2));
         resolve(data);
       });
-    }));
+    });
+
+    return from(promise);
   }
 
   /**

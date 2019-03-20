@@ -1,12 +1,13 @@
 import { WidgetInstances } from '../../widget-instances.service'
 'use strict';
+declare const require: any;
 numberWidget.$inject = ['WidgetInstances', '$filter'];
 
 export default function numberWidget(WidgetInstances, $filter) {
     return {
         restrict: 'A',
         replace: true,
-        templateUrl: 'number.html',
+        template: require('./number.html'),
         scope: {
             data: '=',
             widgetId: '@'

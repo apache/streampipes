@@ -1,7 +1,8 @@
 import {MatchingPropertyController} from "./matchingproperty.controller";
+declare const require: any;
 
 export let MatchingPropertyComponent = {
-    templateUrl: 'matchingproperty.tmpl.html',
+    template: require('./matchingproperty.tmpl.html'),
     bindings: {
         staticProperty : "="
     },

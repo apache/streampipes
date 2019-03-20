@@ -1,7 +1,8 @@
 import {DatatypePropertyController} from "./datatype-property.controller";
+declare const require: any;
 
 export let DatatypePropertyComponent = {
-    templateUrl: 'datatype-property.tmpl.html',
+    template: require('./datatype-property.tmpl.html'),
     bindings: {
         disabled : "<",
         runtimeType : "=",

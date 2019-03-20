@@ -1,7 +1,8 @@
 import {CustomOutputController} from "./customoutput.controller";
+declare const require: any;
 
 export let CustomOutputComponent = {
-    templateUrl: 'customoutput.tmpl.html',
+    template: require('./customoutput.tmpl.html'),
     bindings: {
         outputStrategy: "=",
         selectedElement: "="

@@ -1,7 +1,7 @@
 import {TransportProtocolController} from "./transport-protocol.controller";
 
 export let TransportProtocolComponent = {
-    templateUrl: 'transport-protocol.tmpl.html',
+    templateUrl: '/src/app/sensors/components/grounding/transport-protocol.tmpl.html',
     bindings: {
         disabled : "<",
         grounding : "="

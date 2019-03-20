@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
+import { map } from 'rxjs/operators';
 import {AuthStatusService} from '../../services/auth-status.service';
 import {HttpClient} from '@angular/common/http';
 
@@ -26,9 +27,9 @@ export class FileRestService {
         const data: FormData = new FormData();
         data.append('file_upload', file, file.name);
         return this.http.post(this.url, data)
-            .map(res => {
+            .pipe(map(res => {
                 return res;
-            });
+            }));
     }
 
     delete(id: string) {
@@ -37,7 +38,7 @@ export class FileRestService {
 
     getURLS(): Observable<any> {
         return this.http.get(this.url)
-            .map(res => {
+            .pipe(map(res => {
                 let result = [];
                 let stringArray = res as String[];
                 stringArray.forEach(url => {
@@ -46,7 +47,7 @@ export class FileRestService {
                     result.push({"name": fileName, "url": url})
                 });
                 return result;
-            });
+            }));
     }
 
 

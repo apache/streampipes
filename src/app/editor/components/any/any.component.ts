@@ -1,7 +1,8 @@
 import {AnyController} from "./any.controller";
+declare const require: any;
 
 export let AnyComponent = {
-    templateUrl: 'any.tmpl.html',
+    template: require('./any.tmpl.html'),
     bindings: {
         staticProperty: "="
     },

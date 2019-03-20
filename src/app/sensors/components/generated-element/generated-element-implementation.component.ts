@@ -1,7 +1,8 @@
 import {GeneratedElementImplementationController} from "./generated-element-implementation.controller";
+declare const require: any;
 
 export let GeneratedElementImplementationComponent = {
-    templateUrl: 'generated-element-implementation.tmpl.html',
+    template: require('./generated-element-implementation.tmpl.html'),
     bindings: {
         zipFile : "<",
         element: "<"

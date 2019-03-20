@@ -1,7 +1,8 @@
 import {SepaBasicsController} from "./sepa-basics.controller";
+declare const require: any;
 
 export let SepaBasicsComponent = {
-    templateUrl: 'sepa-basics.tmpl.html',
+    template: require('./sepa-basics.tmpl.html'),
     bindings: {
         disabled : "<",
         element : "="

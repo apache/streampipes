@@ -35,7 +35,7 @@ export class AdapterUploadDialog {
         fileReader.onload = (e) => {
             this.uploaded = true;
 
-            var jsonString: string = fileReader.result;
+            var jsonString: any = fileReader.result;
             var json = JSON.parse(jsonString);
 
             if (jsonString.indexOf('AdapterDescriptionList') != -1) {

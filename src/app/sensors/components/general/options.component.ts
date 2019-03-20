@@ -1,7 +1,8 @@
 import {OptionsController} from "./options.controller";
+declare const require: any;
 
 export let OptionsComponent = {
-    templateUrl: 'options.tmpl.html',
+    template: './options.tmpl.html',
     bindings: {
         disabled : "<",
         options : "<"

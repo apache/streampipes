@@ -2,13 +2,15 @@ declare const google: any;
 
 import { WidgetInstances } from '../../widget-instances.service'
 'use strict';
+
+declare const require: any;
 heatmapWidget.$inject = ['WidgetInstances', '$http', 'NgMap'];
 
 export default function heatmapWidget(WidgetInstances) {
     return {
         restrict: 'A',
         replace: true,
-        templateUrl: 'heatmap.html',
+        template: require('./heatmap.html'),
         scope: {
             data: '=',
             widgetId: '@'

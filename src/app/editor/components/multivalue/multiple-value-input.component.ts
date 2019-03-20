@@ -1,7 +1,8 @@
 import {MultipleValueInputController} from "./multiple-value-input.controller";
+declare const require: any;
 
 export let MultipleValueInputComponent = {
-    templateUrl: 'multiple-value-input.tmpl.html',
+    template: require('./multiple-value-input.tmpl.html'),
     bindings: {
         staticProperty : "="
     },

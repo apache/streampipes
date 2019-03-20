@@ -7,7 +7,6 @@ import {EventProperty} from './schema-editor/model/EventProperty';
 import {EventPropertyPrimitive} from './schema-editor/model/EventPropertyPrimitive';
 import {EventPropertyNested} from './schema-editor/model/EventPropertyNested';
 import {AddNestedRuleDescription} from './model/connect/rules/AddNestedRuleDescription';
-import {k} from '@angular/core/src/render3';
 import {MoveRuleDescription} from './model/connect/rules/MoveRuleDesctiption';
 import {DeleteRuleDescription} from './model/connect/rules/DeleteRuleDescription';
 import {UnitTransformRuleDescription} from './model/connect/rules/UnitTransformRuleDescription';

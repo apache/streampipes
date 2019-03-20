@@ -1,7 +1,8 @@
 import {DomainPropertyController} from "./domain-property.controller";
+declare const require: any;
 
 export let DomainPropertyComponent = {
-    templateUrl: 'domain-property.tmpl.html',
+    template: require('./domain-property.tmpl.html'),
     bindings: {
         disabled : "<",
         property : "="

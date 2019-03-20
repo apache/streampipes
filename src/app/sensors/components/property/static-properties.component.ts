@@ -1,7 +1,8 @@
 import {StaticPropertiesController} from "./static-properties.controller";
+declare const require: any;
 
 export let StaticPropertiesComponent = {
-    templateUrl: 'static-properties.tmpl.html',
+    template: require('./static-properties.tmpl.html'),
     bindings: {
         disabled : "<",
         staticProperties : "=",

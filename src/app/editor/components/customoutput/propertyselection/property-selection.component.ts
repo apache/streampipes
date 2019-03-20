@@ -1,7 +1,8 @@
 import {PropertySelectionController} from "./property-selection.controller";
+declare const require: any;
 
 export let PropertySelectionComponent = {
-    templateUrl: 'property-selection.tmpl.html',
+    template: require('./property-selection.tmpl.html'),
     bindings: {
         outputStrategy: "=",
         eventProperty: "=",

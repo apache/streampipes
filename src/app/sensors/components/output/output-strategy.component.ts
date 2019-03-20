@@ -1,7 +1,8 @@
 import {OutputStrategyController} from "./output-strategy.controller";
+declare const require: any;
 
 export let OutputStrategyComponent = {
-    templateUrl: 'output-strategy.tmpl.html',
+    template: require('./output-strategy.tmpl.html'),
     bindings: {
         disabled : "<",
         strategies : "="

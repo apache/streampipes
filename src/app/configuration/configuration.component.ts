@@ -27,8 +27,6 @@ export class ConfigurationComponent {
     }
 
     updateConsulService(consulService: StreampipesPeContainer): void {
-        console.log(consulService.configs[3].value);
-        
         this.configurationService.updateConsulService(consulService)
             .subscribe(response => {
 

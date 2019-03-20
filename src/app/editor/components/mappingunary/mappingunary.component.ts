@@ -1,7 +1,8 @@
 import {MappingUnaryController} from "./mappingunary.controller";
+declare const require: any;
 
 export let MappingUnaryComponent = {
-    templateUrl: 'mappingunary.tmpl.html',
+    template: require('./mappingunary.tmpl.html'),
     bindings: {
         staticProperty : "=",
         displayRecommended: "=",

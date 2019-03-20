@@ -1,5 +1,6 @@
 import * as angular from 'angular';
 declare const jsPlumb: any;
+declare const require: any;
 
 import {StartAllPipelinesController} from './dialog/start-all-pipelines-dialog.controller';
 import {PipelineCategoriesDialogController} from './dialog/pipeline-categories-dialog.controller';
@@ -120,7 +121,7 @@ export class PipelineCtrl {
         this.$mdDialog.show({
             controller: StartAllPipelinesController,
             controllerAs : 'ctrl',
-            templateUrl: 'dialog/start-all-pipelines-dialog.tmpl.html',
+            template: require('./dialog/start-all-pipelines-dialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: false,
             locals: {
@@ -139,7 +140,7 @@ export class PipelineCtrl {
         this.$mdDialog.show({
             controller: PipelineCategoriesDialogController,
             controllerAs : 'ctrl',
-            templateUrl: 'dialog/pipeline-categories-dialog.tmpl.html',
+            template: require('./dialog/pipeline-categories-dialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             locals: {

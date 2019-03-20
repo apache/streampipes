@@ -2,12 +2,13 @@ import { WidgetInstances } from '../../widget-instances.service'
 'use strict';
 mapWidget.$inject = ['WidgetInstances', 'NgMap'];
 declare let L;
+declare const require: any;
 
 export default function mapWidget(WidgetInstances, NgMap) {
     return {
         restrict: 'A',
         replace: true,
-        templateUrl: 'map.html',
+        template: require('./map.html'),
         scope: {
             data: '=',
             widgetId: '@'

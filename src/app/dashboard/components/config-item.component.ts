@@ -1,7 +1,9 @@
 import {ConfigItemController} from "./config-item.controller";
 
+declare const require: any;
+
 export let ConfigItemComponent = {
-    templateUrl: 'config-item.tmpl.html',
+    template: require('./config-item.tmpl.html'),
     bindings: {
         elementTitle: "@",
     },

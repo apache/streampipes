@@ -37,7 +37,7 @@ import {Logger} from './shared/logger/default-log.service';
         FlexLayoutModule,
         HttpClientModule,
         FormsModule,
-        UIRouterUpgradeModule.forChild(),
+        UIRouterUpgradeModule.forRoot(),
         HomeModule,
         ConfigurationModule,
         InfoModule,

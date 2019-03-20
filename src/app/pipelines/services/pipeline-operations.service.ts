@@ -1,7 +1,7 @@
 import * as angular from 'angular';
 import {PipelineStatusDialogController} from "../dialog/pipeline-status-dialog.controller";
 import {DeletePipelineDialogController} from "../dialog/delete-pipeline-dialog.controller";
-
+declare const require: any;
 
 export class PipelineOperationsService {
 
@@ -65,7 +65,7 @@ export class PipelineOperationsService {
         this.$mdDialog.show({
             controller: DeletePipelineDialogController,
             controllerAs: 'ctrl',
-            templateUrl: '../dialog/delete-pipeline-dialog.tmpl.html',
+            template: require('../dialog/delete-pipeline-dialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: false,
             locals: {
@@ -80,7 +80,7 @@ export class PipelineOperationsService {
         this.$mdDialog.show({
             controller: PipelineStatusDialogController,
             controllerAs: 'ctrl',
-            templateUrl: '../dialog/pipeline-status-dialog.tmpl.html',
+            template: require('../dialog/pipeline-status-dialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: false,
             locals: {

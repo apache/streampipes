@@ -1,7 +1,8 @@
 import {OneOfController} from "./oneof.controller";
+declare const require: any;
 
 export let OneOfComponent = {
-    templateUrl: 'oneof.tmpl.html',
+    template: require('./oneof.tmpl.html'),
     bindings: {
         staticProperty : "="
     },

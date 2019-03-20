@@ -1,7 +1,8 @@
 import {StreamQualityDefinitionsController} from "./stream-quality-definitions.controller";
+declare const require: any;
 
 export let StreamQualityDefinitionsComponent = {
-    templateUrl: 'stream-quality-definitions.tmpl.html',
+    template: require('./stream-quality-definitions.tmpl.html'),
     bindings: {
         disabled : "<",
         property : "=element",

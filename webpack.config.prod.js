@@ -29,16 +29,24 @@ module.exports = merge(baseConfig, {
         //     }
         // },
         minimizer: [
-            new HashedModuleIdsPlugin(),
-            // new TerserPlugin({
-            //     cache: true,
-            //     parallel: true,
-            //     sourceMap: false, // Must be set to true if using source-maps in production
-            //     terserOptions: {
-            //         comments: false
-            //         // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
-            //     }
-            // })
+            // new HashedModuleIdsPlugin(),
+            new TerserPlugin({
+                terserOptions: {
+                    ecma: undefined,
+                    warnings: false,
+                    parse: {},
+                    compress: {},
+                    mangle: false, // Note `mangle.properties` is `false` by default.
+                    module: false,
+                    output: null,
+                    toplevel: false,
+                    nameCache: null,
+                    ie8: false,
+                    keep_classnames: true,
+                    keep_fnames: true,
+                    safari10: false,
+                },
+            }),
         ]
     }
 });

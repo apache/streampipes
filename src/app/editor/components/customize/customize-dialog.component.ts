@@ -1,7 +1,8 @@
 import {CustomizeDialogController} from "./customize-dialog.controller";
+declare const require: any;
 
 export let CustomizeDialogComponent = {
-    templateUrl: 'customize-dialog.tmpl.html',
+    template: require('./customize-dialog.tmpl.html'),
     bindings: {
         staticProperty: "=",
         selectedElement: "=",

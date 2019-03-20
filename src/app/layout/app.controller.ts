@@ -86,6 +86,11 @@ export class AppCtrl {
                     title: 'File Upload',
                     icon: 'file:ic_file_upload_24px'
                 },
+                {
+                    link: 'streampipes.asset-monitoring',
+                    title: 'Asset Monitoring',
+                    icon: 'av:ic_web_asset_24px'
+                },
             ];
             this.admin = [
                 {

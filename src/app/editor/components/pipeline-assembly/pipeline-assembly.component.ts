@@ -1,7 +1,8 @@
 import {PipelineAssemblyController} from "./pipeline-assembly.controller";
+declare const require: any;
 
 export let PipelineAssemblyComponent = {
-    templateUrl: 'pipeline-assembly.tmpl.html',
+    template: require('./pipeline-assembly.tmpl.html'),
     bindings: {
         currentModifiedPipelineId: "=",
         rawPipelineModel : "=",

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { DataSetDescription } from '../../connect/model/DataSetDescription';
 import { TsonLd } from '../../connect/tsonld/tsonld';
@@ -76,7 +77,7 @@ export class KviService {
     getDataSets(): Observable<DataSetDescription[]> {
         return this.http
             .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates/sets')
-            .map(response => {
+            .pipe(map(response => {
 
 
 
@@ -94,23 +95,23 @@ export class KviService {
 
                 const res = tsonld.fromJsonLdType(response, 'sp:DataStreamContainer');
                 return res.list;
-            });
+            }));
     }
 
     getOperators(dataSet: DataSetDescription): Observable<PipelineTemplateDescription[]> {
         return this.http
             .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates?dataset=' + dataSet.id)
-            .map(response => {
+            .pipe(map(response => {
                 const tsonld = this.getTsonLd();
                 const res = tsonld.fromJsonLdType(response, 'sp:PipelineTemplateDescriptionContainer');
                 return res.list;
-            });
+            }));
     }
 
     getStaticProperties(dataSet: DataSetDescription, operator: PipelineTemplateDescription): Observable<PipelineTemplateInvocation> {
         return this.http
             .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates/invocations?streamId=' + dataSet.id + '&templateId=' + operator.internalName)
-            .map(response => {
+            .pipe(map(response => {
 
 
                 const tsonld = this.getTsonLd();
@@ -126,7 +127,7 @@ export class KviService {
                     }
                 });
                 return res;
-            });
+            }));
     }
 
     isFreeTextStaticProperty(val) {

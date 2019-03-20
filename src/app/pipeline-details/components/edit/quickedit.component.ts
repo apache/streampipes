@@ -1,7 +1,8 @@
 import {QuickEditController} from "./quickedit.controller";
+declare const require: any;
 
 export let QuickEditComponent = {
-    templateUrl: 'quickedit.tmpl.html',
+    template: require('./quickedit.tmpl.html'),
     bindings: {
         pipeline: "<",
         selectedElement: "<"

@@ -61,7 +61,7 @@ export class EditorDialogManager {
         this.$mdDialog.show({
             controller: HelpDialogController,
             controllerAs: 'ctrl',
-            templateUrl: '../dialog/help/help-dialog.tmpl.html',
+            template: require('../dialog/help/help-dialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             locals: {
@@ -75,7 +75,7 @@ export class EditorDialogManager {
         this.$mdDialog.show({
             controller: PossibleElementsController,
             controllerAs: 'ctrl',
-            templateUrl: '../dialog/possible-elements/possible-elements-dialog.tmpl.html',
+            template: require('../dialog/possible-elements/possible-elements-dialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             bindToController: true,
@@ -100,7 +100,7 @@ export class EditorDialogManager {
         this.$mdDialog.show({
             controller: WelcomeTourDialogController,
             controllerAs: 'ctrl',
-            templateUrl: '../dialog/welcome-tour/welcome-tour-dialog.tmpl.html',
+            template: require('../dialog/welcome-tour/welcome-tour-dialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: false,
             bindToController: true,
@@ -114,7 +114,7 @@ export class EditorDialogManager {
         this.$mdDialog.show({
             controller: MissingElementsForTutorialDialogController,
             controllerAs: 'ctrl',
-            templateUrl: '../dialog/missing-elements-for-tutorial/missing-elements-for-tutorial-dialog.tmpl.html',
+            template: require('../dialog/missing-elements-for-tutorial/missing-elements-for-tutorial-dialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: false,
             bindToController: true,

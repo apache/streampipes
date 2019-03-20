@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/fromPromise';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+
 import { TsonLd } from '../tsonld';
 import { AuthStatusService } from '../../services/auth-status.service';
 import { AdapterDescriptionList } from '../model/connect/AdapterDescriptionList';
@@ -112,7 +113,7 @@ export class DataMarketplaceService {
           this.authStatusService.email +
           path
       )
-      .map(response => {
+      .pipe(map(response => {
         if(response['@graph'] === undefined) return [];
         const res = this.getTsonLd().fromJsonLdType(
           response,
@@ -120,7 +121,7 @@ export class DataMarketplaceService {
         );
 
         return res.list;
-      });
+      }));
   }
 
   deleteAdapter(adapter: AdapterDescription): Observable<Object> {
@@ -149,25 +150,25 @@ export class DataMarketplaceService {
           this.authStatusService.email +
           '/master/description/protocols'
       )
-      .map(response => {
+      .pipe(map(response => {
         const res = this.getTsonLd().fromJsonLdType(
           response,
           'sp:ProtocolDescriptionList'
         );
 
         return res.list;
-      });
+      }));
   }
 
   getGenericAndSpecifigAdapterDescriptions(): Observable<
     Observable<AdapterDescription[]>
   > {
-    return this.getAdapterDescriptions().map(adapterDescriptions => {
+    return this.getAdapterDescriptions().pipe(map(adapterDescriptions => {
       adapterDescriptions = adapterDescriptions.filter(
         this.connectService.isSpecificDescription
       );
 
-      return this.getProtocols().map(protocols => {
+      return this.getProtocols().pipe(map(protocols => {
         for (let protocol of protocols) {
           let newAdapterDescription: AdapterDescription;
           if (protocol.id.includes('sp:protocol/set')) {
@@ -193,8 +194,8 @@ export class DataMarketplaceService {
           adapterDescriptions.push(newAdapterDescription);
         }
         return adapterDescriptions;
-      });
-    });
+      }));
+    }));
   }
 
   cloneAdapterDescription(toClone: AdapterDescription): AdapterDescription {

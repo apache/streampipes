@@ -1,12 +1,13 @@
 import { WidgetInstances } from '../../widget-instances.service'
 'use strict';
 htmlWidget.$inject = ['WidgetInstances'];
+declare const require: any;
 
 export default function htmlWidget(WidgetInstances) {
     return {
         restrict: 'A',
         replace: true,
-        templateUrl: './htmltemplate.html',
+        template: require('./htmltemplate.html'),
         scope: {
             data: '=',
             widgetId: '@'

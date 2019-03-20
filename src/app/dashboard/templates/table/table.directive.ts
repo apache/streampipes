@@ -1,14 +1,14 @@
 import { WidgetInstances } from '../../widget-instances.service'
 import * as angular from 'angular';
-
 'use strict';
+declare const require: any;
 tableWidget.$inject = ['WidgetInstances', '$filter'];
 
 export default function tableWidget(WidgetInstances, $filter) {
 	return {
 		restrict: 'A',
 		replace: true,
-		templateUrl: 'table.html',
+		template: require('./table.html'),
 		scope: {
 			data: '=',
 			widgetId: '@'

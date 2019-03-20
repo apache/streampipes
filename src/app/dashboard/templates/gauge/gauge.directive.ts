@@ -1,12 +1,15 @@
 import { WidgetInstances } from '../../widget-instances.service'
 'use strict';
+
+declare const require: any;
+
 gaugeWidget.$inject = ['WidgetInstances'];
 
 export default function gaugeWidget(WidgetInstances) {
     return {
         restrict: 'A',
         replace: true,
-        templateUrl: 'gauge.html',
+        template: require('./gauge.html'),
         scope: {
             data: '=',
             widgetId: '@'
@@ -16,9 +19,6 @@ export default function gaugeWidget(WidgetInstances) {
 						$scope.widgetConfig = data.visualisation.schema.config;
                         $scope.min = data.visualisation.config.min;
                         $scope.max = data.visualisation.config.max;
-                        console.log(data);
-                        console.log($scope.min);
-                        console.log($scope.max);
 					})
             $scope.lineData = [];
             $scope.myChart = null;

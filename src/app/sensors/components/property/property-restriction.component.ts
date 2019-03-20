@@ -1,7 +1,8 @@
 import {PropertyRestrictionController} from "./property-restriction.controller";
+declare const require: any;
 
 export let PropertyRestrictionComponent = {
-    templateUrl: 'property-restriction.tmpl.html',
+    template: require('./property-restriction.tmpl.html'),
     bindings: {
         disabled : "<",
         restriction : "=element"
