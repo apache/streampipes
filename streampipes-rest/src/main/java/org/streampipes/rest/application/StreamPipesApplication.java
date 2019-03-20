@@ -18,6 +18,7 @@
 package org.streampipes.rest.application;
 
 import org.streampipes.rest.impl.ApplicationLink;
+import org.streampipes.rest.impl.AssetDashboard;
 import org.streampipes.rest.impl.Authentication;
 import org.streampipes.rest.impl.AutoComplete;
 import org.streampipes.rest.impl.ConsulConfig;
@@ -68,6 +69,7 @@ public class StreamPipesApplication extends Application {
 
         // APIs
         apiClasses.add(Authentication.class);
+        apiClasses.add(AssetDashboard.class);
         apiClasses.add(AutoComplete.class);
         apiClasses.add(PipelineElementCategory.class);
         apiClasses.add(Deployment.class);

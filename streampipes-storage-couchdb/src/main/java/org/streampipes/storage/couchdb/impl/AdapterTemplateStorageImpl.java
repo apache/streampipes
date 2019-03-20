@@ -17,7 +17,6 @@
 
 package org.streampipes.storage.couchdb.impl;
 
-import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.model.connect.adapter.AdapterDescription;
@@ -32,39 +31,39 @@ import java.util.Optional;
 
 public class AdapterTemplateStorageImpl extends AbstractDao<AdapterDescription> implements IAdapterTemplateStorage {
 
-    Logger LOG = LoggerFactory.getLogger(AdapterStorageImpl.class);
+  Logger LOG = LoggerFactory.getLogger(AdapterStorageImpl.class);
 
-    private static final String SYSTEM_USER = "system";
+  private static final String SYSTEM_USER = "system";
 
-    public AdapterTemplateStorageImpl() {
-        super(Utils::getCouchDbAdapterTemplateClient, AdapterDescription.class);
-    }
+  public AdapterTemplateStorageImpl() {
+    super(Utils::getCouchDbAdapterTemplateClient, AdapterDescription.class);
+  }
 
-    @Override
-    public List<AdapterDescription> getAllAdapterTemplates() {
-        return findAll();
-    }
+  @Override
+  public List<AdapterDescription> getAllAdapterTemplates() {
+    return findAll();
+  }
 
-    @Override
-    public void storeAdapterTemplate(AdapterDescription adapter) {
-        persist(adapter);
-    }
+  @Override
+  public void storeAdapterTemplate(AdapterDescription adapter) {
+    persist(adapter);
+  }
 
-    @Override
-    public void updateAdapterTemplate(AdapterDescription adapter) {
-        couchDbClientSupplier.get().
-        update(adapter);
-    }
+  @Override
+  public void updateAdapterTemplate(AdapterDescription adapter) {
+    couchDbClientSupplier.get().
+            update(adapter);
+  }
 
-    @Override
-    public AdapterDescription getAdapterTemplate(String adapterId) {
-        DbCommand<Optional<AdapterDescription>, AdapterDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterDescription.class);
-        return cmd.execute().get();
-    }
+  @Override
+  public AdapterDescription getAdapterTemplate(String adapterId) {
+    DbCommand<Optional<AdapterDescription>, AdapterDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterDescription.class);
+    return cmd.execute().get();
+  }
 
-    @Override
-    public void deleteAdapterTemplate(String adapterId) {
-        AdapterDescription adapterDescription = getAdapterTemplate(adapterId);
-        couchDbClientSupplier.get().remove(adapterDescription.getId(), adapterDescription.getRev());
-    }
+  @Override
+  public void deleteAdapterTemplate(String adapterId) {
+    AdapterDescription adapterDescription = getAdapterTemplate(adapterId);
+    couchDbClientSupplier.get().remove(adapterDescription.getId(), adapterDescription.getRev());
+  }
 }
