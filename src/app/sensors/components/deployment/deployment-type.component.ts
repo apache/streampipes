@@ -2,7 +2,7 @@ import {DeploymentTypeController} from "./deployment-type.controller";
 declare const require: any;
 
 export let DeploymentTypeComponent = {
-    template: './deployment-type.tmpl.html',
+    template: require('./deployment-type.tmpl.html'),
     bindings: {
         disabled : "<",
         deployment : "<",
