@@ -51,7 +51,6 @@ public class SendToKafkaAdapterSink implements AdapterPipelineElement  {
         try {
             if (event != null) {
                 producer.publish(objectMapper.writeValueAsBytes(event));
-                System.out.println("send to kafka: " + event);
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
