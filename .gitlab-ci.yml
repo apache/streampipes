@@ -25,7 +25,7 @@ stages:
 #    - npm test
 
 build:
-  image: node:10-alpine
+  image: node:8-alpine
   stage: build
   script:
     - export NODE_PATH=/cache/node_modules

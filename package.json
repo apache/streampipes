@@ -86,7 +86,6 @@
     "@angular/compiler-cli": "7.2.9",
     "@types/angular": "^1.6.43",
     "@types/jasmine": "~2.8.3",
-    "@types/jquery": "3.3.28",
     "@types/jqueryui": "^1.12.7",
     "@types/node": "11.11.3",
     "@types/rx": "^4.1.1",
