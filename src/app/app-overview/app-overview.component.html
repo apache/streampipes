@@ -1,0 +1,36 @@
+<div fxLayout="column" fxFlex="100" class="page-container page-container-padding page-container-connect">
+    <div fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
+        <div fxLayoutAlign="end center" fxLayout="fill"
+             style="padding-right:10px; width:100%;min-height:50px;line-height:24px;border-bottom:1px solid #ccc;margin-bottom:1px;">
+            <div *ngIf="appOpen">
+                <button mat-button mat-raised-button color="primary" (click)="appClosed()">
+                    Close App
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="!appOpen">
+        <div fxFlex="100" fxLayout="column">
+            <h1>My apps</h1>
+            <mat-card class="example-card" *ngFor="let app of apps">
+                <div fxFlex="100" fxLayout="row">
+                    <div fxFlex="75" fxLayout="column" fxLayoutAlign="center start">
+                        <mat-card-header>
+                            <mat-card-title> {{app.appName}}</mat-card-title>
+                            <mat-card-subtitle>{{app.appDescription}}</mat-card-subtitle>
+                        </mat-card-header>
+                    </div>
+                    <div fxFlex="25" fxLayoutAlign="center end" fxLayout="column">
+                        <button mat-button mat-raised-button color="primary" (click)="selectApp(app.appId)">Open App
+                        </button>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+    <app-asset-monitoring (appOpened)="appOpened($event)"
+                          *ngIf="currentlySelectedApp === apps[0].appId"></app-asset-monitoring>
+    <app-transport-monitoring (appOpened)="appOpened($event)"
+                          *ngIf="currentlySelectedApp === apps[1].appId"></app-transport-monitoring>
+</div>

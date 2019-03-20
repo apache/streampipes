@@ -1,16 +1,16 @@
-import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {CommonModule} from '@angular/common';
 
-import { AppAssetMonitoringComponent } from './app-asset-monitoring.component';
+import {AppAssetMonitoringComponent} from './app-asset-monitoring.component';
 
-import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
 
-import { ViewAssetComponent } from "./components/view-asset/view-asset.component";
-import { CreateAssetComponent } from "./components/create-asset/create-asset.component";
-import { WebsocketService } from "./services/websocket.service";
-import { AddPipelineDialogComponent } from "./dialog/add-pipeline/add-pipeline-dialog.component";
-import { RestService } from './services/rest.service';
+import {ViewAssetComponent} from "./components/view-asset/view-asset.component";
+import {CreateAssetComponent} from "./components/create-asset/create-asset.component";
+import {WebsocketService} from "./services/websocket.service";
+import {AddPipelineDialogComponent} from "./dialog/add-pipeline/add-pipeline-dialog.component";
+import {RestService} from './services/rest.service';
 import {MatFormFieldModule, MatGridListModule, MatInputModule} from "@angular/material";
 import {ElementIconText} from "../services/get-element-icon-text.service";
 import {FormsModule} from "@angular/forms";
@@ -53,6 +53,9 @@ import {AssetDashboardOverviewComponent} from "./components/dashboard-overview/d
         AppAssetMonitoringComponent,
         AddPipelineDialogComponent,
         SaveDashboardDialogComponent
+    ],
+    exports: [
+        AppAssetMonitoringComponent
     ]
 })
 export class AppAssetMonitoringModule {

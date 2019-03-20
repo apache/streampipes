@@ -15,6 +15,8 @@ import { AuthStatusService } from './services/auth-status.service';
 
 import { HomeModule } from './home/home.module';
 import { InfoModule } from './info/info.module';
+import { AppAssetMonitoringModule } from "./app-asset-monitoring/app-asset-monitoring.module";
+import { AppTransportMonitoringModule } from "./app-transport-monitoring/app-transport-monitoring.module";
 
 {{#modulesActive}}
 {{#ng5}}
@@ -41,6 +43,8 @@ import {Logger} from './shared/logger/default-log.service';
         HomeModule,
         ConfigurationModule,
         InfoModule,
+        AppAssetMonitoringModule,
+        AppTransportMonitoringModule,
         {{#modulesActive}}
         {{#ng5}}
         {{{ng5_moduleName}}},

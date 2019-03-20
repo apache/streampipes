@@ -54,6 +54,21 @@ spDashboard:
   icon: 'editor:ic_insert_chart_24px'
   homeImage: '/assets/img/home/dashboard.png'
   admin: False
+spAppOverview:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'AppOverviewModule'
+  ng5_component: 'AppOverviewComponent'
+  ng5_componentPath: '../app-overview/app-overview.component'
+  path: './app-overview/app-overview.module'
+  link: 'streampipes.app-overview'
+  url: '/apps'
+  title: 'Apps'
+  description: 'app-overview'
+  icon: 'navigation:ic_apps_24px'
+  homeImage: '/assets/img/home/configuration.png'
+  admin: false
 spAppFileDownload:
   ng5: False
   ng1_templateUrl: '../app-file-download/app-file-download.tmpl.html'
@@ -182,18 +197,4 @@ spFileUpload:
   icon: 'file:ic_file_upload_24px'
   homeImage: '/assets/img/home/configuration.png'
   admin: false
-spAppAssetMonitoring:
-  ng5: True
-  ng1_templateUrl: ''
-  ng1_controller: ''
-  ng5_moduleName: 'AppAssetMonitoringModule'
-  ng5_component: 'AppAssetMonitoringComponent'
-  ng5_componentPath: '../app-asset-monitoring/app-asset-monitoring.component'
-  path: './app-asset-monitoring/app-asset-monitoring.module'
-  link: 'streampipes.asset-monitoring'
-  url: '/asset-monitoring'
-  title: 'Asset Monitoring'
-  description: 'asset-monitoring'
-  icon: 'av:ic_web_asset_24px'
-  homeImage: '/assets/img/home/configuration.png'
-  admin: false
+

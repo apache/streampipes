@@ -1,0 +1,8 @@
+.dashboard-panel {
+    border: 2px solid rgb(156, 156, 156);
+}
+
+.dashboard-panel-title {
+    color:white;
+    background: rgb(156, 156, 156);
+}

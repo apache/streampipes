@@ -67,6 +67,11 @@ export class AppCtrl {
                     icon: 'editor:ic_insert_chart_24px'
                 },
                 {
+                    link: 'streampipes.app-overview',
+                    title: 'Apps',
+                    icon: 'navigation:ic_apps_24px'
+                },
+                {
                     link: 'streampipes.appfiledownload',
                     title: 'File Download',
                     icon: 'file:ic_file_download_24px'
@@ -85,11 +90,6 @@ export class AppCtrl {
                     link: 'streampipes.file-upload',
                     title: 'File Upload',
                     icon: 'file:ic_file_upload_24px'
-                },
-                {
-                    link: 'streampipes.asset-monitoring',
-                    title: 'Asset Monitoring',
-                    icon: 'av:ic_web_asset_24px'
                 },
             ];
             this.admin = [

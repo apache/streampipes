@@ -1,4 +1,7 @@
 .page-container-padding {
     width:100%;
-    padding: 5px;
+}
+
+.page-container-padding-inner {
+    padding: 10px;
 }

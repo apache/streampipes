@@ -7,6 +7,7 @@ modules:
   - spPipelines
   - spConnect
   - spDashboard
+  - spAppOverview
   - spAdd
   - spAppFileDownload
   - spOntology
@@ -14,4 +15,3 @@ modules:
   - spMyElements
   - spFileUpload
   - spConfiguration
-  - spAppAssetMonitoring

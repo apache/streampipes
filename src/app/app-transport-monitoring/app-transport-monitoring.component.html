@@ -1,0 +1,44 @@
+<div fxLayout="column" fxFlex="100" class="page-container-connect">
+    <div fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
+        <div fxLayout="fill" style="line-height:24px;border-bottom:1px solid #ccc">
+            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)">
+                <mat-tab label="Transport Monitoring">
+                </mat-tab>
+                <mat-tab id="all-adapters" label="New Asset">
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+
+    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
+        <h1>Transport Summary</h1>
+
+        <mat-expansion-panel [expanded]="outgoingExpanded">
+            <mat-expansion-panel-header>
+                <h4>Outgoing Goods</h4>
+            </mat-expansion-panel-header>
+
+            <outgoing-view></outgoing-view>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel [expanded]="transportExpanded">
+            <mat-expansion-panel-header>
+                <h3>Transport</h3>
+            </mat-expansion-panel-header>
+
+            <transport-view></transport-view>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel [expanded]="incomingExpanded">
+            <mat-expansion-panel-header>
+               Incoming Goods
+            </mat-expansion-panel-header>
+
+            <incoming-view></incoming-view>
+
+        </mat-expansion-panel>
+
+    </div>
+</div>
