@@ -46,7 +46,7 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
                     "on.", ""), PropertyScope.NONE).build())
             .outputStrategy(OutputStrategies.keep())
             .requiredSingleValueSelection(Labels.from(OPERATION, "Filter Operation", "Specifies the filter " +
-                    "operation that should be applied on the field"), Options.from("<", "<=", ">", ">=", "=="))
+                    "operation that should be applied on the field"), Options.from("<", "<=", ">", ">=", "==", "!="))
             .requiredFloatParameter(Labels.from(VALUE, "Threshold value", "Specifies a threshold value."), "number")
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
@@ -72,6 +72,8 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
       operation = "GE";
     } else if (stringOperation.equals("==")) {
       operation = "EQ";
+    } else if (stringOperation.equals("!=")) {
+      operation = "IE";
     }
 
     String filterProperty = extractor.mappingPropertyValue(NUMBER_MAPPING);

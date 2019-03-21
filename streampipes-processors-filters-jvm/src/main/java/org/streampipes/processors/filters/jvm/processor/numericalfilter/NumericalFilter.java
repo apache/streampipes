@@ -43,7 +43,7 @@ public class NumericalFilter extends StandaloneEventProcessorEngine<NumericalFil
     Double threshold = params.getThreshold();
 
     if (params.getNumericalOperator() == NumericalOperator.EQ) {
-      satisfiesFilter = (value == threshold);
+      satisfiesFilter = (Math.abs(value - threshold) < 0.000001);
     } else if (params.getNumericalOperator() == NumericalOperator.GE) {
       satisfiesFilter = (value >= threshold);
     } else if (params.getNumericalOperator() == NumericalOperator.GT) {
@@ -52,6 +52,8 @@ public class NumericalFilter extends StandaloneEventProcessorEngine<NumericalFil
       satisfiesFilter = (value <= threshold);
     } else if (params.getNumericalOperator() == NumericalOperator.LT) {
       satisfiesFilter = (value < threshold);
+    } else if (params.getNumericalOperator() == NumericalOperator.IE) {
+      satisfiesFilter = (Math.abs(value - threshold) > 0.000001);
     }
 
     if (satisfiesFilter) {
