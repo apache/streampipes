@@ -20,10 +20,9 @@ import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 import org.streampipes.processors.pattern.detection.flink.processor.common.TimestampExtractor;
-
-import java.util.Map;
 
 public class IncreaseProgram extends AbstractPatternDetectionProgram<IncreaseParameters> {
 
@@ -32,7 +31,7 @@ public class IncreaseProgram extends AbstractPatternDetectionProgram<IncreasePar
   }
 
   @Override
-  public DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
+  public DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
     String timestampField = params.getTimestampField();
     return dataStreams[0]
             .assignTimestampsAndWatermarks(new TimestampExtractor(timestampField))
@@ -42,12 +41,12 @@ public class IncreaseProgram extends AbstractPatternDetectionProgram<IncreasePar
                     .getOutputProperties(), params.getGroupBy())).setParallelism(1);
   }
 
-  private KeySelector<Map<String, Object>, String> getKeySelector() {
+  private KeySelector<Event, String> getKeySelector() {
     String groupBy = params.getGroupBy();
-    return new KeySelector<Map<String, Object>, String>() {
+    return new KeySelector<Event, String>() {
       @Override
-      public String getKey(Map<String, Object> in) throws Exception {
-        return String.valueOf(in.get(groupBy));
+      public String getKey(Event in) throws Exception {
+        return in.getFieldBySelector(groupBy).getAsPrimitive().getAsString();
       }
     };
   }

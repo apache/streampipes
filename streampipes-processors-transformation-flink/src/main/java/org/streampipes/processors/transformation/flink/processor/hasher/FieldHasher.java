@@ -19,26 +19,26 @@ package org.streampipes.processors.transformation.flink.processor.hasher;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithm;
 
 import java.io.Serializable;
-import java.util.Map;
 
-public class FieldHasher implements Serializable, FlatMapFunction<Map<String, Object>, Map<String, Object>>{
+public class FieldHasher implements Serializable, FlatMapFunction<Event, Event> {
 
-	private HashAlgorithm hashAlgorithm;
-	private String propertyName;
-	
-	public FieldHasher(String propertyName, HashAlgorithm hashAlgorithm) {
-		this.propertyName = propertyName;
-		this.hashAlgorithm = hashAlgorithm;
-	}
-	
-	@Override
-	public void flatMap(Map<String, Object> in,
-			Collector<Map<String, Object>> out) throws Exception {
-		in.put(propertyName, hashAlgorithm.toHashValue(in.get(propertyName)));
-		out.collect(in);
-	}
+  private HashAlgorithm hashAlgorithm;
+  private String propertyName;
+
+  public FieldHasher(String propertyName, HashAlgorithm hashAlgorithm) {
+    this.propertyName = propertyName;
+    this.hashAlgorithm = hashAlgorithm;
+  }
+
+  @Override
+  public void flatMap(Event in,
+                      Collector<Event> out) throws Exception {
+    in.updateFieldBySelector(propertyName, hashAlgorithm.toHashValue(in.getFieldBySelector(propertyName)));
+    out.collect(in);
+  }
 
 }

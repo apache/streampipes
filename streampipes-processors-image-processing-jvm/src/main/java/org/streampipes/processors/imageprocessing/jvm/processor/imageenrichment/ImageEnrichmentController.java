@@ -72,9 +72,7 @@ public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer
   }
 
   @Override
-  public ConfiguredEventProcessor<ImageEnrichmentParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(dataProcessorInvocation);
-
+  public ConfiguredEventProcessor<ImageEnrichmentParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation, ProcessingElementParameterExtractor extractor) {
     String imageProperty = extractor.mappingPropertyValue(IMAGE_PROPERTY);
     String boxArray = extractor.mappingPropertyValue(BOX_ARRAY_PROPERTY);
 //    String boxArray = "boxes";
@@ -82,7 +80,7 @@ public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer
     ImageEnrichmentParameters params = new ImageEnrichmentParameters(dataProcessorInvocation, imageProperty,
             boxArray, "box_width", "box_height", "box_x", "box_y");
 
-    return new ConfiguredEventProcessor<>(params, () -> new ImageEnricher(params));
+    return new ConfiguredEventProcessor<>(params, ImageEnricher::new);
 
 
   }

@@ -20,16 +20,15 @@ package org.streampipes.processors.statistics.flink.processor.stat.window;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.statistics.flink.processor.stat.StatisticsSummaryController;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-public class StatisticsSummaryCalculatorWindow implements FlatMapFunction<List<Map<String,
-        Object>>, Map<String, Object>>, Serializable {
+public class StatisticsSummaryCalculatorWindow implements FlatMapFunction<List<Event>, Event>,
+        Serializable {
 
   private String partitionMapping;
   private String valueToObserveMapping;
@@ -40,27 +39,27 @@ public class StatisticsSummaryCalculatorWindow implements FlatMapFunction<List<M
   }
 
   @Override
-  public void flatMap(List<Map<String, Object>> in, Collector<Map<String, Object>> out)
+  public void flatMap(List<Event> in, Collector<Event> out)
           throws Exception {
-    List<Double> listValues = (in.stream().map(m -> Double.parseDouble(String.valueOf(m.get
-            (valueToObserveMapping))))
+    List<Double> listValues = (in.stream().map(m -> m.getFieldBySelector(valueToObserveMapping)
+            .getAsPrimitive().getAsDouble())
             .collect(Collectors.toList()));
 
     SummaryStatistics stats = new SummaryStatistics();
 
     listValues.forEach(lv -> stats.addValue(lv));
 
-    Map<String, Object> outMap = new HashMap<>();
+    Event outMap = new Event();
 
-    outMap.put("timestamp", System.currentTimeMillis());
-    outMap.put("id", in.get(in.size() - 1).get(partitionMapping));
-    outMap.put(StatisticsSummaryController.MIN, stats.getMin());
-    outMap.put(StatisticsSummaryController.MAX, stats.getMax());
-    outMap.put(StatisticsSummaryController.MEAN, stats.getMean());
-    outMap.put(StatisticsSummaryController.N, stats.getN());
-    outMap.put(StatisticsSummaryController.SUM, stats.getSum());
-    outMap.put(StatisticsSummaryController.STDDEV, stats.getStandardDeviation());
-    outMap.put(StatisticsSummaryController.VARIANCE, stats.getVariance());
+    outMap.addField("timestamp", System.currentTimeMillis());
+    outMap.addField("id", in.get(in.size() - 1).getFieldBySelector(partitionMapping).getRawValue());
+    outMap.addField(StatisticsSummaryController.MIN, stats.getMin());
+    outMap.addField(StatisticsSummaryController.MAX, stats.getMax());
+    outMap.addField(StatisticsSummaryController.MEAN, stats.getMean());
+    outMap.addField(StatisticsSummaryController.N, stats.getN());
+    outMap.addField(StatisticsSummaryController.SUM, stats.getSum());
+    outMap.addField(StatisticsSummaryController.STDDEV, stats.getStandardDeviation());
+    outMap.addField(StatisticsSummaryController.VARIANCE, stats.getVariance());
 
     out.collect(outMap);
   }

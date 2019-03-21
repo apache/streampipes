@@ -23,9 +23,12 @@ import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.junit.Test;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.test.generator.InvocationGraphGenerator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class TestCountProgram extends DataStreamTestBase {
 
@@ -34,8 +37,8 @@ public class TestCountProgram extends DataStreamTestBase {
 
     EventTimeInput input = makeInputData(makeTestData(), makeTestData().size());
 
-    ExpectedRecords<Map<String, Object>> expected =
-            new ExpectedRecords<Map<String, Object>>().expectAll(getOutput());
+    ExpectedRecords<Event> expected =
+            new ExpectedRecords<Event>().expectAll(getOutput());
 
     runProgram(input, expected);
   }
@@ -45,24 +48,25 @@ public class TestCountProgram extends DataStreamTestBase {
 
     EventTimeInput input = makeInputData(makeTestData(), 2);
 
-    ExpectedRecords<Map<String, Object>> expected =
-            new ExpectedRecords<Map<String, Object>>().expectAll(getOutOfWindowOutput());
+    ExpectedRecords<Event> expected =
+            new ExpectedRecords<Event>().expectAll(getOutOfWindowOutput());
 
     runProgram(input, expected);
   }
 
-  private void runProgram(EventTimeInput<Map<String, Object>> input, ExpectedRecords<Map<String, Object>> expected) {
+  private void runProgram(EventTimeInput<Event> input, ExpectedRecords<Event>
+          expected) {
     CountParameters params = new CountParameters(InvocationGraphGenerator.makeEmptyInvocation(new CountController().declareModel()), Time.seconds(10), "field");
 
     CountProgram program = new CountProgram(params, true);
 
-    DataStream<Map<String, Object>> stream = program.getApplicationLogic(createTestStream(input));
+    DataStream<Event> stream = program.getApplicationLogic(createTestStream(input));
 
     assertStream(stream, expected);
   }
 
-  private Collection<Map<String, Object>> getOutput() {
-    List<Map<String, Object>> outRecords = new ArrayList<>();
+  private Collection<Event> getOutput() {
+    List<Event> outRecords = new ArrayList<>();
     outRecords.add(makeOutMap("v1", 1));
     outRecords.add(makeOutMap("v2", 1));
     outRecords.add(makeOutMap("v1", 2));
@@ -72,8 +76,8 @@ public class TestCountProgram extends DataStreamTestBase {
     return outRecords;
   }
 
-  private Collection<Map<String, Object>> getOutOfWindowOutput() {
-    List<Map<String, Object>> outRecords = new ArrayList<>();
+  private Collection<Event> getOutOfWindowOutput() {
+    List<Event> outRecords = new ArrayList<>();
     outRecords.add(makeOutMap("v1", 1));
     outRecords.add(makeOutMap("v2", 1));
     outRecords.add(makeOutMap("v1", 1));
@@ -83,15 +87,16 @@ public class TestCountProgram extends DataStreamTestBase {
     return outRecords;
   }
 
-  private Map<String, Object> makeOutMap(String key, Integer count) {
-    Map<String, Object> outMap = new HashMap<>();
-    outMap.put("value", key);
-    outMap.put("count", count);
-    return outMap;
+  private Event makeOutMap(String key, Integer count) {
+    Event outEvent = new Event();
+    outEvent.addField("value", key);
+    outEvent.addField("count", count);
+    return outEvent;
   }
 
-  private EventTimeInput<Map<String, Object>> makeInputData(List<Map<String, Object>> testData, Integer splitIndex) {
-    EventTimeInputBuilder<Map<String, Object>> builder = EventTimeInputBuilder.startWith(testData.get(0));
+  private EventTimeInput<Event> makeInputData(List<Event> testData, Integer
+          splitIndex) {
+    EventTimeInputBuilder<Event> builder = EventTimeInputBuilder.startWith(testData.get(0));
 
     for (int i = 1; i < splitIndex; i++) {
       builder.emit(testData.get(i), after(1, seconds));
@@ -104,20 +109,20 @@ public class TestCountProgram extends DataStreamTestBase {
     return builder;
   }
 
-  private List<Map<String, Object>> makeTestData() {
-    List<Map<String, Object>> inMap = new ArrayList<>();
-    inMap.add(makeMap("v1"));
-    inMap.add(makeMap("v2"));
-    inMap.add(makeMap("v1"));
-    inMap.add(makeMap("v3"));
-    inMap.add(makeMap("v2"));
+  private List<Event> makeTestData() {
+    List<Event> inEvent = new ArrayList<>();
+    inEvent.add(makeMap("v1"));
+    inEvent.add(makeMap("v2"));
+    inEvent.add(makeMap("v1"));
+    inEvent.add(makeMap("v3"));
+    inEvent.add(makeMap("v2"));
 
-    return inMap;
+    return inEvent;
   }
 
-  private Map<String, Object> makeMap(String s) {
-    Map<String, Object> testMap = new HashMap<>();
-    testMap.put("field", s);
-    return testMap;
+  private Event makeMap(String s) {
+    Event testEvent = new Event();
+    testEvent.addField("field", s);
+    return testEvent;
   }
 }

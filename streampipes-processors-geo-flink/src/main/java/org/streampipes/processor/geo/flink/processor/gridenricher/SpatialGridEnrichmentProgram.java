@@ -18,9 +18,8 @@
 package org.streampipes.processor.geo.flink.processor.gridenricher;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processor.geo.flink.AbstractGeoProgram;
-
-import java.util.Map;
 
 public class SpatialGridEnrichmentProgram extends AbstractGeoProgram<SpatialGridEnrichmentParameters> {
 
@@ -29,7 +28,7 @@ public class SpatialGridEnrichmentProgram extends AbstractGeoProgram<SpatialGrid
   }
 
   @Override
-  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>[] messageStream) {
+  protected DataStream<Event> getApplicationLogic(DataStream<Event>[] messageStream) {
     return messageStream[0].flatMap(new SpatialGridEnricher(params.getEnrichmentSettings()));
   }
 }

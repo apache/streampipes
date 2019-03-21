@@ -61,7 +61,7 @@ public class NotificationController extends StandaloneEventSinkDeclarer<Notifica
 
 		NotificationParameters params = new NotificationParameters(graph, title, content);
 
-		return new ConfiguredEventSink<>(params, () -> new NotificationProducer(params));
+		return new ConfiguredEventSink<>(params, NotificationProducer::new);
 	}
 
 }

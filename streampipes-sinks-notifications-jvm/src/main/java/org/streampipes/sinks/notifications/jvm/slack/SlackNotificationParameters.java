@@ -18,6 +18,7 @@
 package org.streampipes.sinks.notifications.jvm.slack;
 
 import com.ullink.slack.simpleslackapi.SlackSession;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class SlackNotificationParameters extends EventSinkBindingParams {
@@ -27,7 +28,9 @@ public class SlackNotificationParameters extends EventSinkBindingParams {
     private String message;
     private SlackSession session;
 
-    public SlackNotificationParameters(String authToken, boolean sendToUser, String userChannel, String message, SlackSession session) {
+    public SlackNotificationParameters(DataSinkInvocation graph, String authToken, boolean
+            sendToUser, String userChannel, String message, SlackSession session) {
+        super(graph);
         this.authToken = authToken;
         this.sendToUser = sendToUser;
         this.userChannel = userChannel;
@@ -39,24 +42,12 @@ public class SlackNotificationParameters extends EventSinkBindingParams {
         return authToken;
     }
 
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
-    }
-
     public boolean isSendToUser() {
         return sendToUser;
     }
 
-    public void setSendToUser(boolean sendToUser) {
-        this.sendToUser = sendToUser;
-    }
-
     public String getUserChannel() {
         return userChannel;
-    }
-
-    public void setUserChannel(String userChannel) {
-        this.userChannel = userChannel;
     }
 
     public String getMessage() {
@@ -67,8 +58,5 @@ public class SlackNotificationParameters extends EventSinkBindingParams {
         return session;
     }
 
-    public void setSession(SlackSession session) {
-        this.session = session;
-    }
 }
 

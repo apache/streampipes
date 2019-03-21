@@ -59,8 +59,7 @@ public class TextFilterController extends StandaloneEventProcessingDeclarer<Text
 
   @Override
   public ConfiguredEventProcessor<TextFilterParameters> onInvocation
-          (DataProcessorInvocation sepa) {
-    ProcessingElementParameterExtractor extractor = getExtractor(sepa);
+          (DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 
     String keyword = extractor.singleValueParameter(KEYWORD_ID, String.class);
     String operation = extractor.selectedSingleValue(OPERATION_ID, String.class);
@@ -73,6 +72,6 @@ public class TextFilterController extends StandaloneEventProcessingDeclarer<Text
             StringOperator.valueOf(operation),
             filterProperty);
 
-    return new ConfiguredEventProcessor<>(staticParam, () -> new TextFilter(staticParam));
+    return new ConfiguredEventProcessor<>(staticParam, TextFilter::new);
   }
 }

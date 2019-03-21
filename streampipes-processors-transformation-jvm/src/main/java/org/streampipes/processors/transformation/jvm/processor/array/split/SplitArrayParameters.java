@@ -26,9 +26,6 @@ public class SplitArrayParameters extends EventProcessorBindingParams {
     private String arrayField;
     private List<String> keepProperties;
 
-    public SplitArrayParameters() {
-    }
-
     public SplitArrayParameters(DataProcessorInvocation graph, String arrayField, List<String> keepProperties) {
         super(graph);
         this.arrayField = arrayField;

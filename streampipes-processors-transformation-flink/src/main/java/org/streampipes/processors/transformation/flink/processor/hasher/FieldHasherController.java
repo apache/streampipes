@@ -25,42 +25,47 @@ import org.streampipes.processors.transformation.flink.processor.hasher.algorith
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Options;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 public class FieldHasherController extends FlinkDataProcessorDeclarer<FieldHasherParameters> {
 
-	private static final String HASH_PROPERTIES = "property-mapping";
-	private static final String HASH_ALGORITHM = "hash-algorithm";
+  private static final String HASH_PROPERTIES = "property-mapping";
+  private static final String HASH_ALGORITHM = "hash-algorithm";
 
-	@Override
-	public DataProcessorDescription declareModel() {
-		return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.fieldhasher", "Field Hasher",
-						"The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values.")
-						.requiredStream(StreamRequirementsBuilder
-										.create()
-										.requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.from
-														(HASH_PROPERTIES, "Field", "The field the hash function should be applied on"), PropertyScope.NONE)
-										.build())
-						.iconUrl(TransformationFlinkConfig.getIconUrl("field-hasher-icon"))
-						.requiredSingleValueSelection(Labels.from("hash-algorithm", "Hash Algorithm", "The hash algorithm that should be used."),
-										Options.from("SHA1", "SHA2", "MD5"))
-						.outputStrategy(OutputStrategies.keep())
-						.supportedFormats(SupportedFormats.jsonFormat())
-						.supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-						.build();
-	}
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.fieldhasher", "Field Hasher",
+            "The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values.")
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.from
+                            (HASH_PROPERTIES, "Field", "The field the hash function should be applied on"), PropertyScope.NONE)
+                    .build())
+            .iconUrl(TransformationFlinkConfig.getIconUrl("field-hasher-icon"))
+            .requiredSingleValueSelection(Labels.from("hash-algorithm", "Hash Algorithm", "The hash algorithm that should be used."),
+                    Options.from("SHA1", "SHA2", "MD5"))
+            .outputStrategy(OutputStrategies.keep())
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+            .build();
+  }
 
-	@Override
-	public FlinkDataProcessorRuntime<FieldHasherParameters> getRuntime(
-					DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
-		String propertyName = extractor.mappingPropertyValue(HASH_PROPERTIES);
-		
-		HashAlgorithmType hashAlgorithmType = HashAlgorithmType.valueOf(extractor.selectedSingleValue(HASH_ALGORITHM, String.class));
-		
-		return new FieldHasherProgram(
-				new FieldHasherParameters(graph, propertyName, hashAlgorithmType));
-	}
+  @Override
+  public FlinkDataProcessorRuntime<FieldHasherParameters> getRuntime(
+          DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+    String propertyName = extractor.mappingPropertyValue(HASH_PROPERTIES);
+
+    HashAlgorithmType hashAlgorithmType = HashAlgorithmType.valueOf(extractor.selectedSingleValue(HASH_ALGORITHM, String.class));
+
+    return new FieldHasherProgram(
+            new FieldHasherParameters(graph, propertyName, hashAlgorithmType));
+  }
 
 }

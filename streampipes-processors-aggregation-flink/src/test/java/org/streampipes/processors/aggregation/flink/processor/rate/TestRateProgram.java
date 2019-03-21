@@ -24,9 +24,13 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.test.generator.InvocationGraphGenerator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RunWith(Parameterized.class)
@@ -66,18 +70,21 @@ public class TestRateProgram extends DataStreamTestBase {
 
     EventRateProgram program = new EventRateProgram(params, true);
 
-    DataStream<Map<String, Object>> stream = program.getApplicationLogic(createTestStream(makeInputData(numEvents, waitTime, timeUnit)));
+    DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData
+            (numEvents, waitTime, timeUnit)));
 
-    ExpectedRecords<Map<String, Object>> expected =
-            new ExpectedRecords<Map<String, Object>>().expectAll(getOutput(timeWindowSize, expectedFrequency, numEvents));
+    ExpectedRecords<Event> expected =
+            new ExpectedRecords<Event>().expectAll(getOutput(timeWindowSize, expectedFrequency,
+                    numEvents));
 
     assertStream(stream, expected);
   }
 
-  private Collection<Map<String, Object>> getOutput(Integer timeWindowSize, Float eventsPerSecond, Integer numEvents) {
-    List<Map<String, Object>> allEvents = new ArrayList<>();
-    Map<String, Object> outMap = new HashMap<>();
-    outMap.put("rate", eventsPerSecond);
+  private Collection<Event> getOutput(Integer timeWindowSize, Float eventsPerSecond, Integer
+          numEvents) {
+    List<Event> allEvents = new ArrayList<>();
+    Event outMap = new Event();
+    outMap.addField("rate", eventsPerSecond);
 
     for (int i = 0; i < numEvents % timeWindowSize; i++) {
       allEvents.add(outMap);
@@ -86,9 +93,9 @@ public class TestRateProgram extends DataStreamTestBase {
     return allEvents;
   }
 
-  private EventTimeInput<Map<String, Object>> makeInputData(Integer count, Integer time, TimeUnit timeUnit) {
-    List<Map<String, Object>> testData = makeTestData(count);
-    EventTimeInputBuilder<Map<String, Object>> builder = EventTimeInputBuilder.startWith(testData.get(0));
+  private EventTimeInput<Event> makeInputData(Integer count, Integer time, TimeUnit timeUnit) {
+    List<Event> testData = makeTestData(count);
+    EventTimeInputBuilder<Event> builder = EventTimeInputBuilder.startWith(testData.get(0));
 
     for (int i = 1; i < testData.size(); i++) {
       builder.emit(testData.get(i), after(time, timeUnit));
@@ -97,10 +104,10 @@ public class TestRateProgram extends DataStreamTestBase {
     return builder;
   }
 
-  private List<Map<String, Object>> makeTestData(Integer count) {
-    List<Map<String, Object>> allEvents = new ArrayList<>();
-    Map<String, Object> event = new HashMap<>();
-    event.put("test", 1);
+  private List<Event> makeTestData(Integer count) {
+    List<Event> allEvents = new ArrayList<>();
+    Event event = new Event();
+    event.addField("test", 1);
 
     for (int i = 0; i < count; i++) {
       allEvents.add(event);

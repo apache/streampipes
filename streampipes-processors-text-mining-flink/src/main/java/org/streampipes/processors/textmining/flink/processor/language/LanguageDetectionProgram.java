@@ -16,9 +16,8 @@ limitations under the License.
 package org.streampipes.processors.textmining.flink.processor.language;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.textmining.flink.AbstractTextMiningProgram;
-
-import java.util.Map;
 
 public class LanguageDetectionProgram extends AbstractTextMiningProgram<LanguageDetectionParameters> {
 
@@ -31,7 +30,7 @@ public class LanguageDetectionProgram extends AbstractTextMiningProgram<Language
   }
 
   @Override
-  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
+  protected DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
     return messageStream[0]
             .flatMap(new LanguageDetection(params.getFieldName()));
   }

@@ -21,12 +21,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.pe.shared.PlaceholderExtractor;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Map;
 
-public class RabbitMqConsumer extends EventSink<RabbitMqParameters> {
+public class RabbitMqConsumer implements EventSink<RabbitMqParameters> {
 
   // For testing: rabbitMQ default port is 15700 for the Axoom use case
 
@@ -36,20 +38,20 @@ public class RabbitMqConsumer extends EventSink<RabbitMqParameters> {
 
   private static final Logger LOG = LoggerFactory.getLogger(RabbitMqConsumer.class);
 
-  public RabbitMqConsumer(RabbitMqParameters params) {
-    super(params);
+  public RabbitMqConsumer() {
     this.dataFormatDefinition = new JsonDataFormatDefinition();
   }
 
   @Override
-  public void bind(RabbitMqParameters parameters) throws SpRuntimeException {
+  public void onInvocation(RabbitMqParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     this.publisher = new RabbitMqPublisher(parameters);
     this.topic = parameters.getRabbitMqTopic();
   }
 
   @Override
-  public void onEvent(Map<String, Object> event, String sourceInfo) {
+  public void onEvent(Event inputEvent) {
     try {
+      Map<String, Object> event = inputEvent.getRaw();
       publisher.fire(dataFormatDefinition.fromMap(event),
               PlaceholderExtractor.replacePlaceholders(topic, event));
     } catch (SpRuntimeException e) {
@@ -58,7 +60,7 @@ public class RabbitMqConsumer extends EventSink<RabbitMqParameters> {
   }
 
   @Override
-  public void discard() throws SpRuntimeException {
+  public void onDetach() throws SpRuntimeException {
     publisher.cleanup();
   }
 }

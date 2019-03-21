@@ -16,11 +16,15 @@
  */
 package org.streampipes.processors.transformation.flink.processor.hasher;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import io.flinkspector.datastream.DataStreamTestBase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithm;
 import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.Md5HashAlgorithm;
 import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.Sha1HashAlgorithm;
@@ -30,10 +34,6 @@ import org.streampipes.processors.transformation.flink.utils.DummyCollector;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 @RunWith(Parameterized.class)
 public class TestFieldHasher extends DataStreamTestBase {
@@ -56,25 +56,25 @@ public class TestFieldHasher extends DataStreamTestBase {
   @Parameterized.Parameter(2)
   public Object valueToHash;
 
-  private Map<String, Object> inputMap;
-  private Map<String, Object> expectedMap;
+  private Event inputMap;
+  private Event expectedMap;
 
   @Before
   public void generateMaps() {
-    inputMap = new HashMap<>();
-    inputMap.put(fieldToHash, valueToHash);
-    inputMap.put(fieldNotToHash, valueToHash);
+    inputMap = new Event();
+    inputMap.addField(fieldToHash, valueToHash);
+    inputMap.addField(fieldNotToHash, valueToHash);
 
-    expectedMap = new HashMap<>();
-    expectedMap.put(fieldToHash, valueToHash);
-    expectedMap.put(fieldNotToHash, valueToHash);
+    expectedMap = new Event();
+    expectedMap.addField(fieldToHash, valueToHash);
+    expectedMap.addField(fieldNotToHash, valueToHash);
   }
 
   @Test
   public void testFieldHasherMd5() {
     HashAlgorithm algorithm = new Md5HashAlgorithm();
     FieldHasher fieldHasher = new FieldHasher(fieldToHash, algorithm);
-    expectedMap.put(fieldToHash, algorithm.toHashValue(valueToHash));
+    expectedMap.addField(fieldToHash, algorithm.toHashValue(valueToHash));
 
     testFieldHasher(fieldHasher);
 
@@ -84,7 +84,7 @@ public class TestFieldHasher extends DataStreamTestBase {
   public void testFieldHasherSha1() {
     HashAlgorithm algorithm = new Sha1HashAlgorithm();
     FieldHasher fieldHasher = new FieldHasher(fieldToHash, algorithm);
-    expectedMap.put(fieldToHash, algorithm.toHashValue(valueToHash));
+    expectedMap.addField(fieldToHash, algorithm.toHashValue(valueToHash));
 
     testFieldHasher(fieldHasher);
 
@@ -94,7 +94,7 @@ public class TestFieldHasher extends DataStreamTestBase {
   public void testFieldHasherSha2() {
     HashAlgorithm algorithm = new Sha2HashAlgorithm();
     FieldHasher fieldHasher = new FieldHasher(fieldToHash, algorithm);
-    expectedMap.put(fieldToHash, algorithm.toHashValue(valueToHash));
+    expectedMap.addField(fieldToHash, algorithm.toHashValue(valueToHash));
 
     testFieldHasher(fieldHasher);
 
@@ -105,7 +105,7 @@ public class TestFieldHasher extends DataStreamTestBase {
     try {
       fieldHasher.flatMap(inputMap, collector);
 
-      List<Map<String, Object>> output = collector.getOutput();
+      List<Event> output = collector.getOutput();
 
       if (output.size() != 1) {
         fail();

@@ -26,8 +26,6 @@ public class GoogleRoutingParameters extends EventProcessorBindingParams {
     private String number;
     private String home;
 
-    public GoogleRoutingParameters() {
-    }
 
     public GoogleRoutingParameters(DataProcessorInvocation graph, String city, String street, String number, String home) {
         super(graph);

@@ -16,29 +16,26 @@
 
 package org.streampipes.processors.filters.jvm.processor.textfilter;
 
-import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
-import org.streampipes.wrapper.standalone.engine.StandaloneEventProcessorEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 
-import java.util.Map;
-
-public class TextFilter extends StandaloneEventProcessorEngine<TextFilterParameters> {
+public class TextFilter implements EventProcessor<TextFilterParameters> {
 
   private TextFilterParameters params;
 
-  public TextFilter(TextFilterParameters params) {
-    super(params);
-  }
-
   @Override
-  public void onInvocation(TextFilterParameters textFilterParameters, DataProcessorInvocation dataProcessorInvocation) {
+  public void onInvocation(TextFilterParameters textFilterParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     this.params = textFilterParameters;
   }
 
   @Override
-  public void onEvent(Map<String, Object> in, String s, SpOutputCollector out) {
+  public void onEvent(Event event, SpOutputCollector out) {
     Boolean satisfiesFilter = false;
-    String value = String.valueOf(in.get(params.getFilterProperty()));
+    String value = event.getFieldBySelector(params.getFilterProperty())
+            .getAsPrimitive()
+            .getAsString();
 
     if (params.getStringOperator() == StringOperator.MATCHES) {
       satisfiesFilter = (value.equals(params.getKeyword()));
@@ -47,7 +44,7 @@ public class TextFilter extends StandaloneEventProcessorEngine<TextFilterParamet
     }
 
     if (satisfiesFilter) {
-      out.onEvent(in);
+      out.collect(event);
     }
   }
 

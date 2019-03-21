@@ -18,9 +18,8 @@
 package org.streampipes.processors.statistics.flink.processor.stat;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.statistics.flink.AbstractStatisticsProgram;
-
-import java.util.Map;
 
 public class StatisticsSummaryProgram extends AbstractStatisticsProgram<StatisticsSummaryParameters> {
 
@@ -33,7 +32,7 @@ public class StatisticsSummaryProgram extends AbstractStatisticsProgram<Statisti
   }
 
   @Override
-  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
+  protected DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
     return messageStream[0].flatMap(new StatisticsSummaryCalculator(bindingParams.getListPropertyName()));
   }
 }

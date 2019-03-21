@@ -15,15 +15,15 @@ limitations under the License.
 */
 package org.streampipes.processors.aggregation.flink.processor.aggregation;
 
+import org.streampipes.model.runtime.Event;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AggregationTestData {
 
-  private List<Map<String, Object>> expectedOutput;
-  private List<Map<String, Object>> input;
+  private List<Event> expectedOutput;
+  private List<Event> input;
 
   public AggregationTestData() {
     buildOutput();
@@ -32,34 +32,34 @@ public class AggregationTestData {
 
   private void buildOutput() {
     this.expectedOutput = new ArrayList<>();
-    this.expectedOutput.add(buildOutputMap(1, 1.0));
-    this.expectedOutput.add(buildOutputMap(2, 1.5));
+    this.expectedOutput.add(buildOutputMap(1.0f, 1.0f));
+    this.expectedOutput.add(buildOutputMap(2.0f, 1.5f));
   }
 
   private void buildInput() {
     this.input = new ArrayList<>();
-    input.add(buildMap(1));
-    input.add(buildMap(2));
+    input.add(buildEvent(1.0f));
+    input.add(buildEvent(2.0f));
   }
 
-  private Map<String, Object> buildOutputMap(Object value, Object aggregatedValue) {
-    Map<String, Object> map = buildMap(value);
-    map.put("aggregatedValue", aggregatedValue);
-    return map;
+  private Event buildOutputMap(Float value, Float aggregatedValue) {
+    Event event = buildEvent(value);
+    event.addField("aggregatedValue", aggregatedValue);
+    return event;
   }
 
-  private Map<String, Object> buildMap(Object value) {
-    Map<String, Object> map = new HashMap<>();
-    map.put("sensorId", "a");
-    map.put("value", value);
-    return map;
+  private Event buildEvent(Float value) {
+   Event event = new Event();
+    event.addField("sensorId", "a");
+    event.addField("value", value);
+    return event;
   }
 
-  public List<Map<String, Object>> getExpectedOutput() {
+  public List<Event> getExpectedOutput() {
     return expectedOutput;
   }
 
-  public List<Map<String, Object>> getInput() {
+  public List<Event> getInput() {
     return input;
   }
 }

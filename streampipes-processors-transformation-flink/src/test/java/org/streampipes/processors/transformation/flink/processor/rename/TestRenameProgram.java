@@ -23,9 +23,13 @@ import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.test.generator.InvocationGraphGenerator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class TestRenameProgram extends DataStreamTestBase {
 
@@ -50,36 +54,36 @@ public class TestRenameProgram extends DataStreamTestBase {
 
     FieldRenamerProgram program = new FieldRenamerProgram(params, true);
 
-    DataStream<Map<String, Object>> stream = program.getApplicationLogic(createTestStream(makeInputData()));
+    DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData()));
 
-    ExpectedRecords<Map<String, Object>> expected =
-            new ExpectedRecords<Map<String, Object>>().expectAll(getOutput(oldPropertyName, newPropertyName));
+    ExpectedRecords<Event> expected =
+            new ExpectedRecords<Event>().expectAll(getOutput(oldPropertyName, newPropertyName));
 
     assertStream(stream, expected);
   }
 
-  private Collection<Map<String, Object>> getOutput(String oldPropertyName, String newPropertyName) {
-    List<Map<String, Object>> allEvents = new ArrayList<>();
-    Map<String, Object> outMap = makeTestData().get(0);
-    Object value = outMap.get(oldPropertyName);
-    outMap.remove(oldPropertyName);
-    outMap.put(newPropertyName, value);
+  private Collection<Event> getOutput(String oldPropertyName, String newPropertyName) {
+    List<Event> allEvents = new ArrayList<>();
+    Event outMap = makeTestData().get(0);
+    Object value = outMap.getFieldBySelector(oldPropertyName);
+    outMap.removeFieldBySelector(oldPropertyName);
+    outMap.addField(newPropertyName, value);
     allEvents.add(outMap);
 
     return allEvents;
   }
 
-  private EventTimeInput<Map<String, Object>> makeInputData() {
-    List<Map<String, Object>> testData = makeTestData();
+  private EventTimeInput<Event> makeInputData() {
+    List<Event> testData = makeTestData();
 
     return EventTimeInputBuilder.startWith(testData.get(0));
   }
 
-  private List<Map<String, Object>> makeTestData() {
-    List<Map<String, Object>> allEvents = new ArrayList<>();
-    Map<String, Object> event = new HashMap<>();
-    event.put("fieldA", "a");
-    event.put("fieldB", "b");
+  private List<Event> makeTestData() {
+    List<Event> allEvents = new ArrayList<>();
+    Event event = new Event();
+    event.addField("fieldA", "a");
+    event.addField("fieldB", "b");
 
     allEvents.add(event);
 

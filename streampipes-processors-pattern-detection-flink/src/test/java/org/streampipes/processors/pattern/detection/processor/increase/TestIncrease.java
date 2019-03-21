@@ -16,6 +16,8 @@
  */
 package org.streampipes.processors.pattern.detection.processor.increase;
 
+import static org.hamcrest.core.IsEqual.equalTo;
+
 import io.flinkspector.core.input.Input;
 import io.flinkspector.core.input.InputBuilder;
 import io.flinkspector.datastream.DataStreamTestBase;
@@ -23,15 +25,17 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.pattern.detection.flink.processor.increase.IncreaseController;
 import org.streampipes.processors.pattern.detection.flink.processor.increase.IncreaseParameters;
 import org.streampipes.processors.pattern.detection.flink.processor.increase.IncreaseProgram;
 import org.streampipes.processors.pattern.detection.flink.processor.increase.Operation;
 import org.streampipes.test.generator.InvocationGraphGenerator;
 
-import java.util.*;
-
-import static org.hamcrest.core.IsEqual.equalTo;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 @RunWith(Parameterized.class)
 public class TestIncrease extends DataStreamTestBase {
@@ -83,13 +87,13 @@ public class TestIncrease extends DataStreamTestBase {
 
     IncreaseProgram program = new IncreaseProgram(params, true);
 
-    DataStream<Map<String, Object>> stream = program.getApplicationLogic(createTestStream(makeInputData(makeMap())));
+    DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData(makeMap())));
 
     assertStream(stream, equalTo(getOutput(shouldMatch)));
   }
 
-  private Collection<Map<String, Object>> getOutput(Boolean shouldMatch) {
-    List<Map<String, Object>> allEvents = new ArrayList<>();
+  private Collection<Event> getOutput(Boolean shouldMatch) {
+    List<Event> allEvents = new ArrayList<>();
 
     if (shouldMatch) {
      allEvents.add(makeMap().get(1));
@@ -98,28 +102,28 @@ public class TestIncrease extends DataStreamTestBase {
     return allEvents;
   }
 
-  private Input<Map<String, Object>> makeInputData(List<Map<String, Object>> inputMap) {
-    List<Map<String, Object>> testData = inputMap;
-    InputBuilder<Map<String, Object>> builder = InputBuilder.startWith(testData.get(0));
+  private Input<Event> makeInputData(List<Event> inputMap) {
+    List<Event> testData = inputMap;
+    InputBuilder<Event> builder = InputBuilder.startWith(testData.get(0));
     for(int i = 1; i < inputMap.size(); i++) {
       builder.emit(inputMap.get(i));
     }
     return builder;
   }
 
-  private List<Map<String, Object>> makeMap() {
-    List<Map<String, Object>> allEvents = new ArrayList<>();
-    Map<String, Object> event1 = new HashMap<>();
-    event1.put("id", "a");
-    event1.put("timestamp", 0);
-    event1.put("value", value1);
+  private List<Event> makeMap() {
+    List<Event> allEvents = new ArrayList<>();
+    Event event1 = new Event();
+    event1.addField("id", "a");
+    event1.addField("timestamp", 0);
+    event1.addField("value", value1);
 
     allEvents.add(event1);
 
-    Map<String, Object> event2 = new HashMap<>();
-    event2.put("id", "a");
-    event2.put("timestamp", waitForMs);
-    event2.put("value", value2);
+    Event event2 = new Event();
+    event2.addField("id", "a");
+    event2.addField("timestamp", waitForMs);
+    event2.addField("value", value2);
 
     allEvents.add(event2);
 

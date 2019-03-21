@@ -20,12 +20,11 @@ package org.streampipes.processors.statistics.flink.processor.stat;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+import org.streampipes.model.runtime.Event;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-public class StatisticsSummaryCalculator implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
+public class StatisticsSummaryCalculator implements FlatMapFunction<Event, Event> {
 
   private String listPropertyName;
 
@@ -34,25 +33,22 @@ public class StatisticsSummaryCalculator implements FlatMapFunction<Map<String, 
   }
 
   @Override
-  public void flatMap(Map<String, Object> in, Collector<Map<String, Object>> out) throws
+  public void flatMap(Event in, Collector<Event> out) throws
           Exception {
-    List<Double> listValues = ((List<Object>) in
-            .get(listPropertyName))
-            .stream()
-            .map(o -> Double.parseDouble(o.toString()))
-            .collect(Collectors.toList());
+    List<Double> listValues = (in.getFieldBySelector(listPropertyName).getAsList().castItems
+            (Double.class));
 
     SummaryStatistics stats = new SummaryStatistics();
 
-    listValues.forEach(lv -> stats.addValue(lv));
+    listValues.forEach(stats::addValue);
 
-    in.put(StatisticsSummaryController.MIN, stats.getMin());
-    in.put(StatisticsSummaryController.MAX, stats.getMax());
-    in.put(StatisticsSummaryController.MEAN, stats.getMean());
-    in.put(StatisticsSummaryController.N, stats.getN());
-    in.put(StatisticsSummaryController.SUM, stats.getSum());
-    in.put(StatisticsSummaryController.STDDEV, stats.getStandardDeviation());
-    in.put(StatisticsSummaryController.VARIANCE, stats.getVariance());
+    in.addField(StatisticsSummaryController.MIN, stats.getMin());
+    in.addField(StatisticsSummaryController.MAX, stats.getMax());
+    in.addField(StatisticsSummaryController.MEAN, stats.getMean());
+    in.addField(StatisticsSummaryController.N, stats.getN());
+    in.addField(StatisticsSummaryController.SUM, stats.getSum());
+    in.addField(StatisticsSummaryController.STDDEV, stats.getStandardDeviation());
+    in.addField(StatisticsSummaryController.VARIANCE, stats.getVariance());
 
     out.collect(in);
 
