@@ -14,6 +14,7 @@ export class AppTransportMonitoringComponent {
     incomingExpanded: boolean = true;
     transportExpanded: boolean = true;
     outgoingExpanded: boolean = true;
+    summaryExpanded: boolean = true;
 
     constructor() {
 

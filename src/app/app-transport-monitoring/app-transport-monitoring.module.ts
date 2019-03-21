@@ -12,6 +12,10 @@ import {OutgoingViewComponent} from "./components/outgoing/outgoing-view.compone
 import {DashboardStatusComponent} from "./components/dashboard-status/dashboard-status.component";
 import {DashboardItemComponent} from "./components/dashboard-item/dashboard-item.component";
 import {DashboardImageComponent} from "./components/dashboard-image/dashboard-image.component";
+import {TransportSelectionComponent} from "./components/transport-selection/transport-selection.component";
+import {AppTransportMonitoringRestService} from "./services/app-transport-monitoring-rest.service";
+import {DashboardStatusFilledComponent} from "./components/dashboard-status-filled/dashboard-status-filled.component";
+import {TransportSummaryComponent} from "./components/transport-summary/transport-summary.component";
 
 @NgModule({
     imports: [
@@ -30,9 +34,13 @@ import {DashboardImageComponent} from "./components/dashboard-image/dashboard-im
         TransportViewComponent,
         DashboardImageComponent,
         DashboardItemComponent,
-        DashboardStatusComponent
+        DashboardStatusComponent,
+        TransportSelectionComponent,
+        DashboardStatusFilledComponent,
+        TransportSummaryComponent
     ],
     providers: [
+        AppTransportMonitoringRestService,
         {
             provide: 'RestApi',
             useFactory: ($injector: any) => $injector.get('RestApi'),

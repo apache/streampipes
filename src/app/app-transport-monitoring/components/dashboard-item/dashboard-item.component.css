@@ -1,8 +1,16 @@
 .dashboard-panel {
     border: 2px solid rgb(156, 156, 156);
+    margin: 5px;
 }
 
 .dashboard-panel-title {
     color:white;
     background: rgb(156, 156, 156);
+    min-height: 30px;
+    font-size:12pt;
+    padding-left:5px;
+}
+
+.dashboard-panel-content {
+    padding: 10px;
 }

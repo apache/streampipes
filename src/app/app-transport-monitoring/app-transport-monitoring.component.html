@@ -11,11 +11,27 @@
     </div>
 
     <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
-        <h1>Transport Summary</h1>
+        <h1>Transport Status</h1>
+
+        <dashboard-item [panelTitle]="'Select Transport Process'" style="margin-bottom:15px;">
+            <transport-selection></transport-selection>
+        </dashboard-item>
+
+        <mat-divider></mat-divider>
+
+        <mat-expansion-panel [expanded]="summaryExpanded">
+            <mat-expansion-panel-header>
+                <h3>Summary</h3>
+            </mat-expansion-panel-header>
+
+            <transport-summary></transport-summary>
+        </mat-expansion-panel>
+
+        <mat-divider></mat-divider>
 
         <mat-expansion-panel [expanded]="outgoingExpanded">
             <mat-expansion-panel-header>
-                <h4>Outgoing Goods</h4>
+                <h3>Outgoing Goods</h3>
             </mat-expansion-panel-header>
 
             <outgoing-view></outgoing-view>
@@ -33,7 +49,7 @@
 
         <mat-expansion-panel [expanded]="incomingExpanded">
             <mat-expansion-panel-header>
-               Incoming Goods
+                <h3>Incoming Goods</h3>
             </mat-expansion-panel-header>
 
             <incoming-view></incoming-view>

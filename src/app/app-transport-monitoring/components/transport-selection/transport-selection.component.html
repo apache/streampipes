@@ -1,0 +1,22 @@
+<div fxFlex="100" fxLayout="row">
+    <div fxFlex="80" fxLayout="column" fxLayoutAlign="start start">
+        <mat-form-field>
+            <mat-label>Process ID</mat-label>
+            <input type="text" matInput [autocomplete]="auto">
+        </mat-form-field>
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let transportProcess of transportProcesses" [value]="transportProcess">
+                {{transportProcess}}
+            </mat-option>
+        </mat-autocomplete>
+        <button mat-button mat-raised-button color="primary">
+            Select Process
+        </button>
+    </div>
+    <div fxFlex="20" fxLayoutAlign="end center">
+        <button mat-button mat-raised-button color="primary">
+            Refresh
+        </button>
+    </div>
+
+</div>

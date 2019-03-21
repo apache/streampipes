@@ -1,6 +1,8 @@
-<div class="dashboard-panel">
-    <div class="dashboard-panel-title">
+<div class="dashboard-panel" fxLayout="column">
+    <div fxLayout="column" fxFlex="100" fxLayoutAlign="center start" class="dashboard-panel-title">
         {{panelTitle}}
     </div>
-    <ng-content></ng-content>
+    <div class="dashboard-panel-content">
+        <ng-content></ng-content>
+    </div>
 </div>

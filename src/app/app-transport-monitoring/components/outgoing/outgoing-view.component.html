@@ -1,3 +1,19 @@
-<dashboard-item [panelTitle]="'Image'">
-<h3>That's an image!</h3>
-</dashboard-item>
+<div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
+    <div fxFlex="50">
+        <dashboard-item [panelTitle]="'Image'">
+            <dashboard-image *ngIf="showImage" [imageBase64]="parcelInfo.image"></dashboard-image>
+        </dashboard-item>
+    </div>
+    <div fxFlex="50" fxLayout="column">
+        <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
+            <dashboard-item fxFlex="100" [panelTitle]="'# Parcels'">
+                <dashboard-status [statusValue]="'100'"></dashboard-status>
+            </dashboard-item>
+        </div>
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
+            <dashboard-item fxFlex="100" [panelTitle]="'# Parcels'">
+                <dashboard-status [statusValue]="'SHAKING'"></dashboard-status>
+            </dashboard-item>
+        </div>
+    </div>
+</div>

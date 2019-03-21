@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
     selector: 'dashboard-image',
@@ -7,13 +7,15 @@ import {Component, EventEmitter, Output} from '@angular/core';
 })
 export class DashboardImageComponent {
 
+    @Input() imageBase64: string;
+    imageData: string;
 
     constructor() {
 
     }
 
     ngOnInit() {
-
+        this.imageData = 'data:image/jpeg;base64,' + this.imageBase64;
     }
 
 

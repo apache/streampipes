@@ -1,4 +1,6 @@
 import {Component, EventEmitter, Output} from '@angular/core';
+import {AppTransportMonitoringRestService} from "../../services/app-transport-monitoring-rest.service";
+import {ActivityDetectionModel} from "../../model/activity-detection.model";
 
 @Component({
     selector: 'transport-view',
@@ -7,13 +9,32 @@ import {Component, EventEmitter, Output} from '@angular/core';
 })
 export class TransportViewComponent {
 
+    processActivities: ActivityDetectionModel[] = [];
 
-    constructor() {
+    constructor(private restService: AppTransportMonitoringRestService) {
 
     }
 
     ngOnInit() {
+        this.fetchProcessActivities();
+    }
 
+    fetchProcessActivities() {
+        this.restService.getActivityDetection(0, 0).subscribe(resp => {
+            this.processActivities = resp;
+        })
+    }
+
+    getShakePercentage() {
+        return this.processActivities.filter(pa => pa.activity == 'shake').length / this.processActivities.length;
+    }
+
+    getThrowPercentage() {
+        return this.processActivities.filter(pa => pa.activity == 'throw').length / this.processActivities.length;
+    }
+
+    getNormalPercentage() {
+        return this.processActivities.filter(pa => pa.activity == 'normal').length / this.processActivities.length;
     }
 
 
