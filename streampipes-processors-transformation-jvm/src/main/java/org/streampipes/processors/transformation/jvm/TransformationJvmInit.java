@@ -26,6 +26,7 @@ import org.streampipes.processors.transformation.jvm.config.TransformationJvmCon
 import org.streampipes.processors.transformation.jvm.processor.array.count.CountArrayController;
 import org.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayController;
 import org.streampipes.processors.transformation.jvm.processor.value.change.ChangedValueDetectionController;
+import org.streampipes.processors.transformation.jvm.processor.value.duration.CalculateDurationController;
 
 public class TransformationJvmInit extends StandaloneModelSubmitter {
 
@@ -34,6 +35,7 @@ public class TransformationJvmInit extends StandaloneModelSubmitter {
             .getInstance()
             .add(new CountArrayController())
             .add(new SplitArrayController())
+            .add(new CalculateDurationController())
             .add(new ChangedValueDetectionController());
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
