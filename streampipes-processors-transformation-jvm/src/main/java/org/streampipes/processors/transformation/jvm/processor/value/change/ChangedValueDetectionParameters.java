@@ -17,14 +17,13 @@
 
 package org.streampipes.processors.transformation.jvm.processor.value.change;
 
-import java.util.List;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class ChangedValueParameters extends EventProcessorBindingParams {
+public class ChangedValueDetectionParameters extends EventProcessorBindingParams {
     private String compareField;
 
-    public ChangedValueParameters(DataProcessorInvocation graph, String compareField) {
+    public ChangedValueDetectionParameters(DataProcessorInvocation graph, String compareField) {
         super(graph);
         this.compareField = compareField;
     }

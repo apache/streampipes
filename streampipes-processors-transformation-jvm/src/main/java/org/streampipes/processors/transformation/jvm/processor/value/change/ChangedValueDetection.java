@@ -17,17 +17,13 @@
 
 package org.streampipes.processors.transformation.jvm.processor.value.change;
 
-import java.util.List;
-import java.util.Map;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
-import org.streampipes.model.runtime.field.AbstractField;
-import org.streampipes.model.runtime.field.NestedField;
 import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
-public class ChangedValue implements EventProcessor<ChangedValueParameters> {
+public class ChangedValueDetection implements EventProcessor<ChangedValueDetectionParameters> {
 
   private static Logger LOG;
 
@@ -35,11 +31,11 @@ public class ChangedValue implements EventProcessor<ChangedValueParameters> {
   private Object lastObject = null;
 
   @Override
-  public void onInvocation(ChangedValueParameters changedValueParameters,
+  public void onInvocation(ChangedValueDetectionParameters changedValueDetectionParameters,
                             SpOutputCollector spOutputCollector,
                             EventProcessorRuntimeContext runtimeContext) {
-    LOG = changedValueParameters.getGraph().getLogger(ChangedValue.class);
-    this.compareParameter = changedValueParameters.getCompareField();
+    LOG = changedValueDetectionParameters.getGraph().getLogger(ChangedValueDetection.class);
+    this.compareParameter = changedValueDetectionParameters.getCompareField();
   }
 
   @Override
@@ -49,9 +45,8 @@ public class ChangedValue implements EventProcessor<ChangedValueParameters> {
     if (newObject != null) {
       if (!newObject.equals(lastObject)) {
         lastObject = newObject;
-        //TODO: Correct? Or how do we specify the correct timestamp (see also controller->outputStrategy)?
-        //TODO: Also maybe check if there is already a timestamp in the eventschema
-        inputEvent.addField("Timestamp", System.currentTimeMillis());
+        //TODO: Better handling of multiple timestamps (if the field "change_detected" is already in the input)?
+        inputEvent.addField("change_detected", System.currentTimeMillis());
         out.collect(inputEvent);
       }
     }

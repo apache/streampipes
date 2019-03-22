@@ -33,10 +33,11 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-public class ChangedValueController extends StandaloneEventProcessingDeclarer<ChangedValueParameters> {
+public class ChangedValueDetectionController extends StandaloneEventProcessingDeclarer<ChangedValueDetectionParameters> {
 
   public static final String COMPARE_FIELD_ID = "compare";
 
+  //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors" +
@@ -49,18 +50,18 @@ public class ChangedValueController extends StandaloneEventProcessingDeclarer<Ch
                                     "property which might change over time"),
                             PropertyScope.NONE)
                     .build())
-            .outputStrategy(OutputStrategies.append(EpProperties.timestampProperty("Timestamp")))
+            .outputStrategy(OutputStrategies.append(EpProperties.timestampProperty("change_detected")))
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<ChangedValueParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<ChangedValueDetectionParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
     String compare = extractor.mappingPropertyValue(COMPARE_FIELD_ID);
 
-    ChangedValueParameters params = new ChangedValueParameters(graph, compare);
-    return new ConfiguredEventProcessor<>(params, ChangedValue::new);
+    ChangedValueDetectionParameters params = new ChangedValueDetectionParameters(graph, compare);
+    return new ConfiguredEventProcessor<>(params, ChangedValueDetection::new);
   }
 }
