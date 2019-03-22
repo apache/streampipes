@@ -66,9 +66,9 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
     String operation = "GT";
 
     if (stringOperation.equals("<=")) {
-      operation = "LT";
-    } else if (stringOperation.equals("<")) {
       operation = "LE";
+    } else if (stringOperation.equals("<")) {
+      operation = "LT";
     } else if (stringOperation.equals(">=")) {
       operation = "GE";
     } else if (stringOperation.equals("==")) {
