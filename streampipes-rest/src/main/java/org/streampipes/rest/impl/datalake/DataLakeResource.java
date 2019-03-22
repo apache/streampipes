@@ -23,12 +23,12 @@ import org.streampipes.rest.impl.datalake.model.DataResult;
 import org.streampipes.rest.impl.datalake.model.InfoResult;
 import org.streampipes.rest.shared.annotation.GsonWithIds;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -44,26 +44,32 @@ public class DataLakeResource extends AbstractRestInterface {
         this.dataLakeManagement = dataLakeManagement;
     }
 
+    @SuppressWarnings("unchecked")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
     @Path("/data/{index}")
-    public Response getAllData(@PathParam("index") String index) {
+    public Response getAllData(@Context UriInfo info, @PathParam("index") String index) {
 
-        DataResult result = this.dataLakeManagement.getEvents(index);
+        DataResult result;
+        String from = info.getQueryParameters().getFirst("from");
+        String to = info.getQueryParameters().getFirst("to");
+        String timestamp = info.getQueryParameters().getFirst("timestamp");
 
-        return Response.ok(result).build();
+        try {
+            if (from != null && to != null && timestamp != null) {
+                result = this.dataLakeManagement.getEvents(index, timestamp, Long.parseLong(from), Long.parseLong(to));
+                return Response.ok(result).build();
 
-    }
+            } else  {
+                result = this.dataLakeManagement.getEvents(index);
+                return Response.ok(result).build();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
-    // TODO add parameters
-    @Path("/data/{index}/from/to")
-    public Response getDataFromTo(@PathParam("index") String index) {
-        DataResult result = this.dataLakeManagement.getEvents(index, 0, 0);
-        return Response.ok(result).build();
+            return Response.serverError().build();
+        }
     }
 
     @GET
@@ -85,17 +91,6 @@ public class DataLakeResource extends AbstractRestInterface {
         List<InfoResult> result = this.dataLakeManagement.getAllInfos();
 
         return Response.ok(result).build();
-    }
-
-
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
-    public Response getAllData() {
-
-        return Response.ok(DataLakeManagement.getData()).build();
-
     }
 
 }

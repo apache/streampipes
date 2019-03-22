@@ -17,15 +17,18 @@
 
 package org.streampipes.rest.impl.datalake;
 
-import org.streampipes.rest.impl.datalake.model.DataResult;
 import org.apache.http.HttpHost;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.*;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.Scroll;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.rest.impl.datalake.model.DataResult;
 import org.streampipes.rest.impl.datalake.model.InfoResult;
 
 import java.io.IOException;
@@ -35,74 +38,16 @@ import java.util.Map;
 
 public class DataLakeManagement {
 
-    @Deprecated
-    public static List<Map<String, Object>> getData() {
-        RestHighLevelClient client = new RestHighLevelClient(
-                RestClient.builder(
-                        new HttpHost("ipe-girlitz.fzi.de", 9200, "http")));
-
-        SearchRequest searchRequest = new SearchRequest("sp_shake1");
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
-        searchRequest.source(searchSourceBuilder);
-
-        SearchResponse searchResponse = null;
-        try {
-            searchResponse = client.search(searchRequest);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        SearchHit[] searchHits = searchResponse.getHits().getHits();
-        List<Map<String, Object>> result = new ArrayList<>();
-        for (SearchHit hit : searchHits) {
-            System.out.println(hit.getSourceAsMap());
-            result.add(hit.getSourceAsMap());
-            // do something with the SearchHit
-        }
-
-        try {
-            client.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return result;
+    public DataResult getEvents(String index) throws IOException {
+        List<Map<String, Object>> events = getDataLakeData(index);
+        DataResult dataResult = new DataResult(events.size(), events);
+        return dataResult;
     }
 
-    @Deprecated
-    public static void main(String... args) throws IOException {
-        RestHighLevelClient client = new RestHighLevelClient(
-                RestClient.builder(
-                        new HttpHost("ipe-girlitz.fzi.de", 9200, "http")));
-
-        SearchRequest searchRequest = new SearchRequest("sp_flow");
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
-        searchRequest.source(searchSourceBuilder);
-
-        SearchResponse searchResponse = client.search(searchRequest);
-
-
-        System.out.println(searchResponse.getHits().getTotalHits());
-        SearchHit[] searchHits = searchResponse.getHits().getHits();
-        for (SearchHit hit : searchHits) {
-            System.out.println(hit.getSourceAsMap());
-            // do something with the SearchHit
-        }
-
-        client.close();
-
-    }
-
-
-    public DataResult getEvents(String index) {
-        return null;
-    }
-
-    public DataResult getEvents(String index, long from, long to) {
-        return null;
+    public DataResult getEvents(String index, String timestampRuntimeName, Long from, Long to) throws IOException {
+        List<Map<String, Object>> events = getDataLakeData(index, timestampRuntimeName, from, to);
+        DataResult dataResult = new DataResult(events.size(), events);
+        return dataResult;
     }
 
     public InfoResult getInfo(String index) {
@@ -112,5 +57,63 @@ public class DataLakeManagement {
     public List<InfoResult> getAllInfos() {
         return null;
     }
+
+
+    public List<Map<String, Object>> getDataLakeData(String index) throws IOException {
+       return getDataLakeData(index, null, -1, -1);
+    }
+
+    public List<Map<String, Object>> getDataLakeData(String index, String timestampRuntimeName, long from, long to) throws IOException {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        String host = BackendConfig.INSTANCE.getDatalakeHost();
+        int port = BackendConfig.INSTANCE.getDatalakePort();
+
+        RestHighLevelClient client = new RestHighLevelClient(
+                RestClient.builder(
+                        new HttpHost(host, port, "http")));
+
+        final Scroll scroll = new Scroll(TimeValue.timeValueMinutes(1L));
+        SearchRequest searchRequest = new SearchRequest(index);
+        searchRequest.scroll(scroll);
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+        if (timestampRuntimeName != null) {
+            searchSourceBuilder.query(QueryBuilders.rangeQuery(timestampRuntimeName).from(from).to(to));
+        }
+
+        searchRequest.source(searchSourceBuilder);
+
+        SearchResponse searchResponse = client.search(searchRequest);
+        String scrollId = searchResponse.getScrollId();
+
+
+        SearchHit[] searchHits = searchResponse.getHits().getHits();
+
+        for (SearchHit hit : searchHits) {
+            result.add(hit.getSourceAsMap());
+        }
+
+        while (searchHits != null && searchHits.length > 0) {
+
+            SearchScrollRequest scrollRequest = new SearchScrollRequest(scrollId);
+            scrollRequest.scroll(scroll);
+            searchResponse = client.scroll(scrollRequest, RequestOptions.DEFAULT);
+            scrollId = searchResponse.getScrollId();
+            searchHits = searchResponse.getHits().getHits();
+            for (SearchHit hit : searchHits) {
+                result.add(hit.getSourceAsMap());
+            }
+        }
+
+
+        ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
+        clearScrollRequest.addScrollId(scrollId);
+        ClearScrollResponse clearScrollResponse = client.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
+
+        return result;
+    }
+
+
 
 }
