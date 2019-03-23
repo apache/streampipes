@@ -21,6 +21,10 @@ import java.util.List;
 
 public class SuccessMessage extends Message {
 
+	public SuccessMessage() {
+		super(true);
+	}
+
 	public SuccessMessage(Notification... notifications) {
 		super(true, notifications);
 	}

@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.streampipes</groupId>
        <artifactId>streampipes-parent</artifactId>
-        <version>0.60.2-SNAPSHOT</version>
+        <version>0.61.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

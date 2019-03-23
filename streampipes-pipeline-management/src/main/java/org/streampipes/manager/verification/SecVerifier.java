@@ -18,7 +18,10 @@
 package org.streampipes.manager.verification;
 
 import org.streampipes.commons.exceptions.SepaParseException;
+import org.streampipes.manager.assets.AssetManager;
 import org.streampipes.model.graph.DataSinkDescription;
+
+import java.io.IOException;
 
 public class SecVerifier extends ElementVerifier<DataSinkDescription> {
 
@@ -56,4 +59,18 @@ public class SecVerifier extends ElementVerifier<DataSinkDescription> {
 		storageApi.update(elementDescription);
 	}
 
+	@Override
+	protected void storeAssets() throws IOException  {
+		if (elementDescription.isIncludesAssets()) {
+			AssetManager.storeAsset(elementDescription.getElementId(), elementDescription.getAppId());
+		}
+	}
+
+	@Override
+	protected void updateAssets() throws IOException {
+		if (elementDescription.isIncludesAssets()) {
+			AssetManager.deleteAsset(elementDescription.getAppId());
+			storeAssets();
+		}
+	}
 }

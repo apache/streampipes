@@ -25,6 +25,7 @@ import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.adapter.generic.format.Parser;
 import org.streampipes.connect.adapter.generic.format.util.JsonEventProperty;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.*;
@@ -50,7 +51,7 @@ public class JsonArrayParser extends Parser {
     }
 
     @Override
-    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) {
+    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
         JsonParserFactory factory = Json.createParserFactory(null);
         String s = data.toString();
         javax.json.stream.JsonParser jsonParser = factory.createParser(data);
@@ -63,6 +64,8 @@ public class JsonArrayParser extends Parser {
                 foundBeginning = true;
             }
         }
+        if (!foundBeginning)
+            throw new ParseException("No JSON Array found");
 
         // Parse all events
         JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
@@ -76,7 +79,7 @@ public class JsonArrayParser extends Parser {
                 try {
                     tmp = jsonDefinition.fromMap(objectMap);
                 } catch (SpRuntimeException e) {
-                    e.printStackTrace();
+                   throw new ParseException(e.toString());
                 }
 //                    handleEvent(new EventObjectEndEvent(parseObject(tmp)));
                 // TODO decide what happens id emit returns false

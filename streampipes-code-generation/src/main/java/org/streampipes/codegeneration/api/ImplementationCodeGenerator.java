@@ -17,16 +17,15 @@
 
 package org.streampipes.codegeneration.api;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
+import org.streampipes.commons.zip.ZipFileGenerator;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.streampipes.model.client.deployment.DeploymentConfiguration;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.RandomStringUtils;
-
-import org.streampipes.model.base.ConsumableStreamPipesEntity;
-import org.streampipes.model.client.deployment.DeploymentConfiguration;
-import org.streampipes.codegeneration.ZipFileGenerator;
 
 public abstract class ImplementationCodeGenerator extends CodeGenerator {
 
@@ -80,7 +79,7 @@ public abstract class ImplementationCodeGenerator extends CodeGenerator {
 
 		String zipFolder = generatedProjects + new Date().getTime() + "_";
 		File outputFile = new File(zipFolder + config.getArtifactId() + ".zip");
-		new ZipFileGenerator(new File(getTempDir()), outputFile).makeZip();
+		new ZipFileGenerator(new File(getTempDir()), outputFile).makeZipToFile();
 		return outputFile;
 	}
 }

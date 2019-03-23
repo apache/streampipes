@@ -19,6 +19,7 @@ package org.streampipes.connect.adapter.generic.format.json.geojson;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.streampipes.connect.adapter.generic.format.geojson.GeoJsonParser;
+import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.schema.EventSchema;
 
 import java.io.IOException;
@@ -59,7 +60,7 @@ public class GeoJsonTest {
 
 
     @Test
-    public void parseOneEvent() {
+    public void parseOneEvent() throws AdapterException {
 
         String jo = getFullExampleWithOneElement();
 
@@ -80,7 +81,7 @@ public class GeoJsonTest {
 
 
     @Test
-    public void parseThreeEvents() {
+    public void parseThreeEvents() throws AdapterException {
 
         String jo = getFullExampleWithThreeElements();
         GeoJsonParser parser = new GeoJsonParser();

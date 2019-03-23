@@ -25,13 +25,17 @@ import java.util.Map;
 public class ValueEventTransformer implements ValueTransformationRule {
 
     private List<UnitTransformationRule> unitTransformationRules;
+    private List<TimestampTranformationRule> timestampTranformationRules;
 
     public ValueEventTransformer(List<ValueTransformationRule> rules) {
         this.unitTransformationRules = new ArrayList<>();
+        timestampTranformationRules = new ArrayList<>();
 
         for (TransformationRule rule : rules) {
             if (rule instanceof UnitTransformationRule) {
                 this.unitTransformationRules.add((UnitTransformationRule) rule);
+            } else if (rule instanceof TimestampTranformationRule) {
+                this.timestampTranformationRules.add((TimestampTranformationRule) rule);
             }
         }
     }
@@ -49,6 +53,11 @@ public class ValueEventTransformer implements ValueTransformationRule {
             event = unitRule.transform(event);
         }
 
+        for (TimestampTranformationRule unitRule : timestampTranformationRules) {
+            event = unitRule.transform(event);
+        }
+
+
         return event;
     }
 
@@ -59,5 +68,13 @@ public class ValueEventTransformer implements ValueTransformationRule {
 
     public void setUnitTransformationRules(List<UnitTransformationRule> unitTransformationRules) {
         this.unitTransformationRules = unitTransformationRules;
+    }
+
+    public List<TimestampTranformationRule> getTimestampTranformationRules() {
+        return timestampTranformationRules;
+    }
+
+    public void setTimestampTranformationRules(List<TimestampTranformationRule> timestampTranformationRules) {
+        this.timestampTranformationRules = timestampTranformationRules;
     }
 }

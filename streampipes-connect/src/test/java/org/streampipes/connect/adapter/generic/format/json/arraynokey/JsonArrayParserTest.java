@@ -21,6 +21,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
+import org.streampipes.connect.exception.AdapterException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +33,7 @@ import static org.junit.Assert.assertEquals;
 public class JsonArrayParserTest {
 
     @Test
-    public void parseOneEvent() {
+    public void parseOneEvent() throws AdapterException {
 
         String jo = getJsonArrayWithThreeElements();
 
@@ -48,7 +49,7 @@ public class JsonArrayParserTest {
 
 
     @Test
-    public void parseThreeEvents() {
+    public void parseThreeEvents() throws AdapterException {
 
         String jo = getJsonArrayWithThreeElements();
         JsonArrayParser parser = new JsonArrayParser();
@@ -77,7 +78,7 @@ public class JsonArrayParserTest {
 
 
     @Test
-    public void parseMoreThenExist() {
+    public void parseMoreThenExist() throws AdapterException {
 
         String jo = new JSONArray()
                 .put(new JSONObject().put("one", 1))

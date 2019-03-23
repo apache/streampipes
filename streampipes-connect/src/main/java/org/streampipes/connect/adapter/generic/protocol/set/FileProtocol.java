@@ -28,6 +28,9 @@ import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.exception.ParseException;
+import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
@@ -108,6 +111,8 @@ public class FileProtocol extends Protocol {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }  catch (ParseException e) {
+            logger.error("Error while parsing: " + e.getMessage());
         }
     }
 
@@ -118,7 +123,7 @@ public class FileProtocol extends Protocol {
 
 
     @Override
-    public GuessSchema getGuessSchema() {
+    public GuessSchema getGuessSchema() throws ParseException {
 
 
         InputStream dataInputStream = getDataFromEndpoint();
@@ -153,7 +158,7 @@ public class FileProtocol extends Protocol {
     }
 
 
-    public InputStream getDataFromEndpoint() {
+    public InputStream getDataFromEndpoint() throws ParseException {
         FileReader fr = null;
         InputStream inn = null;
 
@@ -164,15 +169,15 @@ public class FileProtocol extends Protocol {
             inn = new FileInputStream(fileUri);
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            throw new ParseException("File not found: " + fileUri);
         }
+        if (inn == null)
+            throw new ParseException("Could not receive Data from file: " + fileUri);
 
         return inn;
     }
     @Override
-    public List<Map<String, Object>> getNElements(int n) {
+    public List<Map<String, Object>> getNElements(int n) throws ParseException {
         List<Map<String, Object>> result = new ArrayList<>();
 
         InputStream dataInputStream = getDataFromEndpoint();

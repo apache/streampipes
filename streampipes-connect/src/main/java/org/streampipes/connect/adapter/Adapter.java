@@ -24,13 +24,14 @@ import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.generic.pipeline.elements.*;
 import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
 import org.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
-import org.streampipes.model.connect.rules.value.TimestampTransformationRuleDescription;
-import org.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
+import org.streampipes.model.grounding.TransportProtocol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,16 +72,22 @@ public abstract class Adapter<T extends AdapterDescription> {
 
     public abstract Adapter getInstance(T adapterDescription);
 
-    public abstract GuessSchema getSchema(T adapterDescription) throws AdapterException;
+    public abstract GuessSchema getSchema(T adapterDescription) throws AdapterException, ParseException;
 
     public abstract String getId();
+
+    public void changeEventGrounding(TransportProtocol transportProtocol) {
+        List<AdapterPipelineElement> pipelineElements =  this.adapterPipeline.getPipelineElements();
+        SendToKafkaAdapterSink sink = (SendToKafkaAdapterSink) pipelineElements.get(pipelineElements.size() - 1);
+        sink.changeTransportProtocol(transportProtocol);
+    }
 
     private AdapterPipeline getAdapterPipeline(T adapterDescription) {
 
         List<AdapterPipelineElement> pipelineElements = new ArrayList<>();
 
         // Must be before the schema transformations to ensure that user can move this event property
-        TimestampTransformationRuleDescription timestampTransformationRuleDescription = getTimestampRule(adapterDescription);
+        AddTimestampRuleDescription timestampTransformationRuleDescription = getTimestampRule(adapterDescription);
         if (timestampTransformationRuleDescription != null) {
             pipelineElements.add(new AddTimestampPipelineElement(timestampTransformationRuleDescription.getRuntimeKey()));
         }
@@ -116,8 +123,8 @@ public abstract class Adapter<T extends AdapterDescription> {
         return getRule(adapterDescription, RemoveDuplicatesTransformationRuleDescription.class);
     }
 
-    private TimestampTransformationRuleDescription getTimestampRule(T adapterDescription) {
-        return getRule(adapterDescription, TimestampTransformationRuleDescription.class);
+    private AddTimestampRuleDescription getTimestampRule(T adapterDescription) {
+        return getRule(adapterDescription, AddTimestampRuleDescription.class);
     }
 
     private AddValueTransformationRuleDescription getAddValueRule(T adapterDescription) {

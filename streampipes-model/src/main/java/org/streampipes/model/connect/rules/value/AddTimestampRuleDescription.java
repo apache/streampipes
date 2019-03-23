@@ -25,18 +25,18 @@ import org.streampipes.vocabulary.StreamPipes;
 import javax.persistence.Entity;
 
 @Namespaces({StreamPipes.NS_PREFIX, StreamPipes.NS})
-@RdfsClass(StreamPipes.TIMESTAMP_RULE_DESCRIPTION)
+@RdfsClass(StreamPipes.ADD_TIMESTAMP_RULE_DESCRIPTION)
 @Entity
-public class TimestampTransformationRuleDescription extends ValueTransformationRuleDescription {
+public class AddTimestampRuleDescription extends ValueTransformationRuleDescription {
 
     @RdfProperty(StreamPipes.RUNTIME_KEY)
     private String runtimeKey;
 
-    public TimestampTransformationRuleDescription() {
+    public AddTimestampRuleDescription() {
         super();
     }
 
-    public TimestampTransformationRuleDescription(TimestampTransformationRuleDescription other) {
+    public AddTimestampRuleDescription(AddTimestampRuleDescription other) {
         super(other);
         this.runtimeKey = other.getRuntimeKey();
     }

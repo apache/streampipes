@@ -20,6 +20,7 @@ package org.streampipes.connect.adapter.generic.format.image;
 import org.apache.commons.io.IOUtils;
 import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.adapter.generic.format.Parser;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
@@ -46,7 +47,7 @@ public class ImageParser extends Parser {
     }
 
     @Override
-    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) {
+    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(data));
 
         try {
@@ -54,7 +55,7 @@ public class ImageParser extends Parser {
             System.out.println("Parser " + result.toString());
             emitBinaryEvent.emit(result);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ParseException(e.getMessage());
         }
 
     }

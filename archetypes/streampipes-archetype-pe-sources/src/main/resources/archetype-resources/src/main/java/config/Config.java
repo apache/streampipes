@@ -3,112 +3,63 @@
 #set( $symbol_escape = '\' )
 package ${package}.config;
 
+import org.streampipes.config.SpConfig;
+import org.streampipes.container.model.PeConfig;
 
-import ${groupId}.config.SpConfig;
-
-public enum ActionConfig {
+public enum Config implements PeConfig {
 
   INSTANCE;
 
   private SpConfig config;
-  private final static String HOST = "host";
-  private final static String PORT = "port";
-  private final static String KAFKA_HOST = "kafka_host";
-  private final static String KAFKA_PORT = "kafka_port";
-  private final static String ZOOKEEPER_HOST = "zookeeper_host";
-  private final static String ZOOKEEPER_PORT = "zookeeper_port";
-  private final static String JMS_HOST = "jms_host";
-  private final static String JMS_PORT = "jms_port";
-  private final static String NGINX_HOST = "nginx_host";
-  private final static String NGINX_PORT = "nginx_port";
-  private final static String ICON_HOST = "icon_host";
-  private final static String ICON_PORT = "icon_port";
+  public static final String JAR_FILE = "./streampipes-processing-element-container.jar";
 
+  private final static String SERVICE_ID = "pe/${package}";
 
-  public final static String serverUrl;
-  public final static String iconBaseUrl;
+  Config() {
+    config = SpConfig.getSpConfig(SERVICE_ID);
 
-  ActionConfig() {
-    config = SpConfig.getSpConfig("pe/${package}");
+    config.register(ConfigKeys.HOST, "${artifactId}", "Hostname for the pe source component");
+    config.register(ConfigKeys.PORT, 8090, "Port for the pe source component");
+    config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
+    config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
 
-    config.register(HOST, "${projectName}", "Hostname for the pe sinks");
-    config.register(PORT, 8090, "Port for the pe sinks");
-    config.register(NGINX_HOST, System.getenv("STREAMPIPES_HOST"), "External hostname of " +
-            "StreamPipes Nginx");
-    config.register(NGINX_PORT, 80, "External port of StreamPipes Nginx");
-    config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");
-    config.register(KAFKA_PORT, 9092, "Port for kafka of the pe sinks project");
-    config.register(ZOOKEEPER_HOST, "zookeeper", "Host for zookeeper of the pe sinks project");
-    config.register(ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe sinks project");
-    config.register(JMS_HOST, "activemq", "Hostname for pe actions service for active mq");
-    config.register(JMS_PORT, 61616, "Port for pe actions service for active mq");
-    config.register(ICON_HOST, "backend", "Hostname for the icon host");
-    config.register(ICON_PORT, 80, "Port for the icons in nginx");
+    config.register(ConfigKeys.SERVICE_NAME, "${packageName}", "The name of the service");
+
   }
 
-  static {
-    serverUrl = ActionConfig.INSTANCE.getHost() + ":" + ActionConfig.INSTANCE.getPort();
-    iconBaseUrl = "http://" + ActionConfig.INSTANCE.getIconHost() + ":" + ActionConfig.INSTANCE.getIconPort() + "/assets/img/pe_icons";
+  @Override
+  public String getHost() {
+    return config.getString(ConfigKeys.HOST);
   }
+
+  @Override
+  public int getPort() {
+    return config.getInteger(ConfigKeys.PORT);
+  }
+
+  public static final String iconBaseUrl = "http://" + Config.INSTANCE.getIconHost() + ":" +
+          Config.INSTANCE.getIconPort() + "/assets/img/pe_icons";
 
   public static final String getIconUrl(String pictureName) {
     return iconBaseUrl + "/" + pictureName + ".png";
   }
 
-  public String getHost() {
-    return config.getString(HOST);
-  }
-
-  public int getPort() {
-    return config.getInteger(PORT);
-  }
-
-  public String getKafkaHost() {
-    return config.getString(KAFKA_HOST);
-  }
-
-  public int getKafkaPort() {
-    return config.getInteger(KAFKA_PORT);
-  }
-
-  public String getKafkaUrl() {
-    return getKafkaHost() + ":" + getKafkaPort();
-  }
-
-  public String getZookeeperHost() {
-    return config.getString(ZOOKEEPER_HOST);
-  }
-
-  public int getZookeeperPort() {
-    return "tcp://" + config.getInteger(ZOOKEEPER_PORT);
-  }
-
-  public String getJmsHost() {
-    return config.getString(JMS_HOST);
-  }
-
-  public int getJmsPort() {
-    return config.getInteger(JMS_PORT);
-  }
-
-  public String getJmsUrl() {
-    return getJmsHost() + ":" + getJmsPort();
-  }
-
-  public String getNginxHost() {
-    return config.getString(NGINX_HOST);
-  }
-
-  public Integer getNginxPort() {
-    return config.getInteger(NGINX_PORT);
-  }
-
   public String getIconHost() {
-    return config.getString(ICON_HOST);
+    return config.getString(ConfigKeys.ICON_HOST);
   }
 
   public int getIconPort() {
-    return config.getInteger(ICON_PORT);
+    return config.getInteger(ConfigKeys.ICON_PORT);
+  }
+
+  @Override
+  public String getId() {
+    return SERVICE_ID;
+  }
+
+  @Override
+  public String getName() {
+    return config.getString(ConfigKeys.SERVICE_NAME);
   }
 
 }

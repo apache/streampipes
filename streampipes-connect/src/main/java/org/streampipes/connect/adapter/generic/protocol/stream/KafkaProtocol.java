@@ -37,6 +37,7 @@ import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectPars
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
@@ -93,7 +94,7 @@ public class KafkaProtocol extends BrokerProtocol {
     }
 
     @Override
-    protected List<byte[]> getNByteElements(int n) {
+    protected List<byte[]> getNByteElements(int n) throws ParseException {
         final Consumer<Long, String> consumer = createConsumer(this.brokerUrl, this.topic);
 
         consumer.subscribe(Arrays.asList(this.topic), new ConsumerRebalanceListener() {
@@ -142,7 +143,7 @@ public class KafkaProtocol extends BrokerProtocol {
         return resultEventsByte;
     }
 
-    public static void main(String... args) {
+    public static void main(String... args) throws ParseException {
         Parser parser = new JsonObjectParser();
         Format format = new JsonObjectFormat();
         KafkaProtocol kp = new KafkaProtocol(parser, format, "localhost:9092", "org.streampipes.examples.flowrate-1");
@@ -216,7 +217,9 @@ public class KafkaProtocol extends BrokerProtocol {
                 parser.parse(IOUtils.toInputStream(new String(payload), "UTF-8"), stk);
             } catch (IOException e) {
                 logger.error("Adapter " + ID + " could not read value!",e);
-            }
+            } catch (ParseException e) {
+                logger.error("Error while parsing: " + e.getMessage());
+        }
         }
     }
 

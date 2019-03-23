@@ -31,6 +31,7 @@ import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
@@ -124,7 +125,7 @@ public class HDFSProtocol extends Protocol {
     }
 
     @Override
-    public GuessSchema getGuessSchema() {
+    public GuessSchema getGuessSchema() throws ParseException {
         int n = 2;
         GuessSchema result = null;
 
@@ -145,7 +146,7 @@ public class HDFSProtocol extends Protocol {
     }
 
     @Override
-    public List<Map<String, Object>> getNElements(int n) {
+    public List<Map<String, Object>> getNElements(int n) throws ParseException {
         List<Map<String, Object>> result = new ArrayList<>();
 
         InputStream inputStream = getInputStreamFromFile(getFiles().get(0));
@@ -192,7 +193,11 @@ public class HDFSProtocol extends Protocol {
                 logger.info("+++ New files found, newest file Date: " + this.knownNewestFileDate + " (in milliseconds form 1970)");
             } else
                 logger.info("No new files found");
-            files.forEach(file -> parser.parse(getInputStreamFromFile(file), stk));
+            try {
+                files.forEach(file -> parser.parse(getInputStreamFromFile(file), stk));
+            } catch (ParseException e) {
+                logger.error("Error while parsing: " + e.getMessage());
+            }
         };
 
 
@@ -302,13 +307,14 @@ public class HDFSProtocol extends Protocol {
         return conf;
     }
 
-    private FSDataInputStream getInputStreamFromFile(LocatedFileStatus locatedFileStatus) {
+    private FSDataInputStream getInputStreamFromFile(LocatedFileStatus locatedFileStatus) throws ParseException {
         FileSystem fs = getFilesSystem();
         FSDataInputStream inputStream = null;
         try {
             inputStream = fs.open(locatedFileStatus.getPath());
         } catch (IOException e) {
-            e.printStackTrace();
+            if (inputStream == null)
+                throw new ParseException(e.getMessage());
         }
         return inputStream;
     }

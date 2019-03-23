@@ -19,12 +19,12 @@ package org.streampipes.connect.adapter.generic.pipeline.elements;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.eclipse.rdf4j.query.algebra.Str;
 import org.streampipes.connect.adapter.GroundingService;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.TransportProtocol;
 
 import java.util.Map;
 
@@ -51,12 +51,16 @@ public class SendToKafkaAdapterSink implements AdapterPipelineElement  {
         try {
             if (event != null) {
                 producer.publish(objectMapper.writeValueAsBytes(event));
-                System.out.println("send to kafka: " + event);
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
         return null;
+    }
+
+    public void changeTransportProtocol(TransportProtocol transportProtocol) {
+        producer.disconnect();
+        producer.connect((KafkaTransportProtocol) transportProtocol);
     }
 }

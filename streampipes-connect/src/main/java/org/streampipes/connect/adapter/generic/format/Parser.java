@@ -19,6 +19,7 @@ package org.streampipes.connect.adapter.generic.format;
 
 
 import org.streampipes.connect.GetNEvents;
+import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.connect.EmitBinaryEvent;
@@ -30,12 +31,19 @@ public abstract class Parser {
 
     public abstract Parser getInstance(FormatDescription formatDescription);
 
-    public abstract void parse(InputStream data, EmitBinaryEvent emitBinaryEvent);
+    public abstract void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException;
 
-    public List<byte[]> parseNEvents(InputStream data, int n) {
+    public List<byte[]> parseNEvents(InputStream data, int n) throws ParseException {
         GetNEvents gne = new GetNEvents(n);
 
-        parse(data, gne);
+        try {
+            parse(data, gne);
+        } catch (ParseException e) {
+            throw new ParseException(e.getMessage());
+        } catch (Exception e) {
+            throw new ParseException("Error while parse the data with the "
+                    + this.getClass().getSimpleName() + ": " + e.getMessage());
+        }
 
         return gne.getEvents();
     }

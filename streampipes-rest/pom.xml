@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.60.2-SNAPSHOT</version>
+		<version>0.61.1-SNAPSHOT</version>
 	</parent>
 	<name>StreamPipes REST API</name>
 	<artifactId>streampipes-rest</artifactId>
@@ -79,7 +79,7 @@
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>elasticsearch-rest-high-level-client</artifactId>
-			<version>6.2.1</version>
+			<version>6.6.2</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -38,6 +38,11 @@ public abstract class AbstractPipelineElementBuilder<BU extends AbstractPipeline
         return me();
     }
 
+    public BU providesAssets() {
+        this.elementDescription.setIncludesAssets(true);
+        return me();
+    }
+
     protected <SP extends StaticProperty> SP prepareStaticProperty(Label label, SP element) {
         element.setInternalName(label.getInternalId());
         element.setDescription(label.getDescription());
