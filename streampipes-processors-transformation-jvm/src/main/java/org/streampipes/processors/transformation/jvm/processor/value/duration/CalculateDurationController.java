@@ -38,7 +38,7 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDecl
 public class CalculateDurationController extends StandaloneEventProcessingDeclarer<CalculateDurationParameters> {
 
   public static final String START_TS_FIELD_ID = "start_ts";
-  public static final String END_TS_FIELD_ID= "end_ts";
+  public static final String END_TS_FIELD_ID = "end_ts";
   public static final String DURATION_FIELD_NAME = "duration";
   public static final String UNIT_FIELD_ID = "unit_field"; // hours,
 
