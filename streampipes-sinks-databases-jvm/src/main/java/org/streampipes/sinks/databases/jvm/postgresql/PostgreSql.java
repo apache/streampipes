@@ -18,24 +18,21 @@ package org.streampipes.sinks.databases.jvm.postgresql;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.logging.api.Logger;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.sinks.databases.jvm.jdbcclient.JdbcClient;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
-import java.sql.SQLException;
 import java.util.Map;
 
-public class PostgreSql extends EventSink<PostgreSqlParameters> {
+public class PostgreSql implements EventSink<PostgreSqlParameters> {
 
   private JdbcClient jdbcClient;
 
   private static Logger LOG;
 
-  public PostgreSql(PostgreSqlParameters params) {
-    super(params);
-  }
-
   @Override
-  public void bind(PostgreSqlParameters parameters) throws SpRuntimeException {
+  public void onInvocation(PostgreSqlParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     LOG = parameters.getGraph().getLogger(PostgreSql.class);
 
     // get(0) because it is the only input stream of the sink (and not two)
@@ -57,7 +54,7 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
   }
 
   @Override
-  public void onEvent(Map<String, Object> event, String sourceInfo) {
+  public void onEvent(Event event) {
     try {
       jdbcClient.save(event);
     } catch (SpRuntimeException e) {
@@ -68,7 +65,7 @@ public class PostgreSql extends EventSink<PostgreSqlParameters> {
   }
 
   @Override
-  public void discard() throws SpRuntimeException {
+  public void onDetach() throws SpRuntimeException {
     jdbcClient.closeAll();
   }
 }

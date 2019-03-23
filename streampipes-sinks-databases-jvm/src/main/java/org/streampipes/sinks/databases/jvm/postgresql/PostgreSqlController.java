@@ -94,6 +94,6 @@ public class PostgreSqlController  extends StandaloneEventSinkDeclarer<PostgreSq
         user,
         password);
 
-    return new ConfiguredEventSink<>(params, () -> new PostgreSql(params));
+    return new ConfiguredEventSink<>(params, PostgreSql::new);
   }
 }

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.logging.api.Logger;
+import org.streampipes.model.runtime.Event;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventPropertyPrimitive;
@@ -269,7 +270,8 @@ public class JdbcClient {
 	 * @param event The event which should be saved to the Postgres table
 	 * @throws SpRuntimeException When there was an error in the saving process
 	 */
-	public void save(final Map<String, Object> event) throws SpRuntimeException {
+	public void save(final Event event) throws SpRuntimeException {
+		Map<String, Object> eventMap = event.getRaw();
 		if (event == null) {
 			throw new SpRuntimeException("event is null");
 		}
@@ -279,7 +281,7 @@ public class JdbcClient {
       tableExists = true;
 		}
 		try {
-			executePreparedStatement(event);
+			executePreparedStatement(eventMap);
 		} catch (SQLException e) {
 			if (e.getSQLState().substring(0, 2).equals("42")) {
 				// If the table does not exists (because it got deleted or something, will cause the error
@@ -290,7 +292,7 @@ public class JdbcClient {
         tableExists = true;
 
         try {
-          executePreparedStatement(event);
+          executePreparedStatement(eventMap);
         } catch (SQLException e1) {
           throw new SpRuntimeException(e1.getMessage());
         }
