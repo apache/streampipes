@@ -25,12 +25,14 @@ import { TransitionService } from "./transition.service";
 import { ShepherdService } from "./tour/shepherd.service";
 import { TourProviderService } from "./tour/tour-provider.service";
 import { PropertySelectorService } from "./property-selector.service";
+import { RouteTransitionInterceptorService } from "./route-transition-interceptor.service";
 
 import CreatePipelineTour from './tour/create-pipeline-tour.constants';
 import DashboardTour from './tour/dashboard-tour.constants';
 import AdapterTour from './tour/adapter-tour.constants';
 import AdapterTour2 from './tour/adapter-tour-2.constants';
 import AdapterTour3 from './tour/adapter-tour-3.constants';
+
 
 export default angular.module('sp.services', [spConstants])
 	.service('ImageChecker', ImageChecker)
@@ -50,6 +52,7 @@ export default angular.module('sp.services', [spConstants])
     .service('DeploymentService', DeploymentService)
     .service('JsplumbConfigService', JsplumbConfigService)
     .service('PipelineElementIconService', PipelineElementIconService)
+	.service('RouteTransitionInterceptorService', RouteTransitionInterceptorService)
 	.service('TransitionService', TransitionService)
 	.service('ShepherdService', ShepherdService)
 	.service('TourProviderService', TourProviderService)

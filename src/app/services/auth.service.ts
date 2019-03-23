@@ -1,10 +1,13 @@
+import {RestApi} from "./rest-api.service";
+import {AuthStatusService} from "./auth-status.service";
+
 export class AuthService {
 
-    AuthStatusService: any;
+    AuthStatusService: AuthStatusService;
     $rootScope: any;
     $location: any;
     $state: any;
-    RestApi: any;
+    RestApi: RestApi;
 
     constructor($rootScope, $location, $state, RestApi, AuthStatusService) {
         this.AuthStatusService = AuthStatusService;
@@ -14,52 +17,33 @@ export class AuthService {
         this.RestApi = RestApi;
     }
 
-    authenticate() {
-        return this.RestApi.getAuthc()
-            .then(
-                response => {
-                    if (response.data.success == false) {
-                        this.AuthStatusService.authenticated = false;
-                        this.RestApi.configured()
-                            .then(response => {
-                                if (response.data.configured) {
-                                    this.$rootScope.appConfig = response.data.appConfig;
-                                    if (!this.$location.path().startsWith("/sso") && !this.$location.path().startsWith("/streampipes/login")) {
-                                        this.$state.go("login")
-                                    }
-                                }
-                                else this.$state.go("setup")
-                            })
-                    }
-                    else {
-                        this.AuthStatusService.username = response.data.info.authc.principal.username;
-                        this.AuthStatusService.email = response.data.info.authc.principal.email;
-                        this.AuthStatusService.authenticated = true;
-                        this.AuthStatusService.token = response.data.token;
-                        this.RestApi.configured()
-                            .then(response => {
-                                if (response.data.configured) {
-                                    this.$rootScope.appConfig = response.data.appConfig;
-                                }
-                            });
-                        this.RestApi.getNotifications()
-                            .then(notifications => {
-                                this.$rootScope.unreadNotifications = notifications.data;
-                            });
+    checkConfiguration() {
+        return this.RestApi.configured().then(response => {
+            if (response.data.configured) {
+                this.AuthStatusService.configured = true;
 
-                    }
-                },
-                response => {
-                    this.AuthStatusService.username = undefined;
-                    this.AuthStatusService.authenticated = false;
-                    this.RestApi.configured()
-                        .then(conf => {
-                            if (conf.data.configured) {
-                            }
-                            else this.$state.go("setup")
-                        })
-                });
+                this.$rootScope.appConfig = response.data.appConfig;
+            } else {
+                this.AuthStatusService.configured = false;
+            }
+        });
+    }
+
+    checkAuthentication() {
+        return this.RestApi.getAuthc().then(response => {
+            if (response.data.success) {
+                this.AuthStatusService.username = response.data.info.authc.principal.username;
+                this.AuthStatusService.email = response.data.info.authc.principal.email;
+                this.AuthStatusService.authenticated = true;
+                this.AuthStatusService.token = response.data.token;
+
+                // this.RestApi.getNotifications()
+                //     .then(notifications => {
+                //         this.$rootScope.unreadNotifications = notifications.data;
+                //     });
+            } else {
+                this.AuthStatusService.authenticated = false;
+            }
+        })
     }
 }
-
-//AuthService.$inject = ['$rootScope', '$location', '$state', 'RestApi', 'AuthStatusService'];

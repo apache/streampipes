@@ -1,7 +1,7 @@
 <md-toolbar class="md-primary md-hue-2 top-nav">
     <div class="md-toolbar-tools">
         <div flex="40" layout layout-align="start center">
-            <md-button class="md-icon-button" aria-label="Settings" ng-click="appCtrl.toggleLeft()" ng-show="appCtrl.authenticated">
+            <md-button class="md-icon-button" aria-label="Settings" ng-click="toolbarCtrl.toggleLeft()" ng-show="toolbarCtrl.authenticated">
             <i class="material-icons md-36">menu</i>
             </md-button>
             <h1 class="md-toolbar-tools">
@@ -16,24 +16,24 @@
         </div>
         <div flex="20" layout="row" layout-align="center end" class="current-nav-page-box sp-darkblue-text">
             <div class="current-nav-page-content">
-                <h4 style="margin-top:-10px;">{{appCtrl.getActivePage()}}</h4>
+                <h4 style="margin-top:-10px;">{{toolbarCtrl.getActivePage()}}</h4>
             </div>
         </div>
         <span flex></span>
-        <div flex="40" layout layout-align="end center" ng-show="appCtrl.authenticated">
-            <md-button class="sp-icon-button" ng-click="appCtrl.openInfo()" style="min-width:0px;">
+        <div flex="40" layout layout-align="end center" ng-show="toolbarCtrl.authenticated">
+            <md-button class="sp-icon-button" ng-click="toolbarCtrl.openInfo()" style="min-width:0px;">
                 <md-icon md-svg-icon="action:ic_help_24px" aria-label="Info" style="color:white;"></md-icon>
                 <md-tooltip md-direction="bottom">
                     Info
                 </md-tooltip>
             </md-button>
-            <md-button class="sp-icon-button" ng-click="appCtrl.openDocumentation()" style="min-width:0px;">
+            <md-button class="sp-icon-button" ng-click="toolbarCtrl.openDocumentation()" style="min-width:0px;">
                 <md-icon md-svg-icon="action:ic_description_24px" aria-label="Documentation" style="color:white;"></md-icon>
                 <md-tooltip md-direction="bottom">
                     Documentation
                 </md-tooltip>
             </md-button>
-            <md-button class="sp-icon-button" id="sp_logout" ng-click="appCtrl.logout()" style="min-width:0px;">
+            <md-button class="sp-icon-button" id="sp_logout" ng-click="toolbarCtrl.logout()" style="min-width:0px;">
                 <md-icon md-svg-icon="action:ic_exit_to_app_24px" aria-label="Logout"></md-icon>
                 <md-tooltip md-direction="bottom">
                     Logout
@@ -43,22 +43,22 @@
     </div>
 </md-toolbar>
 
-<md-sidenav flex layout="column" class="md-sidenav-left" md-component-id="left" ng-show="appCtrl.authenticated">
+<md-sidenav flex layout="column" class="md-sidenav-left" md-component-id="left" ng-show="toolbarCtrl.authenticated">
     <md-toolbar class="md-tall md-hue-3">
         <span flex></span>
         <div layout="column" class="md-toolbar-tools-bottom inset">
             <div layout layout-sm="column">
-                <div class="useravatar" user="appCtrl.AuthStatusService.userInfo"></div>
-                <div style="color:white;margin-left:10px; margin-right:10px;">{{appCtrl.AuthStatusService.email}}</div>
+                <div class="useravatar" user="toolbarCtrl.AuthStatusService.userInfo"></div>
+                <div style="color:white;margin-left:10px; margin-right:10px;">{{toolbarCtrl.AuthStatusService.email}}</div>
             </div>
             <div style="margin-top:20px;">
-                <md-button style="background:rgb(63,81,181);color:white;" class="md-accent" ng-click="appCtrl.logout()">Logout
+                <md-button style="background:rgb(63,81,181);color:white;" class="md-accent" ng-click="toolbarCtrl.logout()">Logout
                 </md-button>
             </div>
         </div>
     </md-toolbar>
     <md-list>
-        <md-list-item class="md-2-line" ng-repeat="item in appCtrl.menu" role="link" ng-click="appCtrl.go(item.link)">
+        <md-list-item class="md-2-line" ng-repeat="item in toolbarCtrl.menu" role="link" ng-click="toolbarCtrl.go(item.link)">
 
             <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"></md-icon>
             <div class="md-list-item-text">
@@ -66,15 +66,15 @@
             </div>
 
         </md-list-item>
-        <md-list-item class="md-2-line" role="link" ng-click="appCtrl.go('streampipes.notifications')">
+        <md-list-item class="md-2-line" role="link" ng-click="toolbarCtrl.go('streampipes.notifications')">
             <md-icon md-svg-icon="communication:ic_chat_24px" aria-label="Notifications"></md-icon>
             <div class="md-list-item-text">
-                <span class="md-body-2">Notifications  <span class="sidebar-badge">{{appCtrl.unreadNotifications.length}}</span></span>
+                <span class="md-body-2">Notifications  <span class="sidebar-badge">{{toolbarCtrl.unreadNotifications.length}}</span></span>
             </div>
         </md-list-item>
         <md-divider></md-divider>
         <md-subheader class="md-no-sticky">Management</md-subheader>
-        <md-list-item class="md-2-line" ng-repeat="item in appCtrl.admin" role="link" ng-click="appCtrl.go(item.link)">
+        <md-list-item class="md-2-line" ng-repeat="item in toolbarCtrl.admin" role="link" ng-click="toolbarCtrl.go(item.link)">
             <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"></md-icon>
             <div class="md-list-item-text">
                 <span class="md-body-2">{{item.title}}</span>

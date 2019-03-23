@@ -7,11 +7,11 @@
     <div fxFlex="50" fxLayout="column">
         <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
             <dashboard-item fxFlex="100" [panelTitle]="'Activities Count'">
-                <dashboard-status [statusValue]="processActivities.length"></dashboard-status>
+                <dashboard-status [statusValue]="processActivities.events.length"></dashboard-status>
             </dashboard-item>
         </div>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
-            <dashboard-item fxFlex="100" [panelTitle]="'# Throw'">
+            <dashboard-item fxFlex="100" [panelTitle]="'# Normal'">
                 <dashboard-status [statusValue]="getNormalPercentage()"></dashboard-status>
             </dashboard-item>
         </div>

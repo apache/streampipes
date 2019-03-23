@@ -46,7 +46,6 @@ export class LoginCtrl {
                         this.AuthStatusService.email = response.data.info.authc.principal.email;
                         this.AuthStatusService.token = response.data.token;
                         this.AuthStatusService.authenticated = true;
-
                         this.$state.go("streampipes");
                     }
                     else {

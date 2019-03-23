@@ -10,12 +10,10 @@ export class TransitionService {
     }
 
     onTransitionStarted(transitionInfo) {
-        this.AuthService.authenticate();
         if (transitionInfo.$from().name === 'streampipes.editor' && !(this.isPipelineAssemblyEmpty)) {
             return this.showDiscardPipelineDialog().then(() => {
                 this.isPipelineAssemblyEmpty = true;
                 return true;
-
             }, function () {
                 return false;
             });

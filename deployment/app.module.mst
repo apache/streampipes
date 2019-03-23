@@ -42,42 +42,17 @@ export const Ng1AppModule = angular
         {{/ng5}}
         {{/modulesActive}}
     ])
-    .run(["$rootScope", "$transitions", "$location", "RestApi", "AuthService", "$state", "$urlRouter", "ObjectProvider", "AuthStatusService", "TransitionService",
-    function ($rootScope, $transitions, $location, RestApi, AuthService, $state, $urlRouter, ObjectProvider, AuthStatusService, TransitionService) {
-        if (!$location.path().startsWith("/login") && !$location.path().startsWith("/sso")) {
-            RestApi.configured().then(msg => {
-                            if (msg.data.configured) {
-                                AuthService.authenticate();
-                            }
-                            else {
-                                AuthStatusService.authenticated = false;
-                                $state.go("setup");
-                            }
+    .config(['$urlServiceProvider', ($urlService) => $urlService.deferIntercept()])
+    .run(["$rootScope", "$transitions", "ObjectProvider", "TransitionService", "RouteTransitionInterceptorService",
+        function ($rootScope, $transitions, ObjectProvider, TransitionService, RouteTransitionInterceptorService) {
+            $transitions.onBefore({}, transition => {
+              return RouteTransitionInterceptorService.onTransitionStarted(transition);
             });
-        }
-        window['loading_screen'].finish();
-
-        $rootScope.$on('$stateChangeStart',
-            function (event, toState, toParams, fromState, fromParams) {
-                var isLogin = toState.name === "login";
-                var isSetup = toState.name === "setup";
-                var isRegister = toState.name === "register";
-                if (isLogin || isSetup || isRegister) {
-                    return;
-                }
-                else if (AuthStatusService.authenticated === false) {
-                    event.preventDefault();
-                    console.log("logging in event prevent");
-                    $state.go('login');
-                }
-
-            })
-
-        $transitions.onStart({}, transition => {
-                        return TransitionService.onTransitionStarted(transition);
-        });
-        $rootScope.state = new ObjectProvider.State();
-
+            $transitions.onStart({}, transition => {
+                return TransitionService.onTransitionStarted(transition);
+            });
+            $rootScope.state = new ObjectProvider.State();
+            window['loading_screen'].finish();
     }]).config(function($mdThemingProvider) {
 
         $mdThemingProvider.definePalette('streamPipesPrimary', {

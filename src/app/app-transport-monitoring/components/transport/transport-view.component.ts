@@ -9,7 +9,7 @@ import {ActivityDetectionModel} from "../../model/activity-detection.model";
 })
 export class TransportViewComponent {
 
-    processActivities: ActivityDetectionModel[] = [];
+    processActivities: ActivityDetectionModel;
 
     constructor(private restService: AppTransportMonitoringRestService) {
 
@@ -26,15 +26,15 @@ export class TransportViewComponent {
     }
 
     getShakePercentage() {
-        return this.processActivities.filter(pa => pa.activity == 'shake').length / this.processActivities.length;
+        return this.processActivities.events.filter(pa => pa.activity == 'shake').length / this.processActivities.events.length;
     }
 
     getThrowPercentage() {
-        return this.processActivities.filter(pa => pa.activity == 'throw').length / this.processActivities.length;
+        return this.processActivities.events.filter(pa => pa.activity == 'throw').length / this.processActivities.events.length;
     }
 
     getNormalPercentage() {
-        return this.processActivities.filter(pa => pa.activity == 'normal').length / this.processActivities.length;
+        return this.processActivities.events.filter(pa => pa.activity == 'normal').length / this.processActivities.events.length;
     }
 
 

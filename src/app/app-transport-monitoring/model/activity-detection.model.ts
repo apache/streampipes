@@ -1,4 +1,6 @@
+import {EventModel} from "./event.model";
+
 export interface ActivityDetectionModel {
-    timestamp: number;
-    activity: string;
+   total: string;
+   events: EventModel[];
 }

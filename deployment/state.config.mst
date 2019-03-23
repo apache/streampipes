@@ -10,26 +10,21 @@ import { InfoComponent } from '../info/info.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
-    //	    $urlRouterProvider.otherwise( function($injector, $location) {
-    //            var $state = $injector.get("$state");
-    //            $state.go("streampipes");
-    //        });
-
-    $urlRouterProvider.otherwise('/streampipes');
+    $urlRouterProvider.otherwise($injector => {
+        var $state = $injector.get('$state');
+        $state.go('streampipes');
+    });
 
     var spNavbar = {
-        templateUrl: '../../assets/templates/navbar.html',
-        controller: 'AppCtrl'
+            templateUrl: '../../assets/templates/navbar.html',
     };
 
     var spIconBar = {
         templateUrl: '../../assets/templates/iconbar.html',
-        controller: 'AppCtrl'
     };
 
     var container = {
         templateUrl: '../../assets/templates/streampipes.html',
-        controller: 'AppCtrl'
     };
 
     $stateProvider
@@ -41,11 +36,6 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 'spIconBar@streampipes': spIconBar,
                 'spMain@streampipes': {
                     component: HomeComponent
-                }
-            },
-            resolve: {
-                "authData": function (AuthService) {
-                    return AuthService.authenticate();
                 }
             }
         })

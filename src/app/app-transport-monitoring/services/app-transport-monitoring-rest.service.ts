@@ -12,6 +12,7 @@ import {ParcelInfoModel} from "../model/parcel-info.model";
 @Injectable()
 export class AppTransportMonitoringRestService {
 
+    // datalake/data/sp_sp_acceleration?from=1553100861004&to=1553100861941&timestamp=appendedTime
 
     constructor(private http: HttpClient, private authStatusService: AuthStatusService) {
     }
@@ -21,10 +22,12 @@ export class AppTransportMonitoringRestService {
         return undefined;
     }
 
-    getActivityDetection(startTimestamp: number, endTimestamp: number): Observable<ActivityDetectionModel[]> {
+    getActivityDetection(startTimestamp: number, endTimestamp: number): Observable<ActivityDetectionModel> {
         // parcel activity
-        return this.http.get("/assets/Activity.json").pipe(map (resp => {
-            return resp as ActivityDetectionModel[]
+        startTimestamp = 0;
+        endTimestamp = 2653100861941;
+        return this.http.get(this.getParcelActivityUrl(startTimestamp, endTimestamp, "timestamp")).pipe(map (resp => {
+            return resp as ActivityDetectionModel
         }));
     }
 
@@ -61,12 +64,16 @@ export class AppTransportMonitoringRestService {
         return this.http.get('/visualizablepipeline/_all_docs?include_docs=true');
     }
 
+    getParcelActivityUrl(from: number, to: number, timestampProperty: string): string {
+        return this.url + "/sp_dominik_xdk?from=" +from +"&to=" +to +"&timestamp=" +timestampProperty;
+    }
+
     private get baseUrl() {
         return '/streampipes-backend';
     }
 
     private get url() {
-        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/asset-dashboards'
+        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/datalake/data'
     }
 
     private get imagePath() {
