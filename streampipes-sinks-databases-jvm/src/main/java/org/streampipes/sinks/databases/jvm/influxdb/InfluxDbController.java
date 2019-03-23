@@ -119,6 +119,6 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
         batch_size,
         flush_duration);
 
-    return new ConfiguredEventSink<>(params, () -> new InfluxDb(params));
+    return new ConfiguredEventSink<>(params, InfluxDb::new);
   }
 }

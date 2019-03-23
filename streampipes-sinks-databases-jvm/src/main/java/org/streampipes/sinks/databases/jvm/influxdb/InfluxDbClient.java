@@ -28,6 +28,7 @@ import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.logging.api.Logger;
+import org.streampipes.model.runtime.Event;
 
 public class InfluxDbClient {
 	private Integer influxDbPort;
@@ -75,6 +76,7 @@ public class InfluxDbClient {
    * @throws SpRuntimeException If the hostname is not valid
    */
 	private void validate() throws SpRuntimeException {
+    //TODO: replace regex with validation method (import org.apache.commons.validator.routines.InetAddressValidator;)
     // Validates the database name and the attributes
     // See following link for regular expressions:
     // https://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
@@ -82,7 +84,6 @@ public class InfluxDbClient {
         + "[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
     String hostnameRegex = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*"
         + "([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$";*/
-    //TODO: replace regex with validation method (import org.apache.commons.validator.routines.InetAddressValidator;)
     // https://stackoverflow.com/questions/3114595/java-regex-for-accepting-a-valid-hostname-ipv4-or-ipv6-address)
     //if (!influxDbHost.matches(ipRegex) && !influxDbHost.matches(hostnameRegex)) {
     //  throw new SpRuntimeException("Error: Hostname '" + influxDbHost
@@ -155,13 +156,14 @@ public class InfluxDbClient {
    * @param event The event which should be saved
    * @throws SpRuntimeException If the column name (key-value of the event map) is not allowed
    */
-	void save(Map<String, Object> event) throws SpRuntimeException {
+	void save(Event event) throws SpRuntimeException {
 		if (event == null) {
 			throw new SpRuntimeException("event is null");
 		}
 		//TODO: Choose the timestamp from the parameters (replace System.currentTimeMillis())
+		//TODO: Nested Items?
     Point.Builder p = Point.measurement(measureName).time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
-    for (Map.Entry<String, Object> pair : event.entrySet()) {
+		for (Map.Entry<String, Object> pair : event.getRaw().entrySet()) {
       if(!pair.getKey().matches("^[a-zA-Z_][a-zA-Z0-9_]*$")) {
         throw new SpRuntimeException("Column name '" + pair.getKey() + "' not allowed "
             + "(allowed: '^[a-zA-Z_][a-zA-Z0-9_]*$')");

@@ -19,20 +19,18 @@ package org.streampipes.sinks.databases.jvm.influxdb;
 import java.util.Map;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.logging.api.Logger;
+import org.streampipes.model.runtime.Event;
+import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
-public class InfluxDb extends EventSink<InfluxDbParameters> {
+public class InfluxDb implements EventSink<InfluxDbParameters> {
 
   private InfluxDbClient influxDbClient;
 
   private static Logger LOG;
 
-  public InfluxDb(InfluxDbParameters params) {
-    super(params);
-  }
-
   @Override
-  public void bind(InfluxDbParameters parameters) throws SpRuntimeException {
+  public void onInvocation(InfluxDbParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     LOG = parameters.getGraph().getLogger(InfluxDb.class);
 
     this.influxDbClient = new InfluxDbClient(
@@ -50,17 +48,16 @@ public class InfluxDb extends EventSink<InfluxDbParameters> {
   }
 
   @Override
-  public void onEvent(Map<String, Object> event, String sourceInfo) {
+  public void onEvent(Event event) {
     try {
       influxDbClient.save(event);
     } catch (SpRuntimeException e) {
-      //TODO: error or warn?
       LOG.error(e.getMessage());
     }
   }
 
   @Override
-  public void discard() throws SpRuntimeException {
+  public void onDetach() throws SpRuntimeException {
     influxDbClient.stop();
   }
 }
