@@ -36,6 +36,7 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDecl
 public class ChangedValueDetectionController extends StandaloneEventProcessingDeclarer<ChangedValueDetectionParameters> {
 
   public static final String COMPARE_FIELD_ID = "compare";
+  public static final String CHANGE_FIELD_NAME = "change_detected";
 
   //TODO: Change Icon
   @Override
@@ -50,7 +51,7 @@ public class ChangedValueDetectionController extends StandaloneEventProcessingDe
                                     "property which might change over time"),
                             PropertyScope.NONE)
                     .build())
-            .outputStrategy(OutputStrategies.append(EpProperties.timestampProperty("change_detected")))
+            .outputStrategy(OutputStrategies.append(EpProperties.timestampProperty(CHANGE_FIELD_NAME)))
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
@@ -61,7 +62,7 @@ public class ChangedValueDetectionController extends StandaloneEventProcessingDe
 
     String compare = extractor.mappingPropertyValue(COMPARE_FIELD_ID);
 
-    ChangedValueDetectionParameters params = new ChangedValueDetectionParameters(graph, compare);
+    ChangedValueDetectionParameters params = new ChangedValueDetectionParameters(graph, compare, CHANGE_FIELD_NAME);
     return new ConfiguredEventProcessor<>(params, ChangedValueDetection::new);
   }
 }

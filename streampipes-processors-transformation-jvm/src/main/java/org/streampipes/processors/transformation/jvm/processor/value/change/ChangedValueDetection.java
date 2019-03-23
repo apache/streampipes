@@ -28,6 +28,7 @@ public class ChangedValueDetection implements EventProcessor<ChangedValueDetecti
   private static Logger LOG;
 
   private String compareParameter;
+  private String changeFieldName;
   private Object lastObject = null;
 
   @Override
@@ -36,6 +37,7 @@ public class ChangedValueDetection implements EventProcessor<ChangedValueDetecti
                             EventProcessorRuntimeContext runtimeContext) {
     LOG = changedValueDetectionParameters.getGraph().getLogger(ChangedValueDetection.class);
     this.compareParameter = changedValueDetectionParameters.getCompareField();
+    this.changeFieldName = changedValueDetectionParameters.getChangeFieldName();
   }
 
   @Override
@@ -46,7 +48,7 @@ public class ChangedValueDetection implements EventProcessor<ChangedValueDetecti
       if (!newObject.equals(lastObject)) {
         lastObject = newObject;
         //TODO: Better handling of multiple timestamps (if the field "change_detected" is already in the input)?
-        inputEvent.addField("change_detected", System.currentTimeMillis());
+        inputEvent.addField(changeFieldName, System.currentTimeMillis());
         out.collect(inputEvent);
       }
     }
