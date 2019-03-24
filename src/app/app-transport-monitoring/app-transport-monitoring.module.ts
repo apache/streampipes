@@ -19,6 +19,7 @@ import {TransportSummaryComponent} from "./components/transport-summary/transpor
 import {SlideshowModule} from "ng-simple-slideshow";
 import {TransportActivityGraphComponent} from "./components/transport-activity-graph/transport-activity-graph.component";
 import {TimestampConverterService} from "./services/timestamp-converter.service";
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
     imports: [
@@ -29,7 +30,8 @@ import {TimestampConverterService} from "./services/timestamp-converter.service"
         MatInputModule,
         MatFormFieldModule,
         FormsModule,
-        SlideshowModule
+        SlideshowModule,
+        NgxChartsModule
     ],
     declarations: [
         AppTransportMonitoringComponent,

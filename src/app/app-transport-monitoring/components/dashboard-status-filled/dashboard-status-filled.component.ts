@@ -11,12 +11,14 @@ export class DashboardStatusFilledComponent {
     @Input() label: string;
     @Input() color: string;
 
+    chartData: any;
+
     constructor() {
 
     }
 
     ngOnInit() {
-
+        this.chartData = [{"name": this.label, "value": this.statusValue}]
     }
 
     getBackground() {

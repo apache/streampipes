@@ -72,6 +72,7 @@
     "ng-file-upload": "9.0.13",
     "ng-prettyjson": "0.1.8",
     "ng2-charts": "^2.0.3",
+    "@swimlane/ngx-charts": "^10.1.0",
     "ng2-dragula": "^1.5.0",
     "ng-showdown": "^1.1.0",
     "ngmap": "1.18.0",

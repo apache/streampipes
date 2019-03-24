@@ -1,7 +1,7 @@
 <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
     <div fxFlex="50">
         <dashboard-item [panelTitle]="'Activity Graph'">
-            <transport-activity-graph *ngIf="activitiesPresent" [activityEventModel]="processActivities.events"></transport-activity-graph>
+            <transport-activity-graph fxFlex="100" *ngIf="activitiesPresent" [activityEventModel]="processActivities.events"></transport-activity-graph>
         </dashboard-item>
     </div>
     <div fxFlex="50" fxLayout="column" *ngIf="activitiesPresent">

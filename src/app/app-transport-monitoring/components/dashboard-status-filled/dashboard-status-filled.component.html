@@ -1,4 +1,8 @@
-<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" class="statusValue" [ngStyle]="getBackground()">
-    <h4>{{label}}</h4>
-    {{statusValue}}
+<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+    <ngx-charts-number-card
+            [results]="chartData"
+            [scheme]="'cool'"
+            [cardColor]="color"
+    [bandColor]="'rgb(27, 20, 100)'">
+    </ngx-charts-number-card>
 </div>

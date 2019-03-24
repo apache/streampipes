@@ -1,5 +1,6 @@
 import {Component, Input} from "@angular/core";
 import {ActivityEventModel} from "../../model/activity-event.model";
+import {TimestampConverterService} from "../../services/timestamp-converter.service";
 
 @Component({
     selector: 'transport-activity-graph',
@@ -10,26 +11,33 @@ export class TransportActivityGraphComponent {
 
     @Input() activityEventModel: ActivityEventModel[];
 
-    constructor() {
+    polarChartDataActivity: any = [];
+
+    constructor(private timestampConverterService: TimestampConverterService) {
 
     }
 
     ngOnInit() {
         this.makeDummyData();
+        this.prepareNewPolarChart();
     }
 
-    getStyle(activity: ActivityEventModel) {
-        return {'position': 'relative', 'left': activity.timestamp / 1000,'width':'1px', 'height':'200px', 'background': this.getBackground(activity) };
+    prepareNewPolarChart() {
+        let normalSeries: any = [];
+        let shakeSeries: any = [];
+        let fallSeries: any = [];
+
+        this.activityEventModel.forEach(activity => {
+            normalSeries.push({"name": this.timestampConverterService.convertTimestampHoursOnly(activity.timestamp), "value": this.getActivityValue("normal", 1, activity.activity)});
+            shakeSeries.push({"name": this.timestampConverterService.convertTimestampHoursOnly(activity.timestamp), "value": this.getActivityValue("shake", 2, activity.activity)});
+            fallSeries.push({"name": this.timestampConverterService.convertTimestampHoursOnly(activity.timestamp), "value": this.getActivityValue("fall", 3, activity.activity)});
+        });
+
+        this.polarChartDataActivity = [{"name": "Normal", series: normalSeries}, {"name": "Shake", series: shakeSeries}, {"name": "Fall", series: fallSeries}];
     }
 
-    getBackground(activity) {
-        if (activity.activity == "normal") {
-            return "green";
-        } else if (activity.activity == "shake") {
-            return "yellow";
-        } else {
-            return "red";
-        }
+    getActivityValue(activeActivity, value, activity): number {
+        return activity == activeActivity ? value : 0;
     }
 
     makeDummyData() {
@@ -37,7 +45,7 @@ export class TransportActivityGraphComponent {
         let currentTimestamp = 0;
         let currentActivity = "normal";
         let frequency = 1000;
-        for(let i = 0; i < 300; i++) {
+        for(let i = 0; i < 200; i++) {
             let nextActivity = this.getRandomActivity(currentActivity);
             this.activityEventModel.push({timestamp: currentTimestamp,  activity: nextActivity});
             currentTimestamp += frequency;
