@@ -25,57 +25,64 @@ import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
 import org.eclipse.milo.opcua.stack.client.UaTcpStackClient;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
+import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
-import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.MonitoringMode;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
-import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
-import org.eclipse.milo.opcua.stack.core.types.structured.MonitoredItemCreateRequest;
-import org.eclipse.milo.opcua.stack.core.types.structured.MonitoringParameters;
-import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.*;
+import org.eclipse.milo.opcua.stack.core.types.structured.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 
-public class OpcuaAdapter {
+import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
+import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
+
+public class OpcUaTest {
 
 //    private OpcUaClient myClient;
-    private static String opcServerURL = "opc.tcp://141.21.43.39:4840";
+//    private static String opcServerURL = "opc.tcp://141.21.43.39:4840";
+    private static String opcServerURL = "opc.tcp://192.168.0.144:4840";
     private static final AtomicLong clientHandles = new AtomicLong(1L);
 
 
     public static void main(String... args) throws Exception {
 
         OpcUaClient client = init();
+//        client.connect().get();
         client.connect().get();
 
         NodeId node1 = new NodeId(4, "|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG.auto_gruen");
         NodeId node2 = new NodeId(4, "|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG.auto_rot");
         NodeId node3 = new NodeId(4, "|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG.fuss_rot");
+        NodeId node4 = new NodeId(4, "|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG");
 
-        CompletableFuture<DataValue> va1 = client.readValue(0, TimestampsToReturn.Both, node1);
-        CompletableFuture<DataValue> va2 = client.readValue(0, TimestampsToReturn.Both, node2);
-        CompletableFuture<DataValue> va3 = client.readValue(0, TimestampsToReturn.Both, node3);
+        browseNodeTest("", client, node4);
 
-
-        System.out.println("Auto grün: " + va1.get().getValue());
-        System.out.println("Auto rot: " + va2.get().getValue());
-        System.out.println("Fußgänger rot: " + va3.get().getValue());
+//        CompletableFuture<DataValue> va1 = client.readValue(0, TimestampsToReturn.Both, node1);
+//        CompletableFuture<DataValue> va2 = client.readValue(0, TimestampsToReturn.Both, node2);
+//        CompletableFuture<DataValue> va3 = client.readValue(0, TimestampsToReturn.Both, node3);
+//
+//
+//        System.out.println("Auto grün: " + va1.get().getValue());
+//        System.out.println("Auto rot: " + va2.get().getValue());
+//        System.out.println("Fußgänger rot: " + va3.get().getValue());
 
 	 /*   JSONParser parser = new JSONParser();
 	    JSONObject json = (JSONObject) parser.parse(exchange.getIn().getBody().toString());*/
 
-        createSubscription(client, node1);
-        createSubscription(client, node2);
-        createSubscription(client, node3);
+//        createSubscription(client, node1);
+//        createSubscription(client, node2);
 
         // let the example run for 10 seconds then terminate
         Thread.sleep(100000000);
@@ -93,6 +100,10 @@ public class OpcuaAdapter {
     private static OpcUaClient init() throws Exception{
         EndpointDescription[] endpoints = UaTcpStackClient.getEndpoints(opcServerURL).get();
 
+        EndpointDescription tmpEndpoint = endpoints[0];
+        tmpEndpoint = updateEndpointUrl(tmpEndpoint, "192.168.0.144");
+        endpoints = new EndpointDescription[]{tmpEndpoint};
+
         EndpointDescription endpoint = Arrays.stream(endpoints)
                 .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getSecurityPolicyUri()))
                 .findFirst().orElseThrow(() -> new Exception("no desired endpoints returned"));
@@ -104,6 +115,31 @@ public class OpcuaAdapter {
                 .build();
 
         return new OpcUaClient(config);
+    }
+
+    private static EndpointDescription updateEndpointUrl(
+            EndpointDescription original, String hostname) throws URISyntaxException {
+
+        URI uri = new URI(original.getEndpointUrl()).parseServerAuthority();
+
+        String endpointUrl = String.format(
+                "%s://%s:%s%s",
+                uri.getScheme(),
+                hostname,
+                uri.getPort(),
+                uri.getPath()
+        );
+
+        return new EndpointDescription(
+                endpointUrl,
+                original.getServer(),
+                original.getServerCertificate(),
+                original.getSecurityMode(),
+                original.getSecurityPolicyUri(),
+                original.getUserIdentityTokens(),
+                original.getTransportProfileUri(),
+                original.getSecurityLevel()
+        );
     }
 
     /**
@@ -128,13 +164,13 @@ public class OpcuaAdapter {
             ReadValueId readValue = new ReadValueId(node, AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE);
 
             // important: client handle must be unique per item
-            UInteger clientHandle = Unsigned.uint(clientHandles.getAndIncrement());
+            UInteger clientHandle = uint(clientHandles.getAndIncrement());
 
             MonitoringParameters parameters = new MonitoringParameters(
                     clientHandle,
                     1000.0,     // sampling interval
                     null,      // filter, null means use default
-                    Unsigned.uint(10),   // queue size
+                    uint(10),   // queue size
                     true         // discard oldest
             );
 
@@ -142,7 +178,7 @@ public class OpcuaAdapter {
 
 
             BiConsumer<UaMonitoredItem, Integer> onItemCreated =
-                    (item, id) -> item.setValueConsumer(OpcuaAdapter::onSubscriptionValue);
+                    (item, id) -> item.setValueConsumer(OpcUaTest::onSubscriptionValue);
 
             List<UaMonitoredItem> items = subscription.createMonitoredItems(
                     TimestampsToReturn.Both,
@@ -161,4 +197,64 @@ public class OpcuaAdapter {
 
         }
     }
+
+    private static void browseNodeTest(String indent, OpcUaClient client, NodeId browseRoot) {
+        BrowseDescription browse = new BrowseDescription(
+                browseRoot,
+                BrowseDirection.Forward,
+                Identifiers.References,
+                true,
+                uint(NodeClass.Object.getValue() | NodeClass.Variable.getValue()),
+                uint(BrowseResultMask.All.getValue())
+        );
+
+        try {
+            BrowseResult browseResult = client.browse(browse).get();
+
+            List<ReferenceDescription> references = toList(browseResult.getReferences());
+
+            for (ReferenceDescription rd : references) {
+                System.out.println("=====================================================================");
+                System.out.println(rd.toString());
+                System.out.println(rd.getNodeClass());
+                System.out.println("Node={} " + indent + " " + rd.getBrowseName().getName());
+                System.out.println("=====================================================================");
+                // recursively browse to children
+                rd.getNodeId().local().ifPresent(nodeId -> browseNodeTest(indent + "  ", client, nodeId));
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            System.out.println("Browsing nodeId=" + browseRoot + " failed: " + e.getMessage());
+        }
+    }
+
+
+    private List<ReferenceDescription> browseNode(String indent, OpcUaClient client, NodeId browseRoot) {
+        List<ReferenceDescription> result = new ArrayList<>();
+
+        BrowseDescription browse = new BrowseDescription(
+                browseRoot,
+                BrowseDirection.Forward,
+                Identifiers.References,
+                true,
+                uint(NodeClass.Object.getValue() | NodeClass.Variable.getValue()),
+                uint(BrowseResultMask.All.getValue())
+        );
+
+        try {
+            BrowseResult browseResult = client.browse(browse).get();
+
+            List<ReferenceDescription> references = toList(browseResult.getReferences());
+
+            for (ReferenceDescription rd : references) {
+                result.add(rd);
+                rd.getNodeId().local().ifPresent(nodeId -> browseNode(indent + "  ", client, nodeId));
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            System.out.println("Browsing nodeId=" + browseRoot + " failed: " + e.getMessage());
+        }
+
+        return result;
+
+    }
+
 }
