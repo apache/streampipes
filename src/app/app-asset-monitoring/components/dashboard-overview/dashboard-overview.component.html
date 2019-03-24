@@ -23,4 +23,7 @@
             </mat-card>
         </mat-grid-tile>
     </mat-grid-list>
+    <div *ngIf="dashboardConfigs.length == 0">
+        <h4>(no dashboards available, navigate to <i>New Dahboard</i> to create a new asset dashboard)</h4>
+    </div>
 </div>

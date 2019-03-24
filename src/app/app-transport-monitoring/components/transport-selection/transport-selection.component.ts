@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {TransportProcessModel} from "../../model/transport-process.model";
 import {AppTransportMonitoringRestService} from "../../services/app-transport-monitoring-rest.service";
+import {TransportProcessEventModel} from "../../model/transport-process-event.model";
+import {TimestampConverterService} from "../../services/timestamp-converter.service";
 
 @Component({
     selector: 'transport-selection',
@@ -9,21 +10,31 @@ import {AppTransportMonitoringRestService} from "../../services/app-transport-mo
 })
 export class TransportSelectionComponent {
 
-    transportProcesses: TransportProcessModel[] = [];
+    transportProcesses: TransportProcessEventModel[] = [];
+
+    displayedColumns: string[] = ['position', 'startTime', 'endTime', 'action'];
+
+    @Output() selectedProcess = new EventEmitter<TransportProcessEventModel>();
 
 
-    constructor(private restService: AppTransportMonitoringRestService) {
+    constructor(private restService: AppTransportMonitoringRestService,
+                public timestampConverterService: TimestampConverterService) {
 
     }
 
     ngOnInit() {
-
+        this.fetchTransportProcesses();
     }
 
     fetchTransportProcesses() {
-        return this.restService.getTransportProcesses().subscribe(resp => {
+        this.restService.getTransportProcesses().subscribe(resp => {
+            console.log(resp);
            this.transportProcesses = resp;
         });
+    }
+
+    selectProcess(element: TransportProcessEventModel) {
+        this.selectedProcess.emit(element);
     }
 
 

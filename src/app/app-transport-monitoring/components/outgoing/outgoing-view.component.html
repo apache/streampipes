@@ -1,18 +1,23 @@
 <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
-    <div fxFlex="50">
+    <div fxFlex="67">
         <dashboard-item [panelTitle]="'Image'">
-            <dashboard-image *ngIf="showImage" [imageBase64]="parcelInfo.image"></dashboard-image>
+            <dashboard-image *ngIf="showImage" [parcelInfoEventModel]="parcelInfo"></dashboard-image>
         </dashboard-item>
     </div>
-    <div fxFlex="50" fxLayout="column">
+    <div fxFlex="33" fxLayout="column">
         <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
-            <dashboard-item fxFlex="100" [panelTitle]="'# Parcels'">
-                <dashboard-status [statusValue]="'100'"></dashboard-status>
+            <dashboard-item fxFlex="100" [panelTitle]="'Total Boxes Detected'">
+                <dashboard-status [statusValue]="totalBoxes"></dashboard-status>
             </dashboard-item>
         </div>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
-            <dashboard-item fxFlex="100" [panelTitle]="'# Parcels'">
-                <dashboard-status [statusValue]="'SHAKING'"></dashboard-status>
+            <dashboard-item fxFlex="100" [panelTitle]="'Transparent Boxes Detected'">
+                <dashboard-status [statusValue]="transparentBoxes"></dashboard-status>
+            </dashboard-item>
+        </div>
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
+            <dashboard-item fxFlex="100" [panelTitle]="'Cardboard Boxes Detected'">
+                <dashboard-status [statusValue]="cardboardBoxes"></dashboard-status>
             </dashboard-item>
         </div>
     </div>

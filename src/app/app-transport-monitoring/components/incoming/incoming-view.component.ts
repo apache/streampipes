@@ -1,6 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
-import {AppTransportMonitoringRestService} from "../../services/app-transport-monitoring-rest.service";
-import {ParcelInfoModel} from "../../model/parcel-info.model";
+import {Component} from '@angular/core';
 
 @Component({
     selector: 'incoming-view',
@@ -9,23 +7,13 @@ import {ParcelInfoModel} from "../../model/parcel-info.model";
 })
 export class IncomingViewComponent {
 
-    parcelInfo: ParcelInfoModel;
-    showImage: boolean = false;
 
-    constructor(private restService: AppTransportMonitoringRestService) {
+    constructor() {
 
     }
 
     ngOnInit() {
-        this.fetchIncomingParcelInfo();
-    }
 
-    fetchIncomingParcelInfo() {
-        this.restService.getLatestIncomingParcelInfo(0, 0).subscribe(resp => {
-            this.parcelInfo = resp;
-            this.showImage = true;
-        });
     }
-
 
 }

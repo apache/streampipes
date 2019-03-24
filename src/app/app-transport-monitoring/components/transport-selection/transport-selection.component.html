@@ -1,22 +1,45 @@
-<div fxFlex="100" fxLayout="row">
-    <div fxFlex="80" fxLayout="column" fxLayoutAlign="start start">
-        <mat-form-field>
-            <mat-label>Process ID</mat-label>
-            <input type="text" matInput [autocomplete]="auto">
-        </mat-form-field>
-        <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let transportProcess of transportProcesses" [value]="transportProcess">
-                {{transportProcess}}
-            </mat-option>
-        </mat-autocomplete>
-        <button mat-button mat-raised-button color="primary">
-            Select Process
-        </button>
-    </div>
-    <div fxFlex="20" fxLayoutAlign="end center">
-        <button mat-button mat-raised-button color="primary">
+<div fxFlex="100" fxLayout="column" style="height:100%;">
+    <div fxFlex="100" fxLayoutAlign="end center" style="margin-bottom:10px;">
+        <button mat-button mat-raised-button color="primary" (click)="fetchTransportProcesses()">
             Refresh
         </button>
     </div>
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+        <table mat-table [dataSource]="transportProcesses" class="mat-elevation-z1">
 
+            <ng-container matColumnDef="position">
+                <th fxFlex="15" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> No.</th>
+                <td fxFlex="15" fxLayoutAlign="start center" mat-cell *matCellDef="let element; let i = index">
+                    {{i+1}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="startTime">
+                <th fxFlex="30" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Shipped</th>
+                <td fxFlex="30" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                    {{timestampConverterService.convertTimestampHoursOnly(element.startTime)}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="endTime">
+                <th fxFlex="30" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Delivered</th>
+                <td fxFlex="30" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                    {{timestampConverterService.convertTimestampHoursOnly(element.endTime)}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+                <th fxFlex="25" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Action</th>
+                <td fxFlex="25" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                    <button mat-button mat-raised-button color="primary" (click)="selectProcess(element)">
+                        Select Process
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
 </div>

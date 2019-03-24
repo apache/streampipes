@@ -1,12 +1,7 @@
 <div fxLayout="column" fxFlex="100" class="page-container-connect">
     <div fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
         <div fxLayout="fill" style="line-height:24px;border-bottom:1px solid #ccc">
-            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)">
-                <mat-tab label="Transport Monitoring">
-                </mat-tab>
-                <mat-tab id="all-adapters" label="New Asset">
-                </mat-tab>
-            </mat-tab-group>
+
         </div>
     </div>
 
@@ -14,45 +9,45 @@
         <h1>Transport Status</h1>
 
         <dashboard-item [panelTitle]="'Select Transport Process'" style="margin-bottom:15px;">
-            <transport-selection></transport-selection>
+            <transport-selection (selectedProcess)="selectTransportProcess($event)"></transport-selection>
         </dashboard-item>
 
         <mat-divider></mat-divider>
 
-        <mat-expansion-panel [expanded]="summaryExpanded">
+        <mat-expansion-panel [expanded]="summaryExpanded" *ngIf="transportProcessSelected">
             <mat-expansion-panel-header>
                 <h3>Summary</h3>
             </mat-expansion-panel-header>
 
-            <transport-summary></transport-summary>
+            <transport-summary [transportProcess]="selectedTransportProcess"></transport-summary>
         </mat-expansion-panel>
 
         <mat-divider></mat-divider>
 
-        <mat-expansion-panel [expanded]="outgoingExpanded">
+        <mat-expansion-panel [expanded]="outgoingExpanded" *ngIf="transportProcessSelected && outgoingParcelInfoPresent">
             <mat-expansion-panel-header>
                 <h3>Outgoing Goods</h3>
             </mat-expansion-panel-header>
 
-            <outgoing-view></outgoing-view>
+            <outgoing-view [parcelInfo]="outgoingParcelInfo"></outgoing-view>
 
         </mat-expansion-panel>
 
-        <mat-expansion-panel [expanded]="transportExpanded">
+        <mat-expansion-panel [expanded]="transportExpanded" *ngIf="transportProcessSelected">
             <mat-expansion-panel-header>
                 <h3>Transport</h3>
             </mat-expansion-panel-header>
 
-            <transport-view></transport-view>
+            <transport-view [transportProcess]="selectedTransportProcess"></transport-view>
 
         </mat-expansion-panel>
 
-        <mat-expansion-panel [expanded]="incomingExpanded">
+        <mat-expansion-panel [expanded]="incomingExpanded" *ngIf="transportProcessSelected && incomingParcelInfoPresent">
             <mat-expansion-panel-header>
                 <h3>Incoming Goods</h3>
             </mat-expansion-panel-header>
 
-            <incoming-view></incoming-view>
+            <outgoing-view [parcelInfo]="incomingParcelInfo"></outgoing-view>
 
         </mat-expansion-panel>
 

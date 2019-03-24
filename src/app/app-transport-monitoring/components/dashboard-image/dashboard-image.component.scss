@@ -1,0 +1,16 @@
+.slideshow-container .slick-dots li {
+  display: inline-block !important;
+}
+
+.slideshow-container .arrow-container .arrow {
+  border-top: 2px solid rgb(156, 156, 156) !important;
+  border-left: 2px solid rgb(156, 156, 156) !important;
+}
+
+.slideshow-container .arrow-container.prev:before {
+  background-image: none !important;
+}
+
+.slideshow-container .arrow-container.next:before {
+  background-image: none !important;
+}
