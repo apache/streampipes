@@ -11,7 +11,7 @@ export class AssetDashboardOverviewComponent {
 
     @Output() selectedDashboard = new EventEmitter<DashboardConfiguration>();
 
-    dashboardConfigs: DashboardConfiguration[];
+    dashboardConfigs: DashboardConfiguration[] = [];
 
     constructor(private restService: RestService) {
 

@@ -21,7 +21,7 @@ export class ShapeService {
     makeLabelGroup(config: SelectedVisualizationData): Konva.Group {
         let labelGroup = this.makeGroup(false);
         labelGroup.add(this.makeRect(config.labelBackgroundColor, 120, 40, 120, 20));
-        labelGroup.add(this.makeText(config, config.label, config.labelTextColor, 120, 50, 120, 20, false))
+        labelGroup.add(this.makeText(config, config.label, config.labelTextColor, 120, 45, 120, 20, false))
         return labelGroup;
     }
 

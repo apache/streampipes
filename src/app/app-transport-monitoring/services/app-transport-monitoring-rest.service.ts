@@ -42,19 +42,19 @@ export class AppTransportMonitoringRestService {
     }
 
     getOutgoingParcelInfo(startTimestamp: number, endTimestamp: number): Observable<ParcelInfoModel> {
-        // return this.http.get(this.getOutgoingParcelInfoUrl(startTimestamp, endTimestamp, "timestamp"))
-        //      .pipe(map (resp => {
-        //      return resp as ParcelInfoModel
-        //  }));
-        return this.getLatestOutgoingParcelInfo(0, 0);
+        return this.http.get(this.getOutgoingParcelInfoUrl(startTimestamp, endTimestamp, "timestamp"))
+             .pipe(map (resp => {
+             return resp as ParcelInfoModel
+         }));
+        //return this.getLatestOutgoingParcelInfo(0, 0);
     }
 
     getIncomingParcelInfo(startTimestamp: number, endTimestamp: number): Observable<ParcelInfoModel> {
-        // return this.http.get(this.getIncomingParcelInfoUrl(startTimestamp, endTimestamp, "timestamp"))
-        //     .pipe(map (resp => {
-        //         return resp as ParcelInfoModel
-        //     }));
-        return this.getLatestOutgoingParcelInfo(0, 0);
+        return this.http.get(this.getIncomingParcelInfoUrl(startTimestamp, endTimestamp, "timestamp"))
+            .pipe(map (resp => {
+                return resp as ParcelInfoModel
+            }));
+        //return this.getLatestOutgoingParcelInfo(0, 0);
     }
 
     getLatestOutgoingParcelInfo(startTimestamp: number, endTimestamp: number): Observable<ParcelInfoModel> {

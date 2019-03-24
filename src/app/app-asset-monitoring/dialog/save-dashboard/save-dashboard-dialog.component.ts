@@ -8,7 +8,7 @@ import {ImageInfo} from "../../model/image-info.model";
 @Component({
     selector: 'save-dashboard-dialog-component',
     templateUrl: 'save-dashboard-dialog.component.html',
-    styleUrls: ['../add-pipeline/add-pipeline-dialog.component.css'],
+    styleUrls: ['./save-dashboard-dialog.component.css'],
 })
 export class SaveDashboardDialogComponent {
 
@@ -28,7 +28,6 @@ export class SaveDashboardDialogComponent {
     save() {
         // save image
         this.restService.storeImage(this.data.file).subscribe(response => {
-           console.log(response);
         });
 
         // save dashboard
@@ -39,8 +38,6 @@ export class SaveDashboardDialogComponent {
         dashboardConfig.imageInfo = imageInfo;
         dashboardConfig.imageInfo.imageName = this.data.file.name;
 
-        console.log(dashboardConfig);
-
         this.restService.storeDashboard(dashboardConfig).subscribe(response => {
             this.dialogRef.close();
         });
@@ -48,7 +45,6 @@ export class SaveDashboardDialogComponent {
 
     makeImageInfo(): ImageInfo {
         let imageShape = this.data.dashboardCanvas.findOne('#main-image');
-        console.log(imageShape);
         return imageShape.attrs as ImageInfo;
     }
 

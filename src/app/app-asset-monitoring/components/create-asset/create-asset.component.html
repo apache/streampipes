@@ -1,11 +1,11 @@
 <div fxLayout="column" fxFlex="100" >
-    <input type="file" (change)="handleFileInput($event.target.files)" accept="image/*" #file style="display:none;">
+    <input type="file" (change)="handleFileInput($event)" accept="image/*" #file style="display:none;">
     <div class="assemblyOptions sp-blue-bg">
         <div layout="row" layout-align="start center">
-            <button mat-icon-button (click)="prepareDashboard()" type="submit">
+            <button mat-icon-button (click)="prepareDashboard()" type="submit" [disabled]="!backgroundImagePresent || !measurementPresent">
                 <i class="material-icons">save</i>
             </button>
-            <button mat-icon-button (click)="file.click()" type="submit">
+            <button mat-icon-button (click)="file.click()" type="submit" [disabled]="backgroundImagePresent">
                 <i class="material-icons">file_upload</i>
             </button>
             <button mat-icon-button (click)="openAddPipelineDialog()" >

@@ -5,7 +5,6 @@ import {MatDialog} from "@angular/material";
 import {ShapeService} from "../../services/shape.service";
 import {SelectedVisualizationData} from "../../model/selected-visualization-data.model";
 import {SaveDashboardDialogComponent} from "../../dialog/save-dashboard/save-dashboard-dialog.component";
-import {DashboardConfiguration} from "../../model/dashboard-configuration.model";
 
 interface Window {
     Image: any;
@@ -27,10 +26,15 @@ export class CreateAssetComponent {
     backgroundImageLayer: any;
     mainLayer: any;
 
+    currentlySelectedShape: any;
+
+    IMAGE_ID: string = "main-image";
     selectedVisualizationData: SelectedVisualizationData;
 
-    constructor(public dialog: MatDialog, public shapeService: ShapeService) {
+    backgroundImagePresent: boolean = false;
+    measurementPresent: boolean = false;
 
+    constructor(public dialog: MatDialog, public shapeService: ShapeService) {
     }
 
     ngAfterViewInit() {
@@ -45,20 +49,29 @@ export class CreateAssetComponent {
         let container = this.mainCanvasStage.container();
         container.focus();
 
+        this.initLayers();
+    }
+
+    initLayers() {
         this.mainLayer = new Konva.Layer();
         this.backgroundImageLayer = new Konva.Layer();
 
-        this.backgroundImageLayer.on('click', function(evt) {
-            // get the shape that was clicked on
-            var shape = evt.target;
-            console.log(evt);
+        this.backgroundImageLayer.on('click', evt => {
+            this.currentlySelectedShape = evt.target;
         });
-
+        this.mainLayer.on('click', evt => {
+            let parentElement = evt.target.getParent();
+            while(!parentElement.id()) {
+                parentElement = parentElement.getParent();
+            }
+            this.currentlySelectedShape = parentElement;
+        });
         this.mainCanvasStage.add(this.backgroundImageLayer);
         this.mainCanvasStage.add(this.mainLayer);
     }
 
-    handleFileInput(files: any) {
+    handleFileInput(event: any) {
+        let files: any = event.target.files;
         this.selectedUploadFile = files[0];
         this.fileName = this.selectedUploadFile.name;
 
@@ -71,30 +84,25 @@ export class CreateAssetComponent {
                 x: 0,
                 y: 0,
                 draggable: true,
-                id: 'main-image'
+                id: this.IMAGE_ID
             });
 
             this.backgroundImageLayer.add(imageCanvas);
             this.backgroundImageLayer.draw();
 
-            var tr = new Konva.Transformer({
-                anchorStroke: 'white',
-                anchorFill: '#39B54A',
-                anchorSize: 20,
-                borderStroke: 'green',
-                borderDash: [3, 3],
-                keepRatio: true,
-            });
+            var tr = this.getNewTransformer(this.IMAGE_ID);
             this.backgroundImageLayer.add(tr);
             tr.attachTo(imageCanvas);
             this.backgroundImageLayer.draw();
+            this.currentlySelectedShape = imageCanvas;
         };
 
         const reader = new FileReader();
         reader.onload = e => image.src = reader.result;
 
         reader.readAsDataURL(this.selectedUploadFile);
-
+        event.target.value = null;
+        this.backgroundImagePresent = true;
 
     }
 
@@ -108,8 +116,11 @@ export class CreateAssetComponent {
     }
 
     clearCanvas() {
-        this.backgroundImageLayer.clear();
-        this.mainLayer.clear();
+        this.backgroundImageLayer.destroy();
+        this.mainLayer.destroy();
+        this.initLayers();
+        this.backgroundImagePresent = false;
+        this.measurementPresent = false;
     }
 
     openAddPipelineDialog(): void {
@@ -120,37 +131,74 @@ export class CreateAssetComponent {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            this.addNewVisulizationItem(result);
-            console.log(result);
-            this.mainLayer.draw();
+            if (result) {
+                this.addNewVisulizationItem(result);
+                this.measurementPresent = true;
+                this.mainLayer.draw();
+            }
         });
     }
 
     @HostListener('document:keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
-        console.log(event);
-        //this.key = event.key;
+        const delta = 4;
+        if (event.code == "Delete") {
+            let id = this.currentlySelectedShape.id();
+            this.mainCanvasStage.findOne("#" +id + "-transformer").destroy();
+            this.currentlySelectedShape.destroy();
+            if (id === this.IMAGE_ID) {
+                this.backgroundImagePresent = false;
+            } else {
+                let remainingElementIds = this.mainLayer.find("Group");
+                if (remainingElementIds.length === 0) {
+                    this.measurementPresent = false;
+                }
+            }
+        } else if (event.code == "ArrowLeft") {
+            this.currentlySelectedShape.x(this.currentlySelectedShape.x() - delta);
+        } else if (event.code == "ArrowRight") {
+            this.currentlySelectedShape.x(this.currentlySelectedShape.x() + delta);
+        } else if (event.code == "ArrowDown") {
+            this.currentlySelectedShape.y(this.currentlySelectedShape.y() + delta);
+        } else if (event.code == "ArrowUp") {
+            this.currentlySelectedShape.y(this.currentlySelectedShape.y() - delta);
+        }
+        this.backgroundImageLayer.draw();
+        this.mainLayer.draw();
     }
 
     addNewVisulizationItem(visualizationConfig) {
         let visGroup = this.shapeService.makeNewMeasurementShape(visualizationConfig);
+        let id = this.makeId();
+        visGroup.id(id);
         this.mainLayer.add(visGroup);
-        let tr = this.getNewTransformer();
+        let tr = this.getNewTransformer(id);
         this.mainLayer.add(tr);
         tr.attachTo(visGroup);
         this.mainLayer.draw();
-
+        this.currentlySelectedShape = visGroup;
     }
 
-    getNewTransformer(): Konva.Transformer {
+    getNewTransformer(id: string): Konva.Transformer {
         return new Konva.Transformer({
             anchorStroke: 'white',
             anchorFill: '#39B54A',
             anchorSize: 10,
             borderStroke: 'green',
             borderDash: [3, 3],
-            keepRatio: true
+            keepRatio: true,
+            id: id + "-transformer"
         });
+    }
+
+    makeId() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < 6; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
     }
 
 }

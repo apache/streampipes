@@ -1,7 +1,7 @@
 <mat-toolbar>
     <div class="md-toolbar-tools">
         <h2>Save Dashboard</h2>
-        <span flex></span>
+        <span fxFlex></span>
         <button mat-icon-button (click)="cancel()">
             <i class="material-icons">close</i>
         </button>
@@ -9,7 +9,9 @@
 </mat-toolbar>
 <div mat-dialog-content class="md-dialog-content">
     <div flex="100" fxLayout="column">
-        <mat-form-field appearance="outline">
+        <h4>Dashboard Settings</h4>
+        <div class="dialog-margin-bottom" fxLayout="column">
+        <mat-form-field appearance="outline" class="dialog-margin-bottom">
             <mat-label>Dashboard Name</mat-label>
             <input matInput placeholder="Label" [(ngModel)]="dashboardName">
             <mat-hint>The name of your new asset dashboard</mat-hint>
@@ -19,6 +21,7 @@
             <input matInput placeholder="Label" [(ngModel)]="dashboardDescription">
             <mat-hint>The description of your new asset dashboard</mat-hint>
         </mat-form-field>
+        </div>
 
     </div>
 </div>

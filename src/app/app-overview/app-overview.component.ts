@@ -45,7 +45,6 @@ export class AppOverviewComponent {
     }
 
     selectApp(appId: string) {
-        console.log(appId);
         this.currentlySelectedApp = appId;
     }
 

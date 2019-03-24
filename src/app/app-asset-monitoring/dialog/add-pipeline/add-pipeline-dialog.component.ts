@@ -34,9 +34,9 @@ export class AddPipelineDialogComponent {
     page: any = "select-pipeline";
 
     selectedLabelBackgroundColor: string = "#FFFFFF";
-    selectedLabelTextColor: string = "#000000";
-    selectedMeasurementBackgroundColor: string = "#FFFFFF";
-    selectedMeasurementTextColor: string = "#000000";
+    selectedLabelTextColor: string = "#1B1464";
+    selectedMeasurementBackgroundColor: string = "#39B54A";
+    selectedMeasurementTextColor: string = "#FFFFFF";
     selectedLabel: string;
 
 
@@ -51,7 +51,6 @@ export class AddPipelineDialogComponent {
     ngOnInit() {
         this.restService.getVisualizablePipelines().subscribe(visualizations => {
             visualizations.rows.forEach(vis => {
-                console.log(vis);
                 this.restService.getPipeline(vis.doc.pipelineId)
                     .subscribe(pipeline => {
                         vis.doc.name = pipeline.name;
@@ -82,14 +81,12 @@ export class AddPipelineDialogComponent {
     }
 
     getTabCss(page) {
-        console.log(page);
         if (page == this.page) return "md-fab md-accent";
         else return "md-fab md-accent wizard-inactive";
     }
 
     selectPipeline(vis) {
         this.selectedVisualization = vis;
-        console.log(vis);
         this.next();
 
     }
