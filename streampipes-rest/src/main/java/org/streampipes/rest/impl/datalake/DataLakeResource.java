@@ -44,7 +44,6 @@ public class DataLakeResource extends AbstractRestInterface {
         this.dataLakeManagement = dataLakeManagement;
     }
 
-    @SuppressWarnings("unchecked")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
@@ -66,6 +65,28 @@ public class DataLakeResource extends AbstractRestInterface {
                 return Response.ok(result).build();
             }
         } catch (IOException e) {
+            e.printStackTrace();
+
+            return Response.serverError().build();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @GsonWithIds
+    @Path("/delete/{index}")
+    public Response delteIndex(@PathParam("index") String index) {
+
+        try {
+            String result = this.dataLakeManagement.deleteIndex(index);
+            if (result.equals("")) {
+                return Response.ok(result).build();
+            } else {
+
+                return Response.serverError().build();
+            }
+
+        } catch(IOException e){
             e.printStackTrace();
 
             return Response.serverError().build();

@@ -18,12 +18,16 @@
 package org.streampipes.rest.impl.datalake;
 
 import org.apache.http.HttpHost;
+import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.search.*;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.Scroll;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -60,18 +64,13 @@ public class DataLakeManagement {
 
 
     public List<Map<String, Object>> getDataLakeData(String index) throws IOException {
-       return getDataLakeData(index, null, -1, -1);
+        return getDataLakeData(index, null, -1, -1);
     }
 
     public List<Map<String, Object>> getDataLakeData(String index, String timestampRuntimeName, long from, long to) throws IOException {
         List<Map<String, Object>> result = new ArrayList<>();
 
-        String host = BackendConfig.INSTANCE.getDatalakeHost();
-        int port = BackendConfig.INSTANCE.getDatalakePort();
-
-        RestHighLevelClient client = new RestHighLevelClient(
-                RestClient.builder(
-                        new HttpHost(host, port, "http")));
+        RestHighLevelClient client = getRestHighLevelClient();
 
         final Scroll scroll = new Scroll(TimeValue.timeValueMinutes(1L));
         SearchRequest searchRequest = new SearchRequest(index);
@@ -114,6 +113,36 @@ public class DataLakeManagement {
         return result;
     }
 
+    private RestHighLevelClient getRestHighLevelClient() {
+        String host = BackendConfig.INSTANCE.getDatalakeHost();
+        int port = BackendConfig.INSTANCE.getDatalakePort();
+
+        return new RestHighLevelClient(
+                RestClient.builder(
+                        new HttpHost(host, port, "http")));
+    }
+
+    public String deleteIndex(String index) throws IOException {
+        RestHighLevelClient client = getRestHighLevelClient();
+
+        DeleteIndexRequest request = new DeleteIndexRequest(index);
+
+        try {
+            AcknowledgedResponse deleteIndexResponse = client.indices().delete(request, RequestOptions.DEFAULT);
+            if (deleteIndexResponse.isAcknowledged()) {
+                return "";
+            } else {
+                return "Index: " + index + " did not exist!";
+            }
+
+        } catch (ElasticsearchException exception) {
+            if (exception.status() == RestStatus.NOT_FOUND) {
+                return "Index: " + index + " did not exist!";
+            }
+        }
+
+        return "Index: " + index + " did not exist!";
+    }
 
 
 }
