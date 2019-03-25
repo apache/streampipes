@@ -24,6 +24,8 @@ import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
@@ -116,6 +118,10 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException, ParseException {
+
+        GuessSchema guessSchema = new GuessSchema();
+        EventSchema eventSchema = new EventSchema();
+
         getConfigurations(adapterDescription);
 
         OpcUa opc = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId);
@@ -124,7 +130,9 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
             List<ReferenceDescription> res =  opc.browseNode();
 
             for (ReferenceDescription r : res) {
-                System.out.println(r.getBrowseName().getName());
+                EventPropertyPrimitive ep = new EventPropertyPrimitive();
+                ep.setRuntimeType(r.getBrowseName().getName());
+                System.out.println(r.toString());
             }
 
             opc.disconnect();
