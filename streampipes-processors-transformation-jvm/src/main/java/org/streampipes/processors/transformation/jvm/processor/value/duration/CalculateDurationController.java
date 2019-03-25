@@ -77,11 +77,11 @@ public class CalculateDurationController extends StandaloneEventProcessingDeclar
   @Override
   public ConfiguredEventProcessor<CalculateDurationParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-    String start_ts = extractor.mappingPropertyValue(START_TS_FIELD_ID);
-    String end_ts = extractor.mappingPropertyValue(END_TS_FIELD_ID);
+    String startTs = extractor.mappingPropertyValue(START_TS_FIELD_ID);
+    String endTs = extractor.mappingPropertyValue(END_TS_FIELD_ID);
     String unit = extractor.selectedSingleValue(UNIT_FIELD_ID, String.class);
 
-    CalculateDurationParameters params = new CalculateDurationParameters(graph, start_ts, end_ts, unit, DURATION_FIELD_NAME);
+    CalculateDurationParameters params = new CalculateDurationParameters(graph, startTs, endTs, unit, DURATION_FIELD_NAME);
     return new ConfiguredEventProcessor<>(params, CalculateDuration::new);
   }
 }

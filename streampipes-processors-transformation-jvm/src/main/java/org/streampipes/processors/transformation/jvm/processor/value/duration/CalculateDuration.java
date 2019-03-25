@@ -27,8 +27,8 @@ public class CalculateDuration implements EventProcessor<CalculateDurationParame
 
   private static Logger LOG;
 
-  private String start_ts;
-  private String end_ts;
+  private String startTs;
+  private String endTs;
   private String unit;
   private String durationName;
 
@@ -39,16 +39,16 @@ public class CalculateDuration implements EventProcessor<CalculateDurationParame
     LOG = calculateDurationParameters.getGraph().getLogger(
         CalculateDuration.class);
 
-    this.start_ts = calculateDurationParameters.getTimestampStart();
-    this.end_ts = calculateDurationParameters.getTimestampEnd();
+    this.startTs = calculateDurationParameters.getStartTs();
+    this.endTs= calculateDurationParameters.getEndTs();
     this.unit = calculateDurationParameters.getUnit();
     this.durationName = calculateDurationParameters.getDurationName();
   }
 
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
-    Long start = inputEvent.getFieldBySelector(start_ts).getAsPrimitive().getAsLong();
-    Long end = inputEvent.getFieldBySelector(end_ts).getAsPrimitive().getAsLong();
+    Long start = inputEvent.getFieldBySelector(startTs).getAsPrimitive().getAsLong();
+    Long end = inputEvent.getFieldBySelector(endTs).getAsPrimitive().getAsLong();
     Long duration = end - start;
 
     if (unit.equals(CalculateDurationController.MS)) {
