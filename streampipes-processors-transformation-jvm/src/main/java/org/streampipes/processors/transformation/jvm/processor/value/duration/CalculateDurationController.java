@@ -42,6 +42,12 @@ public class CalculateDurationController extends StandaloneEventProcessingDeclar
   public static final String DURATION_FIELD_NAME = "duration";
   public static final String UNIT_FIELD_ID = "unit_field"; // hours,
 
+  public static final String MS = "Milliseconds";
+  public static final String SECONDS = "Seconds";
+  public static final String MINUTES = "Minutes";
+  public static final String HOURS = "Hours";
+
+
   //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
@@ -60,7 +66,7 @@ public class CalculateDurationController extends StandaloneEventProcessingDeclar
                     PropertyScope.NONE)
                     .build())
             .requiredSingleValueSelection(Labels.from(UNIT_FIELD_ID, "Timeunit", "Test"),
-                Options.from("Milliseconds", "Seconds", "Minutes", "Hours"))
+                Options.from(MS, SECONDS, MINUTES, HOURS))
             .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), DURATION_FIELD_NAME,
                 SO.Number)))
             .supportedFormats(SupportedFormats.jsonFormat())
