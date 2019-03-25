@@ -40,7 +40,7 @@ import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
 public class PalletTransportDetectionController extends StandaloneEventProcessingDeclarer<PalletTransportDetectionParameters>
-    /*implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor>*/ {
+    implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   public static final String PALLET = "pallet";
 
@@ -48,6 +48,9 @@ public class PalletTransportDetectionController extends StandaloneEventProcessin
   public static final String SECONDS = "Seconds";
   public static final String MINUTES = "Minutes";
   public static final String HOURS = "Hours";
+
+  public static final String FIRST_STREAM_KEEP_FIELD_ID = "firstStreamItems";
+  public static final String SECOND_STREAM_KEEP_FIELD_ID = "secondStreamItems";
 
   public static final String FIRST_LOCATION_PALLET_FIELD_ID = "firstLocation";
   public static final String SECOND_LOCATION_PALLET_FIELD_ID = "secondLocation";
@@ -58,7 +61,7 @@ public class PalletTransportDetectionController extends StandaloneEventProcessin
   @Override
   public DataProcessorDescription declareModel() {
     //TODO: Add output strategy (check dashboard for how-to)?
-    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.mergerorg.streampipes.processors.filters.jvm.processor.mergestartandend",
+    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.processor.pallettransportdetection",
             "PalletTransportDetection", "Merges two event streams if there is a start and an end")
             .category(DataProcessorType.TRANSFORM)
             .iconUrl(FiltersJvmConfig.getIconUrl("projection"))
@@ -73,6 +76,10 @@ public class PalletTransportDetectionController extends StandaloneEventProcessin
                     Labels.from(FIRST_TS_FIELD_ID , "Start timestamp",
                         "Timestamp of the first stream"),
                     PropertyScope.NONE)
+                .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
+                    Labels.from(FIRST_STREAM_KEEP_FIELD_ID, "First Stream",
+                        "Included Items of the first stream"),
+                    PropertyScope.NONE)
                 .build())
             .requiredStream(StreamRequirementsBuilder
                 .create()
@@ -85,15 +92,16 @@ public class PalletTransportDetectionController extends StandaloneEventProcessin
                     Labels.from(END_TS_FIELD_ID , "End timestamp",
                         "Timestamp of the second stream"),
                     PropertyScope.NONE)
+                .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
+                    Labels.from(SECOND_STREAM_KEEP_FIELD_ID, "Second Stream",
+                        "Included Items of the second stream"),
+                    PropertyScope.NONE)
                 .build())
             .requiredSingleValueSelection(Labels.from(UNIT_FIELD_ID,
                 "Timeunit",
                 "The unit in which the duration is calculated"),
                 Options.from(MS, SECONDS, MINUTES, HOURS))
-            .outputStrategy(OutputStrategies.custom(true))
-//            .outputStrategy(OutputStrategies.transform(TransformOperations
-//                .dynamicRuntimeNameTransformation(FIRST_TS_FIELD_ID, "StartTs")))
-//            .outputStrategy(OutputStrategies.customTransformation())
+            .outputStrategy(OutputStrategies.customTransformation())
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.jms(), SupportedProtocols.kafka())
             .build();
@@ -113,19 +121,31 @@ public class PalletTransportDetectionController extends StandaloneEventProcessin
     return new ConfiguredEventProcessor<>(staticParam, PalletTransportDetection::new);
   }
 
-/*  @Override
+  @Override
   public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
       ProcessingElementParameterExtractor extractor) throws SpRuntimeException {
-    String arrayFieldSelector = extractor.mappingPropertyValue(ARRAY_FIELD_ID);
-    List<String> keepPropertySelectors = extractor.mappingPropertyValues(KEEP_PROPERTIES_ID);
+
+    // Keeping all the elements
+    List<String> keepProperties1 = extractor.mappingPropertyValues(FIRST_STREAM_KEEP_FIELD_ID);
+    List<String> keepProperties2 = extractor.mappingPropertyValues(SECOND_STREAM_KEEP_FIELD_ID);
+
+    // Removes the timestamp from the list to later add it again (with a different runtime name)
+    String timestampOneSelector = extractor.mappingPropertyValue(FIRST_TS_FIELD_ID);
+    keepProperties1.remove(timestampOneSelector);
+    String timestampTwoSelector = extractor.mappingPropertyValue(FIRST_TS_FIELD_ID);
+    keepProperties2.remove(timestampTwoSelector);
+
+    EventProperty ts1 = extractor.getEventPropertyBySelector(timestampOneSelector);
+    EventProperty ts2 = extractor.getEventPropertyBySelector(timestampTwoSelector);
+    ts1.setRuntimeName("startTimestamp");
+    ts2.setRuntimeName("endTimestamp");
 
     List<EventProperty> outProperties = new ArrayList<>();
-    EventProperty arrayProperty = extractor.getEventPropertyBySelector(arrayFieldSelector);
-    List<EventProperty> keepProperties = extractor.getEventPropertiesBySelector
-        (keepPropertySelectors);
-    outProperties.add(arrayProperty);
-    outProperties.addAll(keepProperties);
+    outProperties.addAll(extractor.getEventPropertiesBySelector(keepProperties1));
+    outProperties.addAll(extractor.getEventPropertiesBySelector(keepProperties2));
+    outProperties.add(ts1);
+    outProperties.add(ts2);
 
     return new EventSchema(outProperties);
-  }*/
+  }
 }
