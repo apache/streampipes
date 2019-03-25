@@ -14,9 +14,9 @@ export class AppTransportMonitoringComponent {
     selectedIndex: number = 0;
     @Output() appOpened = new EventEmitter<boolean>();
 
-    incomingExpanded: boolean = false;
-    transportExpanded: boolean = false;
-    outgoingExpanded: boolean = false;
+    incomingExpanded: boolean = true;
+    transportExpanded: boolean = true;
+    outgoingExpanded: boolean = true;
     summaryExpanded: boolean = true;
 
     transportProcessSelected: boolean = false;
