@@ -6,19 +6,16 @@
     </div>
     <div fxFlex="33" fxLayout="column">
         <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
-            <dashboard-item fxFlex="100" [panelTitle]="'Total Boxes Detected'">
-                <dashboard-status [statusValue]="totalBoxes"></dashboard-status>
-            </dashboard-item>
+            <dashboard-status-filled fxFlex="100" [label]="'Total Boxes Detected'"
+                                     [statusValue]="totalBoxes"></dashboard-status-filled>
         </div>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
-            <dashboard-item fxFlex="100" [panelTitle]="'Transparent Boxes Detected'">
-                <dashboard-status [statusValue]="transparentBoxes"></dashboard-status>
-            </dashboard-item>
+            <dashboard-status-filled fxFlex="100" [label]="'Transparent Boxes Detected'"
+                              [statusValue]="transparentBoxes"></dashboard-status-filled>
         </div>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
-            <dashboard-item fxFlex="100" [panelTitle]="'Cardboard Boxes Detected'">
-                <dashboard-status [statusValue]="cardboardBoxes"></dashboard-status>
-            </dashboard-item>
+            <dashboard-status-filled fxFlex="100" [label]="'Cardboard Boxes Detected'"
+                              [statusValue]="cardboardBoxes"></dashboard-status-filled>
         </div>
     </div>
 </div>

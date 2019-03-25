@@ -3,11 +3,10 @@
 <!--<div [ngStyle]="getStyle(activity)" style="display:inline-block;"></div>-->
 <!--</div>-->
 <!--</div>-->
-<div fxFlex="100">
+<div fxFlex="100" class="chart-container">
     <ngx-charts-polar-chart
-            [view]="[700, 700]"
             [results]="polarChartDataActivity"
-            [legend]="false"
+            [legend]="true"
             [xAxis]="false"
             [yAxis]="false"></ngx-charts-polar-chart>
 </div>

@@ -18,6 +18,9 @@ export class TransportActivityGraphComponent {
     }
 
     ngOnInit() {
+    }
+
+    ngAfterViewInit() {
         this.makeDummyData();
         this.prepareNewPolarChart();
     }
