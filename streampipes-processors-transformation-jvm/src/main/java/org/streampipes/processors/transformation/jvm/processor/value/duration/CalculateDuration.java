@@ -54,12 +54,12 @@ public class CalculateDuration implements EventProcessor<CalculateDurationParame
     if (unit.equals(CalculateDurationController.MS)) {
       inputEvent.addField(durationName, duration);
     } else if (unit.equals(CalculateDurationController.SECONDS)) {
-      inputEvent.addField(durationName, duration / 1000);
+      inputEvent.addField(durationName, (duration + 500) / 1000);
     } else if (unit.equals(CalculateDurationController.MINUTES)) {
-      inputEvent.addField(durationName, duration / 60000);
+      inputEvent.addField(durationName, (duration + 30000) / 60000);
     } else {
       // Hours
-      inputEvent.addField(durationName, duration / 3600000);
+      inputEvent.addField(durationName, (duration + 1800000) / 3600000);
     }
     out.collect(inputEvent);
   }
