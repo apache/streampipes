@@ -17,6 +17,7 @@
 
 package org.streampipes.connect.adapter.specific.opcua;
 
+import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.specific.SpecificDataStreamAdapter;
@@ -24,10 +25,11 @@ import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
-import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.streampipes.sdk.helpers.Labels;
 
@@ -121,6 +123,8 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
         GuessSchema guessSchema = new GuessSchema();
         EventSchema eventSchema = new EventSchema();
+        List<EventProperty> allProperties = new ArrayList<>();
+
 
         getConfigurations(adapterDescription);
 
@@ -130,9 +134,9 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
             List<ReferenceDescription> res =  opc.browseNode();
 
             for (ReferenceDescription r : res) {
-                EventPropertyPrimitive ep = new EventPropertyPrimitive();
-                ep.setRuntimeType(r.getBrowseName().getName());
-                System.out.println(r.toString());
+               allProperties.add(PrimitivePropertyBuilder
+                        .create(OpcUaTypes.getType((UInteger) r.getTypeDefinition().getIdentifier()), r.getBrowseName().getName())
+                        .build());
             }
 
             opc.disconnect();
@@ -140,8 +144,10 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
             e.printStackTrace();
         }
 
+        eventSchema.setEventProperties(allProperties);
+        guessSchema.setEventSchema(eventSchema);
 
-        return null;
+        return guessSchema;
     }
 
     @Override
