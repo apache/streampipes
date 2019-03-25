@@ -15,48 +15,38 @@ limitations under the License.
 */
 package org.streampipes.processors.filters.jvm.processor.mergestartandend;
 
-import java.util.List;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.processors.filters.jvm.config.FiltersJvmConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-public class MergeStartAndEndController extends StandaloneEventProcessingDeclarer<MergeStartAndEndParameters> {
+import java.util.List;
 
-  public static final String START_TS_FIELD_ID = "start_ts";
-  public static final String END_TS_FIELD_ID = "end_ts";
+public class MergeStartAndEndController extends StandaloneEventProcessingDeclarer<MergeStartAndEndParameters> {
 
   @Override
   public DataProcessorDescription declareModel() {
     //TODO: Add output strategy (check dashboard for how-to)?
-    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.merger",
+    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.mergerorg.streampipes.processors.filters.jvm.processor.mergestartandend",
             "MergeStartAndEnd", "Merges two event streams if there is a start and an end")
             .category(DataProcessorType.TRANSFORM)
             .iconUrl(FiltersJvmConfig.getIconUrl("projection"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                        Labels.from(START_TS_FIELD_ID, "Startevent timestamp",
-                            "The timestamp of the startevent"),
-                        PropertyScope.NONE)
+                    .requiredProperty(EpRequirements.anyProperty())
                     .build())
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                    Labels.from(END_TS_FIELD_ID, "Endevent timestamp",
-                        "The timestamp of the endevent"),
-                    PropertyScope.NONE)
+                    .requiredProperty(EpRequirements.anyProperty())
                 .build())
             .outputStrategy(OutputStrategies.custom(true))
             .supportedFormats(SupportedFormats.jsonFormat())
@@ -70,12 +60,10 @@ public class MergeStartAndEndController extends StandaloneEventProcessingDeclare
 
     List<String> outputKeySelectors = extractor.outputKeySelectors();
 
-    String timestampStart = extractor.mappingPropertyValue(START_TS_FIELD_ID);
-    String timestampEnd = extractor.mappingPropertyValue(END_TS_FIELD_ID);
 
 
     MergeStartAndEndParameters staticParam = new MergeStartAndEndParameters(
-            graph, outputKeySelectors, timestampStart, timestampEnd);
+            graph, outputKeySelectors);
 
     return new ConfiguredEventProcessor<>(staticParam, MergeStartAndEnd::new);
   }

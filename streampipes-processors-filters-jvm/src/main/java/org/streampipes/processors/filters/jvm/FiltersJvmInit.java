@@ -23,6 +23,7 @@ import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.filters.jvm.config.FiltersJvmConfig;
 import org.streampipes.processors.filters.jvm.processor.compose.ComposeController;
+import org.streampipes.processors.filters.jvm.processor.mergestartandend.MergeStartAndEndController;
 import org.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterController;
 import org.streampipes.processors.filters.jvm.processor.projection.ProjectionController;
 import org.streampipes.processors.filters.jvm.processor.textfilter.TextFilterController;
@@ -34,6 +35,7 @@ public class FiltersJvmInit extends StandaloneModelSubmitter {
             .getInstance()
             .add(new NumericalFilterController())
             .add(new TextFilterController())
+            .add(new MergeStartAndEndController())
             .add(new ProjectionController())
             .add(new ComposeController());
 

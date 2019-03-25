@@ -15,29 +15,21 @@ limitations under the License.
 */
 package org.streampipes.processors.filters.jvm.processor.mergestartandend;
 
-import java.util.List;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
+import java.util.List;
+
 public class MergeStartAndEndParameters extends EventProcessorBindingParams {
 
-  private String timestampStart;
-  private String timestampEnd;
   private List<String> outputKeySelectors;
 
   public MergeStartAndEndParameters(DataProcessorInvocation graph,
-        List<String> outputKeySelectors,
-        String timestampStart,
-        String timestampEnd) {
+        List<String> outputKeySelectors) {
     super(graph);
     this.outputKeySelectors = outputKeySelectors;
-    this.timestampStart = timestampStart;
-    this.timestampEnd = timestampEnd;
   }
 
   public List<String> getOutputKeySelectors() { return outputKeySelectors; }
 
-  public String getTimestampStart() { return timestampStart; }
-
-  public String getTimestampEnd() { return timestampEnd; }
 }

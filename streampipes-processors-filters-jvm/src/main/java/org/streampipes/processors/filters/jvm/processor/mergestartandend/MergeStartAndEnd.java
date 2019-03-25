@@ -15,13 +15,14 @@ limitations under the License.
 */
 package org.streampipes.processors.filters.jvm.processor.mergestartandend;
 
-import java.util.List;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.model.runtime.EventFactory;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
+
+import java.util.List;
 
 public class MergeStartAndEnd implements EventProcessor<MergeStartAndEndParameters> {
 
@@ -44,8 +45,7 @@ public class MergeStartAndEnd implements EventProcessor<MergeStartAndEndParamete
 
   @Override
   public void onEvent(Event event, SpOutputCollector spOutputCollector) {
-    //TODO: equals 0?
-    if (event.getSourceInfo().getSelectorPrefix().equals("0")) {
+    if (event.getSourceInfo().getSelectorPrefix().equals("s0")) {
       // Startevent
       startValid = true;
       lastStartEvent = event;
