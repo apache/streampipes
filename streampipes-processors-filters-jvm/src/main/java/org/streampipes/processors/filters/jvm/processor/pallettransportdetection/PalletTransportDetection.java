@@ -25,15 +25,21 @@ import org.streampipes.wrapper.runtime.EventProcessor;
 
 public class PalletTransportDetection implements EventProcessor<PalletTransportDetectionParameters> {
 
+  private enum StateMachine {
+    Start,
+    PalletOnFirst,
+    PalletOnTransport,
+    PalletOnSecond
+  }
+
   private EventSchema outputSchema;
   private List<String> outputKeySelectors;
 
   private String startTs;
   private String endTs;
 
-  private boolean startValid = false;
-  private Event lastStartEvent;
-
+  private StateMachine state = StateMachine.Start;
+  private Event palletTakenEvent;
 
   @Override
   public void onInvocation(PalletTransportDetectionParameters palletTransportDetectionParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
@@ -53,21 +59,48 @@ public class PalletTransportDetection implements EventProcessor<PalletTransportD
   public void onEvent(Event event, SpOutputCollector spOutputCollector) {
     if (event.getSourceInfo().getSelectorPrefix().equals("s0")) {
       // Startevent
-      startValid = true;
-      lastStartEvent = event;
+      boolean pall = event
+          .getFieldBySelector(PalletTransportDetectionController.FIRST_LOCATION_PALLET_FIELD_ID)
+          .getAsPrimitive()
+          .getAsString()
+          .equals(PalletTransportDetectionController.PALLET);
+      if (pall) {
+        if (state == StateMachine.Start) {
+          // pallet was just placed to 1
+          state = StateMachine.PalletOnFirst;
+        }
+      } else {
+        if (state == StateMachine.PalletOnFirst) {
+          // pallet was just removed from 1
+          state = StateMachine.PalletOnTransport;
+          palletTakenEvent = event;
+        }
+      }
     } else {
       // Endevent
-      if (startValid) {
-        // Merge events
-        spOutputCollector.collect(mergeEvents(event));
-        startValid = false;
+      boolean pall = event
+          .getFieldBySelector(PalletTransportDetectionController.SECOND_LOCATION_PALLET_FIELD_ID)
+          .getAsPrimitive()
+          .getAsString()
+          .equals(PalletTransportDetectionController.PALLET);
+      if (pall) {
+        if (state == StateMachine.PalletOnTransport) {
+          // pallet was just placed on 2
+          state = StateMachine.PalletOnSecond;
+          spOutputCollector.collect(mergeEvents(event));
+        }
+      } else {
+        if (state == StateMachine.PalletOnSecond) {
+          // pallet was just removed from 2
+          state = StateMachine.Start;
+        }
       }
     }
   }
 
   private Event mergeEvents(Event event) {
     return EventFactory
-        .fromEvents(lastStartEvent, event, outputSchema)
+        .fromEvents(palletTakenEvent, event, outputSchema)
         .getSubset(outputKeySelectors);
   }
 }
