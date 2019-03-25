@@ -1,29 +1,25 @@
 <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
-    <div fxFlex="50">
+    <div fxFlex="67">
         <dashboard-item [panelTitle]="'Activity Graph'">
-            Activity graph
+            <transport-activity-graph fxFlex="100" *ngIf="activitiesPresent"
+                                      [activityEventModel]="processActivities.events"></transport-activity-graph>
         </dashboard-item>
     </div>
-    <div fxFlex="50" fxLayout="column">
-        <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
-            <dashboard-item fxFlex="100" [panelTitle]="'Activities Count'">
-                <dashboard-status [statusValue]="processActivities.events.length"></dashboard-status>
-            </dashboard-item>
+    <div fxFlex="33" fxLayout="column" *ngIf="activitiesPresent">
+        <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+            <dashboard-status-filled fxFlex="100" [label]="'Activities Count'"
+                                     [statusValue]="processActivities.events.length"></dashboard-status-filled>
+        </div>
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+            <dashboard-status-filled fxFlex="100" [label]="'# Normal'" [statusValue]="normalActivitiesTotalTime"></dashboard-status-filled>
         </div>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
-            <dashboard-item fxFlex="100" [panelTitle]="'# Normal'">
-                <dashboard-status [statusValue]="getNormalPercentage()"></dashboard-status>
-            </dashboard-item>
+            <dashboard-status-filled fxFlex="100" [label]="'Detected Shake Activities'"
+                              [statusValue]="shakeActivitiesTotalTime"></dashboard-status-filled>
         </div>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
-            <dashboard-item fxFlex="100" [panelTitle]="'# Throw'">
-                <dashboard-status [statusValue]="getThrowPercentage()"></dashboard-status>
-            </dashboard-item>
-        </div>
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
-            <dashboard-item fxFlex="100" [panelTitle]="'# Shake'">
-                <dashboard-status [statusValue]="getShakePercentage()"></dashboard-status>
-            </dashboard-item>
+            <dashboard-status-filled fxFlex="100" [label]="'Detected Fall Activities'"
+                              [statusValue]="fallActivities"></dashboard-status-filled>
         </div>
     </div>
 </div>

@@ -1,5 +1,6 @@
-export interface ParcelInfoModel {
-    date: string;
-    image: string;
-    timestamp: number;
+import {AbstractEventModel} from "./abstract-event.model";
+import {ParcelInfoEventModel} from "./parcel-info-event.model";
+
+export interface ParcelInfoModel extends AbstractEventModel<ParcelInfoEventModel> {
+
 }

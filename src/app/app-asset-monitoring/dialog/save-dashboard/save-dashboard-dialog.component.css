@@ -24,7 +24,7 @@ mat-dialog-content {
 .mat-dialog-content {
     width:100%;
     height:74%;
-    margin: 0px;
+    margin: 10px 0px 0px;
 }
 
 .mat-dialog-actions {
@@ -32,6 +32,6 @@ mat-dialog-content {
     padding-right:10px;
 }
 
-.mat-radio-button {
-    padding: 10px;
+.dialog-margin-bottom {
+    margin-bottom: 10px;
 }

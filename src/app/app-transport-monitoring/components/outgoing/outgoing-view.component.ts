@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {AppTransportMonitoringRestService} from "../../services/app-transport-monitoring-rest.service";
 import {ParcelInfoModel} from "../../model/parcel-info.model";
+import {ParcelInfoEventModel} from "../../model/parcel-info-event.model";
 
 @Component({
     selector: 'outgoing-view',
@@ -9,24 +10,22 @@ import {ParcelInfoModel} from "../../model/parcel-info.model";
 })
 export class OutgoingViewComponent {
 
-    parcelInfo: ParcelInfoModel;
+    @Input() parcelInfo: ParcelInfoEventModel[];
     showImage: boolean = false;
 
-    constructor(private restService: AppTransportMonitoringRestService) {
+    totalBoxes: number = 0;
+    transparentBoxes: number = 0;
+    cardboardBoxes: number = 0;
+
+    constructor() {
 
     }
 
     ngOnInit() {
-        this.fetchOutgoingParcelInfo();
+        this.showImage = true;
+        this.totalBoxes = this.parcelInfo[0].number_of_detected_boxes;
+        this.transparentBoxes = this.parcelInfo[0].number_of_transparent_boxes;
+        this.cardboardBoxes = this.parcelInfo[0].number_of_cardboard_boxes;
+        this.showImage = true;
     }
-
-    fetchOutgoingParcelInfo() {
-        this.restService.getLatestOutgoingParcelInfo(0, 0).subscribe(resp => {
-            this.parcelInfo = resp;
-            this.showImage = true;
-        });
-
-    }
-
-
 }

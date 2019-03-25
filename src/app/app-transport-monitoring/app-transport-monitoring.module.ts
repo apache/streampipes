@@ -16,6 +16,10 @@ import {TransportSelectionComponent} from "./components/transport-selection/tran
 import {AppTransportMonitoringRestService} from "./services/app-transport-monitoring-rest.service";
 import {DashboardStatusFilledComponent} from "./components/dashboard-status-filled/dashboard-status-filled.component";
 import {TransportSummaryComponent} from "./components/transport-summary/transport-summary.component";
+import {SlideshowModule} from "ng-simple-slideshow";
+import {TransportActivityGraphComponent} from "./components/transport-activity-graph/transport-activity-graph.component";
+import {TimestampConverterService} from "./services/timestamp-converter.service";
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
     imports: [
@@ -25,7 +29,9 @@ import {TransportSummaryComponent} from "./components/transport-summary/transpor
         MatGridListModule,
         MatInputModule,
         MatFormFieldModule,
-        FormsModule
+        FormsModule,
+        SlideshowModule,
+        NgxChartsModule
     ],
     declarations: [
         AppTransportMonitoringComponent,
@@ -37,10 +43,12 @@ import {TransportSummaryComponent} from "./components/transport-summary/transpor
         DashboardStatusComponent,
         TransportSelectionComponent,
         DashboardStatusFilledComponent,
-        TransportSummaryComponent
+        TransportSummaryComponent,
+        TransportActivityGraphComponent
     ],
     providers: [
         AppTransportMonitoringRestService,
+        TimestampConverterService,
         {
             provide: 'RestApi',
             useFactory: ($injector: any) => $injector.get('RestApi'),

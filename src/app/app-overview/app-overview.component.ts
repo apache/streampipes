@@ -12,8 +12,8 @@ export class AppOverviewComponent {
 
     apps: any[] = [
         {
-            appName: "Asset Monitoring",
-            appDescription: "Monitor measurement of your assets by using an image of your asset.",
+            appName: "Asset Dashboards",
+            appDescription: "Monitor measurements of your assets by placing visualizations on an image of your asset.",
             appId: "asset-monitoring",
         },
         {
@@ -45,7 +45,6 @@ export class AppOverviewComponent {
     }
 
     selectApp(appId: string) {
-        console.log(appId);
         this.currentlySelectedApp = appId;
     }
 

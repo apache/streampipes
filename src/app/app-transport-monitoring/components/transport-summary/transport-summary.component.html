@@ -1,9 +1,9 @@
 <div flex="100" fxLayout="row">
-    <dashboard-status-filled fxFlex="25" [label]="'Shipped'" [statusValue]="'13:06:59'"
+    <dashboard-status-filled fxFlex="25" [label]="'Shipped'" [statusValue]="shippedTime"
                              [color]="'rgb(156, 156, 156)'"></dashboard-status-filled>
-    <dashboard-status-filled fxFlex="25" [label]="'Delivered'" [statusValue]="'13:08:59'"
+    <dashboard-status-filled fxFlex="25" [label]="'Delivered'" [statusValue]="deliveredTime"
                              [color]="'rgb(156, 156, 156)'"></dashboard-status-filled>
-    <dashboard-status-filled fxFlex="25" [label]="'Time'" [statusValue]="'120 sec'"
+    <dashboard-status-filled fxFlex="25" [label]="'Took'" [statusValue]="tookTime"
                              [color]="'rgb(156, 156, 156)'"></dashboard-status-filled>
     <dashboard-status-filled fxFlex="25"[label]="'Status'" [statusValue]="'OK'" [color]="'green'"></dashboard-status-filled>
 </div>

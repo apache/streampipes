@@ -11,3 +11,7 @@
     font-size:20pt;
     margin-bottom: 30px;
 }
+
+.fix-margin {
+    margin-top: -5px;
+}

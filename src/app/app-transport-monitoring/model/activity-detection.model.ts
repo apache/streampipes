@@ -1,6 +1,6 @@
-import {EventModel} from "./event.model";
+import {ActivityEventModel} from "./activity-event.model";
+import {AbstractEventModel} from "./abstract-event.model";
 
-export interface ActivityDetectionModel {
-   total: string;
-   events: EventModel[];
+export interface ActivityDetectionModel extends AbstractEventModel<ActivityEventModel> {
+
 }

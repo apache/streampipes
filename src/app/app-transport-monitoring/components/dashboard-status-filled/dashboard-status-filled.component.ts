@@ -9,14 +9,16 @@ export class DashboardStatusFilledComponent {
 
     @Input() statusValue: string;
     @Input() label: string;
-    @Input() color: string;
+    @Input() color: string = "rgb(156, 156, 156)";
+
+    chartData: any;
 
     constructor() {
 
     }
 
     ngOnInit() {
-
+        this.chartData = [{"name": this.label, "value": this.statusValue}]
     }
 
     getBackground() {
