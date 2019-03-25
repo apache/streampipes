@@ -51,11 +51,11 @@ public class CalculateDuration implements EventProcessor<CalculateDurationParame
     Long end = inputEvent.getFieldBySelector(end_ts).getAsPrimitive().getAsLong();
     Long duration = end - start;
 
-    if (unit == "Milliseconds") {
+    if (unit.equals("Milliseconds")) {
       inputEvent.addField(durationName, duration);
-    } else if (unit == "Seconds") {
+    } else if (unit.equals("Seconds")) {
       inputEvent.addField(durationName, duration / 1000);
-    } else if (unit == "Minutes") {
+    } else if (unit.equals("Minutes")) {
       inputEvent.addField(durationName, duration / 60000);
     } else {
       // Hours
