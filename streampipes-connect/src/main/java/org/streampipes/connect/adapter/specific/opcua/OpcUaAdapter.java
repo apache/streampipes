@@ -17,6 +17,9 @@
 
 package org.streampipes.connect.adapter.specific.opcua;
 
+import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
+import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
+import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
 import org.streampipes.connect.adapter.Adapter;
@@ -34,7 +37,9 @@ import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.streampipes.sdk.helpers.Labels;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
@@ -51,8 +56,16 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
     private String nodeId;
     private String port;
 
+    private Map<String, Object> event;
+
+    private OpcUa opcUa;
+
+    private int numberProperties;
+
 
     public OpcUaAdapter() {
+        this.event = new HashMap<>();
+        this.numberProperties = 0;
     }
 
     public OpcUaAdapter(SpecificAdapterStreamDescription adapterDescription) {
@@ -60,6 +73,8 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
         getConfigurations(adapterDescription);
 
+        this.event = new HashMap<>();
+        this.numberProperties = 0;
     }
 
     @Override
@@ -68,6 +83,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
         SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "OPC UA", "Read values form an opc ua server")
                 .iconUrl("opc.jpg")
                 .requiredTextParameter(Labels.from(OPC_SERVER_HOST, "OPC Server", "URL of the OPC UA server. No leading opc.tcp://"))
+                .requiredTextParameter(Labels.from(OPC_SERVER_PORT, "OPC Server Port", "Port of the OPC UA server. Default: 4840"))
                 .requiredTextParameter(Labels.from(NAMESPACE_INDEX, "Namespace Index", "Index of the Namespace of the node"))
                 .requiredTextParameter(Labels.from(NODE_ID, "Node Id", "Id of the Node to read the values from"))
                 .build();
@@ -77,45 +93,56 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
         return  description;
     }
 
+    public void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
+
+        String[] keys = item.getReadValueId().getNodeId().getIdentifier().toString().split("\\.");
+        String key;
+
+        if (keys.length > 0) {
+            key = keys[keys.length - 1];
+        } else {
+            key = item.getReadValueId().getNodeId().getIdentifier().toString();
+        }
+        event.put(key, value.getValue().getValue());
+
+        if (event.keySet().size() == this.numberProperties) {
+            adapterPipeline.process(event);
+            System.out.println(event);
+        }
+    }
+
+
     @Override
     public void startAdapter() throws AdapterException {
+        this.opcUa = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId);
+        try {
+            this.opcUa.connect();
 
+            List<ReferenceDescription> allNodes = this.opcUa.browseNode();
+            List<NodeId> nodeIds = new ArrayList<>();
+
+
+            for (ReferenceDescription rd : allNodes) {
+                rd.getNodeId().local().ifPresent(nodeId -> nodeIds.add(nodeId));
+            }
+
+            this.numberProperties = nodeIds.size();
+            this.opcUa.createListSubscription(nodeIds, this);
+        } catch (Exception e) {
+            throw new AdapterException("Could not connect to OPC-UA server! Server: " + opcUaServer + " Port: " + port +
+                    " NamespaceIndex: " + namespaceIndex + " NodeId: " + nodeId);
+        }
     }
 
     @Override
     public void stopAdapter() throws AdapterException {
-
+        // close connection
+        this.opcUa.disconnect();
     }
 
     @Override
     public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
         return new OpcUaAdapter(adapterDescription);
-    }
-
-    public static void main(String... args) throws AdapterException {
-        List<StaticProperty> all = new ArrayList<>();
-        FreeTextStaticProperty p1 = new FreeTextStaticProperty(OPC_SERVER_HOST, "", "");
-        p1.setValue("192.168.0.144");
-        all.add(p1);
-
-        FreeTextStaticProperty p2 = new FreeTextStaticProperty(NODE_ID, "", "");
-        p2.setValue("|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG");
-        all.add(p2);
-
-        FreeTextStaticProperty p3 = new FreeTextStaticProperty(NAMESPACE_INDEX, "", "");
-        p3.setValue("4");
-        all.add(p3);
-
-        FreeTextStaticProperty p4 = new FreeTextStaticProperty(OPC_SERVER_PORT, "", "");
-        p4.setValue("4840");
-        all.add(p4);
-
-
-        SpecificAdapterStreamDescription description = new SpecificAdapterStreamDescription();
-        description.setConfig(all);
-
-        OpcUaAdapter opcUaAdapter = new OpcUaAdapter(description);
-        opcUaAdapter.getSchema(description);
     }
 
     @Override
@@ -134,7 +161,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
             List<ReferenceDescription> res =  opc.browseNode();
 
             for (ReferenceDescription r : res) {
-               allProperties.add(PrimitivePropertyBuilder
+                allProperties.add(PrimitivePropertyBuilder
                         .create(OpcUaTypes.getType((UInteger) r.getTypeDefinition().getIdentifier()), r.getBrowseName().getName())
                         .build());
             }

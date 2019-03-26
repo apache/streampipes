@@ -92,11 +92,7 @@ public class OpcUaTest {
 
     }
 
-    private static void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
-        System.out.println(
-                "subscription value received: " + item.getReadValueId().toString() + " " + value.getValue().toString());
 
-    }
 
     private static OpcUaClient init() throws Exception{
         EndpointDescription[] endpoints = UaTcpStackClient.getEndpoints(opcServerURL).get();
@@ -144,6 +140,12 @@ public class OpcUaTest {
     }
 
 
+    private static void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
+        System.out.println(
+                "subscription value received: " + item.getReadValueId().toString() + " " + value.getValue().toString());
+
+    }
+
     private static void createListSubscription(OpcUaClient client, List<NodeId> nodes) throws Exception {
         /*
          * create a subscription @ 1000ms
@@ -159,7 +161,7 @@ public class OpcUaTest {
 
         for (CompletableFuture<DataValue> value : values) {
             if (value.get().getValue().toString().contains("null")) {
-                System.out.println("ALAMR! Node has no value");
+                System.out.println("Node has no value");
             }
         }
 
@@ -168,10 +170,7 @@ public class OpcUaTest {
             // Read a specific value attribute
         for (NodeId node : nodes) {
             readValues.add(new ReadValueId(node, AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE));
-
         }
-
-
 
             List<MonitoredItemCreateRequest> requests = new ArrayList<>();
 
@@ -192,7 +191,6 @@ public class OpcUaTest {
 
             BiConsumer<UaMonitoredItem, Integer> onItemCreated =
                     (item, id) -> {
-                        System.out.println(id);
                         item.setValueConsumer(OpcUaTest::onSubscriptionValue);
                     };
 

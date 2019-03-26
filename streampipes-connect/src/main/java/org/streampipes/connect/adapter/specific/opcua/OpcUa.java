@@ -20,25 +20,29 @@ package org.streampipes.connect.adapter.specific.opcua;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
+import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
+import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
 import org.eclipse.milo.opcua.stack.client.UaTcpStackClient;
+import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
+import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseDirection;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseResultMask;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
-import org.eclipse.milo.opcua.stack.core.types.structured.BrowseDescription;
-import org.eclipse.milo.opcua.stack.core.types.structured.BrowseResult;
-import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
-import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
+import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
+import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.*;
+import org.eclipse.milo.opcua.stack.core.types.structured.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.BiConsumer;
 
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
@@ -49,6 +53,8 @@ public class OpcUa {
     private String opcServerHost;
     private int opcServerPort;
     private OpcUaClient client;
+
+    private static final AtomicLong clientHandles = new AtomicLong(1L);
 
     public OpcUa(String opcServerURL, int opcServerPort, int namespaceIndex, String nodeId) {
 
@@ -61,10 +67,6 @@ public class OpcUa {
     public void connect() throws Exception {
 
         EndpointDescription[] endpoints = UaTcpStackClient.getEndpoints("opc.tcp://" + opcServerHost + ":" + opcServerPort).get();
-
-        System.out.println("------------");
-        System.out.println(opcServerHost);
-        System.out.println("------------");
 
         EndpointDescription tmpEndpoint = endpoints[0];
         tmpEndpoint = updateEndpointUrl(tmpEndpoint, opcServerHost);
@@ -145,5 +147,72 @@ public class OpcUa {
         return result;
 
     }
+
+
+    public void createListSubscription(List<NodeId> nodes, OpcUaAdapter opcUaAdapter) throws Exception {
+        /*
+         * create a subscription @ 1000ms
+         */
+        UaSubscription subscription = this.client.getSubscriptionManager().createSubscription(1000.0).get();
+
+
+        List<CompletableFuture<DataValue>> values = new ArrayList<>();
+
+        for (NodeId node : nodes) {
+            values.add(this.client.readValue(0, TimestampsToReturn.Both, node));
+        }
+
+        for (CompletableFuture<DataValue> value : values) {
+            if (value.get().getValue().toString().contains("null")) {
+                System.out.println("Node has no value");
+            }
+        }
+
+
+        List<ReadValueId> readValues = new ArrayList<>();
+            // Read a specific value attribute
+        for (NodeId node : nodes) {
+            readValues.add(new ReadValueId(node, AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE));
+        }
+
+            List<MonitoredItemCreateRequest> requests = new ArrayList<>();
+
+            for (ReadValueId readValue : readValues) {
+                // important: client handle must be unique per item
+                UInteger clientHandle = uint(clientHandles.getAndIncrement());
+
+                MonitoringParameters parameters = new MonitoringParameters(
+                        clientHandle,
+                        1000.0,     // sampling interval
+                        null,      // filter, null means use default
+                        uint(10),   // queue size
+                        true         // discard oldest
+                );
+
+                requests.add(new MonitoredItemCreateRequest(readValue, MonitoringMode.Reporting, parameters));
+            }
+
+            BiConsumer<UaMonitoredItem, Integer> onItemCreated =
+                    (item, id) -> {
+                        item.setValueConsumer(opcUaAdapter::onSubscriptionValue);
+                    };
+
+            List<UaMonitoredItem> items = subscription.createMonitoredItems(
+                    TimestampsToReturn.Both,
+                    requests,
+                    onItemCreated
+            ).get();
+
+            for (UaMonitoredItem item : items) {
+                NodeId tagId = item.getReadValueId().getNodeId();
+                if (item.getStatusCode().isGood()) {
+                    System.out.println("item created for nodeId="+ tagId);
+                } else {
+                    System.out.println("failed to create item for " + item.getReadValueId().getNodeId() + item.getStatusCode());
+                }
+            }
+
+    }
+
 
 }
