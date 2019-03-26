@@ -44,9 +44,7 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
     if (singletonEngine) {
      send(consumers.get(consumers.keySet().toArray()[0]), event);
     } else {
-      consumers.keySet().forEach(c -> {
-        send(consumers.get(c), event);
-      });
+      consumers.forEach((key, value) -> send(value, event));
     }
   }
 
