@@ -50,9 +50,9 @@ import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
 public class OpcUaTest {
 
-//    private OpcUaClient myClient;
-//    private static String opcServerURL = "opc.tcp://141.21.43.39:4840";
-    private static String opcServerURL = "opc.tcp://192.168.0.144:4840";
+    //    private OpcUaClient myClient;
+    private static String opcServerURL = "opc.tcp://141.21.43.39:4840";
+    //    private static String opcServerURL = "opc.tcp://192.168.0.144:4840";
     private static final AtomicLong clientHandles = new AtomicLong(1L);
 
 
@@ -67,7 +67,7 @@ public class OpcUaTest {
         NodeId node3 = new NodeId(4, "|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG.fuss_rot");
         NodeId node4 = new NodeId(4, "|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG");
 
-        browseNodeTest("", client, node4);
+//        browseNodeTest("", client, node4);
 
 //        CompletableFuture<DataValue> va1 = client.readValue(0, TimestampsToReturn.Both, node1);
 //        CompletableFuture<DataValue> va2 = client.readValue(0, TimestampsToReturn.Both, node2);
@@ -81,6 +81,7 @@ public class OpcUaTest {
 	 /*   JSONParser parser = new JSONParser();
 	    JSONObject json = (JSONObject) parser.parse(exchange.getIn().getBody().toString());*/
 
+	 createListSubscription(client, Arrays.asList(node1, node2));
 //        createSubscription(client, node1);
 //        createSubscription(client, node2);
 
@@ -93,7 +94,7 @@ public class OpcUaTest {
 
     private static void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
         System.out.println(
-                "subscription value received: " + item.getReadValueId().getNodeId()+ value.getValue().toString());
+                "subscription value received: " + item.getReadValueId().toString() + " " + value.getValue().toString());
 
     }
 
@@ -101,7 +102,7 @@ public class OpcUaTest {
         EndpointDescription[] endpoints = UaTcpStackClient.getEndpoints(opcServerURL).get();
 
         EndpointDescription tmpEndpoint = endpoints[0];
-        tmpEndpoint = updateEndpointUrl(tmpEndpoint, "192.168.0.144");
+        tmpEndpoint = updateEndpointUrl(tmpEndpoint, "141.21.43.39");
         endpoints = new EndpointDescription[]{tmpEndpoint};
 
         EndpointDescription endpoint = Arrays.stream(endpoints)
@@ -142,6 +143,77 @@ public class OpcUaTest {
         );
     }
 
+
+    private static void createListSubscription(OpcUaClient client, List<NodeId> nodes) throws Exception {
+        /*
+         * create a subscription @ 1000ms
+         */
+        UaSubscription subscription = client.getSubscriptionManager().createSubscription(1000.0).get();
+
+
+        List<CompletableFuture<DataValue>> values = new ArrayList<>();
+
+        for (NodeId node : nodes) {
+            values.add(client.readValue(0, TimestampsToReturn.Both, node));
+        }
+
+        for (CompletableFuture<DataValue> value : values) {
+            if (value.get().getValue().toString().contains("null")) {
+                System.out.println("ALAMR! Node has no value");
+            }
+        }
+
+
+        List<ReadValueId> readValues = new ArrayList<>();
+            // Read a specific value attribute
+        for (NodeId node : nodes) {
+            readValues.add(new ReadValueId(node, AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE));
+
+        }
+
+
+
+            List<MonitoredItemCreateRequest> requests = new ArrayList<>();
+
+            for (ReadValueId readValue : readValues) {
+                // important: client handle must be unique per item
+                UInteger clientHandle = uint(clientHandles.getAndIncrement());
+
+                MonitoringParameters parameters = new MonitoringParameters(
+                        clientHandle,
+                        1000.0,     // sampling interval
+                        null,      // filter, null means use default
+                        uint(10),   // queue size
+                        true         // discard oldest
+                );
+
+                requests.add(new MonitoredItemCreateRequest(readValue, MonitoringMode.Reporting, parameters));
+            }
+
+            BiConsumer<UaMonitoredItem, Integer> onItemCreated =
+                    (item, id) -> {
+                        System.out.println(id);
+                        item.setValueConsumer(OpcUaTest::onSubscriptionValue);
+                    };
+
+            List<UaMonitoredItem> items = subscription.createMonitoredItems(
+                    TimestampsToReturn.Both,
+                    requests,
+                    onItemCreated
+            ).get();
+
+            for (UaMonitoredItem item : items) {
+                NodeId tagId = item.getReadValueId().getNodeId();
+                if (item.getStatusCode().isGood()) {
+                    System.out.println("item created for nodeId="+ tagId);
+                } else {
+                    System.out.println("failed to create item for " + item.getReadValueId().getNodeId() + item.getStatusCode());
+                }
+            }
+
+    }
+
+
     /**
      * creates a subcription for the given node
      *
@@ -178,7 +250,11 @@ public class OpcUaTest {
 
 
             BiConsumer<UaMonitoredItem, Integer> onItemCreated =
-                    (item, id) -> item.setValueConsumer(OpcUaTest::onSubscriptionValue);
+                    (item, id) -> {
+                        System.out.println(id);
+                        item.setValueConsumer(OpcUaTest::onSubscriptionValue);
+                    };
+
 
             List<UaMonitoredItem> items = subscription.createMonitoredItems(
                     TimestampsToReturn.Both,
