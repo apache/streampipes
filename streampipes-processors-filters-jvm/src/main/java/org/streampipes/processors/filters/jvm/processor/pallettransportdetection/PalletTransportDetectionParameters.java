@@ -15,7 +15,6 @@ limitations under the License.
 */
 package org.streampipes.processors.filters.jvm.processor.pallettransportdetection;
 
-import java.util.List;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
@@ -23,22 +22,34 @@ public class PalletTransportDetectionParameters extends EventProcessorBindingPar
 
   private String startTs;
   private String endTs;
-  private List<String> outputKeySelectors;
+  private String palletField1;
+  private String palletField2;
 
   public PalletTransportDetectionParameters(DataProcessorInvocation graph,
-      List<String> outputKeySelectors,
-      String startTs,
-      String endTs) {
+                                            String startTs,
+                                            String endTs,
+                                            String palletField1, String palletField2) {
     super(graph);
     this.startTs = startTs;
     this.endTs = endTs;
-    this.outputKeySelectors = outputKeySelectors;
+    this.palletField1 = palletField1;
+    this.palletField2 = palletField2;
+
   }
 
-  public List<String> getOutputKeySelectors() { return outputKeySelectors; }
+  public String getStartTs() {
+    return startTs;
+  }
 
-  public String getStartTs() { return startTs; }
+  public String getEndTs() {
+    return endTs;
+  }
 
-  public String getEndTs() { return endTs; }
+  public String getPalletField1() {
+    return palletField1;
+  }
 
+  public String getPalletField2() {
+    return palletField2;
+  }
 }
