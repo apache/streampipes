@@ -24,7 +24,10 @@ export class AdapterExportDialog {
 
     ngOnInit() {
         delete this.data.adapter['userName'];
-        this.adapterJsonLd = this.tsonLdSerializerService.toJsonLd(this.data.adapter);
+        this.tsonLdSerializerService.toJsonLd(this.data.adapter).subscribe(res => {
+            this.adapterJsonLd = res;
+        });
+
     }
 
     download() {
