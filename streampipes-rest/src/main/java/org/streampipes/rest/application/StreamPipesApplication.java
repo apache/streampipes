@@ -17,38 +17,8 @@
 
 package org.streampipes.rest.application;
 
-import org.streampipes.rest.impl.ApplicationLink;
-import org.streampipes.rest.impl.AssetDashboard;
-import org.streampipes.rest.impl.Authentication;
-import org.streampipes.rest.impl.AutoComplete;
-import org.streampipes.rest.impl.ConsulConfig;
-import org.streampipes.rest.impl.ContainerProvidedOptions;
-import org.streampipes.rest.impl.Couchdb;
-import org.streampipes.rest.impl.DataStream;
-import org.streampipes.rest.impl.Deployment;
-import org.streampipes.rest.impl.InternalPipelineTemplates;
-import org.streampipes.rest.impl.Notification;
-import org.streampipes.rest.impl.OntologyContext;
-import org.streampipes.rest.impl.OntologyKnowledge;
-import org.streampipes.rest.impl.OntologyMeasurementUnit;
-import org.streampipes.rest.impl.OntologyPipelineElement;
-import org.streampipes.rest.impl.PipelineCategory;
-import org.streampipes.rest.impl.PipelineElementAsset;
-import org.streampipes.rest.impl.PipelineElementCategory;
-import org.streampipes.rest.impl.PipelineElementImport;
-import org.streampipes.rest.impl.PipelineElementRuntimeInfo;
-import org.streampipes.rest.impl.PipelineTemplate;
-import org.streampipes.rest.impl.PipelineWithUserResource;
-import org.streampipes.rest.impl.RdfEndpoint;
-import org.streampipes.rest.impl.SemanticEventConsumer;
-import org.streampipes.rest.impl.SemanticEventProcessingAgent;
-import org.streampipes.rest.impl.SemanticEventProducer;
-import org.streampipes.rest.impl.Setup;
-import org.streampipes.rest.impl.StreamPipesLogs;
-import org.streampipes.rest.impl.User;
-import org.streampipes.rest.impl.Version;
-import org.streampipes.rest.impl.VirtualSensor;
-import org.streampipes.rest.impl.Visualization;
+import org.streampipes.rest.impl.*;
+import org.streampipes.rest.impl.datalake.DataLakeResource;
 import org.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
 import org.streampipes.rest.impl.nouser.PipelineNoUserResource;
 import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
@@ -56,10 +26,9 @@ import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
 import org.streampipes.rest.shared.serializer.JsonLdProvider;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 public class StreamPipesApplication extends Application {
 
@@ -82,6 +51,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(PipelineNoUserResource.class);
         apiClasses.add(PipelineElementImportNoUser.class);
         apiClasses.add(PipelineCategory.class);
+        apiClasses.add(DataLakeResource.class);
         apiClasses.add(PipelineElementImport.class);
         apiClasses.add(SemanticEventConsumer.class);
         apiClasses.add(SemanticEventProcessingAgent.class);

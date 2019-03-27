@@ -44,6 +44,7 @@ import org.streampipes.connect.adapter.generic.protocol.stream.HttpStreamProtoco
 import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.MqttProtocol;
 import org.streampipes.connect.adapter.specific.gdelt.GdeltAdapter;
+import org.streampipes.connect.adapter.specific.opcua.OpcUaAdapter;
 import org.streampipes.connect.adapter.specific.ros.RosBridgeAdapter;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 
@@ -62,6 +63,7 @@ public class AdapterRegistry {
         allAdapters.put(GenericDataStreamAdapter.ID, new GenericDataStreamAdapter());
         //allAdapters.put(OpenSenseMapAdapter.ID, new OpenSenseMapAdapter());
         allAdapters.put(GdeltAdapter.ID, new GdeltAdapter());
+        allAdapters.put(OpcUaAdapter.ID, new OpcUaAdapter());
         //allAdapters.put(NswTrafficCameraAdapter.ID, new NswTrafficCameraAdapter());
         allAdapters.put(RosBridgeAdapter.ID, new RosBridgeAdapter());
 

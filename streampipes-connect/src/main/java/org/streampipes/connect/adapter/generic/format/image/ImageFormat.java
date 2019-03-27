@@ -25,7 +25,6 @@ import org.streampipes.model.connect.grounding.FormatDescription;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,9 +61,6 @@ public class ImageFormat extends Format {
                     .asStream();
 
         byte[] b =  IOUtils.toByteArray(result);
-        System.out.println(Base64.getEncoder().encodeToString(b));
-
-        System.out.println("========k=======k=======k=======k=======k=======k=======k=======k=======k=======k=======k=======k=======k======k");
 //        InputStream in  = IOUtils.toInputStream(result, "UTF-8");
 //        byte[] a = IOUtils.toByteArray(in);
 
@@ -84,8 +80,6 @@ public class ImageFormat extends Format {
         Map<String, Object> result = new HashMap<>();
 
         String resultImage = Base64.getEncoder().encodeToString(object);
-
-        System.out.println("Format " + Base64.getEncoder().encodeToString(object));
 
         result.put("image", resultImage);
 
