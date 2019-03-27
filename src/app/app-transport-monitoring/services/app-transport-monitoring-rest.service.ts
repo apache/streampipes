@@ -92,7 +92,7 @@ export class AppTransportMonitoringRestService {
     }
 
     getTransportProcessesUrl(): string {
-        return this.url + "/sp_transport_processes?from=0&to=&timestamp=timestamp";
+        return this.url + "/sp_transport_processes";
     }
 
     getOutgoingParcelInfoUrl(from: number, to:number, timestampProperty: string): string {
