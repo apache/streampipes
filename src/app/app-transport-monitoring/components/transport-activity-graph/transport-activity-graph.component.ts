@@ -21,7 +21,7 @@ export class TransportActivityGraphComponent {
     }
 
     ngAfterViewInit() {
-        this.makeDummyData();
+        //this.makeDummyData();
         this.prepareNewPolarChart();
     }
 
