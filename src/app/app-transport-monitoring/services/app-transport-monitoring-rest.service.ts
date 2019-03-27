@@ -10,6 +10,7 @@ import {ParcelInfoModel} from "../model/parcel-info.model";
 import {ParcelInfoEventModel} from "../model/parcel-info-event.model";
 import {OldEventModel} from "../model/old-event.model";
 import {TransportProcessEventModel} from "../model/transport-process-event.model";
+import {TransportProcessModel} from "../model/transport-process.model";
 
 @Injectable()
 export class AppTransportMonitoringRestService {
@@ -22,10 +23,14 @@ export class AppTransportMonitoringRestService {
     }
 
     getTransportProcesses(): Observable<TransportProcessEventModel[]> {
-        let transportProceses: TransportProcessEventModel[] = [];
-        transportProceses.push({startTime: this.startTimestampDefault, endTime: this.endTimestampDefault});
-        transportProceses.push({startTime: this.startTimestampDefault, endTime: this.endTimestampDefault});
-        return of(transportProceses);
+        return this.http.get(this.getTransportProcessesUrl()).pipe(map(resp => {
+           let transportProcessModel:TransportProcessModel = resp as TransportProcessModel;
+           return transportProcessModel.events;
+        }));
+        // let transportProcesses: TransportProcessEventModel[] = [];
+        // transportProcesses.push({startTime: this.startTimestampDefault, endTime: this.endTimestampDefault});
+        // transportProcesses.push({startTime: this.startTimestampDefault, endTime: this.endTimestampDefault});
+        // return of(transportProcesses);
     }
 
     getActivityDetection(startTimestamp: number, endTimestamp: number): Observable<ActivityDetectionModel> {
