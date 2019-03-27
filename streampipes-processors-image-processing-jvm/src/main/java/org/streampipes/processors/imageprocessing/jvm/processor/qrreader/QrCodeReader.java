@@ -36,11 +36,15 @@ import java.util.Optional;
 public class QrCodeReader implements EventProcessor<QrCodeReaderParameters> {
 
   private QrCodeReaderParameters params;
+  private Boolean sendIfNoResult;
+  private String placeholderValue;
   private static final Logger LOG = LoggerFactory.getLogger(QrCodeReader.class);
 
   @Override
   public void onInvocation(QrCodeReaderParameters qrCodeReaderParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     this.params = qrCodeReaderParameters;
+    this.sendIfNoResult = qrCodeReaderParameters.getSendIfNoResult();
+    this.placeholderValue = qrCodeReaderParameters.getPlaceholderValue();
   }
 
   @Override
@@ -58,20 +62,31 @@ public class QrCodeReader implements EventProcessor<QrCodeReaderParameters> {
 
       detector.process(gray);
       List<QrCode> detections = detector.getDetections();
+      List<QrCode> failures = detector.getFailures();
 
       if (detections.size() > 0) {
         LOG.info(detections.get(0).message);
-        Event event = new Event();
-        event.addField("qrvalue", detections.get(0).message);
-        event.addField("timestamp", System.currentTimeMillis());
+        Event event = makeEvent(detections.get(0).message);
         out.collect(event);
       } else {
         LOG.info("Could not find any QR code");
+        if (sendIfNoResult) {
+          Event event = makeEvent(placeholderValue);
+          out.collect(event);
+        }
       }
 
 
     }
   }
+
+  private Event makeEvent(String qrCodeValue) {
+    Event event = new Event();
+    event.addField("qrvalue", qrCodeValue);
+    event.addField("timestamp", System.currentTimeMillis());
+    return event;
+  }
+
 
   @Override
   public void onDetach() {

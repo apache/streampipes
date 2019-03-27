@@ -22,13 +22,26 @@ import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 public class QrCodeReaderParameters extends EventProcessorBindingParams {
 
   private String imagePropertyName;
+  private String placeholderValue;
+  private Boolean sendIfNoResult;
 
-  public QrCodeReaderParameters(DataProcessorInvocation graph, String imagePropertyName) {
+  public QrCodeReaderParameters(DataProcessorInvocation graph, String imagePropertyName, String
+          placeholderValue, Boolean sendIfNoResult) {
     super(graph);
     this.imagePropertyName = imagePropertyName;
+    this.placeholderValue = placeholderValue;
+    this.sendIfNoResult = sendIfNoResult;
   }
 
   public String getImagePropertyName() {
     return imagePropertyName;
+  }
+
+  public String getPlaceholderValue() {
+    return placeholderValue;
+  }
+
+  public Boolean getSendIfNoResult() {
+    return sendIfNoResult;
   }
 }

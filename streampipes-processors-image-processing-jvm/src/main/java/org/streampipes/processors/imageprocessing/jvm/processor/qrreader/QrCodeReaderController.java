@@ -29,6 +29,7 @@ import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
@@ -36,6 +37,9 @@ import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
 public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<QrCodeReaderParameters> {
+
+  private static final String PLACEHOLDER_VALUE = "placeholder-value";
+  private static final String SEND_IF_NO_RESULT = "send-if-no-result";
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -48,6 +52,9 @@ public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<Qr
                             .domainPropertyReq("https://image.com"), Labels
                             .from(IMAGE_PROPERTY, "Image", ""),
                     PropertyScope.NONE).build())
+            .requiredSingleValueSelection(Labels.from(SEND_IF_NO_RESULT, "Send placeholder value" +
+                    " if no qr code is detected", ""), Options.from("Yes", "No"))
+            .requiredTextParameter(Labels.from(PLACEHOLDER_VALUE, "Placeholder value", ""))
             .outputStrategy(OutputStrategies.fixed(EpProperties.timestampProperty("timestamp"),
                     EpProperties.stringEp(Labels.from("qr-value", "QR code value", ""),
                             "qrvalue", "http://schema.org/text")))
@@ -59,8 +66,12 @@ public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<Qr
   @Override
   public ConfiguredEventProcessor<QrCodeReaderParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation, ProcessingElementParameterExtractor extractor) {
     String imagePropertyName = extractor.mappingPropertyValue(IMAGE_PROPERTY);
+    String placeholderValue = extractor.singleValueParameter(PLACEHOLDER_VALUE, String.class);
+    Boolean sendIfNoResult = extractor.selectedSingleValue(SEND_IF_NO_RESULT, String.class)
+            .equals("Yes");
 
-    QrCodeReaderParameters params = new QrCodeReaderParameters(dataProcessorInvocation, imagePropertyName);
+    QrCodeReaderParameters params = new QrCodeReaderParameters(dataProcessorInvocation,
+            imagePropertyName, placeholderValue, sendIfNoResult);
 
     return new ConfiguredEventProcessor<>(params, QrCodeReader::new);
   }
