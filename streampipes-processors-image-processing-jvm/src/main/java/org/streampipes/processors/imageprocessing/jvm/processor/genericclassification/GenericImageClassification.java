@@ -64,7 +64,7 @@ public class GenericImageClassification implements EventProcessor<GenericImageCl
   @Override
   public void onEvent(Event in, SpOutputCollector out) {
     PlainImageTransformer<GenericImageClassificationParameters> imageTransformer = new
-            PlainImageTransformer<>(in.getRaw(),
+            PlainImageTransformer<>(in,
             params);
 
 

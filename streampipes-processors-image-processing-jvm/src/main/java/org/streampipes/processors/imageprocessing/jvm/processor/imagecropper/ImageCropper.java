@@ -38,7 +38,7 @@ public class ImageCropper implements EventProcessor<ImageCropperParameters> {
 
   @Override
   public void onEvent(Event in, SpOutputCollector out) {
-    ImageTransformer imageTransformer = new ImageTransformer(in.getRaw(), params);
+    ImageTransformer imageTransformer = new ImageTransformer(in, params);
     Optional<BufferedImage> imageOpt = imageTransformer.getImage();
 
     if (imageOpt.isPresent()) {

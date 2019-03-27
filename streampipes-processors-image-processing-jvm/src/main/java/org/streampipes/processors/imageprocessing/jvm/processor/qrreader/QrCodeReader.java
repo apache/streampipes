@@ -46,7 +46,7 @@ public class QrCodeReader implements EventProcessor<QrCodeReaderParameters> {
   @Override
   public void onEvent(Event in, SpOutputCollector out) {
     PlainImageTransformer<QrCodeReaderParameters> imageTransformer = new PlainImageTransformer<>
-            (in.getRaw(), params);
+            (in, params);
     Optional<BufferedImage> imageOpt = imageTransformer.getImage(params.getImagePropertyName());
 
     if (imageOpt.isPresent()) {

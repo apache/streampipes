@@ -16,31 +16,31 @@
  */
 package org.streampipes.processors.imageprocessing.jvm.processor.commons;
 
+import org.streampipes.model.runtime.Event;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
-import java.util.Map;
 import java.util.Optional;
+
+import javax.imageio.ImageIO;
 
 public class PlainImageTransformer<T extends EventProcessorBindingParams> {
 
-  protected Map<String, Object> in;
+  protected Event in;
   protected T params;
 
-  public PlainImageTransformer(Map<String, Object> in, T params) {
+  public PlainImageTransformer(Event in, T params) {
     this.in = in;
     this.params = params;
   }
 
   public Optional<BufferedImage> getImage(String imagePropertyName) {
     System.out.println(imagePropertyName);
-    System.out.println(in.get(imagePropertyName));
-    String imageBase64 = String.valueOf(in.get(imagePropertyName));
+    String imageBase64 = in.getFieldBySelector(imagePropertyName).getAsPrimitive().getAsString();
 
     InputStream img = new ByteArrayInputStream(Base64.getDecoder().decode(imageBase64));
     try {
