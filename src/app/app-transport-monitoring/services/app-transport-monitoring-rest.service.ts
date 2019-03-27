@@ -96,11 +96,11 @@ export class AppTransportMonitoringRestService {
     }
 
     getOutgoingParcelInfoUrl(from: number, to:number, timestampProperty: string): string {
-        return this.url + "/sp_new_box_data?from=" +from +"&to=" +to +"&timestamp=" +timestampProperty;
+        return this.url + "/sp_new_box_data?from=" +(from - 5000) +"&to=" +from +"&timestamp=" +timestampProperty;
     }
 
     getIncomingParcelInfoUrl(from: number, to:number, timestampProperty: string): string {
-        return this.url + "/sp_new_box_data?from=" +from +"&to=" +to +"&timestamp=" +timestampProperty;
+        return this.url + "/sp_incoming_goods?from=" +to +"&to=" +(to + 5000) +"&timestamp=" +timestampProperty;
     }
 
 

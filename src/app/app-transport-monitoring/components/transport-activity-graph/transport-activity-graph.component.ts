@@ -33,7 +33,7 @@ export class TransportActivityGraphComponent {
         this.activityEventModel.forEach(activity => {
             normalSeries.push({"name": this.timestampConverterService.convertTimestampHoursOnly(activity.timestamp), "value": this.getActivityValue("normal", 1, activity.activity)});
             shakeSeries.push({"name": this.timestampConverterService.convertTimestampHoursOnly(activity.timestamp), "value": this.getActivityValue("shake", 2, activity.activity)});
-            fallSeries.push({"name": this.timestampConverterService.convertTimestampHoursOnly(activity.timestamp), "value": this.getActivityValue("fall", 3, activity.activity)});
+            fallSeries.push({"name": this.timestampConverterService.convertTimestampHoursOnly(activity.timestamp), "value": this.getActivityValue("fall_down", 3, activity.activity)});
         });
 
         this.polarChartDataActivity = [{"name": "Normal", series: normalSeries}, {"name": "Shake", series: shakeSeries}, {"name": "Fall", series: fallSeries}];
