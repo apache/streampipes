@@ -62,13 +62,13 @@ docker-backend:
    script: 
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-#     - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
-#     - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION -t $HARBOR_IMAGE_NAME/backend:latest -t $HARBOR_IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
+     - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
+     - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION -t $HARBOR_IMAGE_NAME/backend:latest -t $HARBOR_IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
      - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
      - docker push $IMAGE_NAME/backend:$MVN_VERSION
      - docker push $IMAGE_NAME/backend:latest
-#     - docker push $HARBOR_IMAGE_NAME/backend:$MVN_VERSION
-#     - docker push $HARBOR_IMAGE_NAME/backend:latest
+     - docker push $HARBOR_IMAGE_NAME/backend:$MVN_VERSION
+     - docker push $HARBOR_IMAGE_NAME/backend:latest
    only:
      - dev
 
@@ -80,13 +80,13 @@ docker-connect-container:
    script:
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-#     - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
-#     - docker build --pull -t $IMAGE_NAME/streampipes-connect-container:latest -t $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION -t $HARBOR_IMAGE_NAME/streampipes-connect-container:latest -t $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container/
+     - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
+     - docker build --pull -t $IMAGE_NAME/streampipes-connect-container:latest -t $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION -t $HARBOR_IMAGE_NAME/streampipes-connect-container:latest -t $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container/
      - docker build --pull -t $IMAGE_NAME/streampipes-connect-container:latest -t $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION  ./streampipes-connect-container/
      - docker push $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
      - docker push $IMAGE_NAME/streampipes-connect-container:latest
-#     - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
-#     - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:latest
+     - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
+     - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:latest
    only:
      - dev
 
