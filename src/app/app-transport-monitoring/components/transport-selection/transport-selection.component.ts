@@ -28,13 +28,19 @@ export class TransportSelectionComponent {
 
     fetchTransportProcesses() {
         this.restService.getTransportProcesses().subscribe(resp => {
-            console.log(resp);
-           this.transportProcesses = resp;
+           this.transportProcesses = this.sort(resp);
         });
     }
 
     selectProcess(element: TransportProcessEventModel) {
         this.selectedProcess.emit(element);
+    }
+
+    sort(tpe : TransportProcessEventModel[]):TransportProcessEventModel[] {
+        tpe.sort((a,b) => {
+            return b.startTime - a.startTime;
+        });
+        return tpe;
     }
 
 

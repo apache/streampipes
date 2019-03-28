@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {AppTransportMonitoringRestService} from "../../services/app-transport-monitoring-rest.service";
 import {ActivityDetectionModel} from "../../model/activity-detection.model";
-import {ParcelInfoEventModel} from "../../model/parcel-info-event.model";
 import {TransportProcessEventModel} from "../../model/transport-process-event.model";
+import {OpenBoxModel} from "../../model/open-box.model";
 
 @Component({
     selector: 'transport-view',
@@ -14,6 +14,7 @@ export class TransportViewComponent {
     @Input() transportProcess: TransportProcessEventModel;
 
     processActivities: ActivityDetectionModel;
+    openBoxActivities: OpenBoxModel = {total: "0", events: []};
 
     activitiesPresent: boolean = false;
     fallActivities: number = 0;
@@ -36,6 +37,10 @@ export class TransportViewComponent {
             this.normalActivitiesTotalTime = this.filter('shake');
             this.shakeActivitiesTotalTime = this.filter('fall');
         })
+
+        this.restService.getBoxOpenModel(this.transportProcess.startTime, this.transportProcess.endTime).subscribe(resp => {
+            this.openBoxActivities = resp;
+        });
     }
 
     filter(activity: string) {

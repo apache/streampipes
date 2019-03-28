@@ -61,5 +61,17 @@ export class AppTransportMonitoringComponent {
         });
     }
 
+    truncateTransportProcessDatabase() {
+        this.restService.truncateTransportProcessDb();
+    }
+
+    truncateIncomingGoodsDatabase() {
+        this.restService.truncateIncomingGoodsDb();
+    }
+
+    truncateOutgoingGoodsDatabase() {
+        this.restService.truncateOutgoingGoodsDb()
+    }
+
 
 }
