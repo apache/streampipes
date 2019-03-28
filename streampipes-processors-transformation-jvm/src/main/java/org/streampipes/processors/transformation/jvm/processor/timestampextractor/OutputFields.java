@@ -39,6 +39,6 @@ public enum OutputFields {
 
     @Override
     public String toString() {
-        return super.toString();
+        return value;
     }
 }

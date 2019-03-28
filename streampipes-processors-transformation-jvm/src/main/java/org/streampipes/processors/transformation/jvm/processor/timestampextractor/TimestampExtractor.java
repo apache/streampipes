@@ -19,7 +19,6 @@ package org.streampipes.processors.transformation.jvm.processor.timestampextract
 
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
-import org.streampipes.model.runtime.field.AbstractField;
 import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
@@ -50,23 +49,45 @@ public class TimestampExtractor implements EventProcessor<TimestampExtractorPara
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date(timestamp));
 
-        //TODO Labels
-
         for (String field : outputFields) {
-            if(field.equals(OutputFields.YEAR)) {
+            if(field.equals(OutputFields.YEAR.toString())) {
                 event.addField("timestampYear", calendar.get(Calendar.YEAR));
-            } else if(field.equals(OutputFields.MONTH)) {
-                event.addField("timestampMoth", calendar.get(Calendar.MONTH));
-            } else if(field.equals(OutputFields.DAY)) {
+            }
+            if(field.equals(OutputFields.MONTH.toString())) {
+                event.addField("timestampMonth", calendar.get(Calendar.MONTH) + 1);
+            }
+            if(field.equals(OutputFields.DAY.toString())) {
                 event.addField("timestampDay", calendar.get(Calendar.DAY_OF_MONTH));
-            } else if(field.equals(OutputFields.HOUR)) {
+            }
+            if(field.equals(OutputFields.HOUR.toString())) {
                 event.addField("timestampHour", calendar.get(Calendar.HOUR_OF_DAY));
-            } else if(field.equals(OutputFields.MINUTE)) {
+            }
+            if(field.equals(OutputFields.MINUTE.toString())) {
                 event.addField("timestampMinute", calendar.get(Calendar.MINUTE));
-            } else if(field.equals(OutputFields.SECOND)) {
+            }
+            if(field.equals(OutputFields.SECOND.toString())) {
                 event.addField("timestampSecond", calendar.get(Calendar.SECOND));
-            } else if(field.equals(OutputFields.WEEKDAY)) {
-                // TODO
+            }
+            if(field.equals(OutputFields.WEEKDAY.toString())) {
+                int day =  calendar.get(Calendar.DAY_OF_WEEK);
+                String dayString = "";
+                switch (day) {
+                    case Calendar.MONDAY: dayString = "Monday";
+                        break;
+                    case Calendar.TUESDAY: dayString = "Tuesday";
+                        break;
+                    case Calendar.WEDNESDAY: dayString = "Wednesday";
+                        break;
+                    case Calendar.THURSDAY: dayString = "Thursday";
+                        break;
+                    case Calendar.FRIDAY: dayString = "Friday";
+                        break;
+                    case Calendar.SATURDAY: dayString = "Saturday";
+                        break;
+                    case Calendar.SUNDAY: dayString = "Sunday";
+                        break;
+                }
+                event.addField("timestampWeekday", dayString);
             }
         }
 
