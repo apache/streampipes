@@ -21,6 +21,11 @@ export class AppOverviewComponent {
             appDescription: "Monitors the current transport status",
             appId: "transport-monitoring"
         },
+        {
+            appName: "Pallet 3D Model",
+            appDescription: "View a virtual 3D model of a pallet.",
+            appId: "pallet-3d-model"
+        },
     ];
 
     constructor() {
