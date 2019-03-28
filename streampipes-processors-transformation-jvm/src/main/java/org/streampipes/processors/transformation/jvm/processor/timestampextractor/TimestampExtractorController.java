@@ -79,8 +79,6 @@ public class TimestampExtractorController extends StandaloneEventProcessingDecla
 
         List<String> selectedOutputField = extractor.selectedMultiValues(SELECTED_OUTPUT_FIELDS, String.class);
 
-
-        // TODO add fields
         for (String field : selectedOutputField) {
             if(field.equals(OutputFields.YEAR.toString())) {
                 eventSchema.addEventProperty(EpProperties.numberEp(Labels.from("timestampYear", "Timestamp Year", ""), "timestampYear", SO.Number));
