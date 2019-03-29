@@ -59,17 +59,17 @@
     </div>
     <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 1">
         <div fxFlex="100" fxLayout="column">
-            <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start center" style="margin-bottom:10px;">
+            <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="button-margin">
                 <button mat-button mat-raised-button color="primary" (click)="truncateTransportProcessDatabase()">
                     Truncate Transport Process Database
                 </button>
             </div>
-            <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="center center" style="margin-bottom:10px;">
+            <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="button-margin">
                 <button mat-button mat-raised-button color="primary" (click)="truncateIncomingGoodsDatabase()">
                     Truncate Incoming Goods Database
                 </button>
             </div>
-            <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="center center" style="margin-bottom:10px;">
+            <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="button-margin">
                 <button mat-button mat-raised-button color="primary" (click)="truncateOutgoingGoodsDatabase()">
                     Truncate Outgoing Goods Database
                 </button>

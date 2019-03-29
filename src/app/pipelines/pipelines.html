@@ -7,7 +7,8 @@
         <div layout-fill style="line-height:24px;border-bottom:1px solid #ccc">
             <md-tabs md-dynamic-height md-border-bottom>
                 <md-tab label="All Pipelines" md-on-select="ctrl.setSelectedTab('')"></md-tab>
-                <md-tab label="{{pipelineCategory.categoryName}}" md-on-select="ctrl.setSelectedTab(pipelineCategory._id)"
+                <md-tab label="{{pipelineCategory.categoryName}}"
+                        md-on-select="ctrl.setSelectedTab(pipelineCategory._id)"
                         ng-repeat="pipelineCategory in ctrl.pipelineCategories"></md-tab>
             </md-tabs>
         </div>
@@ -18,17 +19,40 @@
         <div>
             <md-content layout-padding>
                 <div layout="row">
-                    <sp-button sp-button-blue ng-click="ctrl.startAllPipelines(true)" ng-disabled="ctrl.checkCurrentSelectionStatus(false)" type="button">Start all pipelines
+                    <sp-button sp-button-blue ng-click="ctrl.startAllPipelines(true)"
+                               ng-disabled="ctrl.checkCurrentSelectionStatus(false)" type="button">Start all pipelines
                     </sp-button>
-                    <sp-button sp-button-blue ng-click="ctrl.startAllPipelines(false)" ng-disabled="ctrl.checkCurrentSelectionStatus(true)" type="button">Stop all pipelines
+                    <sp-button sp-button-blue ng-click="ctrl.startAllPipelines(false)"
+                               ng-disabled="ctrl.checkCurrentSelectionStatus(true)" type="button">Stop all pipelines
                     </sp-button>
                 </div>
                 <md-list>
                     <div class="assemblyOptions sp-blue-bg" style="padding:5px;">
-                        <h4>My pipelines</h4>
+                        <div layout="row" layout-align="start center">
+                            <h4>My pipelines</h4>
+                            <span flex></span>
+                            <md-button class="md-icon-button" ng-click="ctrl.exportPipelines()">
+                                <i class="material-icons">
+                                    cloud_download
+                                </i>
+                                <md-tooltip md-direction="top">
+                                    Export pipelines
+                                </md-tooltip>
+                            </md-button>
+                            <md-button class="md-icon-button" ng-click="ctrl.openImportPipelinesDialog()">
+                                <i class="material-icons">
+                                    cloud_upload
+                                </i>
+                                <md-tooltip md-direction="top">
+                                    Import pipelines
+                                </md-tooltip>
+                            </md-button>
+                        </div>
                     </div>
                     <div class="sp-blue-border">
-                        <pipeline-details active-category="ctrl.activeCategory" pipelines="ctrl.pipelines" refresh-pipelines="ctrl.refreshPipelines()" ng-if="ctrl.pipelines.length > 0"></pipeline-details>
+                        <pipeline-details active-category="ctrl.activeCategory" pipelines="ctrl.pipelines"
+                                          refresh-pipelines="ctrl.refreshPipelines()"
+                                          ng-if="ctrl.pipelines.length > 0"></pipeline-details>
                         <div layout="row" layout-align="center center" ng-if="ctrl.pipelines.length == 0">
                             <h5>(no pipelines available)</h5>
                         </div>
@@ -39,7 +63,9 @@
                         <h4>System-generated pipelines</h4>
                     </div>
                     <div class="sp-blue-border">
-                        <pipeline-details active-category="ctrl.activeCategory" pipelines="ctrl.systemPipelines" refresh-pipelines="ctrl.refreshPipelines()" ng-if="ctrl.pipelines.length > 0"></pipeline-details>
+                        <pipeline-details active-category="ctrl.activeCategory" pipelines="ctrl.systemPipelines"
+                                          refresh-pipelines="ctrl.refreshPipelines()"
+                                          ng-if="ctrl.pipelines.length > 0"></pipeline-details>
                         <div layout="row" layout-align="center center" ng-if="ctrl.systemPipelines.length == 0">
                             <h5>(no system pipelines available)</h5>
                         </div>
