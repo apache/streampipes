@@ -148,100 +148,100 @@ finish release:
   except:
     - master
 
-docker-processors-aggregation-flink:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "processors-aggregation-flink"
-
-docker-processors-enricher-flink:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "processors-enricher-flink"
-
-docker-processors-filters-jvm:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "processors-filters-jvm"
-
-docker-processors-geo-jvm:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "processors-geo-jvm"
+#docker-processors-aggregation-flink:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "processors-aggregation-flink"
+#
+#docker-processors-enricher-flink:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "processors-enricher-flink"
+#
+#docker-processors-filters-jvm:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "processors-filters-jvm"
+#
+#docker-processors-geo-jvm:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "processors-geo-jvm"
 
 docker-processors-image-processing-jvm:
     <<: *docker_script
     variables:
       CONTAINER_NAME: "processors-image-processing-jvm"
 
-docker-processors-pattern-detection-flink:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "processors-pattern-detection-flink"
-
-docker-processors-filters-siddhi:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "processors-filters-siddhi"
-
-docker-processors-statistics-flink:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "processors-statistics-flink"
-
-docker-processors-geo-flink:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "processors-geo-flink"
-
-docker-processors-transformation-flink:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "processors-transformation-flink"
-
-docker-processors-transformation-jvm:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "processors-transformation-jvm"
-
-docker-sinks-brokers-jvm:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "sinks-brokers-jvm"
-
-docker-sinks-databases-flink:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "sinks-databases-flink"
-
-docker-sinks-databases-jvm:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "sinks-databases-jvm"
-
-docker-sinks-notifications-jvm:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "sinks-notifications-jvm"
-
-docker-sinks-internal-jvm:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "sinks-internal-jvm"
-
-docker-sources-vehicle-simulator:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "sources-vehicle-simulator"
-
-docker-sources-random:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "sources-random-data-generator"
-
-docker-sources-watertank-simulator:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "sources-watertank-simulator"
+#docker-processors-pattern-detection-flink:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "processors-pattern-detection-flink"
+#
+#docker-processors-filters-siddhi:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "processors-filters-siddhi"
+#
+#docker-processors-statistics-flink:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "processors-statistics-flink"
+#
+#docker-processors-geo-flink:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "processors-geo-flink"
+#
+#docker-processors-transformation-flink:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "processors-transformation-flink"
+#
+#docker-processors-transformation-jvm:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "processors-transformation-jvm"
+#
+#docker-sinks-brokers-jvm:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "sinks-brokers-jvm"
+#
+#docker-sinks-databases-flink:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "sinks-databases-flink"
+#
+#docker-sinks-databases-jvm:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "sinks-databases-jvm"
+#
+#docker-sinks-notifications-jvm:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "sinks-notifications-jvm"
+#
+#docker-sinks-internal-jvm:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "sinks-internal-jvm"
+#
+#docker-sources-vehicle-simulator:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "sources-vehicle-simulator"
+#
+#docker-sources-random:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "sources-random-data-generator"
+#
+#docker-sources-watertank-simulator:
+#    <<: *docker_script
+#    variables:
+#      CONTAINER_NAME: "sources-watertank-simulator"
 
 
 docker-hub-processors-aggregation-flink:
