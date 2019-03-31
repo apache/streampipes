@@ -24,7 +24,7 @@
                 <h3>Summary</h3>
             </mat-expansion-panel-header>
 
-            <transport-summary [transportProcess]="selectedTransportProcess"></transport-summary>
+            <transport-summary [transportProcess]="selectedTransportProcess" [incomingBoxCount]="incomingBoxCount" [outgoingBoxCount]="outgoingBoxCount"></transport-summary>
         </mat-expansion-panel>
 
         <mat-divider></mat-divider>
@@ -34,7 +34,7 @@
                 <h3>Outgoing Goods</h3>
             </mat-expansion-panel-header>
 
-            <outgoing-view [parcelInfo]="outgoingParcelInfo"></outgoing-view>
+            <outgoing-view [parcelInfo]="outgoingParcelInfo" (detectedBoxes)="updateOutgoingBoxCount($event)"></outgoing-view>
 
         </mat-expansion-panel>
 
@@ -52,7 +52,7 @@
                 <h3>Incoming Goods</h3>
             </mat-expansion-panel-header>
 
-            <outgoing-view [parcelInfo]="incomingParcelInfo"></outgoing-view>
+            <outgoing-view [parcelInfo]="incomingParcelInfo" (detectedBoxes)="updateIncomingBoxCount($event)"></outgoing-view>
 
         </mat-expansion-panel>
 
@@ -72,6 +72,16 @@
             <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="button-margin">
                 <button mat-button mat-raised-button color="primary" (click)="truncateOutgoingGoodsDatabase()">
                     Truncate Outgoing Goods Database
+                </button>
+            </div>
+            <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="button-margin">
+                <button mat-button mat-raised-button color="primary" (click)="truncateParcelActivitiesDatabase()">
+                    Truncate Parcel Activity Database
+                </button>
+            </div>
+            <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="button-margin">
+                <button mat-button mat-raised-button color="primary" (click)="truncateParcelOpenBoxDatabase()">
+                    Truncate Parcel Open Box Database
                 </button>
             </div>
         </div>

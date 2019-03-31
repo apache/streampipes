@@ -10,12 +10,12 @@
             <dashboard-status-filled fxFlex="100" [label]="'Activities Count'"
                                      [statusValue]="processActivities.events.length"></dashboard-status-filled>
         </div>
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
-            <dashboard-status-filled fxFlex="100" [label]="'Normal Activities'" [statusValue]="normalActivitiesTotalTime"></dashboard-status-filled>
-        </div>
+        <!--<div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">-->
+            <!--<dashboard-status-filled fxFlex="100" [label]="'Normal Activities'" [statusValue]="normalActivities"></dashboard-status-filled>-->
+        <!--</div>-->
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
             <dashboard-status-filled fxFlex="100" [label]="'Detected Shake Activities'"
-                              [statusValue]="shakeActivitiesTotalTime"></dashboard-status-filled>
+                              [statusValue]="shakeActivities"></dashboard-status-filled>
         </div>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
             <dashboard-status-filled fxFlex="100" [label]="'Detected Fall Activities'"

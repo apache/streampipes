@@ -2,6 +2,7 @@ import {Component, EventEmitter, Output} from '@angular/core';
 import {TransportProcessEventModel} from "./model/transport-process-event.model";
 import {AppTransportMonitoringRestService} from "./services/app-transport-monitoring-rest.service";
 import {ParcelInfoEventModel} from "./model/parcel-info-event.model";
+import {DetectedBoxModel} from "./model/detected-box.model";
 
 @Component({
     selector: 'app-transport-monitoring',
@@ -28,12 +29,17 @@ export class AppTransportMonitoringComponent {
     incomingParcelInfoPresent: boolean = false;
     outgoingParcelInfoPresent: boolean = false;
 
+    outgoingBoxCount: DetectedBoxModel = {totalBoxCount: 0, transparentBoxCount: 0, cardboardBoxCount: 0};
+    incomingBoxCount: DetectedBoxModel = {totalBoxCount: 0, transparentBoxCount: 0, cardboardBoxCount: 0};
+
     constructor(private restService: AppTransportMonitoringRestService) {
 
     }
 
     ngOnInit() {
         this.appOpened.emit(true);
+        this.incomingParcelInfo = [];
+        this.outgoingParcelInfo = [];
     }
 
     selectedIndexChange(index: number) {
@@ -41,6 +47,8 @@ export class AppTransportMonitoringComponent {
     }
 
     selectTransportProcess(transportProcess: TransportProcessEventModel) {
+        console.log("new transport process");
+        console.log(transportProcess);
         this.selectedTransportProcess = transportProcess;
         this.transportProcessSelected = true;
         this.fetchOutgoingParcelInfo();
@@ -70,7 +78,24 @@ export class AppTransportMonitoringComponent {
     }
 
     truncateOutgoingGoodsDatabase() {
-        this.restService.truncateOutgoingGoodsDb()
+        this.restService.truncateOutgoingGoodsDb();
+    }
+
+    truncateParcelActivitiesDatabase() {
+        this.restService.truncateParcelActivitiesDb();
+    }
+
+    truncateParcelOpenBoxDatabase() {
+        this.restService.truncateParcelOpenBoxDb();
+    }
+
+    updateOutgoingBoxCount(boxCount: DetectedBoxModel) {
+        console.log("outgoing");
+        this.outgoingBoxCount = boxCount;
+    }
+
+    updateIncomingBoxCount(boxCount: DetectedBoxModel) {
+        this.incomingBoxCount = boxCount;
     }
 
 
