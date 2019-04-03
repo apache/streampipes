@@ -162,7 +162,12 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
         }
 
         Ros ros = new Ros(host);
-        ros.connect();
+
+        boolean connect = ros.connect();
+
+        if (!connect) {
+            throw new AdapterException("Could not connect to ROS bridge Endpoint: " + host);
+        }
 
         String topicType = getMethodType(ros, topic);
 
@@ -177,8 +182,6 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
                 e.printStackTrace();
             }
         }
-
-        System.out.println(getNEvents.getEvents().get(0));
 
         t.interrupt();
 
