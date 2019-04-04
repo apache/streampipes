@@ -19,6 +19,9 @@ export class PipelineTemplateDescription {
     @RdfProperty('sp:internalName')
     public internalName: string;
 
+    @RdfProperty('sp:hasAppId')
+    public appId: string;
+
     @RdfProperty('sp:isConnectedTo')
     public connectedTo: BoundPipelineElement[] = [];
 

@@ -26,8 +26,14 @@ import { PipelineTemplateDescription } from '../../connect/model/PipelineTemplat
 import { PipelineTemplateDescriptionContainer } from '../../connect/model/PipelineTemplateDescriptionContainer';
 import { StaticProperty } from '../../connect/model/StaticProperty';
 import { MappingPropertyUnary } from '../../connect/model/MappingPropertyUnary';
-import {URI} from '../../connect/model/URI';
-import {AuthStatusService} from '../../services/auth-status.service';
+import { URI } from '../../connect/model/URI';
+import { AuthStatusService } from '../../services/auth-status.service';
+import { DataStreamDescription } from '../../connect/model/DataStreamDescription';
+import { Enumeration } from '../../connect/schema-editor/model/Enumeration';
+import { QuantitativeValue } from '../../connect/schema-editor/model/QuantitativeValue';
+import {BoundPipelineElement} from '../../connect/model/BoundPipelineElement';
+import {DataSinkInvocation} from '../../connect/model/DataSinkInvocation';
+import 'rxjs-compat/add/operator/map';
 
 @Injectable()
 export class KviService {
@@ -50,8 +56,13 @@ export class KviService {
         tsonld.addClassMapping(FormatDescription);
         tsonld.addClassMapping(AdapterDescriptionList);
         tsonld.addClassMapping(AdapterDescription);
+        tsonld.addClassMapping(Enumeration);
+        tsonld.addClassMapping(QuantitativeValue);
         tsonld.addClassMapping(DataStreamContainer);
         tsonld.addClassMapping(DataSetDescription);
+        tsonld.addClassMapping(BoundPipelineElement);
+        tsonld.addClassMapping(DataSinkInvocation);
+        tsonld.addClassMapping(DataStreamDescription);
         tsonld.addClassMapping(PipelineTemplateInvocation);
         tsonld.addClassMapping(PipelineTemplateDescription);
         tsonld.addClassMapping(PipelineTemplateDescriptionContainer);
@@ -76,7 +87,7 @@ export class KviService {
 
     getDataSets(): Observable<DataSetDescription[]> {
         return this.http
-            .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates/sets')
+            .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates/streams')
             .pipe(map(response => {
 
 
@@ -110,12 +121,24 @@ export class KviService {
 
     getStaticProperties(dataSet: DataSetDescription, operator: PipelineTemplateDescription): Observable<PipelineTemplateInvocation> {
         return this.http
-            .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates/invocations?streamId=' + dataSet.id + '&templateId=' + operator.internalName)
+            .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates/invocations?streamId=' + dataSet.id + '&templateId=' + operator.appId)
             .pipe(map(response => {
 
-
                 const tsonld = this.getTsonLd();
-                const res: PipelineTemplateInvocation = tsonld.fromJsonLdType(response, 'sp:PipelineTemplateInvocation');
+
+                var res: PipelineTemplateInvocation;
+
+                // Currently tsonld dows not support objects that just contain one root object without an enclosing @graph array
+                if (response.toString().search('@graph') == -1) {
+                    res = new PipelineTemplateInvocation(response['@id']);
+                    res.dataSetId = response['sp:hasDataSetId'];
+                    res.name = response['hasElementName'];
+                    res.pipelineTemplateId = response['sp:hasInternalName'];
+
+                } else {
+                    res = tsonld.fromJsonLdType(response, 'sp:PipelineTemplateInvocation');
+
+                }
 
                 // TODO find better solution
                 // This will remove preconfigured values from the UI

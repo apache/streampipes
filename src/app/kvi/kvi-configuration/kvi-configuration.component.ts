@@ -3,7 +3,7 @@ import { StaticProperty } from '../../connect/model/StaticProperty';
 import { DataSetDescription } from '../../connect/model/DataSetDescription';
 import { FreeTextStaticProperty } from '../../connect/model/FreeTextStaticProperty';
 import { MappingPropertyUnary } from '../../connect/model/MappingPropertyUnary';
-import {URI} from '../../connect/model/URI';
+import { URI } from '../../connect/model/URI';
 
 @Component({
     selector: 'kvi-configuration',

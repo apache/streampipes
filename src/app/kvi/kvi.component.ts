@@ -25,7 +25,7 @@ export class KviComponent implements OnInit {
     isValidOperator: boolean = false;
 
     configurations: StaticProperty[];
-    isValidConfiguration: boolean = false;
+    isValidConfiguration: boolean = true;
 
     invocationGraph: PipelineTemplateInvocation;
     isValidName: boolean = false;
@@ -62,14 +62,15 @@ export class KviComponent implements OnInit {
             this.kviService.getStaticProperties(this.selectedDataSet, operator).subscribe(res => {
                 this.invocationGraph = res;
                 this.invocationGraph.dataSetId = this.selectedDataSet.id;
-                this.invocationGraph.pipelineTemplateId = this.selectedOperator.internalName;
+                this.invocationGraph.pipelineTemplateId = this.selectedOperator.appId;
                 this.configurations = res.list;
             });
         }
     }
 
     selectConfiguration(configuration: any) {
-        this.isValidConfiguration = !!configuration;
+        // this.isValidConfiguration = !!configuration;
+        this.isValidConfiguration = true;
         if (this.isValidConfiguration) {
             this.invocationGraph.list = configuration;
         }

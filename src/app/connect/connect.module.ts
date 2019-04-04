@@ -81,7 +81,10 @@ import { EventPropertyListComponent } from './schema-editor/event-property-list/
     MatInputModule,
     MatFormFieldModule,
   ],
-  exports: [StaticPropertyComponent],
+  exports: [
+      StaticPropertyComponent,
+      SelectStaticPropertiesComponent
+  ],
   declarations: [
     NewAdapterComponent,
     SelectProtocolComponent,
