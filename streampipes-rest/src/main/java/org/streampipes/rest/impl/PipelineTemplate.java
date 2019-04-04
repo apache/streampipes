@@ -26,6 +26,7 @@ import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.streampipes.model.template.PipelineTemplateInvocation;
 import org.streampipes.rest.api.IPipelineTemplate;
+import org.streampipes.rest.shared.util.SpMediaType;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.vocabulary.StreamPipes;
 
@@ -81,13 +82,15 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   }
 
   @GET
-  @Produces(MediaType.APPLICATION_JSON)
+//  @Produces(MediaType.APPLICATION_JSON)
+  @Produces(SpMediaType.JSONLD)
   @Override
   public Response getPipelineTemplates(@QueryParam("streamId") String streamId) {
     if (streamId != null) {
-      return ok(toJsonLd(new PipelineTemplateDescriptionContainer(Operations.getCompatiblePipelineTemplates(streamId))));
+      return ok(new PipelineTemplateDescriptionContainer(Operations.getCompatiblePipelineTemplates(streamId)));
     } else {
-      return ok(toJsonLd(new PipelineTemplateDescriptionContainer(Operations.getAllPipelineTemplates())));
+        PipelineTemplateDescriptionContainer container = new PipelineTemplateDescriptionContainer(Operations.getAllPipelineTemplates());
+      return ok(container);
     }
   }
 
@@ -111,7 +114,7 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
     return Operations
             .getAllPipelineTemplates()
             .stream()
-            .filter(pt -> pt.getPipelineTemplateId().equals(pipelineTemplateId))
+            .filter(pt -> pt.getAppId().equals(pipelineTemplateId))
             .findFirst()
             .get();
   }

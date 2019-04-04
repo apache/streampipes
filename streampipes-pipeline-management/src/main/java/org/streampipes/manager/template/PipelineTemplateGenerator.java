@@ -16,8 +16,6 @@
  */
 package org.streampipes.manager.template;
 
-import org.streampipes.commons.Utils;
-import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.manager.matching.DataSetGroundingSelector;
 import org.streampipes.manager.matching.v2.ElementVerification;
 import org.streampipes.model.SpDataSet;
@@ -31,11 +29,9 @@ import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.sdk.builder.BoundPipelineElementBuilder;
 import org.streampipes.sdk.builder.PipelineTemplateBuilder;
-import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.streampipes.storage.management.StorageDispatcher;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,10 +43,10 @@ public class PipelineTemplateGenerator {
   public List<PipelineTemplateDescription> makeExampleTemplates() {
 
     try {
-      availableDescriptions.add(makeExampleTemplate());
-      System.out.println(availableDescriptions.get(0).getElementId());
-      System.out.println(Utils.asString(new JsonLdTransformer().toJsonLd(availableDescriptions.get(0))));
-    } catch (URISyntaxException | IllegalAccessException | InvocationTargetException | InvalidRdfException | ClassNotFoundException e) {
+      availableDescriptions.add(makeExampleTemplateNew());
+//      System.out.println(availableDescriptions.get(0).getElementId());
+//      System.out.println(Utils.asString(new JsonLdTransformer().toJsonLd(availableDescriptions.get(0))));
+    } catch (URISyntaxException e) {
       e.printStackTrace();
     }
 
@@ -94,6 +90,32 @@ public class PipelineTemplateGenerator {
     return stream;
   }
 
+  public static void main(String... args) throws URISyntaxException {
+    PipelineTemplateGenerator generator = new PipelineTemplateGenerator();
+    PipelineTemplateDescription tmp = generator.makeExampleTemplateNew();
+
+    System.out.println(tmp);
+
+
+  }
+
+
+  private PipelineTemplateDescription makeExampleTemplateNew() throws URISyntaxException {
+    PipelineTemplateDescription result = new PipelineTemplateDescription(PipelineTemplateBuilder.create("http://test.de","Notification",
+            "")
+            .setAppId("org.streampipes.pipelinetemplates.test")
+            .boundPipelineElementTemplate(
+                    BoundPipelineElementBuilder
+//                            .create(getSink("org.streampipes.sinks.internal.jvm.notification"))
+                            .create(getSink("org.streampipes.sinks.databases.flink.elasticsearch"))
+//                            .create(getSink("org.streampipes.sinks.internal.jvm.dashboard"))
+                            .build())
+            .build());
+
+    return result;
+  }
+
+
 
   private PipelineTemplateDescription makeExampleTemplate() throws URISyntaxException {
     return new PipelineTemplateDescription(PipelineTemplateBuilder.create("distance-kvi","Distance KVI",
@@ -106,7 +128,7 @@ public class PipelineTemplateGenerator {
                     .connectTo(BoundPipelineElementBuilder
 //                            .create(getSink("http://localhost:8090/sec/dashboard_sink"))
                             .create(getSink("http://localhost:8090/sec/couchdb"))
-                              .withPredefinedFreeTextValue("db_name", "kvi")
+                            .withPredefinedFreeTextValue("db_name", "kvi")
                             .build())
                     .build())
             .build());
@@ -124,7 +146,7 @@ public class PipelineTemplateGenerator {
 
   private DataSinkDescription getSink(String id) throws URISyntaxException {
     return getStorage()
-            .getSECById(id);
+            .getSECByAppId(id);
   }
 
   private IPipelineElementDescriptionStorage getStorage() {
