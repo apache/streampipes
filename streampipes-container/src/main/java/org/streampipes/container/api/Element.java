@@ -68,10 +68,16 @@ public abstract class Element<D extends Declarer> {
   @Path("{id}/assets")
   @Produces("application/zip")
   public Response getAssets(@PathParam("id") String elementId) {
-    return Response
-            .ok()
-            .entity(new AssetZipGenerator(elementId).makeZip())
-            .build();
+    List<String> includedAssets = getDeclarerById(elementId).declareModel().getIncludedAssets();
+    try {
+      return Response
+              .ok()
+              .entity(new AssetZipGenerator(elementId, includedAssets).makeZip())
+              .build();
+    } catch (IOException e) {
+      e.printStackTrace();
+      return Response.status(500).build();
+    }
   }
 
   @GET

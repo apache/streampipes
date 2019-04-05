@@ -72,10 +72,16 @@ public class SepElement extends Element<SemanticEventProducerDeclarer> {
   @Produces("application/zip")
   public javax.ws.rs.core.Response getAssets(@PathParam("sourceId") String sourceId, @PathParam
           ("streamId") String streamId) {
-    return javax.ws.rs.core.Response
-            .ok()
-            .entity(new AssetZipGenerator(streamId).makeZip())
-            .build();
+    try {
+      return javax.ws.rs.core.Response
+              .ok()
+              .entity(new AssetZipGenerator(streamId, getDeclarerById(streamId).declareModel()
+                      .getIncludedAssets()).makeZip())
+              .build();
+    } catch (IOException e) {
+      e.printStackTrace();
+      return javax.ws.rs.core.Response.status(500).build();
+    }
   }
 
   private Optional<SpDataStream> getStreamBySourceId(String sourceId, String streamId) {

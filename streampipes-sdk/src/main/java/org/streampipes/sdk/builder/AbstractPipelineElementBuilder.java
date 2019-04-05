@@ -21,6 +21,8 @@ import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.sdk.helpers.Label;
 
+import java.util.Arrays;
+
 public abstract class AbstractPipelineElementBuilder<BU extends AbstractPipelineElementBuilder<BU, T>, T extends NamedStreamPipesEntity> {
 
     protected T elementDescription;
@@ -38,8 +40,9 @@ public abstract class AbstractPipelineElementBuilder<BU extends AbstractPipeline
         return me();
     }
 
-    public BU providesAssets() {
+    public BU providesAssets(String... assets) {
         this.elementDescription.setIncludesAssets(true);
+        this.elementDescription.setIncludedAssets(Arrays.asList(assets));
         return me();
     }
 
