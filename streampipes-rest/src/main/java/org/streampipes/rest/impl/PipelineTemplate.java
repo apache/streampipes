@@ -82,7 +82,6 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   }
 
   @GET
-//  @Produces(MediaType.APPLICATION_JSON)
   @Produces(SpMediaType.JSONLD)
   @Override
   public Response getPipelineTemplates(@QueryParam("streamId") String streamId) {
@@ -95,7 +94,7 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   }
 
   @GET
-  @Path("/invocations")
+  @Path("/invocation")
   @Produces(MediaType.APPLICATION_JSON)
   @Override
   public Response getPipelineTemplateInvocation(@QueryParam("streamId") String streamId, @QueryParam("templateId") String pipelineTemplateId) {

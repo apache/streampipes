@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 FZI Forschungszentrum Informatik
+ * Copyright 2019 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
  * limitations under the License.
  *
  */
-package org.streampipes.manager.template;
 
-import org.streampipes.model.SpDataStream;
-import org.streampipes.storage.management.StorageDispatcher;
+package org.streampipes.manager.template.instances;
 
-public class TestTemplateGenerator {
+import org.streampipes.commons.exceptions.ElementNotFoundException;
+import org.streampipes.model.template.PipelineTemplateDescription;
 
-  private static SpDataStream getSource() {
-    return StorageDispatcher.INSTANCE.getTripleStore().getStorageAPI().getEventStreamById("http://localhost:8089/sep/source_random/random-data-set");
-  }
+import java.net.URISyntaxException;
+
+public interface PipelineTemplate {
+
+    public PipelineTemplateDescription declareModel() throws URISyntaxException, ElementNotFoundException;
+
 }

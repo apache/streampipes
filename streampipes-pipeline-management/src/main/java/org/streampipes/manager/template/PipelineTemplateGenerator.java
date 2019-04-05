@@ -16,8 +16,15 @@
  */
 package org.streampipes.manager.template;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.streampipes.commons.exceptions.ElementNotFoundException;
 import org.streampipes.manager.matching.DataSetGroundingSelector;
 import org.streampipes.manager.matching.v2.ElementVerification;
+import org.streampipes.manager.template.instances.DashboardPipelineTemplate;
+import org.streampipes.manager.template.instances.DelmeExamplePipelineTemplate;
+import org.streampipes.manager.template.instances.ElasticsearchPipelineTemplate;
+import org.streampipes.manager.template.instances.PipelineTemplate;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
@@ -27,8 +34,6 @@ import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.template.PipelineTemplateDescription;
-import org.streampipes.sdk.builder.BoundPipelineElementBuilder;
-import org.streampipes.sdk.builder.PipelineTemplateBuilder;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.streampipes.storage.management.StorageDispatcher;
 
@@ -38,16 +43,28 @@ import java.util.List;
 
 public class PipelineTemplateGenerator {
 
+
+  Logger logger = LoggerFactory.getLogger(PipelineTemplateGenerator.class);
+
   private List<PipelineTemplateDescription> availableDescriptions = new ArrayList<>();
 
-  public List<PipelineTemplateDescription> makeExampleTemplates() {
+  public List<PipelineTemplateDescription> getAllPipelineTemplates() {
 
-    try {
-      availableDescriptions.add(makeExampleTemplateNew());
-//      System.out.println(availableDescriptions.get(0).getElementId());
-//      System.out.println(Utils.asString(new JsonLdTransformer().toJsonLd(availableDescriptions.get(0))));
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
+    List<PipelineTemplate> allPipelineTemplates = new ArrayList<>();
+
+    allPipelineTemplates.add(new DashboardPipelineTemplate());
+    allPipelineTemplates.add(new ElasticsearchPipelineTemplate());
+    allPipelineTemplates.add(new DelmeExamplePipelineTemplate());
+
+
+    for (PipelineTemplate pt : allPipelineTemplates) {
+      try {
+        availableDescriptions.add(pt.declareModel());
+      } catch (URISyntaxException e) {
+        e.printStackTrace();
+      } catch (ElementNotFoundException e) {
+          logger.warn("Adapter template can not be used because some elements are not installed", e);
+      }
     }
 
     return availableDescriptions;
@@ -56,20 +73,28 @@ public class PipelineTemplateGenerator {
   public List<PipelineTemplateDescription> getCompatibleTemplates(String streamId) {
     List<PipelineTemplateDescription> compatibleTemplates = new ArrayList<>();
     ElementVerification verifier = new ElementVerification();
-    SpDataStream streamOffer = getStream(streamId);
-    if (streamOffer instanceof SpDataSet) {
-      streamOffer = new SpDataSet((SpDataSet) prepareStream((SpDataSet) streamOffer));
-    } else {
-      streamOffer = new SpDataStream(streamOffer);
-    }
-    if (streamOffer != null) {
-      for(PipelineTemplateDescription pipelineTemplateDescription : makeExampleTemplates()) {
-        // TODO make this work for 2+ input streams
-        InvocableStreamPipesEntity entity = cloneInvocation(pipelineTemplateDescription.getBoundTo().get(0).getPipelineElementTemplate());
-        if (verifier.verify(streamOffer, entity)) {
-          compatibleTemplates.add(pipelineTemplateDescription);
+    SpDataStream streamOffer = null;
+
+    try {
+      streamOffer = getStream(streamId);
+
+      if (streamOffer instanceof SpDataSet) {
+        streamOffer = new SpDataSet((SpDataSet) prepareStream((SpDataSet) streamOffer));
+      } else {
+        streamOffer = new SpDataStream(streamOffer);
+      }
+      if (streamOffer != null) {
+        for(PipelineTemplateDescription pipelineTemplateDescription : getAllPipelineTemplates()) {
+          // TODO make this work for 2+ input streams
+          InvocableStreamPipesEntity entity = cloneInvocation(pipelineTemplateDescription.getBoundTo().get(0).getPipelineElementTemplate());
+          if (verifier.verify(streamOffer, entity)) {
+            compatibleTemplates.add(pipelineTemplateDescription);
+          }
         }
       }
+
+    } catch (ElementNotFoundException e) {
+      e.printStackTrace();
     }
 
     return compatibleTemplates;
@@ -90,66 +115,40 @@ public class PipelineTemplateGenerator {
     return stream;
   }
 
-  public static void main(String... args) throws URISyntaxException {
-    PipelineTemplateGenerator generator = new PipelineTemplateGenerator();
-    PipelineTemplateDescription tmp = generator.makeExampleTemplateNew();
-
-    System.out.println(tmp);
-
-
-  }
-
-
-  private PipelineTemplateDescription makeExampleTemplateNew() throws URISyntaxException {
-    PipelineTemplateDescription result = new PipelineTemplateDescription(PipelineTemplateBuilder.create("http://test.de","Notification",
-            "")
-            .setAppId("org.streampipes.pipelinetemplates.test")
-            .boundPipelineElementTemplate(
-                    BoundPipelineElementBuilder
-//                            .create(getSink("org.streampipes.sinks.internal.jvm.notification"))
-                            .create(getSink("org.streampipes.sinks.databases.flink.elasticsearch"))
-//                            .create(getSink("org.streampipes.sinks.internal.jvm.dashboard"))
-                            .build())
-            .build());
-
-    return result;
-  }
-
-
-
-  private PipelineTemplateDescription makeExampleTemplate() throws URISyntaxException {
-    return new PipelineTemplateDescription(PipelineTemplateBuilder.create("distance-kvi","Distance KVI",
-            "Calculates the distance between two locations")
-            .boundPipelineElementTemplate(BoundPipelineElementBuilder
-                    .create(getProcessor("http://localhost:8091/sepa/google-routing"))
-//                    .withPredefinedFreeTextValue("timeWindow", "30")
-//                    .withPredefinedSelection("operation", Collections.singletonList("Average"))
-//                    .withOverwrittenLabel("aggregate", "Select a field you'd like to use for the KVI calculation")
-                    .connectTo(BoundPipelineElementBuilder
-//                            .create(getSink("http://localhost:8090/sec/dashboard_sink"))
-                            .create(getSink("http://localhost:8090/sec/couchdb"))
-                            .withPredefinedFreeTextValue("db_name", "kvi")
-                            .build())
-                    .build())
-            .build());
-  }
-
-  private SpDataStream getStream(String streamId) {
-    return getStorage()
+  protected SpDataStream getStream(String streamId) throws ElementNotFoundException {
+    SpDataStream result = getStorage()
             .getEventStreamById(streamId);
+
+    if (result == null) {
+      throw new ElementNotFoundException("Data stream " + streamId + " is not installed!");
+    }
+
+    return  result;
   }
 
-  private DataProcessorDescription getProcessor(String id) throws URISyntaxException {
-    return getStorage()
+  protected DataProcessorDescription getProcessor(String id) throws URISyntaxException, ElementNotFoundException {
+    DataProcessorDescription result = getStorage()
             .getSEPAById(id);
+
+    if (result == null) {
+      throw new ElementNotFoundException("Data processor " + id + " is not installed!");
+    }
+
+    return  result;
   }
 
-  private DataSinkDescription getSink(String id) throws URISyntaxException {
-    return getStorage()
+  protected DataSinkDescription getSink(String id) throws URISyntaxException, ElementNotFoundException {
+    DataSinkDescription result = getStorage()
             .getSECByAppId(id);
+
+    if (result == null) {
+      throw new ElementNotFoundException("Data stream " + id + " is not installed!");
+    }
+
+    return  result;
   }
 
-  private IPipelineElementDescriptionStorage getStorage() {
+  protected IPipelineElementDescriptionStorage getStorage() {
     return StorageDispatcher
             .INSTANCE
             .getTripleStore()

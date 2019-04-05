@@ -95,6 +95,6 @@ public class PipelineTemplateInvocationHandler {
   
 
   private PipelineTemplateDescription getTemplateById(String pipelineTemplateId) {
-    return new PipelineTemplateGenerator().makeExampleTemplates().stream().filter(template -> template.getAppId().equals(pipelineTemplateId)).findFirst().get();
+    return new PipelineTemplateGenerator().getAllPipelineTemplates().stream().filter(template -> template.getAppId().equals(pipelineTemplateId)).findFirst().get();
   }
 }
