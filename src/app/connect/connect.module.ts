@@ -65,6 +65,8 @@ import { AdapterExportDialog } from './data-marketplace/adapter-export/adapter-e
 import { AdapterUploadDialog } from './data-marketplace/adapter-upload/adapter-upload-dialog.component';
 import { TsonLdSerializerService } from './tsonld-serializer.service';
 import { EventPropertyListComponent } from './schema-editor/event-property-list/event-property-list.component';
+import {StaticMappingNaryComponent} from './static-properties/static-mapping-nary/static-mapping-nary.component';
+import {StaticMappingUnaryComponent} from './static-properties/static-mapping-unary/static-mapping-unary.component';
 
 
 @NgModule({
@@ -104,6 +106,8 @@ import { EventPropertyListComponent } from './schema-editor/event-property-list/
     StaticTextInputComponent,
     StaticFreeInputComponent,
     StaticFileInputComponent,
+    StaticMappingNaryComponent,
+    StaticMappingUnaryComponent,
     StaticAnyInput,
     ProtocolComponent,
     ProtocolListComponent,

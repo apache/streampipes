@@ -4,6 +4,7 @@ import { DataSetDescription } from '../../connect/model/DataSetDescription';
 import { FreeTextStaticProperty } from '../../connect/model/FreeTextStaticProperty';
 import { MappingPropertyUnary } from '../../connect/model/MappingPropertyUnary';
 import { URI } from '../../connect/model/URI';
+import {EventSchema} from '../../connect/schema-editor/model/EventSchema';
 
 @Component({
     selector: 'kvi-configuration',
@@ -13,7 +14,7 @@ import { URI } from '../../connect/model/URI';
 export class KviConfigurationComponent {
 
     @Input() configurations: StaticProperty[] = [];
-    @Input() dataSet: DataSetDescription;
+    @Input() eventSchema: EventSchema;
     @Output() configuredOperators: EventEmitter<StaticProperty[]> = new EventEmitter<StaticProperty[]>();
 
     constructor() {

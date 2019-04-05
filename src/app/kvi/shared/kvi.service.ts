@@ -121,24 +121,25 @@ export class KviService {
 
     getStaticProperties(dataSet: DataSetDescription, operator: PipelineTemplateDescription): Observable<PipelineTemplateInvocation> {
         return this.http
-            .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates/invocations?streamId=' + dataSet.id + '&templateId=' + operator.appId)
+            .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates/invocation?streamId=' + dataSet.id + '&templateId=' + operator.appId)
             .pipe(map(response => {
 
                 const tsonld = this.getTsonLd();
 
                 var res: PipelineTemplateInvocation;
 
+                console.log(response.toString());
                 // Currently tsonld dows not support objects that just contain one root object without an enclosing @graph array
-                if (response.toString().search('@graph') == -1) {
+                if ('@graph' in response) {
+                    res = tsonld.fromJsonLdType(response, 'sp:PipelineTemplateInvocation');
+                } else {
                     res = new PipelineTemplateInvocation(response['@id']);
                     res.dataSetId = response['sp:hasDataSetId'];
                     res.name = response['hasElementName'];
                     res.pipelineTemplateId = response['sp:hasInternalName'];
-
-                } else {
-                    res = tsonld.fromJsonLdType(response, 'sp:PipelineTemplateInvocation');
-
                 }
+
+                console.log( res);
 
                 // TODO find better solution
                 // This will remove preconfigured values from the UI
@@ -149,6 +150,7 @@ export class KviService {
                         }
                     }
                 });
+                console.log(res);
                 return res;
             }));
     }

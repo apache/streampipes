@@ -1,0 +1,17 @@
+<div id="formWrapper" fxFlex="90" fxLayout="row">
+    <div fxFlex="20">
+    <p>{{staticProperty.label}}: </p>
+    </div>
+    <div fxFlex fxLayout="row">
+        <form fxFlex [formGroup]="unaryTextForm">
+            <mat-form-field class="example-full-width">
+                <!--<mat-form-field class="example-full-width">-->
+                <mat-select [placeholder]="staticProperty.label">
+                    <mat-option *ngFor="let eventProperty of eventSchema.eventProperties" [value]="{'a': staticProperty, 'b': eventProperty}">
+                        {{getName(eventProperty)}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </form>
+    </div>
+</div>

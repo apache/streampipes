@@ -2,9 +2,6 @@ import {RdfId} from '../tsonld/RdfId';
 import {RdfProperty} from '../tsonld/RdfsProperty';
 import {RdfsClass} from '../tsonld/RdfsClass';
 import {StaticProperty} from './StaticProperty';
-import {EventPropertyPrimitive} from '../schema-editor/model/EventPropertyPrimitive';
-import {URI} from './URI';
-import {EventProperty} from "../schema-editor/model/EventProperty";
 
 @RdfsClass('sp:MappingPropertyUnary')
 export class MappingPropertyUnary extends StaticProperty {
@@ -12,17 +9,29 @@ export class MappingPropertyUnary extends StaticProperty {
     @RdfId
     public id: string;
 
+    @RdfProperty('sp:elementName')
+    public elementName: string;
+
     @RdfProperty('http://www.w3.org/2000/01/rdf-schema#label')
     public label: string;
+
+    @RdfProperty('http://www.w3.org/2000/01/rdf-schema#description')
+    public description: string;
 
     @RdfProperty('sp:internalName')
     public internalName: string;
 
-    // @RdfProperty('sp:mapsFrom')
-    // public mapsFromOptions: Array<URI>;
+    @RdfProperty('sp:mapsFrom')
+    public requirementSelector: string;
+
+    @RdfProperty('sp:mapsFromOptions')
+    public mapsFromOptions: string[];
+
+    @RdfProperty('sp:hasPropertyScope')
+    public propertyScope: string;
 
     @RdfProperty('sp:mapsTo')
-    public mapsTo: URI;
+    public selectedProperties: string[];
 
     constructor(id: string) {
         super();

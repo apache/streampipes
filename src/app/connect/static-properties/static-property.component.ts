@@ -16,6 +16,8 @@ import { xsService } from '../../NS/XS.service';
 import { StaticPropertyUtilService } from './static-property-util.service';
 import { AnyStaticProperty } from '../model/AnyStaticProperty';
 import {FileStaticProperty} from '../model/FileStaticProperty';
+import {MappingPropertyNary} from '../model/MappingPropertyNary';
+import {EventSchema} from '../schema-editor/model/EventSchema';
 
 @Component({
   selector: 'app-static-property',
@@ -30,11 +32,10 @@ export class StaticPropertyComponent implements OnInit {
   emitter: EventEmitter<any> = new EventEmitter<any>();
   @Output()
   validateEmitter: EventEmitter<any> = new EventEmitter<any>();
+
   @Input()
-  dataSet: DataSetDescription;
-  // private mappingFormControl: FormControl = new FormControl();
-  // private freeTextFormControl: FormControl = new FormControl([Validators.required]);
-  // private doNotRender: boolean;
+  eventSchema: EventSchema;
+
   private frTxt: FreeTextStaticProperty;
 
   constructor(
@@ -64,12 +65,6 @@ export class StaticPropertyComponent implements OnInit {
     this.frTxt.requiredDomainProperty = '';
   }
 
-  getName(eventProperty) {
-    return eventProperty.label
-      ? eventProperty.label
-      : eventProperty.runTimeName;
-  }
-
   isFreeTextStaticProperty(val) {
     return val instanceof FreeTextStaticProperty;
   }
@@ -89,6 +84,10 @@ export class StaticPropertyComponent implements OnInit {
 
   isOneOfStaticProperty(val) {
     return val instanceof OneOfStaticProperty;
+  }
+
+  isMappingNaryProperty(val) {
+    return val instanceof MappingPropertyNary;
   }
 
   valueChange(hasInput) {

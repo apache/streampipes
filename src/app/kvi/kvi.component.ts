@@ -9,6 +9,7 @@ import { PipelineTemplateInvocation } from '../connect/model/PipelineTemplateInv
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { KviCreatedDialog } from './kvi-created/kvi-created.dialog';
+import {EventSchema} from '../connect/schema-editor/model/EventSchema';
 
 @Component({
     templateUrl: './kvi.component.html',
@@ -31,6 +32,8 @@ export class KviComponent implements OnInit {
     isValidName: boolean = false;
     nameControl: FormControl = new FormControl();
 
+    selectedEventSchema: EventSchema = new EventSchema();
+
     constructor(private kviService: KviService, public dialog: MatDialog) {
         this.kviService.getDataSets().subscribe(res => {
             this.dataSets = res;
@@ -43,12 +46,15 @@ export class KviComponent implements OnInit {
                 this.invocationGraph.name = res;
                 this.isValidName = !!res;
             });
+
+        this.selectedDataSet = new DataSetDescription("");
     }
 
     selectDataSet(dataSet: DataSetDescription) {
         this.isValidDataSet = !!dataSet;
         if (this.isValidDataSet) {
             this.selectedDataSet = dataSet;
+            this.selectedEventSchema = dataSet.eventSchema;
             this.kviService.getOperators(dataSet).subscribe(res => {
                 this.operators = res;
             });
