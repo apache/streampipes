@@ -27,8 +27,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.*;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
@@ -88,7 +87,7 @@ public class Elasticsearch implements IElasticsearch {
     try {
       RestHighLevelClient client = getRestHighLevelClient();
 
-      Scroll scroll = new Scroll(TimeValue.timeValueMinutes(1L));
+      final Scroll scroll = new Scroll(TimeValue.timeValueMinutes(1L));
       SearchRequest searchRequest = new SearchRequest(index);
       searchRequest.scroll(scroll);
       SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -98,8 +97,8 @@ public class Elasticsearch implements IElasticsearch {
       }
 
       searchRequest.source(searchSourceBuilder);
-
       SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+      String scrollId = searchResponse.getScrollId();
       SearchHit[] searchHits = searchResponse.getHits().getHits();
 
       //Time created in milli sec, index, from, to
@@ -108,29 +107,10 @@ public class Elasticsearch implements IElasticsearch {
       String filePath = mainFilePath + fileName;
       FileOutputStream fileStream = this.getFileStream(filePath);
 
-      List<Map<String, Object>> result = new ArrayList<>();
-      String response = null;
-
       if(("csv").equals(output)) {
-        JsonConverter jsonConverter = new JsonConverter();
-        boolean isFirstElement = true;
-        for (SearchHit hit : searchHits) {
-          if (isFirstElement)
-            fileStream.write(jsonConverter.getCsvHeader(hit.getSourceAsString()).getBytes());
-          response = jsonConverter.convertToCsv(hit.getSourceAsString());
-          fileStream.write(response.getBytes());
-          isFirstElement = false;
-        }
+       processCSV(client, fileStream, scrollId, scroll, searchHits);
       } else {
-        fileStream.write("[".getBytes());
-        boolean isFirstElement = true;
-        for (SearchHit hit : searchHits) {
-          if(!isFirstElement)
-            fileStream.write(",".getBytes());
-          fileStream.write(hit.getSourceAsString().getBytes());
-          isFirstElement = false;
-        }
-        fileStream.write("]".getBytes());
+        processJSON(client, fileStream, scrollId, scroll, searchHits);
       }
 
       fileStream.close();
@@ -266,4 +246,70 @@ public class Elasticsearch implements IElasticsearch {
 
   }
 
-}
+  private void processJSON(RestHighLevelClient client, FileOutputStream fileStream, String scrollId,  Scroll scroll,  SearchHit[] searchHits) throws IOException {
+      fileStream.write("[".getBytes());
+      boolean isFirstElement = true;
+      for (SearchHit hit : searchHits) {
+        if(!isFirstElement)
+          fileStream.write(",".getBytes());
+        fileStream.write(hit.getSourceAsString().getBytes());
+        isFirstElement = false;
+      }
+
+    while (searchHits != null && searchHits.length > 0) {
+
+      SearchScrollRequest scrollRequest = new SearchScrollRequest(scrollId);
+      scrollRequest.scroll(scroll);
+      SearchResponse searchResponse = client.scroll(scrollRequest, RequestOptions.DEFAULT);
+      scrollId = searchResponse.getScrollId();
+      searchHits = searchResponse.getHits().getHits();
+      for (SearchHit hit : searchHits) {
+        fileStream.write(",".getBytes());
+        fileStream.write(hit.getSourceAsString().getBytes());
+      }
+    }
+    fileStream.write("]".getBytes());
+
+    ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
+    clearScrollRequest.addScrollId(scrollId);
+    ClearScrollResponse clearScrollResponse = client.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
+
+
+  }
+
+  private void processCSV(RestHighLevelClient client, FileOutputStream fileStream, String scrollId,  Scroll scroll,
+                          SearchHit[] searchHits) throws IOException {
+    JsonConverter jsonConverter = new JsonConverter();
+
+    boolean isFirstElement = true;
+    for (SearchHit hit : searchHits) {
+      if (isFirstElement)
+        fileStream.write(jsonConverter.getCsvHeader(hit.getSourceAsString()).getBytes());
+      String response = jsonConverter.convertToCsv(hit.getSourceAsString());
+      fileStream.write(response.getBytes());
+      isFirstElement = false;
+
+    }
+
+    while (searchHits != null && searchHits.length > 0) {
+
+      SearchScrollRequest scrollRequest = new SearchScrollRequest(scrollId);
+      scrollRequest.scroll(scroll);
+      SearchResponse searchResponse = client.scroll(scrollRequest, RequestOptions.DEFAULT);
+      scrollId = searchResponse.getScrollId();
+      searchHits = searchResponse.getHits().getHits();
+      for (SearchHit hit : searchHits) {
+        fileStream.write(jsonConverter.convertToCsv(hit.getSourceAsString()).getBytes());
+      }
+
+    }
+
+    ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
+    clearScrollRequest.addScrollId(scrollId);
+    ClearScrollResponse clearScrollResponse = client.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
+
+  }
+
+
+
+  }
