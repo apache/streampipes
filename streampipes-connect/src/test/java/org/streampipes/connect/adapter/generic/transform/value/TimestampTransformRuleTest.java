@@ -25,64 +25,64 @@ import static org.junit.Assert.assertEquals;
 
 public class TimestampTransformRuleTest {
 
-    @Test
-    public void transformListFormatString() {
-        EventSchema eventSchema = new EventSchema();
-        EventPropertyList eventPropertyList = new EventPropertyList();
-        eventPropertyList.setRuntimeName("list");
-        EventProperty eventPropertyValue = new EventPropertyPrimitive();
-        eventPropertyValue.setLabel("value");
-        eventPropertyValue.setRuntimeName("value");
-        eventPropertyList.setEventProperty(eventPropertyValue);
-        eventSchema.setEventProperties(Collections.singletonList(eventPropertyList));
+//    @Test
+//    public void transformListFormatString() {
+//        EventSchema eventSchema = new EventSchema();
+//        EventPropertyList eventPropertyList = new EventPropertyList();
+//        eventPropertyList.setRuntimeName("list");
+//        EventProperty eventPropertyValue = new EventPropertyPrimitive();
+//        eventPropertyValue.setLabel("value");
+//        eventPropertyValue.setRuntimeName("value");
+//        eventPropertyList.setEventProperty(eventPropertyValue);
+//        eventSchema.setEventProperties(Collections.singletonList(eventPropertyList));
+//
+//        Map<String, Object> event = new HashMap<>();
+//        Map<String, Object> subEvent = new HashMap<>();
+//        subEvent.put("value", "2019-03-11T20:50:38.138Z");
+//        event.put("list",subEvent);
+//
+//        List<String> keys = new ArrayList<>();
+//        keys.add("list");
+//        keys.add("value");
+//
+//        TimestampTranformationRule timestampTranformationRule = new TimestampTranformationRule(keys,
+//                TimestampTranformationRuleMode.FORMAT_STRING, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", 1000);
+//
+//        Map result = timestampTranformationRule.transform(event);
+//
+//        assertEquals(1, result.keySet().size());
+//        assertEquals( 1552333838138L, ((Map) result.get(eventPropertyList.getRuntimeName())).get(eventPropertyValue.getRuntimeName()));
+//    }
 
-        Map<String, Object> event = new HashMap<>();
-        Map<String, Object> subEvent = new HashMap<>();
-        subEvent.put("value", "2019-03-11T20:50:38.138Z");
-        event.put("list",subEvent);
-
-        List<String> keys = new ArrayList<>();
-        keys.add("list");
-        keys.add("value");
-
-        TimestampTranformationRule timestampTranformationRule = new TimestampTranformationRule(keys,
-                TimestampTranformationRuleMode.FORMAT_STRING, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", 1000);
-
-        Map result = timestampTranformationRule.transform(event);
-
-        assertEquals(1, result.keySet().size());
-        assertEquals( 1552333838138L, ((Map) result.get(eventPropertyList.getRuntimeName())).get(eventPropertyValue.getRuntimeName()));
-    }
-
-    @Test
-    public void transformListTimeUnit() {
-        EventSchema eventSchema = new EventSchema();
-        EventPropertyList eventPropertyList = new EventPropertyList();
-        eventPropertyList.setRuntimeName("list");
-        EventProperty eventPropertyValue = new EventPropertyPrimitive();
-        eventPropertyValue.setLabel("value");
-        eventPropertyValue.setRuntimeName("value");
-        eventPropertyList.setEventProperty(eventPropertyValue);
-        eventSchema.setEventProperties(Collections.singletonList(eventPropertyList));
-
-        Map<String, Object> event = new HashMap<>();
-        Map<String, Object> subEvent = new HashMap<>();
-        subEvent.put("value", 1552380411);
-        event.put("list",subEvent);
-
-        List<String> keys = new ArrayList<>();
-        keys.add("list");
-        keys.add("value");
-
-        TimestampTranformationRule timestampTranformationRule = new TimestampTranformationRule(keys,
-                TimestampTranformationRuleMode.TIME_UNIT, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", 1000);
-
-        Map result = timestampTranformationRule.transform(event);
-
-        assertEquals(1, result.keySet().size());
-        assertEquals( 1552380411000L, ((Map) result.get(eventPropertyList.getRuntimeName())).get(eventPropertyValue.getRuntimeName()));
-
-    }
+//    @Test
+//    public void transformListTimeUnit() {
+//        EventSchema eventSchema = new EventSchema();
+//        EventPropertyList eventPropertyList = new EventPropertyList();
+//        eventPropertyList.setRuntimeName("list");
+//        EventProperty eventPropertyValue = new EventPropertyPrimitive();
+//        eventPropertyValue.setLabel("value");
+//        eventPropertyValue.setRuntimeName("value");
+//        eventPropertyList.setEventProperty(eventPropertyValue);
+//        eventSchema.setEventProperties(Collections.singletonList(eventPropertyList));
+//
+//        Map<String, Object> event = new HashMap<>();
+//        Map<String, Object> subEvent = new HashMap<>();
+//        subEvent.put("value", 1552380411);
+//        event.put("list",subEvent);
+//
+//        List<String> keys = new ArrayList<>();
+//        keys.add("list");
+//        keys.add("value");
+//
+//        TimestampTranformationRule timestampTranformationRule = new TimestampTranformationRule(keys,
+//                TimestampTranformationRuleMode.TIME_UNIT, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", 1000);
+//
+//        Map result = timestampTranformationRule.transform(event);
+//
+//        assertEquals(1, result.keySet().size());
+//        assertEquals( 1552380411000L, ((Map) result.get(eventPropertyList.getRuntimeName())).get(eventPropertyValue.getRuntimeName()));
+//
+//    }
 
 
     @Test
