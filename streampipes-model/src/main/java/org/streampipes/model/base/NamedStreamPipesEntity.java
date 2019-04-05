@@ -58,6 +58,11 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
   @RdfProperty(StreamPipes.INCLUDES_ASSETS)
   private boolean includesAssets;
 
+  @RdfProperty(StreamPipes.INCLUDED_ASSETS)
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  private List<String> includedAssets;
+
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
   @RdfProperty(StreamPipes.HAS_APPLICATION_LINK)
@@ -70,18 +75,21 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
   public NamedStreamPipesEntity() {
     super();
     this.applicationLinks = new ArrayList<>();
+    this.includedAssets = new ArrayList<>();
   }
 
   public NamedStreamPipesEntity(String elementId) {
     super();
     this.elementId = elementId;
     this.applicationLinks = new ArrayList<>();
+    this.includedAssets = new ArrayList<>();
   }
 
   public NamedStreamPipesEntity(String elementId, String name, String description, String iconUrl) {
     this(elementId, name, description);
     this.iconUrl = iconUrl;
     this.applicationLinks = new ArrayList<>();
+    this.includedAssets = new ArrayList<>();
   }
 
   public NamedStreamPipesEntity(String elementId, String name, String description) {
@@ -90,6 +98,7 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.name = name;
     this.description = description;
     this.applicationLinks = new ArrayList<>();
+    this.includedAssets = new ArrayList<>();
   }
 
   public NamedStreamPipesEntity(NamedStreamPipesEntity other) {
@@ -105,6 +114,9 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     }
     this.appId = other.getAppId();
     this.includesAssets = other.isIncludesAssets();
+    if (other.getIncludedAssets() != null) {
+      this.includedAssets = other.getIncludedAssets();
+    }
   }
 
   public String getName() {
@@ -187,6 +199,14 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   public void setIncludesAssets(boolean includesAssets) {
     this.includesAssets = includesAssets;
+  }
+
+  public List<String> getIncludedAssets() {
+    return includedAssets;
+  }
+
+  public void setIncludedAssets(List<String> includedAssets) {
+    this.includedAssets = includedAssets;
   }
 
   @Deprecated

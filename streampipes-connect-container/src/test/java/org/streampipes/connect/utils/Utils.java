@@ -23,6 +23,7 @@ import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.vocabulary.StreamPipes;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 public class Utils {
 
@@ -59,6 +60,7 @@ public class Utils {
         String id = "http://t.de/";
         result.setUri(id);
         result.setId(id);
+        result.setRules(new ArrayList<>());
 
         return result;
     }
