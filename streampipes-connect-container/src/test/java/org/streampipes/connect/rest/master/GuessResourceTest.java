@@ -28,7 +28,6 @@ import org.streampipes.connect.init.Config;
 import org.streampipes.connect.management.master.GuessManagement;
 import org.streampipes.connect.utils.ConnectContainerResourceTest;
 import org.streampipes.connect.utils.Utils;
-import org.streampipes.model.connect.guess.DomainPropertyProbabilityList;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
@@ -38,11 +37,10 @@ import org.streampipes.vocabulary.StreamPipes;
 import java.util.Arrays;
 
 import static com.jayway.restassured.RestAssured.given;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class GuessResourceTest extends ConnectContainerResourceTest {
 
@@ -116,7 +114,7 @@ public class GuessResourceTest extends ConnectContainerResourceTest {
                 .post(getApi() + "/schema");
 
             res.then()
-                .statusCode(500);
+                .statusCode(200);
 
     }
 

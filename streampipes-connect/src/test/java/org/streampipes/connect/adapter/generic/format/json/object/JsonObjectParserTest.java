@@ -51,39 +51,6 @@ public class JsonObjectParserTest {
         assertEquals(parsedStringEvent, "{\"one\":1}");
     }
 
-
-    @Test
-    public void parseThreeEvents() throws AdapterException {
-
-        String jo = getJsonArrayWithThreeElements();
-        JsonObjectParser parser = new JsonObjectParser();
-
-        List<byte[]> parsedEvent = parser.parseNEvents(getInputStream(jo), 3);
-
-        assertEquals(1, parsedEvent.size());
-        String parsedStringEventOne = new String(parsedEvent.get(0), StandardCharsets.UTF_8);
-
-        assertEquals( "{\"one\":1}", parsedStringEventOne);
-    }
-
-    private String getJsonArrayWithThreeElements() {
-
-        String jo = new JSONObject()
-                .put("one", 1)
-                .toString();
-
-        jo += "\n" + new JSONObject()
-                .put("one", 2)
-                .toString();
-
-        jo += "\n" + new JSONObject()
-                .put("one", 3)
-                .toString();
-
-        return jo;
-    }
-
-
     @Test
     public void parseMoreThenExist() throws AdapterException {
 
