@@ -28,42 +28,38 @@ import java.util.StringJoiner;
 public class JsonConverter {
 
   private JsonObject elasticJsonRepresentation;
+  private JsonParser jsonParser;
 
-  public JsonConverter(String elasticJsonRepresentation) {
-    this.elasticJsonRepresentation = new JsonParser().parse(elasticJsonRepresentation).getAsJsonObject();
+  public JsonConverter() {
+    this.jsonParser = new JsonParser();
   }
 
-  public String convertToJson() {
-    return extractContent().toString();
-  }
+  public String getCsvHeader(String elasticJsonRepresentation) {
+    JsonObject inContent = jsonParser.parse(elasticJsonRepresentation).getAsJsonObject();
 
-  public String convertToCsv() {
-    JsonArray inContent = extractContent();
-    StringBuilder sb = new StringBuilder();
+    Set<Map.Entry<String, JsonElement>> elements = inContent.entrySet();
+    StringJoiner sj = new StringJoiner(";");
 
-    for(int i = 0; i < inContent.size(); i++) {
-      JsonObject jsonObject = inContent.get(i).getAsJsonObject();
-      Set<Map.Entry<String, JsonElement>> elements = jsonObject.entrySet();
-      StringJoiner sj = new StringJoiner(";");
-      for (Map.Entry<String, JsonElement> entry: elements) {
-        sj.add(entry.getValue().toString());
-      }
-      sb.append(sj.toString());
-      sb.append("\n");
+    for (Map.Entry<String, JsonElement> entry: elements) {
+      sj.add(entry.getKey().toString());
     }
 
-    return sb.toString();
+    return sj.toString() + "\n";
+
   }
 
-  private JsonArray extractContent() {
-    JsonArray inContent = elasticJsonRepresentation.get("hits").getAsJsonObject().get("hits").getAsJsonArray();
-    JsonArray outContent = new JsonArray();
+  public String convertToCsv(String elasticJsonRepresentation) {
+    JsonObject inContent = jsonParser.parse(elasticJsonRepresentation).getAsJsonObject();
 
-    for(int i = 0; i < inContent.size(); i++) {
-      JsonObject jsonObject = inContent.get(i).getAsJsonObject().get("_source").getAsJsonObject();
-      outContent.add(jsonObject);
+    Set<Map.Entry<String, JsonElement>> elements = inContent.entrySet();
+    StringJoiner sj = new StringJoiner(";");
+
+    for (Map.Entry<String, JsonElement> entry: elements) {
+      sj.add(entry.getValue().toString());
     }
 
-    return outContent;
+    return sj.toString() + "\n";
+
   }
+
 }
