@@ -25,7 +25,18 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.HttpRequestWithBody;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
+import org.elasticsearch.action.search.*;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.Scroll;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +47,7 @@ import org.streampipes.app.file.export.converter.JsonConverter;
 import org.streampipes.app.file.export.model.IndexInfo;
 import org.streampipes.storage.couchdb.utils.Utils;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -76,40 +85,35 @@ public class Elasticsearch implements IElasticsearch {
     boolean allData = data.isAllData();
 
     try {
-      String countUrl = ElasticsearchConfig.INSTANCE.getElasticsearchURL() + "/" + index + "/_count";
-      HttpResponse<JsonNode> jsonResponse = unirestGet(countUrl);
-      String count = jsonResponse.getBody().getObject().get("count").toString();
+      RestHighLevelClient client = getRestHighLevelClient();
 
-      String url = ElasticsearchConfig.INSTANCE.getElasticsearchURL() + "/" + index + "/_search";
-      String response;
-      HttpRequestWithBody request = Unirest.post(url)
-              .header("accept", "application/json")
-              .header("Content-Type", "application/json");
+      final Scroll scroll = new Scroll(TimeValue.timeValueMinutes(1L));
+      SearchRequest searchRequest = new SearchRequest(index);
+      searchRequest.scroll(scroll);
+      SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 
-      if (allData) {
-        jsonResponse = request.body("{\"from\" : 0, \"size\" :" + count + ", \"query\": { \"match_all\": {} }}")
-                              .asJson();
-        timestampFrom = 0;
-        timeStampTo = 0;
-      } else {
-        jsonResponse = request.body("{\"from\" : 0, \"size\" :" + count + ", \"query\": {\"range\" : {\"timestamp\" : {\"gte\" : " + timestampFrom + ",\"lte\" : " + timeStampTo + "}}}}")
-                             .asJson();
+      if (!allData) {
+        searchSourceBuilder.query(QueryBuilders.rangeQuery("timestamp").from(timestampFrom).to(timeStampTo));
       }
 
-      response = jsonResponse.getBody().getObject().toString();
-
-      if (("csv").equals(output)) {
-        response = new JsonConverter(response).convertToCsv();
-      } else {
-        response = new JsonConverter(response).convertToJson();
-      }
+      searchRequest.source(searchSourceBuilder);
+      SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+      String scrollId = searchResponse.getScrollId();
+      SearchHit[] searchHits = searchResponse.getHits().getHits();
 
       //Time created in milli sec, index, from, to
       long timestamp = System.currentTimeMillis();
-      String fileName = System.currentTimeMillis() + "-" + index + "-" + timestampFrom + "-" + timeStampTo + "." +output;
+      String fileName = System.currentTimeMillis() + "-" + index + "-" + timestampFrom + "-" + timeStampTo + "." + output;
       String filePath = mainFilePath + fileName;
+      FileOutputStream fileStream = this.getFileStream(filePath);
 
-      this.saveFile(filePath, response);
+      if(("csv").equals(output)) {
+       processCSV(client, fileStream, scrollId, scroll, searchHits);
+      } else {
+        processJSON(client, fileStream, scrollId, scroll, searchHits);
+      }
+
+      fileStream.close();
 
       CouchDbClient couchDbClient = getCouchDbClient();
       Map<String, Object> map = new HashMap<>();
@@ -125,7 +129,7 @@ public class Elasticsearch implements IElasticsearch {
 
       return Response.ok().build();
 
-    } catch (IOException | UnirestException e) {
+    } catch (IOException e) {
       e.printStackTrace();
       LOG.error(e.getMessage());
       return Response.status(500).entity(e).build();
@@ -206,13 +210,11 @@ public class Elasticsearch implements IElasticsearch {
     return Utils.getCouchDbElasticsearchFilesEndppointClient();
   }
 
-  private void saveFile(String filePath, String text) throws IOException {
+  private FileOutputStream getFileStream(String filePath) throws IOException {
     File file = new File(filePath);
     file.getParentFile().mkdirs();
     FileWriter fileWriter = new FileWriter(file, true);
-    fileWriter.write(text);
-    fileWriter.flush();
-    fileWriter.close();
+    return new FileOutputStream(filePath);
   }
 
   private HttpResponse<JsonNode> unirestGet(String url) throws UnirestException {
@@ -223,4 +225,91 @@ public class Elasticsearch implements IElasticsearch {
     return jsonResponse;
   }
 
-}
+  private RestHighLevelClient getRestHighLevelClient() {
+    String host = ElasticsearchConfig.INSTANCE.getElasticsearchHost();
+    int port = ElasticsearchConfig.INSTANCE.getElasticsearchPort();
+
+    return new RestHighLevelClient(
+            RestClient.builder(
+                    new HttpHost(host, port, "http"))
+                      .setRequestConfigCallback(
+                              new RestClientBuilder.RequestConfigCallback() {
+                                @Override
+                                public RequestConfig.Builder customizeRequestConfig(
+                                        RequestConfig.Builder requestConfigBuilder) {
+                                  return requestConfigBuilder
+                                          .setConnectTimeout(5000)
+                                          .setSocketTimeout(60000);
+                                }
+                              })
+    );
+
+  }
+
+  private void processJSON(RestHighLevelClient client, FileOutputStream fileStream, String scrollId,  Scroll scroll,  SearchHit[] searchHits) throws IOException {
+      fileStream.write("[".getBytes());
+      boolean isFirstElement = true;
+      for (SearchHit hit : searchHits) {
+        if(!isFirstElement)
+          fileStream.write(",".getBytes());
+        fileStream.write(hit.getSourceAsString().getBytes());
+        isFirstElement = false;
+      }
+
+    while (searchHits != null && searchHits.length > 0) {
+
+      SearchScrollRequest scrollRequest = new SearchScrollRequest(scrollId);
+      scrollRequest.scroll(scroll);
+      SearchResponse searchResponse = client.scroll(scrollRequest, RequestOptions.DEFAULT);
+      scrollId = searchResponse.getScrollId();
+      searchHits = searchResponse.getHits().getHits();
+      for (SearchHit hit : searchHits) {
+        fileStream.write(",".getBytes());
+        fileStream.write(hit.getSourceAsString().getBytes());
+      }
+    }
+    fileStream.write("]".getBytes());
+
+    ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
+    clearScrollRequest.addScrollId(scrollId);
+    ClearScrollResponse clearScrollResponse = client.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
+
+
+  }
+
+  private void processCSV(RestHighLevelClient client, FileOutputStream fileStream, String scrollId,  Scroll scroll,
+                          SearchHit[] searchHits) throws IOException {
+    JsonConverter jsonConverter = new JsonConverter();
+
+    boolean isFirstElement = true;
+    for (SearchHit hit : searchHits) {
+      if (isFirstElement)
+        fileStream.write(jsonConverter.getCsvHeader(hit.getSourceAsString()).getBytes());
+      String response = jsonConverter.convertToCsv(hit.getSourceAsString());
+      fileStream.write(response.getBytes());
+      isFirstElement = false;
+
+    }
+
+    while (searchHits != null && searchHits.length > 0) {
+
+      SearchScrollRequest scrollRequest = new SearchScrollRequest(scrollId);
+      scrollRequest.scroll(scroll);
+      SearchResponse searchResponse = client.scroll(scrollRequest, RequestOptions.DEFAULT);
+      scrollId = searchResponse.getScrollId();
+      searchHits = searchResponse.getHits().getHits();
+      for (SearchHit hit : searchHits) {
+        fileStream.write(jsonConverter.convertToCsv(hit.getSourceAsString()).getBytes());
+      }
+
+    }
+
+    ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
+    clearScrollRequest.addScrollId(scrollId);
+    ClearScrollResponse clearScrollResponse = client.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
+
+  }
+
+
+
+  }
