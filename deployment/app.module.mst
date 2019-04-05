@@ -42,6 +42,15 @@ export const Ng1AppModule = angular
         {{/ng5}}
         {{/modulesActive}}
     ])
+ .decorator('$rootScope', $delegate => {
+    const originalDigest = $delegate.$digest;
+    $delegate.$digest = () => {
+      if (!$delegate.$$phase) {
+        originalDigest.call($delegate);
+      }
+    };
+    return $delegate;
+  })
     .config(['$urlServiceProvider', ($urlService) => $urlService.deferIntercept()])
     .run(["$rootScope", "$transitions", "ObjectProvider", "TransitionService", "RouteTransitionInterceptorService",
         function ($rootScope, $transitions, ObjectProvider, TransitionService, RouteTransitionInterceptorService) {

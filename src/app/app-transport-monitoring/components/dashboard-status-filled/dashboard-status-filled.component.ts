@@ -7,9 +7,9 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 })
 export class DashboardStatusFilledComponent {
 
-    @Input() statusValue: string;
-    @Input() label: string;
     @Input() color: string = "rgb(156, 156, 156)";
+    _label: string;
+    _statusValue: string;
 
     chartData: any;
 
@@ -18,7 +18,24 @@ export class DashboardStatusFilledComponent {
     }
 
     ngOnInit() {
-        this.chartData = [{"name": this.label, "value": this.statusValue}]
+
+    }
+
+    @Input()
+    set statusValue(statusValue: string) {
+        this._statusValue = statusValue;
+        this.updateChartData();
+    }
+
+    @Input()
+    set label(label: string) {
+        this._label = label;
+        this.updateChartData();
+    }
+
+    updateChartData() {
+        this.chartData = [];
+        this.chartData = [{"name": this._label, "value": this._statusValue}];
     }
 
     getBackground() {

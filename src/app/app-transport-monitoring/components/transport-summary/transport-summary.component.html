@@ -5,5 +5,8 @@
                              [color]="'rgb(156, 156, 156)'"></dashboard-status-filled>
     <dashboard-status-filled fxFlex="25" [label]="'Took'" [statusValue]="tookTime"
                              [color]="'rgb(156, 156, 156)'"></dashboard-status-filled>
-    <dashboard-status-filled fxFlex="25"[label]="'Status'" [statusValue]="'OK'" [color]="'green'"></dashboard-status-filled>
+    <dashboard-status-filled fxFlex="25" [label]="'Status'" [statusValue]="errorCode" [color]="statusColor"></dashboard-status-filled>
+</div>
+<div *ngFor="let statusMessage of statusMessages">
+    <h4>{{statusMessage}}</h4>
 </div>

@@ -9,7 +9,7 @@ import {DomSanitizer, SafeStyle, SafeValue} from "@angular/platform-browser";
 })
 export class DashboardImageComponent {
 
-    @Input() parcelInfoEventModel: ParcelInfoEventModel[];
+    //@Input() parcelInfoEventModel: ParcelInfoEventModel[];
     imageData: any[];
 
     currentIndex: number = 0;
@@ -22,9 +22,20 @@ export class DashboardImageComponent {
     }
 
     ngOnInit() {
-        this.parcelInfoEventModel.forEach(parcelInfo => {
-           this.imageData.push('data:image/jpeg;base64,' + parcelInfo.segmentationImage);
-        });
+
+    }
+
+    @Input()
+    set parcelInfoEventModel(parcelInfoEventModel: ParcelInfoEventModel[]) {
+        this.imageData = [];
+        let index = this.getIndex(parcelInfoEventModel)
+        //parcelInfoEventModel.forEach(parcelInfo => {
+            this.imageData.push('data:image/jpeg;base64,' + parcelInfoEventModel[index].segmentationImage);
+        //});
+    }
+
+    getIndex(parcelInfoEventModel: ParcelInfoEventModel[]) {
+        return parcelInfoEventModel.length > 1 ? 1 : 0;
     }
 
     getSanitizedImageUrl(imageUrl) {

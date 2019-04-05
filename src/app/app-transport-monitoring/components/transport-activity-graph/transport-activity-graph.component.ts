@@ -9,9 +9,8 @@ import {TimestampConverterService} from "../../services/timestamp-converter.serv
 })
 export class TransportActivityGraphComponent {
 
-    @Input() activityEventModel: ActivityEventModel[];
-
     polarChartDataActivity: any = [];
+    _activityEventModel: ActivityEventModel[];
 
     constructor(private timestampConverterService: TimestampConverterService) {
 
@@ -20,9 +19,15 @@ export class TransportActivityGraphComponent {
     ngOnInit() {
     }
 
+    @Input()
+    set activityEventModel(activityEventModel: ActivityEventModel[]) {
+        this._activityEventModel = activityEventModel;
+        this.prepareNewPolarChart();
+    }
+
     ngAfterViewInit() {
         //this.makeDummyData();
-        this.prepareNewPolarChart();
+
     }
 
     prepareNewPolarChart() {
@@ -30,7 +35,7 @@ export class TransportActivityGraphComponent {
         let shakeSeries: any = [];
         let fallSeries: any = [];
 
-        this.activityEventModel.forEach(activity => {
+        this._activityEventModel.forEach(activity => {
             normalSeries.push({"name": this.timestampConverterService.convertTimestampHoursOnly(activity.timestamp), "value": this.getActivityValue("normal", 1, activity.activity)});
             shakeSeries.push({"name": this.timestampConverterService.convertTimestampHoursOnly(activity.timestamp), "value": this.getActivityValue("shake", 2, activity.activity)});
             fallSeries.push({"name": this.timestampConverterService.convertTimestampHoursOnly(activity.timestamp), "value": this.getActivityValue("fall_down", 3, activity.activity)});

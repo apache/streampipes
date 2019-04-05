@@ -1,0 +1,55 @@
+<md-dialog aria-label="import pipelines" flex="60" class="colored-frame">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Installation</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                    <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content class="md-dialog-content">
+            <div flex="100">
+                <!-- Select element to visualize -->
+                <div flex="100" style="margin:5px;width:100%">
+                    <div ng-if="ctrl.page == 'upload-pipelines'">
+                        <h4>{{ctrl.pages[0].description}}</h4>
+                        <sp-button sp-button-blue ngf-select="ctrl.upload($file)">Upload Pipeline JSON</sp-button>
+                    </div>
+
+                    <!-- Select Type -->
+                    <div ng-if="ctrl.page == 'select-pipelines'">
+                        <h4>{{ctrl.pages[1].description}}</h4>
+                        <div ng-repeat="availablePipeline in ctrl.availablePipelines">
+                            <md-checkbox ng-model="availablePipeline.selectedForUpload">
+                                {{availablePipeline.name}}
+                            </md-checkbox>
+                        </div>
+                    </div>
+
+                    <!-- Select Scheme -->
+                    <div ng-if="ctrl.page == 'import-pipelines'">
+                        <b><h4>{{ctrl.pages[2].description}}</h4></b>
+                        <md-progress-circular md-mode="indeterminate" class="md-accent"
+                                              ng-show="ctrl.importing"></md-progress-circular>
+                    </div>
+
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-divider/>
+        <md-dialog-actions layout="row">
+            <sp-button sp-button-gray ng-click="ctrl.cancel()">
+                Cancel
+            </sp-button>
+            <sp-button sp-button-gray ng-click="ctrl.back()"
+                       ng-if="!('upload-pipelines'===ctrl.page)">
+                Back
+            </sp-button>
+            <sp-button id="save-viz-button" ng-click="ctrl.startImport()" sp-button-blue ng-if="ctrl.page === 'select-pipelines'">
+                Import
+            </sp-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

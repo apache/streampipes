@@ -1,11 +1,16 @@
 <div fxLayout="column" fxFlex="100" class="page-container-connect">
     <div fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
         <div fxLayout="fill" style="line-height:24px;border-bottom:1px solid #ccc">
-
+            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)">
+                <mat-tab label="Transport Status">
+                </mat-tab>
+                <mat-tab id="ts-settings" label="Settings">
+                </mat-tab>
+            </mat-tab-group>
         </div>
     </div>
 
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
+    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 0">
         <h1>Transport Status</h1>
 
         <dashboard-item [panelTitle]="'Select Transport Process'" style="margin-bottom:15px;">
@@ -19,7 +24,7 @@
                 <h3>Summary</h3>
             </mat-expansion-panel-header>
 
-            <transport-summary [transportProcess]="selectedTransportProcess"></transport-summary>
+            <transport-summary [transportProcess]="selectedTransportProcess" [incomingBoxCount]="incomingBoxCount" [outgoingBoxCount]="outgoingBoxCount"></transport-summary>
         </mat-expansion-panel>
 
         <mat-divider></mat-divider>
@@ -29,7 +34,7 @@
                 <h3>Outgoing Goods</h3>
             </mat-expansion-panel-header>
 
-            <outgoing-view [parcelInfo]="outgoingParcelInfo"></outgoing-view>
+            <outgoing-view [parcelInfo]="outgoingParcelInfo" (detectedBoxes)="updateOutgoingBoxCount($event)"></outgoing-view>
 
         </mat-expansion-panel>
 
@@ -47,9 +52,38 @@
                 <h3>Incoming Goods</h3>
             </mat-expansion-panel-header>
 
-            <outgoing-view [parcelInfo]="incomingParcelInfo"></outgoing-view>
+            <outgoing-view [parcelInfo]="incomingParcelInfo" (detectedBoxes)="updateIncomingBoxCount($event)"></outgoing-view>
 
         </mat-expansion-panel>
 
+    </div>
+    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 1">
+        <div fxFlex="100" fxLayout="column">
+            <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="button-margin">
+                <button mat-button mat-raised-button color="primary" (click)="truncateTransportProcessDatabase()">
+                    Truncate Transport Process Database
+                </button>
+            </div>
+            <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="button-margin">
+                <button mat-button mat-raised-button color="primary" (click)="truncateIncomingGoodsDatabase()">
+                    Truncate Incoming Goods Database
+                </button>
+            </div>
+            <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="button-margin">
+                <button mat-button mat-raised-button color="primary" (click)="truncateOutgoingGoodsDatabase()">
+                    Truncate Outgoing Goods Database
+                </button>
+            </div>
+            <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="button-margin">
+                <button mat-button mat-raised-button color="primary" (click)="truncateParcelActivitiesDatabase()">
+                    Truncate Parcel Activity Database
+                </button>
+            </div>
+            <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="button-margin">
+                <button mat-button mat-raised-button color="primary" (click)="truncateParcelOpenBoxDatabase()">
+                    Truncate Parcel Open Box Database
+                </button>
+            </div>
+        </div>
     </div>
 </div>

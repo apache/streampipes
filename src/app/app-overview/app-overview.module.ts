@@ -8,6 +8,7 @@ import {FormsModule} from "@angular/forms";
 import {AppOverviewComponent} from "./app-overview.component";
 import {AppAssetMonitoringModule} from "../app-asset-monitoring/app-asset-monitoring.module";
 import {AppTransportMonitoringModule} from "../app-transport-monitoring/app-transport-monitoring.module";
+import {AppPallet3dModule} from "../app-pallet3d/app-pallet3d.module";
 
 @NgModule({
     imports: [
@@ -19,7 +20,8 @@ import {AppTransportMonitoringModule} from "../app-transport-monitoring/app-tran
         MatFormFieldModule,
         FormsModule,
         AppAssetMonitoringModule,
-        AppTransportMonitoringModule
+        AppTransportMonitoringModule,
+        AppPallet3dModule
     ],
     declarations: [
         AppOverviewComponent,

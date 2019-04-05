@@ -1,10 +1,13 @@
 import * as angular from 'angular';
+import * as FileSaver from 'file-saver';
+
 declare const jsPlumb: any;
 declare const require: any;
 
 import {StartAllPipelinesController} from './dialog/start-all-pipelines-dialog.controller';
 import {PipelineCategoriesDialogController} from './dialog/pipeline-categories-dialog.controller';
 import {ElementIconText} from "../services/get-element-icon-text.service";
+import {ImportPipelineDialogController} from "./dialog/import-pipeline-dialog.controller";
 
 export class PipelineCtrl {
 
@@ -64,6 +67,12 @@ export class PipelineCtrl {
         this.activeCategory = categoryId;
     }
 
+    exportPipelines() {
+        let blob = new Blob([JSON.stringify(this.pipelines)], {type: "application/json"})
+        FileSaver.saveAs(blob, "pipelines.json");
+    }
+
+
     getPipelines() {
         this.RestApi.getOwnPipelines()
             .then(pipelines => {
@@ -87,7 +96,7 @@ export class PipelineCtrl {
             });
     }
 
-   getPipelineCategories() {
+    getPipelineCategories() {
         this.RestApi.getPipelineCategories()
             .then(pipelineCategories => {
                 this.pipelineCategories = pipelineCategories.data;
@@ -117,10 +126,27 @@ export class PipelineCtrl {
         return active;
     }
 
+    openImportPipelinesDialog() {
+        this.$mdDialog.show({
+            controller: ImportPipelineDialogController,
+            controllerAs: 'ctrl',
+            template: require('./dialog/import-pipeline-dialog.tmpl.html'),
+            parent: angular.element(document.body),
+            clickOutsideToClose: false,
+            locals: {
+                pipelines: this.pipelines,
+                refreshPipelines: () => {
+                    return this.refreshPipelines();
+                }
+            },
+            bindToController: true
+        })
+    }
+
     startAllPipelines(action) {
         this.$mdDialog.show({
             controller: StartAllPipelinesController,
-            controllerAs : 'ctrl',
+            controllerAs: 'ctrl',
             template: require('./dialog/start-all-pipelines-dialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: false,
@@ -135,11 +161,11 @@ export class PipelineCtrl {
             bindToController: true
         })
     }
-    
+
     showPipelineCategoriesDialog() {
         this.$mdDialog.show({
             controller: PipelineCategoriesDialogController,
-            controllerAs : 'ctrl',
+            controllerAs: 'ctrl',
             template: require('./dialog/pipeline-categories-dialog.tmpl.html'),
             parent: angular.element(document.body),
             clickOutsideToClose: true,
@@ -160,12 +186,12 @@ export class PipelineCtrl {
         this.getPipelines();
         this.getSystemPipelines();
     }
-    
+
 
     showPipeline(pipeline) {
         pipeline.display = !pipeline.display;
     }
-    
+
 
     addImageOrTextIcon($element, json) {
         this.ImageChecker.imageExists(json.properties.iconUrl, function (exists) {
@@ -195,7 +221,7 @@ export class PipelineCtrl {
         }
         return result.toUpperCase();
     };
-    
+
 
 }
 

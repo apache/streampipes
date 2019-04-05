@@ -4,13 +4,12 @@ import {map} from "rxjs/operators";
 import {Observable, of} from "rxjs";
 import {AuthStatusService} from "../../services/auth-status.service";
 import {ActivityDetectionModel} from "../model/activity-detection.model";
-import {AmbientLightModel} from "../model/ambient-light.model";
-import {ParcelMetricsModel} from "../model/parcel-metrics.model";
 import {ParcelInfoModel} from "../model/parcel-info.model";
 import {ParcelInfoEventModel} from "../model/parcel-info-event.model";
 import {OldEventModel} from "../model/old-event.model";
 import {TransportProcessEventModel} from "../model/transport-process-event.model";
 import {TransportProcessModel} from "../model/transport-process.model";
+import {OpenBoxModel} from "../model/open-box.model";
 
 @Injectable()
 export class AppTransportMonitoringRestService {
@@ -36,14 +35,15 @@ export class AppTransportMonitoringRestService {
     getActivityDetection(startTimestamp: number, endTimestamp: number): Observable<ActivityDetectionModel> {
         // parcel activity
         return this.http.get(this.getParcelActivityUrl(startTimestamp, endTimestamp, "timestamp")).pipe(map (resp => {
-            console.log(resp);
             return resp as ActivityDetectionModel
         }));
     }
 
-    getBoxOpenModel(startTimestamp: number, endTimestamp: number): Observable<AmbientLightModel[]> {
+    getBoxOpenModel(startTimestamp: number, endTimestamp: number): Observable<OpenBoxModel> {
         // box open/close
-        return undefined;
+        return this.http.get(this.getOpenBoxUrl(startTimestamp, endTimestamp, "timestamp")).pipe(map (resp => {
+            return resp as OpenBoxModel
+        }));
     }
 
     getOutgoingParcelInfo(startTimestamp: number, endTimestamp: number): Observable<ParcelInfoModel> {
@@ -76,19 +76,33 @@ export class AppTransportMonitoringRestService {
         }));
     }
 
-    getLatestOutgoingParcelMetrics(startTimestamp: number, endTimestamp: number): Observable<ParcelMetricsModel> {
-        // parcel metrics: output from felix
-        return undefined;
+    truncateIncomingGoodsDb() {
+        let index = "sp_incoming_goods";
+        this.http.get(this.getDeleteUrl(index)).subscribe();
     }
 
-    getLatestIncomingParcelInfo(startTimestamp: number, endTimestamp: number): Observable<ParcelInfoModel> {
-        return this.http.get("/assets/Camera.json").pipe(map(resp => {
-            return (resp as ParcelInfoModel[])[1];
-        }));
+    truncateOutgoingGoodsDb() {
+        let index = "sp_outgoing_goods";
+        this.http.get(this.getDeleteUrl(index)).subscribe();
     }
 
-    getLatestIncomingParcelMetrics(startTimestamp: number, endTimestamp: number): Observable<ParcelMetricsModel> {
-        return undefined;
+    truncateTransportProcessDb() {
+        let index = "sp_transport_processes";
+        this.http.get(this.getDeleteUrl(index)).subscribe();
+    }
+
+    truncateParcelActivitiesDb() {
+        let index = "sp_parcel_activity";
+        this.http.get(this.getDeleteUrl(index)).subscribe();
+    }
+
+    truncateParcelOpenBoxDb() {
+        let index = "sp_parcel_open_box";
+        this.http.get(this.getDeleteUrl(index)).subscribe();
+    }
+
+    getDeleteUrl(index: string) {
+        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/datalake/delete/' +index;
     }
 
     getTransportProcessesUrl(): string {
@@ -96,16 +110,19 @@ export class AppTransportMonitoringRestService {
     }
 
     getOutgoingParcelInfoUrl(from: number, to:number, timestampProperty: string): string {
-        return this.url + "/sp_new_box_data?from=" +(from - 5000) +"&to=" +from +"&timestamp=" +timestampProperty;
+        return this.url + "/sp_outgoing_goods?from=" +(from - 6000) +"&to=" +(from-1000) +"&timestamp=" +timestampProperty;
     }
 
     getIncomingParcelInfoUrl(from: number, to:number, timestampProperty: string): string {
-        return this.url + "/sp_incoming_goods?from=" +to +"&to=" +(to + 5000) +"&timestamp=" +timestampProperty;
+        return this.url + "/sp_incoming_goods?from=" +(to+1000) +"&to=" +(to + 6000) +"&timestamp=" +timestampProperty;
     }
 
-
     getParcelActivityUrl(from: number, to: number, timestampProperty: string): string {
-        return this.url + "/sp_dominik_xdk?from=" +from +"&to=" +to +"&timestamp=" +timestampProperty;
+        return this.url + "/sp_parcel_activity?from=" +from +"&to=" +to +"&timestamp=" +timestampProperty;
+    }
+
+    getOpenBoxUrl(from: number, to: number, timestampProperty: string): string {
+        return this.url + "/sp_parcel_open_box?from=" +from +"&to=" +to +"&timestamp=" +timestampProperty;
     }
 
     private get baseUrl() {
