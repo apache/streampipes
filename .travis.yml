@@ -1,8 +1,5 @@
 language: java
 
-script:
-  - mvn clean package --quiet
-
 addons:
   sonarcloud:
     organization: "streampipes"
@@ -10,3 +7,7 @@ addons:
       secure: $SONAR_TOKEN
     branches:
       - dev
+
+script:
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar --quiet
+
