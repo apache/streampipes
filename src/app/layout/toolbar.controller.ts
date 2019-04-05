@@ -86,6 +86,11 @@ export class ToolbarController {
                 title: 'File Upload',
                 icon: 'file:ic_file_upload_24px'
             },
+            {
+                link: 'streampipes.asset',
+                title: 'Asset',
+                icon: 'action:ic_view_headline_24px'
+            },
         ];
 
         this.admin = [

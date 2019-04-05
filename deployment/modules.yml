@@ -197,4 +197,18 @@ spFileUpload:
   icon: 'file:ic_file_upload_24px'
   homeImage: '/assets/img/home/configuration.png'
   admin: false
-
+spAsset:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'AssetModule'
+  ng5_component: 'AssetComponent'
+  ng5_componentPath: '../asset/asset.component'
+  path: './asset/asset.module'
+  link: 'streampipes.asset'
+  url: '/asset'
+  title: 'Asset'
+  description: 'Asset'
+  icon: 'action:ic_view_headline_24px'
+  homeImage: ''
+  admin: false
