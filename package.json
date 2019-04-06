@@ -83,7 +83,10 @@
     "rxjs-compat": "^6.3.3",
     "shepherd.js": "2.4.0",
     "slick-carousel": "1.6.0",
-    "zone.js": "^0.8.29"
+    "zone.js": "^0.8.29",
+    "three": "^0.103.0",
+    "three-orbitcontrols": "^2.102.1",
+    "threex-domevents": "^1.0.0"
   },
   "devDependencies": {
     "@angular/cli": "7.3.6",
