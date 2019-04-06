@@ -57,7 +57,7 @@ public class EndpointItemFetcher {
 
             return new Gson().fromJson(result, new TypeToken<List<RdfEndpointItem>>(){}.getType());
         } catch (IOException e1) {
-            logger.warn("Processing Element Descriptions could not be fetched from RDF endpoint: " + e.getEndpointUrl(), e1);
+            logger.warn("Processing Element Descriptions could not be fetched from RDF endpoint: " + e.getEndpointUrl());
             return new ArrayList<>();
         }
     }

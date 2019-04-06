@@ -15,12 +15,9 @@ limitations under the License.
 */
 package org.streampipes.container.assets;
 
-import com.google.common.io.Resources;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -49,10 +46,10 @@ public class AssetZipGenerator {
       ZipEntry ze = new ZipEntry(asset);
       out.putNextEntry(ze);
 
-      FileInputStream in = null;
+      InputStream in = null;
       try {
-        File file = new File(Resources.getResource(appId + "/" + asset).getFile());
-        in = new FileInputStream(file);
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        in = classLoader.getResourceAsStream(makePath(asset));
         int len;
         while ((len = in.read(buffer)) > 0) {
           out.write(buffer, 0, len);
@@ -66,5 +63,9 @@ public class AssetZipGenerator {
     out.closeEntry();
     out.close();
     return outputStream.toByteArray();
+  }
+
+  private String makePath(String assetAppendix) {
+    return this.appId + "/" + assetAppendix;
   }
 }
