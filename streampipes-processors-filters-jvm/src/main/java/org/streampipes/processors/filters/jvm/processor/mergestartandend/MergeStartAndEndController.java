@@ -26,6 +26,7 @@ import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -36,9 +37,10 @@ public class MergeStartAndEndController extends StandaloneEventProcessingDeclare
   @Override
   public DataProcessorDescription declareModel() {
     //TODO: Add output strategy (check dashboard for how-to)?
-    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.mergerorg.streampipes.processors.filters.jvm.processor.mergestartandend",
+    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.processor.mergestartandend",
             "MergeStartAndEnd", "Merges two event streams if there is a start and an end")
             .category(DataProcessorType.TRANSFORM)
+            .providesAssets(Assets.DOCUMENTATION)
             .iconUrl(FiltersJvmConfig.getIconUrl("projection"))
             .requiredStream(StreamRequirementsBuilder
                     .create()

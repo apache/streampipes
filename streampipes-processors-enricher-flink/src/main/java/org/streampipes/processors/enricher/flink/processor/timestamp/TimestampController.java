@@ -24,6 +24,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -34,10 +35,10 @@ public class TimestampController extends FlinkDataProcessorDeclarer<TimestampPar
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink" +
-                    ".enrich-timestamp", "Timestamp Enricher",
+    return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.timestamp",
+            "Timestamp Enricher",
             "Appends the current time in ms to the event payload")
-            .iconUrl(EnricherFlinkConfig.getIconUrl("enrich-timestamp-icon"))
+            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())

@@ -19,7 +19,6 @@ import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.processors.filters.jvm.config.FiltersJvmConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -30,6 +29,7 @@ import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -59,7 +59,7 @@ public class PalletTransportDetectionController extends StandaloneEventProcessin
     return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.processor.pallettransportdetection",
             "PalletTransportDetection", "Merges two event streams if there is a start and an end")
             .category(DataProcessorType.TRANSFORM)
-            .iconUrl(FiltersJvmConfig.getIconUrl("projection"))
+            .providesAssets(Assets.DOCUMENTATION)
             .requiredStream(StreamRequirementsBuilder
                 .create()
                 .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),

@@ -22,7 +22,6 @@ import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.processors.imageprocessing.jvm.config.ImageProcessingJvmConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -33,6 +32,7 @@ import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -43,11 +43,10 @@ public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<Qr
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("qr-code-reader", "QR Code Reader", ("QR Code Reader: Detects a QR Code " +
-            "in an image"))
+    return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.qrcode",
+            "QR Code Reader", "QR Code Reader: Detects a QR Code in an image")
             .category(DataProcessorType.FILTER)
-            .iconUrl(ImageProcessingJvmConfig.getIconUrl("qrcode"))
-
+            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
                             .domainPropertyReq("https://image.com"), Labels
                             .from(IMAGE_PROPERTY, "Image", ""),

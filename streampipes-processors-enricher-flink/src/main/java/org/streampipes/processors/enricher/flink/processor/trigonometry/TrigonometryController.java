@@ -25,6 +25,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -40,7 +41,7 @@ public class TrigonometryController extends FlinkDataProcessorDeclarer<Trigonome
     public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.trigonometry",
                 "Trigonometry","Performs Trigonometric function on event properties")
-                .iconUrl(EnricherFlinkConfig.getIconUrl("trigonometry_icon"))
+                .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .category(DataProcessorType.ALGORITHM)
                 .requiredStream(StreamRequirementsBuilder
                         .create()

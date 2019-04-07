@@ -22,7 +22,6 @@ import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.processors.imageprocessing.jvm.config.ImageProcessingJvmConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -33,6 +32,7 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -45,7 +45,7 @@ public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer
     return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.jvm.image-enricher", "Image Enricher", "Image Enrichment: Enriches an " +
             "image with " +
             "given bounding box coordinates")
-            .iconUrl(ImageProcessingJvmConfig.getIconUrl( "image_enrich"))
+            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(DataProcessorType.FILTER)
             .requiredStream(getStreamRequirements())
 

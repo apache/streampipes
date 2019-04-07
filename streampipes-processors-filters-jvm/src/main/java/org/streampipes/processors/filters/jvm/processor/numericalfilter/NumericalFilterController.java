@@ -46,8 +46,10 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
             .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from(NUMBER_MAPPING, "Specifies the field name where the filter operation should" +
-                    " be applied on.", ""), PropertyScope.NONE).build())
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                            Labels.from(NUMBER_MAPPING, "Field", "Specifies the field name where "
+                                    + "the filter operation should be applied on."),
+                            PropertyScope.NONE).build())
             .outputStrategy(OutputStrategies.keep())
             .requiredSingleValueSelection(Labels.from(OPERATION, "Filter Operation", "Specifies the filter " +
                     "operation that should be applied on the field"), Options.from("<", "<=", ">", ">=", "==", "!="))
