@@ -76,12 +76,13 @@ export class AdapterStartedDialog {
                                     if (property instanceof FreeTextStaticProperty && "domId2index-name" == property.internalName) {
                                         property.value = this.data.adapter.label.toLowerCase().replace(" ", "_");
                                     } else if (property instanceof MappingPropertyUnary && "domId2timestamp-mapping" == property.internalName) {
-                                        property.selectedProperties = [this.data.dataLakeTimestampField]
+                                        property.selectedProperties = ["s0::" + this.data.dataLakeTimestampField]
                                     }
 
                                 });
 
                                 res.pipelineTemplateId = templateName;
+                                res.name = this.data.adapter.label;
 
                                 this.pipelineTemplateService.createPipelineTemplateInvocation(res);
 
