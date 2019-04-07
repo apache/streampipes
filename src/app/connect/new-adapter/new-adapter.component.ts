@@ -20,6 +20,7 @@ import {EventSchemaComponent} from '../schema-editor/event-schema/event-schema.c
 import {ConnectService} from "../connect.service";
 import {RemoveDuplicatesRuleDescription} from '../model/connect/rules/RemoveDuplicatesRuleDescription';
 import {IconService} from './icon.service';
+import {EventProperty} from '../schema-editor/model/EventProperty';
 
 @Component({
     selector: 'sp-new-adapter',
@@ -64,10 +65,14 @@ export class NewAdapterComponent implements OnInit {
     removeDuplicates: boolean = false;
     removeDuplicatesTime: number;
 
+    saveInDataLake: boolean = false;
+    dataLakeTimestampField: string;
+
     startAdapterFormGroup: FormGroup;
 
     eventSchema: EventSchema;
     oldEventSchema: EventSchema;
+
 
     hasInput: Boolean[];
 
@@ -93,7 +98,6 @@ export class NewAdapterComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-
 
         this.formatConfigurationValid = false;
 
@@ -149,7 +153,10 @@ export class NewAdapterComponent implements OnInit {
         let dialogRef = this.dialog.open(AdapterStartedDialog, {
             width: '70%',
             data: { adapter: this.adapter,
-                storeAsTemplate: storeAsTemplate},
+                storeAsTemplate: storeAsTemplate,
+                saveInDataLake: this.saveInDataLake,
+                dataLakeTimestampField: this.dataLakeTimestampField
+            },
             panelClass: 'sp-no-padding-dialog'
         });
 

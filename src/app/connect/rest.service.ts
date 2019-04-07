@@ -16,7 +16,7 @@ import { GuessSchema } from './schema-editor/model/GuessSchema';
 import { AuthStatusService } from '../services/auth-status.service';
 import {StatusMessage} from "./model/message/StatusMessage";
 import { UnitDescription } from './model/UnitDescription';
-import {TsonLdSerializerService} from './tsonld-serializer.service';
+import {TsonLdSerializerService} from '../platform-services/tsonld-serializer.service';
 
 @Injectable()
 export class RestService {

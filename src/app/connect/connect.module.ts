@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  MatFormField,
   MatFormFieldModule,
   MatGridListModule,
 } from '@angular/material';
@@ -63,10 +62,12 @@ import { FileRestService } from './file-management/service/filerest.service';
 import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
 import { AdapterExportDialog } from './data-marketplace/adapter-export/adapter-export-dialog.component';
 import { AdapterUploadDialog } from './data-marketplace/adapter-upload/adapter-upload-dialog.component';
-import { TsonLdSerializerService } from './tsonld-serializer.service';
+import { TsonLdSerializerService } from '../platform-services/tsonld-serializer.service';
 import { EventPropertyListComponent } from './schema-editor/event-property-list/event-property-list.component';
 import {StaticMappingNaryComponent} from './static-properties/static-mapping-nary/static-mapping-nary.component';
 import {StaticMappingUnaryComponent} from './static-properties/static-mapping-unary/static-mapping-unary.component';
+import {TimestampPipe} from './filter/timestamp.pipe';
+import {PlatformServicesModule} from '../platform-services/platform.module';
 
 
 @NgModule({
@@ -82,6 +83,7 @@ import {StaticMappingUnaryComponent} from './static-properties/static-mapping-un
     MatProgressSpinnerModule,
     MatInputModule,
     MatFormFieldModule,
+    PlatformServicesModule
   ],
   exports: [
       StaticPropertyComponent,
@@ -108,6 +110,7 @@ import {StaticMappingUnaryComponent} from './static-properties/static-mapping-un
     StaticFileInputComponent,
     StaticMappingNaryComponent,
     StaticMappingUnaryComponent,
+    TimestampPipe,
     StaticAnyInput,
     ProtocolComponent,
     ProtocolListComponent,
@@ -123,7 +126,6 @@ import {StaticMappingUnaryComponent} from './static-properties/static-mapping-un
   ],
   providers: [
     RestService,
-    TsonLdSerializerService,
     ConnectService,
     DataTypesService,
     TransformationRuleService,

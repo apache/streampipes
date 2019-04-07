@@ -1,6 +1,6 @@
 import {EventProperty} from './EventProperty';
-import {RdfsClass} from '../../tsonld/RdfsClass';
-import {RdfProperty} from '../../tsonld/RdfsProperty';
+import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
+import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
 //  extends EventProperty
 
 @RdfsClass('sp:EventPropertyList')

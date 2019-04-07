@@ -1,6 +1,6 @@
-import {RdfId} from '../../tsonld/RdfId';
-import {RdfProperty} from '../../tsonld/RdfsProperty';
-import {RdfsClass} from '../../tsonld/RdfsClass';
+import {RdfId} from '../../../platform-services/tsonld/RdfId';
+import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
+import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
 import {AdapterDescription} from './AdapterDescription';
 
 @RdfsClass('sp:AdapterDescriptionList')

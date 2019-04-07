@@ -141,6 +141,16 @@
                             <input [disabled]="!isEditable" matInput id="input-removeDuplicatesTime" [ngModelOptions]="{standalone: true}" placeholder="Remove Duplicates Time Window" [(ngModel)]="removeDuplicatesTime">
                         </mat-form-field>
 
+                        <mat-checkbox [disabled]="!isEditable" [(ngModel)]="saveInDataLake" [ngModelOptions]="{standalone: true}">Store in Datalake</mat-checkbox>
+                        <mat-form-field *ngIf="saveInDataLake">
+                            <mat-label>Select Time Field</mat-label>
+                            <mat-select [(ngModel)]="dataLakeTimestampField" [ngModelOptions]="{standalone: true}">
+                                <mat-option class="md-elevation-z1" style="background: white;" *ngFor="let timestampField of eventSchema.eventProperties | timestampFilter" [value]="timestampField.runTimeName">
+                                    {{timestampField.runTimeName}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
                     </div>
                 </div>
 

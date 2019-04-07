@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { DataSetDescription } from '../../connect/model/DataSetDescription';
-import { TsonLd } from '../../connect/tsonld/tsonld';
+import { TsonLd } from '../../platform-services/tsonld/tsonld';
 import { ProtocolDescription } from '../../connect/model/connect/grounding/ProtocolDescription';
 import { ProtocolDescriptionList } from '../../connect/model/connect/grounding/ProtocolDescriptionList';
 import { FreeTextStaticProperty } from '../../connect/model/FreeTextStaticProperty';
@@ -31,14 +31,18 @@ import { AuthStatusService } from '../../services/auth-status.service';
 import { DataStreamDescription } from '../../connect/model/DataStreamDescription';
 import { Enumeration } from '../../connect/schema-editor/model/Enumeration';
 import { QuantitativeValue } from '../../connect/schema-editor/model/QuantitativeValue';
-import {BoundPipelineElement} from '../../connect/model/BoundPipelineElement';
-import {DataSinkInvocation} from '../../connect/model/DataSinkInvocation';
+import { BoundPipelineElement } from '../../connect/model/BoundPipelineElement';
+import { DataSinkInvocation } from '../../connect/model/DataSinkInvocation';
 import 'rxjs-compat/add/operator/map';
+import { PipelineTemplateService } from '../../platform-services/apis/pipeline-template.service';
 
 @Injectable()
 export class KviService {
 
-    constructor(private http: HttpClient, private authStatusService: AuthStatusService) {
+    constructor(
+        private http: HttpClient,
+        private authStatusService: AuthStatusService,
+        private pipelineTemplateService: PipelineTemplateService) {
     }
 
     getServerUrl() {
@@ -120,39 +124,8 @@ export class KviService {
     }
 
     getStaticProperties(dataSet: DataSetDescription, operator: PipelineTemplateDescription): Observable<PipelineTemplateInvocation> {
-        return this.http
-            .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates/invocation?streamId=' + dataSet.id + '&templateId=' + operator.appId)
-            .pipe(map(response => {
 
-                const tsonld = this.getTsonLd();
-
-                var res: PipelineTemplateInvocation;
-
-                console.log(response.toString());
-                // Currently tsonld dows not support objects that just contain one root object without an enclosing @graph array
-                if ('@graph' in response) {
-                    res = tsonld.fromJsonLdType(response, 'sp:PipelineTemplateInvocation');
-                } else {
-                    res = new PipelineTemplateInvocation(response['@id']);
-                    res.dataSetId = response['sp:hasDataSetId'];
-                    res.name = response['hasElementName'];
-                    res.pipelineTemplateId = response['sp:hasInternalName'];
-                }
-
-                console.log( res);
-
-                // TODO find better solution
-                // This will remove preconfigured values from the UI
-                res.list.forEach(property => {
-                    if (this.isFreeTextStaticProperty(property)) {
-                        if (this.asFreeTextStaticProperty(property).value != undefined) {
-                            this.asFreeTextStaticProperty(property).render = false;
-                        }
-                    }
-                });
-                console.log(res);
-                return res;
-            }));
+        return this.pipelineTemplateService.getPipelineTemplateInvocation(dataSet.id, operator.appId);
     }
 
     isFreeTextStaticProperty(val) {
@@ -164,13 +137,7 @@ export class KviService {
     }
 
     createPipelineTemplateInvocation(invocation: PipelineTemplateInvocation) {
-        const tsonld = this.getTsonLd();
-
-        tsonld.toflattenJsonLd(invocation).subscribe(res => {
-            this.http
-                .post(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates', res)
-                .subscribe();
-        });
+        this.pipelineTemplateService.createPipelineTemplateInvocation(invocation);
     }
 
 }

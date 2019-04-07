@@ -1,4 +1,4 @@
-import { RdfsClass } from '../tsonld/RdfsClass';
+import { RdfsClass } from '../../platform-services/tsonld/RdfsClass';
 import { SelectionStaticProperty } from './SelectionStaticProperty';
 
 @RdfsClass('sp:OneOfStaticProperty')

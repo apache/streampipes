@@ -5,6 +5,10 @@ import {RestService} from "../../rest.service";
 import {StatusMessage} from "../../model/message/StatusMessage";
 import {GenericAdapterSetDescription} from '../../model/connect/GenericAdapterSetDescription';
 import {SpecificAdapterSetDescription} from '../../model/connect/SpecificAdapterSetDescription';
+import {PipelineTemplateService} from '../../../platform-services/apis/pipeline-template.service';
+import {FreeTextStaticProperty} from '../../model/FreeTextStaticProperty';
+import {StaticProperty} from '../../model/StaticProperty';
+import {MappingPropertyUnary} from '../../model/MappingPropertyUnary';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -21,11 +25,14 @@ export class AdapterStartedDialog {
     private isSetAdapter: boolean = false;
     private isTemplate: boolean = false;
 
+    private saveInDataLake: boolean;
+
     constructor(
         public dialogRef: MatDialogRef<AdapterStartedDialog>,
         private restService: RestService,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private ShepherdService: ShepherdService) { }
+        private ShepherdService: ShepherdService,
+        private pipelineTemplateService: PipelineTemplateService) { }
 
     ngOnInit() {
         this.startAdapter();
@@ -47,6 +54,7 @@ export class AdapterStartedDialog {
                 this.adapterInstalled = true;
                 this.adapterStatus = x;
                 if (x.success) {
+
                     // Start preview on streams and message for sets
                     if (newAdapter instanceof GenericAdapterSetDescription || newAdapter instanceof SpecificAdapterSetDescription) {
                         this.isSetAdapter = true;
@@ -57,6 +65,29 @@ export class AdapterStartedDialog {
                             this.getLatestRuntimeInfo();
                         });
                     }
+
+                    if (this.data.saveInDataLake) {
+                        const templateName = "org.streampipes.manager.template.instances.ElasticsearchPipelineTemplate";
+                        x.notifications[0].title
+                        this.pipelineTemplateService.getPipelineTemplateInvocation(x.notifications[0].title + "/streams", templateName)
+                            .subscribe(res => {
+
+                                res.list.forEach(property => {
+                                    if (property instanceof FreeTextStaticProperty && "domId2index-name" == property.internalName) {
+                                        property.value = this.data.adapter.label.toLowerCase().replace(" ", "_");
+                                    } else if (property instanceof MappingPropertyUnary && "domId2timestamp-mapping" == property.internalName) {
+                                        property.selectedProperties = [this.data.dataLakeTimestampField]
+                                    }
+
+                                });
+
+                                res.pipelineTemplateId = templateName;
+
+                                this.pipelineTemplateService.createPipelineTemplateInvocation(res);
+
+                            });
+                    }
+
 
                 }
             });
