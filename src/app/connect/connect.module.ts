@@ -134,6 +134,7 @@ import {PlatformServicesModule} from '../platform-services/platform.module';
     IconService,
     ShepherdService,
     UnitProviderService,
+    TimestampPipe,
     FileRestService,
     StaticFileRestService,
     {
