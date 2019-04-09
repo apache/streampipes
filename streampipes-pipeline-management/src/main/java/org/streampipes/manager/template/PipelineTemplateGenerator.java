@@ -21,10 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.ElementNotFoundException;
 import org.streampipes.manager.matching.DataSetGroundingSelector;
 import org.streampipes.manager.matching.v2.ElementVerification;
-import org.streampipes.manager.template.instances.DashboardPipelineTemplate;
-import org.streampipes.manager.template.instances.DelmeExamplePipelineTemplate;
-import org.streampipes.manager.template.instances.ElasticsearchPipelineTemplate;
-import org.streampipes.manager.template.instances.PipelineTemplate;
+import org.streampipes.manager.template.instances.*;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
@@ -54,7 +51,8 @@ public class PipelineTemplateGenerator {
 
     allPipelineTemplates.add(new DashboardPipelineTemplate());
     allPipelineTemplates.add(new ElasticsearchPipelineTemplate());
-    allPipelineTemplates.add(new DelmeExamplePipelineTemplate());
+    allPipelineTemplates.add(new FilterPipelineTemplate());
+//    allPipelineTemplates.add(new DelmeExamplePipelineTemplate());
 
 
     for (PipelineTemplate pt : allPipelineTemplates) {
@@ -128,7 +126,7 @@ public class PipelineTemplateGenerator {
 
   protected DataProcessorDescription getProcessor(String id) throws URISyntaxException, ElementNotFoundException {
     DataProcessorDescription result = getStorage()
-            .getSEPAById(id);
+            .getSEPAByAppId(id);
 
     if (result == null) {
       throw new ElementNotFoundException("Data processor " + id + " is not installed!");
