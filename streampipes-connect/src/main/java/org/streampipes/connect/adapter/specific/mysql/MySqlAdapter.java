@@ -159,7 +159,7 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
 
     // Init JdbcDriver
     try {
-      Class.forName("com.mysql.jdbc.Driver");
+      Class.forName("com.mysql.cj.jdbc.Driver");
     } catch (ClassNotFoundException e) {
       throw new AdapterException("MySql Driver not found.");
     }
