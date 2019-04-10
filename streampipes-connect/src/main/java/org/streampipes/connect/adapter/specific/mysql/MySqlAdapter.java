@@ -28,9 +28,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +49,6 @@ import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.sdk.utils.Datatypes;
 
 public class MySqlAdapter extends SpecificDataStreamAdapter {
 
@@ -72,6 +71,15 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
   private boolean stream = false;
   private static List<Column> tableSchema = new ArrayList<>();
   private BinaryLogClient client;
+
+  public MySqlAdapter() {
+  }
+
+  public MySqlAdapter(SpecificAdapterStreamDescription adapterDescription) {
+    super(adapterDescription);
+
+    getConfigurations(adapterDescription);
+  }
 
   @Override
   public SpecificAdapterStreamDescription declareModel() {
@@ -108,8 +116,7 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
     try {
       client.connect();
     } catch (IOException e) {
-      //TODO: Log exception rather than printStackTrace()
-      e.printStackTrace();
+      throw new AdapterException(e.getMessage());
     }
   }
 
@@ -144,7 +151,7 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
       if (rows[i] != null) {
         out.put(tableSchema.get(i).getName(), rows[i]);
       } else {
-        out.put(tableSchema.get(i).getName(), tableSchema.get(i).getDefaul());
+        out.put(tableSchema.get(i).getName(), tableSchema.get(i).getDefault());
       }
     }
     adapterPipeline.process(out);
@@ -161,7 +168,7 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
 
   @Override
   public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-    return null;
+    return new MySqlAdapter(adapterDescription);
   }
 
   @Override
@@ -174,53 +181,15 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
 
     getConfigurations(adapterDescription);
 
-    // Init JdbcDriver
-    try {
-      Class.forName("com.mysql.cj.jdbc.Driver");
-    } catch (ClassNotFoundException e) {
-      throw new AdapterException("MySql Driver not found.");
+    checkJdbcDriver();
+    extractTableInformation();
+
+    for (Column column : tableSchema) {
+      allProperties.add(PrimitivePropertyBuilder
+          .create(column.getType(), database + "." + table + "." + column.getName())
+          .label(column.getName())
+          .build());
     }
-
-    String server = "jdbc:mysql://" + host + ":" + port + "/";
-    // Maybe do it with "ResultSet rs = c.getMetaData().getTables(null, null, tableName, null);"?
-    String query = "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE"
-        + " TABLE_NAME = '" + table + "';";
-
-    // Establish connection
-    try (Connection connection = DriverManager.getConnection(server, user, pass);
-      Statement statement = connection.createStatement();
-      ResultSet resultSet = statement.executeQuery(query)) {
-
-      while (resultSet.next()) {
-        String name = resultSet.getString("COLUMN_NAME");
-        String type = resultSet.getString("DATA_TYPE");
-
-        String runtimename = "";
-        Datatypes datatype;
-        Object defaul;
-        if (type.equals("bool") || type.equals("boolean")) {
-          datatype = Datatypes.Boolean;
-          defaul = Boolean.FALSE;
-        } else if (type.equals("varchar") || type.equals("char")) {
-          datatype = Datatypes.String;
-          defaul = "";
-        } else {
-          datatype = Datatypes.Float;
-          datatype = Datatypes.Integer;
-          defaul = 0;
-        }
-
-        tableSchema.add(new Column(name, type, defaul));
-        allProperties.add(PrimitivePropertyBuilder
-            .create(datatype, runtimename)
-            .build());
-      }
-    } catch (SQLException e) {
-      throw new AdapterException("SqlException: " + e.getMessage()
-          + ", Error code: " + e.getErrorCode()
-          + ", SqlState: " + e.getSQLState());
-    }
-    // Also add timestmap
 
     eventSchema.setEventProperties(allProperties);
     guessSchema.setEventSchema(eventSchema);
@@ -248,6 +217,51 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
       } else {
         this.port = ((FreeTextStaticProperty) sp).getValue();
       }
+    }
+  }
+
+  private void checkJdbcDriver() throws AdapterException {
+    try {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+    } catch (ClassNotFoundException e) {
+      throw new AdapterException("MySql Driver not found.");
+    }
+  }
+
+  private void extractTableInformation() throws AdapterException {
+    String server = "jdbc:mysql://" + host + ":" + port + "/";
+    ResultSet resultSet = null;
+
+    String query = "SELECT COLUMN_NAME, DATA_TYPE, COLUMN_TYPE FROM "
+        + "INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ? ORDER BY "
+        + "ORDINAL_POSITION ASC;";
+
+    try (Connection con = DriverManager.getConnection(server, user, pass);
+        PreparedStatement statement = con.prepareStatement(query)) {
+
+      statement.setString(1, table);
+      statement.setString(2, database);
+      resultSet = statement.executeQuery();
+
+      if (resultSet.next()) {
+        do {
+          String name = resultSet.getString("COLUMN_NAME");
+          String dataType = resultSet.getString("DATA_TYPE");
+          String columnType = resultSet.getString("COLUMN_TYPE");
+          tableSchema.add(new Column(name, dataType, columnType));
+        } while(resultSet.next());
+      } else {
+        // No columns found -> Table/Database does not exist
+        throw new IllegalArgumentException("Database/table not found");
+      }
+    } catch (SQLException e) {
+      throw new AdapterException("SqlException: " + e.getMessage()
+          + ", Error code: " + e.getErrorCode()
+          + ", SqlState: " + e.getSQLState());
+    } finally {
+      try {
+        resultSet.close();
+      } catch (Exception e) {}
     }
   }
 }
