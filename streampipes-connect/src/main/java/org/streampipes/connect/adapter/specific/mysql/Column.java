@@ -66,6 +66,9 @@ class Column {
   public String getName() {
     return name;
   }
+  public Datatypes getType() {
+    return type;
+  }
   public Object getDefault() {
     return def;
   }
