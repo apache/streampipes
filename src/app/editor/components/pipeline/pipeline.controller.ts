@@ -125,11 +125,11 @@ export class PipelineController {
                             });
                             //Droppable Actions
                         } else if (ui.draggable.hasClass('action')) {
-                            // this.$timeout(() => {
-                            //     this.$timeout(() => {
+                             this.$timeout(() => {
+                                 this.$timeout(() => {
                                     this.JsplumbService.actionDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
-                            //     });
-                            // });
+                                 });
+                             });
                         }
                         if (this.ShepherdService.isTourActive()) {
                             this.ShepherdService.trigger("drop-" +pipelineElementConfig.type);
@@ -243,12 +243,7 @@ export class PipelineController {
                             }
                         } else {
                             this.JsplumbBridge.detach(info.connection);
-                            this.$timeout(() => {
-                                this.$timeout(() => {
                                     this.EditorDialogManager.showMatchingErrorDialog(data);
-                                });
-                            });
-
                         }
                     });
             }
