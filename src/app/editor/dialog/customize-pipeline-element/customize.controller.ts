@@ -18,7 +18,7 @@ export class CustomizeController {
     sepa: any;
     customizeForm: any;
     ShepherdService: any;
-    showDocumentation: any = false;
+    showDocumentation: boolean = false;
 
     constructor($rootScope, $mdDialog, elementData, sourceEndpoint, sepa, ShepherdService) {
         this.selectedElement = sepa;

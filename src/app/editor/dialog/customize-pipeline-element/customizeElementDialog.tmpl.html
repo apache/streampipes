@@ -14,7 +14,7 @@
                 <div flex="100" layout="row"
                      style="border-bottom:1px solid #ccc;padding-left:10px;padding-right:10px;background-color:#f6f6f6">
                     <div flex="100" layout="row" layout-align="end end">
-                        <md-switch ng-model="ctrl.showDocumentation" aria-label="Switch 1">
+                        <md-switch ng-model="ctrl.showDocumentation" aria-label="Switch 1" ng-disabled="!ctrl.selectedElement.includesAssets">
                             Show documentation
                         </md-switch>
                         <md-switch ng-model="ctrl.displayRecommended" aria-label="Switch 1">
