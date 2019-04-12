@@ -21,6 +21,7 @@ package org.streampipes.rest.impl.datalake;
 import org.streampipes.rest.impl.AbstractRestInterface;
 import org.streampipes.rest.impl.datalake.model.DataResult;
 import org.streampipes.rest.impl.datalake.model.InfoResult;
+import org.streampipes.rest.impl.datalake.model.PageResult;
 import org.streampipes.rest.shared.annotation.GsonWithIds;
 
 import javax.ws.rs.*;
@@ -70,6 +71,32 @@ public class DataLakeResource extends AbstractRestInterface {
             return Response.serverError().build();
         }
     }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @GsonWithIds
+    @Path("/data/{index}/paging")
+    public Response getAllData(@PathParam("index") String index,
+                               @Context UriInfo info,
+                               @QueryParam("itemsPerPage") int itemsPerPage) {
+
+        PageResult result;
+        String page = info.getQueryParameters().getFirst("page");
+
+        try {
+            if(page != null) {
+                result = this.dataLakeManagement.getEvents(index, itemsPerPage, Integer.parseInt(page));
+            } else {
+                result = this.dataLakeManagement.getEvents(index, itemsPerPage);
+            }
+            return Response.ok(result).build();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return Response.serverError().build();
+        }
+    }
+
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
