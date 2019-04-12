@@ -2,33 +2,70 @@
     <div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6; display: inline-block; width: 100%;" >
         <div flex layout-fill layout="row" layout-align="start center"
              style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <h4>Asset</h4>
+            <label style="font-size: 30px; padding-top: 10px;">Asset View</label>
         </div>
     </div>
 
     <div class="container-fluid">
             <div layout-padding>
                     <div class="assemblyOptions sp-blue-bg">
-                        <h4>Select Index</h4>
+                        <h4 style="display: initial">Select Index:</h4>
+                            <mat-form-field style="margin-top: -10px; margin-bottom: -20px; margin-left: 10px;">
+                                <input type="text" matInput  [formControl]="myControl" [matAutocomplete]="auto">
+                                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectIndex($event.option.value)">
+                                    <mat-option  *ngFor="let indexInfo of filteredIndexInfos | async" [value]="indexInfo.indexName">
+                                        {{indexInfo.indexName}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+
+                        <!--
+                       <button mat-icon-button (click)="loadIndex()">
+                            <mat-icon>
+                                autorenew
+                            </mat-icon>
+                        </button>
+                        -->
 
                     </div>
                 <div layout="row">
                     <div class="sp-blue-border">
 
-                        <mat-form-field class="example-full-width">
-                            <input type="text" placeholder="Pick one" matInput [matAutocomplete]="auto">
-                            <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let option of options" [value]="option">
-                                    {{option}}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
 
-                            <div layout="row">
+
+
+                        <div style="margin-top: -15px;">
+
+                            <table mat-table [dataSource]="dataSource" style="width: 100%; background: none;">
+
+                                <ng-container *ngFor="let element of displayedColumns" [cdkColumnDef]="element">
+                                    <th mat-header-cell *matHeaderCellDef><label style="font-size: large">{{element}}</label></th>
+                                    <td mat-cell *matCellDef="let row">{{row[element]}}</td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                            </table>
+                            <div>
+                                <button mat-icon-button (click)="previousPage()">
+                                    <mat-icon>keyboard_arrow_left</mat-icon>
+                                </button>
+                                Page: {{page}}
+                                <button mat-icon-button (click)="nextPage()">
+                                    <mat-icon>keyboard_arrow_right</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+
+
+
+                        <mat-divider></mat-divider>
+
+                        <div layout="row">
                             <input
                                     required
                                     [(ngModel)]='myVar'
-                                    formControlName="date"
                                     ngui-datetime-picker/>
                             <mat-radio-group layout="row">
                                 <mat-radio-button value="json">
@@ -40,42 +77,6 @@
                             </mat-radio-group>
                             <button mat-raised-button color="primary">Download</button>
                         </div>
-
-                        <div>
-
-                            <table mat-table [dataSource]="data" class="example-table"
-                                   matSort matSortActive="created" matSortDisableClear matSortDirection="desc">
-                                <!-- Number Column -->
-                                <ng-container matColumnDef="number">
-                                    <th mat-header-cell *matHeaderCellDef>#</th>
-                                    <td mat-cell *matCellDef="let row">{{row.number}}</td>
-                                </ng-container>
-
-                                <!-- Title Column -->
-                                <ng-container matColumnDef="title">
-                                    <th mat-header-cell *matHeaderCellDef>Title</th>
-                                    <td mat-cell *matCellDef="let row">{{row.title}}</td>
-                                </ng-container>
-
-                                <!-- State Column -->
-                                <ng-container matColumnDef="state">
-                                    <th mat-header-cell *matHeaderCellDef>State</th>
-                                    <td mat-cell *matCellDef="let row">{{row.state}}</td>
-                                </ng-container>
-
-                                <!-- Created Column -->
-                                <ng-container matColumnDef="created">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
-                                        Created
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">{{row.created_at | date}}</td>
-                                </ng-container>
-
-                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                            </table>
-                        </div>
-                        <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
 
                     </div>
 

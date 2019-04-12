@@ -7,6 +7,9 @@ import {AssetComponent} from './asset.component';
 import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
 import {NguiDatetimePickerModule} from '@ngui/datetime-picker';
 import {AssetRestService} from './service/asset-rest.service';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {CdkTableModule} from '@angular/cdk/table';
+import {MatSnackBarModule} from '@angular/material';
 
 
 @NgModule({
@@ -15,11 +18,16 @@ import {AssetRestService} from './service/asset-rest.service';
         FlexLayoutModule,
         CustomMaterialModule,
         NguiDatetimePickerModule,
+        ReactiveFormsModule,
+        FormsModule,
+        CdkTableModule,
+        MatSnackBarModule
     ],
     declarations: [
         AssetComponent,
     ],
     providers: [
+        AssetRestService
     ],
     entryComponents: [
         AssetComponent,
