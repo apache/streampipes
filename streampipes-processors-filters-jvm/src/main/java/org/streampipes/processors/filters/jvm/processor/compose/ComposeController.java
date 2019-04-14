@@ -26,6 +26,7 @@ import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -38,6 +39,7 @@ public class ComposeController extends StandaloneEventProcessingDeclarer<Compose
     return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.merger",
             "Compose", "Merges two event streams ")
             .category(DataProcessorType.TRANSFORM)
+            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
             .iconUrl(FiltersJvmConfig.getIconUrl("projection"))
             .requiredStream(StreamRequirementsBuilder
                     .create()

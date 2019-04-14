@@ -27,6 +27,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -49,7 +50,7 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create(getLabel(PE_ID))
             .category(DataProcessorType.AGGREGATE)
-            .iconUrl(AggregationFlinkConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png")
+            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(

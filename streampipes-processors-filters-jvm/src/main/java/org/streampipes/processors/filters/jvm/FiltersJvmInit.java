@@ -25,6 +25,7 @@ import org.streampipes.processors.filters.jvm.config.FiltersJvmConfig;
 import org.streampipes.processors.filters.jvm.processor.compose.ComposeController;
 import org.streampipes.processors.filters.jvm.processor.mergestartandend.MergeStartAndEndController;
 import org.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterController;
+import org.streampipes.processors.filters.jvm.processor.pallettransportdetection.PalletTransportDetectionController;
 import org.streampipes.processors.filters.jvm.processor.projection.ProjectionController;
 import org.streampipes.processors.filters.jvm.processor.textfilter.TextFilterController;
 
@@ -37,7 +38,8 @@ public class FiltersJvmInit extends StandaloneModelSubmitter {
             .add(new TextFilterController())
             .add(new MergeStartAndEndController())
             .add(new ProjectionController())
-            .add(new ComposeController());
+            .add(new ComposeController())
+            .add(new PalletTransportDetectionController());
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());

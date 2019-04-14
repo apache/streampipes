@@ -22,7 +22,6 @@ import static org.streampipes.processors.imageprocessing.jvm.processor.commons.R
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.processors.imageprocessing.jvm.config.ImageProcessingJvmConfig;
 import org.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -31,6 +30,7 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -42,7 +42,7 @@ public class ImageCropperController extends StandaloneEventProcessingDeclarer<Im
     return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.jvm.image-cropper", "Image Cropper", "Image Enrichment: Crops an " +
             "image based on " +
             "given bounding box coordinates")
-            .iconUrl(ImageProcessingJvmConfig.getIconUrl( "crop"))
+            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(DataProcessorType.FILTER)
             .requiredStream(RequiredBoxStream.getBoxStream())
             .outputStrategy(OutputStrategies.fixed(

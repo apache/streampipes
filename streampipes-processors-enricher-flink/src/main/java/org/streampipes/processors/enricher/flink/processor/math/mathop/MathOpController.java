@@ -21,67 +21,84 @@ import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
-import org.streampipes.processors.enricher.flink.processor.math.operation.*;
+import org.streampipes.processors.enricher.flink.processor.math.operation.Operation;
+import org.streampipes.processors.enricher.flink.processor.math.operation.OperationAddition;
+import org.streampipes.processors.enricher.flink.processor.math.operation.OperationDivide;
+import org.streampipes.processors.enricher.flink.processor.math.operation.OperationModulo;
+import org.streampipes.processors.enricher.flink.processor.math.operation.OperationMultiply;
+import org.streampipes.processors.enricher.flink.processor.math.operation.OperationSubtracting;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Options;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 public class MathOpController extends FlinkDataProcessorDeclarer<MathOpParameters> {
 
-    private final String RESULT_FIELD = "calculationResult";
-    private final String LEFT_OPERAND = "leftOperand";
-    private final String RIGHT_OPERAND = "rightOperand";
-    private final String OPERATION = "operation";
+  private final String RESULT_FIELD = "calculationResult";
+  private final String LEFT_OPERAND = "leftOperand";
+  private final String RIGHT_OPERAND = "rightOperand";
+  private final String OPERATION = "operation";
 
-    @Override
-    public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.math.mathop",
-                "Math","Performs calculations on event properties (+, -, *, /, %)")
-                .iconUrl(EnricherFlinkConfig.getIconUrl("math-icon"))
-                .category(DataProcessorType.ALGORITHM)
-                .requiredStream(StreamRequirementsBuilder
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.math.mathop",
+            "Math", "Performs calculations on event properties (+, -, *, /, %)")
+            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .category(DataProcessorType.ALGORITHM)
+            .requiredStream(StreamRequirementsBuilder
                     .create()
-                        .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                                Labels.from(LEFT_OPERAND, "Left operand", "Select left operand"),
-                                PropertyScope.NONE)
-                        .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                                Labels.from(RIGHT_OPERAND, "Right operand", "Select right operand"),
-                                PropertyScope.NONE)
-                        .build())
-                .outputStrategy(
-                        OutputStrategies.append(
-                                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
-                .requiredSingleValueSelection(OPERATION, "Select Operation", "", Options.from("+", "-", "/", "*", "%"))
-                .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka())
-                .build();
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                            Labels.from(LEFT_OPERAND, "Left operand", "Select left operand"),
+                            PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                            Labels.from(RIGHT_OPERAND, "Right operand", "Select right operand"),
+                            PropertyScope.NONE)
+                    .build())
+            .outputStrategy(
+                    OutputStrategies.append(
+                            EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
+            .requiredSingleValueSelection(OPERATION, "Select Operation", "", Options.from("+", "-", "/", "*", "%"))
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .supportedProtocols(SupportedProtocols.kafka())
+            .build();
+  }
+
+  @Override
+  public FlinkDataProcessorRuntime<MathOpParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+    String leftOperand = extractor.mappingPropertyValue(LEFT_OPERAND);
+    String rightOperand = extractor.mappingPropertyValue(RIGHT_OPERAND);
+    String operation = extractor.selectedSingleValue(OPERATION, String.class);
+
+    Operation arithmeticOperation = null;
+    switch (operation) {
+      case "+":
+        arithmeticOperation = new OperationAddition();
+        break;
+      case "-":
+        arithmeticOperation = new OperationSubtracting();
+        break;
+      case "*":
+        arithmeticOperation = new OperationMultiply();
+        break;
+      case "/":
+        arithmeticOperation = new OperationDivide();
+        break;
+      case "%":
+        arithmeticOperation = new OperationModulo();
     }
 
-    @Override
-    public FlinkDataProcessorRuntime<MathOpParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
-        String leftOperand = extractor.mappingPropertyValue(LEFT_OPERAND);
-        String rightOperand = extractor.mappingPropertyValue(RIGHT_OPERAND);
-        String operation = extractor.selectedSingleValue(OPERATION, String.class);
+    MathOpParameters parameters = new MathOpParameters(graph, arithmeticOperation, leftOperand, rightOperand, RESULT_FIELD);
 
-        Operation arithmeticOperation = null;
-        switch (operation) {
-            case "+": arithmeticOperation = new OperationAddition();
-                break;
-            case "-": arithmeticOperation = new OperationSubtracting();
-                break;
-            case "*": arithmeticOperation = new OperationMultiply();
-                break;
-            case "/": arithmeticOperation = new OperationDivide();
-                break;
-            case "%": arithmeticOperation = new OperationModulo();
-        }
-
-        MathOpParameters parameters = new MathOpParameters(graph, arithmeticOperation, leftOperand, rightOperand, RESULT_FIELD);
-
-        return new MathOpProgram(parameters, EnricherFlinkConfig.INSTANCE.getDebug());
-    }
+    return new MathOpProgram(parameters, EnricherFlinkConfig.INSTANCE.getDebug());
+  }
 }

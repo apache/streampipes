@@ -12,6 +12,7 @@ import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -22,9 +23,10 @@ public class EventRateController extends FlinkDataProcessorDeclarer<EventRatePar
   @Override
   public DataProcessorDescription declareModel() {
 
-    return ProcessingElementBuilder.create("org.streampipes.processor.aggregation.flink.rate", "Event rate", "Computes current event rate")
+    return ProcessingElementBuilder.create("org.streampipes.processors.aggregation.flink.rate",
+            "Event rate", "Computes current event rate")
             .category(DataProcessorType.AGGREGATE)
-            .iconUrl(AggregationFlinkConfig.getIconUrl("event_rate"))
+            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())

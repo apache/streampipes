@@ -11,6 +11,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -26,7 +27,7 @@ public class CountController extends FlinkDataProcessorDeclarer<CountParameters>
     return ProcessingElementBuilder.create("org.streampipes.processors.aggregation.flink.count", "Count Aggregation",
             "Performs an aggregation based on a given event property and outputs the number of occurrences.")
             .category(DataProcessorType.AGGREGATE)
-            .iconUrl(AggregationFlinkConfig.iconBaseUrl + "/Counter_Icon_HQ.png")
+            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.from(COUNT_MAPPING, "Field to count", "The field that contains the values which should be counted"), PropertyScope.DIMENSION_PROPERTY)

@@ -16,6 +16,7 @@
  */
 package org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment;
 
+import org.streampipes.model.runtime.field.AbstractField;
 import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
@@ -26,7 +27,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,8 +49,16 @@ public class ImageEnricher implements EventProcessor<ImageEnrichmentParameters> 
     @Override
     public void onEvent(org.streampipes.model.runtime.Event in, SpOutputCollector out) {
 // TODO
-        List<Map<String, Object>> allBoxes = in.getFieldBySelector(params.getBoxArray()).getAsList()
-                .parseAsCustomType(value -> (Map<String, Object>) value);
+        List<Map<String, AbstractField>> allBoxes = in.getFieldBySelector(params.getBoxArray())
+                .getAsList()
+                .parseAsCustomType(value -> value.getAsComposite().getRawValue());
+
+        List<Map<String, Object>> allBoxesMap = new ArrayList<>();
+        allBoxes.forEach(box -> {
+            Map<String, Object> boxMap = new HashMap<>();
+            box.forEach((key, value) -> boxMap.put(value.getFieldNameIn(), value.getRawValue()));
+            allBoxesMap.add(boxMap);
+        });
 
         Optional<BufferedImage> imageOpt = getImage(in.getFieldBySelector(params.getImageProperty
                 ()).getAsPrimitive().getRawValue());
@@ -55,7 +66,7 @@ public class ImageEnricher implements EventProcessor<ImageEnrichmentParameters> 
         if (imageOpt.isPresent()) {
             BufferedImage image = imageOpt.get();
 
-            for (Map<String, Object> box : allBoxes) {
+            for (Map<String, Object> box : allBoxesMap) {
 //
                 BoxCoordinates boxCoordinates = getBoxCoordinates(image, box);
 
