@@ -22,12 +22,6 @@ import java.util.List;
 
 public class Trend extends SiddhiEventEngine<TrendParameters> {
 
-
-//  from every( e1=TempStream ) -> e2=TempStream[ e1.roomNo == roomNo and (e1.temp + 5) <= temp ]
-//  within 10 min
-//  select e1.roomNo, e1.temp as initialTemp, e2.temp as finalTemp
-//  insert into AlertStream;
-
   @Override
   protected String fromStatement(List<String> inputStreamNames, TrendParameters params) {
       String mappingProperty = prepareName(params.getMapping());

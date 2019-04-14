@@ -23,6 +23,7 @@ import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.siddhi.config.FilterSiddhiConfig;
 import org.streampipes.processors.siddhi.filter.NumericalFilterController;
+import org.streampipes.processors.siddhi.stop.StreamStopController;
 import org.streampipes.processors.siddhi.trend.TrendController;
 
 public class FiltersSiddhiInit extends StandaloneModelSubmitter {
@@ -31,6 +32,7 @@ public class FiltersSiddhiInit extends StandaloneModelSubmitter {
     DeclarersSingleton
             .getInstance()
             .add(new TrendController())
+            .add(new StreamStopController())
             .add(new NumericalFilterController());
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());

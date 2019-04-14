@@ -33,6 +33,25 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
   private static final String OPERATION = "operation";
 
   @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.numericalfilter", "Numerical Filter", "Numerical Filter Description")
+            .category(DataProcessorType.FILTER)
+            .iconUrl("Numerical_Filter_Icon_HQ")
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from(NUMBER_MAPPING, "Specifies the field name where the filter operation should" +
+                            " be applied " +
+                            "on.", ""), PropertyScope.NONE).build())
+            .outputStrategy(OutputStrategies.keep())
+            .requiredSingleValueSelection(Labels.from(OPERATION, "Filter Operation", "Specifies the filter " +
+                    "operation that should be applied on the field"), Options.from("<", "<=", ">", ">=", "=="))
+            .requiredFloatParameter(Labels.from(VALUE, "Threshold value", "Specifies a threshold value."), NUMBER_MAPPING)
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .build();
+  }
+
+  @Override
   public ConfiguredEventProcessor<NumericalFilterParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
     Double threshold = extractor.singleValueParameter(VALUE, Double.class);
@@ -59,22 +78,4 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
     return new ConfiguredEventProcessor<>(staticParam, NumericalFilter::new);
   }
 
-  @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.numericalfilter", "Numerical Filter", "Numerical Filter Description")
-            .category(DataProcessorType.FILTER)
-            .iconUrl("Numerical_Filter_Icon_HQ")
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from(NUMBER_MAPPING, "Specifies the field name where the filter operation should" +
-                            " be applied " +
-                            "on.", ""), PropertyScope.NONE).build())
-            .outputStrategy(OutputStrategies.keep())
-            .requiredSingleValueSelection(Labels.from(OPERATION, "Filter Operation", "Specifies the filter " +
-                    "operation that should be applied on the field"), Options.from("<", "<=", ">", ">=", "=="))
-            .requiredFloatParameter(Labels.from(VALUE, "Threshold value", "Specifies a threshold value."), NUMBER_MAPPING)
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .build();
-  }
 }

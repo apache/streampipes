@@ -23,7 +23,8 @@ public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters
 
   @Override
   protected String fromStatement(List<String> inputStreamNames, NumericalFilterParameters params) {
-    return "from " + inputStreamNames.get(0) +"[" +params.getFilterProperty().replaceAll("::", "XXXXX") +"<" +params.getThreshold() +"]";
+    String filterProperty = prepareName(params.getFilterProperty());
+    return "from " + inputStreamNames.get(0) +"[" + filterProperty +"<" + params.getThreshold() +"]";
   }
 
   @Override
