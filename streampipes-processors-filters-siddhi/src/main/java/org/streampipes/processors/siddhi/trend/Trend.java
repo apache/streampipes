@@ -34,7 +34,8 @@ public class Trend extends SiddhiEventEngine<TrendParameters> {
       int duration = params.getDuration();
       String operator;
 
-      double increase = params.getIncrease() / 100;
+      double increase = Double.valueOf(params.getIncrease());
+      increase = (increase / 100) + 1;
 
       if (params.getOperation() == TrendOperator.INCREASE) {
           operator = ">=";
@@ -42,8 +43,7 @@ public class Trend extends SiddhiEventEngine<TrendParameters> {
           operator = "<=";
       }
 
-//      String s = "from every(e1=" + inputStreamNames.get(0) +") -> e2=" +inputStreamNames.get(0) + "[e1." + mappingProperty + " * " + increase + operator + mappingProperty + "]" +
-              String s = "from every(e1=" + inputStreamNames.get(0) +") -> e2=" +inputStreamNames.get(0) + "[e1." + mappingProperty + operator + mappingProperty + "]" +
+      String s = "from every(e1=" + inputStreamNames.get(0) +") -> e2=" +inputStreamNames.get(0) + "[e1." + mappingProperty + operator + mappingProperty + " * " + increase + "]<1>" +
             " within " + duration + " sec";
 
     return s;
