@@ -108,8 +108,6 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
           schemaInfo,
                                                         SourceInfo sourceInfo) {
     Map<String, Object> outMap = new HashMap<>();
-    // TODO make sure that ordering of event attributes is correct
-//    for (String key : parameters.getOutEventType().keySet()) {
     for (int i = 0; i < sortedEventKeys.size(); i++) {
       outMap.put(sortedEventKeys.get(i), event.getData(i));
     }
@@ -214,5 +212,9 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     }
 
     return selectString.toString();
+  }
+
+  public void setSortedEventKeys(List<String> sortedEventKeys) {
+    this.sortedEventKeys = sortedEventKeys;
   }
 }
