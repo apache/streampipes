@@ -18,26 +18,28 @@ package org.streampipes.processors.siddhi.stop;
 
 import org.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class StreamStop extends SiddhiEventEngine<StreamStopParameters> {
 
+  public StreamStop() {
+    super();
+  }
+
   @Override
   protected String fromStatement(List<String> inputStreamNames, StreamStopParameters params) {
-
-//    from every (e1=MaterialSupplyStream) -> e2=MaterialConsumptionStream within 10 min
-
-//      return "from every(e1=" + inputStreamNames.get(0) + ") -> not e2=" + inputStreamNames.get(0) + " for " + params.getDuration() + " sec";
-//    return "define stream Test(timestamp LONG,message STRING);\n" +
-//            return "from every not " + inputStreamNames.get(0) + " for " + params.getDuration() + " sec";
-    return "from every not " + inputStreamNames.get(0) + " for 1 sec";
+    return "define stream Test(timestamp LONG,message STRING);\n" +
+            "from every not " + inputStreamNames.get(0) + " for " + params.getDuration() + " sec";
   }
 
   @Override
   protected String selectStatement(StreamStopParameters params) {
-//    return getCustomOutputSelectStatement(params.getGraph());
-    return "select *";
-//    return "select currentTimeMillis() as timestamp, 'Customer has not arrived' as message";
+      setSortedEventKeys(Arrays.asList("timestamp", "message"));
+//    return "select currentTimeMillis() as timestamp, 'Event stream has stopped' as message \noutput first every 60 sec";
+    return "select currentTimeMillis() as timestamp, 'Event stream has stopped' as message";
   }
+
+
 
 }

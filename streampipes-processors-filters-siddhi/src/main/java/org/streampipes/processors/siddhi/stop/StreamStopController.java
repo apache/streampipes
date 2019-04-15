@@ -45,7 +45,7 @@ public class StreamStopController extends StandaloneEventProcessingDeclarer<Stre
             .outputStrategy(OutputStrategies.fixed(
                     Arrays.asList(
                             EpProperties.timestampProperty("timestamp"),
-                            EpProperties.stringEp(new Label("message", "Message", "Message that stream stopped"), "message", "kj")
+                            EpProperties.stringEp(new Label("message", "Message", "Message that stream stopped"), "message", "http://schema.org/text")
                     )
 
             ))
