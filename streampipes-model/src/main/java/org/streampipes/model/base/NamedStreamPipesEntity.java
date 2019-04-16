@@ -58,10 +58,18 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
   @RdfProperty(StreamPipes.INCLUDES_ASSETS)
   private boolean includesAssets;
 
+  @RdfProperty(StreamPipes.INCLUDES_LOCALES)
+  private boolean includesLocales;
+
   @RdfProperty(StreamPipes.INCLUDED_ASSETS)
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
   private List<String> includedAssets;
+
+  @RdfProperty(StreamPipes.INCLUDED_LOCALES)
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  private List<String> includedLocales;
 
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
@@ -207,6 +215,22 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   public void setIncludedAssets(List<String> includedAssets) {
     this.includedAssets = includedAssets;
+  }
+
+  public boolean isIncludesLocales() {
+    return includesLocales;
+  }
+
+  public void setIncludesLocales(boolean includesLocales) {
+    this.includesLocales = includesLocales;
+  }
+
+  public List<String> getIncludedLocales() {
+    return includedLocales;
+  }
+
+  public void setIncludedLocales(List<String> includedLocales) {
+    this.includedLocales = includedLocales;
   }
 
   @Deprecated
