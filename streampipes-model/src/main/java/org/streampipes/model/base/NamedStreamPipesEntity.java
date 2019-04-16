@@ -84,20 +84,17 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     super();
     this.applicationLinks = new ArrayList<>();
     this.includedAssets = new ArrayList<>();
+    this.includedLocales = new ArrayList<>();
   }
 
   public NamedStreamPipesEntity(String elementId) {
-    super();
+    this();
     this.elementId = elementId;
-    this.applicationLinks = new ArrayList<>();
-    this.includedAssets = new ArrayList<>();
   }
 
   public NamedStreamPipesEntity(String elementId, String name, String description, String iconUrl) {
     this(elementId, name, description);
     this.iconUrl = iconUrl;
-    this.applicationLinks = new ArrayList<>();
-    this.includedAssets = new ArrayList<>();
   }
 
   public NamedStreamPipesEntity(String elementId, String name, String description) {
@@ -107,6 +104,7 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.description = description;
     this.applicationLinks = new ArrayList<>();
     this.includedAssets = new ArrayList<>();
+    this.includedLocales = new ArrayList<>();
   }
 
   public NamedStreamPipesEntity(NamedStreamPipesEntity other) {
@@ -122,8 +120,12 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     }
     this.appId = other.getAppId();
     this.includesAssets = other.isIncludesAssets();
+    this.includesLocales = other.isIncludesLocales();
     if (other.getIncludedAssets() != null) {
       this.includedAssets = other.getIncludedAssets();
+    }
+    if (other.getIncludedLocales() != null) {
+      this.includedLocales = other.getIncludedLocales();
     }
   }
 
