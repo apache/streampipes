@@ -1,5 +1,5 @@
 ---
-title: 'Feature request'
+name: 'Feature request'
 about: 'Suggest a new idea for StreamPipes!'
 labels: bug
 ---
