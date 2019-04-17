@@ -112,11 +112,11 @@ public abstract class Adapter<T extends AdapterDescription> {
 
         // Needed when adapter is
         if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
-        && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
+                && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
             pipelineElements.add(new SendToKafkaAdapterSink( adapterDescription));
         }
 
-       return new AdapterPipeline(pipelineElements);
+        return new AdapterPipeline(pipelineElements);
     }
 
     private RemoveDuplicatesTransformationRuleDescription getRemoveDuplicateRule(T adapterDescription) {
@@ -134,9 +134,11 @@ public abstract class Adapter<T extends AdapterDescription> {
 
     private <G extends TransformationRuleDescription> G getRule(T adapterDescription, Class<G> type) {
 
-        for (TransformationRuleDescription tr : adapterDescription.getRules()) {
-            if (type.isInstance(tr)) {
-                return type.cast(tr);
+        if (adapterDescription != null) {
+            for (TransformationRuleDescription tr : adapterDescription.getRules()) {
+                if (type.isInstance(tr)) {
+                    return type.cast(tr);
+                }
             }
         }
 

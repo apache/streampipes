@@ -15,25 +15,57 @@ limitations under the License.
 */
 package org.streampipes.container.assets;
 
-import com.google.common.io.Resources;
-import org.streampipes.commons.zip.ZipFileGenerator;
-
-import java.io.File;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class AssetZipGenerator {
 
-  private String elementAppId;
+  private List<String> includedAssets;
+  private String appId;
 
-  public AssetZipGenerator(String elementAppId) {
-    this.elementAppId = elementAppId;
+  public AssetZipGenerator(String appId, List<String> includedAssets) {
+    this.includedAssets = includedAssets;
+    this.appId = appId;
   }
 
-  public byte[] makeZip() {
-    File assetFolder = getAssetFolder();
-    return new ZipFileGenerator(assetFolder).makeZipToBytes();
+  public byte[] makeZip() throws IOException {
+    return makeZipFromAssets();
   }
 
-  private File getAssetFolder() {
-    return new File(Resources.getResource(elementAppId).getFile());
+  private byte[] makeZipFromAssets() throws IOException {
+    byte[] buffer = new byte[1024];
+
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    ZipOutputStream out = new ZipOutputStream(outputStream);
+
+    for (String asset : includedAssets) {
+      ZipEntry ze = new ZipEntry(asset);
+      out.putNextEntry(ze);
+
+      InputStream in = null;
+      try {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        in = classLoader.getResourceAsStream(makePath(asset));
+        int len;
+        while ((len = in.read(buffer)) > 0) {
+          out.write(buffer, 0, len);
+        }
+      } catch(Exception e) {
+        e.printStackTrace();
+      } finally {
+        in.close();
+      }
+    }
+    out.closeEntry();
+    out.close();
+    return outputStream.toByteArray();
+  }
+
+  private String makePath(String assetAppendix) {
+    return this.appId + "/" + assetAppendix;
   }
 }

@@ -20,8 +20,10 @@ package org.streampipes.container.html.page;
 import org.streampipes.container.declarer.*;
 import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.streampipes.container.html.model.Description;
+import org.streampipes.container.locales.LabelGenerator;
 import org.streampipes.model.graph.DataSinkDescription;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,8 +54,19 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
 
     private Description getDescription(Declarer declarer) {
         Description desc = new Description();
-        desc.setName(declarer.declareModel().getName());
-        desc.setDescription(declarer.declareModel().getDescription());
+        // TODO remove after full internationalization support has been implemented
+        if (!declarer.declareModel().isIncludesLocales()) {
+            desc.setName(declarer.declareModel().getName());
+            desc.setDescription(declarer.declareModel().getDescription());
+        } else {
+            LabelGenerator lg = new LabelGenerator(declarer.declareModel());
+            try {
+                desc.setName(lg.getElementTitle());
+                desc.setDescription(lg.getElementDescription());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         desc.setType(getType(declarer));
         String uri = baseUri;
         if (declarer instanceof SemanticEventConsumerDeclarer) {

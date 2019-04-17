@@ -321,4 +321,7 @@ public class StreamPipes {
   public static final String SUCCESS_MESSAGE = NS + "SuccessMessage";
 
 
+  public static final String INCLUDED_ASSETS = NS + "includedAssets";
+  public static final String INCLUDES_LOCALES = NS + "includesLocales";
+  public static final String INCLUDED_LOCALES = NS + "includedLocales";
 }
