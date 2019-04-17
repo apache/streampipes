@@ -35,6 +35,7 @@ import { BoundPipelineElement } from '../../connect/model/BoundPipelineElement';
 import { DataSinkInvocation } from '../../connect/model/DataSinkInvocation';
 import 'rxjs-compat/add/operator/map';
 import { PipelineTemplateService } from '../../platform-services/apis/pipeline-template.service';
+import {TsonLdSerializerService} from '../../platform-services/tsonld-serializer.service';
 
 @Injectable()
 export class KviService {
@@ -42,51 +43,12 @@ export class KviService {
     constructor(
         private http: HttpClient,
         private authStatusService: AuthStatusService,
-        private pipelineTemplateService: PipelineTemplateService) {
+        private pipelineTemplateService: PipelineTemplateService,
+        private tsonLdSerializerService: TsonLdSerializerService) {
     }
 
     getServerUrl() {
         return '/streampipes-backend';
-    }
-
-    private getTsonLd(): any {
-
-        const tsonld = new TsonLd();
-        tsonld.addClassMapping(ProtocolDescription);
-        tsonld.addClassMapping(ProtocolDescriptionList);
-        tsonld.addClassMapping(FreeTextStaticProperty);
-        tsonld.addClassMapping(MappingPropertyUnary);
-        tsonld.addClassMapping(FormatDescriptionList);
-        tsonld.addClassMapping(FormatDescription);
-        tsonld.addClassMapping(AdapterDescriptionList);
-        tsonld.addClassMapping(AdapterDescription);
-        tsonld.addClassMapping(Enumeration);
-        tsonld.addClassMapping(QuantitativeValue);
-        tsonld.addClassMapping(DataStreamContainer);
-        tsonld.addClassMapping(DataSetDescription);
-        tsonld.addClassMapping(BoundPipelineElement);
-        tsonld.addClassMapping(DataSinkInvocation);
-        tsonld.addClassMapping(DataStreamDescription);
-        tsonld.addClassMapping(PipelineTemplateInvocation);
-        tsonld.addClassMapping(PipelineTemplateDescription);
-        tsonld.addClassMapping(PipelineTemplateDescriptionContainer);
-        tsonld.addClassMapping(EventSchema);
-        tsonld.addClassMapping(EventProperty);
-        tsonld.addClassMapping(EventPropertyNested);
-        tsonld.addClassMapping(EventPropertyList);
-        tsonld.addClassMapping(EventPropertyPrimitive);
-        tsonld.addClassMapping(DomainPropertyProbability);
-        tsonld.addClassMapping(DomainPropertyProbabilityList);
-        tsonld.addClassMapping(GuessSchema);
-        tsonld.addClassMapping(URI);
-
-        tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
-        tsonld.addContext('spi', 'urn:streampipes.org:spi:');
-        tsonld.addContext('xsd', 'http://www.w3.org/2001/XMLSchema#');
-        tsonld.addContext('empire', 'urn:clarkparsia.com:empire:');
-
-
-        return tsonld;
     }
 
     getDataSets(): Observable<DataSetDescription[]> {
@@ -106,9 +68,7 @@ export class KviService {
                    }
                 });
 
-                const tsonld = this.getTsonLd();
-
-                const res = tsonld.fromJsonLdType(response, 'sp:DataStreamContainer');
+                const res = this.tsonLdSerializerService.fromJsonLd(response, 'sp:DataStreamContainer');
                 return res.list;
             }));
     }
@@ -117,8 +77,7 @@ export class KviService {
         return this.http
             .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates?dataset=' + dataSet.id)
             .pipe(map(response => {
-                const tsonld = this.getTsonLd();
-                const res = tsonld.fromJsonLdType(response, 'sp:PipelineTemplateDescriptionContainer');
+                const res = this.tsonLdSerializerService.fromJsonLd(response, 'sp:PipelineTemplateDescriptionContainer');
                 return res.list;
             }));
     }

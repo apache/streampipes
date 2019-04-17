@@ -45,6 +45,25 @@ import {TimestampTransformationRuleDescription} from '../connect/model/connect/r
 import {DataStreamDescription} from '../connect/model/DataStreamDescription';
 import {PipelineTemplateInvocation} from '../connect/model/PipelineTemplateInvocation';
 import {MappingPropertyUnary} from '../connect/model/MappingPropertyUnary';
+import {DataProcessorInvocation} from '../connect/model/DataProcessorInvocation';
+import {AppendOutputStrategy} from '../connect/model/output/AppendOutputStrategy';
+import {CustomOutputComponent} from '../editor/components/customoutput/customoutput.component';
+import {CustomOutputStrategy} from '../connect/model/output/CustomOutputStrategy';
+import {CustomTransformOutputStrategy} from '../connect/model/output/CustomTransformOutputStrategy';
+import {FixedOutputStrategy} from '../connect/model/output/FixedOutputStrategy';
+import {KeepOutputStrategy} from '../connect/model/output/KeepOutputStrategy';
+import {ListOutputStrategy} from '../connect/model/output/ListOutputStrategy';
+import {OutputStrategy} from '../connect/model/output/OutputStrategy';
+import {PropertyRenameRule} from '../connect/model/output/PropertyRenameRule';
+import {TransformOutputStrategy} from '../connect/model/output/TransformOutputStrategy';
+import {TransformOperation} from '../connect/model/output/TransformOperation';
+import {DataStreamContainer} from '../connect/model/DataStreamContainer';
+import {Enumeration} from '../connect/schema-editor/model/Enumeration';
+import {QuantitativeValue} from '../connect/schema-editor/model/QuantitativeValue';
+import {PipelineTemplateDescriptionContainer} from '../connect/model/PipelineTemplateDescriptionContainer';
+import {PipelineTemplateDescription} from '../connect/model/PipelineTemplateDescription';
+import {BoundPipelineElement} from '../connect/model/BoundPipelineElement';
+import {DataSinkInvocation} from '../connect/model/DataSinkInvocation';
 
 @Injectable()
 export class TsonLdSerializerService {
@@ -87,6 +106,7 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(AddValueTransformationRuleDescription);
         tsonld.addClassMapping(MoveRuleDescription);
         tsonld.addClassMapping(UnitTransformRuleDescription);
+        tsonld.addClassMapping(DataStreamContainer);
         tsonld.addClassMapping(Option);
         tsonld.addClassMapping(AnyStaticProperty);
         tsonld.addClassMapping(OneOfStaticProperty);
@@ -95,6 +115,26 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(MessageLd);
         tsonld.addClassMapping(SuccessMessageLd);
         tsonld.addClassMapping(ErrorMessageLd);
+
+        tsonld.addClassMapping(Enumeration);
+        tsonld.addClassMapping(QuantitativeValue);
+
+        tsonld.addClassMapping(PipelineTemplateDescriptionContainer);
+        tsonld.addClassMapping(PipelineTemplateDescription);
+        tsonld.addClassMapping(DataProcessorInvocation);
+        tsonld.addClassMapping(DataSinkInvocation);
+        tsonld.addClassMapping(BoundPipelineElement);
+
+        tsonld.addClassMapping(AppendOutputStrategy);
+        tsonld.addClassMapping(CustomOutputStrategy);
+        tsonld.addClassMapping(CustomTransformOutputStrategy);
+        tsonld.addClassMapping(FixedOutputStrategy);
+        tsonld.addClassMapping(KeepOutputStrategy);
+        tsonld.addClassMapping(ListOutputStrategy);
+        tsonld.addClassMapping(OutputStrategy);
+        tsonld.addClassMapping(PropertyRenameRule);
+        tsonld.addClassMapping(TransformOperation);
+        tsonld.addClassMapping(TransformOutputStrategy);
 
         tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
         tsonld.addContext('spi', 'urn:streampipes.org:spi:');
