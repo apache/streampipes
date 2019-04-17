@@ -21,6 +21,7 @@ import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.sdk.helpers.Label;
+import org.streampipes.sdk.helpers.Locales;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +38,11 @@ public class ProcessingElementBuilder extends AbstractProcessingElementBuilder<P
         this.outputStrategies = new ArrayList<>();
     }
 
+    private ProcessingElementBuilder(String id) {
+        super(id, new DataProcessorDescription());
+        this.outputStrategies = new ArrayList<>();
+    }
+
     /**
      * Creates a new processing element using the builder pattern.
      * @param id A unique identifier of the new element, e.g., com.mycompany.processor.mynewdataprocessor
@@ -49,6 +55,19 @@ public class ProcessingElementBuilder extends AbstractProcessingElementBuilder<P
 
     public static ProcessingElementBuilder create(Label label) {
         return new ProcessingElementBuilder(label.getInternalId(), label.getLabel(), label.getDescription());
+    }
+
+    /**
+     * Creates a new processing element using the builder pattern. If no label and description is
+     * given
+     * for an element,
+     * {@link org.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
+     * must be called.
+     *
+     * @param id A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
+     */
+    public static ProcessingElementBuilder create(String id) {
+        return new ProcessingElementBuilder(id);
     }
 
     /**

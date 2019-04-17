@@ -46,6 +46,11 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     this.staticProperties = new ArrayList<>();
   }
 
+  protected AbstractConfigurablePipelineElementBuilder(String appId, T element) {
+    super(appId, element);
+    this.staticProperties = new ArrayList<>();
+  }
+
   /**
    *
    * @param staticProperty: The required static property (e.g., user input as shown in the StreamPipes UI
