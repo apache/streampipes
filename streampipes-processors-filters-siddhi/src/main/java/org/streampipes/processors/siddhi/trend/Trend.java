@@ -26,18 +26,22 @@ public class Trend extends SiddhiEventEngine<TrendParameters> {
   protected String fromStatement(List<String> inputStreamNames, TrendParameters params) {
       String mappingProperty = prepareName(params.getMapping());
       int duration = params.getDuration();
+      String inequaloperator;
       String operator;
 
       double increase = Double.valueOf(params.getIncrease());
       increase = (increase / 100) + 1;
 
       if (params.getOperation() == TrendOperator.INCREASE) {
-          operator = ">=";
+          inequaloperator = "<=";
+          operator = "/";
+
       } else {
-          operator = "<=";
+          inequaloperator = ">=";
+          operator = "*";
       }
 
-      String s = "from every(e1=" + inputStreamNames.get(0) +") -> e2=" +inputStreamNames.get(0) + "[e1." + mappingProperty + operator + mappingProperty + " * " + increase + "]<1>" +
+      String s = "from every(e1=" + inputStreamNames.get(0) +") -> e2=" +inputStreamNames.get(0) + "[e1." + mappingProperty + inequaloperator + mappingProperty + operator + increase + "]<1>" +
             " within " + duration + " sec";
 
     return s;
