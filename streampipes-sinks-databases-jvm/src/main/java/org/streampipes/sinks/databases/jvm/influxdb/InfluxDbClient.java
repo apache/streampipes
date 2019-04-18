@@ -16,9 +16,6 @@
 
 package org.streampipes.sinks.databases.jvm.influxdb;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import org.influxdb.BatchOptions;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
@@ -29,6 +26,10 @@ import org.influxdb.dto.QueryResult;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class InfluxDbClient {
 	private Integer influxDbPort;
@@ -160,9 +161,8 @@ public class InfluxDbClient {
 		if (event == null) {
 			throw new SpRuntimeException("event is null");
 		}
-		//TODO: Choose the timestamp from the parameters (replace System.currentTimeMillis())
-		//TODO: Nested Items?
-    Point.Builder p = Point.measurement(measureName).time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+		Long timestampValue = event.getFieldBySelector(timestampField).getAsPrimitive().getAsLong();
+    Point.Builder p = Point.measurement(measureName).time(timestampValue, TimeUnit.MILLISECONDS);
 		for (Map.Entry<String, Object> pair : event.getRaw().entrySet()) {
       if(!pair.getKey().matches("^[a-zA-Z_][a-zA-Z0-9_]*$")) {
         throw new SpRuntimeException("Column name '" + pair.getKey() + "' not allowed "
@@ -180,6 +180,7 @@ public class InfluxDbClient {
         p.addField(pair.getKey(), pair.getValue().toString());
       }
     }
+
     influxDb.write(p.build());
 	}
 
