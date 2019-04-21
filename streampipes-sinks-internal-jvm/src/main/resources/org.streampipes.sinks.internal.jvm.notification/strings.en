@@ -1,0 +1,8 @@
+org.streampipes.sinks.internal.jvm.notification.title=Notification
+org.streampipes.sinks.internal.jvm.notification.description=Displays a notification in the UI panel
+
+title.title=Notification Title
+title.description=
+
+content.title=Content
+content.description=Enter the notification text. You can  use placeholders like #fieldName# to add the value of a stream variable.

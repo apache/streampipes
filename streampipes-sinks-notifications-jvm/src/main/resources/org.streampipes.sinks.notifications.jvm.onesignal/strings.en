@@ -1,0 +1,11 @@
+org.streampipes.sinks.notifications.jvm.onesignal.title=OneSignal
+org.streampipes.sinks.notifications.jvm.onesignal.description=Send Push Message to OneSignal-Application
+
+content.title=Content
+content.description=Push Message
+
+app_id.title=App-ID
+app_id.description=OneSignal App ID
+
+api_key.title=API-Key
+api_key.description=REST API Key

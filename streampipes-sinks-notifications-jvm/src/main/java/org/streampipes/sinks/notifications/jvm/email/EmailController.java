@@ -25,6 +25,7 @@ import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sinks.notifications.jvm.config.SinksNotificationsJvmConfig;
@@ -40,18 +41,17 @@ public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.streampipes.sinks.notifications.jvm.email", "Email Notification", "Email bot to send notifications emails")
+    return DataSinkBuilder.create("org.streampipes.sinks.notifications.jvm.email")
+            .withLocales(Locales.EN)
             .category(DataSinkType.NOTIFICATION)
             .iconUrl(SinksNotificationsJvmConfig.getIconUrl("email"))
-            .requiredTextParameter(Labels.from(TO_EMAIL_ADRESS, "To", "Receiver E-mail address"))
-            .requiredTextParameter(Labels.from(EMAIL_SUBJECT, "Subject", "The subject of the email"))
+            .requiredTextParameter(Labels.withId(TO_EMAIL_ADRESS))
+            .requiredTextParameter(Labels.withId(EMAIL_SUBJECT))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
-            .requiredHtmlInputParameter(Labels.from(EMAIL_CONTENT, "Content", "Enter the email " +
-                    "text. You can" +
-                    "use place holders like #fieldName# to add the value of a stream variable."))
+            .requiredHtmlInputParameter(Labels.withId(EMAIL_CONTENT))
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();

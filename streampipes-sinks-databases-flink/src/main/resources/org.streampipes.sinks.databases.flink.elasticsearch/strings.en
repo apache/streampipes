@@ -1,0 +1,8 @@
+org.streampipes.sinks.databases.flink.elasticsearch.title=Elasticsearch
+org.streampipes.sinks.databases.flink.elasticsearch.description=Stores data in an elasticsearch cluster
+
+timestamp-mapping.title=Timestamp Field
+timestamp-mapping.description=The field containing the timestamp for an Elasticsearch index
+
+index-name.title=Index Name
+index-name.description=Elasticsearch index name

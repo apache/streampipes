@@ -25,6 +25,7 @@ import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OntologyProperties;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
@@ -42,16 +43,15 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.streampipes.sinks.brokers.jvm.jms", "JMS Publisher", "Publishes events to a JMS topic")
+    return DataSinkBuilder.create("org.streampipes.sinks.brokers.jvm.jms")
+            .withLocales(Locales.EN)
             .iconUrl(BrokersJvmConfig.getIconUrl("jms_logo"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
-            .requiredTextParameter(Labels.from(TOPIC_KEY, "JMS Topic", "Select a JMS " +
-                    "topic"), false, false)
-            .requiredOntologyConcept(Labels.from(JMS_BROKER_SETTINGS_KEY, "JMS Broker Settings", "Provide" +
-                            " settings of the JMS broker to connect with."),
+            .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
+            .requiredOntologyConcept(Labels.withId(JMS_BROKER_SETTINGS_KEY),
                     OntologyProperties.mandatory(JMS_HOST_URI),
                     OntologyProperties.mandatory(JMS_PORT_URI))
             .supportedFormats(SupportedFormats.jsonFormat())

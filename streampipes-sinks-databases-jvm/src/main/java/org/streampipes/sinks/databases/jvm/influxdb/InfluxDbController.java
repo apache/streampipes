@@ -25,6 +25,7 @@ import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sinks.databases.jvm.config.DatabasesJvmConfig;
@@ -46,52 +47,30 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.streampipes.sinks.databases.jvm.influxdb",
-        "InfluxDB",
-        "Stores events in an InfluxDB.")
-        .category(DataSinkType.STORAGE)
-        .iconUrl(DatabasesJvmConfig.getIconUrl("influx"))
-        .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
-            EpRequirements.timestampReq(),
-            Labels.from(TIMESTAMP_MAPPING_KEY,
-                "Timestamp Property",
-                "The value which contains a timestamp"),
-            PropertyScope.NONE).build())
-        .supportedFormats(SupportedFormats.jsonFormat())
-        .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-        .requiredTextParameter(Labels.from(DATABASE_HOST_KEY,
-            "Hostname",
-            "The hostname/URL of the InfluxDB instance. (Include http(s)://)"))
-        .requiredIntegerParameter(Labels.from(DATABASE_PORT_KEY,
-            "Port",
-            "The port of the InfluxDB instance"), 8086)
-        .requiredIntegerParameter(Labels.from(BATCH_INTERVAL_ACTIONS_KEY,
-            "Buffer size",
-            "How many actions are written into a buffer, before it is written "
-                + "to the database"))
-        .requiredIntegerParameter(Labels.from(MAX_FLUSH_DURATION_KEY,
-            "Maximum flush ",
-            "The maximum waiting time for the buffer to fill the Buffer size before "
-                + "it will be written to the database in ms"), 2000)
-        .requiredTextParameter(Labels.from(DATABASE_NAME_KEY,
-            "Database Name",
-            "The name of the database where events will be stored"))
-        .requiredTextParameter(Labels.from(DATABASE_MEASUREMENT_KEY ,
-            "Measurement Name",
-            "The name of the Measurement where events will be stored "
-                    + "(will be created if it does not exist)"))
-        .requiredTextParameter(Labels.from(DATABASE_USER_KEY ,
-            "Username",
-            "The username for the InfluxDB Server"))
-        .requiredTextParameter(Labels.from(DATABASE_PASSWORD_KEY ,
-            "Password",
-            "The password for the InfluxDB Server"))
-        .build();
+    return DataSinkBuilder.create("org.streampipes.sinks.databases.jvm.influxdb")
+            .withLocales(Locales.EN)
+            .category(DataSinkType.STORAGE)
+            .iconUrl(DatabasesJvmConfig.getIconUrl("influx"))
+            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
+                    EpRequirements.timestampReq(),
+                    Labels.withId(TIMESTAMP_MAPPING_KEY),
+                    PropertyScope.NONE).build())
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+            .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
+            .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 8086)
+            .requiredIntegerParameter(Labels.withId(BATCH_INTERVAL_ACTIONS_KEY))
+            .requiredIntegerParameter(Labels.withId(MAX_FLUSH_DURATION_KEY), 2000)
+            .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
+            .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
+            .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
+            .requiredTextParameter(Labels.withId(DATABASE_PASSWORD_KEY))
+            .build();
   }
 
   @Override
   public ConfiguredEventSink<InfluxDbParameters> onInvocation(DataSinkInvocation graph,
-                                                             DataSinkParameterExtractor extractor) {
+                                                              DataSinkParameterExtractor extractor) {
 
     String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
@@ -104,15 +83,15 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
     Integer flush_duration = extractor.singleValueParameter(MAX_FLUSH_DURATION_KEY, Integer.class);
 
     InfluxDbParameters params = new InfluxDbParameters(graph,
-        hostname,
-        port,
-        dbName,
-        measureName,
-        user,
-        password,
-        timestampField,
-        batch_size,
-        flush_duration);
+            hostname,
+            port,
+            dbName,
+            measureName,
+            user,
+            password,
+            timestampField,
+            batch_size,
+            flush_duration);
 
     return new ConfiguredEventSink<>(params, InfluxDb::new);
   }

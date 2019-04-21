@@ -36,7 +36,8 @@ public class OneSignalController extends StandaloneEventSinkDeclarer<OneSignalPa
 
     @Override
     public DataSinkDescription declareModel() {
-        return DataSinkBuilder.create("org.streampipes.sinks.notifications.jvm.onesignal", "OneSignal", "Send Push Message to OneSignal-Application")
+        return DataSinkBuilder.create("org.streampipes.sinks.notifications.jvm.onesignal")
+                .withLocales(Locales.EN)
                 .category(DataSinkType.NOTIFICATION)
                 .iconUrl(SinksNotificationsJvmConfig.getIconUrl("one_signal"))
                 .requiredStream(StreamRequirementsBuilder
@@ -45,9 +46,9 @@ public class OneSignalController extends StandaloneEventSinkDeclarer<OneSignalPa
                         .build())
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-                .requiredHtmlInputParameter(Labels.from(CONTENT_KEY, "Content", "Push Message"))
-                .requiredTextParameter(Labels.from(APP_ID, "App-ID", "OneSignal App ID"))
-                .requiredTextParameter(Labels.from(REST_API_KEY, "API-Key", "REST API Key"))
+                .requiredHtmlInputParameter(Labels.withId(CONTENT_KEY))
+                .requiredTextParameter(Labels.withId(APP_ID))
+                .requiredTextParameter(Labels.withId(REST_API_KEY))
                 .build();
     }
 

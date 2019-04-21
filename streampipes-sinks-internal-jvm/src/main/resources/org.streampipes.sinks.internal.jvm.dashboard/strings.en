@@ -1,0 +1,2 @@
+org.streampipes.sinks.internal.jvm.dashboard.title=Dashboard Sink
+org.streampipes.sinks.internal.jvm.dashboard.description=This sink will be used to visualize data streams in the StreamPipes dashboard

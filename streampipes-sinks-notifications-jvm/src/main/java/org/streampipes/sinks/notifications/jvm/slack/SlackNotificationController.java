@@ -44,7 +44,8 @@ public class SlackNotificationController extends StandaloneEventSinkDeclarer<Sla
   @Override
   public DataSinkDescription declareModel() {
 
-    return DataSinkBuilder.create("org.streampipes.sinks.notifications.jvm.slack", "Slack Notification", "Slack bot to send notifications directly into your slack")
+    return DataSinkBuilder.create("org.streampipes.sinks.notifications.jvm.slack")
+            .withLocales(Locales.EN)
             .category(DataSinkType.NOTIFICATION)
             .iconUrl(SinksNotificationsJvmConfig.getIconUrl("slack_icon"))
             .requiredStream(StreamRequirementsBuilder
@@ -53,9 +54,10 @@ public class SlackNotificationController extends StandaloneEventSinkDeclarer<Sla
                     .build())
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .requiredTextParameter(Labels.from(RECEIVER, "Send to", "Enter the username or channel you want to notify"))
-            .requiredTextParameter(Labels.from(CONTENT, "Message", "The message that should be sent"))
-            .requiredSingleValueSelection(Labels.from(CHANNEL_TYPE, "User or Channel", "Decide wether you want to sent a notification to a user or to a channel"), Options.from("User", "Channel"))
+            .requiredTextParameter(Labels.withId(RECEIVER))
+            .requiredTextParameter(Labels.withId(CONTENT))
+            .requiredSingleValueSelection(Labels.withId(CHANNEL_TYPE),
+                    Options.from("User", "Channel"))
             .build();
   }
 

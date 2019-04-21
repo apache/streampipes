@@ -20,6 +20,7 @@ import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -33,9 +34,8 @@ public class DashboardController extends StandaloneEventSinkDeclarer<DashboardPa
 
     @Override
     public DataSinkDescription declareModel() {
-        return DataSinkBuilder.create("org.streampipes.sinks.internal.jvm.dashboard", "Dashboard Sink", "This sink will be used to visualize data" +
-                " " +
-                "streams in the StreamPipes dashboard")
+        return DataSinkBuilder.create("org.streampipes.sinks.internal.jvm.dashboard")
+                .withLocales(Locales.EN)
                 .category(DataSinkType.VISUALIZATION_CHART)
                 .requiredStream(StreamRequirementsBuilder
                         .create()

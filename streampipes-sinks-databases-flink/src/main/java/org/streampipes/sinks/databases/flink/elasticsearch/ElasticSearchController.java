@@ -25,6 +25,7 @@ import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sinks.databases.flink.config.DatabasesFlinkConfig;
@@ -38,15 +39,16 @@ public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearch
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.streampipes.sinks.databases.flink.elasticsearch", "Elasticsearch", "Stores data in an elasticsearch cluster")
+    return DataSinkBuilder.create("org.streampipes.sinks.databases.flink.elasticsearch")
+            .withLocales(Locales.EN)
             .category(DataSinkType.STORAGE)
             .iconUrl(DatabasesFlinkConfig.getIconUrl("elasticsearch_icon"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(), Labels.from(TIMESTAMP_MAPPING,
-                            "Timestamp Property", "Timestamp Mapping"), PropertyScope.HEADER_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                            Labels.withId(TIMESTAMP_MAPPING), PropertyScope.HEADER_PROPERTY)
                     .build())
-            .requiredTextParameter(Labels.from(INDEX_NAME, "Index Name", "Elasticsearch index name property"))
+            .requiredTextParameter(Labels.withId(INDEX_NAME))
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();

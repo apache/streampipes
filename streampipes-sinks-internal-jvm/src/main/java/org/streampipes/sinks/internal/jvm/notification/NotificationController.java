@@ -19,49 +19,50 @@ package org.streampipes.sinks.internal.jvm.notification;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
-import org.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class NotificationController extends StandaloneEventSinkDeclarer<NotificationParameters> {
 
-	private static final String TITLE_KEY = "title";
-	private static final String CONTENT_KEY = "content";
+  private static final String TITLE_KEY = "title";
+  private static final String CONTENT_KEY = "content";
 
-	@Override
-	public DataSinkDescription declareModel() {
-		return DataSinkBuilder.create("org.streampipes.sinks.internal.jvm.notification", "Notification", "Displays a notification in the UI panel")
-						.category(DataSinkType.NOTIFICATION)
-						.iconUrl(SinksInternalJvmConfig.getIconUrl("notification_icon"))
-						.requiredStream(StreamRequirementsBuilder
-										.create()
-										.requiredProperty(EpRequirements.anyProperty())
-										.build())
-						.supportedFormats(SupportedFormats.jsonFormat())
-						.supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-						.requiredTextParameter(Labels.from(TITLE_KEY, "Notification title", "Notification title"))
-						.requiredHtmlInputParameter(Labels.from(CONTENT_KEY, "Content", "Enter the notification text. You can " +
-										"use place holders like #fieldName# to add the value of a stream variable."))
-						.build();
-	}
+  @Override
+  public DataSinkDescription declareModel() {
+    return DataSinkBuilder.create("org.streampipes.sinks.internal.jvm.notification")
+            .withLocales(Locales.EN)
+            .category(DataSinkType.NOTIFICATION)
+            .iconUrl(SinksInternalJvmConfig.getIconUrl("notification_icon"))
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredProperty(EpRequirements.anyProperty())
+                    .build())
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+            .requiredTextParameter(Labels.withId(TITLE_KEY))
+            .requiredHtmlInputParameter(Labels.withId(CONTENT_KEY))
+            .build();
+  }
 
-	@Override
-	public ConfiguredEventSink<NotificationParameters> onInvocation(DataSinkInvocation graph,
-																																	DataSinkParameterExtractor extractor) {
+  @Override
+  public ConfiguredEventSink<NotificationParameters> onInvocation(DataSinkInvocation graph,
+                                                                  DataSinkParameterExtractor extractor) {
 
-		String title = extractor.singleValueParameter(TITLE_KEY, String.class);
-		String content = extractor.singleValueParameter(CONTENT_KEY, String.class);
+    String title = extractor.singleValueParameter(TITLE_KEY, String.class);
+    String content = extractor.singleValueParameter(CONTENT_KEY, String.class);
 
-		NotificationParameters params = new NotificationParameters(graph, title, content);
+    NotificationParameters params = new NotificationParameters(graph, title, content);
 
-		return new ConfiguredEventSink<>(params, NotificationProducer::new);
-	}
+    return new ConfiguredEventSink<>(params, NotificationProducer::new);
+  }
 
 }
