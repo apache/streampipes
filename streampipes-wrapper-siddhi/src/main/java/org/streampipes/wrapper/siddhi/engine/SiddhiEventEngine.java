@@ -22,7 +22,6 @@ import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.runtime.EventFactory;
 import org.streampipes.model.runtime.SchemaInfo;
 import org.streampipes.model.runtime.SourceInfo;
-import org.streampipes.model.schema.EventProperty;
 import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.streampipes.wrapper.routing.SpOutputCollector;
@@ -142,7 +141,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     } else if (o.equals(Double.class)) {
       return "DOUBLE";
     } else if (o.equals(Float.class)) {
-      return "FLOAT";
+      return "DOUBLE";
     } else if (o.equals(Boolean.class)) {
       return "BOOL";
     } else {
@@ -192,7 +191,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   protected String prepareName(String eventName) {
     return eventName
             .replaceAll("\\.", "")
-//            .replaceAll("VVVVV", "\\.")
+            .replaceAll("-", "")
             .replaceAll("::", "");
   }
 
@@ -201,14 +200,13 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     StringBuilder selectString = new StringBuilder();
     selectString.append("select ");
 
-    List<EventProperty> eventProperties = invocation.getOutputStream().getEventSchema().getEventProperties();
+    if (sortedEventKeys.size() > 0) {
+      for (int i = 0; i < sortedEventKeys.size() -1; i++) {
+        selectString.append("e1.s0" + sortedEventKeys.get(i) + ",");
 
-    if (eventProperties.size() > 0) {
-      for (int i = 0; i < eventProperties.size() - 1; i++) {
-        selectString.append("e1.s0" + eventProperties.get(i).getRuntimeName() + ",");
       }
+      selectString.append("e1.s0" + sortedEventKeys.get(sortedEventKeys.size() - 1));
 
-      selectString.append("e1.s0" + eventProperties.get(eventProperties.size() - 1).getRuntimeName());
     }
 
     return selectString.toString();
