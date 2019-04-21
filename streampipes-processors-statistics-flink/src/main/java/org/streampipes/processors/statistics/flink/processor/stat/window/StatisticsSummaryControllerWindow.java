@@ -43,23 +43,21 @@ public class StatisticsSummaryControllerWindow extends
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.statistics.flink.statistics-summary-window", "Sliding Descriptive " +
-                    "Statistics",
-            "Calculate" +
-                    " simple descriptive summary statistics based on a configurable time window")
+    return ProcessingElementBuilder.create("org.streampipes.processors.statistics.flink.statistics-summary-window")
+            .withLocales(Locales.EN)
             .iconUrl(StatisticsFlinkConfig.getIconUrl("statistics-icon"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                            Labels.from(VALUE_TO_OBSERVE, "Value to " +
-                                    "observe", "Provide a value where statistics are calculated upon"), PropertyScope.MEASUREMENT_PROPERTY)
+                            Labels.withId(VALUE_TO_OBSERVE), PropertyScope.MEASUREMENT_PROPERTY)
                     .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                            Labels.from(TIMESTAMP_MAPPING, "Time", "Provide a time parameter"), PropertyScope.HEADER_PROPERTY)
+                            Labels.withId(TIMESTAMP_MAPPING),
+                            PropertyScope.HEADER_PROPERTY)
                     .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                            Labels.from(PARTITION_BY, "Group by", "Partition the stream by a given id"), PropertyScope.DIMENSION_PROPERTY)
+                            Labels.withId(PARTITION_BY), PropertyScope.DIMENSION_PROPERTY)
                     .build())
-            .requiredIntegerParameter(Labels.from(TIME_WINDOW, "Time Window Size", "Size of the time window"))
-            .requiredSingleValueSelection(Labels.from(TIME_SCALE, "Time Window Scale", ""),
+            .requiredIntegerParameter(Labels.withId(TIME_WINDOW))
+            .requiredSingleValueSelection(Labels.withId(TIME_SCALE),
                     Options.from("Hours", "Minutes", "Seconds"))
             .outputStrategy(OutputStrategies.fixed(
                     EpProperties.timestampProperty("timestamp"),

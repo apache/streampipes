@@ -27,9 +27,11 @@ import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -37,8 +39,9 @@ public class ImageRectificationController extends StandaloneEventProcessingDecla
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.image-rectifier", "Image Rectifier", "Image Rectification: Rectifies " +
-            "an image")
+    return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.image-rectifier")
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .category(DataProcessorType.FILTER)
             .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
                             .domainPropertyReq("https://image.com"), Labels

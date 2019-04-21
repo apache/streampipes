@@ -23,19 +23,25 @@ public class AndController extends FlinkDataProcessorDeclarer<AndParameters> {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.and", "And", "Detects whether an event co-occurs with another event within a given time..")
+    return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.and")
             .category(DataProcessorType.PATTERN_DETECT)
+            .withLocales(Locales.EN)
             .iconUrl(PatternDetectionFlinkConfig.getIconUrl("And_Icon"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.from("left-mapping", "Left Mapping", ""), PropertyScope.DIMENSION_PROPERTY)
+                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
+                            Labels.withId(LEFT_MAPPING)
+                            , PropertyScope.DIMENSION_PROPERTY)
                     .build())
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.from("right-mapping", "Right Mapping", ""), PropertyScope.DIMENSION_PROPERTY)
+                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
+                            Labels.withId(RIGHT_MAPPING)
+                            , PropertyScope.DIMENSION_PROPERTY)
                     .build())
-            .requiredSingleValueSelection(Labels.from(TIME_UNIT, "Time Unit", "The time unit used for detecting the co-occurrence."), Options.from("Seconds", "Minutes", "Hours"))
-            .requiredIntegerParameter(Labels.from(TIME_WINDOW, "Time Window Size", "Time window size (seconds)"))
+            .requiredSingleValueSelection(Labels.withId(TIME_UNIT), Options.from("Seconds",
+                    "Minutes", "Hours"))
+            .requiredIntegerParameter(Labels.withId(TIME_WINDOW))
             .outputStrategy(OutputStrategies.custom(true))
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())

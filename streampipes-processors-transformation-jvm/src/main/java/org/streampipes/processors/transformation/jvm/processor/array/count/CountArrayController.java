@@ -27,6 +27,7 @@ import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
@@ -36,34 +37,32 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDecl
 
 public class CountArrayController extends StandaloneEventProcessingDeclarer<CountArrayParameters> {
 
-    public final static String COUNT_NAME = "countValue";
-    public final static String ARRAY_FIELD = "array_field";
+  public final static String COUNT_NAME = "countValue";
+  public final static String ARRAY_FIELD = "array-field";
 
-    @Override
-    public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.streampipes.processors" +
-                ".transformation.jvm.count-array", "Count Array", "This processor takes " +
-                "an array of event properties counts them and appends the result to the event")
-                .iconUrl(TransformationJvmConfig.getIconUrl( "countarray"))
-                .requiredStream(
-                        StreamRequirementsBuilder.create()
-                                            .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(),
-                    Labels.from(ARRAY_FIELD, "Array of Events", "Contains an array with events"),
-                    PropertyScope.NONE)
-                                .build())
-                .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), COUNT_NAME,
-                        SO.Number)))
-                .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-                .build();
-    }
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.count-array")
+            .withLocales(Locales.EN)
+            .iconUrl(TransformationJvmConfig.getIconUrl("countarray"))
+            .requiredStream(
+                    StreamRequirementsBuilder.create()
+                            .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(),
+                                    Labels.withId(ARRAY_FIELD), PropertyScope.NONE)
+                            .build())
+            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), COUNT_NAME,
+                    SO.Number)))
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+            .build();
+  }
 
-    @Override
-    public ConfiguredEventProcessor<CountArrayParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
-        String arrayField = extractor.mappingPropertyValue(ARRAY_FIELD);
+  @Override
+  public ConfiguredEventProcessor<CountArrayParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+    String arrayField = extractor.mappingPropertyValue(ARRAY_FIELD);
 
-        CountArrayParameters params = new CountArrayParameters(graph, arrayField);
-        return new ConfiguredEventProcessor<>(params, CountArray::new);
-    }
+    CountArrayParameters params = new CountArrayParameters(graph, arrayField);
+    return new ConfiguredEventProcessor<>(params, CountArray::new);
+  }
 
 }

@@ -36,17 +36,18 @@ public class BoilerplateController extends FlinkDataProcessorDeclarer<Boilerplat
 
     @Override
     public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.processor.boilerplate",
-                "Boilerplate Removal", "Removes boilerplate and extract fulltext from HTML")
+        return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.processor.boilerplate")
+                .withLocales(Locales.EN)
                 .iconUrl(TransformationFlinkConfig.getIconUrl("Boilerplate_icon"))
                 .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                            Labels.from(HTML_PROPERTY,"Html", "The property with the html"), PropertyScope.NONE)
+                            Labels.withId(HTML_PROPERTY),
+                            PropertyScope.NONE)
                     .build())
-                .requiredSingleValueSelection(Labels.from(EXTRACTOR, "Extractor", "Common use: Article Extractor"),
+                .requiredSingleValueSelection(Labels.withId(EXTRACTOR),
                         Options.from("Article Extractor", "Default Extractor", "Largest Content Extractor", "Canola Extractor", "Keep Everything Extractor"))
-                .requiredSingleValueSelection(Labels.from(OUTPUT_MODE, "Output Mode", ""),
+                .requiredSingleValueSelection(Labels.withId(OUTPUT_MODE),
                         Options.from("Plain Text", "Highlighted Html", "Html"))
                 .supportedProtocols(SupportedProtocols.kafka())
                 .supportedFormats(SupportedFormats.jsonFormat())

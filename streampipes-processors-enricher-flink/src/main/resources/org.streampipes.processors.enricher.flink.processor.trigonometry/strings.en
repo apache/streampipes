@@ -1,0 +1,9 @@
+org.streampipes.processors.enricher.flink.processor.trigonometry.title=Trigonometry Functions
+org.streampipes.processors.enricher.flink.processor.trigonometry.description=Performs Trigonometric functions on event properties
+
+operand.title=Alpha
+operand.description=Select the alpha parameter
+
+operation.title=Operation
+operation.description=
+

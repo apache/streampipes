@@ -27,6 +27,7 @@ import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
@@ -37,10 +38,10 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDecl
 
 public class CalculateDurationController extends StandaloneEventProcessingDeclarer<CalculateDurationParameters> {
 
-  public static final String START_TS_FIELD_ID = "start_ts";
-  public static final String END_TS_FIELD_ID = "end_ts";
+  public static final String START_TS_FIELD_ID = "start-ts";
+  public static final String END_TS_FIELD_ID = "end-ts";
   public static final String DURATION_FIELD_NAME = "duration";
-  public static final String UNIT_FIELD_ID = "unit_field"; // hours,
+  public static final String UNIT_FIELD_ID = "unit-field"; // hours,
 
   public static final String MS = "Milliseconds";
   public static final String SECONDS = "Seconds";
@@ -51,21 +52,18 @@ public class CalculateDurationController extends StandaloneEventProcessingDeclar
   //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors" +
-            ".transformation.jvm.duration-value", "Calculate Duration", "This processor calculates " +
-            "the duration for a given stream with a start timestamp and an end timestamp.")
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.duration-value")
+            .withLocales(Locales.EN)
             .iconUrl(TransformationJvmConfig.getIconUrl("splitarray"))
             .requiredStream(StreamRequirementsBuilder.create()
                 .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                    Labels.from(START_TS_FIELD_ID, "Start timestamp", "The " +
-                        "timestamp of the start event"),
+                    Labels.withId(START_TS_FIELD_ID),
                     PropertyScope.NONE)
                 .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                    Labels.from(END_TS_FIELD_ID, "End timestamp", "The " +
-                        "timestamp of the end event"),
+                    Labels.withId(END_TS_FIELD_ID),
                     PropertyScope.NONE)
                     .build())
-            .requiredSingleValueSelection(Labels.from(UNIT_FIELD_ID, "Timeunit", "Test"),
+            .requiredSingleValueSelection(Labels.withId(UNIT_FIELD_ID),
                 Options.from(MS, SECONDS, MINUTES, HOURS))
             .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), DURATION_FIELD_NAME,
                 SO.Number)))

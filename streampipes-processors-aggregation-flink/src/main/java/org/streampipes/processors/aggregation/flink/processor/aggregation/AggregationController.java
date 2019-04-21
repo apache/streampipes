@@ -36,9 +36,6 @@ import java.util.List;
 
 public class AggregationController extends FlinkDataProcessorDeclarer<AggregationParameters> {
 
-  private static final String RESOURCE_ID = "strings";
-  private static final String PE_ID = "org.streampipes.processors.aggregation.flink.aggregation";
-
   private static final String AGGREGATE_KEY = "aggregate";
   private static final String AGGREGATED_VALUE_KEY = "aggregatedValue";
   private static final String GROUP_BY_KEY = "groupBy";
@@ -48,26 +45,27 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(getLabel(PE_ID))
+    return ProcessingElementBuilder.create("org.streampipes.processors.aggregation.flink.aggregation")
             .category(DataProcessorType.AGGREGATE)
-            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(
                             EpRequirements.numberReq(),
-                            getLabel(AGGREGATE_KEY),
+                            Labels.withId(AGGREGATE_KEY),
                             PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
             .naryMappingPropertyWithoutRequirement(
-                    getLabel(GROUP_BY_KEY),
+                    Labels.withId(GROUP_BY_KEY),
                     PropertyScope.DIMENSION_PROPERTY)
             .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(
-                    getLabel(AGGREGATED_VALUE_KEY),
+                    Labels.withId(AGGREGATED_VALUE_KEY),
                     "aggregatedValue",
                     "http://schema.org/Number")))
-            .requiredIntegerParameter(getLabel(OUTPUT_EVERY_KEY))
-            .requiredIntegerParameter(getLabel(TIME_WINDOW_KEY))
-            .requiredSingleValueSelection(getLabel(OPERATION_KEY),
+            .requiredIntegerParameter(Labels.withId(OUTPUT_EVERY_KEY))
+            .requiredIntegerParameter(Labels.withId(TIME_WINDOW_KEY))
+            .requiredSingleValueSelection(Labels.withId(OPERATION_KEY),
                     Options.from(new Tuple2<>("Average", "AVG"),
                             new Tuple2<>("Sum", "SUM"),
                             new Tuple2<>("Min", "MIN"),
@@ -75,10 +73,6 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
             .supportedFormats(StandardTransportFormat.standardFormat())
             .supportedProtocols(StandardTransportFormat.standardProtocols())
             .build();
-  }
-
-  private Label getLabel(String id) {
-    return Labels.fromResources(RESOURCE_ID, id);
   }
 
   @Override

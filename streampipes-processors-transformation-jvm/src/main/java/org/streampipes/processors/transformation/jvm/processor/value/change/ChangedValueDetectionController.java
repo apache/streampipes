@@ -27,6 +27,7 @@ import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
@@ -41,14 +42,12 @@ public class ChangedValueDetectionController extends StandaloneEventProcessingDe
   //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors" +
-            ".transformation.jvm.changed-value", "Value Changed", "This processor sends " +
-            "out an event everytime a specific object changes. It also adds a timestamp in ms from the system time.")
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.changed-value")
+            .withLocales(Locales.EN)
             .iconUrl(TransformationJvmConfig.getIconUrl("splitarray"))
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                            Labels.from(COMPARE_FIELD_ID, "Keep Properties", "The " +
-                                    "property which might change over time"),
+                            Labels.withId(COMPARE_FIELD_ID),
                             PropertyScope.NONE)
                     .build())
             .outputStrategy(OutputStrategies.append(EpProperties.timestampProperty(CHANGE_FIELD_NAME)))

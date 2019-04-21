@@ -32,6 +32,7 @@ import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
@@ -49,22 +50,22 @@ public class StaticMathOpController extends FlinkDataProcessorDeclarer<StaticMat
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.math.staticmathop",
-            "Static Math", "Performs calculation on an event property with a static value (+, -, *, /, %)")
-            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
+    return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.math.staticmathop")
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .category(DataProcessorType.ALGORITHM)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                            Labels.from(LEFT_OPERAND, "Left operand", "Select left operand"),
+                            Labels.withId(LEFT_OPERAND),
                             PropertyScope.NONE)
                     .build())
-            .requiredFloatParameter(Labels.from(RIGHT_OPERAND_VALUE, "Right operand value",
-                    "Specify the value of the right operand."))
+            .requiredFloatParameter(Labels.withId(RIGHT_OPERAND_VALUE))
             .outputStrategy(
                     OutputStrategies.keep())
 //                                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
-            .requiredSingleValueSelection(OPERATION, "Select Operation", "", Options.from("+", "-", "/", "*", "%"))
+            .requiredSingleValueSelection(Labels.withId(OPERATION),
+                    Options.from("+", "-", "/", "*", "%"))
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka())
             .build();

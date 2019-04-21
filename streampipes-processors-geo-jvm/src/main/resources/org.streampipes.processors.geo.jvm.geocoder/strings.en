@@ -1,0 +1,17 @@
+org.streampipes.processors.geo.jvm.geocoder.title=Geocoder
+org.streampipes.processors.geo.jvm.geocoder.description=Geocodes a location based on given street, address and street number
+
+city.title=City
+city.description=
+
+street.title=Street Address
+street.description=
+
+street-number.title=Street Number
+street-number.description=
+
+latitude.title=
+latitude.description=
+
+longitude.title=
+longitude.description=

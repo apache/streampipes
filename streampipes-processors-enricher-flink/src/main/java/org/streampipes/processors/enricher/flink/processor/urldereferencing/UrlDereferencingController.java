@@ -37,14 +37,14 @@ public class UrlDereferencingController extends FlinkDataProcessorDeclarer<UrlDe
 
     @Override
     public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.urldereferencing",
-                "URL Dereferencing","Append the html page as a string to event")
-                .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
+        return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.urldereferencing")
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withLocales(Locales.EN)
                 .category(DataProcessorType.ENRICH)
                 .requiredStream(StreamRequirementsBuilder
                         .create()
                         .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                                Labels.from(URL, "URL", "The server URL"),
+                                Labels.withId(URL),
                                 PropertyScope.NONE)
                         .build())
                 .outputStrategy(

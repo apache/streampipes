@@ -27,6 +27,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
@@ -39,10 +40,9 @@ public class ImageCropperController extends StandaloneEventProcessingDeclarer<Im
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.jvm.image-cropper", "Image Cropper", "Image Enrichment: Crops an " +
-            "image based on " +
-            "given bounding box coordinates")
-            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
+    return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.jvm.image-cropper")
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .category(DataProcessorType.FILTER)
             .requiredStream(RequiredBoxStream.getBoxStream())
             .outputStrategy(OutputStrategies.fixed(

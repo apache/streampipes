@@ -25,6 +25,7 @@ import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
@@ -56,37 +57,29 @@ public class PalletTransportDetectionController extends StandaloneEventProcessin
   @Override
   public DataProcessorDescription declareModel() {
     //TODO: Add output strategy (check dashboard for how-to)?
-    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.processor.pallettransportdetection",
-            "PalletTransportDetection", "Merges two event streams if there is a start and an end")
+    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.processor.pallettransportdetection")
             .category(DataProcessorType.TRANSFORM)
-            .providesAssets(Assets.DOCUMENTATION)
+            .withAssets(Assets.DOCUMENTATION)
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                 .create()
                 .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                    Labels.from(FIRST_LOCATION_PALLET_FIELD_ID, "Pallet detection first",
-                        "String which says \"" + PALLET + "\" if the pallet is"
-                            + "on the first location. Otherwise it is not."),
+                    Labels.withId(FIRST_LOCATION_PALLET_FIELD_ID),
                     PropertyScope.NONE)
                 .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                    Labels.from(FIRST_TS_FIELD_ID , "Start timestamp",
-                        "Timestamp of the first stream"),
+                    Labels.withId(FIRST_TS_FIELD_ID ),
                     PropertyScope.NONE)
                 .build())
             .requiredStream(StreamRequirementsBuilder
                 .create()
                 .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                    Labels.from(SECOND_LOCATION_PALLET_FIELD_ID, "Pallet detection first",
-                        "String which says \"" + PALLET + "\" if the pallet is"
-                            + "on the first location. Otherwise it is not."),
+                    Labels.withId(SECOND_LOCATION_PALLET_FIELD_ID),
                     PropertyScope.NONE)
                 .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                    Labels.from(END_TS_FIELD_ID , "End timestamp",
-                        "Timestamp of the second stream"),
+                    Labels.withId(END_TS_FIELD_ID ),
                     PropertyScope.NONE)
                 .build())
-            .requiredSingleValueSelection(Labels.from(UNIT_FIELD_ID,
-                "Timeunit",
-                "The unit in which the duration is calculated"),
+            .requiredSingleValueSelection(Labels.withId(UNIT_FIELD_ID),
                 Options.from(MS, SECONDS, MINUTES, HOURS))
             .outputStrategy(OutputStrategies.fixed(EpProperties.timestampProperty("startTime"),
                     EpProperties.timestampProperty("endTime")))

@@ -1,0 +1,2 @@
+org.streampipes.processors.filters.jvm.processor.mergestartandend.title=Merge Start And End
+org.streampipes.processors.filters.jvm.processor.mergestartandend.description=Merges two event streams if there is a start and an end

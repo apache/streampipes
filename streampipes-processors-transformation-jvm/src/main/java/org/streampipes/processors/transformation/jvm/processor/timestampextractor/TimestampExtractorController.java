@@ -36,26 +36,21 @@ import java.util.List;
 public class TimestampExtractorController extends StandaloneEventProcessingDeclarer<TimestampExtractorParameters>
         implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
-
-    public final static String ID = "org.streampipes.processors.transformation.jvm.processor.timestampextractor";
-
     public final static String TIMESTAMP_FIELD = "timestampField";
     public final static String SELECTED_OUTPUT_FIELDS = "selectedOutputFields";
 
 
     @Override
     public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create(ID, "Timestamp Extractor", "This processor extracts a time stamp into the" +
-                " individual time fields (e.g. day field, hour field, ....). ")
+        return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.processor.timestampextractor")
+                .withLocales(Locales.EN)
             //    .iconUrl(TransformationJvmConfig.getIconUrl())
                 .requiredStream(
                         StreamRequirementsBuilder.create()
                         .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                    Labels.from(TIMESTAMP_FIELD, "Timestamp", ""),
-                    PropertyScope.NONE)
+                    Labels.withId(TIMESTAMP_FIELD), PropertyScope.NONE)
                                 .build())
-                .requiredMultiValueSelection(Labels.from(SELECTED_OUTPUT_FIELDS, "Extract fields",
-                        ""),
+                .requiredMultiValueSelection(Labels.withId(SELECTED_OUTPUT_FIELDS),
                         Options.from(OutputFields.YEAR.toString(), OutputFields.MONTH.toString(), OutputFields.DAY.toString(), OutputFields.HOUR.toString(),
                                 OutputFields.MINUTE.toString(), OutputFields.SECOND.toString(), OutputFields.WEEKDAY.toString()))
                 .outputStrategy(OutputStrategies.customTransformation())

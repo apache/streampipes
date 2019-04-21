@@ -23,7 +23,14 @@ import org.streampipes.processors.geo.jvm.config.GeoJvmConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.Geo;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -47,34 +54,32 @@ public class GeocodingController extends StandaloneEventProcessingDeclarer<Geoco
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.geo.jvm.geocoder", "Geocoder", "Geocodes a location based " +
-            "on given street, address and street number")
+    return ProcessingElementBuilder.create("org.streampipes.processors.geo.jvm.geocoder")
             .iconUrl(GeoJvmConfig.iconBaseUrl + "Location_Icon_HQ.png")
-
+            .withAssets(Assets.DOCUMENTATION)
+            .withLocales(Locales.EN)
             .requiredStream(
                     StreamRequirementsBuilder.create()
                             .requiredPropertyWithUnaryMapping(
                                     EpRequirements
                                             .domainPropertyReq("http://schema.org/city"),
-                                    Labels.from(CITY_MAPPING, "City", ""),
+                                    Labels.withId(CITY_MAPPING),
                                     PropertyScope.NONE)
                             .requiredPropertyWithUnaryMapping(
                                     EpRequirements
                                             .domainPropertyReq("http://schema" +
                                                     ".org/streetAddress"),
-                                    Labels.from(STREET_MAPPING, "Street", ""),
+                                    Labels.withId(STREET_MAPPING),
                                     PropertyScope.NONE)
                             .requiredPropertyWithUnaryMapping(
                                     EpRequirements
                                             .domainPropertyReq("http://schema" +
                                                     ".org/streetNumber"),
-                                    Labels.from(STREET_NUMBER_MAPPING, "Street number", ""),
+                                    Labels.withId(STREET_NUMBER_MAPPING),
                                     PropertyScope.NONE)
                             .build())
-            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.from("latitude",
-                    "Latitude", ""),
-                    "latitude", Geo.lat), EpProperties.doubleEp(Labels.from("longitude",
-                    "Longitude", ""), "longitude", Geo.lng)))
+            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.withId("latitude"),
+                    "latitude", Geo.lat), EpProperties.doubleEp(Labels.withId("longitude"), "longitude", Geo.lng)))
 
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())

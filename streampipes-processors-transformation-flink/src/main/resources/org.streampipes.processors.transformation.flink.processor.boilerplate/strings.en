@@ -1,0 +1,11 @@
+org.streampipes.processors.transformation.flink.processor.boilerplate.title=Boilerplate Removal
+org.streampipes.processors.transformation.flink.processor.boilerplate.description=Removes boilerplate and extract fulltext from HTML
+
+stringProperty.title=HTML Field
+stringProperty.description=The field containing the HTML
+
+extractor.title=Extractor
+extractor.description=Common use: Article Extractor
+
+outputMode.title=Output Mode
+outputMode.description=

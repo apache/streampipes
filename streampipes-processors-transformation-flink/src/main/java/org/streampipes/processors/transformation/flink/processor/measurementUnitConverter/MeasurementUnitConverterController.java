@@ -45,27 +45,24 @@ public class MeasurementUnitConverterController extends
         FlinkDataProcessorDeclarer<MeasurementUnitConverterParameters> implements ResolvesContainerProvidedOptions {
 
   private static final String CONVERT_PROPERTY = "convert-property";
-  private static final String OUTPUT_UNIT = "outputUnit";
+  private static final String OUTPUT_UNIT = "output-unit";
 
   @Override
   public DataProcessorDescription declareModel() {
 
 
-    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.measurement-unit-converter", "Measurement Unit " +
-                    "Converter",
-            "Converts a unit of measurement to another one")
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.measurement-unit-converter")
+            .withLocales(Locales.EN)
             .iconUrl(TransformationFlinkConfig.getIconUrl("unit_conversion"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(PropertyRequirementsBuilder
                             .create()
                             .measurementUnitPresence()
-                            .build(), Labels.from
-                            (CONVERT_PROPERTY, "Property", "The" +
-                                    " property to convert"), PropertyScope.MEASUREMENT_PROPERTY)
+                            .build(), Labels.withId
+                            (CONVERT_PROPERTY), PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
-            .requiredSingleValueSelectionFromContainer(Labels.from(OUTPUT_UNIT, "The output type unit of " +
-                    "measurement", ""), "convert-property")
+            .requiredSingleValueSelectionFromContainer(Labels.withId(OUTPUT_UNIT), "convert-property")
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .outputStrategy(OutputStrategies.transform(TransformOperations

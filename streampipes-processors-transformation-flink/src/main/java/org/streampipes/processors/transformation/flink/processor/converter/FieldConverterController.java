@@ -36,16 +36,15 @@ public class FieldConverterController extends
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.field-converter", "Field Converter",
-            "Converts a string value to a number data type")
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.field-converter")
+            .withLocales(Locales.EN)
             .iconUrl(TransformationFlinkConfig.getIconUrl("field_converter"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.from
-                            (CONVERT_PROPERTY,"Property", "The" +
-                                    " property to convert"), PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId
+                            (CONVERT_PROPERTY), PropertyScope.NONE)
                     .build())
-            .requiredSingleValueSelection(Labels.from(TARGET_TYPE, "Datatype", "The target datatype"), Options.from
+            .requiredSingleValueSelection(Labels.withId(TARGET_TYPE), Options.from
                     (new Tuple2<>("Float", XSD._float.toString()), new Tuple2<>
                             ("Integer", XSD._integer.toString())))
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())

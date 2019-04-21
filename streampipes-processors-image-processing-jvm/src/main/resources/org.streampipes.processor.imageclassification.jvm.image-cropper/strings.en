@@ -1,0 +1,2 @@
+org.streampipes.processor.imageclassification.jvm.image-cropper.title=Image Cropper
+org.streampipes.processor.imageclassification.jvm.image-cropper.description=Crops an image based on given bounding box coordinates

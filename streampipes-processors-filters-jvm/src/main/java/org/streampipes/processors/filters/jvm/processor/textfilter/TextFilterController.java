@@ -25,6 +25,7 @@ import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
@@ -41,16 +42,18 @@ public class TextFilterController extends StandaloneEventProcessingDeclarer<Text
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.textfilter", "Text Filter", "Text Filter Description")
-            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
+    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.textfilter")
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .category(DataProcessorType.FILTER)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements
-                    .stringReq(), Labels.from(MAPPING_PROPERTY_ID, "Select Text Property", ""), PropertyScope.NONE)
+                    .stringReq(), Labels.withId(MAPPING_PROPERTY_ID), PropertyScope.NONE)
                     .build())
-            .requiredSingleValueSelection(Labels.from(OPERATION_ID, "Select Operation", ""), Options.from("MATCHES", "CONTAINS"))
-            .requiredTextParameter(Labels.from(KEYWORD_ID, "Select Keyword", ""), "text")
+            .requiredSingleValueSelection(Labels.withId(OPERATION_ID), Options.from("MATCHES",
+                    "CONTAINS"))
+            .requiredTextParameter(Labels.withId(KEYWORD_ID), "text")
             .outputStrategy(OutputStrategies.keep())
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())

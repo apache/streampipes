@@ -24,6 +24,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
@@ -37,9 +38,10 @@ public class ProjectionController extends StandaloneEventProcessingDeclarer<Proj
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.project", "Projection", "Outputs a selectable subset of an input event type")
+    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.project")
             .category(DataProcessorType.TRANSFORM)
-            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())

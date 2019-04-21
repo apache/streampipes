@@ -29,6 +29,7 @@ import org.streampipes.sdk.helpers.CollectedStreamRequirements;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
@@ -42,10 +43,9 @@ public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.jvm.image-enricher", "Image Enricher", "Image Enrichment: Enriches an " +
-            "image with " +
-            "given bounding box coordinates")
-            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
+    return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.jvm.image-enricher")
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .category(DataProcessorType.FILTER)
             .requiredStream(getStreamRequirements())
 

@@ -1,0 +1,11 @@
+org.streampipes.processors.enricher.flink.processor.math.mathop.title=Math
+org.streampipes.processors.enricher.flink.processor.math.mathop.description=Performs calculations on event properties (+, -, *, /, %)
+
+leftOperand.title=Left operand
+leftOperand.description=Select left operand
+
+rightOperand.title=Right operand
+rightOperand.description=Select right operand
+
+operation.title=Select Operation
+operation.description=

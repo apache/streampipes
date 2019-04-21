@@ -21,13 +21,15 @@ import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.processors.aggregation.flink.config.AggregationFlinkConfig;
 import org.streampipes.processors.aggregation.flink.processor.aggregation.AggregationController;
 import org.streampipes.processors.aggregation.flink.processor.count.CountController;
+import org.streampipes.processors.aggregation.flink.processor.rate.EventRateController;
 
 public class AggregationFlinkInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton.getInstance()
             .add(new AggregationController())
-            .add(new CountController());
+            .add(new CountController())
+            .add(new EventRateController());
 
     new AggregationFlinkInit().init(AggregationFlinkConfig.INSTANCE);
   }

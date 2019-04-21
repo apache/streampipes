@@ -39,26 +39,25 @@ public class IncreaseController extends FlinkDataProcessorDeclarer<IncreaseParam
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.increase", "Increase", "Detects the increase of a numerical field over a customizable time window. Example: A temperature value increases by 10 percent within 5 minutes.")
+    return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.increase")
+            .withLocales(Locales.EN)
             .category(DataProcessorType.PATTERN_DETECT)
             .iconUrl(PatternDetectionFlinkConfig.getIconUrl("increase-icon"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements
-                            .numberReq(), Labels.from(VALUE_MAPPING, "Value to observe", "Specifies the value that should be " +
-                            "monitored."), PropertyScope.MEASUREMENT_PROPERTY)
+                            .numberReq(), Labels.withId(VALUE_MAPPING),
+                            PropertyScope.MEASUREMENT_PROPERTY)
                     .requiredPropertyWithUnaryMapping(EpRequirements
-                            .timestampReq(), Labels.from(TIMESTAMP, "Timestamp field", "The field that contains " +
-                            "the event's timestamp"), PropertyScope.HEADER_PROPERTY)
+                            .timestampReq(), Labels.withId(TIMESTAMP),
+                            PropertyScope.HEADER_PROPERTY)
                     .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                            Labels.from(PARTITION_BY, "Group by", "Partition the stream by a given id"), PropertyScope
+                            Labels.withId(PARTITION_BY), PropertyScope
                                     .DIMENSION_PROPERTY)
                     .build())
-            .requiredIntegerParameter(INCREASE, "Percentage of Increase/Decrease", "Specifies the increase in " +
-                    "percent (e.g., 100 indicates an increase by 100 percent within the specified time window.", 0, 500, 1)
-            .requiredIntegerParameter(Labels.from(DURATION, "Time Window Length (Seconds)", "Specifies the size of the time window in seconds."))
-            .requiredSingleValueSelection(Labels.from(OPERATION, "Increase/Decrease", "Specifies the type of operation the " +
-                    "processor should perform."), Options.from("Increase", "Decrease"))
+            .requiredIntegerParameter(Labels.withId(INCREASE), 0, 500, 1)
+            .requiredIntegerParameter(Labels.withId(DURATION))
+            .requiredSingleValueSelection(Labels.withId(OPERATION))
             .outputStrategy(OutputStrategies.custom(true))
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())

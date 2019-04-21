@@ -1,0 +1,2 @@
+org.streampipes.processors.enricher.flink.timestamp.title=Timestamp Enricher
+org.streampipes.processors.enricher.flink.timestamp.description=Appends the current time in ms to the event payload

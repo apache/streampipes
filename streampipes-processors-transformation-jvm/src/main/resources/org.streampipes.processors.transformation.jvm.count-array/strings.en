@@ -1,0 +1,5 @@
+org.streampipes.processors.transformation.jvm.count-array.title=Count Array
+org.streampipes.processors.transformation.jvm.count-array.description=This processor takes an array of event properties counts them and appends the result to the event
+
+array-field.title=Array of Events
+array-field.description=Contains an array with events

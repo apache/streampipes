@@ -1,0 +1,11 @@
+org.streampipes.processors.filters.jvm.textfilter.title=Text Filter
+org.streampipes.processors.filters.jvm.textfilter.description=Text Filter Description
+
+text.title=Select Text Property
+text.description=
+
+operation.title=Select Operation
+operation.description=
+
+keyword.title=Select Keyword
+keyword.description=

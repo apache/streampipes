@@ -27,6 +27,7 @@ import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
@@ -41,15 +42,15 @@ public class FieldHasherController extends FlinkDataProcessorDeclarer<FieldHashe
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.fieldhasher", "Field Hasher",
-            "The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values.")
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.fieldhasher")
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.from
-                            (HASH_PROPERTIES, "Field", "The field the hash function should be applied on"), PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
+                            (HASH_PROPERTIES), PropertyScope.NONE)
                     .build())
             .iconUrl(TransformationFlinkConfig.getIconUrl("field-hasher-icon"))
-            .requiredSingleValueSelection(Labels.from("hash-algorithm", "Hash Algorithm", "The hash algorithm that should be used."),
+            .requiredSingleValueSelection(Labels.withId(HASH_ALGORITHM),
                     Options.from("SHA1", "SHA2", "MD5"))
             .outputStrategy(OutputStrategies.keep())
             .supportedFormats(SupportedFormats.jsonFormat())

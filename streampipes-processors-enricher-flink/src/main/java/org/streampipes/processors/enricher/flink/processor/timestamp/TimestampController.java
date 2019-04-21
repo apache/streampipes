@@ -35,10 +35,9 @@ public class TimestampController extends FlinkDataProcessorDeclarer<TimestampPar
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.timestamp",
-            "Timestamp Enricher",
-            "Appends the current time in ms to the event payload")
-            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
+    return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.timestamp")
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())

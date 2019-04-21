@@ -1,0 +1,8 @@
+org.streampipes.processors.transformation.flink.field-renamer.title=Field Renamer
+org.streampipes.processors.transformation.flink.field-renamer.description=Replaces the runtime name of an event property with a custom defined name. Useful for data ingestion purposes where a specific event schema is needed.
+
+convert-property.title=Field
+convert-property.description=The field to rename
+
+field-name.title=The new field name
+field-name.description=

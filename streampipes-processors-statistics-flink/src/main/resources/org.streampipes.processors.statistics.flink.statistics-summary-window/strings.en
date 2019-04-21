@@ -1,0 +1,18 @@
+org.streampipes.processors.statistics.flink.statistics-summary-window.title=Sliding Descriptive Statistics
+org.streampipes.processors.statistics.flink.statistics-summary-window.description=Calculate simple descriptive summary statistics based on a configurable time window
+
+value-to-observe.title=Value to Observe
+value-to-observe.description=Provide a value where statistics are calculated upon
+
+partition-by.title=Group by
+partition-by.description=Partition the stream by a given id
+
+timestamp-mapping.title=Time Field
+timestamp-mapping.description=Provide a time parameter
+
+time-window.title=Time Window Size
+time-window.description=Size of the time window
+
+time-scale.title=Time Window Scale
+time-scale.description=
+

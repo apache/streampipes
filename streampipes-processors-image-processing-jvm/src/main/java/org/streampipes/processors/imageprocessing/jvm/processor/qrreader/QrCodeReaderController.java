@@ -28,6 +28,7 @@ import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
@@ -40,22 +41,22 @@ public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<Qr
 
   private static final String PLACEHOLDER_VALUE = "placeholder-value";
   private static final String SEND_IF_NO_RESULT = "send-if-no-result";
+  private static final String QR_VALUE = "qr-value";
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.qrcode",
-            "QR Code Reader", "QR Code Reader: Detects a QR Code in an image")
+    return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.qrcode")
             .category(DataProcessorType.FILTER)
-            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
                             .domainPropertyReq("https://image.com"), Labels
-                            .from(IMAGE_PROPERTY, "Image", ""),
+                            .withId(IMAGE_PROPERTY),
                     PropertyScope.NONE).build())
-            .requiredSingleValueSelection(Labels.from(SEND_IF_NO_RESULT, "Send placeholder value" +
-                    " if no qr code is detected", ""), Options.from("Yes", "No"))
-            .requiredTextParameter(Labels.from(PLACEHOLDER_VALUE, "Placeholder value", ""))
+            .requiredSingleValueSelection(Labels.withId(SEND_IF_NO_RESULT), Options.from("Yes", "No"))
+            .requiredTextParameter(Labels.withId(PLACEHOLDER_VALUE))
             .outputStrategy(OutputStrategies.fixed(EpProperties.timestampProperty("timestamp"),
-                    EpProperties.stringEp(Labels.from("qr-value", "QR code value", ""),
+                    EpProperties.stringEp(Labels.withId(QR_VALUE),
                             "qrvalue", "http://schema.org/text")))
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())

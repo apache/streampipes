@@ -26,6 +26,7 @@ import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
@@ -40,15 +41,15 @@ public class FieldRenamerController extends FlinkDataProcessorDeclarer<FieldRena
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.field-renamer", "Field Renamer", "Replaces the runtime name of an event property with a custom defined name. Useful for data ingestion purposes where a specific event schema is needed.")
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.field-renamer")
+            .withLocales(Locales.EN)
             .iconUrl(TransformationFlinkConfig.getIconUrl("field_renamer"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.from
-                            (CONVERT_PROPERTY, "Property", "The" +
-                                    " property to convert"), PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
+                            (CONVERT_PROPERTY), PropertyScope.NONE)
                     .build())
-            .requiredTextParameter(Labels.from(FIELD_NAME, "The new field name", ""))
+            .requiredTextParameter(Labels.withId(FIELD_NAME))
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .outputStrategy(OutputStrategies.transform(TransformOperations

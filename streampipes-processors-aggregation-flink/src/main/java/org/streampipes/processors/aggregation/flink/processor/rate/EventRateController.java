@@ -11,6 +11,7 @@ import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
@@ -23,18 +24,17 @@ public class EventRateController extends FlinkDataProcessorDeclarer<EventRatePar
   @Override
   public DataProcessorDescription declareModel() {
 
-    return ProcessingElementBuilder.create("org.streampipes.processors.aggregation.flink.rate",
-            "Event rate", "Computes current event rate")
+    return ProcessingElementBuilder.create("org.streampipes.processors.aggregation.flink.rate")
             .category(DataProcessorType.AGGREGATE)
-            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
             .outputStrategy(OutputStrategies.fixed(EpProperties.doubleEp(Labels.empty(), "rate",
                     "http://schema.org/Number")))
-            .requiredIntegerParameter(Labels.from(RATE_KEY, "Time Baseline", "Time window size used for calculating the rate" +
-                    "in seconds, also defines the output rate"))
+            .requiredIntegerParameter(Labels.withId(RATE_KEY))
             .supportedFormats(StandardTransportFormat.standardFormat())
             .supportedProtocols(StandardTransportFormat.standardProtocols())
             .build();

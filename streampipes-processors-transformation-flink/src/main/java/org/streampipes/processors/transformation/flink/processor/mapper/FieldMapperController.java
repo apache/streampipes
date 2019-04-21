@@ -29,6 +29,7 @@ import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
@@ -47,15 +48,14 @@ public class FieldMapperController extends
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.field-mapper", "Field Mapper",
-            "Replaces one or more field with a new field and computes a hash value of these fields")
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.field-mapper")
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.from
-                            (REPLACE_PROPERTIES,"Fields", "The" +
-                                    " fields to replace"), PropertyScope.NONE)
+                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.withId
+                            (REPLACE_PROPERTIES), PropertyScope.NONE)
                     .build())
-            .requiredTextParameter(Labels.from(FIELD_NAME, "The name of the new field ", ""))
+            .requiredTextParameter(Labels.withId(FIELD_NAME))
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .outputStrategy(OutputStrategies.customTransformation())

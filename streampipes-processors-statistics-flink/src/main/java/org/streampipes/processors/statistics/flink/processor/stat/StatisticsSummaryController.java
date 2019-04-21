@@ -44,13 +44,13 @@ public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<Stat
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.statistics.flink.statistics-summary", "Statistics Summary", "Calculate" +
-            " simple descriptive summary statistics")
+    return ProcessingElementBuilder.create("org.streampipes.processors.statistics.flink.statistics-summary")
+            .withLocales(Locales.EN)
             .iconUrl(StatisticsFlinkConfig.getIconUrl("statistical_summary"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(Datatypes
-                    .Number), Labels.from(listPropertyMappingName, "Property", "Select a list property"), PropertyScope.MEASUREMENT_PROPERTY)
+                    .Number), Labels.withId(listPropertyMappingName), PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
             .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), MEAN, Statistics
                             .MEAN),

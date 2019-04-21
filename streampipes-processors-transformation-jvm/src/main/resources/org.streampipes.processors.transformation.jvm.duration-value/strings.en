@@ -1,0 +1,11 @@
+org.streampipes.processors.transformation.jvm.duration-value.title=Calculate Duration
+org.streampipes.processors.transformation.jvm.duration-value.description=This processor calculates the duration for a given stream with a start timestamp and an end timestamp.
+
+start-ts.title=Start Timestamp
+start-ts.description=The timestamp of the start event
+
+end-ts.title=End Timestamp
+end-ts.description=The timestamp of the end event
+
+unit-field.title=Time Unit
+unit-field.description=

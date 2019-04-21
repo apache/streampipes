@@ -24,6 +24,7 @@ import org.streampipes.processors.transformation.flink.processor.boilerplate.Boi
 import org.streampipes.processors.transformation.flink.processor.converter.FieldConverterController;
 import org.streampipes.processors.transformation.flink.processor.hasher.FieldHasherController;
 import org.streampipes.processors.transformation.flink.processor.mapper.FieldMapperController;
+import org.streampipes.processors.transformation.flink.processor.measurementUnitConverter.MeasurementUnitConverterController;
 import org.streampipes.processors.transformation.flink.processor.rename.FieldRenamerController;
 
 public class TransformationFlinkInit extends StandaloneModelSubmitter {
@@ -33,7 +34,7 @@ public class TransformationFlinkInit extends StandaloneModelSubmitter {
             .add(new FieldConverterController())
             .add(new FieldHasherController())
             .add(new FieldMapperController())
-            //.add(new MeasurementUnitConverterController())
+            .add(new MeasurementUnitConverterController())
             .add(new FieldRenamerController())
             .add(new BoilerplateController());
 
