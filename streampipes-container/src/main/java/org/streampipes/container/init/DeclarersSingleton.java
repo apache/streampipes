@@ -35,6 +35,10 @@ import java.util.Map;
 public class DeclarersSingleton {
   private static DeclarersSingleton instance;
 
+  private static final String Http = "http://";
+  private static final String Colon = ":";
+  private static final String Slash = "/";
+
   private Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers;
   private Map<String, SemanticEventProducerDeclarer> producerDeclarers;
   private Map<String, SemanticEventConsumerDeclarer> consumerDeclarers;
@@ -149,11 +153,11 @@ public class DeclarersSingleton {
   }
 
   public void setRoute(String route) {
-    this.route = "/" + route + "/";
+    this.route = Slash + route + Slash;
   }
 
   public String getBaseUri() {
-    return "http://" + hostName + ":" + port + route;
+    return Http + hostName + Colon + port + route;
   }
 
   private void checkAndStartExecutableStreams(SemanticEventProducerDeclarer sourceDeclarer) {
