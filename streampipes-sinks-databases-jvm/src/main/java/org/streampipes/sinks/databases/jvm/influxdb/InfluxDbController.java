@@ -46,30 +46,25 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
 
   @Override
   public DataSinkDescription declareModel() {
-    //TODO: Replace Icon, insert defaults (for the port)
     return DataSinkBuilder.create("org.streampipes.sinks.databases.jvm.influxdb",
         "InfluxDB",
         "Stores events in an InfluxDB.")
         .category(DataSinkType.STORAGE)
         .iconUrl(DatabasesJvmConfig.getIconUrl("influx"))
-        .requiredStream(StreamRequirementsBuilder.create()
-            .requiredProperty(EpRequirements.anyProperty())
-            .build())
-        //TODO: Timestampmapping currently not working
-        /*.requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
+        .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
             EpRequirements.timestampReq(),
             Labels.from(TIMESTAMP_MAPPING_KEY,
                 "Timestamp Property",
                 "The value which contains a timestamp"),
-            PropertyScope.NONE).build())*/
+            PropertyScope.NONE).build())
         .supportedFormats(SupportedFormats.jsonFormat())
         .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
         .requiredTextParameter(Labels.from(DATABASE_HOST_KEY,
             "Hostname",
-            "The hostname/URL of the InfluxDB instance"))
+            "The hostname/URL of the InfluxDB instance. (Include http(s)://)"))
         .requiredIntegerParameter(Labels.from(DATABASE_PORT_KEY,
             "Port",
-            "The port of the InfluxDB instance (default 8086)"), 8086)
+            "The port of the InfluxDB instance"), 8086)
         .requiredIntegerParameter(Labels.from(BATCH_INTERVAL_ACTIONS_KEY,
             "Buffer size",
             "How many actions are written into a buffer, before it is written "
@@ -104,7 +99,7 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
     String measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
     String password = extractor.singleValueParameter(DATABASE_PASSWORD_KEY, String.class);
-    String timestampField = "";//extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
+    String timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
     Integer batch_size = extractor.singleValueParameter(BATCH_INTERVAL_ACTIONS_KEY, Integer.class);
     Integer flush_duration = extractor.singleValueParameter(MAX_FLUSH_DURATION_KEY, Integer.class);
 

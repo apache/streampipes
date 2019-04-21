@@ -42,6 +42,7 @@ public class InfluxDbParameters extends EventSinkBindingParams {
       Integer batchSize,
       Integer flushDuration) {
     super(graph);
+
     this.influxDbHost = influxDbHost;
     this.influxDbPort = influxDbPort;
     this.databaseName = databaseName;
