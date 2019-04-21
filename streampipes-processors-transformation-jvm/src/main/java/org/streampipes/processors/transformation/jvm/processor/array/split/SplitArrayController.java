@@ -24,7 +24,6 @@ import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.processors.transformation.jvm.config.TransformationJvmConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -34,6 +33,7 @@ import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -50,7 +50,7 @@ public class SplitArrayController extends StandaloneEventProcessingDeclarer<Spli
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.split-array", "Split Array", "")
             .withLocales(Locales.EN)
-            .iconUrl(TransformationJvmConfig.getIconUrl("splitarray"))
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
                             Labels.withId(KEEP_PROPERTIES_ID),

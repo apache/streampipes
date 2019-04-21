@@ -29,7 +29,7 @@ import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OntologyProperties;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.sinks.brokers.jvm.config.BrokersJvmConfig;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
@@ -45,7 +45,7 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.streampipes.sinks.brokers.jvm.jms")
             .withLocales(Locales.EN)
-            .iconUrl(BrokersJvmConfig.getIconUrl("jms_logo"))
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())

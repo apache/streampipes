@@ -25,6 +25,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -46,7 +47,7 @@ public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDete
     return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.peak-detection")
             .category(DataProcessorType.ALGORITHM)
             .withLocales(Locales.EN)
-            .iconUrl(PatternDetectionFlinkConfig.getIconUrl("peak-detection-icon"))
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
                             .numberReq(),
                     Labels.withId(VALUE_TO_OBSERVE), PropertyScope.MEASUREMENT_PROPERTY)

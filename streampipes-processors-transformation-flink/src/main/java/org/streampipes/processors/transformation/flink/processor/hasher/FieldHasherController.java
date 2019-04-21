@@ -20,7 +20,6 @@ package org.streampipes.processors.transformation.flink.processor.hasher;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.processors.transformation.flink.config.TransformationFlinkConfig;
 import org.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithmType;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -32,6 +31,7 @@ import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -44,12 +44,12 @@ public class FieldHasherController extends FlinkDataProcessorDeclarer<FieldHashe
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.fieldhasher")
             .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
                             (HASH_PROPERTIES), PropertyScope.NONE)
                     .build())
-            .iconUrl(TransformationFlinkConfig.getIconUrl("field-hasher-icon"))
             .requiredSingleValueSelection(Labels.withId(HASH_ALGORITHM),
                     Options.from("SHA1", "SHA2", "MD5"))
             .outputStrategy(OutputStrategies.keep())

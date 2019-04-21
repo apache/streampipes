@@ -22,8 +22,13 @@ import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.streampipes.sdk.helpers.*;
-import org.streampipes.sinks.brokers.jvm.config.BrokersJvmConfig;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
+import org.streampipes.sdk.helpers.OntologyProperties;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
@@ -42,7 +47,7 @@ public class RabbitMqController extends StandaloneEventSinkDeclarer<RabbitMqPara
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.streampipes.sinks.brokers.jvm.rabbitmq")
             .withLocales(Locales.EN)
-            .iconUrl(BrokersJvmConfig.getIconUrl("rabbitmq-icon"))
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())

@@ -28,6 +28,7 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
@@ -39,6 +40,7 @@ public class RestController extends StandaloneEventSinkDeclarer<RestParameters> 
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.streampipes.sinks.brokers.jvm.rest")
             .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())

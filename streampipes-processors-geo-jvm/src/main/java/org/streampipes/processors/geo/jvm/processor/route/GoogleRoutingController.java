@@ -31,6 +31,7 @@ import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -47,6 +48,7 @@ public class GoogleRoutingController extends StandaloneEventProcessingDeclarer<G
     return ProcessingElementBuilder.create("org.streampipes.processors.geo.jvm.google-routing")
             .iconUrl(GeoJvmConfig.iconBaseUrl + "Map_Icon_HQ.png")
             .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(
                     StreamRequirementsBuilder.create()
                             .requiredPropertyWithUnaryMapping(

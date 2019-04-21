@@ -26,7 +26,15 @@ import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
+import org.streampipes.sdk.helpers.Options;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -36,70 +44,70 @@ import java.util.List;
 public class TimestampExtractorController extends StandaloneEventProcessingDeclarer<TimestampExtractorParameters>
         implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
-    public final static String TIMESTAMP_FIELD = "timestampField";
-    public final static String SELECTED_OUTPUT_FIELDS = "selectedOutputFields";
+  public final static String TIMESTAMP_FIELD = "timestampField";
+  public final static String SELECTED_OUTPUT_FIELDS = "selectedOutputFields";
 
 
-    @Override
-    public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.processor.timestampextractor")
-                .withLocales(Locales.EN)
-            //    .iconUrl(TransformationJvmConfig.getIconUrl())
-                .requiredStream(
-                        StreamRequirementsBuilder.create()
-                        .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                    Labels.withId(TIMESTAMP_FIELD), PropertyScope.NONE)
-                                .build())
-                .requiredMultiValueSelection(Labels.withId(SELECTED_OUTPUT_FIELDS),
-                        Options.from(OutputFields.YEAR.toString(), OutputFields.MONTH.toString(), OutputFields.DAY.toString(), OutputFields.HOUR.toString(),
-                                OutputFields.MINUTE.toString(), OutputFields.SECOND.toString(), OutputFields.WEEKDAY.toString()))
-                .outputStrategy(OutputStrategies.customTransformation())
-                .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka())
-                .build();
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.processor.timestampextractor")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION)
+            .requiredStream(
+                    StreamRequirementsBuilder.create()
+                            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                                    Labels.withId(TIMESTAMP_FIELD), PropertyScope.NONE)
+                            .build())
+            .requiredMultiValueSelection(Labels.withId(SELECTED_OUTPUT_FIELDS),
+                    Options.from(OutputFields.YEAR.toString(), OutputFields.MONTH.toString(), OutputFields.DAY.toString(), OutputFields.HOUR.toString(),
+                            OutputFields.MINUTE.toString(), OutputFields.SECOND.toString(), OutputFields.WEEKDAY.toString()))
+            .outputStrategy(OutputStrategies.customTransformation())
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .supportedProtocols(SupportedProtocols.kafka())
+            .build();
+  }
+
+  @Override
+  public ConfiguredEventProcessor<TimestampExtractorParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+    String timestampField = extractor.mappingPropertyValue(TIMESTAMP_FIELD);
+    List<String> selectedMultiValue = extractor.selectedMultiValues(SELECTED_OUTPUT_FIELDS, String.class);
+
+    TimestampExtractorParameters params = new TimestampExtractorParameters(graph, timestampField, selectedMultiValue);
+    return new ConfiguredEventProcessor<>(params, TimestampExtractor::new);
+  }
+
+  @Override
+  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement, ProcessingElementParameterExtractor extractor) throws SpRuntimeException {
+    EventSchema eventSchema = processingElement.getInputStreams().get(0).getEventSchema();
+
+    List<String> selectedOutputField = extractor.selectedMultiValues(SELECTED_OUTPUT_FIELDS, String.class);
+
+    for (String field : selectedOutputField) {
+      if (field.equals(OutputFields.YEAR.toString())) {
+        eventSchema.addEventProperty(EpProperties.numberEp(Labels.from("timestampYear", "Timestamp Year", ""), "timestampYear", SO.Number));
+      }
+      if (field.equals(OutputFields.MONTH.toString())) {
+        eventSchema.addEventProperty(EpProperties.numberEp(Labels.from("timestampMonth", "Timestamp Month", ""), "timestampMonth", SO.Number));
+      }
+      if (field.equals(OutputFields.DAY.toString())) {
+        eventSchema.addEventProperty(EpProperties.numberEp(Labels.from("timestampDay", "Timestamp Day", ""), "timestampDay", SO.Number));
+      }
+      if (field.equals(OutputFields.HOUR.toString())) {
+        eventSchema.addEventProperty(EpProperties.numberEp(Labels.from("timestampHour", "Timestamp Hour", ""), "timestampHour", SO.Number));
+      }
+      if (field.equals(OutputFields.MINUTE.toString())) {
+        eventSchema.addEventProperty(EpProperties.numberEp(Labels.from("timestampMinute", "Timestamp Minute", ""), "timestampMinute", SO.Number));
+      }
+      if (field.equals(OutputFields.SECOND.toString())) {
+        eventSchema.addEventProperty(EpProperties.numberEp(Labels.from("timestampSecond", "Timestamp Second", ""), "timestampSecond", SO.Number));
+      }
+      if (field.equals(OutputFields.WEEKDAY.toString())) {
+        eventSchema.addEventProperty(EpProperties.stringEp(Labels.from("timestampWeekday", "Timestamp Weekday", ""), "timestampWeekday", SO.Text));
+      }
     }
 
-    @Override
-    public ConfiguredEventProcessor<TimestampExtractorParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
-        String timestampField = extractor.mappingPropertyValue(TIMESTAMP_FIELD);
-        List<String> selectedMultiValue = extractor.selectedMultiValues(SELECTED_OUTPUT_FIELDS, String.class);
 
-        TimestampExtractorParameters params = new TimestampExtractorParameters(graph, timestampField, selectedMultiValue);
-        return new ConfiguredEventProcessor<>(params, TimestampExtractor::new);
-    }
-
-    @Override
-    public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement, ProcessingElementParameterExtractor extractor) throws SpRuntimeException {
-        EventSchema eventSchema = processingElement.getInputStreams().get(0).getEventSchema();
-
-        List<String> selectedOutputField = extractor.selectedMultiValues(SELECTED_OUTPUT_FIELDS, String.class);
-
-        for (String field : selectedOutputField) {
-            if(field.equals(OutputFields.YEAR.toString())) {
-                eventSchema.addEventProperty(EpProperties.numberEp(Labels.from("timestampYear", "Timestamp Year", ""), "timestampYear", SO.Number));
-            }
-            if(field.equals(OutputFields.MONTH.toString())) {
-                eventSchema.addEventProperty(EpProperties.numberEp(Labels.from("timestampMonth", "Timestamp Month", ""), "timestampMonth", SO.Number));
-            }
-            if(field.equals(OutputFields.DAY.toString())) {
-                eventSchema.addEventProperty(EpProperties.numberEp(Labels.from("timestampDay", "Timestamp Day", ""), "timestampDay", SO.Number));
-            }
-            if(field.equals(OutputFields.HOUR.toString())) {
-                eventSchema.addEventProperty(EpProperties.numberEp(Labels.from("timestampHour", "Timestamp Hour", ""), "timestampHour", SO.Number));
-            }
-            if(field.equals(OutputFields.MINUTE.toString())) {
-                eventSchema.addEventProperty(EpProperties.numberEp(Labels.from("timestampMinute", "Timestamp Minute", ""), "timestampMinute", SO.Number));
-            }
-            if(field.equals(OutputFields.SECOND.toString())) {
-                eventSchema.addEventProperty(EpProperties.numberEp(Labels.from("timestampSecond", "Timestamp Second", ""), "timestampSecond", SO.Number));
-            }
-            if(field.equals(OutputFields.WEEKDAY.toString())) {
-                eventSchema.addEventProperty(EpProperties.stringEp(Labels.from("timestampWeekday", "Timestamp Weekday", ""), "timestampWeekday", SO.Text));
-            }
-        }
-
-
-        return eventSchema;
-    }
+    return eventSchema;
+  }
 
 }

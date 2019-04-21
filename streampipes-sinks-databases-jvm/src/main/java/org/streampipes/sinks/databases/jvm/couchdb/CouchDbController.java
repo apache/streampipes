@@ -27,7 +27,7 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.sinks.databases.jvm.config.DatabasesJvmConfig;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
@@ -43,8 +43,8 @@ public class CouchDbController  extends StandaloneEventSinkDeclarer<CouchDbParam
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.streampipes.sinks.databases.jvm.couchdb")
             .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(DataSinkType.STORAGE)
-            .iconUrl(DatabasesJvmConfig.getIconUrl("couchdb_icon"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())

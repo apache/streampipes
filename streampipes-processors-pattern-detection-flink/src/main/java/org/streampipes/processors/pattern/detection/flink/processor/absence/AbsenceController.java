@@ -10,6 +10,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -24,6 +25,8 @@ public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParamet
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.absence")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION)
             .category(DataProcessorType.PATTERN_DETECT)
             .requiredStream(StreamRequirementsBuilder
                     .create()

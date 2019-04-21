@@ -28,7 +28,7 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.sinks.notifications.jvm.config.SinksNotificationsJvmConfig;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
@@ -43,8 +43,8 @@ public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.streampipes.sinks.notifications.jvm.email")
             .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(DataSinkType.NOTIFICATION)
-            .iconUrl(SinksNotificationsJvmConfig.getIconUrl("email"))
             .requiredTextParameter(Labels.withId(TO_EMAIL_ADRESS))
             .requiredTextParameter(Labels.withId(EMAIL_SUBJECT))
             .requiredStream(StreamRequirementsBuilder

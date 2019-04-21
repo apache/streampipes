@@ -28,6 +28,7 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.sinks.databases.flink.config.DatabasesFlinkConfig;
 import org.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
@@ -41,8 +42,8 @@ public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearch
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.streampipes.sinks.databases.flink.elasticsearch")
             .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(DataSinkType.STORAGE)
-            .iconUrl(DatabasesFlinkConfig.getIconUrl("elasticsearch_icon"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),

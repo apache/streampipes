@@ -24,6 +24,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -38,7 +39,7 @@ public class BoilerplateController extends FlinkDataProcessorDeclarer<Boilerplat
     public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.processor.boilerplate")
                 .withLocales(Locales.EN)
-                .iconUrl(TransformationFlinkConfig.getIconUrl("Boilerplate_icon"))
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),

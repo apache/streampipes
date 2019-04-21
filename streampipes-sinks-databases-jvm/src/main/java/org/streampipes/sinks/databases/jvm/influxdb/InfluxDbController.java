@@ -28,7 +28,7 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.sinks.databases.jvm.config.DatabasesJvmConfig;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
@@ -49,8 +49,8 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.streampipes.sinks.databases.jvm.influxdb")
             .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(DataSinkType.STORAGE)
-            .iconUrl(DatabasesJvmConfig.getIconUrl("influx"))
             .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
                     EpRequirements.timestampReq(),
                     Labels.withId(TIMESTAMP_MAPPING_KEY),

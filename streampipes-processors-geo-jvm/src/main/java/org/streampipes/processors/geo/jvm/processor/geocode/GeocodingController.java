@@ -56,7 +56,7 @@ public class GeocodingController extends StandaloneEventProcessingDeclarer<Geoco
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.geo.jvm.geocoder")
             .iconUrl(GeoJvmConfig.iconBaseUrl + "Location_Icon_HQ.png")
-            .withAssets(Assets.DOCUMENTATION)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .withLocales(Locales.EN)
             .requiredStream(
                     StreamRequirementsBuilder.create()

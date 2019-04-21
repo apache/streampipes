@@ -9,6 +9,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -26,7 +27,7 @@ public class AndController extends FlinkDataProcessorDeclarer<AndParameters> {
     return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.and")
             .category(DataProcessorType.PATTERN_DETECT)
             .withLocales(Locales.EN)
-            .iconUrl(PatternDetectionFlinkConfig.getIconUrl("And_Icon"))
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),

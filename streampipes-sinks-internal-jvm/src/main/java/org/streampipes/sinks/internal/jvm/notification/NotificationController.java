@@ -27,7 +27,7 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
@@ -40,8 +40,8 @@ public class NotificationController extends StandaloneEventSinkDeclarer<Notifica
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.streampipes.sinks.internal.jvm.notification")
             .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(DataSinkType.NOTIFICATION)
-            .iconUrl(SinksInternalJvmConfig.getIconUrl("notification_icon"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())

@@ -23,8 +23,12 @@ import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.streampipes.sdk.helpers.*;
-import org.streampipes.sinks.notifications.jvm.config.SinksNotificationsJvmConfig;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
@@ -38,8 +42,8 @@ public class OneSignalController extends StandaloneEventSinkDeclarer<OneSignalPa
     public DataSinkDescription declareModel() {
         return DataSinkBuilder.create("org.streampipes.sinks.notifications.jvm.onesignal")
                 .withLocales(Locales.EN)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .category(DataSinkType.NOTIFICATION)
-                .iconUrl(SinksNotificationsJvmConfig.getIconUrl("one_signal"))
                 .requiredStream(StreamRequirementsBuilder
                         .create()
                         .requiredProperty(EpRequirements.anyProperty())

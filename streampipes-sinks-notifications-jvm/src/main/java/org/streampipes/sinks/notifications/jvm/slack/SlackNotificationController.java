@@ -28,6 +28,7 @@ import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.sinks.notifications.jvm.config.ConfigKeys;
 import org.streampipes.sinks.notifications.jvm.config.SinksNotificationsJvmConfig;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
@@ -46,8 +47,8 @@ public class SlackNotificationController extends StandaloneEventSinkDeclarer<Sla
 
     return DataSinkBuilder.create("org.streampipes.sinks.notifications.jvm.slack")
             .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(DataSinkType.NOTIFICATION)
-            .iconUrl(SinksNotificationsJvmConfig.getIconUrl("slack_icon"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())

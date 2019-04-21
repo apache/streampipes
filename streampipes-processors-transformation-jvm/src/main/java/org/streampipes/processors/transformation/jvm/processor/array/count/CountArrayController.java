@@ -20,7 +20,6 @@ package org.streampipes.processors.transformation.jvm.processor.array.count;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.processors.transformation.jvm.config.TransformationJvmConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -31,6 +30,7 @@ import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -44,7 +44,7 @@ public class CountArrayController extends StandaloneEventProcessingDeclarer<Coun
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.count-array")
             .withLocales(Locales.EN)
-            .iconUrl(TransformationJvmConfig.getIconUrl("countarray"))
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(
                     StreamRequirementsBuilder.create()
                             .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(),

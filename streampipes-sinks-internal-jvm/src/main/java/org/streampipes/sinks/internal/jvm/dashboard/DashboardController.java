@@ -19,14 +19,14 @@ package org.streampipes.sinks.internal.jvm.dashboard;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
-import org.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.streampipes.sdk.helpers.Locales;
-import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
@@ -36,12 +36,12 @@ public class DashboardController extends StandaloneEventSinkDeclarer<DashboardPa
     public DataSinkDescription declareModel() {
         return DataSinkBuilder.create("org.streampipes.sinks.internal.jvm.dashboard")
                 .withLocales(Locales.EN)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .category(DataSinkType.VISUALIZATION_CHART)
                 .requiredStream(StreamRequirementsBuilder
                         .create()
                         .requiredProperty(EpRequirements.anyProperty())
                         .build())
-                .iconUrl(SinksInternalJvmConfig.getIconUrl("dashboard-icon"))
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
                 .build();

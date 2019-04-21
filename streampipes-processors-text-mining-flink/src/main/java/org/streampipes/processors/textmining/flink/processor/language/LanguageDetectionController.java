@@ -24,37 +24,33 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 public class LanguageDetectionController extends FlinkDataProcessorDeclarer<LanguageDetectionParameters> {
-
-  private static final String RESOURCE_ID = "strings.languagedetection";
-  private static final String PE_ID = "org.streampipes.processors.textmining.flink.languagedetection";
 
   private static final String DETECTION_FIELD_KEY = "detectionField";
   private static final String LANGUAGE_KEY = "language";
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create(getLabel(PE_ID))
+    return ProcessingElementBuilder.create("org.streampipes.processors.textmining.flink.languagedetection")
             .category(DataProcessorType.ENRICH_TEXT)
+            .withAssets(Assets.DOCUMENTATION)
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(
                             EpRequirements.stringReq(),
-                            getLabel(DETECTION_FIELD_KEY),
+                            Labels.withId(DETECTION_FIELD_KEY),
                             PropertyScope.NONE)
                     .build())
             .outputStrategy(OutputStrategies.append(EpProperties.stringEp(
-                    getLabel(LANGUAGE_KEY),
+                    Labels.withId(LANGUAGE_KEY),
                     "language",
                     "http://schema.org/language")))
             .build();
-  }
-
-  private Label getLabel(String id) {
-    return Labels.fromResources(RESOURCE_ID, id);
   }
 
   @Override

@@ -32,6 +32,7 @@ import org.streampipes.sdk.builder.PropertyRequirementsBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.units.UnitProvider;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -49,10 +50,9 @@ public class MeasurementUnitConverterController extends
 
   @Override
   public DataProcessorDescription declareModel() {
-
-
     return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.measurement-unit-converter")
             .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .iconUrl(TransformationFlinkConfig.getIconUrl("unit_conversion"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
