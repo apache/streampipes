@@ -23,6 +23,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -37,7 +38,7 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
     return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.numericalfilter")
             .category(DataProcessorType.FILTER)
             .withLocales(Locales.EN)
-            .iconUrl("Numerical_Filter_Icon_HQ")
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),

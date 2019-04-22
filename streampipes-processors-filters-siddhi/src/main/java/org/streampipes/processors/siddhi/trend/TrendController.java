@@ -20,7 +20,6 @@ import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.processors.siddhi.config.FilterSiddhiConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -31,6 +30,7 @@ import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -46,7 +46,7 @@ public class TrendController extends StandaloneEventProcessingDeclarer<TrendPara
         return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.increase")
                 .withLocales(Locales.EN)
                 .category(DataProcessorType.PATTERN_DETECT)
-                .iconUrl(FilterSiddhiConfig.getIconUrl("increase-icon"))
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .requiredStream(StreamRequirementsBuilder.create()
                         .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId
                                 (Mapping), PropertyScope.MEASUREMENT_PROPERTY)

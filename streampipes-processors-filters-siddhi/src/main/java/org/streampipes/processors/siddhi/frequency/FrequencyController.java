@@ -23,6 +23,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -37,6 +38,7 @@ public class FrequencyController extends StandaloneEventProcessingDeclarer<Frequ
     return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.frequency")
             .category(DataProcessorType.FILTER)
             .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())

@@ -29,6 +29,7 @@ import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -44,7 +45,7 @@ public class StreamStopController extends StandaloneEventProcessingDeclarer<Stre
     return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.stop")
             .withLocales(Locales.EN)
             .category(DataProcessorType.FILTER)
-            .iconUrl("Numerical_Filter_Icon_HQ")
+            .withAssets(Assets.DOCUMENTATION)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
