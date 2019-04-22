@@ -1,4 +1,4 @@
-## Numerical Filter
+## Language Detection
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Detects the language of a written text.
 Add a detailed description here
 
 ***

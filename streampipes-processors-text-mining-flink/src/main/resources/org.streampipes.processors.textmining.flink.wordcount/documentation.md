@@ -1,4 +1,4 @@
-## Numerical Filter
+## Word Count
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Counts words on continuous text-based streams
 Add a detailed description here
 
 ***

@@ -1,4 +1,4 @@
-## Numerical Filter
+## Count Array
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+This processor takes an array of event properties counts them and appends the result to the event
 Add a detailed description here
 
 ***

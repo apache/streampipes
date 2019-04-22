@@ -1,4 +1,4 @@
-## Numerical Filter
+## InfluxDB
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Stores events in an InfluxDB.
 Add a detailed description here
 
 ***

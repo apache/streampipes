@@ -1,4 +1,4 @@
-## Numerical Filter
+## Value Changed
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+This processor sends out an event everytime a specific object changes. It also adds a timestamp in ms from the system time.
 Add a detailed description here
 
 ***

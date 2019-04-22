@@ -1,4 +1,4 @@
-## Numerical Filter
+## REST Publisher
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Posts events to a REST interface
 Add a detailed description here
 
 ***

@@ -1,4 +1,4 @@
-## Numerical Filter
+## And
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Detects whether an event co-occurs with another event within a given time.
 Add a detailed description here
 
 ***

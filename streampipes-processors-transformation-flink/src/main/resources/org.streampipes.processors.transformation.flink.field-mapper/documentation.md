@@ -1,4 +1,4 @@
-## Numerical Filter
+## Field Mapper
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Replaces one or more field with a new field and computes a hash value of these fields
 Add a detailed description here
 
 ***

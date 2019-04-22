@@ -1,4 +1,4 @@
-## Numerical Filter
+## Absence
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Detects whether an event does not arrive within a specified time after the occurrence of another event.
 Add a detailed description here
 
 ***

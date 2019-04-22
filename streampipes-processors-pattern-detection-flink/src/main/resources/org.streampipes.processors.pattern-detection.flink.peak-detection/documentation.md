@@ -1,4 +1,4 @@
-## Numerical Filter
+## Peak Detection
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Detect peaks in time series data
 Add a detailed description here
 
 ***

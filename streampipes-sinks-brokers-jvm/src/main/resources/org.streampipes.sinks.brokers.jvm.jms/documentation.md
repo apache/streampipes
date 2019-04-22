@@ -1,4 +1,4 @@
-## Numerical Filter
+## JMS Publisher
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Publishes events to a JMS topic
 Add a detailed description here
 
 ***

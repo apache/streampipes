@@ -1,4 +1,4 @@
-## Numerical Filter
+## Sequence Detection
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Merges events from two event streams, when the top event arrives first and then the bottom event
 Add a detailed description here
 
 ***

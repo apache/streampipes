@@ -1,4 +1,4 @@
-## Numerical Filter
+## RabbitMQ Publisher
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Forwards events to a RabbitMQ broker
 Add a detailed description here
 
 ***

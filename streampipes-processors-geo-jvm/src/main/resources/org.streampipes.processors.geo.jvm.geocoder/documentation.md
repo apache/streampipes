@@ -1,4 +1,4 @@
-## Numerical Filter
+## Geocoder
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Geocodes a location based on given street, address and street number
 Add a detailed description here
 
 ***

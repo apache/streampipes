@@ -1,4 +1,4 @@
-## Numerical Filter
+## Email Notification
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Email bot to send notifications emails
 Add a detailed description here
 
 ***

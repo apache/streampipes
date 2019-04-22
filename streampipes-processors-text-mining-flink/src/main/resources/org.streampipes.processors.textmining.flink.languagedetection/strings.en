@@ -1,5 +1,5 @@
-languagedetection.title=Language Detection
-languagedetection.description=Detects the language of a written text.
+org.streampipes.processors.textmining.flink.languagedetection.title=Language Detection
+org.streampipes.processors.textmining.flink.languagedetection.description=Detects the language of a written text.
 
 detectionField.title=Field Selection
 detectionField.description=Specifies the field where the language detection should be applied upon.

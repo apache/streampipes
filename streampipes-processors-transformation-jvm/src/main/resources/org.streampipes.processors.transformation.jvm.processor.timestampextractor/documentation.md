@@ -1,4 +1,4 @@
-## Numerical Filter
+## Timestamp Extractor
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+This processor extracts a time stamp into the individual time fields (e.g. day field, hour field, ....)
 Add a detailed description here
 
 ***

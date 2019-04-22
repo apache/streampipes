@@ -1,4 +1,4 @@
-## Numerical Filter
+## Calculate Duration
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+This processor calculates the duration for a given stream with a start timestamp and an end timestamp.
 Add a detailed description here
 
 ***

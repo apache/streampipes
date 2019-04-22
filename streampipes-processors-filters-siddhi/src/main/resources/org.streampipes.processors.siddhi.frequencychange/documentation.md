@@ -1,4 +1,4 @@
-## Numerical Filter
+## Frequency Change
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Detects when the frequency of the event stream changes
 Add a detailed description here
 
 ***

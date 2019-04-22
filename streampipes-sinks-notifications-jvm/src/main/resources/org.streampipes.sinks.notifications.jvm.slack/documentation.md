@@ -1,4 +1,4 @@
-## Numerical Filter
+## Slack Notification
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Slack bot to send notifications directly into your slack
 Add a detailed description here
 
 ***

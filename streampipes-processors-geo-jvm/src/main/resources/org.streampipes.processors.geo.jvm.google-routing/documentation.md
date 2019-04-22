@@ -1,4 +1,4 @@
-## Numerical Filter
+## Google Routing
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Uses the Google routing service to calculate a route from start to destination
 Add a detailed description here
 
 ***

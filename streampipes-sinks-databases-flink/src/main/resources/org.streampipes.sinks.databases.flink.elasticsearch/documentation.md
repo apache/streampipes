@@ -1,4 +1,4 @@
-## Numerical Filter
+## Elasticsearch
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Stores data in an elasticsearch cluster
 Add a detailed description here
 
 ***

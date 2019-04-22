@@ -1,4 +1,4 @@
-## Numerical Filter
+## Field Converter
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Converts a string value to a number data type
 Add a detailed description here
 
 ***

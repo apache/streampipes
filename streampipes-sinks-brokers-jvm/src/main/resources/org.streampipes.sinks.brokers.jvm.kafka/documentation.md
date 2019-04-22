@@ -1,4 +1,4 @@
-## Numerical Filter
+## Kafka Publisher
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Forwards an event to a Kafka Broker
 Add a detailed description here
 
 ***

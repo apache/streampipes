@@ -48,7 +48,7 @@ public class SplitArrayController extends StandaloneEventProcessingDeclarer<Spli
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.split-array", "Split Array", "")
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.split-array")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()

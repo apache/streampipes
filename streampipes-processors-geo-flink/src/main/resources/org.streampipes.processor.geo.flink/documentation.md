@@ -1,4 +1,4 @@
-## Numerical Filter
+## Spatial Grid Enrichment
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Groups spatial events into cells of a given size
 Add a detailed description here
 
 ***

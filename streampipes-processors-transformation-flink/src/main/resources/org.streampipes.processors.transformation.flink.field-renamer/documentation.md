@@ -1,4 +1,4 @@
-## Numerical Filter
+## Field Renamer
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Replaces the runtime name of an event property with a custom defined name. Useful for data ingestion purposes where a specific event schema is needed.
 Add a detailed description here
 
 ***

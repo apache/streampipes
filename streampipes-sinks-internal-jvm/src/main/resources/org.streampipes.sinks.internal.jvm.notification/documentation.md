@@ -1,4 +1,4 @@
-## Numerical Filter
+## Notification
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Displays a notification in the UI panel
 Add a detailed description here
 
 ***

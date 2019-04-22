@@ -1,4 +1,4 @@
-## Numerical Filter
+## Statistics Summary
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Calculate simple descriptive summary statistics
 Add a detailed description here
 
 ***

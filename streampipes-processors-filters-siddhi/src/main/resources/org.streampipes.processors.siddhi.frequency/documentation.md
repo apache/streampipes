@@ -1,4 +1,4 @@
-## Numerical Filter
+## Frequency Calculation
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Calculates the frequency of the event stream
 Add a detailed description here
 
 ***

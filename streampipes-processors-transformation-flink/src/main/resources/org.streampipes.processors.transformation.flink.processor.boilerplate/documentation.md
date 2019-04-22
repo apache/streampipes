@@ -1,4 +1,4 @@
-## Numerical Filter
+## Boilerplate Removal
 
 <p align="center"> 
     <img src="icon.png" width="150px;"/>
@@ -8,7 +8,7 @@
 
 ## Description
 
-Numerical Filter Description
+Removes boilerplate and extract fulltext from HTML
 Add a detailed description here
 
 ***
