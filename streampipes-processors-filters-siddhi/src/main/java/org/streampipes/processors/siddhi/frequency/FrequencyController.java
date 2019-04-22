@@ -34,18 +34,16 @@ public class FrequencyController extends StandaloneEventProcessingDeclarer<Frequ
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.frequency", "Frequency Calculation",
-            "Calculates the frequency of the event stream")
+    return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.frequency")
             .category(DataProcessorType.FILTER)
-            .iconUrl("Numerical_Filter_Icon_HQ")
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
-            .requiredSingleValueSelection(Labels.from(TIME_UNIT, "Time Unit", "Specifies a unit for the time window of the " +
-                    "sequence. "), Options.from("sec", "min", "hrs"))
+            .requiredSingleValueSelection(Labels.withId(TIME_UNIT), Options.from("sec", "min", "hrs"))
             .outputStrategy(OutputStrategies.custom(true))
-            .requiredIntegerParameter(Labels.from(DURATION, "Time Window Length (Seconds)", "Specifies the size of the time window in seconds."))
+            .requiredIntegerParameter(Labels.withId(DURATION))
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();

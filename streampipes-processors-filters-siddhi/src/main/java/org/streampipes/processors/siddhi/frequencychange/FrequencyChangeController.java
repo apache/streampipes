@@ -35,21 +35,18 @@ public class FrequencyChangeController extends StandaloneEventProcessingDeclarer
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.frequencychange", "Frequency Change",
-            "Detects when the frequency of the event stream changes")
+    return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.frequencychange")
             .category(DataProcessorType.FILTER)
-            .iconUrl("Numerical_Filter_Icon_HQ")
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
-            .requiredSingleValueSelection(Labels.from(TIME_UNIT, "Time Unit", "Specifies a unit for the time window of the " +
-                    "sequence. "), Options.from("sec", "min", "hrs"))
-            .requiredIntegerParameter(Labels.from(INCREASE, "Percentage of Increase/Decrease",
-                        "Specifies the increase in percent (e.g., 100 indicates an increase by 100 " +
-                                "percent within the specified time window."), 0, 500, 1)
+            .requiredSingleValueSelection(Labels.withId(TIME_UNIT), Options.from("sec", "min",
+                    "hrs"))
+            .requiredIntegerParameter(Labels.withId(INCREASE), 0, 500, 1)
             .outputStrategy(OutputStrategies.custom(true))
-            .requiredIntegerParameter(Labels.from(DURATION, "Time Window Length (Seconds)", "Specifies the size of the time window in seconds."))
+            .requiredIntegerParameter(Labels.withId(DURATION))
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();

@@ -22,7 +22,13 @@ import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -30,12 +36,13 @@ import java.util.Arrays;
 
 public class StreamStopController extends StandaloneEventProcessingDeclarer<StreamStopParameters> {
 
-  private static final String DURATION = "duration";
-
+  private static final String Duration = "duration";
+  private static final String Message = "message";
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.stop", "Stream Stop Detection", "Triggers an event when the input data stream stops sending events")
+    return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.stop")
+            .withLocales(Locales.EN)
             .category(DataProcessorType.FILTER)
             .iconUrl("Numerical_Filter_Icon_HQ")
             .requiredStream(StreamRequirementsBuilder
@@ -45,11 +52,11 @@ public class StreamStopController extends StandaloneEventProcessingDeclarer<Stre
             .outputStrategy(OutputStrategies.fixed(
                     Arrays.asList(
                             EpProperties.timestampProperty("timestamp"),
-                            EpProperties.stringEp(new Label("message", "Message", "Message that stream stopped"), "message", "http://schema.org/text")
+                            EpProperties.stringEp(Labels.withId(Message),
+                                    "message", "http://schema.org/text")
                     )
-
             ))
-            .requiredIntegerParameter(Labels.from(DURATION, "Time Window Length (Seconds)", "Specifies the size of the time window in seconds."))
+            .requiredIntegerParameter(Labels.withId(Duration))
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
@@ -58,7 +65,7 @@ public class StreamStopController extends StandaloneEventProcessingDeclarer<Stre
   @Override
   public ConfiguredEventProcessor<StreamStopParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-    int duration = extractor.singleValueParameter(DURATION, Integer.class);
+    int duration = extractor.singleValueParameter(Duration, Integer.class);
 
     StreamStopParameters staticParam = new StreamStopParameters(graph, duration);
 

@@ -23,20 +23,21 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
 public class SequenceController extends StandaloneEventProcessingDeclarer<SequenceParameters> {
 
-  private static final String DURATION = "duration";
+  private static final String Duration = "duration";
 
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.sequence", "Sequence Detection",
-            "Merges events from two event streams, when the top event arrives first and then the bottom event")
+    return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.sequence")
             .category(DataProcessorType.FILTER)
-            .iconUrl("Numerical_Filter_Icon_HQ")
+            .withAssets(Assets.DOCUMENTATION)
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
@@ -46,7 +47,7 @@ public class SequenceController extends StandaloneEventProcessingDeclarer<Sequen
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
             .outputStrategy(OutputStrategies.custom(true))
-            .requiredIntegerParameter(Labels.from(DURATION, "Time Window Length (Seconds)", "Specifies the size of the time window in seconds."))
+            .requiredIntegerParameter(Labels.withId(Duration))
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
@@ -55,7 +56,7 @@ public class SequenceController extends StandaloneEventProcessingDeclarer<Sequen
   @Override
   public ConfiguredEventProcessor<SequenceParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-    int duration = extractor.singleValueParameter(DURATION, Integer.class);
+    int duration = extractor.singleValueParameter(Duration, Integer.class);
 
     SequenceParameters staticParam = new SequenceParameters(graph, duration);
 

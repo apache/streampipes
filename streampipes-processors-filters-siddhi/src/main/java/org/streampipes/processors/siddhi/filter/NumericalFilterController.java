@@ -34,18 +34,18 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.numericalfilter", "Numerical Filter", "Numerical Filter Description")
+    return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.numericalfilter")
             .category(DataProcessorType.FILTER)
+            .withLocales(Locales.EN)
             .iconUrl("Numerical_Filter_Icon_HQ")
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from(NUMBER_MAPPING, "Specifies the field name where the filter operation should" +
-                            " be applied " +
-                            "on.", ""), PropertyScope.NONE).build())
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                            Labels.withId(NUMBER_MAPPING), PropertyScope.NONE).build())
             .outputStrategy(OutputStrategies.keep())
-            .requiredSingleValueSelection(Labels.from(OPERATION, "Filter Operation", "Specifies the filter " +
-                    "operation that should be applied on the field"), Options.from("<", "<=", ">", ">=", "=="))
-            .requiredFloatParameter(Labels.from(VALUE, "Threshold value", "Specifies a threshold value."), NUMBER_MAPPING)
+            .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
+                    ">=", "=="))
+            .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING)
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();

@@ -1,0 +1,11 @@
+org.streampipes.processors.siddhi.frequencychange.title=Frequency Change
+org.streampipes.processors.siddhi.frequencychange.description=Detects when the frequency of the event stream changes
+
+duration.title=Time Window Length (Seconds)
+duration.description=Specifies the size of the time window in seconds.
+
+timeUnit.title=Time Unit
+timeUnit.description=Specifies a unit for the time window of the sequence.
+
+increase.title=Percentage of Increase/Decrease
+increase.description=Specifies the increase in percent (e.g., 100 indicates an increase by 100 percent within the specified time window.

@@ -24,32 +24,37 @@ import org.streampipes.processors.siddhi.config.FilterSiddhiConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
+import org.streampipes.sdk.helpers.Options;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
 public class TrendController extends StandaloneEventProcessingDeclarer<TrendParameters> {
 
+    private static final String Mapping = "mapping";
+    private static final String Increase = "increase";
+    private static final String Operation = "operation";
+    private static final String Duration = "duration";
 
     @Override
     public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("increase", "Trend",
-                "Detects the increase of a numerical field over a customizable time window. Example: A temperature value increases by 10 percent within 5 minutes.")
-
+        return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.increase")
+                .withLocales(Locales.EN)
                 .category(DataProcessorType.PATTERN_DETECT)
                 .iconUrl(FilterSiddhiConfig.getIconUrl("increase-icon"))
                 .requiredStream(StreamRequirementsBuilder.create()
-                        .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from
-                                ("mapping", "Value to observe", "Specifies the value that should be " +
-                                        "monitored."), PropertyScope.MEASUREMENT_PROPERTY)
+                        .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId
+                                (Mapping), PropertyScope.MEASUREMENT_PROPERTY)
                         .build())
-                .requiredSingleValueSelection(Labels.from("operation", "Increase/Decrease",
-                        "Specifies the type of operation the processor should perform."), Options
+                .requiredSingleValueSelection(Labels.withId(Operation), Options
                         .from("Increase", "Decrease"))
-                .requiredIntegerParameter(Labels.from("increase", "Percentage of Increase/Decrease",
-                        "Specifies the increase in percent (e.g., 100 indicates an increase by 100 " +
-                                "percent within the specified time window."), 0, 500, 1)
-                .requiredIntegerParameter(Labels.from("duration", "Time Window Length (Seconds)", "Specifies the size of the time window in seconds."))
+                .requiredIntegerParameter(Labels.withId(Increase), 0, 500, 1)
+                .requiredIntegerParameter(Labels.withId(Duration))
                 .outputStrategy(OutputStrategies.custom())
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
@@ -59,10 +64,10 @@ public class TrendController extends StandaloneEventProcessingDeclarer<TrendPara
     @Override
     public ConfiguredEventProcessor<TrendParameters> onInvocation(DataProcessorInvocation
                                                                              invocationGraph, ProcessingElementParameterExtractor extractor) {
-        String operation = extractor.selectedSingleValue( "operation", String.class);
-        int increase = extractor.singleValueParameter("increase", Integer.class);
-        int duration = extractor.singleValueParameter("duration", Integer.class);
-        String mapping = extractor.mappingPropertyValue("mapping");
+        String operation = extractor.selectedSingleValue( Operation, String.class);
+        int increase = extractor.singleValueParameter(Increase, Integer.class);
+        int duration = extractor.singleValueParameter(Duration, Integer.class);
+        String mapping = extractor.mappingPropertyValue(Mapping);
         TrendParameters params = new TrendParameters(invocationGraph, getOperation(operation), increase, duration, mapping);
 
         return new ConfiguredEventProcessor<>(params, Trend::new);

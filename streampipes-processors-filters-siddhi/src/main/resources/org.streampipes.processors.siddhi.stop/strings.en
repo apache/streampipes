@@ -1,0 +1,8 @@
+org.streampipes.processors.siddhi.stop.title=Stream Stop Detection
+org.streampipes.processors.siddhi.stop.description=Triggers an event when the input data stream stops sending events
+
+message.title=Message
+message.description=Message that stream stopped
+
+duration.title=Time Window Length (Seconds)
+duration.description=Specifies the size of the time window in seconds.
