@@ -1,7 +1,7 @@
 ## Stream Stop Detection
 
 <p align="center"> 
-    <img src="icon.png" width="150px;"/>
+    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
 ***
