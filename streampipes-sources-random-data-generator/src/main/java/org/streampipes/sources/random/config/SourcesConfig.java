@@ -32,7 +32,8 @@ public enum SourcesConfig implements PeConfig {
 
   SourcesConfig() {
     config = SpConfig.getSpConfig(SERVICE_ID);
-    config.register(ConfigKeys.HOST, "pe-sources-random", "Hostname for the pe sources samples");
+    config.register(ConfigKeys.HOST, "sources-random-data-generator", "Hostname for the pe " +
+            "sources samples");
     config.register(ConfigKeys.PORT, 8090, "Port for the pe sources samples");
     config.register(ConfigKeys.KAFKA_HOST, "kafka", "Host for kafka of the pe sources samples project");
     config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the pe sources samples project");
