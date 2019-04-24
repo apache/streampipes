@@ -11,6 +11,7 @@ services:
       - SP_KAFKA_HOST=${SP_KAFKA_HOST}
     volumes:
       - ./config:/root/.streampipes
+      - ./config/assets:/streampipes-assets
       - ./config/RDF4J:/root/.RDF4J
     networks:
       spnet:
