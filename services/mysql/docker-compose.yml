@@ -1,0 +1,14 @@
+version: "2.0"
+services:
+  mysql:
+    image: mysql
+    volumes:
+      - ./config/mysql/data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      spnet:
