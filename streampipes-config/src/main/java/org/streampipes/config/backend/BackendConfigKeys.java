@@ -36,5 +36,10 @@ public class BackendConfigKeys {
   public static final String DATA_LAKE_HOST = "SP_DATA_LAKE_HOST";
   public static final String DATA_LAKE_PORT = "SP_DATA_LAKE_PORT";
 
+  public static final String INFLUX_PORT = "SP_INFLUX_PORT";
+  public static final String INFLUX_HOST = "SP_INFLUX_HOST";
+  public static final String INFLUX_DATA_BASE = "SP_INFLUX_DATA_BASE";
+
+
   public static final String SERVICE_NAME = "SP_SERVICE_NAME";
 }
