@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {AssetRestService} from './service/asset-rest.service';
 import {InfoResult} from './model/InfoResult';
-import {IndexInfo} from './model/IndexInfo';
 import {Observable} from 'rxjs/Observable';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
-import {MatPaginator, MatSnackBar, MatSort, MatTableDataSource} from '@angular/material';
+import {MatSnackBar, MatTableDataSource} from '@angular/material';
+import {HttpEventType} from '@angular/common/http';
 
 @Component({
     selector: 'app-asset',
@@ -15,23 +15,27 @@ import {MatPaginator, MatSnackBar, MatSort, MatTableDataSource} from '@angular/m
 export class AssetComponent implements OnInit {
 
     myControl = new FormControl();
-    indexInfos: IndexInfo[];
-    filteredIndexInfos: Observable<IndexInfo[]>;
+    infoResult: InfoResult[];
+    filteredIndexInfos: Observable<InfoResult[]>;
 
     displayedColumns: string[] = [];
     dataSource = new MatTableDataSource();
 
-    page: number;
+    page: number = 0;
+    pageSum: number = 0;
     itemsPerPage = 10;
-    selectedIndex: string;
+    selectedIndex: string = '';
+
+    downloadFormat: string = 'csv';
+    isDownloading: boolean = false;
 
     constructor(private restService: AssetRestService, private snackBar: MatSnackBar) {
 
     }
 
     ngOnInit(): void {
-        this.restService.getAllIndices().subscribe(res => {
-                this.indexInfos = res;
+        this.restService.getAllInfos().subscribe(res => {
+                this.infoResult = res;
                 this.filteredIndexInfos = this.myControl.valueChanges
                     .pipe(
                         startWith(''),
@@ -51,11 +55,12 @@ export class AssetComponent implements OnInit {
     }
 
     paging(page) {
-        this.restService.getDataPage(this, this.itemsPerPage, page).subscribe(
+        this.restService.getDataPage(this.selectedIndex, this.itemsPerPage, page).subscribe(
             res => {
                 if(res.events.length > 0) {
                     console.log(res);
                     this.page = res.page;
+                    this.pageSum = res.pageSum;
                     this.dataSource.data = res.events as [];
                     this.displayedColumns = Object.keys(res.events[0]);
                 } else {
@@ -64,26 +69,13 @@ export class AssetComponent implements OnInit {
             });
     }
 
-
-
-
-    selectIndex(index: string) {
-        /*this.restService.getDataPage(index, this.itemsPerPage, page).subscribe(
-            res => {
-                if(res.events.length > 0) {
-                    console.log(res)
-                    this.page = res.page;
-                    this.dataSource.data = res.events as [];
-                    this.displayedColumns = Object.keys(res.events[0]);
-                }
-            }
-        );*/
-        this.selectedIndex = index;
-        this.restService.getDataPageWithoutPage(index,this.itemsPerPage).subscribe(
+    loadData() {
+        this.restService.getDataPageWithoutPage(this.selectedIndex,this.itemsPerPage).subscribe(
             res => {
                 if(res.events.length > 0) {
                     console.log(res);
                     this.page = res.page;
+                    this.pageSum = res.pageSum;
                     this.dataSource.data = res.events as [];
                     this.displayedColumns = Object.keys(res.events[0]);
                 }
@@ -91,10 +83,48 @@ export class AssetComponent implements OnInit {
         );
     }
 
-    private _filter(value: string): IndexInfo[] {
+    selectIndex(index: string) {
+        this.selectedIndex = index;
+        this.loadData()
+    }
+
+    selectItemsPerPage(num) {
+        this.itemsPerPage = num;
+        this.loadData()
+    }
+
+    downloadData() {
+        this.isDownloading = true;
+        this.restService.getFile(this.selectedIndex, this.downloadFormat).subscribe(event => {
+            // progress
+            if (event.type === HttpEventType.DownloadProgress) {
+                console.log(event.loaded);
+            }
+
+            // finished
+            if (event.type === HttpEventType.Response) {
+                console.log(event);
+
+                this.isDownloading = false;
+
+                var element = document.createElement('a');
+                element.setAttribute('href', 'data:text/' + this.downloadFormat + ';charset=utf-8,' + encodeURIComponent(String(event.body)));
+
+                element.style.display = 'none';
+                document.body.appendChild(element);
+
+                element.click();
+
+                document.body.removeChild(element);
+
+            }
+        })
+    }
+
+    private _filter(value: string): InfoResult[] {
         const filterValue = value.toLowerCase();
 
-        return this.indexInfos.filter(option => option.indexName.toLowerCase().includes(filterValue));
+        return this.infoResult.filter(option => option.index.toLowerCase().includes(filterValue));
     }
 
     openSnackBar(message: string) {

@@ -9,29 +9,42 @@
     <div class="container-fluid">
             <div layout-padding>
                     <div class="assemblyOptions sp-blue-bg">
-                        <h4 style="display: initial">Select Index:</h4>
-                            <mat-form-field style="margin-top: -10px; margin-bottom: -20px; margin-left: 10px;">
-                                <input type="text" matInput  [formControl]="myControl" [matAutocomplete]="auto">
-                                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectIndex($event.option.value)">
-                                    <mat-option  *ngFor="let indexInfo of filteredIndexInfos | async" [value]="indexInfo.indexName">
-                                        {{indexInfo.indexName}}
-                                    </mat-option>
-                                </mat-autocomplete>
-                            </mat-form-field>
 
-                        <!--
-                       <button mat-icon-button (click)="loadIndex()">
-                            <mat-icon>
-                                autorenew
-                            </mat-icon>
-                        </button>
-                        -->
+                        <div fxLayout="row" fxLayoutAlign="space-between center" >
+                            <div>
+                                <h4 style="display: initial">Select Index:</h4>
+                                <mat-form-field style="margin-top: -10px; margin-bottom: -20px; margin-left: 10px;">
+                                    <input type="text" matInput  [formControl]="myControl" [matAutocomplete]="auto">
+                                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectIndex($event.option.value)">
+                                        <mat-option  *ngFor="let indexInfo of filteredIndexInfos | async" [value]="indexInfo.index">
+                                            {{indexInfo.index}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="selectedIndex != ''">
+                                <mat-radio-group layout="row" [(ngModel)]="downloadFormat">
+                                    <mat-radio-button value="json">
+                                        <b>JSON</b>
+                                    </mat-radio-button>
+                                    <mat-radio-button style="margin-left: 5px" value="csv">
+                                        <b>CSV</b>
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                                <button  *ngIf="!isDownloading" mat-icon-button matTooltip="Download data" (click)="downloadData()">
+                                    <mat-icon>
+                                        get_app
+                                    </mat-icon>
+                                </button>
+
+                                <mat-spinner *ngIf="isDownloading" [diameter]="40"></mat-spinner>
+
+                            </div>
+                        </div>
 
                     </div>
                 <div layout="row">
                     <div class="sp-blue-border">
-
-
 
 
                         <div style="margin-top: -15px;">
@@ -47,35 +60,36 @@
                                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
                             </table>
-                            <div>
-                                <button mat-icon-button (click)="previousPage()">
-                                    <mat-icon>keyboard_arrow_left</mat-icon>
-                                </button>
-                                Page: {{page}}
-                                <button mat-icon-button (click)="nextPage()">
-                                    <mat-icon>keyboard_arrow_right</mat-icon>
-                                </button>
+
+                            <div fxLayout="row" fxLayoutAlign=" center" *ngIf="selectedIndex != ''">
+                                <div>
+                                    <button mat-icon-button (click)="previousPage()">
+                                        <mat-icon>keyboard_arrow_left</mat-icon>
+                                    </button>
+                                    Page: {{page}} - {{pageSum}}
+                                    <button mat-icon-button (click)="nextPage()">
+                                        <mat-icon>keyboard_arrow_right</mat-icon>
+                                    </button>
+                                </div>
+
+                                <div>
+                                    Items per page:
+                                    <mat-form-field style="width: 40px; margin-top: 10px;" >
+                                        <mat-select [(ngModel)]="itemsPerPage" (valueChange)="selectItemsPerPage($event)">
+                                            <mat-option [value]=10 style="background-color: #FFFFFF">
+                                                10
+                                            </mat-option>
+                                            <mat-option [value]=25 style="background-color: #FFFFFF">
+                                                25
+                                            </mat-option>
+                                            <mat-option [value]=50 style="background-color: #FFFFFF">
+                                                50
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
                             </div>
-                        </div>
-
-
-
-                        <mat-divider></mat-divider>
-
-                        <div layout="row">
-                            <input
-                                    required
-                                    [(ngModel)]='myVar'
-                                    ngui-datetime-picker/>
-                            <mat-radio-group layout="row">
-                                <mat-radio-button value="json">
-                                    <b>JSON</b>
-                                </mat-radio-button>
-                                <mat-radio-button value="csv">
-                                    <b>CSV</b>
-                                </mat-radio-button>
-                            </mat-radio-group>
-                            <button mat-raised-button color="primary">Download</button>
                         </div>
 
                     </div>

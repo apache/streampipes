@@ -9,7 +9,7 @@ import {NguiDatetimePickerModule} from '@ngui/datetime-picker';
 import {AssetRestService} from './service/asset-rest.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
-import {MatSnackBarModule} from '@angular/material';
+import {MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
 
 
 @NgModule({
@@ -21,7 +21,8 @@ import {MatSnackBarModule} from '@angular/material';
         ReactiveFormsModule,
         FormsModule,
         CdkTableModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatProgressSpinnerModule,
     ],
     declarations: [
         AssetComponent,

@@ -1,3 +1,9 @@
 ::ng-deep .mat-form-field-underline {
     background-color: rgba(255, 255, 255, 0.8);
 }
+
+::ng-deep .mat-select-content{
+    width:2000px;
+    background-color: red;
+    font-size: 10px;
+}
