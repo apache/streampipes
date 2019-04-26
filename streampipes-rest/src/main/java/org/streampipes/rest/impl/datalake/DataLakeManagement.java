@@ -25,20 +25,15 @@ import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.core.CountRequest;
-import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.Scroll;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.rest.impl.datalake.model.DataResult;
 import org.streampipes.rest.impl.datalake.model.InfoResult;
-import org.streampipes.rest.impl.datalake.model.PageResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,19 +51,6 @@ public class DataLakeManagement {
     public DataResult getEvents(String index, String timestampRuntimeName, Long from, Long to) throws IOException {
         List<Map<String, Object>> events = getDataLakeData(index, timestampRuntimeName, from, to);
         DataResult dataResult = new DataResult(events.size(), events);
-        return dataResult;
-    }
-
-    public PageResult getEvents(String index, int itemsPerPage) throws IOException {
-        int page = getBiggestPageNumber(index, itemsPerPage);
-        List<Map<String, Object>> events = getDataLakeData(index, itemsPerPage, page);
-        PageResult dataResult = new PageResult(events.size(), events, page);
-        return dataResult;
-    }
-
-    public PageResult getEvents(String index, int itemsPerPage, int page) throws IOException {
-        List<Map<String, Object>> events = getDataLakeData(index, itemsPerPage, page);
-        PageResult dataResult = new PageResult(events.size(), events, page);
         return dataResult;
     }
 
@@ -131,47 +113,6 @@ public class DataLakeManagement {
         return result;
     }
 
-
-
-    public List<Map<String, Object>> getDataLakeData(String index, int itemsPerPage, int page) throws IOException {
-        List<Map<String, Object>> result = new ArrayList<>();
-        if(page < 0)
-            return result;
-
-        RestHighLevelClient client = getRestHighLevelClient();
-
-        //TODO remove?
-        //Count
-        CountRequest countRequest = new CountRequest(index);
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
-        countRequest.source(searchSourceBuilder);
-        CountResponse countResponse = client.count(countRequest, RequestOptions.DEFAULT);
-        Long numOfElements = countResponse.getCount();
-
-        if (numOfElements < page * itemsPerPage)
-            return result;
-
-
-        //Get num of elements
-        //check if page want new data
-        //if new data, get
-
-        SearchRequest searchRequest = new SearchRequest(index);
-        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        sourceBuilder.from(page * itemsPerPage);
-        sourceBuilder.size(itemsPerPage);
-        sourceBuilder.sort(new FieldSortBuilder("date").order(SortOrder.DESC));
-        searchRequest.source(sourceBuilder);
-
-        SearchResponse searchResponse = client.search(searchRequest);
-        for (SearchHit hit : searchResponse.getHits().getHits()) {
-            result.add(hit.getSourceAsMap());
-        }
-
-        return result;
-    }
-
     private RestHighLevelClient getRestHighLevelClient() {
         String host = BackendConfig.INSTANCE.getDatalakeHost();
         int port = BackendConfig.INSTANCE.getDatalakePort();
@@ -202,21 +143,5 @@ public class DataLakeManagement {
 
         return "Index: " + index + " did not exist!";
     }
-
-    private int getBiggestPageNumber(String index, int itemsPerPage) throws IOException {
-        RestHighLevelClient client = getRestHighLevelClient();
-
-        CountRequest countRequest = new CountRequest(index);
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
-        countRequest.source(searchSourceBuilder);
-        CountResponse countResponse = client.count(countRequest, RequestOptions.DEFAULT);
-        Long numOfElements = countResponse.getCount();
-
-        int page = (int) (numOfElements /  (long)itemsPerPage);
-
-        return page;
-    }
-
 
 }

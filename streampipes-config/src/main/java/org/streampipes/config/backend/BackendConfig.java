@@ -52,6 +52,9 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.DATA_LAKE_HOST, "elasticsearch", "The host of the data base used for the data lake");
     config.register(BackendConfigKeys.DATA_LAKE_PORT, 9200, "The port of the data base used for the data lake");
 
+    config.register(BackendConfigKeys.INFLUX_HOST, "influxdb", "The host of the influx data base");
+    config.register(BackendConfigKeys.INFLUX_PORT, 8086, "The hist of the influx data base");
+    config.register(BackendConfigKeys.INFLUX_DATA_BASE, "sp", "The influx data base name");
   }
 
   public String getBackendHost() {
@@ -150,12 +153,25 @@ public enum BackendConfig {
     return config.getInteger(BackendConfigKeys.DATA_LAKE_PORT);
   }
 
-
   public String getDataLakeUrl() {
     return getDatalakeHost() + ":" + getDatalakePort();
   }
 
+  public String getInfluxHost() {
+    return config.getString(BackendConfigKeys.INFLUX_HOST);
+  }
 
+  public int getInfluxPort() {
+    return config.getInteger(BackendConfigKeys.INFLUX_PORT);
+  }
+
+  public String getInfluxUrl() {
+    return "http://" + getInfluxHost() + ":" + getInfluxPort();
+  }
+
+  public String getInfluxDatabaseName() {
+    return config.getString(BackendConfigKeys.INFLUX_DATA_BASE);
+  }
 
 
 }
