@@ -1,0 +1,100 @@
+<div flex class="page-container page-container-padding" style="height: 1px">
+    <div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6; display: inline-block; width: 100%;" >
+        <div flex layout-fill layout="row" layout-align="start center"
+             style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+            <label style="font-size: 30px; padding-top: 10px;">Asset View</label>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+            <div layout-padding>
+                    <div class="assemblyOptions sp-blue-bg">
+
+                        <div fxLayout="row" fxLayoutAlign="space-between center" >
+                            <div>
+                                <h4 style="display: initial">Select Index:</h4>
+                                <mat-form-field style="margin-top: -10px; margin-bottom: -20px; margin-left: 10px;">
+                                    <input type="text" matInput  [formControl]="myControl" [matAutocomplete]="auto">
+                                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectIndex($event.option.value)">
+                                        <mat-option  *ngFor="let indexInfo of filteredIndexInfos | async" [value]="indexInfo.index">
+                                            {{indexInfo.index}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="selectedIndex != ''">
+                                <mat-radio-group layout="row" [(ngModel)]="downloadFormat">
+                                    <mat-radio-button value="json">
+                                        <b>JSON</b>
+                                    </mat-radio-button>
+                                    <mat-radio-button style="margin-left: 5px" value="csv">
+                                        <b>CSV</b>
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                                <button  *ngIf="!isDownloading" mat-icon-button matTooltip="Download data" (click)="downloadData()">
+                                    <mat-icon>
+                                        get_app
+                                    </mat-icon>
+                                </button>
+
+                                <mat-spinner *ngIf="isDownloading" [diameter]="40"></mat-spinner>
+
+                            </div>
+                        </div>
+
+                    </div>
+                <div layout="row">
+                    <div class="sp-blue-border">
+
+
+                        <div style="margin-top: -15px;">
+
+                            <table mat-table [dataSource]="dataSource" style="width: 100%; background: none;">
+
+                                <ng-container *ngFor="let element of displayedColumns" [cdkColumnDef]="element">
+                                    <th mat-header-cell *matHeaderCellDef><label style="font-size: large">{{element}}</label></th>
+                                    <td mat-cell *matCellDef="let row">{{row[element]}}</td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                            </table>
+
+                            <div fxLayout="row" fxLayoutAlign=" center" *ngIf="selectedIndex != ''">
+                                <div>
+                                    <button mat-icon-button (click)="previousPage()">
+                                        <mat-icon>keyboard_arrow_left</mat-icon>
+                                    </button>
+                                    Page: {{page}} - {{pageSum}}
+                                    <button mat-icon-button (click)="nextPage()">
+                                        <mat-icon>keyboard_arrow_right</mat-icon>
+                                    </button>
+                                </div>
+
+                                <div>
+                                    Items per page:
+                                    <mat-form-field style="width: 40px; margin-top: 10px;" >
+                                        <mat-select [(ngModel)]="itemsPerPage" (valueChange)="selectItemsPerPage($event)">
+                                            <mat-option [value]=10 style="background-color: #FFFFFF">
+                                                10
+                                            </mat-option>
+                                            <mat-option [value]=25 style="background-color: #FFFFFF">
+                                                25
+                                            </mat-option>
+                                            <mat-option [value]=50 style="background-color: #FFFFFF">
+                                                50
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+    </div>
+</div>
