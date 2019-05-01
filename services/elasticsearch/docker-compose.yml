@@ -1,6 +1,6 @@
 version: "2"
 services:
-  elasticsearch:      
+  elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3
     environment:
       - cluster.name=streampipes-cluster
@@ -15,8 +15,13 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - esdata1:/usr/share/elasticsearch/data
+      - elastic:/usr/share/elasticsearch/data
     networks:
       spnet:
 
+volumes:
+  elastic:
 
+networks:
+  spnet:
+    external: true

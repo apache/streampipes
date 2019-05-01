@@ -9,5 +9,14 @@ services:
 #    environment:
 #      PGDATA: /tmp
 #      PGDATA: /var/lib/postgresql/data
+    # volumes:
+    #   - postgres:/var/lib/postgresql/data
     networks:
       spnet:
+
+volumes:
+  postgres:
+    
+networks:
+  spnet:
+    external: true

@@ -5,13 +5,20 @@ services:
     ports:
       - "9092:9092"
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: ${SP_HOST} 
+      KAFKA_ADVERTISED_HOST_NAME: ${SP_HOST}
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_MESSAGE_MAX_BYTES: 5000012
       KAFKA_FETCH_MESSAGE_MAX_BYTES: 5000012
       KAFKA_REPLICA_FETCH_MAX_BYTES: 10000000
     volumes:
+      - kafka:/kafka
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       spnet:
- 
+
+volumes:
+  kafka:
+
+networks:
+  spnet:
+    external: true

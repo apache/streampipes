@@ -10,8 +10,14 @@ services:
     environment:
       - SP_KAFKA_HOST=${SP_KAFKA_HOST}
     volumes:
-      - ./config:/root/.streampipes
-      - ./config/RDF4J:/root/.RDF4J
+      - backend:/root/.streampipes
+      - backend:/root/.RDF4J
     networks:
       spnet:
 
+volumes:
+  backend:
+
+networks:
+  spnet:
+    external: true

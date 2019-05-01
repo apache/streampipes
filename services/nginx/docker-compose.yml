@@ -13,4 +13,7 @@ services:
       - backend
     networks:
       spnet:
- 
+
+networks:
+  spnet:
+    external: true

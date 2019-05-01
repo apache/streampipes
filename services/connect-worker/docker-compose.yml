@@ -9,11 +9,17 @@ services:
       - "8098:8098"
     environment:
       - EXECUTION_MODE=WORKER
-      - SP_CONNECT_CONTAINER_HOST=connect-master      
+      - SP_CONNECT_CONTAINER_HOST=connect-master
       - SP_CONNECT_CONTAINER_WORKER=connect-worker
       - SP_KAFKA_HOST=${SP_KAFKA_HOST}
     volumes:
-      - ./config/files/:/data/
+      - connect:/data/
     networks:
       spnet:
 
+volumes:
+  connect:
+
+networks:
+  spnet:
+    external: true

@@ -6,6 +6,9 @@ services:
       - kafka
     ports:
       - "5044:5044"
-    networks: 
+    networks:
       spnet:
 
+networks:
+  spnet:
+    external: true

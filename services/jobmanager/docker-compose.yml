@@ -7,3 +7,7 @@ services:
     command: jobmanager
     networks:
       spnet:
+
+networks:
+  spnet:
+    external: true

@@ -11,3 +11,7 @@ services:
       - SP_KAFKA_HOST=${SP_KAFKA_HOST}
     networks:
       spnet:
+
+networks:
+  spnet:
+    external: true

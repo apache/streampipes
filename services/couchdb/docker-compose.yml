@@ -5,8 +5,13 @@ services:
     ports:
       - "5984:5984"
     volumes:
-       - ./config/couchdb/data:/opt/couchdb/data
+       - couchdb:/opt/couchdb/data
     networks:
       spnet:
 
+volumes:
+  couchdb:
 
+networks:
+  spnet:
+    external: true

@@ -18,7 +18,7 @@ services:
       - -enable-script-checks=true
       - -ui
     volumes:
-      - ./config/consul:/consul/data
+      - consul:/consul/data
     ports:
       - "8500:8500"
       - "8600:8600"
@@ -26,15 +26,9 @@ services:
       spnet:
         ipv4_address: 172.31.0.9
 
+volumes:
+  consul:
+
 networks:
   spnet:
-    driver: bridge
-    ipam:
-     config:
-       - subnet: 172.31.0.0/16
-         gateway: 172.31.0.1
-
-
-volumes:
-  esdata1:
-    driver: local
+    external: true
