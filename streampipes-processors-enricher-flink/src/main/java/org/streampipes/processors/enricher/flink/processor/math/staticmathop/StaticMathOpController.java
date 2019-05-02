@@ -63,7 +63,6 @@ public class StaticMathOpController extends FlinkDataProcessorDeclarer<StaticMat
             .requiredFloatParameter(Labels.withId(RIGHT_OPERAND_VALUE))
             .outputStrategy(
                     OutputStrategies.keep())
-//                                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
             .requiredSingleValueSelection(Labels.withId(OPERATION),
                     Options.from("+", "-", "/", "*", "%"))
             .supportedFormats(SupportedFormats.jsonFormat())
