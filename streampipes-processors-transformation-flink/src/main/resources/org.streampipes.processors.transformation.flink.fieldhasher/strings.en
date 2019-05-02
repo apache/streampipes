@@ -1,5 +1,5 @@
 org.streampipes.processors.transformation.flink.fieldhasher.title=Field Hasher
-org.streampipes.processors.transformation.flink.fieldhasher.description=The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values.
+org.streampipes.processors.transformation.flink.fieldhasher.description=Hashes the value of a field using various hash functions.
 
 property-mapping.title=Field
 property-mapping.description=The field the hash function should be applied on

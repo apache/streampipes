@@ -8,13 +8,13 @@
 
 ## Description
 
-Send Push Message to OneSignal-Application
-Add a detailed description here
+This sink sends a push message to the OneSignal application
 
 ***
 
 ## Required input
 
+This sink does not have any requirements and works with any incoming event type.
 
 ***
 
@@ -22,9 +22,18 @@ Add a detailed description here
 
 Describe the configuration parameters here
 
-### 1st parameter
+### App Id
 
+The OneSignal application ID.
 
-### 2nd parameter
+### API Key
+
+The OneSignal API key.
+
+### Content
+
+The message that should be sent to OneSignal
 
 ## Output
+
+(not applicable for data sinks)

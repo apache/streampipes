@@ -1,5 +1,5 @@
 org.streampipes.sinks.notifications.jvm.slack.title=Slack Notification
-org.streampipes.sinks.notifications.jvm.slack.description=Slack bot to send notifications directly into your slack
+org.streampipes.sinks.notifications.jvm.slack.description=Slack bot to send notifications to Slack
 
 receiver.title=Send to
 receiver.description=Enter the username or channel you want to notify

@@ -1,5 +1,5 @@
 org.streampipes.sinks.brokers.jvm.kafka.title=Kafka Publisher
-org.streampipes.sinks.brokers.jvm.kafka.description=Forwards an event to a Kafka Broker
+org.streampipes.sinks.brokers.jvm.kafka.description=Publish events to Apache Kafka
 
 topic.title=Kafka Topic
 topic.description=Select a Kafka topic

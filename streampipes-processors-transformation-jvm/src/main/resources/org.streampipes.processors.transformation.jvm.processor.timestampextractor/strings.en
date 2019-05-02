@@ -1,5 +1,5 @@
 org.streampipes.processors.transformation.jvm.processor.timestampextractor.title=Timestamp Extractor
-org.streampipes.processors.transformation.jvm.processor.timestampextractor.description=This processor extracts a time stamp into the individual time fields (e.g. day field, hour field, ....)
+org.streampipes.processors.transformation.jvm.processor.timestampextractor.description=Extracts a timestamp into its individual time fields.
 
 timestampField.title=Timestamp Field
 timestampField.description=
