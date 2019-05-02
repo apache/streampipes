@@ -32,6 +32,8 @@ All available services are in the services folder.
   * Stops and cleans SP installation, remove networks
 * remove-settings: 
   * Stops StreamPipes and deletes .env file
+* set-version:
+  * Change the StreamPipes version in the tmpl_env file
 
 * generate-compose-file
 

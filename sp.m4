@@ -4,7 +4,7 @@
 # ARG_OPTIONAL_BOOLEAN([defaultip],d, [When set the first ip is used as default])
 # ARG_OPTIONAL_BOOLEAN([all],a, [Select all available StreamPipes services])
 # ARG_POSITIONAL_MULTI([operation], [The StreamPipes operation (operation-name) (service-name (optional))], 3, [], [])
-# ARG_TYPE_GROUP_SET([operation], [type string], [operation], [start,stop,restart,update,set-template,logs,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,set-env,unset-env])
+# ARG_TYPE_GROUP_SET([operation], [type string], [operation], [start,stop,restart,update,set-template,log,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,set-env,unset-env,create-compose,set-version])
 # ARG_DEFAULTS_POS
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -169,7 +169,6 @@ moveSystemConfig() {
 		info "Configuration $1 was not found"
 	fi
 }
-
 createNetwork() {
 	if [ ! "$(docker network ls | grep spnet)" ]; then
 	  info "Creating StreamPipes network"
@@ -177,6 +176,20 @@ createNetwork() {
 	else
 	  info "StreamPipes network already exists. Continuing"
 	fi
+}
+
+setVersion() {
+	# change pe version
+	version=SP_PE_VERSION=${_arg_operation[1]}
+	sed "s/SP_PE_VERSION=.*/${version}/g" ./tmpl_env > ./del_tmpl_env
+	mv ./del_tmpl_env ./tmpl_env
+
+	# change backend version
+	version=SP_BACKEND_VERSION=${_arg_operation[1]}
+	sed "s/SP_BACKEND_VERSION=.*/${version}/g" ./tmpl_env > ./del_tmpl_env
+	mv ./del_tmpl_env ./tmpl_env
+
+	echo "Change StreamPipes version to ${_arg_operation[1]}"
 }
 
 getCommand() {
@@ -446,6 +459,11 @@ fi
 # then
 #    createCompose
 # fi
+
+if [ "$_arg_operation" = "set-version" ];
+then
+   setVersion
+fi
 
 if [ "$_arg_operation" = "nil" ];
 then

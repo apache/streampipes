@@ -11,6 +11,7 @@ services:
       - SP_KAFKA_HOST=${SP_KAFKA_HOST}
     volumes:
       - backend:/root/.streampipes
+      - backend:/streampipes-assets
       - backend:/root/.RDF4J
     networks:
       spnet:
