@@ -1,11 +1,11 @@
 import {HttpClient, HttpRequest} from '@angular/common/http';
-import {InfoResult} from '../model/InfoResult';
+import {InfoResult} from '../../core-model/datalake/InfoResult';
 import {AuthStatusService} from '../../services/auth-status.service';
 import {Injectable} from '@angular/core';
-import {PageResult} from '../model/PageResult';
+import {PageResult} from '../../core-model/datalake/PageResult';
 
 @Injectable()
-export class AssetRestService {
+export class DatalakeRestService {
 
     constructor(private http: HttpClient,
                 private authStatusService: AuthStatusService) {

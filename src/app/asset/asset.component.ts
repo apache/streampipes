@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {AssetRestService} from './service/asset-rest.service';
-import {InfoResult} from './model/InfoResult';
+import {DatalakeRestService} from '../core-services/datalake/datalake-rest.service';
+import {InfoResult} from '../core-model/datalake/InfoResult';
 import {Observable} from 'rxjs/Observable';
 import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
@@ -29,7 +29,7 @@ export class AssetComponent implements OnInit {
     downloadFormat: string = 'csv';
     isDownloading: boolean = false;
 
-    constructor(private restService: AssetRestService, private snackBar: MatSnackBar) {
+    constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar) {
 
     }
 
