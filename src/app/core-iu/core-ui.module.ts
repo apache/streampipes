@@ -7,6 +7,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
 import {MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
 import {TableComponent} from './table/table.component';
+import {DatalakeTableComponent} from './datalake/table/datalake-table.component';
+import {DatalakeDataDownloadcomponent} from './datalake/datadownload/datalake-dataDownloadcomponent';
 
 
 @NgModule({
@@ -22,14 +24,18 @@ import {TableComponent} from './table/table.component';
     ],
     declarations: [
         TableComponent,
+        DatalakeTableComponent,
+        DatalakeDataDownloadcomponent,
     ],
     providers: [
     ],
     entryComponents: [
     ],
     exports: [
-        TableComponent
+        TableComponent,
+        DatalakeTableComponent,
+        DatalakeDataDownloadcomponent
     ]
 })
-export class AssetModule {
+export class CoreUiModule {
 }

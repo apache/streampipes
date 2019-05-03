@@ -10,6 +10,7 @@ import {DatalakeRestService} from '../core-services/datalake/datalake-rest.servi
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
 import {MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
+import {CoreUiModule} from '../core-iu/core-ui.module';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import {MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
         CdkTableModule,
         MatSnackBarModule,
         MatProgressSpinnerModule,
+        CoreUiModule,
     ],
     declarations: [
         AssetComponent,
