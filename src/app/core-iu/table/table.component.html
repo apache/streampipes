@@ -12,8 +12,8 @@
 
     </table>
 
-    <div fxLayout="row" fxLayoutAlign=" center" *ngIf="enablePaging">
-        <div>
+    <div fxLayout="row" fxLayoutAlign=" center">
+        <div  *ngIf="enablePaging">
             <button mat-icon-button (click)="clickPreviousPage()">
                 <mat-icon>keyboard_arrow_left</mat-icon>
             </button>
@@ -26,7 +26,7 @@
 
         <div *ngIf="enableItemsPerPage">
             Items per page:
-            <mat-form-field style="width: 40px; margin-top: 10px;" >
+            <mat-form-field style="width: 50px; margin-top: 10px;" >
                 <mat-select [(ngModel)]="itemsPerPage" (valueChange)="selectItemsPerPage($event)">
                     <mat-option [value]=10 style="background-color: #FFFFFF">
                         10

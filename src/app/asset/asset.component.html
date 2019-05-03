@@ -29,8 +29,14 @@
                 <div layout="row">
                     <div class="sp-blue-border">
 
-                        <sp-datalake-table [index]="selectedIndex" *ngIf="selectedIndex != ''"></sp-datalake-table>
-
+                        <mat-tab-group>
+                            <mat-tab label="Table">
+                                <sp-datalake-table [index]="selectedIndex" *ngIf="selectedIndex != ''"></sp-datalake-table>
+                            </mat-tab>
+                            <mat-tab label="Line chart">
+                                <sp-datalake-lineChart [index]="selectedIndex" *ngIf="selectedIndex != ''"></sp-datalake-lineChart>
+                            </mat-tab>
+                        </mat-tab-group>
                     </div>
 
                 </div>

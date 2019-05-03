@@ -9,6 +9,9 @@ import {MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
 import {TableComponent} from './table/table.component';
 import {DatalakeTableComponent} from './datalake/table/datalake-table.component';
 import {DatalakeDataDownloadcomponent} from './datalake/datadownload/datalake-dataDownloadcomponent';
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import {LineChartComponent} from './linechart/lineChart.component';
+import {DatalakeLineChartComponent} from './datalake/linechart/datalake-lineChart.component';
 
 
 @NgModule({
@@ -21,11 +24,14 @@ import {DatalakeDataDownloadcomponent} from './datalake/datadownload/datalake-da
         CdkTableModule,
         MatSnackBarModule,
         MatProgressSpinnerModule,
+        NgxChartsModule,
     ],
     declarations: [
         TableComponent,
+        LineChartComponent,
         DatalakeTableComponent,
         DatalakeDataDownloadcomponent,
+        DatalakeLineChartComponent,
     ],
     providers: [
     ],
@@ -33,8 +39,10 @@ import {DatalakeDataDownloadcomponent} from './datalake/datadownload/datalake-da
     ],
     exports: [
         TableComponent,
+        LineChartComponent,
         DatalakeTableComponent,
-        DatalakeDataDownloadcomponent
+        DatalakeDataDownloadcomponent,
+        DatalakeLineChartComponent
     ]
 })
 export class CoreUiModule {

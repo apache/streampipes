@@ -32,7 +32,7 @@
     "@angular/router": "7.2.9",
     "@angular/upgrade": "7.2.9",
     "@ngui/datetime-picker": "^0.16.2",
-    "@swimlane/ngx-charts": "^10.1.0",
+    "@swimlane/ngx-charts": "10.1.0",
     "@uirouter/angular-hybrid": "7.0.0",
     "angular": "1.7.7",
     "angular-animate": "1.7.7",
