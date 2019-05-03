@@ -17,23 +17,18 @@
 package org.streampipes.processors.imageprocessing.jvm.processor.imagecropper;
 
 
-import static org.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.*;
-
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.EpProperties;
-import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.sdk.helpers.Locales;
-import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.helpers.*;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+
+import static org.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.IMAGE_PROPERTY;
 
 
 public class ImageCropperController extends StandaloneEventProcessingDeclarer<ImageCropperParameters> {
@@ -58,13 +53,10 @@ public class ImageCropperController extends StandaloneEventProcessingDeclarer<Im
   public ConfiguredEventProcessor<ImageCropperParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation, ProcessingElementParameterExtractor extractor) {
 
     String imageProperty = extractor.mappingPropertyValue(IMAGE_PROPERTY);
-    String boxWidthProperty = extractor.mappingPropertyValue(BOX_WIDTH_PROPERTY);
-    String boxHeightProperty = extractor.mappingPropertyValue(BOX_HEIGHT_PROPERTY);
-    String boxXProperty = extractor.mappingPropertyValue(BOX_X_PROPERTY);
-    String boxYProperty = extractor.mappingPropertyValue(BOX_Y_PROPERTY);
+    String boxArray = extractor.mappingPropertyValue(RequiredBoxStream.BOX_ARRAY_PROPERTY);
 
     ImageCropperParameters params = new ImageCropperParameters(dataProcessorInvocation, imageProperty,
-            boxWidthProperty, boxHeightProperty, boxXProperty, boxYProperty);
+            boxArray, "box_width", "box_height", "box_x", "box_y");
 
     return new ConfiguredEventProcessor<>(params, ImageCropper::new);
   }

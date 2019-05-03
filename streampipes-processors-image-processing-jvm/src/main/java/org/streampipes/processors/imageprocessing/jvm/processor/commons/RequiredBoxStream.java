@@ -25,29 +25,16 @@ import org.streampipes.sdk.helpers.Labels;
 public class RequiredBoxStream {
 
   public static final String IMAGE_PROPERTY = "image-property";
-  public static final String BOX_WIDTH_PROPERTY = "box-width-property";
-  public static final String BOX_HEIGHT_PROPERTY = "box-height-property";
-  public static final String BOX_X_PROPERTY = "box-x-property";
-  public static final String BOX_Y_PROPERTY = "box-y-property";
+  public static final String BOX_ARRAY_PROPERTY = "box-array-property";
 
   public static CollectedStreamRequirements getBoxStream() {
-
-    return StreamRequirementsBuilder
+        return StreamRequirementsBuilder
             .create()
             .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq("https://image.com"), Labels
                             .from(IMAGE_PROPERTY, "Image Classification", ""),
                     PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq("https://schema.org/width"),
-                    Labels.from(BOX_WIDTH_PROPERTY, "Box Width", ""),
-                    PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq("https://schema.org/height"),
-                    Labels.from(BOX_HEIGHT_PROPERTY, "Box Height", ""),
-                    PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq("https://schema.org/x"),
-                    Labels.from(BOX_X_PROPERTY, "Box X Coordinate", ""),
-                    PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq("https://schema.org/y"),
-                    Labels.from(BOX_Y_PROPERTY, "Box Y Coordinate", ""),
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReqList("https://streampipes.org/boundingboxes"),
+                    Labels.from(BOX_ARRAY_PROPERTY, "Array Width Bounding Boxes", "Contains an array with bounding boxes"),
                     PropertyScope.NONE)
             .build();
   }
