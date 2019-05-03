@@ -24,19 +24,12 @@ public class Frequency extends SiddhiEventEngine<FrequencyParameters> {
 
   @Override
   protected String fromStatement(List<String> inputStreamNames, FrequencyParameters params) {
-
-//    from every (e1=MaterialSupplyStream) -> e2=MaterialConsumptionStream within 10 min
-
-//      return "from every(e1=" + inputStreamNames.get(0) + ") -> not e2=" + inputStreamNames.get(0) + " for " + params.getDuration() + " sec";
-//    return "define stream Test(timestamp LONG,message STRING);\n" +
             return "from every not " + inputStreamNames.get(0) + " for " + params.getDuration() + " sec";
   }
 
   @Override
   protected String selectStatement(FrequencyParameters params) {
-//    return getCustomOutputSelectStatement(params.getGraph());
     return "select *";
-//    return "select currentTimeMillis() as s0timestamp, 'Customer has not arrived' as message";
   }
 
 }

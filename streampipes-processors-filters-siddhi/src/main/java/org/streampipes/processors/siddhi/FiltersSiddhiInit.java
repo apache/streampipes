@@ -32,7 +32,6 @@ public class FiltersSiddhiInit extends StandaloneModelSubmitter {
             .getInstance()
             .add(new TrendController())
             .add(new StreamStopController());
-            //.add(new NumericalFilterController());
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
