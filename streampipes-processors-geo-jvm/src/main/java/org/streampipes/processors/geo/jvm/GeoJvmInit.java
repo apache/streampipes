@@ -23,16 +23,13 @@ import org.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.geo.jvm.config.GeoJvmConfig;
-import org.streampipes.processors.geo.jvm.processor.geocode.GeocodingController;
-import org.streampipes.processors.geo.jvm.processor.route.GoogleRoutingController;
 
 public class GeoJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton
-            .getInstance()
-            .add(new GeocodingController())
-            .add(new GoogleRoutingController());
+            .getInstance();
+//            .add(new GeocodingController())
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
