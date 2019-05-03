@@ -1,5 +1,5 @@
 org.streampipes.sinks.notifications.jvm.email.title=Email Notification
-org.streampipes.sinks.notifications.jvm.email.description=Email bot to send notifications emails
+org.streampipes.sinks.notifications.jvm.email.description=Email service to send notifications emails
 
 to_email.title=To
 to_email.description=Receiver E-mail address
@@ -8,4 +8,4 @@ email_subject.title=Subject
 email_subject.description=The subject of the email
 
 email_content.title=Content
-email_content.description=Enter the email text. You can use place holders like #fieldName# to add the value of a stream variable.
+email_content.description=Enter the email text. You can use place holders like #fieldName# to add the value of a field.

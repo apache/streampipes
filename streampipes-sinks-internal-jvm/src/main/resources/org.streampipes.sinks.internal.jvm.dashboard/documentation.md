@@ -8,23 +8,21 @@
 
 ## Description
 
-This sink will be used to visualize data streams in the StreamPipes dashboard
-Add a detailed description here
+This sink visualizes data streams in the StreamPipes dashboard. 
+Visualizations can be configured in Live Dashboard of StreamPipes after the pipeline has been started.
 
 ***
 
 ## Required input
 
+This sink does not have any requirements and works with any incoming event type.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
+No further configuration necessary, individual visualizations can be configured in the Dashboard itself.
 
 ## Output
+
+(not applicable for data sinks)

@@ -1,8 +1,8 @@
 org.streampipes.processors.transformation.jvm.split-array.title=Split Array
-org.streampipes.processors.transformation.jvm.split-array.description=This processor takes an array of event properties and creates an event for each of them. Further property of the events can be added to each element
+org.streampipes.processors.transformation.jvm.split-array.description=Outputs an event for each entry of a list.
 
 keep.title=Keep fields
 keep.description=The fields that should be added to the events of array
 
-array-field.title=Array of Events
+array-field.title=List Field
 array-field.description=Contains an array with events

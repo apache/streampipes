@@ -8,23 +8,32 @@
 
 ## Description
 
-Email bot to send notifications emails
-Add a detailed description here
+This sink sends an email to a specified receiver.
 
 ***
 
 ## Required input
 
+This sink does not have any requirements and works with any incoming event type.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+The following configuration is required:
 
-### 1st parameter
+### Receiver Address
 
+The email address of the receiver.
 
-### 2nd parameter
+### Subject
+
+The subject of the email.
+
+### Content
+
+The mail text.
 
 ## Output
+
+(not applicable for data sinks)

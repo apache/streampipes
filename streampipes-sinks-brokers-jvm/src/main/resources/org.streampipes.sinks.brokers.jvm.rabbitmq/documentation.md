@@ -15,16 +15,36 @@ Add a detailed description here
 
 ## Required input
 
+This sink does not have any requirements and works with any incoming event type.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Host
 
-### 1st parameter
+The hostname of the RabbitMQ broker.
 
+### Port
 
-### 2nd parameter
+The port of the RabbitMQ broker.
+
+### User
+
+The username used to connect to the RabbitMQ broker.
+
+### Password
+
+The password used to connect to the RabbitMQ broker.
+
+### Exchange Name
+
+The name of the exchange.
+
+### RabbitMQ Topic
+
+The topic where events should be sent to.
 
 ## Output
+
+(not applicable for data sinks)

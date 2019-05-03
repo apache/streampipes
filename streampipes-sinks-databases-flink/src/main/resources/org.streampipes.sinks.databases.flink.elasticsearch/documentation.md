@@ -8,13 +8,14 @@
 
 ## Description
 
-Stores data in an elasticsearch cluster
-Add a detailed description here
+Stores data in an Elasticsearch database.
 
 ***
 
 ## Required input
 
+This sink requires an event that provides a timestamp value (a field that is marked to be of type ``http://schema
+.org/DateTime``.
 
 ***
 
@@ -22,9 +23,14 @@ Add a detailed description here
 
 Describe the configuration parameters here
 
-### 1st parameter
+### Timestamp Field
 
+The field which contains the required timestamp.
 
-### 2nd parameter
+### Index Name
+
+The name of the Elasticsearch index where events are stored to.
 
 ## Output
+
+(not applicable for data sinks)

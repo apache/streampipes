@@ -15,16 +15,22 @@ Add a detailed description here
 
 ## Required input
 
+This processor works with any event that has a field of type ``list``.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Keep Fields
 
-### 1st parameter
+Fields of the event that should be kept in each resulting event.
 
+### List field
 
-### 2nd parameter
+The name of the field that contains the list values that should be split.
+
 
 ## Output
+
+This data processor produces an event with all fields selected by the ``Keep Fields`` parameter and all fields of the
+ selected list field.

@@ -8,23 +8,22 @@
 
 ## Description
 
-Posts events to a REST interface
-Add a detailed description here
+Posts a JSON representation of an event to a REST interface.
 
 ***
 
 ## Required input
 
+This sink does not have any requirements and works with any incoming event type.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### REST URL
 
-### 1st parameter
-
-
-### 2nd parameter
+The complete URL of the REST endpoint.
 
 ## Output
+
+(not applicable for data sinks)

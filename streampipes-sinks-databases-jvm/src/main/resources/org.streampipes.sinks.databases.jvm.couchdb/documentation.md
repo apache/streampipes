@@ -9,12 +9,12 @@
 ## Description
 
 Stores events in an Apache CouchDB database.
-Add a detailed description here
 
 ***
 
 ## Required input
 
+This sink does not have any requirements and works with any incoming event type.
 
 ***
 
@@ -22,9 +22,18 @@ Add a detailed description here
 
 Describe the configuration parameters here
 
-### 1st parameter
+### Hostname
 
+The hostname of the CouchDB instance.
 
-### 2nd parameter
+### Port
+
+The port of the CouchDB instance.
+
+### Database Name
+
+The name of the database where events will be stored
 
 ## Output
+
+(not applicable for data sinks)

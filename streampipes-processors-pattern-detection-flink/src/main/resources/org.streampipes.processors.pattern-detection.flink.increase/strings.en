@@ -1,5 +1,5 @@
 org.streampipes.processors.pattern-detection.flink.increase.title=Increase
-org.streampipes.processors.pattern-detection.flink.increase.description=Detects the increase of a numerical field over a customizable time window. Example: A temperature value increases by 10 percent within 5 minutes.
+org.streampipes.processors.pattern-detection.flink.increase.description=Detects the increase of a numerical field over a customizable time window.
 
 value-mapping.title=Value to observe
 value-mapping.description=Specifies the value that should be monitored.

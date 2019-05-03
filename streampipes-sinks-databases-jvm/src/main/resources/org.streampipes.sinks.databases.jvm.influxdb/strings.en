@@ -23,7 +23,7 @@ timestamp_mapping.title=Timestamp Field
 timestamp_mapping.description=The value which contains a timestamp
 
 batch_interval_actions.title=Buffer Size
-batch_interval_actions.description=How many actions are written into a buffer, before it is written to the database"
+batch_interval_actions.description=How many actions are written into a buffer, before it is written to the database
 
 max_flush_duration.title=Maximum Flush
 max_flush_duration.description=The maximum waiting time for the buffer to fill the Buffer size before it will be written to the database in ms

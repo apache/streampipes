@@ -8,13 +8,13 @@
 
 ## Description
 
-This processor takes an array of event properties counts them and appends the result to the event
-Add a detailed description here
+This processor takes a list field, computes the size of the list and appends the result to the event.
 
 ***
 
 ## Required input
 
+This processor works with any event that has a field of type ``list``.
 
 ***
 
@@ -22,9 +22,10 @@ Add a detailed description here
 
 Describe the configuration parameters here
 
-### 1st parameter
+### List Field
 
-
-### 2nd parameter
+The field containing the list that should be used.
 
 ## Output
+
+Outputs the incoming event while appending the list size (named ``countValue``) to the incoming event.

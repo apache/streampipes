@@ -9,22 +9,41 @@
 ## Description
 
 Stores events in a Postgres database.
-Add a detailed description here
 
 ***
 
 ## Required input
 
+This sink does not have any requirements and works with any incoming event type.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Hostname
 
-### 1st parameter
+The hostname of the PostgreSQL instance.
 
+### Port
 
-### 2nd parameter
+The port of the PostgreSQL instance (default 5432).
+
+### Database Name
+
+The name of the database where events will be stored
+
+### Table Name
+
+The name of the table where events will be stored (will be created if it does not exist)
+
+### Username
+
+The username for the PostgreSQL Server.
+
+### Password
+
+The password for the PostgreSQL Server.
 
 ## Output
+
+(not applicable for data sinks)
