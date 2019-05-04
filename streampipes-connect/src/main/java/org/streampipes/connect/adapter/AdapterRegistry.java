@@ -43,7 +43,10 @@ import org.streampipes.connect.adapter.generic.protocol.stream.HDFSProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.HttpStreamProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.MqttProtocol;
+import org.streampipes.connect.adapter.specific.coindesk.CoindeskBitcoinAdapter;
 import org.streampipes.connect.adapter.specific.gdelt.GdeltAdapter;
+import org.streampipes.connect.adapter.specific.iex.IexCloudNewsAdapter;
+import org.streampipes.connect.adapter.specific.iex.IexCloudStockAdapter;
 import org.streampipes.connect.adapter.specific.opcua.OpcUaAdapter;
 import org.streampipes.connect.adapter.specific.ros.RosBridgeAdapter;
 import org.streampipes.model.connect.adapter.AdapterDescription;
@@ -66,6 +69,10 @@ public class AdapterRegistry {
         allAdapters.put(OpcUaAdapter.ID, new OpcUaAdapter());
         //allAdapters.put(NswTrafficCameraAdapter.ID, new NswTrafficCameraAdapter());
         allAdapters.put(RosBridgeAdapter.ID, new RosBridgeAdapter());
+        allAdapters.put(CoindeskBitcoinAdapter.ID, new CoindeskBitcoinAdapter());
+        allAdapters.put(IexCloudStockAdapter.ID, new IexCloudStockAdapter());
+        allAdapters.put(IexCloudNewsAdapter.ID, new IexCloudNewsAdapter());
+
 
         return allAdapters;
     }

@@ -15,8 +15,12 @@ limitations under the License.
 */
 package org.streampipes.sdk.builder.adapter;
 
+import org.streampipes.model.DataSinkType;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public abstract class AdapterDescriptionBuilder<BU extends
         AdapterDescriptionBuilder<BU, T>, T extends AdapterDescription> extends
@@ -26,5 +30,14 @@ public abstract class AdapterDescriptionBuilder<BU extends
                                    T adapterTypeInstance) {
     super(id, label, description, adapterTypeInstance);
     this.elementDescription.setAdapterId(id);
+  }
+
+  public AdapterDescriptionBuilder<BU, T> category(DataSinkType... categories) {
+    this.elementDescription
+            .setCategory(Arrays
+                    .stream(categories)
+                    .map(Enum::name)
+                    .collect(Collectors.toList()));
+    return me();
   }
 }

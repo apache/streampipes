@@ -31,6 +31,8 @@ import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.util.Cloner;
+import org.streampipes.vocabulary.StreamPipes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,11 +77,17 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     @RdfProperty("sp:rules")
     private List<TransformationRuleDescription> rules;
 
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.HAS_EPA_TYPE)
+    private List<String> category;
+
     public AdapterDescription() {
         super();
         this.rules = new ArrayList<>();
         this.eventGrounding = new EventGrounding();
         this.config = new ArrayList<>();
+        this.category = new ArrayList<>();
 
         // TODO move to another place
         TransportProtocol tp = new KafkaTransportProtocol();
@@ -93,6 +101,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     public AdapterDescription(String uri, String name, String description) {
         super(uri, name, description);
         this.rules = new ArrayList<>();
+        this.category = new ArrayList<>();
     }
 
 
@@ -103,6 +112,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.rules = other.getRules();
         this.adapterType = other.getAdapterType();
         this.icon = other.getIcon();
+        this.category = new Cloner().epaTypes(other.getCategory());
         if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
 
@@ -209,6 +219,14 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public List<String> getCategory() {
+        return category;
+    }
+
+    public void setCategory(List<String> category) {
+        this.category = category;
     }
 
     @Override

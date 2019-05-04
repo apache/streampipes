@@ -28,15 +28,28 @@ public class MqttConsumer implements Runnable {
   private int maxElementsToReceive = -1;
   private int messageCount = 0;
 
+  private Boolean authenticatedConnection;
+  private String username;
+  private String password;
+
   public MqttConsumer(String broker, String topic, InternalEventProcessor<byte[]> consumer) {
     this.broker = broker;
     this.topic = topic;
     this.consumer = consumer;
+    this.authenticatedConnection = false;
   }
 
   public MqttConsumer(String broker, String topic, InternalEventProcessor<byte[]> consumer, int maxElementsToReceive) {
     this(broker, topic, consumer);
     this.maxElementsToReceive = maxElementsToReceive;
+  }
+
+  public MqttConsumer(String broker, String topic, String username, String password,
+                      InternalEventProcessor<byte[]> consumer) {
+    this(broker, topic, consumer);
+    this.username = username;
+    this.password = password;
+    this.authenticatedConnection = true;
   }
 
 
@@ -46,6 +59,10 @@ public class MqttConsumer implements Runnable {
     MQTT mqtt = new MQTT();
     try {
       mqtt.setHost(broker);
+      if (authenticatedConnection) {
+        mqtt.setUserName(username);
+        mqtt.setPassword(password);
+      }
       BlockingConnection connection = mqtt.blockingConnection();
       connection.connect();
       Topic[] topics = {new Topic(topic, QoS.AT_LEAST_ONCE)};
