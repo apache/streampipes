@@ -1,0 +1,48 @@
+
+<div fxLayout="row" fxLayoutAlign=" center">
+    <div *ngIf="enablePaging">
+        <button mat-icon-button (click)="clickPreviousPage()">
+            <mat-icon>keyboard_arrow_left</mat-icon>
+        </button>
+        Page: <label *ngIf="currentPage !== undefined">{{currentPage}}</label>
+        <label *ngIf="maxPage !== undefined"> - {{maxPage}}</label>
+        <button mat-icon-button (click)="clickNextPage()">
+            <mat-icon>keyboard_arrow_right</mat-icon>
+        </button>
+    </div>
+
+    <div *ngIf="enableItemsPerPage">
+        Items per page:
+        <mat-form-field style="width: 70px; margin-top: 10px;" >
+            <mat-select [(ngModel)]="itemsPerPage" (valueChange)="selectItemsPerPage($event)">
+                <mat-option [value]=50 style="background-color: #FFFFFF">
+                    50
+                </mat-option>
+                <mat-option [value]=100 style="background-color: #FFFFFF">
+                    100
+                </mat-option>
+                <mat-option [value]=200 style="background-color: #FFFFFF">
+                    200
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+</div>
+<div style="width: 100%; height: 500px">
+    <ngx-charts-line-chart
+            *ngIf="displayData != undefined"
+            [results]="displayData"
+            [gradient]="false"
+            [xAxis]="true"
+            [yAxis]="true"
+            [legend]="false"
+            [showXAxisLabel]="true"
+            [showYAxisLabel]="true"
+            [xAxisLabel]="_xAxesKey"
+            [yAxisLabel]="_yAxesKey"
+            [autoScale]="true"
+            [timeline]="true"
+            (select)="onSelect($event)">
+    </ngx-charts-line-chart>
+</div>

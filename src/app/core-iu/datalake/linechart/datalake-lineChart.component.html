@@ -1,0 +1,23 @@
+<div>
+    <h4 style="display: initial">Select data:</h4>
+    <mat-form-field style="margin-top: -10px; margin-bottom: -20px; margin-left: 10px;">
+        <mat-select (selectionChange)="selectKey($event.value)">
+            <mat-option *ngFor="let key of dataKeys" [value]="key" style="background-color: #FFFFFF">
+                {{key}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+
+<sp-lineChart
+        [xAxesKey]="xAxesKey"
+        [yAxesKey]="yAxesKey"
+        [data]="data"
+        [enableItemsPerPage]="true"
+        [enablePaging]="true"
+        [currentPage]="currentPage"
+        [maxPage]="maxPage"
+        (itemPerPageChange)="handleItemsPerPageChange($event)"
+        (nextPage)="handleNextPage()"
+        (previousPage)="handlePreviousPage()">
+></sp-lineChart>
