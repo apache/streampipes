@@ -15,5 +15,7 @@ limitations under the License.
 */
 package org.streampipes.connect.adapter.specific.wikipedia;
 
-public class model {
+public interface WikipediaOutputCollector {
+
+  void onEvent(String data);
 }

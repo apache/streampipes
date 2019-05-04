@@ -49,6 +49,8 @@ import org.streampipes.connect.adapter.specific.iex.IexCloudNewsAdapter;
 import org.streampipes.connect.adapter.specific.iex.IexCloudStockAdapter;
 import org.streampipes.connect.adapter.specific.opcua.OpcUaAdapter;
 import org.streampipes.connect.adapter.specific.ros.RosBridgeAdapter;
+import org.streampipes.connect.adapter.specific.wikipedia.WikipediaEditedArticlesAdapter;
+import org.streampipes.connect.adapter.specific.wikipedia.WikipediaNewArticlesAdapter;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.HashMap;
@@ -72,7 +74,8 @@ public class AdapterRegistry {
         allAdapters.put(CoindeskBitcoinAdapter.ID, new CoindeskBitcoinAdapter());
         allAdapters.put(IexCloudStockAdapter.ID, new IexCloudStockAdapter());
         allAdapters.put(IexCloudNewsAdapter.ID, new IexCloudNewsAdapter());
-
+        allAdapters.put(WikipediaEditedArticlesAdapter.ID, new WikipediaEditedArticlesAdapter());
+        allAdapters.put(WikipediaNewArticlesAdapter.ID, new WikipediaNewArticlesAdapter());
 
         return allAdapters;
     }

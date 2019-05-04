@@ -15,5 +15,39 @@ limitations under the License.
 */
 package org.streampipes.connect.adapter.specific.wikipedia;
 
-public class WikipediaEditedArticlesAdapter {
+import org.streampipes.connect.adapter.Adapter;
+import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
+import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+
+public class WikipediaEditedArticlesAdapter extends WikipediaAdapter {
+
+  public static final String ID = "http://streampipes.org/adapter/specific/wikipedia/edit";
+
+  private static final String Type = "edit";
+
+  public WikipediaEditedArticlesAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
+    super(adapterStreamDescription, Type);
+  }
+
+  public WikipediaEditedArticlesAdapter() {
+    super();
+  }
+
+  @Override
+  public SpecificAdapterStreamDescription declareModel() {
+    return SpecificDataStreamAdapterBuilder.create(ID, "Wikipedia Edits", "Continuously publishes" +
+            " recent Wikipedia edits")
+            .iconUrl("wikipedia.png")
+            .build();
+  }
+
+  @Override
+  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
+    return new WikipediaEditedArticlesAdapter(adapterDescription);
+  }
+
+  @Override
+  public String getId() {
+    return ID;
+  }
 }

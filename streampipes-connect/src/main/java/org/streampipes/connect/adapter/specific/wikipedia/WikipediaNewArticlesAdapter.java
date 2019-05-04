@@ -15,5 +15,41 @@ limitations under the License.
 */
 package org.streampipes.connect.adapter.specific.wikipedia;
 
-public class WikipediaNewArticlesAdapter {
+import org.streampipes.connect.adapter.Adapter;
+import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
+import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+
+public class WikipediaNewArticlesAdapter extends WikipediaAdapter {
+
+  public static final String ID = "http://streampipes.org/adapter/specific/wikipedia/new";
+
+  private static final String Type = "new";
+
+  public WikipediaNewArticlesAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
+    super(adapterStreamDescription, Type);
+  }
+
+  public WikipediaNewArticlesAdapter() {
+    super();
+  }
+
+  @Override
+  public SpecificAdapterStreamDescription declareModel() {
+    return SpecificDataStreamAdapterBuilder.create(ID, "Wikipedia New Articles", "Continuously " +
+            "publishes" +
+            " articles recently created on Wikipedia")
+            .iconUrl("wikipedia.png")
+            .build();
+  }
+
+  @Override
+  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
+    return new WikipediaNewArticlesAdapter(adapterDescription);
+  }
+
+
+  @Override
+  public String getId() {
+    return ID;
+  }
 }
