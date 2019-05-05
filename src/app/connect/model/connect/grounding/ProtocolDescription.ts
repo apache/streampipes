@@ -32,6 +32,9 @@ export class ProtocolDescription {
   @RdfProperty('sp:config')
   public config: StaticProperty[] = [];
 
+  @RdfProperty('sp:hasAdapterType')
+  public category: string[] = [];
+
   constructor(id: string) {
     this.id = id;
     this.edit = false;
