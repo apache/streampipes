@@ -61,8 +61,6 @@ export class DataMarketplaceComponent implements OnInit {
     }
 
     getAdapterDescriptions(): void {
-        var self = this;
-
         this.adapterDescriptions = [];
 
         this.dataMarketplaceService
@@ -70,6 +68,7 @@ export class DataMarketplaceComponent implements OnInit {
             .subscribe(res => {
                 res.subscribe(adapterDescriptions => {
                     this.adapterDescriptions = this.adapterDescriptions.concat(adapterDescriptions);
+                    this.adapterDescriptions.sort((a, b) => a.label.localeCompare(b.label));
                     this.filteredAdapterDescriptions = this.adapterDescriptions;
                 });
             });
@@ -77,11 +76,10 @@ export class DataMarketplaceComponent implements OnInit {
         this.dataMarketplaceService.getAdapterTemplates().subscribe(adapterTemplates => {
             adapterTemplates.forEach(function (adapterTemplate) {
                 adapterTemplate.isTemplate = true;
-                console.log("Template: ");
-                console.log(adapterTemplate);
             });
 
             this.adapterDescriptions = this.adapterDescriptions.concat(adapterTemplates);
+            this.adapterDescriptions.sort((a, b) => a.label.localeCompare(b.label));
             this.filteredAdapterDescriptions = this.adapterDescriptions;
         });
     }
