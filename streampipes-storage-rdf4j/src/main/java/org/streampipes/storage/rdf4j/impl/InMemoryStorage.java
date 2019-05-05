@@ -31,6 +31,7 @@ import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,9 +93,10 @@ public class InMemoryStorage implements IPipelineElementDescriptionStorage {
   }
 
   private <T extends ConsumableStreamPipesEntity> List<T> sort(List<T> processingElements) {
-    processingElements.forEach(pe -> pe.getStaticProperties().sort((o1, o2) -> {
-        return Integer.compare(o1.getIndex(), o2.getIndex());
-    }));
+    processingElements.forEach(pe -> {
+      pe.getStaticProperties().sort(Comparator.comparingInt(StaticProperty::getIndex));
+      pe.getSpDataStreams().sort(Comparator.comparingInt(SpDataStream::getIndex));
+    });
     return processingElements;
   }
 
