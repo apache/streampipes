@@ -25,6 +25,7 @@ import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 
@@ -87,6 +88,11 @@ public class InMemoryStorage implements IPipelineElementDescriptionStorage {
   private void initializeSEPStorage() {
     inMemorySEPStorage.clear();
     List<DataSourceDescription> seps = sesameStorage.getAllSEPs();
+    seps.forEach(sep ->
+            sep.getSpDataStreams().forEach(es ->
+                    es.getEventSchema()
+                            .getEventProperties()
+                            .sort(Comparator.comparingInt(EventProperty::getIndex))));
     seps.forEach(sep -> inMemorySEPStorage.put(sep.getElementId(), sep));
     seps.forEach(sep -> sep.getSpDataStreams().forEach(eventStream -> inMemoryEventStreamStorage.put(eventStream.getElementId(),
             eventStream)));

@@ -79,6 +79,9 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
   @RdfProperty(StreamPipes.HAS_PROPERTY_SCOPE)
   private String propertyScope;
 
+  @RdfProperty(StreamPipes.INDEX)
+  private int index = 0;
+
   private String runtimeId;
 
   public EventProperty() {
@@ -105,6 +108,7 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
     this.domainProperties = other.getDomainProperties();
     this.propertyScope = other.getPropertyScope();
     this.runtimeId = other.getRuntimeId();
+    this.index = other.getIndex();
   }
 
   public EventProperty(List<URI> subClassOf) {
@@ -207,5 +211,13 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
 
   public void setRuntimeId(String runtimeId) {
     this.runtimeId = runtimeId;
+  }
+
+  public int getIndex() {
+    return index;
+  }
+
+  public void setIndex(int index) {
+    this.index = index;
   }
 }

@@ -105,6 +105,10 @@ public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStream
     @Override
     protected void prepareBuild() {
         this.elementDescription.setEventGrounding(eventGrounding);
+
+        for (int i = 0; i < eventProperties.size(); i++) {
+            eventProperties.get(i).setIndex(i);
+        }
         this.elementDescription.setEventSchema(new EventSchema(eventProperties));
     }
 }

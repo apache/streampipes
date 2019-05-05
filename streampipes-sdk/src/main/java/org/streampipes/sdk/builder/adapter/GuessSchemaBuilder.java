@@ -55,6 +55,11 @@ public class GuessSchemaBuilder {
   public GuessSchema build() {
     GuessSchema guessSchema = new GuessSchema();
     EventSchema eventSchema = new EventSchema();
+
+    for (int i = 0; i < eventProperties.size(); i++) {
+      eventProperties.get(i).setIndex(i);
+    }
+
     eventSchema.setEventProperties(eventProperties);
 
     guessSchema.setEventSchema(eventSchema);
