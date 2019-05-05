@@ -117,11 +117,13 @@ export class DataMarketplaceService {
       )
       .pipe(map(response => {
         if(response['@graph'] === undefined) return [];
-        const res = this.getTsonLd().fromJsonLdType(
+        const res: AdapterDescriptionList = this.getTsonLd().fromJsonLdType(
           response,
           'sp:AdapterDescriptionList'
         );
-
+        res.list.forEach(adapterDescription => {
+          adapterDescription.config.sort((a, b) => a.index - b.index);
+        });
         return res.list;
       }));
   }
@@ -165,7 +167,9 @@ export class DataMarketplaceService {
           response,
           'sp:ProtocolDescriptionList'
         );
-
+        res.list.forEach(protocolDescription => {
+          protocolDescription.config.sort((a, b) => a.index - b.index);
+        });
         return res.list;
       }));
   }
