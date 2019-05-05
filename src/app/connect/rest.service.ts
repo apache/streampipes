@@ -66,21 +66,18 @@ export class RestService {
 
 
     getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
-        const self = this;
-
-
-       let promise = new Promise<GuessSchema>(function(resolve, reject) {
-                self.tsonLdSerializerService.toJsonLd(adapter).subscribe(res => {
-                    return self.http
-                        .post('/streampipes-connect/api/v1/' + self.authStatusService.email + '/master/guess/schema', res)
+       let promise = new Promise<GuessSchema>((resolve, reject) => {
+                this.tsonLdSerializerService.toJsonLd(adapter).subscribe(res => {
+                    return this.http
+                        .post('/streampipes-connect/api/v1/' + this.authStatusService.email + '/master/guess/schema', res)
                         .pipe(map(response => {
                             if (JSON.stringify(response).includes('sp:GuessSchema')) {
-                                const r = self.tsonLdSerializerService.fromJsonLd(response, 'sp:GuessSchema');
-                                self.removeHeaderKeys(r.eventSchema.eventProperties);
-
+                                const r = this.tsonLdSerializerService.fromJsonLd(response, 'sp:GuessSchema');
+                                r.eventSchema.eventProperties.sort((a, b) => a.index - b.index);
+                                this.removeHeaderKeys(r.eventSchema.eventProperties);
                                 resolve(r);
                             } else {
-                                const r = self.tsonLdSerializerService.fromJsonLd(response, 'sp:ErrorMessage');
+                                const r = this.tsonLdSerializerService.fromJsonLd(response, 'sp:ErrorMessage');
                                 reject(r);
                             }
 

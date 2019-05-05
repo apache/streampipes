@@ -30,6 +30,9 @@ export abstract class EventProperty {
   @RdfProperty('sp:domainProperty')
   public domainProperty: String;
 
+  @RdfProperty('sp:hasIndex')
+  public index: number;
+
   constructor(propertyID: string, parent: EventProperty, child?: EventProperty) {
     this.propertyID = propertyID;
     this.id = "http://eventProperty.de/" + propertyID;
