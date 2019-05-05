@@ -16,6 +16,7 @@ limitations under the License.
 package org.streampipes.connect.adapter.specific.wikipedia;
 
 import org.streampipes.connect.adapter.Adapter;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 
@@ -38,6 +39,7 @@ public class WikipediaNewArticlesAdapter extends WikipediaAdapter {
     return SpecificDataStreamAdapterBuilder.create(ID, "Wikipedia New Articles", "Continuously " +
             "publishes" +
             " articles recently created on Wikipedia")
+            .category(AdapterType.SocialMedia, AdapterType.OpenData)
             .iconUrl("wikipedia.png")
             .build();
   }

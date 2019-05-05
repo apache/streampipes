@@ -24,6 +24,7 @@ import org.streampipes.connect.adapter.specific.coindesk.model.CoindeskRawModel;
 import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.exception.ParseException;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
@@ -93,6 +94,7 @@ public class CoindeskBitcoinAdapter extends PullAdapter {
     return SpecificDataStreamAdapterBuilder.create(ID, "Coindesk Bitcoin Stream", "The current " +
             "bitcoin price from the Coindesk API.")
             .iconUrl("coindesk.png")
+            .category(AdapterType.Finance)
             .requiredSingleValueSelection(Labels.from("currency", "Currency", "The currency of the" +
                     " bitcoin rate"), Options.from("USD", "EUR", "GBP"))
             .build();

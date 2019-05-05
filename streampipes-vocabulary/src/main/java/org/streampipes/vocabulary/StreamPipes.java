@@ -136,6 +136,7 @@ public class StreamPipes {
   public static final String HAS_OUTPUT_STRATEGY = NS + "hasOutputStrategy";
   public static final String HAS_EPA_TYPE = NS + "hasEpaType";
   public static final String HAS_EC_TYPE = NS + "hasEcType";
+  public static final String HAS_ADAPTER_TYPE = NS + "hasAdapterType";
   public static final String PRODUCES = NS + "produces";
 
   public static final String HAS_TRANSPORT_PROTOCOL = NS + "hasTransportProtocol";

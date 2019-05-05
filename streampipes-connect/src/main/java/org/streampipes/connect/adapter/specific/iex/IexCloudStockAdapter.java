@@ -20,6 +20,7 @@ import org.streampipes.connect.adapter.specific.iex.model.IexStockData;
 import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.exception.ParseException;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
@@ -55,6 +56,7 @@ public class IexCloudStockAdapter extends IexCloudAdapter {
     return SpecificDataStreamAdapterBuilder.create(ID, "IEX Cloud Stock Quotes", "Live stock data" +
             " provided by <a href='https://iexcloud.io'>IEX Cloud</a>")
             .iconUrl("iexcloud.png")
+            .category(AdapterType.Finance)
             .requiredTextParameter(Labels.from("token", "API Token", "The IEXCloud API token"))
             .requiredTextParameter(Labels.from("stock", "Stock", "The stock symbol (e.g., AAPL"))
             .build();

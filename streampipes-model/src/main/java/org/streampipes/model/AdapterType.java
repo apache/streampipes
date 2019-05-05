@@ -22,7 +22,8 @@ public enum AdapterType {
   Environment("Environmental Data", ""),
   News("News", ""),
   SocialMedia("Social Media", ""),
-  OpenData("Open Data", "");
+  OpenData("Open Data", ""),
+  Manufacturing("Production & Manufacturing", "");
 
   private String label;
   private String description;

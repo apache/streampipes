@@ -31,6 +31,7 @@ import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectForm
 import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectParser;
 import org.streampipes.connect.adapter.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
@@ -86,6 +87,7 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
     public SpecificAdapterStreamDescription declareModel() {
         SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "ROS Bridge", "Connect Robots running on ROS")
                 .iconUrl("ros.png")
+                .category(AdapterType.Manufacturing)
                 .requiredTextParameter(Labels.from(ROS_HOST_KEY, "Ros Bridge", "Hostname of the ROS Bridge"))
                 .requiredTextParameter(Labels.from(ROS_PORT_KEY, "Port", "Port of the ROS Bridge"))
                 .requiredTextParameter(Labels.from(TOPIC_KEY, "Topic", "Name of the topic to be connected of the ROS Bridge"))

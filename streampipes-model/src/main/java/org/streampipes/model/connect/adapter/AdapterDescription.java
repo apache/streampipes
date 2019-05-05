@@ -79,7 +79,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
-    @RdfProperty(StreamPipes.HAS_EPA_TYPE)
+    @RdfProperty(StreamPipes.HAS_ADAPTER_TYPE)
     private List<String> category;
 
     public AdapterDescription() {
