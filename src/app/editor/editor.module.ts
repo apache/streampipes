@@ -50,6 +50,7 @@ import selectFilter from './filter/select.filter';
 import elementNameFilter from './filter/element-name.filter';
 import {PropertySelectionComponent} from "./components/customoutput/propertyselection/property-selection.component";
 import {PipelineElementDocumentationComponent} from "./components/pipeline-element-documentation/pipeline-element-documentation.component";
+import {CustomOutputValidatorDirective} from "./validator/text/custom-output-validator.directive";
 
 
 export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate', 'datatables', 'ng-showdown'])
@@ -57,6 +58,7 @@ export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimat
     .directive('myDataBind', myDataBind)
     .directive('imageBind', imageBind)
     .directive("textValidator", () => new TextValidatorDirective())
+    .directive("customOutputValidator", () => new CustomOutputValidatorDirective())
     .filter('displayRecommendedFilter', displayRecommendedFilter)
     .filter('selectFilter', selectFilter)
     .filter('elementNameFilter', elementNameFilter)

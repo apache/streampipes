@@ -14,7 +14,7 @@ export class DialogBuilder {
             bindToController: true,
             template: template,
             parent: angular.element(document.body),
-            clickOutsideToClose: true,
+            clickOutsideToClose: false,
             //scope: this.$scope,
             //rootScope: this.$rootScope,
             //preserveScope: true

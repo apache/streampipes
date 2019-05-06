@@ -1,13 +1,15 @@
 import * as angular from 'angular';
+import {JsplumbBridge} from "../../../services/jsplumb-bridge.service";
+import {JsplumbService} from "../../../services/jsplumb.service";
 
 export class PipelineElementOptionsController {
 
     ObjectProvider: any;
     PipelineElementRecommendationService: any;
     InitTooltips: any;
-    JsplumbBridge: any;
+    JsplumbBridge: JsplumbBridge;
     EditorDialogManager: any;
-    JsplumbService: any;
+    JsplumbService: JsplumbService;
     recommendationsAvailable: any;
     possibleElements: any;
     recommendedElements: any;
@@ -52,7 +54,12 @@ export class PipelineElementOptionsController {
     }
 
     openCustomizeDialog() {
-        this.EditorDialogManager.showCustomizeDialog($("#" + this.pipelineElement.payload.DOM), "", this.pipelineElement.payload);
+        this.EditorDialogManager.showCustomizeDialog($("#" + this.pipelineElement.payload.DOM), "", this.pipelineElement.payload)
+            .then(() => {
+                this.JsplumbService.activateEndpoint(this.pipelineElement.payload.DOM, !this.pipelineElement.payload.uncompleted);
+            }, () => {
+                this.JsplumbService.activateEndpoint(this.pipelineElement.payload.DOM, !this.pipelineElement.payload.uncompleted);
+            });
     }
 
     openHelpDialog() {

@@ -40,7 +40,7 @@ md-input-container.sp label:not(.md-no-float) {
   //transform: translate3d(0, -28px, 0) scale(1);
 }
 
-md-input-container.sp.md-input-focused label:not(.md-no-float), md-input-container.md-input-has-placeholder label:not(.md-no-float), md-input-container.md-input-has-value label:not(.md-no-float) {
+md-input-container.sp.md-input-focused label:not(.md-no-float), md-input-container.sp.md-input-has-placeholder label:not(.md-no-float), md-input-container.sp.md-input-has-value label:not(.md-no-float) {
   -webkit-transform: translate3d(0, 55px, 0) scale(0.75);
   color:white;
  }
@@ -53,7 +53,7 @@ md-input-container.sp.md-input-focused .md-input {
   border-width: 2px;
 }
 
-md-input-container.sp label:not(.md-no-float):not(.md-container-ignore), md-input-container .md-placeholder {
+md-input-container.sp label:not(.md-no-float):not(.md-container-ignore), md-input-container.sp .md-placeholder {
   padding-left:10px;
 }
 

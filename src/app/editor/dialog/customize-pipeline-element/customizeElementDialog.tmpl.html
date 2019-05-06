@@ -105,7 +105,7 @@
                                     </div>
                                     <div class="customize-item-content">
                                         <custom-output output-strategy="outputStrategy"
-                                                       selected-element="ctrl.selectedElement"></custom-output>
+                                                       selected-element="ctrl.selectedElement" customize-form="ctrl.customizeForm" ></custom-output>
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +120,7 @@
                 </div>
             </md-dialog-content>
             <md-dialog-actions layout="row">
-                <sp-button sp-button-gray ng-click="ctrl.hide()">
+                <sp-button sp-button-gray ng-click="ctrl.cancel()">
                     Close
                 </sp-button>
                 <sp-button sp-button-blue ng-disabled="ctrl.customizeForm.$invalid" type="submit"
