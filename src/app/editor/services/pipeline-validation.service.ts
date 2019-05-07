@@ -1,11 +1,12 @@
 import * as angular from 'angular';
 import * as dagre from 'dagre';
+import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
 
 export class PipelineValidationService {
 
     ObjectProvider: any;
     errorMessages: any = [];
-    JsplumbBridge: any;
+    JsplumbBridge: JsplumbBridge;
 
     availableErrorMessages: any = [
         {title: "Did you add a data stream?", content: "Any pipeline needs at least one data stream."},
@@ -36,6 +37,8 @@ export class PipelineValidationService {
 
         if (!this.isEmptyPipeline(rawPipelineModel)) {
             this.buildErrorMessages(streamInAssembly, actionInAssembly, allElementsConnected, onlyOnePipelineCreated);
+        } else {
+            this.errorMessages = [];
         }
 
         return streamInAssembly && actionInAssembly && allElementsConnected && onlyOnePipelineCreated;

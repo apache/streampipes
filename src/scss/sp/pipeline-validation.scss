@@ -1,0 +1,12 @@
+@import '../_variables';
+
+.pipeline-validation-summary {
+  background: white;
+  border-radius: 3px;
+  color: #5b5b5b;
+  padding: 2px 5px;
+}
+
+.pipeline-validation-summary-error {
+  color: $sp-color-error;
+}
