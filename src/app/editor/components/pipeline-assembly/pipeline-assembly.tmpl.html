@@ -41,10 +41,10 @@
             <span flex></span>
             <div style="position:relative;">
             <div ng-if="!ctrl.isPipelineAssemblyEmpty()" class="pipeline-validation-summary {{ctrl.PipelineValidationService.errorMessages.length > 0 ? 'pipeline-validation-summary-error' : ''}}" ng-click="ctrl.toggleErrorMessagesDisplayed()">
-                <div layout="row" layout-align="start center">
+                <div layout="row" layout-align="center center">
                     <div layout="row" layout-align="start center">
                         <i class="material-icons" ng-if="ctrl.PipelineValidationService.errorMessages.length > 0">notifications</i>
-                        <i class="material-icons" ng-if="ctrl.PipelineValidationService.errorMessages.length === 0">notifications_none</i>
+                        <i class="material-icons" ng-if="ctrl.PipelineValidationService.errorMessages.length === 0">done</i>
                     </div>
                     <div>
                         <span ng-if="ctrl.PipelineValidationService.errorMessages.length === 0">Pipeline ok</span>
