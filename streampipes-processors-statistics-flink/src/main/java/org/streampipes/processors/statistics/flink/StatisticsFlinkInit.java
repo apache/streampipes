@@ -20,13 +20,15 @@ package org.streampipes.processors.statistics.flink;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.processors.statistics.flink.config.StatisticsFlinkConfig;
+import org.streampipes.processors.statistics.flink.processor.stat.StatisticsSummaryController;
+import org.streampipes.processors.statistics.flink.processor.stat.window.StatisticsSummaryControllerWindow;
 
 public class StatisticsFlinkInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton.getInstance();
-//            .add(new StatisticsSummaryController())
-//            .add(new StatisticsSummaryControllerWindow());
+    DeclarersSingleton.getInstance()
+            .add(new StatisticsSummaryController())
+            .add(new StatisticsSummaryControllerWindow());
 
     new StatisticsFlinkInit().init(StatisticsFlinkConfig.INSTANCE);
   }

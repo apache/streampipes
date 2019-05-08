@@ -8,11 +8,7 @@ import org.streampipes.processors.textmining.flink.config.TextMiningFlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.EpProperties;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.sdk.helpers.Locales;
-import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.*;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -20,7 +16,7 @@ import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 public class WordCountController extends FlinkDataProcessorDeclarer<WordCountParameters> {
 
   private static final String WORD_COUNT_FIELD_KEY = "wordcountField";
-  private static final String TIME_WINDOW_KEY = "timeWindowKey";
+  private static final String TIME_WINDOW_KEY = "timeWindow";
   private static final String WORD_KEY = "word";
   private static final String COUNT_KEY = "count";
 
@@ -30,6 +26,8 @@ public class WordCountController extends FlinkDataProcessorDeclarer<WordCountPar
             .withAssets(Assets.DOCUMENTATION)
             .withLocales(Locales.EN)
             .category(DataProcessorType.AGGREGATE)
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+            .supportedFormats(SupportedFormats.jsonFormat())
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(
