@@ -38,13 +38,14 @@ public class RabbitMqPublisher {
 
   private RabbitMqParameters params;
 
-  private static final String EXCHANGE_NAME = "Axoom.IoT";
+  private String exchangeName;
   private static final Logger LOG = LoggerFactory.getLogger(RabbitMqPublisher.class);
 
   public RabbitMqPublisher(RabbitMqParameters params) {
     try {
       this.queueMap = new HashMap<>();
       this.params = params;
+      this.exchangeName = params.getExchangeName();
       setupConnection();
       this.errorMode = false;
     } catch (IOException e) {
@@ -71,7 +72,7 @@ public class RabbitMqPublisher {
       setupChannel(topic);
     }
     try {
-      queueMap.get(topic).basicPublish(EXCHANGE_NAME, topic, null, event);
+      queueMap.get(topic).basicPublish(exchangeName, topic, null, event);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -80,7 +81,7 @@ public class RabbitMqPublisher {
   private void setupChannel(String topic) {
     try {
       Channel channel = connection.createChannel();
-      channel.exchangeDeclare(EXCHANGE_NAME, "topic", true, false, null);
+      channel.exchangeDeclare(exchangeName, "topic", true, false, null);
 
       queueMap.put(topic, channel);
     } catch (IOException e) {

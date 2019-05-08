@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 FZI Forschungszentrum Informatik
+ * Copyright 2019 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.processors.statistics.flink.processor.stat;
+package org.streampipes.processors.statistics.flink.processor.stat.summary;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.streampipes.model.runtime.Event;

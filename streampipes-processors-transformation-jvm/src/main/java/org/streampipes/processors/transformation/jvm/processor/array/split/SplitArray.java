@@ -20,7 +20,9 @@ package org.streampipes.processors.transformation.jvm.processor.array.split;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.model.runtime.field.AbstractField;
+import org.streampipes.model.runtime.field.ListField;
 import org.streampipes.model.runtime.field.NestedField;
+import org.streampipes.model.runtime.field.PrimitiveField;
 import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
@@ -46,14 +48,27 @@ public class SplitArray implements EventProcessor<SplitArrayParameters> {
     String arrayField = splitArrayParameters.getArrayField();
     List<String> keepProperties = splitArrayParameters.getKeepProperties();
 
-    List<NestedField> allEvents = inputEvent.getFieldBySelector(arrayField).getAsList()
-            .parseAsCustomType(o -> (NestedField) o);
+    List<AbstractField> allEvents = inputEvent.getFieldBySelector(arrayField).getAsList()
+            .parseAsCustomType(o -> {
+              if (o instanceof NestedField){
+                return (NestedField) o;
+              } else if (o instanceof ListField) {
+                return (ListField) o;
+              } else {
+                return (PrimitiveField) o;
+              }
+            });
 
-    for (NestedField field : allEvents) {
+    for (AbstractField field : allEvents) {
       Event outEvent = new Event();
-      for (Map.Entry<String, AbstractField> key : field.getRawValue().entrySet()) {
-        outEvent.addField(key.getValue());
+      if (field instanceof NestedField) {
+        for (Map.Entry<String, AbstractField> key : ((NestedField) field).getRawValue().entrySet()) {
+          outEvent.addField(key.getValue());
+        }
+      } else {
+        outEvent.addField("value", field);
       }
+
       for (String propertyName : keepProperties) {
         outEvent.addField(inputEvent.getFieldBySelector(propertyName));
       }
