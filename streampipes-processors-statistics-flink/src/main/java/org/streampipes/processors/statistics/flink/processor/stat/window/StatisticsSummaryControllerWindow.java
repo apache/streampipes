@@ -20,18 +20,12 @@ package org.streampipes.processors.statistics.flink.processor.stat.window;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.processors.statistics.flink.processor.stat.StatisticsSummaryController;
+import org.streampipes.processors.statistics.flink.config.StatisticsFlinkConfig;
+import org.streampipes.processors.statistics.flink.processor.stat.summary.StatisticsSummaryController;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.EpProperties;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.sdk.helpers.Locales;
-import org.streampipes.sdk.helpers.Options;
-import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.helpers.*;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.Statistics;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
@@ -110,7 +104,7 @@ public class StatisticsSummaryControllerWindow extends
     StatisticsSummaryParamsSerializable serializableParams = new StatisticsSummaryParamsSerializable
             (valueToObserve, timestampMapping, groupBy, (long) timeWindowSize, timeUnit);
 
-    return new StatisticsSummaryProgramWindow(params, serializableParams);
+    return new StatisticsSummaryProgramWindow(params, serializableParams, StatisticsFlinkConfig.INSTANCE.getDebug());
 
   }
 }

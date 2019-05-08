@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 FZI Forschungszentrum Informatik
+ * Copyright 2019 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,12 @@
  *
  */
 
-package org.streampipes.processors.statistics.flink.processor.stat;
+package org.streampipes.processors.statistics.flink.processor.stat.summary;
 
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
+import org.streampipes.processors.statistics.flink.config.StatisticsFlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -77,7 +78,7 @@ public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<Stat
 
     StatisticsSummaryParameters params = new StatisticsSummaryParameters(graph, listPropertyMapping);
 
-    return new StatisticsSummaryProgram(params);
+    return new StatisticsSummaryProgram(params, StatisticsFlinkConfig.INSTANCE.getDebug());
 
   }
 }

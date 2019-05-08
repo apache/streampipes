@@ -41,9 +41,9 @@ public class FieldConverter implements FlatMapFunction<Event, Event> {
       String value = in.getFieldBySelector(convertProperty).getAsPrimitive().getAsString();
       try {
           if (targetDatatype.equals(XSD._float.toString())) {
-              in.updateFieldBySelector(convertProperty, Float.parseFloat(value));
+              in.updateFieldBySelector(convertProperty, Float.parseFloat(value.trim()));
           } else {
-              in.updateFieldBySelector(convertProperty, Integer.parseInt(value));
+              in.updateFieldBySelector(convertProperty, Integer.parseInt(value.trim()));
           }
           
           out.collect(in);
