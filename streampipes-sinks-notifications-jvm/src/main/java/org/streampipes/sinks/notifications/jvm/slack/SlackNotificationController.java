@@ -27,7 +27,12 @@ import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
+import org.streampipes.sdk.helpers.Options;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.sinks.notifications.jvm.config.ConfigKeys;
 import org.streampipes.sinks.notifications.jvm.config.SinksNotificationsJvmConfig;
@@ -91,7 +96,8 @@ public class SlackNotificationController extends StandaloneEventSinkDeclarer<Sla
       } else {
         SlackChannel channel = session.findChannelByName(userChannel);
         if (channel == null || channel.getId() == null) {
-          //throw new SpRuntimeException("The channel: '" + userChannel + "' does not exists or the bot has no rights to access it");
+          //throw new SpRuntimeException("The channel: '" + userChannel + "' does not exists or " +
+                  //"the bot has no rights to access it");
         }
       }
 
