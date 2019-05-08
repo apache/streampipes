@@ -18,6 +18,7 @@ package org.streampipes.connect.adapter.specific.wikipedia;
 import org.glassfish.jersey.media.sse.EventInput;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
+import org.streampipes.connect.adapter.util.AdapterOutputCollector;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -27,7 +28,7 @@ public class WikipediaSseConsumer {
 
   private Boolean running = true;
 
-  public void consumeEventStream(String url, WikipediaOutputCollector consumer) throws Exception {
+  public void consumeEventStream(String url, AdapterOutputCollector consumer) throws Exception {
     Client client = ClientBuilder.newBuilder().register(new SseFeature()).build();
     WebTarget target = client.target(url);
     EventInput e = null;
