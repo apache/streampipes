@@ -4,7 +4,7 @@
 # ARG_OPTIONAL_BOOLEAN([defaultip],[d],[When set the first ip is used as default])
 # ARG_OPTIONAL_BOOLEAN([all],[a],[Select all available StreamPipes services])
 # ARG_POSITIONAL_MULTI([operation],[The StreamPipes operation (operation-name) (service-name (optional))],[3],[],[])
-# ARG_TYPE_GROUP_SET([operation],[type string],[operation],[start,stop,restart,update,set-template,log,list-available,list-active,list-templates,activate,add,deactivate,clean,remove-settings,set-env,unset-env,create-compose,set-version])
+# ARG_TYPE_GROUP_SET([operation],[type string],[operation],[start,stop,restart,update,set-template,logs,list-available,list-active,list-templates,activate,add,deactivate,clean,force-clean,remove-settings,set-env,unset-env,create-compose,set-version])
 # ARG_DEFAULTS_POS()
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -29,12 +29,12 @@ die()
 
 operation()
 {
-	local _allowed=("start" "stop" "restart" "update" "set-template" "log" "list-available" "list-active" "list-templates" "activate" "add" "deactivate" "clean" "remove-settings" "set-env" "unset-env" "create-compose" "set-version") _seeking="$1"
+	local _allowed=("start" "stop" "restart" "update" "set-template" "logs" "list-available" "list-active" "list-templates" "activate" "add" "deactivate" "clean" "force-clean" "remove-settings" "set-env" "unset-env" "create-compose" "set-version") _seeking="$1"
 	for element in "${_allowed[@]}"
 	do
 		test "$element" = "$_seeking" && echo "$element" && return 0
 	done
-	die "Value '$_seeking' (of argument '$2') doesn't match the list of allowed values: 'start', 'stop', 'restart', 'update', 'set-template', 'log', 'list-available', 'list-active', 'list-templates', 'activate', 'add', 'deactivate', 'clean', 'remove-settings', 'set-env', 'unset-env', 'create-compose' and 'set-version'" 4
+	die "Value '$_seeking' (of argument '$2') doesn't match the list of allowed values: 'start', 'stop', 'restart', 'update', 'set-template', 'logs', 'list-available', 'list-active', 'list-templates', 'activate', 'add', 'deactivate', 'clean', 'force-clean', 'remove-settings', 'set-env', 'unset-env', 'create-compose' and 'set-version'" 4
 }
 
 
@@ -209,11 +209,6 @@ fi
 #	fi
 }
 
-endEcho() {
-	echo ''
-	info $1
-}
-
 getIp() {
     if [ -x "$(command -v ifconfig)" ]; then
         rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
@@ -373,7 +368,7 @@ startStreamPipes() {
 		SP_BACKEND_VERSION=`grep SP_BACKEND_VERSION "$SP_HOME/streampipes-cli/.env" | awk -F= '{print $2}'`
 		SP_HOST=`grep SP_HOST "$SP_HOME/streampipes-cli/.env" | awk -F= '{print $2}'`
 
-    #endEcho "StreamPipes started ${_arg_operation[1]}"
+    #info "StreamPipes started ${_arg_operation[1]}"
 		deployment_notice $SP_BACKEND_VERSION $SP_HOST
 }
 
@@ -383,14 +378,14 @@ updateStreamPipes() {
 		info "Updating StreamPipes ${_arg_operation[1]}"
     run "$command streampipes up -d ${_arg_operation[1]}"
 
-		endEcho "Services updated"
+		info "StreamPipes services updated"
 }
 
 updateServices() {
     getCommand
     $command pull ${_arg_operation[1]}
 
-    endEcho "Service updated. Execute sp restart ${_arg_operation[1]} to restart service"
+    info "Service updated. Execute sp restart ${_arg_operation[1]} to restart service"
 }
 
 stopStreamPipes() {
@@ -407,7 +402,7 @@ stopStreamPipes() {
     	run "$command rm -f ${_arg_operation[1]}"
 		fi
 
-    endEcho "StreamPipes stopped ${_arg_operation[1]}"
+    info "StreamPipes stopped ${_arg_operation[1]}"
 }
 
 restartStreamPipes() {
@@ -415,7 +410,7 @@ restartStreamPipes() {
 	info "Restarting StreamPipes."
 	run "$command restart ${_arg_operation[1]}"
 
-  endEcho "StreamPipes restarted ${_arg_operation[1]}"
+  info "StreamPipes restarted ${_arg_operation[1]}"
 
 }
 
@@ -425,16 +420,27 @@ logServices() {
 }
 
 cleanStreamPipes() {
-    # if `docker ps --format '{{.Names}}' | grep streampipes`; then
-    #   stopStreamPipes
-    # fi
-    #stopStreamPipes
-
-    if [ "$(docker volume ls --filter name=streampipes -q)" ]; then
-      info "Removing StreamPipes volumes"
-      run "docker volume rm $(docker volume ls --filter name=streampipes -q)" > /dev/null 2>&1
+    if [ "$(docker ps --format '{{.Names}}' | grep streampipes)" ]; then
+      fatal "Running StreamPipes services detected. Stop them before: 'sp stop'"
+    else
+      if [ "$(docker volume ls --filter name=streampipes -q)" ]; then
+        info "Removing StreamPipes volumes"
+        run "docker volume rm $(docker volume ls --filter name=streampipes -q)" > /dev/null 2>&1
+      fi
+      info "All StreamPipes configurations/data volumes were deleted."
     fi
-    endEcho "All configurations of StreamPipes have been deleted."
+}
+
+forceCleanStreamPipes() {
+    if [ "$(docker ps --format '{{.Names}}' | grep streampipes)" ]; then
+      info "Running StreamPipes services detected and stopped"
+      stopStreamPipes
+      if [ "$(docker volume ls --filter name=streampipes -q)" ]; then
+        info "Removing StreamPipes volumes"
+        run "docker volume rm $(docker volume ls --filter name=streampipes -q)" > /dev/null 2>&1
+      fi
+      info "All StreamPipes configurations/data volumes were deleted."
+    fi
 }
 
 removeStreamPipesSettings() {
@@ -457,9 +463,12 @@ listAvailableServices() {
 }
 
 listActiveServices() {
-	info "Running StreamPipes services:"
-	#cat $SP_HOME/streampipes-cli/system
-  docker ps --format '{{.Names}}' | grep streampipes | awk -F'_' '{print $2}'
+  if [ "$(docker ps --format '{{.Names}}' | grep streampipes | awk -F'_' '{print $2}')" ]; then
+    info "Running StreamPipes services:"
+    docker ps --format '{{.Names}}' | grep streampipes | awk -F'_' '{print $2}'
+  else
+    info "No StreamPipes services running. To start run 'sp start'"
+  fi
 }
 
 listTemplates() {
@@ -494,7 +503,7 @@ addService() {
         addAllServices
     else
         if grep -iq "${_arg_operation[1]}" $SP_HOME/streampipes-cli/system;then
-            info "Service ${_arg_operation[1]} already exists"
+            warning "StreamPipes service ${_arg_operation[1]} already exists"
         else
             echo ${_arg_operation[1]} >> $SP_HOME/streampipes-cli/system
         fi
@@ -516,7 +525,7 @@ addAllServices() {
     for dir in */ ; do
         service_name=`echo $dir | sed "s/\///g"`
         if grep -iq "$service_name" ../system;then
-            warning "Service $service_name already exists"
+            warning "StreamPipes service $service_name already exists"
         else
             echo $service_name >> ../system
         fi
@@ -546,6 +555,11 @@ fi
 if [ "$_arg_operation" = "clean" ];
 then
     cleanStreamPipes
+fi
+
+if [ "$_arg_operation" = "force-clean" ];
+then
+    forceCleanStreamPipes
 fi
 
 if [ "$_arg_operation" = "remove-settings" ];
@@ -604,10 +618,10 @@ then
     setTemplate
 fi
 
-if [ "$_arg_operation" = "set-env" ];
-then
-    setEnv
-fi
+# if [ "$_arg_operation" = "set-env" ];
+# then
+#     setEnv
+# fi
 
 # if [ "$_arg_operation" = "create-compose" ];
 # then
