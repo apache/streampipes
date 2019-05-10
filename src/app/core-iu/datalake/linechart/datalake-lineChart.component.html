@@ -1,22 +1,33 @@
-<div>
-    <h4 style="display: initial">Select data:</h4>
-    <mat-form-field style="margin-top: -10px; margin-bottom: -20px; margin-left: 10px;">
+<div fxLayout="row" fxLayoutAlign="start stretch" style="margin-top: 10px; margin-left: 5px">
+    <mat-form-field style="margin-right: 1px;top: -3px;height: 1px;" appearance="outline">
+        <mat-label>Select Data</mat-label>
         <mat-select (selectionChange)="selectKey($event.value)">
             <mat-option *ngFor="let key of dataKeys" [value]="key" style="background-color: #FFFFFF">
                 {{key}}
             </mat-option>
         </mat-select>
     </mat-form-field>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== 'All'" (click)="selectTimeUnit('All')">All</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === 'All'" color="primary" mat-raised-button>All</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '24 Hours'" (click)="selectTimeUnit('24 Hours')">24 Hours</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '24 Hours'"color="primary" mat-raised-button>24 Hours</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Week'" (click)="selectTimeUnit('1 Week')">1 Week</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Week'" color="primary" mat-raised-button>1 Week</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Month'" (click)="selectTimeUnit('1 Month')">1 Month</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Month'" color="primary" mat-raised-button>1 Month</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Year'" (click)="selectTimeUnit('1 Year')">1 Year</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Year'" color="primary" mat-raised-button>1 Year</button>
 </div>
 
 <sp-lineChart
         [xAxesKey]="xAxesKey"
         [yAxesKey]="yAxesKey"
         [data]="data"
-        [enableItemsPerPage]="true"
-        [enablePaging]="true"
+        [enableItemsPerPage]="enableItemsPerPage"
+        [enablePaging]="enablePaging"
         [currentPage]="currentPage"
         [maxPage]="maxPage"
+        [isLoadingData]="isLoadingData"
         (itemPerPageChange)="handleItemsPerPageChange($event)"
         (nextPage)="handleNextPage()"
         (previousPage)="handlePreviousPage()">

@@ -1,36 +1,69 @@
-
-<div fxLayout="row" fxLayoutAlign=" center">
-    <div *ngIf="enablePaging">
-        <button mat-icon-button (click)="clickPreviousPage()">
-            <mat-icon>keyboard_arrow_left</mat-icon>
-        </button>
-        Page: <label *ngIf="currentPage !== undefined">{{currentPage}}</label>
-        <label *ngIf="maxPage !== undefined"> - {{maxPage}}</label>
-        <button mat-icon-button (click)="clickNextPage()">
-            <mat-icon>keyboard_arrow_right</mat-icon>
-        </button>
-    </div>
-
-    <div *ngIf="enableItemsPerPage">
-        Items per page:
-        <mat-form-field style="width: 70px; margin-top: 10px;" >
-            <mat-select [(ngModel)]="itemsPerPage" (valueChange)="selectItemsPerPage($event)">
-                <mat-option [value]=50 style="background-color: #FFFFFF">
-                    50
-                </mat-option>
-                <mat-option [value]=100 style="background-color: #FFFFFF">
-                    100
-                </mat-option>
-                <mat-option [value]=200 style="background-color: #FFFFFF">
-                    200
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-
-</div>
 <div style="width: 100%; height: 500px">
-    <ngx-charts-line-chart
+    <!-- error message -->
+    <div *ngIf="displayData === undefined || _yAxesKey === undefined" fxLayout="column" fxLayoutAlign="space-around center" style="margin-top: 30px">
+        <mat-icon style="font-size: 70px; height: 70px; width: 70px;">
+            clear
+        </mat-icon>
+        <h3 *ngIf="displayData === undefined">No Data Found</h3>
+        <h3 *ngIf="_yAxesKey === undefined">Select Data</h3>
+    </div>
+
+    <!-- loading -->
+    <div *ngIf="isLoadingData" fxLayout="row" fxLayoutAlign="space-between center" style="margin-top: 30px">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <!-- chart header -->
+    <div fxLayout="row" fxLayoutAlign="space-between center"  *ngIf="displayData != undefined" style="height: 60px">
+        <!-- left button + date -->
+        <div>
+            <div *ngIf="enablePaging">
+                <button mat-icon-button (click)="clickPreviousPage()">
+                    <mat-icon>keyboard_arrow_left</mat-icon>
+                </button>
+                <label>{{displayData[0].series[0].name | date:'dd.yyyy.MM HH:mm:ss'}} </label>
+            </div>
+            <label *ngIf="!enablePaging" style="margin-left: 10px">{{displayData[0].series[0].name | date:'dd.yyyy.MM HH:mm:ss'}} </label>
+        </div>
+
+        <!-- page -->
+        <div *ngIf="currentPage !== undefined">
+            Page: <label>{{currentPage}} </label>
+            <label *ngIf="maxPage !== undefined"> - {{maxPage}}</label>
+        </div>
+
+        <!-- items per page -->
+        <div *ngIf="enableItemsPerPage" matTooltip="Items per page">
+            <mat-form-field style="width: 70px; margin-top: 10px;" >
+                <mat-label>Items per page</mat-label>
+                <mat-select [(ngModel)]="itemsPerPage" (valueChange)="selectItemsPerPage($event)">
+                    <mat-option [value]=50 style="background-color: #FFFFFF">
+                        50
+                    </mat-option>
+                    <mat-option [value]=100 style="background-color: #FFFFFF">
+                        100
+                    </mat-option>
+                    <mat-option [value]=200 style="background-color: #FFFFFF">
+                        200
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- right button + date -->
+        <div>
+            <div *ngIf="enablePaging">
+                <label>{{displayData[0].series[ displayData[0].series.length - 1].name | date:'dd.yyyy.MM HH:mm:ss'}} </label>
+                <button  mat-icon-button (click)="clickNextPage()">
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                </button>
+            </div>
+            <label *ngIf="!enablePaging" style="margin-right: 10px">{{displayData[0].series[ displayData[0].series.length - 1].name | date:'dd.yyyy.MM HH:mm:ss'}} </label>
+        </div>
+    </div>
+
+    <!-- Chart -->
+    <ngx-charts-line-chart flex
             *ngIf="displayData != undefined"
             [results]="displayData"
             [gradient]="false"
@@ -45,4 +78,7 @@
             [timeline]="true"
             (select)="onSelect($event)">
     </ngx-charts-line-chart>
+
+
 </div>
+

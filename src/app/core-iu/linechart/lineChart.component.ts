@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {time} from '@ngtools/webpack/src/benchmark';
 
 @Component({
     selector: 'sp-lineChart',
@@ -17,6 +16,8 @@ export class LineChartComponent {
             if (this._data !== undefined && this._xAxesKey !== undefined && this._yAxesKey !== undefined) {
                 this.processData()
             }
+        } else {
+            this.displayData = undefined;
         }
     }
     @Input() set xAxesKey(value: string) {
@@ -39,10 +40,12 @@ export class LineChartComponent {
     @Input() maxPage: number = undefined;
     @Input() enablePaging: boolean = false;
     @Input() enableItemsPerPage: boolean = false;
+    @Input() isLoadingData: boolean = false;
 
     @Output() previousPage = new EventEmitter<boolean>();
     @Output() nextPage = new EventEmitter<boolean>();
     @Output() itemPerPageChange = new EventEmitter<number>();
+
 
     _xAxesKey: string = undefined;
     _yAxesKey: string = undefined;
@@ -57,7 +60,6 @@ export class LineChartComponent {
             serie.push({name: new Date(date[this._xAxesKey]), value: date[this._yAxesKey]})
         });
         this.displayData = [{name: this._yAxesKey, series: serie}]
-        console.log(this.displayData)
     }
 
     clickPreviousPage(){
