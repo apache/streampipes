@@ -69,7 +69,7 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
   private String port;
 
   private boolean stream = false;
-  private static List<Column> tableSchema = new ArrayList<>();
+  private static List<Column> tableSchema;
   private BinaryLogClient client;
 
   public MySqlAdapter() {
@@ -130,6 +130,7 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
       }
     }
     if (stream) {
+      //TODO: remove System.out.println
       if (EventType.isUpdate(event.getHeader().getEventType())) {
         System.out.println("Data updated: ");
         for (Entry<Serializable[], Serializable[]> en : ((UpdateRowsEventData) event.getData()).getRows()) {
@@ -177,12 +178,14 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
     // Load JDBC Driver, connect JDBC Driver, Extract information, disconnect JDBC Driver
     EventSchema eventSchema = new EventSchema();
     GuessSchema guessSchema = new GuessSchema();
+    tableSchema = new ArrayList<>();
     List<EventProperty> allProperties = new ArrayList<>();
 
     getConfigurations(adapterDescription);
 
     checkJdbcDriver();
     extractTableInformation();
+
 
     for (Column column : tableSchema) {
       allProperties.add(PrimitivePropertyBuilder
@@ -229,7 +232,7 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
   }
 
   private void extractTableInformation() throws AdapterException {
-    String server = "jdbc:mysql://" + host + ":" + port + "/";
+    String server = "jdbc:mysql://" + host + ":" + port + "/" + "?sslMode=DISABLED";
     ResultSet resultSet = null;
 
     String query = "SELECT COLUMN_NAME, DATA_TYPE, COLUMN_TYPE FROM "
