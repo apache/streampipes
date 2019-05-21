@@ -1,5 +1,6 @@
 activemq
 backend
+consul
 connect-master
 connect-worker
 couchdb
