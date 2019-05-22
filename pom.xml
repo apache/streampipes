@@ -21,7 +21,7 @@
 
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.62.0-SNAPSHOT</version>
+    <version>0.62.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
