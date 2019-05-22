@@ -203,6 +203,11 @@ docker-processors-transformation-jvm:
     variables:
       CONTAINER_NAME: "processors-transformation-jvm"
 
+docker-processors-text-mining-flink:
+  <<: *docker_hub_script
+  variables:
+    CONTAINER_NAME: "processors-text-mining-flink"
+
 docker-sinks-brokers-jvm:
     <<: *docker_script
     variables:
@@ -298,6 +303,11 @@ docker-hub-processors-transformation-jvm:
     <<: *docker_hub_script
     variables:
       CONTAINER_NAME: "processors-transformation-jvm"
+
+docker-hub-processors-text-mining-flink:
+  <<: *docker_hub_script
+  variables:
+    CONTAINER_NAME: "processors-text-mining-flink"
 
 docker-hub-sinks-brokers-jvm:
     <<: *docker_hub_script
