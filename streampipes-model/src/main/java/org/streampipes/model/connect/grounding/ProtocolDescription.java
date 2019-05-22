@@ -23,13 +23,15 @@ import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.Cloner;
+import org.streampipes.vocabulary.StreamPipes;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
 
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass("sp:ProtocolDescription")
@@ -47,25 +49,33 @@ public class ProtocolDescription extends NamedStreamPipesEntity {
     @RdfProperty("sp:config")
     List<StaticProperty> config;
 
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty(StreamPipes.HAS_ADAPTER_TYPE)
+    private List<String> category;
+
     public ProtocolDescription() {
     }
 
     public ProtocolDescription(String uri, String name, String description) {
         super(uri, name, description);
         this.config = new ArrayList<>();
+        this.category = new ArrayList<>();
     }
 
     public ProtocolDescription(String uri, String name, String description, List<StaticProperty> config) {
         super(uri, name, description);
         this.config = config;
+        this.category = new ArrayList<>();
     }
 
     public ProtocolDescription(ProtocolDescription other) {
         super(other);
 
         this.config = new Cloner().staticProperties(other.getConfig());
-
-
+        if (other.getCategory() != null) {
+            this.category = new Cloner().epaTypes(other.getCategory());
+        }
     }
 
     public void addConfig(StaticProperty sp) {
@@ -86,5 +96,13 @@ public class ProtocolDescription extends NamedStreamPipesEntity {
 
     public void setSourceType(String sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public List<String> getCategory() {
+        return category;
+    }
+
+    public void setCategory(List<String> category) {
+        this.category = category;
     }
 }

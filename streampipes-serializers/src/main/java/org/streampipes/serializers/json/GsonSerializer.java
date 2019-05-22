@@ -21,6 +21,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.SpDataSet;
@@ -78,6 +79,7 @@ public class GsonSerializer {
     builder.registerTypeAdapter(MappingProperty.class, new JsonLdSerializer<MappingProperty>());
     builder.registerTypeAdapter(ValueSpecification.class, new JsonLdSerializer<ValueSpecification>());
     builder.registerTypeAdapter(DataSinkType.class, new EcTypeAdapter());
+    builder.registerTypeAdapter(AdapterType.class, new AdapterTypeAdapter());
     builder.registerTypeAdapter(Message.class, new JsonLdSerializer<Message>());
     builder.registerTypeAdapter(DataProcessorType.class, new EpaTypeAdapter());
     builder.registerTypeAdapter(URI.class, new UriSerializer());

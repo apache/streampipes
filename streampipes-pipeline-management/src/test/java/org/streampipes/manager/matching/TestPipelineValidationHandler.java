@@ -17,11 +17,9 @@
 
 package org.streampipes.manager.matching;
 
-import junit.framework.TestCase;
-
 //import static org.assertj.core.api.Assertions.assertThat;
 
-public class TestPipelineValidationHandler extends TestCase {
+public class TestPipelineValidationHandler {
 
 //	@Test
 //	public void testPositivePipelineValidation() {

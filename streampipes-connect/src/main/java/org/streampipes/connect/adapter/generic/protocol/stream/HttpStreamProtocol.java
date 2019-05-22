@@ -25,6 +25,7 @@ import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.connect.exception.ParseException;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
@@ -83,11 +84,10 @@ public class HttpStreamProtocol extends PullProtocol {
         return ProtocolDescriptionBuilder.create(ID, "HTTP Stream", "This is the " +
                 "description for the http stream protocol")
                 .sourceType(AdapterSourceType.STREAM)
+                .category(AdapterType.Generic)
                 .iconUrl("rest.png")
-                .requiredTextParameter(Labels.from(URL_PROPERTY, "URL", "This property " +
-                        "defines the URL for the http request."))
-                .requiredIntegerParameter(Labels.from(INTERVAL_PROPERTY, "Interval", "This property " +
-                        "defines the pull interval in seconds."))
+                .requiredTextParameter(Labels.from(URL_PROPERTY, "Url", "Example: http(s)://test-server.com"))
+                .requiredIntegerParameter(Labels.from(INTERVAL_PROPERTY, "Interval", "Example: 5 (Polling interval in seconds)"))
                 //.requiredTextParameter(Labels.from(ACCESS_TOKEN_PROPERTY, "Access Token", "Http
                 // Access Token"))
                 .build();

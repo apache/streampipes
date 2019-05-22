@@ -26,7 +26,7 @@ build:
     - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
    # - mvn clean package javadoc:aggregate gpg:sign -DskipTests
-    - mvn clean package javadoc:aggregate -DskipTests
+    - mvn clean package javadoc:aggregate
     - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
     - "echo $MVN_VERSION >> ./target/mvn_version"
   artifacts:
@@ -64,6 +64,7 @@ docker-backend:
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
      - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
      - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION -t $HARBOR_IMAGE_NAME/backend:latest -t $HARBOR_IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
+     - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
      - docker push $IMAGE_NAME/backend:$MVN_VERSION
      - docker push $IMAGE_NAME/backend:latest
      - docker push $HARBOR_IMAGE_NAME/backend:$MVN_VERSION
@@ -81,6 +82,7 @@ docker-connect-container:
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
      - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
      - docker build --pull -t $IMAGE_NAME/streampipes-connect-container:latest -t $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION -t $HARBOR_IMAGE_NAME/streampipes-connect-container:latest -t $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container/
+     - docker build --pull -t $IMAGE_NAME/streampipes-connect-container:latest -t $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION  ./streampipes-connect-container/
      - docker push $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
      - docker push $IMAGE_NAME/streampipes-connect-container:latest
      - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION

@@ -25,6 +25,7 @@ import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.connect.exception.ParseException;
 import org.streampipes.messaging.InternalEventProcessor;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.streampipes.sdk.helpers.AdapterSourceType;
@@ -62,10 +63,11 @@ public class MqttProtocol extends BrokerProtocol {
     return ProtocolDescriptionBuilder.create(ID, "MQTT", "Consumes messages from a broker using " +
             "the MQTT protocol")
             .iconUrl("mqtt.png")
+            .category(AdapterType.Generic, AdapterType.Manufacturing)
             .sourceType(AdapterSourceType.STREAM)
             .requiredTextParameter(Labels.from("broker_url", "Broker URL",
-                    "This property defines the URL of the MQTT broker."))
-            .requiredTextParameter(Labels.from("topic", "Topic","The topic to subscribe to"))
+                    "Example: tcp://test-server.com:1883 (Protocol required. Port required)"))
+            .requiredTextParameter(Labels.from("topic", "Topic","Example: test/topic"))
             .build();
   }
 

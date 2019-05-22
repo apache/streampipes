@@ -52,7 +52,6 @@ public class ImageParser extends Parser {
 
         try {
             byte[] result = IOUtils.toByteArray(data);
-            System.out.println("Parser " + result.toString());
             emitBinaryEvent.emit(result);
         } catch (IOException e) {
             throw new ParseException(e.getMessage());
@@ -65,6 +64,7 @@ public class ImageParser extends Parser {
         EventSchema resultSchema = new EventSchema();
         EventPropertyPrimitive p = new EventPropertyPrimitive();
         p.setRuntimeName("image");
+        p.setLabel("Image");
         p.setRuntimeType(XSD._string.toString());
 
         p.setDomainProperties(Arrays.asList(URI.create("https://image.com")));

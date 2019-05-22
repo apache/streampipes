@@ -40,6 +40,7 @@ import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.connect.exception.ParseException;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
@@ -85,11 +86,12 @@ public class KafkaProtocol extends BrokerProtocol {
         return ProtocolDescriptionBuilder.create(ID,"Apache Kafka","Consumes messages from an " +
                 "Apache Kafka broker")
                 .iconUrl("kafka.jpg")
+                .category(AdapterType.Generic, AdapterType.Manufacturing)
                 .sourceType(AdapterSourceType.STREAM)
                 .requiredTextParameter(Labels.from("broker_url", "Broker URL",
-                        "This property defines the URL of the Kafka broker."))
+                        "Example: test.server.com:9092 (No protocol. Port required)"))
                 .requiredTextParameter(Labels.from("topic", "Topic",
-                        "Topic in the broker"))
+                        "Example: test.topic"))
                 .build();
     }
 

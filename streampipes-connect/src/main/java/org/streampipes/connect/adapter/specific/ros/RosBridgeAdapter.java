@@ -31,6 +31,7 @@ import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectForm
 import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectParser;
 import org.streampipes.connect.adapter.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
@@ -51,10 +52,12 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
     public static final String ID = "http://streampipes.org/adapter/specific/ros";
 
     private static final String ROS_HOST_KEY = "ROS_HOST_KEY";
+    private static final String ROS_PORT_KEY = "ROS_PORT_KEY";
     private static final String TOPIC_KEY = "TOPIC_KEY";
 
     private String topic;
     private String host;
+    private int port;
 
     private Ros ros;
 
@@ -70,11 +73,13 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
         for (StaticProperty sp : all) {
             if (sp.getInternalName().equals(ROS_HOST_KEY)) {
                 this.host = ((FreeTextStaticProperty) sp).getValue();
+            } else if (sp.getInternalName().equals(ROS_PORT_KEY)) {
+                port = Integer.parseInt(((FreeTextStaticProperty) sp).getValue());
             } else {
                 this.topic = ((FreeTextStaticProperty) sp).getValue();
             }
         }
-
+        
         this.jsonObjectParser = new JsonObjectParser();
     }
 
@@ -82,8 +87,10 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
     public SpecificAdapterStreamDescription declareModel() {
         SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "ROS Bridge", "Connect Robots running on ROS")
                 .iconUrl("ros.png")
-                .requiredTextParameter(Labels.from(ROS_HOST_KEY, "Ros Bridge", "Hostname of the ROS Bridge"))
-                .requiredTextParameter(Labels.from(TOPIC_KEY, "Topic", "Name of the topic to be connected of the ROS Bridge"))
+                .category(AdapterType.Manufacturing)
+                .requiredTextParameter(Labels.from(ROS_HOST_KEY, "Ros Bridge", "Example: test-server.com (No protocol) "))
+                .requiredTextParameter(Labels.from(ROS_PORT_KEY, "Port", "Example: 9090"))
+                .requiredTextParameter(Labels.from(TOPIC_KEY, "Topic", "Example: /battery (Starts with /) "))
                 .build();
         description.setAppId(ID);
 
@@ -93,7 +100,7 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public void startAdapter() throws AdapterException {
-        this.ros = new Ros(this.host);
+        this.ros = new Ros(this.host, this.port);
         this.ros.connect();
 
         String topicType = getMethodType(this.ros, this.topic);
@@ -152,17 +159,26 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
     public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException {
         String host = null;
         String topic = null;
+        int port = 0;
 
          for (StaticProperty sp : adapterDescription.getConfig()) {
             if (sp.getInternalName().equals(ROS_HOST_KEY)) {
                 host = ((FreeTextStaticProperty) sp).getValue();
-            } else {
+            } else if (sp.getInternalName().equals(ROS_PORT_KEY)) {
+                port = Integer.parseInt(((FreeTextStaticProperty) sp).getValue());
+            }
+            else {
                 topic = ((FreeTextStaticProperty) sp).getValue();
             }
         }
 
-        Ros ros = new Ros(host);
-        ros.connect();
+        Ros ros = new Ros(host, port);
+
+        boolean connect = ros.connect();
+
+        if (!connect) {
+            throw new AdapterException("Could not connect to ROS bridge Endpoint: " + host + " with port: " + port);
+        }
 
         String topicType = getMethodType(ros, topic);
 
@@ -177,8 +193,6 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
                 e.printStackTrace();
             }
         }
-
-        System.out.println(getNEvents.getEvents().get(0));
 
         t.interrupt();
 

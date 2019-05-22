@@ -39,11 +39,20 @@ public class Labels {
    * @param label       A human-readable title
    * @param description A human-readable brief summary of the element.
    * @return
+   * @deprecated Externalize labels by using
+   * {@link org.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
+   * to ease future support for multiple languages.
    */
   public static Label from(String internalId, String label, String description) {
     return new Label(internalId, label, description);
   }
 
+  @Deprecated
+  /**
+  *  @deprecated Externalize labels by using
+  *  {@link org.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
+  *  to ease future support for multiple languages.
+  */
   public static Label fromResources(String resourceIdentifier, String resourceName) {
     try {
       return new Label(resourceName, findTitleLabel(resourceIdentifier, resourceName), findDescriptionLabel(resourceIdentifier, resourceName));
@@ -63,6 +72,12 @@ public class Labels {
     return new Label(internalId, "", "");
   }
 
+  @Deprecated
+  /**
+   *  @deprecated Externalize labels by using
+   *  {@link org.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
+   *  to ease future support for multiple languages.
+   */
   public static Label withTitle(String label, String description) {
     return new Label("", label, description);
   }
@@ -80,7 +95,7 @@ public class Labels {
   }
 
   private static String makeResourceId(String resourceName, Boolean titleType) {
-    return resourceName +"." +(titleType ? "title" : "description");
+    return resourceName + "." + (titleType ? "title" : "description");
   }
 
   private static Properties loadProperties(String filename) throws IOException {

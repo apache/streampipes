@@ -26,6 +26,7 @@ import org.streampipes.connect.adapter.specific.sensemap.model.SenseBox;
 import org.streampipes.connect.adapter.specific.sensemap.model.Sensor;
 import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
@@ -81,6 +82,7 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
 
         SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "OpenSenseMap", "Environment Sensors")
                 .iconUrl("openSenseMap.png")
+                .category(AdapterType.Environment, AdapterType.OpenData)
                 .requiredMultiValueSelection(Labels.from("sensors", "Sensors", "Select the " +
                         "sensors that are included in the data stream"), Stream
                         .of(SensorNames.ALL_SENSOR_LABELS)

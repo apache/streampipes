@@ -20,14 +20,14 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.61.0</version>
+        <version>0.62.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>streampipes-wrapper-siddhi</artifactId>
 
     <properties>
-        <siddhi.version>4.1.51</siddhi.version>
+        <siddhi.version>4.5.4</siddhi.version>
     </properties>
 
     <dependencies>

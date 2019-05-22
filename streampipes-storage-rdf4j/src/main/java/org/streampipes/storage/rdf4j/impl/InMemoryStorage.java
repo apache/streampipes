@@ -25,12 +25,14 @@ import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,15 +88,21 @@ public class InMemoryStorage implements IPipelineElementDescriptionStorage {
   private void initializeSEPStorage() {
     inMemorySEPStorage.clear();
     List<DataSourceDescription> seps = sesameStorage.getAllSEPs();
+    seps.forEach(sep ->
+            sep.getSpDataStreams().forEach(es ->
+                    es.getEventSchema()
+                            .getEventProperties()
+                            .sort(Comparator.comparingInt(EventProperty::getIndex))));
     seps.forEach(sep -> inMemorySEPStorage.put(sep.getElementId(), sep));
     seps.forEach(sep -> sep.getSpDataStreams().forEach(eventStream -> inMemoryEventStreamStorage.put(eventStream.getElementId(),
             eventStream)));
   }
 
   private <T extends ConsumableStreamPipesEntity> List<T> sort(List<T> processingElements) {
-    processingElements.forEach(pe -> pe.getStaticProperties().sort((o1, o2) -> {
-        return Integer.compare(o1.getIndex(), o2.getIndex());
-    }));
+    processingElements.forEach(pe -> {
+      pe.getStaticProperties().sort(Comparator.comparingInt(StaticProperty::getIndex));
+      pe.getSpDataStreams().sort(Comparator.comparingInt(SpDataStream::getIndex));
+    });
     return processingElements;
   }
 

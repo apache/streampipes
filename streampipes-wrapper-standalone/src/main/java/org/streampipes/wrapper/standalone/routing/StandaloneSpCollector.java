@@ -25,8 +25,8 @@ import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.wrapper.routing.PipelineElementCollector;
 import org.streampipes.wrapper.standalone.manager.PManager;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class StandaloneSpCollector<T extends TransportProtocol, C> implements
         PipelineElementCollector<C> {
@@ -47,7 +47,7 @@ public abstract class StandaloneSpCollector<T extends TransportProtocol, C> impl
     this.transportFormat = format;
     this.dataFormatDefinition = PManager.getDataFormat(format).orElseThrow(() -> new
             SpRuntimeException("Could not find format"));
-    this.consumers = new HashMap<>();
+    this.consumers = new ConcurrentHashMap<>();
   }
 
   public void registerConsumer(String routeId, C consumer) {
