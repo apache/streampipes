@@ -88,9 +88,9 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
         SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "ROS Bridge", "Connect Robots running on ROS")
                 .iconUrl("ros.png")
                 .category(AdapterType.Manufacturing)
-                .requiredTextParameter(Labels.from(ROS_HOST_KEY, "Ros Bridge", "Hostname of the ROS Bridge"))
-                .requiredTextParameter(Labels.from(ROS_PORT_KEY, "Port", "Port of the ROS Bridge"))
-                .requiredTextParameter(Labels.from(TOPIC_KEY, "Topic", "Name of the topic to be connected of the ROS Bridge"))
+                .requiredTextParameter(Labels.from(ROS_HOST_KEY, "Ros Bridge", "Example: test-server.com (No protocol) "))
+                .requiredTextParameter(Labels.from(ROS_PORT_KEY, "Port", "Example: 9090"))
+                .requiredTextParameter(Labels.from(TOPIC_KEY, "Topic", "Example: /battery (Starts with /) "))
                 .build();
         description.setAppId(ID);
 

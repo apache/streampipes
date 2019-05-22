@@ -66,12 +66,11 @@ public class FileProtocol extends Protocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        return ProtocolDescriptionBuilder.create(ID, "File", "Reads the content from a local file.")
+        return ProtocolDescriptionBuilder.create(ID, "File Set", "Reads the content from a local file.")
                 .sourceType(AdapterSourceType.SET)
                 .category(AdapterType.Generic)
                 .iconUrl("file.png")
-                .requiredFile(Labels.from("filePath", "File", "This " +
-                        "property defines the path to the file."))
+                .requiredFile(Labels.from("filePath", "File", "File Path"))
                 .build();
     }
 

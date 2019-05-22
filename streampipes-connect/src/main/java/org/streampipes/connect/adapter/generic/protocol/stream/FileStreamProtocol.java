@@ -93,14 +93,13 @@ public class FileStreamProtocol extends PullProtocol {
 
   @Override
   public ProtocolDescription declareModel() {
-    return ProtocolDescriptionBuilder.create(ID, "File", "Continuously streams the content of a " +
+    return ProtocolDescriptionBuilder.create(ID, "File Stream", "Continuously streams the content of a " +
             "file.")
             .sourceType(AdapterSourceType.STREAM)
             .category(AdapterType.Generic)
             .iconUrl("file.png")
-            .requiredFile(Labels.from("filePath", "File", "This property defines the path to the file."))
-            .requiredIntegerParameter(Labels.from("interval", "Interval", "This property " +
-                    "defines the pull interval in seconds."))
+            .requiredFile(Labels.from("filePath", "File", "File path"))
+            .requiredIntegerParameter(Labels.from("interval", "Interval", "Example: 5 (Polling interval in seconds)"))
             .build();
   }
 

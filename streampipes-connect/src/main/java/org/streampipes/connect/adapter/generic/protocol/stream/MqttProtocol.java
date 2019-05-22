@@ -66,8 +66,8 @@ public class MqttProtocol extends BrokerProtocol {
             .category(AdapterType.Generic, AdapterType.Manufacturing)
             .sourceType(AdapterSourceType.STREAM)
             .requiredTextParameter(Labels.from("broker_url", "Broker URL",
-                    "This property defines the URL of the MQTT broker."))
-            .requiredTextParameter(Labels.from("topic", "Topic","The topic to subscribe to"))
+                    "Example: tcp://test-server.com:1883 (Protocol required. Port required)"))
+            .requiredTextParameter(Labels.from("topic", "Topic","Example: test/topic"))
             .build();
   }
 
