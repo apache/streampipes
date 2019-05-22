@@ -7,24 +7,18 @@
 ***
 
 ## Description
-
-Appends the current time in ms to the event payload
-Add a detailed description here
+Appends the current time in ms to the event payload.
 
 ***
 
 ## Required input
-
+The timestamp enricher works with any input event.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
+(no further configuration required)
 
 ## Output
+This processor appends the current system time to every input event.

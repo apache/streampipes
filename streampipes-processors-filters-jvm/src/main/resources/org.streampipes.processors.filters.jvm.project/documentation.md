@@ -7,24 +7,18 @@
 ***
 
 ## Description
-
-Outputs a selectable subset of an input event type
-Add a detailed description here
+Outputs a selectable subset of an input event type.
 
 ***
 
 ## Required input
-
+The project processor works with any input event stream.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
+(no further configuration required)
 
 ## Output
+The output depends on the fields selected at pipeline development time.

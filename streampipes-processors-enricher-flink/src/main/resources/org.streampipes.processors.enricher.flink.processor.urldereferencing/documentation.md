@@ -8,23 +8,20 @@
 
 ## Description
 
-Append the html page as a string to event
-Add a detailed description here
+Parses and appends the html page as a string to event.
 
 ***
 
 ## Required input
-
+The URL Dereferencing processor requires an input stream that provides an input field of type 'string', representing 
+the URL to dereference.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
+### URL
+The field containing the URL to dereference.
 
 ## Output
+The processor appends the extracted HTML page to each input event.
