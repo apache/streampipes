@@ -21,10 +21,12 @@ import javax.ws.rs.core.Response;
 
 public interface IPipelineElementCategory {
 
-	Response getEps();
+  Response getEps();
 
-	Response getEpaCategories();
+  Response getEpaCategories();
 
-	Response getEcCategories();
-	
+  Response getEcCategories();
+
+  Response getAdapterCategories();
+
 }

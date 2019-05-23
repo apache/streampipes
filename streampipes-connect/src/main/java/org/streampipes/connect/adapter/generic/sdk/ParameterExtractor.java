@@ -43,6 +43,10 @@ public class ParameterExtractor {
                 .collect(Collectors.toList());
     }
 
+    public String selectedSingleValueOption(String internalName) {
+        return selectedMultiValues(internalName).get(0);
+    }
+
     public StaticProperty getStaticPropertyByName(String name)
     {
         for(StaticProperty p : list)

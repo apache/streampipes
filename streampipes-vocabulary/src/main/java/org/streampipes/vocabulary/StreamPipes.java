@@ -136,6 +136,7 @@ public class StreamPipes {
   public static final String HAS_OUTPUT_STRATEGY = NS + "hasOutputStrategy";
   public static final String HAS_EPA_TYPE = NS + "hasEpaType";
   public static final String HAS_EC_TYPE = NS + "hasEcType";
+  public static final String HAS_ADAPTER_TYPE = NS + "hasAdapterType";
   public static final String PRODUCES = NS + "produces";
 
   public static final String HAS_TRANSPORT_PROTOCOL = NS + "hasTransportProtocol";
@@ -321,4 +322,7 @@ public class StreamPipes {
   public static final String SUCCESS_MESSAGE = NS + "SuccessMessage";
 
 
+  public static final String INCLUDED_ASSETS = NS + "includedAssets";
+  public static final String INCLUDES_LOCALES = NS + "includesLocales";
+  public static final String INCLUDED_LOCALES = NS + "includedLocales";
 }

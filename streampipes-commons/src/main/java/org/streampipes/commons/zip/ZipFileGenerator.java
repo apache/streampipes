@@ -39,7 +39,6 @@ public class ZipFileGenerator {
   public ZipFileGenerator(File inputDirectory, File outputFile) {
     this(inputDirectory);
     this.outputFile = outputFile;
-
   }
 
   public ZipFileGenerator(File inputDirectory) {

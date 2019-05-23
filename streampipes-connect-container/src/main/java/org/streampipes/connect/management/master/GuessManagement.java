@@ -40,6 +40,9 @@ public class GuessManagement {
         GuessSchema guessSchema;
         try {
             guessSchema = adapter.getSchema(adapterDescription);
+            for (int i = 0; i < guessSchema.getEventSchema().getEventProperties().size(); i++) {
+                guessSchema.getEventSchema().getEventProperties().get(i).setIndex(i);
+            }
         } catch (ParseException e) {
             logger.error(e.toString());
 

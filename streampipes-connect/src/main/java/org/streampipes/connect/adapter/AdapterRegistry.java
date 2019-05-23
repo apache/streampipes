@@ -43,10 +43,16 @@ import org.streampipes.connect.adapter.generic.protocol.stream.HDFSProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.HttpStreamProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.MqttProtocol;
+import org.streampipes.connect.adapter.specific.coindesk.CoindeskBitcoinAdapter;
 import org.streampipes.connect.adapter.specific.gdelt.GdeltAdapter;
 import org.streampipes.connect.adapter.specific.mysql.MySqlAdapter;
+import org.streampipes.connect.adapter.specific.iex.IexCloudNewsAdapter;
+import org.streampipes.connect.adapter.specific.iex.IexCloudStockAdapter;
 import org.streampipes.connect.adapter.specific.opcua.OpcUaAdapter;
 import org.streampipes.connect.adapter.specific.ros.RosBridgeAdapter;
+import org.streampipes.connect.adapter.specific.slack.SlackAdapter;
+import org.streampipes.connect.adapter.specific.wikipedia.WikipediaEditedArticlesAdapter;
+import org.streampipes.connect.adapter.specific.wikipedia.WikipediaNewArticlesAdapter;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.HashMap;
@@ -68,6 +74,12 @@ public class AdapterRegistry {
         allAdapters.put(MySqlAdapter.ID, new MySqlAdapter());
         //allAdapters.put(NswTrafficCameraAdapter.ID, new NswTrafficCameraAdapter());
         allAdapters.put(RosBridgeAdapter.ID, new RosBridgeAdapter());
+        allAdapters.put(CoindeskBitcoinAdapter.ID, new CoindeskBitcoinAdapter());
+        allAdapters.put(IexCloudStockAdapter.ID, new IexCloudStockAdapter());
+        allAdapters.put(IexCloudNewsAdapter.ID, new IexCloudNewsAdapter());
+        allAdapters.put(WikipediaEditedArticlesAdapter.ID, new WikipediaEditedArticlesAdapter());
+        allAdapters.put(WikipediaNewArticlesAdapter.ID, new WikipediaNewArticlesAdapter());
+        allAdapters.put(SlackAdapter.ID, new SlackAdapter());
 
         return allAdapters;
     }

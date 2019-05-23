@@ -60,6 +60,14 @@ public abstract class AbstractProcessingElementBuilder<BU extends
     this.supportedGrounding = new EventGrounding();
   }
 
+  protected AbstractProcessingElementBuilder(String id, T element) {
+    super(id, element);
+    this.streamRequirements = new ArrayList<>();
+    this.stream1Properties = new ArrayList<>();
+    this.stream2Properties = new ArrayList<>();
+    this.supportedGrounding = new EventGrounding();
+  }
+
   /**
    * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
    */
@@ -278,6 +286,11 @@ public abstract class AbstractProcessingElementBuilder<BU extends
     }
 
     this.elementDescription.setSupportedGrounding(supportedGrounding);
+
+    for(int i = 0; i < streamRequirements.size(); i++) {
+      streamRequirements.get(i).setIndex(i);
+    }
+
     this.elementDescription.setSpDataStreams(streamRequirements);
 
   }

@@ -58,6 +58,19 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
   @RdfProperty(StreamPipes.INCLUDES_ASSETS)
   private boolean includesAssets;
 
+  @RdfProperty(StreamPipes.INCLUDES_LOCALES)
+  private boolean includesLocales;
+
+  @RdfProperty(StreamPipes.INCLUDED_ASSETS)
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  private List<String> includedAssets;
+
+  @RdfProperty(StreamPipes.INCLUDED_LOCALES)
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  private List<String> includedLocales;
+
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
   @RdfProperty(StreamPipes.HAS_APPLICATION_LINK)
@@ -70,18 +83,18 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
   public NamedStreamPipesEntity() {
     super();
     this.applicationLinks = new ArrayList<>();
+    this.includedAssets = new ArrayList<>();
+    this.includedLocales = new ArrayList<>();
   }
 
   public NamedStreamPipesEntity(String elementId) {
-    super();
+    this();
     this.elementId = elementId;
-    this.applicationLinks = new ArrayList<>();
   }
 
   public NamedStreamPipesEntity(String elementId, String name, String description, String iconUrl) {
     this(elementId, name, description);
     this.iconUrl = iconUrl;
-    this.applicationLinks = new ArrayList<>();
   }
 
   public NamedStreamPipesEntity(String elementId, String name, String description) {
@@ -90,6 +103,8 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.name = name;
     this.description = description;
     this.applicationLinks = new ArrayList<>();
+    this.includedAssets = new ArrayList<>();
+    this.includedLocales = new ArrayList<>();
   }
 
   public NamedStreamPipesEntity(NamedStreamPipesEntity other) {
@@ -105,6 +120,13 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     }
     this.appId = other.getAppId();
     this.includesAssets = other.isIncludesAssets();
+    this.includesLocales = other.isIncludesLocales();
+    if (other.getIncludedAssets() != null) {
+      this.includedAssets = other.getIncludedAssets();
+    }
+    if (other.getIncludedLocales() != null) {
+      this.includedLocales = other.getIncludedLocales();
+    }
   }
 
   public String getName() {
@@ -187,6 +209,30 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   public void setIncludesAssets(boolean includesAssets) {
     this.includesAssets = includesAssets;
+  }
+
+  public List<String> getIncludedAssets() {
+    return includedAssets;
+  }
+
+  public void setIncludedAssets(List<String> includedAssets) {
+    this.includedAssets = includedAssets;
+  }
+
+  public boolean isIncludesLocales() {
+    return includesLocales;
+  }
+
+  public void setIncludesLocales(boolean includesLocales) {
+    this.includesLocales = includesLocales;
+  }
+
+  public List<String> getIncludedLocales() {
+    return includedLocales;
+  }
+
+  public void setIncludedLocales(List<String> includedLocales) {
+    this.includedLocales = includedLocales;
   }
 
   @Deprecated

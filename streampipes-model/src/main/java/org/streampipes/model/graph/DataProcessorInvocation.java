@@ -47,7 +47,6 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
   @RdfProperty(StreamPipes.PRODUCES)
   private SpDataStream outputStream;
 
-
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
   @RdfProperty(StreamPipes.HAS_OUTPUT_STRATEGY)

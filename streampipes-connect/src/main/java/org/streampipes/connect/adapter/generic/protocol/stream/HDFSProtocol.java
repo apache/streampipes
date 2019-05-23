@@ -32,6 +32,7 @@ import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.connect.exception.ParseException;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
@@ -111,6 +112,7 @@ public class HDFSProtocol extends Protocol {
                 " System")
                 .sourceType(AdapterSourceType.STREAM)
                 .iconUrl("hdfs.png")
+                .category(AdapterType.Generic)
                 .requiredTextParameter(Labels.from(URL_PROPERTY, "HDFS-Server URL e.g. hdfs://server:8020",
                         "This property defines the HDFS URL e.g. hdfs://server:8020"))
                 .requiredIntegerParameter(Labels.from(INTERVAL_PROPERTY, "Interval", "This property " +

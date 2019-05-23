@@ -28,6 +28,7 @@ import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.container.init.DeclarersSingleton;
+import org.streampipes.container.locales.LabelGenerator;
 import org.streampipes.container.transform.Transformer;
 import org.streampipes.empire.core.empire.SupportsRdfId;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
@@ -68,10 +69,16 @@ public abstract class Element<D extends Declarer> {
   @Path("{id}/assets")
   @Produces("application/zip")
   public Response getAssets(@PathParam("id") String elementId) {
-    return Response
-            .ok()
-            .entity(new AssetZipGenerator(elementId).makeZip())
-            .build();
+    List<String> includedAssets = getDeclarerById(elementId).declareModel().getIncludedAssets();
+    try {
+      return Response
+              .ok()
+              .entity(new AssetZipGenerator(elementId, includedAssets).makeZip())
+              .build();
+    } catch (IOException e) {
+      e.printStackTrace();
+      return Response.status(500).build();
+    }
   }
 
   @GET
@@ -150,6 +157,15 @@ public abstract class Element<D extends Declarer> {
       desc.setUri(uri);
       desc.setRdfId(new SupportsRdfId.URIKey(URI.create(uri)));
 
+      // TODO remove after full internationalization support has been implemented
+      if (desc.isIncludesLocales()) {
+        try {
+          desc = new LabelGenerator(desc).generateLabels();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+
       if (desc instanceof DataSourceDescription) {
         for (SpDataStream stream : ((DataSourceDescription) desc).getSpDataStreams()) {
           String baseUri = DeclarersSingleton.getInstance().getBaseUri()
@@ -159,6 +175,16 @@ public abstract class Element<D extends Declarer> {
                   + stream.getUri();
           stream.setUri(baseUri);
           stream.setRdfId(new SupportsRdfId.URIKey(URI.create(baseUri)));
+          // TODO remove after full internationalization support has been implemented
+          if (stream.isIncludesLocales()) {
+            try {
+              LabelGenerator lg = new LabelGenerator(desc);
+              stream.setName(lg.getElementTitle());
+              stream.setDescription(lg.getElementDescription());
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          }
         }
       }
     }

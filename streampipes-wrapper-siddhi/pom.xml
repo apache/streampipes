@@ -27,7 +27,7 @@
     <artifactId>streampipes-wrapper-siddhi</artifactId>
 
     <properties>
-        <siddhi.version>4.1.51</siddhi.version>
+        <siddhi.version>4.5.4</siddhi.version>
     </properties>
 
     <dependencies>

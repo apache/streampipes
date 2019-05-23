@@ -17,9 +17,6 @@
 
 package org.streampipes.connect.management;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -33,13 +30,13 @@ import org.streampipes.connect.adapter.specific.SpecificDataSetAdapter;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.management.worker.AdapterWorkerManagement;
 import org.streampipes.connect.utils.Utils;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.model.connect.guess.GuessSchema;
+
+import java.util.ArrayList;
+
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AdapterRegistry.class })
@@ -47,7 +44,7 @@ public class AdapterWorkerManagementTest {
 
     @Test
     public void startStreamAdapterSucess() throws AdapterException {
-        TestAdapter testAdapter = new TestAdapter();
+        TestAdapter testAdapter = getTestAdapterInstance();
 
         PowerMockito.mockStatic(AdapterRegistry.class);
         Mockito.when(AdapterRegistry.getAdapter(any(AdapterDescription.class)))
@@ -78,7 +75,7 @@ public class AdapterWorkerManagementTest {
 
     @Test
     public void stopStreamAdapterSuccess() throws AdapterException {
-        TestAdapter testAdapter = new TestAdapter();
+        TestAdapter testAdapter = getTestAdapterInstance();
         RunningAdapterInstances.INSTANCE.addAdapter("http://t.de/", testAdapter);
         AdapterWorkerManagement adapterWorkerManagement = new AdapterWorkerManagement();
         adapterWorkerManagement.stopStreamAdapter(Utils.getMinimalStreamAdapter());
@@ -105,7 +102,8 @@ public class AdapterWorkerManagementTest {
 
     @Test
     public void stopSetAdapterSuccess() throws AdapterException {
-        TestAdapter testAdapter = new TestAdapter();
+        TestAdapter testAdapter = getTestAdapterInstance();
+
         RunningAdapterInstances.INSTANCE.addAdapter("http://t.de/", testAdapter);
         AdapterWorkerManagement adapterWorkerManagement = new AdapterWorkerManagement();
         adapterWorkerManagement.stopSetAdapter(Utils.getMinimalSetAdapter());
@@ -113,10 +111,19 @@ public class AdapterWorkerManagementTest {
         assertTrue(testAdapter.calledStop);
     }
 
+    private TestAdapter getTestAdapterInstance() {
+        SpecificAdapterSetDescription description = new SpecificAdapterSetDescription();
+        description.setRules(new ArrayList<>());
+        TestAdapter testAdapter = new TestAdapter(description);
+
+        return testAdapter;
+    }
+
     private class TestAdapter extends SpecificDataSetAdapter {
 
-        public TestAdapter() {
-            super(null);
+
+        public TestAdapter(SpecificAdapterSetDescription description) {
+            super(description);
         }
 
         public boolean calledStart = false;
