@@ -22,14 +22,16 @@ import org.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.siddhi.config.FilterSiddhiConfig;
-import org.streampipes.processors.siddhi.filter.NumericalFilterController;
+import org.streampipes.processors.siddhi.stop.StreamStopController;
+import org.streampipes.processors.siddhi.trend.TrendController;
 
 public class FiltersSiddhiInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton
             .getInstance()
-            .add(new NumericalFilterController());
+            .add(new TrendController())
+            .add(new StreamStopController());
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());

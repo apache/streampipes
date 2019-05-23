@@ -1,0 +1,8 @@
+org.streampipes.processors.transformation.flink.field-mapper.title=Field Mapper
+org.streampipes.processors.transformation.flink.field-mapper.description=Replaces one or more field with a new field and computes a hash value of these fields
+
+replaceProperties.title=Fields
+replaceProperties.description=The fields to replace
+
+fieldName.title=New Field Name
+fieldName.description=The name of the new field

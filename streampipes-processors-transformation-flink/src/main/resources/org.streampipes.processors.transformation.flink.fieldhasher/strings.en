@@ -1,0 +1,8 @@
+org.streampipes.processors.transformation.flink.fieldhasher.title=Field Hasher
+org.streampipes.processors.transformation.flink.fieldhasher.description=Hashes the value of a field using various hash functions.
+
+property-mapping.title=Field
+property-mapping.description=The field the hash function should be applied on
+
+hash-algorithm.title=Hash Algorithm
+hash-algorithm.description=The hash algorithm that should be used.

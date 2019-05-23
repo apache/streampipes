@@ -1,0 +1,21 @@
+org.streampipes.sinks.databases.jvm.postgresql.title=PostgreSQL
+org.streampipes.sinks.databases.jvm.postgresql.description=Stores events in a Postgres database.
+
+db_host.title=Hostname
+db_host.description=The hostname of the PostgreSQL instance
+
+db_port.title=Port
+db_port.description=The port of the PostgreSQL instance (default 5432)
+
+db_name.title=Database Name
+db_name.description=The name of the database where events will be stored
+
+db_table.title=Table Name
+db_table.description=The name of the table where events will be stored (will be created if it does not exist)
+
+db_user.title=Username
+db_user.description=The username for the PostgreSQL Server
+
+db_password.title=Password
+db_password.description=The password for the PostgreSQL Server
+

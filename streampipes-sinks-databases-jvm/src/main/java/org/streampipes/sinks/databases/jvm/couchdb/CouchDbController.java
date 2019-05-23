@@ -24,9 +24,10 @@ import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.sinks.databases.jvm.config.DatabasesJvmConfig;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
@@ -40,19 +41,19 @@ public class CouchDbController  extends StandaloneEventSinkDeclarer<CouchDbParam
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.streampipes.sinks.databases.jvm.couchdb", "CouchDB", "Stores events in a couchdb database.")
+    return DataSinkBuilder.create("org.streampipes.sinks.databases.jvm.couchdb")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(DataSinkType.STORAGE)
-            .iconUrl(DatabasesJvmConfig.getIconUrl("couchdb_icon"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .requiredTextParameter(Labels.from(DATABASE_HOST_KEY, "Hostname", "The hostname of the CouchDB instance"))
-            .requiredIntegerParameter(Labels.from(DATABASE_PORT_KEY, "Port", "The port of the CouchDB instance"))
-            .requiredTextParameter(Labels.from(DATABASE_NAME_KEY, "Database Name", "The name of the database where events will " +
-                    "be stored"))
+            .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
+            .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY))
+            .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
             .build();
   }
 

@@ -17,5 +17,6 @@
 package org.streampipes.processors.filters.jvm.processor.numericalfilter;
 
 public enum NumericalOperator {
-GE, GT, LE, LT, EQ
+  // Greater/Equal, Greater than, Less/Equal, Less than, Equal, Inequal
+  GE, GT, LE, LT, EQ, IE
 }

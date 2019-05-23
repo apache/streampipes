@@ -25,6 +25,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -43,26 +44,22 @@ public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDete
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.peak-detection", "Peak Detection",
-            "Detect peaks in time series data")
+    return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.peak-detection")
             .category(DataProcessorType.ALGORITHM)
-            .iconUrl(PatternDetectionFlinkConfig.getIconUrl("peak-detection-icon"))
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
                             .numberReq(),
-                    Labels.from(VALUE_TO_OBSERVE, "Value to " +
-                            "observe", "Provide a value where statistics are calculated upon"), PropertyScope.MEASUREMENT_PROPERTY)
+                    Labels.withId(VALUE_TO_OBSERVE), PropertyScope.MEASUREMENT_PROPERTY)
                     .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                            Labels.from(TIMESTAMP_MAPPING, "Time", "Provide a time parameter"), PropertyScope.NONE)
+                            Labels.withId(TIMESTAMP_MAPPING), PropertyScope.NONE)
                     .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                            Labels.from(PARTITION_BY, "Group by", "Partition the stream by a given id"), PropertyScope
+                            Labels.withId(PARTITION_BY), PropertyScope
                                     .DIMENSION_PROPERTY).build())
-            .requiredIntegerParameter(Labels.from(COUNT_WINDOW_SIZE, "Count Window Size", "Defines " +
-                    "the size of the count window"), 60)
-            .requiredIntegerParameter(Labels.from(LAG_KEY, "Lag", "Defines the lag of the smoothing " +
-                    "function"), 5)
-            .requiredFloatParameter(Labels.from(THRESHOLD_KEY, "Threshold", "Defines the standard deviation " +
-                    "threshold"), 2.0f)
-            .requiredFloatParameter(Labels.from(INFLUENCE_KEY, "Influence", "Defines the influence"), 0.5f)
+            .requiredIntegerParameter(Labels.withId(COUNT_WINDOW_SIZE), 60)
+            .requiredIntegerParameter(Labels.withId(LAG_KEY), 5)
+            .requiredFloatParameter(Labels.withId(THRESHOLD_KEY), 2.0f)
+            .requiredFloatParameter(Labels.withId(INFLUENCE_KEY), 0.5f)
             .outputStrategy(OutputStrategies.fixed(
                     EpProperties.timestampProperty("timestamp"),
                     EpProperties.stringEp(Labels.empty(), "id", "http://schema.org/id"),

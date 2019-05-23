@@ -19,11 +19,19 @@ package org.streampipes.processors.transformation.flink.processor.converter;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.processors.transformation.flink.config.TransformationFlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
+import org.streampipes.sdk.helpers.Options;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.helpers.TransformOperations;
+import org.streampipes.sdk.helpers.Tuple2;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.XSD;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -36,16 +44,15 @@ public class FieldConverterController extends
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.field-converter", "Field Converter",
-            "Converts a string value to a number data type")
-            .iconUrl(TransformationFlinkConfig.getIconUrl("field_converter"))
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.flink.field-converter")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.from
-                            (CONVERT_PROPERTY,"Property", "The" +
-                                    " property to convert"), PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId
+                            (CONVERT_PROPERTY), PropertyScope.NONE)
                     .build())
-            .requiredSingleValueSelection(Labels.from(TARGET_TYPE, "Datatype", "The target datatype"), Options.from
+            .requiredSingleValueSelection(Labels.withId(TARGET_TYPE), Options.from
                     (new Tuple2<>("Float", XSD._float.toString()), new Tuple2<>
                             ("Integer", XSD._integer.toString())))
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())

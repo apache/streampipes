@@ -1,0 +1,5 @@
+org.streampipes.processors.aggregation.flink.rate.title=Event Rate
+org.streampipes.processors.aggregation.flink.rate.description=Computes current event rate. Output is a number representing events per second.
+
+rate.title=Time Baseline
+rate.description=Time window size used for calculating the rate in seconds, also defines the output rate

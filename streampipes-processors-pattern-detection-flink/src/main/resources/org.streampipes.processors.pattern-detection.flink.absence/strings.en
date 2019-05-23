@@ -1,0 +1,8 @@
+org.streampipes.processors.pattern-detection.flink.absence.title=Absence
+org.streampipes.processors.pattern-detection.flink.absence.description=Detects whether an event does not arrive within a specified time after the occurrence of another event.
+
+time-window.title=Time Window
+time-window.description=Time window size (seconds)
+
+time-unit.title=Time Unit
+time-unit.description=The time unit used for detecting the co-occurrence.

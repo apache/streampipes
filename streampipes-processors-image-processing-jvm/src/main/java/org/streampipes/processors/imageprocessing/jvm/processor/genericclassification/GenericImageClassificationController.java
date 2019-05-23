@@ -24,22 +24,24 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
 public class GenericImageClassificationController extends StandaloneEventProcessingDeclarer<GenericImageClassificationParameters> {
 
-  private static final String IMAGE = "IMAGE";
+  private static final String IMAGE = "image-mapping";
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.jvm.generic-image-classification", "Generic Image Classification", "Image " +
-            "Classification Description (Generic Model)")
+    return ProcessingElementBuilder.create("org.streampipes.processor.imageclassification.jvm.generic-image-classification")
             .category(DataProcessorType.FILTER)
+            .withAssets(Assets.DOCUMENTATION)
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements
-                                    .domainPropertyReq("https://image.com"), Labels.from(IMAGE, "Image Classification", ""),
+                                    .domainPropertyReq("https://image.com"), Labels.withId(IMAGE),
                             PropertyScope.NONE)
                     .build())
             .outputStrategy(OutputStrategies.fixed(

@@ -25,6 +25,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -38,20 +39,21 @@ public class TrigonometryController extends FlinkDataProcessorDeclarer<Trigonome
 
     @Override
     public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.trigonometry",
-                "Trigonometry","Performs Trigonometric function on event properties")
-                .iconUrl(EnricherFlinkConfig.getIconUrl("trigonometry_icon"))
+        return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.trigonometry")
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withLocales(Locales.EN)
                 .category(DataProcessorType.ALGORITHM)
                 .requiredStream(StreamRequirementsBuilder
                         .create()
                         .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                                Labels.from(OPERAND, "Alpha", "Select the alpha parameter"),
+                                Labels.withId(OPERAND),
                                 PropertyScope.NONE)
                         .build())
                 .outputStrategy(
                         OutputStrategies.append(
                                 EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
-                .requiredSingleValueSelection(Labels.from(OPERATION, "Select function", ""), Options.from("sin(a)", "cos(a)", "tan(a)" ))
+                .requiredSingleValueSelection(Labels.withId(OPERATION),
+                        Options.from("sin(a)", "cos(a)", "tan(a)" ))
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .supportedProtocols(SupportedProtocols.kafka())
                 .build();

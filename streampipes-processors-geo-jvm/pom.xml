@@ -3,7 +3,7 @@
     <parent>
         <artifactId>streampipes-pipeline-elements</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.61.0</version>
+        <version>0.62.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -41,11 +41,6 @@
             <version>3.9.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.maps</groupId>
-            <artifactId>google-maps-services</artifactId>
-            <version>0.2.6</version>
-        </dependency>
     </dependencies>
 
     <build>

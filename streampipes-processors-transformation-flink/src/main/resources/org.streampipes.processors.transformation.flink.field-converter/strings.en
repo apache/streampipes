@@ -1,0 +1,8 @@
+org.streampipes.processors.transformation.flink.field-converter.title=Field Converter
+org.streampipes.processors.transformation.flink.field-converter.description=Converts a string value to a number data type
+
+convert-property.title=Field
+convert-property.description=The field to convert
+
+target-type.title=Datatype
+target-type.description=The target datatype

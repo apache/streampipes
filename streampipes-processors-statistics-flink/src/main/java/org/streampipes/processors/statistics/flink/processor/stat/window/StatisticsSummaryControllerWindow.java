@@ -21,11 +21,12 @@ import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.processors.statistics.flink.config.StatisticsFlinkConfig;
-import org.streampipes.processors.statistics.flink.processor.stat.StatisticsSummaryController;
+import org.streampipes.processors.statistics.flink.processor.stat.summary.StatisticsSummaryController;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.Statistics;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -43,23 +44,21 @@ public class StatisticsSummaryControllerWindow extends
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.statistics.flink.statistics-summary-window", "Sliding Descriptive " +
-                    "Statistics",
-            "Calculate" +
-                    " simple descriptive summary statistics based on a configurable time window")
-            .iconUrl(StatisticsFlinkConfig.getIconUrl("statistics-icon"))
+    return ProcessingElementBuilder.create("org.streampipes.processors.statistics.flink.statistics-summary-window")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                            Labels.from(VALUE_TO_OBSERVE, "Value to " +
-                                    "observe", "Provide a value where statistics are calculated upon"), PropertyScope.MEASUREMENT_PROPERTY)
+                            Labels.withId(VALUE_TO_OBSERVE), PropertyScope.MEASUREMENT_PROPERTY)
                     .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                            Labels.from(TIMESTAMP_MAPPING, "Time", "Provide a time parameter"), PropertyScope.HEADER_PROPERTY)
+                            Labels.withId(TIMESTAMP_MAPPING),
+                            PropertyScope.HEADER_PROPERTY)
                     .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                            Labels.from(PARTITION_BY, "Group by", "Partition the stream by a given id"), PropertyScope.DIMENSION_PROPERTY)
+                            Labels.withId(PARTITION_BY), PropertyScope.DIMENSION_PROPERTY)
                     .build())
-            .requiredIntegerParameter(Labels.from(TIME_WINDOW, "Time Window Size", "Size of the time window"))
-            .requiredSingleValueSelection(Labels.from(TIME_SCALE, "Time Window Scale", ""),
+            .requiredIntegerParameter(Labels.withId(TIME_WINDOW))
+            .requiredSingleValueSelection(Labels.withId(TIME_SCALE),
                     Options.from("Hours", "Minutes", "Seconds"))
             .outputStrategy(OutputStrategies.fixed(
                     EpProperties.timestampProperty("timestamp"),
@@ -105,7 +104,7 @@ public class StatisticsSummaryControllerWindow extends
     StatisticsSummaryParamsSerializable serializableParams = new StatisticsSummaryParamsSerializable
             (valueToObserve, timestampMapping, groupBy, (long) timeWindowSize, timeUnit);
 
-    return new StatisticsSummaryProgramWindow(params, serializableParams);
+    return new StatisticsSummaryProgramWindow(params, serializableParams, StatisticsFlinkConfig.INSTANCE.getDebug());
 
   }
 }

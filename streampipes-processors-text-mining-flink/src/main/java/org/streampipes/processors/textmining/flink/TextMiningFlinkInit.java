@@ -25,6 +25,7 @@ public class TextMiningFlinkInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton.getInstance()
+//            .add(new LanguageDetectionController())
             .add(new WordCountController());
 
     new TextMiningFlinkInit().init(TextMiningFlinkConfig.INSTANCE);

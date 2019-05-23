@@ -20,7 +20,7 @@ package org.streampipes.processors.statistics.flink;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.processors.statistics.flink.config.StatisticsFlinkConfig;
-import org.streampipes.processors.statistics.flink.processor.stat.StatisticsSummaryController;
+import org.streampipes.processors.statistics.flink.processor.stat.summary.StatisticsSummaryController;
 import org.streampipes.processors.statistics.flink.processor.stat.window.StatisticsSummaryControllerWindow;
 
 public class StatisticsFlinkInit extends StandaloneModelSubmitter {

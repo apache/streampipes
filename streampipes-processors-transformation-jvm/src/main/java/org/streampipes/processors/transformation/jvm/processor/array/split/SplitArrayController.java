@@ -24,15 +24,16 @@ import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.schema.PropertyScope;
-import org.streampipes.processors.transformation.jvm.config.TransformationJvmConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -43,21 +44,19 @@ public class SplitArrayController extends StandaloneEventProcessingDeclarer<Spli
         implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   public static final String KEEP_PROPERTIES_ID = "keep";
-  public static final String ARRAY_FIELD_ID = "array_field";
+  public static final String ARRAY_FIELD_ID = "array-field";
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors" +
-            ".transformation.jvm.split-array", "Split Array", "This processor takes " +
-            "an array of event properties and creates an event for each of them. Further property of the events can be added to each element")
-            .iconUrl(TransformationJvmConfig.getIconUrl("splitarray"))
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.split-array")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
-                            Labels.from(KEEP_PROPERTIES_ID, "Keep Properties", "The " +
-                                    "properties that should be added to the events of array"),
+                            Labels.withId(KEEP_PROPERTIES_ID),
                             PropertyScope.NONE)
                     .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(),
-                            Labels.from(ARRAY_FIELD_ID, "Array of Events", "Contains an array with events"),
+                            Labels.withId(ARRAY_FIELD_ID),
                             PropertyScope.NONE)
                     .build())
             .outputStrategy(OutputStrategies.customTransformation())

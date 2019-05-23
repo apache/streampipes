@@ -22,8 +22,13 @@ import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.streampipes.sdk.helpers.*;
-import org.streampipes.sinks.brokers.jvm.config.BrokersJvmConfig;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
+import org.streampipes.sdk.helpers.OntologyProperties;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
@@ -40,17 +45,15 @@ public class RabbitMqController extends StandaloneEventSinkDeclarer<RabbitMqPara
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.streampipes.sinks.brokers.jvm.rabbitmq", "RabbitMQ Publisher", "Forwards events to a " +
-            "RabbitMQ broker")
-            .iconUrl(BrokersJvmConfig.getIconUrl("rabbitmq-icon"))
+    return DataSinkBuilder.create("org.streampipes.sinks.brokers.jvm.rabbitmq")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
-            .requiredTextParameter(Labels.from(TOPIC_KEY, "RabbitMQ Topic", "Select a RabbitMQ " +
-                    "topic"), false, true)
-            .requiredOntologyConcept(Labels.from(RABBITMQ_BROKER_SETTINGS_KEY, "RabbitMQ Broker Settings", "Provide" +
-                    " settings of the RabbitMQ broker to connect with."),
+            .requiredTextParameter(Labels.withId(TOPIC_KEY), false, true)
+            .requiredOntologyConcept(Labels.withId(RABBITMQ_BROKER_SETTINGS_KEY),
                     OntologyProperties.mandatory(RABBITMQ_HOST_URI),
                     OntologyProperties.mandatory(RABBITMQ_PORT_URI),
                     OntologyProperties.mandatory(RABBITMQ_USER_URI),

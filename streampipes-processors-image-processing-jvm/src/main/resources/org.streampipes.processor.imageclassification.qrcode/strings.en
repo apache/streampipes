@@ -1,0 +1,14 @@
+org.streampipes.processor.imageclassification.qrcode.title=QR Code Reader
+org.streampipes.processor.imageclassification.qrcode.description=Detects a QR Code in an image
+
+send-if-no-result.title=Send placeholder value if no qr code is detected
+send-if-no-result.description=
+
+placeholder-value.title=Placeholder value
+placeholder-value.description=
+
+qr-value.title=QR code value
+qr-value.description=
+
+image-property.title=Image
+image-property.description=

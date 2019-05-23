@@ -25,10 +25,12 @@ import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -40,17 +42,19 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.numericalfilter", "Numerical Filter", "Numerical Filter Description")
+    return ProcessingElementBuilder.create("org.streampipes.processors.filters.jvm.numericalfilter")
             .category(DataProcessorType.FILTER)
-            .providesAssets()
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from(NUMBER_MAPPING, "Specifies the field name where the filter operation should" +
-                    " be applied on.", ""), PropertyScope.NONE).build())
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                            Labels.withId(NUMBER_MAPPING),
+                            PropertyScope.NONE).build())
             .outputStrategy(OutputStrategies.keep())
-            .requiredSingleValueSelection(Labels.from(OPERATION, "Filter Operation", "Specifies the filter " +
-                    "operation that should be applied on the field"), Options.from("<", "<=", ">", ">=", "=="))
-            .requiredFloatParameter(Labels.from(VALUE, "Threshold value", "Specifies a threshold value."), "number")
+            .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
+                    ">=", "==", "!="))
+            .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING)
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
@@ -66,13 +70,15 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
     String operation = "GT";
 
     if (stringOperation.equals("<=")) {
-      operation = "LT";
-    } else if (stringOperation.equals("<")) {
       operation = "LE";
+    } else if (stringOperation.equals("<")) {
+      operation = "LT";
     } else if (stringOperation.equals(">=")) {
       operation = "GE";
     } else if (stringOperation.equals("==")) {
       operation = "EQ";
+    } else if (stringOperation.equals("!=")) {
+      operation = "IE";
     }
 
     String filterProperty = extractor.mappingPropertyValue(NUMBER_MAPPING);

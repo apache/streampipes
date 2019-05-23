@@ -23,6 +23,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -31,6 +32,25 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
   private static final String NUMBER_MAPPING = "number-mapping";
   private static final String VALUE = "value";
   private static final String OPERATION = "operation";
+
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.numericalfilter")
+            .category(DataProcessorType.FILTER)
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                            Labels.withId(NUMBER_MAPPING), PropertyScope.NONE).build())
+            .outputStrategy(OutputStrategies.keep())
+            .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
+                    ">=", "=="))
+            .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING)
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .build();
+  }
 
   @Override
   public ConfiguredEventProcessor<NumericalFilterParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
@@ -59,22 +79,4 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
     return new ConfiguredEventProcessor<>(staticParam, NumericalFilter::new);
   }
 
-  @Override
-  public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.siddhi.numericalfilter", "Numerical Filter", "Numerical Filter Description")
-            .category(DataProcessorType.FILTER)
-            .iconUrl("Numerical_Filter_Icon_HQ")
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from(NUMBER_MAPPING, "Specifies the field name where the filter operation should" +
-                            " be applied " +
-                            "on.", ""), PropertyScope.NONE).build())
-            .outputStrategy(OutputStrategies.keep())
-            .requiredSingleValueSelection(Labels.from(OPERATION, "Filter Operation", "Specifies the filter " +
-                    "operation that should be applied on the field"), Options.from("<", "<=", ">", ">=", "=="))
-            .requiredFloatParameter(Labels.from(VALUE, "Threshold value", "Specifies a threshold value."), NUMBER_MAPPING)
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .build();
-  }
 }

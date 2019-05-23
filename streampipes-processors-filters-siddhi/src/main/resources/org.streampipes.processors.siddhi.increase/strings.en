@@ -1,0 +1,14 @@
+org.streampipes.processors.siddhi.increase.title=Trend
+org.streampipes.processors.siddhi.increase.description=Detects the increase of a numerical field over a customizable time window. Example: A temperature value increases by 10 percent within 5 minutes.
+
+mapping.title=Value to Observe
+mapping.description=Specifies the value that should be monitored.
+
+increase.title=Percentage of Increase/Decrease
+increase.description=Specifies the increase in percent (e.g., 100 indicates an increase by 100 percent within the specified time window.
+
+duration.title=Time Window Length (Seconds)
+duration.description=Specifies the size of the time window in seconds.
+
+operation.title=Increase/Decrease
+operation.description=Specifies the type of operation the processor should perform.

@@ -60,6 +60,7 @@ github:
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
      - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
      - docker build --no-cache --pull -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
+     - docker build --no-cache --pull -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION  ./streampipes-$CONTAINER_NAME
      - docker push $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
      - docker push $IMAGE_NAME/$CONTAINER_NAME:latest
      - docker push $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
@@ -202,6 +203,11 @@ docker-processors-transformation-jvm:
     variables:
       CONTAINER_NAME: "processors-transformation-jvm"
 
+docker-processors-text-mining-flink:
+  <<: *docker_hub_script
+  variables:
+    CONTAINER_NAME: "processors-text-mining-flink"
+
 docker-sinks-brokers-jvm:
     <<: *docker_script
     variables:
@@ -297,6 +303,11 @@ docker-hub-processors-transformation-jvm:
     <<: *docker_hub_script
     variables:
       CONTAINER_NAME: "processors-transformation-jvm"
+
+docker-hub-processors-text-mining-flink:
+  <<: *docker_hub_script
+  variables:
+    CONTAINER_NAME: "processors-text-mining-flink"
 
 docker-hub-sinks-brokers-jvm:
     <<: *docker_hub_script

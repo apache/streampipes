@@ -16,19 +16,20 @@
  */
 package org.streampipes.processors.imageprocessing.jvm.processor.commons;
 
+import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.BoxCoordinates;
 import org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentParameters;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Map;
 import java.util.Optional;
+
+import javax.imageio.ImageIO;
 
 public class ImageTransformer extends PlainImageTransformer<ImageEnrichmentParameters> {
 
-  public ImageTransformer(Map<String, Object> in, ImageEnrichmentParameters params) {
+  public ImageTransformer(Event in, ImageEnrichmentParameters params) {
    super(in, params);
   }
 
@@ -38,10 +39,10 @@ public class ImageTransformer extends PlainImageTransformer<ImageEnrichmentParam
   }
 
   public BoxCoordinates getBoxCoordinates(BufferedImage image) {
-    Float x = toFloat(in.get(params.getBoxX()));
-    Float y = toFloat(in.get(params.getBoxY()));
-    Float width = toFloat(in.get(params.getBoxWidth()));
-    Float height = toFloat(in.get(params.getBoxHeight()));
+    Float x = in.getFieldBySelector(params.getBoxX()).getAsPrimitive().getAsFloat();
+    Float y = in.getFieldBySelector(params.getBoxY()).getAsPrimitive().getAsFloat();
+    Float width = in.getFieldBySelector(params.getBoxWidth()).getAsPrimitive().getAsFloat();
+    Float height = in.getFieldBySelector(params.getBoxHeight()).getAsPrimitive().getAsFloat();
 
     return BoxCoordinates.make(image.getWidth(), image.getHeight(), width, height, x, y);
   }
@@ -61,9 +62,4 @@ public class ImageTransformer extends PlainImageTransformer<ImageEnrichmentParam
     }
 
   }
-
-  private Float toFloat(Object obj) {
-    return Float.parseFloat(String.valueOf(obj));
-  }
-
 }

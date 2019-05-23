@@ -1,0 +1,5 @@
+org.streampipes.processors.transformation.jvm.changed-value.title=Value Changed
+org.streampipes.processors.transformation.jvm.changed-value.description=Outpus an event every time a specific field changes.
+
+compare.title=Keep Fields
+compare.description=The field which might change over time

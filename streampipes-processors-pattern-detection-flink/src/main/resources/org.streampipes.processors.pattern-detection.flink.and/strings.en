@@ -1,0 +1,14 @@
+org.streampipes.processors.pattern-detection.flink.and.title=And
+org.streampipes.processors.pattern-detection.flink.and.description=Detects whether an event co-occurs with another event within a given time.
+
+time-window.title=Time Window
+time-window.description=Time window size (seconds)
+
+time-unit.title=Time Unit
+time-unit.description=The time unit used for detecting the co-occurrence.
+
+left-mapping.title=Left Mapping
+left-mapping.description=
+
+right-mapping.title=Right Mapping
+right-mapping.description=

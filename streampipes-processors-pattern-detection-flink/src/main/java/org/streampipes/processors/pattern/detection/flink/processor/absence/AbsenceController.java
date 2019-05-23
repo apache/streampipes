@@ -10,6 +10,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -23,7 +24,9 @@ public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParamet
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.absence", "Absence", "Detects whether an event does not arrive within a specified time after the occurrence of another event.")
+    return ProcessingElementBuilder.create("org.streampipes.processors.pattern-detection.flink.absence")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION)
             .category(DataProcessorType.PATTERN_DETECT)
             .requiredStream(StreamRequirementsBuilder
                     .create()
@@ -33,8 +36,9 @@ public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParamet
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
-            .requiredSingleValueSelection(Labels.from(TIME_UNIT, "Time Unit", "The time unit used for detecting the co-occurrence."), Options.from("Seconds", "Minutes", "Hours"))
-            .requiredIntegerParameter(Labels.from(TIME_WINDOW, "Time Window Size", "Time window size (seconds)"))
+            .requiredSingleValueSelection(Labels.withId(TIME_UNIT), Options.from("Seconds",
+                    "Minutes", "Hours"))
+            .requiredIntegerParameter(Labels.withId(TIME_WINDOW))
             .outputStrategy(OutputStrategies.custom(false))
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())

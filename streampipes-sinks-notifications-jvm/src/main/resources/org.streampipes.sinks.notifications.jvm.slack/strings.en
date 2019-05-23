@@ -1,0 +1,11 @@
+org.streampipes.sinks.notifications.jvm.slack.title=Slack Notification
+org.streampipes.sinks.notifications.jvm.slack.description=Slack bot to send notifications to Slack
+
+receiver.title=Send to
+receiver.description=Enter the username or channel you want to notify
+
+content.title=Message
+content.description=The message that should be sent
+
+channel-type.title=User or Channel
+channel-type.description=Decide wether you want to sent a notification to a user or to a channel

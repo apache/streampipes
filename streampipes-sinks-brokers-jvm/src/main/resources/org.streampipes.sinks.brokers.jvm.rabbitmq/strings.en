@@ -1,0 +1,8 @@
+org.streampipes.sinks.brokers.jvm.rabbitmq.title=RabbitMQ Publisher
+org.streampipes.sinks.brokers.jvm.rabbitmq.description=Forwards events to a RabbitMQ broker
+
+topic.title=RabbitMQ Topic
+topic.description=Select a RabbitMQ topic
+
+broker-settings.title=RabbitMQ broker settings
+broker-settings.description=Provide settings of the RabbitMQ broker to connect with.

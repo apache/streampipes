@@ -1,0 +1,5 @@
+org.streampipes.processors.statistics.flink.statistics-summary.title=Statistics Summary
+org.streampipes.processors.statistics.flink.statistics-summary.description=Calculate simple descriptive summary statistics
+
+list-property.title=Field Name
+list-property.description=Select a list property

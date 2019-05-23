@@ -1,0 +1,8 @@
+org.streampipes.sinks.brokers.jvm.kafka.title=Kafka Publisher
+org.streampipes.sinks.brokers.jvm.kafka.description=Publish events to Apache Kafka
+
+topic.title=Kafka Topic
+topic.description=Select a Kafka topic
+
+broker-settings.title=Kafka broker settings
+broker-settings.description=Provide settings of the Kafka broker to connect with.

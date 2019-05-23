@@ -27,7 +27,13 @@ import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
+import org.streampipes.sdk.helpers.Options;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.sinks.notifications.jvm.config.ConfigKeys;
 import org.streampipes.sinks.notifications.jvm.config.SinksNotificationsJvmConfig;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
@@ -44,18 +50,20 @@ public class SlackNotificationController extends StandaloneEventSinkDeclarer<Sla
   @Override
   public DataSinkDescription declareModel() {
 
-    return DataSinkBuilder.create("org.streampipes.sinks.notifications.jvm.slack", "Slack Notification", "Slack bot to send notifications directly into your slack")
+    return DataSinkBuilder.create("org.streampipes.sinks.notifications.jvm.slack")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(DataSinkType.NOTIFICATION)
-            .iconUrl(SinksNotificationsJvmConfig.getIconUrl("slack_icon"))
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .requiredTextParameter(Labels.from(RECEIVER, "Send to", "Enter the username or channel you want to notify"))
-            .requiredTextParameter(Labels.from(CONTENT, "Message", "The message that should be sent"))
-            .requiredSingleValueSelection(Labels.from(CHANNEL_TYPE, "User or Channel", "Decide wether you want to sent a notification to a user or to a channel"), Options.from("User", "Channel"))
+            .requiredTextParameter(Labels.withId(RECEIVER))
+            .requiredTextParameter(Labels.withId(CONTENT))
+            .requiredSingleValueSelection(Labels.withId(CHANNEL_TYPE),
+                    Options.from("User", "Channel"))
             .build();
   }
 
@@ -88,7 +96,8 @@ public class SlackNotificationController extends StandaloneEventSinkDeclarer<Sla
       } else {
         SlackChannel channel = session.findChannelByName(userChannel);
         if (channel == null || channel.getId() == null) {
-          //throw new SpRuntimeException("The channel: '" + userChannel + "' does not exists or the bot has no rights to access it");
+          //throw new SpRuntimeException("The channel: '" + userChannel + "' does not exists or " +
+                  //"the bot has no rights to access it");
         }
       }
 

@@ -25,23 +25,28 @@ import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class RestController extends StandaloneEventSinkDeclarer<RestParameters> {
 
-  private static final String URL_KEY = "url_key";
+  private static final String URL_KEY = "url-key";
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.streampipes.sinks.brokers.jvm.rest", "REST Publisher", "Posts events to a REST interface")
+    return DataSinkBuilder.create("org.streampipes.sinks.brokers.jvm.rest")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
-            .requiredTextParameter(Labels.from(URL_KEY, "REST URL", "URL of the REST endoint"), false, false)
+            .requiredTextParameter(Labels.withId(URL_KEY),
+                    false, false)
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();

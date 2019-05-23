@@ -5,7 +5,7 @@
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-pipeline-elements</artifactId>
     <packaging>pom</packaging>
-    <version>0.61.0</version>
+    <version>0.62.0</version>
     <modules>
         <module>streampipes-sinks-databases-jvm</module>
         <module>streampipes-sinks-internal-jvm</module>
@@ -31,7 +31,7 @@
     </modules>
 
     <properties>
-        <streampipes.version>0.61.0</streampipes.version>
+        <streampipes.version>0.62.0</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
     </properties>
 
@@ -218,6 +218,13 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.streampipes</groupId>-->
+<!--                <artifactId>streampipes-maven-plugin</artifactId>-->
+<!--                <version>1.0-SNAPSHOT</version>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
     </build>
 
     <scm>

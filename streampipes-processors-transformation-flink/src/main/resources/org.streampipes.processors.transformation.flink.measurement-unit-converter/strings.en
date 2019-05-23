@@ -1,0 +1,8 @@
+org.streampipes.processors.transformation.flink.measurement-unit-converter.title=Measurement Unit Converter
+org.streampipes.processors.transformation.flink.measurement-unit-converter.description=Converts a unit of measurement to another one
+
+convert-property.title=Field
+convert-property.description=The field to convert
+
+output-unit.title=Output Unit
+output-unit.description=The output type unit of measurement

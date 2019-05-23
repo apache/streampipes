@@ -24,7 +24,6 @@ import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.imageprocessing.jvm.config.ImageProcessingJvmConfig;
 import org.streampipes.processors.imageprocessing.jvm.processor.genericclassification.GenericImageClassificationController;
-import org.streampipes.processors.imageprocessing.jvm.processor.imagecropper.ImageCropperController;
 import org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentController;
 import org.streampipes.processors.imageprocessing.jvm.processor.qrreader.QrCodeReaderController;
 
@@ -34,8 +33,7 @@ public class ImageProcessingJvmInit extends StandaloneModelSubmitter {
     DeclarersSingleton
             .getInstance()
             .add(new ImageEnrichmentController())
-            .add(new ImageCropperController())
-            //.add(new ImageRectificationController())
+//            .add(new ImageCropperController())
             .add(new QrCodeReaderController())
             .add(new GenericImageClassificationController());
 

@@ -21,7 +21,7 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 import org.streampipes.model.runtime.Event;
-import org.streampipes.processors.statistics.flink.processor.stat.StatisticsSummaryController;
+import org.streampipes.processors.statistics.flink.processor.stat.summary.StatisticsSummaryController;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,0 +1,8 @@
+org.streampipes.processors.siddhi.frequency.title=Frequency Calculation
+org.streampipes.processors.siddhi.frequency.description=Calculates the frequency of the event stream
+
+duration.title=Time Window Length (Seconds)
+duration.description=Specifies the size of the time window in seconds.
+
+timeUnit.title=Time Unit
+timeUnit.description=Specifies a unit for the time window.

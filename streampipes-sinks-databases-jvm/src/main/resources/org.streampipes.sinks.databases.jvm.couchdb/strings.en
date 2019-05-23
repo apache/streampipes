@@ -1,0 +1,11 @@
+org.streampipes.sinks.databases.jvm.couchdb.title=CouchDB
+org.streampipes.sinks.databases.jvm.couchdb.description=Stores events in an Apache CouchDB database.
+
+db_host.title=Hostname
+db_host.description=The hostname of the CouchDB instance
+
+db_port.title=Port
+db_port.description=The port of the CouchDB instance
+
+db_name.title=Database Name
+db_name.description=The name of the database where events will be stored

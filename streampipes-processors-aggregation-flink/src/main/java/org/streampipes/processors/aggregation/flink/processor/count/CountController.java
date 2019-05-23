@@ -11,31 +11,32 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 public class CountController extends FlinkDataProcessorDeclarer<CountParameters> {
 
-  private static final String TIME_WINDOW_KEY = "timeWindow";
+  private static final String TIME_WINDOW_KEY = "time-window";
   private static final String SCALE_KEY = "scale";
   private static final String COUNT_MAPPING = "count-mapping";
 
   @Override
   public DataProcessorDescription declareModel() {
 
-    return ProcessingElementBuilder.create("org.streampipes.processors.aggregation.flink.count", "Count Aggregation",
-            "Performs an aggregation based on a given event property and outputs the number of occurrences.")
+    return ProcessingElementBuilder.create("org.streampipes.processors.aggregation.flink.count")
             .category(DataProcessorType.AGGREGATE)
-            .iconUrl(AggregationFlinkConfig.iconBaseUrl + "/Counter_Icon_HQ.png")
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.from(COUNT_MAPPING, "Field to count", "The field that contains the values which should be counted"), PropertyScope.DIMENSION_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
+                            Labels.withId(COUNT_MAPPING), PropertyScope.DIMENSION_PROPERTY)
                     .build())
             .outputStrategy(OutputStrategies.fixed(EpProperties.stringEp(Labels.empty(), "value", "http://schema.org/Text"), EpProperties.integerEp(Labels.empty(), "countValue",
                     "http://schema.org/Number")))
-            .requiredIntegerParameter(Labels.from(TIME_WINDOW_KEY, "Time Window Size", "Size of the time window " +
-                    "in seconds"))
-            .requiredSingleValueSelection(Labels.from(SCALE_KEY, "Time Window Scale", ""),
+            .requiredIntegerParameter(Labels.withId(TIME_WINDOW_KEY))
+            .requiredSingleValueSelection(Labels.withId(SCALE_KEY),
                     Options.from(new Tuple2<>("Hours", "HOURS"),
                             new Tuple2<>("Minutes", "MINUTES"),
                             new Tuple2<>("Seconds", "SECONDS")))

@@ -1,0 +1,14 @@
+org.streampipes.processor.geo.flink.title=Spatial Grid Enrichment
+org.streampipes.processor.geo.flink.description=Groups spatial events into cells of a given size
+
+mapping-latitude.title=Latitude Field
+mapping-latitude.description=
+
+mapping-longitude.title=Longitude Field
+mapping-longitude.description=
+
+cellSize.title=Cell Size
+cellSize.description=The size of a cell in meters
+
+startingCell.title=Starting Location
+startingCell.description=The upper-left corner of the starting cell

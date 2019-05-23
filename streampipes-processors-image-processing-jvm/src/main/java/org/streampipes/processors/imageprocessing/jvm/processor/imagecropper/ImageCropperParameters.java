@@ -21,7 +21,7 @@ import org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.
 
 public class ImageCropperParameters extends ImageEnrichmentParameters {
 
-  public ImageCropperParameters(DataProcessorInvocation graph, String imageProperty, String boxWidth, String boxHeight, String boxX, String boxY) {
-    super(graph, imageProperty, boxWidth, boxHeight, boxX, boxY);
+  public ImageCropperParameters(DataProcessorInvocation graph, String imageProperty, String boxArray, String boxWidth, String boxHeight, String boxX, String boxY) {
+    super(graph, imageProperty, boxArray, boxWidth, boxHeight, boxX, boxY);
   }
 }

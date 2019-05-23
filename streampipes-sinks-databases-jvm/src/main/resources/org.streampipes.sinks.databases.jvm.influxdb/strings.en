@@ -1,0 +1,29 @@
+org.streampipes.sinks.databases.jvm.influxdb.title=InfluxDB
+org.streampipes.sinks.databases.jvm.influxdb.description=Stores events in an InfluxDB.
+
+db_host.title=Hostname
+db_host.description=The hostname/URL of the InfluxDB instance. (Include http(s)://)
+
+db_port.title=Port
+db_port.description=The port of the InfluxDB instance
+
+db_name.title=Database Name
+db_name.description=The name of the database where events will be stored
+
+db_measurement.title=Measurement Name
+db_measurement.description=The name of the Measurement where events will be stored (will be created if it does not exist)
+
+db_user.title=Username
+db_user.description=The username for the InfluxDB Server
+
+db_password.title=Password
+db_password.description=The password for the InfluxDB Server
+
+timestamp_mapping.title=Timestamp Field
+timestamp_mapping.description=The value which contains a timestamp
+
+batch_interval_actions.title=Buffer Size
+batch_interval_actions.description=How many actions are written into a buffer, before it is written to the database
+
+max_flush_duration.title=Maximum Flush
+max_flush_duration.description=The maximum waiting time for the buffer to fill the Buffer size before it will be written to the database in ms

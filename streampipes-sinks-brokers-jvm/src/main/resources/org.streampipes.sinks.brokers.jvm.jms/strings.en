@@ -1,0 +1,8 @@
+org.streampipes.sinks.brokers.jvm.jms.title=JMS Publisher
+org.streampipes.sinks.brokers.jvm.jms.description=Publishes events to a JMS topic
+
+topic.title=JMS Topic
+topic.description=Select a JMS topic
+
+broker-settings.title=JMS broker settings (use prefix tcp://)
+broker-settings.description=Provide settings of the JMS broker to connect with.

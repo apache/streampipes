@@ -1,0 +1,4 @@
+org.streampipes.processor.imageclassification.jvm.generic-image-classification.title=Generic Image Classification
+org.streampipes.processor.imageclassification.jvm.generic-image-classification.description=Classification Description (Generic Model)
+
+image-mapping.title=Image field

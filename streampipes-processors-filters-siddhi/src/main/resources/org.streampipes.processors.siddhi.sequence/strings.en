@@ -1,0 +1,5 @@
+org.streampipes.processors.siddhi.sequence.title=Sequence Detection
+org.streampipes.processors.siddhi.sequence.description=Merges events from two event streams, when the top event arrives first and then the bottom event
+
+duration.title=Time Window Length (Seconds)
+duration.description=Specifies the size of the time window in seconds.

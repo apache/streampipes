@@ -1,0 +1,23 @@
+org.streampipes.processors.pattern-detection.flink.peak-detection.title=Peak Detection
+org.streampipes.processors.pattern-detection.flink.peak-detection.description=Detect peaks in time series data
+
+value-to-observe.title=Value to Observe
+value-to-observe.description=Provide a value where statistics are calculated upon
+
+partition-by.title=Group by
+partition-by.description=Partition the stream by a given id
+
+timestamp-mapping.title=Time
+timestam-mapping.description=Provide a time parameter
+
+sp-lag.title=Lag
+sp-lag.description=Defines the lag of the smoothing function
+
+sp-threshold.title=Threshold
+sp-threshold.description=Defines the standard deviation threshold
+
+sp-count-window.title=Count Window Size
+sp-count-window.description=Defines the size of the count window
+
+sp-influence.title=Influence
+sp-influence.description=Defines the influence

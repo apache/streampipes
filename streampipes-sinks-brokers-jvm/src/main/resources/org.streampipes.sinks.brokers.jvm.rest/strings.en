@@ -1,0 +1,5 @@
+org.streampipes.sinks.brokers.jvm.rest.title=REST Publisher
+org.streampipes.sinks.brokers.jvm.rest.description=Posts events to a REST interface
+
+url-key.title=REST URL
+url-key.description=URL of the REST endoint

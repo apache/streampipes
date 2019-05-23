@@ -1,0 +1,5 @@
+org.streampipes.processors.transformation.jvm.count-array.title=Count Array
+org.streampipes.processors.transformation.jvm.count-array.description=Counts the size of list items.
+
+array-field.title=List Field
+array-field.description=Contains a list of fields.

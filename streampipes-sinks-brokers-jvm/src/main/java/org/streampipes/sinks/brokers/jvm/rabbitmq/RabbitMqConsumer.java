@@ -30,8 +30,6 @@ import java.util.Map;
 
 public class RabbitMqConsumer implements EventSink<RabbitMqParameters> {
 
-  // For testing: rabbitMQ default port is 15700 for the Axoom use case
-
   private RabbitMqPublisher publisher;
   private JsonDataFormatDefinition dataFormatDefinition;
   private String topic;

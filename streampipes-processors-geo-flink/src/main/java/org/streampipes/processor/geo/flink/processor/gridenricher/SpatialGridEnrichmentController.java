@@ -26,6 +26,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.Geo;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
@@ -36,19 +37,20 @@ public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<
   private static final String MAPPING_LATITUDE = "mapping-latitude";
   private static final String MAPPING_LONGITUDE = "mapping-longitude";
 
-  private static final String CELLSIZE = "cellsize";
-  private static final String STARTING_CELL = "starting-cell";
+  private static final String CELLSIZE = "cellSize";
+  private static final String STARTING_CELL = "startingCell";
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processor.geo.flink", "Spatial Grid Enrichment", "Groups spatial " +
-            "events into cells of a given size")
+    return ProcessingElementBuilder.create("org.streampipes.processor.geo.flink")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat)
-                            , Labels.from(MAPPING_LATITUDE, "Latitude Property", ""), PropertyScope.MEASUREMENT_PROPERTY)
+                            , Labels.withId(MAPPING_LATITUDE), PropertyScope.MEASUREMENT_PROPERTY)
                     .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng)
-                            , Labels.from(MAPPING_LONGITUDE, "Longitude Property", ""), PropertyScope.MEASUREMENT_PROPERTY)
+                            , Labels.withId(MAPPING_LONGITUDE), PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .supportedFormats(SupportedFormats.jsonFormat())
@@ -60,10 +62,9 @@ public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<
                     EpProperties.doubleEp(Labels.empty(), SpatialGridConstants.GRID_LAT_SE_KEY, Geo.lat),
                     EpProperties.doubleEp(Labels.empty(), SpatialGridConstants.GRID_LON_SE_KEY, Geo.lng),
                     EpProperties.integerEp(Labels.empty(), SpatialGridConstants.GRID_CELLSIZE_KEY, SO.Number)))
-            .requiredIntegerParameter(CELLSIZE, "Cell Size", "The size of a cell in meters",
+            .requiredIntegerParameter(Labels.withId(CELLSIZE),
                     100, 10000, 100)
-            .requiredOntologyConcept(Labels.from(STARTING_CELL, "Starting Location", "The " +
-                    "upper-left corner of the starting cell"), StaticProperties
+            .requiredOntologyConcept(Labels.withId(STARTING_CELL), StaticProperties
                     .supportedDomainProperty(Geo.lat, true), StaticProperties
                     .supportedDomainProperty(Geo.lng, true))
             .build();

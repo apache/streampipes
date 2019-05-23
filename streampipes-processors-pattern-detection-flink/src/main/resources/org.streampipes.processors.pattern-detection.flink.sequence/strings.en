@@ -1,0 +1,8 @@
+org.streampipes.processors.pattern-detection.flink.sequence.title=Sequence
+org.streampipes.processors.pattern-detection.flink.sequence.description=Detects a sequence of events.
+
+timeWindow.title=Time Window Size
+timeWindow.description=Size of the time window
+
+timeUnit.title=Time Unit
+timeUnit.description=Specifies a unit for the time window of the sequence.

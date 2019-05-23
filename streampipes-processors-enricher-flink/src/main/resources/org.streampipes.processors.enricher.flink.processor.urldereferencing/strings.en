@@ -1,0 +1,5 @@
+org.streampipes.processors.enricher.flink.processor.urldereferencing.title=URL Dereferencing
+org.streampipes.processors.enricher.flink.processor.urldereferencing.description=Append the html page as a string to event
+
+url.title=URL
+url.description=The server URL

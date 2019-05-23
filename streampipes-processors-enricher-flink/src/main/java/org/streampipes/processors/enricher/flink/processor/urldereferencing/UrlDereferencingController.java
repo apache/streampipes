@@ -25,6 +25,7 @@ import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -36,14 +37,14 @@ public class UrlDereferencingController extends FlinkDataProcessorDeclarer<UrlDe
 
     @Override
     public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.urldereferencing",
-                "URL Dereferencing","Append the html page as a string to event")
-                .iconUrl(EnricherFlinkConfig.getIconUrl("html_icon"))
+        return ProcessingElementBuilder.create("org.streampipes.processors.enricher.flink.processor.urldereferencing")
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withLocales(Locales.EN)
                 .category(DataProcessorType.ENRICH)
                 .requiredStream(StreamRequirementsBuilder
                         .create()
                         .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                                Labels.from(URL, "URL", "The server URL"),
+                                Labels.withId(URL),
                                 PropertyScope.NONE)
                         .build())
                 .outputStrategy(
