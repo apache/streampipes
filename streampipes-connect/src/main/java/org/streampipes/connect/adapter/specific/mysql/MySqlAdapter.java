@@ -69,7 +69,7 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
   private String port;
 
   private boolean stream = false;
-  private static List<Column> tableSchema;
+  private List<Column> tableSchema;
   private BinaryLogClient client;
 
   public MySqlAdapter() {
@@ -104,7 +104,10 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
 
   @Override
   public void startAdapter() throws AdapterException {
+    checkJdbcDriver();
+    extractTableInformation();
     // Connect BinaryLogClient
+    //TODO: Add correct database to the hostname?
     client = new BinaryLogClient(host, Integer.parseInt(port), user, pass);
     EventDeserializer eventDeserializer = new EventDeserializer();
     eventDeserializer.setCompatibilityMode(
@@ -136,13 +139,13 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
         for (Entry<Serializable[], Serializable[]> en : ((UpdateRowsEventData) event.getData()).getRows()) {
           sendChange(en.getValue());
         }
+        stream = false;
       } else if (EventType.isWrite(event.getHeader().getEventType())) {
-        System.out.println("New data written: ");
         for (Serializable[] s : ((WriteRowsEventData) event.getData()).getRows()) {
           sendChange(s);
         }
+        stream = false;
       }
-      stream = false;
     }
   }
 
@@ -150,7 +153,12 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
     Map<String, Object> out = new HashMap<>();
     for (int i = 0; i < rows.length; i++) {
       if (rows[i] != null) {
-        out.put(tableSchema.get(i).getName(), rows[i]);
+        if (rows[i] instanceof byte[]) {
+          // Strings are sent in byte arrays and have to be converted. TODO: Check that encoding is correct
+          out.put(tableSchema.get(i).getName(), new String((byte[])rows[i]));
+        } else {
+          out.put(tableSchema.get(i).getName(), rows[i]);
+        }
       } else {
         out.put(tableSchema.get(i).getName(), tableSchema.get(i).getDefault());
       }
@@ -178,14 +186,12 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
     // Load JDBC Driver, connect JDBC Driver, Extract information, disconnect JDBC Driver
     EventSchema eventSchema = new EventSchema();
     GuessSchema guessSchema = new GuessSchema();
-    tableSchema = new ArrayList<>();
     List<EventProperty> allProperties = new ArrayList<>();
 
     getConfigurations(adapterDescription);
 
     checkJdbcDriver();
     extractTableInformation();
-
 
     for (Column column : tableSchema) {
       allProperties.add(PrimitivePropertyBuilder
@@ -232,8 +238,9 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
   }
 
   private void extractTableInformation() throws AdapterException {
-    String server = "jdbc:mysql://" + host + ":" + port + "/" + "?sslMode=DISABLED";
+    String server = "jdbc:mysql://" + host + ":" + port + "/" + "?sslMode=DISABLED&allowPublicKeyRetrieval=true";
     ResultSet resultSet = null;
+    tableSchema = new ArrayList<>();
 
     String query = "SELECT COLUMN_NAME, DATA_TYPE, COLUMN_TYPE FROM "
         + "INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ? ORDER BY "
