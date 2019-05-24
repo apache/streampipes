@@ -1,10 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {time} from '@ngtools/webpack/src/benchmark';
 import {DatalakeRestService} from '../../../core-services/datalake/datalake-rest.service';
 import {MatSnackBar} from '@angular/material';
 import {FormControl} from '@angular/forms';
-import {InfoResult} from '../../../core-model/datalake/InfoResult';
-import {Observable} from 'rxjs/Observable';
 
 @Component({
     selector: 'sp-datalake-lineChart',
@@ -38,6 +35,13 @@ export class DatalakeLineChartComponent {
 
     //timeunit selection
     selectedTimeUnit = 'All';
+
+    //aggregation
+    //group by
+    groupbyUnit = 'd';
+    sliderMin = 0;
+    sliderMax = 60;
+    sliderValue = 60;
 
     constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar) {
 
