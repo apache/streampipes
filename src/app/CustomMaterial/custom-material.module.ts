@@ -17,7 +17,7 @@ import {
     MatPaginatorModule,
     MatSortModule,
     MatDividerModule,
-    MatProgressBarModule,
+    MatProgressBarModule, MatButtonToggleModule,
 
 } from '@angular/material';
 import {MatStepperModule} from '@angular/material/stepper';
@@ -54,7 +54,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
         MatSortModule,
         MatDividerModule,
         MatTooltipModule,
-        MatProgressBarModule
+        MatProgressBarModule,
+        MatButtonToggleModule
     ],
     exports: [
         MatButtonModule,
@@ -79,7 +80,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
         MatSortModule,
         MatDividerModule,
         MatTooltipModule,
-        MatProgressBarModule
+        MatProgressBarModule,
+        MatButtonToggleModule
     ],
 })
 export class CustomMaterialModule {
