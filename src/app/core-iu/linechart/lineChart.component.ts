@@ -49,6 +49,8 @@ export class LineChartComponent {
 
     @Output() previousPage = new EventEmitter<boolean>();
     @Output() nextPage = new EventEmitter<boolean>();
+    @Output() firstPage = new EventEmitter<boolean>();
+    @Output() lastPage = new EventEmitter<boolean>();
     @Output() itemPerPageChange = new EventEmitter<number>();
 
 
@@ -101,6 +103,14 @@ export class LineChartComponent {
 
     clickNextPage() {
         this.nextPage.emit()
+    }
+
+    clickFirstPage(){
+        this.firstPage.emit()
+    }
+
+    clickLastPage() {
+        this.lastPage.emit()
     }
 
     selectItemsPerPage(num) {

@@ -24,8 +24,11 @@
         <!-- left button + date -->
         <div>
             <div *ngIf="enablePaging">
+                <button mat-icon-button (click)="clickFirstPage()">
+                    <mat-icon>first_page</mat-icon>
+                </button>
                 <button mat-icon-button (click)="clickPreviousPage()">
-                    <mat-icon>keyboard_arrow_left</mat-icon>
+                    <mat-icon>chevron_left</mat-icon>
                 </button>
                 <label>{{displayData[0].series[0].name | date:'dd.yyyy.MM HH:mm:ss'}} </label>
             </div>
@@ -61,7 +64,10 @@
             <div *ngIf="enablePaging">
                 <label>{{displayData[0].series[ displayData[0].series.length - 1].name | date:'dd.yyyy.MM HH:mm:ss'}} </label>
                 <button  mat-icon-button (click)="clickNextPage()">
-                    <mat-icon>keyboard_arrow_right</mat-icon>
+                    <mat-icon>chevron_right</mat-icon>
+                </button>
+                <button mat-icon-button (click)="clickLastPage()">
+                    <mat-icon>last_page</mat-icon>
                 </button>
             </div>
             <label *ngIf="!enablePaging" style="margin-right: 10px">{{displayData[0].series[ displayData[0].series.length - 1].name | date:'dd.yyyy.MM HH:mm:ss'}} </label>

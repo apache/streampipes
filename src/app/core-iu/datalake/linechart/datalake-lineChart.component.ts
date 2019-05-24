@@ -154,11 +154,20 @@ export class DatalakeLineChartComponent {
             this.paging(this.currentPage - 1);
     }
 
+    handleFirstPage() {
+        this.paging(0);
+    }
+
+    handleLastPage() {
+        this.loadAllData()
+    }
+
     openSnackBar(message: string) {
         this.snackBar.open(message, 'Close', {
             duration: 2000,
         });
     }
+
 
 
 }
