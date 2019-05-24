@@ -1,20 +1,26 @@
 <div style="width: 100%; height: 500px">
     <!-- error message -->
-    <div *ngIf="displayData === undefined || _yAxesKey === undefined" fxLayout="column" fxLayoutAlign="space-around center" style="margin-top: 30px">
+    <div *ngIf="displayData === undefined || _yAxesKeys === undefined" fxLayout="column" fxLayoutAlign="space-around center" style="margin-top: 30px">
         <mat-icon style="font-size: 70px; height: 70px; width: 70px;">
             clear
         </mat-icon>
         <h3 *ngIf="displayData === undefined">No Data Found</h3>
-        <h3 *ngIf="_yAxesKey === undefined">Select Data</h3>
+        <h3 *ngIf="_yAxesKeys === undefined">Select Data</h3>
     </div>
 
     <!-- loading -->
-    <div *ngIf="isLoadingData" fxLayout="row" fxLayoutAlign="space-between center" style="margin-top: 30px">
-        <mat-spinner></mat-spinner>
+    <div *ngIf="isLoadingData" fxLayout="column" fxLayoutAlign="space-around center" >
+        <div  fxLayout="row" fxLayoutAlign="center center" style="margin-top: 30px">
+            <mat-spinner></mat-spinner>
+        </div>
+        <div  fxLayout="row" fxLayoutAlign="center center" style="margin-top: 30px">
+            <h3>Loading Data</h3>
+        </div>
     </div>
 
+
     <!-- chart header -->
-    <div fxLayout="row" fxLayoutAlign="space-between center"  *ngIf="displayData != undefined" style="height: 60px">
+    <div fxLayout="row" fxLayoutAlign="space-between center"  *ngIf="displayData != undefined && isLoadingData == false" style="height: 60px">
         <!-- left button + date -->
         <div>
             <div *ngIf="enablePaging">
@@ -64,7 +70,7 @@
 
     <!-- Chart -->
     <ngx-charts-line-chart flex
-            *ngIf="displayData != undefined"
+            *ngIf="displayData != undefined && isLoadingData == false"
             [results]="displayData"
             [gradient]="false"
             [xAxis]="true"
@@ -73,7 +79,7 @@
             [showXAxisLabel]="true"
             [showYAxisLabel]="true"
             [xAxisLabel]="_xAxesKey"
-            [yAxisLabel]="_yAxesKey"
+            [yAxisLabel]="_yAxesKeys"
             [autoScale]="true"
             [timeline]="true"
             (select)="onSelect($event)">

@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {keyframes} from '@angular/animations';
 
 @Component({
     selector: 'sp-lineChart',
@@ -13,8 +14,9 @@ export class LineChartComponent {
     @Input() set data(value: any[]) {
         if (value != undefined) {
             this._data = value;
-            if (this._data !== undefined && this._xAxesKey !== undefined && this._yAxesKey !== undefined) {
-                this.processData()
+            if (this._data !== undefined && this._xAxesKey !== undefined && this._yAxesKeys !== undefined) {
+                this.processData();
+                this.selectDataToDisplay();
             }
         } else {
             this.displayData = undefined;
@@ -23,16 +25,19 @@ export class LineChartComponent {
     @Input() set xAxesKey(value: string) {
         if (value != undefined) {
             this._xAxesKey = value;
-            if (this._data !== undefined && this._xAxesKey !== undefined && this._yAxesKey !== undefined) {
+            if (this._data !== undefined && this._xAxesKey !== undefined && this._yAxesKeys !== undefined) {
                 this.processData()
+                this.selectDataToDisplay();
             }
         }
     }
-    @Input() set yAxesKey(value: string) {
+    @Input() set yAxesKeys(value: string[]) {
         if (value !== undefined) {
-            this._yAxesKey = value;
-            if (this._data !== undefined && this._xAxesKey !== undefined && this._yAxesKey !== undefined) {
-                this.processData()
+            this._yAxesKeys = value;
+            if (this._data !== undefined && this._xAxesKey !== undefined && this._yAxesKeys !== undefined) {
+                if (this.processedData === undefined)
+                    this.processData();
+                this.selectDataToDisplay();
             }
         }
     }
@@ -48,19 +53,47 @@ export class LineChartComponent {
 
 
     _xAxesKey: string = undefined;
-    _yAxesKey: string = undefined;
+    _yAxesKeys: string[] = undefined;
     _data: any[] = undefined;
+
+    processedData: any[] = undefined;
 
     displayData: any[] = undefined;
     itemsPerPage = 50;
 
     processData() {
-        const serie = [];
-        this._data.forEach(date => {
-            serie.push({name: new Date(date[this._xAxesKey]), value: date[this._yAxesKey]})
-        });
-        this.displayData = [{name: this._yAxesKey, series: serie}]
+        const tmp = [];
+        Object.keys(this._data[0]).forEach(key => {
+            const serie = [];
+            this._data.forEach(date => {
+                serie.push({name: new Date(date[this._xAxesKey]), value: date[key]})
+            });
+            tmp.push({name: key, series: serie});
+        })
+        this.processedData = tmp;
+
+
+        this.displayData = tmp;
     }
+
+    selectDataToDisplay() {
+        if (this._yAxesKeys.length > 0) {
+            const tmp = [];
+            this._yAxesKeys.forEach(key => {
+                this.processedData.forEach(serie => {
+                    if (serie.name === key)
+                        tmp.push(serie)
+                })
+            })
+            this.displayData = tmp;
+        } else {
+            this.displayData = undefined;
+        }
+
+
+    }
+
+
 
     clickPreviousPage(){
         this.previousPage.emit()

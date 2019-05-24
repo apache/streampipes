@@ -23,7 +23,7 @@ export class DatalakeLineChartComponent {
     _index: string;
 
     //Line Chart configs
-    yAxesKey = undefined;
+    yAxesKeys: [] = undefined;
     xAxesKey = 'time';
     currentPage: number = 0;
     maxPage: number = 0;
@@ -44,6 +44,7 @@ export class DatalakeLineChartComponent {
     }
 
     paging(page) {
+        this.isLoadingData = true;
         this.restService.getDataPage(this._index, this.itemsPerPage, page).subscribe(
             res => {
                 if(res.events.length > 0) {
@@ -53,11 +54,11 @@ export class DatalakeLineChartComponent {
                 } else {
                     this.openSnackBar('No data found on page ' + page);
                 }
+                this.isLoadingData = false;
             });
     }
 
     loadData() {
-        this.isLoadingData = true;
         if (this.selectedTimeUnit === 'All') {
             this.loadAllData();
             this.enablePaging = true;
@@ -67,10 +68,10 @@ export class DatalakeLineChartComponent {
             this.enableItemsPerPage = false;
             this.loadLastData();
         }
-        this.isLoadingData = false;
     }
 
     loadAllData() {
+        this.isLoadingData = true;
         this.restService.getDataPageWithoutPage(this._index,this.itemsPerPage).subscribe(
             res => {
                 if(res.events.length > 0) {
@@ -81,6 +82,7 @@ export class DatalakeLineChartComponent {
                 } else {
                     this.data = undefined;
                 }
+                this.isLoadingData = false;
             }
         );
     }
@@ -104,6 +106,7 @@ export class DatalakeLineChartComponent {
             timevalue = 4 * 12;
         }
 
+        this.isLoadingData = true;
         this.restService.getLastData(this._index, timeunit, timevalue, aggregationunit, aggreagtionvalue).subscribe(
             res => {
                 if(res.events.length > 0) {
@@ -113,12 +116,13 @@ export class DatalakeLineChartComponent {
                 } else {
                     this.data = undefined;
                 }
+                this.isLoadingData = false;
             }
         );
     }
 
     selectKey(value) {
-        this.yAxesKey = value;
+        this.yAxesKeys = value;
     }
 
     setDataKeys(event) {

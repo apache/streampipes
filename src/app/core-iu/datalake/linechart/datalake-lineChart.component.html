@@ -1,7 +1,7 @@
 <div fxLayout="row" fxLayoutAlign="start stretch" style="margin-top: 10px; margin-left: 5px">
     <mat-form-field style="margin-right: 1px;top: -3px;height: 1px;" appearance="outline">
         <mat-label>Select Data</mat-label>
-        <mat-select (selectionChange)="selectKey($event.value)">
+        <mat-select (selectionChange)="selectKey($event.value)" multiple>
             <mat-option *ngFor="let key of dataKeys" [value]="key" style="background-color: #FFFFFF">
                 {{key}}
             </mat-option>
@@ -21,7 +21,7 @@
 
 <sp-lineChart
         [xAxesKey]="xAxesKey"
-        [yAxesKey]="yAxesKey"
+        [yAxesKeys]="yAxesKeys"
         [data]="data"
         [enableItemsPerPage]="enableItemsPerPage"
         [enablePaging]="enablePaging"
