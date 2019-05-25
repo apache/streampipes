@@ -31,7 +31,7 @@
     </modules>
 
     <properties>
-        <streampipes.version>0.62.0</streampipes.version>
+        <streampipes.version>0.62.1-SNAPSHOT</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
     </properties>
 
