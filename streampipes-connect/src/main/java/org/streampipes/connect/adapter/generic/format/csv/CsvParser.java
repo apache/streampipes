@@ -25,7 +25,6 @@ import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.vocabulary.SO;
 import org.streampipes.vocabulary.XSD;
 
 import java.io.BufferedReader;
@@ -54,7 +53,7 @@ public class CsvParser extends Parser {
         ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
 
         boolean header = extractor.selectedMultiValues(CsvFormat.HEADER_NAME).stream()
-                .anyMatch(option -> option.equals("Header"));
+                .anyMatch(option -> "Header".equals(option));
         String delimiter = extractor.singleValue(CsvFormat.DELIMITER_NAME);
 
         return new CsvParser(delimiter, header);
@@ -85,8 +84,6 @@ public class CsvParser extends Parser {
         String[] keys;
         String[] data;
 
-        // TODO handle strings containing seperator chars
-
         if (this.header) {
             keys = parseLine(new String(oneEvent.get(0)), delimiter);
             data = parseLine(new String (oneEvent.get(1)), delimiter);
@@ -113,7 +110,7 @@ public class CsvParser extends Parser {
 
         try {
             Double.parseDouble(o);
-            return SO.Number.toString();
+            return XSD._float.toString();
         } catch (NumberFormatException e) {
 
         }

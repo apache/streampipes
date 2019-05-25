@@ -26,20 +26,14 @@ import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.vocabulary.XSD;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
 
 public class ImageParser extends Parser {
-
-    public ImageParser() {
-
-    }
 
     @Override
     public Parser getInstance(FormatDescription formatDescription) {
@@ -48,7 +42,6 @@ public class ImageParser extends Parser {
 
     @Override
     public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(data));
 
         try {
             byte[] result = IOUtils.toByteArray(data);
@@ -56,7 +49,6 @@ public class ImageParser extends Parser {
         } catch (IOException e) {
             throw new ParseException(e.getMessage());
         }
-
     }
 
     @Override

@@ -56,7 +56,7 @@ public class CsvFormat extends Format {
         String delimiter = extractor.singleValue(DELIMITER_NAME);
 
         boolean header = extractor.selectedMultiValues(HEADER_NAME).stream()
-                .anyMatch(option -> option.equals("Header"));
+                .anyMatch(option -> "Header".equals(option));
 
 
         return new CsvFormat(delimiter, header);
@@ -110,9 +110,6 @@ public class CsvFormat extends Format {
 
         AnyStaticProperty offset = new AnyStaticProperty("header", "Header", "Does the CSV file include a header or not");
         offset.setOptions(Arrays.asList(new Option("Header","Header")));
-//
-//        FreeTextStaticProperty offset = new FreeTextStaticProperty("header",
-//                "Includes Header", "Description");
 
         fd.addConfig(delimiterProperty);
         fd.addConfig(offset);
