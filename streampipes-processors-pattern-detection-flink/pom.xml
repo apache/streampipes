@@ -83,14 +83,12 @@
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-cep_2.11</artifactId>
-            <version>1.4.0</version>
+            <version>1.8.0</version>
         </dependency>
 
         <dependency>
             <groupId>io.flinkspector</groupId>
             <artifactId>flinkspector-datastream_2.11</artifactId>
-            <version>0.8.4</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>

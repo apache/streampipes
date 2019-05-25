@@ -123,6 +123,12 @@
                 <version>4.12</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>io.flinkspector</groupId>
+                <artifactId>flinkspector-datastream_2.11</artifactId>
+                <version>0.9.4</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
