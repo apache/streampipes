@@ -1,10 +1,13 @@
 version: "2"
 services:
   jobmanager:
-    image: streampipes/flink:1.4
+    image: flink:1.8.0-scala_2.11-alpine
     ports:
-      - "8081:8099"
+      - "8081:8081"
+      - "6123:6123"
     command: jobmanager
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
     networks:
       spnet:
 
