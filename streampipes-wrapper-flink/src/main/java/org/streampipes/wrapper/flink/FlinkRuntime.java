@@ -21,7 +21,7 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.SpDataStream;
@@ -143,13 +143,13 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
 
   private SourceFunction<String> getKafkaConsumer(KafkaTransportProtocol protocol) {
     if (protocol.getTopicDefinition() instanceof SimpleTopicDefinition) {
-      return new FlinkKafkaConsumer010<>(protocol
+      return new FlinkKafkaConsumer<>(protocol
               .getTopicDefinition()
               .getActualTopicName(), new SimpleStringSchema
               (), getProperties(protocol));
     } else {
       String patternTopic = replaceWildcardWithPatternFormat(protocol.getTopicDefinition().getActualTopicName());
-      return new FlinkKafkaConsumer010<>(Pattern.compile(patternTopic), new SimpleStringSchema
+      return new FlinkKafkaConsumer<>(Pattern.compile(patternTopic), new SimpleStringSchema
               (), getProperties(protocol));
     }
   }

@@ -18,7 +18,7 @@
 package org.streampipes.wrapper.flink;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer010;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 import org.apache.flink.streaming.util.serialization.SerializationSchema;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -70,7 +70,7 @@ public abstract class FlinkDataProcessorRuntime<B extends EventProcessorBindingP
     SerializationSchema<Map<String, Object>> jmsSerializer = new SimpleJmsSerializer();
     if (isKafkaProtocol(getOutputStream())) {
       applicationLogic
-              .addSink(new FlinkKafkaProducer010<>(getTopic(getOutputStream()),
+              .addSink(new FlinkKafkaProducer<>(getTopic(getOutputStream()),
                       kafkaSerializer, getProperties((KafkaTransportProtocol) getOutputStream().getEventGrounding().getTransportProtocol())));
     } else {
       applicationLogic

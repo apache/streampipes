@@ -26,7 +26,7 @@
     <name>StreamPipes Wrapper for Apache Flink</name>
     <properties>
         <jackson.version>2.7.4</jackson.version>
-        <flink.version>1.4.0</flink.version>
+        <flink.version>1.8.0</flink.version>
     </properties>
     <dependencies>
         <dependency>
@@ -88,7 +88,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-kafka-0.11_2.11</artifactId>
+            <artifactId>flink-connector-kafka_2.11</artifactId>
             <version>${flink.version}</version>
         </dependency>
         <dependency>
