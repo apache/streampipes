@@ -34,7 +34,7 @@
         <consul-client.version>1.1.1</consul-client.version>
         <persistence-api.version>1.0.2</persistence-api.version>
         <junit.version>4.12</junit.version>
-        <kafka.version>1.0.0</kafka.version>
+        <kafka.version>2.2.0</kafka.version>
         <shiro.version>1.2.3</shiro.version>
         <streampipes-empire.version>1.9.9</streampipes-empire.version>
         <dependency.locations.enabled>false</dependency.locations.enabled>
@@ -96,7 +96,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.kafka</groupId>
-                <artifactId>kafka_2.10</artifactId>
+                <artifactId>kafka_2.12</artifactId>
                 <version>${kafka.version}</version>
             </dependency>
             <dependency>
