@@ -10,12 +10,26 @@ variables:
 
 
 stages:
+  - test-build
   - build
   - github
   - docker
   - deploy
   - release
   - docker-hub
+  
+test-mvn:
+  image: maven:3.6.1-jdk-8
+  stage: test-build
+  script:
+    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    - mvn clean package -DskipTests
+    - echo mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\['
+    - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
+    - ls
+    - echo $MVN_VERSION
+    - echo $MVN_VERSION >> ./target/mvn_version
 
 build:
   image: maven:3.6.1-jdk-8
