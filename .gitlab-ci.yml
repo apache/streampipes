@@ -25,7 +25,7 @@ build:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - mvn clean package -DskipTests
     - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
-    - "echo $MVN_VERSION >> ./target/mvn_version"
+    - echo $MVN_VERSION >> ./target/mvn_version
   artifacts:
     paths:
       - ./*/target/*.jar
