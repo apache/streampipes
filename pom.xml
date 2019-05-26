@@ -240,6 +240,7 @@
                                 <goal>jar</goal>
                             </goals>
                             <configuration>
+                                <doclint>none</doclint>
                                 <additionalparam>-Xdoclint:none</additionalparam>
                             </configuration>
                         </execution>
