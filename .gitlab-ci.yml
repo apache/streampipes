@@ -18,7 +18,7 @@ stages:
   - docker-hub
 
 build:
-  image: maven:3-jdk-8
+  image: maven:3.6.1-jdk-8
   stage: build
   script:
     - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
