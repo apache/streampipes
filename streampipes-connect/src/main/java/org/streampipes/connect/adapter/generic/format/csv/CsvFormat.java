@@ -18,6 +18,7 @@
 package org.streampipes.connect.adapter.generic.format.csv;
 
 
+import org.apache.commons.lang.StringUtils;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.connect.exception.ParseException;
@@ -87,7 +88,14 @@ public class CsvFormat extends Format {
 
         } else {
             for (int i = 0; i <= arr.length - 1; i++) {
-                map.put(keyValues[i], arr[i]);
+
+                if (StringUtils.isNumeric(arr[i])) {
+                    map.put(keyValues[i], Double.parseDouble(arr[i]));
+                } else if ("true".equals(arr[i].toLowerCase()) || "true".equals(arr[i].toLowerCase())) {
+                    map.put(keyValues[i], Boolean.parseBoolean(arr[i]));
+                } else {
+                    map.put(keyValues[i], arr[i]);
+                }
             }
 
         }
