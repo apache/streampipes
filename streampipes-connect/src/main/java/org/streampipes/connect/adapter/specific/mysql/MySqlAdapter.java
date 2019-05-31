@@ -68,7 +68,7 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
   private String table;
   private String port;
 
-  private boolean stream = false;
+  private boolean dataComing = false;
   private List<Column> tableSchema;
   private BinaryLogClient client;
 
@@ -88,7 +88,7 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
         "MySql Adapter",
         "Connects to a MySql Database and sends out all inserted or updated rows. Needs"
             + "binary logging enabled (MySql command: \"SHOW VARIABLES LIKE 'log_bin';\") and a"
-            + "user with sufficient privileges")
+            + "user with sufficient privileges (REPLICATION CLIENT)")
         //.iconUrl("ros.png")
         .requiredTextParameter(Labels.from(MYSQL_HOST, "Hostname", "Hostname of the MySql Server"))
         .requiredTextParameter(Labels.from(MYSQL_USER, "Username", "Username of the user"))
@@ -106,8 +106,8 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
   public void startAdapter() throws AdapterException {
     checkJdbcDriver();
     extractTableInformation();
+
     // Connect BinaryLogClient
-    //TODO: Add correct database to the hostname?
     client = new BinaryLogClient(host, Integer.parseInt(port), user, pass);
     EventDeserializer eventDeserializer = new EventDeserializer();
     eventDeserializer.setCompatibilityMode(
@@ -129,22 +129,20 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
       // Check table and database, if the next event should be streamed
       if (((TableMapEventData) event.getData()).getDatabase().equals(database)
           && ((TableMapEventData) event.getData()).getTable().equals((table))) {
-        stream = true;
+        dataComing = true;
       }
     }
-    if (stream) {
-      //TODO: remove System.out.println
+    if (dataComing) {
       if (EventType.isUpdate(event.getHeader().getEventType())) {
-        System.out.println("Data updated: ");
         for (Entry<Serializable[], Serializable[]> en : ((UpdateRowsEventData) event.getData()).getRows()) {
           sendChange(en.getValue());
         }
-        stream = false;
+        dataComing = false;
       } else if (EventType.isWrite(event.getHeader().getEventType())) {
         for (Serializable[] s : ((WriteRowsEventData) event.getData()).getRows()) {
           sendChange(s);
         }
-        stream = false;
+        dataComing = false;
       }
     }
   }
