@@ -3,7 +3,7 @@ services:
   mariadb:
     image: mariadb
     volumes:
-      - ./config/mariadb/data:/var/lib/mysql
+      - mariadb:/var/lib/mysql
     ports:
       - 3306:3306
     environment:
@@ -12,3 +12,10 @@ services:
       MYSQL_ROOT_PASSWORD: uJ-ft,2CX7YD8N,P
     networks:
       spnet:
+
+volumes:
+  mariadb
+
+networks:
+  spnet:
+    external: true
