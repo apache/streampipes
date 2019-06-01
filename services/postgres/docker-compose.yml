@@ -7,8 +7,8 @@ services:
     ports:
       - 5432:5432
     environment:
-       POSTGRES_USER: admin
-       POSTGRES_PASSWORD: admin
+       POSTGRES_USER: user1
+       POSTGRES_PASSWORD: bQgu"FUR_VH6z>~j
 #      PGDATA: /tmp
 #      PGDATA: /var/lib/postgresql/data
     volumes:
