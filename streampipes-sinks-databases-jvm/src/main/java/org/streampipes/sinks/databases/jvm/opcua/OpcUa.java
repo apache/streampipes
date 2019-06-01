@@ -17,27 +17,94 @@
 
 package org.streampipes.sinks.databases.jvm.opcua;
 
+import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
+import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
+import org.eclipse.milo.opcua.stack.client.UaTcpStackClient;
+import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
+import org.eclipse.milo.opcua.stack.core.types.builtin.*;
+import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
+import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 public class OpcUa implements EventSink<OpcUaParameters> {
 
+	private static Logger LOG;
 
-  @Override
-  public void onInvocation(OpcUaParameters parameters, EventSinkRuntimeContext runtimeContext) throws
-          SpRuntimeException {
+	private OpcUaClient opcUaClient;
+	private OpcUaParameters params;
+	private String serverUrl;
+	private NodeId node;
 
-  }
+	@Override
+	public void onInvocation(OpcUaParameters parameters, EventSinkRuntimeContext runtimeContext) throws
+			SpRuntimeException {
+		LOG = parameters.getGraph().getLogger(OpcUa.class);
 
-  @Override
-  public void onEvent(Event inputEvent) {
-  }
+		serverUrl = "opc.tcp://" + parameters.getHostName() + ":" + parameters.getPort();
 
-  @Override
-  public void onDetach() throws SpRuntimeException {
-  }
+		node = new NodeId(parameters.getNameSpaceIndex(), parameters.getNodeId());
+		this.params = parameters;
+
+		EndpointDescription[] endpoints;
+
+		try {
+			endpoints = UaTcpStackClient.getEndpoints(serverUrl).get();
+
+			EndpointDescription endpoint = null;
+
+			endpoint = Arrays.stream(endpoints)
+					.filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getSecurityPolicyUri()))
+					.findFirst().orElseThrow(() -> new Exception("no desired endpoints returned"));
+
+			OpcUaClientConfig config = OpcUaClientConfig.builder()
+					.setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
+					.setApplicationUri("urn:eclipse:milo:examples:client")
+					.setEndpoint(endpoint)
+					.build();
+
+			new OpcUaClient(config);
+			opcUaClient = new OpcUaClient(config);
+			opcUaClient.connect().get();
+
+		} catch (Exception e) {
+			throw new SpRuntimeException("Could not connect to OPC-UA server: " + serverUrl);
+		}
+
+	}
+
+	@Override
+	public void onEvent(Event inputEvent) {
+
+		// TODO how to handle multiple data types
+	  Double fieldValue = inputEvent.getFieldBySelector(this.params.getNumberMapping()).getAsPrimitive().getAsDouble();
+
+	  Variant v = new Variant(fieldValue);
+		DataValue value = new DataValue(v);
+		CompletableFuture<StatusCode> f =	opcUaClient.writeValue(node, value);
+
+		try {
+			StatusCode status = f.get();
+			if (status.isBad()) {
+			    LOG.error("Value: " + fieldValue + " could not be written to node Id: " + this.params.getNodeId() + " on " +
+							"OPC-UA server: " + this.serverUrl);
+			}
+		} catch (InterruptedException | ExecutionException e) {
+			LOG.error("Exception: Value: " + fieldValue + " could not be written to node Id: " + this.params.getNodeId() + " on " +
+							"OPC-UA server: " + this.serverUrl);
+		}
+	}
+
+	@Override
+	public void onDetach() throws SpRuntimeException {
+		opcUaClient.disconnect();
+	}
 
 
 }
