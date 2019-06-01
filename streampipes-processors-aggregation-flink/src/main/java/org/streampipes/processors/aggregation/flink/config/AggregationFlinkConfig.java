@@ -25,7 +25,6 @@ public enum AggregationFlinkConfig implements PeConfig {
   private SpConfig config;
   public static final String JAR_FILE = "./streampipes-processing-element-container.jar";
 
-
   private final static String service_id = "pe/org.streampipes.processors.aggregation.flink";
   private final static String service_name = "Processors Aggregation Flink";
   private final static String service_container_name = "processors-aggregation-flink";
@@ -37,7 +36,7 @@ public enum AggregationFlinkConfig implements PeConfig {
     config.register(ConfigKeys.HOST, service_container_name, "Hostname for the pe mixed flink component");
     config.register(ConfigKeys.PORT, 8090, "Port for the pe mixed flink component");
     config.register(ConfigKeys.FLINK_HOST, "jobmanager", "Host for the flink cluster");
-    config.register(ConfigKeys.FLINK_PORT, 6123, "Port for the flink cluster");
+    config.register(ConfigKeys.FLINK_PORT, 8081, "Port for the flink cluster");
 
     config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");

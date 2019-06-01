@@ -18,14 +18,14 @@ stages:
   - docker-hub
 
 build:
-  image: maven:3-jdk-8
+  image: maven:3.6.1-jdk-8
   stage: build
   script:
     - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - mvn clean package javadoc:aggregate -U -DskipTests
     - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
-    - "echo $MVN_VERSION >> ./target/mvn_version"
+    - echo $MVN_VERSION >> ./target/mvn_version
   artifacts:
     paths:
       - ./*/target/*.jar
@@ -203,6 +203,11 @@ docker-processors-transformation-jvm:
     variables:
       CONTAINER_NAME: "processors-transformation-jvm"
 
+docker-processors-text-mining-flink:
+  <<: *docker_hub_script
+  variables:
+    CONTAINER_NAME: "processors-text-mining-flink"
+
 docker-sinks-brokers-jvm:
     <<: *docker_script
     variables:
@@ -298,6 +303,11 @@ docker-hub-processors-transformation-jvm:
     <<: *docker_hub_script
     variables:
       CONTAINER_NAME: "processors-transformation-jvm"
+
+docker-hub-processors-text-mining-flink:
+  <<: *docker_hub_script
+  variables:
+    CONTAINER_NAME: "processors-text-mining-flink"
 
 docker-hub-sinks-brokers-jvm:
     <<: *docker_hub_script

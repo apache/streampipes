@@ -7,24 +7,26 @@
 ***
 
 ## Description
-
-Numerical Filter Description
-Add a detailed description here
+The Numerical Filter processor filters numerical values based on a given threshold.
 
 ***
 
 ## Required input
-
+The processor works with any input event that has one field containing a numerical value.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Field
+Specifies the field name where the filter operation should be applied on.
 
-### 1st parameter
 
+### Operation
+Specifies the filter operation that should be applied on the field.
 
-### 2nd parameter
+### Threshold value
+Specifies the threshold value.
 
 ## Output
+The processor outputs the input event if it satisfies the filter expression.

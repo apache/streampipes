@@ -1,7 +1,7 @@
 org.streampipes.processors.filters.jvm.textfilter.title=Text Filter
 org.streampipes.processors.filters.jvm.textfilter.description=Text Filter Description
 
-text.title=Select Text Property
+text.title=Select Text Field
 text.description=
 
 operation.title=Select Operation
