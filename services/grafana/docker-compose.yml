@@ -5,7 +5,13 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./config/grafana/data:/var/lib/grafana
+      - grafana:/var/lib/grafana
     networks:
       spnet:
 
+volumes:
+  grafana:
+
+networks:
+  spnet:
+    external: true

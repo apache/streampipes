@@ -1,11 +1,18 @@
 version: "2"
 services:
   taskmanager:
-    image: streampipes/flink:1.4
+    image: flink:1.8.0-scala_2.11-alpine
+    depends_on:
+      - jobmanager
     command: taskmanager
+    links:
+      - "jobmanager:jobmanager"
     environment:
-      - FLINK_NUM_SLOTS=20
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+      - TASK_MANAGER_NUMBER_OF_TASK_SLOTS=20
     networks:
       spnet:
 
-
+networks:
+  spnet:
+    external: true

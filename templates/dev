@@ -1,5 +1,6 @@
 activemq
 kafka
+consul
 zookeeper
 swagger-ui
 couchdb

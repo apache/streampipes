@@ -5,6 +5,7 @@ swagger-ui
 couchdb
 backend
 nginx
+consul
 connect-master
 connect-worker
 jobmanager

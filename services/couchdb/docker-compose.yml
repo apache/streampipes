@@ -1,16 +1,17 @@
 version: "2"
 services:
   couchdb:
-    image: couchdb:2.1.1
+    image: couchdb:2.3.1
     ports:
       - "5984:5984"
     volumes:
-#      - ./config/couchdb/data:/opt/couchdb/data
-      - data-couchdb:/opt/couchdb/data
+      - couchdb:/opt/couchdb/data
     networks:
       spnet:
 
 volumes:
-  data-couchdb:
-    driver: local
-    external: false
+  couchdb:
+
+networks:
+  spnet:
+    external: true

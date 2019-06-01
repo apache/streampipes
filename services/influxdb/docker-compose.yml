@@ -11,13 +11,15 @@ services:
 #      - INFLUXDB_REPORTING_DISABLED=false
 #      - INFLUXDB_ADMIN_ENABLED=true
     volumes:
-#      - ./config/influx:/var/lib/influxdb
-      - data-influx:/var/lib/influxdb
+      # Data persistency
+      # sudo mkdir -p /srv/docker/influxdb/data
+      - influx:/var/lib/influxdb
     networks:
       spnet:
 
 volumes:
-  data-influx:
-    external: false
-    driver: local
+  influx:
 
+networks:
+  spnet:
+    external: true

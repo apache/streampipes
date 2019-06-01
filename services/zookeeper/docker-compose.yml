@@ -4,8 +4,16 @@ services:
     image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
+    volumes:
+      - zk-conf:/opt/zookeeper-3.4.13/conf
+      - zk-data:/opt/zookeeper-3.4.13/data
     networks:
       spnet:
 
+volumes:
+  zk-conf:
+  zk-data:
 
-
+networks:
+  spnet:
+    external: true
