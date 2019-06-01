@@ -8,23 +8,25 @@
 
 ## Description
 
-Performs calculations on event properties (+, -, *, /, %)
-Add a detailed description here
+Performs calculations on event properties (+, -, *, /, %).
 
 ***
 
 ## Required input
-
+The math processor works with any event that has at least one field containing a numerical value.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
+### Left operand
+The field from the input event that should be used as the left operand.
 
-### 1st parameter
+### Right operand
+The field from the input event that should be used as the right operand.
 
-
-### 2nd parameter
+### Operation
+The math operation that should be performed.
 
 ## Output
+The processor appends the calculation result to each input event.

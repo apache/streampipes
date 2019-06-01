@@ -1,0 +1,7 @@
+org.streampipes.processors.aggregation.flink.count
+org.streampipes.processor.imageclassification.jvm.image-cropper
+org.streampipes.processors.pattern-detection.flink.sequence
+org.streampipes.processors.pattern-detection.flink.absence
+org.streampipes.processors.pattern-detection.flink.and
+org.streampipes.processors.pattern-detection.flink.increase
+org.streampipes.processors.statistics.flink.statistics-summary

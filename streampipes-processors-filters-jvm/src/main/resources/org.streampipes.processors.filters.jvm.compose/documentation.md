@@ -8,23 +8,19 @@
 
 ## Description
 
-Merges two event streams 
-Add a detailed description here
+Merges two event streams. Any time, a new input event arrives, it is merged with the last input event from the other 
+event stream and forwarded.
 
 ***
 
 ## Required input
-
+The Compose processor does not have any specific input requirements.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
+(no further configuration required)
 
 ## Output
+The compose processor has a configurable output that can be selected by the user at pipeline modeling time.

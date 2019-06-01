@@ -8,13 +8,12 @@
 
 ## Description
 
-Performs Trigonometric function on event properties
-Add a detailed description here
+Performs Trigonometric functions (sin, cos, tan) on event properties.
 
 ***
 
 ## Required input
-
+The trigonometry processor works with any event that has at least one field containing a numerical value.
 
 ***
 
@@ -22,9 +21,12 @@ Add a detailed description here
 
 Describe the configuration parameters here
 
-### 1st parameter
+### Alpha
+The field that should be used for calculating the trigonometric function.
 
 
-### 2nd parameter
+### Operation
+The trigonometric function that should be calculated.
 
 ## Output
+The processor appends the calculation result to each input event.

@@ -10,6 +10,9 @@
 
 Slack bot to send notifications directly into your slack
 
+Before you use this sink, the Slack token needs to be configured.
+After you've installed the element, navigate to ``Settings``, open the panel ``Sinks Notifications JVM`` and add your
+Slack API token.
 ***
 
 ## Required input

@@ -3,14 +3,14 @@
     <parent>
         <artifactId>streampipes-pipeline-elements</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.61.1-SNAPSHOT</version>
+        <version>0.62.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>streampipes-processors-transformation-flink</artifactId>
 
     <properties>
-        <flink.version>1.4.0</flink.version>
+        <flink.version>1.8.0</flink.version>
     </properties>
     <dependencies>
         <dependency>
@@ -90,8 +90,6 @@
         <dependency>
             <groupId>io.flinkspector</groupId>
             <artifactId>flinkspector-datastream_2.11</artifactId>
-            <version>0.8.4</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>

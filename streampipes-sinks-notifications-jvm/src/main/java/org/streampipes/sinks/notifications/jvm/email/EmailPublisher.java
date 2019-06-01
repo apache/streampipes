@@ -63,10 +63,12 @@ public class EmailPublisher implements EventSink<EmailParameters> {
         properties.setProperty("mail.smtp.host", host);
         properties.setProperty("mail.smtp.port", String.valueOf(port));
 
-        if(starttls)
-            properties.put("mail.smtp.starttls.enable","true");
-        if(ssl)
+        if (starttls) {
+            properties.put("mail.smtp.starttls.enable", "true");
+        }
+        if (ssl) {
             properties.put("mail.smtp.ssl.enable", "true");
+        }
         properties.put("mail.smtp.auth", "true");
 
         Session session = Session.getDefaultInstance(properties, new Authenticator() {
@@ -85,7 +87,6 @@ public class EmailPublisher implements EventSink<EmailParameters> {
         } catch (MessagingException e) {
            LOG.error(e.toString());
         }
-
     }
 
     @Override

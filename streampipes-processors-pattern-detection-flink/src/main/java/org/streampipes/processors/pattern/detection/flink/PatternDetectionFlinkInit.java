@@ -25,7 +25,6 @@ public class PatternDetectionFlinkInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton.getInstance()
-//            .add(new IncreaseController())
             .add(new PeakDetectionController());
 //            .add(new SequenceController())
 //            .add(new AbsenceController())

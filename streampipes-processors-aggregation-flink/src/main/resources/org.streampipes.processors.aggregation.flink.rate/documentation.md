@@ -8,23 +8,19 @@
 
 ## Description
 
-Computes the current event rate 
-Add a detailed description here
+Computes the current event rate. Output is a number representing events per second.
 
 ***
 
 ## Required input
 
+The event rate processor works with any stream and does not have any specific requirements.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
+### Time Baseline
+Time window size used for calculating the rate in seconds, also defines the output rate
 
 ## Output
