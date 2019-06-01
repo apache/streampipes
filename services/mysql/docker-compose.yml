@@ -7,9 +7,9 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: user1
+      MYSQL_PASSWORD: uY-F8c5)(!{H?EE}
+      MYSQL_ROOT_PASSWORD: 7u*4rAy<rPh!v6@5
     networks:
       spnet:
 
