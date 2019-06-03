@@ -221,6 +221,16 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     }
   }
 
+  public String getEventPropertyTypeBySelector(String selector) throws SpRuntimeException {
+
+      EventProperty eventProperty = getEventPropertyBySelector(selector);
+      if (eventProperty instanceof EventPropertyPrimitive) {
+        return ((EventPropertyPrimitive)eventProperty).getRuntimeType();
+      } else {
+        throw new SpRuntimeException("Property with selector " + selector + " is not an EventPropertyPrimitive");
+      }
+
+  }
   private List<EventProperty> getEventProperty(String selector, String currentPointer,
                                                List<EventProperty> properties) {
     for (EventProperty property : properties) {
