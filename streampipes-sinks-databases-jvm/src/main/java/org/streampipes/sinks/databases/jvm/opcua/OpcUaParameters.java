@@ -26,15 +26,18 @@ public class OpcUaParameters extends EventSinkBindingParams {
   private Integer port;
   private String nodeId;
   private Integer nameSpaceIndex;
-  private String numberMapping;
+  private String mappingPropertySelector;
+  private String mappingPropertyType;
 
-  public OpcUaParameters(DataSinkInvocation graph, String hostname, Integer port, String nodeId, Integer nameSpaceIndex, String numberMapping) {
+  public OpcUaParameters(DataSinkInvocation graph, String hostname, Integer port, String nodeId, Integer nameSpaceIndex,
+                         String mappingPropertySelector, String mappingPropertyType) {
     super(graph);
     this.hostname = hostname;
     this.port = port;
     this.nodeId = nodeId;
     this.nameSpaceIndex = nameSpaceIndex;
-    this.numberMapping = numberMapping;
+    this.mappingPropertySelector = mappingPropertySelector;
+    this.mappingPropertyType = mappingPropertyType;
   }
 
   public String getHostName() {
@@ -69,11 +72,27 @@ public class OpcUaParameters extends EventSinkBindingParams {
     this.nameSpaceIndex = nameSpaceIndex;
   }
 
-  public String getNumberMapping() {
-    return numberMapping;
+  public String getHostname() {
+    return hostname;
   }
 
-  public void setNumberMapping(String numberMapping) {
-    this.numberMapping = numberMapping;
+  public void setHostname(String hostname) {
+    this.hostname = hostname;
+  }
+
+  public String getMappingPropertySelector() {
+    return mappingPropertySelector;
+  }
+
+  public void setMappingPropertySelector(String mappingPropertySelector) {
+    this.mappingPropertySelector = mappingPropertySelector;
+  }
+
+  public String getMappingPropertyType() {
+    return mappingPropertyType;
+  }
+
+  public void setMappingPropertyType(String mappingPropertyType) {
+    this.mappingPropertyType = mappingPropertyType;
   }
 }

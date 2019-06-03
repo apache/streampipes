@@ -19,12 +19,12 @@ package org.streampipes.sinks.databases.jvm;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.dataformat.json.JsonDataFormatFactory;
-
 import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.sinks.databases.jvm.config.DatabasesJvmConfig;
 import org.streampipes.sinks.databases.jvm.couchdb.CouchDbController;
 import org.streampipes.sinks.databases.jvm.influxdb.InfluxDbController;
+import org.streampipes.sinks.databases.jvm.opcua.UpcUaController;
 import org.streampipes.sinks.databases.jvm.postgresql.PostgreSqlController;
 
 public class DatabasesJvmInit extends StandaloneModelSubmitter {
@@ -34,6 +34,7 @@ public class DatabasesJvmInit extends StandaloneModelSubmitter {
             .getInstance()
             .add(new CouchDbController())
             .add(new InfluxDbController())
+            .add(new UpcUaController())
             .add(new PostgreSqlController());
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());

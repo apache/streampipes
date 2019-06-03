@@ -4,8 +4,8 @@ org.streampipes.sinks.databases.jvm.opcua.description=Writes values in an OPC-UA
 opc_host.title=Hostname
 opc_host.description=The hostname of the OPC-UA server (Example: opc-ua-server.com, no leading opc.tcp://)
 
-db_port.title=Port
-db_port.description=The port of the OPC-UA server (Example: 4840)
+opc_port.title=Port
+opc_port.description=The port of the OPC-UA server (Example: 4840)
 
 opc_namespace_index.title=Namespace Index
 opc_namespace_index.description=The number of the namespace
@@ -13,5 +13,5 @@ opc_namespace_index.description=The number of the namespace
 opc_node_id_index.title=Node Id
 opc_node_id_index.description=Id of the node the result should be written to
 
-number_mapping_key.title=Event Property
-number_mapping_key.description=The event property that should be written to the OPC-UA server
+mapping_property_key.title=Event Property
+mapping_property_key.description=The event property that should be written to the OPC-UA server

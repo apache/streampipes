@@ -17,6 +17,7 @@
 
 package org.streampipes.sinks.databases.jvm.opcua;
 
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
@@ -35,7 +36,7 @@ public class UpcUaController extends StandaloneEventSinkDeclarer<OpcUaParameters
   private static final String OPC_PORT_KEY = "opc_port";
   private static final String OPC_NAMESPACE_INDEX_KEY = "opc_namespace_index";
   private static final String OPC_NODE_ID_KEY = "opc_node_id_index";
-  private static final String NUMBER_MAPPING_KEY = "number_mapping_key";
+  private static final String MAPPING_PROPERTY_KEY = "mapping_property_key";
 
 
   @Override
@@ -46,8 +47,8 @@ public class UpcUaController extends StandaloneEventSinkDeclarer<OpcUaParameters
             .category(DataSinkType.STORAGE)
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                            Labels.withId(NUMBER_MAPPING_KEY),
+                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
+                            Labels.withId(MAPPING_PROPERTY_KEY),
                             PropertyScope.NONE).build())
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
@@ -69,9 +70,18 @@ public class UpcUaController extends StandaloneEventSinkDeclarer<OpcUaParameters
     String nodeId = extractor.singleValueParameter(OPC_NODE_ID_KEY, String.class);
     Integer nameSpaceIndex = extractor.singleValueParameter(OPC_NAMESPACE_INDEX_KEY, Integer.class);
 
-    String numberMapping = extractor.mappingPropertyValue(NUMBER_MAPPING_KEY);
+    String mappingPropertySelector = extractor.mappingPropertyValue(MAPPING_PROPERTY_KEY);
 
-    OpcUaParameters params = new OpcUaParameters(graph, hostname, port, nodeId, nameSpaceIndex, numberMapping);
+    String mappingPropertyType = "";
+    try {
+      mappingPropertyType = extractor.getEventPropertyTypeBySelector(mappingPropertySelector);;
+    } catch (SpRuntimeException e) {
+      e.printStackTrace();
+    }
+
+
+    OpcUaParameters params = new OpcUaParameters(graph, hostname, port, nodeId, nameSpaceIndex,
+            mappingPropertySelector, mappingPropertyType);
 
     return new ConfiguredEventSink<>(params, OpcUa::new);
   }
