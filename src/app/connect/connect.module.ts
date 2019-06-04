@@ -66,6 +66,8 @@ import { AdapterUploadDialog } from './data-marketplace/adapter-upload/adapter-u
 import { TsonLdSerializerService } from './tsonld-serializer.service';
 import { EventPropertyListComponent } from './schema-editor/event-property-list/event-property-list.component';
 
+import {DragDropModule} from '@angular/cdk/drag-drop';
+
 
 @NgModule({
   imports: [
@@ -80,6 +82,7 @@ import { EventPropertyListComponent } from './schema-editor/event-property-list/
     MatProgressSpinnerModule,
     MatInputModule,
     MatFormFieldModule,
+    DragDropModule,
   ],
   exports: [StaticPropertyComponent],
   declarations: [
