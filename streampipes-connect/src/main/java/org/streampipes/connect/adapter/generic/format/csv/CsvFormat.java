@@ -90,7 +90,12 @@ public class CsvFormat extends Format {
             for (int i = 0; i <= arr.length - 1; i++) {
 
                 if (StringUtils.isNumeric(arr[i])) {
-                    map.put(keyValues[i], Double.parseDouble(arr[i]));
+                    Double doubleValue = Double.parseDouble(arr[i]);
+                    if (doubleValue == Math.floor(doubleValue)) {
+                        map.put(keyValues[i], Long.parseLong(arr[i]));
+                    } else {
+                        map.put(keyValues[i], doubleValue);
+                    }
                 } else if ("true".equals(arr[i].toLowerCase()) || "true".equals(arr[i].toLowerCase())) {
                     map.put(keyValues[i], Boolean.parseBoolean(arr[i]));
                 } else {
