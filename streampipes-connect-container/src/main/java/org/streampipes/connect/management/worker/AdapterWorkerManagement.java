@@ -64,15 +64,18 @@ public class AdapterWorkerManagement {
                 e.printStackTrace();
             }
 
-            // TODO wait till all components are done with their calculations
-            try {
-                Thread.sleep(20000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (adapterSetDescription.isStopPipeline()) {
+
+                try {
+                    Thread.sleep(20000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                String url = AdapterUtils.getUrl(ConnectContainerConfig.INSTANCE.getBackendApiUrl(), dataSet.getCorrespondingPipeline());
+                String result = AdapterUtils.stopPipeline(url);
+                logger.info(result);
+
             }
-            String url = AdapterUtils.getUrl(ConnectContainerConfig.INSTANCE.getBackendApiUrl(), dataSet.getCorrespondingPipeline());
-            String result = AdapterUtils.stopPipeline(url);
-            logger.info(result);
         };
 
         new Thread(r).start();
