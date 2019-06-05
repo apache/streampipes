@@ -6,6 +6,7 @@ import { EventPropertyList } from '../model/EventPropertyList';
 import { EventPropertyPrimitive } from '../model/EventPropertyPrimitive';
 import { DomainPropertyProbabilityList } from '../model/DomainPropertyProbabilityList';
 import { DataTypesService } from '../data-type.service';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 
 @Component({
@@ -44,6 +45,10 @@ export class EventPropertyBagComponent implements OnInit {
         }
 
         return result;
+    }
+
+    drop(event: CdkDragDrop<EventProperty>) {
+        this.eventProperties.splice(event.currentIndex, 0, this.eventProperties.splice(event.previousIndex, 1)[0]);
     }
 
     public addStaticValueProperty(): void {
