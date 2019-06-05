@@ -141,6 +141,8 @@
                             <input [disabled]="!isEditable" matInput id="input-removeDuplicatesTime" [ngModelOptions]="{standalone: true}" placeholder="Remove Duplicates Time Window" [(ngModel)]="removeDuplicatesTime">
                         </mat-form-field>
 
+                        <mat-checkbox *ngIf="isSetAdapter" [(ngModel)]="adapter.stopPipeline" [ngModelOptions]="{standalone: true}">Stop pipeline when replay is completed</mat-checkbox>
+
                     </div>
                 </div>
 

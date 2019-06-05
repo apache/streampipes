@@ -10,6 +10,9 @@ export class AdapterSetDescription extends AdapterDescription {
     @RdfProperty("sp:hasDataSet")
     public dataSet: DataSetDescription;
 
+    @RdfProperty("sp:stopPipeline")
+    public stopPipeline: Boolean;
+
     constructor(id: string) {
         super(id)
         this.dataSet = new DataSetDescription('http://streampipes.org/dataset/' + UUID.UUID().toString());
