@@ -17,10 +17,12 @@
 
 package org.streampipes.messaging.kafka;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.TopicPartition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,7 +106,11 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
 
   private Properties getProperties() {
     Properties props = new Properties();
-    props.put("bootstrap.servers", kafkaUrl);
+    props.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
+    props.put(ConsumerConfig.CLIENT_ID_CONFIG, "your_client_id");
+    props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaUrl);
     props.put("group.id", groupId);
     props.put("enable.auto.commit", "true");
     props.put("auto.commit.interval.ms", "10000");

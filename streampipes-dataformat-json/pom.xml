@@ -24,10 +24,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <properties>
-        <jackson.version>2.7.4</jackson.version>
-    </properties>
-
     <artifactId>streampipes-dataformat-json</artifactId>
 
     <dependencies>
