@@ -9,10 +9,6 @@ services:
     environment:
        POSTGRES_USER: user1
        POSTGRES_PASSWORD: bQgu"FUR_VH6z>~j
-#      PGDATA: /tmp
-#      PGDATA: /var/lib/postgresql/data
-    volumes:
-      - postgres:/var/lib/postgresql/data
     networks:
       spnet:
 
