@@ -15,27 +15,36 @@ export class DatalakeLineChartComponent {
 
     @Input() set index(value: string) {
         this._index = value;
-        this.loadData();
+        this.loadAllData();
+        this.enablePaging = true;
+        this.enableItemsPerPage = true;
     }
     data;
     _index: string;
 
-    yAxesKey = undefined;
+    //Line Chart configs
+    yAxesKeys: [] = undefined;
     xAxesKey = 'time';
-
     currentPage: number = 0;
     maxPage: number = 0;
-
     itemsPerPage = 50;
+    enablePaging = false;
+    enableItemsPerPage = false;
+    isLoadingData = false;
 
+    //index selections
     myControl = new FormControl();
     dataKeys: string[] = [];
+
+    //timeunit selection
+    selectedTimeUnit = 'All';
 
     constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar) {
 
     }
 
     paging(page) {
+        this.isLoadingData = true;
         this.restService.getDataPage(this._index, this.itemsPerPage, page).subscribe(
             res => {
                 if(res.events.length > 0) {
@@ -45,10 +54,24 @@ export class DatalakeLineChartComponent {
                 } else {
                     this.openSnackBar('No data found on page ' + page);
                 }
+                this.isLoadingData = false;
             });
     }
 
     loadData() {
+        if (this.selectedTimeUnit === 'All') {
+            this.loadAllData();
+            this.enablePaging = true;
+            this.enableItemsPerPage = true;
+        } else {
+            this.enablePaging = false;
+            this.enableItemsPerPage = false;
+            this.loadLastData();
+        }
+    }
+
+    loadAllData() {
+        this.isLoadingData = true;
         this.restService.getDataPageWithoutPage(this._index,this.itemsPerPage).subscribe(
             res => {
                 if(res.events.length > 0) {
@@ -56,14 +79,50 @@ export class DatalakeLineChartComponent {
                     this.maxPage = res.pageSum;
                     this.data = res.events as [];
                     this.setDataKeys(res.events[0])
+                } else {
+                    this.data = undefined;
                 }
+                this.isLoadingData = false;
+            }
+        );
+    }
+
+    loadLastData() {
+        let timeunit = '';
+        let timevalue = 0;
+        let aggregationunit = 'm';
+        let aggreagtionvalue = 1;
+        if (this.selectedTimeUnit === '24 Hours') {
+            timeunit = 'h';
+            timevalue = 24;
+        } else if (this.selectedTimeUnit === '1 Week') {
+            timeunit = 'w';
+            timevalue = 1;
+        } else if (this.selectedTimeUnit === '1 Month') {
+            timeunit = 'w';
+            timevalue = 4;
+        } else if (this.selectedTimeUnit === '1 Year') {
+            timeunit = 'w';
+            timevalue = 4 * 12;
+        }
+
+        this.isLoadingData = true;
+        this.restService.getLastData(this._index, timeunit, timevalue, aggregationunit, aggreagtionvalue).subscribe(
+            res => {
+                if(res.events.length > 0) {
+                    this.data = res.events as [];
+                    this.setDataKeys(res.events[0]);
+                    this.currentPage = undefined;
+                } else {
+                    this.data = undefined;
+                }
+                this.isLoadingData = false;
             }
         );
     }
 
     selectKey(value) {
-        this.yAxesKey = value;
-        console.log(value)
+        this.yAxesKeys = value;
     }
 
     setDataKeys(event) {
@@ -75,6 +134,10 @@ export class DatalakeLineChartComponent {
         }
     }
 
+    selectTimeUnit(value) {
+        this.selectedTimeUnit = value;
+        this.loadData();
+    }
 
 
     handleItemsPerPageChange(value) {
@@ -91,11 +154,20 @@ export class DatalakeLineChartComponent {
             this.paging(this.currentPage - 1);
     }
 
+    handleFirstPage() {
+        this.paging(0);
+    }
+
+    handleLastPage() {
+        this.loadAllData()
+    }
+
     openSnackBar(message: string) {
         this.snackBar.open(message, 'Close', {
             duration: 2000,
         });
     }
+
 
 
 }

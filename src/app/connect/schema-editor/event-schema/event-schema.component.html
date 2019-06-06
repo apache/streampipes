@@ -1,5 +1,5 @@
 
-<div id="schema_reload_button" fxLayout="row wrap" fxLayoutAlign="end start" >
+<div id="schema_reload_button" fxLayout="row wrap" fxLayoutAlign="end start">
     <button color="primary" mat-button (click)=guessSchema()>
         <i class="material-icons">
            refresh
@@ -8,16 +8,16 @@
     </button>
 </div>
 
-<div fxLayout="column"  *ngIf="isLoading">
+<div fxLayout="column" *ngIf="isLoading">
     <div fxLayoutAlign="center" >
         <mat-spinner fxLayoutAlign="center" style="margin: 10px 0 5px 0" >Loading</mat-spinner>
     </div>
-    <div fxLayoutAlign="center" >
+    <div fxLayoutAlign="center">
         <h3>The system tries to guess the schema of the data</h3>
     </div>
 </div>
 
-<div fxLayout="column"  *ngIf="isError">
+<div fxLayout="column" *ngIf="isError">
     <div fxLayout="row" fxLayoutAlign="center center">
         <mat-icon style="margin-top: 10px" class="md-accent">warning</mat-icon>
         <span style="width: 10px;"></span>

@@ -1,14 +1,12 @@
-import { Component, Input, EventEmitter, OnInit, Output, OnChanges } from '@angular/core';
+import { Component, Input, EventEmitter, OnInit, Output } from '@angular/core';
 import { UUID } from 'angular2-uuid';
-import { RestService } from '../../rest.service';
-import { DragulaService } from 'ng2-dragula';
 import { EventProperty } from '../model/EventProperty';
 import { EventPropertyNested } from '../model/EventPropertyNested';
 import { EventPropertyList } from '../model/EventPropertyList';
 import { EventPropertyPrimitive } from '../model/EventPropertyPrimitive';
 import { DomainPropertyProbabilityList } from '../model/DomainPropertyProbabilityList';
-import { DomainPropertyProbability } from '../model/DomainPropertyProbability';
-import {DataTypesService} from '../data-type.service';
+import { DataTypesService } from '../data-type.service';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 
 @Component({
@@ -21,23 +19,15 @@ export class EventPropertyBagComponent implements OnInit {
 
     @Input() eventProperties: EventProperty[];
 
-    @Input() eventPropertyNested: boolean = false;
+    @Input() eventPropertyNested = false;
 
-    @Input()
-    isEditable: Boolean;
+    @Input() isEditable: boolean;
 
     @Output() eventPropertiesChange = new EventEmitter<EventProperty[]>();
 
     @Input() domainPropertyGuesses: DomainPropertyProbabilityList[];
 
-    private dragularOptions: any = {
-        removeOnSpill: false
-    };
-
-    constructor(private restService: RestService,
-        private dragulaService: DragulaService,
-                private dataTypesService: DataTypesService) {
-    }
+    constructor(private dataTypesService: DataTypesService) { }
 
     ngOnInit() {
         if (this.domainPropertyGuesses == null) {
@@ -46,10 +36,10 @@ export class EventPropertyBagComponent implements OnInit {
     }
 
     public getDomainProbability(name: string) {
-        var result: DomainPropertyProbabilityList;
+        let result: DomainPropertyProbabilityList;
 
-        for (let entry of this.domainPropertyGuesses) {
-            if (entry.runtimeName == name) {
+        for (const entry of this.domainPropertyGuesses) {
+            if (entry.runtimeName === name) {
                 result = entry;
             }
         }
@@ -57,24 +47,26 @@ export class EventPropertyBagComponent implements OnInit {
         return result;
     }
 
-    public addStaticValueProperty(): void {
-        var eventProperty = new EventPropertyPrimitive('staticValue/' + UUID.UUID(), undefined);
+    drop(event: CdkDragDrop<EventProperty>) {
+        this.eventProperties.splice(event.currentIndex, 0, this.eventProperties.splice(event.previousIndex, 1)[0]);
+    }
 
-        eventProperty.setRuntimeName("key_0");
+    public addStaticValueProperty(): void {
+        const eventProperty = new EventPropertyPrimitive('staticValue/' + UUID.UUID(), undefined);
+
+        eventProperty.setRuntimeName('key_0');
         eventProperty.setRuntimeType(this.dataTypesService.getStringTypeUrl());
 
         this.eventProperties.push(eventProperty);
     }
 
     public addTimestampProperty(): void {
+        const eventProperty = new EventPropertyPrimitive('timestamp/' + UUID.UUID(), undefined);
 
-        var eventProperty = new EventPropertyPrimitive('timestamp/' + UUID.UUID(), undefined);
-
-        eventProperty.setRuntimeName("timestamp");
-        eventProperty.setLabel("Timestamp");
-        eventProperty.setDomainProperty("http://schema.org/DateTime");
+        eventProperty.setRuntimeName('timestamp');
+        eventProperty.setLabel('Timestamp');
+        eventProperty.setDomainProperty('http://schema.org/DateTime');
         eventProperty.setRuntimeType(this.dataTypesService.getNumberTypeUrl());
-
 
         this.eventProperties.push(eventProperty);
     }
@@ -82,8 +74,6 @@ export class EventPropertyBagComponent implements OnInit {
 
     public addNestedProperty(): void {
         const uuid: string = UUID.UUID();
-        const path = '/' + uuid;
-
         this.eventProperties.push(new EventPropertyNested(uuid, undefined));
     }
 
@@ -101,39 +91,26 @@ export class EventPropertyBagComponent implements OnInit {
     }
 
     public deletePropertyPrimitive(e) {
-
-        var property: EventPropertyPrimitive = <EventPropertyPrimitive> e;
-
-        var index = this.eventProperties.indexOf(property, 0);
+        const property: EventPropertyPrimitive = e as EventPropertyPrimitive;
+        const index = this.eventProperties.indexOf(property, 0);
         if (index > -1) {
             this.eventProperties.splice(index, 1);
         }
-
     }
 
     public deletePropertyNested(e) {
-
-        var property: EventPropertyNested = <EventPropertyNested> e;
-
-        var index = this.eventProperties.indexOf(property, 0);
+        const property: EventPropertyNested = e as EventPropertyNested;
+        const index = this.eventProperties.indexOf(property, 0);
         if (index > -1) {
             this.eventProperties.splice(index, 1);
         }
-
     }
 
     public deletePropertyList(e) {
-
-        var property: EventPropertyList = <EventPropertyList> e;
-
-        var index = this.eventProperties.indexOf(property, 0);
+        const property: EventPropertyList = e as EventPropertyList;
+        const index = this.eventProperties.indexOf(property, 0);
         if (index > -1) {
             this.eventProperties.splice(index, 1);
         }
-
     }
-
-
-
-
 }

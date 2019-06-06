@@ -3,7 +3,7 @@ import { RestService } from '../../rest.service';
 import { EventSchema } from '../model/EventSchema';
 import { AdapterDescription } from '../../model/connect/AdapterDescription';
 import { GuessSchema } from '../model/GuessSchema';
-import {NotificationLd} from '../../model/message/NotificationLd';
+import { NotificationLd } from '../../model/message/NotificationLd';
 
 @Component({
   selector: 'app-event-schema',
@@ -11,68 +11,55 @@ import {NotificationLd} from '../../model/message/NotificationLd';
   styleUrls: ['./event-schema.component.css'],
 })
 export class EventSchemaComponent implements OnInit {
-  @Input()
-  adapterDescription;
+  @Input() adapterDescription: AdapterDescription;
+  @Input() isEditable: boolean;
+  @Output() isEditableChange = new EventEmitter<boolean>();
 
+  @Output() adapterChange = new EventEmitter<AdapterDescription>();
 
-  @Input()
-  isEditable: Boolean;
-  @Output()
-  isEditableChange = new EventEmitter<Boolean>();
+  @Input() eventSchema: EventSchema;
+  @Output() eventSchemaChange = new EventEmitter<EventSchema>();
 
-  @Output()
-  adapterChange = new EventEmitter<AdapterDescription>();
+  @Input() oldEventSchema: EventSchema;
+  @Output() oldEventSchemaChange = new EventEmitter<EventSchema>();
 
-  @Input()
-  public eventSchema: EventSchema;
-  @Output()
-  eventSchemaChange = new EventEmitter<EventSchema>();
+  schemaGuess: GuessSchema = new GuessSchema();
 
-  @Input()
-  public oldEventSchema: EventSchema;
-  @Output()
-  oldEventSchemaChange = new EventEmitter<EventSchema>();
+  isLoading = false;
+  isError = false;
+  showErrorMessage = false;
+  errorMessages: NotificationLd[];
 
-  public schemaGuess: GuessSchema = new GuessSchema();
-
-  public isLoading: boolean = false;
-  public isError: boolean = false;
-  public showErrorMessage: boolean = false;
-  public errorMessages: NotificationLd[];
-
-  constructor(
-    private restService: RestService,
-  ) {}
+  constructor(private restService: RestService) {}
 
   public guessSchema(): void {
     this.isLoading = true;
     this.isError = false;
-        this.restService.getGuessSchema(this.adapterDescription).subscribe(x => {
-                this.isLoading = false;
-                this.eventSchema = x.eventSchema;
-                this.eventSchemaChange.emit(this.eventSchema);
-                this.schemaGuess = x;
+    this.restService.getGuessSchema(this.adapterDescription).subscribe(guessSchema => {
+        this.isLoading = false;
+        this.eventSchema = guessSchema.eventSchema;
+        this.eventSchemaChange.emit(this.eventSchema);
+        this.schemaGuess = guessSchema;
 
-                this.oldEventSchema = this.eventSchema.copy();
-                this.oldEventSchemaChange.emit(this.oldEventSchema);
+        this.oldEventSchema = this.eventSchema.copy();
+        this.oldEventSchemaChange.emit(this.oldEventSchema);
 
-                this.isEditable = true;
-                this.isEditableChange.emit(true);
-            },
-            error => {
-                this.errorMessages = error.notifications;
-                this.isError = true;
-                this.isLoading = false;
-                this.eventSchema = new EventSchema();
-            });
+        this.isEditable = true;
+        this.isEditableChange.emit(true);
+    },
+    error => {
+        this.errorMessages = error.notifications;
+        this.isError = true;
+        this.isLoading = false;
+        this.eventSchema = new EventSchema();
+    });
 
   }
 
   ngOnInit() {
-      // this.guessSchema();
-      if (!this.eventSchema) {
-        this.eventSchema = new EventSchema();
-      }
+    if (!this.eventSchema) {
+      this.eventSchema = new EventSchema();
+    }
 
   }
 }

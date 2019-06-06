@@ -3,6 +3,7 @@ import {InfoResult} from '../../core-model/datalake/InfoResult';
 import {AuthStatusService} from '../../services/auth-status.service';
 import {Injectable} from '@angular/core';
 import {PageResult} from '../../core-model/datalake/PageResult';
+import {DataResult} from '../../core-model/datalake/DataResult';
 
 @Injectable()
 export class DatalakeRestService {
@@ -30,6 +31,10 @@ export class DatalakeRestService {
 
     getDataPageWithoutPage(index, itemsPerPage) {
         return this.http.get<PageResult>(this.dataLakeUrlV3 + '/data/' + index + '/paging?itemsPerPage=' + itemsPerPage);
+    }
+
+    getLastData(index, timeunit, value, aggregationTimeUnit, aggregationValue) {
+        return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/last/' + value + '/' + timeunit + '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
     }
 
     getFile(index, format) {
