@@ -15,26 +15,39 @@ limitations under the License.
 */
 package org.streampipes.config.backend;
 
-public class BackendBrokerSettings {
+import java.util.Arrays;
+import java.util.List;
+
+public class MessagingSettings {
 
   private Integer batchSize;
   private Integer messageMaxBytes;
   private Integer lingerMs;
   private Integer acks;
 
-  public static BackendBrokerSettings fromDefault() {
-    return new BackendBrokerSettings(1638400, 5000012, 20, 2);
+  private List<SpDataFormat> prioritizedFormats;
+
+  public static MessagingSettings fromDefault() {
+    return new MessagingSettings(1638400,
+            5000012,
+            20,
+            2,
+            Arrays.asList(SpDataFormat.CBOR,
+            SpDataFormat.JSON,
+            SpDataFormat.FST,
+            SpDataFormat.SMILE));
   }
 
-  public BackendBrokerSettings(Integer batchSize, Integer messageMaxBytes, Integer lingerMs,
-                               Integer acks) {
+  public MessagingSettings(Integer batchSize, Integer messageMaxBytes, Integer lingerMs,
+                           Integer acks, List<SpDataFormat> prioritizedFormats) {
     this.batchSize = batchSize;
     this.messageMaxBytes = messageMaxBytes;
     this.lingerMs = lingerMs;
     this.acks = acks;
+    this.prioritizedFormats = prioritizedFormats;
   }
 
-  public BackendBrokerSettings() {
+  public MessagingSettings() {
 
   }
 
@@ -68,5 +81,13 @@ public class BackendBrokerSettings {
 
   public void setAcks(Integer acks) {
     this.acks = acks;
+  }
+
+  public List<SpDataFormat> getPrioritizedFormats() {
+    return prioritizedFormats;
+  }
+
+  public void setPrioritizedFormats(List<SpDataFormat> prioritizedFormats) {
+    this.prioritizedFormats = prioritizedFormats;
   }
 }

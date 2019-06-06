@@ -55,6 +55,8 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.INFLUX_HOST, "influxdb", "The host of the influx data base");
     config.register(BackendConfigKeys.INFLUX_PORT, 8086, "The hist of the influx data base");
     config.register(BackendConfigKeys.INFLUX_DATA_BASE, "sp", "The influx data base name");
+    config.registerObject(BackendConfigKeys.MESSAGING_SETTINGS, MessagingSettings.fromDefault(),
+            "Default Messaging Settings");
   }
 
   public String getBackendHost() {
@@ -93,6 +95,11 @@ public enum BackendConfig {
     return config.getInteger(BackendConfigKeys.ZOOKEEPER_PORT);
   }
 
+  public MessagingSettings getMessagingSettings() {
+    return config.getObject(BackendConfigKeys.MESSAGING_SETTINGS, MessagingSettings.class,
+            new MessagingSettings());
+  }
+
   public boolean isConfigured() {
     return config.getBoolean(BackendConfigKeys.IS_CONFIGURED);
   }
@@ -107,6 +114,10 @@ public enum BackendConfig {
 
   public void setJmsHost(String s) {
     config.setString(BackendConfigKeys.JMS_HOST, s);
+  }
+
+  public void setMessagingSettings(MessagingSettings settings) {
+    config.setObject(BackendConfigKeys.MESSAGING_SETTINGS, settings);
   }
 
   public void setIsConfigured(boolean b) {
