@@ -90,16 +90,20 @@ public class CsvFormat extends Format {
             for (int i = 0; i <= arr.length - 1; i++) {
 
                 if (StringUtils.isNumeric(arr[i])) {
-                    Double doubleValue = Double.parseDouble(arr[i]);
-                    if (doubleValue == Math.floor(doubleValue)) {
-                        map.put(keyValues[i], Long.parseLong(arr[i]));
-                    } else {
-                        map.put(keyValues[i], doubleValue);
-                    }
+                    map.put(keyValues[i], Long.parseLong(arr[i]));
                 } else if ("true".equals(arr[i].toLowerCase()) || "true".equals(arr[i].toLowerCase())) {
                     map.put(keyValues[i], Boolean.parseBoolean(arr[i]));
                 } else {
-                    map.put(keyValues[i], arr[i]);
+
+                    try {
+                        Double doubleValue = Double.parseDouble(arr[i]);
+                        map.put(keyValues[i], doubleValue);
+
+                    } catch (NumberFormatException e) {
+                        // If not a double use string as fallback type
+                        map.put(keyValues[i], arr[i]);
+                    }
+
                 }
             }
 
