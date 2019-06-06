@@ -47,8 +47,6 @@ export class AppTransportMonitoringComponent {
     }
 
     selectTransportProcess(transportProcess: TransportProcessEventModel) {
-        console.log("new transport process");
-        console.log(transportProcess);
         this.selectedTransportProcess = transportProcess;
         this.transportProcessSelected = true;
         this.fetchOutgoingParcelInfo();

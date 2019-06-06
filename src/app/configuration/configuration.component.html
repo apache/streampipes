@@ -1,7 +1,17 @@
-<div class="page-container page-container-padding">
-    <div fxLayout="row wrap" fxLayoutAlign="start stretch">
-        <consul-service fxFlex="33" *ngFor="let consulService of consulServices" class="consul-service"
-                        [consulService]="consulService" (updateConsulService)="updateConsulService($event)">
-        </consul-service>
+<div fxLayout="column" fxFlex="100" class="page-container">
+    <div fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
+        <div fxLayout="fill" style="line-height:24px;border-bottom:1px solid #ccc">
+            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)">
+                <mat-tab label="Pipeline Element Configuration"></mat-tab>
+                <mat-tab label="Messaging"></mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+
+    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 0">
+        <pipeline-element-configuration fxFlex="100"></pipeline-element-configuration>
+    </div>
+    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 1">
+        <messaging-configuration fxFlex="100"></messaging-configuration>
     </div>
 </div>

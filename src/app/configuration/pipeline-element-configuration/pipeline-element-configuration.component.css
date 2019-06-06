@@ -1,0 +1,43 @@
+table {
+    width:100%;
+}
+
+.service-icon-passing {
+    cursor: default;
+    color: #4CAF50;
+}
+
+.service-icon-critical {
+    cursor: default;
+    color: #F44336;
+}
+
+
+tr.consul-configuration-detail-row {
+    height: 0;
+}
+
+tr.consul-configuration-row:not(.consul-configuration-row-expanded):hover {
+    background: #f5f5f5;
+}
+
+tr.consul-configuration-row:not(.consul-configuration-row-expanded):active {
+    background: #efefef;
+}
+
+.consul-configuration-row td {
+    border-bottom-width: 0;
+}
+
+.consul-configuration-detail {
+    overflow: hidden;
+    display: flex;
+}
+
+.mat-table {
+    background: #FAFAFA;
+}
+
+.consul-service {
+    padding: 5px;
+}

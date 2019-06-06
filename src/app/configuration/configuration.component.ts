@@ -1,38 +1,31 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 
 import { ConfigurationService } from './shared/configuration.service';
 import { StreampipesPeContainer } from "./shared/streampipes-pe-container.model";
 import { StreampipesPeContainerConifgs } from "./shared/streampipes-pe-container-configs";
+import {MatPaginator, MatTableDataSource} from "@angular/material";
+import {animate, state, style, transition, trigger} from '@angular/animations';
+
 @Component({
     templateUrl: './configuration.component.html',
-    styleUrls: ['./configuration.component.css']
+    styleUrls: ['./configuration.component.css'],
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
+            state('expanded', style({height: '*'})),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+    ]
 })
 export class ConfigurationComponent {
 
-    consulServices: StreampipesPeContainer[];
+    selectedIndex: number = 0;
 
-    constructor(private configurationService: ConfigurationService) {
-        this.getConsulServices();
+    constructor() {
     }
 
-    getConsulServices(): void {
-        this.configurationService.getConsulServices()
-            .subscribe( response => {
-                this.consulServices = response;
-            }, error => {
-                console.error(error);
-            });
-
-            
+    selectedIndexChange(index: number) {
+        this.selectedIndex = index;
     }
 
-    updateConsulService(consulService: StreampipesPeContainer): void {
-        this.configurationService.updateConsulService(consulService)
-            .subscribe(response => {
-
-            }, error => {
-                console.error(error);
-            });
-    }
-    
 }

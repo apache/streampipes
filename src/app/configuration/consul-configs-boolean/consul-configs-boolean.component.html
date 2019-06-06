@@ -1,4 +1,4 @@
-<section class="checkbox-field" fxLayout="row" fxLayoutAlign="space-between center">
+<section class="checkbox-field" fxLayout="row" fxLayoutAlign="space-between center" fxFlex="100">
     <mat-checkbox matInput [(ngModel)]="configuration.value" type="checkbox"
                   [ngModelOptions]="{standalone: true}">
         {{configService.adjustConfigurationKey(configuration.key)}}

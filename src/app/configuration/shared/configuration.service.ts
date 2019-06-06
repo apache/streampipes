@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { StreampipesPeContainer } from './streampipes-pe-container.model';
+import { MessagingSettings } from './messaging-settings.model';
 
 @Injectable()
 export class ConfigurationService {
@@ -14,6 +15,16 @@ export class ConfigurationService {
 
     getServerUrl() {
         return '/streampipes-backend';
+    }
+
+    getMessagingSettings(): Observable<MessagingSettings> {
+        return this.http.get(this.getServerUrl() + '/api/v2/consul/messaging')
+            .pipe(
+                map(response => {
+                    console.log(response);
+                    return response as MessagingSettings;
+                })
+            )
     }
 
     getConsulServices(): Observable<StreampipesPeContainer[]> {
@@ -38,6 +49,10 @@ export class ConfigurationService {
 
     updateConsulService(consulService: StreampipesPeContainer): Observable<Object> {
         return this.http.post(this.getServerUrl() + '/api/v2/consul', consulService);
+    }
+
+    updateMessagingSettings(messagingSettings: MessagingSettings):Observable<Object> {
+        return this.http.post(this.getServerUrl() + '/api/v2/consul/messaging', messagingSettings);
     }
 
 
