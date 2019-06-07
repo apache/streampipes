@@ -36,12 +36,11 @@ export class DatalakeLineChartComponent {
     //timeunit selection
     selectedTimeUnit = 'All';
 
-    //aggregation
+    //aggregation / advanced options
     //group by
+    enableAdvanceOptions = false;
     groupbyUnit = 'd';
-    sliderMin = 0;
-    sliderMax = 60;
-    sliderValue = 60;
+    groupbyValue = 1;
 
     //custom time range
     customStartDate = new Date();
@@ -102,8 +101,6 @@ export class DatalakeLineChartComponent {
     loadLastData() {
         let timeunit = '';
         let timevalue = 0;
-        let aggregationunit = 'm';
-        let aggreagtionvalue = 1;
         if (this.selectedTimeUnit === '24 Hours') {
             timeunit = 'h';
             timevalue = 24;
@@ -115,11 +112,11 @@ export class DatalakeLineChartComponent {
             timevalue = 4;
         } else if (this.selectedTimeUnit === '1 Year') {
             timeunit = 'w';
-            timevalue = 4 * 12;
+            timevalue = 12*4;
         }
 
         this.isLoadingData = true;
-        this.restService.getLastData(this._index, timeunit, timevalue, aggregationunit, aggreagtionvalue).subscribe(
+        this.restService.getLastData(this._index, timeunit, timevalue, this.groupbyUnit, this.groupbyValue).subscribe(
             res => {
                 if(res.events.length > 0) {
                     this.data = res.events as [];
@@ -166,6 +163,21 @@ export class DatalakeLineChartComponent {
 
     selectTimeUnit(value) {
         this.selectedTimeUnit = value;
+
+        if (this.selectedTimeUnit === '24 Hours') {
+            this.groupbyUnit = 'm';
+            this.groupbyValue = 1;
+        } else if (this.selectedTimeUnit === '1 Week') {
+            this.groupbyUnit = 'm';
+            this.groupbyValue = 30;
+        } else if (this.selectedTimeUnit === '1 Month') {
+            this.groupbyUnit = 'h';
+            this.groupbyValue = 4;
+        } else if (this.selectedTimeUnit === '1 Year') {
+            this.groupbyUnit = 'h';
+            this.groupbyValue = 12;
+        }
+
         this.loadData();
     }
 
