@@ -28,6 +28,7 @@ import org.streampipes.rest.shared.annotation.GsonWithIds;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 
@@ -95,13 +96,25 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/data/{index}/last/{value}/{unit}")
     public Response getAllData(@PathParam("index") String index, @PathParam("value") int value, @PathParam("unit") String unit,
-                               @QueryParam("aggregationUnit") String aggregationUnit, @QueryParam("aggregationValue") int aggregationValue) {
-       try {
-           DataResult result = dataLakeManagement.getEvents(index, unit, value, aggregationUnit, aggregationValue);
+                               @Context UriInfo info) {
+
+
+        String aggregationUnit = info.getQueryParameters().getFirst("aggregationUnit");
+        String aggregationValue = info.getQueryParameters().getFirst("aggregationValue");
+
+        DataResult result;
+        try {
+            if (aggregationUnit != null && aggregationValue != null) {
+                result = dataLakeManagement.getEventsFromNow(index, unit, value, aggregationUnit, Integer.parseInt(aggregationValue));
+            } else {
+                result = dataLakeManagement.getEventsFromNowAutoAggregation(index, unit, value);
+            }
            return Response.ok(result).build();
        } catch (IllegalArgumentException e) {
            return constructErrorMessage(new Notification(e.getMessage(), ""));
-       }
+       } catch (ParseException e) {
+            return constructErrorMessage(new Notification(e.getMessage(), ""));
+        }
 
     }
 
@@ -109,15 +122,24 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/data/{index}/{startdate}/{enddate}")
     public Response getAllData(@Context UriInfo info, @PathParam("index") String index,
-                               @PathParam("startdate") long startdate,  @PathParam("enddate") long enddate,
-                               @QueryParam("aggregationUnit") String aggregationUnit, @QueryParam("aggregationValue") int aggregationValue) {
+                               @PathParam("startdate") long startdate,  @PathParam("enddate") long enddate) {
+
+        String aggregationUnit = info.getQueryParameters().getFirst("aggregationUnit");
+        String aggregationValue = info.getQueryParameters().getFirst("aggregationValue");
+
+        DataResult result;
         try {
-            DataResult result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit, aggregationValue);
+            if (aggregationUnit != null && aggregationValue != null) {
+                result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit, Integer.parseInt(aggregationValue));
+            } else {
+                result = dataLakeManagement.getEventsAutoAggregation(index, startdate, enddate);
+            }
             return Response.ok(result).build();
         } catch (IllegalArgumentException e) {
             return constructErrorMessage(new Notification(e.getMessage(), ""));
+        } catch (ParseException e) {
+            return constructErrorMessage(new Notification(e.getMessage(), ""));
         }
-
     }
 
 }
