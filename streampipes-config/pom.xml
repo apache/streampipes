@@ -28,6 +28,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-vocabulary</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.orbitz.consul</groupId>
             <artifactId>consul-client</artifactId>
         </dependency>

@@ -17,20 +17,28 @@ limitations under the License.
 package org.streampipes.config.backend;
 
 
+import org.streampipes.vocabulary.MessageFormat;
+
 public enum SpDataFormat {
 
-  CBOR("Cbor"),
-  JSON("JSON"),
-  FST("Fast-Serializer"),
-  SMILE("Smile");
+  CBOR("Cbor", MessageFormat.Cbor),
+  JSON("JSON", MessageFormat.Json),
+  FST("Fast-Serializer", MessageFormat.Fst),
+  SMILE("Smile", MessageFormat.Smile);
 
   private String name;
+  private String messageFormat;
 
-  SpDataFormat(String name) {
+  SpDataFormat(String name, String messageFormat) {
     this.name = name;
+    this.messageFormat = messageFormat;
   }
 
   public String getName() {
     return name;
+  }
+
+  public String getMessageFormat() {
+    return messageFormat;
   }
 }
