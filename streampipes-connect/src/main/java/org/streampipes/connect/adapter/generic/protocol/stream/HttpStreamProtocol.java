@@ -86,10 +86,8 @@ public class HttpStreamProtocol extends PullProtocol {
                 .sourceType(AdapterSourceType.STREAM)
                 .category(AdapterType.Generic)
                 .iconUrl("rest.png")
-                .requiredTextParameter(Labels.from(URL_PROPERTY, "URL", "This property " +
-                        "defines the URL for the http request."))
-                .requiredIntegerParameter(Labels.from(INTERVAL_PROPERTY, "Interval", "This property " +
-                        "defines the pull interval in seconds."))
+                .requiredTextParameter(Labels.from(URL_PROPERTY, "Url", "Example: http(s)://test-server.com"))
+                .requiredIntegerParameter(Labels.from(INTERVAL_PROPERTY, "Interval", "Example: 5 (Polling interval in seconds)"))
                 //.requiredTextParameter(Labels.from(ACCESS_TOKEN_PROPERTY, "Access Token", "Http
                 // Access Token"))
                 .build();

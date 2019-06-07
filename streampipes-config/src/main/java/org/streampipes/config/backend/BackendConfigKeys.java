@@ -39,6 +39,7 @@ public class BackendConfigKeys {
   public static final String INFLUX_PORT = "SP_INFLUX_PORT";
   public static final String INFLUX_HOST = "SP_INFLUX_HOST";
   public static final String INFLUX_DATA_BASE = "SP_INFLUX_DATA_BASE";
+  public static final String MESSAGING_SETTINGS = "SP_MESSAGING_SETTINGS";
 
 
   public static final String SERVICE_NAME = "SP_SERVICE_NAME";

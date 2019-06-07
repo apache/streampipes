@@ -23,6 +23,7 @@ import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.rest.impl.datalake.model.DataResult;
 import org.streampipes.rest.impl.datalake.model.InfoResult;
 import org.streampipes.rest.impl.datalake.model.PageResult;
 
@@ -53,12 +54,54 @@ public class DataLakeManagementV3 {
         return indices;
     }
 
-    public PageResult getEvents(String index, int itemsPerPage) throws IOException {
-        int page = getMaxPage(index, itemsPerPage);
-        return getEvents(index, itemsPerPage, page);
+    public DataResult getEvents(String index, long startDate, long endDate, String aggregationUnit, int aggregationValue) {
+        if (!(aggregationUnit.equals("u") || aggregationUnit.equals("ms") || aggregationUnit.equals("s") || aggregationUnit.equals("m") || aggregationUnit.equals("h")
+                || aggregationUnit.equals("d") || aggregationUnit.equals("w")))
+            throw new IllegalArgumentException("Invalid aggreation unit! Supported time units: w (week), " +
+                    "d (day), h (hour), m (minute), s (second), ms (millisecond), u (microseconds)");
+
+        InfluxDB influxDB = getInfluxDBClient();
+        Query query = new Query("SELECT mean(*) FROM " + index +  " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000
+                + " GROUP BY time(" + aggregationValue + aggregationUnit + ") ORDER BY time" ,
+                BackendConfig.INSTANCE.getInfluxDatabaseName());
+        QueryResult result = influxDB.query(query);
+
+        List<Map<String, Object>> events = new ArrayList<>();
+        if(result.getResults().get(0).getSeries() != null) {
+            events = convertResult(result.getResults().get(0).getSeries().get(0));
+        }
+        influxDB.close();
+
+        return new DataResult(events.size(), events);
     }
 
-    public PageResult getEvents(String index, int itemsPerPage, int page) throws IOException {
+    public DataResult getEvents(String index, String timeunit, int value, String aggregationUnit, int aggregationValue) {
+        if (!(timeunit.equals("u") ||  timeunit.equals("ms") || timeunit.equals("s") || timeunit.equals("m") || timeunit.equals("h")
+                || timeunit.equals("d") || timeunit.equals("w")))
+            throw new IllegalArgumentException("Invalid time unit! Supported time units: w (week), " +
+                "d (day), h (hour), m (minute), s (second), ms (millisecond), u (microseconds)");
+        if (!(aggregationUnit.equals("u") ||  aggregationUnit.equals("ms") || aggregationUnit.equals("s") || aggregationUnit.equals("m") || aggregationUnit.equals("h")
+                || aggregationUnit.equals("d") || aggregationUnit.equals("w")))
+            throw new IllegalArgumentException("Invalid aggreation unit! Supported time units: w (week), " +
+                    "d (day), h (hour), m (minute), s (second), ms (millisecond), u (microseconds)");
+
+
+        InfluxDB influxDB = getInfluxDBClient();
+        Query query = new Query("SELECT mean(*) FROM " + index +  " WHERE time > now() -" + value + timeunit + " GROUP BY time(" + aggregationValue + aggregationUnit + ") ORDER BY time" ,
+                BackendConfig.INSTANCE.getInfluxDatabaseName());
+        QueryResult result = influxDB.query(query);
+
+        List<Map<String, Object>> events = new ArrayList<>();
+        if(result.getResults().get(0).getSeries() != null) {
+            events = convertResult(result.getResults().get(0).getSeries().get(0));
+        }
+        influxDB.close();
+
+        return new DataResult(events.size(), events);
+
+    }
+
+    public PageResult getEvents(String index, int itemsPerPage, int page) {
         InfluxDB influxDB = getInfluxDBClient();
         Query query = new Query("SELECT * FROM " + index +  " ORDER BY time LIMIT " + itemsPerPage + " OFFSET " + page * itemsPerPage,
                 BackendConfig.INSTANCE.getInfluxDatabaseName());
@@ -73,6 +116,11 @@ public class DataLakeManagementV3 {
         int pageSum = getMaxPage(index, itemsPerPage);
 
         return new PageResult(events.size(), events, page, pageSum);
+    }
+
+    public PageResult getEvents(String index, int itemsPerPage) throws IOException {
+        int page = getMaxPage(index, itemsPerPage);
+        return getEvents(index, itemsPerPage, page);
     }
 
     public StreamingOutput getAllEvents(String index, String outputFormat) {
@@ -173,14 +221,22 @@ public class DataLakeManagementV3 {
     private List<Map<String, Object>> convertResult(QueryResult.Series serie) {
         List<Map<String, Object>> events = new ArrayList<>();
         List<String> columns = serie.getColumns();
+        for (int i = 0; i < columns.size(); i++) {
+            String replacedColumnName = columns.get(i).replaceAll("mean_", "");
+            columns.set(i, replacedColumnName);
+        }
 
         for (List<Object> value : serie.getValues()) {
             Map<String, Object> event = new HashMap<>();
             for (int i = 0; i < value.size(); i++) {
-                event.put(columns.get(i), value.get(i));
+                if (value.get(i) != null)
+                    event.put(columns.get(i), value.get(i));
             }
-            events.add(event);
+            //if the size is just 1, it just contain the timestamp
+            if (event.size() > 1)
+                events.add(event);
         }
+
         return events;
 
     }

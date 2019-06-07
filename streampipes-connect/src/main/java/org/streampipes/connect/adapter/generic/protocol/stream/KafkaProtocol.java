@@ -89,9 +89,9 @@ public class KafkaProtocol extends BrokerProtocol {
                 .category(AdapterType.Generic, AdapterType.Manufacturing)
                 .sourceType(AdapterSourceType.STREAM)
                 .requiredTextParameter(Labels.from("broker_url", "Broker URL",
-                        "This property defines the URL of the Kafka broker."))
+                        "Example: test.server.com:9092 (No protocol. Port required)"))
                 .requiredTextParameter(Labels.from("topic", "Topic",
-                        "Topic in the broker"))
+                        "Example: test.topic"))
                 .build();
     }
 

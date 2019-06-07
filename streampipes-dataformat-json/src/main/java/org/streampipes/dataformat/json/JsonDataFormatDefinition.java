@@ -37,7 +37,7 @@ public class JsonDataFormatDefinition implements SpDataFormatDefinition {
   @Override
   public Map<String, Object> toMap(byte[] event) throws SpRuntimeException {
     try {
-      return objectMapper.readValue(new String(event), HashMap.class);
+      return objectMapper.readValue(event, HashMap.class);
     } catch (IOException e) {
       throw new SpRuntimeException("Could not convert event to map data structure");
     }

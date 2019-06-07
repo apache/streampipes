@@ -94,7 +94,7 @@ public class IexCloudNewsAdapter extends IexCloudAdapter {
             .iconUrl("iexcloud.png")
             .category(AdapterType.Finance, AdapterType.News)
             .requiredTextParameter(Labels.from("token", "API Token", "The IEXCloud API token"))
-            .requiredTextParameter(Labels.from("stock", "Stock", "The stock symbol (e.g., AAPL"))
+            .requiredTextParameter(Labels.from("stock", "Stock", "The stock symbol (e.g., AAPL)"))
             .build();
   }
 

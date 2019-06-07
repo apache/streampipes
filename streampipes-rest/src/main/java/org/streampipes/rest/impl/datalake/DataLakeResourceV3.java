@@ -18,7 +18,9 @@
 package org.streampipes.rest.impl.datalake;
 
 
+import org.streampipes.model.client.messages.Notification;
 import org.streampipes.rest.impl.AbstractRestInterface;
+import org.streampipes.rest.impl.datalake.model.DataResult;
 import org.streampipes.rest.impl.datalake.model.InfoResult;
 import org.streampipes.rest.impl.datalake.model.PageResult;
 import org.streampipes.rest.shared.annotation.GsonWithIds;
@@ -87,6 +89,35 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
         return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
                 header("Content-Disposition", "attachment; filename=\"datalake" + format + "\"")
                 .build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/data/{index}/last/{value}/{unit}")
+    public Response getAllData(@PathParam("index") String index, @PathParam("value") int value, @PathParam("unit") String unit,
+                               @QueryParam("aggregationUnit") String aggregationUnit, @QueryParam("aggregationValue") int aggregationValue) {
+       try {
+           DataResult result = dataLakeManagement.getEvents(index, unit, value, aggregationUnit, aggregationValue);
+           return Response.ok(result).build();
+       } catch (IllegalArgumentException e) {
+           return constructErrorMessage(new Notification(e.getMessage(), ""));
+       }
+
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/data/{index}/{startdate}/{enddate}")
+    public Response getAllData(@Context UriInfo info, @PathParam("index") String index,
+                               @PathParam("startdate") long startdate,  @PathParam("enddate") long enddate,
+                               @QueryParam("aggregationUnit") String aggregationUnit, @QueryParam("aggregationValue") int aggregationValue) {
+        try {
+            DataResult result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit, aggregationValue);
+            return Response.ok(result).build();
+        } catch (IllegalArgumentException e) {
+            return constructErrorMessage(new Notification(e.getMessage(), ""));
+        }
+
     }
 
 }

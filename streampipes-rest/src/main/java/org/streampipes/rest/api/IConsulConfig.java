@@ -17,6 +17,7 @@
 
 package org.streampipes.rest.api;
 
+import org.streampipes.config.backend.MessagingSettings;
 import org.streampipes.config.model.PeConfig;
 
 import javax.ws.rs.core.Response;
@@ -28,4 +29,8 @@ public interface IConsulConfig {
     Response saveServiceConfig(PeConfig peConfig);
 
     Response deleteService(String serviceName);
+
+    Response getMessagingSettings();
+
+    Response updateMessagingSettings(MessagingSettings messagingSettings);
 }

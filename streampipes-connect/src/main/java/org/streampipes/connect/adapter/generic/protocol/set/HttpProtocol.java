@@ -65,8 +65,7 @@ public class HttpProtocol extends Protocol {
                 .category(AdapterType.Generic)
                 .sourceType(AdapterSourceType.SET)
                 .iconUrl("rest.png")
-                .requiredTextParameter(Labels.from("url", "url", "This property defines the URL " +
-                        "for the http request."))
+                .requiredTextParameter(Labels.from("url", "Url", "Example: http(s)://test-server.com"))
                 .build();
     }
 
