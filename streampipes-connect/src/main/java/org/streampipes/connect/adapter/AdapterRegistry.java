@@ -45,6 +45,7 @@ import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.MqttProtocol;
 import org.streampipes.connect.adapter.specific.coindesk.CoindeskBitcoinAdapter;
 import org.streampipes.connect.adapter.specific.gdelt.GdeltAdapter;
+import org.streampipes.connect.adapter.specific.mysql.MySqlAdapter;
 import org.streampipes.connect.adapter.specific.iex.IexCloudNewsAdapter;
 import org.streampipes.connect.adapter.specific.iex.IexCloudStockAdapter;
 import org.streampipes.connect.adapter.specific.opcua.OpcUaAdapter;
@@ -70,6 +71,7 @@ public class AdapterRegistry {
         //allAdapters.put(OpenSenseMapAdapter.ID, new OpenSenseMapAdapter());
         allAdapters.put(GdeltAdapter.ID, new GdeltAdapter());
         allAdapters.put(OpcUaAdapter.ID, new OpcUaAdapter());
+        allAdapters.put(MySqlAdapter.ID, new MySqlAdapter());
         //allAdapters.put(NswTrafficCameraAdapter.ID, new NswTrafficCameraAdapter());
         allAdapters.put(RosBridgeAdapter.ID, new RosBridgeAdapter());
         allAdapters.put(CoindeskBitcoinAdapter.ID, new CoindeskBitcoinAdapter());

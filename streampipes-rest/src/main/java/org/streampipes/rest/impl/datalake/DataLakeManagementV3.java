@@ -54,6 +54,27 @@ public class DataLakeManagementV3 {
         return indices;
     }
 
+    public DataResult getEvents(String index, long startDate, long endDate, String aggregationUnit, int aggregationValue) {
+        if (!(aggregationUnit.equals("u") || aggregationUnit.equals("ms") || aggregationUnit.equals("s") || aggregationUnit.equals("m") || aggregationUnit.equals("h")
+                || aggregationUnit.equals("d") || aggregationUnit.equals("w")))
+            throw new IllegalArgumentException("Invalid aggreation unit! Supported time units: w (week), " +
+                    "d (day), h (hour), m (minute), s (second), ms (millisecond), u (microseconds)");
+
+        InfluxDB influxDB = getInfluxDBClient();
+        Query query = new Query("SELECT mean(*) FROM " + index +  " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000
+                + " GROUP BY time(" + aggregationValue + aggregationUnit + ") ORDER BY time" ,
+                BackendConfig.INSTANCE.getInfluxDatabaseName());
+        QueryResult result = influxDB.query(query);
+
+        List<Map<String, Object>> events = new ArrayList<>();
+        if(result.getResults().get(0).getSeries() != null) {
+            events = convertResult(result.getResults().get(0).getSeries().get(0));
+        }
+        influxDB.close();
+
+        return new DataResult(events.size(), events);
+    }
+
     public DataResult getEvents(String index, String timeunit, int value, String aggregationUnit, int aggregationValue) {
         if (!(timeunit.equals("u") ||  timeunit.equals("ms") || timeunit.equals("s") || timeunit.equals("m") || timeunit.equals("h")
                 || timeunit.equals("d") || timeunit.equals("w")))
