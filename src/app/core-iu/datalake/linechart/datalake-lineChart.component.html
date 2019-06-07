@@ -1,5 +1,4 @@
-<div fxLayout="row" fxLayoutAlign="start stretch" style="margin-top: 10px; margin-left: 5px"
-     xmlns:margin-left="http://www.w3.org/1999/xhtml">
+<div fxLayout="row" fxLayoutAlign="start stretch" style="margin-top: 10px; margin-left: 5px">
     <mat-form-field style="margin-right: 1px;top: -3px;height: 1px;" appearance="outline">
         <mat-label>Select Data</mat-label>
         <mat-select (selectionChange)="selectKey($event.value)" multiple>
@@ -19,78 +18,93 @@
     <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Year'" (click)="selectTimeUnit('1 Year')">1 Year</button>
     <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Year'" color="primary" mat-raised-button>1 Year</button>
 
-    <!--
-    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Year'">Custom</button>
-    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Year'" color="primary" mat-raised-button>Custom</button>
-    -->
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== 'Custom'" (click)="selectTimeUnit('Custom')">Custom</button>
+    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === 'Custom'" color="primary" mat-raised-button>Custom</button>
 
 </div>
-<!--
-<div class="container">
-    <div class="option" style="margin-left: 5px">
-
-        <div class="optionName">Group Values</div>
-
-        <mat-form-field style="margin-left: -85px; top: -10px">
-            <mat-select [(value)]="groupbyUnit">
-                <mat-option style="background-color: #FFFFFF" value="ns">nanoseconds</mat-option>
-                <mat-option style="background-color: #FFFFFF" value="u">microseconds</mat-option>
-                <mat-option style="background-color: #FFFFFF" value="ms">milliseconds</mat-option>
-                <mat-option style="background-color: #FFFFFF" value="s">second</mat-option>
-                <mat-option style="background-color: #FFFFFF" value="m">minute</mat-option>
-                <mat-option style="background-color: #FFFFFF" value="h">hour</mat-option>
-                <mat-option style="background-color: #FFFFFF" value="d">hour</mat-option>
-                <mat-option style="background-color: #FFFFFF" value="w">week</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-slider
-                [max]="sliderMax"
-                [min]="sliderMin"
-                [thumbLabel]="true"
-                [step]="1"
-                [(ngModel)]="sliderValue">
-        </mat-slider>
-    </div>
 
 
-    <div class="option" style="margin-left: 5px">
 
-        <div class="optionName">Aggregation</div>
+<div class="optionContainer clearfix">
 
-        <mat-form-field style="margin-left: -75px; margin-right: 10px; top: -10px">
-            <mat-select [(value)]="sad">
-                <mat-option style="background-color: #FFFFFF" value="ns">Min</mat-option>
-                <mat-option style="background-color: #FFFFFF" value="u">Max</mat-option>
-                <mat-option style="background-color: #FFFFFF" value="ms">Mean</mat-option>
-            </mat-select>
-        </mat-form-field>
-
+    <div *ngIf="selectedTimeUnit === 'Custom'">
+        <div class="option" style="margin-left: 5px">
+            <div class="optionName">Start date</div>
+            <mat-form-field style="top: -10px">
+                <input matInput [matDatepicker]="picker" [(ngModel)]="customStartDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div class="option" style="margin-left: 5px">
+            <div class="optionName">End date</div>
+            <mat-form-field style="top: -10px">
+                <input matInput [min]="customStartDate" [matDatepicker]="picker2" [(ngModel)]="customEndDate">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <button mat-icon-button class="reloadIcon" style="margin-left: 5px" color="primary">
+            <mat-icon style="font-size: 30px;height: 30px; width: 30px" (click)="loadData()">autorenew</mat-icon>
+        </button>
 
     </div>
 
+    <div *ngIf=false>
+        <div class="option" style="margin-left: 5px">
+            <div class="optionName">Group Values</div>
+            <mat-form-field style="top: -10px">
+                <mat-select [(value)]="groupbyUnit">
+                    <mat-option style="background-color: #FFFFFF" value="ns">nanoseconds</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="u">microseconds</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="ms">milliseconds</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="s">second</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="m">minute</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="h">hour</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="d">hour</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="w">week</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-slider
+                    [max]="sliderMax"
+                    [min]="sliderMin"
+                    [thumbLabel]="true"
+                    [step]="1"
+                    [(ngModel)]="sliderValue">
+            </mat-slider>
+        </div>
 
-    <div class="option" style="margin-left: 5px">
 
-        <div class="optionName">Set Date Range</div>
+        <div class="option" style="margin-left: 5px">
+            <div class="optionName">Aggregation</div>
+            <mat-form-field style="top: -10px">
+                <mat-select [(value)]="sad">
+                    <mat-option style="background-color: #FFFFFF" value="ns">Min</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="u">Max</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="ms">Mean</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
 
-        <mat-form-field style="margin-left: -100px; top: -10px">
-            <input matInput [matDatepicker]="picker" placeholder="Start date">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
 
-
-        <mat-form-field style="margin-right: 10px; top: -10px">
-            <input matInput [matDatepicker]="picker2" placeholder="End date">
-            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-            <mat-datepicker #picker2></mat-datepicker>
-        </mat-form-field>
-
+        <div class="option" style="margin-left: 5px">
+            <div class="optionName">Set Date Range</div>
+            <mat-form-field style="margin-right: 5px; top: -10px">
+                <input matInput [matDatepicker]="picker" placeholder="Start date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field style=" top: -10px">
+                <input matInput [matDatepicker]="picker2" placeholder="End date">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+        </div>
 
     </div>
+
 </div>
--->
+
 <sp-lineChart
         [xAxesKey]="xAxesKey"
         [yAxesKeys]="yAxesKeys"

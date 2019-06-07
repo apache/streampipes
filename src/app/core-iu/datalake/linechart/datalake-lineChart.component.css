@@ -8,7 +8,9 @@
     border-radius: 5px;
     margin-top: 10px;
     height: 50px;
-    width: fit-content;
+    float: left;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .optionName {
@@ -20,6 +22,17 @@
     background:#fafafa;
 }
 
-.container div {
-   float: left;
+.reloadIcon {
+    top: 15px;
+    border: #202020 solid 1px;
+    margin-left: 5px
+}
+
+.optionContainer {
+}
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
 }
