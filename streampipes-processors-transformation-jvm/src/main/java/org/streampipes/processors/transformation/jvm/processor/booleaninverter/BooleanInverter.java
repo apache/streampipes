@@ -29,6 +29,8 @@ public class BooleanInverter implements EventProcessor<BooleanInverterParameters
 
   private String invertFieldName;
 
+
+
   @Override
   public void onInvocation(BooleanInverterParameters booleanInverterParameters,
                            SpOutputCollector spOutputCollector,
@@ -39,8 +41,8 @@ public class BooleanInverter implements EventProcessor<BooleanInverterParameters
 
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
-    boolean field = inputEvent.getFieldBySelector(invertFieldName).getAsPrimitive().getAsBoolean();
 
+    boolean field = inputEvent.getFieldBySelector(invertFieldName).getAsPrimitive().getAsBoolean();
     inputEvent.updateFieldBySelector(invertFieldName, !field);
 
     out.collect(inputEvent);

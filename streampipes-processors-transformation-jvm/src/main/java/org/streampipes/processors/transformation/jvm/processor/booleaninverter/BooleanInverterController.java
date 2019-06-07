@@ -35,7 +35,7 @@ public class BooleanInverterController extends StandaloneEventProcessingDeclarer
   //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.boolean-inverter-controller")
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.boolean-inverter")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION)
             .requiredStream(StreamRequirementsBuilder.create()
