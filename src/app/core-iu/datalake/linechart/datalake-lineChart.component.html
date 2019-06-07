@@ -21,11 +21,40 @@
     <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== 'Custom'" (click)="selectTimeUnit('Custom')">Custom</button>
     <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === 'Custom'" color="primary" mat-raised-button>Custom</button>
 
+    <button mat-icon-button *ngIf="!enableAdvanceOptions" class="reloadIcon" (click)="enableAdvanceOptions = true"
+            style="margin-left: 5px; margin-top: -15px;" color="primary" tooltip="Display Advanced Options">
+        <mat-icon style="font-size: 30px;height: 30px; width: 30px">expand_more</mat-icon>
+    </button>
+    <button mat-icon-button *ngIf="enableAdvanceOptions" mat-raised-button class="reloadIcon" (click)="enableAdvanceOptions = false"
+            style="margin-left: 5px; margin-top: -15px;" color="primary" tooltip="Hide Advanced Options">
+        <mat-icon style="font-size: 30px;height: 30px; width: 30px">expand_less</mat-icon>
+    </button>
+
+
 </div>
 
 
-
 <div class="optionContainer clearfix">
+    <div *ngIf=enableAdvanceOptions>
+        <div class="option" style="margin-left: 5px">
+            <div class="optionName">Group values by time</div>
+            <mat-form-field style="top: -10px; width: 80px; margin-right: 5px">
+                <input matInput type="number" [(ngModel)]="groupbyValue">
+            </mat-form-field>
+            <mat-form-field style="top: -10px; width: 100px">
+                <mat-select [(value)]="groupbyUnit">
+                    <mat-option style="background-color: #FFFFFF" value="ns">Manoseconds</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="u">Microseconds</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="ms">Milliseconds</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="s">Second</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="m">Minute</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="h">Hour</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="d">Day</mat-option>
+                    <mat-option style="background-color: #FFFFFF" value="w">Week</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
 
     <div *ngIf="selectedTimeUnit === 'Custom'">
         <div class="option" style="margin-left: 5px">
@@ -44,37 +73,15 @@
                 <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
         </div>
-        <button mat-icon-button class="reloadIcon" style="margin-left: 5px" color="primary">
-            <mat-icon style="font-size: 30px;height: 30px; width: 30px" (click)="loadData()">autorenew</mat-icon>
-        </button>
-
     </div>
 
-    <div *ngIf=false>
-        <div class="option" style="margin-left: 5px">
-            <div class="optionName">Group Values</div>
-            <mat-form-field style="top: -10px">
-                <mat-select [(value)]="groupbyUnit">
-                    <mat-option style="background-color: #FFFFFF" value="ns">nanoseconds</mat-option>
-                    <mat-option style="background-color: #FFFFFF" value="u">microseconds</mat-option>
-                    <mat-option style="background-color: #FFFFFF" value="ms">milliseconds</mat-option>
-                    <mat-option style="background-color: #FFFFFF" value="s">second</mat-option>
-                    <mat-option style="background-color: #FFFFFF" value="m">minute</mat-option>
-                    <mat-option style="background-color: #FFFFFF" value="h">hour</mat-option>
-                    <mat-option style="background-color: #FFFFFF" value="d">hour</mat-option>
-                    <mat-option style="background-color: #FFFFFF" value="w">week</mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-slider
-                    [max]="sliderMax"
-                    [min]="sliderMin"
-                    [thumbLabel]="true"
-                    [step]="1"
-                    [(ngModel)]="sliderValue">
-            </mat-slider>
-        </div>
+    <button *ngIf="enableAdvanceOptions || selectedTimeUnit === 'Custom'"  mat-icon-button class="reloadIcon" style="margin-left: 5px" color="primary">
+        <mat-icon style="font-size: 30px;height: 30px; width: 30px" (click)="loadData()">autorenew</mat-icon>
+    </button>
 
 
+
+<!--
         <div class="option" style="margin-left: 5px">
             <div class="optionName">Aggregation</div>
             <mat-form-field style="top: -10px">
@@ -85,23 +92,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-
-
-        <div class="option" style="margin-left: 5px">
-            <div class="optionName">Set Date Range</div>
-            <mat-form-field style="margin-right: 5px; top: -10px">
-                <input matInput [matDatepicker]="picker" placeholder="Start date">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field style=" top: -10px">
-                <input matInput [matDatepicker]="picker2" placeholder="End date">
-                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                <mat-datepicker #picker2></mat-datepicker>
-            </mat-form-field>
-        </div>
-
-    </div>
+-->
 
 </div>
 
