@@ -1,7 +1,7 @@
 version: "2.0"
 services:
   mysql:
-    image: mysql
+    image: mysql:8.0.3
     volumes:
       - mysql:/var/lib/mysql
     ports:
