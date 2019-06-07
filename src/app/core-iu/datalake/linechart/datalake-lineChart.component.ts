@@ -111,41 +111,49 @@ export class DatalakeLineChartComponent {
             timeunit = 'w';
             timevalue = 4;
         } else if (this.selectedTimeUnit === '1 Year') {
-            timeunit = 'w';
-            timevalue = 12*4;
+            timeunit = 'd';
+            timevalue = 365;
         }
 
         this.isLoadingData = true;
-        this.restService.getLastData(this._index, timeunit, timevalue, this.groupbyUnit, this.groupbyValue).subscribe(
-            res => {
-                if(res.events.length > 0) {
-                    this.data = res.events as [];
-                    this.setDataKeys(res.events[0]);
-                    this.currentPage = undefined;
-                } else {
-                    this.data = undefined;
-                }
-                this.isLoadingData = false;
-            }
-        );
+        if (this.enableAdvanceOptions) {
+            this.restService.getLastData(this._index, timeunit, timevalue, this.groupbyUnit, this.groupbyValue).subscribe(
+                res => this.processRevicedData(res)
+            );
+        } else {
+            this.restService.getLastDataAutoAggregation(this._index, timeunit, timevalue).subscribe(
+                res => this.processRevicedData(res)
+            );
+        }
+
+
     }
 
     loadCustomData() {
         let aggregationunit = 'm';
         let aggreagtionvalue = 1;
         this.isLoadingData = true;
-        this.restService.getData(this._index, this.customStartDate.getTime(), this.customEndDate.getTime(), aggregationunit, aggreagtionvalue).subscribe(
-            res => {
-                if(res.events.length > 0) {
-                    this.data = res.events as [];
-                    this.setDataKeys(res.events[0]);
-                    this.currentPage = undefined;
-                } else {
-                    this.data = undefined;
-                }
-                this.isLoadingData = false;
-            }
-        );
+        if (this.enableAdvanceOptions) {
+            this.restService.getData(this._index, this.customStartDate.getTime(), this.customEndDate.getTime(), aggregationunit, aggreagtionvalue).subscribe(
+                res => this.processRevicedData(res)
+            );
+        } else {
+            this.restService.getDataAutoAggergation(this._index, this.customStartDate.getTime(), this.customEndDate.getTime()).subscribe(
+                res => this.processRevicedData(res)
+            );
+        }
+
+    }
+
+    processRevicedData(res) {
+        if(res.events.length > 0) {
+            this.data = res.events as [];
+            this.setDataKeys(res.events[0]);
+            this.currentPage = undefined;
+        } else {
+            this.data = undefined;
+        }
+        this.isLoadingData = false;
     }
 
     selectKey(value) {
