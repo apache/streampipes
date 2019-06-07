@@ -5,7 +5,7 @@ import {CommonModule} from '@angular/common';
 import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
-import {MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
+import {MatDatepickerModule, MatNativeDateModule, MatProgressSpinnerModule, MatSliderModule, MatSnackBarModule} from '@angular/material';
 import {TableComponent} from './table/table.component';
 import {DatalakeTableComponent} from './datalake/table/datalake-table.component';
 import {DatalakeDataDownloadcomponent} from './datalake/datadownload/datalake-dataDownloadcomponent';
@@ -25,6 +25,9 @@ import {DatalakeLineChartComponent} from './datalake/linechart/datalake-lineChar
         MatSnackBarModule,
         MatProgressSpinnerModule,
         NgxChartsModule,
+        MatSliderModule,
+        MatDatepickerModule,
+        MatNativeDateModule
     ],
     declarations: [
         TableComponent,
@@ -34,6 +37,7 @@ import {DatalakeLineChartComponent} from './datalake/linechart/datalake-lineChar
         DatalakeLineChartComponent,
     ],
     providers: [
+        MatDatepickerModule
     ],
     entryComponents: [
     ],

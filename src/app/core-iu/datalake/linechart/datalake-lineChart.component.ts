@@ -1,10 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {time} from '@ngtools/webpack/src/benchmark';
 import {DatalakeRestService} from '../../../core-services/datalake/datalake-rest.service';
 import {MatSnackBar} from '@angular/material';
 import {FormControl} from '@angular/forms';
-import {InfoResult} from '../../../core-model/datalake/InfoResult';
-import {Observable} from 'rxjs/Observable';
 
 @Component({
     selector: 'sp-datalake-lineChart',
@@ -39,6 +36,17 @@ export class DatalakeLineChartComponent {
     //timeunit selection
     selectedTimeUnit = 'All';
 
+    //aggregation
+    //group by
+    groupbyUnit = 'd';
+    sliderMin = 0;
+    sliderMax = 60;
+    sliderValue = 60;
+
+    //custom time range
+    customStartDate = new Date();
+    customEndDate = new Date(this.customStartDate.getTime() + 60000 * 60 * 24);
+
     constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar) {
 
     }
@@ -63,6 +71,10 @@ export class DatalakeLineChartComponent {
             this.loadAllData();
             this.enablePaging = true;
             this.enableItemsPerPage = true;
+        } else if(this.selectedTimeUnit == 'Custom') {
+            this.loadCustomData();
+            this.enablePaging = false;
+            this.enableItemsPerPage = false;
         } else {
             this.enablePaging = false;
             this.enableItemsPerPage = false;
@@ -108,6 +120,24 @@ export class DatalakeLineChartComponent {
 
         this.isLoadingData = true;
         this.restService.getLastData(this._index, timeunit, timevalue, aggregationunit, aggreagtionvalue).subscribe(
+            res => {
+                if(res.events.length > 0) {
+                    this.data = res.events as [];
+                    this.setDataKeys(res.events[0]);
+                    this.currentPage = undefined;
+                } else {
+                    this.data = undefined;
+                }
+                this.isLoadingData = false;
+            }
+        );
+    }
+
+    loadCustomData() {
+        let aggregationunit = 'm';
+        let aggreagtionvalue = 1;
+        this.isLoadingData = true;
+        this.restService.getData(this._index, this.customStartDate.getTime(), this.customEndDate.getTime(), aggregationunit, aggreagtionvalue).subscribe(
             res => {
                 if(res.events.length > 0) {
                     this.data = res.events as [];
@@ -167,7 +197,5 @@ export class DatalakeLineChartComponent {
             duration: 2000,
         });
     }
-
-
 
 }
