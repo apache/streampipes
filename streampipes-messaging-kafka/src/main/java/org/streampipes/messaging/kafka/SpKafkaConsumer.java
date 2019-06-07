@@ -106,9 +106,6 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
 
   private Properties getProperties() {
     Properties props = new Properties();
-    props.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
-    props.put(ConsumerConfig.CLIENT_ID_CONFIG, "your_client_id");
-    props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaUrl);
     props.put("group.id", groupId);
