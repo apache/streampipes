@@ -31,12 +31,16 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class DataLakeManagementV3 {
+
+    private static final double NUM_OF_AUTO_AGGREGATION_VALUES = 2000;
+    private SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
 
     public List<InfoResult> getInfos() {
         List<InfoResult> indices = new ArrayList<>();
@@ -55,62 +59,104 @@ public class DataLakeManagementV3 {
     }
 
     public DataResult getEvents(String index, long startDate, long endDate, String aggregationUnit, int aggregationValue) {
-        if (!(aggregationUnit.equals("u") || aggregationUnit.equals("ms") || aggregationUnit.equals("s") || aggregationUnit.equals("m") || aggregationUnit.equals("h")
-                || aggregationUnit.equals("d") || aggregationUnit.equals("w")))
-            throw new IllegalArgumentException("Invalid aggreation unit! Supported time units: w (week), " +
-                    "d (day), h (hour), m (minute), s (second), ms (millisecond), u (microseconds)");
-
         InfluxDB influxDB = getInfluxDBClient();
         Query query = new Query("SELECT mean(*) FROM " + index +  " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000
-                + " GROUP BY time(" + aggregationValue + aggregationUnit + ") ORDER BY time" ,
+                + " GROUP BY time(" + aggregationValue + aggregationUnit + ") fill(none) ORDER BY time" ,
                 BackendConfig.INSTANCE.getInfluxDatabaseName());
         QueryResult result = influxDB.query(query);
 
-        List<Map<String, Object>> events = new ArrayList<>();
-        if(result.getResults().get(0).getSeries() != null) {
-            events = convertResult(result.getResults().get(0).getSeries().get(0));
-        }
+        List<Map<String, Object>> events = convertResult(result);
         influxDB.close();
 
         return new DataResult(events.size(), events);
     }
 
-    public DataResult getEvents(String index, String timeunit, int value, String aggregationUnit, int aggregationValue) {
-        if (!(timeunit.equals("u") ||  timeunit.equals("ms") || timeunit.equals("s") || timeunit.equals("m") || timeunit.equals("h")
-                || timeunit.equals("d") || timeunit.equals("w")))
-            throw new IllegalArgumentException("Invalid time unit! Supported time units: w (week), " +
-                "d (day), h (hour), m (minute), s (second), ms (millisecond), u (microseconds)");
-        if (!(aggregationUnit.equals("u") ||  aggregationUnit.equals("ms") || aggregationUnit.equals("s") || aggregationUnit.equals("m") || aggregationUnit.equals("h")
-                || aggregationUnit.equals("d") || aggregationUnit.equals("w")))
-            throw new IllegalArgumentException("Invalid aggreation unit! Supported time units: w (week), " +
-                    "d (day), h (hour), m (minute), s (second), ms (millisecond), u (microseconds)");
-
-
+    public DataResult getEvents(String index, long startDate, long endDate) {
         InfluxDB influxDB = getInfluxDBClient();
-        Query query = new Query("SELECT mean(*) FROM " + index +  " WHERE time > now() -" + value + timeunit + " GROUP BY time(" + aggregationValue + aggregationUnit + ") ORDER BY time" ,
+        Query query = new Query("SELECT * FROM " + index
+                +  " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000
+                + " ORDER BY time",
                 BackendConfig.INSTANCE.getInfluxDatabaseName());
         QueryResult result = influxDB.query(query);
 
-        List<Map<String, Object>> events = new ArrayList<>();
-        if(result.getResults().get(0).getSeries() != null) {
-            events = convertResult(result.getResults().get(0).getSeries().get(0));
+        List<Map<String, Object>> events = convertResult(result);
+        influxDB.close();
+
+        return new DataResult(events.size(), events);
+    }
+
+    public DataResult getEventsAutoAggregation(String index, long startDate, long endDate) throws ParseException {
+        InfluxDB influxDB = getInfluxDBClient();
+        double numberOfRecords = getNumOfRecordsOfTable(index, influxDB, startDate, endDate);
+        influxDB.close();
+
+        if (numberOfRecords == 0) {
+            influxDB.close();
+            return new DataResult(0, new ArrayList<>());
+        } else if (numberOfRecords <= NUM_OF_AUTO_AGGREGATION_VALUES) {
+            influxDB.close();
+            return getEvents(index, startDate, endDate);
+        } else {
+           int aggregatinValue = getAggregationValue(index, influxDB);
+           influxDB.close();
+           return getEvents(index, startDate, endDate, "ms", aggregatinValue);
         }
+    }
+
+
+    public DataResult getEventsFromNow(String index, String timeunit, int value, String aggregationUnit, int aggregationValue) throws ParseException {
+        InfluxDB influxDB = getInfluxDBClient();
+
+        Query query = new Query("SELECT mean(*) FROM " + index +  " WHERE time > now() -" + value + timeunit
+                + " GROUP BY time(" + aggregationValue + aggregationUnit + ") fill(none) ORDER BY time" ,
+                BackendConfig.INSTANCE.getInfluxDatabaseName());
+        QueryResult result = influxDB.query(query);
+
+        List<Map<String, Object>> events = convertResult(result);
+
+        return new DataResult(events.size(), events);
+    }
+
+
+    public DataResult getEventsFromNow(String index, String timeunit, int value) {
+        InfluxDB influxDB = getInfluxDBClient();
+        Query query = new Query("SELECT mean(*) FROM " + index +  " WHERE time > now() -" + value + timeunit
+                + " ORDER BY time" ,
+                BackendConfig.INSTANCE.getInfluxDatabaseName());
+        QueryResult result = influxDB.query(query);
+
+        List<Map<String, Object>> events = convertResult(result);
         influxDB.close();
 
         return new DataResult(events.size(), events);
 
     }
+
+    public DataResult getEventsFromNowAutoAggregation(String index, String timeunit, int value) throws ParseException {
+        InfluxDB influxDB = getInfluxDBClient();
+        double numberOfRecords = getNumOfRecordsOfTableFromNow(index, influxDB, timeunit, value);
+        if (numberOfRecords == 0) {
+            influxDB.close();
+            return new DataResult(0, new ArrayList<>());
+        } else if (numberOfRecords <= NUM_OF_AUTO_AGGREGATION_VALUES) {
+            influxDB.close();
+            return getEventsFromNow(index, timeunit, value);
+        } else {
+            int aggregationValue = getAggregationValue(index, influxDB);
+            influxDB.close();
+            return getEventsFromNow(index, timeunit, value, "ms", aggregationValue);
+        }
+    }
+
 
     public PageResult getEvents(String index, int itemsPerPage, int page) {
         InfluxDB influxDB = getInfluxDBClient();
-        Query query = new Query("SELECT * FROM " + index +  " ORDER BY time LIMIT " + itemsPerPage + " OFFSET " + page * itemsPerPage,
+        Query query = new Query("SELECT * FROM " + index +  " ORDER BY time LIMIT " + itemsPerPage
+                + " OFFSET " + page * itemsPerPage,
                 BackendConfig.INSTANCE.getInfluxDatabaseName());
         QueryResult result = influxDB.query(query);
 
-        List<Map<String, Object>> events = new ArrayList<>();
-        if(result.getResults().get(0).getSeries() != null) {
-            events = convertResult(result.getResults().get(0).getSeries().get(0));
-        }
+        List<Map<String, Object>> events = convertResult(result);
         influxDB.close();
 
         int pageSum = getMaxPage(index, itemsPerPage);
@@ -218,6 +264,15 @@ public class DataLakeManagementV3 {
         return page;
     }
 
+    private List<Map<String, Object>> convertResult(QueryResult result) {
+        List<Map<String, Object>> events = new ArrayList<>();
+        if(result.getResults().get(0).getSeries() != null) {
+            events = convertResult(result.getResults().get(0).getSeries().get(0));
+        }
+        return events;
+    }
+
+
     private List<Map<String, Object>> convertResult(QueryResult.Series serie) {
         List<Map<String, Object>> events = new ArrayList<>();
         List<String> columns = serie.getColumns();
@@ -232,18 +287,97 @@ public class DataLakeManagementV3 {
                 if (value.get(i) != null)
                     event.put(columns.get(i), value.get(i));
             }
-            //if the size is just 1, it just contain the timestamp
-            if (event.size() > 1)
-                events.add(event);
+            events.add(event);
         }
 
         return events;
+    }
 
+    private int getAggregationValue(String index, InfluxDB influxDB) throws ParseException {
+        long timerange = getDateFromNewestRecordReOfTable(index, influxDB) - getDateFromOldestRecordReOfTable(index, influxDB);
+        double v = timerange / NUM_OF_AUTO_AGGREGATION_VALUES;
+        return Double.valueOf(v).intValue();
+    }
+
+    private long getDateFromNewestRecordReOfTable(String index, InfluxDB influxDB) throws ParseException {
+        Query query = new Query("SELECT * FROM " + index +  " ORDER BY desc LIMIT 1 ",
+                BackendConfig.INSTANCE.getInfluxDatabaseName());
+        QueryResult result = influxDB.query(query);
+        int timestampIndex = result.getResults().get(0).getSeries().get(0).getColumns().indexOf("time");
+        String stringDate = result.getResults().get(0).getSeries().get(0).getValues().get(0).get(timestampIndex).toString();
+        Date date = tryParseDate(stringDate);
+        return date.getTime();
+
+    }
+
+    private long getDateFromOldestRecordReOfTable(String index, InfluxDB influxDB) throws ParseException {
+        Query query = new Query("SELECT * FROM " + index +  " ORDER BY asc LIMIT 1 ",
+                BackendConfig.INSTANCE.getInfluxDatabaseName());
+        QueryResult result = influxDB.query(query);
+        int timestampIndex = result.getResults().get(0).getSeries().get(0).getColumns().indexOf("time");
+        String stringDate = result.getResults().get(0).getSeries().get(0).getValues().get(0).get(timestampIndex).toString();
+        Date date = tryParseDate(stringDate);
+        return date.getTime();
+
+
+    }
+
+    private double getNumOfRecordsOfTable(String index, InfluxDB influxDB) {
+        double numOfRecords = 0;
+
+        QueryResult.Result result = influxDB.query(new Query("SELECT count(*) FROM " + index,
+                BackendConfig.INSTANCE.getInfluxDatabaseName())).getResults().get(0);
+        if (result.getSeries() == null)
+            return numOfRecords;
+
+        for (Object item: result.getSeries().get(0).getValues().get(0)) {
+            if (item instanceof Double) numOfRecords = Double.parseDouble(item.toString());
+        }
+
+        return numOfRecords;
+    }
+
+    private double getNumOfRecordsOfTable(String index, InfluxDB influxDB, long startDate, long endDate) {
+        double numOfRecords = 0;
+
+        QueryResult.Result result = influxDB.query(new Query("SELECT count(*) FROM " + index +
+                " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000,
+                BackendConfig.INSTANCE.getInfluxDatabaseName())).getResults().get(0);
+        if (result.getSeries() == null)
+            return numOfRecords;
+
+        for (Object item: result.getSeries().get(0).getValues().get(0)) {
+            if (item instanceof Double) numOfRecords = Double.parseDouble(item.toString());
+        }
+
+        return numOfRecords;
+    }
+
+    private double getNumOfRecordsOfTableFromNow(String index, InfluxDB influxDB,  String timeunit, int value) {
+        double numOfRecords = 0;
+        QueryResult.Result result = influxDB.query(new Query("SELECT count(*) FROM " + index +
+                " WHERE time > now() -" + value + timeunit,
+                BackendConfig.INSTANCE.getInfluxDatabaseName())).getResults().get(0);
+        if (result.getSeries() == null)
+            return numOfRecords;
+
+        for (Object item: result.getSeries().get(0).getValues().get(0)) {
+            if (item instanceof Double) numOfRecords = Double.parseDouble(item.toString());
+        }
+        return numOfRecords;
     }
 
 
     private InfluxDB getInfluxDBClient() {
         return InfluxDBFactory.connect(BackendConfig.INSTANCE.getInfluxUrl());
+    }
+
+    private Date tryParseDate(String v) throws ParseException {
+        try {
+            return dateFormat1.parse(v);
+        } catch (ParseException e) {
+            return dateFormat2.parse(v);
+        }
     }
 
 }
