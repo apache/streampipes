@@ -59,6 +59,11 @@
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.github.drapostolos</groupId>
                 <artifactId>type-parser</artifactId>
                 <version>${type-parser.version}</version>
@@ -236,7 +241,22 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-cbor</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-fst</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-dataformat-json</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-smile</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

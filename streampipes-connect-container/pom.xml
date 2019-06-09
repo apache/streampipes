@@ -16,6 +16,10 @@
     <dependencies>
         <dependency>
             <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-connect</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
             <artifactId>streampipes-serializers</artifactId>
         </dependency>
         <dependency>
@@ -25,10 +29,6 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-connect</artifactId>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
@@ -47,7 +47,6 @@
             <artifactId>jersey-container-jetty-http</artifactId>
             <version>${jersey.version}</version>
         </dependency>
-
        <dependency>
             <groupId>org.rendersnake</groupId>
             <artifactId>rendersnake</artifactId>
@@ -63,8 +62,6 @@
             <artifactId>json-path</artifactId>
             <version>3.1.0</version>
         </dependency>
-
-
     </dependencies>
 
     <build>
