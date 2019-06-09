@@ -158,6 +158,6 @@ public class Operations {
   }
 
   public static String getRuntimeInfo(SpDataStream spDataStream) throws SpRuntimeException {
-    return new PipelineElementRuntimeInfoFetcher(spDataStream).getCurrentData();
+    return PipelineElementRuntimeInfoFetcher.INSTANCE.getCurrentData(spDataStream);
   }
 }
