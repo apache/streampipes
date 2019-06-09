@@ -17,7 +17,6 @@
 
 package org.streampipes.messaging.kafka;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -28,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.InternalEventProcessor;
+import org.streampipes.messaging.kafka.config.ConsumerConfigFactory;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.model.grounding.WildcardTopicDefinition;
@@ -36,16 +36,14 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Properties;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, Runnable,
         Serializable {
 
-  private String kafkaUrl;
   private String topic;
-  private String groupId;
   private InternalEventProcessor<byte[]> eventProcessor;
+  private KafkaTransportProtocol protocol;
   private volatile boolean isRunning;
   private Boolean patternTopic = false;
 
@@ -104,18 +102,7 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
   }
 
   private Properties getProperties() {
-    Properties props = new Properties();
-
-    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaUrl);
-    props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-    props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
-    props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "10000");
-    props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
-    props.put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, 5000012);
-    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.ByteArrayDeserializer");
-    props.put(ConsumerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString());
-    return props;
+    return new ConsumerConfigFactory(protocol).makeProperties();
   }
 
   @Override
@@ -127,9 +114,8 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
       this.patternTopic = true;
     }
     this.eventProcessor = eventProcessor;
-    this.kafkaUrl = protocol.getBrokerHostname() + ":" + protocol.getKafkaPort();
+    this.protocol = protocol;
     this.topic = protocol.getTopicDefinition().getActualTopicName();
-    this.groupId = UUID.randomUUID().toString();
     this.isRunning = true;
 
     Thread thread = new Thread(this);
