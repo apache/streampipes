@@ -25,19 +25,23 @@
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <rdf4j.version>2.4.5</rdf4j.version>
+        <dependency.locations.enabled>false</dependency.locations.enabled>
+
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
-        <javassist.version>3.19.0-GA</javassist.version>
-        <logback-classic.version>1.1.9</logback-classic.version>
-        <jackson.version>2.9.9</jackson.version>
-        <type-parser.version>0.6.0</type-parser.version>
         <consul-client.version>1.3.5</consul-client.version>
-        <persistence-api.version>1.0.2</persistence-api.version>
-        <junit.version>4.12</junit.version>
+        <jackson.version>2.9.9</jackson.version>
+        <javassist.version>3.19.0-GA</javassist.version>
+        <jersey.version>2.28</jersey.version>
+        <jetty.version>9.4.18.v20190429</jetty.version>
         <kafka.version>2.2.0</kafka.version>
+        <logback-classic.version>1.1.9</logback-classic.version>
+        <persistence-api.version>1.0.2</persistence-api.version>
+        <rdf4j.version>2.4.5</rdf4j.version>
         <shiro.version>1.2.3</shiro.version>
         <streampipes-empire.version>1.9.9</streampipes-empire.version>
-        <dependency.locations.enabled>false</dependency.locations.enabled>
+        <type-parser.version>0.6.0</type-parser.version>
+
+        <junit.version>4.12</junit.version>
         <mockito.version>2.18.3</mockito.version>
         <powermock.version>2.0.0-beta.5</powermock.version>
     </properties>
@@ -93,6 +97,37 @@
                 <artifactId>persistence-api</artifactId>
                 <version>${persistence-api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-jetty-http</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-servlet</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.inject</groupId>
+                <artifactId>jersey-hk2</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-json-jackson</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-multipart</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-sse</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -447,17 +482,17 @@
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-server</artifactId>
-                <version>9.2.24.v20180105</version>
+                <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-util</artifactId>
-                <version>9.2.24.v20180105</version>
+                <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-continuation</artifactId>
-                <version>9.2.24.v20180105</version>
+                <version>${jetty.version}</version>
             </dependency>
 
         </dependencies>
