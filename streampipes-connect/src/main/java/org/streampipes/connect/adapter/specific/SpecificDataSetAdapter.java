@@ -17,10 +17,13 @@
 
 package org.streampipes.connect.adapter.specific;
 
-import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 
 public abstract class SpecificDataSetAdapter extends SpecificAdapter<SpecificAdapterSetDescription> {
+
+    public SpecificDataSetAdapter() {
+        super();
+    }
 
     public SpecificDataSetAdapter(SpecificAdapterSetDescription adapterDescription) {
         super(adapterDescription);

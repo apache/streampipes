@@ -23,7 +23,8 @@ public enum AdapterType {
   News("News", ""),
   SocialMedia("Social Media", ""),
   OpenData("Open Data", ""),
-  Manufacturing("Production & Manufacturing", "");
+  Manufacturing("Production & Manufacturing", ""),
+  Debugging("Testing & Debugging", "");
 
   private String label;
   private String description;

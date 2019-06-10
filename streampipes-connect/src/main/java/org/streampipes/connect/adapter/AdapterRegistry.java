@@ -50,6 +50,8 @@ import org.streampipes.connect.adapter.specific.iex.IexCloudNewsAdapter;
 import org.streampipes.connect.adapter.specific.iex.IexCloudStockAdapter;
 import org.streampipes.connect.adapter.specific.opcua.OpcUaAdapter;
 import org.streampipes.connect.adapter.specific.ros.RosBridgeAdapter;
+import org.streampipes.connect.adapter.specific.simulator.RandomDataSetAdapter;
+import org.streampipes.connect.adapter.specific.simulator.RandomDataStreamAdapter;
 import org.streampipes.connect.adapter.specific.slack.SlackAdapter;
 import org.streampipes.connect.adapter.specific.wikipedia.WikipediaEditedArticlesAdapter;
 import org.streampipes.connect.adapter.specific.wikipedia.WikipediaNewArticlesAdapter;
@@ -80,6 +82,8 @@ public class AdapterRegistry {
         allAdapters.put(WikipediaEditedArticlesAdapter.ID, new WikipediaEditedArticlesAdapter());
         allAdapters.put(WikipediaNewArticlesAdapter.ID, new WikipediaNewArticlesAdapter());
         allAdapters.put(SlackAdapter.ID, new SlackAdapter());
+        allAdapters.put(RandomDataStreamAdapter.ID, new RandomDataStreamAdapter());
+        allAdapters.put(RandomDataSetAdapter.ID, new RandomDataSetAdapter());
 
         return allAdapters;
     }

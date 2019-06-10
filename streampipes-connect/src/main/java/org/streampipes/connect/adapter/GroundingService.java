@@ -63,8 +63,7 @@ public class GroundingService {
         transportProtocol.setBrokerHostname(kafkaHost);
         transportProtocol.setKafkaPort(kafkaPort);
 
-        String topic = "org.streampipes.connect." + UUID.randomUUID();
-        System.out.println("Topic: " + topic);
+        String topic = "org.streampipes.connect." + UUID.randomUUID().toString();
         TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
         transportProtocol.setTopicDefinition(topicDefinition);
 

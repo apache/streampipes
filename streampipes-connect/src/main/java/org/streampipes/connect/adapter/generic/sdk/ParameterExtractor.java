@@ -17,6 +17,7 @@
 
 package org.streampipes.connect.adapter.generic.sdk;
 
+import com.github.drapostolos.typeparser.TypeParser;
 import org.streampipes.model.staticproperty.*;
 
 import java.util.List;
@@ -24,14 +25,20 @@ import java.util.stream.Collectors;
 
 public class ParameterExtractor {
     private List<StaticProperty> list;
+    private TypeParser typeParser;
 
     public ParameterExtractor(List<StaticProperty> list) {
         this.list = list;
+        this.typeParser = TypeParser.newBuilder().build();
     }
 
     public String singleValue(String internalName) {
         return (((FreeTextStaticProperty) getStaticPropertyByName(internalName))
                 .getValue());
+    }
+
+    public <V> V singleValue(String internalName, Class<V> targetClass) {
+        return typeParser.parse(singleValue(internalName), targetClass);
     }
 
     public List<String> selectedMultiValues(String internalName) {
