@@ -1,10 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {time} from '@ngtools/webpack/src/benchmark';
 import {DatalakeRestService} from '../../../core-services/datalake/datalake-rest.service';
 import {MatSnackBar} from '@angular/material';
 import {FormControl} from '@angular/forms';
-import {InfoResult} from '../../../core-model/datalake/InfoResult';
-import {Observable} from 'rxjs/Observable';
 
 @Component({
     selector: 'sp-datalake-lineChart',
@@ -39,6 +36,16 @@ export class DatalakeLineChartComponent {
     //timeunit selection
     selectedTimeUnit = 'All';
 
+    //aggregation / advanced options
+    //group by
+    enableAdvanceOptions = false;
+    groupbyUnit = 'd';
+    groupbyValue = 1;
+
+    //custom time range
+    customStartDate = new Date();
+    customEndDate = new Date(this.customStartDate.getTime() + 60000 * 60 * 24);
+
     constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar) {
 
     }
@@ -63,6 +70,10 @@ export class DatalakeLineChartComponent {
             this.loadAllData();
             this.enablePaging = true;
             this.enableItemsPerPage = true;
+        } else if(this.selectedTimeUnit == 'Custom') {
+            this.loadCustomData();
+            this.enablePaging = false;
+            this.enableItemsPerPage = false;
         } else {
             this.enablePaging = false;
             this.enableItemsPerPage = false;
@@ -90,8 +101,6 @@ export class DatalakeLineChartComponent {
     loadLastData() {
         let timeunit = '';
         let timevalue = 0;
-        let aggregationunit = 'm';
-        let aggreagtionvalue = 1;
         if (this.selectedTimeUnit === '24 Hours') {
             timeunit = 'h';
             timevalue = 24;
@@ -102,23 +111,49 @@ export class DatalakeLineChartComponent {
             timeunit = 'w';
             timevalue = 4;
         } else if (this.selectedTimeUnit === '1 Year') {
-            timeunit = 'w';
-            timevalue = 4 * 12;
+            timeunit = 'd';
+            timevalue = 365;
         }
 
         this.isLoadingData = true;
-        this.restService.getLastData(this._index, timeunit, timevalue, aggregationunit, aggreagtionvalue).subscribe(
-            res => {
-                if(res.events.length > 0) {
-                    this.data = res.events as [];
-                    this.setDataKeys(res.events[0]);
-                    this.currentPage = undefined;
-                } else {
-                    this.data = undefined;
-                }
-                this.isLoadingData = false;
-            }
-        );
+        if (this.enableAdvanceOptions) {
+            this.restService.getLastData(this._index, timeunit, timevalue, this.groupbyUnit, this.groupbyValue).subscribe(
+                res => this.processRevicedData(res)
+            );
+        } else {
+            this.restService.getLastDataAutoAggregation(this._index, timeunit, timevalue).subscribe(
+                res => this.processRevicedData(res)
+            );
+        }
+
+
+    }
+
+    loadCustomData() {
+        let aggregationunit = 'm';
+        let aggreagtionvalue = 1;
+        this.isLoadingData = true;
+        if (this.enableAdvanceOptions) {
+            this.restService.getData(this._index, this.customStartDate.getTime(), this.customEndDate.getTime(), aggregationunit, aggreagtionvalue).subscribe(
+                res => this.processRevicedData(res)
+            );
+        } else {
+            this.restService.getDataAutoAggergation(this._index, this.customStartDate.getTime(), this.customEndDate.getTime()).subscribe(
+                res => this.processRevicedData(res)
+            );
+        }
+
+    }
+
+    processRevicedData(res) {
+        if(res.events.length > 0) {
+            this.data = res.events as [];
+            this.setDataKeys(res.events[0]);
+            this.currentPage = undefined;
+        } else {
+            this.data = undefined;
+        }
+        this.isLoadingData = false;
     }
 
     selectKey(value) {
@@ -136,6 +171,21 @@ export class DatalakeLineChartComponent {
 
     selectTimeUnit(value) {
         this.selectedTimeUnit = value;
+
+        if (this.selectedTimeUnit === '24 Hours') {
+            this.groupbyUnit = 'm';
+            this.groupbyValue = 1;
+        } else if (this.selectedTimeUnit === '1 Week') {
+            this.groupbyUnit = 'm';
+            this.groupbyValue = 30;
+        } else if (this.selectedTimeUnit === '1 Month') {
+            this.groupbyUnit = 'h';
+            this.groupbyValue = 4;
+        } else if (this.selectedTimeUnit === '1 Year') {
+            this.groupbyUnit = 'h';
+            this.groupbyValue = 12;
+        }
+
         this.loadData();
     }
 
@@ -167,7 +217,5 @@ export class DatalakeLineChartComponent {
             duration: 2000,
         });
     }
-
-
 
 }

@@ -20,13 +20,14 @@ export class LineChartComponent {
             }
         } else {
             this.displayData = undefined;
+            this._data = undefined;
         }
     }
     @Input() set xAxesKey(value: string) {
         if (value != undefined) {
             this._xAxesKey = value;
             if (this._data !== undefined && this._xAxesKey !== undefined && this._yAxesKeys !== undefined) {
-                this.processData()
+                this.processData();
                 this.selectDataToDisplay();
             }
         }
