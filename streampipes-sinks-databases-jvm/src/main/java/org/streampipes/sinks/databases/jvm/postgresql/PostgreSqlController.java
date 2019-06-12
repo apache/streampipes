@@ -25,8 +25,6 @@ import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
@@ -50,8 +48,6 @@ public class PostgreSqlController extends StandaloneEventSinkDeclarer<PostgreSql
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
             .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 5432)
             .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))

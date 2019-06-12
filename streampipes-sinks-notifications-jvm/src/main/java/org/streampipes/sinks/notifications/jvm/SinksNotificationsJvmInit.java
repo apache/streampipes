@@ -19,7 +19,10 @@ package org.streampipes.sinks.notifications.jvm;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.sinks.notifications.jvm.config.SinksNotificationsJvmConfig;
@@ -36,9 +39,13 @@ public class SinksNotificationsJvmInit extends StandaloneModelSubmitter {
             .add(new OneSignalController())
             .add(new SlackNotificationController());
 
-    DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
-    DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
-    DeclarersSingleton.getInstance().registerProtocol(new SpJmsProtocolFactory());
+    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory());
+
+    DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory());
 
     new SinksNotificationsJvmInit().init(SinksNotificationsJvmConfig.INSTANCE);
   }

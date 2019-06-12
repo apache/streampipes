@@ -25,8 +25,6 @@ import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -51,8 +49,6 @@ public class ComposeController extends StandaloneEventProcessingDeclarer<Compose
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
             .outputStrategy(OutputStrategies.custom(true))
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.jms(), SupportedProtocols.kafka())
             .build();
   }
 

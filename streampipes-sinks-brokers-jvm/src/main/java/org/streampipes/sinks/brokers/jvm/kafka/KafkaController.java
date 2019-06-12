@@ -25,8 +25,6 @@ import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OntologyProperties;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
@@ -52,8 +50,6 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
             .requiredOntologyConcept(Labels.withId(KAFKA_BROKER_SETTINGS_KEY),
                     OntologyProperties.mandatory(KAFKA_HOST_URI),
                     OntologyProperties.mandatory(KAFKA_PORT_URI))
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 

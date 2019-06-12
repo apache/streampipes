@@ -26,8 +26,6 @@ import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
@@ -48,8 +46,6 @@ public class OneSignalController extends StandaloneEventSinkDeclarer<OneSignalPa
                         .create()
                         .requiredProperty(EpRequirements.anyProperty())
                         .build())
-                .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
                 .requiredHtmlInputParameter(Labels.withId(CONTENT_KEY))
                 .requiredTextParameter(Labels.withId(APP_ID))
                 .requiredTextParameter(Labels.withId(REST_API_KEY))

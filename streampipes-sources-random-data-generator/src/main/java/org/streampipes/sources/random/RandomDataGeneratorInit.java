@@ -27,6 +27,7 @@ public class RandomDataGeneratorInit extends StandaloneModelSubmitter {
   public static void main(String[] args) {
     DeclarersSingleton.getInstance().add(new RandomDataProducer());
 
+
     new RandomDataGeneratorInit().init(SourcesConfig.INSTANCE);
   }
 }

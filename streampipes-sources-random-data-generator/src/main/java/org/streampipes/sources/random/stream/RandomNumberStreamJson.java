@@ -18,7 +18,8 @@
 package org.streampipes.sources.random.stream;
 
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.dataformat.cbor.CborDataFormatDefinition;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.sdk.builder.DataStreamBuilder;
@@ -27,9 +28,19 @@ import org.streampipes.sources.random.config.SampleSettings;
 import org.streampipes.sources.random.model.MessageConfig;
 import org.streampipes.sources.random.model.MessageResult;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RandomNumberStreamJson extends RandomNumberStream {
 
   private static final String TOPIC = "SEPA.SEP.Random.Number.Json";
+
+  private CborDataFormatDefinition cborDataFormatDefinition;
+
+  public RandomNumberStreamJson() {
+    super();
+    this.cborDataFormatDefinition = new CborDataFormatDefinition();
+  }
 
   @Override
   public SpDataStream declareModel(DataSourceDescription sep) {
@@ -37,7 +48,7 @@ public class RandomNumberStreamJson extends RandomNumberStream {
             + "Stream (JSON)", "Publishes randomly generated data and nothing more.")
             .providesAssets()
             .properties(getEventPropertyDescriptions())
-            .format(Formats.jsonFormat())
+            .format(Formats.cborFormat())
             .protocol(SampleSettings.kafkaProtocol(TOPIC))
             .build();
   }
@@ -46,17 +57,16 @@ public class RandomNumberStreamJson extends RandomNumberStream {
   protected MessageResult getMessage(MessageConfig messageConfig) {
     try {
       return new MessageResult(
-              buildJson(messageConfig.getTimestamp(), messageConfig.getCounter())
-                      .toString()
-                      .getBytes(), TOPIC);
-    } catch (JSONException e) {
+              cborDataFormatDefinition.fromMap(buildJson(messageConfig.getTimestamp(),
+                      messageConfig.getCounter())), TOPIC);
+    } catch (JSONException | SpRuntimeException e) {
       e.printStackTrace();
       return new MessageResult(false);
     }
   }
 
-  private JSONObject buildJson(long timestamp, int counter) throws JSONException {
-    JSONObject json = new JSONObject();
+  private Map<String, Object> buildJson(long timestamp, int counter) throws JSONException {
+    Map<String, Object> json = new HashMap<>();
 
     json.put("timestamp", timestamp);
     json.put("randomValue", random.nextInt(100));
