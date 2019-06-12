@@ -1,0 +1,14 @@
+version: "2.0"
+services:
+  opcua:
+    image: mcr.microsoft.com/iotedge/opc-plc
+    volumes:
+      - ./config-generated/:/appdata
+    ports:
+      - 50000:50000
+    networks:
+      spnet:
+
+networks:
+  spnet:
+    external: true
