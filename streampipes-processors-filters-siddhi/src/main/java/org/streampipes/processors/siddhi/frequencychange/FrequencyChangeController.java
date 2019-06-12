@@ -49,8 +49,6 @@ public class FrequencyChangeController extends StandaloneEventProcessingDeclarer
             .requiredIntegerParameter(Labels.withId(INCREASE), 0, 500, 1)
             .outputStrategy(OutputStrategies.custom(true))
             .requiredIntegerParameter(Labels.withId(DURATION))
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }
 

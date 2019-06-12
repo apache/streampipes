@@ -48,8 +48,6 @@ public class SequenceController extends StandaloneEventProcessingDeclarer<Sequen
                     .build())
             .outputStrategy(OutputStrategies.custom(true))
             .requiredIntegerParameter(Labels.withId(Duration))
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }
 

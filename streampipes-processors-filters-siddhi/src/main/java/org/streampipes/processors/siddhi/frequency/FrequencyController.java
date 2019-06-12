@@ -46,8 +46,6 @@ public class FrequencyController extends StandaloneEventProcessingDeclarer<Frequ
             .requiredSingleValueSelection(Labels.withId(TIME_UNIT), Options.from("sec", "min", "hrs"))
             .outputStrategy(OutputStrategies.custom(true))
             .requiredIntegerParameter(Labels.withId(DURATION))
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }
 
