@@ -17,42 +17,46 @@
 
 package org.streampipes.connect.adapter.generic.pipeline.elements;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.streampipes.connect.adapter.GroundingService;
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
+import org.streampipes.connect.adapter.util.TransportFormatSelector;
+import org.streampipes.dataformat.SpDataFormatDefinition;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
 
 import java.util.Map;
 
 public class SendToKafkaAdapterSink implements AdapterPipelineElement  {
     private SpKafkaProducer producer;
-    private ObjectMapper objectMapper;
-
+    private SpDataFormatDefinition dataFormatDefinition;
 
     // TODO Handle multiple Event Groundings and define what happens when none is provided
     public SendToKafkaAdapterSink(AdapterDescription adapterDescription) {
-        String brokerUrl = GroundingService.extractBroker(adapterDescription);
-        String topic = GroundingService.extractTopic(adapterDescription);
-
-
-//        producer = new SpKafkaProducer(brokerUrl, topic);
         producer = new SpKafkaProducer();
-        KafkaTransportProtocol kafkaTransportProtocol = (KafkaTransportProtocol) adapterDescription.getEventGrounding().getTransportProtocol();
+
+        KafkaTransportProtocol kafkaTransportProtocol = (KafkaTransportProtocol) adapterDescription
+                .getEventGrounding()
+                .getTransportProtocol();
+
+        TransportFormat transportFormat =
+                adapterDescription.getEventGrounding().getTransportFormats().get(0);
+
+        this.dataFormatDefinition =
+                new TransportFormatSelector(transportFormat).getDataFormatDefinition();
+
         producer.connect(kafkaTransportProtocol);
-        objectMapper = new ObjectMapper();
     }
 
     @Override
     public Map<String, Object> process(Map<String, Object> event) {
         try {
             if (event != null) {
-                producer.publish(objectMapper.writeValueAsBytes(event));
+                producer.publish(dataFormatDefinition.fromMap(event));
             }
-        } catch (JsonProcessingException e) {
+        } catch (SpRuntimeException e) {
             e.printStackTrace();
         }
 

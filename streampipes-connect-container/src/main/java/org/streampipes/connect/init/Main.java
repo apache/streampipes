@@ -23,6 +23,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
 import org.streampipes.connect.rest.master.AdapterResource;
@@ -53,6 +54,7 @@ public class Main {
     public static void main(String... args) throws InterruptedException {
 
         // TODO Two different execution modes
+        ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl();
 
         String executionMode = Config.getEnv(Config.EXECUTION_MODE);
 

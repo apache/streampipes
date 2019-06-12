@@ -19,9 +19,8 @@ package org.streampipes.connect.management.master;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.config.backend.BackendConfig;
-import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.util.TransportFormatGenerator;
 import org.streampipes.container.html.JSONGenerator;
 import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.streampipes.container.html.model.Description;
@@ -32,17 +31,12 @@ import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.model.grounding.TransportProtocol;
-import org.streampipes.sdk.helpers.Formats;
-import org.streampipes.sdk.helpers.Protocols;
-import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SourcesManagement {
@@ -140,25 +134,22 @@ public class SourcesManagement {
             ds = ((AdapterSetDescription) adapterDescription).getDataSet();
             EventGrounding eg = new EventGrounding();
             eg.setTransportProtocol(SupportedProtocols.kafka());
-            eg.setTransportFormats(Arrays.asList(SupportedFormats.jsonFormat()));
+            eg.setTransportFormats(TransportFormatGenerator.getAllFormats());
             ((SpDataSet) ds).setSupportedGrounding(eg);
         } else {
             ds = ((AdapterStreamDescription) adapterDescription).getDataStream();
 
 
-            String topic = adapterDescription.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
-
-            TransportProtocol tp = Protocols.kafka(BackendConfig.INSTANCE.getKafkaHost(), BackendConfig.INSTANCE.getKafkaPort(), topic);
-            EventGrounding eg = new EventGrounding();
-            eg.setTransportFormats(Arrays.asList(Formats.jsonFormat()));
-            eg.setTransportProtocol(tp);
-
-            ds.setEventGrounding(eg);
+//            String topic = adapterDescription.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
+//
+//            TransportProtocol tp = Protocols.kafka(BackendConfig.INSTANCE.getKafkaHost(), BackendConfig.INSTANCE.getKafkaPort(), topic);
+//            EventGrounding eg = new EventGrounding();
+//            eg.setTransportProtocol(tp);
+//
+            ds.setEventGrounding(new EventGrounding(adapterDescription.getEventGrounding()));
         }
 
-
-//        String url = adapterDescription.getUri().toString() + "/" + adapterDescription.getId();
-        String url = adapterDescription.getUri().toString();
+        String url = adapterDescription.getUri();
 
         ds.setName(adapterDescription.getName());
         ds.setDescription("Description");
@@ -173,14 +164,6 @@ public class SourcesManagement {
 
         return dataSourceDescription;
     }
-
-//    public String getConnectHost() {
-//        if (connectHost == null) {
-//            return ConnectContainerConfig.INSTANCE.getConnectContainerMasterHost() + ":" + ConnectContainerConfig.INSTANCE.getConnectContainerMasterPort();
-//        } else {
-//            return connectHost;
-//        }
-//    }
 
     public void setConnectHost(String connectHost) {
         this.connectHost = connectHost;
