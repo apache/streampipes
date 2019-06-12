@@ -11,6 +11,9 @@
 
     <properties>
         <lightcouch.version>0.1.8</lightcouch.version>
+        <milo.version>2.22.1</milo.version>
+        <influxdb.java.version>2.14</influxdb.java.version>
+        <postgresql.version>42.2.2</postgresql.version>
     </properties>
 
     <dependencies>
@@ -62,12 +65,17 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.2</version>
+            <version>${postgresql.version}</version>
         </dependency>
         <dependency>
             <groupId>org.influxdb</groupId>
             <artifactId>influxdb-java</artifactId>
-            <version>2.14</version>
+            <version>${influxdb.java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-milo</artifactId>
+            <version>${milo.version}</version>
         </dependency>
     </dependencies>
 

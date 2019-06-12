@@ -28,6 +28,7 @@ import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.transformation.jvm.config.TransformationJvmConfig;
 import org.streampipes.processors.transformation.jvm.processor.array.count.CountArrayController;
 import org.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayController;
+import org.streampipes.processors.transformation.jvm.processor.booleaninverter.BooleanInverterController;
 import org.streampipes.processors.transformation.jvm.processor.value.change.ChangedValueDetectionController;
 import org.streampipes.processors.transformation.jvm.processor.value.duration.CalculateDurationController;
 import org.streampipes.processors.transformation.jvm.processor.timestampextractor.TimestampExtractorController;
@@ -41,7 +42,8 @@ public class TransformationJvmInit extends StandaloneModelSubmitter {
             .add(new SplitArrayController())
             .add(new CalculateDurationController())
             .add(new ChangedValueDetectionController())
-            .add(new TimestampExtractorController());
+            .add(new TimestampExtractorController())
+            .add(new BooleanInverterController());
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
