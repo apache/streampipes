@@ -20,6 +20,7 @@ import org.streampipes.dataformat.SpDataFormatFactory;
 import org.streampipes.vocabulary.MessageFormat;
 
 public class CborDataFormatFactory extends SpDataFormatFactory {
+
   @Override
   public String getTransportFormatRdfUri() {
     return MessageFormat.Cbor;

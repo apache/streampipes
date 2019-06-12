@@ -33,15 +33,21 @@ import org.streampipes.container.transform.Transformer;
 import org.streampipes.empire.core.empire.SupportsRdfId;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.grounding.TransportProtocol;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -186,10 +192,27 @@ public abstract class Element<D extends Declarer> {
             }
           }
         }
+      } else if (desc instanceof ConsumableStreamPipesEntity) {
+        Collection<TransportProtocol> supportedProtocols =
+                DeclarersSingleton.getInstance().getSupportedProtocols();
+        Collection<TransportFormat> supportedFormats =
+                DeclarersSingleton.getInstance().getSupportedFormats();
+
+        ((ConsumableStreamPipesEntity) desc)
+                .setSupportedGrounding(makeGrounding(supportedProtocols, supportedFormats));
       }
     }
 
     return desc;
+  }
+
+  private EventGrounding makeGrounding(Collection<TransportProtocol> supportedProtocols,
+                                       Collection<TransportFormat> supportedFormats) {
+    EventGrounding grounding = new EventGrounding();
+    grounding.setTransportProtocols(new ArrayList<>(supportedProtocols));
+    grounding.setTransportFormats(new ArrayList<>(supportedFormats));
+
+    return grounding;
   }
 
   protected String toJsonLd(NamedStreamPipesEntity namedElement) {
