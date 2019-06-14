@@ -11,7 +11,7 @@ export class AdapterSetDescription extends AdapterDescription {
     public dataSet: DataSetDescription;
 
     @RdfProperty("sp:stopPipeline")
-    public stopPipeline: Boolean;
+    public stopPipeline: Boolean = false;
 
     constructor(id: string) {
         super(id)

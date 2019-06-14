@@ -306,7 +306,7 @@ export class TsonLd {
               } else {
                 // TODO check with Philipp
                 let type = jsonObject[property]['@type'];
-                if (type === 'xsd:int' || type === 'xsd:double' || type === 'xsd:float') {
+                if (type === 'xsd:int' || type === 'xsd:double' || type === 'xsd:float' || type === 'xsd:boolean') {
                   result[objectProp] = +jsonObject[property]['@value'];
                 } else {
                   result[objectProp] = jsonObject[property]['@value'];

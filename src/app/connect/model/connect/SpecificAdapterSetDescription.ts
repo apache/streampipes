@@ -6,6 +6,7 @@ export class SpecificAdapterSetDescription extends AdapterSetDescription {
 
     constructor(id: string) {
         super(id)
+        this.appId = id;
     }
 
 }
