@@ -174,7 +174,7 @@ public class DataLakeManagementV3 {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {
                 InfluxDB influxDB = getInfluxDBClient();
-                int itemsPerRequest = 200;
+                int itemsPerRequest = 10000;
 
                 //JSON
                 if (outputFormat.equals("json")) {
@@ -189,8 +189,11 @@ public class DataLakeManagementV3 {
                         Query query = new Query("SELECT * FROM " + index + " ORDER BY time LIMIT " + itemsPerRequest + " OFFSET " + i * itemsPerRequest,
                                 BackendConfig.INSTANCE.getInfluxDatabaseName());
                         QueryResult result = influxDB.query(query);
-                        if((result.getResults().get(0).getSeries() != null))
+                        if((result.getResults().get(0).getSeries() != null)) {
                             convertResult = convertResult(result.getResults().get(0).getSeries().get(0));
+                        } else {
+                            convertResult = new ArrayList<>();
+                        }
 
                         for (Map<String, Object> event : convertResult) {
                             if (!isFirstElement)
@@ -198,7 +201,6 @@ public class DataLakeManagementV3 {
                             isFirstElement = false;
                             outputStream.write(toBytes(gson.toJson(event)));
                         }
-                        convertResult = new ArrayList<>();
                         i++;
                     } while (convertResult.size() > 0);
                     outputStream.write(toBytes("]"));
@@ -232,7 +234,9 @@ public class DataLakeManagementV3 {
                             QueryResult.Series serie = result.getResults().get(0).getSeries().get(0);
                             for (int i2 = 0; i2 < serie.getValues().size() - 1; i2++) {
                                 for (int i3 = 0; i3 < serie.getValues().get(i2).size(); i3++) {
-                                    outputStream.write(toBytes(serie.getValues().get(i2).get(i3).toString()));
+                                    if (serie.getValues().get(i2).get(i3) != null) {
+                                        outputStream.write(toBytes(serie.getValues().get(i2).get(i3).toString()));
+                                    }
                                     if(i3 < serie.getValues().get(i2).size() - 1)
                                         outputStream.write(toBytes(";"));
                                 }
@@ -331,7 +335,9 @@ public class DataLakeManagementV3 {
             return numOfRecords;
 
         for (Object item: result.getSeries().get(0).getValues().get(0)) {
-            if (item instanceof Double) numOfRecords = Double.parseDouble(item.toString());
+            if (item instanceof Double && numOfRecords < Double.parseDouble(item.toString())) {
+                numOfRecords = Double.parseDouble(item.toString());
+            }
         }
 
         return numOfRecords;
@@ -347,7 +353,9 @@ public class DataLakeManagementV3 {
             return numOfRecords;
 
         for (Object item: result.getSeries().get(0).getValues().get(0)) {
-            if (item instanceof Double) numOfRecords = Double.parseDouble(item.toString());
+            if (item instanceof Double && numOfRecords < Double.parseDouble(item.toString())) {
+                numOfRecords = Double.parseDouble(item.toString());
+            }
         }
 
         return numOfRecords;
