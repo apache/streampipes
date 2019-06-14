@@ -22,6 +22,8 @@ export class TableComponent {
     @Output() previousPage = new EventEmitter<boolean>();
     @Output() nextPage = new EventEmitter<boolean>();
     @Output() itemPerPageChange = new EventEmitter<number>();
+    @Output() firstPage = new EventEmitter<boolean>();
+    @Output() lastPage = new EventEmitter<boolean>();
 
     displayedColumns: string[] = [];
     dataSource = new MatTableDataSource();
@@ -43,6 +45,14 @@ export class TableComponent {
     selectItemsPerPage(num) {
         this.itemsPerPage = num;
         this.itemPerPageChange.emit(this.itemsPerPage);
+    }
+
+    clickFirstPage(){
+        this.firstPage.emit()
+    }
+
+    clickLastPage() {
+        this.lastPage.emit()
     }
 
 }

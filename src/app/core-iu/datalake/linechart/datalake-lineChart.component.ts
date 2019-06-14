@@ -117,7 +117,17 @@ export class DatalakeLineChartComponent {
 
         this.isLoadingData = true;
         if (this.enableAdvanceOptions) {
-            this.restService.getLastData(this._index, timeunit, timevalue, this.groupbyUnit, this.groupbyValue).subscribe(
+            let groupbyUnit = this.groupbyUnit;
+            let groupbyValue = this.groupbyValue;
+            if (this.groupbyUnit === 'month') {
+                groupbyUnit = 'd';
+                groupbyValue = 30 * this.groupbyValue;
+            } else if(this.groupbyUnit === 'year') {
+                groupbyUnit = 'd';
+                groupbyValue = 365 * this.groupbyValue;
+            }
+
+            this.restService.getLastData(this._index, timeunit, timevalue, groupbyUnit, groupbyValue).subscribe(
                 res => this.processRevicedData(res)
             );
         } else {
@@ -130,11 +140,18 @@ export class DatalakeLineChartComponent {
     }
 
     loadCustomData() {
-        let aggregationunit = 'm';
-        let aggreagtionvalue = 1;
         this.isLoadingData = true;
+        let groupbyUnit = this.groupbyUnit;
+        let groupbyValue = this.groupbyValue;
+        if (this.groupbyUnit === 'month') {
+            groupbyUnit = 'w';
+            this.groupbyValue = 4 * this.groupbyValue;
+        } else if(this.groupbyUnit === 'year') {
+            groupbyUnit = 'd';
+            this.groupbyValue = 365 * this.groupbyValue;
+        }
         if (this.enableAdvanceOptions) {
-            this.restService.getData(this._index, this.customStartDate.getTime(), this.customEndDate.getTime(), aggregationunit, aggreagtionvalue).subscribe(
+            this.restService.getData(this._index, this.customStartDate.getTime(), this.customEndDate.getTime(), groupbyUnit, groupbyValue).subscribe(
                 res => this.processRevicedData(res)
             );
         } else {
