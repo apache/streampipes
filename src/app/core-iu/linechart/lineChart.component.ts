@@ -66,10 +66,24 @@ export class LineChartComponent {
 
     processData() {
         const tmp = [];
-        Object.keys(this._data[0]).forEach(key => {
+
+        let dataKeys = [];
+        for (let event of this._data) {
+            for (let key in event) {
+                if (typeof event[key] == 'number') {
+                    if (!dataKeys.includes(key)) {
+                        dataKeys.push(key)
+                    }
+                }
+            }
+        }
+
+        dataKeys.forEach(key => {
             const serie = [];
             this._data.forEach(date => {
-                serie.push({name: new Date(date[this._xAxesKey]), value: date[key]})
+                if (date[key] !== undefined) {
+                    serie.push({name: new Date(date[this._xAxesKey]), value: date[key]})
+                }
             });
             tmp.push({name: key, series: serie});
         })

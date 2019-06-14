@@ -15,6 +15,7 @@ export class DatalakeLineChartComponent {
         this.loadAllData();
         this.enablePaging = true;
         this.enableItemsPerPage = true;
+        this.selectedTimeUnit = 'All';
     }
     data;
     _index: string;
@@ -89,7 +90,7 @@ export class DatalakeLineChartComponent {
                     this.currentPage = res.page;
                     this.maxPage = res.pageSum;
                     this.data = res.events as [];
-                    this.setDataKeys(res.events[0])
+                    this.setDataKeys(res.events)
                 } else {
                     this.data = undefined;
                 }
@@ -165,7 +166,7 @@ export class DatalakeLineChartComponent {
     processRevicedData(res) {
         if(res.events.length > 0) {
             this.data = res.events as [];
-            this.setDataKeys(res.events[0]);
+            this.setDataKeys(res.events);
             this.currentPage = undefined;
         } else {
             this.data = undefined;
@@ -177,11 +178,15 @@ export class DatalakeLineChartComponent {
         this.yAxesKeys = value;
     }
 
-    setDataKeys(event) {
+    setDataKeys(events) {
         this.dataKeys = [];
-        for (let key in event) {
-            if (typeof event[key] == 'number') {
-                this.dataKeys.push(key)
+        for (let event of events) {
+            for (let key in event) {
+                if (typeof event[key] == 'number') {
+                    if (!this.dataKeys.includes(key)) {
+                        this.dataKeys.push(key)
+                    }
+                }
             }
         }
     }
