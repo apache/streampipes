@@ -18,26 +18,14 @@ package org.streampipes.wrapper.flink.converter;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 import org.streampipes.model.runtime.Event;
-import org.streampipes.wrapper.params.runtime.RuntimeParams;
+import org.streampipes.model.runtime.EventConverter;
 
 import java.util.Map;
 
-public class EventGenerator<RP extends RuntimeParams<?, ?, ?>> implements
-        FlatMapFunction<Map<String,
-        Object>, Event> {
-
-  private static final long serialVersionUID = 1L;
-
-  private RP runtimeParams;
-  private String sourceId;
-
-  public EventGenerator(String sourceId, RP runtimeParams) {
-    this.sourceId = sourceId;
-    this.runtimeParams = runtimeParams;
-  }
+public class EventToMapConverter implements FlatMapFunction<Event, Map<String, Object>> {
 
   @Override
-  public void flatMap(Map<String, Object> inMap, Collector<Event> collector) throws Exception {
-    collector.collect(runtimeParams.makeEvent(inMap, sourceId));
+  public void flatMap(Event event, Collector<Map<String, Object>> collector) throws Exception {
+    collector.collect(new EventConverter(event).toMap());
   }
 }

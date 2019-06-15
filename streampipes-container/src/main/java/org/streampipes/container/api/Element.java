@@ -198,8 +198,11 @@ public abstract class Element<D extends Declarer> {
         Collection<TransportFormat> supportedFormats =
                 DeclarersSingleton.getInstance().getSupportedFormats();
 
-        ((ConsumableStreamPipesEntity) desc)
-                .setSupportedGrounding(makeGrounding(supportedProtocols, supportedFormats));
+        if (supportedProtocols.size() > 0 && supportedFormats.size() > 0) {
+          // Overwrite existing grounding from default provided by declarers singleton
+          ((ConsumableStreamPipesEntity) desc)
+                  .setSupportedGrounding(makeGrounding(supportedProtocols, supportedFormats));
+        }
       }
     }
 

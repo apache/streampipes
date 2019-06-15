@@ -19,9 +19,10 @@ package org.streampipes.dataformat;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public interface SpDataFormatDefinition {
+public interface SpDataFormatDefinition extends Serializable {
 
   Map<String, Object> toMap(byte[] event) throws SpRuntimeException;
 
