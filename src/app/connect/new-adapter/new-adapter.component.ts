@@ -87,6 +87,8 @@ export class NewAdapterComponent implements OnInit {
     @ViewChild(EventSchemaComponent)
     private eventSchemaComponent: EventSchemaComponent;
 
+    isSetAdapter: Boolean = false;
+
 
     constructor(
         private logger: Logger,
@@ -144,9 +146,6 @@ export class NewAdapterComponent implements OnInit {
 
         }
     }
-
-
-
 
     public triggerDialog(storeAsTemplate: boolean) {
         if (this.removeDuplicates) {
@@ -215,6 +214,11 @@ export class NewAdapterComponent implements OnInit {
 
         this.ShepherdService.trigger("event-schema-next-button");
         this.goForward(stepper);
+
+        if (this.adapter instanceof GenericAdapterSetDescription || this.adapter instanceof SpecificAdapterSetDescription) {
+            this.isSetAdapter = true;
+        }
+
     }
 
     clickFormatSelectionNextButton(stepper: MatStepper) {

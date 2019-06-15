@@ -28,8 +28,11 @@ export class DataMarketplaceComponent implements OnInit {
     selectedIndex: number = 0;
     filterTerm: string = "";
     pipe: FilterPipe = new FilterPipe();
-    categories: string[] = ['All Adapters', 'Data Set', 'Data Stream'];
-    selected: string = "All Adapters";
+    adapterTypes: string[] = ['All types', 'Data Set', 'Data Stream'];
+    selectedType: string = "All types";
+
+    adapterCategories: any;
+    selectedCategory: any = "All";
 
     constructor(private dataMarketplaceService: DataMarketplaceService,
                 private ShepherdService: ShepherdService,
@@ -41,7 +44,15 @@ export class DataMarketplaceComponent implements OnInit {
 
     ngOnInit() {
         this.updateDescriptionsAndRunningAdatpers();
+        this.loadAvailableTypeCategories();
         this.visibleAdapters = this.adapters;
+    }
+
+    loadAvailableTypeCategories() {
+        this.dataMarketplaceService.getAdapterCategories().subscribe(res => {
+            this.adapterCategories = res;
+            this.adapterCategories.unshift({type: "All", label: "All categories", description: ""});
+        });
     }
 
     updateDescriptionsAndRunningAdatpers() {
@@ -50,8 +61,6 @@ export class DataMarketplaceComponent implements OnInit {
     }
 
     getAdapterDescriptions(): void {
-        var self = this;
-
         this.adapterDescriptions = [];
 
         this.dataMarketplaceService
@@ -59,6 +68,7 @@ export class DataMarketplaceComponent implements OnInit {
             .subscribe(res => {
                 res.subscribe(adapterDescriptions => {
                     this.adapterDescriptions = this.adapterDescriptions.concat(adapterDescriptions);
+                    this.adapterDescriptions.sort((a, b) => a.label.localeCompare(b.label));
                     this.filteredAdapterDescriptions = this.adapterDescriptions;
                 });
             });
@@ -66,11 +76,10 @@ export class DataMarketplaceComponent implements OnInit {
         this.dataMarketplaceService.getAdapterTemplates().subscribe(adapterTemplates => {
             adapterTemplates.forEach(function (adapterTemplate) {
                 adapterTemplate.isTemplate = true;
-                console.log("Template: ");
-                console.log(adapterTemplate);
             });
 
             this.adapterDescriptions = this.adapterDescriptions.concat(adapterTemplates);
+            this.adapterDescriptions.sort((a, b) => a.label.localeCompare(b.label));
             this.filteredAdapterDescriptions = this.adapterDescriptions;
         });
     }
@@ -171,37 +180,33 @@ export class DataMarketplaceComponent implements OnInit {
         });
     }
 
-    filterAdapterCategory(categorie) {
+    filterAdapter(event) {
+        let filteredAdapterTypes = this.filterAdapterType(this.adapterDescriptions);
+        let filteredAdapterTemplateTypes = this.filterAdapterType(this.adapters);
 
-        this.filteredAdapterDescriptions = this.adapterDescriptions;
-        this.filteredAdapters = this.adapters;
-        if (this.selected == this.categories[1]) {
-            for (let adapter of this.filteredAdapterDescriptions) {
-                if (!this.connectService.isDataSetDescription(adapter)) {
-                    this.filteredAdapterDescriptions = this.filteredAdapterDescriptions.filter(obj => obj !== adapter);
-                }
-            }
-            for (let adapter of this.filteredAdapters) {
-                if (!this.connectService.isDataSetDescription(adapter)) {
-                    this.filteredAdapters = this.filteredAdapters.filter(obj => obj !== adapter);
-                }
-            }
+        let filteredAdapterCategories = this.filterAdapterCategory(filteredAdapterTypes);
+        let filteredAdapterTemplateCategories = this.filterAdapterCategory(filteredAdapterTemplateTypes);
 
+        this.filteredAdapterDescriptions = filteredAdapterCategories;
+        this.filteredAdapters = filteredAdapterTemplateCategories;
+    }
+
+    filterAdapterCategory(currentElements: AdapterDescription[]): AdapterDescription[] {
+        if (this.selectedCategory == this.adapterCategories[0].type) {
+            return currentElements;
+        } else {
+            return currentElements.filter(adapterDescription => adapterDescription.category.indexOf(this.selectedCategory) != -1);
         }
+    }
 
-        else if (this.selected == this.categories[2]) {
-            for (let adapter of this.filteredAdapterDescriptions) {
-                if (this.connectService.isDataSetDescription(adapter)) {
-                    this.filteredAdapterDescriptions = this.filteredAdapterDescriptions.filter(obj => obj !== adapter);
-                }
-            }
-            for (let adapter of this.filteredAdapters) {
-                if (this.connectService.isDataSetDescription(adapter)) {
-                    this.filteredAdapters = this.filteredAdapters.filter(obj => obj !== adapter);
-                }
-            }
+    filterAdapterType(currentElements: AdapterDescription[]): AdapterDescription[] {
+        if (this.selectedType == this.adapterTypes[0]) {
+            return currentElements;
+        } else if (this.selectedType == this.adapterTypes[1]) {
+            return currentElements.filter(adapterDescription => this.connectService.isDataSetDescription(adapterDescription));
+        } else if (this.selectedType == this.adapterTypes[2]) {
+            return currentElements.filter(adapterDescription => !this.connectService.isDataSetDescription(adapterDescription));
         }
-
     }
 
 }

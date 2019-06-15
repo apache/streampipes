@@ -18,3 +18,5 @@
                             layer="0"></property-selection>
     </div>
 </div>
+<input type="hidden" name="{{ctrl.outputStrategy.properties.elementId}}" ng-model="ctrl.outputStrategy.properties.selectedPropertyKeys" custom-output-validator>
+<span ng-show="ctrl.customizeForm[ctrl.outputStrategy.properties.elementId].$invalid">Select at least one property.</span>

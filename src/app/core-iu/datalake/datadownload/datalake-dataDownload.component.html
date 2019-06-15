@@ -1,0 +1,22 @@
+<div>
+    <div *ngIf="!isDownloading">
+        <mat-radio-group layout="row" [(ngModel)]="downloadFormat">
+            <mat-radio-button value="json">
+                <b>JSON</b>
+            </mat-radio-button>
+            <mat-radio-button style="margin-left: 5px" value="csv">
+                <b>CSV</b>
+            </mat-radio-button>
+        </mat-radio-group>
+        <button   mat-icon-button matTooltip="Download data" (click)="downloadData()">
+            <mat-icon>
+                get_app
+            </mat-icon>
+        </button>
+    </div>
+    <div *ngIf="isDownloading">
+        <mat-spinner  [diameter]="40"></mat-spinner>
+        <label>{{downloadedMBs | number : '1.0-2' }} Mb</label>
+    </div>
+
+</div>

@@ -452,6 +452,10 @@ export class RestApi {
         return this.$http.get(this.getServerUrl() + "/categories/ep");
     }
 
+    getAdapterCategories() {
+        return this.$http.get(this.getServerUrl() + "/categories/adapter");
+    }
+
     getAvailableApps(elementId) {
         return this.$http.get(this.urlBase() +"/marketplace");
     }

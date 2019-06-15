@@ -5,6 +5,10 @@ import {RdfsClass} from '../../platform-services/tsonld/RdfsClass';
 @RdfsClass('sp:StaticProperty')
 export class StaticProperty {
   public isValid = false;
+
+  @RdfProperty('sp:hasIndex')
+  public index: number;
+
   // @RdfId
   // public id: string;
   //

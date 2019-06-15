@@ -34,6 +34,9 @@ export class AdapterDescription {
   @RdfProperty('sp:icon')
   public icon: string;
 
+  @RdfProperty('sp:hasAdapterType')
+  public category: string[] = [];
+
   @RdfProperty('sp:adapterType')
   public adapterType: string;
 

@@ -125,11 +125,11 @@ export class PipelineController {
                             });
                             //Droppable Actions
                         } else if (ui.draggable.hasClass('action')) {
-                            this.$timeout(() => {
-                                this.$timeout(() => {
+                             this.$timeout(() => {
+                                 this.$timeout(() => {
                                     this.JsplumbService.actionDropped(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, true, false);
-                                });
-                            });
+                                 });
+                             });
                         }
                         if (this.ShepherdService.isTourActive()) {
                             this.ShepherdService.trigger("drop-" +pipelineElementConfig.type);
@@ -232,7 +232,12 @@ export class PipelineController {
                             var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
                             if (this.PipelineEditorService.isFullyConnected(pe)) {
                                 if ((pe.payload.staticProperties && pe.payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
-                                    this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload);
+                                    this.EditorDialogManager.showCustomizeDialog($("#" +pe.payload.DOM), sourceEndpoint, pe.payload)
+                                        .then(() => {
+                                            this.JsplumbService.activateEndpoint(pe.payload.DOM, !pe.payload.uncompleted);
+                                        }, () => {
+                                            this.JsplumbService.activateEndpoint(pe.payload.DOM, !pe.payload.uncompleted);
+                                        });
                                 } else {
                                     this.$rootScope.$broadcast("SepaElementConfigured", pe.payload.DOM);
                                     pe.payload.configured = true;
@@ -243,7 +248,7 @@ export class PipelineController {
                             }
                         } else {
                             this.JsplumbBridge.detach(info.connection);
-                            this.EditorDialogManager.showMatchingErrorDialog(data);
+                                    this.EditorDialogManager.showMatchingErrorDialog(data);
                         }
                     });
             }

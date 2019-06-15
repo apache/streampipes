@@ -67,6 +67,7 @@
                                 <sp-button sp-button-blue ng-click="ctrl.createNewFile(newFile)">Create
                                     File
                                 </sp-button>
+                                <md-progress-circular md-diameter="96"  ng-if="ctrl.isGeneratingFile" ></md-progress-circular>
                             </section>
                         </div>
                     </div>

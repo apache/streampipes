@@ -32,22 +32,32 @@
 
     <div class="fixed-height" fxLayout="row" class="data-marketplace-options">
 
-            <mat-icon class="icon-style" >search</mat-icon>
+        <div class="data-marketplace-options-item" fxLayoutAlign="start center" fxLayout="row">
+            <mat-icon>search</mat-icon>
 
             <mat-form-field class="form-style">
                 <input matInput placeholder="Find Element" value="" (input)="updateFilterTerm($event.target.value)"
                     name="something">
             </mat-form-field>
-
-            <mat-icon class="icon-style" >list</mat-icon>
-
+        </div>
+        <div class="data-marketplace-options-item">
             <mat-form-field>
-                <mat-select [(value)]="selected" (selectionChange)="filterAdapterCategory($event)">
-                    <mat-option *ngFor="let categorie of categories" [value]="categorie">
-                        {{categorie}}
+                <mat-select [(value)]="selectedType" (selectionChange)="filterAdapter($event)">
+                    <mat-option *ngFor="let type of adapterTypes" [value]="type">
+                        {{type}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+        </div>
+        <div class="data-marketplace-options-item">
+            <mat-form-field>
+                <mat-select [(value)]="selectedCategory" (selectionChange)="filterAdapter($event)">
+                    <mat-option *ngFor="let category of adapterCategories" [value]="category.type">
+                        {{category.label}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
         <span fxFlex></span>
 
         <mat-icon class="icon-style" matTooltip="Download All Adapter Templates" (click)="downloadAllAdapterTemplates()" style="margin-right: 15px; cursor: pointer;">cloud_download</mat-icon>
@@ -64,12 +74,6 @@
                     [adapter]="adapterDescription" (updateAdapterEmitter)="updateDescriptionsAndRunningAdatpers()"></sp-adapter-description>
             </div>
 
-            <!--<div *ngIf="newAdapterFromDescription===undefined" fxLayout="row wrap" fxLayoutAlign="start stretch" class="adapter-description-container">-->
-            <!--<sp-adapter-description attr.id="{{adapterTemplate.label.replace(' ', '_')}}" class="adapter-description" fxFlex="33"-->
-            <!--(click)="selectAdapter(adapterTemplate)"-->
-            <!--*ngFor="let adapterTemplate of adapterTemplates"-->
-            <!--[adapter]="adapterTemplate"></sp-adapter-description>-->
-            <!--</div>-->
 
             <div class="new-adapter-container" fxFlex="100" fxLayout="row" fxLayoutAlign="start start" *ngIf="newAdapterFromDescription!==undefined">
                 <sp-new-adapter fxFlex="100" (removeSelectionEmitter)="removeSelection($event)" [adapter]="newAdapterFromDescription"

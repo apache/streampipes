@@ -1,0 +1,12 @@
+<sp-table
+    [data]="data"
+    [enableItemsPerPage]="true"
+    [enablePaging]="true"
+    [currentPage]="currentPage"
+    [maxPage]="maxPage"
+    (itemPerPageChange)="handleItemsPerPageChange($event)"
+    (nextPage)="handleNextPage()"
+    (previousPage)="handlePreviousPage()"
+    (firstPage)=handleFirstPage()
+    (lastPage)="handleLastPage()">
+</sp-table>

@@ -5,7 +5,8 @@ export let CustomOutputComponent = {
     template: require('./customoutput.tmpl.html'),
     bindings: {
         outputStrategy: "=",
-        selectedElement: "="
+        selectedElement: "=",
+        customizeForm: "="
     },
     controller: CustomOutputController,
     controllerAs: 'ctrl'

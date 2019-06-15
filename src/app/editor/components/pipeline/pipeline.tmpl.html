@@ -7,6 +7,11 @@
                  <md-progress-circular md-mode="indeterminate" class="pipeline-element-progress" md-diameter="40px"></md-progress-circular>
             </div>
             <div class="pipeline-element-loading-container sp-fade-opacity" ng-if="pipelineElement.settings.loadingStatus"></div>
+            <div class="pipeline-element-configuration-invalid {{pipelineElement.type === 'stream' ? 'pi-stream' : 'pi-processor'}}" ng-if="pipelineElement.payload.uncompleted">
+                <i class="material-icons pipeline-element-configuration-invalid-icon">
+                warning
+                </i>
+            </div>
             <pipeline-element pipeline-element="pipelineElement.payload" preview="ctrl.preview"></pipeline-element>
         </span>
          <pipeline-element-options ng-if="!ctrl.preview" delete-function="ctrl.handleDeleteOption"

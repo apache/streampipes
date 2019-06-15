@@ -18,7 +18,7 @@ export class CustomizeController {
     sepa: any;
     customizeForm: any;
     ShepherdService: any;
-    showDocumentation: any = false;
+    showDocumentation: boolean = false;
 
     constructor($rootScope, $mdDialog, elementData, sourceEndpoint, sepa, ShepherdService) {
         this.selectedElement = sepa;
@@ -40,23 +40,14 @@ export class CustomizeController {
         this.helpDialogVisible = !this.helpDialogVisible;
     }
 
-    setCurrentStaticProperty(staticProperty) {
-        this.currentStaticProperty = staticProperty;
-    }
-
-    getStaticPropertyInfo() {
-        var info = "";
-        if (this.currentStaticProperty.type == 'MAPPING_PROPERTY')
-            info += "This field is a mapping property. It requires you to select one or more specific data elements from a stream.<b>"
-        info += "This field requires the following specifc input: <b>";
-        return info;
-    }
-
     hide() {
         this.$mdDialog.hide();
     };
 
     cancel() {
+        if (this.customizeForm.$invalid) {
+            this.selectedElement.uncompleted = true;
+        }
         this.$mdDialog.cancel();
     };
 
@@ -91,10 +82,7 @@ export class CustomizeController {
         ;
 
         if (this.validate()) {
-            // this.$rootScope.state.currentElement.data("options", true);
-            // this.$rootScope.state.currentElement.data("JSON").staticProperties = this.selectedElement.staticProperties;
-            // this.$rootScope.state.currentElement.data("JSON").configured = true;
-            // this.$rootScope.state.currentElement.removeClass("disabled");
+            this.selectedElement.uncompleted = false;
             this.$rootScope.$broadcast("SepaElementConfigured", this.sepa.DOM);
             this.selectedElement.configured = true;
             this.hide();
@@ -121,15 +109,6 @@ export class CustomizeController {
                     if (option.selected) anyOccurrence = true;
                 });
                 if (!anyOccurrence) valid = false;
-            } else if (staticProperty.properties.staticPropertyType === 'FreeTextStaticProperty') {
-                if (!staticProperty.properties.value) {
-                    console.log("value missing");
-                    console.log(staticProperty);
-                    valid = false;
-                }
-                if (staticProperty.properties.requiredDatatype) {
-
-                }
             } else if (staticProperty.properties.staticPropertyType === 'MappingPropertyUnary') {
                 if (!staticProperty.properties.selectedProperty) {
                     valid = false;

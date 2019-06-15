@@ -13,7 +13,7 @@
     </div>
     <md-input-container ng-if="!ctrl.staticProperty.properties.multiLine"><label>{{ctrl.staticProperty.properties.description}}</label>
         <input name="{{ctrl.staticProperty.properties.elementName}}" ng-model="ctrl.staticProperty.properties.value"
-               text-validator="ctrl.staticProperty"/>
+               text-validator="ctrl.staticProperty" required/>
         <span ng-show="ctrl.customizeForm[ctrl.staticProperty.properties.elementName].$touched && ctrl.customizeForm[ctrl.staticProperty.properties.elementName].$error.textValidator">{{ctrl.getFriendlyDatatype()}}</span>
     </md-input-container>
     <div ng-if="ctrl.staticProperty.properties.multiLine">
@@ -52,9 +52,9 @@
         <div ng-if="!ctrl.selectedEventProperty.properties.valueSpecification" flex="100" layout="column">
             <md-input-container>
                 <label>{{ctrl.staticProperty.properties.description}}</label>
-                <input name="{{ctrl.staticProperty.properties.elementName}}"
-                       ng-model="ctrl.staticProperty.properties.value" text-validator="ctrl.staticProperty"/>
-                <span ng-show="ctrl.customizeForm[ctrl.staticProperty.properties.elementName].$touched && ctrl.customizeForm[ctrl.staticProperty.properties.elementName].$error.textValidator">{{ctrl.getFriendlyDatatype()}}</span>
+                <input name="{{ctrl.staticProperty.properties.elementId}}"
+                       ng-model="ctrl.staticProperty.properties.value" text-validator="ctrl.staticProperty" required/>
+                <span ng-show="ctrl.customizeForm[ctrl.staticProperty.properties.elementId].$touched && ctrl.customizeForm[ctrl.staticProperty.properties.elementId].$error.textValidator">{{ctrl.getFriendlyDatatype()}}</span>
             </md-input-container>
         </div>
         <div ng-if="ctrl.selectedEventProperty.properties.valueSpecification.type=='org.streampipes.model.schema.QuantitativeValue'">

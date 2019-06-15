@@ -1,6 +1,6 @@
 <div>
     <div class="assemblyOptions sp-blue-bg">
-        <div layout="row" layout-align="start center">
+        <div flex="100" layout="row" layout-align="start center">
             <md-button ng-disabled="!ctrl.PipelineValidationService.isValidPipeline(ctrl.rawPipelineModel)"
                        class="md-icon-button" ng-click="ctrl.submit()" type="submit">
                 <md-tooltip md-direction="top">
@@ -40,14 +40,18 @@
             </md-button>
             <span flex></span>
             <div style="position:relative;">
-                <md-button class="md-icon-button" ng-click="ctrl.toggleErrorMessagesDisplayed()" ng-disabled="ctrl.PipelineValidationService.errorMessages.length == 0">
-                    <i class="material-icons">
-                        notification_important
-                        <md-tooltip md-direction="top">
-                            Pipeline Errors
-                        </md-tooltip>
-                    </i>
-                </md-button>
+            <div ng-if="!ctrl.isPipelineAssemblyEmpty()" class="pipeline-validation-summary {{ctrl.PipelineValidationService.errorMessages.length > 0 ? 'pipeline-validation-summary-error' : ''}}" ng-click="ctrl.toggleErrorMessagesDisplayed()">
+                <div layout="row" layout-align="center center">
+                    <div layout="row" layout-align="start center">
+                        <i class="material-icons" ng-if="ctrl.PipelineValidationService.errorMessages.length > 0">notifications</i>
+                        <i class="material-icons" ng-if="ctrl.PipelineValidationService.errorMessages.length === 0">done</i>
+                    </div>
+                    <div>
+                        <span ng-if="ctrl.PipelineValidationService.errorMessages.length === 0">Pipeline ok</span>
+                        <span ng-if="ctrl.PipelineValidationService.errorMessages.length > 0">{{ctrl.PipelineValidationService.errorMessages.length}} {{ctrl.PipelineValidationService.errorMessages.length > 1 ? 'hints' : 'hint'}}</span>
+                    </div>
+                </div>
+            </div>
                 <div class="editor-error-notifications" ng-if="ctrl.PipelineValidationService.errorMessages.length > 0 && ctrl.errorMessagesDisplayed">
                     <h5 style="color:darkred"><b>{{ctrl.PipelineValidationService.errorMessages.length}} {{ctrl.PipelineValidationService.errorMessages.length == 1 ? "error" : "errors"}} found.</b></h5>
                     <hr/>

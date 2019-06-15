@@ -39,6 +39,7 @@ import {AddTimestampRuleDescription} from '../model/connect/rules/AddTimestampRu
 import {AddValueTransformationRuleDescription} from '../model/connect/rules/AddValueTransformationRuleDescription';
 import {FileStaticProperty} from '../model/FileStaticProperty';
 import {TimestampTransformationRuleDescription} from '../model/connect/rules/TimestampTransformationRuleDescription';
+import {RestApi} from "../../services/rest-api.service";
 
 @Injectable()
 export class DataMarketplaceService {
@@ -47,7 +48,8 @@ export class DataMarketplaceService {
   constructor(
     private http: HttpClient,
     private authStatusService: AuthStatusService,
-    private connectService: ConnectService
+    private connectService: ConnectService,
+    private restApi: RestApi
   ) {}
 
   private getTsonLd(): TsonLd {
@@ -115,11 +117,13 @@ export class DataMarketplaceService {
       )
       .pipe(map(response => {
         if(response['@graph'] === undefined) return [];
-        const res = this.getTsonLd().fromJsonLdType(
+        const res: AdapterDescriptionList = this.getTsonLd().fromJsonLdType(
           response,
           'sp:AdapterDescriptionList'
         );
-
+        res.list.forEach(adapterDescription => {
+          adapterDescription.config.sort((a, b) => a.index - b.index);
+        });
         return res.list;
       }));
   }
@@ -130,6 +134,14 @@ export class DataMarketplaceService {
 
   deleteAdapterTemplate(adapter: AdapterDescription): Observable<Object> {
       return this.deleteRequest(adapter, '/master/adapters/template/')
+  }
+
+  getAdapterCategories(): Observable<Object> {
+    return this.http.get(
+        this.baseUrl +
+        '/api/v2' +
+        "/categories/adapter"
+    )
   }
 
   private deleteRequest(adapter: AdapterDescription, url: String) {
@@ -155,7 +167,9 @@ export class DataMarketplaceService {
           response,
           'sp:ProtocolDescriptionList'
         );
-
+        res.list.forEach(protocolDescription => {
+          protocolDescription.config.sort((a, b) => a.index - b.index);
+        });
         return res.list;
       }));
   }
@@ -184,6 +198,7 @@ export class DataMarketplaceService {
           newAdapterDescription.description = protocol.description;
           newAdapterDescription.iconUrl = protocol.iconUrl;
           newAdapterDescription.uri = newAdapterDescription.id;
+          newAdapterDescription.category = protocol.category;
 
           if (
             newAdapterDescription instanceof GenericAdapterSetDescription ||
@@ -216,5 +231,9 @@ export class DataMarketplaceService {
       }
 
     return result;
+  }
+
+  private get baseUrl() {
+    return '/streampipes-backend';
   }
 }

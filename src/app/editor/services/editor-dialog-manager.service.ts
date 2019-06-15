@@ -37,7 +37,7 @@ export class EditorDialogManager {
             sourceEndpoint: sourceEndpoint,
             sepa: sepa
         }
-        this.$mdDialog.show(dialogContent);
+        return this.$mdDialog.show(dialogContent);
     };
 
     showCustomizeStreamDialog(streamDescription) {

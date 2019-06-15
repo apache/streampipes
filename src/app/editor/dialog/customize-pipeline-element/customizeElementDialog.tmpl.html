@@ -14,7 +14,7 @@
                 <div flex="100" layout="row"
                      style="border-bottom:1px solid #ccc;padding-left:10px;padding-right:10px;background-color:#f6f6f6">
                     <div flex="100" layout="row" layout-align="end end">
-                        <md-switch ng-model="ctrl.showDocumentation" aria-label="Switch 1">
+                        <md-switch ng-model="ctrl.showDocumentation" aria-label="Switch 1" ng-disabled="!ctrl.selectedElement.includesAssets">
                             Show documentation
                         </md-switch>
                         <md-switch ng-model="ctrl.displayRecommended" aria-label="Switch 1">
@@ -105,7 +105,7 @@
                                     </div>
                                     <div class="customize-item-content">
                                         <custom-output output-strategy="outputStrategy"
-                                                       selected-element="ctrl.selectedElement"></custom-output>
+                                                       selected-element="ctrl.selectedElement" customize-form="ctrl.customizeForm" ></custom-output>
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +120,7 @@
                 </div>
             </md-dialog-content>
             <md-dialog-actions layout="row">
-                <sp-button sp-button-gray ng-click="ctrl.hide()">
+                <sp-button sp-button-gray ng-click="ctrl.cancel()">
                     Close
                 </sp-button>
                 <sp-button sp-button-blue ng-disabled="ctrl.customizeForm.$invalid" type="submit"

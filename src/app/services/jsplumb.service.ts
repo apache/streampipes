@@ -51,6 +51,10 @@ export class JsplumbService {
         });
     }
 
+    activateEndpoint(endpointId, endpointEnabled) {
+        this.JsplumbBridge.selectEndpointsById(endpointId).setEnabled(endpointEnabled);
+    }
+
     makeRawPipeline(pipelineModel, isPreview) {
         return pipelineModel
             .streams

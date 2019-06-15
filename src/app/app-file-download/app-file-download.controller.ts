@@ -7,6 +7,8 @@ export class AppFileDownloadCtrl {
     $rootScope: any;
     searchIndex: any;
 
+    isGeneratingFile: boolean;
+
     constructor($rootScope, AppFileDownloadRestApi) {
         this.$rootScope = $rootScope;
         this.appFileDownloadRestApiService = AppFileDownloadRestApi;
@@ -19,6 +21,7 @@ export class AppFileDownloadCtrl {
     $onInit() {
         this.getFiles();
         this.getAvailableIndices();
+        this.isGeneratingFile = false;
 
         this.$rootScope.newFile = {
             allData: 'true',
@@ -48,13 +51,15 @@ export class AppFileDownloadCtrl {
 
     createNewFile(file) {
         if(file.index !== null) {
+            this.isGeneratingFile = true;
             var start = new Date(file.timestampFrom).getTime();
             var end = new Date(file.timestampTo).getTime();
             var output = file.output;
             var allData = file.allData;
             this.appFileDownloadRestApiService.createFile(file.index.indexName, start, end, output, allData).then((msg) => {
+                this.isGeneratingFile = false;
                 this.getFiles();
-            });
+            }).error(err => {console.log(err)});
         }
     };
 

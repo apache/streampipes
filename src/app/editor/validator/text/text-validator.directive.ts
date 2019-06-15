@@ -23,15 +23,18 @@ export class TextValidatorDirective {
     }
 
     validateText(modelValue, viewValue, sp) {
-        if (sp.properties.requiredDatatype) {
-            return this.typeCheck(modelValue, sp.properties.requiredDatatype);
-        } else if (sp.properties.requiredDomainProperty) {
-            // TODO why is type info stored in required domain property??
-            return this.typeCheck(modelValue, sp.properties.requiredDomainProperty);
+        if (modelValue === "" || modelValue === undefined) {
+            return false;
         } else {
-            return true;
+            if (sp.properties.requiredDatatype) {
+                return this.typeCheck(modelValue, sp.properties.requiredDatatype);
+            } else if (sp.properties.requiredDomainProperty) {
+                // TODO why is type info stored in required domain property??
+                return this.typeCheck(modelValue, sp.properties.requiredDomainProperty);
+            } else {
+                return true;
+            }
         }
-
     }
 
     typeCheck(property, datatype) {

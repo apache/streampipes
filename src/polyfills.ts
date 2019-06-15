@@ -1,3 +1,6 @@
+let __zone_symbol__BLACK_LISTED_EVENTS = ['scroll', 'mouseenter', 'mouseleave', 'mousemove', 'mouseover', 'mouseout', 'mousewheel', 'pointermove', 'keypress', 'keyup'];
+let __Zone_disable_PromiseRejectionEvent = true;
+
 /**
  * This file includes polyfills needed by Angular and is loaded before the app.
  * You can add your own extra polyfills to this file.

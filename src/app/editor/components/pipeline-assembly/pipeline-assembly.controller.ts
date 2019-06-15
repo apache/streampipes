@@ -1,3 +1,5 @@
+import {PipelineValidationService} from "../../services/pipeline-validation.service";
+
 export class PipelineAssemblyController {
 
     $timeout: any;
@@ -13,7 +15,7 @@ export class PipelineAssemblyController {
     preview: any;
     rawPipelineModel: any;
     PipelinePositioningService: any;
-    PipelineValidationService: any;
+    PipelineValidationService: PipelineValidationService;
     RestApi: any;
     selectMode: any;
     currentPipelineName: any;
@@ -167,6 +169,10 @@ export class PipelineAssemblyController {
 
     toggleErrorMessagesDisplayed() {
         this.errorMessagesDisplayed = !(this.errorMessagesDisplayed);
+    }
+
+    isPipelineAssemblyEmpty() {
+        return this.rawPipelineModel.length === 0 || this.rawPipelineModel.every(pe => pe.settings.disabled);
     }
 
 }

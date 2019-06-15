@@ -17,7 +17,7 @@
     </div>
     <div fxLayout="row">
         <div fxFlex="70" class="description" fxLayoutAlign="start start">
-            <p>{{adapter.description}}</p>
+            <p [innerHTML]="adapter.description"></p>
         </div>
         <div fxFlex="30" fxLayout="row" fxLayoutAlign="end end" *ngIf="isRunningAdapter(adapter)" class="delete">
             <button id="{{ 'create-template-' + adapter.label.split(' ').join('_') }}" matTooltip="Create Adapter Template" color="secondary" class="edit" mat-fab (click)="createTemplate(adapter)">

@@ -205,13 +205,11 @@ export class TsonLd {
       } else {
         objectProp = Reflect.getMetadata('TsProperty', c.prototype, property);
       }
-
       // skip the @type property
       if (property !== '@type') {
 
         // check whether property is object or literal
         if (typeof jsonObject[property] === 'object'  && !isUndefined(objectProp)) {
-
 
           // check if object or array
           if (Array.isArray(jsonObject[property])) {
@@ -284,9 +282,7 @@ export class TsonLd {
 
               // console.log('ddddd: ' + JSON.stringify(ids,null, 2));
               const current_id = jsonObject[property]['@id'];
-
               if (!isUndefined(current_id)) {
-
                 // TODO last statement either 0 or now graph does not contain object id with more
                 if (Object.keys(jsonObject[property]).length === 1 && isUndefined(ids[current_id]) && !this.containsIdObject(newObj['@graph'], current_id)) {
 
@@ -295,7 +291,6 @@ export class TsonLd {
 
                 } else {
                   // if object just contains an @id initialize it as a string
-
                   const nestedResult = this.fromJsonLd(newObj, ids, jsonObject[property]['@id']);
                   // case where array just has one element (this is serialized as an object)
 
@@ -307,6 +302,14 @@ export class TsonLd {
                   } else {
                     result[objectProp] = nestedResult;
                   }
+                }
+              } else {
+                // TODO check with Philipp
+                let type = jsonObject[property]['@type'];
+                if (type === 'xsd:int' || type === 'xsd:double' || type === 'xsd:float' || type === 'xsd:boolean') {
+                  result[objectProp] = +jsonObject[property]['@value'];
+                } else {
+                  result[objectProp] = jsonObject[property]['@value'];
                 }
               }
             }

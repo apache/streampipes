@@ -12,7 +12,6 @@ export class PropertySelectionController {
         } else {
             this.add(runtimeId);
         }
-        console.log(this.outputStrategy.properties.selectedPropertyKeys);
     }
 
     exists(runtimeId) {
@@ -21,6 +20,8 @@ export class PropertySelectionController {
 
     add(runtimeId) {
         this.outputStrategy.properties.selectedPropertyKeys.push(runtimeId);
+        // This is needed to trigger update of scope
+        this.outputStrategy.properties.selectedPropertyKeys = this.outputStrategy.properties.selectedPropertyKeys.filter(el => {return true;});
     }
 
     remove(runtimeId) {

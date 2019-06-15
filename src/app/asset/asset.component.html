@@ -1,0 +1,45 @@
+<div flex class="page-container page-container-padding" style="height: 1px">
+    <div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6; display: inline-block; width: 100%;" >
+        <div flex layout-fill layout="row" layout-align="start center"
+             style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+            <label style="font-size: 30px; padding-top: 10px;">Asset View</label>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+            <div layout-padding>
+                    <div class="assemblyOptions sp-blue-bg">
+
+                        <div fxLayout="row" fxLayoutAlign="space-between center" >
+                            <div>
+                                <h4 style="display: initial">Select Index:</h4>
+                                <mat-form-field style="margin-top: -10px; margin-bottom: -20px; margin-left: 10px;">
+                                    <input type="text" matInput  [formControl]="myControl" [matAutocomplete]="auto">
+                                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectIndex($event.option.value)">
+                                        <mat-option  *ngFor="let indexInfo of filteredIndexInfos | async" [value]="indexInfo.index">
+                                            {{indexInfo.index}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <sp-datalake-data-download *ngIf="selectedIndex != ''" [index]="selectedIndex" ></sp-datalake-data-download>
+                        </div>
+
+                    </div>
+                <div layout="row">
+                    <div class="sp-blue-border">
+
+                        <mat-tab-group>
+                            <mat-tab label="Table">
+                                <sp-datalake-table [index]="selectedIndex" *ngIf="selectedIndex != ''"></sp-datalake-table>
+                            </mat-tab>
+                            <mat-tab label="Line chart">
+                                <sp-datalake-lineChart [index]="selectedIndex" *ngIf="selectedIndex != ''"></sp-datalake-lineChart>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+
+                </div>
+            </div>
+    </div>
+</div>

@@ -70,7 +70,10 @@ export class JsplumbConfigService {
                         lineWidth: settings.arrowLineWidth
                     }
                 }],
-            ]
+            ],
+            parameters: {
+                endpointType: "output"
+            }
         }
     }
 
