@@ -16,7 +16,6 @@
 
 package org.streampipes.processors.aggregation.flink.processor.aggregation;
 
-import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -26,7 +25,13 @@ import org.streampipes.processors.aggregation.flink.config.AggregationFlinkConfi
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
+import org.streampipes.sdk.helpers.Options;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.Tuple2;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -70,8 +75,6 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
                             new Tuple2<>("Sum", "SUM"),
                             new Tuple2<>("Min", "MIN"),
                             new Tuple2<>("Max", "MAX")))
-            .supportedFormats(StandardTransportFormat.standardFormat())
-            .supportedProtocols(StandardTransportFormat.standardProtocols())
             .build();
   }
 

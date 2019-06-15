@@ -52,8 +52,6 @@ public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<
                     .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng)
                             , Labels.withId(MAPPING_LONGITUDE), PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .outputStrategy(OutputStrategies.append(
                     EpProperties.integerEp(Labels.empty(), SpatialGridConstants.GRID_X_KEY, SO.Number),
                     EpProperties.integerEp(Labels.empty(), SpatialGridConstants.GRID_Y_KEY, SO.Number),

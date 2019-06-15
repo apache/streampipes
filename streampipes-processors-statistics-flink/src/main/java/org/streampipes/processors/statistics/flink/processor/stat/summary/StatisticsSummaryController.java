@@ -29,8 +29,6 @@ import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.vocabulary.Statistics;
@@ -67,8 +65,6 @@ public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<Stat
                     EpProperties.doubleEp(Labels.empty(), STDDEV, Statistics.STDDEV),
                     EpProperties.doubleEp(Labels.empty(), VARIANCE, Statistics.VARIANCE),
                     EpProperties.doubleEp(Labels.empty(), N, Statistics.N)))
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 
