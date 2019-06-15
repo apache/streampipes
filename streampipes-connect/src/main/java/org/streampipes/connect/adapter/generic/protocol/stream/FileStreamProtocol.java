@@ -24,6 +24,7 @@ import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.connect.exception.ParseException;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
@@ -36,7 +37,6 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,13 +93,13 @@ public class FileStreamProtocol extends PullProtocol {
 
   @Override
   public ProtocolDescription declareModel() {
-    return ProtocolDescriptionBuilder.create(ID, "File", "Continuously streams the content of a " +
+    return ProtocolDescriptionBuilder.create(ID, "File Stream", "Continuously streams the content of a " +
             "file.")
             .sourceType(AdapterSourceType.STREAM)
+            .category(AdapterType.Generic)
             .iconUrl("file.png")
-            .requiredFile(Labels.from("filePath", "File", "This property defines the path to the file."))
-            .requiredIntegerParameter(Labels.from("interval", "Interval", "This property " +
-                    "defines the pull interval in seconds."))
+            .requiredFile(Labels.from("filePath", "File", "File path"))
+            .requiredIntegerParameter(Labels.from("interval", "Interval", "Example: 5 (Polling interval in seconds)"))
             .build();
   }
 

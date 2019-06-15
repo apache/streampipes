@@ -17,6 +17,7 @@
 
 package org.streampipes.connect.adapter;
 
+import org.streampipes.connect.adapter.util.TransportFormatGenerator;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
@@ -26,6 +27,7 @@ import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.model.grounding.TopicDefinition;
 import org.streampipes.model.schema.EventSchema;
 
+import java.util.Collections;
 import java.util.UUID;
 
 public class GroundingService {
@@ -63,12 +65,13 @@ public class GroundingService {
         transportProtocol.setBrokerHostname(kafkaHost);
         transportProtocol.setKafkaPort(kafkaPort);
 
-        String topic = "org.streampipes.connect." + UUID.randomUUID();
-        System.out.println("Topic: " + topic);
+        String topic = "org.streampipes.connect." + UUID.randomUUID().toString();
         TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
         transportProtocol.setTopicDefinition(topicDefinition);
 
         eventGrounding.setTransportProtocol(transportProtocol);
+        eventGrounding.setTransportFormats(Collections
+                .singletonList(TransportFormatGenerator.getTransportFormat()));
 
 
         return eventGrounding;

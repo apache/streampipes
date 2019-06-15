@@ -28,9 +28,8 @@ import org.streampipes.connect.adapter.generic.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
-import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.exception.ParseException;
-import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
@@ -67,11 +66,11 @@ public class FileProtocol extends Protocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        return ProtocolDescriptionBuilder.create(ID, "File", "Reads the content from a local file.")
+        return ProtocolDescriptionBuilder.create(ID, "File Set", "Reads the content from a local file.")
                 .sourceType(AdapterSourceType.SET)
+                .category(AdapterType.Generic)
                 .iconUrl("file.png")
-                .requiredFile(Labels.from("filePath", "File", "This " +
-                        "property defines the path to the file."))
+                .requiredFile(Labels.from("filePath", "File", "File Path"))
                 .build();
     }
 

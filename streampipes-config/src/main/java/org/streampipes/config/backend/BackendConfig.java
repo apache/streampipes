@@ -52,6 +52,11 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.DATA_LAKE_HOST, "elasticsearch", "The host of the data base used for the data lake");
     config.register(BackendConfigKeys.DATA_LAKE_PORT, 9200, "The port of the data base used for the data lake");
 
+    config.register(BackendConfigKeys.INFLUX_HOST, "influxdb", "The host of the influx data base");
+    config.register(BackendConfigKeys.INFLUX_PORT, 8086, "The hist of the influx data base");
+    config.register(BackendConfigKeys.INFLUX_DATA_BASE, "sp", "The influx data base name");
+    config.registerObject(BackendConfigKeys.MESSAGING_SETTINGS, MessagingSettings.fromDefault(),
+            "Default Messaging Settings");
   }
 
   public String getBackendHost() {
@@ -90,6 +95,11 @@ public enum BackendConfig {
     return config.getInteger(BackendConfigKeys.ZOOKEEPER_PORT);
   }
 
+  public MessagingSettings getMessagingSettings() {
+    return config.getObject(BackendConfigKeys.MESSAGING_SETTINGS, MessagingSettings.class,
+            new MessagingSettings());
+  }
+
   public boolean isConfigured() {
     return config.getBoolean(BackendConfigKeys.IS_CONFIGURED);
   }
@@ -104,6 +114,10 @@ public enum BackendConfig {
 
   public void setJmsHost(String s) {
     config.setString(BackendConfigKeys.JMS_HOST, s);
+  }
+
+  public void setMessagingSettings(MessagingSettings settings) {
+    config.setObject(BackendConfigKeys.MESSAGING_SETTINGS, settings);
   }
 
   public void setIsConfigured(boolean b) {
@@ -150,12 +164,25 @@ public enum BackendConfig {
     return config.getInteger(BackendConfigKeys.DATA_LAKE_PORT);
   }
 
-
   public String getDataLakeUrl() {
     return getDatalakeHost() + ":" + getDatalakePort();
   }
 
+  public String getInfluxHost() {
+    return config.getString(BackendConfigKeys.INFLUX_HOST);
+  }
 
+  public int getInfluxPort() {
+    return config.getInteger(BackendConfigKeys.INFLUX_PORT);
+  }
+
+  public String getInfluxUrl() {
+    return "http://" + getInfluxHost() + ":" + getInfluxPort();
+  }
+
+  public String getInfluxDatabaseName() {
+    return config.getString(BackendConfigKeys.INFLUX_DATA_BASE);
+  }
 
 
 }

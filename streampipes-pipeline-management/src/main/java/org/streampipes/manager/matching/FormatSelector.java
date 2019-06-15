@@ -17,6 +17,8 @@
 
 package org.streampipes.manager.matching;
 
+import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.config.backend.SpDataFormat;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.SpDataStream;
@@ -40,13 +42,16 @@ public class FormatSelector extends GroundingSelector {
                     .getTransportFormats()
                     .get(0);
         } else {
-            if (supportsFormat(MessageFormat.Json)) {
-                return new TransportFormat(MessageFormat.Json);
-            } else if (supportsFormat(MessageFormat.Thrift)) {
-                return new TransportFormat(MessageFormat.Thrift);
-            }
+            List<SpDataFormat> prioritizedFormats =
+                    BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedFormats();
+
+            return prioritizedFormats
+                    .stream()
+                    .filter(pf -> supportsFormat(pf.getMessageFormat()))
+                    .findFirst()
+                    .map(pf -> new TransportFormat(pf.getMessageFormat()))
+                    .orElse(new TransportFormat(MessageFormat.Json));
         }
-        return new TransportFormat(MessageFormat.Json);
     }
 
     public <T extends TransportFormat> boolean supportsFormat(String format) {

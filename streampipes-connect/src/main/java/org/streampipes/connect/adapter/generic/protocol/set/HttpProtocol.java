@@ -28,6 +28,7 @@ import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.connect.exception.ParseException;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
@@ -61,10 +62,10 @@ public class HttpProtocol extends Protocol {
     public ProtocolDescription declareModel() {
         return ProtocolDescriptionBuilder.create(ID, "HTTP Set", "Reads the content from an HTTP " +
                 "endpoint.")
+                .category(AdapterType.Generic)
                 .sourceType(AdapterSourceType.SET)
                 .iconUrl("rest.png")
-                .requiredTextParameter(Labels.from("url", "url", "This property defines the URL " +
-                        "for the http request."))
+                .requiredTextParameter(Labels.from("url", "Url", "Example: http(s)://test-server.com"))
                 .build();
     }
 

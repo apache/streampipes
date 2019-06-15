@@ -19,6 +19,7 @@ package org.streampipes.rest.application;
 
 import org.streampipes.rest.impl.*;
 import org.streampipes.rest.impl.datalake.DataLakeResource;
+import org.streampipes.rest.impl.datalake.DataLakeResourceV3;
 import org.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
 import org.streampipes.rest.impl.nouser.PipelineNoUserResource;
 import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
@@ -72,6 +73,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(PipelineElementRuntimeInfo.class);
         apiClasses.add(Version.class);
         apiClasses.add(PipelineElementAsset.class);
+        apiClasses.add(DataLakeResourceV3.class);
 
 
         // Serializers

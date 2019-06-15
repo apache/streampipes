@@ -26,6 +26,7 @@ import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.exception.ParseException;
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
@@ -44,7 +45,6 @@ import java.util.Map;
 public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
     public static final String ID = "http://streampipes.org/adapter/specific/opcua";
-
 
     private static final String OPC_SERVER_HOST = "OPC_SERVER_HOST";
     private static final String OPC_SERVER_PORT = "OPC_SERVER_PORT";
@@ -82,9 +82,10 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
         SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "OPC UA", "Read values form an opc ua server")
                 .iconUrl("opc.jpg")
-                .requiredTextParameter(Labels.from(OPC_SERVER_HOST, "OPC Server", "URL of the OPC UA server. No leading opc.tcp://"))
-                .requiredTextParameter(Labels.from(OPC_SERVER_PORT, "OPC Server Port", "Port of the OPC UA server. Default: 4840"))
-                .requiredTextParameter(Labels.from(NAMESPACE_INDEX, "Namespace Index", "Index of the Namespace of the node"))
+                .category(AdapterType.Generic, AdapterType.Manufacturing)
+                .requiredTextParameter(Labels.from(OPC_SERVER_HOST, "OPC Server", "Example: test-server.com (No leading opc.tcp://) "))
+                .requiredTextParameter(Labels.from(OPC_SERVER_PORT, "OPC Server Port", "Example: 4840"))
+                .requiredTextParameter(Labels.from(NAMESPACE_INDEX, "Namespace Index", "Example: 2"))
                 .requiredTextParameter(Labels.from(NODE_ID, "Node Id", "Id of the Node to read the values from"))
                 .build();
         description.setAppId(ID);

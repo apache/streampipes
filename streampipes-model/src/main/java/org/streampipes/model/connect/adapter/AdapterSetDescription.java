@@ -44,6 +44,9 @@ public abstract class AdapterSetDescription extends AdapterDescription {
     @RdfProperty("sp:hasDataSet")
     private SpDataSet dataSet;
 
+    @RdfProperty("sp:stopPipeline")
+    private boolean stopPipeline;
+
     public SpDataSet getDataSet() {
         return dataSet;
     }
@@ -52,4 +55,11 @@ public abstract class AdapterSetDescription extends AdapterDescription {
         this.dataSet = dataSet;
     }
 
+    public boolean isStopPipeline() {
+        return stopPipeline;
+    }
+
+    public void setStopPipeline(boolean stopPipeline) {
+        this.stopPipeline = stopPipeline;
+    }
 }

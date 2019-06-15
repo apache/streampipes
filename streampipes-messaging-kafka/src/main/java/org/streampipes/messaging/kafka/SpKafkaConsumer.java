@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.InternalEventProcessor;
+import org.streampipes.messaging.kafka.config.ConsumerConfigFactory;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.model.grounding.WildcardTopicDefinition;
@@ -35,16 +36,14 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Properties;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, Runnable,
         Serializable {
 
-  private String kafkaUrl;
   private String topic;
-  private String groupId;
   private InternalEventProcessor<byte[]> eventProcessor;
+  private KafkaTransportProtocol protocol;
   private volatile boolean isRunning;
   private Boolean patternTopic = false;
 
@@ -103,20 +102,7 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
   }
 
   private Properties getProperties() {
-    Properties props = new Properties();
-    props.put("bootstrap.servers", kafkaUrl);
-    props.put("group.id", groupId);
-    props.put("enable.auto.commit", "true");
-    props.put("auto.commit.interval.ms", "10000");
-    props.put("session.timeout.ms", "30000");
-    props.put("message.max.bytes", 5000012);
-    props.put("fetch.message.max.bytes", 5000012);
-    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-    props.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
-    props.put("zookeeper.session.timeout.ms", "60000");
-    props.put("zookeeper.sync.time.ms", "20000");
-    props.put("client.id", UUID.randomUUID().toString());
-    return props;
+    return new ConsumerConfigFactory(protocol).makeProperties();
   }
 
   @Override
@@ -128,9 +114,8 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
       this.patternTopic = true;
     }
     this.eventProcessor = eventProcessor;
-    this.kafkaUrl = protocol.getBrokerHostname() + ":" + protocol.getKafkaPort();
+    this.protocol = protocol;
     this.topic = protocol.getTopicDefinition().getActualTopicName();
-    this.groupId = UUID.randomUUID().toString();
     this.isRunning = true;
 
     Thread thread = new Thread(this);

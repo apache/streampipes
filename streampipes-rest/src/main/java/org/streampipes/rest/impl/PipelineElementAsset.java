@@ -37,7 +37,6 @@ public class PipelineElementAsset extends AbstractRestInterface implements IPipe
     try {
       return ok(AssetManager.getAssetIcon(appId));
     } catch (IOException e) {
-      e.printStackTrace();
       return fail();
     }
   }
@@ -49,7 +48,6 @@ public class PipelineElementAsset extends AbstractRestInterface implements IPipe
     try {
       return ok(AssetManager.getAssetDocumentation(appId));
     } catch (IOException e) {
-      e.printStackTrace();
       return fail();
     }
   }

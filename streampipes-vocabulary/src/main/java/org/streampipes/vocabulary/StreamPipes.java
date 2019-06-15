@@ -136,6 +136,7 @@ public class StreamPipes {
   public static final String HAS_OUTPUT_STRATEGY = NS + "hasOutputStrategy";
   public static final String HAS_EPA_TYPE = NS + "hasEpaType";
   public static final String HAS_EC_TYPE = NS + "hasEcType";
+  public static final String HAS_ADAPTER_TYPE = NS + "hasAdapterType";
   public static final String PRODUCES = NS + "produces";
 
   public static final String HAS_TRANSPORT_PROTOCOL = NS + "hasTransportProtocol";
@@ -144,13 +145,21 @@ public class StreamPipes {
 
   public static final String ZOOKEEPER_HOST = NS + "zookeeperHost";
   public static final String ZOOKEEPER_PORT = NS + "zookeeperPort";
-  public static final String KAFKA_PORT = NS + "kafkaPort";
 
   public static final String BROKER_HOSTNAME = NS + "brokerHostname";
   public static final String TOPIC = NS + "topic";
 
   public static final String ELEMENT_IDENTIFIER = NS + "elementIdentifier";
+
+  public static final String KAFKA_PORT = NS + "kafkaPort";
   public static final String KAFKA_HOST = NS + "kafkaHost";
+  public static final String KAFKA_LINGER_MS = NS + "kafkaLingerMs";
+  public static final String KAFKA_MESSAGE_MAX_BYTES = NS + "kafkaMessageMaxBytes";
+  public static final String KAFKA_ACKS = NS + "kafkaAcks";
+  public static final String KAFKA_BATCH_SIZE = NS + "kafkaBatchSize";
+  public static final String KAFKA_OFFSET = NS + "kafkaOffset";
+  public static final String KAFKA_GROUP_ID = NS + "kafkaGroupId";
+
   public static final String ERROR_TOPIC = NS + "errorTopic";
   public static final String STATS_TOPIC = NS + "statsTopic";
 
@@ -324,4 +333,5 @@ public class StreamPipes {
   public static final String INCLUDED_ASSETS = NS + "includedAssets";
   public static final String INCLUDES_LOCALES = NS + "includesLocales";
   public static final String INCLUDED_LOCALES = NS + "includedLocales";
+
 }

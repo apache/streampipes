@@ -21,6 +21,8 @@ import org.streampipes.model.grounding.TransportProtocol;
 
 public abstract class SpProtocolDefinitionFactory<T extends TransportProtocol> {
 
+  public abstract TransportProtocol getTransportProtocol();
+
   public abstract String getTransportProtocolClass();
 
   public abstract SpProtocolDefinition<T> createInstance();

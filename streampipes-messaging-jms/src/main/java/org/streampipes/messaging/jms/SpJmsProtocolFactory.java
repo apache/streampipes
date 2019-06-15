@@ -19,8 +19,14 @@ package org.streampipes.messaging.jms;
 import org.streampipes.messaging.SpProtocolDefinition;
 import org.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.model.grounding.TransportProtocol;
 
 public class SpJmsProtocolFactory extends SpProtocolDefinitionFactory<JmsTransportProtocol> {
+
+  @Override
+  public TransportProtocol getTransportProtocol() {
+    return new JmsTransportProtocol();
+  }
 
   @Override
   public String getTransportProtocolClass() {

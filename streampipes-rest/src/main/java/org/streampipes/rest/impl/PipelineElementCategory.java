@@ -17,6 +17,7 @@
 
 package org.streampipes.rest.impl;
 
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.client.Category;
@@ -49,6 +50,14 @@ public class PipelineElementCategory extends AbstractRestInterface implements IP
 	@Override
 	public Response getEpaCategories() {
 		return ok(DataProcessorType.values());
+	}
+
+	@GET
+	@Path("/adapter")
+	@Produces("application/json")
+	@Override
+	public Response getAdapterCategories() {
+		return ok(AdapterType.values());
 	}
 
 	@GET

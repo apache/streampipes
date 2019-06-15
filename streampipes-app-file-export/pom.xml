@@ -21,14 +21,11 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.61.1-SNAPSHOT</version>
+        <version>0.62.1-SNAPSHOT</version>
     </parent>
     <name>StreamPipes App File Export</name>
     <artifactId>streampipes-app-file-export</artifactId>
     <packaging>jar</packaging>
-    <properties>
-        <jersey.version>2.22.1</jersey.version>
-    </properties>
 
     <dependencies>
         <dependency>

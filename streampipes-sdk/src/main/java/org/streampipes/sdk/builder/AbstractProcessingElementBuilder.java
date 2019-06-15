@@ -286,6 +286,11 @@ public abstract class AbstractProcessingElementBuilder<BU extends
     }
 
     this.elementDescription.setSupportedGrounding(supportedGrounding);
+
+    for(int i = 0; i < streamRequirements.size(); i++) {
+      streamRequirements.get(i).setIndex(i);
+    }
+
     this.elementDescription.setSpDataStreams(streamRequirements);
 
   }

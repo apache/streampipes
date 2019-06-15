@@ -15,9 +15,13 @@ limitations under the License.
 */
 package org.streampipes.sdk.builder.adapter;
 
+import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
 import org.streampipes.sdk.helpers.AdapterSourceType;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class ProtocolDescriptionBuilder extends
         AbstractConfigurablePipelineElementBuilder<ProtocolDescriptionBuilder, ProtocolDescription> {
@@ -39,6 +43,15 @@ public class ProtocolDescriptionBuilder extends
   public ProtocolDescriptionBuilder sourceType(AdapterSourceType sourceType) {
     this.elementDescription.setSourceType(sourceType.toString());
     return this;
+  }
+
+  public ProtocolDescriptionBuilder category(AdapterType... categories) {
+    this.elementDescription
+            .setCategory(Arrays
+                    .stream(categories)
+                    .map(Enum::name)
+                    .collect(Collectors.toList()));
+    return me();
   }
 
   @Override

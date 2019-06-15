@@ -20,15 +20,11 @@
 	<parent>
 		<artifactId>streampipes-parent</artifactId>
 		<groupId>org.streampipes</groupId>
-		<version>0.61.1-SNAPSHOT</version>
+		<version>0.62.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>streampipes-rest-shared</artifactId>
-
-	<properties>
-		<jersey.version>2.22.2</jersey.version>
-	</properties>
 
 	<dependencies>
         <dependency>
@@ -48,22 +44,18 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet</artifactId>
-			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
-			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-multipart</artifactId>
-			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-jetty-http</artifactId>
-			<version>${jersey.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.jetty</groupId>

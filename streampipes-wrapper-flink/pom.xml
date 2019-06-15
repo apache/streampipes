@@ -20,13 +20,12 @@
     <parent>
         <groupId>org.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.61.1-SNAPSHOT</version>
+        <version>0.62.1-SNAPSHOT</version>
     </parent>
     <artifactId>streampipes-wrapper-flink</artifactId>
     <name>StreamPipes Wrapper for Apache Flink</name>
     <properties>
-        <jackson.version>2.7.4</jackson.version>
-        <flink.version>1.4.0</flink.version>
+        <flink.version>1.8.0</flink.version>
     </properties>
     <dependencies>
         <dependency>
@@ -37,12 +36,10 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
@@ -88,7 +85,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-kafka-0.11_2.11</artifactId>
+            <artifactId>flink-connector-kafka_2.11</artifactId>
             <version>${flink.version}</version>
         </dependency>
         <dependency>
