@@ -67,17 +67,18 @@ export class AdapterStartedDialog {
                     }
 
                     if (this.data.saveInDataLake) {
-                        const templateName = "org.streampipes.manager.template.instances.ElasticsearchPipelineTemplate";
+                        const templateName = "org.streampipes.manager.template.instances.DataLakePipelineTemplate";
                         x.notifications[0].title
                         this.pipelineTemplateService.getPipelineTemplateInvocation(x.notifications[0].title + "/streams", templateName)
                             .subscribe(res => {
 
                                 res.list.forEach(property => {
-                                    if (property instanceof FreeTextStaticProperty && "domId2index-name" == property.internalName) {
+                                    if (property instanceof FreeTextStaticProperty && "domId2db_measurement" == property.internalName) {
                                         property.value = this.data.adapter.label.toLowerCase().replace(" ", "_");
-                                    } else if (property instanceof MappingPropertyUnary && "domId2timestamp-mapping" == property.internalName) {
+                                    } else if (property instanceof MappingPropertyUnary && "domId2timestamp_mapping" == property.internalName) {
                                         property.selectedProperties = ["s0::" + this.data.dataLakeTimestampField]
                                     }
+
 
                                 });
 
