@@ -19,43 +19,46 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.dataformat.SpDataFormatDefinition;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.jms.ActiveMQConsumer;
 import org.streampipes.model.grounding.JmsTransportProtocol;
 
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class JmsConsumer implements SourceFunction<String>, Serializable {
+public class JmsConsumer implements SourceFunction<Map<String, Object>>, Serializable {
 
   private static final Logger LOG = LoggerFactory.getLogger(JmsConsumer.class);
 
   private JmsTransportProtocol protocol;
   private ActiveMQConsumer activeMQConsumer;
+  private SpDataFormatDefinition spDataFormatDefinition;
   private Boolean isRunning;
-  private Queue<String> queue;
+  private Queue<byte[]> queue;
 
-  public JmsConsumer(JmsTransportProtocol protocol) {
+  public JmsConsumer(JmsTransportProtocol protocol, SpDataFormatDefinition spDataFormatDefinition) {
     this.protocol = protocol;
     this.activeMQConsumer = new ActiveMQConsumer();
+    this.spDataFormatDefinition = spDataFormatDefinition;
     this.queue = new LinkedBlockingQueue<>();
   }
 
   @Override
-  public void run(SourceContext<String> sourceContext) throws Exception {
+  public void run(SourceContext<Map<String, Object>> sourceContext) throws Exception {
     this.isRunning = true;
     this.activeMQConsumer.connect(protocol, new InternalEventProcessor<byte[]>() {
       @Override
       public void onEvent(byte[] event) {
-        queue.add(new String(event, StandardCharsets.UTF_8));
+        queue.add(event);
       }
     });
 
     while (isRunning) {
       if (!queue.isEmpty()) {
-        sourceContext.collect(queue.poll());
+        sourceContext.collect(spDataFormatDefinition.toMap(queue.poll()));
       } else {
         Thread.sleep(100);
       }

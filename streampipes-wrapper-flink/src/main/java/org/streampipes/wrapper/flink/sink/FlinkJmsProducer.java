@@ -17,47 +17,48 @@
 
 package org.streampipes.wrapper.flink.sink;
 
-import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
-import org.apache.flink.streaming.util.serialization.SerializationSchema;
+import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.wrapper.flink.serializer.ByteArraySerializer;
+
+import java.util.Map;
 
 
-public class FlinkJmsProducer<IN> extends RichSinkFunction<IN>  { 
+public class FlinkJmsProducer extends RichSinkFunction<Map<String, Object>> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private JmsTransportProtocol protocol;
-	
-	private SerializationSchema<IN> serializationSchema;
-	
-	private ActiveMQPublisher publisher;
-	
-	public FlinkJmsProducer(JmsTransportProtocol protocol, SerializationSchema<IN>
-					serializationSchema) {
-		this.protocol = protocol;
-		this.serializationSchema = serializationSchema;
-	}
-	
-	@Override
-	public void open(Configuration configuration) throws Exception {
-		try {
-			publisher = new ActiveMQPublisher();
-			publisher.connect(protocol);
-		} catch (Exception e)
-		{
-			throw new Exception("Failed to open Jms connection: " + e.getMessage(), e);
-		}
-	}
-	
-	@Override
-	public void invoke(IN value) throws Exception {
-		byte[] msg = serializationSchema.serialize(value);
-		publisher.publish(msg);
-	}
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+  private JmsTransportProtocol protocol;
+
+  private ByteArraySerializer serializationSchema;
+
+  private ActiveMQPublisher publisher;
+
+  public FlinkJmsProducer(JmsTransportProtocol protocol, ByteArraySerializer
+          serializationSchema) {
+    this.protocol = protocol;
+    this.serializationSchema = serializationSchema;
+  }
+
+  @Override
+  public void open(Configuration configuration) throws Exception {
+    try {
+      publisher = new ActiveMQPublisher();
+      publisher.connect(protocol);
+    } catch (Exception e) {
+      throw new Exception("Failed to open Jms connection: " + e.getMessage(), e);
+    }
+  }
+
+  @Override
+  public void invoke(Map<String, Object> value) throws Exception {
+    byte[] msg = serializationSchema.serialize(value);
+    publisher.publish(msg);
+  }
 }
 
 
