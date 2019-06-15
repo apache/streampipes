@@ -18,6 +18,10 @@ package org.streampipes.processors.aggregation.flink;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.streampipes.dataformat.fst.FstDataFormatFactory;
+import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.streampipes.processors.aggregation.flink.config.AggregationFlinkConfig;
 import org.streampipes.processors.aggregation.flink.processor.aggregation.AggregationController;
 import org.streampipes.processors.aggregation.flink.processor.count.CountController;
@@ -30,6 +34,11 @@ public class AggregationFlinkInit extends StandaloneModelSubmitter {
             .add(new AggregationController())
             .add(new CountController())
             .add(new EventRateController());
+
+    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory());
 
     new AggregationFlinkInit().init(AggregationFlinkConfig.INSTANCE);
   }

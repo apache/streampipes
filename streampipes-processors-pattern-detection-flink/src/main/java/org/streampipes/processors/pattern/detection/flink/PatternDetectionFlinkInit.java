@@ -18,6 +18,10 @@ package org.streampipes.processors.pattern.detection.flink;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.streampipes.dataformat.fst.FstDataFormatFactory;
+import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.streampipes.processors.pattern.detection.flink.config.PatternDetectionFlinkConfig;
 import org.streampipes.processors.pattern.detection.flink.processor.peak.PeakDetectionController;
 
@@ -29,6 +33,11 @@ public class PatternDetectionFlinkInit extends StandaloneModelSubmitter {
 //            .add(new SequenceController())
 //            .add(new AbsenceController())
 //            .add(new AndController());
+
+    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory());
 
     new PatternDetectionFlinkInit().init(PatternDetectionFlinkConfig.INSTANCE);
   }
