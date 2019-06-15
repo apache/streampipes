@@ -11,6 +11,7 @@
 
     <properties>
         <lightcouch.version>0.1.8</lightcouch.version>
+        <influxdb.java.version>2.14</influxdb.java.version>
     </properties>
 
     <dependencies>
@@ -58,6 +59,11 @@
             <groupId>org.lightcouch</groupId>
             <artifactId>lightcouch</artifactId>
             <version>${lightcouch.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.influxdb</groupId>
+            <artifactId>influxdb-java</artifactId>
+            <version>${influxdb.java.version}</version>
         </dependency>
     </dependencies>
 
