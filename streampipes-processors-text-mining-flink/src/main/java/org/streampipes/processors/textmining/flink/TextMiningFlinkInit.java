@@ -18,6 +18,10 @@ package org.streampipes.processors.textmining.flink;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.streampipes.dataformat.fst.FstDataFormatFactory;
+import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.streampipes.processors.textmining.flink.config.TextMiningFlinkConfig;
 import org.streampipes.processors.textmining.flink.processor.wordcount.WordCountController;
 
@@ -27,6 +31,11 @@ public class TextMiningFlinkInit extends StandaloneModelSubmitter {
     DeclarersSingleton.getInstance()
 //            .add(new LanguageDetectionController())
             .add(new WordCountController());
+
+    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory());
 
     new TextMiningFlinkInit().init(TextMiningFlinkConfig.INSTANCE);
   }

@@ -19,6 +19,10 @@ package org.streampipes.processors.transformation.flink;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.streampipes.dataformat.fst.FstDataFormatFactory;
+import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.streampipes.processors.transformation.flink.config.TransformationFlinkConfig;
 import org.streampipes.processors.transformation.flink.processor.boilerplate.BoilerplateController;
 import org.streampipes.processors.transformation.flink.processor.converter.FieldConverterController;
@@ -37,6 +41,11 @@ public class TransformationFlinkInit extends StandaloneModelSubmitter {
             .add(new MeasurementUnitConverterController())
             .add(new FieldRenamerController())
             .add(new BoilerplateController());
+
+    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory());
 
     new TransformationFlinkInit().init(TransformationFlinkConfig.INSTANCE);
   }
