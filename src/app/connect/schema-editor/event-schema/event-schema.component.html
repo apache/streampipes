@@ -40,8 +40,15 @@
 </div>
 
 <div fxLayout="column" fxLayoutAlign="space-evenly stretched" >
+    <!--
     <app-event-property-bag [(eventProperties)]="eventSchema.eventProperties" [domainPropertyGuesses]="schemaGuess.eventProperties" [isEditable]="isEditable">
     </app-event-property-bag>
+-->
+    <cdk-tree #treeSelector [dataSource]="datasource" [treeControl]="treeControl" cdkDropList (cdkDropListDropped)="drop($event)">
+        <cdk-tree-node style="display: flex" *cdkTreeNodeDef="let node;" cdkTreeNodePadding cdkDrag [cdkDragData]="node">
+            {{node.runTimeName}} 
+        </cdk-tree-node>
+    </cdk-tree>
 </div>
 
 

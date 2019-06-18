@@ -67,6 +67,7 @@ import { TsonLdSerializerService } from './tsonld-serializer.service';
 import { EventPropertyListComponent } from './schema-editor/event-property-list/event-property-list.component';
 
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {CdkTreeModule} from '@angular/cdk/tree';
 
 
 @NgModule({
@@ -83,6 +84,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     MatInputModule,
     MatFormFieldModule,
     DragDropModule,
+    CdkTreeModule,
   ],
   exports: [StaticPropertyComponent],
   declarations: [
