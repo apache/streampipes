@@ -67,6 +67,11 @@
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-jms</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.opennlp</groupId>
+            <artifactId>opennlp-tools</artifactId>
+            <version>1.9.0</version>
+        </dependency>
     </dependencies>
 
     <build>

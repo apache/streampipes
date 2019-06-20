@@ -20,12 +20,13 @@ package org.streampipes.processors.textmining.jvm;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.processors.textmining.jvm.config.TextMiningJvmConfig;
+import org.streampipes.processors.textmining.jvm.processor.language.LanguageDetectionController;
 
 public class TextMiningJvmInit extends StandaloneModelSubmitter {
     public static void main(String[] args) {
-        DeclarersSingleton.getInstance();
-//            .add(new LanguageDetectionController())
-//                .add(new WordCountController());
+        DeclarersSingleton
+                .getInstance()
+                .add(new LanguageDetectionController());
 
         new TextMiningJvmInit().init(TextMiningJvmConfig.INSTANCE);
     }

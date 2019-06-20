@@ -17,41 +17,53 @@
 
 package org.streampipes.processors.textmining.jvm.processor.language;
 
+import opennlp.tools.langdetect.Language;
+import opennlp.tools.langdetect.LanguageDetector;
+import opennlp.tools.langdetect.LanguageDetectorME;
+import opennlp.tools.langdetect.LanguageDetectorModel;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
-public class ChangedValueDetection implements EventProcessor<ChangedValueDetectionParameters> {
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+public class LanguageDetection implements EventProcessor<LanguageDetectionParameters> {
 
   private static Logger LOG;
 
-  private String compareParameter;
-  private String changeFieldName;
-  private Object lastObject = null;
+  private String detection;
+  private LanguageDetector myCategorizer;
+
+  public LanguageDetection() {
+    try (InputStream modelIn = new FileInputStream("language-detection.bin")) {
+      LanguageDetectorModel model = new LanguageDetectorModel(modelIn);
+      myCategorizer = new LanguageDetectorME(model);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
   @Override
-  public void onInvocation(ChangedValueDetectionParameters changedValueDetectionParameters,
-                            SpOutputCollector spOutputCollector,
-                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = changedValueDetectionParameters.getGraph().getLogger(ChangedValueDetection.class);
-    this.compareParameter = changedValueDetectionParameters.getCompareField();
-    this.changeFieldName = changedValueDetectionParameters.getChangeFieldName();
+  public void onInvocation(LanguageDetectionParameters languageDetectionParameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
+    LOG = languageDetectionParameters.getGraph().getLogger(LanguageDetection.class);
+    this.detection = languageDetectionParameters.getDetectionName();
   }
 
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
-    Object newObject = inputEvent.getFieldBySelector(compareParameter).getRawValue();
+    String text = inputEvent.getFieldBySelector(detection).getAsPrimitive().getAsString();
+    Language language = myCategorizer.predictLanguage(text);
 
-    if (newObject != null) {
-      if (!newObject.equals(lastObject)) {
-        lastObject = newObject;
-        //TODO: Better handling of multiple timestamps (if the field "change_detected" is already in the input)?
-        inputEvent.addField(changeFieldName, System.currentTimeMillis());
-        out.collect(inputEvent);
-      }
-    }
+    inputEvent.addField(LanguageDetectionController.LANGUAGE_KEY, language.getLang());
+    inputEvent.addField(LanguageDetectionController.CONFIDENCE_KEY, language.getConfidence());
+
+    out.collect(inputEvent);
   }
 
   @Override

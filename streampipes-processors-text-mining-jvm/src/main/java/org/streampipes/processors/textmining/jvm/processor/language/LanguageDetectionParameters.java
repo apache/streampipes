@@ -20,21 +20,16 @@ package org.streampipes.processors.textmining.jvm.processor.language;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class ChangedValueDetectionParameters extends EventProcessorBindingParams {
-    private String compareField;
-    private String changeFieldName;
+public class LanguageDetectionParameters extends EventProcessorBindingParams {
+    private String detectionName;
 
-    public ChangedValueDetectionParameters(DataProcessorInvocation graph, String compareField, String changeFieldName) {
+    public LanguageDetectionParameters(DataProcessorInvocation graph, String fieldName)
+    {
         super(graph);
-        this.compareField = compareField;
-        this.changeFieldName = changeFieldName;
+        this.detectionName = fieldName;
     }
 
-    public String getCompareField() {
-        return compareField;
-    }
-
-    public String getChangeFieldName() {
-        return changeFieldName;
+    public String getDetectionName() {
+        return detectionName;
     }
 }

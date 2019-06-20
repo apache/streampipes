@@ -17,6 +17,7 @@
 
 package org.streampipes.processors.textmining.jvm.processor.language;
 
+import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
@@ -28,32 +29,45 @@ import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-public class ChangedValueDetectionController extends StandaloneEventProcessingDeclarer<ChangedValueDetectionParameters> {
+public class LanguageDetectionController extends StandaloneEventProcessingDeclarer<LanguageDetectionParameters> {
 
-  public static final String COMPARE_FIELD_ID = "compare";
-  public static final String CHANGE_FIELD_NAME = "change_detected";
+  private static final String DETECTION_FIELD_KEY = "detectionField";
+  static final String LANGUAGE_KEY = "language";
+  static final String CONFIDENCE_KEY = "confidence";
 
   //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.changed-value")
-            .withLocales(Locales.EN)
+    return ProcessingElementBuilder.create("org.streampipes.processors.textmining.jvm.language")
+            .category(DataProcessorType.ENRICH_TEXT)
             .withAssets(Assets.DOCUMENTATION)
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                            Labels.withId(COMPARE_FIELD_ID),
+            .withLocales(Locales.EN)
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.stringReq(),
+                            Labels.withId(DETECTION_FIELD_KEY),
                             PropertyScope.NONE)
                     .build())
-            .outputStrategy(OutputStrategies.append(EpProperties.timestampProperty(CHANGE_FIELD_NAME)))
+            .outputStrategy(OutputStrategies.append(
+                    EpProperties.stringEp(
+                            Labels.withId(LANGUAGE_KEY),
+                            "language",
+                            "http://schema.org/language"),
+                    EpProperties.doubleEp(Labels.withId(CONFIDENCE_KEY),
+                            "probability",
+                            "https://schema.org/Float")))
             .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<ChangedValueDetectionParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<LanguageDetectionParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-    String compare = extractor.mappingPropertyValue(COMPARE_FIELD_ID);
+    String detection = extractor.mappingPropertyValue(DETECTION_FIELD_KEY);
 
-    ChangedValueDetectionParameters params = new ChangedValueDetectionParameters(graph, compare, CHANGE_FIELD_NAME);
-    return new ConfiguredEventProcessor<>(params, ChangedValueDetection::new);
+    LanguageDetectionParameters params = new LanguageDetectionParameters(graph, detection);
+    return new ConfiguredEventProcessor<>(params, LanguageDetection::new);
   }
 }
