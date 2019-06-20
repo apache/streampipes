@@ -31,8 +31,6 @@ import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
@@ -58,8 +56,6 @@ public class FieldMapperController extends
                             (REPLACE_PROPERTIES), PropertyScope.NONE)
                     .build())
             .requiredTextParameter(Labels.withId(FIELD_NAME))
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .outputStrategy(OutputStrategies.customTransformation())
             .build();
   }

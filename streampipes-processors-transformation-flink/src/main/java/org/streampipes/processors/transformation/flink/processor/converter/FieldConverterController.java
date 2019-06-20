@@ -27,8 +27,6 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.helpers.TransformOperations;
 import org.streampipes.sdk.helpers.Tuple2;
 import org.streampipes.sdk.utils.Assets;
@@ -55,8 +53,6 @@ public class FieldConverterController extends
             .requiredSingleValueSelection(Labels.withId(TARGET_TYPE), Options.from
                     (new Tuple2<>("Float", XSD._float.toString()), new Tuple2<>
                             ("Integer", XSD._integer.toString())))
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .outputStrategy(OutputStrategies.transform(TransformOperations
                     .dynamicDatatypeTransformation(CONVERT_PROPERTY, TARGET_TYPE)))
             .build();

@@ -18,14 +18,16 @@ package org.streampipes.processors.enricher.flink;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.streampipes.dataformat.fst.FstDataFormatFactory;
+import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
 import org.streampipes.processors.enricher.flink.processor.math.mathop.MathOpController;
 import org.streampipes.processors.enricher.flink.processor.math.staticmathop.StaticMathOpController;
 import org.streampipes.processors.enricher.flink.processor.timestamp.TimestampController;
 import org.streampipes.processors.enricher.flink.processor.trigonometry.TrigonometryController;
 import org.streampipes.processors.enricher.flink.processor.urldereferencing.UrlDereferencingController;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 
 public class EnricherFlinkInit extends StandaloneModelSubmitter {
 
@@ -37,11 +39,10 @@ public class EnricherFlinkInit extends StandaloneModelSubmitter {
             .add(new UrlDereferencingController())
             .add(new TrigonometryController());
 
-    DeclarersSingleton.getInstance().supportedProtocols(SupportedProtocols.jms(),
-            SupportedProtocols.kafka());
-
-    DeclarersSingleton.getInstance().supportedFormats(SupportedFormats.jsonFormat(),
-            SupportedFormats.cborFormat());
+    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory());
 
     new EnricherFlinkInit().init(EnricherFlinkConfig.INSTANCE);
   }

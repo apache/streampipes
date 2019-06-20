@@ -44,8 +44,6 @@ public class AndController extends FlinkDataProcessorDeclarer<AndParameters> {
                     "Minutes", "Hours"))
             .requiredIntegerParameter(Labels.withId(TIME_WINDOW))
             .outputStrategy(OutputStrategies.custom(true))
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }
 

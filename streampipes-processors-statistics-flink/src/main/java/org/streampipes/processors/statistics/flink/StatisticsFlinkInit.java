@@ -19,6 +19,10 @@ package org.streampipes.processors.statistics.flink;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.streampipes.dataformat.fst.FstDataFormatFactory;
+import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.streampipes.processors.statistics.flink.config.StatisticsFlinkConfig;
 import org.streampipes.processors.statistics.flink.processor.stat.summary.StatisticsSummaryController;
 import org.streampipes.processors.statistics.flink.processor.stat.window.StatisticsSummaryControllerWindow;
@@ -29,6 +33,11 @@ public class StatisticsFlinkInit extends StandaloneModelSubmitter {
     DeclarersSingleton.getInstance()
             .add(new StatisticsSummaryController())
             .add(new StatisticsSummaryControllerWindow());
+
+    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory());
 
     new StatisticsFlinkInit().init(StatisticsFlinkConfig.INSTANCE);
   }

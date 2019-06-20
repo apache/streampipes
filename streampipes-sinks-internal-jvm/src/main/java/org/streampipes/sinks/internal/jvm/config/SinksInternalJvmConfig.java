@@ -47,6 +47,10 @@ public enum SinksInternalJvmConfig implements PeConfig {
 		config.register(ConfigKeys.COUCHDB_PORT, 5984, "Port for couchdb of the pe sinks project");
 		config.register(ConfigKeys.JMS_HOST, "activemq", "Hostname for pe actions service for active mq");
 		config.register(ConfigKeys.JMS_PORT, 61616, "Port for pe actions service for active mq");
+		config.register(ConfigKeys.DATA_LAKE_HOST, "influxdb", "Hostname for the StreamPipes data lake database");
+		config.register(ConfigKeys.DATA_LAKE_PROTOCOL, "http", "Protocol for the StreamPipes data lake database");
+		config.register(ConfigKeys.DATA_LAKE_PORT, 8086, "Port for the StreamPipes data lake database");
+
 
 		config.register(ConfigKeys.SERVICE_NAME, service_name, "The name of the service");
 
@@ -106,6 +110,18 @@ public enum SinksInternalJvmConfig implements PeConfig {
 	public Integer getNginxPort() {
 	    
 		return config.getInteger(ConfigKeys.NGINX_PORT);
+	}
+
+	public String getDataLakeHost() {
+		return config.getString(ConfigKeys.DATA_LAKE_HOST);
+	}
+
+	public String getDataLakeProtocol() {
+		return config.getString(ConfigKeys.DATA_LAKE_PROTOCOL);
+	}
+
+	public Integer getDataLakePort() {
+		return config.getInteger(ConfigKeys.DATA_LAKE_PORT);
 	}
 
 	@Override

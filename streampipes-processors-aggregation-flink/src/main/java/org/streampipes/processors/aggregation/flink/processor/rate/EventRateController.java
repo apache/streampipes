@@ -1,6 +1,5 @@
 package org.streampipes.processors.aggregation.flink.processor.rate;
 
-import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -35,8 +34,6 @@ public class EventRateController extends FlinkDataProcessorDeclarer<EventRatePar
             .outputStrategy(OutputStrategies.fixed(EpProperties.doubleEp(Labels.empty(), "rate",
                     "http://schema.org/Number")))
             .requiredIntegerParameter(Labels.withId(RATE_KEY))
-            .supportedFormats(StandardTransportFormat.standardFormat())
-            .supportedProtocols(StandardTransportFormat.standardProtocols())
             .build();
   }
 

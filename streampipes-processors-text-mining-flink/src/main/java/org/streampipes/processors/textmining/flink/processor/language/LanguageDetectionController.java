@@ -39,8 +39,6 @@ public class LanguageDetectionController extends FlinkDataProcessorDeclarer<Lang
             .category(DataProcessorType.ENRICH_TEXT)
             .withAssets(Assets.DOCUMENTATION)
             .withLocales(Locales.EN)
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(

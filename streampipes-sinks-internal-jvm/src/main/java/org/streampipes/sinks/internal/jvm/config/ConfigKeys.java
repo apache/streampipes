@@ -28,5 +28,9 @@ public class ConfigKeys {
     final static String JMS_PORT = "SP_JMS_PORT";
     final static String NGINX_HOST = "SP_NGINX_HOST";
     final static String NGINX_PORT = "SP_NGINX_PORT";
+    final static String DATA_LAKE_HOST = "SP_DATA_LAKE_HOST";
+    final static String DATA_LAKE_PROTOCOL = "SP_DATA_LAKE_PROTOCOL";
+    final static String DATA_LAKE_PORT = "SP_DATA_LAKE_PORT";
+
     final static String SERVICE_NAME = "SP_SERVICE_NAME";
 }
