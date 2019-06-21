@@ -21,13 +21,20 @@
     <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== 'Custom'" (click)="selectTimeUnit('Custom')">Custom</button>
     <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === 'Custom'" color="primary" mat-raised-button>Custom</button>
 
-    <button mat-icon-button *ngIf="!enableAdvanceOptions" class="reloadIcon" (click)="enableAdvanceOptions = true"
-            style="margin-left: 5px; margin-top: -15px;" color="primary" tooltip="Display Advanced Options">
+    <button mat-icon-button *ngIf="!enableAdvanceOptions" class="icon" (click)="enableAdvanceOptions = true"
+            style="margin-left: 5px; margin-top: -15px;" color="primary" matTooltip="Display Advanced Options">
         <mat-icon style="font-size: 30px;height: 30px; width: 30px">expand_more</mat-icon>
     </button>
-    <button mat-icon-button *ngIf="enableAdvanceOptions" mat-raised-button class="reloadIcon" (click)="enableAdvanceOptions = false"
-            style="margin-left: 5px; margin-top: -15px;" color="primary" tooltip="Hide Advanced Options">
+    <button mat-icon-button *ngIf="enableAdvanceOptions" mat-raised-button class="icon" (click)="enableAdvanceOptions = false"
+            style="margin-left: 5px; margin-top: -15px;" color="primary" matTooltip="Hide Advanced Options">
         <mat-icon style="font-size: 30px;height: 30px; width: 30px">expand_less</mat-icon>
+    </button>
+
+    <button  mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()"
+             style="margin-top: -15px;" color="primary">
+        <mat-icon style="font-size: 30px;height: 30px; width: 30px">
+            get_app
+        </mat-icon>
     </button>
 
 
@@ -77,7 +84,7 @@
         </div>
     </div>
 
-    <button *ngIf="enableAdvanceOptions || selectedTimeUnit === 'Custom'"  mat-icon-button class="reloadIcon" style="margin-left: 5px" color="primary">
+    <button *ngIf="enableAdvanceOptions || selectedTimeUnit === 'Custom'"  mat-icon-button class="icon" style="margin-left: 5px" color="primary">
         <mat-icon style="font-size: 30px;height: 30px; width: 30px" (click)="loadData()">autorenew</mat-icon>
     </button>
 
