@@ -1,7 +1,7 @@
-import {RdfId} from '../tsonld/RdfId';
-import {RdfsClass} from '../tsonld/RdfsClass';
+import {RdfId} from '../../platform-services/tsonld/RdfId';
+import {RdfsClass} from '../../platform-services/tsonld/RdfsClass';
 import {StaticProperty} from './StaticProperty';
-import {RdfProperty} from '../tsonld/RdfsProperty';
+import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
 
 @RdfsClass('sp:URI')
 export class URI extends StaticProperty {

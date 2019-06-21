@@ -1,4 +1,4 @@
 <div id="select-static-properties" *ngFor="let staticProperty of staticProperties" class="blockElement fullWidth">
-    <app-static-property [staticProperty]="staticProperty" (validateEmitter)="validateText()" class="test fullWidth">
+    <app-static-property [eventSchema]="eventSchema" [staticProperty]="staticProperty" (validateEmitter)="validateText()" class="test fullWidth">
     </app-static-property>
 </div>

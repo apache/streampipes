@@ -1,5 +1,5 @@
-import {RdfProperty} from '../../tsonld/RdfsProperty';
-import {RdfsClass} from '../../tsonld/RdfsClass';
+import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
+import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
 import { AdapterSetDescription } from './AdapterSetDescription';
 import {FormatDescription} from './grounding/FormatDescription';
 import {ProtocolDescription} from './grounding/ProtocolDescription';

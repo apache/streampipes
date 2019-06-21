@@ -2,7 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {ShepherdService} from '../../../services/tour/shepherd.service';
 import {RestService} from "../../rest.service";
-import {TsonLdSerializerService} from '../../tsonld-serializer.service';
+import {TsonLdSerializerService} from '../../../platform-services/tsonld-serializer.service';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',

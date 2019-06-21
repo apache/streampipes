@@ -1,31 +1,42 @@
-import {RdfId} from '../tsonld/RdfId';
-import {RdfProperty} from '../tsonld/RdfsProperty';
-import {RdfsClass} from '../tsonld/RdfsClass';
+import {RdfId} from '../../platform-services/tsonld/RdfId';
+import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
+import {RdfsClass} from '../../platform-services/tsonld/RdfsClass';
 import {StaticProperty} from './StaticProperty';
-import {EventPropertyPrimitive} from '../schema-editor/model/EventPropertyPrimitive';
-import {URI} from './URI';
 
 @RdfsClass('sp:MappingPropertyNary')
 export class MappingPropertyNary extends StaticProperty {
 
-    @RdfId
-    public id: string;
+  @RdfId
+  public id: string;
 
-    @RdfProperty('http://www.w3.org/2000/01/rdf-schema#label')
-    public label: string;
+  @RdfProperty('sp:elementName')
+  public elementName: string;
 
-    @RdfProperty('sp:internalName')
-    public internalName: string;
+  @RdfProperty('http://www.w3.org/2000/01/rdf-schema#label')
+  public label: string;
 
-    @RdfProperty('sp:mapsFrom')
-    public mapsFromOptions: Array<URI>;
+  @RdfProperty('http://www.w3.org/2000/01/rdf-schema#description')
+  public description: string;
 
-    @RdfProperty('sp:mapsTo')
-    public mapsTo: Array<URI>;
+  @RdfProperty('sp:internalName')
+  public internalName: string;
 
-    constructor(id: string) {
-        super();
-        this.id = id;
-    }
+  @RdfProperty('sp:mapsFrom')
+  public requirementSelector: string;
+
+  @RdfProperty('sp:mapsFromOptions')
+  public mapsFromOptions: string[];
+
+  @RdfProperty('sp:hasPropertyScope')
+  public propertyScope: string;
+
+  @RdfProperty('sp:mapsTo')
+  public selectedProperty: string;
+
+
+  constructor(id: string) {
+      super();
+      this.id = id;
+  }
 
 }

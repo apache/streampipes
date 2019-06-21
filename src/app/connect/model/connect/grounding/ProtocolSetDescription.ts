@@ -1,4 +1,4 @@
-import {RdfsClass} from '../../../tsonld/RdfsClass';
+import {RdfsClass} from '../../../../platform-services/tsonld/RdfsClass';
 import {ProtocolDescription} from './ProtocolDescription';
 
 @RdfsClass('sp:ProtocolSetDescription')

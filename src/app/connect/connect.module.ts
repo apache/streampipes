@@ -3,9 +3,8 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  MatFormField,
-  MatFormFieldModule,
-  MatGridListModule,
+    MatFormFieldModule,
+    MatGridListModule,
 } from '@angular/material';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserModule } from '@angular/platform-browser';
@@ -63,89 +62,100 @@ import { FileRestService } from './file-management/service/filerest.service';
 import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
 import { AdapterExportDialog } from './data-marketplace/adapter-export/adapter-export-dialog.component';
 import { AdapterUploadDialog } from './data-marketplace/adapter-upload/adapter-upload-dialog.component';
-import { TsonLdSerializerService } from './tsonld-serializer.service';
+import { TsonLdSerializerService } from '../platform-services/tsonld-serializer.service';
 import { EventPropertyListComponent } from './schema-editor/event-property-list/event-property-list.component';
+import {StaticMappingNaryComponent} from './static-properties/static-mapping-nary/static-mapping-nary.component';
+import {StaticMappingUnaryComponent} from './static-properties/static-mapping-unary/static-mapping-unary.component';
+import {TimestampPipe} from './filter/timestamp.pipe';
+import {PlatformServicesModule} from '../platform-services/platform.module';
 
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
-    FlexLayoutModule,
-    MatGridListModule,
-    CustomMaterialModule,
-    DragulaModule,
-    MatProgressSpinnerModule,
-    MatInputModule,
-    MatFormFieldModule,
-    DragDropModule,
-  ],
-  exports: [StaticPropertyComponent],
-  declarations: [
-    NewAdapterComponent,
-    SelectProtocolComponent,
-    FormatFormComponent,
-    EventSchemaComponent,
-    EventPropertyBagComponent,
-    EventPropertyPrimitiveComponent,
-    EventPropertyComponent,
-    EventPropertyNestedComponent,
-    EventPropertyListComponent,
-    StaticPropertyComponent,
-    AdapterStartedDialog,
-    AdapterExportDialog,
-    AdapterUploadDialog,
-    StaticNumberInputComponent,
-    StaticUrlInputComponent,
-    StaticTextInputComponent,
-    StaticFreeInputComponent,
-    StaticFileInputComponent,
-    StaticAnyInput,
-    ProtocolComponent,
-    ProtocolListComponent,
-    FormatListComponent,
-    FormatComponent,
-    DataMarketplaceComponent,
-    AdapterDescriptionComponent,
-    ConnectComponent,
-    SelectStaticPropertiesComponent,
-    StaticOneOfInputComponent,
-    FileManagementComponent,
-    FilterPipe
-  ],
-  providers: [
-    RestService,
-    TsonLdSerializerService,
-    ConnectService,
-    DataTypesService,
-    TransformationRuleService,
-    StaticPropertyUtilService,
-    DataMarketplaceService,
-    IconService,
-    ShepherdService,
-    UnitProviderService,
-    FileRestService,
-    StaticFileRestService,
-    {
-      provide: '$state',
-      useFactory: ($injector: any) => $injector.get('$state'),
-      deps: ['$injector'],
-    },
-    {
-      provide: '$timeout',
-      useFactory: ($injector: any) => $injector.get('$timeout'),
-      deps: ['$injector'],
-    },
-    {
-      provide: 'TourProviderService',
-      useFactory: ($injector: any) => $injector.get('TourProviderService'),
-      deps: ['$injector'],
-    },
-  ],
-  entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+        FlexLayoutModule,
+        MatGridListModule,
+        CustomMaterialModule,
+        DragulaModule,
+        MatProgressSpinnerModule,
+        MatInputModule,
+        MatFormFieldModule,
+        DragDropModule,
+        PlatformServicesModule
+    ],
+    exports: [
+        StaticPropertyComponent,
+        SelectStaticPropertiesComponent
+    ],
+    declarations: [
+        NewAdapterComponent,
+        SelectProtocolComponent,
+        FormatFormComponent,
+        EventSchemaComponent,
+        EventPropertyBagComponent,
+        EventPropertyPrimitiveComponent,
+        EventPropertyComponent,
+        EventPropertyNestedComponent,
+        EventPropertyListComponent,
+        StaticPropertyComponent,
+        AdapterStartedDialog,
+        AdapterExportDialog,
+        AdapterUploadDialog,
+        StaticNumberInputComponent,
+        StaticUrlInputComponent,
+        StaticTextInputComponent,
+        StaticFreeInputComponent,
+        StaticFileInputComponent,
+        StaticMappingNaryComponent,
+        StaticMappingUnaryComponent,
+        TimestampPipe,
+        StaticAnyInput,
+        ProtocolComponent,
+        ProtocolListComponent,
+        FormatListComponent,
+        FormatComponent,
+        DataMarketplaceComponent,
+        AdapterDescriptionComponent,
+        ConnectComponent,
+        SelectStaticPropertiesComponent,
+        StaticOneOfInputComponent,
+        FileManagementComponent,
+        FilterPipe
+    ],
+    providers: [
+        RestService,
+        ConnectService,
+        DataTypesService,
+        TransformationRuleService,
+        StaticPropertyUtilService,
+        DataMarketplaceService,
+        IconService,
+        ShepherdService,
+        UnitProviderService,
+        TimestampPipe,
+        FileRestService,
+        StaticFileRestService,
+        {
+            provide: '$state',
+            useFactory: ($injector: any) => $injector.get('$state'),
+            deps: ['$injector'],
+        },
+        {
+            provide: '$timeout',
+            useFactory: ($injector: any) => $injector.get('$timeout'),
+            deps: ['$injector'],
+        },
+        {
+            provide: 'TourProviderService',
+            useFactory: ($injector: any) => $injector.get('TourProviderService'),
+            deps: ['$injector'],
+        },
+    ],
+    entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog],
 })
 export class ConnectModule {}

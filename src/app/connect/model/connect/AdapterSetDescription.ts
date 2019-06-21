@@ -1,5 +1,5 @@
-import {RdfProperty} from '../../tsonld/RdfsProperty';
-import {RdfsClass} from '../../tsonld/RdfsClass';
+import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
+import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
 import {DataSetDescription} from '../DataSetDescription';
 import {AdapterDescription} from './AdapterDescription';
 import {UUID} from 'angular2-uuid';

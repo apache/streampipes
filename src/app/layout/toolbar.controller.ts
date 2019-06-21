@@ -72,6 +72,11 @@ export class ToolbarController {
                 icon: 'file:ic_file_download_24px'
             },
             {
+                link: 'streampipes.kvi',
+                title: 'KVI Editor',
+                icon: 'action:ic_trending_up_24px'
+            },
+            {
                 link: 'streampipes.ontology',
                 title: 'Knowledge Management',
                 icon: 'social:ic_share_24px'

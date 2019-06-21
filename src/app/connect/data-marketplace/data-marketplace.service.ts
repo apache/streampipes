@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 
-import { TsonLd } from '../tsonld';
+import { TsonLd } from '../../platform-services/tsonld';
 import { AuthStatusService } from '../../services/auth-status.service';
 import { AdapterDescriptionList } from '../model/connect/AdapterDescriptionList';
 import { AdapterDescription } from '../model/connect/AdapterDescription';

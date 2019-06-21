@@ -1,7 +1,6 @@
-import { RdfId } from '../tsonld/RdfId';
-import { RdfProperty } from '../tsonld/RdfsProperty';
-import { RdfsClass } from '../tsonld/RdfsClass';
-import { InvocableStreamPipesEntity } from "./InvocableStreamPipesEntity";
+import { RdfId } from '../../platform-services/tsonld/RdfId';
+import { RdfProperty } from '../../platform-services/tsonld/RdfsProperty';
+import { RdfsClass } from '../../platform-services/tsonld/RdfsClass';
 
 @RdfsClass('sp:DataSinkInvocation')
 export class DataSinkInvocation {
@@ -13,7 +12,6 @@ export class DataSinkInvocation {
     public label: string;
 
     constructor(id: string) {
-        //super(id);
         this.id = id;
     }
 

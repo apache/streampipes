@@ -1,5 +1,5 @@
 ///<reference path="../model/connect/AdapterDescription.ts"/>
-import {Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, ViewChild, PipeTransform} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { RestService } from '../rest.service';
 import { FormatDescription } from '../model/connect/grounding/FormatDescription';
@@ -20,6 +20,8 @@ import {EventSchemaComponent} from '../schema-editor/event-schema/event-schema.c
 import {ConnectService} from "../connect.service";
 import {RemoveDuplicatesRuleDescription} from '../model/connect/rules/RemoveDuplicatesRuleDescription';
 import {IconService} from './icon.service';
+import {TimestampPipe} from '../filter/timestamp.pipe';
+import {EventProperty} from '../schema-editor/model/EventProperty';
 
 @Component({
     selector: 'sp-new-adapter',
@@ -64,10 +66,15 @@ export class NewAdapterComponent implements OnInit {
     removeDuplicates: boolean = false;
     removeDuplicatesTime: number;
 
+    saveInDataLake: boolean = false;
+    dataLakeTimestampField: string;
+
     startAdapterFormGroup: FormGroup;
 
     eventSchema: EventSchema;
     oldEventSchema: EventSchema;
+
+    timestampPropertiesInSchema: EventProperty[] = [];
 
     hasInput: Boolean[];
 
@@ -91,11 +98,11 @@ export class NewAdapterComponent implements OnInit {
         private ShepherdService: ShepherdService,
         private connectService: ConnectService,
         private _formBuilder: FormBuilder,
-        private iconService: IconService
+        private iconService: IconService,
+        private timestampPipe: TimestampPipe,
     ) {}
 
     ngOnInit() {
-
 
         this.formatConfigurationValid = false;
 
@@ -148,7 +155,10 @@ export class NewAdapterComponent implements OnInit {
         let dialogRef = this.dialog.open(AdapterStartedDialog, {
             width: '70%',
             data: { adapter: this.adapter,
-                storeAsTemplate: storeAsTemplate},
+                storeAsTemplate: storeAsTemplate,
+                saveInDataLake: this.saveInDataLake,
+                dataLakeTimestampField: this.dataLakeTimestampField
+            },
             panelClass: 'sp-no-padding-dialog'
         });
 
@@ -194,6 +204,12 @@ export class NewAdapterComponent implements OnInit {
     clickEventSchemaNextButtonButton(stepper: MatStepper) {
         if (this.isEditable) {
             this.setSchema();
+        }
+
+        // Auto selection of timestamp field for datalake
+        this.timestampPropertiesInSchema = this.timestampPipe.transform(this.eventSchema.eventProperties, "");
+        if (this.timestampPropertiesInSchema.length > 0) {
+            this.dataLakeTimestampField = this.timestampPropertiesInSchema[0].runTimeName;
         }
 
         this.ShepherdService.trigger("event-schema-next-button");

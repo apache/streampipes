@@ -1,6 +1,6 @@
-import { RdfId } from '../tsonld/RdfId';
-import { RdfProperty } from '../tsonld/RdfsProperty';
-import { RdfsClass } from '../tsonld/RdfsClass';
+import { RdfId } from '../../platform-services/tsonld/RdfId';
+import { RdfProperty } from '../../platform-services/tsonld/RdfsProperty';
+import { RdfsClass } from '../../platform-services/tsonld/RdfsClass';
 import { BoundPipelineElement } from "./BoundPipelineElement";
 
 
@@ -18,6 +18,9 @@ export class PipelineTemplateDescription {
 
     @RdfProperty('sp:internalName')
     public internalName: string;
+
+    @RdfProperty('sp:hasAppId')
+    public appId: string;
 
     @RdfProperty('sp:isConnectedTo')
     public connectedTo: BoundPipelineElement[] = [];
