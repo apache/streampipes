@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {DatalakeRestService} from '../../../core-services/datalake/datalake-rest.service';
-import {MatSnackBar} from '@angular/material';
+import {MatDialog, MatSnackBar} from '@angular/material';
 import {FormControl} from '@angular/forms';
+import {DatalakeLineChartDataDownloadDialog} from './datadownloadDialog/datalake-lineChart-dataDownload.dialog';
 
 @Component({
     selector: 'sp-datalake-lineChart',
@@ -17,8 +18,8 @@ export class DatalakeLineChartComponent {
         this.enableItemsPerPage = true;
         this.selectedTimeUnit = 'All';
     }
-    data;
     _index: string;
+    data;
 
     //Line Chart configs
     yAxesKeys: [] = undefined;
@@ -47,7 +48,7 @@ export class DatalakeLineChartComponent {
     customStartDate = new Date();
     customEndDate = new Date(this.customStartDate.getTime() + 60000 * 60 * 24);
 
-    constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar) {
+    constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar, public dialog: MatDialog) {
 
     }
 
@@ -211,6 +212,14 @@ export class DatalakeLineChartComponent {
         this.loadData();
     }
 
+    downloadDataAsFile() {
+        const dialogRef = this.dialog.open(DatalakeLineChartDataDownloadDialog, {
+            width: '600px',
+            data: {data: this.data, xAxesKey: this.xAxesKey, yAxesKeys: this.yAxesKeys, index: this._index}
+
+        });
+    }
+
 
     handleItemsPerPageChange(value) {
         this.itemsPerPage = value;
@@ -241,3 +250,4 @@ export class DatalakeLineChartComponent {
     }
 
 }
+
