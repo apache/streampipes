@@ -138,7 +138,7 @@ public class Operations {
   }
 
   public static List<PipelineTemplateDescription> getAllPipelineTemplates() {
-    return new PipelineTemplateGenerator().makeExampleTemplates();
+    return new PipelineTemplateGenerator().getAllPipelineTemplates();
   }
 
   public static List<PipelineTemplateDescription> getCompatiblePipelineTemplates(String streamId) {

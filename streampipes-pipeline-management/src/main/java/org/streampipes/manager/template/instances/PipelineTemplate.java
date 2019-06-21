@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 FZI Forschungszentrum Informatik
+ * Copyright 2019 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,15 @@
  *
  */
 
-package org.streampipes.dataformat;
+package org.streampipes.manager.template.instances;
 
-import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.commons.exceptions.ElementNotFoundException;
+import org.streampipes.model.template.PipelineTemplateDescription;
 
-import java.io.Serializable;
-import java.util.Map;
+import java.net.URISyntaxException;
 
-public interface SpDataFormatDefinition extends Serializable {
+public interface PipelineTemplate {
 
-  Map<String, Object> toMap(byte[] event) throws SpRuntimeException;
+    public PipelineTemplateDescription declareModel() throws URISyntaxException, ElementNotFoundException;
 
-  byte[] fromMap(Map<String, Object> event) throws SpRuntimeException;
 }
