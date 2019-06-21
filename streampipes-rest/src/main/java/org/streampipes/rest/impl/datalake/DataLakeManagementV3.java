@@ -27,6 +27,7 @@ import org.streampipes.rest.impl.datalake.model.DataResult;
 import org.streampipes.rest.impl.datalake.model.InfoResult;
 import org.streampipes.rest.impl.datalake.model.PageResult;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
@@ -170,6 +171,10 @@ public class DataLakeManagementV3 {
     }
 
     public StreamingOutput getAllEvents(String index, String outputFormat) {
+        return getAllEvents(index, outputFormat, null, null);
+    }
+
+    public StreamingOutput getAllEvents(String index, String outputFormat, @Nullable Long startDate,@Nullable Long endDate) {
         return new StreamingOutput() {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {
@@ -183,11 +188,9 @@ public class DataLakeManagementV3 {
                     List<Map<String, Object>> convertResult = new ArrayList<>();
                     Gson gson = new Gson();
 
+                    outputStream.write(toBytes("["));
                     do {
-                        outputStream.write(toBytes("["));
-
-                        Query query = new Query("SELECT * FROM " + index + " ORDER BY time LIMIT " + itemsPerRequest + " OFFSET " + i * itemsPerRequest,
-                                BackendConfig.INSTANCE.getInfluxDatabaseName());
+                        Query query = getRawDataQueryWithPage(i, itemsPerRequest, index, startDate, endDate);
                         QueryResult result = influxDB.query(query);
                         if((result.getResults().get(0).getSeries() != null)) {
                             convertResult = convertResult(result.getResults().get(0).getSeries().get(0));
@@ -209,8 +212,7 @@ public class DataLakeManagementV3 {
                 } else if (outputFormat.equals("csv")) {
                     int i = 0;
 
-                    Query query = new Query("SELECT * FROM " + index + " ORDER BY time LIMIT " + itemsPerRequest + " OFFSET " + i * itemsPerRequest,
-                            BackendConfig.INSTANCE.getInfluxDatabaseName());
+                    Query query = getRawDataQueryWithPage(i, itemsPerRequest, index, startDate, endDate);
                     QueryResult result = influxDB.query(query);
                     if((result.getResults().get(0).getSeries() != null)) {
                         //HEADER
@@ -226,8 +228,7 @@ public class DataLakeManagementV3 {
                     boolean newResults;
                     do {
                         newResults = false;
-                        query = new Query("SELECT * FROM " + index + " ORDER BY time LIMIT " + itemsPerRequest + " OFFSET " + i * itemsPerRequest,
-                                BackendConfig.INSTANCE.getInfluxDatabaseName());
+                        query = getRawDataQueryWithPage(i, itemsPerRequest, index, startDate, endDate);
                         result = influxDB.query(query);
                         if((result.getResults().get(0).getSeries() != null)) {
                             newResults = true;
@@ -249,6 +250,21 @@ public class DataLakeManagementV3 {
                 }
             }
         };
+    }
+
+    private Query getRawDataQueryWithPage(int page, int itemsPerRequest, String index,
+                                          @Nullable Long startDate,@Nullable Long endDate) {
+        Query query;
+        if (startDate != null && endDate != null) {
+            query = new Query("SELECT * FROM " + index +
+                    " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000
+                    + " ORDER BY time LIMIT " + itemsPerRequest + " OFFSET " + page * itemsPerRequest,
+                    BackendConfig.INSTANCE.getInfluxDatabaseName());
+        } else {
+            query = new Query("SELECT * FROM " + index + " ORDER BY time LIMIT " + itemsPerRequest + " OFFSET " + page * itemsPerRequest,
+                    BackendConfig.INSTANCE.getInfluxDatabaseName());
+        }
+        return query;
     }
 
     private byte[] toBytes(String value) {
