@@ -12,7 +12,8 @@ import { EventPropertyNested } from '../model/EventPropertyNested';
 import { EventPropertyPrimitive } from '../model/EventPropertyPrimitive';
 import { EventPropertyList } from '../model/EventPropertyList';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { resolve } from 'dns';
+import { ITreeOptions, TreeComponent } from 'angular-tree-component';
+import { DomainPropertyProbabilityList } from '../model/DomainPropertyProbabilityList';
 
 @Component({
   selector: 'app-event-schema',
@@ -21,13 +22,7 @@ import { resolve } from 'dns';
 })
 export class EventSchemaComponent implements OnInit {
 
-  treeControl = new FlatTreeControl<ExampleNode>(
-    node => node.level, node => node.expandable);
-  datasource: ArrayDataSource<ExampleNode>;
-
-  @ViewChild('treeSelector') tree: CdkTree<any>;
-
-  constructor(private restService: RestService , private changeDetectorRefs: ChangeDetectorRef) {}
+  constructor(private restService: RestService) {}
   @Input() adapterDescription: AdapterDescription;
   @Input() isEditable: boolean;
   @Output() isEditableChange = new EventEmitter<boolean>();
@@ -40,7 +35,23 @@ export class EventSchemaComponent implements OnInit {
   @Input() oldEventSchema: EventSchema;
   @Output() oldEventSchemaChange = new EventEmitter<EventSchema>();
 
+  @Input() domainPropertyGuesses: DomainPropertyProbabilityList[] = [];
+
   schemaGuess: GuessSchema = new GuessSchema();
+
+  nodes: EventProperty[] = new Array<EventProperty>();
+  options: ITreeOptions = {
+    childrenField: 'eventProperties',
+    allowDrag: (node) => {
+      return true;
+    },
+    allowDrop: (node) => {
+      return true;
+    },
+    displayField: 'runTimeName',
+  };
+  @ViewChild(TreeComponent)
+  private tree: TreeComponent;
 
   isLoading = false;
   isError = false;
@@ -59,7 +70,10 @@ export class EventSchemaComponent implements OnInit {
         this.oldEventSchema = this.eventSchema.copy();
         this.oldEventSchemaChange.emit(this.oldEventSchema);
 
-        this.datasource = new ArrayDataSource(this.buildFileTree(this.eventSchema));
+        this.nodes = new Array<EventProperty>();
+        this.nodes.push(this.eventSchema as unknown as EventProperty);
+        this.tree.treeModel.update();
+        this.tree.treeModel.expandAll();
 
         this.isEditable = true;
         this.isEditableChange.emit(true);
@@ -73,74 +87,33 @@ export class EventSchemaComponent implements OnInit {
 
   }
 
-  buildFileTree(obj: EventProperty | EventSchema, level: number = -1, parentId: string = '0'): ExampleNode[] {
-    let nodeArray: ExampleNode[] = new Array<ExampleNode>();
-    if (obj instanceof EventSchema) {
-      for (let eventProperty of obj.eventProperties) {
-        nodeArray = nodeArray.concat(this.buildFileTree(eventProperty, level+1, parentId));
-      }
-    } else if (obj instanceof EventProperty) {
-      if (obj instanceof EventPropertyPrimitive) {
-        let node = obj as unknown as ExampleNode;
-        node.level = level;
-        nodeArray.push(node);
-      } else if (obj instanceof EventPropertyList) {
-        let node = obj as unknown as ExampleNode;
-        node.level = level;
-        nodeArray.push(node);
-      } else if (obj instanceof EventPropertyNested) {
-        let node = obj as unknown as ExampleNode;
-        node.level = level;
-        nodeArray.push(node);
-        for (let eventProperty of obj.eventProperties) {
-          nodeArray = nodeArray.concat(this.buildFileTree(eventProperty, level+1, parentId));
-        }
-      }
-    }
-    return nodeArray;
+  private isEventPropertyPrimitive(instance): boolean {
+    return instance instanceof EventPropertyPrimitive;
   }
 
-  buildEventSchema(nodes: ExampleNode[]): EventSchema {
-    const schema = this.eventSchema;
-    schema.eventProperties = new Array<EventProperty>();
-    let lastLevel = 0;
-    const lastNested = new Array<EventPropertyNested>();
-    lastNested[-1] = schema as unknown as EventPropertyNested;
-    nodes.forEach((node, index) => {
-      if (node.level == lastLevel) {
-        lastNested[lastLevel-1].eventProperties.push(node);
-      } else if (node.level > lastLevel) {
-        lastNested[lastLevel] = nodes[index-1] as unknown as EventPropertyNested;
-        lastNested[lastLevel].eventProperties = new Array<EventProperty>();
-        lastLevel = node.level;
-        lastNested[lastLevel-1].eventProperties.push(node);
-      } else if (node.level < lastLevel) {
-        lastLevel = node.level;
-        lastNested[lastLevel-1].eventProperties.push(node);
-      }
-    });
-    return schema;
+  private isEventPropertyNested(instance): boolean {
+    return instance instanceof EventPropertyNested;
+  }
+
+  private isEventPropertyList(instance): boolean {
+    return instance instanceof EventPropertyList;
+  }
+
+  public getDomainProbability(name: string) {
+    let result: DomainPropertyProbabilityList;
+
+    for (const entry of this.domainPropertyGuesses) {
+        if (entry.runtimeName === name) {
+            result = entry;
+        }
+    }
+
+    return result;
   }
 
   ngOnInit() {
     if (!this.eventSchema) {
       this.eventSchema = new EventSchema();
     }
-
   }
-
-  drop(event: CdkDragDrop<EventProperty>) {
-    let changedData: ExampleNode[];
-    this.datasource.connect().subscribe(res => {
-      changedData = res as ExampleNode[];
-      let oldData = changedData.splice(event.previousIndex, 1)[0];
-      oldData.level = event.currentIndex == 0?0:changedData[event.currentIndex-1].level;
-      changedData.splice(event.currentIndex, 0, oldData);
-      let schema = this.buildEventSchema(changedData);
-      console.log(schema)
-      this.datasource = null
-      this.datasource = new ArrayDataSource(this.buildFileTree(schema));
-      this.changeDetectorRefs.detectChanges();
-    })
-}
 }

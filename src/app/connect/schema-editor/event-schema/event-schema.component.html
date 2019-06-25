@@ -43,12 +43,39 @@
     <!--
     <app-event-property-bag [(eventProperties)]="eventSchema.eventProperties" [domainPropertyGuesses]="schemaGuess.eventProperties" [isEditable]="isEditable">
     </app-event-property-bag>
--->
     <cdk-tree #treeSelector [dataSource]="datasource" [treeControl]="treeControl" cdkDropList (cdkDropListDropped)="drop($event)">
         <cdk-tree-node style="display: flex" *cdkTreeNodeDef="let node;" cdkTreeNodePadding cdkDrag [cdkDragData]="node">
             {{node.runTimeName}} 
         </cdk-tree-node>
     </cdk-tree>
+    -->
+
+    <tree-root #tree [nodes]="nodes" [options]="options">
+        <ng-template #treeNodeTemplate let-node let-index="index">
+            <div class="schema"  *ngIf="isEventPropertyNested(node.data)">
+            <app-event-property-nested [index]="i + 1"
+                        [eventPropertyNested]="node.data"
+                        [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
+                        [domainPropertyGuesses]="domainPropertyGuesses"
+                        [isEditable]="isEditable"
+                        (delete)=deletePropertyNested($event)></app-event-property-nested>
+            </div>
+            <div *ngIf="isEventPropertyPrimitive(node.data)">
+            <app-event-property-primitive (delete)=deletePropertyPrimitive($event)
+                        (addPrimitive)="addStaticValueProperty($event)"
+                        [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
+                        [isEditable]="isEditable"
+                        [property]="node.data">
+            </app-event-property-primitive>
+            </div>
+            <div *ngIf="isEventPropertyList(node.data)">
+            <app-event-property-list (delete)=deletePropertyList($event)
+                        [isEditable]="isEditable"
+                        [property]="node.data">
+            </app-event-property-list>
+            </div>
+          </ng-template>
+    </tree-root>
 </div>
 
 

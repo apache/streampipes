@@ -68,6 +68,7 @@ import { EventPropertyListComponent } from './schema-editor/event-property-list/
 
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {CdkTreeModule} from '@angular/cdk/tree';
+import { TreeModule } from 'angular-tree-component';
 
 
 @NgModule({
@@ -85,6 +86,7 @@ import {CdkTreeModule} from '@angular/cdk/tree';
     MatFormFieldModule,
     DragDropModule,
     CdkTreeModule,
+    TreeModule.forRoot(),
   ],
   exports: [StaticPropertyComponent],
   declarations: [
