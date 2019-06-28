@@ -38,12 +38,10 @@ public class LanguageDetectionController extends StandaloneEventProcessingDeclar
   //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.textmining.jvm.language")
+    return ProcessingElementBuilder.create("org.streampipes.processors.textmining.jvm.languagedetection")
             .category(DataProcessorType.ENRICH_TEXT)
             .withAssets(Assets.DOCUMENTATION)
             .withLocales(Locales.EN)
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(
@@ -54,10 +52,10 @@ public class LanguageDetectionController extends StandaloneEventProcessingDeclar
             .outputStrategy(OutputStrategies.append(
                     EpProperties.stringEp(
                             Labels.withId(LANGUAGE_KEY),
-                            "language",
+                            LANGUAGE_KEY,
                             "http://schema.org/language"),
                     EpProperties.doubleEp(Labels.withId(CONFIDENCE_KEY),
-                            "probability",
+                            CONFIDENCE_KEY,
                             "https://schema.org/Float")))
             .build();
   }
