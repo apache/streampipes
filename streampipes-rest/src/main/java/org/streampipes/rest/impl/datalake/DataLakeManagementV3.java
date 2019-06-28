@@ -121,7 +121,7 @@ public class DataLakeManagementV3 {
 
     public DataResult getEventsFromNow(String index, String timeunit, int value) {
         InfluxDB influxDB = getInfluxDBClient();
-        Query query = new Query("SELECT mean(*) FROM " + index +  " WHERE time > now() -" + value + timeunit
+        Query query = new Query("SELECT * FROM " + index +  " WHERE time > now() -" + value + timeunit
                 + " ORDER BY time" ,
                 BackendConfig.INSTANCE.getInfluxDatabaseName());
         QueryResult result = influxDB.query(query);
