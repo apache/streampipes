@@ -18,6 +18,7 @@
 package org.streampipes.sinks.internal.jvm.datalake;
 
 import org.streampipes.model.DataSinkType;
+import org.streampipes.model.datalake.DataLakeMeasure;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.schema.PropertyScope;
@@ -78,6 +79,7 @@ public class DataLakeController extends StandaloneEventSinkDeclarer<DataLakePara
             timestampField,
             batch_size,
             flush_duration);
+
 
     return new ConfiguredEventSink<>(params, DataLake::new);
   }
