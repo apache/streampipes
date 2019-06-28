@@ -92,8 +92,8 @@ export class ToolbarController {
                 icon: 'file:ic_file_upload_24px'
             },
             {
-                link: 'streampipes.asset',
-                title: 'Asset',
+                link: 'streampipes.data-explorer',
+                title: 'Data Explorer',
                 icon: 'action:ic_view_headline_24px'
             },
         ];

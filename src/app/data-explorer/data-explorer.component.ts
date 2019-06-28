@@ -4,15 +4,14 @@ import {InfoResult} from '../core-model/datalake/InfoResult';
 import {Observable} from 'rxjs/Observable';
 import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
-import {MatSnackBar, MatTableDataSource} from '@angular/material';
-import {HttpEventType} from '@angular/common/http';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
-    selector: 'app-asset',
-    templateUrl: './asset.component.html',
-    styleUrls: ['./asset.component.css']
+    selector: 'sp-data-explorer',
+    templateUrl: './data-explorer.component.html',
+    styleUrls: ['./data-explorer.css']
 })
-export class AssetComponent implements OnInit {
+export class DataExplorerComponent implements OnInit {
 
     myControl = new FormControl();
     infoResult: InfoResult[];

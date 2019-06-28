@@ -30,9 +30,7 @@
                 <button mat-icon-button (click)="clickPreviousPage()">
                     <mat-icon>chevron_left</mat-icon>
                 </button>
-                <label>{{displayData[0].series[0].name | date:'dd.yyyy.MM HH:mm:ss'}} </label>
             </div>
-            <label *ngIf="!enablePaging" style="margin-left: 10px">{{displayData[0].series[0].name | date:'dd.yyyy.MM HH:mm:ss'}} </label>
         </div>
 
         <!-- page -->
@@ -59,10 +57,9 @@
             </mat-form-field>
         </div>
 
-        <!-- right button + date -->
+        <!-- right button -->
         <div>
             <div *ngIf="enablePaging">
-                <label>{{displayData[0].series[ displayData[0].series.length - 1].name | date:'dd.yyyy.MM HH:mm:ss'}} </label>
                 <button  mat-icon-button (click)="clickNextPage()">
                     <mat-icon>chevron_right</mat-icon>
                 </button>
@@ -70,26 +67,40 @@
                     <mat-icon>last_page</mat-icon>
                 </button>
             </div>
-            <label *ngIf="!enablePaging" style="margin-right: 10px">{{displayData[0].series[ displayData[0].series.length - 1].name | date:'dd.yyyy.MM HH:mm:ss'}} </label>
         </div>
     </div>
 
     <!-- Chart -->
-    <ngx-charts-line-chart flex
-            *ngIf="displayData != undefined && isLoadingData == false"
-            [results]="displayData"
-            [gradient]="false"
-            [xAxis]="true"
-            [yAxis]="true"
-            [legend]="false"
-            [showXAxisLabel]="true"
-            [showYAxisLabel]="true"
-            [xAxisLabel]="_xAxesKey"
-            [yAxisLabel]="_yAxesKeys"
-            [autoScale]="true"
-            [timeline]="true"
-            (select)="onSelect($event)">
-    </ngx-charts-line-chart>
+    <div style="height: 400px">
+        <ngx-charts-line-chart
+                flex
+                *ngIf="displayData != undefined && isLoadingData == false"
+                [results]="displayData"
+                [gradient]="false"
+                [xAxis]="true"
+                [yAxis]="true"
+                [legend]="false"
+                [showXAxisLabel]="true"
+                [showYAxisLabel]="true"
+                [xAxisLabel]="_xAxesKey"
+                [yAxisLabel]="_yAxesKeys"
+                [autoScale]="true"
+                [timeline]="true"
+                (select)="onSelect($event)">
+        </ngx-charts-line-chart>
+    </div>
+
+
+    <div fxLayout="column">
+        <div fxLayout="row" fxLayoutAlign="space-between center"  *ngIf="displayData != undefined && isLoadingData == false" style="padding-left: 95px; padding-right: 30px">
+            <label>{{displayData[0].series[0].name | date:'MM/dd/yyyy'}} </label>
+            <label>{{displayData[0].series[ displayData[0].series.length - 1].name | date:'MM/dd/yyyy'}} </label>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center"  *ngIf="displayData != undefined && isLoadingData == false" style="padding-left: 102px; padding-right: 38px">
+            <label>{{displayData[0].series[0].name | date:'HH:mm:ss'}} </label>
+            <label>{{displayData[0].series[ displayData[0].series.length - 1].name | date:'HH:mm:ss'}} </label>
+        </div>
+    </div>
 
 
 </div>

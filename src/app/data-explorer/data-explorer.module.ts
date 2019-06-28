@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {CommonModule} from '@angular/common';
 
-import {AssetComponent} from './asset.component';
+import {DataExplorerComponent} from './data-explorer.component';
 
 import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
 import {NguiDatetimePickerModule} from '@ngui/datetime-picker';
@@ -27,16 +27,16 @@ import {CoreUiModule} from '../core-iu/core-ui.module';
         CoreUiModule,
     ],
     declarations: [
-        AssetComponent,
+        DataExplorerComponent,
     ],
     providers: [
         DatalakeRestService
     ],
     entryComponents: [
-        AssetComponent,
+        DataExplorerComponent,
     ],
     exports: [
     ]
 })
-export class AssetModule {
+export class DataExplorerModule {
 }
