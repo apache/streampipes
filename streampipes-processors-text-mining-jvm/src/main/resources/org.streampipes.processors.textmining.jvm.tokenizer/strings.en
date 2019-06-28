@@ -1,0 +1,5 @@
+org.streampipes.processors.textmining.jvm.tokenizer.title=Tokenizer (English)
+org.streampipes.processors.textmining.jvm.tokenizer.description=Segments a text into different tokens
+
+detectionField.title=Text
+detectionField.description=Specifies the event property from your stream that contains the text that should be segmented

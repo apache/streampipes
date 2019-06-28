@@ -28,12 +28,14 @@ import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.textmining.jvm.config.TextMiningJvmConfig;
 import org.streampipes.processors.textmining.jvm.processor.language.LanguageDetectionController;
 import org.streampipes.processors.textmining.jvm.processor.sentence.SentenceDetectionController;
+import org.streampipes.processors.textmining.jvm.processor.tokenizer.TokenizerController;
 
 public class TextMiningJvmInit extends StandaloneModelSubmitter {
     public static void main(String[] args) {
         DeclarersSingleton
                 .getInstance()
                 .add(new LanguageDetectionController())
+                .add(new TokenizerController())
                 .add(new SentenceDetectionController());
 
         DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
