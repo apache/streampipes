@@ -1,11 +1,5 @@
 org.streampipes.processors.textmining.jvm.sentencedetection.title=Sentence Detection (English)
 org.streampipes.processors.textmining.jvm.sentencedetection.description=Splits a text up in sentences
 
-detectionField.title=Text detection
-detectionField.description=Specifies the event property from your stream that contains the text in an unknown language.
-
-language.title=Language
-language.description=The detected language
-
-confidence.title=Confidence
-confidence.description=The probability that the detected language is correct. Between 0 (no confidence) and 1 (highly confident).
+detectionField.title=Sentence detection
+detectionField.description=Specifies the event property from your stream that contains the text that should be split up
