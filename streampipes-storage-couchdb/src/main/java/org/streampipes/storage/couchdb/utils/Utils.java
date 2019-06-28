@@ -118,6 +118,10 @@ public class Utils {
     return new CouchDbClient(props("file-export-endpoints-elasticsearch"));
   }
 
+  public static CouchDbClient getCouchDbDataLakeClient() {
+    return new CouchDbClient(props("data-lake"));
+  }
+
   public static CouchDbClient getCoucbDbClient(String table) {
     return new CouchDbClient(props(table));
   }

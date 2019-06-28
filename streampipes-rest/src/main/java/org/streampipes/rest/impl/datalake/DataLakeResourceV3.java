@@ -19,9 +19,9 @@ package org.streampipes.rest.impl.datalake;
 
 
 import org.streampipes.model.client.messages.Notification;
+import org.streampipes.model.datalake.DataLakeMeasure;
 import org.streampipes.rest.impl.AbstractRestInterface;
 import org.streampipes.rest.impl.datalake.model.DataResult;
-import org.streampipes.rest.impl.datalake.model.InfoResult;
 import org.streampipes.rest.impl.datalake.model.PageResult;
 import org.streampipes.rest.shared.annotation.GsonWithIds;
 
@@ -76,7 +76,7 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     @GsonWithIds
     @Path("/info")
     public Response getAllInfos() {
-        List<InfoResult> result = this.dataLakeManagement.getInfos();
+        List<DataLakeMeasure> result = this.dataLakeManagement.getInfos();
 
         return Response.ok(result).build();
     }
