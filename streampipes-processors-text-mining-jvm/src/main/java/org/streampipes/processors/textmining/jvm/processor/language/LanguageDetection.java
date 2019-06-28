@@ -27,7 +27,6 @@ import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -39,7 +38,7 @@ public class LanguageDetection implements EventProcessor<LanguageDetectionParame
   private LanguageDetector myCategorizer;
 
   public LanguageDetection() {
-    try (InputStream modelIn = new FileInputStream("language-detection.bin")) {
+    try (InputStream modelIn = getClass().getClassLoader().getResourceAsStream("language-detection.bin")) {
       LanguageDetectorModel model = new LanguageDetectorModel(modelIn);
       myCategorizer = new LanguageDetectorME(model);
     } catch (IOException e) {
