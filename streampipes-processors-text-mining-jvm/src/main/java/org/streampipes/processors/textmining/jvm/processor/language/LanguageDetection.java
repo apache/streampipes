@@ -35,12 +35,12 @@ public class LanguageDetection implements EventProcessor<LanguageDetectionParame
   private static Logger LOG;
 
   private String detection;
-  private LanguageDetector myCategorizer;
+  private LanguageDetector languageDetector;
 
   public LanguageDetection() {
     try (InputStream modelIn = getClass().getClassLoader().getResourceAsStream("language-detection.bin")) {
       LanguageDetectorModel model = new LanguageDetectorModel(modelIn);
-      myCategorizer = new LanguageDetectorME(model);
+      languageDetector = new LanguageDetectorME(model);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -57,7 +57,7 @@ public class LanguageDetection implements EventProcessor<LanguageDetectionParame
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
     String text = inputEvent.getFieldBySelector(detection).getAsPrimitive().getAsString();
-    Language language = myCategorizer.predictLanguage(text);
+    Language language = languageDetector.predictLanguage(text);
 
     inputEvent.addField(LanguageDetectionController.LANGUAGE_KEY, language.getLang());
     inputEvent.addField(LanguageDetectionController.CONFIDENCE_KEY, language.getConfidence());
