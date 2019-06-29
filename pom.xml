@@ -43,7 +43,7 @@
 
         <junit.version>4.12</junit.version>
         <mockito.version>2.18.3</mockito.version>
-        <powermock.version>2.0.0-beta.5</powermock.version>
+        <powermock.version>2.0.2</powermock.version>
         <wiremock.version>2.23.2</wiremock.version>
     </properties>
 
