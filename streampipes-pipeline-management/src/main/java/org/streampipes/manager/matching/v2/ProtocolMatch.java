@@ -17,31 +17,27 @@
 
 package org.streampipes.manager.matching.v2;
 
-import java.util.List;
-
 import org.streampipes.manager.matching.v2.utils.MatchingUtils;
 import org.streampipes.model.client.matching.MatchingResultMessage;
 import org.streampipes.model.client.matching.MatchingResultType;
 import org.streampipes.model.grounding.TransportProtocol;
 
-public class ProtocolMatch extends AbstractMatcher<TransportProtocol, TransportProtocol>{
+import java.util.List;
 
-	public ProtocolMatch() {
-		super(MatchingResultType.PROTOCOL_MATCH);
-	}
+public class ProtocolMatch extends AbstractMatcher<TransportProtocol, TransportProtocol> {
 
-	@Override
-	public boolean match(TransportProtocol offer, TransportProtocol requirement, List<MatchingResultMessage> errorLog) {
-		
-		boolean matches = MatchingUtils.nullCheck(offer, requirement) ||
-				canonicalName(requirement).equals(canonicalName(offer));
-		
-		if (!matches) buildErrorMessage(errorLog, "protocol");
-		return matches;
-	}
-	
-	private String canonicalName(TransportProtocol protocol) {
-		return protocol.getClass().getCanonicalName();
-	}
+  public ProtocolMatch() {
+    super(MatchingResultType.PROTOCOL_MATCH);
+  }
+
+  @Override
+  public boolean match(TransportProtocol offer, TransportProtocol requirement, List<MatchingResultMessage> errorLog) {
+    return MatchingUtils.nullCheck(offer, requirement) ||
+            canonicalName(requirement).equals(canonicalName(offer));
+  }
+
+  private String canonicalName(TransportProtocol protocol) {
+    return protocol.getClass().getCanonicalName();
+  }
 
 }
