@@ -17,21 +17,21 @@
 
 package org.streampipes.manager.matching.output;
 
+import org.streampipes.manager.selector.PropertySelector;
+import org.streampipes.manager.selector.PropertySelectorGenerator;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.output.PropertyRenameRule;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.sdk.helpers.Tuple2;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AppendOutputSchemaGenerator extends OutputSchemaGenerator<AppendOutputStrategy> {
 
   private List<EventProperty> appendProperties;
-  private List<EventProperty> properties;
-  private List<EventProperty> renamedProperties;
 
   public static AppendOutputSchemaGenerator from(OutputStrategy strategy) {
     return new AppendOutputSchemaGenerator((AppendOutputStrategy) strategy);
@@ -40,33 +40,40 @@ public class AppendOutputSchemaGenerator extends OutputSchemaGenerator<AppendOut
   public AppendOutputSchemaGenerator(AppendOutputStrategy strategy) {
     super(strategy);
     this.appendProperties = strategy.getEventProperties();
-    this.properties = new ArrayList<>();
-    this.renamedProperties = new ArrayList<>();
   }
 
   @Override
   public Tuple2<EventSchema, AppendOutputStrategy> buildFromOneStream(SpDataStream stream) {
-    properties.addAll(stream.getEventSchema().getEventProperties());
-    properties.addAll(renameDuplicates(stream.getEventSchema().getEventProperties()));
-    return new Tuple2<>(new EventSchema(properties), getModifiedOutputStrategy());
+    List<String> selectors =
+            new PropertySelectorGenerator(stream.getEventSchema(), true).generateSelectors();
+
+    Tuple2<List<EventProperty>, List<PropertyRenameRule>> generatedOutputProperties = new
+            PropertySelector(stream.getEventSchema())
+            .createRenamedPropertyList(selectors, appendProperties);
+
+    EventSchema outputSchema = new EventSchema(generatedOutputProperties.a);
+
+    return new Tuple2<>(outputSchema, getModifiedOutputStrategy(generatedOutputProperties.b));
   }
 
   @Override
   public Tuple2<EventSchema, AppendOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
                                          SpDataStream stream2) {
-    properties.addAll(renameDuplicates(stream1.getEventSchema().getEventProperties()));
-    properties.addAll(renameDuplicates(stream2.getEventSchema().getEventProperties()));
-    return new Tuple2<>(new EventSchema(properties), getModifiedOutputStrategy());
+    List<String> selectors =
+            new PropertySelectorGenerator(stream1.getEventSchema(), stream2.getEventSchema(),
+                    true).generateSelectors();
+
+    Tuple2<List<EventProperty>, List<PropertyRenameRule>> generatedOutputProperties = new
+            PropertySelector(stream1.getEventSchema(), stream2.getEventSchema())
+            .createRenamedPropertyList(selectors, appendProperties);
+
+    EventSchema outputSchema = new EventSchema(generatedOutputProperties.a);
+
+    return new Tuple2<>(outputSchema, getModifiedOutputStrategy(generatedOutputProperties.b));
   }
 
-  private List<EventProperty> renameDuplicates(List<EventProperty> oldProperties) {
-    List<EventProperty> renamed = new PropertyDuplicateRemover(oldProperties, appendProperties).rename();
-    this.renamedProperties.addAll(renamed);
-    return renamed;
-  }
-
-  private AppendOutputStrategy getModifiedOutputStrategy() {
-    outputStrategy.setEventProperties(renamedProperties);
+  private AppendOutputStrategy getModifiedOutputStrategy(List<PropertyRenameRule> propertyRenameRules) {
+    outputStrategy.setRenameRules(propertyRenameRules);
     return outputStrategy;
   }
 
