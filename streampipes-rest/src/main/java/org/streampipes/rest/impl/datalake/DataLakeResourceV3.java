@@ -81,6 +81,7 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
         return Response.ok(result).build();
     }
 
+    @Deprecated
     @GET
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Path("/data/{index}")
@@ -88,7 +89,18 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
         StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format);
 
         return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
-                header("Content-Disposition", "attachment; filename=\"datalake" + format + "\"")
+                header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
+                .build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Path("/data/{index}/download")
+    public Response downloadData(@PathParam("index") String index, @QueryParam("format") String format) {
+        StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format);
+
+        return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
+                header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
                 .build();
     }
 
@@ -140,6 +152,18 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
         } catch (ParseException e) {
             return constructErrorMessage(new Notification(e.getMessage(), ""));
         }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Path("/data/{index}/{startdate}/{enddate}/download")
+    public Response downloadData(@PathParam("index") String index, @QueryParam("format") String format,
+                                 @PathParam("startdate") long start, @PathParam("enddate") long end) {
+        StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format, start, end);
+
+        return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
+                header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
+                .build();
     }
 
 }
