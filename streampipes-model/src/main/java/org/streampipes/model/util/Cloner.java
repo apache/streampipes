@@ -102,6 +102,10 @@ public class Cloner {
   public StaticProperty staticProperty(StaticProperty o) {
     if (o instanceof FreeTextStaticProperty) {
       return new FreeTextStaticProperty((FreeTextStaticProperty) o);
+    } else if (o instanceof RuntimeResolvableOneOfStaticProperty) {
+      return new RuntimeResolvableOneOfStaticProperty((RuntimeResolvableOneOfStaticProperty) o);
+    } else if (o instanceof RuntimeResolvableAnyStaticProperty) {
+      return new RuntimeResolvableAnyStaticProperty((RuntimeResolvableAnyStaticProperty) o);
     } else if (o instanceof OneOfStaticProperty) {
       return new OneOfStaticProperty((OneOfStaticProperty) o);
     } else if (o instanceof RemoteOneOfStaticProperty) {
@@ -116,10 +120,6 @@ public class Cloner {
       return new CollectionStaticProperty((CollectionStaticProperty) o);
     } else if (o instanceof MatchingStaticProperty) {
       return new MatchingStaticProperty((MatchingStaticProperty) o);
-    } else if (o instanceof RuntimeResolvableOneOfStaticProperty) {
-      return new RuntimeResolvableOneOfStaticProperty((RuntimeResolvableOneOfStaticProperty) o);
-    } else if (o instanceof RuntimeResolvableAnyStaticProperty) {
-      return new RuntimeResolvableAnyStaticProperty((RuntimeResolvableAnyStaticProperty) o);
     } else {
       return new MappingPropertyUnary((MappingPropertyUnary) o);
     }

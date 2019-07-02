@@ -16,12 +16,12 @@
  */
 package org.streampipes.container.api;
 
-import org.streampipes.model.runtime.RuntimeOptions;
-import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.sdk.extractor.StaticPropertyExtractor;
 
 import java.util.List;
 
 public interface ResolvesContainerProvidedOptions {
 
-  List<RuntimeOptions> resolveOptions(String requestId, EventProperty linkedEventProperty);
+  List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor);
 }

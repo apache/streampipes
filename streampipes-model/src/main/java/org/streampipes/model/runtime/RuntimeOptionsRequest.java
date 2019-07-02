@@ -16,13 +16,17 @@
  */
 package org.streampipes.model.runtime;
 
-import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.staticproperty.StaticProperty;
+
+import java.util.List;
 
 public class RuntimeOptionsRequest {
 
   protected String requestId;
 
-  protected EventProperty mappedEventProperty;
+  protected List<StaticProperty> staticProperties;
+  protected List<SpDataStream> inputStreams;
 
   public RuntimeOptionsRequest() {
 
@@ -32,9 +36,11 @@ public class RuntimeOptionsRequest {
     this.requestId = requestId;
   }
 
-  public RuntimeOptionsRequest(String requestId, EventProperty mappedEventPropety) {
+  public RuntimeOptionsRequest(String requestId, List<StaticProperty> staticProperties,
+                               List<SpDataStream> inputStreams) {
     this.requestId = requestId;
-    this.mappedEventProperty = mappedEventPropety;
+    this.staticProperties = staticProperties;
+    this.inputStreams = inputStreams;
   }
 
   public String getRequestId() {
@@ -45,11 +51,19 @@ public class RuntimeOptionsRequest {
     this.requestId = requestId;
   }
 
-  public EventProperty getMappedEventProperty() {
-    return mappedEventProperty;
+  public List<StaticProperty> getStaticProperties() {
+    return staticProperties;
   }
 
-  public void setMappedEventProperty(EventProperty mappedEventPropety) {
-    this.mappedEventProperty = mappedEventPropety;
+  public void setStaticProperties(List<StaticProperty> staticProperties) {
+    this.staticProperties = staticProperties;
+  }
+
+  public List<SpDataStream> getInputStreams() {
+    return inputStreams;
+  }
+
+  public void setInputStreams(List<SpDataStream> inputStreams) {
+    this.inputStreams = inputStreams;
   }
 }

@@ -27,10 +27,11 @@ import org.streampipes.container.transform.Transformer;
 import org.streampipes.container.util.Util;
 import org.streampipes.model.Response;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
-import org.streampipes.model.runtime.RuntimeOptions;
 import org.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.streampipes.model.staticproperty.Option;
 import org.streampipes.sdk.extractor.AbstractParameterExtractor;
+import org.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.streampipes.serializers.json.GsonSerializer;
 
 import java.io.IOException;
@@ -83,16 +84,16 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
 
     @POST
     @Path("{elementId}/configurations")
-    //@Consumes(MediaType.APPLICATION_JSON)
-    //@Produces(MediaType.APPLICATION_JSON)
     public String fetchConfigurations(@PathParam("elementId") String elementId, String payload) {
 
         RuntimeOptionsRequest runtimeOptionsRequest = GsonSerializer.getGsonWithIds().fromJson(payload,
                 RuntimeOptionsRequest.class);
         ResolvesContainerProvidedOptions resolvesOptions = (ResolvesContainerProvidedOptions) getDeclarerById(elementId);
 
-        List<RuntimeOptions> availableOptions = resolvesOptions.resolveOptions(runtimeOptionsRequest.getRequestId(),
-                runtimeOptionsRequest.getMappedEventProperty());
+        List<Option> availableOptions =
+                resolvesOptions.resolveOptions(runtimeOptionsRequest.getRequestId(),
+                StaticPropertyExtractor.from(runtimeOptionsRequest.getStaticProperties(),
+                        runtimeOptionsRequest.getInputStreams()));
 
         return GsonSerializer.getGsonWithIds().toJson(new RuntimeOptionsResponse(runtimeOptionsRequest,
                 availableOptions));
@@ -101,8 +102,6 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
 
     @POST
     @Path("{elementId}/output")
-    //@Consumes(MediaType.APPLICATION_JSON)
-    //@Produces(MediaType.APPLICATION_JSON)
     public String fetchOutputStrategy(@PathParam("elementId") String elementId, String payload) {
 
         I runtimeOptionsRequest = GsonSerializer.getGsonWithIds().fromJson(payload, clazz);

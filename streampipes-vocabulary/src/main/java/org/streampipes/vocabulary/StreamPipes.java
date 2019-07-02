@@ -334,4 +334,5 @@ public class StreamPipes {
   public static final String INCLUDES_LOCALES = NS + "includesLocales";
   public static final String INCLUDED_LOCALES = NS + "includedLocales";
 
+  public static final String DEPENDS_ON_STATIC_PROPERTY = NS + "dependsOnStaticProperty";
 }

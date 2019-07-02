@@ -113,11 +113,12 @@ public abstract class AbstractProcessingElementBuilder<BU extends
     return me();
   }
 
-  public BU requiredSingleValueSelectionFromContainer(Label label, String linkedMappingPropertyId) {
+  public BU requiredSingleValueSelectionFromContainer(Label label,
+                                                      List<String> dependsOn) {
     RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
             .getLabel(), label.getDescription());
 
-    rsp.setLinkedMappingPropertyId(linkedMappingPropertyId);
+    rsp.setDependsOn(dependsOn);
 
     this.staticProperties.add(rsp);
     return me();

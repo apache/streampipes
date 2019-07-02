@@ -34,7 +34,6 @@ import org.streampipes.model.staticproperty.MappingPropertyNary;
 import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
-import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.model.staticproperty.SelectionStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
@@ -96,8 +95,12 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
 
+  /**
+   * @deprecated Use {@link #selectedSingleValue(String, Class)} instead
+   */
+  @Deprecated
   public <V> V selectedSingleValueFromRemote(String internalName, Class<V> targetClass) {
-    return selectedSingleValue(internalName, targetClass, RuntimeResolvableOneOfStaticProperty.class);
+    return selectedSingleValue(internalName, targetClass);
   }
 
   public <V> V selectedSingleValue(String internalName, Class<V> targetClass) {

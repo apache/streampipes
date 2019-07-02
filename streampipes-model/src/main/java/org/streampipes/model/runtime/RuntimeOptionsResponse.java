@@ -16,28 +16,29 @@
  */
 package org.streampipes.model.runtime;
 
+import org.streampipes.model.staticproperty.Option;
+
 import java.util.List;
 
 public class RuntimeOptionsResponse extends RuntimeOptionsRequest {
 
-  private List<RuntimeOptions> options;
+  private List<Option> options;
 
   public RuntimeOptionsResponse() {
     super();
   }
 
-  public RuntimeOptionsResponse(RuntimeOptionsRequest request, List<RuntimeOptions> options) {
+  public RuntimeOptionsResponse(RuntimeOptionsRequest request, List<Option> options) {
     super();
     this.requestId = request.getRequestId();
-    this.mappedEventProperty = request.getMappedEventProperty();
     this.options = options;
   }
 
-  public List<RuntimeOptions> getOptions() {
+  public List<Option> getOptions() {
     return options;
   }
 
-  public void setOptions(List<RuntimeOptions> options) {
+  public void setOptions(List<Option> options) {
     this.options = options;
   }
 }
