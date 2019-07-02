@@ -5,9 +5,7 @@ export let OneOfRemoteComponent = {
     template: require('./oneof-remote.tmpl.html'),
     bindings: {
         staticProperty : "=",
-        eventProperties : "=",
-        staticProperties: "=",
-        belongsTo: "="
+        selectedElement: "="
     },
     controller: OneOfRemoteController,
     controllerAs: 'ctrl'

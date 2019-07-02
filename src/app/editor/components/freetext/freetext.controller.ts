@@ -8,6 +8,9 @@ export class FreeTextController {
     inputStreams: any;
     customizeForm: any;
 
+    $scope: any;
+    $rootScope: any;
+
     primitiveClasses = [{"id": "http://www.w3.org/2001/XMLSchema#string"},
         {"id": "http://www.w3.org/2001/XMLSchema#boolean"},
         {"id": "http://www.w3.org/2001/XMLSchema#integer"},
@@ -15,7 +18,10 @@ export class FreeTextController {
         {"id": "http://www.w3.org/2001/XMLSchema#double"},
         {"id": "http://www.w3.org/2001/XMLSchema#float"}];
 
-    constructor() { }
+    constructor($scope, $rootScope) {
+        this.$scope = $scope;
+        this.$rootScope = $rootScope;
+    }
 
     $onInit() {
         if (this.staticProperty.properties.valueSpecification) {
@@ -27,6 +33,11 @@ export class FreeTextController {
         }
     }
 
+    notifyListeners() {
+        this.$rootScope.$emit(
+            this.staticProperty.properties.internalName,
+            this.customizeForm[this.staticProperty.properties.internalName].$valid);
+    }
 
     updateCurrentEventProperty(mapsTo) {
         var eventProperty;
@@ -44,7 +55,7 @@ export class FreeTextController {
         if (!this.staticProperty.properties.value) {
             this.staticProperty.properties.value = "";
         }
-        this.staticProperty.properties.value = this.staticProperty.properties.value +"#" +runtimeName +"#" +" ";
+        this.staticProperty.properties.value = this.staticProperty.properties.value + "#" + runtimeName + "#" + " ";
     }
 
     getFriendlyDatatype() {
