@@ -20,6 +20,7 @@ package org.streampipes.connect.adapter.generic.format.image;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.FormatDescription;
+import org.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
 
 import java.util.Base64;
 import java.util.HashMap;
@@ -40,10 +41,8 @@ public class ImageFormat extends Format {
 
     @Override
     public FormatDescription declareModel() {
-        FormatDescription fd = new FormatDescription(ID, "Image", "Allows to process images");
-
-        fd.setAppId(ID);
-        return fd;
+       return FormatDescriptionBuilder.create(ID, "Image", "Processes images and transforms them into events")
+                .build();
     }
 
     @Override

@@ -20,6 +20,7 @@ package org.streampipes.connect.adapter.generic.format.json.object;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.json.AbstractJsonFormat;
 import org.streampipes.model.connect.grounding.FormatDescription;
+import org.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
 
 public class JsonObjectFormat extends AbstractJsonFormat {
 
@@ -32,11 +33,8 @@ public class JsonObjectFormat extends AbstractJsonFormat {
 
   @Override
   public FormatDescription declareModel() {
-    FormatDescription fd = new FormatDescription(ID, "Json Object", "This is the description" +
-            "for json format");
-
-    fd.setAppId(ID);
-    return fd;
+    return FormatDescriptionBuilder.create(ID, "Json Object", "Requires an enclosing Json Object")
+                .build();
   }
 
   @Override

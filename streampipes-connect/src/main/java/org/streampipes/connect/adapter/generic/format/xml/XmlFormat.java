@@ -25,13 +25,16 @@ import org.streampipes.connect.exception.ParseException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
+import org.streampipes.sdk.helpers.Labels;
 
 import java.util.Map;
 
 public class XmlFormat extends Format {
 
+    public static String TAG_ID = "tag";
     public static final String ID = "https://streampipes.org/vocabulary/v1/format/xml";
+
     private String tag;
 
     Logger logger = LoggerFactory.getLogger(XmlFormat.class);
@@ -46,22 +49,19 @@ public class XmlFormat extends Format {
     @Override
     public Format getInstance(FormatDescription formatDescription) {
         ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
-        String tag = extractor.singleValue("tag");
+        String tag = extractor.singleValue(TAG_ID);
 
         return new XmlFormat(tag);
     }
 
     @Override
     public FormatDescription declareModel() {
-        FormatDescription description = new FormatDescription(ID, "XML", "This is the description " +
-                "for the XML format");
-        FreeTextStaticProperty tagProperty = new FreeTextStaticProperty("tag" ,
-                "Tag", "The Tag name of the events");
 
-        description.addConfig(tagProperty);
-        description.setAppId(ID);
+        return FormatDescriptionBuilder.create(ID,"XML","Process XML data")
+                .requiredTextParameter(Labels.from(TAG_ID,"Tag",
+                        "Information in the tag is transformed into an event"))
+                .build();
 
-        return  description;
     }
 
     @Override
