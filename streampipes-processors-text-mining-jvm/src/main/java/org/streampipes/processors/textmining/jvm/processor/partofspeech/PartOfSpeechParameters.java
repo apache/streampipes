@@ -20,10 +20,10 @@ package org.streampipes.processors.textmining.jvm.processor.partofspeech;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class LanguageDetectionParameters extends EventProcessorBindingParams {
+public class PartOfSpeechParameters extends EventProcessorBindingParams {
     private String detectionName;
 
-    public LanguageDetectionParameters(DataProcessorInvocation graph, String fieldName)
+    public PartOfSpeechParameters(DataProcessorInvocation graph, String fieldName)
     {
         super(graph);
         this.detectionName = fieldName;

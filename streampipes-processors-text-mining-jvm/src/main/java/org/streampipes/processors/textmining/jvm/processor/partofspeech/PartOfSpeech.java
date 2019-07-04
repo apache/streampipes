@@ -17,12 +17,11 @@
 
 package org.streampipes.processors.textmining.jvm.processor.partofspeech;
 
-import opennlp.tools.langdetect.Language;
-import opennlp.tools.langdetect.LanguageDetector;
-import opennlp.tools.langdetect.LanguageDetectorME;
-import opennlp.tools.langdetect.LanguageDetectorModel;
+import opennlp.tools.postag.POSModel;
+import opennlp.tools.postag.POSTaggerME;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
+import org.streampipes.model.runtime.field.ListField;
 import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
@@ -30,37 +29,39 @@ import org.streampipes.wrapper.runtime.EventProcessor;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class LanguageDetection implements EventProcessor<LanguageDetectionParameters> {
+public class PartOfSpeech implements EventProcessor<PartOfSpeechParameters> {
 
   private static Logger LOG;
 
   private String detection;
-  private LanguageDetector languageDetector;
+  private POSTaggerME posTagger;
 
-  public LanguageDetection() {
-    try (InputStream modelIn = getClass().getClassLoader().getResourceAsStream("language-detection.bin")) {
-      LanguageDetectorModel model = new LanguageDetectorModel(modelIn);
-      languageDetector = new LanguageDetectorME(model);
+  public PartOfSpeech() {
+    try (InputStream modelIn = getClass().getClassLoader().getResourceAsStream("partofspeech-en-v2.bin")) {
+      POSModel model = new POSModel(modelIn);
+      posTagger = new POSTaggerME(model);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   @Override
-  public void onInvocation(LanguageDetectionParameters languageDetectionParameters,
+  public void onInvocation(PartOfSpeechParameters partOfSpeechParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = languageDetectionParameters.getGraph().getLogger(LanguageDetection.class);
-    this.detection = languageDetectionParameters.getDetectionName();
+    LOG = partOfSpeechParameters.getGraph().getLogger(PartOfSpeech.class);
+    this.detection = partOfSpeechParameters.getDetectionName();
   }
 
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
-    String text = inputEvent.getFieldBySelector(detection).getAsPrimitive().getAsString();
-    Language language = languageDetector.predictLanguage(text);
+    ListField text = inputEvent.getFieldBySelector(detection).getAsList();
 
-    inputEvent.addField(LanguageDetectionController.LANGUAGE_KEY, language.getLang());
-    inputEvent.addField(LanguageDetectionController.CONFIDENCE_KEY, language.getConfidence());
+    String[] tags = posTagger.tag(text.castItems(String.class).stream().toArray(String[]::new));
+    double[] confidence = posTagger.probs();
+    
+    inputEvent.addField(PartOfSpeechController.CONFIDENCE_KEY, confidence);
+    inputEvent.addField(PartOfSpeechController.TAG_KEY, tags);
 
     out.collect(inputEvent);
   }

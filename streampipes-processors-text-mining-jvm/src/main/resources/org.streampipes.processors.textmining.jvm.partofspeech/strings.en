@@ -1,0 +1,11 @@
+org.streampipes.processors.textmining.jvm.partofspeech.title=Part of Speech (English)
+org.streampipes.processors.textmining.jvm.partofspeech.description=Takes in a stream of tokens and appends a tag at the end of the word corresponding to the part of speech
+
+detectionField.title=Tokens
+detectionField.description=Specifies the event property from your stream that contains the tokens
+
+tag.title=Tag
+tag.description=The part of speech tag which was detected
+
+confidence.title=Confidence
+confidence.description=The probability that the detected part of speech is correct. Between 0 (no confidence) and 1 (highly confident).
