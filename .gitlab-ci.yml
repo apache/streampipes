@@ -2,7 +2,6 @@ variables:
   IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH
   HARBOR_IMAGE_NAME: $HARBOR_REGISTRY_HOST/$CI_PROJECT_PATH
   MAVEN_CLI_OPTS: -DskipTests --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true
-  GIT_REPO_ORIGIN: ssh://git@ipe-wim-gitlab.fzi.de:2222
   GIT_STRATEGY: clone
 
 stages:
@@ -60,7 +59,7 @@ docker-backend:
    script: 
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker login -u zehnder -p $HARBOR_PASSWORD ipe-habor.fzi.de
+     - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
      - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION -t $HARBOR_IMAGE_NAME/backend:latest -t $HARBOR_IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
      - docker push $IMAGE_NAME/backend:$MVN_VERSION
      - docker push $IMAGE_NAME/backend:latest
