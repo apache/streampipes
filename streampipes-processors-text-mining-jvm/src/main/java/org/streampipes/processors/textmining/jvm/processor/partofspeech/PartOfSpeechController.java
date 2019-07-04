@@ -33,7 +33,7 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDecl
 public class PartOfSpeechController extends StandaloneEventProcessingDeclarer<PartOfSpeechParameters> {
 
   private static final String DETECTION_FIELD_KEY = "detectionField";
-  static final String CONFIDENCE_KEY = "confidence";
+  static final String CONFIDENCE_KEY = "confidencePos";
   static final String TAG_KEY = "tag";
 
   //TODO: Change Icon

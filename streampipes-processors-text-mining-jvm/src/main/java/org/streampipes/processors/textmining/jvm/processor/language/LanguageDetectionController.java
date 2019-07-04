@@ -33,7 +33,7 @@ public class LanguageDetectionController extends StandaloneEventProcessingDeclar
 
   private static final String DETECTION_FIELD_KEY = "detectionField";
   static final String LANGUAGE_KEY = "language";
-  static final String CONFIDENCE_KEY = "confidence";
+  static final String CONFIDENCE_KEY = "confidenceLanguage";
 
   //TODO: Change Icon
   @Override
