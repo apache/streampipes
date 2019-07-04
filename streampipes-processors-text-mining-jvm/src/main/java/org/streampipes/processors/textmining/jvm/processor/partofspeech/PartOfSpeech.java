@@ -15,61 +15,52 @@
  *
  */
 
-package org.streampipes.processors.textmining.jvm.processor.tokenizer;
+package org.streampipes.processors.textmining.jvm.processor.partofspeech;
 
-import opennlp.tools.tokenize.TokenizerME;
-import opennlp.tools.tokenize.TokenizerModel;
+import opennlp.tools.langdetect.Language;
+import opennlp.tools.langdetect.LanguageDetector;
+import opennlp.tools.langdetect.LanguageDetectorME;
+import opennlp.tools.langdetect.LanguageDetectorModel;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
-import org.streampipes.model.runtime.field.AbstractField;
-import org.streampipes.model.runtime.field.ListField;
-import org.streampipes.model.runtime.field.PrimitiveField;
 import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
-public class Tokenizer implements EventProcessor<TokenizerParameters> {
+public class LanguageDetection implements EventProcessor<LanguageDetectionParameters> {
 
   private static Logger LOG;
 
-  // Field with the text
   private String detection;
-  private TokenizerME tokenizer;
+  private LanguageDetector languageDetector;
 
-  public Tokenizer() {
-    try (InputStream modelIn = getClass().getClassLoader().getResourceAsStream("tokenizer-en.bin")) {
-      TokenizerModel model = new TokenizerModel(modelIn);
-      tokenizer = new TokenizerME(model);
+  public LanguageDetection() {
+    try (InputStream modelIn = getClass().getClassLoader().getResourceAsStream("language-detection.bin")) {
+      LanguageDetectorModel model = new LanguageDetectorModel(modelIn);
+      languageDetector = new LanguageDetectorME(model);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   @Override
-  public void onInvocation(TokenizerParameters tokenizerParameters,
+  public void onInvocation(LanguageDetectionParameters languageDetectionParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = tokenizerParameters.getGraph().getLogger(Tokenizer.class);
-    this.detection = tokenizerParameters.getDetectionName();
+    LOG = languageDetectionParameters.getGraph().getLogger(LanguageDetection.class);
+    this.detection = languageDetectionParameters.getDetectionName();
   }
 
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
     String text = inputEvent.getFieldBySelector(detection).getAsPrimitive().getAsString();
+    Language language = languageDetector.predictLanguage(text);
 
-    List<AbstractField> listOfTokens = Arrays
-            .stream(tokenizer.tokenize(text))
-            .map(token -> new PrimitiveField("", "", token))
-            .collect(Collectors.toList());
-
-    ListField listField = new ListField("filedNameIn123","fieldNameOut123", listOfTokens);
-    inputEvent.addField(TokenizerController.TOKEN_LIST_FIELD_KEY, listField);
+    inputEvent.addField(LanguageDetectionController.LANGUAGE_KEY, language.getLang());
+    inputEvent.addField(LanguageDetectionController.CONFIDENCE_KEY, language.getConfidence());
 
     out.collect(inputEvent);
   }

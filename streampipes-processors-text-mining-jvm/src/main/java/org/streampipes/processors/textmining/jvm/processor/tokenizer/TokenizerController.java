@@ -24,10 +24,7 @@ import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.sdk.helpers.Locales;
-import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.*;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -35,8 +32,9 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDecl
 public class TokenizerController extends StandaloneEventProcessingDeclarer<TokenizerParameters> {
 
   private static final String DETECTION_FIELD_KEY = "detectionField";
+  static final String TOKEN_LIST_FIELD_KEY = "tokenListField";
 
-  //TODO: Change Icon
+  //TODO: Maybe change outputStrategy to an array instead of tons of different strings
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.textmining.jvm.tokenizer")
@@ -50,7 +48,9 @@ public class TokenizerController extends StandaloneEventProcessingDeclarer<Token
                             Labels.withId(DETECTION_FIELD_KEY),
                             PropertyScope.NONE)
                     .build())
-            .outputStrategy(OutputStrategies.keep())
+            .outputStrategy(OutputStrategies.append(EpProperties.listStringEp(Labels.withId(TOKEN_LIST_FIELD_KEY),
+                    TOKEN_LIST_FIELD_KEY,
+                    "http://schema.org/ItemList")))
             .build();
   }
 
