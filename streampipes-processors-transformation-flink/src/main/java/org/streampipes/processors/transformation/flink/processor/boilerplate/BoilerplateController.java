@@ -50,8 +50,6 @@ public class BoilerplateController extends FlinkDataProcessorDeclarer<Boilerplat
                         Options.from("Article Extractor", "Default Extractor", "Largest Content Extractor", "Canola Extractor", "Keep Everything Extractor"))
                 .requiredSingleValueSelection(Labels.withId(OUTPUT_MODE),
                         Options.from("Plain Text", "Highlighted Html", "Html"))
-                .supportedProtocols(SupportedProtocols.kafka())
-                .supportedFormats(SupportedFormats.jsonFormat())
                 .outputStrategy(OutputStrategies.keep())
                 .build();
     }

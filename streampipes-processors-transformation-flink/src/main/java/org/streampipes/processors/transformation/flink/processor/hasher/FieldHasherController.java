@@ -29,8 +29,6 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -53,8 +51,6 @@ public class FieldHasherController extends FlinkDataProcessorDeclarer<FieldHashe
             .requiredSingleValueSelection(Labels.withId(HASH_ALGORITHM),
                     Options.from("SHA1", "SHA2", "MD5"))
             .outputStrategy(OutputStrategies.keep())
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 

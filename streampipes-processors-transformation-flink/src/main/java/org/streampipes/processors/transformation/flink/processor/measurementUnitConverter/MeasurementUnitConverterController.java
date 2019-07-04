@@ -63,8 +63,6 @@ public class MeasurementUnitConverterController extends
                             (CONVERT_PROPERTY), PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
             .requiredSingleValueSelectionFromContainer(Labels.withId(OUTPUT_UNIT), "convert-property")
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .outputStrategy(OutputStrategies.transform(TransformOperations
                     .dynamicMeasurementUnitTransformation(CONVERT_PROPERTY, OUTPUT_UNIT)))
             .build();
