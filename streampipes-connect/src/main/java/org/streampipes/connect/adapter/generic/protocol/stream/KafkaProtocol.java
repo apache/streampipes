@@ -18,11 +18,7 @@
 package org.streampipes.connect.adapter.generic.protocol.stream;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -32,8 +28,6 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.SendToPipeline;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
-import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectFormat;
-import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectParser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
@@ -42,19 +36,13 @@ import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
-import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.streampipes.sdk.helpers.AdapterSourceType;
 import org.streampipes.sdk.helpers.Labels;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class KafkaProtocol extends BrokerProtocol {
 
@@ -144,17 +132,6 @@ public class KafkaProtocol extends BrokerProtocol {
 
         return resultEventsByte;
     }
-
-    public static void main(String... args) throws ParseException {
-        Parser parser = new JsonObjectParser();
-        Format format = new JsonObjectFormat();
-        KafkaProtocol kp = new KafkaProtocol(parser, format, "localhost:9092", "org.streampipes.examples.flowrate-1");
-        GuessSchema gs = kp.getGuessSchema();
-
-        System.out.println(gs);
-
-    }
-
 
     private static Consumer<Long, String> createConsumer(String broker, String topic) {
         final Properties props = new Properties();

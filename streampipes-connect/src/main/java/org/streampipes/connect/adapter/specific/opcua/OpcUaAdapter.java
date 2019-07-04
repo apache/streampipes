@@ -23,6 +23,7 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
 import org.streampipes.connect.adapter.Adapter;
+import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.connect.adapter.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.exception.ParseException;
@@ -31,8 +32,6 @@ import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.streampipes.sdk.helpers.Labels;
@@ -184,19 +183,11 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
     }
 
     private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
-        List<StaticProperty> all = adapterDescription.getConfig();
+        ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
 
-        for (StaticProperty sp : all) {
-            if (sp.getInternalName().equals(OPC_SERVER_HOST)) {
-                this.opcUaServer = ((FreeTextStaticProperty) sp).getValue();
-            } else if (sp.getInternalName().equals(OPC_SERVER_PORT)) {
-                this.port = ((FreeTextStaticProperty) sp).getValue();
-            } else if (sp.getInternalName().equals(NAMESPACE_INDEX)) {
-                this.namespaceIndex = ((FreeTextStaticProperty) sp).getValue();
-            }else {
-                this.nodeId = ((FreeTextStaticProperty) sp).getValue();
-            }
-
-        }
+        this.opcUaServer = extractor.singleValue(OPC_SERVER_HOST, String.class);
+        this.port = extractor.singleValue(OPC_SERVER_PORT, String.class);
+        this.namespaceIndex = extractor.singleValue(NAMESPACE_INDEX, String.class);
+        this.nodeId = extractor.singleValue(NODE_ID, String.class);
     }
 }
