@@ -59,7 +59,8 @@ public class PartOfSpeech implements EventProcessor<PartOfSpeechParameters> {
 
     String[] tags = posTagger.tag(text.castItems(String.class).stream().toArray(String[]::new));
     double[] confidence = posTagger.probs();
-    
+
+
     inputEvent.addField(PartOfSpeechController.CONFIDENCE_KEY, confidence);
     inputEvent.addField(PartOfSpeechController.TAG_KEY, tags);
 

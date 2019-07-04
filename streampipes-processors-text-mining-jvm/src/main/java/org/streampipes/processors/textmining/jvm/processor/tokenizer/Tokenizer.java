@@ -21,18 +21,12 @@ import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
-import org.streampipes.model.runtime.field.AbstractField;
-import org.streampipes.model.runtime.field.ListField;
-import org.streampipes.model.runtime.field.PrimitiveField;
 import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Tokenizer implements EventProcessor<TokenizerParameters> {
 
@@ -63,13 +57,7 @@ public class Tokenizer implements EventProcessor<TokenizerParameters> {
   public void onEvent(Event inputEvent, SpOutputCollector out) {
     String text = inputEvent.getFieldBySelector(detection).getAsPrimitive().getAsString();
 
-    List<AbstractField> listOfTokens = Arrays
-            .stream(tokenizer.tokenize(text))
-            .map(token -> new PrimitiveField("", "", token))
-            .collect(Collectors.toList());
-
-    ListField listField = new ListField("filedNameIn123","fieldNameOut123", listOfTokens);
-    inputEvent.addField(TokenizerController.TOKEN_LIST_FIELD_KEY, listField);
+    inputEvent.addField(TokenizerController.TOKEN_LIST_FIELD_KEY, tokenizer.tokenize(text));
 
     out.collect(inputEvent);
   }

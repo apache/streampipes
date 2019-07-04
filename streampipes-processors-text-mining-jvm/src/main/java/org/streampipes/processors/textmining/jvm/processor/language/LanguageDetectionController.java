@@ -54,7 +54,8 @@ public class LanguageDetectionController extends StandaloneEventProcessingDeclar
                             Labels.withId(LANGUAGE_KEY),
                             LANGUAGE_KEY,
                             "http://schema.org/language"),
-                    EpProperties.doubleEp(Labels.withId(CONFIDENCE_KEY),
+                    EpProperties.doubleEp(
+                            Labels.withId(CONFIDENCE_KEY),
                             CONFIDENCE_KEY,
                             "https://schema.org/Float")))
             .build();
