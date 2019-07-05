@@ -32,7 +32,7 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDecl
 public class TokenizerController extends StandaloneEventProcessingDeclarer<TokenizerParameters> {
 
   private static final String DETECTION_FIELD_KEY = "detectionField";
-  static final String TOKEN_LIST_FIELD_KEY = "tokenListField";
+  static final String TOKEN_LIST_FIELD_KEY = "tokenList";
 
   //TODO: Maybe change outputStrategy to an array instead of tons of different strings
   @Override

@@ -4,5 +4,5 @@ org.streampipes.processors.textmining.jvm.tokenizer.description=Segments a text 
 detectionField.title=Text
 detectionField.description=Specifies the event property from your stream that contains the text that should be segmented
 
-tokenListField.title=List of Tokens
-tokenListField.description=List of the tokens in the sentence
+tokenList.title=List of Tokens
+tokenList.description=List of the tokens in the sentence

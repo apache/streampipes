@@ -34,7 +34,7 @@ public class PartOfSpeechController extends StandaloneEventProcessingDeclarer<Pa
 
   private static final String DETECTION_FIELD_KEY = "detectionField";
   static final String CONFIDENCE_KEY = "confidencePos";
-  static final String TAG_KEY = "tag";
+  static final String TAG_KEY = "tagPos";
 
   //TODO: Change Icon
   @Override
