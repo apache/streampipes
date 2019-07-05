@@ -34,8 +34,8 @@ public class ChunkerController extends StandaloneEventProcessingDeclarer<Chunker
 
   private static final String TAGS_FIELD_KEY = "tagsField";
   private static final String TOKENS_FIELD_KEY = "tokensField";
-  static final String CONFIDENCE_KEY = "confidenceChunker";
-  static final String CHUNK_KEY = "chunk";
+  static final String CHUNK_TYPE_FIELD_KEY = "chunkType";
+  static final String CHUNK_FIELD_KEY = "chunk";
 
   //TODO: Change Icon
   @Override
@@ -57,12 +57,12 @@ public class ChunkerController extends StandaloneEventProcessingDeclarer<Chunker
                     .build())
             .outputStrategy(OutputStrategies.append(
                     EpProperties.listStringEp(
-                            Labels.withId(CONFIDENCE_KEY),
-                            CONFIDENCE_KEY,
+                            Labels.withId(CHUNK_TYPE_FIELD_KEY),
+                            CHUNK_TYPE_FIELD_KEY,
                             "http://schema.org/ItemList"),
                     EpProperties.listStringEp(
-                            Labels.withId(CHUNK_KEY),
-                            CHUNK_KEY,
+                            Labels.withId(CHUNK_FIELD_KEY),
+                            CHUNK_FIELD_KEY,
                             "http://schema.org/ItemList")))
             .build();
   }
