@@ -40,8 +40,6 @@ export class StaticRuntimeResolvableOneOfInputComponent implements OnInit, OnCha
 
         if (this.staticProperty.options.length == 0 && (!this.staticProperty.dependsOn || this.staticProperty.dependsOn.length == 0)) {
             this.loadOptionsFromRestApi();
-        } else {
-            this.loadSavedProperty();
         }
 
         if (this.staticProperty.dependsOn && this.staticProperty.dependsOn.length > 0) {
@@ -64,17 +62,8 @@ export class StaticRuntimeResolvableOneOfInputComponent implements OnInit, OnCha
                 this.staticProperty.options[0].selected = true;
             }
             this.loading = false;
-            this.loadSavedProperty();
+            this.showOptions = true;
         });
-    }
-
-    loadSavedProperty() {
-        this.staticProperty.options.forEach(option => {
-            if (option.selected) {
-                //this.staticProperty.currentSelection = option;
-            }
-        });
-        this.showOptions = true;
     }
 
     select(id) {
