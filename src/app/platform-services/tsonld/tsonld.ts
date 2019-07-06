@@ -158,7 +158,6 @@ export class TsonLd {
     const context = obj['@context'];
     const graph = obj['@graph'];
 
-
     // Get rdfs type of p
     // const objectType: String = Reflect.getMetadata('RdfsClass', Person);
 
@@ -183,10 +182,7 @@ export class TsonLd {
     } else if (!isUndefined(ids[id])) {
       return ids[id];
     } else {
-      console.log('graph: ' + graph);
       console.log('FIX BUG: Pass id to fromJSON-LD');
-      console.log('id: ' + id);
-      console.log('ids: ' + JSON.stringify(ids, null, 2));
     }
 
     // Create the result object
@@ -207,17 +203,14 @@ export class TsonLd {
       }
       // skip the @type property
       if (property !== '@type') {
-
         // check whether property is object or literal
         if (typeof jsonObject[property] === 'object'  && !isUndefined(objectProp)) {
-
           // check if object or array
           if (Array.isArray(jsonObject[property])) {
             // TODO check if needed
             result[objectProp] = [];
             // ARRAY
             if (jsonObject[property].length > 0 && typeof jsonObject[property][0] === 'object') {
-
               for (const elem of jsonObject[property]) {
 
                 // 1. check if already deserialized
@@ -294,8 +287,6 @@ export class TsonLd {
                   const nestedResult = this.fromJsonLd(newObj, ids, jsonObject[property]['@id']);
                   // case where array just has one element (this is serialized as an object)
 
-                  console.log(JSON.stringify(result, null, 2));
-                  console.log(objectProp);
                   if (Array.isArray(result[objectProp])) {
 
                     result[objectProp] = [nestedResult];
@@ -323,7 +314,6 @@ export class TsonLd {
     }
 
 // TODO add handling for and for nested properties
-
     return result;
 
   }

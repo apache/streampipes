@@ -64,6 +64,11 @@ import {PipelineTemplateDescriptionContainer} from '../connect/model/PipelineTem
 import {PipelineTemplateDescription} from '../connect/model/PipelineTemplateDescription';
 import {BoundPipelineElement} from '../connect/model/BoundPipelineElement';
 import {DataSinkInvocation} from '../connect/model/DataSinkInvocation';
+import {RuntimeResolvableOneOfStaticProperty } from "../connect/model/RuntimeResolvableOneOfStaticProperty";
+import {RuntimeResolvableAnyStaticProperty} from "../connect/model/RuntimeResolvableAnyStaticProperty";
+import {RuntimeOptionsRequest} from "../connect/model/connect/runtime/RuntimeOptionsRequest";
+import {RuntimeOptionsResponse} from "../connect/model/connect/runtime/RuntimeOptionsResponse";
+
 
 @Injectable()
 export class TsonLdSerializerService {
@@ -135,6 +140,12 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(PropertyRenameRule);
         tsonld.addClassMapping(TransformOperation);
         tsonld.addClassMapping(TransformOutputStrategy);
+
+        tsonld.addClassMapping(RuntimeResolvableAnyStaticProperty);
+        tsonld.addClassMapping(RuntimeResolvableOneOfStaticProperty);
+
+        tsonld.addClassMapping(RuntimeOptionsRequest);
+        tsonld.addClassMapping(RuntimeOptionsResponse);
 
         tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
         tsonld.addContext('spi', 'urn:streampipes.org:spi:');

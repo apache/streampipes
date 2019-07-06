@@ -58,16 +58,17 @@ import { StaticFileInputComponent } from './static-properties/static-file-input/
 import { StaticFileRestService } from './static-properties/static-file-input/static-file-rest.service';
 import { FileManagementComponent } from './file-management/file-management.component';
 import { FileRestService } from './file-management/service/filerest.service';
+import { StaticRuntimeResolvableAnyInputComponent} from "./static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component";
+import { StaticRuntimeResolvableOneOfInputComponent} from "./static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component";
 
 import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
 import { AdapterExportDialog } from './data-marketplace/adapter-export/adapter-export-dialog.component';
 import { AdapterUploadDialog } from './data-marketplace/adapter-upload/adapter-upload-dialog.component';
-import { TsonLdSerializerService } from '../platform-services/tsonld-serializer.service';
 import { EventPropertyListComponent } from './schema-editor/event-property-list/event-property-list.component';
-import {StaticMappingNaryComponent} from './static-properties/static-mapping-nary/static-mapping-nary.component';
-import {StaticMappingUnaryComponent} from './static-properties/static-mapping-unary/static-mapping-unary.component';
-import {TimestampPipe} from './filter/timestamp.pipe';
-import {PlatformServicesModule} from '../platform-services/platform.module';
+import { StaticMappingNaryComponent } from './static-properties/static-mapping-nary/static-mapping-nary.component';
+import { StaticMappingUnaryComponent } from './static-properties/static-mapping-unary/static-mapping-unary.component';
+import { TimestampPipe } from './filter/timestamp.pipe';
+import { PlatformServicesModule } from '../platform-services/platform.module';
 
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
@@ -124,6 +125,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
         ConnectComponent,
         SelectStaticPropertiesComponent,
         StaticOneOfInputComponent,
+        StaticRuntimeResolvableAnyInputComponent,
+        StaticRuntimeResolvableOneOfInputComponent,
         FileManagementComponent,
         FilterPipe
     ],

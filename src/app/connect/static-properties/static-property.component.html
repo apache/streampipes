@@ -8,22 +8,27 @@
 </app-static-number-input>
 
 <app-static-text-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).render && staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty == xsService.XS_STRING1"
-    (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
+    (updateEmitter)="emitUpdate($event)" (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
 </app-static-text-input>
 
 <app-static-free-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).render && (staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty == '' || !staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty) "
-    (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
+    (inputEmitter)="valueChange($event)" (updateEmitter)="emitUpdate($event)" [staticProperty]="staticProperty">
 </app-static-free-input>
 
 <app-static-file-input *ngIf="isFileStaticProperty(staticProperty)"
     (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
 </app-static-file-input>
 
+<app-static-runtime-resolvable-any-input *ngIf="isRuntimeResolvableAnyStaticProperty(staticProperty)"
+                      (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty"></app-static-runtime-resolvable-any-input>
 
-<app-static-any-input *ngIf="isAnyStaticProperty(staticProperty)"
+<app-static-runtime-resolvable-oneof-input *ngIf="isRuntimeResolvableOneOfStaticProperty(staticProperty)"
+(inputEmitter)="valueChange($event)" [completedStaticProperty]="completedStaticProperty" [staticProperty]="staticProperty" [staticProperties]="staticProperties" [adapterId]="adapterId"></app-static-runtime-resolvable-oneof-input>
+
+<app-static-any-input *ngIf="isAnyStaticProperty(staticProperty) && !isRuntimeResolvableAnyStaticProperty(staticProperty)"
                       (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty"></app-static-any-input>
 
-<app-static-one-of-input *ngIf="isOneOfStaticProperty(staticProperty)"
+<app-static-one-of-input *ngIf="isOneOfStaticProperty(staticProperty) && !isRuntimeResolvableOneOfStaticProperty(staticProperty)"
                          (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
 </app-static-one-of-input>
 

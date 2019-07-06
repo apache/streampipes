@@ -7,7 +7,7 @@
             <mat-form-field fxFlex>
                 <input fxFlex id="{{ 'input-' + staticProperty.label.toLowerCase() }}" matInput [placeholder]="staticProperty.label" [(ngModel)]="staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value"
                     formControlName="freeStaticText" (ngModelChange)="valueChange(staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value)"
-                    required>
+                    required (blur)="emitUpdate()">
                 <mat-hint>{{staticProperty.description}}</mat-hint>
 
                 <mat-error *ngIf="!hasInput">

@@ -1,13 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FreeTextStaticProperty } from '../../model/FreeTextStaticProperty';
 import { StaticProperty } from '../../model/StaticProperty';
-import { MappingPropertyUnary } from '../../model/MappingPropertyUnary';
-import { DataSetDescription } from '../../model/DataSetDescription';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { Logger } from '../../../shared/logger/default-log.service';
-import { ifError } from 'assert';
-import { ValidateUrl, ValidateNumber, ValidateString } from '../../select-protocol-component/input.validator';
+import { ValidateString } from '../../select-protocol-component/input.validator';
 import {StaticPropertyUtilService} from '../static-property-util.service';
+import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
 
 @Component({
     selector: 'app-static-text-input',
@@ -19,6 +15,8 @@ export class StaticTextInputComponent implements OnInit {
     constructor(private staticPropertyUtil: StaticPropertyUtilService){
 
     }
+
+    @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
 
     @Input() staticProperty: StaticProperty;
     @Output() inputEmitter: EventEmitter<any> = new EventEmitter<any>();
@@ -53,6 +51,10 @@ export class StaticTextInputComponent implements OnInit {
 
         this.inputEmitter.emit(this.hasInput);
 
+    }
+
+    emitUpdate() {
+        this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value && this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value !== ""));
     }
 
 }

@@ -52,7 +52,6 @@ export class StaticFileInputComponent implements OnInit {
                     } else if (event instanceof HttpResponse) {
                         (<FileStaticProperty> (this.staticProperty)).locationPath = event.body.notifications[0].title;
                                this.valueChange(true);
-                        console.log('File is completely loaded!');
                     }
                 },
                 error => {

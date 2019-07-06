@@ -295,13 +295,9 @@ export class NewAdapterComponent implements OnInit {
     }
 
     goBack(stepper: MatStepper) {
-        console.log(this.myStepper.selectedIndex);
         this.myStepper.selectedIndex = this.myStepper.selectedIndex - 1;
-        // this.myStepper.previous();
     }
     goForward(stepper: MatStepper) {
         this.myStepper.selectedIndex = this.myStepper.selectedIndex + 1;
-        // this.myStepper.selectedIndex++;
-        // this.myStepper.next();
     }
 }

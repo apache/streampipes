@@ -82,7 +82,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
         MatTooltipModule,
         MatProgressBarModule,
         MatButtonToggleModule
-    ],
+    ]
 })
 export class CustomMaterialModule {
 }
