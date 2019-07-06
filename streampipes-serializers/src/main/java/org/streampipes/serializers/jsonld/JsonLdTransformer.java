@@ -62,7 +62,9 @@ public class JsonLdTransformer implements RdfTransformer {
           StreamPipes.SPECIFIC_ADAPTER_SET_DESCRIPTION,
           StreamPipes.SPECIFIC_ADAPTER_STREAM_DESCRIPTION,
 //          StreamPipes.ADAPTER_SET_DESCRIPTION,
-          StreamPipes.ADAPTER_DESCRIPTION_LIST
+          StreamPipes.ADAPTER_DESCRIPTION_LIST,
+          StreamPipes.RUNTIME_OPTIONS_REQUEST,
+          StreamPipes.RUNTIME_OPTIONS_RESPONSE
 
   );
 

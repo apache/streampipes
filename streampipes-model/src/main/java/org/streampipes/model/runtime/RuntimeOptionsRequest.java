@@ -16,28 +16,49 @@
  */
 package org.streampipes.model.runtime;
 
+import org.streampipes.empire.annotations.RdfProperty;
+import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.vocabulary.StreamPipes;
 
 import java.util.List;
 
-public class RuntimeOptionsRequest {
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 
+@RdfsClass(StreamPipes.RUNTIME_OPTIONS_REQUEST)
+@Entity
+public class RuntimeOptionsRequest extends UnnamedStreamPipesEntity {
+
+  @RdfProperty(StreamPipes.HAS_REQUEST_ID)
   protected String requestId;
 
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.HAS_STATIC_PROPERTY)
   protected List<StaticProperty> staticProperties;
+
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.RECEIVES_STREAM)
   protected List<SpDataStream> inputStreams;
 
   public RuntimeOptionsRequest() {
-
+    super();
   }
 
   public RuntimeOptionsRequest(String requestId) {
+    super();
     this.requestId = requestId;
   }
 
   public RuntimeOptionsRequest(String requestId, List<StaticProperty> staticProperties,
                                List<SpDataStream> inputStreams) {
+    super();
     this.requestId = requestId;
     this.staticProperties = staticProperties;
     this.inputStreams = inputStreams;

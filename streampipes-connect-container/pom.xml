@@ -20,10 +20,6 @@
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-container</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
         </dependency>
         <dependency>

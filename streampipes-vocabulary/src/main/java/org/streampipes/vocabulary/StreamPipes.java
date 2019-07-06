@@ -335,4 +335,7 @@ public class StreamPipes {
   public static final String INCLUDED_LOCALES = NS + "includedLocales";
 
   public static final String DEPENDS_ON_STATIC_PROPERTY = NS + "dependsOnStaticProperty";
+  public static final String RUNTIME_OPTIONS_REQUEST = NS + "RuntimeOptionsRequest";
+  public static final String RUNTIME_OPTIONS_RESPONSE = NS + "RuntimeOptionsResponse";
+  public static final String HAS_REQUEST_ID = NS + "hasRequestId";
 }

@@ -24,6 +24,7 @@ import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.PropertyValueSpecification;
+import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
 import org.streampipes.sdk.helpers.Label;
@@ -608,6 +609,25 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
     return me();
 
+  }
+
+  public BU requiredSingleValueSelectionFromContainer(Label label) {
+    RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
+            .getLabel(), label.getDescription());
+
+    this.staticProperties.add(rsp);
+    return me();
+  }
+
+  public BU requiredSingleValueSelectionFromContainer(Label label,
+                                                      List<String> dependsOn) {
+    RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
+            .getLabel(), label.getDescription());
+
+    rsp.setDependsOn(dependsOn);
+
+    this.staticProperties.add(rsp);
+    return me();
   }
 
   private FreeTextStaticProperty prepareFreeTextStaticProperty(String internalId, String label, String description, String type) {

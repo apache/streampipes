@@ -32,18 +32,18 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.SendToPipeline;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.Parser;
-import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectFormat;
-import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectParser;
 import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.generic.protocol.Protocol;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.connect.exception.ParseException;
+import org.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
-import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.model.staticproperty.Option;
 import org.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
+import org.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.streampipes.sdk.helpers.AdapterSourceType;
 import org.streampipes.sdk.helpers.Labels;
 
@@ -55,8 +55,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-public class KafkaProtocol extends BrokerProtocol {
+public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerProvidedOptions {
 
     Logger logger = LoggerFactory.getLogger(KafkaProtocol.class);
 
@@ -75,8 +77,10 @@ public class KafkaProtocol extends BrokerProtocol {
     @Override
     public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
         ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
-        String brokerUrl = extractor.singleValue("broker_url");
-        String topic = extractor.singleValue("topic");
+        String brokerHost = extractor.singleValue("broker_url", String.class);
+        Integer brokerPort = extractor.singleValue("broker_port", Integer.class);
+        String brokerUrl = brokerHost + ":" + brokerPort;
+        String topic = extractor.selectedSingleValueOption("topic");
 
         return new KafkaProtocol(parser, format, brokerUrl, topic);
     }
@@ -88,10 +92,12 @@ public class KafkaProtocol extends BrokerProtocol {
                 .iconUrl("kafka.jpg")
                 .category(AdapterType.Generic, AdapterType.Manufacturing)
                 .sourceType(AdapterSourceType.STREAM)
-                .requiredTextParameter(Labels.from("broker_url", "Broker URL",
-                        "Example: test.server.com:9092 (No protocol. Port required)"))
-                .requiredTextParameter(Labels.from("topic", "Topic",
-                        "Example: test.topic"))
+                .requiredTextParameter(Labels.from("broker_url", "Broker Hostname",
+                        "Example: test.server.com (No protocol)"))
+                .requiredIntegerParameter(Labels.from("broker_port", "Broker Port", "Example: " +
+                        "9092"))
+                .requiredSingleValueSelectionFromContainer(Labels.from("topic", "Topic",
+                        "Example: test.topic"), Arrays.asList("broker_url", "broker_port"))
                 .build();
     }
 
@@ -145,17 +151,6 @@ public class KafkaProtocol extends BrokerProtocol {
         return resultEventsByte;
     }
 
-    public static void main(String... args) throws ParseException {
-        Parser parser = new JsonObjectParser();
-        Format format = new JsonObjectFormat();
-        KafkaProtocol kp = new KafkaProtocol(parser, format, "localhost:9092", "org.streampipes.examples.flowrate-1");
-        GuessSchema gs = kp.getGuessSchema();
-
-        System.out.println(gs);
-
-    }
-
-
     private static Consumer<Long, String> createConsumer(String broker, String topic) {
         final Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -204,6 +199,25 @@ public class KafkaProtocol extends BrokerProtocol {
 
         logger.info("Kafka Adapter was sucessfully stopped");
         thread.interrupt();
+    }
+
+    @Override
+    public List<Option> resolveOptions(String requestId, StaticPropertyExtractor extractor) {
+        String kafkaHost = extractor.singleValueParameter("broker_url", String.class);
+        Integer kafkaPort = extractor.singleValueParameter("broker_port", Integer.class);
+
+        String kafkaAddress = kafkaHost + ":" + kafkaPort;
+
+        Properties props = new Properties();
+        props.put("bootstrap.servers", kafkaAddress);
+        props.put("group.id", "test-consumer-group");
+        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
+        Set<String> topics = consumer.listTopics().keySet();
+        consumer.close();
+        return topics.stream().map(Option::new).collect(Collectors.toList());
     }
 
 

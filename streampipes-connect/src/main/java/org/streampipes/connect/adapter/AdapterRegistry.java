@@ -55,6 +55,7 @@ import org.streampipes.connect.adapter.specific.simulator.RandomDataStreamAdapte
 import org.streampipes.connect.adapter.specific.slack.SlackAdapter;
 import org.streampipes.connect.adapter.specific.wikipedia.WikipediaEditedArticlesAdapter;
 import org.streampipes.connect.adapter.specific.wikipedia.WikipediaNewArticlesAdapter;
+import org.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.HashMap;
@@ -64,6 +65,8 @@ import java.util.Map;
  * Contains all implemented adapters
  */
 public class AdapterRegistry {
+
+    private static final String SP_NS =  "https://streampipes.org/vocabulary/v1/";
 
     public static Map<String, Adapter> getAllAdapters() {
         Map<String, Adapter> allAdapters = new HashMap<>();
@@ -138,6 +141,23 @@ public class AdapterRegistry {
             return adapterMap.get(adapterDescription.getAdapterId()).getInstance(adapterDescription);
         } else {
             return null;
+        }
+    }
+
+    public static ResolvesContainerProvidedOptions getRuntimeResolvableAdapter(String id) throws IllegalArgumentException {
+        id = id.replaceAll("sp:", SP_NS);
+        Map<String, Adapter> allAdapters = getAllAdapters();
+        Map<String, Format> allFormats = getAllFormats();
+        Map<String, Protocol> allProtocols =  getAllProtocols();
+
+        if (allAdapters.containsKey(id)) {
+            return (ResolvesContainerProvidedOptions) allAdapters.get(id);
+        } else if (allProtocols.containsKey(id)) {
+            return (ResolvesContainerProvidedOptions) allProtocols.get(id);
+        } else if (allFormats.containsKey(id)) {
+            return (ResolvesContainerProvidedOptions) allFormats.get(id);
+        } else {
+            throw new IllegalArgumentException("Could not find adapter with id " + id);
         }
     }
 

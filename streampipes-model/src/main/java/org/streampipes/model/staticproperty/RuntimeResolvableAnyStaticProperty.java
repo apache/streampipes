@@ -36,16 +36,24 @@ public class RuntimeResolvableAnyStaticProperty extends OneOfStaticProperty {
   @RdfProperty(StreamPipes.DEPENDS_ON_STATIC_PROPERTY)
   private List<String> dependsOn;
 
-    public RuntimeResolvableAnyStaticProperty() {
-      super(StaticPropertyType.RuntimeResolvableAnyStaticProperty);
-    }
+  public RuntimeResolvableAnyStaticProperty() {
+    super(StaticPropertyType.RuntimeResolvableAnyStaticProperty);
+  }
 
-  public RuntimeResolvableAnyStaticProperty(RuntimeResolvableOneOfStaticProperty other) {
+  public RuntimeResolvableAnyStaticProperty(RuntimeResolvableAnyStaticProperty other) {
     super(other);
     this.dependsOn = other.getDependsOn();
   }
 
-    public RuntimeResolvableAnyStaticProperty(String internalName, String label, String description) {
-      super(StaticPropertyType.RuntimeResolvableAnyStaticProperty, internalName, label, description);
-    }
+  public RuntimeResolvableAnyStaticProperty(String internalName, String label, String description) {
+    super(StaticPropertyType.RuntimeResolvableAnyStaticProperty, internalName, label, description);
+  }
+
+  public List<String> getDependsOn() {
+    return dependsOn;
+  }
+
+  public void setDependsOn(List<String> dependsOn) {
+    this.dependsOn = dependsOn;
+  }
 }

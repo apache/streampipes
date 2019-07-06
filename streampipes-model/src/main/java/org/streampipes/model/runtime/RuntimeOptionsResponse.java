@@ -16,12 +16,25 @@
  */
 package org.streampipes.model.runtime;
 
+import org.streampipes.empire.annotations.RdfProperty;
+import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.staticproperty.Option;
+import org.streampipes.vocabulary.StreamPipes;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+
+@RdfsClass(StreamPipes.RUNTIME_OPTIONS_RESPONSE)
+@Entity
 public class RuntimeOptionsResponse extends RuntimeOptionsRequest {
 
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.HAS_OPTION)
   private List<Option> options;
 
   public RuntimeOptionsResponse() {

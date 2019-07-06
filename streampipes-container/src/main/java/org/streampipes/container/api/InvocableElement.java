@@ -97,7 +97,6 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
 
         return GsonSerializer.getGsonWithIds().toJson(new RuntimeOptionsResponse(runtimeOptionsRequest,
                 availableOptions));
-
     }
 
     @POST
