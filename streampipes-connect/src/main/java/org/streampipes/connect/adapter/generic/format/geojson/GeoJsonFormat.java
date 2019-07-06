@@ -23,6 +23,7 @@ import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.exception.ParseException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.model.connect.grounding.FormatDescription;
+import org.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +36,10 @@ public class GeoJsonFormat extends Format {
 
     @Override
     public FormatDescription declareModel() {
-        FormatDescription description = new FormatDescription(ID, "GeoJSON", "This is the description " +
-                "for the geoJSON format");
 
-        description.setAppId(ID);
-        return description;
+        return FormatDescriptionBuilder.create(ID, "GeoJSON", "Reads GeoJson")
+                .build();
+
     }
 
     @Override
