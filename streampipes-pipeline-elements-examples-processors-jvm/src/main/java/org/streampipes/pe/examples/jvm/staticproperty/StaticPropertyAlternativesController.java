@@ -15,17 +15,15 @@ limitations under the License.
 */
 package org.streampipes.pe.examples.jvm.staticproperty;
 
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.staticproperty.Option;
 import org.streampipes.pe.examples.jvm.base.DummyEngine;
 import org.streampipes.pe.examples.jvm.base.DummyParameters;
+import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.streampipes.sdk.helpers.Alternatives;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OutputStrategies;
@@ -34,14 +32,8 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-public class RuntimeResolvableSingleValue extends
-        StandaloneEventProcessingDeclarer<DummyParameters> implements ResolvesContainerProvidedOptions {
+public class StaticPropertyAlternativesController extends
+        StandaloneEventProcessingDeclarer<DummyParameters> {
 
   private static final String KafkaHost = "kafka-host";
   private static final String KafkaPort = "kafka-port";
@@ -49,7 +41,7 @@ public class RuntimeResolvableSingleValue extends
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.examples.staticproperty" +
-            ".runtimeresolvablesingle", "Runtime-resolvable single value example", "")
+            ".alternatives", "Static property alternatives example", "")
             .requiredStream(StreamRequirementsBuilder.
                     create()
                     .requiredProperty(EpRequirements.anyProperty())
@@ -58,42 +50,23 @@ public class RuntimeResolvableSingleValue extends
             .supportedProtocols(SupportedProtocols.kafka())
             .supportedFormats(SupportedFormats.jsonFormat())
             .requiredTextParameter(Labels.from(KafkaHost, "Kafka Host", ""))
-            .requiredIntegerParameter(Labels.from(KafkaPort, "Kafka Port", ""))
 
-            // create a single value selection parameter that is resolved at runtime
-            .requiredSingleValueSelectionFromContainer(Labels.from("id", "Example Name", "Example " +
-                    "Description"), Arrays.asList(KafkaHost, KafkaPort))
-
+            .requiredAlternatives(Labels.from("window", "Window", ""),
+                    Alternatives.from(Labels.from("count", "Count Window", ""),
+                            StaticProperties.integerFreeTextProperty(Labels.from("count-window-size",
+                                    "Count Window Size", ""))),
+                    Alternatives.from(Labels.from("time", "Time Window", ""),
+                            StaticProperties.integerFreeTextProperty(Labels.from("time" +
+                                    "-window-size", "Time Window Size", ""))))
             .build();
   }
 
   @Override
   public ConfiguredEventProcessor<DummyParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-    // Extract the text parameter value
-    String selectedSingleValue = extractor.selectedSingleValue("id", String.class);
-
-    // now the text parameter would be added to a parameter class (omitted for this example)
+System.out.println("incov");
 
     return new ConfiguredEventProcessor<>(new DummyParameters(graph), DummyEngine::new);
   }
 
-  @Override
-  public List<Option> resolveOptions(String requestId, StaticPropertyExtractor extractor) {
-    String host = extractor.singleValueParameter(KafkaHost, String.class);
-    Integer port = extractor.singleValueParameter(KafkaPort, Integer.class);
-
-    String kafkaAddress = host + ":" + port;
-
-    Properties props = new Properties();
-    props.put("bootstrap.servers", kafkaAddress);
-    props.put("group.id", "test-consumer-group");
-    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-
-    KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
-    Set<String> topics = consumer.listTopics().keySet();
-    consumer.close();
-    return topics.stream().map(Option::new).collect(Collectors.toList());
-  }
 }

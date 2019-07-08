@@ -5,7 +5,7 @@
     <parent>
         <artifactId>streampipes-pipeline-elements-examples</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.60.2-SNAPSHOT</version>
+        <version>0.62.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -35,6 +35,10 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging-jms</artifactId>
         </dependency>
     </dependencies>
 
