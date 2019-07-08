@@ -23,7 +23,7 @@ import org.streampipes.connect.RunningAdapterInstances;
 import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.management.AdapterUtils;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.connect.adapter.AdapterDescription;
@@ -56,7 +56,7 @@ public class AdapterWorkerManagement {
 
         adapter.changeEventGrounding(adapterSetDescription.getDataSet().getEventGrounding().getTransportProtocol());
 
-        // Set adapters run the whole set in one thread, once all data is processed the corresponding pipeline is stopped
+        // Set adapters run the whole set in one thread, once all data is processed the corresponding preprocessing is stopped
         Runnable r = () -> {
             try {
                 adapter.startAdapter();

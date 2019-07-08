@@ -27,7 +27,7 @@ import org.streampipes.connect.RunningAdapterInstances;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.adapter.specific.SpecificDataSetAdapter;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.management.worker.AdapterWorkerManagement;
 import org.streampipes.connect.utils.Utils;
 import org.streampipes.model.connect.adapter.*;

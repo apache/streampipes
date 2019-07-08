@@ -20,7 +20,7 @@ package org.streampipes.connect.rest.master;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.config.ConnectContainerConfig;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.management.master.SourcesManagement;
 import org.streampipes.connect.management.master.Utils;
 import org.streampipes.connect.rest.AbstractContainerResource;
@@ -33,7 +33,6 @@ import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.rest.shared.util.SpMediaType;
 import org.streampipes.vocabulary.StreamPipes;
 
-import javax.json.Json;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

@@ -18,7 +18,7 @@ package org.streampipes.connect.adapter.generic.elements;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.streampipes.connect.adapter.generic.pipeline.elements.AddTimestampPipelineElement;
+import org.streampipes.connect.adapter.preprocessing.elements.AddTimestampPipelineElement;
 
 import java.util.HashMap;
 import java.util.Map;

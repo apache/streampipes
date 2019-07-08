@@ -22,7 +22,7 @@ import org.rendersnake.HtmlCanvas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.GroundingService;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.connect.adapter.AdapterDescription;

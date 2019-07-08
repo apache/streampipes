@@ -1,0 +1,72 @@
+/*
+ * Copyright 2019 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.streampipes.connect.init;
+
+import org.eclipse.jetty.server.Server;
+import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.streampipes.connect.rest.worker.WelcomePageWorker;
+import org.streampipes.connect.rest.worker.WorkerResource;
+
+import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
+
+public abstract class AdapterWorkerContainer extends AdapterContainer {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerContainer.class);
+
+    // TODO how to register Protocols ans Specific Adapter
+    public void init() {
+
+//        ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl();
+
+
+        ResourceConfig config = new ResourceConfig(getWorkerApiClasses());
+
+        // TODO make worker URL configurable
+        URI baseUri = UriBuilder
+                .fromUri(Config.getWorkerBaseUrl())
+                .build();
+
+
+        LOG.info("Started StreamPipes Connect Resource in WORKER mode");
+        config = new ResourceConfig(getWorkerApiClasses());
+        baseUri = UriBuilder
+                .fromUri(Config.getWorkerBaseUrl())
+                .build();
+
+
+        Server server = JettyHttpContainerFactory.createServer(baseUri, config);
+    }
+
+
+    private static Set<Class<?>> getWorkerApiClasses() {
+        Set<Class<?>> allClasses = new HashSet<>();
+
+        allClasses.add(WelcomePageWorker.class);
+        allClasses.add(WorkerResource.class);
+
+        allClasses.addAll(getApiClasses());
+
+        return allClasses;
+    }
+}

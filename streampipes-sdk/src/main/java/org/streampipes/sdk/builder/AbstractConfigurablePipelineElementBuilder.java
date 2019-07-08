@@ -129,7 +129,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Assigns a new text-based configuration parameter (a string) which is required by the pipeline
+   * Assigns a new text-based configuration parameter (a string) which is required by the preprocessing
    * element.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
@@ -163,7 +163,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a text-based configuration parameter provided by pipeline developers at pipeline authoring time. The
+   * Defines a text-based configuration parameter provided by preprocessing developers at preprocessing authoring time. The
    * value range of the parameter is restricted to the value specification of a selected input event property.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
@@ -180,7 +180,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a text-based configuration parameter provided by pipeline developers at pipeline authoring time. The
+   * Defines a text-based configuration parameter provided by preprocessing developers at preprocessing authoring time. The
    * input field generated in the StreamPipes UI allows to enter HTML content (and an HTML Wysiwyg editor will be
    * rendered).
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
@@ -198,12 +198,12 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a text-based configuration parameter provided by pipeline developers at pipeline authoring time.
+   * Defines a text-based configuration parameter provided by preprocessing developers at preprocessing authoring time.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
    * @param multiLine Defines whether the input dialog allows multiple lines.
    * @param placeholdersSupported Defines whether placeholders are supported, i.e., event property field names that
-   *                              are replaced with the actual value at pipeline execution time.
+   *                              are replaced with the actual value at preprocessing execution time.
    * @return this
    */
   public BU requiredTextParameter(Label label, boolean multiLine, boolean placeholdersSupported) {
@@ -237,7 +237,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Assigns a new number-based configuration parameter (an integer) which is required by the pipeline
+   * Assigns a new number-based configuration parameter (an integer) which is required by the preprocessing
    * element.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
@@ -270,7 +270,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a number-based configuration parameter of type integer provided by pipeline developers at pipeline
+   * Defines a number-based configuration parameter of type integer provided by preprocessing developers at preprocessing
    * authoring time. The
    * value range of the parameter is restricted to the value specification of a selected input event property.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
@@ -308,7 +308,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a number-based configuration parameter of type integer provided by pipeline developers at pipeline
+   * Defines a number-based configuration parameter of type integer provided by preprocessing developers at preprocessing
    * authoring time and initializes the parameter with a default value.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
@@ -341,7 +341,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Assigns a new number-based configuration parameter (a float) which is required by the pipeline
+   * Assigns a new number-based configuration parameter (a float) which is required by the preprocessing
    * element.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
@@ -355,7 +355,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a number-based configuration parameter of type float provided by pipeline developers at pipeline
+   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
    * authoring time. The
    * value range of the parameter is restricted to the value specification of a selected input event property.
    * @deprecated use {@link #requiredFloatParameter(Label, String)}
@@ -377,7 +377,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a number-based configuration parameter of type float provided by pipeline developers at pipeline
+   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
    * authoring time. The
    * value range of the parameter is restricted to the value specification of a selected input event property.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
@@ -414,7 +414,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a number-based configuration parameter of type float provided by pipeline developers at pipeline
+   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
    * authoring time and initializes the parameter with a default value.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
@@ -442,7 +442,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
 
   /**
-   * Defines a configuration parameter that lets pipeline developers select from a list of pre-defined configuration
+   * Defines a configuration parameter that lets preprocessing developers select from a list of pre-defined configuration
    * options. The parameter will be rendered as a RadioGroup in the StreamPipes UI.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
@@ -474,7 +474,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a configuration parameter that lets pipeline developers select from a list of pre-defined configuration
+   * Defines a configuration parameter that lets preprocessing developers select from a list of pre-defined configuration
    * options. The parameter will be rendered as a RadioGroup in the StreamPipes UI.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
@@ -506,7 +506,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a configuration parameter that lets pipeline developers select from a list of pre-defined configuration
+   * Defines a configuration parameter that lets preprocessing developers select from a list of pre-defined configuration
    * options, but multiple selections are allowed. The parameter will be rendered as a Checkbox group in the StreamPipes
    * UI.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
@@ -538,7 +538,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a configuration parameter that lets pipeline developers select from a list of pre-defined configuration
+   * Defines a configuration parameter that lets preprocessing developers select from a list of pre-defined configuration
    * options, but multiple selections are allowed. The parameter will be rendered as a Checkbox group in the StreamPipes
    * UI.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
@@ -573,7 +573,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a number-based configuration parameter of type float provided by pipeline developers at pipeline
+   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
    * authoring time. In addition, an allowed value range of the expected input can be assigned.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.

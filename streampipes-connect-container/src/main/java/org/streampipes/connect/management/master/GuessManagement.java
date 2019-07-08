@@ -21,8 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;
-import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.connect.exception.ParseException;
+import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.ParseException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 

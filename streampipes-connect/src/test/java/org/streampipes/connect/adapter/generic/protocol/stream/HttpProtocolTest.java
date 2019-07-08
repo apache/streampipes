@@ -22,9 +22,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.adapter.generic.Mock;
-import org.streampipes.connect.adapter.generic.format.Format;
-import org.streampipes.connect.adapter.generic.format.Parser;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.model.generic.Format;
+import org.streampipes.connect.adapter.model.generic.Parser;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.EventSchema;
 

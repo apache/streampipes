@@ -50,7 +50,7 @@ public class StreamRequirementsBuilder {
 
   /**
    * Sets a new property requirement, e.g., a property of a specific data type or with specific semantics
-   * a data stream that is connected to this pipeline element must provide.
+   * a data stream that is connected to this preprocessing element must provide.
    * @param propertyRequirement The property requirement. Use {@link org.streampipes.sdk.helpers.EpRequirements} to
    *                            create a new requirement.
    * @return this
@@ -63,7 +63,7 @@ public class StreamRequirementsBuilder {
 
   /**
    * Sets a new property requirement and, in addition, adds a
-   * {@link org.streampipes.model.staticproperty.MappingPropertyUnary} static property to the pipeline element
+   * {@link org.streampipes.model.staticproperty.MappingPropertyUnary} static property to the preprocessing element
    * definition.
    * @param propertyRequirement The property requirement. Use {@link org.streampipes.sdk.helpers.EpRequirements} to
    *                            create a new requirement.
@@ -88,7 +88,7 @@ public class StreamRequirementsBuilder {
 
   /**
    * Sets a new property requirement and, in addition, adds a
-   * {@link org.streampipes.model.staticproperty.MappingPropertyNary} static property to the pipeline element
+   * {@link org.streampipes.model.staticproperty.MappingPropertyNary} static property to the preprocessing element
    * definition.
    * @param propertyRequirement The property requirement. Use {@link org.streampipes.sdk.helpers.EpRequirements} to
    *                            create a new requirement.

@@ -19,8 +19,8 @@ package org.streampipes.connect.management.master;
 
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;
-import org.streampipes.connect.adapter.generic.format.Format;
-import org.streampipes.connect.adapter.generic.protocol.Protocol;
+import org.streampipes.connect.adapter.model.generic.Format;
+import org.streampipes.connect.adapter.model.generic.Protocol;
 import org.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.streampipes.model.connect.grounding.FormatDescriptionList;
 import org.streampipes.model.connect.grounding.ProtocolDescriptionList;

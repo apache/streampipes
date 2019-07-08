@@ -72,7 +72,7 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    //Returns all log-pipeline Invocations
+    //Returns all log-preprocessing Invocations
     public Response getPipelineTemplateInvocation() {
         Object[] templateNames = templates.keySet().toArray();
         String templateJSON = toJson(templateNames);

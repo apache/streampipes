@@ -19,7 +19,7 @@ package org.streampipes.connect.management;
 
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 

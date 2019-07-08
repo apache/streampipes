@@ -18,10 +18,9 @@
 package org.streampipes.connect.management;
 
 import org.junit.Test;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
 import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 

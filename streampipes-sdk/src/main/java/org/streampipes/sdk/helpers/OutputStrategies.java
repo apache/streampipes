@@ -33,8 +33,8 @@ import java.util.List;
 public class OutputStrategies {
 
     /**
-     * Creates a {@link org.streampipes.model.output.CustomOutputStrategy}. Custom output strategies let pipeline
-     * developers decide which events are produced by the corresponding pipeline element.
+     * Creates a {@link org.streampipes.model.output.CustomOutputStrategy}. Custom output strategies let preprocessing
+     * developers decide which events are produced by the corresponding preprocessing element.
      * @return CustomOutputStrategy
      */
     public static CustomOutputStrategy custom() {
@@ -43,8 +43,8 @@ public class OutputStrategies {
 
     /**
      * Creates a {@link org.streampipes.model.output.CustomOutputStrategy}.
-     * @param outputBoth If two input streams are expected by a pipeline element, you can use outputBoth to indicate
-     *                   whether the properties of both input streams should be available to the pipeline developer for
+     * @param outputBoth If two input streams are expected by a preprocessing element, you can use outputBoth to indicate
+     *                   whether the properties of both input streams should be available to the preprocessing developer for
      *                   selection.
      * @return CustomOutputStrategy
      */
@@ -69,7 +69,7 @@ public class OutputStrategies {
 
     /**
      * Creates a {@link org.streampipes.model.output.FixedOutputStrategy}. Fixed output strategies always output the
-     * schema defined by the pipeline element itself.
+     * schema defined by the preprocessing element itself.
      * @param fixedProperties An arbitrary number of event properties that form the output event schema
      * @return FixedOutputStrategy
      */

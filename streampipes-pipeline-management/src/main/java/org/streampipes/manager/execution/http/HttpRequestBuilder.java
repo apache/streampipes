@@ -60,7 +60,7 @@ public class HttpRequestBuilder {
       Response httpResp = Request.Delete(belongsTo).connectTimeout(10000).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
-      LOG.error("Could not stop pipeline " + belongsTo, e.getMessage());
+      LOG.error("Could not stop preprocessing " + belongsTo, e.getMessage());
       return new PipelineElementStatus(belongsTo, payload.getName(), false, e.getMessage());
     }
   }

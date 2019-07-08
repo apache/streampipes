@@ -24,13 +24,11 @@ public class Config {
 
     private static final Logger LOG = LoggerFactory.getLogger(Config.class);
 
-    public static final String EXECUTION_MODE = "EXECUTION_MODE";
     public static final String MASTER = "MASTER";
     public static final String WORKER = "WORKER";
 
 
     public static String CONNECTOR_CONTAINER_ID = "MAIN_CONTAINER";
-
 
 
     public static int MASTER_PORT = 8099;

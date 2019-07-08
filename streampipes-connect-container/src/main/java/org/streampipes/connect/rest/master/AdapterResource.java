@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.config.ConnectContainerConfig;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.management.AdapterDeserializer;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
 import org.streampipes.connect.management.master.Utils;

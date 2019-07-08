@@ -21,9 +21,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.streampipes.connect.adapter.generic.GenericDataSetAdapter;
+import org.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;
 import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 
 

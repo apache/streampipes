@@ -18,8 +18,8 @@
 package org.streampipes.connect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.streampipes.connect.adapter.generic.format.Format;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
+import org.streampipes.connect.adapter.model.generic.Format;
+import org.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 
 import java.util.Map;

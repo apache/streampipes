@@ -18,13 +18,13 @@
 package org.streampipes.connect.management;
 
 import org.junit.Test;
-import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectFormat;
-import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectParser;
-import org.streampipes.connect.adapter.generic.format.xml.XmlFormat;
-import org.streampipes.connect.adapter.generic.format.xml.XmlParser;
+import org.streampipes.connect.adapter.format.json.object.JsonObjectFormat;
+import org.streampipes.connect.adapter.format.json.object.JsonObjectParser;
+import org.streampipes.connect.adapter.format.xml.XmlFormat;
+import org.streampipes.connect.adapter.format.xml.XmlParser;
 import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
 import org.streampipes.connect.adapter.generic.protocol.stream.KafkaProtocol;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;

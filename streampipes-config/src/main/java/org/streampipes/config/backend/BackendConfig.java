@@ -48,7 +48,7 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.KAFKA_REST_PORT, 8082, "The port of the kafka-rest module");
     config.register(BackendConfigKeys.KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
     config.register(BackendConfigKeys.ASSETS_DIR, "/streampipes-assets", "The directory where " +
-            "pipeline element assets are stored.");
+            "preprocessing element assets are stored.");
     config.register(BackendConfigKeys.DATA_LAKE_HOST, "elasticsearch", "The host of the data base used for the data lake");
     config.register(BackendConfigKeys.DATA_LAKE_PORT, 9200, "The port of the data base used for the data lake");
 

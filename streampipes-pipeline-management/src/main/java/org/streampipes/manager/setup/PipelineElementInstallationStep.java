@@ -57,6 +57,6 @@ public class PipelineElementInstallationStep implements InstallationStep {
 
   @Override
   public String getTitle() {
-    return "Installing pipeline elements from " +endpoint.getEndpointUrl();
+    return "Installing preprocessing elements from " +endpoint.getEndpointUrl();
   }
 }

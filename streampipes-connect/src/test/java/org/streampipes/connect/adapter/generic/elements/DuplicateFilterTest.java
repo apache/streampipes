@@ -17,7 +17,7 @@ limitations under the License.
 package org.streampipes.connect.adapter.generic.elements;
 
 import org.junit.Test;
-import org.streampipes.connect.adapter.generic.pipeline.elements.DuplicateFilterPipelineElement;
+import org.streampipes.connect.adapter.preprocessing.elements.DuplicateFilterPipelineElement;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;

@@ -20,11 +20,12 @@ package org.streampipes.connect.adapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
-import org.streampipes.connect.adapter.generic.pipeline.elements.*;
-import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.connect.exception.ParseException;
+import org.streampipes.connect.adapter.model.Connector;
+import org.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
+import org.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
+import org.streampipes.connect.adapter.preprocessing.elements.*;
+import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.ParseException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
@@ -36,7 +37,7 @@ import org.streampipes.model.grounding.TransportProtocol;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Adapter<T extends AdapterDescription> {
+public abstract class Adapter<T extends AdapterDescription> implements Connector {
     Logger logger = LoggerFactory.getLogger(Adapter.class);
 
     private boolean debug;

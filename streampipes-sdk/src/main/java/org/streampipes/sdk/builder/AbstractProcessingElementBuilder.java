@@ -118,7 +118,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   }
 
   /**
-   * Adds a new {@link org.streampipes.model.staticproperty.MappingPropertyNary} to the pipeline element definition
+   * Adds a new {@link org.streampipes.model.staticproperty.MappingPropertyNary} to the preprocessing element definition
    * which is not linked to a specific input property.
    * Use this method if you want to present users a selection (in form of a Checkbox Group) of all available input
    * event properties.
@@ -136,7 +136,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   }
 
   /**
-   * Adds a new {@link org.streampipes.model.staticproperty.MappingPropertyUnary} to the pipeline element definition
+   * Adds a new {@link org.streampipes.model.staticproperty.MappingPropertyUnary} to the preprocessing element definition
    * which is not linked to a specific input property.
    *
    * @param label A human-readable label
@@ -152,7 +152,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   }
 
   /**
-   * Adds a new {@link org.streampipes.model.staticproperty.MappingPropertyUnary} to the pipeline element definition
+   * Adds a new {@link org.streampipes.model.staticproperty.MappingPropertyUnary} to the preprocessing element definition
    * which is not linked to a specific input property.
    *
    * @param label
@@ -166,7 +166,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   }
 
   /**
-   * Adds a new {@link org.streampipes.model.staticproperty.MappingPropertyUnary} to the pipeline element definition
+   * Adds a new {@link org.streampipes.model.staticproperty.MappingPropertyUnary} to the preprocessing element definition
    * which is not linked to a specific input property.
    *
    * @param label         A human-readable label that is displayed to users in the StreamPipes UI.
@@ -184,7 +184,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   }
 
   /**
-   * Assigns supported transport formats to the pipeline elements that can be handled at runtime (e.g.,
+   * Assigns supported transport formats to the preprocessing elements that can be handled at runtime (e.g.,
    * JSON or XMl).
    *
    * @param format An arbitrary number of supported {@link org.streampipes.model.grounding.TransportFormat}s. Use
@@ -197,7 +197,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   }
 
   /**
-   * Assigns supported transport formats to the pipeline elements that can be handled at runtime (e.g.,
+   * Assigns supported transport formats to the preprocessing elements that can be handled at runtime (e.g.,
    * JSON or XMl).
    *
    * @param formats A list of supported {@link org.streampipes.model.grounding.TransportFormat}s. Use
@@ -211,7 +211,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   }
 
   /**
-   * Assigns supported communication/transport protocols to the pipeline elements that can be handled at runtime (e.g.,
+   * Assigns supported communication/transport protocols to the preprocessing elements that can be handled at runtime (e.g.,
    * Kafka or JMS).
    *
    * @param protocol An arbitrary number of supported {@link org.streampipes.model.grounding.TransportProtocol}s. Use
@@ -224,7 +224,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   }
 
   /**
-   * Assigns supported communication/transport protocols to the pipeline elements that can be handled at runtime (e.g.,
+   * Assigns supported communication/transport protocols to the preprocessing elements that can be handled at runtime (e.g.,
    * Kafka or JMS).
    *
    * @param protocols A list of supported {@link org.streampipes.model.grounding.TransportProtocol}s. Use
