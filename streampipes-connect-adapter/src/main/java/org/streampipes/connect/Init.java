@@ -30,7 +30,7 @@ public class Init extends AdapterWorkerContainer {
                 .add(new KafkaProtocol())
                 .add(new OpcUaAdapter());
 
-        new Init().init("http://localhost:8098");
+        new Init().init("http://localhost:8098", "http://localhost:8099");
 
     }
 }

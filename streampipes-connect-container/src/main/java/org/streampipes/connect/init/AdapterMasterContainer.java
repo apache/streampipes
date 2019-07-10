@@ -82,6 +82,7 @@ public class AdapterMasterContainer extends AdapterContainer {
         allClasses.add(FileResource.class);
         allClasses.add(MultiPartFeature.class);
         allClasses.add(UnitResource.class);
+        allClasses.add(WorkerAdministrationResource.class);
         allClasses.addAll(getApiClasses());
 
         return allClasses;

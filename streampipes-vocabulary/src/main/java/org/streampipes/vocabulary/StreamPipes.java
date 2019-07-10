@@ -338,4 +338,6 @@ public class StreamPipes {
   public static final String RUNTIME_OPTIONS_REQUEST = NS + "RuntimeOptionsRequest";
   public static final String RUNTIME_OPTIONS_RESPONSE = NS + "RuntimeOptionsResponse";
   public static final String HAS_REQUEST_ID = NS + "hasRequestId";
+
+  public static final String CONNECT_WORKER_CONTAINER = NS + "ConnectWorkerContainer";
 }

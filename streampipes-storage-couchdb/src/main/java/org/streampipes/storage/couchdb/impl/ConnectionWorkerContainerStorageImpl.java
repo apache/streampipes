@@ -35,7 +35,7 @@ public class ConnectionWorkerContainerStorageImpl extends AbstractDao<ConnectWor
 
 
     public ConnectionWorkerContainerStorageImpl() {
-        super(Utils::getCouchDbAdapterTemplateClient, ConnectWorkerContainer.class);
+        super(Utils::getCouchDbConnectWorkerContainerClient, ConnectWorkerContainer.class);
     }
 
     @Override

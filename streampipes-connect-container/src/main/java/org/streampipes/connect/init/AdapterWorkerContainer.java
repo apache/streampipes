@@ -22,19 +22,25 @@ import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.connect.adapter.Adapter;
+import org.streampipes.connect.adapter.model.generic.Protocol;
+import org.streampipes.connect.management.worker.MasterRestClient;
 import org.streampipes.connect.rest.worker.WelcomePageWorker;
 import org.streampipes.connect.rest.worker.WorkerResource;
+import org.streampipes.model.connect.worker.ConnectWorkerContainer;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class AdapterWorkerContainer extends AdapterContainer {
 
     private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerContainer.class);
 
-    public void init(String workerUrl) {
+    public void init(String workerUrl, String masterUrl) {
 
         ResourceConfig config = new ResourceConfig(getWorkerApiClasses());
 
@@ -46,11 +52,23 @@ public abstract class AdapterWorkerContainer extends AdapterContainer {
         LOG.info("Started StreamPipes Connect Resource in WORKER mode");
         config = new ResourceConfig(getWorkerApiClasses());
         baseUri = UriBuilder
-                .fromUri(Config.getWorkerBaseUrl())
+                .fromUri(workerUrl)
                 .build();
 
+        MasterRestClient.register(masterUrl, getContainerDescription(workerUrl));
 
         Server server = JettyHttpContainerFactory.createServer(baseUri, config);
+    }
+
+    private ConnectWorkerContainer getContainerDescription(String endpointUrl) {
+
+        List<String> adapterIds = AdapterDeclarerSingleton.getInstance().getAllAdapters()
+                .stream().map(Adapter::getId).collect(Collectors.toList());
+        List<String> protocolIds = AdapterDeclarerSingleton.getInstance().getAllProtocols()
+                .stream().map(Protocol::getId).collect(Collectors.toList());
+
+        ConnectWorkerContainer result = new ConnectWorkerContainer(endpointUrl, protocolIds, adapterIds);
+        return result;
     }
 
 

@@ -26,17 +26,15 @@ public class WorkerAdministrationManagement {
         // Check if already registered
         ConnectionWorkerContainerStorageImpl connectionWorkerContainerStorage = new ConnectionWorkerContainerStorageImpl();
 
-        ConnectWorkerContainer inStorage = connectionWorkerContainerStorage.getConnectWorkerContainer(connectWorker.getId());
-
         // IF NOT REGISTERED
         // Store Connect Worker in DB
-        if (inStorage == null) {
+        if (connectWorker.getRev() == null) {
             connectionWorkerContainerStorage.storeConnectWorkerContainer(connectWorker);
 
         } else {
             // IF REGISTERED
             // Start all adapters on worker
-        }
 
+        }
     }
 }

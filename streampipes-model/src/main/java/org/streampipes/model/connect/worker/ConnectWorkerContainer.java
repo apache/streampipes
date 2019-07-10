@@ -21,23 +21,30 @@ import com.google.gson.annotations.SerializedName;
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.model.base.UnnamedStreamPipesEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp:ConnectWorker")
+@RdfsClass("sp:ConnectWorkerContainer")
 @Entity
-public class ConnectWorkerContainer {
+public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
 
     @RdfProperty("sp:couchDBId")
     private @SerializedName("_id") String id;
 
     private @SerializedName("_rev") String rev;
 
+    public ConnectWorkerContainer() {
+        super();
+        this.adapterIds = new ArrayList<>();
+        this.protocolIds = new ArrayList<>();
+    }
 
     @RdfProperty("sp:couchDBId")
     private String endpointUrl;
