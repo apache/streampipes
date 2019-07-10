@@ -20,11 +20,14 @@ package org.streampipes.connect.management.worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.connect.adapter.exception.ParseException;
+import org.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;
+import org.streampipes.connect.adapter.model.generic.GenericDataStreamAdapter;
+import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.streampipes.model.connect.guess.GuessSchema;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -35,8 +38,12 @@ public class GuessManagement {
 
     public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
 
-        // TODO how to get the adapter
-        Adapter adapter = AdapterRegistry.getAdapter(adapterDescription);
+        Adapter adapter = null;
+        if (adapterDescription instanceof GenericAdapterStreamDescription) {
+           adapter = new GenericDataStreamAdapter().getInstance((GenericAdapterStreamDescription) adapterDescription);
+        } else if (adapterDescription instanceof GenericAdapterSetDescription) {
+            adapter = new GenericDataSetAdapter().getInstance((GenericAdapterSetDescription) adapterDescription);
+        }
 
         GuessSchema guessSchema;
         try {

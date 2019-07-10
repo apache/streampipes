@@ -17,50 +17,50 @@
 
 package org.streampipes.connect.management.master;
 
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.exception.ParseException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.rest.shared.util.JsonLdUtils;
 
-import java.util.Arrays;
-import java.util.Optional;
+import java.io.IOException;
 
 public class GuessManagement {
 
-    private static Logger logger = LoggerFactory.getLogger(GuessManagement.class);
+    private static Logger LOG = LoggerFactory.getLogger(GuessManagement.class);
+
+    private WorkerAdministrationManagement workerAdministrationManagement;
+
+    public GuessManagement() {
+       this.workerAdministrationManagement = new WorkerAdministrationManagement();
+    }
 
     public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
+        String protocolId = ((GenericAdapterDescription) (adapterDescription)).getProtocolDescription().getAppId();
 
-        Adapter adapter = AdapterRegistry.getAdapter(adapterDescription);
+        String workerUrl = this.workerAdministrationManagement.getWorkerUrl(protocolId);
+        // Make REST call to worker
 
-        GuessSchema guessSchema;
+        String ad = JsonLdUtils.toJsonLD(adapterDescription);
+
         try {
-            guessSchema = adapter.getSchema(adapterDescription);
-            for (int i = 0; i < guessSchema.getEventSchema().getEventProperties().size(); i++) {
-                guessSchema.getEventSchema().getEventProperties().get(i).setIndex(i);
-            }
-        } catch (ParseException e) {
-            logger.error(e.toString());
+            String responseString = Request.Post(workerUrl)
+                    .bodyString(ad, ContentType.APPLICATION_JSON)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asString();
 
-            String errorClass = "";
-            Optional<StackTraceElement> stackTraceElement = Arrays.stream(e.getStackTrace()).findFirst();
-            if(stackTraceElement.isPresent()) {
-                String[] errorClassLong = stackTraceElement.get().getClassName().split("\\.");
-                errorClass = errorClassLong[errorClassLong.length - 1] + ": ";
-            }
+            return JsonLdUtils.fromJsonLd(responseString, GuessSchema.class);
 
-            throw new ParseException(errorClass + e.getMessage());
-        } catch (Exception e) {
-            logger.error("Unknown Error: " + e.toString());
-            throw new AdapterException(e.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new AdapterException("Could not guess schema at: " + workerUrl);
         }
-
-        return guessSchema;
-
     }
 
     public void guessFormat() {

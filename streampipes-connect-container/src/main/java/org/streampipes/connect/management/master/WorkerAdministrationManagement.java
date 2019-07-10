@@ -20,21 +20,45 @@ package org.streampipes.connect.management.master;
 import org.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
 
+import java.util.List;
+
 public class WorkerAdministrationManagement {
+
+    private ConnectionWorkerContainerStorageImpl connectionWorkerContainerStorage;
+
+    public WorkerAdministrationManagement() {
+        this.connectionWorkerContainerStorage = new ConnectionWorkerContainerStorageImpl();
+    }
 
     public void register(ConnectWorkerContainer connectWorker) {
         // Check if already registered
-        ConnectionWorkerContainerStorageImpl connectionWorkerContainerStorage = new ConnectionWorkerContainerStorageImpl();
+
 
         // IF NOT REGISTERED
         // Store Connect Worker in DB
         if (connectWorker.getRev() == null) {
-            connectionWorkerContainerStorage.storeConnectWorkerContainer(connectWorker);
+            this.connectionWorkerContainerStorage.storeConnectWorkerContainer(connectWorker);
 
         } else {
             // IF REGISTERED
             // Start all adapters on worker
 
         }
+    }
+
+    public String getWorkerUrl(String id) {
+        String workerUrl = "";
+
+        List<ConnectWorkerContainer> allConnectWorkerContainer = this.connectionWorkerContainerStorage.getAllConnectWorkerContainers();
+
+        for (ConnectWorkerContainer connectWorkerContainer : allConnectWorkerContainer) {
+            if (connectWorkerContainer.getProtocols().stream().anyMatch(p -> p.getAppId().equals(id))) {
+                workerUrl = connectWorkerContainer.getEndpointUrl();
+            } else if (connectWorkerContainer.getAdapters().stream().anyMatch(a -> a.getAppId().equals(id))) {
+                workerUrl = connectWorkerContainer.getEndpointUrl();
+            }
+        }
+
+        return workerUrl;
     }
 }
