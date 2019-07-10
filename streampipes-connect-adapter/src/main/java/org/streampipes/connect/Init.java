@@ -21,6 +21,7 @@ import org.streampipes.connect.adapters.opcua.OpcUaAdapter;
 import org.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.streampipes.connect.init.AdapterWorkerContainer;
 import org.streampipes.connect.protocol.stream.KafkaProtocol;
+import org.streampipes.connect.protocol.stream.MqttProtocol;
 
 public class Init extends AdapterWorkerContainer {
 
@@ -28,6 +29,7 @@ public class Init extends AdapterWorkerContainer {
         AdapterDeclarerSingleton
                 .getInstance()
                 .add(new KafkaProtocol())
+                .add(new MqttProtocol())
                 .add(new OpcUaAdapter());
 
         new Init().init("http://localhost:8098", "http://localhost:8099");

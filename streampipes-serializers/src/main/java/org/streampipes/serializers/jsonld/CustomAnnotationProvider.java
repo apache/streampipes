@@ -44,62 +44,16 @@ import org.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
-import org.streampipes.model.graph.DataProcessorDescription;
-import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.graph.DataSinkDescription;
-import org.streampipes.model.graph.DataSinkInvocation;
-import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.model.grounding.JmsTransportProtocol;
-import org.streampipes.model.grounding.KafkaTransportProtocol;
-import org.streampipes.model.grounding.SimpleTopicDefinition;
-import org.streampipes.model.grounding.TransportFormat;
-import org.streampipes.model.grounding.TransportProtocol;
-import org.streampipes.model.grounding.WildcardTopicDefinition;
+import org.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.streampipes.model.graph.*;
+import org.streampipes.model.grounding.*;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
-import org.streampipes.model.output.AppendOutputStrategy;
-import org.streampipes.model.output.CustomOutputStrategy;
-import org.streampipes.model.output.CustomTransformOutputStrategy;
-import org.streampipes.model.output.FixedOutputStrategy;
-import org.streampipes.model.output.KeepOutputStrategy;
-import org.streampipes.model.output.ListOutputStrategy;
-import org.streampipes.model.output.PropertyRenameRule;
-import org.streampipes.model.output.TransformOperation;
-import org.streampipes.model.output.TransformOutputStrategy;
-import org.streampipes.model.quality.Accuracy;
-import org.streampipes.model.quality.EventPropertyQualityRequirement;
-import org.streampipes.model.quality.EventStreamQualityRequirement;
-import org.streampipes.model.quality.Frequency;
-import org.streampipes.model.quality.Latency;
-import org.streampipes.model.quality.MeasurementCapability;
-import org.streampipes.model.quality.MeasurementObject;
-import org.streampipes.model.quality.MeasurementProperty;
-import org.streampipes.model.quality.MeasurementRange;
-import org.streampipes.model.quality.Precision;
-import org.streampipes.model.quality.Resolution;
+import org.streampipes.model.output.*;
+import org.streampipes.model.quality.*;
 import org.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.streampipes.model.schema.Enumeration;
-import org.streampipes.model.schema.EventPropertyList;
-import org.streampipes.model.schema.EventPropertyNested;
-import org.streampipes.model.schema.EventPropertyPrimitive;
-import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.schema.QuantitativeValue;
-import org.streampipes.model.staticproperty.AnyStaticProperty;
-import org.streampipes.model.staticproperty.CollectionStaticProperty;
-import org.streampipes.model.staticproperty.DomainStaticProperty;
-import org.streampipes.model.staticproperty.FileStaticProperty;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.staticproperty.MappingProperty;
-import org.streampipes.model.staticproperty.MappingPropertyNary;
-import org.streampipes.model.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.staticproperty.MatchingStaticProperty;
-import org.streampipes.model.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.staticproperty.Option;
-import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
-import org.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
-import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
-import org.streampipes.model.staticproperty.SupportedProperty;
+import org.streampipes.model.schema.*;
+import org.streampipes.model.staticproperty.*;
 import org.streampipes.model.template.BoundPipelineElement;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.model.template.PipelineTemplateDescriptionContainer;
@@ -213,6 +167,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             PropertyRenameRule.class,
             TimestampTranfsformationRuleDescription.class,
             RuntimeOptionsRequest.class,
+            ConnectWorkerContainer.class,
             RuntimeOptionsResponse.class
     );
   }

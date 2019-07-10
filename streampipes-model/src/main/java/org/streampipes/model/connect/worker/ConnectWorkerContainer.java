@@ -22,6 +22,9 @@ import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.grounding.ProtocolDescription;
+import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -31,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
-@RdfsClass("sp:ConnectWorkerContainer")
+@RdfsClass(StreamPipes.CONNECT_WORKER_CONTAINER)
 @Entity
 public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
 
@@ -42,27 +45,27 @@ public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
 
     public ConnectWorkerContainer() {
         super();
-        this.adapterIds = new ArrayList<>();
-        this.protocolIds = new ArrayList<>();
+        this.adapters = new ArrayList<>();
+        this.protocols = new ArrayList<>();
     }
 
-    @RdfProperty("sp:couchDBId")
+    @RdfProperty("sp:endpointUrl")
     private String endpointUrl;
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
-    @RdfProperty("sp:protocolIds")
-    private List<String> protocolIds;
+    @RdfProperty("sp:protocols")
+    private List<ProtocolDescription> protocols;
 
-    @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL})
-    @RdfProperty("sp:adapterIds")
-    private List<String> adapterIds;
+//    @OneToMany(fetch = FetchType.EAGER,
+//            cascade = {CascadeType.ALL})
+//    @RdfProperty("sp:adapters")
+    private List<AdapterDescription> adapters;
 
-    public ConnectWorkerContainer(String endpointUrl, List<String> protocolIds, List<String> adapterIds) {
+    public ConnectWorkerContainer(String endpointUrl, List<ProtocolDescription> protocols, List<AdapterDescription> adapters) {
         this.endpointUrl = endpointUrl;
-        this.protocolIds = protocolIds;
-        this.adapterIds = adapterIds;
+        this.protocols = protocols;
+        this.adapters = adapters;
     }
 
     public String getEndpointUrl() {
@@ -73,20 +76,20 @@ public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
         this.endpointUrl = endpointUrl;
     }
 
-    public List<String> getProtocolIds() {
-        return protocolIds;
+    public List<ProtocolDescription> getProtocols() {
+        return protocols;
     }
 
-    public void setProtocolIds(List<String> protocolIds) {
-        this.protocolIds = protocolIds;
+    public void setProtocols(List<ProtocolDescription> protocols) {
+        this.protocols = protocols;
     }
 
-    public List<String> getAdapterIds() {
-        return adapterIds;
+    public List<AdapterDescription> getAdapters() {
+        return adapters;
     }
 
-    public void setAdapterIds(List<String> adapterIds) {
-        this.adapterIds = adapterIds;
+    public void setAdapters(List<AdapterDescription> adapters) {
+        this.adapters = adapters;
     }
 
     public String getId() {

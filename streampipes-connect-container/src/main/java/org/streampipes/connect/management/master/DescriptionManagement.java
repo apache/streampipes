@@ -20,22 +20,26 @@ package org.streampipes.connect.management.master;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.adapter.model.generic.Format;
-import org.streampipes.connect.adapter.model.generic.Protocol;
 import org.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.streampipes.model.connect.grounding.FormatDescriptionList;
 import org.streampipes.model.connect.grounding.ProtocolDescriptionList;
+import org.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
 
+import java.util.List;
 import java.util.Map;
 
 public class DescriptionManagement {
 
     public ProtocolDescriptionList getProtocols() {
-        Map<String, Protocol> allProtocols = AdapterRegistry.getAllProtocols();
+        ConnectionWorkerContainerStorageImpl connectionWorkerContainerStorage = new ConnectionWorkerContainerStorageImpl();
+
+        List<ConnectWorkerContainer> allWorkerContainter = connectionWorkerContainerStorage.getAllConnectWorkerContainers();
 
         ProtocolDescriptionList result = new ProtocolDescriptionList();
 
-        for (Protocol p : allProtocols.values()) {
-           result.getList().add(p.declareModel());
+        for (ConnectWorkerContainer connectWorkerContainer : allWorkerContainter) {
+            result.getList().addAll(connectWorkerContainer.getProtocols());
         }
 
         return result;
@@ -54,6 +58,9 @@ public class DescriptionManagement {
     }
 
     public AdapterDescriptionList getAdapters() {
+
+        // TODO get all Worker Containers
+        // TODO get all Adapter Descriptions
         Map<String, Adapter> allAdapters = AdapterRegistry.getAllAdapters();
 
         AdapterDescriptionList result = new AdapterDescriptionList();

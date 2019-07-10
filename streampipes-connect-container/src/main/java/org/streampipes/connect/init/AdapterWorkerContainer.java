@@ -27,14 +27,16 @@ import org.streampipes.connect.adapter.model.generic.Protocol;
 import org.streampipes.connect.management.worker.MasterRestClient;
 import org.streampipes.connect.rest.worker.WelcomePageWorker;
 import org.streampipes.connect.rest.worker.WorkerResource;
+import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.worker.ConnectWorkerContainer;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public abstract class AdapterWorkerContainer extends AdapterContainer {
 
@@ -62,12 +64,17 @@ public abstract class AdapterWorkerContainer extends AdapterContainer {
 
     private ConnectWorkerContainer getContainerDescription(String endpointUrl) {
 
-        List<String> adapterIds = AdapterDeclarerSingleton.getInstance().getAllAdapters()
-                .stream().map(Adapter::getId).collect(Collectors.toList());
-        List<String> protocolIds = AdapterDeclarerSingleton.getInstance().getAllProtocols()
-                .stream().map(Protocol::getId).collect(Collectors.toList());
+        List<AdapterDescription> adapters = new ArrayList<>();
+        for (Adapter a : AdapterDeclarerSingleton.getInstance().getAllAdapters()) {
+            adapters.add(a.declareModel());
+        }
 
-        ConnectWorkerContainer result = new ConnectWorkerContainer(endpointUrl, protocolIds, adapterIds);
+        List<ProtocolDescription> protocols = new ArrayList<>();
+        for (Protocol p : AdapterDeclarerSingleton.getInstance().getAllProtocols()) {
+            protocols.add(p.declareModel());
+        }
+
+        ConnectWorkerContainer result = new ConnectWorkerContainer(endpointUrl, protocols, adapters);
         return result;
     }
 

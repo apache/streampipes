@@ -49,6 +49,7 @@ public class AdapterRegistry {
 
     private static final String SP_NS =  "https://streampipes.org/vocabulary/v1/";
 
+    @Deprecated
     public static Map<String, Adapter> getAllAdapters() {
         Map<String, Adapter> allAdapters = new HashMap<>();
 
@@ -101,6 +102,7 @@ public class AdapterRegistry {
         return allParsers;
     }
 
+    @Deprecated
     public static Map<String, Protocol> getAllProtocols() {
         Map<String, Protocol> allProtocols = new HashMap<>();
 

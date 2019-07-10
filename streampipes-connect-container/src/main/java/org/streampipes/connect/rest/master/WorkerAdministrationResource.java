@@ -25,6 +25,7 @@ import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.streampipes.rest.shared.annotation.GsonWithIds;
 import org.streampipes.rest.shared.util.JsonLdUtils;
+import org.streampipes.vocabulary.StreamPipes;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -48,7 +49,7 @@ public class WorkerAdministrationResource extends AbstractContainerResource {
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAdapter(String connectWorkerContainerString) {
-        ConnectWorkerContainer connectWorkerContainer = JsonLdUtils.fromJsonLd(connectWorkerContainerString, ConnectWorkerContainer.class);
+        ConnectWorkerContainer connectWorkerContainer = JsonLdUtils.fromJsonLd(connectWorkerContainerString, ConnectWorkerContainer.class, StreamPipes.CONNECT_WORKER_CONTAINER);
         this.workerAdministrationManagement.register(connectWorkerContainer);
 
         LOG.info("Worker container: " + connectWorkerContainer.getEndpointUrl() + " was registered");
