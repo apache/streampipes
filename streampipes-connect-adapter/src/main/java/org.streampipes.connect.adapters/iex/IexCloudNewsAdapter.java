@@ -13,13 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.streampipes.connect.adapter.specific.iex;
+package org.streampipes.connect.adapters.iex;
 
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.specific.iex.model.IexNewsData;
-import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.exception.ParseException;
+import org.streampipes.connect.adapter.util.PollingSettings;
+import org.streampipes.connect.adapters.iex.model.IexNewsData;
 import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;

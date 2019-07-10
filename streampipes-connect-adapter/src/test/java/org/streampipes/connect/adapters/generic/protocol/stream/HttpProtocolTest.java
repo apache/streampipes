@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 FZI Forschungszentrum Informatik
+ * Copyright 2019 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,18 @@
  *
  */
 
-package org.streampipes.connect.adapter.generic.protocol.set;
+package org.streampipes.connect.adapters.generic.protocol.stream;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.apache.commons.io.IOUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.streampipes.connect.EmitBinaryEvent;
-import org.streampipes.connect.adapter.generic.Mock;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.model.generic.Format;
 import org.streampipes.connect.adapter.model.generic.Parser;
-import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.connect.adapters.generic.Mock;
+import org.streampipes.connect.protocol.stream.HttpStreamProtocol;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.EventSchema;
 
@@ -36,13 +37,34 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class HttpProtocolTest {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(Mock.PORT);
+
+    @Test
+    public void testRunable() throws InterruptedException {
+
+        String expected = "Expected response";
+
+        stubFor(get(urlEqualTo("/"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody(expected)));
+
+
+        HttpStreamProtocol httpProtocol =
+                new HttpStreamProtocol(
+                        new TestParserWithAssertCheck(""),
+                        new HttpProtocolTest.TestFormat(),
+                        Mock.HOST + "/", 1, "");
+
+        httpProtocol.run(null);
+        Thread.sleep(5000L);
+        httpProtocol.stop();
+    }
 
 
     @Test
@@ -56,7 +78,7 @@ public class HttpProtocolTest {
                         .withBody(expected)));
 
 
-        HttpProtocol httpProtocol = new HttpProtocol(null, null, Mock.HOST + "/");
+        HttpStreamProtocol httpProtocol = new HttpStreamProtocol(null, null, Mock.HOST + "/", 100, "");
 
         InputStream data = httpProtocol.getDataFromEndpoint();
 
@@ -71,7 +93,6 @@ public class HttpProtocolTest {
         assertEquals(expected, resultJson);
     }
 
-
     @Test
     public void getNElementsTest() throws AdapterException {
 
@@ -81,12 +102,45 @@ public class HttpProtocolTest {
                         .withBody("Example response")));
 
 
-        HttpProtocol httpProtocol = new HttpProtocol(new TestParser(""), new TestFormat(), Mock.HOST + "/");
+        HttpStreamProtocol httpProtocol =
+                new HttpStreamProtocol(
+                        new HttpProtocolTest.TestParser(""),
+                        new HttpProtocolTest.TestFormat(),
+                        Mock.HOST + "/", 1, "");
 
         List<Map<String, Object>> result = httpProtocol.getNElements(1);
 
         assertEquals(1, result.size());
         assertEquals("value", result.get(0).get("key"));
+    }
+
+    private class TestParserWithAssertCheck extends Parser {
+
+        private byte[] data;
+        public TestParserWithAssertCheck(String data) {
+            this.data = data.getBytes();
+        }
+
+        @Override
+        public Parser getInstance(FormatDescription formatDescription) {
+            return null;
+        }
+
+        @Override
+        public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) {
+            try {
+                String result = IOUtils.toString(data, "UTF-8");
+                assertEquals ("Expected response", result);
+                System.out.println("");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public EventSchema getEventSchema(List<byte[]> oneEvent) {
+            return null;
+        }
     }
 
     private class TestParser extends Parser {

@@ -1,5 +1,5 @@
 
-package org.streampipes.connect.adapter.specific.coindesk.model;
+package org.streampipes.connect.adapters.coindesk.model;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;

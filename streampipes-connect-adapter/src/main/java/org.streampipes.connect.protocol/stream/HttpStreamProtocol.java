@@ -140,7 +140,7 @@ public class HttpStreamProtocol extends PullProtocol {
     }
 
     @Override
-    InputStream getDataFromEndpoint() throws ParseException {
+    public InputStream getDataFromEndpoint() throws ParseException {
         InputStream result = null;
 
         try {

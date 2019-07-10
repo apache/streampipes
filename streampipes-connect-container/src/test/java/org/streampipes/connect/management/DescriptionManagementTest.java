@@ -25,43 +25,23 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;
-import org.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;
-import org.streampipes.connect.adapter.model.generic.Format;
 import org.streampipes.connect.adapter.format.json.arraykey.JsonFormat;
-import org.streampipes.connect.adapter.model.generic.Protocol;
-import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
+import org.streampipes.connect.adapter.model.generic.Format;
+import org.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;
 import org.streampipes.connect.management.master.DescriptionManagement;
 import org.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.streampipes.model.connect.grounding.FormatDescriptionList;
-import org.streampipes.model.connect.grounding.ProtocolDescriptionList;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AdapterRegistry.class })
 public class DescriptionManagementTest {
 
-    @Test
-    public void getProtocols() {
-        Map<String, Protocol> allProtocols = new HashMap<>();
-        allProtocols.put(HttpProtocol.ID, new HttpProtocol());
-
-        PowerMockito.mockStatic(AdapterRegistry.class);
-        Mockito.when(AdapterRegistry.getAllProtocols())
-                .thenReturn(allProtocols);
-
-        DescriptionManagement descriptionManagement = new DescriptionManagement();
-
-        ProtocolDescriptionList result = descriptionManagement.getProtocols();
-
-        assertNotNull(result);
-        assertNotNull(result.getList());
-        assertEquals(1, result.getList().size());
-        assertEquals(HttpProtocol.ID, result.getList().get(0).getUri());
-    }
 
     @Test
     public void getFormats() {

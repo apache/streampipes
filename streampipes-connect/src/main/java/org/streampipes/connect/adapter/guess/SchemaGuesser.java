@@ -113,33 +113,6 @@ public class SchemaGuesser {
         return httpResp;
     }
 
-    public static void main(String[] args) {
-
-        int[] n = {1, 2};
-        String[] st = {"f", "dd"};
-        String s = "[34292.0, 34292.0, 34292.0, 84155.0, 34466.0, 83352.0, 84503.0, 63916.0, 9456.0, 9456.0, 9456.0, 8359.0, 84371.0, 63743.0, 8280.0, 8280.0, 34454.0, 84364.0, 94081.0, 57334.0]";
-
-        SchemaGuesser schemaGuesser = new SchemaGuesser();
-        PropertyGuessResults prg = schemaGuesser.requestProbabilitiesObject(st);
-
-        for (PropertyGuesses pg : prg.getResult()) {
-            System.out.println("Class " + pg.getClazz());
-            System.out.println("Property " + pg.getProbability());
-            System.out.println("=========");
-
-        }
-
-        DomainPropertyProbabilityList dppl = SchemaGuesser.getDomainPropertyProbability(st);
-
-        for (DomainPropertyProbability pg: dppl.getList()) {
-            System.out.println("Class " + pg.getDomainProperty());
-            System.out.println("Property " + pg.getProbability());
-            System.out.println("=========");
-
-        }
-    }
-
-
     public static DomainPropertyProbabilityList getDomainPropertyProbability(Object[] sampleData) {
         PropertyGuessResults pgr = requestProbabilitiesObject(sampleData);
 

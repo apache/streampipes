@@ -34,17 +34,12 @@ public abstract class AdapterWorkerContainer extends AdapterContainer {
 
     private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerContainer.class);
 
-    // TODO how to register Protocols ans Specific Adapter
-    public void init() {
-
-//        ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl();
-
+    public void init(String workerUrl) {
 
         ResourceConfig config = new ResourceConfig(getWorkerApiClasses());
 
-        // TODO make worker URL configurable
         URI baseUri = UriBuilder
-                .fromUri(Config.getWorkerBaseUrl())
+                .fromUri(workerUrl)
                 .build();
 
 

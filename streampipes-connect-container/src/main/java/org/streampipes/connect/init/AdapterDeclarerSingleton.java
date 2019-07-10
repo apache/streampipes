@@ -21,6 +21,7 @@ import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.model.Connector;
 import org.streampipes.connect.adapter.model.generic.Protocol;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,6 +54,14 @@ public class AdapterDeclarerSingleton {
         }
 
         return getInstance();
+    }
+
+    public Collection<Protocol> getAllProtocols() {
+        return this.allProtocols.values();
+    }
+
+    public Collection<Adapter> getAllAdapters() {
+        return this.allAdapters.values();
     }
 
 }

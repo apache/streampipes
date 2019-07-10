@@ -31,7 +31,7 @@ import java.util.Optional;
 
 public class GuessManagement {
 
-    private static Logger logger = LoggerFactory.getLogger(GuessSchema.class);
+    private static Logger logger = LoggerFactory.getLogger(GuessManagement.class);
 
     public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
 

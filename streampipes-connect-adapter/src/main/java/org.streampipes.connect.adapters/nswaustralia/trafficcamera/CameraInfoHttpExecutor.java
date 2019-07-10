@@ -13,11 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.streampipes.connect.adapter.specific.nswaustralia.trafficcamera;
+package org.streampipes.connect.adapters.nswaustralia.trafficcamera;
 
 import com.google.gson.Gson;
 import org.apache.http.client.fluent.Request;
-import org.streampipes.connect.adapter.specific.nswaustralia.trafficcamera.model.FeatureCollection;
+import org.streampipes.connect.adapters.nswaustralia.trafficcamera.model.FeatureCollection;
 
 import java.io.IOException;
 

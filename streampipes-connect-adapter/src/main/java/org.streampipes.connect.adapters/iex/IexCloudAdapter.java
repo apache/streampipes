@@ -13,12 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.streampipes.connect.adapter.specific.iex;
+package org.streampipes.connect.adapters.iex;
 
 import com.google.gson.Gson;
 import org.apache.http.client.fluent.Request;
 import org.streampipes.connect.adapter.sdk.ParameterExtractor;
-import org.streampipes.connect.adapter.specific.PullAdapter;
+import org.streampipes.connect.adapters.PullAdapter;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 
 import java.io.IOException;

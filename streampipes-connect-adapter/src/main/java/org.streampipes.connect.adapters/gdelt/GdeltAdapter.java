@@ -1,10 +1,10 @@
-package org.streampipes.connect.adapter.specific.gdelt;
+package org.streampipes.connect.adapters.gdelt;
 
 import com.opencsv.CSVReader;
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.specific.PullAdapter;
-import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.connect.adapter.util.PollingSettings;
+import org.streampipes.connect.adapters.PullAdapter;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;

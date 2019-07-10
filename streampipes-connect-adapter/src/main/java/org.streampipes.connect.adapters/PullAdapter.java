@@ -15,18 +15,16 @@
  *
  */
 
-package org.streampipes.connect.adapter.specific;
+package org.streampipes.connect.adapters;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
+import org.streampipes.connect.adapter.util.PollingSettings;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+
+import java.util.concurrent.*;
 
 public abstract class PullAdapter extends SpecificDataStreamAdapter {
 

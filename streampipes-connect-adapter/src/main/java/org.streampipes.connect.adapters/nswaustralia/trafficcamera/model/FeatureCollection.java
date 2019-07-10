@@ -1,5 +1,5 @@
 
-package org.streampipes.connect.adapter.specific.nswaustralia.trafficcamera.model;
+package org.streampipes.connect.adapters.nswaustralia.trafficcamera.model;
 
 import java.util.List;
 import javax.annotation.Generated;

@@ -13,10 +13,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.streampipes.connect.adapter.specific.nswaustralia.trafficcamera;
+package org.streampipes.connect.adapters.nswaustralia.trafficcamera;
 
-import org.streampipes.connect.adapter.specific.nswaustralia.trafficcamera.model.Feature;
-import org.streampipes.connect.adapter.specific.sensemap.SensorNames;
+import org.streampipes.connect.adapters.nswaustralia.trafficcamera.model.Feature;
+import org.streampipes.connect.adapters.sensemap.SensorNames;
 
 import java.io.IOException;
 import java.util.Base64;

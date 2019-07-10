@@ -1,5 +1,5 @@
 
-package org.streampipes.connect.adapter.specific.sensemap.model;
+package org.streampipes.connect.adapters.sensemap.model;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;

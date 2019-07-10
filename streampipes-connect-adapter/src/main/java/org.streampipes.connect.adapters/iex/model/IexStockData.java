@@ -1,5 +1,5 @@
 
-package org.streampipes.connect.adapter.specific.iex.model;
+package org.streampipes.connect.adapters.iex.model;
 
 import com.google.gson.annotations.SerializedName;
 

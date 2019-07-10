@@ -57,7 +57,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
     private Map<String, Object> event;
 
-    private org.streampipes.connect.adapter.specific.opcua.OpcUa opcUa;
+    private OpcUa opcUa;
 
     private int numberProperties;
 

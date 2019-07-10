@@ -1,4 +1,4 @@
-package org.streampipes.connect.adapter.specific;
+package org.streampipes.connect.adapters;
 
 import com.google.gson.Gson;
 import org.apache.http.client.fluent.Request;

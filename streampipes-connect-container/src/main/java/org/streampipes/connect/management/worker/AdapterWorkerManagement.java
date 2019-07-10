@@ -20,19 +20,31 @@ package org.streampipes.connect.management.worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.RunningAdapterInstances;
-import org.streampipes.connect.adapter.AdapterRegistry;
-import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.adapter.Adapter;
+import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.connect.adapter.model.generic.Protocol;
+import org.streampipes.connect.config.ConnectContainerConfig;
+import org.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.streampipes.connect.management.AdapterUtils;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 
+import java.util.Collection;
+
 public class AdapterWorkerManagement {
 
     private static final Logger logger = LoggerFactory.getLogger(AdapterWorkerManagement.class);
+
+    public Collection<Protocol> getAllProtocols() {
+        return AdapterDeclarerSingleton.getInstance().getAllProtocols();
+    }
+
+    public Collection<Adapter> getAllAdapters() {
+        return AdapterDeclarerSingleton.getInstance().getAllAdapters();
+    }
 
     public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
 

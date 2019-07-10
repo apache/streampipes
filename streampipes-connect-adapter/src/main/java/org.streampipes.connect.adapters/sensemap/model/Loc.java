@@ -1,8 +1,9 @@
 
-package org.streampipes.connect.adapter.specific.sensemap.model;
+package org.streampipes.connect.adapters.sensemap.model;
+
+import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.Generated;
-import com.google.gson.annotations.SerializedName;
 
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 FZI Forschungszentrum Informatik
+ * Copyright 2019 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,12 @@
  *
  */
 
-package org.streampipes.connect.adapter.specific.sensemap;
+package org.streampipes.connect.adapters.sensemap;
 
 import org.junit.Test;
+import org.streampipes.connect.adapters.sensemap.SensorNames;
+
+import static org.junit.Assert.assertEquals;
 
 public class SensorNamesTest {
 
