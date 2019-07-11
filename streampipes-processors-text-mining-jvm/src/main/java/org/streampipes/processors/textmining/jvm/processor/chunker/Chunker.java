@@ -20,6 +20,7 @@ package org.streampipes.processors.textmining.jvm.processor.chunker;
 import opennlp.tools.chunker.ChunkerME;
 import opennlp.tools.chunker.ChunkerModel;
 import opennlp.tools.util.Span;
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.model.runtime.field.ListField;
@@ -60,7 +61,7 @@ public class Chunker implements EventProcessor<ChunkerParameters> {
   }
 
   @Override
-  public void onEvent(Event inputEvent, SpOutputCollector out) {
+  public void onEvent(Event inputEvent, SpOutputCollector out) throws SpRuntimeException {
     ListField tags = inputEvent.getFieldBySelector(this.tags).getAsList();
     ListField tokens = inputEvent.getFieldBySelector(this.tokens).getAsList();
 

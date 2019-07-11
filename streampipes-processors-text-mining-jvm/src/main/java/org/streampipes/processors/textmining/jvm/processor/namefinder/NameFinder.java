@@ -20,6 +20,7 @@ package org.streampipes.processors.textmining.jvm.processor.namefinder;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.util.Span;
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.model.runtime.field.ListField;
@@ -58,7 +59,7 @@ public class NameFinder implements EventProcessor<NameFinderParameters> {
   }
 
   @Override
-  public void onEvent(Event inputEvent, SpOutputCollector out) {
+  public void onEvent(Event inputEvent, SpOutputCollector out) throws SpRuntimeException {
     ListField tokens = inputEvent.getFieldBySelector(this.tokens).getAsList();
 
     String[] tokensArray = tokens.castItems(String.class).stream().toArray(String[]::new);
