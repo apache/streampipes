@@ -1,13 +1,17 @@
 version: "2"
 services:
-  processors-transformation-jvm:
-    image: ${SP_DOCKER_REGISTRY}/streampipes/streampipes-pipeline-elements/processors-text-mining-jvm:${SP_PE_VERSION}
+  processors-text-mining-jvm:
+    image: ${SP_PE_DOCKER_REGISTRY}processors-text-mining-jvm:${SP_PE_VERSION}
     depends_on:
       - "consul"
-#    ports:
-#      - "8098:8090"
+    volumes:
+      - "config":"/data/models/"
     environment:
       - SP_ICON_HOST=${SP_ICON_HOST}
+      - SP_KAFKA_HOST=${SP_KAFKA_HOST}
     networks:
       spnet:
 
+networks:
+  spnet:
+    external: true
