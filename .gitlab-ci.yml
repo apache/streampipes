@@ -1,11 +1,8 @@
 variables:
-  REGISTRY_HOST: ipe-wim-gitlab.fzi.de:5000
   IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH
   DOCKER_HUB_IMAGE_NAME: streampipes
   MAVEN_CLI_OPTS: -DskipTests --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true
-  HARBOR_REGISTRY_HOST: laus.fzi.de:8201
   HARBOR_IMAGE_NAME: $HARBOR_REGISTRY_HOST/$CI_PROJECT_PATH
-  GIT_REPO_ORIGIN: ssh://git@ipe-wim-gitlab.fzi.de:2222
   GIT_STRATEGY: clone
 
 
@@ -58,7 +55,7 @@ github:
    script:
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
+     - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
      - docker build --no-cache --pull -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
      - docker build --no-cache --pull -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION  ./streampipes-$CONTAINER_NAME
      - docker push $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
