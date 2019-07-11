@@ -16,7 +16,8 @@ import { GuessSchema } from './schema-editor/model/GuessSchema';
 import { AuthStatusService } from '../services/auth-status.service';
 import {StatusMessage} from "./model/message/StatusMessage";
 import { UnitDescription } from './model/UnitDescription';
-import {TsonLdSerializerService} from './tsonld-serializer.service';
+import {TsonLdSerializerService} from '../platform-services/tsonld-serializer.service';
+import {RuntimeOptionsResponse} from "./model/connect/runtime/RuntimeOptionsResponse";
 
 @Injectable()
 export class RestService {
@@ -34,6 +35,28 @@ export class RestService {
 
     addAdapterTemplate(adapter: AdapterDescription): Observable<StatusMessage> {
         return this.addAdapterDescription(adapter, '/master/adapters/template');
+    }
+
+    fetchRemoteOptions(resolvableOptionsParameterRequest: any, adapterId: string): Observable<RuntimeOptionsResponse> {
+        let promise = new Promise<RuntimeOptionsResponse>((resolve, reject) => {
+            this.tsonLdSerializerService.toJsonLd(resolvableOptionsParameterRequest).subscribe(serialized => {
+                const httpOptions = {
+                    headers: new HttpHeaders({
+                        'Content-Type': 'application/ld+json',
+                    }),
+                };
+                this.http.post("/streampipes-connect/api/v1/"
+                    + this.authStatusService.email
+                    + "/master/adapters/"
+                    + encodeURIComponent(adapterId)
+                    + "/configurations", serialized, httpOptions).pipe(map(response => {
+                    const r = this.tsonLdSerializerService.fromJsonLd(response, 'sp:RuntimeOptionsResponse');
+                    resolve(r);
+                })).subscribe();
+            });
+        });
+        return from(promise);
+
     }
 
     addAdapterDescription(adapter: AdapterDescription, url: String): Observable<StatusMessage> {

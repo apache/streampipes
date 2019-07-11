@@ -10,9 +10,10 @@ modules:
   - spAppOverview
   - spAdd
   - spAppFileDownload
+  - spKvi
   - spOntology
   - spSensors
   - spMyElements
   - spFileUpload
   - spConfiguration
-  - spAsset
+  - spDataExplorer

@@ -19,7 +19,7 @@
 
         <mat-step [completed]="isValidConfiguration" [editable]="false">
             <ng-template matStepLabel>Configuration</ng-template>
-            <kvi-configuration [configurations]="configurations" [dataSet]="selectedDataSet" (configuredOperators)="selectConfiguration($event)"></kvi-configuration>
+            <kvi-configuration [configurations]="configurations" [eventSchema]="selectedEventSchema" (configuredOperators)="selectConfiguration($event)"></kvi-configuration>
             <div fxLayout="row" fxLayoutAlign="end">
                 <button [disabled]="!isValidConfiguration" color="primary" mat-raised-button matStepperNext>Next</button>
             </div>

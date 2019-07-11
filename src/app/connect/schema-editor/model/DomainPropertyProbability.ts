@@ -1,6 +1,6 @@
-import {RdfsClass} from '../../tsonld/RdfsClass';
-import {RdfProperty} from '../../tsonld/RdfsProperty';
-import {RdfId} from '../../tsonld/RdfId';
+import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
+import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
+import {RdfId} from '../../../platform-services/tsonld/RdfId';
 
 @RdfsClass('sp:DomainPropertyProbability')
 export class DomainPropertyProbability {

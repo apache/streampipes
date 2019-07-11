@@ -6,5 +6,7 @@
     [maxPage]="maxPage"
     (itemPerPageChange)="handleItemsPerPageChange($event)"
     (nextPage)="handleNextPage()"
-    (previousPage)="handlePreviousPage()">
+    (previousPage)="handlePreviousPage()"
+    (firstPage)=handleFirstPage()
+    (lastPage)="handleLastPage()">
 </sp-table>

@@ -50,8 +50,28 @@ export class DatalakeRestService {
     }
 
 
+    /*
+        @deprecate
+     */
     getFile(index, format) {
         const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + "?format=" + format,  {
+            reportProgress: true,
+            responseType: 'text'
+        });
+        return this.http.request(request)
+    }
+
+    downloadRowData(index, format) {
+        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + "/download?format=" + format,  {
+            reportProgress: true,
+            responseType: 'text'
+        });
+        return this.http.request(request)
+    }
+
+    downloadRowDataTimeInterval(index, format, startDate, endDate) {
+        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + "/download" +
+            "?format=" + format, {
             reportProgress: true,
             responseType: 'text'
         });

@@ -71,4 +71,12 @@ export class DatalakeTableComponent {
         if(this.currentPage >= 0)
             this.paging(this.currentPage - 1);
     }
+
+    handleFirstPage() {
+        this.paging(0);
+    }
+
+    handleLastPage() {
+        this.loadData()
+    }
 }

@@ -1,3 +1,4 @@
 <p>Configuration of the Operator</p>
 
-<!-- <app-select-static-properties [dataSet]="dataSet" [staticProperties]="configurations" (emitter)="selectConfiguration($event)"></app-select-static-properties> -->
+ <!--<app-select-static-properties [dataSet]="dataSet" [staticProperties]="configurations" (emitter)="selectConfiguration($event)"></app-select-static-properties>-->
+<app-select-static-properties [staticProperties]="configurations" [eventSchema]="eventSchema" (emitter)="selectConfiguration($event)"></app-select-static-properties>

@@ -5,7 +5,7 @@
         <mat-form-field>
             <input class="example-full-width" matInput id="{{ 'input-' + staticProperty.label.toLowerCase() }}" [placeholder]="staticProperty.label" [(ngModel)]="staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value"
                 formControlName="freeStaticTextString" (ngModelChange)="valueChange(staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value)"
-                required>
+                required (blur)="emitUpdate()">
 
             <mat-error *ngIf="!hasInput">
                 {{staticProperty.errorMessage}}

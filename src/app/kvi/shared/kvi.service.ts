@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { DataSetDescription } from '../../connect/model/DataSetDescription';
-import { TsonLd } from '../../connect/tsonld/tsonld';
+import { TsonLd } from '../../platform-services/tsonld/tsonld';
 import { ProtocolDescription } from '../../connect/model/connect/grounding/ProtocolDescription';
 import { ProtocolDescriptionList } from '../../connect/model/connect/grounding/ProtocolDescriptionList';
 import { FreeTextStaticProperty } from '../../connect/model/FreeTextStaticProperty';
@@ -26,57 +26,34 @@ import { PipelineTemplateDescription } from '../../connect/model/PipelineTemplat
 import { PipelineTemplateDescriptionContainer } from '../../connect/model/PipelineTemplateDescriptionContainer';
 import { StaticProperty } from '../../connect/model/StaticProperty';
 import { MappingPropertyUnary } from '../../connect/model/MappingPropertyUnary';
-import {URI} from '../../connect/model/URI';
-import {AuthStatusService} from '../../services/auth-status.service';
+import { URI } from '../../connect/model/URI';
+import { AuthStatusService } from '../../services/auth-status.service';
+import { DataStreamDescription } from '../../connect/model/DataStreamDescription';
+import { Enumeration } from '../../connect/schema-editor/model/Enumeration';
+import { QuantitativeValue } from '../../connect/schema-editor/model/QuantitativeValue';
+import { BoundPipelineElement } from '../../connect/model/BoundPipelineElement';
+import { DataSinkInvocation } from '../../connect/model/DataSinkInvocation';
+import 'rxjs-compat/add/operator/map';
+import { PipelineTemplateService } from '../../platform-services/apis/pipeline-template.service';
+import {TsonLdSerializerService} from '../../platform-services/tsonld-serializer.service';
 
 @Injectable()
 export class KviService {
 
-    constructor(private http: HttpClient, private authStatusService: AuthStatusService) {
+    constructor(
+        private http: HttpClient,
+        private authStatusService: AuthStatusService,
+        private pipelineTemplateService: PipelineTemplateService,
+        private tsonLdSerializerService: TsonLdSerializerService) {
     }
 
     getServerUrl() {
         return '/streampipes-backend';
     }
 
-    private getTsonLd(): any {
-
-        const tsonld = new TsonLd();
-        tsonld.addClassMapping(ProtocolDescription);
-        tsonld.addClassMapping(ProtocolDescriptionList);
-        tsonld.addClassMapping(FreeTextStaticProperty);
-        tsonld.addClassMapping(MappingPropertyUnary);
-        tsonld.addClassMapping(FormatDescriptionList);
-        tsonld.addClassMapping(FormatDescription);
-        tsonld.addClassMapping(AdapterDescriptionList);
-        tsonld.addClassMapping(AdapterDescription);
-        tsonld.addClassMapping(DataStreamContainer);
-        tsonld.addClassMapping(DataSetDescription);
-        tsonld.addClassMapping(PipelineTemplateInvocation);
-        tsonld.addClassMapping(PipelineTemplateDescription);
-        tsonld.addClassMapping(PipelineTemplateDescriptionContainer);
-        tsonld.addClassMapping(EventSchema);
-        tsonld.addClassMapping(EventProperty);
-        tsonld.addClassMapping(EventPropertyNested);
-        tsonld.addClassMapping(EventPropertyList);
-        tsonld.addClassMapping(EventPropertyPrimitive);
-        tsonld.addClassMapping(DomainPropertyProbability);
-        tsonld.addClassMapping(DomainPropertyProbabilityList);
-        tsonld.addClassMapping(GuessSchema);
-        tsonld.addClassMapping(URI);
-
-        tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
-        tsonld.addContext('spi', 'urn:streampipes.org:spi:');
-        tsonld.addContext('xsd', 'http://www.w3.org/2001/XMLSchema#');
-        tsonld.addContext('empire', 'urn:clarkparsia.com:empire:');
-
-
-        return tsonld;
-    }
-
     getDataSets(): Observable<DataSetDescription[]> {
         return this.http
-            .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates/sets')
+            .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates/streams')
             .pipe(map(response => {
 
 
@@ -91,9 +68,7 @@ export class KviService {
                    }
                 });
 
-                const tsonld = this.getTsonLd();
-
-                const res = tsonld.fromJsonLdType(response, 'sp:DataStreamContainer');
+                const res = this.tsonLdSerializerService.fromJsonLd(response, 'sp:DataStreamContainer');
                 return res.list;
             }));
     }
@@ -102,32 +77,14 @@ export class KviService {
         return this.http
             .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates?dataset=' + dataSet.id)
             .pipe(map(response => {
-                const tsonld = this.getTsonLd();
-                const res = tsonld.fromJsonLdType(response, 'sp:PipelineTemplateDescriptionContainer');
+                const res = this.tsonLdSerializerService.fromJsonLd(response, 'sp:PipelineTemplateDescriptionContainer');
                 return res.list;
             }));
     }
 
     getStaticProperties(dataSet: DataSetDescription, operator: PipelineTemplateDescription): Observable<PipelineTemplateInvocation> {
-        return this.http
-            .get(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates/invocations?streamId=' + dataSet.id + '&templateId=' + operator.internalName)
-            .pipe(map(response => {
 
-
-                const tsonld = this.getTsonLd();
-                const res: PipelineTemplateInvocation = tsonld.fromJsonLdType(response, 'sp:PipelineTemplateInvocation');
-
-                // TODO find better solution
-                // This will remove preconfigured values from the UI
-                res.list.forEach(property => {
-                    if (this.isFreeTextStaticProperty(property)) {
-                        if (this.asFreeTextStaticProperty(property).value != undefined) {
-                            this.asFreeTextStaticProperty(property).render = false;
-                        }
-                    }
-                });
-                return res;
-            }));
+        return this.pipelineTemplateService.getPipelineTemplateInvocation(dataSet.id, operator.appId);
     }
 
     isFreeTextStaticProperty(val) {
@@ -139,13 +96,7 @@ export class KviService {
     }
 
     createPipelineTemplateInvocation(invocation: PipelineTemplateInvocation) {
-        const tsonld = this.getTsonLd();
-
-        tsonld.toflattenJsonLd(invocation).subscribe(res => {
-            this.http
-                .post(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates', res)
-                .subscribe();
-        });
+        this.pipelineTemplateService.createPipelineTemplateInvocation(invocation);
     }
 
 }

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 
-import { TsonLd } from '../tsonld';
+import { TsonLd } from '../../platform-services/tsonld';
 import { AuthStatusService } from '../../services/auth-status.service';
 import { AdapterDescriptionList } from '../model/connect/AdapterDescriptionList';
 import { AdapterDescription } from '../model/connect/AdapterDescription';
@@ -40,6 +40,7 @@ import {AddValueTransformationRuleDescription} from '../model/connect/rules/AddV
 import {FileStaticProperty} from '../model/FileStaticProperty';
 import {TimestampTransformationRuleDescription} from '../model/connect/rules/TimestampTransformationRuleDescription';
 import {RestApi} from "../../services/rest-api.service";
+import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer.service";
 
 @Injectable()
 export class DataMarketplaceService {
@@ -49,51 +50,10 @@ export class DataMarketplaceService {
     private http: HttpClient,
     private authStatusService: AuthStatusService,
     private connectService: ConnectService,
-    private restApi: RestApi
+    private restApi: RestApi,
+    private tsonLdSerializer: TsonLdSerializerService
   ) {}
 
-  private getTsonLd(): TsonLd {
-    const tsonld = new TsonLd();
-    tsonld.addClassMapping(AdapterDescriptionList);
-    tsonld.addClassMapping(AdapterDescription);
-    tsonld.addClassMapping(AdapterSetDescription);
-    tsonld.addClassMapping(GenericAdapterSetDescription);
-    tsonld.addClassMapping(SpecificAdapterSetDescription);
-    tsonld.addClassMapping(AdapterStreamDescription);
-    tsonld.addClassMapping(GenericAdapterStreamDescription);
-    tsonld.addClassMapping(SpecificAdapterStreamDescription);
-
-
-    tsonld.addClassMapping(AnyStaticProperty);
-    tsonld.addClassMapping(FileStaticProperty);
-    tsonld.addClassMapping(OneOfStaticProperty);
-    tsonld.addClassMapping(Option);
-
-    tsonld.addClassMapping(ProtocolDescriptionList);
-    tsonld.addClassMapping(ProtocolDescription);
-    tsonld.addClassMapping(FormatDescription);
-
-    tsonld.addClassMapping(DataStreamDescription);
-    tsonld.addClassMapping(DataSetDescription);
-    tsonld.addClassMapping(EventSchema);
-    tsonld.addClassMapping(EventPropertyPrimitive);
-    tsonld.addClassMapping(EventPropertyNested);
-    tsonld.addClassMapping(EventPropertyList);
-
-    tsonld.addClassMapping(FreeTextStaticProperty);
-
-    tsonld.addClassMapping(RenameRuleDescription);
-    tsonld.addClassMapping(DeleteRuleDescription);
-    tsonld.addClassMapping(AddNestedRuleDescription);
-    tsonld.addClassMapping(MoveRuleDescription);
-    tsonld.addClassMapping(UnitTransformRuleDescription);
-    tsonld.addClassMapping(RemoveDuplicatesRuleDescription);
-    tsonld.addClassMapping(AddTimestampRuleDescription);
-    tsonld.addClassMapping(AddValueTransformationRuleDescription);
-    tsonld.addClassMapping(TimestampTransformationRuleDescription);
-
-    return tsonld;
-  }
 
   getAdapterDescriptions(): Observable<AdapterDescription[]> {
       return this.requestAdapterDescriptions('/master/description/adapters');
@@ -117,7 +77,7 @@ export class DataMarketplaceService {
       )
       .pipe(map(response => {
         if(response['@graph'] === undefined) return [];
-        const res: AdapterDescriptionList = this.getTsonLd().fromJsonLdType(
+        const res: AdapterDescriptionList = this.tsonLdSerializer.fromJsonLd(
           response,
           'sp:AdapterDescriptionList'
         );
@@ -163,7 +123,7 @@ export class DataMarketplaceService {
           '/master/description/protocols'
       )
       .pipe(map(response => {
-        const res = this.getTsonLd().fromJsonLdType(
+        const res = this.tsonLdSerializer.fromJsonLd(
           response,
           'sp:ProtocolDescriptionList'
         );

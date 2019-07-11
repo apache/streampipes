@@ -7,7 +7,7 @@ import { FilterPipe } from './filter.pipe';
 import {AdapterUploadDialog} from './adapter-upload/adapter-upload-dialog.component';
 import {MatDialog} from '@angular/material';
 import {AdapterDescriptionList} from '../model/connect/AdapterDescriptionList';
-import {TsonLdSerializerService} from '../tsonld-serializer.service';
+import {TsonLdSerializerService} from '../../platform-services/tsonld-serializer.service';
 
 @Component({
     selector: 'sp-data-marketplace',

@@ -12,6 +12,7 @@ import {DatalakeDataDownloadcomponent} from './datalake/datadownload/datalake-da
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {LineChartComponent} from './linechart/lineChart.component';
 import {DatalakeLineChartComponent} from './datalake/linechart/datalake-lineChart.component';
+import {DatalakeLineChartDataDownloadDialog} from './datalake/linechart/datadownloadDialog/datalake-lineChart-dataDownload.dialog';
 
 
 @NgModule({
@@ -25,7 +26,7 @@ import {DatalakeLineChartComponent} from './datalake/linechart/datalake-lineChar
         MatSnackBarModule,
         MatProgressSpinnerModule,
         NgxChartsModule, MatDatepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
     ],
     declarations: [
         TableComponent,
@@ -33,11 +34,13 @@ import {DatalakeLineChartComponent} from './datalake/linechart/datalake-lineChar
         DatalakeTableComponent,
         DatalakeDataDownloadcomponent,
         DatalakeLineChartComponent,
+        DatalakeLineChartDataDownloadDialog,
     ],
     providers: [
         MatDatepickerModule
     ],
     entryComponents: [
+        DatalakeLineChartDataDownloadDialog
     ],
     exports: [
         TableComponent,

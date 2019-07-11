@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {DatalakeRestService} from '../../../core-services/datalake/datalake-rest.service';
-import {MatSnackBar} from '@angular/material';
+import {MatDialog, MatSnackBar} from '@angular/material';
 import {FormControl} from '@angular/forms';
+import {DatalakeLineChartDataDownloadDialog} from './datadownloadDialog/datalake-lineChart-dataDownload.dialog';
 
 @Component({
     selector: 'sp-datalake-lineChart',
@@ -15,9 +16,10 @@ export class DatalakeLineChartComponent {
         this.loadAllData();
         this.enablePaging = true;
         this.enableItemsPerPage = true;
+        this.selectedTimeUnit = 'All';
     }
-    data;
     _index: string;
+    data;
 
     //Line Chart configs
     yAxesKeys: [] = undefined;
@@ -46,7 +48,7 @@ export class DatalakeLineChartComponent {
     customStartDate = new Date();
     customEndDate = new Date(this.customStartDate.getTime() + 60000 * 60 * 24);
 
-    constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar) {
+    constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar, public dialog: MatDialog) {
 
     }
 
@@ -89,7 +91,7 @@ export class DatalakeLineChartComponent {
                     this.currentPage = res.page;
                     this.maxPage = res.pageSum;
                     this.data = res.events as [];
-                    this.setDataKeys(res.events[0])
+                    this.setDataKeys(res.events)
                 } else {
                     this.data = undefined;
                 }
@@ -117,7 +119,17 @@ export class DatalakeLineChartComponent {
 
         this.isLoadingData = true;
         if (this.enableAdvanceOptions) {
-            this.restService.getLastData(this._index, timeunit, timevalue, this.groupbyUnit, this.groupbyValue).subscribe(
+            let groupbyUnit = this.groupbyUnit;
+            let groupbyValue = this.groupbyValue;
+            if (this.groupbyUnit === 'month') {
+                groupbyUnit = 'd';
+                groupbyValue = 30 * this.groupbyValue;
+            } else if(this.groupbyUnit === 'year') {
+                groupbyUnit = 'd';
+                groupbyValue = 365 * this.groupbyValue;
+            }
+
+            this.restService.getLastData(this._index, timeunit, timevalue, groupbyUnit, groupbyValue).subscribe(
                 res => this.processRevicedData(res)
             );
         } else {
@@ -130,11 +142,18 @@ export class DatalakeLineChartComponent {
     }
 
     loadCustomData() {
-        let aggregationunit = 'm';
-        let aggreagtionvalue = 1;
         this.isLoadingData = true;
+        let groupbyUnit = this.groupbyUnit;
+        let groupbyValue = this.groupbyValue;
+        if (this.groupbyUnit === 'month') {
+            groupbyUnit = 'w';
+            this.groupbyValue = 4 * this.groupbyValue;
+        } else if(this.groupbyUnit === 'year') {
+            groupbyUnit = 'd';
+            this.groupbyValue = 365 * this.groupbyValue;
+        }
         if (this.enableAdvanceOptions) {
-            this.restService.getData(this._index, this.customStartDate.getTime(), this.customEndDate.getTime(), aggregationunit, aggreagtionvalue).subscribe(
+            this.restService.getData(this._index, this.customStartDate.getTime(), this.customEndDate.getTime(), groupbyUnit, groupbyValue).subscribe(
                 res => this.processRevicedData(res)
             );
         } else {
@@ -148,7 +167,7 @@ export class DatalakeLineChartComponent {
     processRevicedData(res) {
         if(res.events.length > 0) {
             this.data = res.events as [];
-            this.setDataKeys(res.events[0]);
+            this.setDataKeys(res.events);
             this.currentPage = undefined;
         } else {
             this.data = undefined;
@@ -160,11 +179,15 @@ export class DatalakeLineChartComponent {
         this.yAxesKeys = value;
     }
 
-    setDataKeys(event) {
+    setDataKeys(events) {
         this.dataKeys = [];
-        for (let key in event) {
-            if (typeof event[key] == 'number') {
-                this.dataKeys.push(key)
+        for (let event of events) {
+            for (let key in event) {
+                if (typeof event[key] == 'number') {
+                    if (!this.dataKeys.includes(key)) {
+                        this.dataKeys.push(key)
+                    }
+                }
             }
         }
     }
@@ -187,6 +210,14 @@ export class DatalakeLineChartComponent {
         }
 
         this.loadData();
+    }
+
+    downloadDataAsFile() {
+        const dialogRef = this.dialog.open(DatalakeLineChartDataDownloadDialog, {
+            width: '600px',
+            data: {data: this.data, xAxesKey: this.xAxesKey, yAxesKeys: this.yAxesKeys, index: this._index}
+
+        });
     }
 
 
@@ -219,3 +250,4 @@ export class DatalakeLineChartComponent {
     }
 
 }
+

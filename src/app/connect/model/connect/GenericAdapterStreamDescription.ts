@@ -1,6 +1,6 @@
 import { AdapterStreamDescription } from "./AdapterStreamDescription";
-import {RdfsClass} from '../../tsonld/RdfsClass';
-import {RdfProperty} from '../../tsonld/RdfsProperty';
+import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
+import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
 import {ProtocolDescription} from './grounding/ProtocolDescription';
 import {FormatDescription} from './grounding/FormatDescription';
 
