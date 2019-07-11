@@ -39,7 +39,7 @@
     </div>
 </div>
 
-<div fxLayout="column" fxLayoutAlign="space-evenly stretched" >
+<div fxLayout="column" fxLayoutAlign="space-evenly stretched" class="drag-drop-tree">
     <!--
     <app-event-property-bag [(eventProperties)]="eventSchema.eventProperties" [domainPropertyGuesses]="schemaGuess.eventProperties" [isEditable]="isEditable">
     </app-event-property-bag>
@@ -50,7 +50,7 @@
     </cdk-tree>
     -->
 
-    <tree-root #tree [nodes]="nodes" [options]="options">
+    <tree-root #tree [nodes]="nodes" [options]="options" (updateData)= "onUpdateData(tree, $event)">
         <ng-template #treeNodeTemplate let-node let-index="index">
             <div class="schema"  *ngIf="isEventPropertyNested(node.data)">
             <app-event-property-nested [index]="i + 1"
@@ -74,8 +74,24 @@
                         [property]="node.data">
             </app-event-property-list>
             </div>
+            <div fxLayoutAlign="center center" class="addSchema" *ngIf="isNested(node.data)">
+                <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty(node.data)>
+                  <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
+                </button>
+              </div>
           </ng-template>
     </tree-root>
+    <div fxLayoutAlign="center center" class="addSchema">
+        <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty()>
+          <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
+        </button>
+        <button [disabled]="!isEditable" *ngIf="!eventPropertyNested" color="primary" mat-button (click)="addStaticValueProperty()">
+          <mat-icon matTooltip="Add a static value to event">add</mat-icon>
+        </button>
+        <button [disabled]="!isEditable"  *ngIf="!eventPropertyNested" color="primary" mat-button (click)=addTimestampProperty()>
+          <mat-icon matTooltip="Add timestamp to event schema">access_time</mat-icon>
+        </button>
+      </div>
 </div>
 
 

@@ -21,8 +21,6 @@ import { EventPropertyPrimitiveComponent } from './schema-editor/event-property-
 import { EventPropertyComponent } from './schema-editor/event-property/event-property.component';
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
 
-import { EventPropertyBagComponent } from './schema-editor/event-property-bag/event-property-bag.component';
-
 import { StaticPropertyComponent } from './static-properties/static-property.component';
 
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
@@ -66,8 +64,6 @@ import { AdapterUploadDialog } from './data-marketplace/adapter-upload/adapter-u
 import { TsonLdSerializerService } from './tsonld-serializer.service';
 import { EventPropertyListComponent } from './schema-editor/event-property-list/event-property-list.component';
 
-import {DragDropModule} from '@angular/cdk/drag-drop';
-import {CdkTreeModule} from '@angular/cdk/tree';
 import { TreeModule } from 'angular-tree-component';
 
 
@@ -84,8 +80,6 @@ import { TreeModule } from 'angular-tree-component';
     MatProgressSpinnerModule,
     MatInputModule,
     MatFormFieldModule,
-    DragDropModule,
-    CdkTreeModule,
     TreeModule.forRoot(),
   ],
   exports: [StaticPropertyComponent],
@@ -94,7 +88,6 @@ import { TreeModule } from 'angular-tree-component';
     SelectProtocolComponent,
     FormatFormComponent,
     EventSchemaComponent,
-    EventPropertyBagComponent,
     EventPropertyPrimitiveComponent,
     EventPropertyComponent,
     EventPropertyNestedComponent,
