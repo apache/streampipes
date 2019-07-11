@@ -208,6 +208,11 @@ docker-processors-text-mining-flink:
   variables:
     CONTAINER_NAME: "processors-text-mining-flink"
 
+docker-processors-text-mining-jvm:
+  <<: *docker_hub_script
+  variables:
+    CONTAINER_NAME: "processors-text-mining-jvm"
+
 docker-sinks-brokers-jvm:
     <<: *docker_script
     variables:
