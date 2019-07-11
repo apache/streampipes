@@ -28,6 +28,7 @@ import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.textmining.jvm.config.TextMiningJvmConfig;
 import org.streampipes.processors.textmining.jvm.processor.chunker.ChunkerController;
 import org.streampipes.processors.textmining.jvm.processor.language.LanguageDetectionController;
+import org.streampipes.processors.textmining.jvm.processor.namefinder.NameFinderController;
 import org.streampipes.processors.textmining.jvm.processor.partofspeech.PartOfSpeechController;
 import org.streampipes.processors.textmining.jvm.processor.sentence.SentenceDetectionController;
 import org.streampipes.processors.textmining.jvm.processor.tokenizer.TokenizerController;
@@ -40,6 +41,7 @@ public class TextMiningJvmInit extends StandaloneModelSubmitter {
                 .add(new TokenizerController())
                 .add(new PartOfSpeechController())
                 .add(new ChunkerController())
+                .add(new NameFinderController())
                 .add(new SentenceDetectionController());
 
         DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),

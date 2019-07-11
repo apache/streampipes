@@ -41,6 +41,8 @@ public enum TextMiningJvmConfig implements PeConfig {
 		config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
 		config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
 
+		config.register(ConfigKeys.MODEL_DIRECTORY, "/home/lennard/models/", "The directory location for the folders of the name finder models");
+
 		config.register(ConfigKeys.SERVICE_NAME_KEY, service_name, "The name of the service");
 
 	}
@@ -82,7 +84,9 @@ public enum TextMiningJvmConfig implements PeConfig {
 		return config.getString(ConfigKeys.SERVICE_NAME_KEY);
 	}
 
-
+	public String getModelDirectory() {
+		return config.getString(ConfigKeys.MODEL_DIRECTORY);
+	}
 
 
 }
