@@ -24,6 +24,7 @@ import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.model.runtime.field.ListField;
 import org.streampipes.processors.textmining.jvm.config.TextMiningJvmConfig;
+import org.streampipes.processors.textmining.jvm.processor.TextMiningUtil;
 import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
@@ -31,7 +32,6 @@ import org.streampipes.wrapper.runtime.EventProcessor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class NameFinder implements EventProcessor<NameFinderParameters> {
@@ -57,31 +57,19 @@ public class NameFinder implements EventProcessor<NameFinderParameters> {
     this.tokens = nameFinderParameters.getTokens();
   }
 
-  @SuppressWarnings("Duplicates")
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
     ListField tokens = inputEvent.getFieldBySelector(this.tokens).getAsList();
 
     String[] tokensArray = tokens.castItems(String.class).stream().toArray(String[]::new);
-
     Span[] spans = nameFinder.find(tokensArray);
 
     // Generating the list of names from the found spans by the nameFinder
-    List<String> names = new ArrayList<>();
-    for (Span span : spans) {
-      StringBuilder stringBuilder = new StringBuilder();
-      for (int i = span.getStart(); i < span.getEnd(); i++) {
-        stringBuilder.append(tokensArray[i]).append(' ');
-      }
-      // Removing the last space
-      stringBuilder.setLength(Math.max(stringBuilder.length() - 1, 0));
-      names.add(stringBuilder.toString());
-    }
+    List<String> names = TextMiningUtil.extractSpans(spans, tokensArray);
 
     nameFinder.clearAdaptiveData();
 
     inputEvent.addField(NameFinderController.FOUND_NAME_FIELD_KEY, names);
-
     out.collect(inputEvent);
   }
 
