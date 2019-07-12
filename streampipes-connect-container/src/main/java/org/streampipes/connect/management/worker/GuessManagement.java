@@ -22,8 +22,11 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.exception.ParseException;
+import org.streampipes.connect.adapter.model.generic.GenericAdapter;
 import org.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;
 import org.streampipes.connect.adapter.model.generic.GenericDataStreamAdapter;
+import org.streampipes.connect.adapter.model.generic.Protocol;
+import org.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
@@ -44,6 +47,18 @@ public class GuessManagement {
         } else if (adapterDescription instanceof GenericAdapterSetDescription) {
             adapter = new GenericDataSetAdapter().getInstance((GenericAdapterSetDescription) adapterDescription);
         }
+
+        Protocol protocol = null;
+        if (adapterDescription instanceof GenericAdapterSetDescription) {
+            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterSetDescription) adapterDescription).getProtocolDescription().getElementId());
+            ((GenericAdapter) adapter).setProtocol(protocol);
+        }
+
+        if (adapterDescription instanceof GenericAdapterStreamDescription) {
+            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterDescription).getProtocolDescription().getElementId());
+            ((GenericAdapter) adapter).setProtocol(protocol);
+        }
+
 
         GuessSchema guessSchema;
         try {

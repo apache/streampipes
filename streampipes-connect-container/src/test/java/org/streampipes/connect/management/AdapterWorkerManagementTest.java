@@ -160,5 +160,6 @@ public class AdapterWorkerManagementTest {
         public String getId() {
             return null;
         }
+
     }
 }

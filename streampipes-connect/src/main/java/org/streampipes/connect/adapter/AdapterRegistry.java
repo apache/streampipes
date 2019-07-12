@@ -117,6 +117,7 @@ public class AdapterRegistry {
         return allProtocols;
     }
 
+    @Deprecated
     public static Adapter getAdapter(AdapterDescription adapterDescription) {
         if (adapterDescription != null) {
             Map<String, Adapter> adapterMap = AdapterRegistry.getAllAdapters();

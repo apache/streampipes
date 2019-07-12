@@ -17,6 +17,7 @@
 
 package org.streampipes.connect;
 
+import org.streampipes.connect.adapters.gdelt.GdeltAdapter;
 import org.streampipes.connect.adapters.opcua.OpcUaAdapter;
 import org.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.streampipes.connect.init.AdapterWorkerContainer;
@@ -32,6 +33,7 @@ public class Init extends AdapterWorkerContainer {
                 .add(new KafkaProtocol())
                 .add(new MqttProtocol())
                 .add(new HttpStreamProtocol())
+                .add(new GdeltAdapter())
                 .add(new OpcUaAdapter());
 
         new Init().init("http://localhost:8098", "http://localhost:8099");

@@ -64,4 +64,11 @@ public class AdapterDeclarerSingleton {
         return this.allAdapters.values();
     }
 
+    public Protocol getProtocol(String id) {
+        return getAllProtocols().stream()
+                .filter(protocol -> protocol.getId().equals(id))
+                .findAny()
+                .orElse(null);
+    }
+
 }

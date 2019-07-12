@@ -25,11 +25,13 @@ import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.exception.ParseException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterDescription;
+import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 
 public abstract class GenericAdapter<T extends AdapterDescription> extends Adapter<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(Adapter.class);
+    protected Protocol protocol;
 
     public GenericAdapter(T adapterDescription) {
         super(adapterDescription);
@@ -56,12 +58,15 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
         Parser parser = getParser(adapterDescription);
         Format format = getFormat(adapterDescription);
 
-        Protocol protocol = getProtocol(adapterDescription, format, parser);
-        setProtocol(protocol);
+        ProtocolDescription protocolDescription = ((GenericAdapterDescription) adapterDescription).getProtocolDescription();
+
+        Protocol protocolInstance = this.protocol.getInstance(protocolDescription, parser, format);
+        this.protocol = protocolInstance;
+
 
         logger.debug("Start adatper with format: " + format.getId() + " and " + protocol.getId());
 
-        protocol.run(adapterPipeline);
+        protocolInstance.run(adapterPipeline);
     }
 
 
@@ -70,11 +75,13 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
         Parser parser = getParser((GenericAdapterDescription) adapterDescription);
         Format format = getFormat((GenericAdapterDescription) adapterDescription);
 
-        Protocol protocol = getProtocol((GenericAdapterDescription) adapterDescription, format, parser);
+        ProtocolDescription protocolDescription = ((GenericAdapterDescription) adapterDescription).getProtocolDescription();
+
+        Protocol protocolInstance = this.protocol.getInstance(protocolDescription, parser, format);
 
         logger.debug("Extract schema with format: " + format.getId() + " and " + protocol.getId());
 
-        return protocol.getGuessSchema();
+        return protocolInstance.getGuessSchema();
     }
 
     private Parser getParser(GenericAdapterDescription adapterDescription) throws AdapterException {
@@ -84,10 +91,6 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
 
     private Format getFormat(GenericAdapterDescription adapterDescription) {
         return AdapterRegistry.getAllFormats().get(adapterDescription.getFormatDescription().getAppId()).getInstance(adapterDescription.getFormatDescription());
-    }
-
-    private Protocol getProtocol(GenericAdapterDescription adapterDescription, Format format, Parser parser) {
-        return AdapterRegistry.getAllProtocols().get(adapterDescription.getProtocolDescription().getAppId()).getInstance(adapterDescription.getProtocolDescription(), parser, format);
     }
 
 }

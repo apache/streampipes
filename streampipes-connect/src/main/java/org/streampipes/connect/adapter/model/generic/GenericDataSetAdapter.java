@@ -27,8 +27,6 @@ public class GenericDataSetAdapter extends GenericAdapter<GenericAdapterSetDescr
 
     public static final String ID = GenericAdapterSetDescription.ID;
 
-    private Protocol protocol;
-
     Logger logger = LoggerFactory.getLogger(Adapter.class);
 
     public GenericDataSetAdapter() {

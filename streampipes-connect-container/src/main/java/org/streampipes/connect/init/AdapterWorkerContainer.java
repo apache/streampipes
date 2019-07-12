@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.model.generic.Protocol;
 import org.streampipes.connect.management.worker.MasterRestClient;
+import org.streampipes.connect.rest.worker.GuessResource;
 import org.streampipes.connect.rest.worker.WelcomePageWorker;
 import org.streampipes.connect.rest.worker.WorkerResource;
 import org.streampipes.model.connect.adapter.AdapterDescription;
@@ -52,7 +53,7 @@ public abstract class AdapterWorkerContainer extends AdapterContainer {
 
 
         LOG.info("Started StreamPipes Connect Resource in WORKER mode");
-        config = new ResourceConfig(getWorkerApiClasses());
+//        config = new ResourceConfig(getWorkerApiClasses());
         baseUri = UriBuilder
                 .fromUri(workerUrl)
                 .build();
@@ -83,6 +84,7 @@ public abstract class AdapterWorkerContainer extends AdapterContainer {
         Set<Class<?>> allClasses = new HashSet<>();
 
         allClasses.add(WelcomePageWorker.class);
+        allClasses.add(GuessResource.class);
         allClasses.add(WorkerResource.class);
 
         allClasses.addAll(getApiClasses());

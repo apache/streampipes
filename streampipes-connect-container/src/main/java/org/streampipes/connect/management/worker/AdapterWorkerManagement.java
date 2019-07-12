@@ -23,14 +23,13 @@ import org.streampipes.connect.RunningAdapterInstances;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.connect.adapter.model.generic.GenericAdapter;
 import org.streampipes.connect.adapter.model.generic.Protocol;
 import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.streampipes.connect.management.AdapterUtils;
 import org.streampipes.model.SpDataSet;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.adapter.*;
 
 import java.util.Collection;
 
@@ -50,6 +49,12 @@ public class AdapterWorkerManagement {
 
         Adapter adapter = AdapterRegistry.getAdapter(adapterStreamDescription);
 
+        Protocol protocol = null;
+        if (adapterStreamDescription instanceof GenericAdapterStreamDescription) {
+            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getElementId());
+            ((GenericAdapter) adapter).setProtocol(protocol);
+        }
+
         RunningAdapterInstances.INSTANCE.addAdapter(adapterStreamDescription.getUri(), adapter);
         adapter.startAdapter();
 
@@ -61,9 +66,17 @@ public class AdapterWorkerManagement {
     }
 
     public void invokeSetAdapter (AdapterSetDescription adapterSetDescription) throws AdapterException {
-        SpDataSet dataSet = adapterSetDescription.getDataSet();
 
         Adapter adapter = AdapterRegistry.getAdapter(adapterSetDescription);
+
+        Protocol protocol = null;
+        if (adapterSetDescription instanceof GenericAdapterSetDescription) {
+            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterSetDescription) adapterSetDescription).getProtocolDescription().getElementId());
+            ((GenericAdapter) adapter).setProtocol(protocol);
+        }
+
+        SpDataSet dataSet = adapterSetDescription.getDataSet();
+
         RunningAdapterInstances.INSTANCE.addAdapter(adapterSetDescription.getUri(), adapter);
 
         adapter.changeEventGrounding(adapterSetDescription.getDataSet().getEventGrounding().getTransportProtocol());

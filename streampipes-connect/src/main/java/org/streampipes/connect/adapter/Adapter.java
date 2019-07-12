@@ -19,13 +19,12 @@ package org.streampipes.connect.adapter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.ParseException;
 import org.streampipes.connect.adapter.model.Connector;
 import org.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.preprocessing.elements.*;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.connect.adapter.exception.ParseException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
@@ -149,4 +148,5 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
     public boolean isDebug() {
         return debug;
     }
+
 }

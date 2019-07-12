@@ -27,8 +27,6 @@ public class GenericDataStreamAdapter extends GenericAdapter<GenericAdapterStrea
 
     public static final String ID = GenericAdapterStreamDescription.ID;
 
-    private Protocol protocol;
-
     Logger logger = LoggerFactory.getLogger(Adapter.class);
 
     public GenericDataStreamAdapter() {
