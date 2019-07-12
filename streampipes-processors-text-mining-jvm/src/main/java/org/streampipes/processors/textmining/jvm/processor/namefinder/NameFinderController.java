@@ -21,12 +21,12 @@ import org.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.runtime.RuntimeOptions;
-import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.PropertyScope;
+import org.streampipes.model.staticproperty.Option;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.streampipes.sdk.helpers.*;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.sdk.utils.Datatypes;
@@ -77,16 +77,16 @@ public class NameFinderController extends StandaloneEventProcessingDeclarer<Name
   }
 
   @Override
-  public List<RuntimeOptions> resolveOptions(String requestId, EventProperty linkedEventProperty) {
+  public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
     String directoryPath = "/home/lennard/models"; //TextMiningJvmConfig.INSTANCE.getModelDirectory();
 
-    List<RuntimeOptions> result = new ArrayList<>();
+    List<Option> result = new ArrayList<>();
 
     File folder = new File(directoryPath);
     File[] listOfFiles = folder.listFiles();
 
     for (File file : listOfFiles) {
-      result.add(new RuntimeOptions(file.getName(), ""));
+      result.add(new Option(file.getName()));
     }
 
     return result;
