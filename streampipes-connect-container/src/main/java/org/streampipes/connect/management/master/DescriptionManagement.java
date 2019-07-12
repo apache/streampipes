@@ -17,7 +17,6 @@
 
 package org.streampipes.connect.management.master;
 
-import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.adapter.model.generic.Format;
 import org.streampipes.model.connect.adapter.AdapterDescriptionList;
@@ -58,15 +57,14 @@ public class DescriptionManagement {
     }
 
     public AdapterDescriptionList getAdapters() {
+        ConnectionWorkerContainerStorageImpl connectionWorkerContainerStorage = new ConnectionWorkerContainerStorageImpl();
 
-        // TODO get all Worker Containers
-        // TODO get all Adapter Descriptions
-        Map<String, Adapter> allAdapters = AdapterRegistry.getAllAdapters();
+        List<ConnectWorkerContainer> allWorkerContainter = connectionWorkerContainerStorage.getAllConnectWorkerContainers();
 
         AdapterDescriptionList result = new AdapterDescriptionList();
 
-        for (Adapter a : allAdapters.values()) {
-           result.getList().add(a.declareModel());
+        for (ConnectWorkerContainer connectWorkerContainer : allWorkerContainter) {
+           result.getList().addAll(connectWorkerContainer.getAdapters());
         }
 
         return result;

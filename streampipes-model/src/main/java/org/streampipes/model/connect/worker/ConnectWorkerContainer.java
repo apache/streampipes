@@ -57,9 +57,9 @@ public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
     @RdfProperty("sp:protocols")
     private List<ProtocolDescription> protocols;
 
-//    @OneToMany(fetch = FetchType.EAGER,
-//            cascade = {CascadeType.ALL})
-//    @RdfProperty("sp:adapters")
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @RdfProperty("sp:list")
     private List<AdapterDescription> adapters;
 
     public ConnectWorkerContainer(String endpointUrl, List<ProtocolDescription> protocols, List<AdapterDescription> adapters) {

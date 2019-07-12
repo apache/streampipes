@@ -26,8 +26,7 @@ import org.streampipes.model.client.messages.ErrorMessageLd;
 import org.streampipes.model.client.messages.MessageLd;
 import org.streampipes.model.client.messages.NotificationLd;
 import org.streampipes.model.client.messages.SuccessMessageLd;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.FormatDescriptionList;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
@@ -78,6 +77,11 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
     }
   }
 
+
+  /**
+   * Do not register abstract classes!!!
+   * Just register classes with a default constructor
+   */
   private List<Class<?>> getAnnotatedClasses() {
     return Arrays.asList(
             ListOutputStrategy.class,
@@ -136,7 +140,10 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             TransformOutputStrategy.class,
             TransformOperation.class,
             CustomTransformOutputStrategy.class,
-            AdapterDescription.class,
+            SpecificAdapterSetDescription.class,
+            SpecificAdapterStreamDescription.class,
+            GenericAdapterStreamDescription.class,
+            GenericAdapterSetDescription.class,
             AdapterDescriptionList.class,
             FormatDescription.class,
             FormatDescriptionList.class,

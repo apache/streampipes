@@ -48,7 +48,7 @@ public class WorkerAdministrationResource extends AbstractContainerResource {
     @GsonWithIds
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAdapter(String connectWorkerContainerString) {
+    public Response addWorkerContainer(String connectWorkerContainerString) {
         ConnectWorkerContainer connectWorkerContainer = JsonLdUtils.fromJsonLd(connectWorkerContainerString, ConnectWorkerContainer.class, StreamPipes.CONNECT_WORKER_CONTAINER);
         this.workerAdministrationManagement.register(connectWorkerContainer);
 
