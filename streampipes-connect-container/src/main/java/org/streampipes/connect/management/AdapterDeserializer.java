@@ -17,39 +17,24 @@
 
 package org.streampipes.connect.management;
 
-import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.rest.shared.util.JsonLdUtils;
-
-import java.util.Set;
 
 public class AdapterDeserializer {
 
     public static AdapterDescription getAdapterDescription(String jsonld) throws AdapterException {
-        Set<String> adapterIds = AdapterRegistry.getAllAdapters().keySet();
-
-        AdapterDescription result = null;
-
-        for (String key : adapterIds) {
-            if (jsonld.contains(key)) {
-                Adapter adapter = AdapterRegistry.getAllAdapters().get(key);
-                AdapterDescription resultDescription = adapter.declareModel();
-
-                result = JsonLdUtils.fromJsonLd(jsonld, resultDescription.getClass());
-
-                if (result.getAdapterId() == null) {
-                    result.setAdapterId(result.getUri());
-                }
-
-            }
+        if (jsonld.contains("SpecificAdapterSetDescription")) {
+            return JsonLdUtils.fromJsonLd(jsonld, SpecificAdapterSetDescription.class);
+        } else if (jsonld.contains("SpecificAdapterStreamDescription")) {
+            return JsonLdUtils.fromJsonLd(jsonld, SpecificAdapterStreamDescription.class);
+        } else if (jsonld.contains("GenericAdapterSetDescription")) {
+            return JsonLdUtils.fromJsonLd(jsonld, GenericAdapterSetDescription.class);
+        } else if (jsonld.contains("GenericAdapterStreamDescription")) {
+            return JsonLdUtils.fromJsonLd(jsonld, GenericAdapterStreamDescription.class);
+        } else {
+            throw new AdapterException("Adapter type not registerd");
         }
 
-        if (result == null) {
-           throw new AdapterException("Json-Ld of adapter description could not be deserialized: " + jsonld);
-        }
-
-        return result;
     }
 }

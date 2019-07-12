@@ -71,4 +71,11 @@ public class AdapterDeclarerSingleton {
                 .orElse(null);
     }
 
+    public Adapter getAdapter(String id) {
+        return getAllAdapters().stream()
+                .filter(adapter -> adapter.getId().equals(id))
+                .findAny()
+                .orElse(null);
+    }
+
 }

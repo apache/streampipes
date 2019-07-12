@@ -17,10 +17,6 @@
 
 package org.streampipes.connect.adapter;
 
-import org.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;
-import org.streampipes.connect.adapter.model.generic.GenericDataStreamAdapter;
-import org.streampipes.connect.adapter.model.generic.Format;
-import org.streampipes.connect.adapter.model.generic.Parser;
 import org.streampipes.connect.adapter.format.csv.CsvFormat;
 import org.streampipes.connect.adapter.format.csv.CsvParser;
 import org.streampipes.connect.adapter.format.geojson.GeoJsonFormat;
@@ -35,9 +31,8 @@ import org.streampipes.connect.adapter.format.json.object.JsonObjectFormat;
 import org.streampipes.connect.adapter.format.json.object.JsonObjectParser;
 import org.streampipes.connect.adapter.format.xml.XmlFormat;
 import org.streampipes.connect.adapter.format.xml.XmlParser;
-import org.streampipes.connect.adapter.model.generic.Protocol;
+import org.streampipes.connect.adapter.model.generic.*;
 import org.streampipes.container.api.ResolvesContainerProvidedOptions;
-import org.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -117,17 +112,8 @@ public class AdapterRegistry {
         return allProtocols;
     }
 
-    @Deprecated
-    public static Adapter getAdapter(AdapterDescription adapterDescription) {
-        if (adapterDescription != null) {
-            Map<String, Adapter> adapterMap = AdapterRegistry.getAllAdapters();
 
-            return adapterMap.get(adapterDescription.getAdapterId()).getInstance(adapterDescription);
-        } else {
-            return null;
-        }
-    }
-
+    // TODO Think about how to solve the Runtime Resovables
     public static ResolvesContainerProvidedOptions getRuntimeResolvableAdapter(String id) throws IllegalArgumentException {
         id = id.replaceAll("sp:", SP_NS);
         Map<String, Adapter> allAdapters = getAllAdapters();

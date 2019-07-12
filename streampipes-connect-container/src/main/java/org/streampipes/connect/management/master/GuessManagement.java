@@ -37,15 +37,24 @@ public class GuessManagement {
     private WorkerAdministrationManagement workerAdministrationManagement;
 
     public GuessManagement() {
-       this.workerAdministrationManagement = new WorkerAdministrationManagement();
+        this.workerAdministrationManagement = new WorkerAdministrationManagement();
     }
 
     public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
-        String protocolId = ((GenericAdapterDescription) (adapterDescription)).getProtocolDescription().getAppId();
 
-        String workerUrl = this.workerAdministrationManagement.getWorkerUrl(protocolId);
-        // Make REST call to worker
+        String id = "";
+
+        if (adapterDescription instanceof GenericAdapterDescription) {
+            id = ((GenericAdapterDescription) (adapterDescription)).getProtocolDescription().getAppId();
+        } else {
+            id = adapterDescription.getAppId();
+        }
+
+
+        String workerUrl = this.workerAdministrationManagement.getWorkerUrl(id);
         workerUrl = workerUrl + "/api/v1/admin@streampipes.de/worker/guess/schema";
+
+
 
         String ad = JsonLdUtils.toJsonLD(adapterDescription);
 

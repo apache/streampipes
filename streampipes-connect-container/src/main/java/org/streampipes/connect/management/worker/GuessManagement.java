@@ -59,6 +59,10 @@ public class GuessManagement {
             ((GenericAdapter) adapter).setProtocol(protocol);
         }
 
+        if (adapter == null) {
+            adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterDescription.getAppId());
+        }
+
 
         GuessSchema guessSchema;
         try {
