@@ -17,33 +17,12 @@
 
 package org.streampipes.connect.adapter;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-
-
-import static org.junit.Assert.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AdapterRegistry.class })
 public class AdapterRegistryTest {
 
-    @Test
-    public void getAdapterSuccess() {
-        AdapterDescription adapterDescription = new GenericAdapterSetDescription();
-        adapterDescription.setAdapterId(GenericDataSetAdapter.ID);
-        Adapter adapter = AdapterRegistry.getAdapter(adapterDescription);
-
-        assertEquals(adapter.getId(), GenericDataSetAdapter.ID);
-    }
-
-    @Test
-    public void getAdapterFailAdapterDescriptionNull() {
-        Adapter adapter = AdapterRegistry.getAdapter(null);
-        assertNull(adapter);
-    }
 }

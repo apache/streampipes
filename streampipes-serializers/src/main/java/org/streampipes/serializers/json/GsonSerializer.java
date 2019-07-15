@@ -99,7 +99,7 @@ public class GsonSerializer {
             .registerSubtype(UnitTransformRuleDescription.class, "org.streampipes.model.UnitTransformRuleDescription")
             .registerSubtype(TimestampTranfsformationRuleDescription.class, "org.streampipes.model.TimestampTranfsformationRuleDescription"));
 
-    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "sourceType")
+    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "type")
             .registerSubtype(SpecificAdapterSetDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterSetDescription")
             .registerSubtype(SpecificAdapterStreamDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription")
             .registerSubtype(GenericAdapterSetDescription.class, "org.streampipes.model.connect.adapter.GenericAdapterSetDescription")

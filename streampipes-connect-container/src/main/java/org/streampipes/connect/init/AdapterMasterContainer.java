@@ -59,6 +59,7 @@ public class AdapterMasterContainer extends AdapterContainer {
                 LOG.error("Could not start all installed stream adapters", e);
                 couchDbAvailable = true;
             } catch (Exception e) {
+                LOG.error("", e);
                 LOG.error("Could not connect to couch db. Try again in 2 seconds");
                 couchDbAvailable = false;
                 Thread.sleep(2000);

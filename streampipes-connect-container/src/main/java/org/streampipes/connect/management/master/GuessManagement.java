@@ -69,7 +69,7 @@ public class GuessManagement {
 
         } catch (IOException e) {
             e.printStackTrace();
-            throw new AdapterException("Could not guess schema at: " + workerUrl);
+            throw new AdapterException("Worker: " + workerUrl + " is currently not available");
         }
     }
 

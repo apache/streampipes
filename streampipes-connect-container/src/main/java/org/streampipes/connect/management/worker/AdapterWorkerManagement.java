@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.RunningAdapterInstances;
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.model.generic.GenericAdapter;
 import org.streampipes.connect.adapter.model.generic.Protocol;
@@ -47,7 +46,8 @@ public class AdapterWorkerManagement {
 
     public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
 
-        Adapter adapter = AdapterRegistry.getAdapter(adapterStreamDescription);
+
+        Adapter adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterStreamDescription.getAppId());
 
         Protocol protocol = null;
         if (adapterStreamDescription instanceof GenericAdapterStreamDescription) {
@@ -67,7 +67,7 @@ public class AdapterWorkerManagement {
 
     public void invokeSetAdapter (AdapterSetDescription adapterSetDescription) throws AdapterException {
 
-        Adapter adapter = AdapterRegistry.getAdapter(adapterSetDescription);
+        Adapter adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterSetDescription.getAppId());
 
         Protocol protocol = null;
         if (adapterSetDescription instanceof GenericAdapterSetDescription) {

@@ -31,7 +31,7 @@ public class Utils {
 
   public static CouchDbClient getCouchDbAdapterTemplateClient() {
     CouchDbClient dbClient = new CouchDbClient(props("adaptertemplate"));
-    dbClient.setGsonBuilder(GsonSerializer.getAdapterGsonBuilder());
+    dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
     return dbClient;
   }
 
