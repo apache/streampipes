@@ -25,7 +25,7 @@ import org.streampipes.connect.protocol.stream.HttpStreamProtocol;
 import org.streampipes.connect.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.protocol.stream.MqttProtocol;
 
-public class Init extends AdapterWorkerContainer {
+public class ConnectAdpaterInit extends AdapterWorkerContainer {
 
     public static void main(String[] args) {
         AdapterDeclarerSingleton
@@ -36,7 +36,7 @@ public class Init extends AdapterWorkerContainer {
                 .add(new GdeltAdapter())
                 .add(new OpcUaAdapter());
 
-        new Init().init("http://localhost:8098", "http://localhost:8099");
+        new ConnectAdpaterInit().init("http://localhost:8098", "http://localhost:8099");
 
     }
 }
