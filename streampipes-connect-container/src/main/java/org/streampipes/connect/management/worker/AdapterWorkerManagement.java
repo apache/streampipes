@@ -47,7 +47,8 @@ public class AdapterWorkerManagement {
     public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
 
 
-        Adapter adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterStreamDescription.getAppId());
+//        Adapter adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterStreamDescription.getAppId());
+        Adapter adapter = AdapterUtils.setAdapter(adapterStreamDescription);
 
         Protocol protocol = null;
         if (adapterStreamDescription instanceof GenericAdapterStreamDescription) {
@@ -67,7 +68,8 @@ public class AdapterWorkerManagement {
 
     public void invokeSetAdapter (AdapterSetDescription adapterSetDescription) throws AdapterException {
 
-        Adapter adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterSetDescription.getAppId());
+//        Adapter adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterSetDescription.getAppId());
+        Adapter adapter = AdapterUtils.setAdapter(adapterSetDescription);
 
         Protocol protocol = null;
         if (adapterSetDescription instanceof GenericAdapterSetDescription) {

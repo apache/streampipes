@@ -28,7 +28,9 @@ public class AdapterSerializer implements JsonSerializer<AdapterDescription>, Js
   @Override
   public AdapterDescription deserialize(JsonElement json, Type typeInfo, JsonDeserializationContext context) throws JsonParseException {
     JsonObject jsonObject = json.getAsJsonObject();
-    String type = jsonObject.get("type").getAsString();
+    // TODO type field is filterd out in org.streampipes.serializers.json.RuntimeTypeAdapterFactory:203
+//    String type = jsonObject.get("type").getAsString();
+    String type = jsonObject.get("aaaaaa").getAsString();
     JsonElement element = jsonObject.get("properties");
     JsonObject tmp = element.getAsJsonObject();
     tmp.addProperty("_id", jsonObject.get("_id").getAsString());
@@ -46,6 +48,7 @@ public class AdapterSerializer implements JsonSerializer<AdapterDescription>, Js
     JsonObject result = new JsonObject();
     try {
       result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
+      result.add("aaaaaa", new JsonPrimitive(src.getClass().getCanonicalName()));
       result.add("properties", GsonSerializer.getGson().toJsonTree(src));
     } catch (MalformedParameterizedTypeException e) {
       e.printStackTrace();

@@ -22,14 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.exception.ParseException;
-import org.streampipes.connect.adapter.model.generic.GenericAdapter;
-import org.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;
-import org.streampipes.connect.adapter.model.generic.GenericDataStreamAdapter;
-import org.streampipes.connect.adapter.model.generic.Protocol;
-import org.streampipes.connect.init.AdapterDeclarerSingleton;
+import org.streampipes.connect.management.AdapterUtils;
 import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 
 import java.util.Arrays;
@@ -41,28 +35,7 @@ public class GuessManagement {
 
     public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
 
-        Adapter adapter = null;
-        if (adapterDescription instanceof GenericAdapterStreamDescription) {
-           adapter = new GenericDataStreamAdapter().getInstance((GenericAdapterStreamDescription) adapterDescription);
-        } else if (adapterDescription instanceof GenericAdapterSetDescription) {
-            adapter = new GenericDataSetAdapter().getInstance((GenericAdapterSetDescription) adapterDescription);
-        }
-
-        Protocol protocol = null;
-        if (adapterDescription instanceof GenericAdapterSetDescription) {
-            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterSetDescription) adapterDescription).getProtocolDescription().getElementId());
-            ((GenericAdapter) adapter).setProtocol(protocol);
-        }
-
-        if (adapterDescription instanceof GenericAdapterStreamDescription) {
-            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterDescription).getProtocolDescription().getElementId());
-            ((GenericAdapter) adapter).setProtocol(protocol);
-        }
-
-        if (adapter == null) {
-            adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterDescription.getAppId());
-        }
-
+        Adapter adapter = AdapterUtils.setAdapter(adapterDescription);
 
         GuessSchema guessSchema;
         try {

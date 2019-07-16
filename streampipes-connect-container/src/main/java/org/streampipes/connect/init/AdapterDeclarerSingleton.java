@@ -19,7 +19,11 @@ package org.streampipes.connect.init;
 
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.model.Connector;
+import org.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;
+import org.streampipes.connect.adapter.model.generic.GenericDataStreamAdapter;
 import org.streampipes.connect.adapter.model.generic.Protocol;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,6 +39,8 @@ public class AdapterDeclarerSingleton {
     public AdapterDeclarerSingleton() {
         this.allProtocols = new HashMap<>();
         this.allAdapters = new HashMap<>();
+        this.allAdapters.put(GenericAdapterStreamDescription.ID, new GenericDataStreamAdapter());
+        this.allAdapters.put(GenericAdapterSetDescription.ID, new GenericDataSetAdapter());
     }
 
     public static AdapterDeclarerSingleton getInstance() {
