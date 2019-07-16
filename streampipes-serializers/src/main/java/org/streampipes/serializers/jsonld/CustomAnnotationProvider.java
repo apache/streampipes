@@ -99,6 +99,9 @@ import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
 import org.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
 import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
+import org.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.streampipes.model.staticproperty.SupportedProperty;
 import org.streampipes.model.template.BoundPipelineElement;
 import org.streampipes.model.template.PipelineTemplateDescription;
@@ -213,7 +216,10 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             PropertyRenameRule.class,
             TimestampTranfsformationRuleDescription.class,
             RuntimeOptionsRequest.class,
-            RuntimeOptionsResponse.class
+            RuntimeOptionsResponse.class,
+            StaticPropertyAlternative.class,
+            StaticPropertyAlternatives.class,
+            StaticPropertyGroup.class
     );
   }
 }

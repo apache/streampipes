@@ -329,7 +329,6 @@ public class StreamPipes {
   public static final String ERROR_MESSAGE = NS + "ErrorMessage";
   public static final String SUCCESS_MESSAGE = NS + "SuccessMessage";
 
-
   public static final String INCLUDED_ASSETS = NS + "includedAssets";
   public static final String INCLUDES_LOCALES = NS + "includesLocales";
   public static final String INCLUDED_LOCALES = NS + "includedLocales";
@@ -338,4 +337,10 @@ public class StreamPipes {
   public static final String RUNTIME_OPTIONS_REQUEST = NS + "RuntimeOptionsRequest";
   public static final String RUNTIME_OPTIONS_RESPONSE = NS + "RuntimeOptionsResponse";
   public static final String HAS_REQUEST_ID = NS + "hasRequestId";
+
+  public static final String STATIC_PROPERTY_ALTERNATIVE = NS + "StaticPropertyAlternative";
+  public static final String STATIC_PROPERTY_ALTERNATIVES = NS + "StaticPropertyAlternatives";
+  public static final String HAS_STATIC_PROPERTY_ALTERNATIVE = NS + "hasStaticPropertyAlternative";
+  public static final String STATIC_PROPERTY_GROUP = NS + "StaticPropertyGroup";
+  public static final String SHOW_LABEL = NS + "showLabel";
 }
