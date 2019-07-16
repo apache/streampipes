@@ -26,6 +26,7 @@ import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.model.generic.Protocol;
 import org.streampipes.connect.management.worker.MasterRestClient;
 import org.streampipes.connect.rest.worker.GuessResource;
+import org.streampipes.connect.rest.worker.RuntimeResolvableResource;
 import org.streampipes.connect.rest.worker.WelcomePageWorker;
 import org.streampipes.connect.rest.worker.WorkerResource;
 import org.streampipes.model.connect.adapter.AdapterDescription;
@@ -85,6 +86,7 @@ public abstract class AdapterWorkerContainer extends AdapterContainer {
 
         allClasses.add(WelcomePageWorker.class);
         allClasses.add(GuessResource.class);
+        allClasses.add(RuntimeResolvableResource.class);
         allClasses.add(WorkerResource.class);
 
         allClasses.addAll(getApiClasses());

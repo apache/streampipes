@@ -25,16 +25,21 @@ import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
 public class WorkerRestClient {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkerRestClient.class);
+
 
     public static void invokeStreamAdapter(String baseUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
 
@@ -91,13 +96,6 @@ public class WorkerRestClient {
 
     public static void stopAdapter(String adapterId, AdapterDescription ad, String url) throws AdapterException {
 
-        //Delete from database
-//        AdapterDescription ad = getAdapterDescriptionById(adapterStorage, adapterId);
-
-//        System.out.println("blll: " + adapterId);
-
-//        adapterStorage.deleteAdapter(adapterId);
-
         // Stop execution of adatper
         try {
             logger.info("Trying to stopAdapter adpater on endpoint: " + url);
@@ -125,6 +123,28 @@ public class WorkerRestClient {
 
     }
 
+    public static RuntimeOptionsResponse getConfiguration(String workerEndpoint, String elementId, String username, String runtimeOptionsRequest) throws AdapterException {
+        String element = encodeValue(elementId);
+        String url = workerEndpoint + "/api/v1/" + username + "/worker/resolvable/" + element + "/configurations";
+//        url = encodeValue(url);
+//        String url = workerEndpoint + "/api/v1/" + username + "/worker/resolvable/abc/configurations";
+
+        try {
+            String responseString = Request.Post(url)
+                       .bodyString(runtimeOptionsRequest, ContentType.APPLICATION_JSON)
+                       .connectTimeout(1000)
+                       .socketTimeout(100000)
+                       .execute().returnContent().asString();
+
+            return JsonLdUtils.fromJsonLd(responseString, RuntimeOptionsResponse.class);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new AdapterException("Could not resolve runtime configurations from " + url);
+        }
+
+    }
+
    private static AdapterDescription getAdapterDescriptionById(AdapterStorageImpl adapterStorage, String id) {
         AdapterDescription adapterDescription = null;
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
@@ -137,6 +157,13 @@ public class WorkerRestClient {
         return adapterDescription;
     }
 
+    private static String encodeValue(String value) {
+        try {
+            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex.getCause());
+        }
+    }
 
 }
 

@@ -23,13 +23,10 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.adapter.format.json.arraykey.JsonFormat;
 import org.streampipes.connect.adapter.model.generic.Format;
-import org.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;
 import org.streampipes.connect.management.master.DescriptionManagement;
-import org.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.streampipes.model.connect.grounding.FormatDescriptionList;
 
 import java.util.HashMap;
@@ -62,22 +59,4 @@ public class DescriptionManagementTest {
         assertEquals(JsonFormat.ID, result.getList().get(0).getUri());
     }
 
-    @Test
-    public void getAdapters() {
-        Map<String, Adapter> allAdapters = new HashMap<>();
-        allAdapters.put(GenericDataSetAdapter.ID, new GenericDataSetAdapter());
-
-        PowerMockito.mockStatic(AdapterRegistry.class);
-        Mockito.when(AdapterRegistry.getAllAdapters())
-                .thenReturn(allAdapters);
-
-        DescriptionManagement descriptionManagement = new DescriptionManagement();
-
-        AdapterDescriptionList result = descriptionManagement.getAdapters();
-
-        assertNotNull(result);
-        assertNotNull(result.getList());
-        assertEquals(1, result.getList().size());
-        assertEquals(GenericDataSetAdapter.ID, result.getList().get(0).getAdapterId());
-    }
 }

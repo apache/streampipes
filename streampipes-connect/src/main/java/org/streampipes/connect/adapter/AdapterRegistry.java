@@ -32,7 +32,6 @@ import org.streampipes.connect.adapter.format.json.object.JsonObjectParser;
 import org.streampipes.connect.adapter.format.xml.XmlFormat;
 import org.streampipes.connect.adapter.format.xml.XmlParser;
 import org.streampipes.connect.adapter.model.generic.*;
-import org.streampipes.container.api.ResolvesContainerProvidedOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,30 +43,6 @@ public class AdapterRegistry {
 
     private static final String SP_NS =  "https://streampipes.org/vocabulary/v1/";
 
-    @Deprecated
-    public static Map<String, Adapter> getAllAdapters() {
-        Map<String, Adapter> allAdapters = new HashMap<>();
-
-        allAdapters.put(GenericDataSetAdapter.ID, new GenericDataSetAdapter());
-        allAdapters.put(GenericDataStreamAdapter.ID, new GenericDataStreamAdapter());
-        //allAdapters.put(OpenSenseMapAdapter.ID, new OpenSenseMapAdapter());
-//        allAdapters.put(GdeltAdapter.ID, new GdeltAdapter());
-//        allAdapters.put(OpcUaAdapter.ID, new OpcUaAdapter());
-//        allAdapters.put(MySqlAdapter.ID, new MySqlAdapter());
-//        //allAdapters.put(NswTrafficCameraAdapter.ID, new NswTrafficCameraAdapter());
-//        allAdapters.put(RosBridgeAdapter.ID, new RosBridgeAdapter());
-//        allAdapters.put(CoindeskBitcoinAdapter.ID, new CoindeskBitcoinAdapter());
-//        allAdapters.put(IexCloudStockAdapter.ID, new IexCloudStockAdapter());
-//        allAdapters.put(IexCloudNewsAdapter.ID, new IexCloudNewsAdapter());
-//        allAdapters.put(WikipediaEditedArticlesAdapter.ID, new WikipediaEditedArticlesAdapter());
-//        allAdapters.put(WikipediaNewArticlesAdapter.ID, new WikipediaNewArticlesAdapter());
-//        allAdapters.put(SlackAdapter.ID, new SlackAdapter());
-//        allAdapters.put(RandomDataStreamAdapter.ID, new RandomDataStreamAdapter());
-//        allAdapters.put(RandomDataSetAdapter.ID, new RandomDataSetAdapter());
-
-        return allAdapters;
-    }
-
     public static Map<String, Format> getAllFormats() {
         Map<String, Format> allFormats = new HashMap<>();
 
@@ -78,7 +53,6 @@ public class AdapterRegistry {
         allFormats.put(GeoJsonFormat.ID, new GeoJsonFormat());
         allFormats.put(XmlFormat.ID, new XmlFormat());
         allFormats.put(ImageFormat.ID, new ImageFormat());
-
 
         return allFormats;
     }
@@ -96,39 +70,4 @@ public class AdapterRegistry {
 
         return allParsers;
     }
-
-    @Deprecated
-    public static Map<String, Protocol> getAllProtocols() {
-        Map<String, Protocol> allProtocols = new HashMap<>();
-
-//        allProtocols.put(HttpProtocol.ID, new HttpProtocol());
-//        allProtocols.put(FileProtocol.ID, new FileProtocol());
-//        allProtocols.put(KafkaProtocol.ID, new KafkaProtocol());
-//        allProtocols.put(MqttProtocol.ID, new MqttProtocol());
-//        allProtocols.put(HttpStreamProtocol.ID, new HttpStreamProtocol());
-//        allProtocols.put(FileStreamProtocol.ID, new FileStreamProtocol());
-//        allProtocols.put(HDFSProtocol.ID, new HDFSProtocol());
-
-        return allProtocols;
-    }
-
-
-    // TODO Think about how to solve the Runtime Resovables
-    public static ResolvesContainerProvidedOptions getRuntimeResolvableAdapter(String id) throws IllegalArgumentException {
-        id = id.replaceAll("sp:", SP_NS);
-        Map<String, Adapter> allAdapters = getAllAdapters();
-        Map<String, Format> allFormats = getAllFormats();
-        Map<String, Protocol> allProtocols =  getAllProtocols();
-
-        if (allAdapters.containsKey(id)) {
-            return (ResolvesContainerProvidedOptions) allAdapters.get(id);
-        } else if (allProtocols.containsKey(id)) {
-            return (ResolvesContainerProvidedOptions) allProtocols.get(id);
-        } else if (allFormats.containsKey(id)) {
-            return (ResolvesContainerProvidedOptions) allFormats.get(id);
-        } else {
-            throw new IllegalArgumentException("Could not find adapter with id " + id);
-        }
-    }
-
 }

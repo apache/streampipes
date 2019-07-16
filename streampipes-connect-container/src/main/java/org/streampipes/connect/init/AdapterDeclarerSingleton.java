@@ -62,6 +62,15 @@ public class AdapterDeclarerSingleton {
         return getInstance();
     }
 
+    public Map<String, Protocol> getAllProtocolsMap() {
+        return this.allProtocols;
+    }
+
+    public Map<String, Adapter> getAllAdaptersMap() {
+        return this.allAdapters;
+    }
+
+
     public Collection<Protocol> getAllProtocols() {
         return this.allProtocols.values();
     }
