@@ -1,10 +1,13 @@
-import { AfterViewInit, Compiler, Component, Input, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Compiler, Component, Input, OnDestroy, ViewChild, ViewContainerRef, Injector } from '@angular/core';
 
 import { InstalledApp } from '../shared/installed-app.model';
 
-// This Imports will be exposed to the dynamically loaded Apps
-import * as AngularCore from '@angular/core';
-import * as AngularCommon from '@angular/common';
+declare const SystemJS;
+
+import * as angularCore from '@angular/core';
+import * as angularCommon from '@angular/common';
+SystemJS.set('@angular/core', SystemJS.newModule(angularCore));
+SystemJS.set('@angular/common', SystemJS.newModule(angularCommon));
 
 @Component({
     selector: 'view',
@@ -14,35 +17,30 @@ import * as AngularCommon from '@angular/common';
 export class ViewComponent implements AfterViewInit {
 
     @Input() installedApp: InstalledApp;
-    @ViewChild('pluginHost') pluginHost;
+    @ViewChild('pluginHost', { read: ViewContainerRef }) content: ViewContainerRef;
 
-    constructor(private compiler: Compiler, private vcr: ViewContainerRef) {
+    constructor(private compiler: Compiler, private injector: Injector) {
     }
 
     ngAfterViewInit(): void {
-        fetch(this.installedApp.bundleUrl)
-            .then(response => response.text())
-            .then(source => {
-                const exports = {};
-                const modules = {
-                    '@angular/core': AngularCore,
-                    '@angular/common': AngularCommon
-                };
-                const require = (module) => modules[module];
+        /*
+        const script = document.createElement('script');
+        script.src = this.installedApp.bundleUrl;
+        document.body.appendChild(script);
+        const tile = document.createElement('app-root');
+        const content = document.getElementById('plugin');
+        content.appendChild(tile);
+        */
+       this.load();
+    }
 
-                eval(source);
-
-                const mwcf = this.compiler.compileModuleAndAllComponentsSync(exports[this.installedApp.moduleName]);
-
-                const componentFactory = mwcf.componentFactories
-                    .find(e => e.selector === this.installedApp.selector);
-
-                if (componentFactory) {
-                    this.vcr.clear();
-
-                    const componentRef = this.vcr.createComponent(componentFactory);
-                }
-            });
+    async load() {
+        const module = await SystemJS.import(this.installedApp.bundleUrl);
+        const moduleFactory = await this.compiler.compileModuleAsync<any>(module["PluginAModule"]);
+        const moduleRef = moduleFactory.create(this.injector);
+        const componentProvider = moduleRef.injector.get('plugins');
+        const componentFactory = moduleRef.componentFactoryResolver.resolveComponentFactory<any>(componentProvider[0][0].component);
+        var pluginComponent = this.content.createComponent(componentFactory);
     }
 
 }

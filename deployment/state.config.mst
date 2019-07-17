@@ -7,6 +7,7 @@ import { {{{ng5_component}}} } from '{{{ng5_componentPath}}}';
 {{/modulesActive}}
 import { HomeComponent } from '../home/home.component';
 import { InfoComponent } from '../info/info.component';
+import { AppContainerComponent } from '../app-container/app-container.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
 
@@ -56,6 +57,14 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                     templateUrl: '../../assets/templates/login.html'
                 }
             }
+        })
+        .state('streampipes.appcontainer', {
+            url: '/appcontainer',
+            views: {
+              'spMain@streampipes': {
+                component: AppContainerComponent,
+              },
+            },
         })
         /*
         .state('streampipes.applinks', {

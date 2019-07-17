@@ -13,8 +13,6 @@ export class AppContainerComponent {
     installedApps: InstalledApp[];
     activeApp: InstalledApp;
     isAppActive: boolean = false;
-    isLoading: boolean = false;
-    term: string="";
 
     constructor(private appContainerService: AppContainerService) {
         this.appContainerService.getInstalledApps().subscribe(installedApps => {
@@ -23,13 +21,8 @@ export class AppContainerComponent {
     }
 
     activateApp(installedApp: InstalledApp): void {
-        this.isAppActive = false;
-        this.isLoading = true;
-        setTimeout(() => {
-            this.activeApp = installedApp;
-            this.isLoading = false;
-            this.isAppActive = true;
-        }, 200);
+        this.activeApp = installedApp;
+        this.isAppActive = true;
     }
 
 }
