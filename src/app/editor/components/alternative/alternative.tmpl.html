@@ -1,0 +1,12 @@
+<md-input-container flex="100" layout="column">
+    <md-radio-group required class="md-accent" ng-repeat="alternative in ctrl.staticProperty.properties.alternatives" name="{{ctrl.staticProperty.properties.elementId}}" ng-model="ctrl.staticProperty.properties.currentSelection" ng-change='ctrl.toggle()'>
+        <md-radio-button ng-value="alternative.internalName" >
+            <b>{{alternative.label}}</b><br/>
+        </md-radio-button>
+    </md-radio-group>
+</md-input-container>
+<div ng-repeat="alternative in ctrl.staticProperty.properties.alternatives">
+    <div ng-if="alternative.selected">
+        <customize-dialog customize-form="ctrl.customizeForm" display-recommended="ctrl.displayRecommended" static-property="alternative.staticProperty" selected-element="ctrl.selectedElement"></customize-dialog>
+    </div>
+</div>
