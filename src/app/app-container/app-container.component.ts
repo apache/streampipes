@@ -12,7 +12,7 @@ export class AppContainerComponent {
 
     installedApps: InstalledApp[];
     activeApp: InstalledApp;
-    isAppActive: boolean = false;
+    isAppActive = false;
 
     constructor(private appContainerService: AppContainerService) {
         this.appContainerService.getInstalledApps().subscribe(installedApps => {

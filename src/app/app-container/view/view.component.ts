@@ -1,4 +1,4 @@
-import { AfterViewInit, Compiler, Component, Input, OnDestroy, ViewChild, ViewContainerRef, Injector } from '@angular/core';
+import { AfterViewInit, Compiler, Component, Input, ViewChild, ViewContainerRef, Injector } from '@angular/core';
 
 import { InstalledApp } from '../shared/installed-app.model';
 
@@ -23,24 +23,16 @@ export class ViewComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        /*
-        const script = document.createElement('script');
-        script.src = this.installedApp.bundleUrl;
-        document.body.appendChild(script);
-        const tile = document.createElement('app-root');
-        const content = document.getElementById('plugin');
-        content.appendChild(tile);
-        */
        this.load();
     }
 
     async load() {
         const module = await SystemJS.import(this.installedApp.bundleUrl);
-        const moduleFactory = await this.compiler.compileModuleAsync<any>(module["PluginAModule"]);
+        const moduleFactory = await this.compiler.compileModuleAsync<any>(module["AppModule"]);
         const moduleRef = moduleFactory.create(this.injector);
         const componentProvider = moduleRef.injector.get('plugins');
         const componentFactory = moduleRef.componentFactoryResolver.resolveComponentFactory<any>(componentProvider[0][0].component);
-        var pluginComponent = this.content.createComponent(componentFactory);
+        this.content.createComponent(componentFactory);
     }
 
 }
