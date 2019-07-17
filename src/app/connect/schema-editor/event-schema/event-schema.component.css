@@ -37,3 +37,43 @@ ul {
   padding: 10px;
   width: 95%;
 }
+:host /deep/ .tree-node {
+  color: #000;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  border-top: 1px solid #000;
+  border-radius: 0;
+  background: transparent;
+  margin: 0;
+}
+:host /deep/ tree-node-expander {
+  display: none;
+}
+:host /deep/ .node-content-wrapper {
+  flex: 1;
+}
+:host /deep/ .node-content-wrapper:hover {
+  background-color: darkgrey;
+}
+:host /deep/ .node-content-wrapper-active, .node-content-wrapper-focused {
+  background: transparent;
+}
+:host /deep/ .node-drop-slot {
+  position: relative;
+  /*background: red;*/
+  /* padding: 8px 0;*/
+  height: 14px !important;
+  margin: -7px 0;
+  z-index: 1000;
+}
+:host /deep/ .node-drop-slot.is-dragging-over {
+  background-color: green;
+  border: none;
+}
+:host /deep/ .tree-node-expanded {
+  border-left: 2px dashed black;
+}
+:host /deep/ tree-viewport {
+  overflow: hidden;
+}

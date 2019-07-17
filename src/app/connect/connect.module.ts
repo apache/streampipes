@@ -20,8 +20,6 @@ import { EventPropertyPrimitiveComponent } from './schema-editor/event-property-
 import { EventPropertyComponent } from './schema-editor/event-property/event-property.component';
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
 
-import { EventPropertyBagComponent } from './schema-editor/event-property-bag/event-property-bag.component';
-
 import { StaticPropertyComponent } from './static-properties/static-property.component';
 
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
@@ -70,7 +68,7 @@ import { StaticMappingUnaryComponent } from './static-properties/static-mapping-
 import { TimestampPipe } from './filter/timestamp.pipe';
 import { PlatformServicesModule } from '../platform-services/platform.module';
 
-import {DragDropModule} from '@angular/cdk/drag-drop';
+import { TreeModule } from 'angular-tree-component';
 
 
 @NgModule({
@@ -86,8 +84,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
         MatProgressSpinnerModule,
         MatInputModule,
         MatFormFieldModule,
-        DragDropModule,
-        PlatformServicesModule
+        PlatformServicesModule,
+        TreeModule.forRoot(),
     ],
     exports: [
         StaticPropertyComponent,
@@ -98,7 +96,6 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
         SelectProtocolComponent,
         FormatFormComponent,
         EventSchemaComponent,
-        EventPropertyBagComponent,
         EventPropertyPrimitiveComponent,
         EventPropertyComponent,
         EventPropertyNestedComponent,
