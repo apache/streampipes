@@ -26,6 +26,7 @@ import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.Alternatives;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
@@ -56,15 +57,22 @@ public class StaticPropertyAlternativesController extends
                             StaticProperties.integerFreeTextProperty(Labels.from("count-window-size",
                                     "Count Window Size", ""))),
                     Alternatives.from(Labels.from("time", "Time Window", ""),
-                            StaticProperties.integerFreeTextProperty(Labels.from("time" +
-                                    "-window-size", "Time Window Size", ""))))
+                            StaticProperties.group(Labels.from("group", "", ""),
+                                    StaticProperties.integerFreeTextProperty(Labels.from("time" +
+                                            "-window-size", "Time Window Size", "")),
+                                    StaticProperties.singleValueSelection(Labels.from("time" +
+                                            "-window-unit", "Time Unit", ""),
+                                            Options.from("Seconds", "Minutes", "Hours")))))
             .build();
   }
 
   @Override
   public ConfiguredEventProcessor<DummyParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
-System.out.println("incov");
+    String selectedAlternative = extractor.selectedAlternativeInternalId("window");
+    if (selectedAlternative.equals("time")) {
+      Integer timeWindowSize = extractor.singleValueParameter("time-window-size", Integer.class);
+    }
 
     return new ConfiguredEventProcessor<>(new DummyParameters(graph), DummyEngine::new);
   }
