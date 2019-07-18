@@ -21,13 +21,9 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.streampipes.model.AdapterType;
-import org.streampipes.model.DataProcessorType;
-import org.streampipes.model.DataSinkType;
-import org.streampipes.model.SpDataSet;
-import org.streampipes.model.SpDataStream;
+import org.streampipes.model.*;
 import org.streampipes.model.client.messages.Message;
-import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.model.connect.rules.Schema.CreateNestedRuleDescription;
 import org.streampipes.model.connect.rules.Schema.DeleteRuleDescription;
 import org.streampipes.model.connect.rules.Schema.MoveRuleDescription;
@@ -103,6 +99,12 @@ public class GsonSerializer {
             .registerSubtype(UnitTransformRuleDescription.class, "org.streampipes.model.UnitTransformRuleDescription")
             .registerSubtype(TimestampTranfsformationRuleDescription.class, "org.streampipes.model.TimestampTranfsformationRuleDescription"));
 
+    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "type")
+            .registerSubtype(SpecificAdapterSetDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterSetDescription")
+            .registerSubtype(SpecificAdapterStreamDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription")
+            .registerSubtype(GenericAdapterSetDescription.class, "org.streampipes.model.connect.adapter.GenericAdapterSetDescription")
+            .registerSubtype(GenericAdapterStreamDescription.class, "org.streampipes.model.connect.adapter.GenericAdapterStreamDescription"));
+
     builder.setPrettyPrinting();
     return builder;
   }
@@ -139,5 +141,4 @@ public class GsonSerializer {
     });
     return builder.create();
   }
-
 }

@@ -26,8 +26,7 @@ import org.streampipes.model.client.messages.ErrorMessageLd;
 import org.streampipes.model.client.messages.MessageLd;
 import org.streampipes.model.client.messages.NotificationLd;
 import org.streampipes.model.client.messages.SuccessMessageLd;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.FormatDescriptionList;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
@@ -44,39 +43,12 @@ import org.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
-import org.streampipes.model.graph.DataProcessorDescription;
-import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.graph.DataSinkDescription;
-import org.streampipes.model.graph.DataSinkInvocation;
-import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.model.grounding.JmsTransportProtocol;
-import org.streampipes.model.grounding.KafkaTransportProtocol;
-import org.streampipes.model.grounding.SimpleTopicDefinition;
-import org.streampipes.model.grounding.TransportFormat;
-import org.streampipes.model.grounding.TransportProtocol;
-import org.streampipes.model.grounding.WildcardTopicDefinition;
+import org.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.streampipes.model.graph.*;
+import org.streampipes.model.grounding.*;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
-import org.streampipes.model.output.AppendOutputStrategy;
-import org.streampipes.model.output.CustomOutputStrategy;
-import org.streampipes.model.output.CustomTransformOutputStrategy;
-import org.streampipes.model.output.FixedOutputStrategy;
-import org.streampipes.model.output.KeepOutputStrategy;
-import org.streampipes.model.output.ListOutputStrategy;
-import org.streampipes.model.output.PropertyRenameRule;
-import org.streampipes.model.output.TransformOperation;
-import org.streampipes.model.output.TransformOutputStrategy;
-import org.streampipes.model.quality.Accuracy;
-import org.streampipes.model.quality.EventPropertyQualityRequirement;
-import org.streampipes.model.quality.EventStreamQualityRequirement;
-import org.streampipes.model.quality.Frequency;
-import org.streampipes.model.quality.Latency;
-import org.streampipes.model.quality.MeasurementCapability;
-import org.streampipes.model.quality.MeasurementObject;
-import org.streampipes.model.quality.MeasurementProperty;
-import org.streampipes.model.quality.MeasurementRange;
-import org.streampipes.model.quality.Precision;
-import org.streampipes.model.quality.Resolution;
+import org.streampipes.model.output.*;
+import org.streampipes.model.quality.*;
 import org.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.streampipes.model.schema.Enumeration;
@@ -127,6 +99,11 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
     }
   }
 
+
+  /**
+   * Do not register abstract classes!!!
+   * Just register classes with a default constructor
+   */
   private List<Class<?>> getAnnotatedClasses() {
     return Arrays.asList(
             ListOutputStrategy.class,
@@ -185,7 +162,10 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             TransformOutputStrategy.class,
             TransformOperation.class,
             CustomTransformOutputStrategy.class,
-            AdapterDescription.class,
+            SpecificAdapterSetDescription.class,
+            SpecificAdapterStreamDescription.class,
+            GenericAdapterStreamDescription.class,
+            GenericAdapterSetDescription.class,
             AdapterDescriptionList.class,
             FormatDescription.class,
             FormatDescriptionList.class,
@@ -219,7 +199,9 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             RuntimeOptionsResponse.class,
             StaticPropertyAlternative.class,
             StaticPropertyAlternatives.class,
-            StaticPropertyGroup.class
+            StaticPropertyGroup.class,
+            ConnectWorkerContainer.class,
+            RuntimeOptionsResponse.class
     );
   }
 }

@@ -28,7 +28,7 @@ import org.eclipse.jetty.server.Server;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.init.Config;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
 import org.streampipes.connect.utils.ConnectContainerResourceTest;

@@ -17,7 +17,7 @@
 
 package org.streampipes.connect.management.master;
 
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.model.connect.adapter.*;
 import org.streampipes.storage.api.IAdapterTemplateStorage;
 import org.streampipes.storage.couchdb.impl.AdapterTemplateStorageImpl;

@@ -53,6 +53,12 @@
             <artifactId>json-path</artifactId>
             <version>3.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.squareup.okio</groupId>
+            <artifactId>okio</artifactId>
+            <version>1.15.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -71,7 +77,7 @@
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.streampipes.connect.init.Main</mainClass>
+                                    <mainClass>org.streampipes.connect.init.AdapterMasterContainer</mainClass>
                                 </transformer>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
                             </transformers>

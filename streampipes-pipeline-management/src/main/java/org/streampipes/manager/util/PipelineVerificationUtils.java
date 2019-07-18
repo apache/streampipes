@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class PipelineVerificationUtils {
 
   /**
-   * returns the root node of a partial pipeline (a pipeline without an action)
+   * returns the root node of a partial preprocessing (a preprocessing without an action)
    *
    * @param pipeline
    * @return {@link org.streampipes.model.base.InvocableStreamPipesEntity}

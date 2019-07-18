@@ -1,5 +1,5 @@
 //import com.google.common.io.Resources;
-//import org.streampipes.model.client.pipeline.Pipeline;
+//import org.streampipes.model.client.preprocessing.Pipeline;
 //import org.streampipes.storage.controller.StorageManager;
 //
 //import java.io.File;
@@ -25,13 +25,13 @@
 //
 //        //dbClient.shutdown();
 //
-//        Pipeline pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline("fa95b256-b6b0-4600-b998-6df72a19fa5b");
-//        System.out.println(pipeline.getPipelineId());
-//        pipeline.setRunning(true);
-//       // System.out.println(pipeline.getRev());
-//      StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(pipeline);
+//        Pipeline preprocessing = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline("fa95b256-b6b0-4600-b998-6df72a19fa5b");
+//        System.out.println(preprocessing.getPipelineId());
+//        preprocessing.setRunning(true);
+//       // System.out.println(preprocessing.getRev());
+//      StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(preprocessing);
 //
-//        pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline("fa95b256-b6b0-4600-b998-6df72a19fa5b");
+//        preprocessing = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline("fa95b256-b6b0-4600-b998-6df72a19fa5b");
 //    }
 //
 //}

@@ -20,23 +20,41 @@ package org.streampipes.connect.management.worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.RunningAdapterInstances;
-import org.streampipes.connect.adapter.AdapterRegistry;
-import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.connect.adapter.model.generic.GenericAdapter;
+import org.streampipes.connect.adapter.model.generic.Protocol;
+import org.streampipes.connect.config.ConnectContainerConfig;
+import org.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.streampipes.connect.management.AdapterUtils;
 import org.streampipes.model.SpDataSet;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.adapter.*;
+
+import java.util.Collection;
 
 public class AdapterWorkerManagement {
 
     private static final Logger logger = LoggerFactory.getLogger(AdapterWorkerManagement.class);
 
+    public Collection<Protocol> getAllProtocols() {
+        return AdapterDeclarerSingleton.getInstance().getAllProtocols();
+    }
+
+    public Collection<Adapter> getAllAdapters() {
+        return AdapterDeclarerSingleton.getInstance().getAllAdapters();
+    }
+
     public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
 
-        Adapter adapter = AdapterRegistry.getAdapter(adapterStreamDescription);
+
+//        Adapter adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterStreamDescription.getAppId());
+        Adapter adapter = AdapterUtils.setAdapter(adapterStreamDescription);
+
+        Protocol protocol = null;
+        if (adapterStreamDescription instanceof GenericAdapterStreamDescription) {
+            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getElementId());
+            ((GenericAdapter) adapter).setProtocol(protocol);
+        }
 
         RunningAdapterInstances.INSTANCE.addAdapter(adapterStreamDescription.getUri(), adapter);
         adapter.startAdapter();
@@ -49,14 +67,23 @@ public class AdapterWorkerManagement {
     }
 
     public void invokeSetAdapter (AdapterSetDescription adapterSetDescription) throws AdapterException {
+
+//        Adapter adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterSetDescription.getAppId());
+        Adapter adapter = AdapterUtils.setAdapter(adapterSetDescription);
+
+        Protocol protocol = null;
+        if (adapterSetDescription instanceof GenericAdapterSetDescription) {
+            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterSetDescription) adapterSetDescription).getProtocolDescription().getElementId());
+            ((GenericAdapter) adapter).setProtocol(protocol);
+        }
+
         SpDataSet dataSet = adapterSetDescription.getDataSet();
 
-        Adapter adapter = AdapterRegistry.getAdapter(adapterSetDescription);
         RunningAdapterInstances.INSTANCE.addAdapter(adapterSetDescription.getUri(), adapter);
 
         adapter.changeEventGrounding(adapterSetDescription.getDataSet().getEventGrounding().getTransportProtocol());
 
-        // Set adapters run the whole set in one thread, once all data is processed the corresponding pipeline is stopped
+        // Set adapters run the whole set in one thread, once all data is processed the corresponding preprocessing is stopped
         Runnable r = () -> {
             try {
                 adapter.startAdapter();

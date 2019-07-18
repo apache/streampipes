@@ -25,7 +25,7 @@ import java.util.List;
 public class PipelineModificationMessage extends Message {
 
 	/**
-	 * Class that represents PipelineModification messages. Modifications are used to update a SEPA within an already created pipeline
+	 * Class that represents PipelineModification messages. Modifications are used to update a SEPA within an already created preprocessing
 	 */
 	
 	private List<PipelineModification> pipelineModifications;

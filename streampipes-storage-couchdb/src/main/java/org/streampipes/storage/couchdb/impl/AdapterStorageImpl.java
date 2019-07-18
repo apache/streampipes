@@ -40,9 +40,6 @@ public class AdapterStorageImpl extends AbstractDao<AdapterDescription> implemen
 
     @Override
     public AdapterDescription getAdapter(String adapterId) {
-
-//        InputStream in = couchDbClientSupplier.get().find(adapterId);
-
         DbCommand<Optional<AdapterDescription>, AdapterDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterDescription.class);
         return cmd.execute().get();
     }
@@ -53,11 +50,5 @@ public class AdapterStorageImpl extends AbstractDao<AdapterDescription> implemen
         AdapterDescription adapterDescription = getAdapter(adapterId);
         couchDbClientSupplier.get().remove(adapterDescription.getId(), adapterDescription.getRev());
 
-//        T result = couchDbClient.find(clazz, key);
-//        couchDbClient.remove(result);
-//        DbCommand<Boolean, AdapterDescription> cmd = new DeleteCommand<>(couchDbClientSupplier, adapterId, AdapterDescription.class);
-//        cmd.execute();
-//
-//        delete(adapterId);
     }
 }

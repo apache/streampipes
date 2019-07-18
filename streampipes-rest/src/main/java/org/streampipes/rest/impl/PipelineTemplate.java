@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/v2/users/{username}/pipeline-templates")
+@Path("/v2/users/{username}/preprocessing-templates")
 public class PipelineTemplate extends AbstractRestInterface implements IPipelineTemplate {
 
   @GET

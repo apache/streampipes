@@ -19,15 +19,13 @@ package org.streampipes.connect.management;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.streampipes.connect.RunningAdapterInstances;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;
-import org.streampipes.connect.adapter.specific.SpecificDataSetAdapter;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.connect.adapter.model.specific.SpecificDataSetAdapter;
 import org.streampipes.connect.management.worker.AdapterWorkerManagement;
 import org.streampipes.connect.utils.Utils;
 import org.streampipes.model.connect.adapter.*;
@@ -36,26 +34,10 @@ import org.streampipes.model.connect.guess.GuessSchema;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AdapterRegistry.class })
 public class AdapterWorkerManagementTest {
-
-    @Test
-    public void startStreamAdapterSucess() throws AdapterException {
-        TestAdapter testAdapter = getTestAdapterInstance();
-
-        PowerMockito.mockStatic(AdapterRegistry.class);
-        Mockito.when(AdapterRegistry.getAdapter(any(AdapterDescription.class)))
-                .thenReturn(testAdapter);
-        AdapterWorkerManagement adapterWorkerManagement = new AdapterWorkerManagement();
-
-        adapterWorkerManagement.invokeStreamAdapter(Utils.getMinimalStreamAdapter());
-
-        assertTrue(testAdapter.calledStart);
-        assertNotNull(RunningAdapterInstances.INSTANCE.removeAdapter("http://t.de/"));
-    }
 
     @Test
     public void stopStreamAdapterFail() {
@@ -160,5 +142,6 @@ public class AdapterWorkerManagementTest {
         public String getId() {
             return null;
         }
+
     }
 }

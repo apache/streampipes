@@ -47,7 +47,8 @@ import java.util.List;
 
 public class JsonLdTransformer implements RdfTransformer {
 
-  private static final List<String> standardRootElements = Arrays.asList(StreamPipes.DATA_PROCESSOR_DESCRIPTION,
+  private static final List<String> standardRootElements = Arrays.asList(
+          StreamPipes.DATA_PROCESSOR_DESCRIPTION,
           StreamPipes.DATA_SOURCE_DESCRIPTION,
           StreamPipes.DATA_SINK_DESCRIPTION,
           StreamPipes.DATA_PROCESSOR_INVOCATION,
@@ -64,7 +65,8 @@ public class JsonLdTransformer implements RdfTransformer {
 //          StreamPipes.ADAPTER_SET_DESCRIPTION,
           StreamPipes.ADAPTER_DESCRIPTION_LIST,
           StreamPipes.RUNTIME_OPTIONS_REQUEST,
-          StreamPipes.RUNTIME_OPTIONS_RESPONSE
+          StreamPipes.RUNTIME_OPTIONS_RESPONSE,
+          StreamPipes.CONNECT_WORKER_CONTAINER
 
   );
 

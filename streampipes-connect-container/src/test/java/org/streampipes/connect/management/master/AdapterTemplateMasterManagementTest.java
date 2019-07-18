@@ -18,13 +18,12 @@
 package org.streampipes.connect.management.master;
 
 import org.junit.Test;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.streampipes.storage.couchdb.impl.AdapterTemplateStorageImpl;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.mockito.Mockito.*;

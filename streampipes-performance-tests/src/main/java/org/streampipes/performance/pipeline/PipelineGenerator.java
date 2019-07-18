@@ -87,7 +87,7 @@ public class PipelineGenerator {
       lastElementId = "epa" + i;
       pipeline.getSepas().add(invocation);
       PipelineModificationMessage message = verifyPipeline(pipeline);
-      //pipeline.getSepas().get(i).setStaticProperties(modifyTimestampEnricher(message.getPipelineModifications().get
+      //preprocessing.getSepas().get(i).setStaticProperties(modifyTimestampEnricher(message.getPipelineModifications().get
       //       (0)));
     }
 

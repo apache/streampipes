@@ -20,7 +20,7 @@ package org.streampipes.connect.rest.master;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.config.ConnectContainerConfig;
-import org.streampipes.connect.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.management.master.SourcesManagement;
 import org.streampipes.connect.management.master.Utils;
 import org.streampipes.connect.rest.AbstractContainerResource;
@@ -33,7 +33,6 @@ import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.rest.shared.util.SpMediaType;
 import org.streampipes.vocabulary.StreamPipes;
 
-import javax.json.Json;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -103,7 +102,9 @@ public class SourcesResource extends AbstractContainerResource {
 
         String responseMessage = "Instance of data set " + dataSet.getUri() + " successfully started";
 
-        String newUrl = Utils.addUserNameToApi(ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl(), username);
+        String workerUrl = new Utils().getWorkerUrlById(elementId);
+
+        String newUrl = Utils.addUserNameToApi(workerUrl, username);
         try {
             this.sourcesManagement.addAdapter(newUrl, elementId,  dataSet);
         } catch (AdapterException e) {
@@ -121,7 +122,8 @@ public class SourcesResource extends AbstractContainerResource {
     public Response detach(@PathParam("streamId") String elementId, @PathParam("runningInstanceId") String runningInstanceId, @PathParam("username") String username) {
         String responseMessage = "Instance of set id: " + elementId  + " with instance id: "+ runningInstanceId + " successfully started";
 
-        String newUrl = Utils.addUserNameToApi(ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl(), username);
+        String workerUrl = new Utils().getWorkerUrlById(elementId);
+        String newUrl = Utils.addUserNameToApi(workerUrl, username);
 
         try {
             this.sourcesManagement.detachAdapter(newUrl, elementId, runningInstanceId);
