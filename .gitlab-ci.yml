@@ -201,9 +201,9 @@ docker-processors-transformation-jvm:
       CONTAINER_NAME: "processors-transformation-jvm"
 
 docker-processors-text-mining-flink:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "processors-text-mining-flink"
+  <<: *docker_hub_script
+  variables:
+    CONTAINER_NAME: "processors-text-mining-flink"
 
 docker-processors-text-mining-jvm:
     <<: *docker_script
