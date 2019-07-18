@@ -28,6 +28,8 @@ build:
     expire_in:  1 hour
   except:
       - /release-.*$/
+      - ./target/mvn_version
+
 
 docker-connect-container:
    image: docker:17.06.0-ce
