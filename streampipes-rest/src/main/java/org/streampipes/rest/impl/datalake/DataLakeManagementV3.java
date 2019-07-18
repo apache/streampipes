@@ -23,9 +23,11 @@ import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.model.datalake.DataLakeMeasure;
 import org.streampipes.rest.impl.datalake.model.DataResult;
 import org.streampipes.rest.impl.datalake.model.InfoResult;
 import org.streampipes.rest.impl.datalake.model.PageResult;
+import org.streampipes.storage.management.StorageDispatcher;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.WebApplicationException;
@@ -43,20 +45,10 @@ public class DataLakeManagementV3 {
     private SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
 
-    public List<InfoResult> getInfos() {
-        List<InfoResult> indices = new ArrayList<>();
-        InfluxDB influxDB = getInfluxDBClient();
-
-        Query query = new Query("SHOW MEASUREMENTS ON " + BackendConfig.INSTANCE.getInfluxDatabaseName(),
-                BackendConfig.INSTANCE.getInfluxDatabaseName());
-        QueryResult result = influxDB.query(query);
-
-        result.getResults().get(0).getSeries().get(0).getValues().forEach(value ->
-                indices.add(new InfoResult((String) value.get(0), null))
-        );
-
-        influxDB.close();
-        return indices;
+    public List<DataLakeMeasure> getInfos() {
+        List<DataLakeMeasure> indices =  StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage()
+                .getAllDataLakeMeasures();
+     return indices;
     }
 
     public DataResult getEvents(String index, long startDate, long endDate, String aggregationUnit, int aggregationValue) {

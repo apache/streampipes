@@ -118,6 +118,12 @@ public class Utils {
     return new CouchDbClient(props("file-export-endpoints-elasticsearch"));
   }
 
+  public static CouchDbClient getCouchDbDataLakeClient() {
+    CouchDbClient dbClient = new CouchDbClient(props("data-lake"));
+    dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+    return dbClient;
+  }
+
   public static CouchDbClient getCoucbDbClient(String table) {
     return new CouchDbClient(props(table));
   }

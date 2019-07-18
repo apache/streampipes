@@ -34,4 +34,6 @@ public interface INoSqlStorage {
   IRdfEndpointStorage getRdfEndpointStorage();
 
   IAssetDashboardStorage getAssetDashboardStorage();
+
+  IDataLakeStorage getDataLakeStorage();
 }
