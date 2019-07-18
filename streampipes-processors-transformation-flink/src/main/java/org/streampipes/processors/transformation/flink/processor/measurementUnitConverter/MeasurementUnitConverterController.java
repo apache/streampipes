@@ -62,9 +62,9 @@ public class MeasurementUnitConverterController extends
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(PropertyRequirementsBuilder
-                            .create()
-                            .measurementUnitPresence()
-                            .build(),
+                                    .create()
+                                    .measurementUnitPresence()
+                                    .build(),
                             Labels.withId(CONVERT_PROPERTY),
                             PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
