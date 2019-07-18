@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.processors.textmining.jvm.processor.sentence;
+package org.streampipes.processors.textmining.jvm.processor.sentencedetection;
 
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;

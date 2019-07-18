@@ -30,7 +30,7 @@ import org.streampipes.processors.textmining.jvm.processor.chunker.ChunkerContro
 import org.streampipes.processors.textmining.jvm.processor.language.LanguageDetectionController;
 import org.streampipes.processors.textmining.jvm.processor.namefinder.NameFinderController;
 import org.streampipes.processors.textmining.jvm.processor.partofspeech.PartOfSpeechController;
-import org.streampipes.processors.textmining.jvm.processor.sentence.SentenceDetectionController;
+import org.streampipes.processors.textmining.jvm.processor.sentencedetection.SentenceDetectionController;
 import org.streampipes.processors.textmining.jvm.processor.tokenizer.TokenizerController;
 
 public class TextMiningJvmInit extends StandaloneModelSubmitter {

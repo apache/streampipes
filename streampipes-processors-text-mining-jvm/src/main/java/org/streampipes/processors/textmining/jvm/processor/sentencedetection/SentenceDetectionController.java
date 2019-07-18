@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.processors.textmining.jvm.processor.sentence;
+package org.streampipes.processors.textmining.jvm.processor.sentencedetection;
 
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;

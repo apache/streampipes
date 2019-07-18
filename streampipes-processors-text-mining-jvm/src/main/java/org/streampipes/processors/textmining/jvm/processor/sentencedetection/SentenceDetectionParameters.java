@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.processors.textmining.jvm.processor.sentence;
+package org.streampipes.processors.textmining.jvm.processor.sentencedetection;
 
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
