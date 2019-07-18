@@ -1,23 +1,19 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { FreeTextStaticProperty } from '../model/FreeTextStaticProperty';
 import { StaticProperty } from '../model/StaticProperty';
 import { MappingPropertyUnary } from '../model/MappingPropertyUnary';
 import { OneOfStaticProperty } from '../model/OneOfStaticProperty';
-import { DataSetDescription } from '../model/DataSetDescription';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Logger } from '../../shared/logger/default-log.service';
-import { ifError } from 'assert';
-import {
-  ValidateUrl,
-  ValidateNumber,
-  ValidateString,
-} from '../select-protocol-component/input.validator';
+
 import { xsService } from '../../NS/XS.service';
 import { StaticPropertyUtilService } from './static-property-util.service';
 import { AnyStaticProperty } from '../model/AnyStaticProperty';
 import {FileStaticProperty} from '../model/FileStaticProperty';
 import {MappingPropertyNary} from '../model/MappingPropertyNary';
 import {EventSchema} from '../schema-editor/model/EventSchema';
+import {RuntimeResolvableOneOfStaticProperty} from "../model/RuntimeResolvableOneOfStaticProperty";
+import {RuntimeResolvableAnyStaticProperty} from "../model/RuntimeResolvableAnyStaticProperty";
+import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
 
 @Component({
   selector: 'app-static-property',
@@ -28,15 +24,27 @@ import {EventSchema} from '../schema-editor/model/EventSchema';
 export class StaticPropertyComponent implements OnInit {
   @Input()
   staticProperty: StaticProperty;
-  @Output()
-  emitter: EventEmitter<any> = new EventEmitter<any>();
+
+  @Input()
+  staticProperties: StaticProperty[];
+
+  @Input()
+  adapterId: string;
+
   @Output()
   validateEmitter: EventEmitter<any> = new EventEmitter<any>();
+
+  @Output()
+  updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
+
 
   @Input()
   eventSchema: EventSchema;
 
   private frTxt: FreeTextStaticProperty;
+
+  @Input()
+  completedStaticProperty: ConfigurationInfo;
 
   constructor(
     private logger: Logger,
@@ -90,8 +98,20 @@ export class StaticPropertyComponent implements OnInit {
     return val instanceof MappingPropertyNary;
   }
 
+  isRuntimeResolvableOneOfStaticProperty(val) {
+    return val instanceof RuntimeResolvableOneOfStaticProperty;
+  }
+
+  isRuntimeResolvableAnyStaticProperty(val) {
+    return val instanceof RuntimeResolvableAnyStaticProperty;
+  }
+
   valueChange(hasInput) {
     this.staticProperty.isValid = hasInput;
     this.validateEmitter.emit();
+  }
+
+  emitUpdate(configurationInfo: ConfigurationInfo) {
+    this.updateEmitter.emit(configurationInfo);
   }
 }

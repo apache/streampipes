@@ -52,6 +52,7 @@
     "angular-sanitize": "1.7.7",
     "angular-slick-carousel": "3.1.7",
     "angular-touch": "1.7.7",
+    "angular-tree-component": "^8.4.0",
     "angular-trix": "1.0.2",
     "angular-ui-bootstrap": "0.14.3",
     "angular-ui-sortable": "0.13.4",

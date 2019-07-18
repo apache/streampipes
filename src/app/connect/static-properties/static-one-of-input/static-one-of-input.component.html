@@ -1,9 +1,15 @@
-<div fxLayout="column">
-  <p>{{staticProperty.label}}: </p>
-  <mat-radio-button *ngFor="let option of staticProperty.options" style="margin-top: -10px"
-                    (click)="select(option.id)" [checked]="option.selected">
-    <label style="font-weight: normal; padding-top: 8px;">
-      {{option.name}}
-    </label>
-  </mat-radio-button>
+<div id="formWrapper" fxFlex="90" fxLayout="row">
+    <div fxFlex="20">
+        <p>{{staticProperty.label}}: </p>
+    </div>
+    <div fxFlex fxLayout="row">
+        <div fxLayout="column">
+            <mat-radio-button *ngFor="let option of staticProperty.options" style="margin-top: -10px"
+                              (click)="select(option.id)" [checked]="option.selected">
+                <label style="font-weight: normal; padding-top: 8px;">
+                    {{option.name}}
+                </label>
+            </mat-radio-button>
+        </div>
+    </div>
 </div>

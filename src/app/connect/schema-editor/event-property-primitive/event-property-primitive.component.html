@@ -52,12 +52,14 @@
     <div fxLayout="row" fxLayoutAlign="start" *ngIf="!property.isTimestampProperty()">
         <div class="form-group" fxFlexAlign="center" style="width: 155px">
             <mat-form-field   *ngIf="!hadMesarumentUnit" class="example-full-width" style="width: 155px">
-                <input matInput placeholder="Unit" [matAutocomplete]="auto" [formControl]="stateCtrl" [attr.disabled]="transformUnitEnable ? '' : null">
+                <input matInput placeholder="Unit" [formControl]="stateCtrl" [attr.disabled]="transformUnitEnable ? '' : null">
+                <!--
                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                     <mat-option *ngFor="let unit of filteredUnits | async" [value]="unit.label">
                         <span [matTooltip]="unit.label">{{unit.label}}</span>
                     </mat-option>
                 </mat-autocomplete>
+            -->
             </mat-form-field>
             <mat-form-field *ngIf="hadMesarumentUnit" class="example-full-width" style="width: 155px">
                 <input matInput placeholder="Unit" disabled [(ngModel)]="oldMeasurementUnitDipsplay">
@@ -117,7 +119,7 @@
     </div>
 
     <mat-form-field *ngIf="staticValueAddedByUser()" class="doubleWidth">
-        <input matInput placeholder="Static Value" name="static_value" id="static_value" [matAutocomplete]="auto" [(ngModel)]="property.staticValue">
+        <input matInput placeholder="Static Value" name="static_value" id="static_value" [(ngModel)]="property.staticValue">
     </mat-form-field>
 
 </div>

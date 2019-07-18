@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ProtocolDescription } from '../model/connect/grounding/ProtocolDescription';
+import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
 
 @Component({
   selector: 'app-protocol',
@@ -14,6 +15,7 @@ export class ProtocolComponent {
   @Output() validateEmitter = new EventEmitter();
   @Output() editableEmitter = new EventEmitter();
   @Output() selectedProtocolEmitter = new EventEmitter();
+
   private hasConfig: Boolean;
 
   constructor() {
@@ -34,12 +36,6 @@ export class ProtocolComponent {
     }
   }
   ngOnInit() {
-    console.log(this.protocol);
-    
+
   }
-
-
-
-
-
 }

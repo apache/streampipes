@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FreeTextStaticProperty } from '../../model/FreeTextStaticProperty';
 import { StaticProperty } from '../../model/StaticProperty';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
+import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
 
 
 @Component({
@@ -15,6 +15,7 @@ export class StaticFreeInputComponent implements OnInit {
 
     @Input() staticProperty: StaticProperty;
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
     
     private freeTextForm: FormGroup;
     private inputValue: String;
@@ -46,4 +47,8 @@ export class StaticFreeInputComponent implements OnInit {
         this.inputEmitter.emit(this.hasInput);
     }
 
+    emitUpdate() {
+        let valid = (this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value != undefined && this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value !== "");
+        this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
+    }
 }

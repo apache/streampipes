@@ -36,9 +36,6 @@ export class ProtocolListComponent {
     }
 
     ngOnInit(){
-      console.log("test4");
-      
-      console.log(this.allProtocols)
     }
 
   }

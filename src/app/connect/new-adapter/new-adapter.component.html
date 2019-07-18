@@ -34,7 +34,7 @@
                     <h4 *ngIf="isGenericAdapter()">Protocol settings</h4>
                 </div>
                 <div class="sp-blue-border padding">
-                    <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"></app-static-property>
+                    <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config" [staticProperties]="adapter.config" [adapterId]="adapter.id"></app-static-property>
                     <app-protocol (validateEmitter)="validateProtocol($event)" [protocol]="adapter.protocol" *ngIf="isGenericAdapter()"></app-protocol>
                 </div>
             </div>
