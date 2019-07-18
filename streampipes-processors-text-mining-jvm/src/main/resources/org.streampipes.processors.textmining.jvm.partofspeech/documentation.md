@@ -34,5 +34,3 @@ Appends two list properties to the stream:
 Input: `(tokens: ["Hi", "Joe"])`
 
 Output: `(tokens: ["Hi", "Joe"], tags: ["UH", "NNP"], confidence: [0.82, 0.87])`
-
-

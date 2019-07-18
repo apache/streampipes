@@ -35,8 +35,8 @@ public enum TextMiningJvmConfig implements PeConfig {
 
 	TextMiningJvmConfig() {
 		config = SpConfig.getSpConfig(service_id);
-		config.register(ConfigKeys.HOST, service_container_name, "Hostname for the pe esper");
-		config.register(ConfigKeys.PORT, 8090, "Port for the pe esper");
+		config.register(ConfigKeys.HOST, service_container_name, "Hostname for the pe text mining");
+		config.register(ConfigKeys.PORT, 8090, "Port for the pe text mining");
 
 		config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
 		config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");

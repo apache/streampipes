@@ -31,4 +31,3 @@ Adds a list to the stream which contains all tokens of the corresponding text.
 Input: `(text: "Hi, how are you?")`
 
 Output: `(text: "Hi, how are you?", tokens: ["Hi", ",", "how", "are", "you", "?"])`
-

@@ -38,5 +38,3 @@ Appends a string list property to the stream which contains all found names.
 Input: `(tokens: ["Hi", "John", "Doe", "is", "here"])`
 
 Output: `(tokens: ["Hi", "John", "Doe", "is", "here"], foundNames: ["John Doe"])`
-
-

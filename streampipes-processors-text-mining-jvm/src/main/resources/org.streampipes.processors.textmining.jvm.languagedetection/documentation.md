@@ -138,6 +138,6 @@ Adds two fields to the event:
 
 **Example:**
 
-Input: `(text: "Hi, how are you? I am fine!")`
+Input: `(text: "Hi, how are you?")`
 
 Output: `(text: "Hi, how are you?", language: "eng", confidenceLanguage: 0.89)`
