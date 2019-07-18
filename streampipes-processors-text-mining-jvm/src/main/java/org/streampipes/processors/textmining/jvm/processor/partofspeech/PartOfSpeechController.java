@@ -36,7 +36,6 @@ public class PartOfSpeechController extends StandaloneEventProcessingDeclarer<Pa
   static final String CONFIDENCE_KEY = "confidencePos";
   static final String TAG_KEY = "tagPos";
 
-  //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.textmining.jvm.partofspeech")

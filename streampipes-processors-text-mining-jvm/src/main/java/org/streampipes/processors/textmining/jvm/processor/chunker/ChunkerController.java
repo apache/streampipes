@@ -37,7 +37,6 @@ public class ChunkerController extends StandaloneEventProcessingDeclarer<Chunker
   static final String CHUNK_TYPE_FIELD_KEY = "chunkType";
   static final String CHUNK_FIELD_KEY = "chunk";
 
-  //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.textmining.jvm.chunker")

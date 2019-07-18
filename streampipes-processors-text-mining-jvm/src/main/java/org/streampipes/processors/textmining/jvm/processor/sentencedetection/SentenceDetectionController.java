@@ -33,7 +33,6 @@ public class SentenceDetectionController extends StandaloneEventProcessingDeclar
 
   private static final String DETECTION_FIELD_KEY = "detectionField";
 
-  //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.textmining.jvm.sentencedetection")

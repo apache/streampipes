@@ -35,7 +35,6 @@ public class LanguageDetectionController extends StandaloneEventProcessingDeclar
   static final String LANGUAGE_KEY = "language";
   static final String CONFIDENCE_KEY = "confidenceLanguage";
 
-  //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.textmining.jvm.languagedetection")

@@ -44,7 +44,6 @@ public class NameFinderController extends StandaloneEventProcessingDeclarer<Name
   private static final String TOKENS_FIELD_KEY = "tokensField";
   static final String FOUND_NAME_FIELD_KEY = "foundNames";
 
-  //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.textmining.jvm.namefinder")
