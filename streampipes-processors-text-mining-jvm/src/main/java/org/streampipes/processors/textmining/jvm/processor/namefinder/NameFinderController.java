@@ -23,6 +23,7 @@ import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.model.staticproperty.Option;
+import org.streampipes.processors.textmining.jvm.config.TextMiningJvmConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -78,7 +79,7 @@ public class NameFinderController extends StandaloneEventProcessingDeclarer<Name
 
   @Override
   public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
-    String directoryPath = "/home/lennard/models"; //TextMiningJvmConfig.INSTANCE.getModelDirectory();
+    String directoryPath = TextMiningJvmConfig.INSTANCE.getModelDirectory();
 
     List<Option> result = new ArrayList<>();
 
