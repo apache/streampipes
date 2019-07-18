@@ -16,8 +16,8 @@
                                 <mat-form-field style="margin-top: -10px; margin-bottom: -20px; margin-left: 10px;">
                                     <input type="text" matInput  [formControl]="myControl" [matAutocomplete]="auto">
                                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectIndex($event.option.value)">
-                                        <mat-option  *ngFor="let indexInfo of filteredIndexInfos | async" [value]="indexInfo.index">
-                                            {{indexInfo.index}}
+                                        <mat-option  *ngFor="let indexInfo of filteredIndexInfos | async" [value]="indexInfo.measureName">
+                                            {{indexInfo.measureName}}
                                         </mat-option>
                                     </mat-autocomplete>
                                 </mat-form-field>
