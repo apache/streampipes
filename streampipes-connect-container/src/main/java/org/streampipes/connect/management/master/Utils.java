@@ -17,8 +17,33 @@
 
 package org.streampipes.connect.management.master;
 
+import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterDescription;
+
 public class Utils {
+    private WorkerAdministrationManagement workerAdministrationManagement;
+
+    public Utils() {
+        this.workerAdministrationManagement = new WorkerAdministrationManagement();
+    }
+
     public static String addUserNameToApi(String url, String userName) {
         return  url + "api/v1/" + userName + "/";
+    }
+
+    public String getWorkerUrl(AdapterDescription adapterDescription) {
+        String id = "";
+
+        if (adapterDescription instanceof GenericAdapterDescription) {
+            id = ((GenericAdapterDescription) (adapterDescription)).getProtocolDescription().getAppId();
+        } else {
+            id = adapterDescription.getAppId();
+        }
+
+        return this.workerAdministrationManagement.getWorkerUrl(id);
+    }
+
+    public String getWorkerUrlById(String id) {
+        return this.workerAdministrationManagement.getWorkerUrl(id);
     }
 }

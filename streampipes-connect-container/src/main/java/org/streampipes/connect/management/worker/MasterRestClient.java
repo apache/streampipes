@@ -19,6 +19,8 @@ package org.streampipes.connect.management.worker;
 
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 
@@ -26,21 +28,27 @@ import java.io.IOException;
 
 public class MasterRestClient {
 
-    public static void register(String baseUrl, ConnectWorkerContainer connectWorkerContainer) {
+    private static final Logger LOG = LoggerFactory.getLogger(MasterRestClient.class);
+
+    public static boolean register(String baseUrl, ConnectWorkerContainer connectWorkerContainer) {
 
             String adapterDescription = JsonLdUtils.toJsonLD(connectWorkerContainer);
 
-            String url = baseUrl + "/api/v1/admin@streampipes.org/master/workercontainer";
+            String url = baseUrl + "api/v1/admin@streampipes.org/master/workercontainer";
 
         try {
-            String responseString = Request.Post(url)
+            Request.Post(url)
                     .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
                     .connectTimeout(1000)
                     .socketTimeout(100000)
                     .execute().returnContent().asString();
+
+            return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.info("Could not connect to " + url);
         }
+
+        return false;
     }
 
 }

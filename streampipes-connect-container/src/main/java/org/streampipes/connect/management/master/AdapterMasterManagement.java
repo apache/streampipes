@@ -22,11 +22,12 @@ import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.GroundingService;
-import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
@@ -38,17 +39,23 @@ import java.util.UUID;
 
 public class AdapterMasterManagement {
 
-    private static final Logger logger = LoggerFactory.getLogger(AdapterMasterManagement.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
-    public static void startAllStreamAdapters() throws AdapterException {
+    public static void startAllStreamAdapters(ConnectWorkerContainer connectWorkerContainer) throws AdapterException {
         AdapterStorageImpl adapterStorage = new AdapterStorageImpl();
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
 
         for (AdapterDescription ad : allAdapters) {
             if (ad instanceof AdapterStreamDescription) {
-                String url = Utils.addUserNameToApi(ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl(), ad.getUserName());
 
-                WorkerRestClient.invokeStreamAdapter(url, (AdapterStreamDescription) ad);
+                String wUrl = new Utils().getWorkerUrl(ad);
+
+                if (wUrl.equals(connectWorkerContainer.getEndpointUrl())){
+                    String url = Utils.addUserNameToApi(connectWorkerContainer.getEndpointUrl(), ad.getUserName());
+
+                    WorkerRestClient.invokeStreamAdapter(url, (AdapterStreamDescription) ad);
+                }
+
             }
         }
     }
@@ -82,16 +89,16 @@ public class AdapterMasterManagement {
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
         String adapterCouchdbId = "";
         for (AdapterDescription a : allAdapters) {
-           if (a.getElementId().equals(ad.getElementId())) {
-               adapterCouchdbId = a.getId();
-           }
+            if (a.getElementId().equals(ad.getElementId())) {
+                adapterCouchdbId = a.getId();
+            }
         }
 
         // backend url is used to install data source in streampipes
         String backendBaseUrl = "http://" + ConnectContainerConfig.INSTANCE.getBackendApiUrl() +"api/v2/";
         String requestUrl = backendBaseUrl +  "noauth/users/" + username + "/element";
 
-        logger.info("Install source (source URL: " + newId +" in backend over URL: " + requestUrl);
+        LOG.info("Install source (source URL: " + newId +" in backend over URL: " + requestUrl);
 
         installDataSource(requestUrl, newId);
 
@@ -110,9 +117,9 @@ public class AdapterMasterManagement {
                     .socketTimeout(100000)
                     .execute().returnContent().asString();
 
-            logger.info(responseString);
+            LOG.info(responseString);
         } catch (IOException e) {
-            logger.error("Error while installing data source: " + requestUrl, e);
+            LOG.error("Error while installing data source: " + requestUrl, e);
             throw new AdapterException();
         }
 
@@ -125,7 +132,7 @@ public class AdapterMasterManagement {
 
         if (allAdapters != null && id != null) {
             for (AdapterDescription ad : allAdapters) {
-                if (id.equals(ad.getAdapterId())) {
+                if (id.equals(ad.getId())) {
                     return ad;
                 }
             }
@@ -152,7 +159,7 @@ public class AdapterMasterManagement {
         String elementUrl = ad.getUri();
 
         String responseString = null;
-        logger.info("Delete data source in backend with request URL: " + backendBaseUrl);
+        LOG.info("Delete data source in backend with request URL: " + backendBaseUrl);
         try {
             responseString = Request.Post(backendBaseUrl)
                     .connectTimeout(1000)
@@ -165,7 +172,7 @@ public class AdapterMasterManagement {
             responseString = e.toString();
         }
 
-        logger.info("Response of the deletion request" + responseString);
+        LOG.info("Response of the deletion request" + responseString);
     }
 
     public List<AdapterDescription> getAllAdapters(AdapterStorageImpl adapterStorage) throws AdapterException {
@@ -203,7 +210,7 @@ public class AdapterMasterManagement {
         String s = JsonLdUtils.toJsonLD(object);
 
         if (s == null) {
-            logger.error("Could not serialize Object " + object + " into json ld");
+            LOG.error("Could not serialize Object " + object + " into json ld");
         }
 
         return s;

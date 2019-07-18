@@ -18,17 +18,14 @@
 package org.streampipes.connect.config;
 
 public class ConfigKeys {
-    final static String BACKEND_HOST = "SP_BACKEND_HOST";
-    final static String BACKEND_PORT = "SP_BACKEND_PORT";
-
     final static String KAFKA_HOST = "SP_KAFKA_HOST";
     final static String KAFKA_PORT = "SP_KAFKA_PORT";
 
+    final static String BACKEND_HOST = "SP_BACKEND_HOST";
+    final static String BACKEND_PORT = "SP_BACKEND_PORT";
+
     final static String CONNECT_CONTAINER_MASTER_HOST = "SP_CONNECT_CONTAINER_HOST";
     final static String CONNECT_CONTAINER_MASTER_PORT = "SP_CONNECT_CONTAINER_PORT";
-
-    final static String CONNECT_CONTAINER_WORKER_HOST = "SP_CONNECT_CONTAINER_WORKER_HOST";
-    final static String CONNECT_CONTAINER_WORKER_PORT = "SP_CONNECT_CONTAINER_WORKER_PORT";
 
     final static String DATA_LOCATION = "SP_DATA_LOCATION";
 

@@ -17,10 +17,6 @@
 
 package org.streampipes.connect.rest.master;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 import com.jayway.restassured.RestAssured;
 import org.eclipse.jetty.server.Server;
 import org.junit.After;
@@ -33,6 +29,10 @@ import org.streampipes.connect.utils.ConnectContainerResourceTest;
 import org.streampipes.connect.utils.Utils;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 public class AdapterResourceTest extends ConnectContainerResourceTest {
 
@@ -50,7 +50,7 @@ public class AdapterResourceTest extends ConnectContainerResourceTest {
         Config.MASTER_PORT = 8019;
         RestAssured.port = 8019;
 
-        adapterResource = new AdapterResource("");
+        adapterResource = new AdapterResource();
         server = getMasterServer(adapterResource);
 
         adapterMasterManagement = mock(AdapterMasterManagement.class);
