@@ -21,22 +21,24 @@ package org.streampipes.connect.config;
 import org.streampipes.config.SpConfig;
 import org.streampipes.connect.init.Config;
 
-import java.util.UUID;
-
 public enum ConnectWorkerConfig {
   INSTANCE;
+
 
   private SpConfig config;
 
   ConnectWorkerConfig() {
-    config = SpConfig.getSpConfig("worker-connect-container");
+    String name = "connect-worker-main";
+    config = SpConfig.getSpConfig("connect-worker-main");
 
     config.register(ConfigKeys.KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
     config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");
 
-    String defaultName = "connect-worker." + UUID.randomUUID();
     config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT, Config.WORKER_PORT, "The port of the connect container");
-    config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST, defaultName, "The hostname of the connect container");
+    config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST, name, "The hostname of the connect container");
+
+    config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT, Config.MASTER_PORT, "The port of the connect container");
+    config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST, Config.MASTER_HOST, "The hostname of the connect container");
 
     config.register(ConfigKeys.DATA_LOCATION,"/data/", "Folder that stores all the uploaded data");
 
@@ -44,6 +46,10 @@ public enum ConnectWorkerConfig {
 
   public String getConnectContainerWorkerUrl() {
     return "http://" + config.getString(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST) + ":" + config.getInteger(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT) + "/";
+  }
+
+  public String getConnectContainerMasterUrl() {
+    return "http://" + config.getString(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST) + ":" + config.getInteger(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT) + "/";
   }
 
   public String getKafkaHost() {
@@ -69,6 +75,15 @@ public enum ConnectWorkerConfig {
 
   public Integer getConnectContainerWorkerPort() {
     return config.getInteger(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT);
+  }
+
+
+  public String getConnectContainerMasterHost() {
+    return config.getString(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST);
+  }
+
+  public Integer getConnectContainerMasterPort() {
+    return config.getInteger(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT);
   }
 
   public String getDataLocation() {
