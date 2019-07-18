@@ -42,7 +42,11 @@ public class DataLakeNoUserResourceV3 extends AbstractRestInterface {
     @GsonWithIds
     @Path("/{measure}")
     public Response addDataLake(@PathParam("measure") String measure, EventSchema eventSchema) {
-        this.dataLakeManagement.addDataLake(measure, eventSchema);
-        return ok();
+        if (this.dataLakeManagement.addDataLake(measure, eventSchema)) {
+            return ok();
+        } else {
+            return Response.status(409).build();
+        }
+
     }
 }
