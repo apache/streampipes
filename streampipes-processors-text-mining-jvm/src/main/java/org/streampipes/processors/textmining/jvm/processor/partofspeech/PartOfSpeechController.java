@@ -51,7 +51,7 @@ public class PartOfSpeechController extends StandaloneEventProcessingDeclarer<Pa
                             PropertyScope.NONE)
                     .build())
             .outputStrategy(OutputStrategies.append(
-                    EpProperties.listStringEp(
+                    EpProperties.listDoubleEp(
                             Labels.withId(CONFIDENCE_KEY),
                             CONFIDENCE_KEY,
                             "http://schema.org/ItemList"),
