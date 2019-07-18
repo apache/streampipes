@@ -37,6 +37,8 @@ docker-connect-container:
    dependencies:
      - build
    script:
+     - pwd
+     - cat ./target/mvn_version
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
      - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
