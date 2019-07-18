@@ -34,12 +34,6 @@
             <version>0.62.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20180130</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.fusesource.mqtt-client</groupId>
             <artifactId>mqtt-client</artifactId>
             <version>1.12</version>
