@@ -16,25 +16,52 @@
  */
 package org.streampipes.model.runtime;
 
-import org.streampipes.model.schema.EventProperty;
+import org.streampipes.empire.annotations.RdfProperty;
+import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.vocabulary.StreamPipes;
 
-public class RuntimeOptionsRequest {
+import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+
+@RdfsClass(StreamPipes.RUNTIME_OPTIONS_REQUEST)
+@Entity
+public class RuntimeOptionsRequest extends UnnamedStreamPipesEntity {
+
+  @RdfProperty(StreamPipes.HAS_REQUEST_ID)
   protected String requestId;
 
-  protected EventProperty mappedEventProperty;
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.HAS_STATIC_PROPERTY)
+  protected List<StaticProperty> staticProperties;
+
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.RECEIVES_STREAM)
+  protected List<SpDataStream> inputStreams;
 
   public RuntimeOptionsRequest() {
-
+    super();
   }
 
   public RuntimeOptionsRequest(String requestId) {
+    super();
     this.requestId = requestId;
   }
 
-  public RuntimeOptionsRequest(String requestId, EventProperty mappedEventPropety) {
+  public RuntimeOptionsRequest(String requestId, List<StaticProperty> staticProperties,
+                               List<SpDataStream> inputStreams) {
+    super();
     this.requestId = requestId;
-    this.mappedEventProperty = mappedEventPropety;
+    this.staticProperties = staticProperties;
+    this.inputStreams = inputStreams;
   }
 
   public String getRequestId() {
@@ -45,11 +72,19 @@ public class RuntimeOptionsRequest {
     this.requestId = requestId;
   }
 
-  public EventProperty getMappedEventProperty() {
-    return mappedEventProperty;
+  public List<StaticProperty> getStaticProperties() {
+    return staticProperties;
   }
 
-  public void setMappedEventProperty(EventProperty mappedEventPropety) {
-    this.mappedEventProperty = mappedEventPropety;
+  public void setStaticProperties(List<StaticProperty> staticProperties) {
+    this.staticProperties = staticProperties;
+  }
+
+  public List<SpDataStream> getInputStreams() {
+    return inputStreams;
+  }
+
+  public void setInputStreams(List<SpDataStream> inputStreams) {
+    this.inputStreams = inputStreams;
   }
 }

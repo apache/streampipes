@@ -47,7 +47,10 @@
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-serializers</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-container</artifactId>
+        </dependency>
         <dependency>
             <groupId>edu.wpi.rail</groupId>
             <artifactId>jrosbridge</artifactId>

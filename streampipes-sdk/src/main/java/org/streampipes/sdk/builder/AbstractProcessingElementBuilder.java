@@ -29,7 +29,6 @@ import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.model.staticproperty.MappingProperty;
 import org.streampipes.model.staticproperty.MappingPropertyNary;
 import org.streampipes.model.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.sdk.helpers.CollectedStreamRequirements;
 import org.streampipes.sdk.helpers.Label;
 
@@ -103,24 +102,6 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   private String getIndex(int index) {
     return index == 1 ? PropertySelectorConstants.FIRST_REQUIREMENT_PREFIX :
             PropertySelectorConstants.SECOND_REQUIREMENT_PREFIX;
-  }
-
-  public BU requiredSingleValueSelectionFromContainer(Label label) {
-    RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
-            .getLabel(), label.getDescription());
-
-    this.staticProperties.add(rsp);
-    return me();
-  }
-
-  public BU requiredSingleValueSelectionFromContainer(Label label, String linkedMappingPropertyId) {
-    RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
-            .getLabel(), label.getDescription());
-
-    rsp.setLinkedMappingPropertyId(linkedMappingPropertyId);
-
-    this.staticProperties.add(rsp);
-    return me();
   }
 
   /**

@@ -21,6 +21,7 @@ package org.streampipes.connect.adapter.generic.format.json.arraynokey;
 import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.format.json.AbstractJsonFormat;
 import org.streampipes.model.connect.grounding.FormatDescription;
+import org.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
 
 public class JsonArrayFormat extends AbstractJsonFormat {
 
@@ -33,11 +34,8 @@ public class JsonArrayFormat extends AbstractJsonFormat {
 
     @Override
     public FormatDescription declareModel() {
-        FormatDescription fd = new FormatDescription(ID, "Json Array No Key", "This is the description" +
-                "for json format");
-
-        fd.setAppId(ID);
-        return fd;
+        return FormatDescriptionBuilder.create(ID, "Json Array No Key", "Transforms all objects within array to events")
+                .build();
     }
 
     @Override

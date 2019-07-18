@@ -34,12 +34,9 @@ public class GroundingMatch extends AbstractMatcher<EventGrounding, EventGroundi
 
   @Override
   public boolean match(EventGrounding offer, EventGrounding requirement, List<MatchingResultMessage> errorLog) {
-    boolean match = MatchingUtils.nullCheckRightNullDisallowed(offer, requirement) ||
+    return MatchingUtils.nullCheckRightNullDisallowed(offer, requirement) ||
             (matchProtocols(offer.getTransportProtocols(), requirement.getTransportProtocols(), errorLog) &&
                     matchFormats(offer.getTransportFormats(), requirement.getTransportFormats(), errorLog));
-
-    return match;
-
   }
 
   private boolean matchProtocols(List<TransportProtocol> offer, List<TransportProtocol> requirement, List<MatchingResultMessage> errorLog) {

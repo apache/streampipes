@@ -29,14 +29,13 @@ import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectFormat;
 import org.streampipes.connect.adapter.generic.format.json.object.JsonObjectParser;
+import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.connect.adapter.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.streampipes.sdk.helpers.Labels;
 
@@ -68,17 +67,8 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
 
     public RosBridgeAdapter(SpecificAdapterStreamDescription adapterDescription) {
         super(adapterDescription);
-        List<StaticProperty> all = adapterDescription.getConfig();
 
-        for (StaticProperty sp : all) {
-            if (sp.getInternalName().equals(ROS_HOST_KEY)) {
-                this.host = ((FreeTextStaticProperty) sp).getValue();
-            } else if (sp.getInternalName().equals(ROS_PORT_KEY)) {
-                port = Integer.parseInt(((FreeTextStaticProperty) sp).getValue());
-            } else {
-                this.topic = ((FreeTextStaticProperty) sp).getValue();
-            }
-        }
+        getConfigurations(adapterDescription);
         
         this.jsonObjectParser = new JsonObjectParser();
     }
@@ -157,20 +147,8 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException {
-        String host = null;
-        String topic = null;
-        int port = 0;
+        getConfigurations(adapterDescription);
 
-         for (StaticProperty sp : adapterDescription.getConfig()) {
-            if (sp.getInternalName().equals(ROS_HOST_KEY)) {
-                host = ((FreeTextStaticProperty) sp).getValue();
-            } else if (sp.getInternalName().equals(ROS_PORT_KEY)) {
-                port = Integer.parseInt(((FreeTextStaticProperty) sp).getValue());
-            }
-            else {
-                topic = ((FreeTextStaticProperty) sp).getValue();
-            }
-        }
 
         Ros ros = new Ros(host, port);
 
@@ -242,6 +220,13 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
         }
     }
 
+    private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
+        ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
+        String host = extractor.singleValue(ROS_HOST_KEY, String.class);
+        String topic = extractor.singleValue(TOPIC_KEY, String.class);
+        int port = extractor.singleValue(ROS_PORT_KEY, Integer.class);
+    }
+
     // Ignore for now, but is interesting for future implementations
     private void getListOfAllTopics() {
         // Get a list of all topics
@@ -251,42 +236,5 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
 //        System.out.println(response.toString());
     }
 
-    public static void main(String... args) {
-        Ros ros = new Ros("ipe-girlitz.fzi.de");
-        ros.connect();
 
-
-//        ros.send("{\n" +
-//                "    name : '/rosapi/topics',\n" +
-//                "    serviceType : 'rosapi/Topics'\n" +
-//                "  }");
-
-        // Get a list of all topics
-//        Service addTwoInts = new Service(ros, "/rosapi/topics", "rosapi/Topics");
-//        ServiceRequest request = new ServiceRequest();
-//        ServiceResponse response = addTwoInts.callServiceAndWait(request);
-//        System.out.println(response.toString());
-
-        // Get topic type
-//        Service addTwoInts = new Service(ros, "/rosapi/topic_type", "rosapi/TopicType");
-//        ServiceRequest request = new ServiceRequest("{\"topic\": \"/battery_state\"}");
-//        ServiceResponse response = addTwoInts.callServiceAndWait(request);
-//        System.out.println(response.toString());
-
-//        System.out.println(RosBridgeAdapter.getMethodType(ros, "/battery_state"));
-
-//        Topic echoBack = new Topic(ros, "/battery_state", "sensor_msgs/BatteryState");
-//        echoBack.subscribe(new TopicCallback() {
-//            @Override
-//            public void handleMessage(Message message) {
-//                System.out.println(message.getMessageType());
-//                System.out.println("From ROS: " + message.toString());
-//            }
-//        });
-//
-//        while (true) {}
-
-//        ros.disconnect();
-
-    }
 }

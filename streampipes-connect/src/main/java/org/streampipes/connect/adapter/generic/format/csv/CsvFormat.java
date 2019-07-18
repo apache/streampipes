@@ -23,9 +23,9 @@ import org.streampipes.connect.adapter.generic.format.Format;
 import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.connect.exception.ParseException;
 import org.streampipes.model.connect.grounding.FormatDescription;
-import org.streampipes.model.staticproperty.AnyStaticProperty;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.Option;
+import org.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
+import org.streampipes.sdk.helpers.Labels;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -118,20 +118,15 @@ public class CsvFormat extends Format {
 
     @Override
     public FormatDescription declareModel() {
-        FormatDescription fd = new FormatDescription(ID, "Csv", "This is the description" +
-                "for csv format");
-        FreeTextStaticProperty delimiterProperty = new FreeTextStaticProperty("delimiter",
-                "Delimiter", "The delimiter for json. Mostly either , or ;");
 
-        fd.setAppId(ID);
+        return FormatDescriptionBuilder.create(ID,"Csv","Can be used to read CSV")
+                .requiredTextParameter(Labels.from("delimiter","Delimiter",
+                        "The delimiter for json. Mostly either , or ;"))
+                .requiredMultiValueSelection(Labels.from("header","Header",
+                        "Does the CSV file include a header or not"),
+                        Arrays.asList(new Option("Header","Header")))
+                .build();
 
-        AnyStaticProperty offset = new AnyStaticProperty("header", "Header", "Does the CSV file include a header or not");
-        offset.setOptions(Arrays.asList(new Option("Header","Header")));
-
-        fd.addConfig(delimiterProperty);
-        fd.addConfig(offset);
-
-        return fd;
     }
 
 

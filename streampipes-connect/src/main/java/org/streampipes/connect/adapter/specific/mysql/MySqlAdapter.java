@@ -18,25 +18,10 @@
 package org.streampipes.connect.adapter.specific.mysql;
 
 import com.github.shyiko.mysql.binlog.BinaryLogClient;
-import com.github.shyiko.mysql.binlog.event.Event;
-import com.github.shyiko.mysql.binlog.event.EventType;
-import com.github.shyiko.mysql.binlog.event.TableMapEventData;
-import com.github.shyiko.mysql.binlog.event.UpdateRowsEventData;
-import com.github.shyiko.mysql.binlog.event.WriteRowsEventData;
+import com.github.shyiko.mysql.binlog.event.*;
 import com.github.shyiko.mysql.binlog.event.deserialization.EventDeserializer;
-import java.io.IOException;
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import org.streampipes.connect.adapter.Adapter;
+import org.streampipes.connect.adapter.generic.sdk.ParameterExtractor;
 import org.streampipes.connect.adapter.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.exception.ParseException;
@@ -44,11 +29,18 @@ import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.streampipes.sdk.helpers.Labels;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class MySqlAdapter extends SpecificDataStreamAdapter {
 
@@ -85,18 +77,18 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
   public SpecificAdapterStreamDescription declareModel() {
     //TODO: Add Icon
     SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID,
-        "MySql Adapter",
-        "Connects to a MySql Database and sends out all inserted or updated rows. Needs"
-            + "binary logging enabled (MySql command: \"SHOW VARIABLES LIKE 'log_bin';\") and a"
-            + "user with sufficient privileges (REPLICATION CLIENT)")
-        //.iconUrl("ros.png")
-        .requiredTextParameter(Labels.from(MYSQL_HOST, "Hostname", "Hostname of the MySql Server"))
-        .requiredTextParameter(Labels.from(MYSQL_USER, "Username", "Username of the user"))
-        .requiredTextParameter(Labels.from(MYSQL_PASS, "Password", "Password of the user"))
-        .requiredTextParameter(Labels.from(MYSQL_DB, "Database", "Database in which the table is located"))
-        .requiredTextParameter(Labels.from(MYSQL_TABLE, "Table", "Table which should be watched"))
-        .requiredIntegerParameter(Labels.from(MYSQL_PORT, "Port", "Port of the MySql Server. Default: 3306"), 3306)
-        .build();
+            "MySql Adapter",
+            "Connects to a MySql Database and sends out all inserted or updated rows. Needs"
+                    + "binary logging enabled (MySql command: \"SHOW VARIABLES LIKE 'log_bin';\") and a"
+                    + "user with sufficient privileges (REPLICATION CLIENT)")
+            //.iconUrl("ros.png")
+            .requiredTextParameter(Labels.from(MYSQL_HOST, "Hostname", "Hostname of the MySql Server"))
+            .requiredTextParameter(Labels.from(MYSQL_USER, "Username", "Username of the user"))
+            .requiredTextParameter(Labels.from(MYSQL_PASS, "Password", "Password of the user"))
+            .requiredTextParameter(Labels.from(MYSQL_DB, "Database", "Database in which the table is located"))
+            .requiredTextParameter(Labels.from(MYSQL_TABLE, "Table", "Table which should be watched"))
+            .requiredIntegerParameter(Labels.from(MYSQL_PORT, "Port", "Port of the MySql Server. Default: 3306"), 3306)
+            .build();
 
     description.setAppId(ID);
     return  description;
@@ -111,8 +103,8 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
     client = new BinaryLogClient(host, Integer.parseInt(port), user, pass);
     EventDeserializer eventDeserializer = new EventDeserializer();
     eventDeserializer.setCompatibilityMode(
-        EventDeserializer.CompatibilityMode.DATE_AND_TIME_AS_LONG,
-        EventDeserializer.CompatibilityMode.CHAR_AND_BINARY_AS_BYTE_ARRAY
+            EventDeserializer.CompatibilityMode.DATE_AND_TIME_AS_LONG,
+            EventDeserializer.CompatibilityMode.CHAR_AND_BINARY_AS_BYTE_ARRAY
     );
     client.setEventDeserializer(eventDeserializer);
     client.registerEventListener(event -> sendEvent(event));
@@ -128,7 +120,7 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
     if (event.getHeader().getEventType() == EventType.TABLE_MAP) {
       // Check table and database, if the next event should be streamed
       if (((TableMapEventData) event.getData()).getDatabase().equals(database)
-          && ((TableMapEventData) event.getData()).getTable().equals((table))) {
+              && ((TableMapEventData) event.getData()).getTable().equals((table))) {
         dataComing = true;
       }
     }
@@ -180,7 +172,7 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
 
   @Override
   public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
-      throws AdapterException, ParseException {
+          throws AdapterException, ParseException {
     // Load JDBC Driver, connect JDBC Driver, Extract information, disconnect JDBC Driver
     EventSchema eventSchema = new EventSchema();
     GuessSchema guessSchema = new GuessSchema();
@@ -193,9 +185,9 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
 
     for (Column column : tableSchema) {
       allProperties.add(PrimitivePropertyBuilder
-          .create(column.getType(), database + "." + table + "." + column.getName())
-          .label(column.getName())
-          .build());
+              .create(column.getType(), database + "." + table + "." + column.getName())
+              .label(column.getName())
+              .build());
     }
 
     eventSchema.setEventProperties(allProperties);
@@ -210,21 +202,14 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
   }
 
   private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
-    for (StaticProperty sp : adapterDescription.getConfig()) {
-      if (sp.getInternalName().equals(MYSQL_HOST)) {
-        this.host= ((FreeTextStaticProperty) sp).getValue();
-      } else if (sp.getInternalName().equals(MYSQL_USER)) {
-        this.user = ((FreeTextStaticProperty) sp).getValue();
-      } else if (sp.getInternalName().equals(MYSQL_PASS)) {
-        this.pass = ((FreeTextStaticProperty) sp).getValue();
-      } else if (sp.getInternalName().equals(MYSQL_DB)) {
-        this.database = ((FreeTextStaticProperty) sp).getValue();
-      } else if (sp.getInternalName().equals(MYSQL_TABLE)) {
-        this.table = ((FreeTextStaticProperty) sp).getValue();
-      } else {
-        this.port = ((FreeTextStaticProperty) sp).getValue();
-      }
-    }
+    ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
+
+    this.host = extractor.singleValue(MYSQL_HOST, String.class);
+    this.user = extractor.singleValue(MYSQL_USER, String.class);
+    this.pass = extractor.singleValue(MYSQL_PASS, String.class);
+    this.database = extractor.singleValue(MYSQL_DB, String.class);
+    this.table = extractor.singleValue(MYSQL_TABLE, String.class);
+    this.port = extractor.singleValue(MYSQL_PORT, String.class);
   }
 
   private void checkJdbcDriver() throws AdapterException {
@@ -241,11 +226,11 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
     tableSchema = new ArrayList<>();
 
     String query = "SELECT COLUMN_NAME, DATA_TYPE, COLUMN_TYPE FROM "
-        + "INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ? ORDER BY "
-        + "ORDINAL_POSITION ASC;";
+            + "INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ? ORDER BY "
+            + "ORDINAL_POSITION ASC;";
 
     try (Connection con = DriverManager.getConnection(server, user, pass);
-        PreparedStatement statement = con.prepareStatement(query)) {
+         PreparedStatement statement = con.prepareStatement(query)) {
 
       statement.setString(1, table);
       statement.setString(2, database);
@@ -264,8 +249,8 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
       }
     } catch (SQLException e) {
       throw new AdapterException("SqlException: " + e.getMessage()
-          + ", Error code: " + e.getErrorCode()
-          + ", SqlState: " + e.getSQLState());
+              + ", Error code: " + e.getErrorCode()
+              + ", SqlState: " + e.getSQLState());
     } finally {
       try {
         resultSet.close();

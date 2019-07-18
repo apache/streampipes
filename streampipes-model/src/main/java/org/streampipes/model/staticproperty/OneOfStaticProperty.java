@@ -32,6 +32,15 @@ public class OneOfStaticProperty extends SelectionStaticProperty {
     super(StaticPropertyType.OneOfStaticProperty);
   }
 
+  public OneOfStaticProperty(StaticPropertyType staticPropertyType) {
+    super(staticPropertyType);
+  }
+
+  public OneOfStaticProperty(StaticPropertyType staticPropertyType, String internalName,
+                             String label, String description) {
+    super(staticPropertyType, internalName, label, description);
+  }
+
   public OneOfStaticProperty(OneOfStaticProperty other) {
     super(other);
   }

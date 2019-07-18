@@ -19,22 +19,31 @@ package org.streampipes.connect.rest.master;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.exception.AdapterException;
 import org.streampipes.connect.management.AdapterDeserializer;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
 import org.streampipes.connect.management.master.Utils;
 import org.streampipes.connect.rest.AbstractContainerResource;
+import org.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.streampipes.model.runtime.RuntimeOptionsRequest;
+import org.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.streampipes.model.staticproperty.Option;
 import org.streampipes.rest.shared.annotation.GsonWithIds;
 import org.streampipes.rest.shared.annotation.JsonLdSerialized;
 import org.streampipes.rest.shared.util.SpMediaType;
+import org.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -113,6 +122,38 @@ public class AdapterResource extends AbstractContainerResource {
 
     }
 
+    @POST
+    @Path("{id}/configurations")
+    @JsonLdSerialized
+    @Produces(SpMediaType.JSONLD)
+    @Consumes(SpMediaType.JSONLD)
+    public Response fetchConfigurations(@PathParam("id") String elementId,
+                                        String payload) {
+
+        try {
+            RuntimeOptionsRequest runtimeOptionsRequest = new JsonLdTransformer().fromJsonLd(payload,
+                    RuntimeOptionsRequest.class);
+
+            ResolvesContainerProvidedOptions adapterClass =
+                    AdapterRegistry.getRuntimeResolvableAdapter(elementId);
+
+            List<Option> availableOptions =
+                    adapterClass.resolveOptions(runtimeOptionsRequest.getRequestId(),
+                            StaticPropertyExtractor.from(runtimeOptionsRequest.getStaticProperties(),
+                                    runtimeOptionsRequest.getInputStreams()));
+
+            return ok(new RuntimeOptionsResponse(runtimeOptionsRequest,
+                    availableOptions));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return fail();
+        }
+
+
+
+
+    }
+
     @DELETE
     @JsonLdSerialized
     @Path("/{id}")
@@ -120,7 +161,6 @@ public class AdapterResource extends AbstractContainerResource {
     public Response deleteAdapter(@PathParam("id") String id, @PathParam("username") String userName) {
 
         try {
-
             String newUrl = Utils.addUserNameToApi(connectContainerEndpoint, userName);
             adapterMasterManagement.deleteAdapter(id, newUrl);
             return ok(true);
