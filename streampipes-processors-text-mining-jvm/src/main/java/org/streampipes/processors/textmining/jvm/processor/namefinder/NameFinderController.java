@@ -71,7 +71,7 @@ public class NameFinderController extends StandaloneEventProcessingDeclarer<Name
   public ConfiguredEventProcessor<NameFinderParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
     String tokens = extractor.mappingPropertyValue(TOKENS_FIELD_KEY);
-    String model = extractor.selectedSingleValueFromRemote(MODEL, String.class);
+    String model = extractor.selectedSingleValue(MODEL, String.class);
 
     NameFinderParameters params = new NameFinderParameters(graph, tokens, model);
     return new ConfiguredEventProcessor<>(params, NameFinder::new);
