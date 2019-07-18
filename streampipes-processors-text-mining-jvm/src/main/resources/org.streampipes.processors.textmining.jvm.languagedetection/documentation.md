@@ -119,16 +119,25 @@ Supported languages:
 
 ## Required input
 
+A stream with a string property which contains a text.
+The longer the text, the higher the accuracy of the language detector.
+
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
+Simply assign the correct output of the previous stream to the language detector input.
 
 ## Output
+
+Adds two fields to the event:
+1. String Property: The acronym of the detected language which can be seen above.
+2. Double Property: The confidence of the detector that it found the correct language. Between 0 (not certain at all) and 1 (very certain).
+
+
+**Example:**
+
+Input: `(text: "Hi, how are you? I am fine!")`
+
+Output: `(text: "Hi, how are you?", language: "eng", confidenceLanguage: 0.89)`

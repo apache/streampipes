@@ -8,23 +8,27 @@
 
 ## Description
 
-Segments a given text into Tokens (usually words, numbers, punctuations, ...)
-Add a detailed description here
+Segments a given text into Tokens (usually words, numbers, punctuations, ...). Works best with english text.
 
 ***
 
 ## Required input
 
+A stream with a string property which contains a text.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
+Simply assign the correct output of the previous stream to the tokenizer input.
 
 ## Output
+
+Adds a list to the stream which contains all tokens of the corresponding text.
+
+**Example:**
+
+Input: `(text: "Hi, how are you?")`
+
+Output: `(text: "Hi, how are you?", tokens: ["Hi", ",", "how", "are", "you", "?"])`
+

@@ -5,7 +5,7 @@ detectionField.title=Text detection
 detectionField.description=Specifies the event property from your stream that contains the text in an unknown language.
 
 language.title=Language
-language.description=The detected language
+language.description=The acronym of the detected language
 
 confidence.title=Confidence
 confidence.description=The probability that the detected language is correct. Between 0 (no confidence) and 1 (highly confident).

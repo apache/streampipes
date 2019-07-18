@@ -8,25 +8,31 @@
 
 ## Description
 
-Takes in a stream of tokens and appends a tag at the end of the word corresponding to the part of speech
+Takes in a stream of tokens and marks each token with a part-of-speech tag
 The list of used suffixes can be found [here](https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html)
-
-Add a detailed description here
 
 ***
 
 ## Required input
 
+A stream with a list property which contains the tokens.
 
 ***
 
 ## Configuration
 
-Describe the configuration parameters here
-
-### 1st parameter
-
-
-### 2nd parameter
+Simply assign the correct output of the previous stream to the part of speech detector input.
 
 ## Output
+
+Appends two list properties to the stream:
+1. String list: The tag for each token
+2. Double list: The confidence for each tag that it is indeed the given tag (between 0 and 1)
+
+**Example:**
+
+Input: `(tokens: ["Hi", "Joe"])`
+
+Output: `(tokens: ["Hi", "Joe"], tags: ["UH", "NNP"], confidence: [0.82, 0.87])`
+
+
