@@ -17,7 +17,7 @@
 
 package org.streampipes.sinks.internal.jvm.datalake;
 
-import com.google.gson.Gson;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -80,7 +80,7 @@ public class DataLake implements EventSink<DataLakeParameters> {
     influxDbClient.stop();
   }
 
-  private void registerAtDataLake(String measure, EventSchema eventSchema){
+  private void registerAtDataLake(String measure, EventSchema eventSchema) throws SpRuntimeException {
     HttpClient httpClient = new DefaultHttpClient();
     String url = SinksInternalJvmConfig.INSTANCE.getStreamPipesBackendUrl();
     HttpPost httpPost = new HttpPost(url + "/streampipes-backend/api/v3/noauth/datalake/" + measure);
@@ -91,7 +91,10 @@ public class DataLake implements EventSink<DataLakeParameters> {
     httpPost.setEntity(stringEntity);
 
     try {
-      httpClient.execute(httpPost);
+      HttpResponse response = httpClient.execute(httpPost);
+      if (response.getStatusLine().getStatusCode() == 409) {
+        throw new SpRuntimeException("The measuremnt '" + measure +"' is already registered as Data lake with different Event schema");
+      }
     } catch (IOException e) {
       LOG.error(e.toString());
     }
