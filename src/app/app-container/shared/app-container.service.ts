@@ -25,7 +25,7 @@ export class AppContainerService {
                 selector: 'test-lol'
             },
             {
-                bundleUrl: 'http://localhost:8082/assets/lib/apps/test.bundle.min.js',
+                bundleUrl: 'http://localhost:8082/assets/lib/apps/app.bundle.js',
                 moduleName: 'AppModule',
                 selector: 'test-lol'
             }]);

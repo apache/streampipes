@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 
 import { AppContainerService } from './shared/app-container.service';
 import { InstalledApp } from './shared/installed-app.model';
@@ -14,13 +14,15 @@ export class AppContainerComponent {
     activeApp: InstalledApp;
     isAppActive = false;
 
-    constructor(private appContainerService: AppContainerService) {
+    constructor(private appContainerService: AppContainerService, private changeDetector: ChangeDetectorRef) {
         this.appContainerService.getInstalledApps().subscribe(installedApps => {
             this.installedApps = installedApps;
         });
     }
 
     activateApp(installedApp: InstalledApp): void {
+        this.isAppActive = false;
+        this.changeDetector.detectChanges();
         this.activeApp = installedApp;
         this.isAppActive = true;
     }
