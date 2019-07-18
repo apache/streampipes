@@ -17,44 +17,36 @@
 
 package org.streampipes.connect.adapters;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.streampipes.connect.adapter.exception.AdapterException;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.junit.Assert.assertEquals;
-
-public class PullAdapterTest {
-    private int port = 4082;
-
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(port);
-
-
-    @Test
-    public void getDataFromEndpointStringSuccess() throws AdapterException {
-        String expected = "EXPECTED_STRING";
-
-        stubFor(get(urlEqualTo("/"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withBody(expected)));
-
-        String result = PullRestAdapter.getDataFromEndpointString("http://localhost:" + port + "/");
-
-        assertEquals(expected, result);
-
-    }
-
-    @Test(expected = AdapterException.class)
-    public void getDataFromEndpointStringFail() throws AdapterException {
-        stubFor(get(urlEqualTo("/"))
-                .willReturn(aResponse()
-                        .withStatus(404)
-                        .withBody("")));
-
-        PullRestAdapter.getDataFromEndpointString("http://localhost:" + port + "/");
-
-    }
-}
+//public class PullAdapterTest {
+//    private int port = 4082;
+//
+//    @Rule
+//    public WireMockRule wireMockRule = new WireMockRule(port);
+//
+//
+//    @Test
+//    public void getDataFromEndpointStringSuccess() throws AdapterException {
+//        String expected = "EXPECTED_STRING";
+//
+//        stubFor(get(urlEqualTo("/"))
+//                .willReturn(aResponse()
+//                        .withStatus(200)
+//                        .withBody(expected)));
+//
+//        String result = PullRestAdapter.getDataFromEndpointString("http://localhost:" + port + "/");
+//
+//        assertEquals(expected, result);
+//
+//    }
+//
+//    @Test(expected = AdapterException.class)
+//    public void getDataFromEndpointStringFail() throws AdapterException {
+//        stubFor(get(urlEqualTo("/"))
+//                .willReturn(aResponse()
+//                        .withStatus(404)
+//                        .withBody("")));
+//
+//        PullRestAdapter.getDataFromEndpointString("http://localhost:" + port + "/");
+//
+//    }
+//}
