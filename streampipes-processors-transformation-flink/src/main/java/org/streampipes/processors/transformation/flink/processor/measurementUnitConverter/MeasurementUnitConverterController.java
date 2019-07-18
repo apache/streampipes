@@ -18,20 +18,25 @@
 package org.streampipes.processors.transformation.flink.processor.measurementUnitConverter;
 
 import com.github.jqudt.Unit;
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.runtime.RuntimeOptions;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.PropertyScope;
+import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.processors.transformation.flink.config.TransformationFlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.PropertyRequirementsBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.TransformOperations;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.units.UnitProvider;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
@@ -57,12 +62,13 @@ public class MeasurementUnitConverterController extends
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(PropertyRequirementsBuilder
-                            .create()
-                            .measurementUnitPresence()
-                            .build(), Labels.withId
-                            (CONVERT_PROPERTY), PropertyScope.MEASUREMENT_PROPERTY)
+                                    .create()
+                                    .measurementUnitPresence()
+                                    .build(),
+                            Labels.withId(CONVERT_PROPERTY),
+                            PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
-            .requiredSingleValueSelectionFromContainer(Labels.withId(OUTPUT_UNIT), "convert-property")
+            .requiredSingleValueSelectionFromContainer(Labels.withId(OUTPUT_UNIT))
             .outputStrategy(OutputStrategies.transform(TransformOperations
                     .dynamicMeasurementUnitTransformation(CONVERT_PROPERTY, OUTPUT_UNIT)))
             .build();
@@ -94,24 +100,25 @@ public class MeasurementUnitConverterController extends
   }
 
   @Override
-  public List<RuntimeOptions> resolveOptions(String requestId, EventProperty linkedEventProperty) {
-    if (linkedEventProperty instanceof EventPropertyPrimitive && ((EventPropertyPrimitive) linkedEventProperty)
-            .getMeasurementUnit() != null) {
-      Unit measurementUnit = UnitProvider.INSTANCE.getUnit(((EventPropertyPrimitive) linkedEventProperty)
-              .getMeasurementUnit().toString());
-      URI type = measurementUnit.getType();
-      List<Unit> availableUnits = UnitProvider.INSTANCE.getUnitsByType(type);
-      return availableUnits.stream().filter(unit -> !(unit.getResource().toString().equals(measurementUnit
-              .getResource().toString()))).map
-              (unit -> new
-                      RuntimeOptions
-                      (unit
-                              .getLabel(), unit
-                              .getResource()
-                              .toString()))
-              .collect(Collectors
-                      .toList());
-    } else {
+  public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
+    try {
+      EventProperty linkedEventProperty = parameterExtractor.getEventPropertyBySelector(CONVERT_PROPERTY);
+      if (linkedEventProperty instanceof EventPropertyPrimitive && ((EventPropertyPrimitive) linkedEventProperty)
+              .getMeasurementUnit() != null) {
+        Unit measurementUnit = UnitProvider.INSTANCE.getUnit(((EventPropertyPrimitive) linkedEventProperty)
+                .getMeasurementUnit().toString());
+        URI type = measurementUnit.getType();
+        List<Unit> availableUnits = UnitProvider.INSTANCE.getUnitsByType(type);
+        return availableUnits
+                .stream()
+                .filter(unit -> !(unit.getResource().toString().equals(measurementUnit.getResource().toString())))
+                .map(unit -> new Option(unit.getLabel(), unit.getResource().toString()))
+                .collect(Collectors.toList());
+      } else {
+        return new ArrayList<>();
+      }
+    } catch (SpRuntimeException e) {
+      e.printStackTrace();
       return new ArrayList<>();
     }
   }
