@@ -26,6 +26,10 @@ public class CountController extends FlinkDataProcessorDeclarer<CountParameters>
   private static final String SCALE_KEY = "scale";
   private static final String COUNT_MAPPING = "count-mapping";
 
+  static final String HOURS_INTERNAL_NAME = "HOURS";
+  static final String MINUTES_INTERNAL_NAME = "MINUTES";
+  static final String SECONDS_INTERNAL_NAME = "SECONDS";
+
   @Override
   public DataProcessorDescription declareModel() {
 
@@ -42,9 +46,9 @@ public class CountController extends FlinkDataProcessorDeclarer<CountParameters>
                     "http://schema.org/Number")))
             .requiredIntegerParameter(Labels.withId(TIME_WINDOW_KEY))
             .requiredSingleValueSelection(Labels.withId(SCALE_KEY),
-                    Options.from(new Tuple2<>("Hours", "HOURS"),
-                            new Tuple2<>("Minutes", "MINUTES"),
-                            new Tuple2<>("Seconds", "SECONDS")))
+                    Options.from(new Tuple2<>("Hours", HOURS_INTERNAL_NAME),
+                            new Tuple2<>("Minutes", MINUTES_INTERNAL_NAME),
+                            new Tuple2<>("Seconds", SECONDS_INTERNAL_NAME)))
             .build();
   }
 

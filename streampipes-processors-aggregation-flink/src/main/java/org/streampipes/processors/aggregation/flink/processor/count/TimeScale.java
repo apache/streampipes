@@ -17,9 +17,9 @@ public class TimeScale {
 	}
 
 	public Time toFlinkTime(Integer count) {
-		if (this.value.equals("minutes")) {
+		if (this.value.equals(CountController.MINUTES_INTERNAL_NAME)) {
 			return Time.minutes(count);
-		} else if (this.value.equals("seconds")) {
+		} else if (this.value.equals(CountController.MINUTES_INTERNAL_NAME)) {
 			return Time.seconds(count);
 		} else {
 			return Time.hours(count);
