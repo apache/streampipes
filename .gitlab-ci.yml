@@ -41,7 +41,7 @@ docker-connect-container:
      - build
    script:
      - ls
-     - cd streampipes-connect-container/
+     - cd streampipes-connect-adapter/
      - export MVN_VERSION=0.62.1-SNAPSHOT
 #     - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
