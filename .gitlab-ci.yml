@@ -28,6 +28,7 @@ build:
     expire_in:  1 hour
   except:
       - /release-.*$/
+      - ./*/target/*.jar
       - ./target/mvn_version
 
 
