@@ -47,7 +47,7 @@ export class RestService {
                 };
                 this.http.post("/streampipes-connect/api/v1/"
                     + this.authStatusService.email
-                    + "/master/adapters/"
+                    + "/master/resolvable/"
                     + encodeURIComponent(adapterId)
                     + "/configurations", serialized, httpOptions).pipe(map(response => {
                     const r = this.tsonLdSerializerService.fromJsonLd(response, 'sp:RuntimeOptionsResponse');
