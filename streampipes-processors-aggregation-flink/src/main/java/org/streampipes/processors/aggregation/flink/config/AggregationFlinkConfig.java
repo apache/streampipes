@@ -26,7 +26,7 @@ public enum AggregationFlinkConfig implements PeConfig {
   public static final String JAR_FILE = "./streampipes-processing-element-container.jar";
 
   private final static String service_id = "pe/org.streampipes.processors.aggregation.flink";
-  private final static String service_name = "Processors Aggregation Flink";
+  private final static String service_name = "Processors TimeAggregation Flink";
   private final static String service_container_name = "processors-aggregation-flink";
 
 

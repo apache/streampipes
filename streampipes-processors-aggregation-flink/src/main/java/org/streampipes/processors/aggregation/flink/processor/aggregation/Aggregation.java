@@ -16,40 +16,37 @@
 
 package org.streampipes.processors.aggregation.flink.processor.aggregation;
 
-import org.apache.flink.streaming.api.functions.windowing.AllWindowFunction;
-import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
-import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 import org.streampipes.model.runtime.Event;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class Aggregation implements WindowFunction<Event, Event, String, TimeWindow>,
-        AllWindowFunction<Event, Event, TimeWindow> {
+public class Aggregation {
 
   private AggregationType aggregationType;
   private String fieldToAggregate;
   private String keyIdentifier;
-  private Boolean keyedStream = false;
+  private Boolean keyedStream;
 
+  // Used for keyed streams
   public Aggregation(AggregationType aggregationType, String fieldToAggregate, String keyIdentifier) {
-    this(aggregationType, fieldToAggregate);
-    this.keyedStream = true;
+    this.aggregationType = aggregationType;
+    this.fieldToAggregate = fieldToAggregate;
     this.keyIdentifier = keyIdentifier;
+    this.keyedStream = true;
   }
 
+  // Used for not keyed streams
   public Aggregation(AggregationType aggregationType, String fieldToAggregate) {
     this.aggregationType = aggregationType;
     this.fieldToAggregate = fieldToAggregate;
+    this.keyedStream = false;
   }
 
-  @Override
-  public void apply(String key, TimeWindow window, Iterable<Event> input, Collector<Event>
-          out) throws Exception {
-    process(input, out, key);
-  }
 
-  private Double getAggregate(List<Double> values) {
+  protected Double getAggregate(List<Double> values) {
     if (aggregationType == AggregationType.AVG) {
       return values.stream().mapToDouble(Double::doubleValue).average().orElse(0);
     } else if (aggregationType == AggregationType.MAX) {
@@ -59,24 +56,15 @@ public class Aggregation implements WindowFunction<Event, Event, String, TimeWin
     } else {
       return values.stream().mapToDouble(Double::doubleValue).sum();
     }
-
   }
 
-  @Override
-  public void apply(TimeWindow window, Iterable<Event> input, Collector<Event> out)
-          throws
-          Exception {
-    process(input, out, null);
-  }
-
-  private void process(Iterable<Event> input, Collector<Event> out, String key) {
+  protected void process(Iterable<Event> input, Collector<Event> out, String key) {
     List<Double> values = new ArrayList<>();
     Event lastEvent = new Event();
 
     for (Event anInput : input) {
       lastEvent = anInput;
-      if (!keyedStream || (lastEvent.getFieldBySelector(keyIdentifier).getAsPrimitive().getAsString())
-              .equals(key)) {
+      if (!keyedStream || (lastEvent.getFieldBySelector(keyIdentifier).getAsPrimitive().getAsString()).equals(key)) {
         values.add(lastEvent.getFieldBySelector
                 (fieldToAggregate).getAsPrimitive().getAsDouble());
       }

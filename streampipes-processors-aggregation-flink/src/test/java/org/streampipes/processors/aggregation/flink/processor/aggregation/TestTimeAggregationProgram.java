@@ -27,7 +27,7 @@ import org.streampipes.test.generator.InvocationGraphGenerator;
 import java.util.Arrays;
 
 //@RunWith(Parameterized.class)
-public class TestAggregationProgram extends DataStreamTestBase {
+public class TestTimeAggregationProgram extends DataStreamTestBase {
 
 //  @Parameterized.Parameters
 //  public static Iterable<Object[]> algorithm() {
