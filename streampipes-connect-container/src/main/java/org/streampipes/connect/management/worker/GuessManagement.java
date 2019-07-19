@@ -35,14 +35,18 @@ public class GuessManagement {
 
     public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
 
+        LOG.info("Start guessing schema for: " + adapterDescription.getAppId());
         Adapter adapter = AdapterUtils.setAdapter(adapterDescription);
 
         GuessSchema guessSchema;
         try {
             guessSchema = adapter.getSchema(adapterDescription);
+
             for (int i = 0; i < guessSchema.getEventSchema().getEventProperties().size(); i++) {
                 guessSchema.getEventSchema().getEventProperties().get(i).setIndex(i);
             }
+
+            LOG.info("Successfully guessed schema for: " + adapterDescription.getAppId());
         } catch (ParseException e) {
             LOG.error(e.toString());
 

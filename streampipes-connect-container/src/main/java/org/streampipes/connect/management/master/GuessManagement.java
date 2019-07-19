@@ -42,13 +42,15 @@ public class GuessManagement {
     public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
         String workerUrl = new Utils().getWorkerUrl(adapterDescription);
 
-        workerUrl = workerUrl + "/api/v1/admin@streampipes.de/worker/guess/schema";
+        workerUrl = workerUrl + "api/v1/admin@streampipes.de/worker/guess/schema";
 
 
 
         String ad = JsonLdUtils.toJsonLD(adapterDescription);
 
         try {
+
+            LOG.info("Guess schema at: " + workerUrl);
             String responseString = Request.Post(workerUrl)
                     .bodyString(ad, ContentType.APPLICATION_JSON)
                     .connectTimeout(1000)
