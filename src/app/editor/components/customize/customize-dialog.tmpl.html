@@ -1,29 +1,56 @@
-<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'OneOfStaticProperty'">
-    <oneof static-property="ctrl.staticProperty"></oneof>
-</div>
-<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'FreeTextStaticProperty'">
-    <freetext customize-form="ctrl.customizeForm" input-streams="ctrl.selectedElement.inputStreams"
-              static-property="ctrl.staticProperty" mapping-property="ctrl.getMappingProperty(ctrl.staticProperty.properties.mapsTo)"></freetext>
-</div>
-<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'AnyStaticProperty'">
-    <any static-property="ctrl.staticProperty"></any>
-</div>
-<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'DomainStaticProperty'">
-    <domain-concept-input static-property="ctrl.staticProperty"
-                          auto-complete-static-property="ctrl.staticProperty"></domain-concept-input>
-</div>
-<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MappingPropertyUnary'">
-    <mapping-property-unary selected-element="ctrl.selectedElement" static-property="ctrl.staticProperty" display-recommended="ctrl.displayRecommended"></mapping-property-unary>
-</div>
-<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MappingPropertyNary'">
-    <mapping-property-nary selected-element="ctrl.selectedElement" static-property="ctrl.staticProperty" display-recommended="ctrl.displayRecommended"></mapping-property-nary>
-</div>
-<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MatchingProperty'">
-    <matching-property static-property="ctrl.staticProperty"></matching-property>
-</div>
-<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'CollectionStaticProperty'">
-    <collection-static-property static-property="ctrl.staticProperty"></collection-static-property>
-</div>
-<div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'RuntimeResolvableOneOfStaticProperty'">
-    <oneof-remote static-property="ctrl.staticProperty" selected-element="ctrl.selectedElement" ></oneof-remote>
+<div layout="column" ng-class="(ctrl.staticProperty.properties.staticPropertyType === 'StaticPropertyGroup') ? '' : 'customize-item-main sp-blue-border-nopadding'">
+    <div class="customize-item-title sp-blue-bg" layout="row" flex="100"
+         layout-align="space-between center" ng-if="(ctrl.staticProperty.properties.staticPropertyType !== 'StaticPropertyGroup')">
+        <div>
+            {{ctrl.staticProperty.properties.label}}
+        </div>
+        <div style="padding-left:10px;">
+            <md-icon md-svg-icon="action:ic_help_24px" aria-label="Description">
+                <md-tooltip md-direction="left">{{ctrl.staticProperty.properties.description}}
+                </md-tooltip>
+            </md-icon>
+        </div>
+    </div>
+    <div ng-class="(ctrl.staticProperty.properties.staticPropertyType === 'StaticPropertyGroup') ? '' : 'customize-item-content'">
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'OneOfStaticProperty'">
+            <oneof static-property="ctrl.staticProperty"></oneof>
+        </div>
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'FreeTextStaticProperty'">
+            <freetext customize-form="ctrl.customizeForm" input-streams="ctrl.selectedElement.inputStreams"
+                      static-property="ctrl.staticProperty"
+                      mapping-property="ctrl.getMappingProperty(ctrl.staticProperty.properties.mapsTo)"></freetext>
+        </div>
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'AnyStaticProperty'">
+            <any static-property="ctrl.staticProperty"></any>
+        </div>
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'DomainStaticProperty'">
+            <domain-concept-input static-property="ctrl.staticProperty"
+                                  auto-complete-static-property="ctrl.staticProperty"></domain-concept-input>
+        </div>
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MappingPropertyUnary'">
+            <mapping-property-unary selected-element="ctrl.selectedElement" static-property="ctrl.staticProperty"
+                                    display-recommended="ctrl.displayRecommended"></mapping-property-unary>
+        </div>
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MappingPropertyNary'">
+            <mapping-property-nary selected-element="ctrl.selectedElement" static-property="ctrl.staticProperty"
+                                   display-recommended="ctrl.displayRecommended"></mapping-property-nary>
+        </div>
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'MatchingProperty'">
+            <matching-property static-property="ctrl.staticProperty"></matching-property>
+        </div>
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'CollectionStaticProperty'">
+            <collection-static-property static-property="ctrl.staticProperty"></collection-static-property>
+        </div>
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'RuntimeResolvableOneOfStaticProperty'">
+            <oneof-remote static-property="ctrl.staticProperty" selected-element="ctrl.selectedElement"></oneof-remote>
+        </div>
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'StaticPropertyAlternatives'">
+            <alternative customize-form="ctrl.customizeForm" display-recommended="ctrl.displayRecommended"
+                         static-property="ctrl.staticProperty" selected-element="ctrl.selectedElement"></alternative>
+        </div>
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'StaticPropertyGroup'">
+            <group customize-form="ctrl.customizeForm" display-recommended="ctrl.displayRecommended"
+                   static-property="ctrl.staticProperty" selected-element="ctrl.selectedElement"></group>
+        </div>
+    </div>
 </div>

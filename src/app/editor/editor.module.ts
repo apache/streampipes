@@ -51,6 +51,8 @@ import elementNameFilter from './filter/element-name.filter';
 import {PropertySelectionComponent} from "./components/customoutput/propertyselection/property-selection.component";
 import {PipelineElementDocumentationComponent} from "./components/pipeline-element-documentation/pipeline-element-documentation.component";
 import {CustomOutputValidatorDirective} from "./validator/text/custom-output-validator.directive";
+import {AlternativeComponent} from "./components/alternative/alternative.component";
+import {GroupComponent} from "./components/group/group.component";
 
 
 export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate', 'datatables', 'ng-showdown'])
@@ -84,6 +86,8 @@ export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimat
     .component('pipelineElementIconStand', PipelineElementIconStandComponent)
     .component('pipelineElementOptions', PipelineElementOptionsComponent)
     .component('pipelineElementDocumentation', PipelineElementDocumentationComponent)
+    .component('alternative', AlternativeComponent)
+    .component('group', GroupComponent)
     .service('EditorDialogManager', EditorDialogManager)
     .service('PipelineElementRecommendationService', PipelineElementRecommendationService)
     .service('PipelineValidationService', PipelineValidationService)

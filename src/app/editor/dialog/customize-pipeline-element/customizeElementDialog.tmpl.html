@@ -53,31 +53,11 @@
                             </div>
                         </div>
                         <div ng-repeat="staticProperty in ctrl.selectedElement.staticProperties">
-                            <div layout="column" class="customize-item-main sp-blue-border-nopadding">
-                                <div class="customize-item-title sp-blue-bg" layout="row" flex="100"
-                                     layout-align="space-between center">
-                                    <div>
-                                        {{staticProperty.properties.label}}
-                                    </div>
-                                    <div style="padding-left:10px;">
-                                        <!--
-                                        <i class="material-icons" ng-click="setCurrentStaticProperty(staticProperty)"
-                                           style="color: white;" popup-show="modules/editor/templates/popup.html"
-                                           popup-placement="bottom">help</i>
-                                        -->
-                                        <md-icon md-svg-icon="action:ic_help_24px" aria-label="Description">
-                                            <md-tooltip md-direction="left">{{staticProperty.properties.description}}
-                                            </md-tooltip>
-                                        </md-icon>
-                                    </div>
-                                </div>
-                                <div class="customize-item-content">
                                     <customize-dialog customize-form="ctrl.customizeForm"
                                                       selected-element="ctrl.selectedElement"
                                                       static-property="staticProperty"
                                                       display-recommended="ctrl.displayRecommended"></customize-dialog>
-                                </div>
-                            </div>
+
                         </div>
                         <div ng-repeat="outputStrategy in ctrl.selectedElement.outputStrategies">
                             <div ng-if="outputStrategy.type === 'org.streampipes.model.output.ReplaceOutputStrategy'">

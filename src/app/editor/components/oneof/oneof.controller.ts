@@ -7,19 +7,10 @@ export class OneOfController {
     constructor() { }
 
     $onInit() {
-        this.loadSavedProperty();
     }
 
-    loadSavedProperty() {
-        angular.forEach(this.staticProperty.properties.options, option => {
-            if (option.selected) {
-                this.staticProperty.properties.currentSelection = option;
-            }
-        });
-    }
-
-    toggleOption(option, options) {
-        angular.forEach(options, function (o) {
+    change(option) {
+        angular.forEach(this.staticProperty.properties.options, function (o) {
             if (o.elementId == option.elementId) {
                 o.selected = true;
             } else {
@@ -28,11 +19,4 @@ export class OneOfController {
         });
     }
 
-    exists(option, options) {
-        angular.forEach(options, o => {
-            if (o.elementId == option.elementId) {
-                return o.selected;
-            }
-        });
-    }
 }
