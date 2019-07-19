@@ -222,9 +222,9 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
 
     private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
         ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
-        String host = extractor.singleValue(ROS_HOST_KEY, String.class);
-        String topic = extractor.singleValue(TOPIC_KEY, String.class);
-        int port = extractor.singleValue(ROS_PORT_KEY, Integer.class);
+        this.host = extractor.singleValue(ROS_HOST_KEY, String.class);
+        this.topic = extractor.singleValue(TOPIC_KEY, String.class);
+        this.port = extractor.singleValue(ROS_PORT_KEY, Integer.class);
     }
 
     // Ignore for now, but is interesting for future implementations
