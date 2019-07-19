@@ -112,5 +112,9 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <finalName>streampipes-connect-adapter</finalName>
+    </build>
+
 
 </project>
