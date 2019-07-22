@@ -38,6 +38,7 @@ import org.streampipes.model.connect.rules.Schema.CreateNestedRuleDescription;
 import org.streampipes.model.connect.rules.Schema.DeleteRuleDescription;
 import org.streampipes.model.connect.rules.Schema.MoveRuleDescription;
 import org.streampipes.model.connect.rules.Schema.RenameRuleDescription;
+import org.streampipes.model.connect.rules.Stream.EventRateTransformationRuleDescription;
 import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
 import org.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
@@ -201,7 +202,8 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             StaticPropertyAlternatives.class,
             StaticPropertyGroup.class,
             ConnectWorkerContainer.class,
-            RuntimeOptionsResponse.class
+            RuntimeOptionsResponse.class,
+            EventRateTransformationRuleDescription.class
     );
   }
 }

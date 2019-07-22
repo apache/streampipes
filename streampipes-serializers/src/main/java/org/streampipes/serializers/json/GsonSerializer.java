@@ -28,6 +28,7 @@ import org.streampipes.model.connect.rules.Schema.CreateNestedRuleDescription;
 import org.streampipes.model.connect.rules.Schema.DeleteRuleDescription;
 import org.streampipes.model.connect.rules.Schema.MoveRuleDescription;
 import org.streampipes.model.connect.rules.Schema.RenameRuleDescription;
+import org.streampipes.model.connect.rules.Stream.EventRateTransformationRuleDescription;
 import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
 import org.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
@@ -97,7 +98,8 @@ public class GsonSerializer {
             .registerSubtype(AddTimestampRuleDescription.class, "org.streampipes.model.AddTimestampRuleDescription")
             .registerSubtype(AddValueTransformationRuleDescription.class, "org.streampipes.model.AddValueTransformationRuleDescription")
             .registerSubtype(UnitTransformRuleDescription.class, "org.streampipes.model.UnitTransformRuleDescription")
-            .registerSubtype(TimestampTranfsformationRuleDescription.class, "org.streampipes.model.TimestampTranfsformationRuleDescription"));
+            .registerSubtype(TimestampTranfsformationRuleDescription.class, "org.streampipes.model.TimestampTranfsformationRuleDescription")
+            .registerSubtype(EventRateTransformationRuleDescription.class, "org.streampipes.model.EventRateTransformationRuleDescription"));
 
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "type")
             .registerSubtype(SpecificAdapterSetDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterSetDescription")

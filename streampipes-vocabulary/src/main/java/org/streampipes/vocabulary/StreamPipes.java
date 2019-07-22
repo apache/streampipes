@@ -291,6 +291,8 @@ public class StreamPipes {
   public static final String OLD_RUNTIME_NAME = NS + "oldRuntimeKey";
   public static final String NEW_RUNTIME_NAME = NS + "newRuntimeKey";
   public static final String FILTER_TIME_WINDOW = NS + "filterTimeWindow";
+  public static final String AGGREGATION_TIME_WINDOW = NS + "aggregationTimeWindow";
+  public static final String AGGREGATION_TYPE = NS + "aggregationType";
 
   //Class
 
@@ -302,6 +304,7 @@ public class StreamPipes {
   public static final String CREATE_NESTED_RULE_DESCRIPTION = NS + "CreateNestedRuleDescription";
 
   public static final String REMOVE_DUPLICATES_RULE_DESCRIPTION = NS + "RemoveDuplicatesRuleDescription";
+  public static final String EVENT_RATE_RULE_DESCRIPTION = NS + "EventRateRuleDescription";
 
   public static final String TIMESTAMP_TRANSFORMATION_RULE_DESCRIPTION = NS + "TimestampTransformationRuleDescription";
   public static final String ADD_TIMESTAMP_RULE_DESCRIPTION = NS + "AddTimestampRuleDescription";
