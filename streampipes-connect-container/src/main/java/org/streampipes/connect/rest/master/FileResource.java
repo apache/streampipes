@@ -20,6 +20,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.management.master.FileManagement;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.client.messages.Notifications;
@@ -27,8 +28,6 @@ import org.streampipes.model.client.messages.Notifications;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 
 @Path("/api/v1/{username}/master/file")
@@ -46,13 +45,24 @@ public class FileResource extends AbstractContainerResource {
         this.fileManagement = fileManagement;
     }
 
+    @Deprecated
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadFiles(@FormDataParam("file_upload") InputStream uploadedInputStream,
+    public Response addFileForAdapter(@FormDataParam("file_upload") InputStream uploadedInputStream,
         @FormDataParam("file_upload") FormDataContentDisposition fileDetail) {
 
+        return Response.status(410).build();
+    }
+
+    @POST
+    @Path("/{appId}")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response addFileForAdapter(@PathParam("appId") String id, @PathParam("username") String username,
+                                      @FormDataParam("file_upload") InputStream uploadedInputStream,
+                                      @FormDataParam("file_upload") FormDataContentDisposition fileDetail) {
+
         try {
-            String filePath = fileManagement.saveFile(uploadedInputStream, fileDetail.getFileName());
+            String filePath = fileManagement.saveFileAtWorker(id, uploadedInputStream, fileDetail.getFileName(), username);
 //            return ok("{fileName: " + filePath + "}");
             return ok(Notifications.success(filePath));
         } catch (Exception e) {
@@ -62,43 +72,70 @@ public class FileResource extends AbstractContainerResource {
     }
 
 
+
+    @Deprecated
     @GET
   //  @Produces({MediaType.F})
     @Path("/{filename}")
     public Response getFile(@PathParam("filename") String fileName) {
-        try {
-            File file = fileManagement.getFile(fileName);
-            logger.info("Downloaded file: " + fileName);
-            return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
-                    .header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
-                    .build();
-        } catch (IOException e) {
-            logger.error(e.toString());
-            return fail();
-        }
+
+        return Response.status(410).build();
     }
 
     @GET
-    public Response getFilePahts(@PathParam("username") String username) {
+    @Path("/{appId}/{filename}")
+    public Response getFileFromWorker(@PathParam("appId") String id, @PathParam("filename") String fileName,
+                                            @PathParam("username") String username) {
         try {
-            return ok(fileManagement.getFilePahts(username));
-        } catch (IOException e) {
+            InputStream fileStream = fileManagement.getFileFromWorker(id, fileName, username);
+            return Response.ok(fileStream, MediaType.APPLICATION_OCTET_STREAM)
+                    .header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
+                    .build();
+        } catch (AdapterException e) {
+            logger.error(e.toString());
+            return fail();
+        }
+
+    }
+
+    @Deprecated
+    @GET
+    public Response getFilePahts(@PathParam("username") String username) {
+
+        return Response.status(410).build();
+    }
+
+    @GET
+    public Response getAllFilePathsFromWorker(@PathParam("username") String username) {
+        try {
+            return ok(fileManagement.getAllFilePathsFromWorker(username));
+        } catch (AdapterException e) {
             logger.error(e.toString());
             return fail();
         }
     }
 
 
+    @Deprecated
     @DELETE
     @Path("/{filename}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteFile(@PathParam("filename") String fileName) {
+
+        return Response.status(410).build();
+    }
+
+    @DELETE
+    @Path("/{appId}/{filename}")
+    public Response deleteFile(@PathParam("appId") String id, @PathParam("filename") String fileName,
+                               @PathParam("username") String username) {
         try {
-            fileManagement.deleteFile(fileName);
+            fileManagement.deleteFileFromWorker(id, fileName, username);
             return ok();
-        } catch (IOException e) {
+        } catch (AdapterException e) {
             logger.error(e.toString());
-            return fail();        }
+            return fail();
+        }
     }
 
 

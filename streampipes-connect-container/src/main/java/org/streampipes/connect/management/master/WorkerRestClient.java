@@ -17,8 +17,12 @@
 
 package org.streampipes.connect.management.master;
 
+import com.google.gson.Gson;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.InputStreamBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.exception.AdapterException;
@@ -30,6 +34,7 @@ import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -145,6 +150,83 @@ public class WorkerRestClient {
 
     }
 
+    public static String saveFileAtWorker(String baseUrl, InputStream inputStream, String fileName) throws AdapterException {
+        String url = baseUrl + "/worker/file";
+        logger.info("Trying to start save file on endpoint: " + url);
+
+
+        HttpEntity httpEntity = new MultipartEntity();
+        ((MultipartEntity) httpEntity).addPart("file_upload", new InputStreamBody(inputStream, fileName));
+
+        try {
+            String responseString = Request.Post(url)
+                    .body(httpEntity)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asString();
+
+            logger.info("File saved successfully at worker");
+            return responseString;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new AdapterException("Could not save file on endpoint " + url);
+        }
+    }
+
+    public static InputStream getFileFromWorker(String baseUrl, String fileName) throws AdapterException {
+        String url = baseUrl + "/worker/file/" + fileName;
+        logger.info("Trying to get file from endpoint: " + url);
+
+        try {
+            InputStream inputStream = Request.Get(url)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asStream();
+
+            logger.info("Got File from worker successfully from worker");
+            return inputStream;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new AdapterException("Could not get file from endpoint " + url);
+        }
+    }
+
+    public static List<String> getAllFilePathsFromWorker(java.lang.String baseUrl) throws AdapterException {
+        String url = baseUrl + "/worker/file/";
+        logger.info("Trying to get file paths from endpoint: " + url);
+
+        try {
+            String stringResponse = Request.Get(url)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asString();
+            List<String> paths = new Gson().fromJson(stringResponse, List.class);
+
+            logger.info("Got File paths successfully");
+            return paths;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new AdapterException("Could not get file from endpoint " + url);
+        }
+    }
+
+    public static void deleteFileFromWorker(String baseUrl, String fileName) throws AdapterException {
+        String url = baseUrl + "/worker/file/";
+        logger.info("Trying to delete file from endpoint: " + url);
+
+        try {
+            Request.Delete(url)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute();
+
+            logger.info("Deleted File successfully");
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new AdapterException("Could not delete file from endpoint " + url);
+        }
+    }
+
    private static AdapterDescription getAdapterDescriptionById(AdapterStorageImpl adapterStorage, String id) {
         AdapterDescription adapterDescription = null;
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
@@ -164,6 +246,9 @@ public class WorkerRestClient {
             throw new RuntimeException(ex.getCause());
         }
     }
+
+
+
 
 }
 
