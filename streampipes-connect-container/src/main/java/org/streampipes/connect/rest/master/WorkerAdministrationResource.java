@@ -50,9 +50,9 @@ public class WorkerAdministrationResource extends AbstractContainerResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addWorkerContainer(String connectWorkerContainerString) {
         ConnectWorkerContainer connectWorkerContainer = JsonLdUtils.fromJsonLd(connectWorkerContainerString, ConnectWorkerContainer.class, StreamPipes.CONNECT_WORKER_CONTAINER);
+        LOG.info("Worker container: " + connectWorkerContainer.getEndpointUrl() + " was detected");
         this.workerAdministrationManagement.register(connectWorkerContainer);
 
-        LOG.info("Worker container: " + connectWorkerContainer.getEndpointUrl() + " was registered");
 
         return ok(Notifications.success("Worker Container sucessfully added"));
     }

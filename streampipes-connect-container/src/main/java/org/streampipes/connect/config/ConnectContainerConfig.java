@@ -29,17 +29,14 @@ public enum ConnectContainerConfig {
   ConnectContainerConfig() {
     config = SpConfig.getSpConfig("connect-container");
 
-    config.register(ConfigKeys.BACKEND_HOST, "backend", "Hostname for backend");
-    config.register(ConfigKeys.BACKEND_PORT, 8030, "Port for backend");
-
     config.register(ConfigKeys.KAFKA_HOST, "kafka", "Hostname for backend service for kafka");
     config.register(ConfigKeys.KAFKA_PORT, 9092, "Port for backend service for kafka");
 
+    config.register(ConfigKeys.BACKEND_HOST, "backend", "Hostname for backend");
+    config.register(ConfigKeys.BACKEND_PORT, 8030, "Port for backend");
+
     config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT, Config.MASTER_PORT, "The port of the connect container");
     config.register(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST, "connect-master", "The hostname of the connect container");
-
-    config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT, Config.WORKER_PORT, "The port of the connect container");
-    config.register(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST, "connect-worker", "The hostname of the connect container");
 
     config.register(ConfigKeys.DATA_LOCATION,"/data/", "Folder that stores all the uploaded data");
 
@@ -47,10 +44,6 @@ public enum ConnectContainerConfig {
 
   public String getBackendApiUrl() {
     return config.getString(ConfigKeys.BACKEND_HOST) + ":" + config.getInteger(ConfigKeys.BACKEND_PORT) + "/streampipes-backend/";
-  }
-
-  public String getConnectContainerWorkerUrl() {
-    return "http://" + config.getString(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST) + ":" + config.getInteger(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT) + "/";
   }
 
   public String getConnectContainerMasterUrl() {
@@ -65,6 +58,18 @@ public enum ConnectContainerConfig {
     return config.getInteger(ConfigKeys.BACKEND_PORT);
   }
 
+  public String getConnectContainerMasterHost() {
+    return config.getString(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST);
+  }
+
+  public Integer getConnectContainerMasterPort() {
+    return config.getInteger(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT);
+  }
+
+  public String getDataLocation() {
+    return config.getString(ConfigKeys.DATA_LOCATION);
+  }
+
   public String getKafkaHost() {
     return config.getString(ConfigKeys.KAFKA_HOST);
   }
@@ -76,34 +81,6 @@ public enum ConnectContainerConfig {
   public String getKafkaUrl() {
     return getKafkaHost() + ":" + getKafkaPort();
   }
-
-  public void setKafkaHost(String s) {
-    config.setString(ConfigKeys.KAFKA_HOST, s);
-  }
-
-  public String getConnectContainerMasterHost() {
-    return config.getString(ConfigKeys.CONNECT_CONTAINER_MASTER_HOST);
-  }
-
-  public Integer getConnectContainerMasterPort() {
-    return config.getInteger(ConfigKeys.CONNECT_CONTAINER_MASTER_PORT);
-  }
-
-
-
-  public String getConnectContainerWorkerHost() {
-    return config.getString(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST);
-  }
-
-  public Integer getConnectContainerWorkerPort() {
-    return config.getInteger(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT);
-  }
-
-  public String getDataLocation() {
-    return config.getString(ConfigKeys.DATA_LOCATION);
-  }
-
-
 
 
 }

@@ -43,18 +43,9 @@ import org.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
-import org.streampipes.model.graph.DataProcessorDescription;
-import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.graph.DataSinkDescription;
-import org.streampipes.model.graph.DataSinkInvocation;
-import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.model.grounding.JmsTransportProtocol;
-import org.streampipes.model.grounding.KafkaTransportProtocol;
-import org.streampipes.model.grounding.SimpleTopicDefinition;
-import org.streampipes.model.grounding.TransportFormat;
-import org.streampipes.model.grounding.TransportProtocol;
-import org.streampipes.model.grounding.WildcardTopicDefinition;
+import org.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.streampipes.model.graph.*;
+import org.streampipes.model.grounding.*;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.streampipes.model.output.*;
 import org.streampipes.model.quality.*;
@@ -84,8 +75,6 @@ import org.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.streampipes.model.staticproperty.SupportedProperty;
-import org.streampipes.model.schema.*;
-import org.streampipes.model.staticproperty.*;
 import org.streampipes.model.template.BoundPipelineElement;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.model.template.PipelineTemplateDescriptionContainer;
@@ -210,7 +199,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             RuntimeOptionsResponse.class,
             StaticPropertyAlternative.class,
             StaticPropertyAlternatives.class,
-            StaticPropertyGroup.class
+            StaticPropertyGroup.class,
             ConnectWorkerContainer.class,
             RuntimeOptionsResponse.class
     );

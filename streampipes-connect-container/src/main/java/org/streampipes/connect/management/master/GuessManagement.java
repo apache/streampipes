@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.exception.ParseException;
 import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 
@@ -41,24 +40,17 @@ public class GuessManagement {
     }
 
     public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
+        String workerUrl = new Utils().getWorkerUrl(adapterDescription);
 
-        String id = "";
-
-        if (adapterDescription instanceof GenericAdapterDescription) {
-            id = ((GenericAdapterDescription) (adapterDescription)).getProtocolDescription().getAppId();
-        } else {
-            id = adapterDescription.getAppId();
-        }
-
-
-        String workerUrl = this.workerAdministrationManagement.getWorkerUrl(id);
-        workerUrl = workerUrl + "/api/v1/admin@streampipes.de/worker/guess/schema";
+        workerUrl = workerUrl + "api/v1/admin@streampipes.de/worker/guess/schema";
 
 
 
         String ad = JsonLdUtils.toJsonLD(adapterDescription);
 
         try {
+
+            LOG.info("Guess schema at: " + workerUrl);
             String responseString = Request.Post(workerUrl)
                     .bodyString(ad, ContentType.APPLICATION_JSON)
                     .connectTimeout(1000)

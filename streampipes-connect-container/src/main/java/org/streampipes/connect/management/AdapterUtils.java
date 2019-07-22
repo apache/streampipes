@@ -79,7 +79,7 @@ public class AdapterUtils {
         }
 
         if (adapter == null) {
-            adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterDescription.getAppId());
+            adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterDescription.getAppId()).getInstance(adapterDescription);
         }
 
         return adapter;

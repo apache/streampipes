@@ -23,9 +23,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.config.ConnectContainerConfig;
-import org.streampipes.connect.management.master.AdapterMasterManagement;
 import org.streampipes.connect.rest.master.*;
 
 import javax.ws.rs.core.UriBuilder;
@@ -39,33 +37,17 @@ public class AdapterMasterContainer extends AdapterContainer {
 
     public static void main(String... args) throws InterruptedException {
 
-        ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl();
+        String url = ConnectContainerConfig.INSTANCE.getConnectContainerMasterUrl();
 
         LOG.info("Started StreamPipes Connect Resource in MASTER mode");
         ResourceConfig config = new ResourceConfig(getMasterApiClasses());
         URI baseUri = UriBuilder
-                .fromUri(Config.getMasterBaseUrl())
+                .fromUri(url)
                 .build();
 
         boolean couchDbAvailable = true;
 
-        do {
-
-            // Start all installed adapters on restart of master
-            try {
-                AdapterMasterManagement.startAllStreamAdapters();
-                couchDbAvailable = true;
-            } catch (AdapterException e) {
-                LOG.error("Could not start all installed stream adapters", e);
-                couchDbAvailable = true;
-            } catch (Exception e) {
-                LOG.error("", e);
-                LOG.error("Could not connect to couch db. Try again in 2 seconds");
-                couchDbAvailable = false;
-                Thread.sleep(2000);
-            }
-        } while (!couchDbAvailable);
-
+        couchDbAvailable = true;
 
         Server server = JettyHttpContainerFactory.createServer(baseUri, config);
 

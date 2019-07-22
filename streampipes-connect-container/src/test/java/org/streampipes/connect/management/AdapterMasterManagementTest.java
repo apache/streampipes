@@ -32,19 +32,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class AdapterMasterManagementTest {
-    @Test
-    public void getAdapterSuccess() throws AdapterException {
-        String id = GenericAdapterStreamDescription.ID;
-        List<AdapterDescription> adapterDescriptions = Arrays.asList(new GenericAdapterStreamDescription());
-        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
-        when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
-
-        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement();
-
-        AdapterDescription result = adapterMasterManagement.getAdapter(id, adapterStorage);
-
-        assertEquals(id, result.getUri());
-    }
 
     @Test(expected = AdapterException.class)
     public void getAdapterFailNull() throws AdapterException {

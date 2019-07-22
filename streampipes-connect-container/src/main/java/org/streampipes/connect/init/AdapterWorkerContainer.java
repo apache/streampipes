@@ -48,20 +48,34 @@ public abstract class AdapterWorkerContainer extends AdapterContainer {
 
         ResourceConfig config = new ResourceConfig(getWorkerApiClasses());
 
+        LOG.info("Started StreamPipes Connect Resource in WORKER mode");
         URI baseUri = UriBuilder
                 .fromUri(workerUrl)
                 .build();
 
-
-        LOG.info("Started StreamPipes Connect Resource in WORKER mode");
-//        config = new ResourceConfig(getWorkerApiClasses());
-        baseUri = UriBuilder
-                .fromUri(workerUrl)
-                .build();
-
-        MasterRestClient.register(masterUrl, getContainerDescription(workerUrl));
-
         Server server = JettyHttpContainerFactory.createServer(baseUri, config);
+
+
+        boolean connected = false;
+
+        while (!connected) {
+            LOG.info("Trying to connect to master: " + masterUrl);
+            connected = MasterRestClient.register(masterUrl, getContainerDescription(workerUrl));
+
+            if (!connected) {
+                LOG.info("Retrying in 5 seconds");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+        LOG.info("Successfully connected to master: " + masterUrl + " Worker is now running.");
+
+
     }
 
     private ConnectWorkerContainer getContainerDescription(String endpointUrl) {

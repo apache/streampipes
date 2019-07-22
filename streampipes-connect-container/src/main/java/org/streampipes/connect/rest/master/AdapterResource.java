@@ -20,7 +20,6 @@ package org.streampipes.connect.rest.master;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.management.AdapterDeserializer;
 import org.streampipes.connect.management.master.AdapterMasterManagement;
 import org.streampipes.connect.management.master.Utils;
@@ -45,16 +44,9 @@ public class AdapterResource extends AbstractContainerResource {
 
     private AdapterMasterManagement adapterMasterManagement;
 
-    private String connectContainerEndpoint;
 
     public AdapterResource() {
         this.adapterMasterManagement = new AdapterMasterManagement();
-        this.connectContainerEndpoint = ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl();
-    }
-
-    public AdapterResource(String connectContainerEndpoint) {
-        this.adapterMasterManagement = new AdapterMasterManagement();
-        this.connectContainerEndpoint = connectContainerEndpoint;
     }
 
     @POST
@@ -76,7 +68,9 @@ public class AdapterResource extends AbstractContainerResource {
 
         LOG.info("User: " + userName + " starts adapter " + adapterDescription.getAdapterId());
 
-        String newUrl = Utils.addUserNameToApi(connectContainerEndpoint, userName);
+
+        String workerUrl = new Utils().getWorkerUrl(adapterDescription);
+        String newUrl = Utils.addUserNameToApi(workerUrl, userName);
 
         try {
             adapterId = adapterMasterManagement.addAdapter(adapterDescription, newUrl, new
@@ -115,7 +109,11 @@ public class AdapterResource extends AbstractContainerResource {
     public Response deleteAdapter(@PathParam("id") String id, @PathParam("username") String userName) {
 
         try {
-            String newUrl = Utils.addUserNameToApi(connectContainerEndpoint, userName);
+
+            AdapterDescription adapterDescription = adapterMasterManagement.getAdapter(id, new AdapterStorageImpl());
+
+            String workerUrl = new Utils().getWorkerUrlById(adapterDescription.getAppId());
+            String newUrl = Utils.addUserNameToApi(workerUrl, userName);
             adapterMasterManagement.deleteAdapter(id, newUrl);
             return ok(true);
         } catch (AdapterException e) {

@@ -102,7 +102,9 @@ public class SourcesResource extends AbstractContainerResource {
 
         String responseMessage = "Instance of data set " + dataSet.getUri() + " successfully started";
 
-        String newUrl = Utils.addUserNameToApi(ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl(), username);
+        String workerUrl = new Utils().getWorkerUrlById(elementId);
+
+        String newUrl = Utils.addUserNameToApi(workerUrl, username);
         try {
             this.sourcesManagement.addAdapter(newUrl, elementId,  dataSet);
         } catch (AdapterException e) {
@@ -120,7 +122,8 @@ public class SourcesResource extends AbstractContainerResource {
     public Response detach(@PathParam("streamId") String elementId, @PathParam("runningInstanceId") String runningInstanceId, @PathParam("username") String username) {
         String responseMessage = "Instance of set id: " + elementId  + " with instance id: "+ runningInstanceId + " successfully started";
 
-        String newUrl = Utils.addUserNameToApi(ConnectContainerConfig.INSTANCE.getConnectContainerWorkerUrl(), username);
+        String workerUrl = new Utils().getWorkerUrlById(elementId);
+        String newUrl = Utils.addUserNameToApi(workerUrl, username);
 
         try {
             this.sourcesManagement.detachAdapter(newUrl, elementId, runningInstanceId);
