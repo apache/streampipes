@@ -16,25 +16,8 @@
  */
 package org.streampipes.storage.couchdb;
 
-import org.streampipes.storage.api.IAssetDashboardStorage;
-import org.streampipes.storage.api.INoSqlStorage;
-import org.streampipes.storage.api.INotificationStorage;
-import org.streampipes.storage.api.IPipelineCategoryStorage;
-import org.streampipes.storage.api.IPipelineElementConnectionStorage;
-import org.streampipes.storage.api.IPipelineMonitoringDataStorage;
-import org.streampipes.storage.api.IPipelineStorage;
-import org.streampipes.storage.api.IRdfEndpointStorage;
-import org.streampipes.storage.api.IUserStorage;
-import org.streampipes.storage.api.IVisualizationStorage;
-import org.streampipes.storage.couchdb.impl.AssetDashboardStorageImpl;
-import org.streampipes.storage.couchdb.impl.ConnectionStorageImpl;
-import org.streampipes.storage.couchdb.impl.MonitoringDataStorageImpl;
-import org.streampipes.storage.couchdb.impl.NotificationStorageImpl;
-import org.streampipes.storage.couchdb.impl.PipelineCategoryStorageImpl;
-import org.streampipes.storage.couchdb.impl.PipelineStorageImpl;
-import org.streampipes.storage.couchdb.impl.RdfEndpointStorageImpl;
-import org.streampipes.storage.couchdb.impl.UserStorage;
-import org.streampipes.storage.couchdb.impl.VisualizationStorageImpl;
+import org.streampipes.storage.api.*;
+import org.streampipes.storage.couchdb.impl.*;
 
 public enum CouchDbStorageManager implements INoSqlStorage {
 
@@ -83,5 +66,10 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IAssetDashboardStorage getAssetDashboardStorage() {
     return new AssetDashboardStorageImpl();
+  }
+
+  @Override
+  public IDataLakeStorage getDataLakeStorage() {
+    return new DataLakeStorageImpl();
   }
 }

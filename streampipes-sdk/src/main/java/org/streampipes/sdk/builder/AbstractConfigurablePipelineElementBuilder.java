@@ -26,6 +26,8 @@ import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.PropertyValueSpecification;
 import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.streampipes.model.staticproperty.SupportedProperty;
 import org.streampipes.sdk.helpers.Label;
 import org.streampipes.sdk.helpers.Labels;
@@ -609,6 +611,20 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
     return me();
 
+  }
+
+  public BU requiredAlternatives(Label label, StaticPropertyAlternative... alternatives) {
+    StaticPropertyAlternatives alternativesContainer =
+            new StaticPropertyAlternatives(label.getInternalId(), label.getLabel(), label.getDescription());
+
+    for (int i = 0; i < alternatives.length; i++) {
+      alternatives[i].setIndex(i);
+    }
+
+    alternativesContainer.setAlternatives(Arrays.asList(alternatives));
+    this.staticProperties.add(alternativesContainer);
+
+    return me();
   }
 
   public BU requiredSingleValueSelectionFromContainer(Label label) {

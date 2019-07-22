@@ -28,5 +28,9 @@ public enum StaticPropertyType {
     MatchingStaticProperty,
     OneOfStaticProperty,
     RuntimeResolvableAnyStaticProperty,
-    RuntimeResolvableOneOfStaticProperty
+    RuntimeResolvableOneOfStaticProperty,
+    StaticPropertyGroup,
+    StaticPropertyAlternatives,
+    StaticPropertyAlternative;
+
 }

@@ -18,6 +18,8 @@
 package org.streampipes.rest.application;
 
 import org.streampipes.rest.impl.*;
+import org.streampipes.rest.impl.datalake.DataLakeNoUserManagementV3;
+import org.streampipes.rest.impl.datalake.DataLakeNoUserResourceV3;
 import org.streampipes.rest.impl.datalake.DataLakeResource;
 import org.streampipes.rest.impl.datalake.DataLakeResourceV3;
 import org.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
@@ -74,6 +76,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(Version.class);
         apiClasses.add(PipelineElementAsset.class);
         apiClasses.add(DataLakeResourceV3.class);
+        apiClasses.add(DataLakeNoUserResourceV3.class);
 
 
         // Serializers

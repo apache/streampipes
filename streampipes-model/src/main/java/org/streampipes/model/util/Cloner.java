@@ -70,6 +70,9 @@ import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
 import org.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
 import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.streampipes.model.staticproperty.SupportedProperty;
 import org.streampipes.model.template.BoundPipelineElement;
 
@@ -120,8 +123,14 @@ public class Cloner {
       return new CollectionStaticProperty((CollectionStaticProperty) o);
     } else if (o instanceof MatchingStaticProperty) {
       return new MatchingStaticProperty((MatchingStaticProperty) o);
-    } else {
+    } else if (o instanceof MappingPropertyUnary) {
       return new MappingPropertyUnary((MappingPropertyUnary) o);
+    } else if (o instanceof StaticPropertyGroup) {
+      return new StaticPropertyGroup((StaticPropertyGroup) o);
+    } else if (o instanceof StaticPropertyAlternatives) {
+      return new StaticPropertyAlternatives((StaticPropertyAlternatives) o);
+    } else {
+      return new StaticPropertyAlternative((StaticPropertyAlternative) o);
     }
 
   }

@@ -340,4 +340,10 @@ public class StreamPipes {
   public static final String HAS_REQUEST_ID = NS + "hasRequestId";
 
   public static final String CONNECT_WORKER_CONTAINER = NS + "ConnectWorkerContainer";
+
+  public static final String STATIC_PROPERTY_ALTERNATIVE = NS + "StaticPropertyAlternative";
+  public static final String STATIC_PROPERTY_ALTERNATIVES = NS + "StaticPropertyAlternatives";
+  public static final String HAS_STATIC_PROPERTY_ALTERNATIVE = NS + "hasStaticPropertyAlternative";
+  public static final String STATIC_PROPERTY_GROUP = NS + "StaticPropertyGroup";
+  public static final String SHOW_LABEL = NS + "showLabel";
 }

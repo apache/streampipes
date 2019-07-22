@@ -31,6 +31,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
+@Deprecated
 @RdfsClass(StreamPipes.REMOTE_ONE_OF_STATIC_PROPERTY)
 @Entity
 public class RemoteOneOfStaticProperty extends StaticProperty {
