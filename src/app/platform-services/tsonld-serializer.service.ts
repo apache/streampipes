@@ -68,6 +68,7 @@ import {RuntimeResolvableOneOfStaticProperty } from "../connect/model/RuntimeRes
 import {RuntimeResolvableAnyStaticProperty} from "../connect/model/RuntimeResolvableAnyStaticProperty";
 import {RuntimeOptionsRequest} from "../connect/model/connect/runtime/RuntimeOptionsRequest";
 import {RuntimeOptionsResponse} from "../connect/model/connect/runtime/RuntimeOptionsResponse";
+import {EventRateTransformationRuleDescription} from '../connect/model/connect/rules/EventRateTransformationRuleDescription';
 
 
 @Injectable()
@@ -109,6 +110,7 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(RemoveDuplicatesRuleDescription);
         tsonld.addClassMapping(AddTimestampRuleDescription);
         tsonld.addClassMapping(AddValueTransformationRuleDescription);
+        tsonld.addClassMapping(EventRateTransformationRuleDescription);
         tsonld.addClassMapping(MoveRuleDescription);
         tsonld.addClassMapping(UnitTransformRuleDescription);
         tsonld.addClassMapping(DataStreamContainer);

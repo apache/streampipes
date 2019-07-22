@@ -22,6 +22,7 @@ import {RemoveDuplicatesRuleDescription} from '../model/connect/rules/RemoveDupl
 import {IconService} from './icon.service';
 import {TimestampPipe} from '../filter/timestamp.pipe';
 import {EventProperty} from '../schema-editor/model/EventProperty';
+import {EventRateTransformationRuleDescription} from '../model/connect/rules/EventRateTransformationRuleDescription';
 
 @Component({
     selector: 'sp-new-adapter',
@@ -65,6 +66,10 @@ export class NewAdapterComponent implements OnInit {
 
     removeDuplicates: boolean = false;
     removeDuplicatesTime: number;
+
+    eventRateReduction: boolean = false;
+    eventRateTime: number;
+    eventRateMode: string = 'none';
 
     saveInDataLake: boolean = false;
     dataLakeTimestampField: string;
@@ -150,6 +155,9 @@ export class NewAdapterComponent implements OnInit {
     public triggerDialog(storeAsTemplate: boolean) {
         if (this.removeDuplicates) {
             this.adapter.rules.push(new RemoveDuplicatesRuleDescription(this.removeDuplicatesTime));
+        }
+        if(this.eventRateReduction) {
+            this.adapter.rules.push(new EventRateTransformationRuleDescription(this.eventRateTime, this.eventRateMode));
         }
 
         let dialogRef = this.dialog.open(AdapterStartedDialog, {

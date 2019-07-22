@@ -141,6 +141,20 @@
                             <input [disabled]="!isEditable" matInput id="input-removeDuplicatesTime" [ngModelOptions]="{standalone: true}" placeholder="Remove Duplicates Time Window" [(ngModel)]="removeDuplicatesTime">
                         </mat-form-field>
 
+                        <mat-checkbox [disabled]="!isEditable" [(ngModel)]="eventRateReduction" [ngModelOptions]="{standalone: true}" matTooltip="Send maximum one event in the specified time window">Reduce the event rate</mat-checkbox>
+                        <mat-form-field *ngIf="eventRateReduction">
+                            <input [disabled]="!isEditable" type="number" matInput id="input-evenRateTime" [ngModelOptions]="{standalone: true}" [(ngModel)]="eventRateTime"
+                                   placeholder="Time Window (Milliseconds)"  matTooltipPosition="above">
+                        </mat-form-field>
+                        <mat-form-field *ngIf="eventRateReduction">
+                            <mat-label>Event Aggregation</mat-label>
+                            <mat-select [(ngModel)]="eventRateMode" [ngModelOptions]="{standalone: true}">
+                                <mat-option class="md-elevation-z1" style="background: white;" matTooltip="Last Event in Time Window" value="none">
+                                    None
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
                         <mat-checkbox *ngIf="timestampPropertiesInSchema.length == 0" [disabled]="timestampPropertiesInSchema.length == 0" [(ngModel)]="saveInDataLake" [ngModelOptions]="{standalone: true}">Store in Datalake (Timestamp required)</mat-checkbox>
                         <mat-checkbox *ngIf="timestampPropertiesInSchema.length > 0" [(ngModel)]="saveInDataLake" [ngModelOptions]="{standalone: true}">Store in Datalake</mat-checkbox>
                         <mat-form-field *ngIf="saveInDataLake">
