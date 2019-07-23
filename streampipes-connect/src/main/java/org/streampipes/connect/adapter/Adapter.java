@@ -25,8 +25,10 @@ import org.streampipes.connect.adapter.model.Connector;
 import org.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.preprocessing.elements.*;
+import org.streampipes.connect.adapter.preprocessing.transform.stream.EventRateTransformationRule;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.model.connect.rules.Stream.EventRateTransformationRuleDescription;
 import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
 import org.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
@@ -109,6 +111,14 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
             pipelineElements.add(new DuplicateFilterPipelineElement(duplicatesTransformationRuleDescription.getFilterTimeWindow()));
         }
 
+        TransformStreamAdapterElement transformStreamAdapterElement = new TransformStreamAdapterElement();
+        EventRateTransformationRuleDescription eventRateTransformationRuleDescription = getEventRateTransformationRule(adapterDescription);
+        if (eventRateTransformationRuleDescription != null) {
+            transformStreamAdapterElement.addStreamTransformationRuleDescription(eventRateTransformationRuleDescription);
+        }
+        pipelineElements.add(transformStreamAdapterElement);
+
+
 
         // Needed when adapter is
         if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
@@ -121,6 +131,10 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
 
     private RemoveDuplicatesTransformationRuleDescription getRemoveDuplicateRule(T adapterDescription) {
         return getRule(adapterDescription, RemoveDuplicatesTransformationRuleDescription.class);
+    }
+
+    private EventRateTransformationRuleDescription getEventRateTransformationRule(T adapterDescription) {
+        return getRule(adapterDescription, EventRateTransformationRuleDescription.class);
     }
 
     private AddTimestampRuleDescription getTimestampRule(T adapterDescription) {
