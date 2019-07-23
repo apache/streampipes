@@ -41,6 +41,17 @@ public class ParameterExtractor {
         return typeParser.parse(singleValue(internalName), targetClass);
     }
 
+    public String selectedSingleValueInternalName(String internalName) {
+        return ((SelectionStaticProperty) getStaticPropertyByName(internalName))
+                .getOptions()
+                .stream()
+                .filter(Option::isSelected)
+                .findFirst()
+                .get()
+                .getInternalName();
+    }
+
+
     public List<String> selectedMultiValues(String internalName) {
         return ((SelectionStaticProperty) getStaticPropertyByName(internalName))
                 .getOptions()
