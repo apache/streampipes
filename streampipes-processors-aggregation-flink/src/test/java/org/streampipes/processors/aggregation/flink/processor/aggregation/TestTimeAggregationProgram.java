@@ -61,7 +61,8 @@ public class TestTimeAggregationProgram extends DataStreamTestBase {
             Arrays.asList("sensorId"),
             "value",
             10,
-            Arrays.asList("value"));
+            Arrays.asList("value"),
+            true);
   }
 
   private EventTimeInput<Event> makeInputData(AggregationTestData testData) {

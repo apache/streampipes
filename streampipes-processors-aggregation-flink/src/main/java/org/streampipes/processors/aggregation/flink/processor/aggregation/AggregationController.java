@@ -25,13 +25,7 @@ import org.streampipes.processors.aggregation.flink.config.AggregationFlinkConfi
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.EpProperties;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.sdk.helpers.Locales;
-import org.streampipes.sdk.helpers.Options;
-import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.Tuple2;
+import org.streampipes.sdk.helpers.*;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -47,6 +41,10 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
   private static final String OUTPUT_EVERY_KEY = "outputEvery";
   private static final String TIME_WINDOW_KEY = "timeWindow";
   private static final String OPERATION_KEY = "operation";
+  private static final String TIME_COUNT_WINDOW_KEY = "timeCountWindow";
+
+  private static final String TIME_WINDOW = "TIME";
+  private static final String COUNT_WINDOW = "COUNT";
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -70,6 +68,9 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
                     "http://schema.org/Number")))
             .requiredIntegerParameter(Labels.withId(OUTPUT_EVERY_KEY))
             .requiredIntegerParameter(Labels.withId(TIME_WINDOW_KEY))
+            .requiredSingleValueSelection(Labels.withId(TIME_COUNT_WINDOW_KEY),
+                    Options.from(new Tuple2<>("Time Aggregation", TIME_WINDOW),
+                            new Tuple2<>("Count Aggregation", COUNT_WINDOW)))
             .requiredSingleValueSelection(Labels.withId(OPERATION_KEY),
                     Options.from(new Tuple2<>("Average", "AVG"),
                             new Tuple2<>("Sum", "SUM"),
@@ -82,24 +83,29 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
   public FlinkDataProcessorRuntime<AggregationParameters> getRuntime(DataProcessorInvocation graph,
                                                                      ProcessingElementParameterExtractor extractor) {
 
-    List<String> groupBy = new ArrayList<>();
+    List<String> groupBy = extractor.mappingPropertyValues("groupBy");
 
     String aggregate = extractor.mappingPropertyValue(AGGREGATE_KEY);
     Integer outputEvery = extractor.singleValueParameter(OUTPUT_EVERY_KEY, Integer.class);
     Integer timeWindowSize = extractor.singleValueParameter(TIME_WINDOW_KEY, Integer.class);
     String aggregateOperation = extractor.selectedSingleValueInternalName(OPERATION_KEY, String.class);
+    String timeCountWindow = extractor.selectedSingleValueInternalName(TIME_COUNT_WINDOW_KEY, String.class);
 
     List<String> selectProperties = new ArrayList<>();
     for (EventProperty p : graph.getInputStreams().get(0).getEventSchema().getEventProperties()) {
       selectProperties.add(p.getRuntimeName());
     }
 
-    AggregationParameters staticParam = new AggregationParameters(graph, AggregationType.valueOf
-            (aggregateOperation),
-            outputEvery, groupBy,
-            aggregate, timeWindowSize, selectProperties);
+    AggregationParameters staticParam = new AggregationParameters(
+            graph,
+            AggregationType.valueOf(aggregateOperation),
+            outputEvery,
+            groupBy,
+            aggregate,
+            timeWindowSize,
+            selectProperties,
+            timeCountWindow.equals(TIME_WINDOW));
 
     return new AggregationProgram(staticParam, AggregationFlinkConfig.INSTANCE.getDebug());
-
   }
 }

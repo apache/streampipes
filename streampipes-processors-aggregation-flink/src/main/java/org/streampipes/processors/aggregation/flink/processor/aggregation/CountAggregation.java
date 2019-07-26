@@ -22,24 +22,29 @@ import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.util.Collector;
 import org.streampipes.model.runtime.Event;
 
-public class CountAggregation extends Aggregation implements WindowFunction<Event, Event, String, GlobalWindow>,
+import java.util.List;
+import java.util.Map;
+
+public class CountAggregation extends Aggregation implements WindowFunction<Event, Event, Map<String, String>, GlobalWindow>,
         AllWindowFunction<Event, Event, GlobalWindow> {
 
-  public CountAggregation(AggregationType aggregationType, String fieldToAggregate, String keyIdentifier) {
-    super(aggregationType, fieldToAggregate, keyIdentifier);
+  // Keyed stream
+  public CountAggregation(AggregationType aggregationType, String fieldToAggregate, List<String> keyIdentifiers) {
+    super(aggregationType, fieldToAggregate, keyIdentifiers);
   }
 
+  // Not keyed stream
   public CountAggregation(AggregationType aggregationType, String fieldToAggregate) {
     super(aggregationType, fieldToAggregate);
   }
 
   @Override
-  public void apply(String key, GlobalWindow window, Iterable<Event> input, Collector<Event> out) {
-    process(input, out, key);
+  public void apply(Map<String, String> keys, GlobalWindow window, Iterable<Event> input, Collector<Event> out) {
+    process(input, out);
   }
 
   @Override
   public void apply(GlobalWindow window, Iterable<Event> input, Collector<Event> out) throws Exception {
-    process(input, out, null);
+    process(input, out);
   }
 }

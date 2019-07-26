@@ -23,21 +23,32 @@ import java.util.List;
 
 public class AggregationParameters extends EventProcessorBindingParams {
 
+	// timeWindow (true) or countWindow (false)
+	private boolean timeWindow;
 	private AggregationType aggregationType;
 	private int outputEvery;
-	private int timeWindowSize;
+	private int windowSize;
 	private String aggregate;
 	private List<String> groupBy;
 	private List<String> selectProperties;
 	
-	public AggregationParameters(DataProcessorInvocation graph, AggregationType aggregationType, int outputEvery, List<String> groupBy, String aggregate, int timeWindowSize, List<String> selectProperties) {
+	public AggregationParameters(
+			DataProcessorInvocation graph,
+			AggregationType aggregationType,
+			int outputEvery,
+			List<String> groupBy,
+			String aggregate,
+			int windowSize,
+			List<String> selectProperties,
+			boolean timeWindow) {
 		super(graph);
 		this.aggregationType = aggregationType;
 		this.outputEvery = outputEvery;
 		this.groupBy = groupBy;
-		this.timeWindowSize = timeWindowSize;
+		this.windowSize= windowSize;
 		this.aggregate = aggregate;
 		this.selectProperties = selectProperties;
+		this.timeWindow = timeWindow;
 	}
 
 	public AggregationType getAggregationType() {
@@ -52,8 +63,8 @@ public class AggregationParameters extends EventProcessorBindingParams {
 		return groupBy;
 	}
 
-	public int getTimeWindowSize() {
-		return timeWindowSize;
+	public int getWindowSize() {
+		return windowSize;
 	}
 
 	public String getAggregate() {
@@ -64,4 +75,7 @@ public class AggregationParameters extends EventProcessorBindingParams {
 		return selectProperties;
 	}
 
+	public boolean getTimeWindow() {
+		return timeWindow;
+	}
 }

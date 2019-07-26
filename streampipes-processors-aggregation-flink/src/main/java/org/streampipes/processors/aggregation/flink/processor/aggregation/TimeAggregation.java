@@ -22,24 +22,29 @@ import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 import org.streampipes.model.runtime.Event;
 
-public class TimeAggregation extends Aggregation implements WindowFunction<Event, Event, String, TimeWindow>,
+import java.util.List;
+import java.util.Map;
+
+public class TimeAggregation extends Aggregation implements WindowFunction<Event, Event, Map<String, String>, TimeWindow>,
         AllWindowFunction<Event, Event, TimeWindow> {
 
-  public TimeAggregation(AggregationType aggregationType, String fieldToAggregate, String keyIdentifier) {
-    super(aggregationType, fieldToAggregate, keyIdentifier);
+  // Keyed stream
+  public TimeAggregation(AggregationType aggregationType, String fieldToAggregate, List<String> keyIdentifiers) {
+    super(aggregationType, fieldToAggregate, keyIdentifiers);
   }
 
+  // Not keyed stream
   public TimeAggregation(AggregationType aggregationType, String fieldToAggregate) {
     super(aggregationType, fieldToAggregate);
   }
 
   @Override
-  public void apply(String key, TimeWindow window, Iterable<Event> input, Collector<Event> out) {
-    process(input, out, key);
+  public void apply(Map<String, String> keys, TimeWindow window, Iterable<Event> input, Collector<Event> out) {
+    process(input, out);
   }
 
   @Override
   public void apply(TimeWindow window, Iterable<Event> input, Collector<Event> out) throws Exception {
-    process(input, out, null);
+    process(input, out);
   }
 }

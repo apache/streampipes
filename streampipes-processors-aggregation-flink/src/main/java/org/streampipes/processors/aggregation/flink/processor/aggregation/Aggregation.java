@@ -19,30 +19,29 @@ package org.streampipes.processors.aggregation.flink.processor.aggregation;
 import org.apache.flink.util.Collector;
 import org.streampipes.model.runtime.Event;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Aggregation {
+public class Aggregation implements Serializable {
 
   private AggregationType aggregationType;
   private String fieldToAggregate;
-  private String keyIdentifier;
-  private Boolean keyedStream;
+  private List<String> keyIdentifiers;
 
   // Used for keyed streams
-  public Aggregation(AggregationType aggregationType, String fieldToAggregate, String keyIdentifier) {
+  public Aggregation(AggregationType aggregationType, String fieldToAggregate, List<String> keyIdentifiers) {
     this.aggregationType = aggregationType;
     this.fieldToAggregate = fieldToAggregate;
-    this.keyIdentifier = keyIdentifier;
-    this.keyedStream = true;
+    this.keyIdentifiers = keyIdentifiers;
   }
 
   // Used for not keyed streams
   public Aggregation(AggregationType aggregationType, String fieldToAggregate) {
     this.aggregationType = aggregationType;
     this.fieldToAggregate = fieldToAggregate;
-    this.keyedStream = false;
+    this.keyIdentifiers = null;
   }
 
 
@@ -58,16 +57,17 @@ public class Aggregation {
     }
   }
 
-  protected void process(Iterable<Event> input, Collector<Event> out, String key) {
+  // Gets called every time a new event is fired, i.e. when an aggregation has to be calculated
+  protected void process(Iterable<Event> input, Collector<Event> out) {
     List<Double> values = new ArrayList<>();
     Event lastEvent = new Event();
 
+    // Adds the values of all recent events in input to aggregate them later
+    // Dumps thereby all previous events and only emits the most recent event in the window with the
+    // aggregated value added
     for (Event anInput : input) {
+      values.add(anInput.getFieldBySelector(fieldToAggregate).getAsPrimitive().getAsDouble());
       lastEvent = anInput;
-      if (!keyedStream || (lastEvent.getFieldBySelector(keyIdentifier).getAsPrimitive().getAsString()).equals(key)) {
-        values.add(lastEvent.getFieldBySelector
-                (fieldToAggregate).getAsPrimitive().getAsDouble());
-      }
     }
 
     lastEvent.addField("aggregatedValue", getAggregate(values));
