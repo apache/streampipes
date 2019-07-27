@@ -1,5 +1,5 @@
 # Those parameters are used by IntelliJ to set the default consul parameters for development
-SP_BACKEND_HOST=localhost
-SP_KAFKA_HOST=localhost
-SP_CONNECT_CONTAINER_HOST=localhost
-SP_COUCHDB_HOST=localhost
+SP_BACKEND_HOST=192.168.178.26
+SP_KAFKA_HOST=192.168.178.26
+SP_CONNECT_CONTAINER_HOST=192.168.178.26
+SP_COUCHDB_HOST=192.168.178.26
