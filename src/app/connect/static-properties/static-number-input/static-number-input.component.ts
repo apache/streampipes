@@ -8,6 +8,7 @@ import { Logger } from '../../../shared/logger/default-log.service';
 import { ifError } from 'assert';
 import { ValidateNumber } from '../../select-protocol-component/input.validator';
 import {StaticPropertyUtilService} from '../static-property-util.service';
+import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
 
 @Component({
     selector: 'app-static-number-input',
@@ -17,12 +18,15 @@ import {StaticPropertyUtilService} from '../static-property-util.service';
 export class StaticNumberInputComponent implements OnInit {
     @Input() staticProperty: StaticProperty;
     @Output() inputEmitter: EventEmitter<any> = new EventEmitter<any>();
+    @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
+
 
 
     private freeTextForm: FormGroup;
     private inputValue: String;
     private errorMessage = "Please enter a valid Number";
     private hasInput: Boolean;
+
 
     constructor(private staticPropertyUtil: StaticPropertyUtilService){
 
@@ -53,6 +57,11 @@ export class StaticNumberInputComponent implements OnInit {
 
         this.inputEmitter.emit(this.hasInput);
 
+    }
+
+    emitUpdate() {
+        let valid = (this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value != undefined && this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value !== "");
+        this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
     }
 
 }

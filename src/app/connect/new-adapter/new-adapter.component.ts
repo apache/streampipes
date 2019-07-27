@@ -23,6 +23,7 @@ import {IconService} from './icon.service';
 import {TimestampPipe} from '../filter/timestamp.pipe';
 import {EventProperty} from '../schema-editor/model/EventProperty';
 import {EventRateTransformationRuleDescription} from '../model/connect/rules/EventRateTransformationRuleDescription';
+import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
 
 @Component({
     selector: 'sp-new-adapter',
@@ -93,6 +94,9 @@ export class NewAdapterComponent implements OnInit {
     private eventSchemaComponent: EventSchemaComponent;
 
     isSetAdapter: Boolean = false;
+
+    completedStaticProperty: ConfigurationInfo;
+
 
 
     constructor(
@@ -307,5 +311,9 @@ export class NewAdapterComponent implements OnInit {
     }
     goForward(stepper: MatStepper) {
         this.myStepper.selectedIndex = this.myStepper.selectedIndex + 1;
+    }
+
+    triggerUpdate(configurationInfo: ConfigurationInfo) {
+        this.completedStaticProperty = Object.assign({}, configurationInfo);
     }
 }

@@ -4,7 +4,7 @@
 </app-static-url-input>
 
 <app-static-number-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).render && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).requiredDomainProperty == xsService.XS_NUMBER"
-    (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
+                         (updateEmitter)="emitUpdate($event)" (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
 </app-static-number-input>
 
 <app-static-text-input *ngIf="isFreeTextStaticProperty(staticProperty) && staticPropertyUtil.asFreeTextStaticProperty(staticProperty).render && staticPropertyUtil.asFreeTextStaticProperty (staticProperty).requiredDomainProperty == xsService.XS_STRING1"
