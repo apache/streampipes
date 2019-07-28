@@ -29,9 +29,12 @@ import org.streampipes.model.client.pipeline.PipelineStatusMessage;
 import org.streampipes.model.client.pipeline.PipelineStatusMessageType;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.staticproperty.SecretStaticProperty;
 import org.streampipes.storage.api.IPipelineStorage;
 import org.streampipes.storage.management.StorageDispatcher;
+import org.streampipes.user.management.encryption.CredentialsManager;
 
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -40,101 +43,143 @@ import java.util.stream.Collectors;
 
 public class PipelineExecutor {
 
-	private Pipeline pipeline;
-	private boolean visualize;
-	private boolean storeStatus;
-	private boolean monitor;
-	
-	public PipelineExecutor(Pipeline pipeline, boolean visualize, boolean storeStatus, boolean monitor)
-	{
-		this.pipeline = pipeline;
-		this.visualize = visualize;
-		this.storeStatus = storeStatus;
-		this.monitor = monitor;
-	}
-	
-	public PipelineOperationStatus startPipeline()
-	{
+  private Pipeline pipeline;
+  private boolean visualize;
+  private boolean storeStatus;
+  private boolean monitor;
 
-		List<DataProcessorInvocation> sepas = pipeline.getSepas();
-		List<DataSinkInvocation> secs = pipeline.getActions();
-		List<SpDataSet> dataSets = pipeline.getStreams().stream().filter(s -> s instanceof SpDataSet).map(s -> new
-						SpDataSet((SpDataSet) s)).collect(Collectors.toList());
+  public PipelineExecutor(Pipeline pipeline, boolean visualize, boolean storeStatus,
+                          boolean monitor) {
+    this.pipeline = pipeline;
+    this.visualize = visualize;
+    this.storeStatus = storeStatus;
+    this.monitor = monitor;
+  }
 
-		for (SpDataSet ds : dataSets) {
-			ds.setCorrespondingPipeline(pipeline.getPipelineId());
-		}
+  public PipelineOperationStatus startPipeline() {
 
-		List<InvocableStreamPipesEntity> graphs = new ArrayList<>();
-		graphs.addAll(sepas);
-		graphs.addAll(secs);
+    List<DataProcessorInvocation> sepas = pipeline.getSepas();
+    List<DataSinkInvocation> secs = pipeline.getActions();
+    List<SpDataSet> dataSets = pipeline.getStreams().stream().filter(s -> s instanceof SpDataSet).map(s -> new
+            SpDataSet((SpDataSet) s)).collect(Collectors.toList());
 
-		graphs.forEach(g -> g.setStreamRequirements(Arrays.asList()));
+    for (SpDataSet ds : dataSets) {
+      ds.setCorrespondingPipeline(pipeline.getPipelineId());
+    }
 
-		PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(), graphs, dataSets)
-						.invokeGraphs();
-		
-		if (status.isSuccess()) 
-		{
-			storeInvocationGraphs(pipeline.getPipelineId(), graphs, dataSets);
-			
-			PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(), 
-					new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), PipelineStatusMessageType.PIPELINE_STARTED.title(), PipelineStatusMessageType.PIPELINE_STARTED.description()));
-			
-			if (monitor) SepMonitoringManager.addObserver(pipeline.getPipelineId());
-			
-			if (storeStatus) setPipelineStarted(pipeline);
-		}
-		return status;
-	}
-	
-	public PipelineOperationStatus stopPipeline()
-	{
-		List<InvocableStreamPipesEntity> graphs = TemporaryGraphStorage.graphStorage.get(pipeline.getPipelineId());
-		List<SpDataSet> dataSets = TemporaryGraphStorage.datasetStorage.get(pipeline.getPipelineId());
+    List<InvocableStreamPipesEntity> graphs = new ArrayList<>();
+    graphs.addAll(sepas);
+    graphs.addAll(secs);
 
-		PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(), graphs, dataSets)
-						.detachGraphs();
-		
-		if (status.isSuccess())
-		{
-			if (visualize) StorageDispatcher.INSTANCE.getNoSqlStore().getVisualizationStorageApi().deleteVisualization(pipeline
-						.getPipelineId());
-			if (storeStatus) setPipelineStopped(pipeline);
-			
-			PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(), 
-					new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), PipelineStatusMessageType.PIPELINE_STOPPED.title(), PipelineStatusMessageType.PIPELINE_STOPPED.description()));
-			
-			if (monitor) SepMonitoringManager.removeObserver(pipeline.getPipelineId());
-			
-		}
-		return status;
-	}
-	
-	private void setPipelineStarted(Pipeline pipeline) {
-		pipeline.setRunning(true);
-		pipeline.setStartedAt(new Date().getTime());
-		try {
-			getPipelineStorageApi().updatePipeline(pipeline);
-		} catch (DocumentConflictException dce)
-		{
-			//dce.printStackTrace();
-		}
-	}
-	
-	private void setPipelineStopped(Pipeline pipeline) {
-		pipeline.setRunning(false);
-		getPipelineStorageApi().updatePipeline(pipeline);
-	}
-	
-	private void storeInvocationGraphs(String pipelineId, List<InvocableStreamPipesEntity> graphs, List<SpDataSet> dataSets)
-	{
-		TemporaryGraphStorage.graphStorage.put(pipelineId, graphs);
-		TemporaryGraphStorage.datasetStorage.put(pipelineId, dataSets);
-	}
+    List<InvocableStreamPipesEntity> decryptedGraphs = decryptSecrets(graphs);
 
-	private IPipelineStorage getPipelineStorageApi() {
-		return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
-	}
+    graphs.forEach(g -> g.setStreamRequirements(Arrays.asList()));
+
+    PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(),
+            pipeline.getName(), decryptedGraphs, dataSets)
+            .invokeGraphs();
+
+    if (status.isSuccess()) {
+      storeInvocationGraphs(pipeline.getPipelineId(), graphs, dataSets);
+
+      PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(),
+              new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), PipelineStatusMessageType.PIPELINE_STARTED.title(), PipelineStatusMessageType.PIPELINE_STARTED.description()));
+
+      if (monitor) {
+        SepMonitoringManager.addObserver(pipeline.getPipelineId());
+      }
+
+      if (storeStatus) {
+        setPipelineStarted(pipeline);
+      }
+    }
+    return status;
+  }
+
+  private List<InvocableStreamPipesEntity> decryptSecrets(List<InvocableStreamPipesEntity> graphs) {
+    List<InvocableStreamPipesEntity> decryptedGraphs = new ArrayList<>();
+    graphs.stream().map(g -> {
+      if (g instanceof DataProcessorInvocation) {
+        return new DataProcessorInvocation((DataProcessorInvocation) g);
+      } else {
+        return new DataSinkInvocation((DataSinkInvocation) g);
+      }
+    }).forEach(g -> {
+      g.getStaticProperties()
+              .stream()
+              .filter(SecretStaticProperty.class::isInstance)
+              .forEach(sp -> {
+                try {
+                  String decrypted = CredentialsManager.decrypt(pipeline.getCreatedByUser(),
+                          ((SecretStaticProperty) sp).getValue());
+                  ((SecretStaticProperty) sp).setValue(decrypted);
+                  ((SecretStaticProperty) sp).setEncrypted(false);
+                } catch (GeneralSecurityException e) {
+                  e.printStackTrace();
+                }
+              });
+      decryptedGraphs.add(g);
+    });
+    return decryptedGraphs;
+  }
+
+  public PipelineOperationStatus stopPipeline() {
+    List<InvocableStreamPipesEntity> graphs = TemporaryGraphStorage.graphStorage.get(pipeline.getPipelineId());
+    List<SpDataSet> dataSets = TemporaryGraphStorage.datasetStorage.get(pipeline.getPipelineId());
+
+    PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(),
+            pipeline.getName(),  graphs, dataSets)
+            .detachGraphs();
+
+    if (status.isSuccess()) {
+      if (visualize) {
+        StorageDispatcher
+                .INSTANCE
+                .getNoSqlStore()
+                .getVisualizationStorageApi()
+                .deleteVisualization(pipeline.getPipelineId());
+      }
+      if (storeStatus) {
+        setPipelineStopped(pipeline);
+      }
+
+      PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(),
+              new PipelineStatusMessage(pipeline.getPipelineId(),
+                      System.currentTimeMillis(),
+                      PipelineStatusMessageType.PIPELINE_STOPPED.title(),
+                      PipelineStatusMessageType.PIPELINE_STOPPED.description()));
+
+      if (monitor) {
+        SepMonitoringManager.removeObserver(pipeline.getPipelineId());
+      }
+
+    }
+    return status;
+  }
+
+  private void setPipelineStarted(Pipeline pipeline) {
+    pipeline.setRunning(true);
+    pipeline.setStartedAt(new Date().getTime());
+    try {
+      getPipelineStorageApi().updatePipeline(pipeline);
+    } catch (DocumentConflictException dce) {
+      //dce.printStackTrace();
+    }
+  }
+
+  private void setPipelineStopped(Pipeline pipeline) {
+    pipeline.setRunning(false);
+    getPipelineStorageApi().updatePipeline(pipeline);
+  }
+
+  private void storeInvocationGraphs(String pipelineId, List<InvocableStreamPipesEntity> graphs,
+                                     List<SpDataSet> dataSets) {
+    TemporaryGraphStorage.graphStorage.put(pipelineId, graphs);
+    TemporaryGraphStorage.datasetStorage.put(pipelineId, dataSets);
+  }
+
+  private IPipelineStorage getPipelineStorageApi() {
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
+  }
 
 }

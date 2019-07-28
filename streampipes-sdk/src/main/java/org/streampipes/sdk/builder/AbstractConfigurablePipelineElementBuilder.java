@@ -25,6 +25,7 @@ import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.PropertyValueSpecification;
 import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
+import org.streampipes.model.staticproperty.SecretStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.streampipes.model.staticproperty.StaticPropertyAlternatives;
@@ -129,6 +130,22 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
     return me();
   }
+
+  /**
+   * Assigns a new secret text-based configuration parameter (e.g., a password) which is required
+   * by the processing element.
+   * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @return
+   */
+  public BU requiredSecret(Label label) {
+    SecretStaticProperty secretStaticProperty = new SecretStaticProperty(label.getInternalId(),
+            label.getLabel(), label.getDescription());
+    this.staticProperties.add(secretStaticProperty);
+
+    return me();
+  }
+
 
   /**
    * Assigns a new text-based configuration parameter (a string) which is required by the preprocessing

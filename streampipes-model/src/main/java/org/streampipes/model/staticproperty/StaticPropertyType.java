@@ -31,6 +31,7 @@ public enum StaticPropertyType {
     RuntimeResolvableOneOfStaticProperty,
     StaticPropertyGroup,
     StaticPropertyAlternatives,
-    StaticPropertyAlternative;
+    StaticPropertyAlternative,
+    SecretStaticProperty;
 
 }

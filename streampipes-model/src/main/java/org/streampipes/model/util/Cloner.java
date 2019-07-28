@@ -69,6 +69,7 @@ import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
 import org.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
 import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
+import org.streampipes.model.staticproperty.SecretStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.streampipes.model.staticproperty.StaticPropertyAlternatives;
@@ -129,6 +130,8 @@ public class Cloner {
       return new StaticPropertyGroup((StaticPropertyGroup) o);
     } else if (o instanceof StaticPropertyAlternatives) {
       return new StaticPropertyAlternatives((StaticPropertyAlternatives) o);
+    } else if (o instanceof SecretStaticProperty) {
+      return new SecretStaticProperty((SecretStaticProperty) o);
     } else {
       return new StaticPropertyAlternative((StaticPropertyAlternative) o);
     }
@@ -306,7 +309,7 @@ public class Cloner {
     } else if (pe instanceof DataSinkDescription) {
       return new DataSinkDescription((DataSinkDescription) pe);
     } else {
-      LOG.error("Description is of unknown type: " +pe.getClass().getCanonicalName());
+      LOG.error("Description is of unknown type: " + pe.getClass().getCanonicalName());
       return pe;
     }
   }

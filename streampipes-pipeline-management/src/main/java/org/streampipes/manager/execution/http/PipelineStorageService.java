@@ -24,8 +24,11 @@ import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.staticproperty.SecretStaticProperty;
 import org.streampipes.storage.management.StorageDispatcher;
+import org.streampipes.user.management.encryption.CredentialsManager;
 
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +43,7 @@ public class PipelineStorageService {
     public void addPipeline() {
         PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
         InvocationGraphBuilder builder = new InvocationGraphBuilder(pipelineGraph, pipeline.getPipelineId());
-        List<InvocableStreamPipesEntity> graphs = builder.buildGraphs();
+        List<InvocableStreamPipesEntity> graphs = encryptSecrets(builder.buildGraphs());
 
         List<DataSinkInvocation> secs = filter(graphs, DataSinkInvocation.class);
         List<DataProcessorInvocation> sepas = filter(graphs, DataProcessorInvocation.class);
@@ -51,11 +54,30 @@ public class PipelineStorageService {
         StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().store(pipeline);
     }
 
+    private List<InvocableStreamPipesEntity> encryptSecrets(List<InvocableStreamPipesEntity> graphs) {
+        graphs.forEach(g -> g.getStaticProperties()
+                .stream()
+                .filter(SecretStaticProperty.class::isInstance)
+                .forEach(secret -> {
+                    if (!((SecretStaticProperty) secret).getEncrypted()) {
+                        try {
+                            String encrypted = CredentialsManager.encrypt(pipeline.getCreatedByUser(),
+                                    ((SecretStaticProperty) secret).getValue());
+                            ((SecretStaticProperty) secret).setValue(encrypted);
+                            ((SecretStaticProperty) secret).setEncrypted(true);
+                        } catch (GeneralSecurityException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }));
+        return graphs;
+    }
+
     private <T> List<T> filter(List<InvocableStreamPipesEntity> graphs, Class<T> clazz) {
         return graphs
                 .stream()
-                .filter(graph -> clazz.isInstance(graph))
-                .map(graph -> clazz.cast(graph))
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
                 .collect(Collectors.toList());
     }
 }

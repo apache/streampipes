@@ -106,11 +106,12 @@ public class Operations {
 
   public static PipelineOperationStatus startPipeline(
           Pipeline pipeline) {
-    return startPipeline(pipeline, true, true, false);
+    return startPipeline(pipeline,true, true, false);
   }
 
   public static PipelineOperationStatus startPipeline(
-          Pipeline pipeline, boolean visualize, boolean storeStatus, boolean monitor) {
+          Pipeline pipeline, boolean visualize, boolean storeStatus,
+          boolean monitor) {
     return new PipelineExecutor(pipeline, visualize, storeStatus, monitor).startPipeline();
   }
 
@@ -121,7 +122,8 @@ public class Operations {
 
 
   public static PipelineOperationStatus stopPipeline(
-          Pipeline pipeline, boolean visualize, boolean storeStatus, boolean monitor) {
+          Pipeline pipeline, boolean visualize, boolean storeStatus,
+          boolean monitor) {
     return new PipelineExecutor(pipeline, visualize, storeStatus, monitor).stopPipeline();
   }
 

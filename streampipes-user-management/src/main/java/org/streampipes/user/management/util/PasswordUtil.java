@@ -34,10 +34,10 @@ public class PasswordUtil {
     return salt;
   }
 
-  public static String encryptPassword(String password) throws NoSuchAlgorithmException,
+  public static String encryptPassword(String property) throws NoSuchAlgorithmException,
           InvalidKeySpecException {
     int iterations = 1000;
-    char[] chars = password.toCharArray();
+    char[] chars = property.toCharArray();
     byte[] salt = createSalt();
 
     PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
@@ -57,14 +57,15 @@ public class PasswordUtil {
     }
   }
 
-  public static boolean validatePassword(String originalPassword, String storedPassword) throws
+  public static boolean validatePassword(String originalProperty, String storedProperty) throws
           NoSuchAlgorithmException, InvalidKeySpecException {
-    String[] parts = storedPassword.split(":");
+    String[] parts = storedProperty.split(":");
     int iterations = Integer.parseInt(parts[0]);
     byte[] salt = fromHex(parts[1]);
     byte[] hash = fromHex(parts[2]);
 
-    PBEKeySpec spec = new PBEKeySpec(originalPassword.toCharArray(), salt, iterations, hash.length * 8);
+    PBEKeySpec spec = new PBEKeySpec(originalProperty.toCharArray(), salt, iterations,
+            hash.length * 8);
     SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
     byte[] testHash = skf.generateSecret(spec).getEncoded();
 
