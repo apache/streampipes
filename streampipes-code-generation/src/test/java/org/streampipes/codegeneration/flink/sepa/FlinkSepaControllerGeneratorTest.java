@@ -17,10 +17,6 @@
 
 package org.streampipes.codegeneration.flink.sepa;
 
-import static org.junit.Assert.assertEquals;
-
-import org.streampipes.model.schema.EventProperty;
-
 public class FlinkSepaControllerGeneratorTest {
 
 //
@@ -68,7 +64,6 @@ public class FlinkSepaControllerGeneratorTest {
 //		//TODO fix tests again
 ////		assertEquals(expected, actual);
 //	}
-
 
 
 }

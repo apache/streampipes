@@ -19,22 +19,25 @@ package org.streampipes.rest.shared.serializer;
 
 import com.google.gson.Gson;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
-import java.io.*;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
 
 
 public abstract class GsonJerseyProvider implements MessageBodyWriter<Object>,
         MessageBodyReader<Object> {
 
     private final String UTF8 = "UTF-8";
-
-    private Gson gson;
 
     protected abstract Gson getGsonSerializer();
 

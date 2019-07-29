@@ -31,77 +31,80 @@ import java.util.stream.Collectors;
 public class ProcessingElementBuilder extends AbstractProcessingElementBuilder<ProcessingElementBuilder, DataProcessorDescription> {
 
 
-    private List<OutputStrategy> outputStrategies;
+  private List<OutputStrategy> outputStrategies;
 
-    private ProcessingElementBuilder(String id, String name, String description) {
-        super(id, name, description, new DataProcessorDescription());
-        this.outputStrategies = new ArrayList<>();
-    }
+  private ProcessingElementBuilder(String id, String name, String description) {
+    super(id, name, description, new DataProcessorDescription());
+    this.outputStrategies = new ArrayList<>();
+  }
 
-    private ProcessingElementBuilder(String id) {
-        super(id, new DataProcessorDescription());
-        this.outputStrategies = new ArrayList<>();
-    }
+  private ProcessingElementBuilder(String id) {
+    super(id, new DataProcessorDescription());
+    this.outputStrategies = new ArrayList<>();
+  }
 
-    /**
-     * Creates a new processing element using the builder pattern.
-     * @param id A unique identifier of the new element, e.g., com.mycompany.processor.mynewdataprocessor
-     * @param label A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
-     * @param description A human-readable description of the element.
-     */
-    public static ProcessingElementBuilder create(String id, String label, String description) {
-        return new ProcessingElementBuilder(id, label, description);
-    }
+  /**
+   * Creates a new processing element using the builder pattern.
+   *
+   * @param id          A unique identifier of the new element, e.g., com.mycompany.processor.mynewdataprocessor
+   * @param label       A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
+   * @param description A human-readable description of the element.
+   */
+  public static ProcessingElementBuilder create(String id, String label, String description) {
+    return new ProcessingElementBuilder(id, label, description);
+  }
 
-    public static ProcessingElementBuilder create(Label label) {
-        return new ProcessingElementBuilder(label.getInternalId(), label.getLabel(), label.getDescription());
-    }
+  public static ProcessingElementBuilder create(Label label) {
+    return new ProcessingElementBuilder(label.getInternalId(), label.getLabel(), label.getDescription());
+  }
 
-    /**
-     * Creates a new processing element using the builder pattern. If no label and description is
-     * given
-     * for an element,
-     * {@link org.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
-     * must be called.
-     *
-     * @param id A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
-     */
-    public static ProcessingElementBuilder create(String id) {
-        return new ProcessingElementBuilder(id);
-    }
+  /**
+   * Creates a new processing element using the builder pattern. If no label and description is
+   * given
+   * for an element,
+   * {@link org.streampipes.sdk.builder.AbstractProcessingElementBuilder#withLocales(Locales...)}
+   * must be called.
+   *
+   * @param id A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
+   */
+  public static ProcessingElementBuilder create(String id) {
+    return new ProcessingElementBuilder(id);
+  }
 
-    /**
-     * Assigns an output strategy to the element which defines the output the data processor produces.
-     * @param outputStrategy An {@link org.streampipes.model.output.OutputStrategy}. Use
-     * {@link org.streampipes.sdk.helpers.OutputStrategies} to assign the strategy.
-     * @return {@link ProcessingElementBuilder}
-     */
-    public ProcessingElementBuilder outputStrategy(OutputStrategy outputStrategy) {
-        this.outputStrategies.add(outputStrategy);
-        return me();
-    }
+  /**
+   * Assigns an output strategy to the element which defines the output the data processor produces.
+   *
+   * @param outputStrategy An {@link org.streampipes.model.output.OutputStrategy}. Use
+   *                       {@link org.streampipes.sdk.helpers.OutputStrategies} to assign the strategy.
+   * @return {@link ProcessingElementBuilder}
+   */
+  public ProcessingElementBuilder outputStrategy(OutputStrategy outputStrategy) {
+    this.outputStrategies.add(outputStrategy);
+    return me();
+  }
 
-    /**
-     * Assigns a category to the element which later serves to categorize data processors in the UI.
-      * @param epaCategory The {@link org.streampipes.model.DataProcessorType} of the element.
-     * @return {@link ProcessingElementBuilder}
-     */
-    public ProcessingElementBuilder category(DataProcessorType... epaCategory) {
-        this.elementDescription.setCategory(Arrays
-                .stream(epaCategory)
-                .map(Enum::name)
-                .collect(Collectors.toList()));
-        return me();
-    }
+  /**
+   * Assigns a category to the element which later serves to categorize data processors in the UI.
+   *
+   * @param epaCategory The {@link org.streampipes.model.DataProcessorType} of the element.
+   * @return {@link ProcessingElementBuilder}
+   */
+  public ProcessingElementBuilder category(DataProcessorType... epaCategory) {
+    this.elementDescription.setCategory(Arrays
+            .stream(epaCategory)
+            .map(Enum::name)
+            .collect(Collectors.toList()));
+    return me();
+  }
 
-    @Override
-    public void prepareBuild() {
-        super.prepareBuild();
-        this.elementDescription.setOutputStrategies(outputStrategies);
-    }
+  @Override
+  public void prepareBuild() {
+    super.prepareBuild();
+    this.elementDescription.setOutputStrategies(outputStrategies);
+  }
 
-    @Override
-    protected ProcessingElementBuilder me() {
-        return this;
-    }
+  @Override
+  protected ProcessingElementBuilder me() {
+    return this;
+  }
 }

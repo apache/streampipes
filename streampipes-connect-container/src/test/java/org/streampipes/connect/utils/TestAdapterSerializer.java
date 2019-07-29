@@ -16,6 +16,8 @@
  */
 package org.streampipes.connect.utils;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
@@ -25,11 +27,8 @@ import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.serializers.json.GsonSerializer;
-import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import java.util.Arrays;
-
-import static org.junit.Assert.assertEquals;
 
 public class TestAdapterSerializer {
 
@@ -69,5 +68,5 @@ public class TestAdapterSerializer {
 //    AdapterDescription deserialized = new AdapterStorageImpl().getAllAdapters().get(0);
 //    System.out.println(deserialized.getAdapterId());
 //  }
-  
+
 }

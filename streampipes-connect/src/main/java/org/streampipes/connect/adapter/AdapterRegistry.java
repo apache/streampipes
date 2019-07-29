@@ -31,7 +31,8 @@ import org.streampipes.connect.adapter.format.json.object.JsonObjectFormat;
 import org.streampipes.connect.adapter.format.json.object.JsonObjectParser;
 import org.streampipes.connect.adapter.format.xml.XmlFormat;
 import org.streampipes.connect.adapter.format.xml.XmlParser;
-import org.streampipes.connect.adapter.model.generic.*;
+import org.streampipes.connect.adapter.model.generic.Format;
+import org.streampipes.connect.adapter.model.generic.Parser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,33 +42,31 @@ import java.util.Map;
  */
 public class AdapterRegistry {
 
-    private static final String SP_NS =  "https://streampipes.org/vocabulary/v1/";
+  public static Map<String, Format> getAllFormats() {
+    Map<String, Format> allFormats = new HashMap<>();
 
-    public static Map<String, Format> getAllFormats() {
-        Map<String, Format> allFormats = new HashMap<>();
+    allFormats.put(JsonFormat.ID, new JsonFormat());
+    allFormats.put(JsonObjectFormat.ID, new JsonObjectFormat());
+    allFormats.put(JsonArrayFormat.ID, new JsonArrayFormat());
+    allFormats.put(CsvFormat.ID, new CsvFormat());
+    allFormats.put(GeoJsonFormat.ID, new GeoJsonFormat());
+    allFormats.put(XmlFormat.ID, new XmlFormat());
+    allFormats.put(ImageFormat.ID, new ImageFormat());
 
-        allFormats.put(JsonFormat.ID, new JsonFormat());
-        allFormats.put(JsonObjectFormat.ID, new JsonObjectFormat());
-        allFormats.put(JsonArrayFormat.ID, new JsonArrayFormat());
-        allFormats.put(CsvFormat.ID, new CsvFormat());
-        allFormats.put(GeoJsonFormat.ID, new GeoJsonFormat());
-        allFormats.put(XmlFormat.ID, new XmlFormat());
-        allFormats.put(ImageFormat.ID, new ImageFormat());
+    return allFormats;
+  }
 
-        return allFormats;
-    }
+  public static Map<String, Parser> getAllParsers() {
+    Map<String, Parser> allParsers = new HashMap<>();
 
-    public static Map<String, Parser> getAllParsers() {
-        Map<String, Parser> allParsers = new HashMap<>();
+    allParsers.put(JsonFormat.ID, new JsonParser());
+    allParsers.put(JsonObjectFormat.ID, new JsonObjectParser());
+    allParsers.put(JsonArrayFormat.ID, new JsonArrayParser());
+    allParsers.put(CsvFormat.ID, new CsvParser());
+    allParsers.put(GeoJsonFormat.ID, new GeoJsonParser());
+    allParsers.put(XmlFormat.ID, new XmlParser());
+    allParsers.put(ImageFormat.ID, new ImageParser());
 
-        allParsers.put(JsonFormat.ID, new JsonParser());
-        allParsers.put(JsonObjectFormat.ID, new JsonObjectParser());
-        allParsers.put(JsonArrayFormat.ID, new JsonArrayParser());
-        allParsers.put(CsvFormat.ID, new CsvParser());
-        allParsers.put(GeoJsonFormat.ID, new GeoJsonParser());
-        allParsers.put(XmlFormat.ID, new XmlParser());
-        allParsers.put(ImageFormat.ID, new ImageParser());
-
-        return allParsers;
-    }
+    return allParsers;
+  }
 }
