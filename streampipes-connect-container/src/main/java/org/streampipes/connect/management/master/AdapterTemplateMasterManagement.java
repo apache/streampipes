@@ -18,7 +18,11 @@
 package org.streampipes.connect.management.master;
 
 import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.model.connect.adapter.*;
+import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.streampipes.model.util.Cloner;
 import org.streampipes.storage.api.IAdapterTemplateStorage;
 import org.streampipes.storage.couchdb.impl.AdapterTemplateStorageImpl;
 
@@ -42,16 +46,7 @@ public class AdapterTemplateMasterManagement {
     public String addAdapterTemplate(AdapterDescription adapterDescription) throws AdapterException {
 
 //        String uri = "http://streampipes.org/adapter/template/" + UUID.randomUUID().toString();
-
-        if (adapterDescription instanceof GenericAdapterSetDescription) {
-            adapterDescription = new GenericAdapterSetDescription((GenericAdapterSetDescription) adapterDescription);
-        } else if (adapterDescription instanceof GenericAdapterStreamDescription) {
-            adapterDescription = new GenericAdapterStreamDescription((GenericAdapterStreamDescription) adapterDescription);
-        } else if (adapterDescription instanceof SpecificAdapterSetDescription) {
-            adapterDescription = new SpecificAdapterSetDescription((SpecificAdapterSetDescription) adapterDescription);
-        } else {
-            adapterDescription = new SpecificAdapterSetDescription((SpecificAdapterSetDescription) adapterDescription);
-        }
+        adapterDescription = new Cloner().adapterDescription(adapterDescription);
 
         String uri = adapterDescription.getUri() + UUID.randomUUID().toString();
         adapterDescription.setUri(uri);

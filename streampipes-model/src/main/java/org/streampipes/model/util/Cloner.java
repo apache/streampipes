@@ -23,6 +23,13 @@ import org.streampipes.model.ApplicationLink;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.AdapterSetDescription;
+import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
+import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.grounding.JmsTransportProtocol;
@@ -319,5 +326,20 @@ public class Cloner {
             .stream()
             .map(PropertyRenameRule::new)
             .collect(Collectors.toList());
+  }
+
+  public AdapterDescription adapterDescription(AdapterDescription ad) {
+    if (ad instanceof GenericAdapterSetDescription) {
+      return new GenericAdapterSetDescription((GenericAdapterSetDescription) ad);
+    } else if (ad instanceof GenericAdapterStreamDescription) {
+      return new GenericAdapterStreamDescription((GenericAdapterStreamDescription) ad);
+    } else if (ad instanceof SpecificAdapterSetDescription) {
+      return new SpecificAdapterSetDescription((AdapterSetDescription) ad);
+    } else if (ad instanceof SpecificAdapterStreamDescription) {
+      return new SpecificAdapterStreamDescription((AdapterStreamDescription) ad);
+    } else {
+      LOG.error("Could not clone adapter description of type: " +ad.getClass().getCanonicalName());
+      return ad;
+    }
   }
 }

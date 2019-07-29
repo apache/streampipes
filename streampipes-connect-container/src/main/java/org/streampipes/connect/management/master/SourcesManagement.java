@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.util.TransportFormatGenerator;
+import org.streampipes.connect.util.AdapterEncryptionService;
 import org.streampipes.container.html.JSONGenerator;
 import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.streampipes.container.html.model.Description;
@@ -31,6 +32,7 @@ import org.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.util.Cloner;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
@@ -119,8 +121,11 @@ public class SourcesManagement {
                 adapterDescription = a;
             }
         }
+        AdapterDescription decryptedAdapterDescription =
+                new AdapterEncryptionService(new Cloner()
+                        .adapterDescription(adapterDescription)).decrypt();
 
-        return adapterDescription;
+        return decryptedAdapterDescription;
     }
 
     public DataSourceDescription getAdapterDataSource(String id) throws AdapterException {

@@ -37,6 +37,11 @@ public class ParameterExtractor {
                 .getValue());
     }
 
+    public String secretValue(String internalName) {
+        return (((SecretStaticProperty) getStaticPropertyByName(internalName))
+                .getValue());
+    }
+
     public <V> V singleValue(String internalName, Class<V> targetClass) {
         return typeParser.parse(singleValue(internalName), targetClass);
     }
