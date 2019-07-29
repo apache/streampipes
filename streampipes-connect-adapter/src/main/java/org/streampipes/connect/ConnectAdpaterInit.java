@@ -33,41 +33,44 @@ import org.streampipes.connect.adapters.wikipedia.WikipediaNewArticlesAdapter;
 import org.streampipes.connect.config.ConnectWorkerConfig;
 import org.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.streampipes.connect.init.AdapterWorkerContainer;
-import org.streampipes.connect.protocol.stream.*;
+import org.streampipes.connect.protocol.stream.HDFSProtocol;
+import org.streampipes.connect.protocol.stream.HttpStreamProtocol;
+import org.streampipes.connect.protocol.stream.KafkaProtocol;
+import org.streampipes.connect.protocol.stream.MqttProtocol;
 
 public class ConnectAdpaterInit extends AdapterWorkerContainer {
 
-    public static void main(String[] args) {
-        AdapterDeclarerSingleton
-                .getInstance()
+  public static void main(String[] args) {
+    AdapterDeclarerSingleton
+            .getInstance()
 
-                // Protocols
+            // Protocols
 //                .add(new FileProtocol())
-                .add(new HttpProtocol())
+            .add(new HttpProtocol())
 //                .add(new FileStreamProtocol())
-                .add(new HDFSProtocol())
-                .add(new KafkaProtocol())
-                .add(new MqttProtocol())
-                .add(new HttpStreamProtocol())
+            .add(new HDFSProtocol())
+            .add(new KafkaProtocol())
+            .add(new MqttProtocol())
+            .add(new HttpStreamProtocol())
 
-                // Specific Adapters
-                .add(new GdeltAdapter())
-                .add(new CoindeskBitcoinAdapter())
-                .add(new IexCloudNewsAdapter())
-                .add(new IexCloudStockAdapter())
-                .add(new MySqlAdapter())
-                .add(new RandomDataSetAdapter())
-                .add(new RandomDataStreamAdapter())
-                .add(new SlackAdapter())
-                .add(new WikipediaEditedArticlesAdapter())
-                .add(new WikipediaNewArticlesAdapter())
-                .add(new RosBridgeAdapter())
-                .add(new OpcUaAdapter());
+            // Specific Adapters
+            .add(new GdeltAdapter())
+            .add(new CoindeskBitcoinAdapter())
+            .add(new IexCloudNewsAdapter())
+            .add(new IexCloudStockAdapter())
+            .add(new MySqlAdapter())
+            .add(new RandomDataSetAdapter())
+            .add(new RandomDataStreamAdapter())
+            .add(new SlackAdapter())
+            .add(new WikipediaEditedArticlesAdapter())
+            .add(new WikipediaNewArticlesAdapter())
+            .add(new RosBridgeAdapter())
+            .add(new OpcUaAdapter());
 
-        String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
-        String masterUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerMasterUrl();
+    String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
+    String masterUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerMasterUrl();
 
-        new ConnectAdpaterInit().init(workerUrl, masterUrl);
+    new ConnectAdpaterInit().init(workerUrl, masterUrl);
 
-    }
+  }
 }
