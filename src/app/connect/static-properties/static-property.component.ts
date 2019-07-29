@@ -14,6 +14,7 @@ import {EventSchema} from '../schema-editor/model/EventSchema';
 import {RuntimeResolvableOneOfStaticProperty} from "../model/RuntimeResolvableOneOfStaticProperty";
 import {RuntimeResolvableAnyStaticProperty} from "../model/RuntimeResolvableAnyStaticProperty";
 import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
+import {SecretStaticProperty} from "../model/SecretStaticProperty";
 
 @Component({
   selector: 'app-static-property',
@@ -100,6 +101,10 @@ export class StaticPropertyComponent implements OnInit {
 
   isRuntimeResolvableOneOfStaticProperty(val) {
     return val instanceof RuntimeResolvableOneOfStaticProperty;
+  }
+
+  isSecretStaticProperty(val) {
+    return val instanceof SecretStaticProperty;
   }
 
   isRuntimeResolvableAnyStaticProperty(val) {

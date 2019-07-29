@@ -36,6 +36,7 @@ import { StaticPropertyUtilService } from './static-properties/static-property-u
 import { StaticTextInputComponent } from './static-properties/static-text-input/static-text-input.component';
 import { StaticUrlInputComponent } from './static-properties/static-url-input/static-url-input.component';
 import { TransformationRuleService } from './transformation-rule.service';
+import { StaticSecretInputComponent } from "./static-properties/static-secret-input/static-secret-input.component";
 
 import { ProtocolComponent } from './protocol-component/protocol.component';
 
@@ -108,6 +109,7 @@ import { TreeModule } from 'angular-tree-component';
         StaticUrlInputComponent,
         StaticTextInputComponent,
         StaticFreeInputComponent,
+        StaticSecretInputComponent,
         StaticFileInputComponent,
         StaticMappingNaryComponent,
         StaticMappingUnaryComponent,

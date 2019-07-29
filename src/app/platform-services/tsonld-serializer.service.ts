@@ -69,6 +69,7 @@ import {RuntimeResolvableAnyStaticProperty} from "../connect/model/RuntimeResolv
 import {RuntimeOptionsRequest} from "../connect/model/connect/runtime/RuntimeOptionsRequest";
 import {RuntimeOptionsResponse} from "../connect/model/connect/runtime/RuntimeOptionsResponse";
 import {EventRateTransformationRuleDescription} from '../connect/model/connect/rules/EventRateTransformationRuleDescription';
+import {SecretStaticProperty} from "../connect/model/SecretStaticProperty";
 
 
 @Injectable()
@@ -79,6 +80,7 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(ProtocolDescription);
         tsonld.addClassMapping(ProtocolDescriptionList);
         tsonld.addClassMapping(FreeTextStaticProperty);
+        tsonld.addClassMapping(SecretStaticProperty);
         tsonld.addClassMapping(FileStaticProperty);
         tsonld.addClassMapping(FormatDescriptionList);
         tsonld.addClassMapping(FormatDescription);
