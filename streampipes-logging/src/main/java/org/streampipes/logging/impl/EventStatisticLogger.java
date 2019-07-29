@@ -1,13 +1,11 @@
 package org.streampipes.logging.impl;
 
-import org.slf4j.LoggerFactory;
-
 import java.io.Serializable;
 
 public class EventStatisticLogger implements Serializable {
 
 
-    private String prefix;
+    // private String prefix;
 
    // public static void log(org.streampipes.model.base.InvocableStreamPipesEntity graph) {
     public static void log(String name, String correspondingPipeline, String source) {

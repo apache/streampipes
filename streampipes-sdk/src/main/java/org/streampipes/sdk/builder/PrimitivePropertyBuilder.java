@@ -33,8 +33,8 @@ import java.util.List;
 
 public class PrimitivePropertyBuilder {
 
-    EventPropertyPrimitive eventProperty;
-    List<EventPropertyQualityDefinition> qualityDefinitions;
+    private EventPropertyPrimitive eventProperty;
+    private List<EventPropertyQualityDefinition> qualityDefinitions;
 
     private PrimitivePropertyBuilder(Datatypes datatype, String runtimeName) {
         this.eventProperty = new EventPropertyPrimitive();

@@ -17,6 +17,8 @@
 
 package org.streampipes.connect.management;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -28,12 +30,14 @@ import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.model.specific.SpecificDataSetAdapter;
 import org.streampipes.connect.management.worker.AdapterWorkerManagement;
 import org.streampipes.connect.utils.Utils;
-import org.streampipes.model.connect.adapter.*;
+import org.streampipes.model.connect.adapter.AdapterSetDescription;
+import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 
 import java.util.ArrayList;
-
-import static org.junit.Assert.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AdapterRegistry.class })
@@ -103,15 +107,12 @@ public class AdapterWorkerManagementTest {
 
     private class TestAdapter extends SpecificDataSetAdapter {
 
+        public boolean calledStart = false;
+        public boolean calledStop = false;
 
         public TestAdapter(SpecificAdapterSetDescription description) {
             super(description);
         }
-
-        public boolean calledStart = false;
-        public boolean calledStop = false;
-
-
 
         @Override
         public SpecificAdapterSetDescription declareModel() {
