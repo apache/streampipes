@@ -1,14 +1,13 @@
 version: "2"
 services:
   connect-worker:
-    image: ${SP_DOCKER_REGISTRY}streampipes/ce/streampipes-connect-container:${SP_BACKEND_VERSION}
+    image: ${SP_DOCKER_REGISTRY}streampipes/streampipes-connect-adapters/streampipes-connect-worker:${SP_BACKEND_VERSION}
     depends_on:
       - consul
       - couchdb
     ports:
       - "8098:8098"
     environment:
-      - EXECUTION_MODE=WORKER
       - SP_CONNECT_CONTAINER_HOST=connect-master
       - SP_CONNECT_CONTAINER_WORKER=connect-worker
       - SP_KAFKA_HOST=${SP_KAFKA_HOST}
