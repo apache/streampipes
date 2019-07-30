@@ -20,6 +20,10 @@
                       static-property="ctrl.staticProperty"
                       mapping-property="ctrl.getMappingProperty(ctrl.staticProperty.properties.mapsTo)"></freetext>
         </div>
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'SecretStaticProperty'">
+            <secret customize-form="ctrl.customizeForm"
+                      static-property="ctrl.staticProperty"></secret>
+        </div>
         <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'AnyStaticProperty'">
             <any static-property="ctrl.staticProperty"></any>
         </div>

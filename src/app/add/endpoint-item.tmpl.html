@@ -12,21 +12,22 @@
                     <div flex layout="column">
                         <h2 class="md-title">{{endpointItem.name}}</h2>
                         <p>{{endpointItem.description}}</p>
-                    </div>
-                    <div flex layout="column" ng-if="endpointItem.type=='source'">
-                        <h4>Data streams included in this source</h4>
-                        <div flex layout="row" ng-repeat="stream in endpointItem.streams">
-                            <div flex="10" layout="row" layout-align="start center">
-                                <div class="draggable-icon-preview stream" style="margin-right:5px;">
-                                    {{ctrl.iconText(stream.name)}}
+                        <div flex layout="column" ng-if="endpointItem.type=='source'">
+                            <h4>Data streams included in this source</h4>
+                            <div flex layout="row" layout-align="start center" ng-repeat="stream in endpointItem.streams">
+                                <div flex="10" style="min-height:60px;">
+                                    <div class="draggable-icon-preview stream" style="margin-right:10px;">
+                                        {{ctrl.iconText(stream.name)}}
+                                    </div>
                                 </div>
-                            </div>
-                            <div flex="90">
-                                <h5><b>{{stream.name}}</b></h5>
-                                <p>{{stream.description}}</p>
+                                <div flex="90" style="min-height:60px;margin-left:10px;">
+                                    <h5><b>{{stream.name}}</b></h5>
+                                    <p>{{stream.description}}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <div flex="100" layout="row" layout-align="end end">

@@ -53,6 +53,7 @@ import {PipelineElementDocumentationComponent} from "./components/pipeline-eleme
 import {CustomOutputValidatorDirective} from "./validator/text/custom-output-validator.directive";
 import {AlternativeComponent} from "./components/alternative/alternative.component";
 import {GroupComponent} from "./components/group/group.component";
+import {SecretComponent} from "./components/secret/secret.component";
 
 
 export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate', 'datatables', 'ng-showdown'])
@@ -68,6 +69,7 @@ export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimat
     .component('customOutput', CustomOutputComponent)
     .component('domainConceptInput', DomainConceptComponent)
     .component('freetext', FreeTextComponent)
+    .component('secret', SecretComponent)
     .component('mappingPropertyNary', MappingNaryComponent)
     .component('mappingPropertyUnary', MappingUnaryComponent)
     .component('matchingProperty', MatchingPropertyComponent)

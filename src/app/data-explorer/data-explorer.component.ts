@@ -46,7 +46,7 @@ export class DataExplorerComponent implements OnInit {
     _filter(value: string): InfoResult[] {
         const filterValue = value.toLowerCase();
 
-        return this.infoResult.filter(option => option.index.toLowerCase().includes(filterValue));
+        return this.infoResult.filter(option => option.measureName.toLowerCase().includes(filterValue));
     }
 
     openSnackBar(message: string) {
