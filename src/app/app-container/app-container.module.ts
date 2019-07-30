@@ -7,11 +7,13 @@ import { AppContainerService } from './shared/app-container.service';
 import { ViewComponent } from './view/view.component';
 
 import { JitCompilerFactory } from '@angular/platform-browser-dynamic';
+import { MatDialogModule } from '@angular/material';
 
 @NgModule({
     imports: [
         CommonModule,
-        FlexLayoutModule
+        FlexLayoutModule,
+        MatDialogModule
     ],
     declarations: [
         AppContainerComponent,

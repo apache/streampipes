@@ -1,5 +1,9 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# apps
+src/assets/lib/apps/*
+
+
 # prebuild
 src/app/app.module.ts
 src/app/appng5.module.ts
