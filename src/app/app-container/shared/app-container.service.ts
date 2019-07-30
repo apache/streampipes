@@ -20,7 +20,9 @@ export class AppContainerService {
         //TODO: Mock
         return <Observable<InstalledApp[]>>Observable.create(observer => {
             observer.next([{
-                bundleUrl: 'http://localhost/apps/app.bundle.js'
+                bundleUrl: '/apps/app.bundle.js',
+                appName: 'Example App',
+                appDescription: 'This is an example app',
             }]);
             observer.complete();
         });

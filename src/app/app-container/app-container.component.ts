@@ -27,4 +27,8 @@ export class AppContainerComponent {
         this.isAppActive = true;
     }
 
+    appClosed() {
+        this.isAppActive = false;
+    }
+
 }

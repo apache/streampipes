@@ -8,12 +8,14 @@ import { ViewComponent } from './view/view.component';
 
 import { JitCompilerFactory } from '@angular/platform-browser-dynamic';
 import { MatDialogModule } from '@angular/material';
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
 @NgModule({
     imports: [
         CommonModule,
         FlexLayoutModule,
-        MatDialogModule
+        MatDialogModule,
+        CustomMaterialModule
     ],
     declarations: [
         AppContainerComponent,
