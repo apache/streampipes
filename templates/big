@@ -2,7 +2,7 @@ activemq
 backend
 consul
 connect-master
-connect-worker
+connect-worker-main
 couchdb
 elasticsearch
 jobmanager

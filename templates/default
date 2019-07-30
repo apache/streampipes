@@ -3,7 +3,7 @@ swagger-ui
 backend
 consul
 connect-master
-connect-worker
+connect-worker-main
 couchdb
 activemq
 kafka

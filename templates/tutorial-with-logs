@@ -7,7 +7,7 @@ backend
 nginx
 consul
 connect-master
-connect-worker
+connect-worker-main
 jobmanager
 taskmanager
 sinks-internal-jvm
