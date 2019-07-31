@@ -7,10 +7,13 @@ aggregate.description=Specifies the event property from your stream that should 
 groupBy.title=Group by
 groupBy.description=Partitions the incoming stream by the selected event properties.
 
-outputEvery.title=Output Frequency
-outputEvery.description=Output values every (seconds)
+outputEverySecond.title=Output Frequency
+outputEverySecond.description=Output values every (seconds)
 
-timeWindow.title=Time Window Size
+outputEveryEvent.title=Output Frequency
+outputEveryEvent.description=Output values # of events
+
+timeWindow.title=Time Window Size [s]
 timeWindow.description=Size of the time window in seconds
 
 operation.title=Operation
@@ -19,3 +22,14 @@ operation.description=Aggregation operation type
 aggregatedValue.title=Aggregated value
 aggregatedValue.description=The calculated aggregation value
 
+window.title=Select window type
+window.description=Data can either be aggregated by event count or by time windows
+
+timeWindowOption.title=Count Window
+timeWindowOption.description=
+
+countWindowOption.title=Time Window
+countWindowOption.description=
+
+countWindow.title=Count Window Size
+countWindow.description=Size of the count window

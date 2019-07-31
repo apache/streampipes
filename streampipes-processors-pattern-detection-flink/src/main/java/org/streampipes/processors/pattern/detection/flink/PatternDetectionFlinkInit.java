@@ -22,6 +22,8 @@ import org.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.streampipes.messaging.jms.SpJmsProtocolFactory;
+import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.pattern.detection.flink.config.PatternDetectionFlinkConfig;
 import org.streampipes.processors.pattern.detection.flink.processor.peak.PeakDetectionController;
 
@@ -38,6 +40,9 @@ public class PatternDetectionFlinkInit extends StandaloneModelSubmitter {
             new CborDataFormatFactory(),
             new SmileDataFormatFactory(),
             new FstDataFormatFactory());
+
+    DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory());
 
     new PatternDetectionFlinkInit().init(PatternDetectionFlinkConfig.INSTANCE);
   }
