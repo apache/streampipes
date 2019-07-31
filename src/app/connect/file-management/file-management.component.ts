@@ -35,7 +35,8 @@ export class FileManagementComponent implements OnInit {
   }
 
   delete(name: string) {
-      this.restService.delete(name).subscribe(
+      // TODO: AppId
+      this.restService.deleteFile('', name).subscribe(
           result => {
               this.openSnackBar('Deleted successful', 'Ok');
               this.getURLS();

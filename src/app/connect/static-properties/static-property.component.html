@@ -20,7 +20,7 @@
 </app-static-free-input>
 
 <app-static-file-input *ngIf="isFileStaticProperty(staticProperty)"
-    (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
+    (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty" [adapterId]="adapterId">
 </app-static-file-input>
 
 <app-static-runtime-resolvable-any-input *ngIf="isRuntimeResolvableAnyStaticProperty(staticProperty)"
