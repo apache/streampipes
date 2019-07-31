@@ -22,13 +22,21 @@ import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class FileManagement {
 
+  public String saveFile(InputStream inputStream, String fileName) throws IOException {
+    String filePath = getMainFilePath() + fileName;
+    saveFile(filePath, inputStream);
+    return filePath;
+  }
     private ConnectionWorkerContainerStorageImpl connectionWorkerContainerStorage;
 
     public FileManagement() {
@@ -56,8 +64,8 @@ public class FileManagement {
             urls.add(getMainFilePath() + files[i].getName());
         }
 
-        return urls;
-    }
+    return urls;
+  }
 
     public List<String> getAllFilePathsFromWorker(String username) throws AdapterException {
         List<String> filePaths = new LinkedList<>();
@@ -123,5 +131,8 @@ public class FileManagement {
     private String getMainFilePath() {
         return ConnectContainerConfig.INSTANCE.getDataLocation();
     }
+
+
+
 
 }

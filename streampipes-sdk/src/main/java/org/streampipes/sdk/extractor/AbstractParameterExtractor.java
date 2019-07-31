@@ -34,6 +34,7 @@ import org.streampipes.model.staticproperty.MappingPropertyNary;
 import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.SecretStaticProperty;
 import org.streampipes.model.staticproperty.SelectionStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.StaticPropertyAlternative;
@@ -86,6 +87,11 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   public <V> V singleValueParameter(String internalName, Class<V> targetClass) {
     return typeParser.parse(getStaticPropertyByName(internalName, FreeTextStaticProperty.class)
             .getValue(), targetClass);
+  }
+
+  public String secretValue(String internalName) {
+    return (getStaticPropertyByName(internalName, SecretStaticProperty.class)
+            .getValue());
   }
 
   private <V, T extends SelectionStaticProperty> V selectedSingleValue(String internalName, Class<V> targetClass, Class<T> oneOfStaticProperty) {

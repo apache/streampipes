@@ -29,6 +29,9 @@ import javax.persistence.Entity;
 @Entity
 public abstract class AdapterStreamDescription extends AdapterDescription {
 
+    @RdfProperty("sp:hasDataStream")
+    private SpDataStream dataStream;
+
     public AdapterStreamDescription() {
         super();
     }
@@ -42,9 +45,6 @@ public abstract class AdapterStreamDescription extends AdapterDescription {
         super(other);
         if (other.getDataStream() != null) this.setDataStream(new SpDataStream(other.getDataStream()));
     }
-
-    @RdfProperty("sp:hasDataStream")
-    private SpDataStream dataStream;
 
     public SpDataStream getDataStream() {
         return dataStream;

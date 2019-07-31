@@ -30,7 +30,7 @@ import javax.persistence.Entity;
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass(StreamPipes.GENERIC_ADAPTER_STREAM_DESCRIPTION)
 @Entity
-public class GenericAdapterStreamDescription extends AdapterStreamDescription implements  GenericAdapterDescription{
+public class GenericAdapterStreamDescription extends AdapterStreamDescription implements GenericAdapterDescription{
     public static final String ID = "http://streampipes.org/genericadapterstreamdescription";
 
 

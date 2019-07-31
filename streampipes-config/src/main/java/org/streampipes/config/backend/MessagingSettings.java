@@ -32,8 +32,8 @@ public class MessagingSettings {
             5000012,
             20,
             2,
-            Arrays.asList(SpDataFormat.CBOR,
-            SpDataFormat.JSON,
+            Arrays.asList(SpDataFormat.JSON,
+                    SpDataFormat.CBOR,
             SpDataFormat.FST,
             SpDataFormat.SMILE));
   }

@@ -32,135 +32,133 @@ import javax.persistence.OneToOne;
 @Entity
 public class FreeTextStaticProperty extends StaticProperty {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	@RdfProperty(StreamPipes.HAS_VALUE)
-	private String value;
-	
-	@RdfProperty(StreamPipes.REQUIRED_DATATYPE)
-	private URI requiredDatatype;
-	
-	@RdfProperty(StreamPipes.REQUIRED_DOMAIN_PROPERTY)
-	private URI requiredDomainProperty;
-	
-	@RdfProperty(StreamPipes.MAPS_TO)
-	private String mapsTo;
+  @RdfProperty(StreamPipes.HAS_VALUE)
+  private String value;
 
-	@RdfProperty(StreamPipes.MULTI_LINE)
-	private boolean multiLine;
+  @RdfProperty(StreamPipes.REQUIRED_DATATYPE)
+  private URI requiredDatatype;
 
-	@RdfProperty(StreamPipes.HTML_ALLOWED)
-	private boolean htmlAllowed;
+  @RdfProperty(StreamPipes.REQUIRED_DOMAIN_PROPERTY)
+  private URI requiredDomainProperty;
 
-	@RdfProperty(StreamPipes.PLACEHOLDERS_SUPPORTED)
-	private boolean placeholdersSupported;
-	
-	@OneToOne(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@RdfProperty(StreamPipes.HAS_VALUE_SPECIFICATION)
-	private PropertyValueSpecification valueSpecification;
-	
-	public FreeTextStaticProperty() {
-		super(StaticPropertyType.FreeTextStaticProperty);
-	}
-	
-	public FreeTextStaticProperty(FreeTextStaticProperty other) {
-		super(other);
-		this.requiredDomainProperty = other.getRequiredDomainProperty();
-		this.requiredDatatype = other.getRequiredDatatype();
-		if (other.getValueSpecification() != null) this.valueSpecification = new PropertyValueSpecification(other.getValueSpecification());
-		this.value = other.getValue();
-		this.htmlAllowed = other.isHtmlAllowed();
-		this.multiLine = other.isMultiLine();
-		this.placeholdersSupported = other.isPlaceholdersSupported();
-		this.mapsTo = other.getMapsTo();
-	}
-	
-	public FreeTextStaticProperty(String internalName, String label, String description)
-	{
-		super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
-	}
-	
-	public FreeTextStaticProperty(String internalName, String label, String description, URI type)
-	{
-		super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
-		this.requiredDomainProperty = type;
-	}
-	
-	public FreeTextStaticProperty(String internalName, String label, String description, URI type, String mapsTo)
-	{
-		super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
-		this.mapsTo = mapsTo;
-	}
-	
-	public FreeTextStaticProperty(String internalName, String label, String description, PropertyValueSpecification valueSpecification)
-	{
-		super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
-		this.valueSpecification = valueSpecification;
-	}
+  @RdfProperty(StreamPipes.MAPS_TO)
+  private String mapsTo;
 
-	public String getValue() {
-		return value;
-	}
+  @RdfProperty(StreamPipes.MULTI_LINE)
+  private boolean multiLine;
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+  @RdfProperty(StreamPipes.HTML_ALLOWED)
+  private boolean htmlAllowed;
 
-	public URI getRequiredDomainProperty() {
-		return requiredDomainProperty;
-	}
+  @RdfProperty(StreamPipes.PLACEHOLDERS_SUPPORTED)
+  private boolean placeholdersSupported;
 
-	public void setRequiredDomainProperty(URI type) {
-		this.requiredDomainProperty = type;
-	}
-	
-	public PropertyValueSpecification getValueSpecification() {
-		return valueSpecification;
-	}
+  @OneToOne(fetch = FetchType.EAGER,
+          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @RdfProperty(StreamPipes.HAS_VALUE_SPECIFICATION)
+  private PropertyValueSpecification valueSpecification;
 
-	public void setValueSpecification(PropertyValueSpecification valueSpecification) {
-		this.valueSpecification = valueSpecification;
-	}
-		
-	
-	public URI getRequiredDatatype() {
-		return requiredDatatype;
-	}
+  public FreeTextStaticProperty() {
+    super(StaticPropertyType.FreeTextStaticProperty);
+  }
 
-	public void setRequiredDatatype(URI requiredDatatype) {
-		this.requiredDatatype = requiredDatatype;
-	}
+  public FreeTextStaticProperty(FreeTextStaticProperty other) {
+    super(other);
+    this.requiredDomainProperty = other.getRequiredDomainProperty();
+    this.requiredDatatype = other.getRequiredDatatype();
+    if (other.getValueSpecification() != null) {
+      this.valueSpecification = new PropertyValueSpecification(other.getValueSpecification());
+    }
+    this.value = other.getValue();
+    this.htmlAllowed = other.isHtmlAllowed();
+    this.multiLine = other.isMultiLine();
+    this.placeholdersSupported = other.isPlaceholdersSupported();
+    this.mapsTo = other.getMapsTo();
+  }
 
-	public boolean isMultiLine() {
-		return multiLine;
-	}
+  public FreeTextStaticProperty(String internalName, String label, String description) {
+    super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
+  }
 
-	public void setMultiLine(boolean multiLine) {
-		this.multiLine = multiLine;
-	}
+  public FreeTextStaticProperty(String internalName, String label, String description, URI type) {
+    super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
+    this.requiredDomainProperty = type;
+  }
 
-	public boolean isHtmlAllowed() {
-		return htmlAllowed;
-	}
+  public FreeTextStaticProperty(String internalName, String label, String description, URI type, String mapsTo) {
+    super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
+    this.mapsTo = mapsTo;
+  }
 
-	public void setHtmlAllowed(boolean htmlAllowed) {
-		this.htmlAllowed = htmlAllowed;
-	}
+  public FreeTextStaticProperty(String internalName, String label, String description, PropertyValueSpecification valueSpecification) {
+    super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
+    this.valueSpecification = valueSpecification;
+  }
 
-	public boolean isPlaceholdersSupported() {
-		return placeholdersSupported;
-	}
+  public String getValue() {
+    return value;
+  }
 
-	public void setPlaceholdersSupported(boolean placeholdersSupported) {
-		this.placeholdersSupported = placeholdersSupported;
-	}
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-	public String getMapsTo() {
-		return mapsTo;
-	}
+  public URI getRequiredDomainProperty() {
+    return requiredDomainProperty;
+  }
 
-	public void setMapsTo(String mapsTo) {
-		this.mapsTo = mapsTo;
-	}
+  public void setRequiredDomainProperty(URI type) {
+    this.requiredDomainProperty = type;
+  }
+
+  public PropertyValueSpecification getValueSpecification() {
+    return valueSpecification;
+  }
+
+  public void setValueSpecification(PropertyValueSpecification valueSpecification) {
+    this.valueSpecification = valueSpecification;
+  }
+
+
+  public URI getRequiredDatatype() {
+    return requiredDatatype;
+  }
+
+  public void setRequiredDatatype(URI requiredDatatype) {
+    this.requiredDatatype = requiredDatatype;
+  }
+
+  public boolean isMultiLine() {
+    return multiLine;
+  }
+
+  public void setMultiLine(boolean multiLine) {
+    this.multiLine = multiLine;
+  }
+
+  public boolean isHtmlAllowed() {
+    return htmlAllowed;
+  }
+
+  public void setHtmlAllowed(boolean htmlAllowed) {
+    this.htmlAllowed = htmlAllowed;
+  }
+
+  public boolean isPlaceholdersSupported() {
+    return placeholdersSupported;
+  }
+
+  public void setPlaceholdersSupported(boolean placeholdersSupported) {
+    this.placeholdersSupported = placeholdersSupported;
+  }
+
+  public String getMapsTo() {
+    return mapsTo;
+  }
+
+  public void setMapsTo(String mapsTo) {
+    this.mapsTo = mapsTo;
+  }
 }

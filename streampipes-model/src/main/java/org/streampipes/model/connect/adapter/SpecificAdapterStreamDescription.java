@@ -19,8 +19,6 @@ package org.streampipes.model.connect.adapter;
 
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfsClass;
-import org.streampipes.model.connect.grounding.FormatDescription;
-import org.streampipes.model.connect.grounding.ProtocolDescription;
 
 import javax.persistence.Entity;
 
@@ -29,10 +27,10 @@ import javax.persistence.Entity;
 @Entity
 public class SpecificAdapterStreamDescription extends AdapterStreamDescription {
 
-    public SpecificAdapterStreamDescription() {
-    }
+  public SpecificAdapterStreamDescription() {
+  }
 
-    public SpecificAdapterStreamDescription(AdapterStreamDescription other) {
-        super(other);
-    }
+  public SpecificAdapterStreamDescription(AdapterStreamDescription other) {
+    super(other);
+  }
 }

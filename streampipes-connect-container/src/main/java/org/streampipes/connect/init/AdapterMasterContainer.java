@@ -24,12 +24,22 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.config.ConnectContainerConfig;
-import org.streampipes.connect.rest.master.*;
+import org.streampipes.connect.rest.master.AdapterResource;
+import org.streampipes.connect.rest.master.AdapterTemplateResource;
+import org.streampipes.connect.rest.master.DescriptionResource;
+import org.streampipes.connect.rest.master.FileResource;
+import org.streampipes.connect.rest.master.GuessResource;
+import org.streampipes.connect.rest.master.RuntimeResolvableResource;
+import org.streampipes.connect.rest.master.SourcesResource;
+import org.streampipes.connect.rest.master.UnitResource;
+import org.streampipes.connect.rest.master.WelcomePageMaster;
+import org.streampipes.connect.rest.master.WorkerAdministrationResource;
 
-import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.ws.rs.core.UriBuilder;
 
 public class AdapterMasterContainer extends AdapterContainer {
 
@@ -44,10 +54,6 @@ public class AdapterMasterContainer extends AdapterContainer {
         URI baseUri = UriBuilder
                 .fromUri(url)
                 .build();
-
-        boolean couchDbAvailable = true;
-
-        couchDbAvailable = true;
 
         Server server = JettyHttpContainerFactory.createServer(baseUri, config);
 

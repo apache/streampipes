@@ -130,7 +130,7 @@ public class WorkerRestClient {
 
     public static RuntimeOptionsResponse getConfiguration(String workerEndpoint, String elementId, String username, String runtimeOptionsRequest) throws AdapterException {
         String element = encodeValue(elementId);
-        String url = workerEndpoint + "/api/v1/" + username + "/worker/resolvable/" + element + "/configurations";
+        String url = workerEndpoint + "api/v1/" + username + "/worker/resolvable/" + element + "/configurations";
 //        url = encodeValue(url);
 //        String url = workerEndpoint + "/api/v1/" + username + "/worker/resolvable/abc/configurations";
 

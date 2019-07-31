@@ -64,9 +64,9 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
     while (it.hasNext()) {
       String objKey = it.next();
       Object obj = typeMap.get(objKey);
-      if (obj instanceof java.util.List) {
+      if (obj instanceof List) {
         String eventName = StringUtils.capitalize(objKey);
-        registerEventTypeIfNotExists(eventName, (Map<String, Object>) ((java.util.List) obj).get(0));
+        registerEventTypeIfNotExists(eventName, (Map<String, Object>) ((List) obj).get(0));
         newTypeMap.put(objKey, eventName + "[]");
       } else {
         newTypeMap.put(objKey, obj);

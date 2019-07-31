@@ -18,11 +18,16 @@
 package org.streampipes.config.backend;
 
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.streampipes.config.SpConfig;
+
+import java.security.SecureRandom;
 
 public enum BackendConfig {
   INSTANCE;
 
+  private final char[] possibleCharacters = (new String(
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?")).toCharArray();
   private SpConfig config;
 
   BackendConfig() {
@@ -57,6 +62,13 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.INFLUX_DATA_BASE, "sp", "The influx data base name");
     config.registerObject(BackendConfigKeys.MESSAGING_SETTINGS, MessagingSettings.fromDefault(),
             "Default Messaging Settings");
+
+    config.register(BackendConfigKeys.ENCRYPTION_KEY, randomKey(), "A random secret key");
+  }
+
+  private String randomKey() {
+    return RandomStringUtils.random( 10, 0, possibleCharacters.length - 1,
+            false, false, possibleCharacters, new SecureRandom());
   }
 
   public String getBackendHost() {
@@ -182,6 +194,10 @@ public enum BackendConfig {
 
   public String getInfluxDatabaseName() {
     return config.getString(BackendConfigKeys.INFLUX_DATA_BASE);
+  }
+
+  public String getEncryptionKey() {
+    return config.getString(BackendConfigKeys.ENCRYPTION_KEY);
   }
 
 
