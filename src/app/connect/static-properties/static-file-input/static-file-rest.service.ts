@@ -23,7 +23,9 @@ export class StaticFileRestService {
     }
 
 
-
+    /**
+     *  @deprecated use uploadFile
+     */
     upload(file: File): Observable<HttpEvent<any>> {
         const data: FormData = new FormData();
         data.append('file_upload', file, file.name);
@@ -36,9 +38,33 @@ export class StaticFileRestService {
 
         const req = new HttpRequest('POST', this.url, data, options);
         return this.http.request(req);
-           }
+    }
 
+    uploadFile(adapterId, file: File): Observable<HttpEvent<any>> {
+        const data: FormData = new FormData();
+        data.append('file_upload', file, file.name);
+        data.append('appId', adapterId);
+
+        let params = new HttpParams();
+        const options = {
+            params: params,
+            reportProgress: true,
+        };
+
+        //let url = this.url + '/' + adapterId;
+        const req = new HttpRequest('POST', this.url, data, options);
+        return this.http.request(req);
+    }
+
+    /**
+     *  @deprecated use deleteFile
+     */
     delete(id: string) {
         return this.http.delete(this.url + '/' + id);
+    }
+
+    deleteFile(adapterId: string, id: string) {
+        const req = new HttpRequest('DELETE', this.url + '/' + id, adapterId);
+        return this.http.request(req);
     }
 }

@@ -16,6 +16,7 @@ export class StaticFileInputComponent implements OnInit {
 
 
     @Input() staticProperty: StaticProperty;
+    @Input() adapterId: String;
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
     private inputValue: String;
@@ -45,7 +46,7 @@ export class StaticFileInputComponent implements OnInit {
     upload() {
         this.uploadStatus = 0;
         if (this.selectedUploadFile !== undefined) {
-            this.staticFileRestService.upload(this.selectedUploadFile).subscribe(
+            this.staticFileRestService.uploadFile(this.adapterId, this.selectedUploadFile).subscribe(
                 event => {
                     if (event.type == HttpEventType.UploadProgress) {
                         this.uploadStatus = Math.round(100 * event.loaded / event.total);
