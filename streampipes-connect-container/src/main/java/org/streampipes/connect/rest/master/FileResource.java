@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.management.master.FileManagement;
 import org.streampipes.connect.rest.AbstractContainerResource;
-import org.streampipes.model.client.messages.Notifications;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -45,41 +44,21 @@ public class FileResource extends AbstractContainerResource {
         this.fileManagement = fileManagement;
     }
 
-    @Deprecated
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response addFileForAdapter(@FormDataParam("file_upload") InputStream uploadedInputStream,
-        @FormDataParam("file_upload") FormDataContentDisposition fileDetail) {
-
-        return Response.status(410).build();
-    }
-
-    @POST
-    @Path("/{appId}")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response addFileForAdapter(@PathParam("appId") String id, @PathParam("username") String username,
+    public Response addFileForAdapter(@PathParam("username") String username,
+                                      @FormDataParam("appId") String id,
                                       @FormDataParam("file_upload") InputStream uploadedInputStream,
                                       @FormDataParam("file_upload") FormDataContentDisposition fileDetail) {
 
         try {
             String filePath = fileManagement.saveFileAtWorker(id, uploadedInputStream, fileDetail.getFileName(), username);
-//            return ok("{fileName: " + filePath + "}");
-            return ok(Notifications.success(filePath));
+            return ok(filePath);
+//            return ok(Notifications.success(filePath));
         } catch (Exception e) {
             logger.error(e.toString());
             return fail();
         }
-    }
-
-
-
-    @Deprecated
-    @GET
-  //  @Produces({MediaType.F})
-    @Path("/{filename}")
-    public Response getFile(@PathParam("filename") String fileName) {
-
-        return Response.status(410).build();
     }
 
     @GET
@@ -98,14 +77,8 @@ public class FileResource extends AbstractContainerResource {
 
     }
 
-    @Deprecated
     @GET
-    public Response getFilePahts(@PathParam("username") String username) {
-
-        return Response.status(410).build();
-    }
-
-    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getAllFilePathsFromWorker(@PathParam("username") String username) {
         try {
             return ok(fileManagement.getAllFilePathsFromWorker(username));
@@ -115,19 +88,9 @@ public class FileResource extends AbstractContainerResource {
         }
     }
 
-
-    @Deprecated
     @DELETE
     @Path("/{filename}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteFile(@PathParam("filename") String fileName) {
-
-        return Response.status(410).build();
-    }
-
-    @DELETE
-    @Path("/{appId}/{filename}")
-    public Response deleteFile(@PathParam("appId") String id, @PathParam("filename") String fileName,
+    public Response deleteFile(String id, @PathParam("filename") String fileName,
                                @PathParam("username") String username) {
         try {
             fileManagement.deleteFileFromWorker(id, fileName, username);

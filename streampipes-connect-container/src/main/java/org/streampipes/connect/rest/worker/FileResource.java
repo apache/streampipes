@@ -78,12 +78,7 @@ public class FileResource extends AbstractContainerResource {
 
     @GET
     public Response getFilePaths(@PathParam("username") String username) {
-        try {
-            return ok(fileManagement.getFilePaths());
-        } catch (IOException e) {
-            logger.error(e.toString());
-            return fail();
-        }
+        return ok(fileManagement.getFilePaths());
     }
 
 
@@ -96,7 +91,8 @@ public class FileResource extends AbstractContainerResource {
             return ok();
         } catch (IOException e) {
             logger.error(e.toString());
-            return fail();        }
+            return fail();
+        }
     }
 
 }

@@ -34,11 +34,13 @@ public class FileManagement {
         return filePath;
     }
 
-    public List<String> getFilePaths() throws IOException {
+    public List<String> getFilePaths() {
         List<String> urls = new ArrayList<>();
         File[] files = new File(getMainFilePath()).listFiles();
-        for (int i = 0; i < files.length; i++) {
-            urls.add(getMainFilePath() + files[i].getName());
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                urls.add(getMainFilePath() + files[i].getName());
+            }
         }
 
         return urls;
@@ -67,12 +69,16 @@ public class FileManagement {
         file.getParentFile().mkdirs();
         file.createNewFile();
         byte[] aByte = IOUtils.toByteArray(inputStream);
-        FileOutputStream fos =new FileOutputStream(file);
+        FileOutputStream fos = new FileOutputStream(file);
         IOUtils.write(aByte, fos);
     }
 
     private String getMainFilePath() {
-        return ConnectContainerConfig.INSTANCE.getDataLocation();
+        String dataLocation = System.getenv("SP_DATA_LOCATION");
+        if (dataLocation == null) {
+            dataLocation = "/data/";
+        }
+        return dataLocation;
     }
 
 

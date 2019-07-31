@@ -151,7 +151,7 @@ public class WorkerRestClient {
     }
 
     public static String saveFileAtWorker(String baseUrl, InputStream inputStream, String fileName) throws AdapterException {
-        String url = baseUrl + "/worker/file";
+        String url = baseUrl + "worker/file";
         logger.info("Trying to start save file on endpoint: " + url);
 
 
@@ -174,7 +174,7 @@ public class WorkerRestClient {
     }
 
     public static InputStream getFileFromWorker(String baseUrl, String fileName) throws AdapterException {
-        String url = baseUrl + "/worker/file/" + fileName;
+        String url = baseUrl + "worker/file/" + fileName;
         logger.info("Trying to get file from endpoint: " + url);
 
         try {
@@ -192,7 +192,7 @@ public class WorkerRestClient {
     }
 
     public static List<String> getAllFilePathsFromWorker(java.lang.String baseUrl) throws AdapterException {
-        String url = baseUrl + "/worker/file/";
+        String url = baseUrl + "worker/file";
         logger.info("Trying to get file paths from endpoint: " + url);
 
         try {
@@ -211,16 +211,21 @@ public class WorkerRestClient {
     }
 
     public static void deleteFileFromWorker(String baseUrl, String fileName) throws AdapterException {
-        String url = baseUrl + "/worker/file/";
-        logger.info("Trying to delete file from endpoint: " + url);
+        String url = baseUrl + "worker/file/" + fileName;
+        logger.info("Trying to delete filefrom endpoint: " + url);
 
         try {
-            Request.Delete(url)
+            int statusCode = Request.Delete(url)
                     .connectTimeout(1000)
                     .socketTimeout(100000)
-                    .execute();
+                    .execute().returnResponse().getStatusLine().getStatusCode();
 
-            logger.info("Deleted File successfully");
+            if (statusCode == 200) {
+                logger.info("Deleted File successfully");
+            } else {
+                throw new AdapterException("Could not delete file from endpoint " + url);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
             throw new AdapterException("Could not delete file from endpoint " + url);
