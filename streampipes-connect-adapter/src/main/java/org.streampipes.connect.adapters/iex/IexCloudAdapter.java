@@ -36,7 +36,7 @@ public abstract class IexCloudAdapter extends PullAdapter {
   public IexCloudAdapter(SpecificAdapterStreamDescription adapterDescription, String restPath) {
     super(adapterDescription);
     ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
-    this.apiToken = extractor.singleValue("token");
+    this.apiToken = extractor.secretValue("token");
     this.stockQuote = extractor.singleValue("stock");
     this.iexCloudInstanceUrl = IexCloudBaseUrl + stockQuote + restPath + Token + apiToken;
 

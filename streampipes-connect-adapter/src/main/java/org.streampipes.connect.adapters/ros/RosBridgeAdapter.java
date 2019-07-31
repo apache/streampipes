@@ -32,11 +32,14 @@ import org.streampipes.connect.adapter.format.json.object.JsonObjectFormat;
 import org.streampipes.connect.adapter.format.json.object.JsonObjectParser;
 import org.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.adapter.sdk.ParameterExtractor;
+import org.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.staticproperty.Option;
 import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+import org.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.streampipes.sdk.helpers.Labels;
 
 import java.io.ByteArrayInputStream;
@@ -45,8 +48,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class RosBridgeAdapter extends SpecificDataStreamAdapter {
+public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements ResolvesContainerProvidedOptions {
 
     public static final String ID = "http://streampipes.org/adapter/specific/ros";
 
@@ -80,7 +84,11 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
                 .category(AdapterType.Manufacturing)
                 .requiredTextParameter(Labels.from(ROS_HOST_KEY, "Ros Bridge", "Example: test-server.com (No protocol) "))
                 .requiredTextParameter(Labels.from(ROS_PORT_KEY, "Port", "Example: 9090"))
-                .requiredTextParameter(Labels.from(TOPIC_KEY, "Topic", "Example: /battery (Starts with /) "))
+//                .requiredSingleValueSelectionFromContainer(Labels.from(TOPIC_KEY, "Topic",
+//                        "Example: /battery (Starts with /) "), Arrays.asList(ROS_HOST_KEY,
+//                        ROS_PORT_KEY))
+                .requiredTextParameter(Labels.from(TOPIC_KEY, "Topic", "Example: /battery " +
+                "(Starts with /) "))
                 .build();
         description.setAppId(ID);
 
@@ -107,6 +115,17 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
         });
 
 
+    }
+
+    @Override
+    public List<Option> resolveOptions(String requestId, StaticPropertyExtractor extractor) {
+        String rosBridgeHost = extractor.singleValueParameter(ROS_HOST_KEY, String.class);
+        Integer rosBridgePort = extractor.singleValueParameter(ROS_PORT_KEY, Integer.class);
+
+        Ros ros = new Ros(rosBridgeHost, rosBridgePort);
+
+        List<String> topics =getListOfAllTopics(ros);
+        return topics.stream().map(Option::new).collect(Collectors.toList());
     }
 
     private class GetNEvents implements Runnable {
@@ -228,13 +247,11 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
     }
 
     // Ignore for now, but is interesting for future implementations
-    private void getListOfAllTopics() {
-        // Get a list of all topics
-//        Service addTwoInts = new Service(ros, "/rosapi/topics", "rosapi/Topics");
-//        ServiceRequest request = new ServiceRequest();
-//        ServiceResponse response = addTwoInts.callServiceAndWait(request);
-//        System.out.println(response.toString());
+    private List<String> getListOfAllTopics(Ros ros) {
+        Service service = new Service(ros, "/rosapi/topics", "rosapi/Topics");
+        ServiceRequest request = new ServiceRequest();
+        ServiceResponse response = service.callServiceAndWait(request);
+        System.out.println(response.toString());
+        return new ArrayList<>();
     }
-
-
 }
