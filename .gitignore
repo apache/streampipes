@@ -60,3 +60,7 @@ dist/
 npm-debug.log
 
 logs/
+
+# Test Data from running in local mode
+/test_data/
+
