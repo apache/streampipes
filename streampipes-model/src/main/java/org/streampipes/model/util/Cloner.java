@@ -82,6 +82,7 @@ import org.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.streampipes.model.staticproperty.SupportedProperty;
+import org.streampipes.model.staticproperty.FileStaticProperty;
 import org.streampipes.model.template.BoundPipelineElement;
 
 import java.util.ArrayList;
@@ -139,6 +140,8 @@ public class Cloner {
       return new StaticPropertyAlternatives((StaticPropertyAlternatives) o);
     } else if (o instanceof SecretStaticProperty) {
       return new SecretStaticProperty((SecretStaticProperty) o);
+    } else if (o instanceof FileStaticProperty) {
+      return new FileStaticProperty((FileStaticProperty) o);
     } else {
       return new StaticPropertyAlternative((StaticPropertyAlternative) o);
     }
@@ -228,7 +231,11 @@ public class Cloner {
 
   public List<StaticProperty> staticProperties(
           List<StaticProperty> staticProperties) {
-    return staticProperties.stream().map(o -> staticProperty(o)).collect(Collectors.toList());
+    if (staticProperties != null) {
+      return staticProperties.stream().map(o -> staticProperty(o)).collect(Collectors.toList());
+    } else {
+      return new ArrayList<>();
+    }
   }
 
   public List<TransportFormat> transportFormats(
