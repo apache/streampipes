@@ -1,6 +1,7 @@
 activemq
 kafka
 consul
+rdf4j
 zookeeper
 swagger-ui
 couchdb

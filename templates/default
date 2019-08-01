@@ -1,6 +1,7 @@
 nginx
 swagger-ui
 backend
+rdf4j
 consul
 connect-master
 connect-worker-main
