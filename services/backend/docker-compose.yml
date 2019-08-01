@@ -12,7 +12,6 @@ services:
     volumes:
       - backend:/root/.streampipes
       - backend:/streampipes-assets
-      - backend:/root/.RDF4J
     networks:
       spnet:
 
