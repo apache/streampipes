@@ -19,6 +19,7 @@ package org.streampipes.connect.init;
 
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ import org.streampipes.connect.rest.worker.GuessResource;
 import org.streampipes.connect.rest.worker.RuntimeResolvableResource;
 import org.streampipes.connect.rest.worker.WelcomePageWorker;
 import org.streampipes.connect.rest.worker.WorkerResource;
+import org.streampipes.connect.rest.worker.FileResource;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.worker.ConnectWorkerContainer;
@@ -102,6 +104,8 @@ public abstract class AdapterWorkerContainer extends AdapterContainer {
         allClasses.add(GuessResource.class);
         allClasses.add(RuntimeResolvableResource.class);
         allClasses.add(WorkerResource.class);
+        allClasses.add(FileResource.class);
+        allClasses.add(MultiPartFeature.class);
 
         allClasses.addAll(getApiClasses());
 
