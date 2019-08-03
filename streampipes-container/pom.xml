@@ -58,19 +58,10 @@
 			<version>1.8</version>
 		</dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet</artifactId>
-        </dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.inject</groupId>
-			<artifactId>jersey-hk2</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.mashape.unirest</groupId>
 			<artifactId>unirest-java</artifactId>
 			<version>1.4.9</version>
