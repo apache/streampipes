@@ -33,6 +33,7 @@ import org.streampipes.pe.examples.jvm.staticproperty.NaryMappingPropertyExample
 import org.streampipes.pe.examples.jvm.staticproperty.NumberParameterExampleController;
 import org.streampipes.pe.examples.jvm.staticproperty.NumberParameterWithRangeExampleController;
 import org.streampipes.pe.examples.jvm.staticproperty.RuntimeResolvableSingleValue;
+import org.streampipes.pe.examples.jvm.staticproperty.SecretStaticPropertyExampleController;
 import org.streampipes.pe.examples.jvm.staticproperty.SingleValueSelectionExampleController;
 import org.streampipes.pe.examples.jvm.staticproperty.StaticPropertyAlternativesController;
 import org.streampipes.pe.examples.jvm.staticproperty.TextParameterExampleController;
@@ -53,6 +54,7 @@ public class ExamplesInit extends StandaloneModelSubmitter {
             .add(new CollectionExampleController())
             .add(new RuntimeResolvableSingleValue())
             .add(new StaticPropertyAlternativesController())
+            .add(new SecretStaticPropertyExampleController())
 
             .add(new AppendOutputController())
             .add(new CustomOutputController())
