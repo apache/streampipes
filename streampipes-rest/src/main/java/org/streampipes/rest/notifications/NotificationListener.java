@@ -24,25 +24,21 @@ import javax.servlet.ServletContextListener;
 
 public class NotificationListener implements ServletContextListener {
 
-	private static final String internalNotificationTopic = "org.streampipes.notifications";
-	
+  private static final String internalNotificationTopic = "org.streampipes.notifications";
 
-	@Override
-	public void contextDestroyed(ServletContextEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void contextInitialized(ServletContextEvent arg0) {
-		if (BackendConfig.INSTANCE.isConfigured())
-		{
-			try {
-			new Thread(new StreamPipesNotificationSubscriber(internalNotificationTopic)).start();
-			} catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
+  @Override
+  public void contextDestroyed(ServletContextEvent arg0) {
+  }
+
+  @Override
+  public void contextInitialized(ServletContextEvent arg0) {
+    if (BackendConfig.INSTANCE.isConfigured()) {
+      try {
+        new Thread(new StreamPipesNotificationSubscriber(internalNotificationTopic)).start();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
 }

@@ -1,5 +1,5 @@
 SP_COUCHDB_HOST=localhost
-uri=http://localhost:8030/rdf4j-server
+uri=http://localhost:8031/rdf4j-server
 SP_KAFKA_HOST=localhost
 SP_ZOOKEEPER_HOST=localhost
 SP_JMS_HOST=localhost
