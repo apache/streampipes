@@ -51,7 +51,7 @@ export class WidgetInstances {
 
 
     getWidgetDashboardDefinition(widget) {
-        var name = widget.visualisation.name + '[' + widget.visualisationType + ']';
+        var name = widget.visualisation.name + " - " +widget.visualisation.visualizationName + ' (' + widget.visualisationType + ')';
         var directive = this.WidgetTemplates.getDirectiveName(widget.visualisationType);
         var dataModel = this.WidgetTemplates.getDataModel(widget.visualisationType);
 
