@@ -24,6 +24,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.init.ModelSubmitter;
+import org.streampipes.container.init.RunningInstances;
 import org.streampipes.container.model.PeConfig;
 import org.streampipes.container.util.ConsulUtil;
 
@@ -58,5 +59,16 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter {
     @PreDestroy
     public void onExit() {
         LOG.info("Shutting down StreamPipes pipeline element container...");
+        Integer runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();
+
+        while (runningInstancesCount > 0) {
+            LOG.info("Waiting for {} running pipeline elements to be stopped...", runningInstancesCount);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                LOG.error("Could not pause current thread...");
+            }
+            runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();
+        }
     }
 }

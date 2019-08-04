@@ -88,6 +88,7 @@ public class GraphSubmitter {
   public PipelineOperationStatus detachGraphs() {
     PipelineOperationStatus status = new PipelineOperationStatus();
     status.setPipelineId(pipelineId);
+    status.setPipelineName(pipelineName);
 
     graphs.forEach(g -> status.addPipelineElementStatus(new HttpRequestBuilder(g, g.getUri()).detach()));
     dataSets.forEach(dataSet -> status.addPipelineElementStatus(new HttpRequestBuilder(dataSet, dataSet.getUri() +

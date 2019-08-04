@@ -29,9 +29,12 @@ import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.streampipes.app.file.export.application.AppFileExportApplication;
+import org.streampipes.manager.operations.Operations;
+import org.streampipes.model.client.pipeline.PipelineOperationStatus;
 import org.streampipes.rest.notifications.NotificationListener;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PreDestroy;
@@ -50,7 +53,14 @@ public class StreamPipesBackendApplication {
   @PreDestroy
   public void onExit() {
    LOG.info("Shutting down StreamPipes...");
-    //Operations.stopAllPipelines();
+    List<PipelineOperationStatus> status = Operations.stopAllPipelines();
+    status.forEach(s -> {
+      if (s.isSuccess()) {
+        LOG.info("Pipeline {} successfully stopped", s.getPipelineName());
+      } else {
+        LOG.error("Pipeline {} could not be stopped", s.getPipelineName());
+      }
+    });
   }
 
   @Bean
