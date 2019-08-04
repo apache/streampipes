@@ -47,6 +47,7 @@ public class StreamPipesBackendApplication {
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesBackendApplication.class.getCanonicalName());
 
   public static void main(String[] args) {
+    System.setProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "true");
     SpringApplication.run(StreamPipesBackendApplication.class, args);
   }
 
