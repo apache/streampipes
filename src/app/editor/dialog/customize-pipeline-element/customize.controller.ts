@@ -1,4 +1,5 @@
 import * as angular from 'angular';
+import {ShepherdService} from "../../../services/tour/shepherd.service";
 
 export class CustomizeController {
 
@@ -17,7 +18,7 @@ export class CustomizeController {
     $rootScope: any;
     sepa: any;
     customizeForm: any;
-    ShepherdService: any;
+    ShepherdService: ShepherdService;
     showDocumentation: boolean = false;
 
     constructor($rootScope, $mdDialog, elementData, sourceEndpoint, sepa, ShepherdService) {
@@ -34,6 +35,12 @@ export class CustomizeController {
         this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.ShepherdService = ShepherdService;
+    }
+
+    $onInit() {
+        if (this.ShepherdService.isTourActive()) {
+            this.ShepherdService.trigger("customize-" +this.sepa.type);
+        }
     }
 
     toggleHelpDialog() {

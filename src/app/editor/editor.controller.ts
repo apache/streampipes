@@ -22,7 +22,7 @@ export class EditorCtrl {
     isTutorialOpen: boolean = false;
 
     requiredStreamForTutorialAppId: any = "org.streampipes.pe.random.number.json";
-    requiredProcessorForTutorialAppId: any = "org.streampipes.processors.transformation.flink.fieldhasher";
+    requiredProcessorForTutorialAppId: any = "org.streampipes.processors.filters.jvm.numericalfilter";
     requiredSinkForTutorialAppId: any = "org.streampipes.sinks.internal.jvm.dashboard";
     missingElementsForTutorial: any = [];
 
