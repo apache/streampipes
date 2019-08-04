@@ -23,6 +23,7 @@ import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
@@ -30,23 +31,28 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class DashboardController extends StandaloneEventSinkDeclarer<DashboardParameters> {
 
-    @Override
-    public DataSinkDescription declareModel() {
-        return DataSinkBuilder.create("org.streampipes.sinks.internal.jvm.dashboard")
-                .withLocales(Locales.EN)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .category(DataSinkType.VISUALIZATION_CHART)
-                .requiredStream(StreamRequirementsBuilder
-                        .create()
-                        .requiredProperty(EpRequirements.anyProperty())
-                        .build())
-                .build();
-    }
+  private static final String VISUALIZATION_NAME_KEY = "visualization-name";
 
-    @Override
-    public ConfiguredEventSink<DashboardParameters> onInvocation(DataSinkInvocation invocationGraph,
-                                                                 DataSinkParameterExtractor extractor) {
-         return new ConfiguredEventSink<>(new DashboardParameters(invocationGraph), Dashboard::new);
-    }
+  @Override
+  public DataSinkDescription declareModel() {
+    return DataSinkBuilder.create("org.streampipes.sinks.internal.jvm.dashboard")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .category(DataSinkType.VISUALIZATION_CHART)
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredProperty(EpRequirements.anyProperty())
+                    .build())
+            .requiredTextParameter(Labels.withId(VISUALIZATION_NAME_KEY))
+            .build();
+  }
+
+  @Override
+  public ConfiguredEventSink<DashboardParameters> onInvocation(DataSinkInvocation invocationGraph,
+                                                               DataSinkParameterExtractor extractor) {
+    String visualizationName = extractor.singleValueParameter(VISUALIZATION_NAME_KEY,
+            String.class);
+    return new ConfiguredEventSink<>(new DashboardParameters(invocationGraph, visualizationName), Dashboard::new);
+  }
 
 }

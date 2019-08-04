@@ -50,7 +50,7 @@ public class Dashboard implements EventSink<DashboardParameters> {
 
     @Override
     public void onInvocation(DashboardParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-        if (!saveToCouchDB(parameters.getGraph())) {
+        if (!saveToCouchDB(parameters.getGraph(), parameters)) {
             throw new SpRuntimeException("The schema couldn't be stored in the couchDB");
         }
         this.publisher = new ActiveMQPublisher(SinksInternalJvmConfig.INSTANCE.getJmsUrl(), parameters.getGraph().getCorrespondingPipeline
@@ -67,11 +67,10 @@ public class Dashboard implements EventSink<DashboardParameters> {
         }
     }
 
-    private boolean saveToCouchDB(DataSinkInvocation invocationGraph) {
+    private boolean saveToCouchDB(DataSinkInvocation invocationGraph, DashboardParameters params) {
         CouchDbClient dbClient = new CouchDbClient(new CouchDbProperties(DB_NAME, true, DB_PROTOCOL, DB_HOST, DB_PORT, null, null));
-        DataSinkInvocation inv = new DataSinkInvocation(invocationGraph);
         dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
-        org.lightcouch.Response res = dbClient.save(DashboardModel.from(new DashboardParameters(inv)));
+        org.lightcouch.Response res = dbClient.save(DashboardModel.from(params));
 
         if (res.getError() == null) {
             visualizationId = res.getId();
