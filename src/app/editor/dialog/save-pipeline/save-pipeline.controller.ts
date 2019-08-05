@@ -1,6 +1,8 @@
+import {RestApi} from "../../../services/rest-api.service";
+
 export class SavePipelineController {
 
-    RestApi: any;
+    RestApi: RestApi;
     $mdToast: any;
     $state: any;
     $mdDialog: any;
@@ -76,21 +78,20 @@ export class SavePipelineController {
             this.showToast("error", "Please enter a name for your pipeline");
             return false;
         }
-        
-        this.ObjectProvider.storePipeline(this.pipeline)
+
+        let storageRequest;
+
+        if (this.modificationMode && this.updateMode === 'update') {
+            storageRequest = this.RestApi.updatePipeline(this.pipeline);
+        } else {
+            storageRequest = this.RestApi.storePipeline(this.pipeline);
+        }
+
+        storageRequest
             .then(msg => {
                 let data = msg.data;
                 if (data.success) {
-                    if (this.modificationMode && this.updateMode === 'update') {
-                        this.RestApi.deleteOwnPipeline(this.pipeline._id)
-                            .then(d => {
-                                this.afterStorage(data, switchTab);
-                            }, d => {
-                                this.showToast("error", "Could not delete Pipeline");
-                            })
-                    } else {
-                        this.afterStorage(data, switchTab);
-                    }
+                    this.afterStorage(data, switchTab);
                 } else {
                     this.displayErrors(data);
                 }

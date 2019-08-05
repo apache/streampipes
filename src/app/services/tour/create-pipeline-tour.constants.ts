@@ -26,7 +26,7 @@ export default {
             {
                 stepId: "step-3",
                 title: "Selecting data streams",
-                text: "The first element of a pipeline is a data stream, which produces data you'd like to transform. <p>To select a stream, click the stream named <b>Random Number Stream</b> and drop it in the assembly area below.</p>",
+                text: "The first element of a pipeline is a data stream, which produces data you'd like to transform. <p>To select a stream, drag and drop the stream named <b>Random Number Stream</b> to the assembly area below.</p>",
                 attachToElement: "#pe-icon-stand-org\\.streampipes\\.pe\\.random\\.number\\.json",
                 attachPosition: "left",
                 buttons: [
@@ -57,8 +57,8 @@ export default {
             {
                 stepId: "step-6",
                 title: "Selecting data processors",
-                text: "<p>Now you can see a variety of available data processors.</p><p>Processors can provide simple capabilities such as filters or aggregations, but can also provide more advanced capabilities such as trend and pattern detection or even pre-trained neural networks.</p><p>Select the processor called <b>Field Hasher</b> and move it to the assembly area.</p>",
-                attachToElement: "#pe-icon-stand-org\\.streampipes\\.processors\\.transformation\\.flink\\.fieldhasher",
+                text: "<p>Now you can see a variety of available data processors.</p><p>Processors can provide simple capabilities such as filters or aggregations, but can also provide more advanced capabilities such as trend and pattern detection or even pre-trained neural networks.</p><p>Select the processor called <b>Numerical Filter</b> and move it to the assembly area.</p>",
+                attachToElement: "#pe-icon-stand-org\\.streampipes\\.processors\\.filters\\.jvm\\.numericalfilter",
                 attachPosition: "right",
                 buttons: [
                     "cancel"
@@ -67,7 +67,7 @@ export default {
             {
                 stepId: "step-7",
                 title: "Connecting elements",
-                text: "<p>Now it's time to connect the first elements of your pipeline!</p> <p>Click the gray output port of the stream and connect it with the Field Hasher component.</p>",
+                text: "<p>Now it's time to connect the first elements of your pipeline!</p> <p>Click the gray output port of the stream and connect it with the Numerical Filter component.</p>",
                 attachToElement: "#assembly>div.jsplumb-endpoint:nth-of-type(1)",
                 attachPosition: "bottom",
                 buttons: [
@@ -77,9 +77,9 @@ export default {
             {
                 stepId: "step-8",
                 title: "Customize elements",
-                text: "<p>Most pipeline elements can be customized according to your needs. Whenever you connect two elements with each other, a configuration dialog pops up.</p><p>Select a <b>Hash Algorithm</b> and a field of the stream you'd like to hash and click <b>Save</b>.</p>",
-                attachToElement: "md-dialog>md-dialog-actions>button:last-of-type",
-                attachPosition: "top",
+                text: "<p>Most pipeline elements can be customized according to your needs. Whenever you connect two elements with each other, a configuration dialog pops up.</p><p>Select <b>randomValue</b> as the field to filter, select <b>greater than (>) </b> as operation, select <b>10</b> as the threshold value and click <b>Save</b>.</p>",
+                attachToElement: "md-dialog",
+                attachPosition: "left",
                 buttons: [
                     "cancel"
                 ]
@@ -97,7 +97,7 @@ export default {
             {
                 stepId: "step-10",
                 title: "Finish Pipeline",
-                text: "<p>Almost there!</p>Select the <b>Dashboard</b> sink and connect the <b>Field Hasher</b> to the Dashboard.</p>",
+                text: "<p>Almost there!</p>Select the <b>Dashboard</b> sink and connect the <b>Field Hasher</b> to the Dashboard. Enter any visualization name in the configuration menu.</p>",
                 attachToElement: "#pe-icon-stand-org\\.streampipes\\.sinks\\.internal\\.jvm\\.dashboard",
                 attachPosition: "left",
                 buttons: [
@@ -152,7 +152,7 @@ export default {
             {actionId: "customize-sepa", currentStep: "step-7"},
             {actionId: "save-sepa", currentStep: "step-8"},
             {actionId: "select-action", currentStep: "step-9"},
-            {actionId: "customize-action", currentStep: "step-10"},
+            {actionId: "save-action", currentStep: "step-10"},
             {actionId: "enter-pipeline-name", currentStep: "step-11"},
             {actionId: "save-pipeline-dialog", currentStep: "step-12"},
             {actionId: "pipeline-started", currentStep: "step-13"},

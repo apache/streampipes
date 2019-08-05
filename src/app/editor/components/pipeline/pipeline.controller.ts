@@ -242,9 +242,6 @@ export class PipelineController {
                                     this.$rootScope.$broadcast("SepaElementConfigured", pe.payload.DOM);
                                     pe.payload.configured = true;
                                 }
-                                if (this.ShepherdService.isTourActive()) {
-                                    this.ShepherdService.trigger("customize-" +pe.type);
-                                }
                             }
                         } else {
                             this.JsplumbBridge.detach(info.connection);
