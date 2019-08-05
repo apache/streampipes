@@ -23,20 +23,20 @@ import org.streampipes.model.client.pipeline.Pipeline;
 import javax.ws.rs.core.Response;
 
 public interface IPipeline extends IPipelineElement {
-	
-	Response addPipeline(String username, Pipeline pipeline);
 
-	Response getSystemPipelines();
+  Response addPipeline(String username, Pipeline pipeline);
 
-	Response start(String username, String pipelineId);
+  Response getSystemPipelines();
 
-	Response stop(String username, String pipelineId);
+  Response start(String username, String pipelineId);
 
-	Response recommend(String email, Pipeline pipeline);
+  Response stop(String username, String pipelineId);
 
-	Response update(Pipeline pipeline, String username);
+  Response recommend(String email, Pipeline pipeline);
 
-	Response overwritePipeline(String username, String pipelineId, Pipeline pipeline);
+  Response update(Pipeline pipeline, String username);
 
-	Response getPipelineStatus(String username, String pipelineId);
+  Response overwritePipeline(String username, String pipelineId, Pipeline pipeline);
+
+  Response getPipelineStatus(String username, String pipelineId);
 }

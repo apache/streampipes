@@ -31,17 +31,16 @@ import java.util.Map;
 
 public class JsonEventProperty {
 
-    static Logger logger = LoggerFactory.getLogger(JsonEventProperty.class);
-
+    private static final Logger LOG = LoggerFactory.getLogger(JsonEventProperty.class);
 
     public static EventProperty getEventProperty(String key, Object o) {
         EventProperty resultProperty = null;
 
-        System.out.println("Key: " + key);
-        System.out.println("Class: " + o.getClass());
-        System.out.println("Primitive: " + o.getClass().isPrimitive());
-        System.out.println("Array: " + o.getClass().isArray());
-        System.out.println("TypeName: " + o.getClass().getTypeName());
+        LOG.info("Key: " + key);
+        LOG.info("Class: " + o.getClass());
+        LOG.info("Primitive: " + o.getClass().isPrimitive());
+        LOG.info("Array: " + o.getClass().isArray());
+        LOG.info("TypeName: " + o.getClass().getTypeName());
 
 
         System.out.println("=======================");
@@ -91,7 +90,8 @@ public class JsonEventProperty {
         }
 
         if (resultProperty == null) {
-            logger.error("Property Type was not detected in JsonParser for the schema detection. This should never happen!");
+            LOG.error("Property Type was not detected in JsonParser for the schema detection. " +
+                    "This should never happen!");
         }
 
         return resultProperty;

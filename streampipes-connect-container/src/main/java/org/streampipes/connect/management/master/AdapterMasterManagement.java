@@ -89,7 +89,7 @@ public class AdapterMasterManagement {
     if (ad instanceof AdapterStreamDescription) {
       // TODO
       WorkerRestClient.invokeStreamAdapter(baseUrl, (AdapterStreamDescription) ad);
-      System.out.println("Start adapter");
+      LOG.info("Start adapter");
 //            SpConnect.startStreamAdapter((AdapterStreamDescription) ad, baseUrl);
     }
 

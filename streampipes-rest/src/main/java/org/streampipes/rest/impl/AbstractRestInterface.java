@@ -37,6 +37,7 @@ import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.SuccessMessage;
 import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.streampipes.storage.api.IDataLakeStorage;
 import org.streampipes.storage.api.INoSqlStorage;
 import org.streampipes.storage.api.INotificationStorage;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
@@ -102,6 +103,10 @@ public abstract class AbstractRestInterface {
 
   protected INotificationStorage getNotificationStorage() {
     return getNoSqlStorage().getNotificationStorageApi();
+  }
+
+  protected IDataLakeStorage getDataLakeStorage() {
+    return getNoSqlStorage().getDataLakeStorage();
   }
 
   protected INoSqlStorage getNoSqlStorage() {

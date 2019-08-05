@@ -19,6 +19,8 @@ package org.streampipes.codegeneration.utils;
 
 import com.google.common.base.CaseFormat;
 import com.squareup.javapoet.JavaFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,7 +36,8 @@ import java.nio.file.Paths;
 
 public class Utils {
 
-  private final static String PROPERTY_SEPARATOR = "-";
+  private static final String PROPERTY_SEPARATOR = "-";
+  private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
 
   public static String readResourceFile(String fileName) {
 
@@ -91,7 +94,7 @@ public class Utils {
     try {
       Files.write(path, b);
     } catch (IOException e) {
-      System.out.println(e);
+      LOG.error("Could not write to file", e);
     }
   }
 
@@ -100,7 +103,7 @@ public class Utils {
       content.writeTo(new File(location));
     } catch (IOException e) {
       e.printStackTrace();
-      System.out.println("Error: Could not write to file: " + location);
+      LOG.error("Error: Could not write to file: {}", location, e);
     }
   }
 

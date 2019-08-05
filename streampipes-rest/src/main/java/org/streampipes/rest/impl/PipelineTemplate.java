@@ -30,12 +30,18 @@ import org.streampipes.rest.shared.util.SpMediaType;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.vocabulary.StreamPipes;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/pipeline-templates")
 public class PipelineTemplate extends AbstractRestInterface implements IPipelineTemplate {
@@ -48,12 +54,12 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
     List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllSEPs();
     List<SpDataStream> datasets = new ArrayList<>();
 
-    for(DataSourceDescription source : sources) {
+    for (DataSourceDescription source : sources) {
       source
               .getSpDataStreams()
               .stream()
               .filter(stream -> !(stream instanceof SpDataSet))
-              .map(stream -> new SpDataStream(stream))
+              .map(SpDataStream::new)
               .forEach(datasets::add);
     }
 
@@ -69,7 +75,7 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
     List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllSEPs();
     List<SpDataStream> datasets = new ArrayList<>();
 
-    for(DataSourceDescription source : sources) {
+    for (DataSourceDescription source : sources) {
       source
               .getSpDataStreams()
               .stream()
@@ -88,7 +94,7 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
     if (streamId != null) {
       return ok(new PipelineTemplateDescriptionContainer(Operations.getCompatiblePipelineTemplates(streamId)));
     } else {
-        PipelineTemplateDescriptionContainer container = new PipelineTemplateDescriptionContainer(Operations.getAllPipelineTemplates());
+      PipelineTemplateDescriptionContainer container = new PipelineTemplateDescriptionContainer(Operations.getAllPipelineTemplates());
       return ok(container);
     }
   }
@@ -97,7 +103,8 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   @Path("/invocation")
   @Produces(MediaType.APPLICATION_JSON)
   @Override
-  public Response getPipelineTemplateInvocation(@QueryParam("streamId") String streamId, @QueryParam("templateId") String pipelineTemplateId) {
+  public Response getPipelineTemplateInvocation(@QueryParam("streamId") String streamId,
+                                                @QueryParam("templateId") String pipelineTemplateId) {
     if (pipelineTemplateId != null) {
       SpDataStream dataStream = getDataStream(streamId);
       PipelineTemplateDescription pipelineTemplateDescription = getPipelineTemplateDescription(pipelineTemplateId);
@@ -122,7 +129,7 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
     List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllSEPs();
     List<SpDataStream> datasets = new ArrayList<>();
 
-    for(DataSourceDescription source : sources) {
+    for (DataSourceDescription source : sources) {
       datasets.addAll(source
               .getSpDataStreams());
     }
@@ -141,10 +148,15 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Override
-  public Response generatePipeline(@PathParam("username") String username, String pipelineTemplateInvocationString) {
+  public Response generatePipeline(@PathParam("username") String username,
+                                   String pipelineTemplateInvocationString) {
     try {
-      PipelineTemplateInvocation pipelineTemplateInvocation = new JsonLdTransformer(StreamPipes.PIPELINE_TEMPLATE_INVOCATION).fromJsonLd(pipelineTemplateInvocationString, PipelineTemplateInvocation.class);
-      PipelineOperationStatus status = Operations.handlePipelineTemplateInvocation(username, pipelineTemplateInvocation);
+      PipelineTemplateInvocation pipelineTemplateInvocation =
+              new JsonLdTransformer(StreamPipes.PIPELINE_TEMPLATE_INVOCATION)
+                      .fromJsonLd(pipelineTemplateInvocationString, PipelineTemplateInvocation.class);
+
+      PipelineOperationStatus status = Operations
+              .handlePipelineTemplateInvocation(username, pipelineTemplateInvocation);
 
       return ok(status);
 

@@ -28,6 +28,7 @@ import org.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
 import org.streampipes.commons.exceptions.RemoteServerNotAccessibleException;
 import org.streampipes.manager.execution.status.PipelineStatusManager;
 import org.streampipes.manager.operations.Operations;
+import org.streampipes.model.SpDataSet;
 import org.streampipes.model.client.exception.InvalidConnectionException;
 import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
@@ -139,7 +140,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @GsonWithIds
     public Response start(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
         try {
-            org.streampipes.model.client.pipeline.Pipeline pipeline = getPipelineStorage()
+            Pipeline pipeline = getPipelineStorage()
                     .getPipeline(pipelineId);
             PipelineOperationStatus status = Operations.startPipeline(pipeline);
             return ok(status);
@@ -162,7 +163,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
-    public Response addPipeline(@PathParam("username") String username, org.streampipes.model.client.pipeline.Pipeline pipeline) {
+    public Response addPipeline(@PathParam("username") String username, Pipeline pipeline) {
         String pipelineId = UUID.randomUUID().toString();
         pipeline.setPipelineId(pipelineId);
         pipeline.setRunning(false);
@@ -179,16 +180,19 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
-    public Response recommend(@PathParam("username") String email, org.streampipes.model.client.pipeline.Pipeline pipeline) {
+    public Response recommend(@PathParam("username") String email, Pipeline pipeline) {
         try {
             return ok(Operations.findRecommendedElements(email, pipeline));
         } catch (JsonSyntaxException e) {
-            return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+            return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR,
+                    e.getMessage()));
         } catch (NoSuitableSepasAvailableException e) {
-            return constructErrorMessage(new Notification(NotificationType.NO_SEPA_FOUND.title(), NotificationType.NO_SEPA_FOUND.description(), e.getMessage()));
+            return constructErrorMessage(new Notification(NotificationType.NO_SEPA_FOUND,
+                    e.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
-            return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+            return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR,
+                    e.getMessage()));
         }
     }
 
@@ -196,7 +200,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
-    public Response updateDataSet(org.streampipes.model.SpDataSet spDataSet, @PathParam("username")
+    public Response updateDataSet(SpDataSet spDataSet, @PathParam("username")
             String username) {
         return ok(Operations.updateDataSet(spDataSet));
     }
@@ -205,27 +209,30 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
-    public Response update(org.streampipes.model.client.pipeline.Pipeline pipeline, @PathParam("username") String username) {
+    public Response update(Pipeline pipeline, @PathParam("username") String username) {
         try {
             return ok(Operations.validatePipeline(pipeline, true, username));
         } catch (JsonSyntaxException e) {
-            return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+            return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR,
+                    e.getMessage()));
         } catch (NoMatchingSchemaException e) {
-            return constructErrorMessage(new Notification(NotificationType.NO_VALID_CONNECTION.title(), NotificationType.NO_VALID_CONNECTION.description(), e.getMessage()));
+            return constructErrorMessage(new Notification(NotificationType.NO_VALID_CONNECTION,
+                    e.getMessage()));
         } catch (NoMatchingFormatException e) {
-            return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_FORMAT_CONNECTION.title(), NotificationType.NO_MATCHING_FORMAT_CONNECTION.description(), e.getMessage()));
+            return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_FORMAT_CONNECTION,
+                    e.getMessage()));
         } catch (NoMatchingProtocolException e) {
-            return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_PROTOCOL_CONNECTION.title(), NotificationType.NO_MATCHING_PROTOCOL_CONNECTION.description(), e.getMessage()));
-        } catch (RemoteServerNotAccessibleException e) {
-            return constructErrorMessage(new Notification(NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE.title(), NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE.description(), e.getMessage()));
-        } catch (NoMatchingJsonSchemaException e) {
-            return constructErrorMessage(new Notification(NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE.title(), NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE.description(), e.getMessage()));
-        }
-        catch (InvalidConnectionException e) {
+            return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_PROTOCOL_CONNECTION,
+                    e.getMessage()));
+        } catch (RemoteServerNotAccessibleException | NoMatchingJsonSchemaException e) {
+            return constructErrorMessage(new Notification(NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE
+                    , e.getMessage()));
+        } catch (InvalidConnectionException e) {
             return ok(e.getErrorLog());
         } catch (Exception e) {
             e.printStackTrace();
-            return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+            return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR,
+                    e.getMessage()));
         }
     }
 
