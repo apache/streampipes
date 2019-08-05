@@ -36,7 +36,7 @@ public interface IPipeline extends IPipelineElement {
 
 	Response update(Pipeline pipeline, String username);
 
-	Response overwritePipeline(String username, Pipeline pipeline);
+	Response overwritePipeline(String username, String pipelineId, Pipeline pipeline);
 
 	Response getPipelineStatus(String username, String pipelineId);
 }

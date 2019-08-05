@@ -33,6 +33,7 @@ import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.client.messages.SuccessMessage;
+import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
 import org.streampipes.rest.api.IPipeline;
 import org.streampipes.rest.management.PipelineManagement;
@@ -228,14 +229,20 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
         }
     }
 
-
     @PUT
     @Path("/{pipelineId}")
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
     @Override
-    public Response overwritePipeline(@PathParam("username") String username, org.streampipes.model.client.pipeline.Pipeline pipeline) {
-        getPipelineStorage().updatePipeline(pipeline);
+    public Response overwritePipeline(@PathParam("username") String username,
+                                      @PathParam("pipelineId") String pipelineId,
+                                      Pipeline pipeline) {
+        Pipeline storedPipeline = getPipelineStorage().getPipeline(pipelineId);
+        storedPipeline.setActions(pipeline.getActions());
+        storedPipeline.setSepas(pipeline.getSepas());
+        storedPipeline.setActions(pipeline.getActions());
+        storedPipeline.setCreatedAt(System.currentTimeMillis());
+        getPipelineStorage().updatePipeline(storedPipeline);
         return statusMessage(Notifications.success("Pipeline modified"));
     }
 
