@@ -34,7 +34,12 @@ public class RunningVisualization {
   private String description;
   private String title;
 
-  public RunningVisualization(String pipelineId, String pipelineName, String consumerUrl, String description, String title) {
+  public RunningVisualization(String pipelineId,
+                              String pipelineName,
+                              String consumerUrl,
+                              String description,
+                              String title) {
+
     this.id = UUID.randomUUID().toString();
     this.pipelineId = pipelineId;
     this.pipelineName = pipelineName;

@@ -96,7 +96,6 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
     }
   }
 
-
   @GET
   @GsonWithIds
   @Path("/authc")
@@ -105,8 +104,9 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
 
     if (BackendConfig.INSTANCE.isConfigured()) {
       if (SecurityUtils.getSubject().isAuthenticated()) {
-        ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create(getUserStorage().getUser((String)
-                SecurityUtils.getSubject().getPrincipal()));
+        ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory
+                .create(getUserStorage()
+                        .getUser((String) SecurityUtils.getSubject().getPrincipal()));
         return ok(response);
       }
     }
@@ -116,12 +116,13 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
 
   private ShiroAuthenticationResponse login(ShiroAuthenticationRequest token) {
     Subject subject = SecurityUtils.getSubject();
-    UsernamePasswordToken shiroToken = new UsernamePasswordToken(token.getUsername(), token.getPassword());
+    UsernamePasswordToken shiroToken = new UsernamePasswordToken(token.getUsername(),
+            token.getPassword());
     shiroToken.setRememberMe(true);
 
     subject.login(shiroToken);
-    ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create(getUserStorage().getUser((String) subject
-            .getPrincipal()));
+    ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory
+            .create(getUserStorage().getUser((String) subject.getPrincipal()));
     response.setToken(subject.getSession().getId().toString());
 
     return response;

@@ -38,7 +38,7 @@ public class Notification {
   }
 
   public Notification(NotificationType notificationType, String additionalInformation) {
-		this(notificationType.title(), notificationType.description(), additionalInformation);
+    this(notificationType.title(), notificationType.description(), additionalInformation);
   }
 
 

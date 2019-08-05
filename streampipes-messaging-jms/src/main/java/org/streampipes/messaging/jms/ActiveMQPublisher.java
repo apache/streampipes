@@ -90,7 +90,9 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
     try {
       this.session = connection
               .createSession(false, Session.AUTO_ACKNOWLEDGE);
-      this.producer = session.createProducer(session.createTopic(protocolSettings.getTopicDefinition().getActualTopicName()));
+      this.producer = session.createProducer(session.createTopic(protocolSettings
+                      .getTopicDefinition()
+                      .getActualTopicName()));
       this.producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
       this.connection.start();
       this.connected = true;

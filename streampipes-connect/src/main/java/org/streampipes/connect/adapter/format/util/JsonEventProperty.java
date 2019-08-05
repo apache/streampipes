@@ -49,18 +49,15 @@ public class JsonEventProperty {
             resultProperty = new EventPropertyPrimitive();
             resultProperty.setRuntimeName(key);
             ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._boolean.toString());
-        }
-        else if (o.getClass().equals(String.class)) {
+        } else if (o.getClass().equals(String.class)) {
             resultProperty = new EventPropertyPrimitive();
             resultProperty.setRuntimeName(key);
             ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._string.toString());
-        }
-        else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)|| o.getClass().equals(Long.class)) {
+        } else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)|| o.getClass().equals(Long.class)) {
             resultProperty = new EventPropertyPrimitive();
             resultProperty.setRuntimeName(key);
             ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._float.toString());
-        }
-        else if (o.getClass().equals(LinkedHashMap.class)) {
+        } else if (o.getClass().equals(LinkedHashMap.class)) {
             resultProperty = new EventPropertyNested();
             resultProperty.setRuntimeName(key);
             List<EventProperty> all = new ArrayList<>();
@@ -90,8 +87,8 @@ public class JsonEventProperty {
         }
 
         if (resultProperty == null) {
-            LOG.error("Property Type was not detected in JsonParser for the schema detection. " +
-                    "This should never happen!");
+            LOG.error("Property Type was not detected in JsonParser for the schema detection. "
+                    + "This should never happen!");
         }
 
         return resultProperty;
