@@ -65,6 +65,16 @@ export class OneOfRemoteController {
         });
     }
 
+    toggle() {
+        this.staticProperty.properties.options.forEach(option => {
+            if (option.internalName === this.staticProperty.properties.currentSelection.internalName) {
+                option.selected = true;
+            }  else {
+                option.selected = false;
+            }
+        });
+    }
+
     loadSavedProperty() {
         angular.forEach(this.staticProperty.properties.options, option => {
             if (option.selected) {
