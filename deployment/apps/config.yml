@@ -1,0 +1,14 @@
+login:
+  backgroundImage: 'deployment/apps/img/background.png'
+  logo: 'deployment/apps/img/logo.png'
+  logo-right: 'deployment/apps/img/sp-logo-right-white.png'
+modules:
+  - spEditor
+  - spPipelines
+  - spConnect
+  - spDashboard
+  - spAppOverview
+  - spAdd
+  - spMyElements
+  - spConfiguration
+  - spDataExplorer
