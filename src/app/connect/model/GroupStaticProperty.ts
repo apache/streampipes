@@ -3,7 +3,7 @@ import {StaticProperty} from './StaticProperty';
 import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
 
 @RdfsClass('sp:StaticPropertyGroup')
-export class StaticPropertyGroup extends StaticProperty {
+export class GroupStaticProperty extends StaticProperty {
 
     @RdfProperty('sp:hasStaticProperty')
     private staticProperties: StaticProperty[];
