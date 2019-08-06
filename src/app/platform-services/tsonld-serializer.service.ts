@@ -70,9 +70,9 @@ import {RuntimeOptionsRequest} from "../connect/model/connect/runtime/RuntimeOpt
 import {RuntimeOptionsResponse} from "../connect/model/connect/runtime/RuntimeOptionsResponse";
 import {EventRateTransformationRuleDescription} from '../connect/model/connect/rules/EventRateTransformationRuleDescription';
 import {SecretStaticProperty} from "../connect/model/SecretStaticProperty";
-import {GroupStaticProperty} from '../connect/model/GroupStaticProperty';
 import {AlternativesStaticProperty} from '../connect/model/AlternativesStaticProperty';
 import {AlternativeStaticProperty} from '../connect/model/AlternativeStaticProperty';
+import {GroupStaticProperty} from '../connect/model/GroupStaticProperty';
 
 
 @Injectable()
