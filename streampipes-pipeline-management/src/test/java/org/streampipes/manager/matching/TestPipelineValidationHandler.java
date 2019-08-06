@@ -24,13 +24,13 @@ public class TestPipelineValidationHandler {
 //	@Test
 //	public void testPositivePipelineValidation() {
 //
-//		Pipeline preprocessing = TestUtils.makePipeline(new RandomDataProducer(),
+//		Pipeline pipeline = TestUtils.makePipeline(new RandomDataProducer(),
 //				new RandomNumberStreamJson(),
 //				new AggregationController());
 //
 //		PipelineVerificationHandler handler;
 //		try {
-//			handler = new PipelineVerificationHandler(preprocessing);
+//			handler = new PipelineVerificationHandler(pipeline);
 //			handler.validateConnection();
 //		} catch (Exception e2) {
 //			fail(e2.getMessage());
@@ -42,7 +42,7 @@ public class TestPipelineValidationHandler {
 //	@Test
 //	public void testNegativePipelineValidation() {
 //
-//		Pipeline preprocessing = TestUtils.makePipeline(new RandomDataProducer(),
+//		Pipeline pipeline = TestUtils.makePipeline(new RandomDataProducer(),
 //				new RandomNumberStreamJson(),
 //				new GeofencingController());
 //
@@ -50,7 +50,7 @@ public class TestPipelineValidationHandler {
 //
 //
 //		try {
-//			handler = new PipelineVerificationHandler(preprocessing);
+//			handler = new PipelineVerificationHandler(pipeline);
 //		} catch (Exception e) {
 //			assertTrue(false);
 //		}

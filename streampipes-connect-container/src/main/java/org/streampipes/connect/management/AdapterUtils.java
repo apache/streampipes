@@ -36,7 +36,7 @@ public class AdapterUtils {
     private static final Logger logger = LoggerFactory.getLogger(AdapterUtils .class);
 
     public static String stopPipeline(String url) {
-        logger.info("Send stopAdapter preprocessing request on URL: " + url);
+        logger.info("Send stopAdapter pipeline request on URL: " + url);
 
         String result = "";
         try {
@@ -49,7 +49,7 @@ public class AdapterUtils {
             result = e.getMessage();
         }
 
-        logger.info("Successfully stopped preprocessing");
+        logger.info("Successfully stopped pipeline");
 
         return result;
     }

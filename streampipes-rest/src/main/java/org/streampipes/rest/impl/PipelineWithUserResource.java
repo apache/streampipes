@@ -155,7 +155,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
     public Response stop(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
-        logger.info("User: " + username + " stopped preprocessing: " + pipelineId);
+        logger.info("User: " + username + " stopped pipeline: " + pipelineId);
         PipelineManagement pm = new PipelineManagement();
         return pm.stopPipeline(pipelineId);
     }
@@ -169,7 +169,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
         pipeline.setRunning(false);
         pipeline.setCreatedByUser(username);
         pipeline.setCreatedAt(new Date().getTime());
-        //userService.addOwnPipeline(username, preprocessing);
+        //userService.addOwnPipeline(username, pipeline);
         Operations.storePipeline(pipeline);
         SuccessMessage message = Notifications.success(NotificationType.PIPELINE_STORAGE_SUCCESS);
         message.addNotification(new Notification("id", pipelineId));

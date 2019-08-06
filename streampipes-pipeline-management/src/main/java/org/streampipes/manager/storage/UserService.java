@@ -80,7 +80,7 @@ public class UserService {
       return;
     }
 //        User user = userStorage.getUser(username);
-//        user.addOwnPipeline(preprocessing);
+//        user.addOwnPipeline(pipeline);
 //        userStorage.updateUser(user);
     StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().storePipeline(pipeline);
   }
@@ -113,7 +113,7 @@ public class UserService {
   }
 
   /**
-   * Remove preprocessing reference from user.
+   * Remove pipeline reference from user.
    *
    * @param username
    * @param pipelineId

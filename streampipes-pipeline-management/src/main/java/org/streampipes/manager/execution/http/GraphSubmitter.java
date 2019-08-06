@@ -62,9 +62,9 @@ public class GraphSubmitter {
     if (status.isSuccess()) {
       status.setTitle("Pipeline " + pipelineName + " successfully started");
     } else {
-      LOG.info("Could not start preprocessing, initializing rollback...");
+      LOG.info("Could not start pipeline, initializing rollback...");
       rollbackInvokedPipelineElements(status);
-      status.setTitle("Could not start preprocessing " + pipelineName + ".");
+      status.setTitle("Could not start pipeline" + pipelineName + ".");
     }
     return status;
   }
@@ -99,7 +99,7 @@ public class GraphSubmitter {
     if (status.isSuccess()) {
       status.setTitle("Pipeline " + pipelineName + " successfully stopped");
     } else {
-      status.setTitle("Could not stop all preprocessing elements of preprocessing " + pipelineName + ".");
+      status.setTitle("Could not stop all pipeline elements of pipeline " + pipelineName + ".");
     }
 
     return status;

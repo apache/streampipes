@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * named preprocessing element, can be accessed via the URI provided in @RdfId
+ * named pipeline element, can be accessed via the URI provided in @RdfId
  */
 public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 

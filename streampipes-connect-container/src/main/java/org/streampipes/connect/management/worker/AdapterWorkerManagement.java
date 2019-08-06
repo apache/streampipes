@@ -83,7 +83,7 @@ public class AdapterWorkerManagement {
 
         adapter.changeEventGrounding(adapterSetDescription.getDataSet().getEventGrounding().getTransportProtocol());
 
-        // Set adapters run the whole set in one thread, once all data is processed the corresponding preprocessing is stopped
+        // Set adapters run the whole set in one thread, once all data is processed the corresponding pipeline is stopped
         Runnable r = () -> {
             try {
                 adapter.startAdapter();

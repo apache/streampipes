@@ -25,11 +25,11 @@ public class TestPipelineModification {
 //        DataProcessorInvocation invocation = TestUtils.makeSepa(new AggregationController(), "B", "A");
 //        SpDataStream stream = TestUtils.makeStream(new RandomDataProducer(), new RandomNumberStreamJson(), "A");
 //
-//        Pipeline preprocessing =TestUtils.makePipeline(Arrays.asList(stream), Arrays.asList(invocation));
+//        Pipeline pipeline =TestUtils.makePipeline(Arrays.asList(stream), Arrays.asList(invocation));
 //
 //        PipelineModificationMessage message = null;
 //        try {
-//            message = new PipelineVerificationHandler(preprocessing)
+//            message = new PipelineVerificationHandler(pipeline)
 //                    .validateConnection()
 //                    .computeMappingProperties()
 //                    .getPipelineModificationMessage();
@@ -46,11 +46,11 @@ public class TestPipelineModification {
 //        DataProcessorInvocation invocation = TestUtils.makeSepa(new AggregationController(), "B", "A");
 //        SpDataStream stream = TestUtils.makeStream(new RandomDataProducer(), new RandomNumberStreamJson(), "A");
 //
-//        Pipeline preprocessing =TestUtils.makePipeline(Arrays.asList(stream), Arrays.asList(invocation));
+//        Pipeline pipeline =TestUtils.makePipeline(Arrays.asList(stream), Arrays.asList(invocation));
 //
 //        PipelineModificationMessage message = null;
 //        try {
-//            message = new PipelineVerificationHandler(preprocessing)
+//            message = new PipelineVerificationHandler(pipeline)
 //                    .validateConnection()
 //                    .computeMappingProperties()
 //                    .getPipelineModificationMessage();

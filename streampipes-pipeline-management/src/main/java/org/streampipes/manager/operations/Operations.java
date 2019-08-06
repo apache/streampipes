@@ -54,7 +54,7 @@ import java.util.List;
 
 
 /**
- * class that provides several (partial) preprocessing verification methods
+ * class that provides several (partial) pipeline verification methods
  *
  * @author riemer
  */
