@@ -2,6 +2,7 @@ version: "2"
 services:
   kafka:
     image: wurstmeister/kafka:2.12-2.2.0
+    hostname: kafka
     ports:
       - "9092:9092"
     depends_on:
