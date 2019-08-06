@@ -3,7 +3,7 @@ import {StaticProperty} from './StaticProperty';
 import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
 
 @RdfsClass('sp:StaticPropertyAlternative')
-export class StaticPropertyAlternative extends StaticProperty {
+export class AlternativeStaticProperty extends StaticProperty {
 
     @RdfProperty('sp:isSelected')
     private selected: boolean;
