@@ -22,6 +22,8 @@ import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.FixedOutputStrategy;
+import org.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.streampipes.model.staticproperty.StaticPropertyGroup;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,6 +51,20 @@ public class LabelGenerator {
         ((ConsumableStreamPipesEntity) desc).getStaticProperties().forEach(sp -> {
           sp.setLabel(getTitle(props, sp.getInternalName()));
           sp.setDescription(getDescription(props, sp.getInternalName()));
+          if (sp instanceof StaticPropertyAlternatives) {
+            ((StaticPropertyAlternatives) sp).getAlternatives().forEach(a -> {
+              a.setLabel(getTitle(props, a.getInternalName()));
+              a.setDescription(getDescription(props, a.getInternalName()));
+              a.getStaticProperty().setLabel(getTitle(props, a.getStaticProperty().getInternalName()));
+              a.getStaticProperty().setDescription(getDescription(props, a.getStaticProperty().getInternalName()));
+              if (a.getStaticProperty() instanceof StaticPropertyGroup) {
+                ((StaticPropertyGroup) a.getStaticProperty()).getStaticProperties().forEach(g -> {
+                  g.setLabel(getTitle(props, g.getInternalName()));
+                  g.setDescription(getDescription(props, g.getInternalName()));
+                });
+              }
+            });
+          }
         });
       }
 
