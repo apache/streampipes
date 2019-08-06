@@ -18,7 +18,6 @@
 package org.streampipes.storage.couchdb.utils;
 
 import org.streampipes.config.SpConfig;
-import org.streampipes.config.SpConfigChangeCallback;
 
 public enum CouchDbConfig {
 
@@ -30,22 +29,10 @@ public enum CouchDbConfig {
     private final static String PROTOCOL = "PROTOCOL";
 
     CouchDbConfig() {
-//        config = SpConfig.getSpConfig("storage/couchdb", new TestOnChange());
         config = SpConfig.getSpConfig("storage/couchdb");
-//
         config.register(COUCHDB_HOST, "couchdb", "Hostname for the couch db service");
         config.register(COUCHDB_PORT, 5984, "Port for the couch db service");
         config.register(PROTOCOL, "http", "Protocol the couch db service");
-
-    }
-
-    private class TestOnChange implements SpConfigChangeCallback {
-
-        @Override
-        public void onChange() {
-            System.out.println("Config changed Yeahh!!");
-
-        }
     }
 
     public String getHost() {

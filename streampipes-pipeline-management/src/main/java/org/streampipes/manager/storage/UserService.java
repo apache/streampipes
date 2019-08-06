@@ -230,7 +230,6 @@ public class UserService {
 
   public List<String> getAvailableActionUris(String email) {
     List<String> actions = new ArrayList<>(getOwnActionUris(email));
-    System.out.println(userStorage.getAllUsers().size());
     userStorage
             .getAllUsers()
             .stream()

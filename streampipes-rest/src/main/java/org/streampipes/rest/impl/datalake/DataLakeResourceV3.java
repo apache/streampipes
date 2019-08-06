@@ -17,7 +17,6 @@
 
 package org.streampipes.rest.impl.datalake;
 
-
 import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.datalake.DataLakeMeasure;
 import org.streampipes.rest.impl.AbstractRestInterface;
@@ -25,145 +24,158 @@ import org.streampipes.rest.impl.datalake.model.DataResult;
 import org.streampipes.rest.impl.datalake.model.PageResult;
 import org.streampipes.rest.shared.annotation.GsonWithIds;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
 
 @Path("/v3/users/{username}/datalake")
 public class DataLakeResourceV3 extends AbstractRestInterface {
-    private DataLakeManagementV3 dataLakeManagement;
+  private DataLakeManagementV3 dataLakeManagement;
 
-    public DataLakeResourceV3() {
-        this.dataLakeManagement = new DataLakeManagementV3();
+  public DataLakeResourceV3() {
+    this.dataLakeManagement = new DataLakeManagementV3();
+  }
+
+  public DataLakeResourceV3(DataLakeManagementV3 dataLakeManagement) {
+    this.dataLakeManagement = dataLakeManagement;
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @GsonWithIds
+  @Path("/data/{index}/paging")
+  public Response getPage(@PathParam("index") String index,
+                          @Context UriInfo info,
+                          @QueryParam("itemsPerPage") int itemsPerPage) {
+
+    PageResult result;
+    String page = info.getQueryParameters().getFirst("page");
+
+    try {
+
+      if (page != null) {
+        result = this.dataLakeManagement.getEvents(index, itemsPerPage, Integer.parseInt(page));
+      } else {
+        result = this.dataLakeManagement.getEvents(index, itemsPerPage);
+      }
+      return Response.ok(result).build();
+    } catch (IOException e) {
+      e.printStackTrace();
+
+      return Response.serverError().build();
+    }
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @GsonWithIds
+  @Path("/info")
+  public Response getAllInfos() {
+    List<DataLakeMeasure> result = this.dataLakeManagement.getInfos();
+
+    return Response.ok(result).build();
+  }
+
+  @Deprecated
+  @GET
+  @Produces(MediaType.APPLICATION_OCTET_STREAM)
+  @Path("/data/{index}")
+  public Response getAllData(@PathParam("index") String index,
+                             @QueryParam("format") String format) {
+    StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format);
+
+    return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
+            header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
+            .build();
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_OCTET_STREAM)
+  @Path("/data/{index}/download")
+  public Response downloadData(@PathParam("index") String index,
+                               @QueryParam("format") String format) {
+    StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format);
+
+    return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
+            header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
+            .build();
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/data/{index}/last/{value}/{unit}")
+  public Response getAllData(@PathParam("index") String index,
+                             @PathParam("value") int value,
+                             @PathParam("unit") String unit,
+                             @Context UriInfo info) {
+
+
+    String aggregationUnit = info.getQueryParameters().getFirst("aggregationUnit");
+    String aggregationValue = info.getQueryParameters().getFirst("aggregationValue");
+
+    DataResult result;
+    try {
+      if (aggregationUnit != null && aggregationValue != null) {
+        result = dataLakeManagement.getEventsFromNow(index, unit, value, aggregationUnit,
+                Integer.parseInt(aggregationValue));
+      } else {
+        result = dataLakeManagement.getEventsFromNowAutoAggregation(index, unit, value);
+      }
+      return Response.ok(result).build();
+    } catch (IllegalArgumentException e) {
+      return constructErrorMessage(new Notification(e.getMessage(), ""));
+    } catch (ParseException e) {
+      return constructErrorMessage(new Notification(e.getMessage(), ""));
     }
 
-    public DataLakeResourceV3(DataLakeManagementV3 dataLakeManagement) {
-        this.dataLakeManagement = dataLakeManagement;
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/data/{index}/{startdate}/{enddate}")
+  public Response getAllData(@Context UriInfo info,
+                             @PathParam("index") String index,
+                             @PathParam("startdate") long startdate,
+                             @PathParam("enddate") long enddate) {
+
+    String aggregationUnit = info.getQueryParameters().getFirst("aggregationUnit");
+    String aggregationValue = info.getQueryParameters().getFirst("aggregationValue");
+
+    DataResult result;
+    try {
+      if (aggregationUnit != null && aggregationValue != null) {
+        result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit,
+                Integer.parseInt(aggregationValue));
+      } else {
+        result = dataLakeManagement.getEventsAutoAggregation(index, startdate, enddate);
+      }
+      return Response.ok(result).build();
+    } catch (IllegalArgumentException | ParseException e) {
+      return constructErrorMessage(new Notification(e.getMessage(), ""));
     }
+  }
 
+  @GET
+  @Produces(MediaType.APPLICATION_OCTET_STREAM)
+  @Path("/data/{index}/{startdate}/{enddate}/download")
+  public Response downloadData(@PathParam("index") String index, @QueryParam("format") String format,
+                               @PathParam("startdate") long start, @PathParam("enddate") long end) {
+    StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format, start, end);
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
-    @Path("/data/{index}/paging")
-    public Response getPage(@PathParam("index") String index,
-                               @Context UriInfo info,
-                               @QueryParam("itemsPerPage") int itemsPerPage) {
-
-        PageResult result;
-        String page = info.getQueryParameters().getFirst("page");
-
-        try {
-
-            if(page != null) {
-                result = this.dataLakeManagement.getEvents(index, itemsPerPage, Integer.parseInt(page));
-            } else {
-                result = this.dataLakeManagement.getEvents(index, itemsPerPage);
-            }
-            return Response.ok(result).build();
-        } catch (IOException e) {
-            e.printStackTrace();
-
-            return Response.serverError().build();
-        }
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
-    @Path("/info")
-    public Response getAllInfos() {
-        List<DataLakeMeasure> result = this.dataLakeManagement.getInfos();
-
-        return Response.ok(result).build();
-    }
-
-    @Deprecated
-    @GET
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    @Path("/data/{index}")
-    public Response getAllData(@PathParam("index") String index, @QueryParam("format") String format) {
-        StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format);
-
-        return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
-                header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
-                .build();
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    @Path("/data/{index}/download")
-    public Response downloadData(@PathParam("index") String index, @QueryParam("format") String format) {
-        StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format);
-
-        return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
-                header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
-                .build();
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/data/{index}/last/{value}/{unit}")
-    public Response getAllData(@PathParam("index") String index, @PathParam("value") int value, @PathParam("unit") String unit,
-                               @Context UriInfo info) {
-
-
-        String aggregationUnit = info.getQueryParameters().getFirst("aggregationUnit");
-        String aggregationValue = info.getQueryParameters().getFirst("aggregationValue");
-
-        DataResult result;
-        try {
-            if (aggregationUnit != null && aggregationValue != null) {
-                result = dataLakeManagement.getEventsFromNow(index, unit, value, aggregationUnit, Integer.parseInt(aggregationValue));
-            } else {
-                result = dataLakeManagement.getEventsFromNowAutoAggregation(index, unit, value);
-            }
-           return Response.ok(result).build();
-       } catch (IllegalArgumentException e) {
-           return constructErrorMessage(new Notification(e.getMessage(), ""));
-       } catch (ParseException e) {
-            return constructErrorMessage(new Notification(e.getMessage(), ""));
-        }
-
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/data/{index}/{startdate}/{enddate}")
-    public Response getAllData(@Context UriInfo info, @PathParam("index") String index,
-                               @PathParam("startdate") long startdate,  @PathParam("enddate") long enddate) {
-
-        String aggregationUnit = info.getQueryParameters().getFirst("aggregationUnit");
-        String aggregationValue = info.getQueryParameters().getFirst("aggregationValue");
-
-        DataResult result;
-        try {
-            if (aggregationUnit != null && aggregationValue != null) {
-                result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit, Integer.parseInt(aggregationValue));
-            } else {
-                result = dataLakeManagement.getEventsAutoAggregation(index, startdate, enddate);
-            }
-            return Response.ok(result).build();
-        } catch (IllegalArgumentException e) {
-            return constructErrorMessage(new Notification(e.getMessage(), ""));
-        } catch (ParseException e) {
-            return constructErrorMessage(new Notification(e.getMessage(), ""));
-        }
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    @Path("/data/{index}/{startdate}/{enddate}/download")
-    public Response downloadData(@PathParam("index") String index, @QueryParam("format") String format,
-                                 @PathParam("startdate") long start, @PathParam("enddate") long end) {
-        StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format, start, end);
-
-        return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
-                header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
-                .build();
-    }
+    return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
+            header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
+            .build();
+  }
 
 }

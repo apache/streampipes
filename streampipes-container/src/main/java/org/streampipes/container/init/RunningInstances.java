@@ -49,6 +49,9 @@ public enum RunningInstances {
 
     public void remove(String id) {
         runningInstances.remove(id);
+    }
 
+    public Integer getRunningInstancesCount() {
+        return runningInstances.size();
     }
 }

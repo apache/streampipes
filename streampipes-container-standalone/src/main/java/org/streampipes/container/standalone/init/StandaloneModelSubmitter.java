@@ -18,22 +18,25 @@
 package org.streampipes.container.standalone.init;
 
 
-import org.eclipse.jetty.server.Server;
-import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.streampipes.container.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.init.ModelSubmitter;
+import org.streampipes.container.init.RunningInstances;
 import org.streampipes.container.model.PeConfig;
 import org.streampipes.container.util.ConsulUtil;
 
-import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collections;
 
+import javax.annotation.PreDestroy;
+
+@SpringBootApplication
 public abstract class StandaloneModelSubmitter extends ModelSubmitter {
 
+    private static final Logger LOG =
+            LoggerFactory.getLogger(StandaloneModelSubmitter.class.getCanonicalName());
 
     public void init(PeConfig peConfig) {
 
@@ -42,34 +45,30 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter {
         DeclarersSingleton.getInstance()
                 .setPort(peConfig.getPort());
 
-        URI baseUri = UriBuilder
-                .fromUri(DeclarersSingleton.getInstance().getBaseUri())
-                .build();
-
-        ResourceConfig config = new ResourceConfig(getApiClasses());
-
-        Server server = JettyHttpContainerFactory.createServer(baseUri, config);
+        SpringApplication app = new SpringApplication(StandaloneModelSubmitter.class);
+        app.setDefaultProperties(Collections.singletonMap("server.port", peConfig.getPort()));
+        app.run();
 
         ConsulUtil.registerPeService(
                 peConfig.getId(),
                 peConfig.getHost(),
                 peConfig.getPort()
         );
-
     }
 
-    private Set<Class<?>> getApiClasses() {
-        Set<Class<?>> allClasses = new HashSet<>();
+    @PreDestroy
+    public void onExit() {
+        LOG.info("Shutting down StreamPipes pipeline element container...");
+        Integer runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();
 
-        allClasses.add(Element.class);
-        allClasses.add(InvocableElement.class);
-        allClasses.add(SecElement.class);
-        allClasses.add(SepaElement.class);
-        allClasses.add(SepElement.class);
-        allClasses.add(WelcomePage.class);
-        allClasses.add(PipelineTemplateElement.class);
-
-        return  allClasses;
+        while (runningInstancesCount > 0) {
+            LOG.info("Waiting for {} running pipeline elements to be stopped...", runningInstancesCount);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                LOG.error("Could not pause current thread...");
+            }
+            runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();
+        }
     }
-
 }

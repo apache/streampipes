@@ -1,9 +1,15 @@
 package org.streampipes.wrapper.esper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public abstract class AbstractQueueRunnable<T> extends Thread {
+
+  private static final Logger LOG = LoggerFactory.getLogger(AbstractQueueRunnable.class);
+
   protected BlockingQueue<T> queue;
   protected long closeAfter = 0;
   protected long currentTimestamp;
@@ -45,7 +51,7 @@ public abstract class AbstractQueueRunnable<T> extends Thread {
         }
       }
     }
-    System.out.println("Interrupted");
+    LOG.info("Interrupted");
   }
 
   public void interrupt() {

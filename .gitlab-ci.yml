@@ -28,7 +28,7 @@ build:
     - "echo $MVN_VERSION >> ./target/mvn_version"
   artifacts:
     paths:
-      - ./streampipes-backend/target/*.war
+      - ./streampipes-backend/target/streampipes-backend.jar
       - ./streampipes-connect-container/target/*.jar
       - ./target/site/apidocs/**
       - ./target/mvn_version

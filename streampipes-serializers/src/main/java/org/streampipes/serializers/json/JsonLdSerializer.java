@@ -25,11 +25,15 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.MalformedParameterizedTypeException;
 import java.lang.reflect.Type;
 
 public class JsonLdSerializer<T> implements JsonDeserializer<T>, JsonSerializer<T> {
+
+  private static final Logger LOG = LoggerFactory.getLogger(JsonLdSerializer.class);
 
   @Override
   public T deserialize(JsonElement json, Type typeOfT,
@@ -54,8 +58,7 @@ public class JsonLdSerializer<T> implements JsonDeserializer<T>, JsonSerializer<
       result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
       result.add("properties", context.serialize(src, src.getClass()));
     } catch (MalformedParameterizedTypeException e) {
-      System.out.println(src.getClass().getCanonicalName());
-      System.out.println("Malformed");
+      LOG.error("Could not serialize class {}", src.getClass().getCanonicalName(), e);
     }
 
     return result;
