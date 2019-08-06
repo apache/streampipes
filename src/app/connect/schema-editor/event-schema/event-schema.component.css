@@ -77,3 +77,7 @@ ul {
 :host /deep/ tree-viewport {
   overflow: hidden;
 }
+
+:host /deep/ .tree-node-level-1 {
+  border: none;
+}

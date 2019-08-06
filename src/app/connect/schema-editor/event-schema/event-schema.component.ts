@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, OnInit, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, EventEmitter, OnInit, Output, ViewChild, ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
 import { RestService } from '../../rest.service';
 import { EventSchema } from '../model/EventSchema';
 import { AdapterDescription } from '../../model/connect/AdapterDescription';
@@ -16,11 +16,11 @@ import { DataTypesService } from '../data-type.service';
 @Component({
   selector: 'app-event-schema',
   templateUrl: './event-schema.component.html',
-  styleUrls: ['./event-schema.component.css'],
+  styleUrls: ['./event-schema.component.css']
 })
 export class EventSchemaComponent implements OnInit {
 
-  constructor(private restService: RestService, private dataTypesService: DataTypesService) {}
+  constructor(private restService: RestService, private dataTypesService: DataTypesService) { }
   @Input() adapterDescription: AdapterDescription;
   @Input() isEditable: boolean;
   @Output() isEditableChange = new EventEmitter<boolean>();
@@ -56,7 +56,7 @@ export class EventSchemaComponent implements OnInit {
   showErrorMessage = false;
   errorMessages: NotificationLd[];
 
-  onUpdateData (treeComponent: TreeComponent, $event) {
+  onUpdateData(treeComponent: TreeComponent, $event) {
     treeComponent.treeModel.expandAll();
   }
 
@@ -64,25 +64,25 @@ export class EventSchemaComponent implements OnInit {
     this.isLoading = true;
     this.isError = false;
     this.restService.getGuessSchema(this.adapterDescription).subscribe(guessSchema => {
-        this.isLoading = false;
-        this.eventSchema = guessSchema.eventSchema;
-        this.eventSchemaChange.emit(this.eventSchema);
-        this.schemaGuess = guessSchema;
+      this.isLoading = false;
+      this.eventSchema = guessSchema.eventSchema;
+      this.eventSchemaChange.emit(this.eventSchema);
+      this.schemaGuess = guessSchema;
 
-        this.oldEventSchema = this.eventSchema.copy();
-        this.oldEventSchemaChange.emit(this.oldEventSchema);
+      this.oldEventSchema = this.eventSchema.copy();
+      this.oldEventSchemaChange.emit(this.oldEventSchema);
 
-        this.refreshTree();
+      this.refreshTree();
 
-        this.isEditable = true;
-        this.isEditableChange.emit(true);
+      this.isEditable = true;
+      this.isEditableChange.emit(true);
     },
-    error => {
+      error => {
         this.errorMessages = error.notifications;
         this.isError = true;
         this.isLoading = false;
         this.eventSchema = new EventSchema();
-    });
+      });
 
   }
 
@@ -109,9 +109,9 @@ export class EventSchemaComponent implements OnInit {
     let result: DomainPropertyProbabilityList;
 
     for (const entry of this.domainPropertyGuesses) {
-        if (entry.runtimeName === name) {
-            result = entry;
-        }
+      if (entry.runtimeName === name) {
+        result = entry;
+      }
     }
 
     return result;
@@ -125,9 +125,9 @@ export class EventSchemaComponent implements OnInit {
   }
 
   public deleteProperty(id, eventProperties) {
-    for(const eventProperty of eventProperties) {
+    for (const eventProperty of eventProperties) {
       const index = eventProperties.indexOf(eventProperty)
-      if(eventProperty.eventProperties && eventProperty.eventProperties.length > 0) {
+      if (eventProperty.eventProperties && eventProperty.eventProperties.length > 0) {
         if (eventProperty.id == id) {
           eventProperties.splice(index, 1)
         }
@@ -149,9 +149,9 @@ export class EventSchemaComponent implements OnInit {
 
     this.eventSchema.eventProperties.push(eventProperty);
     this.refreshTree();
-}
+  }
 
-public addTimestampProperty(): void {
+  public addTimestampProperty(): void {
     const eventProperty = new EventPropertyPrimitive('timestamp/' + UUID.UUID(), undefined);
 
     eventProperty.setRuntimeName('timestamp');
@@ -161,7 +161,7 @@ public addTimestampProperty(): void {
 
     this.eventSchema.eventProperties.push(eventProperty);
     this.refreshTree();
-}
+  }
 
   public addNestedProperty(eventProperty): void {
     const uuid: string = UUID.UUID();
@@ -178,27 +178,27 @@ public addTimestampProperty(): void {
     const property: EventPropertyPrimitive = e as EventPropertyPrimitive;
     const index = this.eventSchema.eventProperties.indexOf(property, 0);
     if (index > -1) {
-        this.eventSchema.eventProperties.splice(index, 1);
+      this.eventSchema.eventProperties.splice(index, 1);
     }
     this.refreshTree();
   }
 
   public deletePropertyNested(e) {
-      const property: EventPropertyNested = e as EventPropertyNested;
-      const index = this.eventSchema.eventProperties.indexOf(property, 0);
-      if (index > -1) {
-          this.eventSchema.eventProperties.splice(index, 1);
-      }
-      this.refreshTree();
+    const property: EventPropertyNested = e as EventPropertyNested;
+    const index = this.eventSchema.eventProperties.indexOf(property, 0);
+    if (index > -1) {
+      this.eventSchema.eventProperties.splice(index, 1);
+    }
+    this.refreshTree();
   }
 
   public deletePropertyList(e) {
-      const property: EventPropertyList = e as EventPropertyList;
-      const index = this.eventSchema.eventProperties.indexOf(property, 0);
-      if (index > -1) {
-          this.eventSchema.eventProperties.splice(index, 1);
-      }
-      this.refreshTree();
+    const property: EventPropertyList = e as EventPropertyList;
+    const index = this.eventSchema.eventProperties.indexOf(property, 0);
+    if (index > -1) {
+      this.eventSchema.eventProperties.splice(index, 1);
+    }
+    this.refreshTree();
   }
 
   ngOnInit() {

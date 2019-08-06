@@ -1,16 +1,15 @@
-
 <div id="schema_reload_button" fxLayout="row wrap" fxLayoutAlign="end start">
     <button color="primary" mat-button (click)=guessSchema()>
         <i class="material-icons">
-           refresh
+            refresh
         </i>
         <!--<span style="font-weight: bold;" > Guess Schema </span>-->
     </button>
 </div>
 
 <div fxLayout="column" *ngIf="isLoading">
-    <div fxLayoutAlign="center" >
-        <mat-spinner fxLayoutAlign="center" style="margin: 10px 0 5px 0" >Loading</mat-spinner>
+    <div fxLayoutAlign="center">
+        <mat-spinner fxLayoutAlign="center" style="margin: 10px 0 5px 0">Loading</mat-spinner>
     </div>
     <div fxLayoutAlign="center">
         <h3>The system tries to guess the schema of the data</h3>
@@ -23,7 +22,7 @@
         <span style="width: 10px;"></span>
         <h3>System error while guess the schema of the data</h3>
     </div>
-    <div fxLayout="row" fxLayoutAlign="center center" >
+    <div fxLayout="row" fxLayoutAlign="center center">
         <button mat-button class="md-accent">
             <div *ngIf="!showErrorMessage" (click)="showErrorMessage = true">Show Details</div>
             <div *ngIf="showErrorMessage" (click)="showErrorMessage = false">Hide Details</div>
@@ -39,59 +38,60 @@
     </div>
 </div>
 
-<div fxLayout="column" fxLayoutAlign="space-evenly stretched" class="drag-drop-tree">
-    <!--
-    <app-event-property-bag [(eventProperties)]="eventSchema.eventProperties" [domainPropertyGuesses]="schemaGuess.eventProperties" [isEditable]="isEditable">
-    </app-event-property-bag>
-    <cdk-tree #treeSelector [dataSource]="datasource" [treeControl]="treeControl" cdkDropList (cdkDropListDropped)="drop($event)">
-        <cdk-tree-node style="display: flex" *cdkTreeNodeDef="let node;" cdkTreeNodePadding cdkDrag [cdkDragData]="node">
-            {{node.runTimeName}} 
-        </cdk-tree-node>
-    </cdk-tree>
-    -->
+<div fxLayout="row">
+    <div fxFlex fxLayout="column" fxLayoutAlign="space-evenly stretched" class="drag-drop-tree">
+        <!--
+        <app-event-property-bag [(eventProperties)]="eventSchema.eventProperties" [domainPropertyGuesses]="schemaGuess.eventProperties" [isEditable]="isEditable">
+        </app-event-property-bag>
+        <cdk-tree #treeSelector [dataSource]="datasource" [treeControl]="treeControl" cdkDropList (cdkDropListDropped)="drop($event)">
+            <cdk-tree-node style="display: flex" *cdkTreeNodeDef="let node;" cdkTreeNodePadding cdkDrag [cdkDragData]="node">
+                {{node.runTimeName}} 
+            </cdk-tree-node>
+        </cdk-tree>
+        -->
 
-    <tree-root #tree [nodes]="nodes" [options]="options" (updateData)= "onUpdateData(tree, $event)">
-        <ng-template #treeNodeTemplate let-node let-index="index">
-            <div class="schema"  *ngIf="isEventPropertyNested(node.data)">
-            <app-event-property-nested [index]="i + 1"
-                        [eventPropertyNested]="node.data"
+        <tree-root #tree [nodes]="nodes" [options]="options" (updateData)="onUpdateData(tree, $event)">
+            <ng-template #treeNodeTemplate let-node let-index="index">
+                <div class="schema" *ngIf="isEventPropertyNested(node.data)">
+                    <app-event-property-nested [index]="i + 1" [eventPropertyNested]="node.data"
                         [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
-                        [domainPropertyGuesses]="domainPropertyGuesses"
-                        [isEditable]="isEditable"
+                        [domainPropertyGuesses]="domainPropertyGuesses" [isEditable]="isEditable"
                         (delete)=deletePropertyNested($event)></app-event-property-nested>
-            </div>
-            <div *ngIf="isEventPropertyPrimitive(node.data)">
-            <app-event-property-primitive (delete)=deletePropertyPrimitive($event)
+                </div>
+                <div *ngIf="isEventPropertyPrimitive(node.data)">
+                    <app-event-property-primitive (delete)=deletePropertyPrimitive($event)
                         (addPrimitive)="addStaticValueProperty($event)"
-                        [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
-                        [isEditable]="isEditable"
+                        [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)" [isEditable]="isEditable"
                         [property]="node.data">
-            </app-event-property-primitive>
-            </div>
-            <div *ngIf="isEventPropertyList(node.data)">
-            <app-event-property-list (delete)=deletePropertyList($event)
-                        [isEditable]="isEditable"
+                    </app-event-property-primitive>
+                </div>
+                <div *ngIf="isEventPropertyList(node.data)">
+                    <app-event-property-list (delete)=deletePropertyList($event) [isEditable]="isEditable"
                         [property]="node.data">
-            </app-event-property-list>
-            </div>
-            <div fxLayoutAlign="center center" class="addSchema" *ngIf="isNested(node.data)">
-                <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty(node.data)>
-                  <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
-                </button>
-              </div>
-          </ng-template>
-    </tree-root>
-    <div fxLayoutAlign="center center" class="addSchema">
-        <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty()>
-          <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
-        </button>
-        <button [disabled]="!isEditable" *ngIf="!eventPropertyNested" color="primary" mat-button (click)="addStaticValueProperty()">
-          <mat-icon matTooltip="Add a static value to event">add</mat-icon>
-        </button>
-        <button [disabled]="!isEditable"  *ngIf="!eventPropertyNested" color="primary" mat-button (click)=addTimestampProperty()>
-          <mat-icon matTooltip="Add timestamp to event schema">access_time</mat-icon>
-        </button>
-      </div>
+                    </app-event-property-list>
+                </div>
+                <div fxLayoutAlign="center center" class="addSchema" *ngIf="isNested(node.data)">
+                    <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty(node.data)>
+                        <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
+                    </button>
+                </div>
+            </ng-template>
+        </tree-root>
+        <div fxLayoutAlign="center center" class="addSchema">
+            <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty()>
+                <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
+            </button>
+            <button [disabled]="!isEditable" *ngIf="!eventPropertyNested" color="primary" mat-button
+                (click)="addStaticValueProperty()">
+                <mat-icon matTooltip="Add a static value to event">add</mat-icon>
+            </button>
+            <button [disabled]="!isEditable" *ngIf="!eventPropertyNested" color="primary" mat-button
+                (click)=addTimestampProperty()>
+                <mat-icon matTooltip="Add timestamp to event schema">access_time</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div fxFlex class="schema-preview">
+        <pre>{{ eventSchema | json }}</pre>
+    </div>
 </div>
-
-
