@@ -108,7 +108,7 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
     String timeCountWindow = extractor.selectedAlternativeInternalId(WINDOW);
     Integer windowSize;
     Integer outputEvery;
-    if (TIME_WINDOW_OPTION.equals(timeCountWindow)) {
+    if (!TIME_WINDOW_OPTION.equals(timeCountWindow)) {
       windowSize = extractor.singleValueParameter(TIME_WINDOW_KEY, Integer.class);
       outputEvery = extractor.singleValueParameter(OUTPUT_EVERY_KEY_SECOND, Integer.class);
     } else {
