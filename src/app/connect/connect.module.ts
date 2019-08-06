@@ -59,6 +59,9 @@ import { FileManagementComponent } from './file-management/file-management.compo
 import { FileRestService } from './file-management/service/filerest.service';
 import { StaticRuntimeResolvableAnyInputComponent} from "./static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component";
 import { StaticRuntimeResolvableOneOfInputComponent} from "./static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component";
+import { StaticGroupComponent}  from './static-properties/static-group/static-group.component';
+import { StaticAlternativesComponent } from './static-properties/static-alternatives/static-alternatives.component';
+
 
 import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
 import { AdapterExportDialog } from './data-marketplace/adapter-export/adapter-export-dialog.component';
@@ -127,7 +130,9 @@ import { TreeModule } from 'angular-tree-component';
         StaticRuntimeResolvableAnyInputComponent,
         StaticRuntimeResolvableOneOfInputComponent,
         FileManagementComponent,
-        FilterPipe
+        FilterPipe,
+        StaticGroupComponent,
+        StaticAlternativesComponent,
     ],
     providers: [
         RestService,

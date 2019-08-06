@@ -6,10 +6,10 @@ import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
 export class GroupStaticProperty extends StaticProperty {
 
     @RdfProperty('sp:hasStaticProperty')
-    private staticProperties: StaticProperty[];
+    public staticProperties: StaticProperty[];
 
     @RdfProperty('sp:showLabel')
-    private showLabel: boolean;
+    public showLabel: boolean;
 
     constructor(id: string) {
         super();

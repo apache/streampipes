@@ -6,10 +6,10 @@ import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
 export class AlternativeStaticProperty extends StaticProperty {
 
     @RdfProperty('sp:isSelected')
-    private selected: boolean;
+    public selected: boolean;
 
     @RdfProperty('sp:hasStaticProperty')
-    private staticProperty: StaticProperty;
+    public staticProperty: StaticProperty;
 
     constructor(id: string) {
         super();

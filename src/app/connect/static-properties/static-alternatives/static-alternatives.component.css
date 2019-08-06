@@ -1,0 +1,40 @@
+#formWrapper {
+
+}
+
+p {
+    width: 100px;
+    float: left;
+    margin: 20px  15px 0 0;
+}
+
+form {
+    float: left;
+}
+
+.content {
+    margin-top: 20px;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+}
+
+.radio-button {
+    margin-top: -10px;
+}
+
+::ng-deep .mat-radio-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: rgb(27, 20, 100);
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: rgb(27, 20, 100);
+}

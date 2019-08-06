@@ -7,7 +7,7 @@ import {AlternativeStaticProperty} from './AlternativeStaticProperty';
 export class AlternativesStaticProperty extends StaticProperty {
 
     @RdfProperty('sp:hasStaticPropertyAlternative')
-    public alternatives: AlternativeStaticProperty[];
+    public alternatives: AlternativeStaticProperty[] = [];
 
 
     constructor(id: string) {
