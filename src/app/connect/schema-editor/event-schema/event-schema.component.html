@@ -1,6 +1,6 @@
 <div fxLayout="row">
     <div fxLayoutAlign="center center" class="addSchema">
-        <button color="primary" mat-button>
+        <button color="primary" mat-button (click)="removeSelectedProperties()">
             <mat-icon matTooltip="Remove selected Properties">delete</mat-icon>
         </button>
         <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty()>
@@ -58,24 +58,34 @@
     <div fxFlex="0 1 100%" fxLayout="column" fxLayoutAlign="space-evenly stretched" class="drag-drop-tree">
         <tree-root #tree [nodes]="nodes" [options]="options" (updateData)="onUpdateData(tree, $event)">
             <ng-template #treeNodeTemplate let-node let-index="index">
-                <div class="schema" *ngIf="isEventPropertyNested(node.data)">
-                    <app-event-property-nested [index]="i + 1" [eventPropertyNested]="node.data"
-                        [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
-                        [domainPropertyGuesses]="domainPropertyGuesses" [isEditable]="isEditable"
-                        (addNestedProperty)="addNestedProperty(node.data)" (delete)=deletePropertyNested($event)>
-                    </app-event-property-nested>
-                </div>
-                <div *ngIf="isEventPropertyPrimitive(node.data)">
-                    <app-event-property-primitive (delete)=deletePropertyPrimitive($event)
-                        (addPrimitive)="addStaticValueProperty($event)"
-                        [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)" [isEditable]="isEditable"
-                        [property]="node.data">
-                    </app-event-property-primitive>
-                </div>
-                <div *ngIf="isEventPropertyList(node.data)">
-                    <app-event-property-list (delete)=deletePropertyList($event) [isEditable]="isEditable"
-                        [property]="node.data">
-                    </app-event-property-list>
+                <div fxLayout="row">
+                    <div fxFlex="1 1 auto">
+                        <div class="schema" *ngIf="isEventPropertyNested(node.data)">
+                            <app-event-property-nested [index]="i + 1" [eventPropertyNested]="node.data"
+                                [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
+                                [domainPropertyGuesses]="domainPropertyGuesses" [isEditable]="isEditable"
+                                (addNestedProperty)="addNestedProperty(node.data)"
+                                (delete)=deletePropertyNested($event)>
+                            </app-event-property-nested>
+                        </div>
+                        <div *ngIf="isEventPropertyPrimitive(node.data)">
+                            <app-event-property-primitive (delete)=deletePropertyPrimitive($event)
+                                (addPrimitive)="addStaticValueProperty($event)"
+                                [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
+                                [isEditable]="isEditable" [property]="node.data">
+                            </app-event-property-primitive>
+                        </div>
+                        <div *ngIf="isEventPropertyList(node.data)">
+                            <app-event-property-list (delete)=deletePropertyList($event) [isEditable]="isEditable"
+                                [property]="node.data">
+                            </app-event-property-list>
+                        </div>
+                    </div>
+                    <div fxFlex="0 1 auto">
+                        <mat-checkbox
+                            *ngIf="isEventPropertyNested(node.data) || isEventPropertyPrimitive(node.data) || isEventPropertyList(node.data)"
+                            (click)="selectProperty(node.data.id)"></mat-checkbox>
+                    </div>
                 </div>
             </ng-template>
         </tree-root>

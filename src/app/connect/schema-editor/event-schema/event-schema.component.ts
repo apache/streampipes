@@ -129,21 +129,43 @@ export class EventSchemaComponent implements OnInit {
     return false;
   }
 
-  public deleteProperty(id, eventProperties) {
+  public selectProperty(id, eventProperties) {
+    eventProperties = eventProperties || this.eventSchema.eventProperties
     for (const eventProperty of eventProperties) {
       const index = eventProperties.indexOf(eventProperty)
       if (eventProperty.eventProperties && eventProperty.eventProperties.length > 0) {
         if (eventProperty.id == id) {
-          eventProperties.splice(index, 1)
+          if (eventProperty.selected) {
+            eventProperty.selected = undefined;
+          } else {
+            eventProperty.selected = true;
+          }
         }
-        this.deleteProperty(id, eventProperty.eventProperties)
+        this.selectProperty(id, eventProperty.eventProperties)
       } else {
         if (eventProperty.id == id) {
-          eventProperties.splice(index, 1)
+          if (eventProperty.selected) {
+            eventProperty.selected = undefined;
+          } else {
+            eventProperty.selected = true;
+          }
         }
-        console.log(index)
       }
     }
+  }
+
+  public removeSelectedProperties(eventProperties) {
+    eventProperties = eventProperties || this.eventSchema.eventProperties
+    for (const eventProperty of eventProperties) {
+      if (eventProperty.selected) {
+        const index = eventProperties.indexOf(eventProperty);
+        eventProperties.splice(index, 1)
+      }
+      if (eventProperty.eventProperties) {
+        this.removeSelectedProperties(eventProperty.eventProperties)
+      }
+    }
+    this.refreshTree();
   }
 
   public addStaticValueProperty(): void {
@@ -174,34 +196,6 @@ export class EventSchemaComponent implements OnInit {
       this.eventSchema.eventProperties.push(new EventPropertyNested(uuid, undefined));
     } else {
       eventProperty.eventProperties.push(new EventPropertyNested(uuid, undefined));
-    }
-    this.refreshTree();
-  }
-
-  public deletePropertyPrimitive(e) {
-    this.deleteProperty(e.id, this.eventSchema.eventProperties)
-    const property: EventPropertyPrimitive = e as EventPropertyPrimitive;
-    const index = this.eventSchema.eventProperties.indexOf(property, 0);
-    if (index > -1) {
-      this.eventSchema.eventProperties.splice(index, 1);
-    }
-    this.refreshTree();
-  }
-
-  public deletePropertyNested(e) {
-    const property: EventPropertyNested = e as EventPropertyNested;
-    const index = this.eventSchema.eventProperties.indexOf(property, 0);
-    if (index > -1) {
-      this.eventSchema.eventProperties.splice(index, 1);
-    }
-    this.refreshTree();
-  }
-
-  public deletePropertyList(e) {
-    const property: EventPropertyList = e as EventPropertyList;
-    const index = this.eventSchema.eventProperties.indexOf(property, 0);
-    if (index > -1) {
-      this.eventSchema.eventProperties.splice(index, 1);
     }
     this.refreshTree();
   }
