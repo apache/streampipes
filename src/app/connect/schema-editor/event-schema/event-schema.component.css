@@ -81,3 +81,7 @@ ul {
 :host /deep/ .tree-node-level-1 {
   border: none;
 }
+
+:host /deep/ .node-content-wrapper-focused, .node-content-wrapper:hover, .node-content-wrapper-active, .node-content-wrapper.node-content-wrapper-active:hover, .node-content-wrapper-active.node-content-wrapper-focused {
+  background: none;
+}
