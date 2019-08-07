@@ -1,13 +1,13 @@
-import {Component, DoCheck, EventEmitter, Injectable, Input, OnInit, Output} from '@angular/core';
-import {EventProperty} from '../model/EventProperty';
-import {EventPropertyNested} from '../model/EventPropertyNested';
-import {UUID} from 'angular2-uuid';
-import {EventPropertyList} from '../model/EventPropertyList';
+import { Component, DoCheck, EventEmitter, Injectable, Input, OnInit, Output } from '@angular/core';
+import { EventProperty } from '../model/EventProperty';
+import { EventPropertyNested } from '../model/EventPropertyNested';
+import { UUID } from 'angular2-uuid';
+import { EventPropertyList } from '../model/EventPropertyList';
 // import {DragulaService} from 'ng2-dragula';
 // import {DragDropService} from '../drag-drop.service';
 // import {WriteJsonService} from '../write-json.service';
-import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
-import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
+import { EventPropertyPrimitive } from '../model/EventPropertyPrimitive';
+import { DomainPropertyProbabilityList } from '../model/DomainPropertyProbabilityList';
 
 @Component({
   selector: 'app-event-property-nested',
@@ -20,7 +20,7 @@ import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityL
 export class EventPropertyNestedComponent implements OnInit, DoCheck {
 
   // constructor(private dragulaService: DragulaService) {  }
-    constructor() {  }
+  constructor() { }
 
   open = false;
 
@@ -34,7 +34,9 @@ export class EventPropertyNestedComponent implements OnInit, DoCheck {
   @Input() domainPropertyGuesses: DomainPropertyProbabilityList[];
   @Input() domainPropertyGuess: DomainPropertyProbabilityList;
 
-  @Output()delete: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
+  @Output() delete: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
+
+  @Output() addNestedProperty: EventEmitter<any> = new EventEmitter<any>();
 
   ngOnInit() {
     this.eventPropertyNested.propertyNumber = this.index;
@@ -49,7 +51,7 @@ export class EventPropertyNestedComponent implements OnInit, DoCheck {
   }
 
   private OnClickDeleteProperty(): void {
-      this.delete.emit(this.eventPropertyNested);
+    this.delete.emit(this.eventPropertyNested);
   }
 
   public deleteProperty(property): void {
@@ -73,19 +75,15 @@ export class EventPropertyNestedComponent implements OnInit, DoCheck {
     this.eventPropertyNested.eventProperties.push(new EventPropertyPrimitive(uuid, parent));
   }
 
-  public addNestedProperty(): void {
-    console.log('called nested');
-
-    const uuid: string = UUID.UUID();
-    const parent: EventProperty = this.eventPropertyNested;
-    this.eventPropertyNested.eventProperties.push(new EventPropertyNested(uuid, parent));
+  public emitAddNestedProperty() {
+    this.addNestedProperty.emit();
   }
 
   private getLabel(): string {
     if (typeof this.eventPropertyNested.getRuntimeName() !== 'undefined') {
       return this.eventPropertyNested.getRuntimeName();
     } else {
-        return 'Nested Property';
+      return 'Nested Property';
     }
   }
 

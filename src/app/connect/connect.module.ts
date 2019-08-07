@@ -57,8 +57,8 @@ import { StaticFileInputComponent } from './static-properties/static-file-input/
 import { StaticFileRestService } from './static-properties/static-file-input/static-file-rest.service';
 import { FileManagementComponent } from './file-management/file-management.component';
 import { FileRestService } from './file-management/service/filerest.service';
-import { StaticRuntimeResolvableAnyInputComponent} from "./static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component";
-import { StaticRuntimeResolvableOneOfInputComponent} from "./static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component";
+import { StaticRuntimeResolvableAnyInputComponent } from "./static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component";
+import { StaticRuntimeResolvableOneOfInputComponent } from "./static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component";
 
 import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
 import { AdapterExportDialog } from './data-marketplace/adapter-export/adapter-export-dialog.component';
@@ -70,6 +70,7 @@ import { TimestampPipe } from './filter/timestamp.pipe';
 import { PlatformServicesModule } from '../platform-services/platform.module';
 
 import { TreeModule } from 'angular-tree-component';
+import { EventSchemaPreviewComponent } from './schema-editor/event-schema-preview/event-schema-preview.component';
 
 
 @NgModule({
@@ -127,7 +128,8 @@ import { TreeModule } from 'angular-tree-component';
         StaticRuntimeResolvableAnyInputComponent,
         StaticRuntimeResolvableOneOfInputComponent,
         FileManagementComponent,
-        FilterPipe
+        FilterPipe,
+        EventSchemaPreviewComponent
     ],
     providers: [
         RestService,
@@ -160,4 +162,4 @@ import { TreeModule } from 'angular-tree-component';
     ],
     entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog],
 })
-export class ConnectModule {}
+export class ConnectModule { }

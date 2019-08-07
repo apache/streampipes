@@ -53,6 +53,7 @@ export class EventSchemaComponent implements OnInit {
 
   isLoading = false;
   isError = false;
+  isPreviewEnabled = false;
   showErrorMessage = false;
   errorMessages: NotificationLd[];
 
@@ -84,6 +85,10 @@ export class EventSchemaComponent implements OnInit {
         this.eventSchema = new EventSchema();
       });
 
+  }
+
+  public showPreview() {
+    this.isPreviewEnabled = !this.isPreviewEnabled;
   }
 
   private refreshTree() {
