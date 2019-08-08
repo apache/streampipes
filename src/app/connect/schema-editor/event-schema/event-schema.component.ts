@@ -55,6 +55,7 @@ export class EventSchemaComponent implements OnInit {
   isError = false;
   isPreviewEnabled = false;
   showErrorMessage = false;
+  countSelected = 0;
   errorMessages: NotificationLd[];
 
   onUpdateData(treeComponent: TreeComponent, $event) {
@@ -147,15 +148,19 @@ export class EventSchemaComponent implements OnInit {
         if (eventProperty.id == id) {
           if (eventProperty.selected) {
             eventProperty.selected = undefined;
+            this.countSelected--;
             this.selectProperty('none', eventProperty.eventProperties)
           } else {
             eventProperty.selected = true;
+            this.countSelected++;
             this.selectProperty('all', eventProperty.eventProperties)
           }
         } else if (id == 'all') {
           eventProperty.selected = true;
+          this.countSelected++;
         } else if (id == 'none') {
           eventProperty.selected = undefined;
+          this.countSelected--;
         } else {
           this.selectProperty(id, eventProperty.eventProperties)
         }
@@ -163,13 +168,17 @@ export class EventSchemaComponent implements OnInit {
         if (eventProperty.id == id) {
           if (eventProperty.selected) {
             eventProperty.selected = undefined;
+            this.countSelected--;
           } else {
             eventProperty.selected = true;
+            this.countSelected++;
           }
         } else if (id == 'all') {
           eventProperty.selected = true;
+          this.countSelected++;
         } else if (id == 'none') {
           eventProperty.selected = undefined;
+          this.countSelected--;
         }
       }
     }
@@ -187,6 +196,7 @@ export class EventSchemaComponent implements OnInit {
         this.removeSelectedProperties(eventProperty.eventProperties)
       }
     }
+    this.countSelected = 0;
     this.refreshTree();
   }
 

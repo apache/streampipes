@@ -20,7 +20,8 @@
             </button>
         </div>
         <div>
-            <button style="padding-right:0" color="primary" mat-button (click)="removeSelectedProperties()">
+            <button style="padding-right:0" color="primary" mat-button [disabled]="countSelected == 0"
+                (click)="removeSelectedProperties()">
                 <mat-icon matTooltip="Remove selected Properties">delete</mat-icon>
             </button>
         </div>
