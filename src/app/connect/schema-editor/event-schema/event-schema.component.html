@@ -26,7 +26,6 @@
             </button>
         </div>
     </div>
-    <div fxFlex="0 0 50%" class="schema-preview" *ngIf="isPreviewEnabled"></div>
 </div>
 
 <div fxLayout="column" *ngIf="isLoading">
@@ -60,52 +59,45 @@
     </div>
 </div>
 
-<div fxLayout="row">
-    <div fxFlex="0 1 100%" fxLayout="column" fxLayoutAlign="space-evenly stretched" class="drag-drop-tree">
-        <tree-root #tree [nodes]="nodes" [options]="options" (updateData)="onUpdateData(tree, $event)">
-            <ng-template #treeNodeTemplate let-node let-index="index">
-                <div fxLayout="row">
-                    <div fxFlex="0 1 auto" *ngIf="isEventPropertyPrimitive(node.data) && isTopLevelProperty(node.data)"
-                        class="dimension-star"
-                        [class.dimension-property]="node.data.propertyScope == 'DIMENSION_PROPERTY'"
-                        (click)="changePropertyScope(node.data)">
-                        <mat-icon *ngIf="node.data.propertyScope == 'DIMENSION_PROPERTY'">
-                            star</mat-icon>
-                        <mat-icon *ngIf="node.data.propertyScope != 'DIMENSION_PROPERTY'">star_border</mat-icon>
+<div fxLayout="column" fxLayoutAlign="space-evenly stretched" class="drag-drop-tree">
+    <tree-root #tree [nodes]="nodes" [options]="options" (updateData)="onUpdateData(tree, $event)">
+        <ng-template #treeNodeTemplate let-node let-index="index">
+            <div fxLayout="row">
+                <div fxFlex="0 1 auto" *ngIf="isEventPropertyPrimitive(node.data) && isTopLevelProperty(node.data)"
+                    class="dimension-star" [class.dimension-property]="node.data.propertyScope == 'DIMENSION_PROPERTY'"
+                    (click)="changePropertyScope(node.data)">
+                    <mat-icon *ngIf="node.data.propertyScope == 'DIMENSION_PROPERTY'">
+                        star</mat-icon>
+                    <mat-icon *ngIf="node.data.propertyScope != 'DIMENSION_PROPERTY'">star_border</mat-icon>
+                </div>
+                <div fxFlex="1 1 auto">
+                    <div class="schema" *ngIf="isEventPropertyNested(node.data)">
+                        <app-event-property-nested [index]="i + 1" [eventPropertyNested]="node.data"
+                            [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
+                            [domainPropertyGuesses]="domainPropertyGuesses" [isEditable]="isEditable"
+                            (addNestedProperty)="addNestedProperty(node.data)" (delete)=deletePropertyNested($event)>
+                        </app-event-property-nested>
                     </div>
-                    <div fxFlex="1 1 auto">
-                        <div class="schema" *ngIf="isEventPropertyNested(node.data)">
-                            <app-event-property-nested [index]="i + 1" [eventPropertyNested]="node.data"
-                                [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
-                                [domainPropertyGuesses]="domainPropertyGuesses" [isEditable]="isEditable"
-                                (addNestedProperty)="addNestedProperty(node.data)"
-                                (delete)=deletePropertyNested($event)>
-                            </app-event-property-nested>
-                        </div>
-                        <div *ngIf="isEventPropertyPrimitive(node.data)">
-                            <app-event-property-primitive (delete)=deletePropertyPrimitive($event)
-                                (addPrimitive)="addStaticValueProperty($event)"
-                                [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
-                                [isEditable]="isEditable" [property]="node.data">
-                            </app-event-property-primitive>
-                        </div>
-                        <div *ngIf="isEventPropertyList(node.data)">
-                            <app-event-property-list (delete)=deletePropertyList($event) [isEditable]="isEditable"
-                                [property]="node.data">
-                            </app-event-property-list>
-                        </div>
+                    <div *ngIf="isEventPropertyPrimitive(node.data)">
+                        <app-event-property-primitive (delete)=deletePropertyPrimitive($event)
+                            (addPrimitive)="addStaticValueProperty($event)"
+                            [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
+                            [isEditable]="isEditable" [property]="node.data">
+                        </app-event-property-primitive>
                     </div>
-                    <div fxFlex="0 1 auto">
-                        <mat-checkbox
-                            *ngIf="isEventPropertyNested(node.data) || isEventPropertyPrimitive(node.data) || isEventPropertyList(node.data)"
-                            (click)="selectProperty(node.data.id)" [class.checkbox-selected]="node.data.selected"
-                            [checked]="node.data.selected"></mat-checkbox>
+                    <div *ngIf="isEventPropertyList(node.data)">
+                        <app-event-property-list (delete)=deletePropertyList($event) [isEditable]="isEditable"
+                            [property]="node.data">
+                        </app-event-property-list>
                     </div>
                 </div>
-            </ng-template>
-        </tree-root>
-    </div>
-    <div fxFlex="0 0 50%" class="schema-preview" *ngIf="isPreviewEnabled">
-        <app-event-schema-preview [eventSchema]="eventSchema"></app-event-schema-preview>
-    </div>
+                <div fxFlex="0 1 auto">
+                    <mat-checkbox
+                        *ngIf="isEventPropertyNested(node.data) || isEventPropertyPrimitive(node.data) || isEventPropertyList(node.data)"
+                        (click)="selectProperty(node.data.id)" [class.checkbox-selected]="node.data.selected"
+                        [checked]="node.data.selected"></mat-checkbox>
+                </div>
+            </div>
+        </ng-template>
+    </tree-root>
 </div>

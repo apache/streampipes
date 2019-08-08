@@ -24,6 +24,7 @@ export class EventSchemaComponent implements OnInit {
   @Input() adapterDescription: AdapterDescription;
   @Input() isEditable: boolean;
   @Output() isEditableChange = new EventEmitter<boolean>();
+  @Output() previewEnabled = new EventEmitter<boolean>();
 
   @Output() adapterChange = new EventEmitter<AdapterDescription>();
 
@@ -90,6 +91,7 @@ export class EventSchemaComponent implements OnInit {
 
   public showPreview() {
     this.isPreviewEnabled = !this.isPreviewEnabled;
+    this.previewEnabled.emit(this.isPreviewEnabled);
   }
 
   private refreshTree() {
@@ -187,13 +189,12 @@ export class EventSchemaComponent implements OnInit {
 
   public removeSelectedProperties(eventProperties) {
     eventProperties = eventProperties || this.eventSchema.eventProperties
-    for (const eventProperty of eventProperties) {
-      if (eventProperty.selected) {
-        const index = eventProperties.indexOf(eventProperty);
-        eventProperties.splice(index, 1)
+    for (let i = eventProperties.length - 1; i >= 0; --i) {
+      if (eventProperties[i].eventProperties) {
+        this.removeSelectedProperties(eventProperties[i].eventProperties)
       }
-      if (eventProperty.eventProperties) {
-        this.removeSelectedProperties(eventProperty.eventProperties)
+      if (eventProperties[i].selected) {
+        eventProperties.splice(i, 1)
       }
     }
     this.countSelected = 0;
