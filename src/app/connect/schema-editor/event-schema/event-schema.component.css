@@ -85,3 +85,24 @@ ul {
 :host /deep/ .node-content-wrapper-focused, .node-content-wrapper:hover, .node-content-wrapper-active, .node-content-wrapper.node-content-wrapper-active:hover, .node-content-wrapper-active.node-content-wrapper-focused {
   background: none !important;
 }
+
+.dimension-star {
+  margin-left: -27px;
+  margin-right: 3px;
+}
+
+:host /deep/ .node-content-wrapper .dimension-star {
+  opacity: 0.2;
+}
+
+:host /deep/ .node-content-wrapper:hover .dimension-star {
+  opacity: 1;
+}
+
+:host /deep/ .node-content-wrapper mat-checkbox {
+  opacity: 0.2;
+}
+
+:host /deep/ .node-content-wrapper:hover mat-checkbox {
+  opacity: 1;
+}

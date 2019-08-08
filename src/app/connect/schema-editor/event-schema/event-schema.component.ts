@@ -98,6 +98,10 @@ export class EventSchemaComponent implements OnInit {
     this.tree.treeModel.update();
   }
 
+  private isTopLevelProperty(instance): boolean {
+    return this.eventSchema.eventProperties.indexOf(instance) !== -1;
+  }
+
   private isEventPropertyPrimitive(instance): boolean {
     return instance instanceof EventPropertyPrimitive;
   }
@@ -120,6 +124,14 @@ export class EventSchemaComponent implements OnInit {
     }
 
     return result;
+  }
+
+  public changePropertyScope(eventProperty) {
+    if (eventProperty.propertyScope == 'MEASUREMENT_PROPERTY') {
+      eventProperty.propertyScope = 'DIMENSION_PROPERTY';
+    } else {
+      eventProperty.propertyScope = 'MEASUREMENT_PROPERTY';
+    }
   }
 
   private isNested(property) {

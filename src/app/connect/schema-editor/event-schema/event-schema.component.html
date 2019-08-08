@@ -59,6 +59,11 @@
         <tree-root #tree [nodes]="nodes" [options]="options" (updateData)="onUpdateData(tree, $event)">
             <ng-template #treeNodeTemplate let-node let-index="index">
                 <div fxLayout="row">
+                    <div fxFlex="0 1 auto" *ngIf="isEventPropertyPrimitive(node.data) && isTopLevelProperty(node.data)"
+                        class="dimension-star" (click)="changePropertyScope(node.data)">
+                        <mat-icon *ngIf="node.data.propertyScope == 'DIMENSION_PROPERTY'">star</mat-icon>
+                        <mat-icon *ngIf="node.data.propertyScope != 'DIMENSION_PROPERTY'">star_border</mat-icon>
+                    </div>
                     <div fxFlex="1 1 auto">
                         <div class="schema" *ngIf="isEventPropertyNested(node.data)">
                             <app-event-property-nested [index]="i + 1" [eventPropertyNested]="node.data"
