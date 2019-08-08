@@ -106,3 +106,11 @@ ul {
 :host /deep/ .node-content-wrapper:hover mat-checkbox {
   opacity: 1;
 }
+
+.checkbox-selected {
+  opacity: 1 !important;
+}
+.dimension-property {
+  color: #ffa23b !important;
+  opacity: 1 !important;
+}

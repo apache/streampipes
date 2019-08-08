@@ -92,7 +92,6 @@ export class EventSchemaComponent implements OnInit {
   }
 
   private refreshTree() {
-    console.log(this.eventSchema);
     this.nodes = new Array<EventProperty>();
     this.nodes.push(this.eventSchema as unknown as EventProperty);
     this.tree.treeModel.update();
@@ -144,16 +143,22 @@ export class EventSchemaComponent implements OnInit {
   public selectProperty(id, eventProperties) {
     eventProperties = eventProperties || this.eventSchema.eventProperties
     for (const eventProperty of eventProperties) {
-      const index = eventProperties.indexOf(eventProperty)
       if (eventProperty.eventProperties && eventProperty.eventProperties.length > 0) {
         if (eventProperty.id == id) {
           if (eventProperty.selected) {
             eventProperty.selected = undefined;
+            this.selectProperty('none', eventProperty.eventProperties)
           } else {
             eventProperty.selected = true;
+            this.selectProperty('all', eventProperty.eventProperties)
           }
+        } else if (id == 'all') {
+          eventProperty.selected = true;
+        } else if (id == 'none') {
+          eventProperty.selected = undefined;
+        } else {
+          this.selectProperty(id, eventProperty.eventProperties)
         }
-        this.selectProperty(id, eventProperty.eventProperties)
       } else {
         if (eventProperty.id == id) {
           if (eventProperty.selected) {
@@ -161,9 +166,14 @@ export class EventSchemaComponent implements OnInit {
           } else {
             eventProperty.selected = true;
           }
+        } else if (id == 'all') {
+          eventProperty.selected = true;
+        } else if (id == 'none') {
+          eventProperty.selected = undefined;
         }
       }
     }
+    this.refreshTree();
   }
 
   public removeSelectedProperties(eventProperties) {

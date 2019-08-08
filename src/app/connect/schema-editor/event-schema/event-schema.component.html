@@ -65,8 +65,11 @@
             <ng-template #treeNodeTemplate let-node let-index="index">
                 <div fxLayout="row">
                     <div fxFlex="0 1 auto" *ngIf="isEventPropertyPrimitive(node.data) && isTopLevelProperty(node.data)"
-                        class="dimension-star" (click)="changePropertyScope(node.data)">
-                        <mat-icon *ngIf="node.data.propertyScope == 'DIMENSION_PROPERTY'">star</mat-icon>
+                        class="dimension-star"
+                        [class.dimension-property]="node.data.propertyScope == 'DIMENSION_PROPERTY'"
+                        (click)="changePropertyScope(node.data)">
+                        <mat-icon *ngIf="node.data.propertyScope == 'DIMENSION_PROPERTY'">
+                            star</mat-icon>
                         <mat-icon *ngIf="node.data.propertyScope != 'DIMENSION_PROPERTY'">star_border</mat-icon>
                     </div>
                     <div fxFlex="1 1 auto">
@@ -94,7 +97,8 @@
                     <div fxFlex="0 1 auto">
                         <mat-checkbox
                             *ngIf="isEventPropertyNested(node.data) || isEventPropertyPrimitive(node.data) || isEventPropertyList(node.data)"
-                            (click)="selectProperty(node.data.id)"></mat-checkbox>
+                            (click)="selectProperty(node.data.id)" [class.checkbox-selected]="node.data.selected"
+                            [checked]="node.data.selected"></mat-checkbox>
                     </div>
                 </div>
             </ng-template>
