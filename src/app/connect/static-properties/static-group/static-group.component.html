@@ -1,0 +1,6 @@
+<div *ngFor="let property of staticProperty.staticProperties" class="padding">
+    <app-static-property [adapterId]="adapterId" [staticProperties]="staticProperties" [eventSchema]="eventSchema"
+                         [staticProperty]="property" (validateEmitter)="valueChange($event)" class="test fullWidth">
+    </app-static-property>
+
+</div>

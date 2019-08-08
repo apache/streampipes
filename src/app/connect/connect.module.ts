@@ -59,10 +59,20 @@ import { FileManagementComponent } from './file-management/file-management.compo
 import { FileRestService } from './file-management/service/filerest.service';
 import { StaticRuntimeResolvableAnyInputComponent } from "./static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component";
 import { StaticRuntimeResolvableOneOfInputComponent } from "./static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component";
+import { StaticGroupComponent } from './static-properties/static-group/static-group.component';
+import { StaticAlternativesComponent } from './static-properties/static-alternatives/static-alternatives.component';
+
 
 import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
 import { AdapterExportDialog } from './data-marketplace/adapter-export/adapter-export-dialog.component';
 import { AdapterUploadDialog } from './data-marketplace/adapter-upload/adapter-upload-dialog.component';
+import { EventPropertyListComponent } from './schema-editor/event-property-list/event-property-list.component';
+import { AdapterExportDialog } from './data-marketplace/adapter-export/adapter-export-dialog.component';
+import { AdapterUploadDialog } from './data-marketplace/adapter-upload/adapter-upload-dialog.component';
+import { StaticMappingNaryComponent } from './static-properties/static-mapping-nary/static-mapping-nary.component';
+import { StaticMappingUnaryComponent } from './static-properties/static-mapping-unary/static-mapping-unary.component';
+import { TimestampPipe } from './filter/timestamp.pipe';
+import { FilterPipe } from './data-marketplace/filter.pipe';
 import { EventPropertyListComponent } from './schema-editor/event-property-list/event-property-list.component';
 import { StaticMappingNaryComponent } from './static-properties/static-mapping-nary/static-mapping-nary.component';
 import { StaticMappingUnaryComponent } from './static-properties/static-mapping-unary/static-mapping-unary.component';
@@ -129,7 +139,9 @@ import { EventSchemaPreviewComponent } from './schema-editor/event-schema-previe
         StaticRuntimeResolvableOneOfInputComponent,
         FileManagementComponent,
         FilterPipe,
-        EventSchemaPreviewComponent
+        EventSchemaPreviewComponent,
+        StaticGroupComponent,
+        StaticAlternativesComponent,
     ],
     providers: [
         RestService,

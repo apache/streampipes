@@ -1,0 +1,45 @@
+<div id="formWrapper" fxFlex="90" fxLayout="row">
+    <div fxFlex="20">
+        <p>{{staticProperty.label}}: </p>
+    </div>
+    <div fxFlex fxLayout="column" class="content">
+        <div>{{staticProperty.description}}</div>
+        <div>
+            <mat-radio-group  *ngIf="staticProperty.alternatives.length > 1"
+                    class="radio-group" (change)="radioSelectionChange($event)" required>
+                <mat-radio-button *ngFor="let alternative of staticProperty.alternatives" class="radio-button"
+                                  [value]="alternative" [checked]="alternative.selected" [matTooltip]="alternative.description">
+                    <label style="font-weight: normal;">
+                        {{alternative.label}}
+                    </label>
+                </mat-radio-button>
+            </mat-radio-group>
+
+            <!-- TODO: Remove hack -->
+            <mat-checkbox *ngIf="staticProperty.alternatives.length === 1"
+                          [(ngModel)]="staticProperty.alternatives[0].selected">
+                {{staticProperty.alternatives[0].label}}
+            </mat-checkbox>
+
+        </div>
+
+        <div *ngFor="let alternative of staticProperty.alternatives">
+            <div *ngIf="alternative.selected == true && alternative.staticProperty != null">
+                <div class="assemblyOptions sp-blue-bg">
+                     {{alternative.label}}
+                 </div>
+
+                <div class="sp-blue-border" style="padding-top: 0px; padding-bottom: 0px;  padding-left: 10px;">
+                    <app-static-property [adapterId]="adapterId" [eventSchema]="eventSchema"
+                                         [staticProperty]="alternative.staticProperty" (validateEmitter)="valueChange($event)"
+                                         class="test fullWidth">
+                    </app-static-property>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>

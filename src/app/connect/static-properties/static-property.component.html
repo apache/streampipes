@@ -44,5 +44,17 @@
                          (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
 </app-static-mapping-nary>
 
+<app-static-alternatives *ngIf="isAlternativesStaticProperty(staticProperty)"
+                         [adapterId]="adapterId" [eventSchema]="eventSchema"
+                         [staticProperty]="staticProperty" class="test fullWidth"
+                         (inputEmitter)="valueChange($event)">
+</app-static-alternatives>
+
+<app-static-group *ngIf="isGroupStaticProperty(staticProperty)"
+                  [adapterId]="adapterId" [eventSchema]="eventSchema"
+                  [staticProperty]="staticProperty" class="test fullWidth"
+                  (inputEmitter)="valueChange($event)">
+</app-static-group>
+
 
 
