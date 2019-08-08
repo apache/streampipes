@@ -25,10 +25,10 @@ aggregatedValue.description=The calculated aggregation value
 window.title=Select window type
 window.description=Data can either be aggregated by event count or by time windows
 
-timeWindowOption.title=Count Window
+timeWindowOption.title=Time Window
 timeWindowOption.description=
 
-countWindowOption.title=Time Window
+countWindowOption.title=Count Window
 countWindowOption.description=
 
 countWindow.title=Count Window Size

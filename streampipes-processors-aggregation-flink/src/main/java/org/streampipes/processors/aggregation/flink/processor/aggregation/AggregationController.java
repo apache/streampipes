@@ -77,12 +77,12 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
 //            .requiredIntegerParameter(Labels.withId(OUTPUT_EVERY_KEY))
 
             .requiredAlternatives(Labels.withId(WINDOW),
-                    Alternatives.from(Labels.withId(COUNT_WINDOW_OPTION),
+                    Alternatives.from(Labels.withId(TIME_WINDOW_OPTION),
                                              StaticProperties.group(Labels.from("group2", "", ""),
                             StaticProperties.integerFreeTextProperty(Labels.withId(TIME_WINDOW_KEY)),
                     StaticProperties.integerFreeTextProperty(Labels.withId(OUTPUT_EVERY_KEY_SECOND)))
            ),
-                    Alternatives.from(Labels.withId(TIME_WINDOW_OPTION),
+                    Alternatives.from(Labels.withId(COUNT_WINDOW_OPTION),
                                              StaticProperties.group(Labels.from("group1", "", ""),
                             StaticProperties.integerFreeTextProperty(Labels.withId(COUNT_WINDOW_KEY)),
                             StaticProperties.integerFreeTextProperty(Labels.withId(OUTPUT_EVERY_KEY_EVENT))))
