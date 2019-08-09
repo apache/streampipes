@@ -33,6 +33,7 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.*;
 import org.eclipse.milo.opcua.stack.core.types.structured.*;
+import org.streampipes.sdk.utils.Datatypes;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -115,12 +116,37 @@ public class OpcUa {
         );
     }
 
-    public List<ReferenceDescription> browseNode() {
-       return browseNode(node);
+    public List<OpcNode> browseNode() {
+        List<OpcNode> referenceDescriptions = browseNode(node);
+
+        if (referenceDescriptions.size() == 0) {
+            referenceDescriptions = getRootNote(node);
+        }
+
+       return referenceDescriptions;
     }
 
-    private List<ReferenceDescription> browseNode(NodeId browseRoot) {
-        List<ReferenceDescription> result = new ArrayList<>();
+    private List<OpcNode> getRootNote(NodeId browseRoot) {
+        List<OpcNode> result = new ArrayList<>();
+
+        try {
+//            VariableNode resultNode = client.getAddressSpace().getVariableNode(browseRoot).get();
+            String name = client.getAddressSpace().getVariableNode(browseRoot).get().getBrowseName().get().getName();
+            Datatypes type = OpcUaTypes.getType((UInteger)client.getAddressSpace().getVariableNode(browseRoot).get().getDataType().get().getIdentifier());
+            NodeId nodeId = client.getAddressSpace().getVariableNode(browseRoot).get().getNodeId().get();
+            result.add(new OpcNode(name, type, nodeId));
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    private List<OpcNode> browseNode(NodeId browseRoot) {
+        List<OpcNode> result = new ArrayList<>();
 
         BrowseDescription browse = new BrowseDescription(
                 browseRoot,
@@ -137,7 +163,10 @@ public class OpcUa {
             List<ReferenceDescription> references = toList(browseResult.getReferences());
 
             for (ReferenceDescription rd : references) {
-                result.add(rd);
+                OpcNode opcNode = new OpcNode( rd.getBrowseName().getName(), OpcUaTypes.getType((UInteger) rd.getTypeDefinition().getIdentifier()), rd.getNodeId().local().get());
+                rd.getNodeId();
+
+                result.add(opcNode);
                 rd.getNodeId().local().ifPresent(nodeId -> browseNode(nodeId));
             }
         } catch (InterruptedException | ExecutionException e) {
