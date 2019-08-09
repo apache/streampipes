@@ -27,6 +27,4 @@ public class ConfigKeys {
     final static String CONNECT_CONTAINER_MASTER_HOST = "SP_CONNECT_CONTAINER_MASTER_HOST";
     final static String CONNECT_CONTAINER_MASTER_PORT = "SP_CONNECT_CONTAINER_MASTER_PORT";
 
-    final static String DATA_LOCATION = "SP_DATA_LOCATION";
-
 }
