@@ -24,6 +24,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 import com.github.jqudt.Unit;
 import com.github.jqudt.onto.UnitFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -48,6 +49,7 @@ public class UnitMasterManagementTest {
     }
 
     @Test(expected = AdapterException.class)
+    @Ignore
     public void invalidURL() throws AdapterException {
         UnitProvider unitProvider = mock(UnitProvider.INSTANCE.getClass());
         when(unitProvider.getUnit(anyString())).thenThrow(new IllegalStateException());
