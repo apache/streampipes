@@ -251,7 +251,6 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements Reso
         Service service = new Service(ros, "/rosapi/topics", "rosapi/Topics");
         ServiceRequest request = new ServiceRequest();
         ServiceResponse response = service.callServiceAndWait(request);
-        System.out.println(response.toString());
         return new ArrayList<>();
     }
 }

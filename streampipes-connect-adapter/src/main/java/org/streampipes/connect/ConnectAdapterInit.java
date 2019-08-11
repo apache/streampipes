@@ -31,14 +31,14 @@ import org.streampipes.connect.adapters.slack.SlackAdapter;
 import org.streampipes.connect.adapters.wikipedia.WikipediaEditedArticlesAdapter;
 import org.streampipes.connect.adapters.wikipedia.WikipediaNewArticlesAdapter;
 import org.streampipes.connect.config.ConnectWorkerConfig;
+import org.streampipes.connect.container.worker.init.AdapterWorkerContainer;
 import org.streampipes.connect.init.AdapterDeclarerSingleton;
-import org.streampipes.connect.init.AdapterWorkerContainer;
 import org.streampipes.connect.protocol.stream.HDFSProtocol;
 import org.streampipes.connect.protocol.stream.HttpStreamProtocol;
 import org.streampipes.connect.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.protocol.stream.MqttProtocol;
 
-public class ConnectAdpaterInit extends AdapterWorkerContainer {
+public class ConnectAdapterInit extends AdapterWorkerContainer {
 
   public static void main(String[] args) {
     AdapterDeclarerSingleton
@@ -69,8 +69,9 @@ public class ConnectAdpaterInit extends AdapterWorkerContainer {
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
     String masterUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerMasterUrl();
+    Integer workerPort = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerPort();
 
-    new ConnectAdpaterInit().init(workerUrl, masterUrl);
+    new ConnectAdapterInit().init(workerUrl, masterUrl, workerPort);
 
   }
 }
