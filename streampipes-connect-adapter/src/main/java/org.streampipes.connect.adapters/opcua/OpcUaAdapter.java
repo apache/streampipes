@@ -28,6 +28,7 @@ import org.streampipes.connect.adapter.exception.ParseException;
 import org.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.streampipes.model.AdapterType;
+import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
@@ -103,11 +104,12 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
         } else {
             key = item.getReadValueId().getNodeId().getIdentifier().toString();
         }
+
         event.put(key, value.getValue().getValue());
 
-        if (event.keySet().size() == this.numberProperties) {
+        if (event.keySet().size() >= this.numberProperties) {
             adapterPipeline.process(event);
-            System.out.println(event);
+//            System.out.println(event);
         }
     }
 
@@ -118,12 +120,11 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
         try {
             this.opcUa.connect();
 
-            List<ReferenceDescription> allNodes = this.opcUa.browseNode();
+            List<OpcNode> allNodes = this.opcUa.browseNode();
             List<NodeId> nodeIds = new ArrayList<>();
 
-
-            for (ReferenceDescription rd : allNodes) {
-                rd.getNodeId().local().ifPresent(nodeId -> nodeIds.add(nodeId));
+            for (OpcNode rd : allNodes) {
+                nodeIds.add(rd.nodeId);
             }
 
             this.numberProperties = nodeIds.size();
@@ -158,12 +159,15 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
         OpcUa opc = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId);
         try {
             opc.connect();
-            List<ReferenceDescription> res =  opc.browseNode();
+            List<OpcNode> res =  opc.browseNode();
 
-            for (ReferenceDescription r : res) {
-                allProperties.add(PrimitivePropertyBuilder
-                        .create(OpcUaTypes.getType((UInteger) r.getTypeDefinition().getIdentifier()), r.getBrowseName().getName())
-                        .build());
+
+            if (res.size() > 0) {
+                for (OpcNode opcNode : res) {
+                    allProperties.add(PrimitivePropertyBuilder
+                            .create(opcNode.getType(), opcNode.getRuntimeName())
+                            .build());
+                }
             }
 
             opc.disconnect();

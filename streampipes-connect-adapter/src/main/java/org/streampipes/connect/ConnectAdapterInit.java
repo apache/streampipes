@@ -33,10 +33,13 @@ import org.streampipes.connect.adapters.wikipedia.WikipediaNewArticlesAdapter;
 import org.streampipes.connect.config.ConnectWorkerConfig;
 import org.streampipes.connect.container.worker.init.AdapterWorkerContainer;
 import org.streampipes.connect.init.AdapterDeclarerSingleton;
+import org.streampipes.connect.init.AdapterWorkerContainer;
+import org.streampipes.connect.protocol.set.FileProtocol;
+import org.streampipes.connect.protocol.stream.FileStreamProtocol;
 import org.streampipes.connect.protocol.stream.HDFSProtocol;
-import org.streampipes.connect.protocol.stream.HttpStreamProtocol;
 import org.streampipes.connect.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.protocol.stream.MqttProtocol;
+import org.streampipes.connect.protocol.stream.HttpStreamProtocol;
 
 public class ConnectAdapterInit extends AdapterWorkerContainer {
 
@@ -45,9 +48,9 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .getInstance()
 
             // Protocols
-//                .add(new FileProtocol())
+            .add(new FileProtocol())
             .add(new HttpProtocol())
-//                .add(new FileStreamProtocol())
+            .add(new FileStreamProtocol())
             .add(new HDFSProtocol())
             .add(new KafkaProtocol())
             .add(new MqttProtocol())

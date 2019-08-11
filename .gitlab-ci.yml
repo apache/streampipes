@@ -28,10 +28,6 @@ build:
       - ./streampipes-connect-container/target/*.jar
       - ./*/target/*.jar
     expire_in:  1 hour
-#  except:
-#      - /release-.*$/
-#      - ./*/target/*.jar
-#      - ./target/mvn_version
 
 
 docker-connect-container:
@@ -40,9 +36,7 @@ docker-connect-container:
    dependencies:
      - build
    script:
-     - ls
      - cd streampipes-connect-adapter/
-     - ls
      - export MVN_VERSION=0.62.1-SNAPSHOT
 #     - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST

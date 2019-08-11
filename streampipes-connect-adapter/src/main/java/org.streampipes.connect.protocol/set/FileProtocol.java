@@ -84,7 +84,7 @@ public class FileProtocol extends Protocol {
     public void run(AdapterPipeline adapterPipeline) {
         FileReader fr = null;
 
-        // TODO fix this. Currently needed because it must be wait till the whole preprocessing is up and running
+        // TODO fix this. Currently needed because it must be wait till the whole pipeline is up and running
         try {
             Thread.sleep(7000);
         } catch (InterruptedException e) {
