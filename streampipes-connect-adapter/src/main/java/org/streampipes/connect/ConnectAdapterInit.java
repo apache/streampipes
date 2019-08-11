@@ -33,7 +33,6 @@ import org.streampipes.connect.adapters.wikipedia.WikipediaNewArticlesAdapter;
 import org.streampipes.connect.config.ConnectWorkerConfig;
 import org.streampipes.connect.container.worker.init.AdapterWorkerContainer;
 import org.streampipes.connect.init.AdapterDeclarerSingleton;
-import org.streampipes.connect.init.AdapterWorkerContainer;
 import org.streampipes.connect.protocol.set.FileProtocol;
 import org.streampipes.connect.protocol.stream.FileStreamProtocol;
 import org.streampipes.connect.protocol.stream.HDFSProtocol;
