@@ -29,7 +29,7 @@ build:
   artifacts:
     paths:
       - ./streampipes-backend/target/streampipes-backend.jar
-      - ./streampipes-connect-container/target/*.jar
+      - ./streampipes-connect-container-master/target/streampipes-connect-container-master.jar
       - ./target/site/apidocs/**
       - ./target/mvn_version
     expire_in:  1 week

@@ -17,10 +17,12 @@
 
 package org.streampipes.connect.utils;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.core.IsEqual.equalTo;
+
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ValidatableResponseOptions;
 import org.eclipse.jetty.server.Server;
-import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
@@ -29,11 +31,9 @@ import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
 import org.streampipes.rest.shared.serializer.JsonLdProvider;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 
-import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.core.IsEqual.equalTo;
+import javax.ws.rs.core.UriBuilder;
 
 public abstract class ConnectContainerResourceTest {
 
@@ -61,7 +61,9 @@ public abstract class ConnectContainerResourceTest {
                 .fromUri(url)
                 .build();
 
-        return JettyHttpContainerFactory.createServer(baseUri, config);
+        //TODO after ref
+        // return JettyHttpContainerFactory.createServer(baseUri, config);
+        return null;
     }
 
 

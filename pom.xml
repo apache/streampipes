@@ -297,6 +297,11 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-connect-container</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-container</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -653,6 +658,8 @@
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-spark</module>
         <module>streampipes-wrapper-standalone</module>
+        <module>streampipes-connect-container-master</module>
+        <module>streampipes-connect-container-worker</module>
     </modules>
 
     <profiles>
