@@ -10,31 +10,6 @@
             <button [disabled]="!isEditable" color="primary" mat-button (click)=emitAddNestedProperty()>
                 <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
             </button>
-            <button mat-button (click)=onClickOpen()>
-                <div *ngIf=open>
-                    <mat-icon>expand_less</mat-icon>
-                </div>
-                <div *ngIf=!open>
-                    <mat-icon>expand_more</mat-icon>
-                </div>
-            </button>
         </div>
     </div>
-</div>
-<!-- body start -->
-<div class="body">
-    <div [hidden]=!open>
-        <app-event-property [domainPropertyGuess]="domainPropertyGuess" [property]="eventPropertyNested">
-        </app-event-property>
-    </div>
-
-    <!--
-    <div style="padding-left: 50px; border-left: 4px dotted black;">
-        <app-event-property-bag [domainPropertyGuesses]="domainPropertyGuesses"
-                                [eventProperties]="eventPropertyNested.eventProperties"
-                                [eventPropertyNested]="true"
-                                [isEditable]="isEditable">
-        </app-event-property-bag>
-    </div>
--->
 </div>

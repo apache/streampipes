@@ -80,8 +80,10 @@ export class EventPropertyNestedComponent implements OnInit, DoCheck {
   }
 
   private getLabel(): string {
-    if (typeof this.eventPropertyNested.getRuntimeName() !== 'undefined') {
-      return this.eventPropertyNested.getRuntimeName();
+    if (typeof this.eventPropertyNested.label !== 'undefined') {
+      return this.eventPropertyNested.label;
+    } else if (typeof this.eventPropertyNested.runTimeName !== 'undefined') {
+      return this.eventPropertyNested.runTimeName;
     } else {
       return 'Nested Property';
     }

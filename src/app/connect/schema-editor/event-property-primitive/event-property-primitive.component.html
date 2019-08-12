@@ -1,27 +1,13 @@
 <div class="header" fxLayout="row" fxLayoutAlign="start center">
     <div class="onhover" fxLayout="row" fxFlex="100">
-        <div fxLayoutAlign="start" fxFlex="80">
-            <b>
-                {{getLabel()}}
-            </b>
-            <mat-icon *ngIf="property.isTimestampProperty()" style="font-size: 15px; padding: 4px;">access_time
-            </mat-icon>
-        </div>
-        <div fxFlex="20" fxLayoutAlign="end">
-            <button mat-button (click)=OnClickOpen()>
-                <div *ngIf=open>
-                    <mat-icon>expand_less</mat-icon>
-                </div>
-                <div *ngIf=!open>
-                    <mat-icon>expand_more</mat-icon>
-                </div>
-            </button>
-        </div>
+        <b>
+            {{getLabel()}}
+        </b>
+        <mat-icon *ngIf="property.isTimestampProperty()" style="font-size: 15px; padding: 4px;">access_time
+        </mat-icon>
     </div>
 </div>
 <div class="divBorder" [hidden]=!open>
-    <app-event-property [(property)]="property" [domainPropertyGuess]="domainPropertyGuess"></app-event-property>
-
 
     <mat-form-field class="doubleWidth">
         <mat-select placeholder="Runtime Type" [(ngModel)]="property.runtimeType"

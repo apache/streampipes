@@ -114,3 +114,40 @@ ul {
   color: #ffa23b !important;
   opacity: 1 !important;
 }
+
+.historic {
+  cursor: pointer;
+  color: #ffa23b;
+}
+.real-time {
+  cursor: pointer;
+  color: #FFEB3B;
+}
+
+.new-adapter-title {
+  margin-top:5px;
+}
+
+.configuration-box {
+  width:100%;
+  margin-bottom:10px;
+  box-shadow: 1px 1px 2px #555;
+  border: 1px solid gray;
+  padding: 10px 10px 10px 60px;
+  margin-left: 20px;
+}
+
+.padding {
+  padding:15px;
+  margin-bottom:2%;
+}
+
+.stepper-button {
+  margin-left:10px;
+}
+
+.disable-editing {
+pointer-events: none !important;
+opacity:0.5;
+}
+

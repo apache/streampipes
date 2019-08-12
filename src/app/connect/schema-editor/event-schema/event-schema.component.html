@@ -1,103 +1,122 @@
-<div fxLayout="row">
-    <div fxLayoutAlign="space-between center" class="addSchema" fxFlex="0 1 100%">
-        <div>
-            <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty()>
-                <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
-            </button>
-            <button [disabled]="!isEditable" *ngIf="!eventPropertyNested" color="primary" mat-button
-                (click)="addStaticValueProperty()">
-                <mat-icon matTooltip="Add a static value to event">add</mat-icon>
-            </button>
-            <button [disabled]="!isEditable" *ngIf="!eventPropertyNested" color="primary" mat-button
-                (click)=addTimestampProperty()>
-                <mat-icon matTooltip="Add timestamp to event schema">access_time</mat-icon>
-            </button>
-            <button color="primary" mat-button (click)=guessSchema()>
-                <mat-icon matTooltip="Refresh Schema">refresh</mat-icon>
-            </button>
-            <button color="primary" mat-button (click)=showPreview()>
-                <mat-icon matTooltip="Show preview of schema">play_arrow</mat-icon>
-            </button>
-        </div>
-        <div>
-            <button style="padding-right:0" color="primary" mat-button [disabled]="countSelected == 0"
-                (click)="removeSelectedProperties()">
-                <mat-icon matTooltip="Remove selected Properties">delete</mat-icon>
-            </button>
-        </div>
-    </div>
-</div>
-
-<div fxLayout="column" *ngIf="isLoading">
-    <div fxLayoutAlign="center">
-        <mat-spinner fxLayoutAlign="center" style="margin: 10px 0 5px 0">Loading</mat-spinner>
-    </div>
-    <div fxLayoutAlign="center">
-        <h3>The system tries to guess the schema of the data</h3>
-    </div>
-</div>
-
-<div fxLayout="column" *ngIf="isError">
-    <div fxLayout="row" fxLayoutAlign="center center">
-        <mat-icon style="margin-top: 10px" class="md-accent">warning</mat-icon>
-        <span style="width: 10px;"></span>
-        <h3>System error while guess the schema of the data</h3>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="center center">
-        <button mat-button class="md-accent">
-            <div *ngIf="!showErrorMessage" (click)="showErrorMessage = true">Show Details</div>
-            <div *ngIf="showErrorMessage" (click)="showErrorMessage = false">Hide Details</div>
-        </button>
-    </div>
-    <div fxLayoutAlign="center center" *ngIf="showErrorMessage">
-        <div class="error-message">
-            <div *ngFor="let error of errorMessages" style="margin-bottom: 5px; margin-top: 5px">
-                <div>{{error.title}}</div>
-                <div>{{error.description}}</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div fxLayout="column" fxLayoutAlign="space-evenly stretched" class="drag-drop-tree">
-    <tree-root #tree [nodes]="nodes" [options]="options" (updateData)="onUpdateData(tree, $event)">
-        <ng-template #treeNodeTemplate let-node let-index="index">
+<div fxLayout="row" fxLayoutAlign="center">
+    <div fxFlex="0 1 80%">
+        <div class="assemblyOptions sp-blue-bg">
             <div fxLayout="row">
-                <div fxFlex="0 1 auto" *ngIf="isEventPropertyPrimitive(node.data) && isTopLevelProperty(node.data)"
-                    class="dimension-star" [class.dimension-property]="node.data.propertyScope == 'DIMENSION_PROPERTY'"
-                    (click)="changePropertyScope(node.data)">
-                    <mat-icon *ngIf="node.data.propertyScope == 'DIMENSION_PROPERTY'">
-                        star</mat-icon>
-                    <mat-icon *ngIf="node.data.propertyScope != 'DIMENSION_PROPERTY'">star_border</mat-icon>
-                </div>
-                <div fxFlex="1 1 auto">
-                    <div class="schema" *ngIf="isEventPropertyNested(node.data)">
-                        <app-event-property-nested [index]="i + 1" [eventPropertyNested]="node.data"
-                            [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
-                            [domainPropertyGuesses]="domainPropertyGuesses" [isEditable]="isEditable"
-                            (addNestedProperty)="addNestedProperty(node.data)" (delete)=deletePropertyNested($event)>
-                        </app-event-property-nested>
+                <div fxLayoutAlign="space-between center" class="addSchema" fxFlex="0 1 100%">
+                    <div>
+                        <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty()>
+                            <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
+                        </button>
+                        <button [disabled]="!isEditable" *ngIf="!eventPropertyNested" color="primary" mat-button
+                            (click)="addStaticValueProperty()">
+                            <mat-icon matTooltip="Add a static value to event">add</mat-icon>
+                        </button>
+                        <button [disabled]="!isEditable" *ngIf="!eventPropertyNested" color="primary" mat-button
+                            (click)=addTimestampProperty()>
+                            <mat-icon matTooltip="Add timestamp to event schema">access_time</mat-icon>
+                        </button>
+                        <button color="primary" mat-button (click)=guessSchema()>
+                            <mat-icon matTooltip="Refresh Schema">refresh</mat-icon>
+                        </button>
+                        <button color="primary" mat-button (click)=showPreview()>
+                            <mat-icon matTooltip="Show preview of schema">play_arrow</mat-icon>
+                        </button>
                     </div>
-                    <div *ngIf="isEventPropertyPrimitive(node.data)">
-                        <app-event-property-primitive (delete)=deletePropertyPrimitive($event)
-                            (addPrimitive)="addStaticValueProperty($event)"
-                            [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
-                            [isEditable]="isEditable" [property]="node.data">
-                        </app-event-property-primitive>
+                    <div>
+                        <button style="padding-right:0" color="primary" mat-button [disabled]="countSelected == 0"
+                            (click)="removeSelectedProperties()">
+                            <mat-icon matTooltip="Remove selected Properties">delete</mat-icon>
+                        </button>
                     </div>
-                    <div *ngIf="isEventPropertyList(node.data)">
-                        <app-event-property-list (delete)=deletePropertyList($event) [isEditable]="isEditable"
-                            [property]="node.data">
-                        </app-event-property-list>
-                    </div>
-                </div>
-                <div fxFlex="0 1 auto">
-                    <mat-checkbox
-                        *ngIf="isEventPropertyNested(node.data) || isEventPropertyPrimitive(node.data) || isEventPropertyList(node.data)"
-                        (click)="selectProperty(node.data.id)" [class.checkbox-selected]="node.data.selected"
-                        [checked]="node.data.selected"></mat-checkbox>
                 </div>
             </div>
-        </ng-template>
-    </tree-root>
+        </div>
+        <div class="sp-blue-border padding">
+
+            <div fxLayout="column" *ngIf="isLoading">
+                <div fxLayoutAlign="center">
+                    <mat-spinner fxLayoutAlign="center" style="margin: 10px 0 5px 0">Loading</mat-spinner>
+                </div>
+                <div fxLayoutAlign="center">
+                    <h3>The system tries to guess the schema of the data</h3>
+                </div>
+            </div>
+
+            <div fxLayout="column" *ngIf="isError">
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <mat-icon style="margin-top: 10px" class="md-accent">warning</mat-icon>
+                    <span style="width: 10px;"></span>
+                    <h3>System error while guess the schema of the data</h3>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <button mat-button class="md-accent">
+                        <div *ngIf="!showErrorMessage" (click)="showErrorMessage = true">Show Details</div>
+                        <div *ngIf="showErrorMessage" (click)="showErrorMessage = false">Hide Details</div>
+                    </button>
+                </div>
+                <div fxLayoutAlign="center center" *ngIf="showErrorMessage">
+                    <div class="error-message">
+                        <div *ngFor="let error of errorMessages" style="margin-bottom: 5px; margin-top: 5px">
+                            <div>{{error.title}}</div>
+                            <div>{{error.description}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div fxLayout="column" fxLayoutAlign="space-evenly stretched" class="drag-drop-tree">
+                <tree-root #tree [nodes]="nodes" [options]="options" (updateData)="onUpdateData(tree, $event)">
+                    <ng-template #treeNodeTemplate let-node let-index="index">
+                        <div fxLayout="row">
+                            <div fxFlex="1 1 auto">
+                                <div class="schema" *ngIf="isEventPropertyNested(node.data)">
+                                    <app-event-property-nested [index]="i + 1" [eventPropertyNested]="node.data"
+                                        [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
+                                        [domainPropertyGuesses]="domainPropertyGuesses" [isEditable]="isEditable"
+                                        (addNestedProperty)="addNestedProperty(node.data)"
+                                        (delete)=deletePropertyNested($event)>
+                                    </app-event-property-nested>
+                                </div>
+                                <div *ngIf="isEventPropertyPrimitive(node.data)">
+                                    <app-event-property-primitive (delete)=deletePropertyPrimitive($event)
+                                        (addPrimitive)="addStaticValueProperty($event)"
+                                        [domainPropertyGuess]="getDomainProbability(node.data.runTimeName)"
+                                        [isEditable]="isEditable" [property]="node.data">
+                                    </app-event-property-primitive>
+                                </div>
+                                <div *ngIf="isEventPropertyList(node.data)">
+                                    <app-event-property-list (delete)=deletePropertyList($event)
+                                        [isEditable]="isEditable" [property]="node.data">
+                                    </app-event-property-list>
+                                </div>
+                            </div>
+                            <div fxFlex="15" *ngIf="isEventPropertyPrimitive(node.data)">
+                                <mat-select [(value)]="node.data.propertyScope">
+                                    <mat-option value="MEASUREMENT_PROPERTY">Measurement</mat-option>
+                                    <mat-option value="DIMENSION_PROPERTY">Dimension</mat-option>
+                                    <mat-option value="HEADER_PROPERTY">Header</mat-option>
+                                </mat-select>
+                            </div>
+                            <div fxFlex="0 1 auto" fxLayoutAlign="center center"
+                                *ngIf="isEventPropertyNested(node.data) || isEventPropertyPrimitive(node.data) || isEventPropertyList(node.data)">
+                                <button color="primary" mat-button (click)="openEditDialog(node.data)">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                            </div>
+                            <div fxFlex="0 1 auto" fxLayoutAlign="center center">
+                                <mat-checkbox
+                                    *ngIf="isEventPropertyNested(node.data) || isEventPropertyPrimitive(node.data) || isEventPropertyList(node.data)"
+                                    (click)="selectProperty(node.data.id)"
+                                    [class.checkbox-selected]="node.data.selected" [checked]="node.data.selected">
+                                </mat-checkbox>
+                            </div>
+                        </div>
+                    </ng-template>
+                </tree-root>
+            </div>
+        </div>
+    </div>
+    <div fxFlex="0 1 50%" *ngIf="isPreviewEnabled">
+        <app-event-schema-preview [eventSchema]="eventSchema"></app-event-schema-preview>
+    </div>
 </div>

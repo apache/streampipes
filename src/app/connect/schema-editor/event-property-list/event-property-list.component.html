@@ -1,26 +1,12 @@
 <div class="header" fxLayout="row" fxLayoutAlign="start center">
-    <div class="onhover" fxLayout="row" fxFlex="100">
-        <div fxFlex="80" fxLayoutAlign="start">
-            <b>
-                {{getLabel()}}
-            </b>
-            <p style="margin: 0px 10px 10px;">[List]</p>
-        </div>
-        <div fxFlex="20" fxLayoutAlign="end">
-            <button mat-button (click)=OnClickOpen()>
-                <div *ngIf=open>
-                    <mat-icon>expand_less</mat-icon>
-                </div>
-                <div *ngIf=!open>
-                    <mat-icon>expand_more</mat-icon>
-                </div>
-            </button>
-        </div>
+    <div class="onhover" fxFlex="100" fxLayout="row">
+        <b>
+            {{getLabel()}}
+        </b>
+        <p style="margin: 0px 10px 10px;">[List]</p>
     </div>
 </div>
 <div class="body" [hidden]=!open>
-    <app-event-property [property]="property"></app-event-property>
-
     <mat-form-field class="doubleWidth">
         <mat-select placeholder="Runtime Type" [(ngModel)]="property.eventProperty.runtimeType">
             <mat-option *ngFor="let dataType of runtimeDataTypes" [value]="dataType.url">

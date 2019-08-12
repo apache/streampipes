@@ -12,6 +12,8 @@ import { ITreeOptions, TreeComponent } from 'angular-tree-component';
 import { DomainPropertyProbabilityList } from '../model/DomainPropertyProbabilityList';
 import { UUID } from 'angular2-uuid';
 import { DataTypesService } from '../data-type.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EventPropertyComponent } from '../event-property/event-property.component';
 
 @Component({
   selector: 'app-event-schema',
@@ -20,7 +22,7 @@ import { DataTypesService } from '../data-type.service';
 })
 export class EventSchemaComponent implements OnInit {
 
-  constructor(private restService: RestService, private dataTypesService: DataTypesService) { }
+  constructor(private restService: RestService, private dataTypesService: DataTypesService, public dialog: MatDialog) { }
   @Input() adapterDescription: AdapterDescription;
   @Input() isEditable: boolean;
   @Output() isEditableChange = new EventEmitter<boolean>();
@@ -92,6 +94,12 @@ export class EventSchemaComponent implements OnInit {
   public showPreview() {
     this.isPreviewEnabled = !this.isPreviewEnabled;
     this.previewEnabled.emit(this.isPreviewEnabled);
+  }
+
+  public openEditDialog(data) {
+    this.dialog.open(EventPropertyComponent, {
+      data
+    });
   }
 
   private refreshTree() {

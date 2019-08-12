@@ -1,8 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EventProperty} from '../model/EventProperty';
-import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
-import {DomainPropertyProbability} from '../model/DomainPropertyProbability';
+import { Component, EventEmitter, Input, OnInit, Output, Inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EventProperty } from '../model/EventProperty';
+import { DomainPropertyProbabilityList } from '../model/DomainPropertyProbabilityList';
+import { DomainPropertyProbability } from '../model/DomainPropertyProbability';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { EventPropertyPrimitive } from '../model/EventPropertyPrimitive';
 // import {WriteJsonService} from '../write-json.service';
 // import {DragDropService} from '../drag-drop.service';
 // import {dataTypes} from '../data-model';
@@ -12,20 +14,17 @@ import {DomainPropertyProbability} from '../model/DomainPropertyProbability';
   templateUrl: './event-property.component.html',
   styleUrls: ['./event-property.component.css']
 })
-
 export class EventPropertyComponent implements OnInit {
 
   private propertyForm: FormGroup;
   // protected dataTypes = dataTypes;
 
-  @Input() property: EventProperty;
   @Output() propertyChange = new EventEmitter<EventProperty>();
-
-  @Input() domainPropertyGuess: DomainPropertyProbabilityList;
+  domainPropertyGuess: any;
 
   @Output() save: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(@Inject(MAT_DIALOG_DATA) public property: EventProperty, private formBuilder: FormBuilder) {
   }
 
 
@@ -37,6 +36,19 @@ export class EventPropertyComponent implements OnInit {
       domainProperty: ['', Validators.required],
       dataType: ['', Validators.required]
     });
+  }
+
+  private isEventPropertyPrimitive(instance): boolean {
+    return instance instanceof EventPropertyPrimitive;
+  }
+
+  staticValueAddedByUser() {
+    if (this.property.id.startsWith('http://eventProperty.de/staticValue/')) {
+      return true;
+    } else {
+      return false;
+    }
+
   }
 
   ngOnInit(): void {
@@ -59,9 +71,9 @@ export class EventPropertyComponent implements OnInit {
     var result: DomainPropertyProbability = null;
 
     for (var _i = 0; _i < list.length; _i++) {
-       if (result == null || +result.probability < +list[_i].probability) {
-           result = list[_i];
-       }
+      if (result == null || +result.probability < +list[_i].probability) {
+        result = list[_i];
+      }
     }
 
     return result;

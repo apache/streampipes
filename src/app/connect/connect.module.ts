@@ -165,6 +165,6 @@ import { EventSchemaPreviewComponent } from './schema-editor/event-schema-previe
             deps: ['$injector'],
         },
     ],
-    entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog],
+    entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog, EventPropertyComponent],
 })
 export class ConnectModule { }
