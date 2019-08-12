@@ -39,11 +39,15 @@ build:
       - dist/assets/fonts/
       - dist/index.html
       - dist/main.bundle.js
+      - dist/main.bundle.js.gz
       - dist/polyfills.bundle.js
+      - dist/polyfills.bundle.js.gz
       - dist/style.bundle.css
-      - dist/runtime.bundle.js
+      - dist/style.bundle.css.gz
       - dist/style.bundle.js
+      - dist/stlye.bundle.js.gz
       - dist/style.css
+      - dist/stlyle.css.gz
     expire_in: 1 hour
 
 nginx:

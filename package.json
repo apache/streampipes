@@ -97,6 +97,7 @@
     "@types/rx": "^4.1.1",
     "codelyzer": "^4.1.0",
     "copy-webpack-plugin": "^5.0.2",
+    "compression-webpack-plugin": "^3.0.0",
     "css-loader": "^0.28.11",
     "cypress": "3.1.0",
     "extract-text-webpack-plugin": "^3.0.2",
@@ -126,6 +127,7 @@
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.2.1",
+    "webpack-bundle-analyzer": "^3.4.1",
     "webpack-merge": "^4.2.1"
   }
 }

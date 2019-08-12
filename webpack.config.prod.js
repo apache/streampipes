@@ -1,12 +1,16 @@
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const { HashedModuleIdsPlugin } = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin')
 
 const merge = require('webpack-merge');
 const baseConfig = require('./webpack.config.base.js');
 
 module.exports = merge(baseConfig, {
     mode: 'production',
+    plugins: [
+        new CompressionPlugin
+    ],
     optimization: {
         // noEmitOnErrors: true,
         // runtimeChunk: 'single',
