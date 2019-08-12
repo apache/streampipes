@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, OnInit, Output, ViewChild, ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
+import { Component, Input, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { RestService } from '../../rest.service';
 import { EventSchema } from '../model/EventSchema';
 import { AdapterDescription } from '../../model/connect/AdapterDescription';

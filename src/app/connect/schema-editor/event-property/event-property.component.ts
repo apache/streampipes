@@ -1,13 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output, Inject } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EventProperty } from '../model/EventProperty';
 import { DomainPropertyProbabilityList } from '../model/DomainPropertyProbabilityList';
 import { DomainPropertyProbability } from '../model/DomainPropertyProbability';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EventPropertyPrimitive } from '../model/EventPropertyPrimitive';
-// import {WriteJsonService} from '../write-json.service';
-// import {DragDropService} from '../drag-drop.service';
-// import {dataTypes} from '../data-model';
 
 @Component({
   selector: 'app-event-property',

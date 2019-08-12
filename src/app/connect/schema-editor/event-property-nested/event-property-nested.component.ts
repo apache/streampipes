@@ -3,9 +3,6 @@ import { EventProperty } from '../model/EventProperty';
 import { EventPropertyNested } from '../model/EventPropertyNested';
 import { UUID } from 'angular2-uuid';
 import { EventPropertyList } from '../model/EventPropertyList';
-// import {DragulaService} from 'ng2-dragula';
-// import {DragDropService} from '../drag-drop.service';
-// import {WriteJsonService} from '../write-json.service';
 import { EventPropertyPrimitive } from '../model/EventPropertyPrimitive';
 import { DomainPropertyProbabilityList } from '../model/DomainPropertyProbabilityList';
 
