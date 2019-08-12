@@ -4,6 +4,7 @@ const baseConfig = require('./webpack.config.base.js');
 module.exports = merge(baseConfig, {
     mode: "development",
     devServer: {
+        compress: true,
         port: 8082,
         proxy: {
             '/streampipes-connect': {

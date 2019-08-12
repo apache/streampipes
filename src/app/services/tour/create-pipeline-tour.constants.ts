@@ -78,8 +78,8 @@ export default {
                 stepId: "step-8",
                 title: "Customize elements",
                 text: "<p>Most pipeline elements can be customized according to your needs. Whenever you connect two elements with each other, a configuration dialog pops up.</p><p>Select <b>randomValue</b> as the field to filter, select <b>greater than (>) </b> as operation, select <b>10</b> as the threshold value and click <b>Save</b>.</p>",
-                attachToElement: "md-dialog",
-                attachPosition: "left",
+                attachToElement: "#tutorial-placeholder",
+                attachPosition: "top",
                 buttons: [
                     "cancel"
                 ]
@@ -97,7 +97,7 @@ export default {
             {
                 stepId: "step-10",
                 title: "Finish Pipeline",
-                text: "<p>Almost there!</p>Select the <b>Dashboard</b> sink and connect the <b>Field Hasher</b> to the Dashboard. Enter any visualization name in the configuration menu.</p>",
+                text: "<p>Almost there!</p>Select the <b>Dashboard</b> sink and connect the <b>Numerical Filter</b> to the Dashboard. Enter any visualization name in the configuration menu.</p>",
                 attachToElement: "#pe-icon-stand-org\\.streampipes\\.sinks\\.internal\\.jvm\\.dashboard",
                 attachPosition: "left",
                 buttons: [
