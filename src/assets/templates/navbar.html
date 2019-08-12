@@ -17,16 +17,16 @@
             </h1>
         </div>
         <span flex></span>
-        <div flex="40" layout layout-align="end center" ng-show="toolbarCtrl.authenticated">
+        <div flex="40" layout layout-align="end center" ng-show="toolbarCtrl.authenticated" style="height:100%;">
             <md-button class="sp-icon-button" ng-click="toolbarCtrl.openInfo()" style="min-width:0px;">
                 <md-icon md-svg-icon="action:ic_feedback_24px" aria-label="Info" style="color:white;"></md-icon>
                 <md-tooltip md-direction="bottom">
                     Feedback
                 </md-tooltip>
             </md-button>
-            <md-menu md-position-mode="target-right target" md-offset="-4 52" style="margin:inherit">
-                <md-button aria-label="Open menu" class="sp-icon-button" ng-click="$mdMenu.open($event)" style="min-width:0px;">
-                    <md-icon md-svg-icon="action:ic_account_circle_24px" aria-label="Logout"></md-icon>
+            <md-menu id="account" ng-style="toolbarCtrl.accountMenuBackground" md-position-mode="target-right target" md-offset="8 52" style="margin:inherit;height:100%;" layout layout-align="center center">
+                <md-button layout layout-align="center center" aria-label="Open menu" class="sp-icon-button" ng-click="toolbarCtrl.triggerAccountMenu($mdMenu, $event)" style="min-width:0px;">
+                    <i ng-style="toolbarCtrl.accountMenuIconColor" class="material-icons">account_circle</i>
                     <md-tooltip md-direction="bottom">
                         User Preferences
                     </md-tooltip>

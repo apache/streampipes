@@ -16,7 +16,13 @@ export class ToolbarController {
     toggleLeft: any;
     activePage: any;
 
-    constructor($mdSidenav, $mdUtil, RestApi, $state, $window, $location, AuthStatusService) {
+    whiteColor: string = "#FFFFFF";
+    greenColor: string = "#39b54a";
+
+    accountMenuBackground: any = this.makeColor('background-color', this.greenColor);
+    accountMenuIconColor: any = this.makeColor('color', this.whiteColor);
+
+    constructor($mdSidenav, $mdUtil, RestApi, $state, $window, $location, AuthStatusService, $scope) {
         this.AuthStatusService = AuthStatusService;
         this.RestApi = RestApi;
         this.$mdSidenav = $mdSidenav;
@@ -24,6 +30,13 @@ export class ToolbarController {
         this.$state = $state;
         this.$window = $window;
         this.$location = $location;
+        $scope.$on('$mdMenuClose', (event, menu) => {
+            if (menu[0].id === 'account') {
+                this.updateAccountColors();
+            }
+            console.log(menu[0].id);
+
+        });
 
         this.unreadNotifications = [];
         this.title = 'StreamPipes';
@@ -231,4 +244,28 @@ export class ToolbarController {
         client.connect(login, passcode, onConnect);
     }
 
-};
+    triggerAccountMenu($mdMenu, $event) {
+        this.updateAccountColors();
+        $mdMenu.open($event)
+    }
+
+    updateAccountColors() {
+        this.accountMenuBackground = this.getNewColor('background-color', this.accountMenuBackground);
+        this.accountMenuIconColor = this.getNewColor('color', this.accountMenuIconColor);
+    }
+
+    // triggerFeedbackMenu($mdMenu, $event) {
+    //     this.feedbackMenuBackground = this.getNewColor('background-color', this.feedbackMenuBackground);
+    //     this.feedbackMenuIconColor = this.getNewColor('color', this.feedbackMenuIconColor);
+    //     $mdMenu.open($event)
+    // }
+
+    getNewColor(type: string, currentColor: any) {
+        return currentColor[type] == this.greenColor ? this.makeColor(type, this.whiteColor) : this.makeColor(type, this.greenColor);
+    }
+
+    makeColor(type: string, color: string) {
+        return {[type]: color};
+    }
+
+}
