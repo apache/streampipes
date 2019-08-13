@@ -155,6 +155,10 @@ opacity:0.5;
   color: white;
 }
 
+.add-schema button:disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
 ::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
   background-color: rgb(27, 20, 100) !important;
 }

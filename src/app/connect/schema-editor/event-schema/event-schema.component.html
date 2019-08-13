@@ -84,7 +84,7 @@
                             </div>
                         -->
                             <div fxFlex="0 1 auto" fxLayoutAlign="center center"
-                                *ngIf="isEventPropertyNested(node.data) || isEventPropertyPrimitive(node.data) || isEventPropertyList(node.data)">
+                                *ngIf="isEventPropertyNested(node.data)">
                                 <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty()>
                                     <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
                                 </button>
