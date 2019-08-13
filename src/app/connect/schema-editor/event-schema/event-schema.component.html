@@ -65,7 +65,7 @@
             </div>
 
             <div fxLayout="column" fxLayoutAlign="space-evenly stretched" class="drag-drop-tree">
-                <tree-root #tree [nodes]="nodes" [options]="options" (updateData)="onUpdateData(tree, $event)">
+                <tree-root #tree [nodes]="nodes" [options]="options" (updateData)="onUpdateData(tree)">
                     <ng-template #treeNodeTemplate let-node let-index="index">
                         <div fxLayout="row">
                             <div fxFlex="1 1 auto">

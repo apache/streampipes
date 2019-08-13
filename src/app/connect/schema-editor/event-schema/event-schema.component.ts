@@ -22,45 +22,41 @@ import { EventPropertyComponent } from '../event-property/event-property.compone
 })
 export class EventSchemaComponent {
 
-  constructor(private restService: RestService, private dataTypesService: DataTypesService, public dialog: MatDialog) { }
+  constructor(private restService: RestService, private dataTypesService: DataTypesService, private dialog: MatDialog) { }
+
   @Input() adapterDescription: AdapterDescription;
   @Input() isEditable: boolean;
-  @Output() isEditableChange = new EventEmitter<boolean>();
-
-  @Output() adapterChange = new EventEmitter<AdapterDescription>();
-
-  @Input() eventSchema: EventSchema = new EventSchema();
-  @Output() eventSchemaChange = new EventEmitter<EventSchema>();
-
   @Input() oldEventSchema: EventSchema;
-  @Output() oldEventSchemaChange = new EventEmitter<EventSchema>();
-
+  @Input() eventSchema: EventSchema = new EventSchema();
   @Input() domainPropertyGuesses: DomainPropertyProbabilityList[] = [];
 
-  schemaGuess: GuessSchema = new GuessSchema();
+  @Output() isEditableChange = new EventEmitter<boolean>();
+  @Output() adapterChange = new EventEmitter<AdapterDescription>();
+  @Output() eventSchemaChange = new EventEmitter<EventSchema>();
+  @Output() oldEventSchemaChange = new EventEmitter<EventSchema>();
 
-  nodes: EventProperty[] = new Array<EventProperty>();
-  options: ITreeOptions = {
-    childrenField: 'eventProperties',
-    allowDrag: (node) => {
-      return true;
-    },
-    allowDrop: (node, { parent, index }) => {
-      return parent.data.eventProperties !== undefined && parent.parent !== null;
-    },
-    displayField: 'runTimeName',
-  };
   @ViewChild(TreeComponent)
   private tree: TreeComponent;
 
+  schemaGuess: GuessSchema = new GuessSchema();
   isLoading = false;
   isError = false;
   isPreviewEnabled = false;
   showErrorMessage = false;
   countSelected = 0;
   errorMessages: NotificationLd[];
+  nodes: EventProperty[] = new Array<EventProperty>();
+  options: ITreeOptions = {
+    childrenField: 'eventProperties',
+    allowDrag: true,
+    allowDrop: (node, { parent, index }) => {
+      return parent.data.eventProperties !== undefined && parent.parent !== null;
+    },
+    displayField: 'runTimeName',
+  };
 
-  onUpdateData(treeComponent: TreeComponent, $event) {
+
+  private onUpdateData(treeComponent: TreeComponent): void {
     treeComponent.treeModel.expandAll();
   }
 
@@ -90,39 +86,35 @@ export class EventSchemaComponent {
 
   }
 
-  public togglePreview() {
+  public togglePreview(): void {
     this.isPreviewEnabled = !this.isPreviewEnabled;
   }
 
-  public openEditDialog(data) {
+  public openEditDialog(data): void {
     this.dialog.open(EventPropertyComponent, {
       data
     });
   }
 
-  private refreshTree() {
+  private refreshTree(): void {
     this.nodes = new Array<EventProperty>();
     this.nodes.push(this.eventSchema as unknown as EventProperty);
     this.tree.treeModel.update();
   }
 
-  private isTopLevelProperty(instance): boolean {
-    return this.eventSchema.eventProperties.indexOf(instance) !== -1;
-  }
-
-  private isEventPropertyPrimitive(instance): boolean {
+  private isEventPropertyPrimitive(instance: EventProperty): boolean {
     return instance instanceof EventPropertyPrimitive;
   }
 
-  private isEventPropertyNested(instance): boolean {
+  private isEventPropertyNested(instance: EventProperty): boolean {
     return instance instanceof EventPropertyNested;
   }
 
-  private isEventPropertyList(instance): boolean {
+  private isEventPropertyList(instance: EventProperty): boolean {
     return instance instanceof EventPropertyList;
   }
 
-  public getDomainProbability(name: string) {
+  public getDomainProbability(name: string): DomainPropertyProbabilityList {
     let result: DomainPropertyProbabilityList;
 
     for (const entry of this.domainPropertyGuesses) {
@@ -134,46 +126,33 @@ export class EventSchemaComponent {
     return result;
   }
 
-  public changePropertyScope(eventProperty) {
-    if (eventProperty.propertyScope == 'MEASUREMENT_PROPERTY') {
-      eventProperty.propertyScope = 'DIMENSION_PROPERTY';
-    } else {
-      eventProperty.propertyScope = 'MEASUREMENT_PROPERTY';
-    }
-  }
-
-  private isNested(property) {
-    if (property.eventProperties !== undefined && !(property instanceof EventSchema)) {
-      return true;
-    }
-    return false;
-  }
-
-  public selectProperty(id, eventProperties) {
-    eventProperties = eventProperties || this.eventSchema.eventProperties
+  public selectProperty(id: string, eventProperties: any): void {
+    eventProperties = eventProperties || this.eventSchema.eventProperties;
     for (const eventProperty of eventProperties) {
       if (eventProperty.eventProperties && eventProperty.eventProperties.length > 0) {
-        if (eventProperty.id == id) {
+        if (eventProperty.id === id) {
           if (eventProperty.selected) {
             eventProperty.selected = undefined;
             this.countSelected--;
-            this.selectProperty('none', eventProperty.eventProperties)
+            this.selectProperty('none', eventProperty.eventProperties);
           } else {
             eventProperty.selected = true;
             this.countSelected++;
-            this.selectProperty('all', eventProperty.eventProperties)
+            this.selectProperty('all', eventProperty.eventProperties);
           }
-        } else if (id == 'all') {
+        } else if (id === 'all') {
           eventProperty.selected = true;
           this.countSelected++;
-        } else if (id == 'none') {
+          this.selectProperty('all', eventProperty.eventProperties);
+        } else if (id === 'none') {
           eventProperty.selected = undefined;
           this.countSelected--;
+          this.selectProperty('none', eventProperty.eventProperties);
         } else {
-          this.selectProperty(id, eventProperty.eventProperties)
+          this.selectProperty(id, eventProperty.eventProperties);
         }
       } else {
-        if (eventProperty.id == id) {
+        if (eventProperty.id === id) {
           if (eventProperty.selected) {
             eventProperty.selected = undefined;
             this.countSelected--;
@@ -181,10 +160,10 @@ export class EventSchemaComponent {
             eventProperty.selected = true;
             this.countSelected++;
           }
-        } else if (id == 'all') {
+        } else if (id === 'all') {
           eventProperty.selected = true;
           this.countSelected++;
-        } else if (id == 'none') {
+        } else if (id === 'none') {
           eventProperty.selected = undefined;
           this.countSelected--;
         }
@@ -193,14 +172,14 @@ export class EventSchemaComponent {
     this.refreshTree();
   }
 
-  public removeSelectedProperties(eventProperties) {
-    eventProperties = eventProperties || this.eventSchema.eventProperties
+  public removeSelectedProperties(eventProperties: any): void {
+    eventProperties = eventProperties || this.eventSchema.eventProperties;
     for (let i = eventProperties.length - 1; i >= 0; --i) {
       if (eventProperties[i].eventProperties) {
-        this.removeSelectedProperties(eventProperties[i].eventProperties)
+        this.removeSelectedProperties(eventProperties[i].eventProperties);
       }
       if (eventProperties[i].selected) {
-        eventProperties.splice(i, 1)
+        eventProperties.splice(i, 1);
       }
     }
     this.countSelected = 0;
@@ -231,7 +210,7 @@ export class EventSchemaComponent {
 
   public addNestedProperty(eventProperty): void {
     const uuid: string = UUID.UUID();
-    if (eventProperty == undefined) {
+    if (eventProperty === undefined) {
       this.eventSchema.eventProperties.push(new EventPropertyNested(uuid, undefined));
     } else {
       eventProperty.eventProperties.push(new EventPropertyNested(uuid, undefined));
