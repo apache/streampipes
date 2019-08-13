@@ -15,7 +15,6 @@ import { NewAdapterComponent } from './new-adapter/new-adapter.component';
 import { FormatFormComponent } from './format-form/format-form.component';
 import { SelectProtocolComponent } from './select-protocol-component/select-protocol.component';
 
-import { EventPropertyNestedComponent } from './schema-editor/event-property-nested/event-property-nested.component';
 import { EventPropertyPrimitiveComponent } from './schema-editor/event-property-primitive/event-property-primitive.component';
 import { EventPropertyComponent } from './schema-editor/event-property/event-property.component';
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
@@ -103,7 +102,6 @@ import { EventSchemaPreviewComponent } from './schema-editor/event-schema-previe
         EventSchemaComponent,
         EventPropertyPrimitiveComponent,
         EventPropertyComponent,
-        EventPropertyNestedComponent,
         EventPropertyListComponent,
         StaticPropertyComponent,
         AdapterStartedDialog,
