@@ -14,10 +14,10 @@ import { EventProperty } from './schema-editor/model/EventProperty';
 import { EventPropertyNested } from './schema-editor/model/EventPropertyNested';
 import { GuessSchema } from './schema-editor/model/GuessSchema';
 import { AuthStatusService } from '../services/auth-status.service';
-import {StatusMessage} from "./model/message/StatusMessage";
+import { StatusMessage } from "./model/message/StatusMessage";
 import { UnitDescription } from './model/UnitDescription';
-import {TsonLdSerializerService} from '../platform-services/tsonld-serializer.service';
-import {RuntimeOptionsResponse} from "./model/connect/runtime/RuntimeOptionsResponse";
+import { TsonLdSerializerService } from '../platform-services/tsonld-serializer.service';
+import { RuntimeOptionsResponse } from "./model/connect/runtime/RuntimeOptionsResponse";
 
 @Injectable()
 export class RestService {
@@ -27,7 +27,7 @@ export class RestService {
         private http: HttpClient,
         private authStatusService: AuthStatusService,
         private tsonLdSerializerService: TsonLdSerializerService,
-    ) {}
+    ) { }
 
     addAdapter(adapter: AdapterDescription): Observable<StatusMessage> {
         return this.addAdapterDescription(adapter, '/master/adapters');
@@ -50,9 +50,9 @@ export class RestService {
                     + "/master/resolvable/"
                     + encodeURIComponent(adapterId)
                     + "/configurations", serialized, httpOptions).pipe(map(response => {
-                    const r = this.tsonLdSerializerService.fromJsonLd(response, 'sp:RuntimeOptionsResponse');
-                    resolve(r);
-                })).subscribe();
+                        const r = this.tsonLdSerializerService.fromJsonLd(response, 'sp:RuntimeOptionsResponse');
+                        resolve(r);
+                    })).subscribe();
             });
         });
         return from(promise);
@@ -64,50 +64,51 @@ export class RestService {
         var self = this;
 
 
-        let promise = new Promise<StatusMessage>(function(resolve, reject) {
-                self.tsonLdSerializerService.toJsonLd(adapter).subscribe(res => {
-                    const httpOptions = {
-                        headers: new HttpHeaders({
-                            'Content-Type': 'application/ld+json',
-                        }),
-                    };
-                    self.http
-                        .post(
-                            '/streampipes-connect/api/v1/' + self.authStatusService.email + url,
-                            res,
-                            httpOptions
-                        )
-                        .pipe(map(response => {
-                            var statusMessage = response as StatusMessage;
-                            resolve(statusMessage);
-                        }))
-                        .subscribe();
-                });
+        let promise = new Promise<StatusMessage>(function (resolve, reject) {
+            self.tsonLdSerializerService.toJsonLd(adapter).subscribe(res => {
+                const httpOptions = {
+                    headers: new HttpHeaders({
+                        'Content-Type': 'application/ld+json',
+                    }),
+                };
+                self.http
+                    .post(
+                        '/streampipes-connect/api/v1/' + self.authStatusService.email + url,
+                        res,
+                        httpOptions
+                    )
+                    .pipe(map(response => {
+                        var statusMessage = response as StatusMessage;
+                        resolve(statusMessage);
+                    }))
+                    .subscribe();
             });
+        });
         return from(promise);
     }
 
 
     getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
-       let promise = new Promise<GuessSchema>((resolve, reject) => {
-                this.tsonLdSerializerService.toJsonLd(adapter).subscribe(res => {
-                    return this.http
-                        .post('/streampipes-connect/api/v1/' + this.authStatusService.email + '/master/guess/schema', res)
-                        .pipe(map(response => {
-                            if (JSON.stringify(response).includes('sp:GuessSchema')) {
-                                const r = this.tsonLdSerializerService.fromJsonLd(response, 'sp:GuessSchema');
-                                r.eventSchema.eventProperties.sort((a, b) => a.index - b.index);
-                                this.removeHeaderKeys(r.eventSchema.eventProperties);
-                                resolve(r);
-                            } else {
-                                const r = this.tsonLdSerializerService.fromJsonLd(response, 'sp:ErrorMessage');
-                                reject(r);
-                            }
+        let promise = new Promise<GuessSchema>((resolve, reject) => {
+            this.tsonLdSerializerService.toJsonLd(adapter).subscribe(res => {
+                return this.http
+                    .post('/streampipes-connect/api/v1/' + this.authStatusService.email + '/master/guess/schema', res)
+                    .pipe(map(response => {
+                        if (JSON.stringify(response).includes('sp:GuessSchema')) {
+                            console.log(response)
+                            const r = this.tsonLdSerializerService.fromJsonLd(response, 'sp:GuessSchema');
+                            r.eventSchema.eventProperties.sort((a, b) => a.index - b.index);
+                            this.removeHeaderKeys(r.eventSchema.eventProperties);
+                            resolve(r);
+                        } else {
+                            const r = this.tsonLdSerializerService.fromJsonLd(response, 'sp:ErrorMessage');
+                            reject(r);
+                        }
 
-                        }))
-                        .subscribe();
-                });
+                    }))
+                    .subscribe();
             });
+        });
         return from(promise);
     }
 
@@ -119,7 +120,7 @@ export class RestService {
             }
 
             if (ep instanceof EventPropertyNested) {
-                this.removeHeaderKeys((<EventPropertyNested> ep).eventProperties);
+                this.removeHeaderKeys((<EventPropertyNested>ep).eventProperties);
             }
         }
 
@@ -127,15 +128,15 @@ export class RestService {
 
     getSourceDetails(sourceElementId): Observable<any> {
         return this.http
-            .get(this.makeUserDependentBaseUrl() +"/sources/" +encodeURIComponent(sourceElementId));
+            .get(this.makeUserDependentBaseUrl() + "/sources/" + encodeURIComponent(sourceElementId));
     }
 
     getRuntimeInfo(sourceDescription): Observable<any> {
-        return this.http.post(this.makeUserDependentBaseUrl() +"/pipeline-element/runtime", sourceDescription);
+        return this.http.post(this.makeUserDependentBaseUrl() + "/pipeline-element/runtime", sourceDescription);
     }
 
     makeUserDependentBaseUrl() {
-        return this.host  +'api/v2/users/' + this.authStatusService.email;
+        return this.host + 'api/v2/users/' + this.authStatusService.email;
     }
 
 
@@ -156,7 +157,7 @@ export class RestService {
         return this.http
             .get(this.host + 'api/v2/adapter/allProtocols')
             .pipe(map(response => {
-               const res = this.tsonLdSerializerService.fromJsonLd(
+                const res = this.tsonLdSerializerService.fromJsonLd(
                     response,
                     'sp:ProtocolDescriptionList'
                 );

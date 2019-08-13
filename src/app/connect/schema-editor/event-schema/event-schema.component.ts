@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, Input, EventEmitter, Output, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { RestService } from '../../rest.service';
 import { EventSchema } from '../model/EventSchema';
 import { AdapterDescription } from '../../model/connect/AdapterDescription';
@@ -20,12 +20,12 @@ import { EventPropertyComponent } from '../event-property/event-property.compone
   templateUrl: './event-schema.component.html',
   styleUrls: ['./event-schema.component.css']
 })
-export class EventSchemaComponent {
+export class EventSchemaComponent implements OnChanges {
 
   constructor(private restService: RestService, private dataTypesService: DataTypesService, private dialog: MatDialog) { }
 
   @Input() adapterDescription: AdapterDescription;
-  @Input() isEditable: boolean;
+  @Input() isEditable = true;
   @Input() oldEventSchema: EventSchema;
   @Input() eventSchema: EventSchema = new EventSchema();
   @Input() domainPropertyGuesses: DomainPropertyProbabilityList[] = [];
@@ -35,8 +35,7 @@ export class EventSchemaComponent {
   @Output() eventSchemaChange = new EventEmitter<EventSchema>();
   @Output() oldEventSchemaChange = new EventEmitter<EventSchema>();
 
-  @ViewChild(TreeComponent)
-  private tree: TreeComponent;
+  @ViewChild(TreeComponent) tree: TreeComponent;
 
   schemaGuess: GuessSchema = new GuessSchema();
   isLoading = false;
@@ -48,7 +47,9 @@ export class EventSchemaComponent {
   nodes: EventProperty[] = new Array<EventProperty>();
   options: ITreeOptions = {
     childrenField: 'eventProperties',
-    allowDrag: true,
+    allowDrag: () => {
+      return this.isEditable;
+    },
     allowDrop: (node, { parent, index }) => {
       return parent.data.eventProperties !== undefined && parent.parent !== null;
     },
@@ -130,6 +131,9 @@ export class EventSchemaComponent {
   }
 
   public selectProperty(id: string, eventProperties: any): void {
+    if (!this.isEditable) {
+      return;
+    }
     eventProperties = eventProperties || this.eventSchema.eventProperties;
     for (const eventProperty of eventProperties) {
       if (eventProperty.eventProperties && eventProperty.eventProperties.length > 0) {
@@ -234,5 +238,9 @@ export class EventSchemaComponent {
       eventProperty.eventProperties.push(new EventPropertyNested(uuid, undefined));
     }
     this.refreshTree();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    setTimeout(() => { this.refreshTree() }, 200);
   }
 }
