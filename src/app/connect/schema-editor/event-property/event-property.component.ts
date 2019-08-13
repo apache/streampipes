@@ -5,6 +5,7 @@ import { DomainPropertyProbabilityList } from '../model/DomainPropertyProbabilit
 import { DomainPropertyProbability } from '../model/DomainPropertyProbability';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EventPropertyPrimitive } from '../model/EventPropertyPrimitive';
+import { DataTypesService } from '../data-type.service';
 
 @Component({
   selector: 'app-event-property',
@@ -18,10 +19,11 @@ export class EventPropertyComponent implements OnInit {
 
   @Output() propertyChange = new EventEmitter<EventProperty>();
   domainPropertyGuess: any;
+  private runtimeDataTypes;
 
   @Output() save: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
 
-  constructor(@Inject(MAT_DIALOG_DATA) public property: EventProperty, private formBuilder: FormBuilder) {
+  constructor(@Inject(MAT_DIALOG_DATA) public property: EventProperty, private formBuilder: FormBuilder, private dataTypeService: DataTypesService) {
   }
 
 
@@ -49,6 +51,7 @@ export class EventPropertyComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
     this.createForm();
 
     if (this.domainPropertyGuess == null) {

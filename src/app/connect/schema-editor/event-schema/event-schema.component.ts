@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, Input, EventEmitter, Output, ViewChild } from '@angular/core';
 import { RestService } from '../../rest.service';
 import { EventSchema } from '../model/EventSchema';
 import { AdapterDescription } from '../../model/connect/AdapterDescription';
@@ -20,17 +20,16 @@ import { EventPropertyComponent } from '../event-property/event-property.compone
   templateUrl: './event-schema.component.html',
   styleUrls: ['./event-schema.component.css']
 })
-export class EventSchemaComponent implements OnInit {
+export class EventSchemaComponent {
 
   constructor(private restService: RestService, private dataTypesService: DataTypesService, public dialog: MatDialog) { }
   @Input() adapterDescription: AdapterDescription;
   @Input() isEditable: boolean;
   @Output() isEditableChange = new EventEmitter<boolean>();
-  @Output() previewEnabled = new EventEmitter<boolean>();
 
   @Output() adapterChange = new EventEmitter<AdapterDescription>();
 
-  @Input() eventSchema: EventSchema;
+  @Input() eventSchema: EventSchema = new EventSchema();
   @Output() eventSchemaChange = new EventEmitter<EventSchema>();
 
   @Input() oldEventSchema: EventSchema;
@@ -91,9 +90,8 @@ export class EventSchemaComponent implements OnInit {
 
   }
 
-  public showPreview() {
+  public togglePreview() {
     this.isPreviewEnabled = !this.isPreviewEnabled;
-    this.previewEnabled.emit(this.isPreviewEnabled);
   }
 
   public openEditDialog(data) {
@@ -239,11 +237,5 @@ export class EventSchemaComponent implements OnInit {
       eventProperty.eventProperties.push(new EventPropertyNested(uuid, undefined));
     }
     this.refreshTree();
-  }
-
-  ngOnInit() {
-    if (!this.eventSchema) {
-      this.eventSchema = new EventSchema();
-    }
   }
 }
