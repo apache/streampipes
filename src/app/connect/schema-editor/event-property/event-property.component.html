@@ -33,112 +33,18 @@
 
     </mat-form-field>
   </div>
-
-
 </form>
 
 <div *ngIf="isEventPropertyPrimitive(property)">
-  <mat-form-field class="doubleWidth">
-    <mat-select placeholder="Runtime Type" [(ngModel)]="property.runtimeType"
-      [disabled]="property.isTimestampProperty()">
-      <mat-option *ngFor="let dataType of runtimeDataTypes" [value]="dataType.url">
-        {{ dataType.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- TODO FIX this -->
-  <!--<form [formGroup]="propertyPrimitivForm " novalidate>-->
-  <!--<div fxLayout="row" fxLayoutAlign="start">-->
-  <!--<div class="form-group">-->
-  <!--<select class="form-controll" formControlName="dataType">-->
-  <!--<mat-error *ngIf="propertyForm.controls['dataType'].errors?.required && propertyForm.controls['dataType'].touched">-->
-  <!--DataTypey is <strong>required</strong>-->
-  <!--</mat-error>-->
-  <!--<option *ngFor="let dataType of dataTypes" [value]="dataType">{{dataType}}</option>-->
-  <!--</select>-->
-  <!--</div>-->
-  <!--</div>-->
-  <!---->
-  <!--</form>-->
-
-
-  <div fxLayout="row" fxLayoutAlign="start" *ngIf="!property.isTimestampProperty()">
-    <div class="form-group" fxFlexAlign="center" style="width: 155px">
-      <mat-form-field *ngIf="!hadMesarumentUnit" class="example-full-width" style="width: 155px">
-        <input matInput placeholder="Unit" [attr.disabled]="transformUnitEnable ? '' : null">
-        <!--
-              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                  <mat-option *ngFor="let unit of filteredUnits | async" [value]="unit.label">
-                      <span [matTooltip]="unit.label">{{unit.label}}</span>
-                  </mat-option>
-              </mat-autocomplete>
-          -->
-      </mat-form-field>
-      <mat-form-field *ngIf="hadMesarumentUnit" class="example-full-width" style="width: 155px">
-        <input matInput placeholder="Unit" disabled [(ngModel)]="oldMeasurementUnitDipsplay">
-      </mat-form-field>
-
-    </div>
-    <button mat-button [disabled]="!isEditable" (click)="transformUnit()" color="primary" class="form-group"
-      fxFlexAlign="center" style="min-width: 60px; max-width: 60px">
-      <mat-icon *ngIf="!transformUnitEnable">arrow_forward</mat-icon>
-      <mat-icon *ngIf="transformUnitEnable" style="transform: rotate(180deg)">arrow_forward</mat-icon>
-    </button>
-    <mat-form-field class="example-full-width" style="width: 155px" *ngIf="transformUnitEnable">
-      <mat-select [disabled]="!isEditable" placeholder="New Unit" [(value)]="selectUnit">
-        <mat-option *ngFor="let unit of possibleUnitTransformations" [value]="unit" (click)="changeTargetUnit(unit)">
-          {{unit.label}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-
-  <div fxLayout="row" fxLayoutAlign="start" *ngIf="property.isTimestampProperty()">
-    <div class="form-group" fxFlexAlign="center">
-      <mat-form-field [class.example-full-width]="property.timestampTransformationMode !== undefined "
-        style="margin-right: 10px" [class.doubleWidth]="property.timestampTransformationMode === undefined"
-        [class.aThirdWidth]="selectedTimeMultiplier === 'custom' && property.timestampTransformationMode === 'timeUnit'">
-        <mat-select placeholder="Timestamp converter (unix timestamp)" [(value)]="property.timestampTransformationMode">
-          <mat-option>None</mat-option>
-          <mat-option value="formatString">Date String</mat-option>
-          <mat-option value="timeUnit">Date Number</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div class="form-group" fxFlexAlign="center">
-      <mat-form-field *ngIf="property.timestampTransformationMode === 'formatString'">
-        <input matInput placeholder="E.g. yyyy-MM-dd HH:mm:ss.SSSZ"
-          [(ngModel)]="property.timestampTransformationFormatString">
-      </mat-form-field>
-      <mat-form-field *ngIf="property.timestampTransformationMode === 'timeUnit'"
-        [class.example-full-width]="selectedTimeMultiplier !== 'custom'"
-        [class.aThirdWidth]="selectedTimeMultiplier === 'custom'">
-        <mat-select placeholder="Current time unit" [(value)]="selectedTimeMultiplier">
-          <mat-option value="milliseconds" (click)="property.timestampTransformationMultiplier = 0">
-            Milliseconds</mat-option>
-          <mat-option value="second" (click)="property.timestampTransformationMultiplier = 1000">Seconds
-          </mat-option>
-          <!-- More transformation Options, there is any use case for them?
-                  <mat-option value="minutes" (click)="property.timestampTransformationMultiplier = 60000">Minutes</mat-option>
-                  <mat-option value="hours"   (click)="property.timestampTransformationMultiplier = 3600000">Hours</mat-option>
-                  <mat-option value="days"    (click)="property.timestampTransformationMultiplier = 86400000">Days</mat-option>
-                  <mat-option value="custom" ><i>Custom</i></mat-option>
-                  -->
-        </mat-select>
-      </mat-form-field>
-      <!-- To set custom time transformation multiplier -> If use: set multiplier to event
-          <mat-form-field class="aThirdWidth" *ngIf="selectedTimeMultiplier === 'custom' && property.timestampTransformationMode === 'timeUnit'">
-              <input matInput placeholder="Set multiplier" type="number">
-          </mat-form-field>
-          -->
-    </div>
-  </div>
-
-  <mat-form-field *ngIf="staticValueAddedByUser()" class="doubleWidth">
-    <input matInput placeholder="Static Value" name="static_value" id="static_value" [(ngModel)]="property.staticValue">
-  </mat-form-field>
-
+  <app-event-property-primitive [domainPropertyGuess]="domainProbability" [isEditable]="isEditable"
+    [property]="property">
+  </app-event-property-primitive>
 </div>
+<div *ngIf="isEventPropertyList(property)">
+  <app-event-property-list [isEditable]="isEditable" [property]="property">
+  </app-event-property-list>
+</div>
+
+
 
 <button mat-button mat-dialog-close>Close</button>

@@ -92,7 +92,10 @@ export class EventSchemaComponent {
 
   public openEditDialog(data): void {
     this.dialog.open(EventPropertyComponent, {
-      data
+      data: {
+        property: data,
+        domainProbability: this.getDomainProbability(data.runTimeName)
+      },
     });
   }
 
@@ -170,6 +173,21 @@ export class EventSchemaComponent {
       }
     }
     this.refreshTree();
+  }
+
+  public getLabel(eventProperty: EventProperty) {
+    if (eventProperty.label !== undefined && eventProperty.label !== '') {
+      return eventProperty.label;
+    } else if (eventProperty.runTimeName !== undefined && eventProperty.runTimeName !== '') {
+      return eventProperty.runTimeName;
+    }
+    if (this.isEventPropertyNested(eventProperty)) {
+      return 'Nested Property';
+    }
+    if (eventProperty instanceof EventSchema) {
+      return '';
+    }
+    return 'Property';
   }
 
   public removeSelectedProperties(eventProperties: any): void {

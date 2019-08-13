@@ -6,6 +6,8 @@ import { DomainPropertyProbability } from '../model/DomainPropertyProbability';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EventPropertyPrimitive } from '../model/EventPropertyPrimitive';
 import { DataTypesService } from '../data-type.service';
+import { EventPropertyNested } from '../model/EventPropertyNested';
+import { EventPropertyList } from '../model/EventPropertyList';
 
 @Component({
   selector: 'app-event-property',
@@ -13,6 +15,9 @@ import { DataTypesService } from '../data-type.service';
   styleUrls: ['./event-property.component.css']
 })
 export class EventPropertyComponent implements OnInit {
+
+  property: EventProperty;
+  domainProbability: DomainPropertyProbabilityList;
 
   private propertyForm: FormGroup;
   // protected dataTypes = dataTypes;
@@ -23,7 +28,9 @@ export class EventPropertyComponent implements OnInit {
 
   @Output() save: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
 
-  constructor(@Inject(MAT_DIALOG_DATA) public property: EventProperty, private formBuilder: FormBuilder, private dataTypeService: DataTypesService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private formBuilder: FormBuilder, private dataTypeService: DataTypesService) {
+    this.property = data.property;
+    this.domainProbability = data.domainProbability;
   }
 
 
@@ -37,8 +44,16 @@ export class EventPropertyComponent implements OnInit {
     });
   }
 
-  private isEventPropertyPrimitive(instance): boolean {
+  private isEventPropertyPrimitive(instance: EventProperty): boolean {
     return instance instanceof EventPropertyPrimitive;
+  }
+
+  private isEventPropertyNested(instance: EventProperty): boolean {
+    return instance instanceof EventPropertyNested;
+  }
+
+  private isEventPropertyList(instance: EventProperty): boolean {
+    return instance instanceof EventPropertyList;
   }
 
   staticValueAddedByUser() {

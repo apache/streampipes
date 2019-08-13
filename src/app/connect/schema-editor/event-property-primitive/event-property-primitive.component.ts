@@ -23,8 +23,7 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
   @Input() domainPropertyGuess: DomainPropertyProbabilityList;
 
-  @Input()
-  isEditable: Boolean;
+  @Input() isEditable: boolean;
 
 
   private propertyPrimitivForm: FormGroup;
@@ -52,11 +51,6 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
     private restService: RestService,
     private unitProviderService: UnitProviderService) {
     this.dataTypeService = dataTypeService;
-    // constructor(private dragulaService: DragulaService, private formBuilder: FormBuilder) {
-    // constructor(private dragulaService: DragulaService, private formBuilder: FormBuilder, private dataTypesService: DataTypesService) {
-    // this.propertyPrimitivForm = formBuilder.group({
-    //   dataType: ['', Validators.required]
-    // });
 
     this.runtimeDataTypes = this.dataTypeService.getDataTypes();
 
@@ -76,7 +70,6 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
 
   ngOnInit() {
-    //   this.dragulaService.drag.subscribe((value: any) => this.drag());
     //   this.property.propertyNumber = this.index;
     if (this.property.measurementUnit !== undefined) {
       this.property.oldMeasurementUnit = this.property.measurementUnit;
@@ -93,35 +86,6 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
   ngDoCheck() {
     this.property.propertyNumber = this.index;
-  }
-
-  // von Dragula-Service aufgerufen nach Drag dieses Elements
-  private drag() {
-    // const dragDropService: DragDropService = DragDropService.getInstance();
-    // dragDropService.announceDrag(this.property);
-    // dragDropService.nestConfirmed$.subscribe(result => {
-    //   this.property.parent = result;
-    // });
-  }
-
-  private OnClickDeleteProperty(): void {
-    this.delete.emit(this.property);
-  }
-
-  private OnClickOpen(): void {
-    this.open = !this.open;
-    this.ShepherdService.trigger("open-event-property-primitve");
-  }
-
-  // TODO this works not completely correct
-  private getLabel(): string {
-    if (typeof this.property.label !== 'undefined') {
-      return this.property.label;
-    } else if (typeof this.property.runTimeName !== 'undefined') {
-      return this.property.runTimeName;
-    } else {
-      return 'Property';
-    }
   }
 
   private transformUnit() {
