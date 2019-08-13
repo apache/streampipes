@@ -18,31 +18,29 @@
 package org.streampipes.connect.adapters.opcua;
 
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
+import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
-import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
-import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.exception.ParseException;
 import org.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.adapter.sdk.ParameterExtractor;
+import org.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.streampipes.model.AdapterType;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.staticproperty.Option;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+import org.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.streampipes.sdk.helpers.Labels;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class OpcUaAdapter extends SpecificDataStreamAdapter {
+public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesContainerProvidedOptions {
 
     public static final String ID = "http://streampipes.org/adapter/specific/opcua";
 
@@ -87,6 +85,8 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
                 .requiredTextParameter(Labels.from(OPC_SERVER_PORT, "OPC Server Port", "Example: 4840"))
                 .requiredTextParameter(Labels.from(NAMESPACE_INDEX, "Namespace Index", "Example: 2"))
                 .requiredTextParameter(Labels.from(NODE_ID, "Node Id", "Id of the Node to read the values from"))
+//                .requiredSingleValueSelectionFromContainer(Labels.from(NODE_ID, "Node Id",
+//                        "Id of the Node to read the values from"), Arrays.asList(OPC_SERVER_HOST, OPC_SERVER_PORT, NAMESPACE_INDEX))
                 .build();
         description.setAppId(ID);
 
@@ -165,7 +165,8 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
             if (res.size() > 0) {
                 for (OpcNode opcNode : res) {
                     allProperties.add(PrimitivePropertyBuilder
-                            .create(opcNode.getType(), opcNode.getRuntimeName())
+                            .create(opcNode.getType(), opcNode.getNodeId().getIdentifier().toString())
+                            .label(opcNode.getLabel())
                             .build());
                 }
             }
@@ -193,5 +194,24 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
         this.port = extractor.singleValue(OPC_SERVER_PORT, String.class);
         this.namespaceIndex = extractor.singleValue(NAMESPACE_INDEX, String.class);
         this.nodeId = extractor.singleValue(NODE_ID, String.class);
+    }
+
+    @Override
+    public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
+        String opcUaServer = parameterExtractor.singleValueParameter(OPC_SERVER_HOST, String.class);
+        int port = parameterExtractor.singleValueParameter(OPC_SERVER_PORT, Integer.class);
+        int namespaceIndex = parameterExtractor.singleValueParameter(NAMESPACE_INDEX, Integer.class);
+
+        OpcUa opc = new OpcUa(opcUaServer, port, namespaceIndex, Identifiers.RootFolder);
+
+        try {
+            opc.connect();
+            List<OpcNode> res =  opc.browseNode();
+            System.out.println(res);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
     }
 }

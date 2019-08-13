@@ -21,22 +21,22 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.streampipes.sdk.utils.Datatypes;
 
 public class OpcNode {
-    String runtimeName;
+    String label;
     Datatypes type;
     NodeId nodeId;
 
-    public OpcNode(String runtimeName, Datatypes type, NodeId nodeId) {
-        this.runtimeName = runtimeName;
+    public OpcNode(String label, Datatypes type, NodeId nodeId) {
+        this.label = label;
         this.type = type;
         this.nodeId = nodeId;
     }
 
-    public String getRuntimeName() {
-        return runtimeName;
+    public String getLabel() {
+        return label;
     }
 
-    public void setRuntimeName(String runtimeName) {
-        this.runtimeName = runtimeName;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public Datatypes getType() {
