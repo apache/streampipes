@@ -1,0 +1,54 @@
+<div class="feedback-container md-whiteframe-z1">
+    <div layout="column" flex="100" layout-fill ng-if="!ctrl.sendingFeedback">
+        <div layout="column" flex="50" layout-align="start center">
+            <div class="feedback-title">We welcome your feedback!</div>
+        </div>
+        <div layout="column" flex="40" layout-align="start center" style="margin-bottom:20px;">
+            <div class="feedback-explainer">Your feedback helps us to improve StreamPipes.<br/>
+                Features you'd like to see, bugs you've found or things you like - tell us what you think!
+            </div>
+        </div>
+        <div layout="column" flex="40" layout-align="start center" style="margin-bottom:20px;">
+            <md-input-container class="md-block feedback-width-100 feedback-font-size-small">
+                <label>Your email (optional)</label>
+                <input ng-model="ctrl.feedback.email" type="email" ng-required="false">
+            </md-input-container>
+            <md-input-container class="md-block feedback-width-100 feedback-font-size-small">
+                <label>Your feedback</label>
+                <textarea ng-model="ctrl.feedback.feedbackText" md-maxlength="500" rows="5"
+                          md-select-on-focus></textarea>
+            </md-input-container>
+        </div>
+        <div layout="column" flex="40" layout-align="end center">
+            <div layout="row" layout-align="end end">
+                <sp-button sp-button-gray ng-click="ctrl.closeDialog()">
+                    Close
+                </sp-button>
+                <sp-button sp-button-blue type="submit"
+                           ng-click="ctrl.sendFeedback()">
+                    Send Feedback
+                </sp-button>
+            </div>
+        </div>
+    </div>
+    <div layout="column" ng-if="ctrl.sendingFeedback" class="feedback-height-100">
+        <div ng-if="!ctrl.sendingFeedbackFinished" class="feedback-height-100">
+            <div layout="column" layout-align="center center" flex="100" layout-fill>
+                <md-progress-circular md-diameter="96"></md-progress-circular>
+                <div class="feedback-status">Submitting feedback...</div>
+            </div>
+        </div>
+        <div ng-if="ctrl.sendingFeedbackFinished" flex="100" class="feedback-height-100">
+            <div layout="column" layout-align="center center" flex="100" layout-fill>
+                <div class="feedback-status">Thanks!</div>
+                <sp-button sp-button-gray ng-click="ctrl.closeDialog()">
+                    Close
+                </sp-button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>

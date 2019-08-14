@@ -1,0 +1,44 @@
+@import '../_variables';
+
+.feedback-container {
+  font-size:14pt;
+  position: absolute;
+  background: white;
+  width: 400px;
+  height: 600px;
+  z-index: 100;
+  //border-left: 2px solid $sp-color-primary;
+  //border-bottom: 2px solid $sp-color-primary;
+  //border-right: 2px solid $sp-color-primary;
+  padding:24px;
+  color:black;
+}
+
+.feedback-width-100 {
+  width:100%;
+}
+
+.feedback-height-100 {
+  height:100%;
+}
+
+.feedback-explainer {
+  font-size:12pt;
+}
+
+.feedback-title {
+  font-size:20pt;
+  font-weight:bold;
+  color: $sp-color-accent;
+  text-align: center;
+}
+
+.feedback-font-size-small {
+  font-size:11pt;
+}
+
+.feedback-status {
+  font-size:16pt;
+  margin-top:10px;
+  margin-bottom:20px;
+}

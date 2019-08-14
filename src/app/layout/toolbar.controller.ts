@@ -16,11 +16,16 @@ export class ToolbarController {
     toggleLeft: any;
     activePage: any;
 
+    feedbackOpen: boolean = false;
+
     whiteColor: string = "#FFFFFF";
     greenColor: string = "#39b54a";
 
     accountMenuBackground: any = this.makeColor('background-color', this.greenColor);
     accountMenuIconColor: any = this.makeColor('color', this.whiteColor);
+
+    feedbackMenuBackground: any = this.makeColor('background-color', this.greenColor);
+    feedbackMenuIconColor: any = this.makeColor('color', this.whiteColor);
 
     constructor($mdSidenav, $mdUtil, RestApi, $state, $window, $location, AuthStatusService, $scope) {
         this.AuthStatusService = AuthStatusService;
@@ -34,8 +39,6 @@ export class ToolbarController {
             if (menu[0].id === 'account') {
                 this.updateAccountColors();
             }
-            console.log(menu[0].id);
-
         });
 
         this.unreadNotifications = [];
@@ -254,11 +257,10 @@ export class ToolbarController {
         this.accountMenuIconColor = this.getNewColor('color', this.accountMenuIconColor);
     }
 
-    // triggerFeedbackMenu($mdMenu, $event) {
-    //     this.feedbackMenuBackground = this.getNewColor('background-color', this.feedbackMenuBackground);
-    //     this.feedbackMenuIconColor = this.getNewColor('color', this.feedbackMenuIconColor);
-    //     $mdMenu.open($event)
-    // }
+    updateFeedbackColors() {
+        this.feedbackMenuBackground = this.getNewColor('background-color', this.feedbackMenuBackground);
+        this.feedbackMenuIconColor = this.getNewColor('color', this.feedbackMenuIconColor);
+    }
 
     getNewColor(type: string, currentColor: any) {
         return currentColor[type] == this.greenColor ? this.makeColor(type, this.whiteColor) : this.makeColor(type, this.greenColor);
@@ -266,6 +268,16 @@ export class ToolbarController {
 
     makeColor(type: string, color: string) {
         return {[type]: color};
+    }
+
+    toggleFeedback() {
+        this.feedbackOpen = !this.feedbackOpen;
+        this.updateFeedbackColors();
+    }
+
+    closeFeedbackWindow() {
+        this.updateFeedbackColors();
+        this.feedbackOpen = false;
     }
 
 }
