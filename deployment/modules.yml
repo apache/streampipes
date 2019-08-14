@@ -54,48 +54,6 @@ spDashboard:
   icon: 'editor:ic_insert_chart_24px'
   homeImage: '/assets/img/home/dashboard.png'
   admin: False
-spAppOverview:
-  ng5: True
-  ng1_templateUrl: ''
-  ng1_controller: ''
-  ng5_moduleName: 'AppOverviewModule'
-  ng5_component: 'AppOverviewComponent'
-  ng5_componentPath: '../app-overview/app-overview.component'
-  path: './app-overview/app-overview.module'
-  link: 'streampipes.app-overview'
-  url: '/apps'
-  title: 'Apps'
-  description: 'app-overview'
-  icon: 'navigation:ic_apps_24px'
-  homeImage: '/assets/img/home/configuration.png'
-  admin: false
-spAppFileDownload:
-  ng5: False
-  ng1_templateUrl: '../app-file-download/app-file-download.tmpl.html'
-  ng5_moduleName: ''
-  ng5_component: ''
-  ng5_componentPath: ''
-  path: './app-file-download/app-file-download.module'
-  link: 'streampipes.appfiledownload'
-  url: '/appfiledownload'
-  title: 'File Download'
-  description: 'File Download'
-  icon: 'file:ic_file_download_24px'
-  homeImage: '/assets/img/home/appfiledownload.png'
-  admin: False
-spOntology:
-  ng5: False
-  ng1_templateUrl: '../ontology/ontology.html'
-  ng5_moduleName: ''
-  ng5_component: ''
-  ng5_componentPath: ''
-  path: './ontology/ontology.module'
-  link: 'streampipes.ontology'
-  title: 'Knowledge Management'
-  description: 'Knowledge Management'
-  icon: 'social:ic_share_24px'
-  homeImage: '/assets/img/home/ontology.png'
-  admin: False
 spSensors:
   ng5: False
   ng1_templateUrl: '../sensors/sensors.html'
@@ -108,36 +66,6 @@ spSensors:
   description: 'Pipeline Element Generator'
   icon: 'content:ic_add_24px'
   homeImage: '/assets/img/home/sensors.png'
-  admin: False
-spKvi:
-  ng5: True
-  ng1_templateUrl: ''
-  ng1_controller: ''
-  ng5_moduleName: 'KviModule'
-  ng5_component: 'KviComponent'
-  ng5_componentPath: '../kvi/kvi.component'
-  path: './kvi/kvi.module'
-  link: 'streampipes.kvi'
-  url: '/kvi'
-  title: 'KVI Editor'
-  description: 'KVI Editor'
-  icon: 'action:ic_trending_up_24px'
-  homeImage: '/assets/img/home/editor.png'
-  admin: False
-spKviVisualization:
-  ng5: True
-  ng1_templateUrl: ''
-  ng1_controller: ''
-  ng5_moduleName: 'KviVisualizationModule'
-  ng5_component: 'KviVisualizationComponent'
-  ng5_componentPath: '../kvi-visualization/kvi-visualization.component'
-  path: './kvi-visualization/kvi-visualization.module'
-  link: 'streampipes.kvivisualization'
-  url: '/kvivisualization'
-  title: 'KVI Visualization'
-  description: 'KVI Visualization'
-  icon: 'editor:ic_format_list_numbered_24px'
-  homeImage: '/assets/img/home/editor.png'
   admin: False
 spAdd:
   ng5: False
@@ -182,21 +110,6 @@ spConfiguration:
   icon: 'action:ic_settings_24px'
   homeImage: '/assets/img/home/configuration.png'
   admin: True
-spFileUpload:
-  ng5: True
-  ng1_templateUrl: ''
-  ng1_controller: ''
-  ng5_moduleName: 'FileUploadModule'
-  ng5_component: 'FileUploadComponent'
-  ng5_componentPath: '../file-upload/file-upload.component'
-  path: './file-upload/file-upload.module'
-  link: 'streampipes.file-upload'
-  url: '/file-upload'
-  title: 'File Upload'
-  description: 'file-upload'
-  icon: 'file:ic_file_upload_24px'
-  homeImage: '/assets/img/home/configuration.png'
-  admin: false
 spDataExplorer:
   ng5: True
   ng1_templateUrl: ''

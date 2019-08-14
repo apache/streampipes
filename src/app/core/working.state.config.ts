@@ -3,9 +3,7 @@ import { ConfigurationComponent } from '../configuration/configuration.component
 import { AppContainerModule } from '../app-container/app-container.module';
 import { AppContainerComponent } from '../app-container/app-container.component';
 import { NewAdapterComponent } from '../connect/new-adapter/new-adapter.component';
-import { KviComponent } from '../kvi/kvi.component';
 import { ConnectComponent } from '../connect/connect.component';
-import { KviVisualizationComponent } from '../kvi-visualization/kvi-visualization.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
   //	    $urlRouterProvider.otherwise( function($injector, $location) {
@@ -42,7 +40,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         },
       },
       resolve: {
-        authData: function(AuthService) {
+        authData: function (AuthService) {
           return AuthService.authenticate();
         },
       },
@@ -142,24 +140,6 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         },
       },
     })
-    .state('streampipes.appfiledownload', {
-      url: '/appfiledownload',
-      views: {
-        'spMain@streampipes': {
-          templateUrl: '../app-file-download/app-file-download.tmpl.html',
-          controller: 'AppFileDownloadCtrl',
-        },
-      },
-    })
-    .state('streampipes.ontology', {
-      url: '',
-      views: {
-        'spMain@streampipes': {
-          templateUrl: '../ontology/ontology.html',
-          controller: 'OntologyCtrl',
-        },
-      },
-    })
     .state('streampipes.sensors', {
       url: '',
       views: {
@@ -208,22 +188,6 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
       views: {
         'spMain@streampipes': {
           component: ConnectComponent,
-        },
-      },
-    })
-    .state('streampipes.kvi', {
-      url: '/kvi',
-      views: {
-        'spMain@streampipes': {
-          component: KviComponent,
-        },
-      },
-    })
-    .state('streampipes.kvivisualization', {
-      url: '/kvivisualization',
-      views: {
-        'spMain@streampipes': {
-          component: KviVisualizationComponent,
         },
       },
     });
