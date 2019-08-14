@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, OnInit, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, EventEmitter, Output, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { RestService } from '../../rest.service';
 import { EventSchema } from '../model/EventSchema';
 import { AdapterDescription } from '../../model/connect/AdapterDescription';
@@ -12,51 +12,52 @@ import { ITreeOptions, TreeComponent } from 'angular-tree-component';
 import { DomainPropertyProbabilityList } from '../model/DomainPropertyProbabilityList';
 import { UUID } from 'angular2-uuid';
 import { DataTypesService } from '../data-type.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EventPropertyComponent } from '../event-property/event-property.component';
 
 @Component({
   selector: 'app-event-schema',
   templateUrl: './event-schema.component.html',
-  styleUrls: ['./event-schema.component.css'],
+  styleUrls: ['./event-schema.component.css']
 })
-export class EventSchemaComponent implements OnInit {
+export class EventSchemaComponent implements OnChanges {
 
-  constructor(private restService: RestService, private dataTypesService: DataTypesService) {}
+  constructor(private restService: RestService, private dataTypesService: DataTypesService, private dialog: MatDialog) { }
+
   @Input() adapterDescription: AdapterDescription;
-  @Input() isEditable: boolean;
-  @Output() isEditableChange = new EventEmitter<boolean>();
-
-  @Output() adapterChange = new EventEmitter<AdapterDescription>();
-
-  @Input() eventSchema: EventSchema;
-  @Output() eventSchemaChange = new EventEmitter<EventSchema>();
-
+  @Input() isEditable = true;
   @Input() oldEventSchema: EventSchema;
-  @Output() oldEventSchemaChange = new EventEmitter<EventSchema>();
-
+  @Input() eventSchema: EventSchema = new EventSchema();
   @Input() domainPropertyGuesses: DomainPropertyProbabilityList[] = [];
 
-  schemaGuess: GuessSchema = new GuessSchema();
+  @Output() isEditableChange = new EventEmitter<boolean>();
+  @Output() adapterChange = new EventEmitter<AdapterDescription>();
+  @Output() eventSchemaChange = new EventEmitter<EventSchema>();
+  @Output() oldEventSchemaChange = new EventEmitter<EventSchema>();
 
+  @ViewChild(TreeComponent) tree: TreeComponent;
+
+  schemaGuess: GuessSchema = new GuessSchema();
+  isLoading = false;
+  isError = false;
+  isPreviewEnabled = false;
+  showErrorMessage = false;
+  countSelected = 0;
+  errorMessages: NotificationLd[];
   nodes: EventProperty[] = new Array<EventProperty>();
   options: ITreeOptions = {
     childrenField: 'eventProperties',
-    allowDrag: (node) => {
-      return true;
+    allowDrag: () => {
+      return this.isEditable;
     },
     allowDrop: (node, { parent, index }) => {
       return parent.data.eventProperties !== undefined && parent.parent !== null;
     },
     displayField: 'runTimeName',
   };
-  @ViewChild(TreeComponent)
-  private tree: TreeComponent;
 
-  isLoading = false;
-  isError = false;
-  showErrorMessage = false;
-  errorMessages: NotificationLd[];
 
-  onUpdateData (treeComponent: TreeComponent, $event) {
+  private onUpdateData(treeComponent: TreeComponent): void {
     treeComponent.treeModel.expandAll();
   }
 
@@ -64,81 +65,147 @@ export class EventSchemaComponent implements OnInit {
     this.isLoading = true;
     this.isError = false;
     this.restService.getGuessSchema(this.adapterDescription).subscribe(guessSchema => {
-        this.isLoading = false;
-        this.eventSchema = guessSchema.eventSchema;
-        this.eventSchemaChange.emit(this.eventSchema);
-        this.schemaGuess = guessSchema;
+      this.isLoading = false;
+      this.eventSchema = guessSchema.eventSchema;
+      this.eventSchemaChange.emit(this.eventSchema);
+      this.schemaGuess = guessSchema;
 
-        this.oldEventSchema = this.eventSchema.copy();
-        this.oldEventSchemaChange.emit(this.oldEventSchema);
+      this.oldEventSchema = this.eventSchema.copy();
+      this.oldEventSchemaChange.emit(this.oldEventSchema);
 
-        this.refreshTree();
+      this.refreshTree();
 
-        this.isEditable = true;
-        this.isEditableChange.emit(true);
+      this.isEditable = true;
+      this.isEditableChange.emit(true);
     },
-    error => {
+      error => {
         this.errorMessages = error.notifications;
         this.isError = true;
         this.isLoading = false;
         this.eventSchema = new EventSchema();
-    });
+      });
 
   }
 
-  private refreshTree() {
-    console.log(this.eventSchema);
+  public togglePreview(): void {
+    this.isPreviewEnabled = !this.isPreviewEnabled;
+  }
+
+  public openEditDialog(data): void {
+    this.dialog.open(EventPropertyComponent, {
+      data: {
+        property: data,
+        domainProbability: this.getDomainProbability(data.runTimeName)
+      },
+    });
+  }
+
+  private refreshTree(): void {
     this.nodes = new Array<EventProperty>();
     this.nodes.push(this.eventSchema as unknown as EventProperty);
     this.tree.treeModel.update();
   }
 
-  private isEventPropertyPrimitive(instance): boolean {
+  private isEventPropertyPrimitive(instance: EventProperty): boolean {
     return instance instanceof EventPropertyPrimitive;
   }
 
-  private isEventPropertyNested(instance): boolean {
+  private isEventPropertyNested(instance: EventProperty): boolean {
     return instance instanceof EventPropertyNested;
   }
 
-  private isEventPropertyList(instance): boolean {
+  private isEventPropertyList(instance: EventProperty): boolean {
     return instance instanceof EventPropertyList;
   }
 
-  public getDomainProbability(name: string) {
+  public getDomainProbability(name: string): DomainPropertyProbabilityList {
     let result: DomainPropertyProbabilityList;
 
     for (const entry of this.domainPropertyGuesses) {
-        if (entry.runtimeName === name) {
-            result = entry;
-        }
+      if (entry.runtimeName === name) {
+        result = entry;
+      }
     }
 
     return result;
   }
 
-  private isNested(property) {
-    if (property.eventProperties !== undefined && !(property instanceof EventSchema)) {
-      return true;
+  public selectProperty(id: string, eventProperties: any): void {
+    if (!this.isEditable) {
+      return;
     }
-    return false;
-  }
-
-  public deleteProperty(id, eventProperties) {
-    for(const eventProperty of eventProperties) {
-      const index = eventProperties.indexOf(eventProperty)
-      if(eventProperty.eventProperties && eventProperty.eventProperties.length > 0) {
-        if (eventProperty.id == id) {
-          eventProperties.splice(index, 1)
+    eventProperties = eventProperties || this.eventSchema.eventProperties;
+    for (const eventProperty of eventProperties) {
+      if (eventProperty.eventProperties && eventProperty.eventProperties.length > 0) {
+        if (eventProperty.id === id) {
+          if (eventProperty.selected) {
+            eventProperty.selected = undefined;
+            this.countSelected--;
+            this.selectProperty('none', eventProperty.eventProperties);
+          } else {
+            eventProperty.selected = true;
+            this.countSelected++;
+            this.selectProperty('all', eventProperty.eventProperties);
+          }
+        } else if (id === 'all') {
+          eventProperty.selected = true;
+          this.countSelected++;
+          this.selectProperty('all', eventProperty.eventProperties);
+        } else if (id === 'none') {
+          eventProperty.selected = undefined;
+          this.countSelected--;
+          this.selectProperty('none', eventProperty.eventProperties);
+        } else {
+          this.selectProperty(id, eventProperty.eventProperties);
         }
-        this.deleteProperty(id, eventProperty.eventProperties)
       } else {
-        if (eventProperty.id == id) {
-          eventProperties.splice(index, 1)
+        if (eventProperty.id === id) {
+          if (eventProperty.selected) {
+            eventProperty.selected = undefined;
+            this.countSelected--;
+          } else {
+            eventProperty.selected = true;
+            this.countSelected++;
+          }
+        } else if (id === 'all') {
+          eventProperty.selected = true;
+          this.countSelected++;
+        } else if (id === 'none') {
+          eventProperty.selected = undefined;
+          this.countSelected--;
         }
-        console.log(index)
       }
     }
+    this.refreshTree();
+  }
+
+  public getLabel(eventProperty: EventProperty) {
+    if (eventProperty.label !== undefined && eventProperty.label !== '') {
+      return eventProperty.label;
+    } else if (eventProperty.runTimeName !== undefined && eventProperty.runTimeName !== '') {
+      return eventProperty.runTimeName;
+    }
+    if (this.isEventPropertyNested(eventProperty)) {
+      return 'Nested Property';
+    }
+    if (eventProperty instanceof EventSchema) {
+      return '';
+    }
+    return 'Property';
+  }
+
+  public removeSelectedProperties(eventProperties: any): void {
+    eventProperties = eventProperties || this.eventSchema.eventProperties;
+    for (let i = eventProperties.length - 1; i >= 0; --i) {
+      if (eventProperties[i].eventProperties) {
+        this.removeSelectedProperties(eventProperties[i].eventProperties);
+      }
+      if (eventProperties[i].selected) {
+        eventProperties.splice(i, 1);
+      }
+    }
+    this.countSelected = 0;
+    this.refreshTree();
   }
 
   public addStaticValueProperty(): void {
@@ -149,9 +216,9 @@ export class EventSchemaComponent implements OnInit {
 
     this.eventSchema.eventProperties.push(eventProperty);
     this.refreshTree();
-}
+  }
 
-public addTimestampProperty(): void {
+  public addTimestampProperty(): void {
     const eventProperty = new EventPropertyPrimitive('timestamp/' + UUID.UUID(), undefined);
 
     eventProperty.setRuntimeName('timestamp');
@@ -161,11 +228,11 @@ public addTimestampProperty(): void {
 
     this.eventSchema.eventProperties.push(eventProperty);
     this.refreshTree();
-}
+  }
 
   public addNestedProperty(eventProperty): void {
     const uuid: string = UUID.UUID();
-    if (eventProperty == undefined) {
+    if (eventProperty === undefined) {
       this.eventSchema.eventProperties.push(new EventPropertyNested(uuid, undefined));
     } else {
       eventProperty.eventProperties.push(new EventPropertyNested(uuid, undefined));
@@ -173,37 +240,7 @@ public addTimestampProperty(): void {
     this.refreshTree();
   }
 
-  public deletePropertyPrimitive(e) {
-    this.deleteProperty(e.id, this.eventSchema.eventProperties)
-    const property: EventPropertyPrimitive = e as EventPropertyPrimitive;
-    const index = this.eventSchema.eventProperties.indexOf(property, 0);
-    if (index > -1) {
-        this.eventSchema.eventProperties.splice(index, 1);
-    }
-    this.refreshTree();
-  }
-
-  public deletePropertyNested(e) {
-      const property: EventPropertyNested = e as EventPropertyNested;
-      const index = this.eventSchema.eventProperties.indexOf(property, 0);
-      if (index > -1) {
-          this.eventSchema.eventProperties.splice(index, 1);
-      }
-      this.refreshTree();
-  }
-
-  public deletePropertyList(e) {
-      const property: EventPropertyList = e as EventPropertyList;
-      const index = this.eventSchema.eventProperties.indexOf(property, 0);
-      if (index > -1) {
-          this.eventSchema.eventProperties.splice(index, 1);
-      }
-      this.refreshTree();
-  }
-
-  ngOnInit() {
-    if (!this.eventSchema) {
-      this.eventSchema = new EventSchema();
-    }
+  ngOnChanges(changes: SimpleChanges) {
+    setTimeout(() => { this.refreshTree() }, 200);
   }
 }

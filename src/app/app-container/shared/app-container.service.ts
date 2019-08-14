@@ -20,14 +20,9 @@ export class AppContainerService {
         //TODO: Mock
         return <Observable<InstalledApp[]>>Observable.create(observer => {
             observer.next([{
-                bundleUrl: 'http://localhost:8082/assets/lib/apps/test.bundle.min.js',
-                moduleName: 'AppModule',
-                selector: 'test-lol'
-            },
-            {
-                bundleUrl: 'http://localhost:8082/assets/lib/apps/test.bundle.min.js',
-                moduleName: 'AppModule',
-                selector: 'test-lol'
+                bundleUrl: '/apps/app.bundle.js',
+                appName: 'Example App',
+                appDescription: 'This is an example app',
             }]);
             observer.complete();
         });

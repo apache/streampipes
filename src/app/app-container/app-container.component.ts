@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 
 import { AppContainerService } from './shared/app-container.service';
 import { InstalledApp } from './shared/installed-app.model';
@@ -12,11 +12,9 @@ export class AppContainerComponent {
 
     installedApps: InstalledApp[];
     activeApp: InstalledApp;
-    isAppActive: boolean = false;
-    isLoading: boolean = false;
-    term: string="";
+    isAppActive = false;
 
-    constructor(private appContainerService: AppContainerService) {
+    constructor(private appContainerService: AppContainerService, private changeDetector: ChangeDetectorRef) {
         this.appContainerService.getInstalledApps().subscribe(installedApps => {
             this.installedApps = installedApps;
         });
@@ -24,12 +22,13 @@ export class AppContainerComponent {
 
     activateApp(installedApp: InstalledApp): void {
         this.isAppActive = false;
-        this.isLoading = true;
-        setTimeout(() => {
-            this.activeApp = installedApp;
-            this.isLoading = false;
-            this.isAppActive = true;
-        }, 200);
+        this.changeDetector.detectChanges();
+        this.activeApp = installedApp;
+        this.isAppActive = true;
+    }
+
+    appClosed() {
+        this.isAppActive = false;
     }
 
 }
