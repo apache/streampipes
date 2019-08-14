@@ -56,8 +56,10 @@ public class SourcesManagement {
         this.adapterStorage = new AdapterStorageImpl();
     }
 
-    public void addAdapter(String baseUrl, String streamId, SpDataSet dataSet) throws AdapterException {
+    public void addAdapter(String streamId, SpDataSet dataSet, String username) throws AdapterException {
 
+
+        String newUrl = getAdapterUrl(streamId, username);
         AdapterSetDescription adapterDescription = (AdapterSetDescription) getAdapterDescriptionById(streamId);
         adapterDescription.setDataSet(dataSet);
 
@@ -65,20 +67,42 @@ public class SourcesManagement {
         adapterDescription.setUri(newId);
         adapterDescription.setId(newId);
 
+        AdapterSetDescription decryptedAdapterDescription =
+                (AdapterSetDescription) new AdapterEncryptionService(new Cloner().adapterDescription(adapterDescription)).decrypt();
 
-        WorkerRestClient.invokeSetAdapter(baseUrl, adapterDescription);
+//        String workerUrl = new Utils().getWorkerUrl(adapterDescription);
+//        String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+
+
+        WorkerRestClient.invokeSetAdapter(newUrl, decryptedAdapterDescription);
+
+
     }
 
-    public void detachAdapter(String baseUrl, String streamId, String runningInstanceId) throws AdapterException {
+    public void detachAdapter(String streamId, String runningInstanceId, String username) throws AdapterException {
         AdapterSetDescription adapterDescription = (AdapterSetDescription) getAdapterDescriptionById(streamId);
 
         String newId = adapterDescription.getUri() + "/streams/" + runningInstanceId;
         adapterDescription.setUri(newId);
         adapterDescription.setId(newId);
 
-        WorkerRestClient.stopSetAdapter(baseUrl, adapterDescription);
+        String newUrl = getAdapterUrl(streamId, username);
+        WorkerRestClient.stopSetAdapter(newUrl, adapterDescription);
     }
 
+    private String getAdapterUrl(String streamId, String username) {
+        String appId = "";
+        List<AdapterDescription> adapterDescriptions = this.adapterStorage.getAllAdapters();
+        for (AdapterDescription ad : adapterDescriptions) {
+            if (ad.getElementId().contains(streamId)) {
+                appId = ad.getAppId();
+            }
+        }
+        String workerUrl = new Utils().getWorkerUrlById(appId);
+
+        return Utils.addUserNameToApi(workerUrl, username);
+
+    }
 
     public String getAllAdaptersInstallDescription(String user) throws AdapterException {
 //        String host = getConnectHost();

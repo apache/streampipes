@@ -58,7 +58,7 @@ public class SourcesManagementTest {
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         doNothing().when(WorkerRestClient.class, "invokeSetAdapter", anyString(), any());
 
-        sourcesManagement.addAdapter("/", ID, new SpDataSet());
+        sourcesManagement.addAdapter(ID, new SpDataSet(), "user");
 
         verify(adapterStorage, times(1)).getAllAdapters();
         verifyStatic(WorkerRestClient.class, times(1));
@@ -75,7 +75,7 @@ public class SourcesManagementTest {
 
         org.powermock.api.mockito.PowerMockito.doThrow(new AdapterException()).when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
 
-        sourcesManagement.detachAdapter("/", ID, "id1");
+        sourcesManagement.detachAdapter( ID, "id1", "user");
     }
 
     @Ignore
@@ -86,7 +86,7 @@ public class SourcesManagementTest {
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         doNothing().when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
 
-        sourcesManagement.detachAdapter("/", ID, "id1");
+        sourcesManagement.detachAdapter(ID, "id1", "user");
 
         verify(adapterStorage, times(1)).getAllAdapters();
         verifyStatic(WorkerRestClient.class, times(1));
@@ -101,7 +101,7 @@ public class SourcesManagementTest {
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         org.powermock.api.mockito.PowerMockito.doThrow(new AdapterException()).when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
 
-        sourcesManagement.detachAdapter("/", ID, "id1");
+        sourcesManagement.detachAdapter( ID, "id1", "user");
     }
 
     @Test

@@ -102,11 +102,11 @@ public class SourcesResource extends AbstractContainerResource {
 
         String responseMessage = "Instance of data set " + dataSet.getUri() + " successfully started";
 
-        String workerUrl = new Utils().getWorkerUrlById(elementId);
-
-        String newUrl = Utils.addUserNameToApi(workerUrl, username);
+//        String workerUrl = new Utils().getWorkerUrlById(dataSet.getElementId());
+//
+//        String newUrl = Utils.addUserNameToApi(workerUrl, username);
         try {
-            this.sourcesManagement.addAdapter(newUrl, elementId,  dataSet);
+            this.sourcesManagement.addAdapter(elementId,  dataSet, username);
         } catch (AdapterException e) {
             logger.error("Could not set data set instance: " + dataSet.getUri(), e);
             return ok(Notifications.error("Could not set data set instance: " + dataSet.getUri()));
@@ -122,11 +122,11 @@ public class SourcesResource extends AbstractContainerResource {
     public Response detach(@PathParam("streamId") String elementId, @PathParam("runningInstanceId") String runningInstanceId, @PathParam("username") String username) {
         String responseMessage = "Instance of set id: " + elementId  + " with instance id: "+ runningInstanceId + " successfully started";
 
-        String workerUrl = new Utils().getWorkerUrlById(elementId);
-        String newUrl = Utils.addUserNameToApi(workerUrl, username);
+//        String workerUrl = new Utils().getWorkerUrlById(elementId);
+//        String newUrl = Utils.addUserNameToApi(workerUrl, username);
 
         try {
-            this.sourcesManagement.detachAdapter(newUrl, elementId, runningInstanceId);
+            this.sourcesManagement.detachAdapter(elementId, runningInstanceId, username);
         } catch (AdapterException e) {
             logger.error("Could not set set id "+ elementId  + " with instance id: "+ runningInstanceId, e);
             return fail();
