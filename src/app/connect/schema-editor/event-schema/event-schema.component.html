@@ -18,9 +18,11 @@
                         <button color="primary" mat-button (click)=guessSchema()>
                             <mat-icon matTooltip="Refresh Schema">refresh</mat-icon>
                         </button>
+                        <!--
                         <button color="primary" mat-button (click)=togglePreview()>
                             <mat-icon matTooltip="Show preview of schema">play_arrow</mat-icon>
                         </button>
+                    -->
                     </div>
                     <div>
                         <button style="padding-right:0" color="primary" mat-button [disabled]="countSelected == 0"
@@ -91,14 +93,15 @@
                             </div>
                             <div fxFlex="0 1 auto" fxLayoutAlign="center center"
                                 *ngIf="isEventPropertyNested(node.data) || isEventPropertyPrimitive(node.data) || isEventPropertyList(node.data)">
-                                <button color="primary" mat-button (click)="openEditDialog(node.data)">
+                                <button [disabled]="!isEditable" color="primary" mat-button
+                                    (click)="openEditDialog(node.data)">
                                     <mat-icon>edit</mat-icon>
                                 </button>
                             </div>
                             <div fxFlex="0 1 auto" fxLayoutAlign="center center">
                                 <mat-checkbox
                                     *ngIf="isEventPropertyNested(node.data) || isEventPropertyPrimitive(node.data) || isEventPropertyList(node.data)"
-                                    (click)="selectProperty(node.data.id)"
+                                    (click)="selectProperty(node.data.id)" [disabled]="!isEditable"
                                     [class.checkbox-selected]="node.data.selected" [checked]="node.data.selected">
                                 </mat-checkbox>
                             </div>
