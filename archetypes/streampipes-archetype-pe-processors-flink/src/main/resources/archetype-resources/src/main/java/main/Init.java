@@ -15,6 +15,14 @@ public class Init extends StandaloneModelSubmitter {
     DeclarersSingleton.getInstance()
             .add(new ${classNamePrefix}Controller());
 
+    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory());
+
+    DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory());
+
     new Init().init(Config.INSTANCE);
 
   }
