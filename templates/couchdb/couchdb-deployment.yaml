@@ -12,8 +12,15 @@ spec:
       labels:
         app: couchdb
     spec:
+      volumes:
+        - name: couchdb-pv
+          persistentVolumeClaim:
+            claimName: couchdb-pvc
       containers:
         - name: couchdb
           image: couchdb:2.1.1
           ports:
             - containerPort: 5984
+          volumeMounts:
+            - mountPath: "/opt/couchdb/data"
+              name: couchdb-pv
