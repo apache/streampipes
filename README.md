@@ -2,7 +2,7 @@
 
 ## Installation
 
-Requires Helm (https://helm.sh/) and an active connection to a Kubernetes Cluster with a running Tiller-Server
+Requires Helm (https://helm.sh/) and an active connection to a kubernetes cluster with a running tiller server
 
 ```sh
 $ brew install helm kubernetes-cli
@@ -13,5 +13,5 @@ $ brew install helm kubernetes-cli
 Run command in chart directory
 
 ```sh
-helm install ./ --name streampipes-core
+helm install ./ --name streampipes
 ```
