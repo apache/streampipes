@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: processors-transformation-flink
+  labels:
+    name: processors-transformation-flink
+spec:
+  selector:
+    app: processors-transformation-flink
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8090
+      targetPort: 8090

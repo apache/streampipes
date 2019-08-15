@@ -1,0 +1,22 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: activemq
+spec:
+  selector:
+    matchLabels:
+      app: activemq
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: activemq
+    spec:
+      containers:
+        - name: activemq
+          image: "streampipes/activemq:{{ .Values.activemqVersion }}"
+          ports:
+            - containerPort: 61616
+            - containerPort: 61614
+            - containerPort: 8161
+            - containerPort: 1883

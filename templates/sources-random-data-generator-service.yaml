@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sources-random-data-generator
+  labels:
+    name: sources-random-data-generator
+spec:
+  selector:
+    app: sources-random-data-generator
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8090
+      targetPort: 8090

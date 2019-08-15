@@ -1,0 +1,20 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: consul
+spec:
+  selector:
+    matchLabels:
+      app: consul
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: consul
+    spec:
+      containers:
+        - name: consul
+          image: consul
+          ports:
+            - containerPort: 8500
+            - containerPort: 8600

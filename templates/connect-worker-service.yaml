@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: connect-worker
+spec:
+  selector:
+    app: connect-worker
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8098
+      targetPort: 8098
