@@ -1,2 +1,8 @@
 org.streampipes.processor.imageclassification.jvm.image-cropper.title=Image Cropper
 org.streampipes.processor.imageclassification.jvm.image-cropper.description=Crops an image based on given bounding box coordinates
+
+image-property.title=Image Field
+image-property.description=The field containing the image.
+
+box-array-property.title=Bounding box field
+box-array-property.description=The field containing a list of bounding boxes.
