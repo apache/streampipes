@@ -5,7 +5,6 @@ metadata:
 spec:
   selector:
     app: couchdb
-  type: NodePort
   ports:
     - name: main
       protocol: TCP
