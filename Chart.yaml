@@ -1,7 +1,7 @@
 apiVersion: v1
 appVersion: "0.62.0"
 description: Self-Service Data Analytics for the Industrial IoT
-name: streampipes
+name: streampipes-helm-chart
 home: https://streampipes.org
 version: 0.62.0
 icon: https://avatars1.githubusercontent.com/u/33908576
