@@ -1,0 +1,5 @@
+${package}.title=${classNamePrefix}
+${package}.description=Description of processor
+
+example-key.title=Example Text Parameter
+example-key.description=Example Text Parameter Description

@@ -32,8 +32,7 @@ public class ${classNamePrefix}Controller extends StandaloneEventProcessingDecla
 							.build())
 						.supportedFormats(SupportedFormats.jsonFormat())
 						.supportedProtocols(SupportedProtocols.kafka())
-						.requiredTextParameter(Labels.from(EXAMPLE_KEY, "Example Text Parameter", "Example " +
-				"Text Parameter Description"))
+						.requiredTextParameter(Labels.withId(EXAMPLE_KEY))
 						.outputStrategy(OutputStrategies.keep())
 						.build();
 	}

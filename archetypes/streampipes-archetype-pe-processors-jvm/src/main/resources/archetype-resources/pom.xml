@@ -38,12 +38,27 @@
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-messaging-kafka</artifactId>
+            <artifactId>streampipes-dataformat-cbor</artifactId>
+            <version>${sp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-smile</artifactId>
+            <version>${sp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-fst</artifactId>
             <version>${sp.version}</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-jms</artifactId>
+            <version>${sp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging-kafka</artifactId>
             <version>${sp.version}</version>
         </dependency>
     </dependencies>

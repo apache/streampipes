@@ -29,6 +29,14 @@
                 <include>deployment/docker-compose.yml</include>
             </includes>
         </fileSet>
+                <fileSet filtered="true" packaged="true" encoding="UTF-8">
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>**/*.png</include>
+                <include>**/*.en</include>
+                <include>**/*.md</include>
+            </includes>
+        </fileSet>
         <fileSet filtered="true" packaged="false" encoding="UTF-8">
             <directory/>
             <includes>
