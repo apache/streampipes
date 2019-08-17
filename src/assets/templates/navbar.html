@@ -30,7 +30,7 @@
                 <sp-feedback style="position:relative;left: -348px;" ng-if="toolbarCtrl.feedbackOpen" close-feedback-window="toolbarCtrl.closeFeedbackWindow()"></sp-feedback>
             </div>
             <md-menu id="account" ng-style="toolbarCtrl.accountMenuBackground" md-position-mode="target-right target" md-offset="8 52" style="margin:inherit;height:100%;" layout layout-align="center center">
-                <md-button layout layout-align="center center" aria-label="Open menu" class="sp-icon-button" ng-click="toolbarCtrl.triggerAccountMenu($mdMenu, $event)" style="min-width:0px;">
+                <md-button layout layout-align="center center" aria-label="Open menu" ng-class="toolbarCtrl.accountMenuOpen ? 'sp-icon-button-no-hover' : 'sp-icon-button'"  ng-click="toolbarCtrl.triggerAccountMenu($mdMenu, $event)" style="min-width:0px;">
                     <i ng-style="toolbarCtrl.accountMenuIconColor" class="material-icons">account_circle</i>
                     <md-tooltip md-direction="bottom">
                         User Preferences

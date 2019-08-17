@@ -17,6 +17,7 @@ export class ToolbarController {
     activePage: any;
 
     feedbackOpen: boolean = false;
+    accountMenuOpen: boolean = false;
 
     whiteColor: string = "#FFFFFF";
     greenColor: string = "#39b54a";
@@ -35,9 +36,11 @@ export class ToolbarController {
         this.$state = $state;
         this.$window = $window;
         this.$location = $location;
+
         $scope.$on('$mdMenuClose', (event, menu) => {
             if (menu[0].id === 'account') {
                 this.updateAccountColors();
+                this.accountMenuOpen = false;
             }
         });
 
@@ -249,6 +252,7 @@ export class ToolbarController {
 
     triggerAccountMenu($mdMenu, $event) {
         this.updateAccountColors();
+        this.accountMenuOpen = true;
         $mdMenu.open($event)
     }
 
@@ -280,4 +284,4 @@ export class ToolbarController {
         this.feedbackOpen = false;
     }
 
-}
+};
