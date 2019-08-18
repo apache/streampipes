@@ -21,9 +21,14 @@ import org.streampipes.model.staticproperty.StaticPropertyAlternative;
 public class Alternatives {
 
   public static StaticPropertyAlternative from(Label label, StaticProperty staticProperty) {
+    StaticPropertyAlternative alternative = from(label);
+    alternative.setStaticProperty(staticProperty);
+    return alternative;
+  }
+
+  public static StaticPropertyAlternative from(Label label) {
     StaticPropertyAlternative alternative = new StaticPropertyAlternative(label.getInternalId(),
             label.getLabel(), label.getInternalId());
-    alternative.setStaticProperty(staticProperty);
     alternative.setIndex(0);
     return alternative;
   }

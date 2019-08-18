@@ -21,6 +21,7 @@ import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.PropertyValueSpecification;
+import org.streampipes.model.staticproperty.SecretStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.streampipes.model.staticproperty.SupportedProperty;
@@ -63,9 +64,13 @@ public class StaticProperties {
     return new SupportedProperty(rdfPropertyUri, required);
   }
 
-  public static StaticPropertyGroup group(Label label, StaticProperty... staticProperties) {
+  public static StaticPropertyGroup group(Label label, StaticProperty... sp) {
+    List<StaticProperty> staticProperties = Arrays.asList(sp);
+    for(int i = 0; i < staticProperties.size(); i++) {
+      staticProperties.get(i).setIndex(i);
+    }
     return new StaticPropertyGroup(label.getInternalId(), label.getLabel(),
-            label.getDescription(), Arrays.asList(staticProperties));
+            label.getDescription(), staticProperties);
   }
 
   public static OneOfStaticProperty singleValueSelection(Label label, List<Option> options) {
@@ -74,5 +79,10 @@ public class StaticProperties {
     osp.setOptions(options);
 
     return osp;
+  }
+
+  public static SecretStaticProperty secretValue(Label label) {
+    return new SecretStaticProperty(label.getInternalId(),
+            label.getLabel(), label.getDescription());
   }
 }
