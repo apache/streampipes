@@ -8,7 +8,8 @@ export let PipelineComponent = {
         rawPipelineModel: "=",
         allElements: "=",
         preview: "<",
-        canvasId: "@"
+        canvasId: "@",
+        pipelineValid: "="
     },
     controller: PipelineController,
     controllerAs: 'ctrl'

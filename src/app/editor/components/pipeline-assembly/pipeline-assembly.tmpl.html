@@ -1,7 +1,7 @@
 <div>
     <div class="assemblyOptions sp-blue-bg">
         <div flex="100" layout="row" layout-align="start center">
-            <md-button ng-disabled="!ctrl.PipelineValidationService.isValidPipeline(ctrl.rawPipelineModel)"
+            <md-button ng-disabled="!ctrl.pipelineValid"
                        class="md-icon-button" ng-click="ctrl.submit()" type="submit">
                 <md-tooltip md-direction="top">
                     Save Pipeline
@@ -74,7 +74,7 @@
     </div>
     <div id="outerAssemblyArea" class="outerAssembly sp-blue-border-nopadding">
         <div id="assembly" class="canvas">
-            <pipeline canvas-id="assembly" raw-pipeline-model="ctrl.rawPipelineModel" all-elements="ctrl.allElements" preview="false"></pipeline>
+            <pipeline pipeline-valid="ctrl.pipelineValid" canvas-id="assembly" raw-pipeline-model="ctrl.rawPipelineModel" all-elements="ctrl.allElements" preview="false"></pipeline>
         </div>
     </div>
 </div>

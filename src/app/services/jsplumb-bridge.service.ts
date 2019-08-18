@@ -41,6 +41,10 @@ export class JsplumbBridge {
         return jsPlumb.selectEndpoints({source: id});
     }
 
+    getEndpointCount(id) {
+        return jsPlumb.selectEndpoints({element: id}).length;
+    }
+
     detach(connection) {
         jsPlumb.detach(connection);
     }
