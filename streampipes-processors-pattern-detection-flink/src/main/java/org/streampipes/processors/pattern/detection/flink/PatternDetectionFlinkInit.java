@@ -25,16 +25,19 @@ import org.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.pattern.detection.flink.config.PatternDetectionFlinkConfig;
+import org.streampipes.processors.pattern.detection.flink.processor.absence.AbsenceController;
+import org.streampipes.processors.pattern.detection.flink.processor.and.AndController;
 import org.streampipes.processors.pattern.detection.flink.processor.peak.PeakDetectionController;
+import org.streampipes.processors.pattern.detection.flink.processor.sequence.SequenceController;
 
 public class PatternDetectionFlinkInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton.getInstance()
-            .add(new PeakDetectionController());
-//            .add(new SequenceController())
-//            .add(new AbsenceController())
-//            .add(new AndController());
+            .add(new PeakDetectionController())
+            .add(new SequenceController())
+            .add(new AbsenceController())
+            .add(new AndController());
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
