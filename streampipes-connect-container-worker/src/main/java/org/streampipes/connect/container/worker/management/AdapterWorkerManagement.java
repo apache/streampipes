@@ -53,6 +53,9 @@ public class AdapterWorkerManagement {
         Protocol protocol = null;
         if (adapterStreamDescription instanceof GenericAdapterStreamDescription) {
             protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getElementId());
+            if (protocol == null) {
+                protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getAppId());
+            }
             ((GenericAdapter) adapter).setProtocol(protocol);
         }
 
