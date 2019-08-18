@@ -49,6 +49,7 @@ public class RandomDataStreamAdapter extends SpecificDataStreamAdapter {
   public SpecificAdapterStreamDescription declareModel() {
     return SpecificDataStreamAdapterBuilder.create(ID, "Random Data Simulator (Stream)",
             "Publishes an endless stream of random events")
+            .iconUrl("dice.png")
             .category(AdapterType.Debugging)
             .requiredIntegerParameter(Labels.from(WaitTimeMs, "Wait Time (MS)", "The time to " +
                     "wait between two events in milliseconds"))

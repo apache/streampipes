@@ -51,6 +51,7 @@ public class RandomDataSetAdapter extends SpecificDataSetAdapter {
   public SpecificAdapterSetDescription declareModel() {
     return SpecificDataSetAdapterBuilder.create(ID, "Random Data Simulator (Set)",
             "Publishes a bounded stream of random events")
+            .iconUrl("dice.png")
             .category(AdapterType.Debugging)
             .requiredIntegerParameter(Labels.from(WaitTimeMs, "Wait Time (MS)", "The time to " +
                     "wait between two events in milliseconds"))

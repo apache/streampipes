@@ -65,6 +65,14 @@ public class OpcUa {
 
     }
 
+    public OpcUa(String opcServerURL, int opcServerPort, int namespaceIndex, NodeId nodeId) {
+
+        this.opcServerHost = opcServerURL;
+        this.opcServerPort = opcServerPort;
+        this.node  = nodeId;
+    }
+
+
     public void connect() throws Exception {
 
         EndpointDescription[] endpoints = UaTcpStackClient.getEndpoints("opc.tcp://" + opcServerHost + ":" + opcServerPort).get();
@@ -123,7 +131,7 @@ public class OpcUa {
             referenceDescriptions = getRootNote(node);
         }
 
-       return referenceDescriptions;
+        return referenceDescriptions;
     }
 
     private List<OpcNode> getRootNote(NodeId browseRoot) {
@@ -131,10 +139,10 @@ public class OpcUa {
 
         try {
 //            VariableNode resultNode = client.getAddressSpace().getVariableNode(browseRoot).get();
-            String name = client.getAddressSpace().getVariableNode(browseRoot).get().getBrowseName().get().getName();
+            String label = client.getAddressSpace().getVariableNode(browseRoot).get().getDisplayName().get().getText();
             Datatypes type = OpcUaTypes.getType((UInteger)client.getAddressSpace().getVariableNode(browseRoot).get().getDataType().get().getIdentifier());
             NodeId nodeId = client.getAddressSpace().getVariableNode(browseRoot).get().getNodeId().get();
-            result.add(new OpcNode(name, type, nodeId));
+            result.add(new OpcNode(label, type, nodeId));
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -163,11 +171,14 @@ public class OpcUa {
             List<ReferenceDescription> references = toList(browseResult.getReferences());
 
             for (ReferenceDescription rd : references) {
-                OpcNode opcNode = new OpcNode( rd.getBrowseName().getName(), OpcUaTypes.getType((UInteger) rd.getTypeDefinition().getIdentifier()), rd.getNodeId().local().get());
-                rd.getNodeId();
+                if (rd.getNodeClass() == NodeClass.Variable) {
 
-                result.add(opcNode);
-                rd.getNodeId().local().ifPresent(nodeId -> browseNode(nodeId));
+                    OpcNode opcNode = new OpcNode( rd.getBrowseName().getName(), OpcUaTypes.getType((UInteger) rd.getTypeDefinition().getIdentifier()), rd.getNodeId().local().get());
+                    rd.getNodeId();
+
+                    result.add(opcNode);
+                    rd.getNodeId().local().ifPresent(nodeId -> browseNode(nodeId));
+                }
             }
         } catch (InterruptedException | ExecutionException e) {
             System.out.println("Browsing nodeId=" + browse + " failed: " + e.getMessage());
@@ -199,47 +210,47 @@ public class OpcUa {
 
 
         List<ReadValueId> readValues = new ArrayList<>();
-            // Read a specific value attribute
+        // Read a specific value attribute
         for (NodeId node : nodes) {
             readValues.add(new ReadValueId(node, AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE));
         }
 
-            List<MonitoredItemCreateRequest> requests = new ArrayList<>();
+        List<MonitoredItemCreateRequest> requests = new ArrayList<>();
 
-            for (ReadValueId readValue : readValues) {
-                // important: client handle must be unique per item
-                UInteger clientHandle = uint(clientHandles.getAndIncrement());
+        for (ReadValueId readValue : readValues) {
+            // important: client handle must be unique per item
+            UInteger clientHandle = uint(clientHandles.getAndIncrement());
 
-                MonitoringParameters parameters = new MonitoringParameters(
-                        clientHandle,
-                        1000.0,     // sampling interval
-                        null,      // filter, null means use default
-                        uint(10),   // queue size
-                        true         // discard oldest
-                );
+            MonitoringParameters parameters = new MonitoringParameters(
+                    clientHandle,
+                    1000.0,     // sampling interval
+                    null,      // filter, null means use default
+                    uint(10),   // queue size
+                    true         // discard oldest
+            );
 
-                requests.add(new MonitoredItemCreateRequest(readValue, MonitoringMode.Reporting, parameters));
+            requests.add(new MonitoredItemCreateRequest(readValue, MonitoringMode.Reporting, parameters));
+        }
+
+        BiConsumer<UaMonitoredItem, Integer> onItemCreated =
+                (item, id) -> {
+                    item.setValueConsumer(opcUaAdapter::onSubscriptionValue);
+                };
+
+        List<UaMonitoredItem> items = subscription.createMonitoredItems(
+                TimestampsToReturn.Both,
+                requests,
+                onItemCreated
+        ).get();
+
+        for (UaMonitoredItem item : items) {
+            NodeId tagId = item.getReadValueId().getNodeId();
+            if (item.getStatusCode().isGood()) {
+                System.out.println("item created for nodeId="+ tagId);
+            } else {
+                System.out.println("failed to create item for " + item.getReadValueId().getNodeId() + item.getStatusCode());
             }
-
-            BiConsumer<UaMonitoredItem, Integer> onItemCreated =
-                    (item, id) -> {
-                        item.setValueConsumer(opcUaAdapter::onSubscriptionValue);
-                    };
-
-            List<UaMonitoredItem> items = subscription.createMonitoredItems(
-                    TimestampsToReturn.Both,
-                    requests,
-                    onItemCreated
-            ).get();
-
-            for (UaMonitoredItem item : items) {
-                NodeId tagId = item.getReadValueId().getNodeId();
-                if (item.getStatusCode().isGood()) {
-                    System.out.println("item created for nodeId="+ tagId);
-                } else {
-                    System.out.println("failed to create item for " + item.getReadValueId().getNodeId() + item.getStatusCode());
-                }
-            }
+        }
 
     }
 

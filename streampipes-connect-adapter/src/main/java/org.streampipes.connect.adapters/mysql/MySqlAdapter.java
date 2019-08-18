@@ -78,10 +78,8 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
     //TODO: Add Icon
     SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID,
             "MySql Adapter",
-            "Connects to a MySql Database and sends out all inserted or updated rows. Needs"
-                    + "binary logging enabled (MySql command: \"SHOW VARIABLES LIKE 'log_bin';\") and a"
-                    + "user with sufficient privileges (REPLICATION CLIENT)")
-            //.iconUrl("ros.png")
+            "Creates a data stream for a SQL table")
+            .iconUrl("sql.png")
             .requiredTextParameter(Labels.from(MYSQL_HOST, "Hostname", "Hostname of the MySql Server"))
             .requiredTextParameter(Labels.from(MYSQL_USER, "Username", "Username of the user"))
             .requiredTextParameter(Labels.from(MYSQL_PASS, "Password", "Password of the user"))
