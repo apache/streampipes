@@ -10,3 +10,4 @@ activemq
 kafka
 kafka-rest
 zookeeper
+app-container
