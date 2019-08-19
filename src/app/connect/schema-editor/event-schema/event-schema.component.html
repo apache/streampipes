@@ -74,7 +74,8 @@
                                 <b>
                                     {{ getLabel(node.data) }}
                                 </b>
-                                <mat-icon *ngIf="property.isTimestampProperty()" style="font-size: 15px; padding: 4px;">
+                                <mat-icon *ngIf="node.data.isTimestampProperty()"
+                                    style="font-size: 15px; padding: 4px;">
                                     access_time</mat-icon>
                                 <p style="margin: 0px 10px 10px;" *ngIf="isEventPropertyList(node.data)">[List]</p>
                             </div>
