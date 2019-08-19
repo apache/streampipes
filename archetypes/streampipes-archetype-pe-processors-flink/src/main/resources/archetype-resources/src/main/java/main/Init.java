@@ -9,6 +9,13 @@ import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import ${package}.config.Config;
 import ${package}.pe.processor.${packageName}.${classNamePrefix}Controller;
 
+import org.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.streampipes.dataformat.fst.FstDataFormatFactory;
+import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.streampipes.messaging.jms.SpJmsProtocolFactory;
+import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
+
 public class Init extends StandaloneModelSubmitter {
 
   public static void main(String[] args) throws Exception {
