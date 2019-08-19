@@ -1,0 +1,30 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: processors-image-processing-jvm
+spec:
+  selector:
+    matchLabels:
+      app: processors-image-processing-jvm
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: processors-image-processing-jvm
+    spec:
+      initContainers:
+        - name: init-wait-consul
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8600 && exit 0 || sleep 3; done; exit 1"]
+      containers:
+        - name: processors-image-processing-jvm
+          image: "streampipes/processors-image-processing-jvm:{{ .Values.streampipesVersion }}"
+          ports:
+            - containerPort: 8090
+          env:
+            - name: SP_ICON_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: SP_KAFKA_HOST
+              value: "kafka-service"

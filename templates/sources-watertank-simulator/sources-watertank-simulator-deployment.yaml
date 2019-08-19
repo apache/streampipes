@@ -1,0 +1,30 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: sources-watertank-simulator
+spec:
+  selector:
+    matchLabels:
+      app: sources-watertank-simulator
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sources-watertank-simulator
+    spec:
+      initContainers:
+        - name: init-wait-consul
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8600 && exit 0 || sleep 3; done; exit 1"]
+      containers:
+        - name: sources-watertank-simulator
+          image: "streampipes/sources-watertank-simulator:{{ .Values.streampipesVersion }}"
+          ports:
+            - containerPort: 8090
+          env:
+            - name: SP_ICON_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: SP_KAFKA_HOST
+              value: "kafka-service"

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sinks-brokers-jvm
+  labels:
+    name: sinks-brokers-jvm
+spec:
+  selector:
+    app: sinks-brokers-jvm
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8090
+      targetPort: 8090

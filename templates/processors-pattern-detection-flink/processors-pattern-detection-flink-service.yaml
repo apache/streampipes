@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: processors-pattern-detection-flink
+  labels:
+    name: processors-pattern-detection-flink
+spec:
+  selector:
+    app: processors-pattern-detection-flink
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8090
+      targetPort: 8090

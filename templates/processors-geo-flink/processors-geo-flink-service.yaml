@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: processors-geo-flink
+  labels:
+    name: processors-geo-flink
+spec:
+  selector:
+    app: processors-geo-flink
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8090
+      targetPort: 8090
