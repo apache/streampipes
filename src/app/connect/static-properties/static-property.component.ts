@@ -15,6 +15,8 @@ import {RuntimeResolvableOneOfStaticProperty} from "../model/RuntimeResolvableOn
 import {RuntimeResolvableAnyStaticProperty} from "../model/RuntimeResolvableAnyStaticProperty";
 import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
 import {SecretStaticProperty} from "../model/SecretStaticProperty";
+import {AlternativesStaticProperty} from '../model/AlternativesStaticProperty';
+import {GroupStaticProperty} from '../model/GroupStaticProperty';
 
 @Component({
   selector: 'app-static-property',
@@ -109,6 +111,14 @@ export class StaticPropertyComponent implements OnInit {
 
   isRuntimeResolvableAnyStaticProperty(val) {
     return val instanceof RuntimeResolvableAnyStaticProperty;
+  }
+
+  isGroupStaticProperty(val) {
+      return val instanceof GroupStaticProperty;
+  }
+
+  isAlternativesStaticProperty(val) {
+      return val instanceof AlternativesStaticProperty;
   }
 
   valueChange(hasInput) {

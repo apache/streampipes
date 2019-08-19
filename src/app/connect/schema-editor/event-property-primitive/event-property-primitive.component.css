@@ -20,3 +20,7 @@
 .onhover:hover {
   background-color: darkgrey;
 }
+
+::ng-deep .cdk-overlay-pane {
+  width: auto !important;
+}

@@ -1,11 +1,14 @@
 import * as angular from 'angular';
 import {JsplumbBridge} from "../../../services/jsplumb-bridge.service";
 import {JsplumbService} from "../../../services/jsplumb.service";
+import {PipelineValidationService} from "../../services/pipeline-validation.service";
+import {TransitionService} from "../../../services/transition.service";
 
 export class PipelineElementOptionsController {
 
     ObjectProvider: any;
     PipelineElementRecommendationService: any;
+    PipelineValidationService: PipelineValidationService;
     InitTooltips: any;
     JsplumbBridge: JsplumbBridge;
     EditorDialogManager: any;
@@ -18,10 +21,13 @@ export class PipelineElementOptionsController {
     rawPipelineModel: any;
     allElements: any;
     deleteFunction: any;
-    TransitionService: any;
+    TransitionService: TransitionService;
     $rootScope: any;
 
-    constructor($rootScope, ObjectProvider, PipelineElementRecommendationService, InitTooltips, JsplumbBridge, EditorDialogManager, JsplumbService, TransitionService) {
+    pipelineValid: boolean;
+
+    constructor($rootScope, ObjectProvider, PipelineElementRecommendationService, InitTooltips, JsplumbBridge,
+                EditorDialogManager, JsplumbService, TransitionService, PipelineValidationService) {
         this.$rootScope = $rootScope;
         this.ObjectProvider = ObjectProvider;
         this.PipelineElementRecommendationService = PipelineElementRecommendationService;
@@ -30,6 +36,7 @@ export class PipelineElementOptionsController {
         this.EditorDialogManager = EditorDialogManager;
         this.JsplumbService = JsplumbService;
         this.TransitionService = TransitionService;
+        this.PipelineValidationService = PipelineValidationService;
 
         this.recommendationsAvailable = false;
         this.possibleElements = [];
@@ -51,6 +58,7 @@ export class PipelineElementOptionsController {
 
     removeElement(pipelineElement) {
         this.deleteFunction(pipelineElement);
+        this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
     }
 
     openCustomizeDialog() {
@@ -110,4 +118,5 @@ export class PipelineElementOptionsController {
     }
 }
 
-PipelineElementOptionsController.$inject = ['$rootScope', 'ObjectProvider', 'PipelineElementRecommendationService', 'InitTooltips', 'JsplumbBridge', 'EditorDialogManager', 'JsplumbService', 'TransitionService'];
+PipelineElementOptionsController.$inject = ['$rootScope', 'ObjectProvider', 'PipelineElementRecommendationService',
+    'InitTooltips', 'JsplumbBridge', 'EditorDialogManager', 'JsplumbService', 'TransitionService', 'PipelineValidationService'];

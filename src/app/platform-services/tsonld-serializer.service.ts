@@ -70,6 +70,9 @@ import {RuntimeOptionsRequest} from "../connect/model/connect/runtime/RuntimeOpt
 import {RuntimeOptionsResponse} from "../connect/model/connect/runtime/RuntimeOptionsResponse";
 import {EventRateTransformationRuleDescription} from '../connect/model/connect/rules/EventRateTransformationRuleDescription';
 import {SecretStaticProperty} from "../connect/model/SecretStaticProperty";
+import {AlternativesStaticProperty} from '../connect/model/AlternativesStaticProperty';
+import {AlternativeStaticProperty} from '../connect/model/AlternativeStaticProperty';
+import {GroupStaticProperty} from '../connect/model/GroupStaticProperty';
 
 
 @Injectable()
@@ -150,6 +153,11 @@ export class TsonLdSerializerService {
 
         tsonld.addClassMapping(RuntimeOptionsRequest);
         tsonld.addClassMapping(RuntimeOptionsResponse);
+        tsonld.addClassMapping(RuntimeOptionsResponse);
+
+        tsonld.addClassMapping(GroupStaticProperty);
+        tsonld.addClassMapping(AlternativesStaticProperty);
+        tsonld.addClassMapping(AlternativeStaticProperty);
 
         tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
         tsonld.addContext('spi', 'urn:streampipes.org:spi:');

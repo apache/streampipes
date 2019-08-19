@@ -1,7 +1,7 @@
-import {Component, DoCheck, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {EventPropertyList} from '../model/EventPropertyList';
-import {EventProperty} from '../model/EventProperty';
-import {DataTypesService} from '../data-type.service';
+import { Component, DoCheck, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { EventPropertyList } from '../model/EventPropertyList';
+import { EventProperty } from '../model/EventProperty';
+import { DataTypesService } from '../data-type.service';
 
 
 @Component({
@@ -9,7 +9,7 @@ import {DataTypesService} from '../data-type.service';
   templateUrl: './event-property-list.component.html',
   styleUrls: ['./event-property-list.component.css']
 })
-export class EventPropertyListComponent implements OnInit, DoCheck {
+export class EventPropertyListComponent implements OnInit {
 
   constructor(private dataTypeService: DataTypesService) { }
 
@@ -19,33 +19,11 @@ export class EventPropertyListComponent implements OnInit, DoCheck {
 
   private runtimeDataTypes;
 
-  @Input()
-  isEditable: Boolean;
-
-  protected open = false;
+  @Input() isEditable: boolean;
 
   @Output() delete: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
 
   ngOnInit() {
-      this.runtimeDataTypes = this.dataTypeService.getDataTypes();
-  }
-
-  ngDoCheck() {
-  }
-
-  private OnClickDeleteProperty(): void {
-    this.delete.emit(this.property);
-  }
-
-  private OnClickOpen(): void {
-    this.open = !this.open;
-  }
-
-  private getLabel(): string {
-    if (typeof this.property.getRuntimeName() !== 'undefined') {
-      return this.property.getRuntimeName();
-    } else {
-      return this.property.label;
-    }
+    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
   }
 }

@@ -1,6 +1,6 @@
-import {RdfId} from '../../../platform-services/tsonld/RdfId';
-import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
-import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
+import { RdfId } from '../../../platform-services/tsonld/RdfId';
+import { RdfProperty } from '../../../platform-services/tsonld/RdfsProperty';
+import { RdfsClass } from '../../../platform-services/tsonld/RdfsClass';
 
 
 @RdfsClass('sp:EventProperty')
@@ -33,6 +33,8 @@ export abstract class EventProperty {
   @RdfProperty('sp:hasIndex')
   public index: number;
 
+  public propertyScope = 'MEASUREMENT_PROPERTY';
+
   constructor(propertyID: string, parent: EventProperty, child?: EventProperty) {
     this.propertyID = propertyID;
     this.id = "http://eventProperty.de/" + propertyID;
@@ -49,7 +51,7 @@ export abstract class EventProperty {
   }
 
   public setDomainProperty(domainProperty: string): void {
-      this.domainProperty = domainProperty;
+    this.domainProperty = domainProperty;
 
   }
 

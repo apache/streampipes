@@ -41,6 +41,9 @@ import {FileStaticProperty} from '../model/FileStaticProperty';
 import {TimestampTransformationRuleDescription} from '../model/connect/rules/TimestampTransformationRuleDescription';
 import {RestApi} from "../../services/rest-api.service";
 import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer.service";
+import {AlternativesStaticProperty} from "../model/AlternativesStaticProperty";
+import {GroupStaticProperty} from "../model/GroupStaticProperty";
+import {StaticProperty} from "../model/StaticProperty";
 
 @Injectable()
 export class DataMarketplaceService {
@@ -83,6 +86,9 @@ export class DataMarketplaceService {
         );
         res.list.forEach(adapterDescription => {
           adapterDescription.config.sort((a, b) => a.index - b.index);
+          adapterDescription.config.forEach(sp => {
+            this.sortStaticProperties(sp)
+          });
         });
         return res.list;
       }));
@@ -129,9 +135,25 @@ export class DataMarketplaceService {
         );
         res.list.forEach(protocolDescription => {
           protocolDescription.config.sort((a, b) => a.index - b.index);
+          protocolDescription.config.forEach(sp => {
+            this.sortStaticProperties(sp)
+          });
         });
         return res.list;
       }));
+  }
+
+  sortStaticProperties(sp: StaticProperty) {
+    if (sp instanceof AlternativesStaticProperty) {
+      sp.alternatives.sort((a, b) => a.index - b.index);
+      sp.alternatives.forEach(a => {
+        if (a.staticProperty instanceof GroupStaticProperty) {
+          a.staticProperty.staticProperties.sort((a, b) => a.index - b.index);
+        }
+      })
+    } else if (sp instanceof GroupStaticProperty) {
+      sp.staticProperties.sort((a, b) => a.index - b.index);
+    }
   }
 
   getGenericAndSpecifigAdapterDescriptions(): Observable<

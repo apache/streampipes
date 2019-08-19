@@ -25,6 +25,8 @@ export class PipelineAssemblyController {
     ShepherdService: any;
     errorMessagesDisplayed: any = false;
 
+    pipelineValid: boolean = false;
+
     constructor(JsplumbBridge,
                 PipelinePositioningService,
                 EditorDialogManager,

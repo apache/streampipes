@@ -68,7 +68,7 @@ ul {
   z-index: 1000;
 }
 :host /deep/ .node-drop-slot.is-dragging-over {
-  background-color: green;
+  background-color: rgb(27, 20, 100);
   border: none;
 }
 :host /deep/ .tree-node-expanded {
@@ -76,4 +76,93 @@ ul {
 }
 :host /deep/ tree-viewport {
   overflow: hidden;
+}
+
+:host /deep/ .tree-node-level-1 {
+  border: none;
+}
+
+:host /deep/ .node-content-wrapper-focused, .node-content-wrapper:hover, .node-content-wrapper-active, .node-content-wrapper.node-content-wrapper-active:hover, .node-content-wrapper-active.node-content-wrapper-focused {
+  background: none !important;
+}
+
+.dimension-star {
+  margin-left: -27px;
+  margin-right: 3px;
+}
+
+:host /deep/ .node-content-wrapper .dimension-star {
+  opacity: 0.2;
+}
+
+:host /deep/ .node-content-wrapper:hover .dimension-star {
+  opacity: 1;
+}
+
+:host /deep/ .node-content-wrapper mat-checkbox {
+  opacity: 0.2;
+}
+
+:host /deep/ .node-content-wrapper:hover mat-checkbox {
+  opacity: 1;
+}
+
+.checkbox-selected {
+  opacity: 1 !important;
+}
+.dimension-property {
+  color: #ffa23b !important;
+  opacity: 1 !important;
+}
+
+.historic {
+  cursor: pointer;
+  color: #ffa23b;
+}
+.real-time {
+  cursor: pointer;
+  color: #FFEB3B;
+}
+
+.new-adapter-title {
+  margin-top:5px;
+}
+
+.configuration-box {
+  width:100%;
+  margin-bottom:10px;
+  box-shadow: 1px 1px 2px #555;
+  border: 1px solid gray;
+  padding: 10px 10px 10px 60px;
+  margin-left: 20px;
+}
+
+.padding {
+  padding:15px;
+  margin-bottom:2%;
+}
+
+.stepper-button {
+  margin-left:10px;
+}
+
+.disable-editing {
+pointer-events: none !important;
+opacity:0.5;
+}
+
+.add-schema button {
+  color: white;
+}
+
+.add-schema button:disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background-color: rgb(27, 20, 100) !important;
+}
+
+::ng-deep .mat-checkbox:not(.mat-checkbox-disabled).mat-accent .mat-checkbox-ripple .mat-ripple-element {
+  background-color: rgb(27, 20, 100) !important;
 }

@@ -1,13 +1,15 @@
 <md-toolbar class="md-primary md-hue-2 top-nav">
     <div class="md-toolbar-tools" style="height:50px;max-height:50px;">
         <div flex="60" layout layout-align="start center">
-            <md-button class="md-icon-button" aria-label="Settings" ng-click="toolbarCtrl.toggleLeft()" ng-show="toolbarCtrl.authenticated">
-            <i class="material-icons md-36">menu</i>
+            <md-button class="md-icon-button" aria-label="Settings" ng-click="toolbarCtrl.toggleLeft()"
+                       ng-show="toolbarCtrl.authenticated">
+                <i class="material-icons md-36">menu</i>
             </md-button>
             <h1 class="md-toolbar-tools" style="height:50px;max-height:50px;">
                 <div class="sp-darkblue"
-                     style="align-items: left;padding:5px;border-radius:0px;margin-right:15px;position:relative;left:20px;"><img
-                        alt="icon" src="assets/img/sp/sp-logo-right-white.png" style="height:28px;">
+                     style="align-items: left;padding:5px;border-radius:0px;margin-right:15px;position:relative;left:20px;">
+                    <img
+                            alt="icon" src="assets/img/sp/sp-logo-right-white.png" style="height:28px;">
                 </div>
                 <div style="color:white;padding: 5px 5px;font-size:15px;margin-left:10px;">
                     <h4 style="margin-top:18px;font-size:12pt;font-weight:bold;">{{toolbarCtrl.getActivePage()}}</h4>
@@ -15,25 +17,49 @@
             </h1>
         </div>
         <span flex></span>
-        <div flex="40" layout layout-align="end center" ng-show="toolbarCtrl.authenticated">
-            <md-button class="sp-icon-button" ng-click="toolbarCtrl.openInfo()" style="min-width:0px;">
-                <md-icon md-svg-icon="action:ic_help_24px" aria-label="Info" style="color:white;"></md-icon>
-                <md-tooltip md-direction="bottom">
-                    Info
-                </md-tooltip>
-            </md-button>
-            <md-button class="sp-icon-button" ng-click="toolbarCtrl.openDocumentation()" style="min-width:0px;">
-                <md-icon md-svg-icon="action:ic_description_24px" aria-label="Documentation" style="color:white;"></md-icon>
-                <md-tooltip md-direction="bottom">
-                    Documentation
-                </md-tooltip>
-            </md-button>
-            <md-button class="sp-icon-button" id="sp_logout" ng-click="toolbarCtrl.logout()" style="min-width:0px;">
-                <md-icon md-svg-icon="action:ic_exit_to_app_24px" aria-label="Logout"></md-icon>
-                <md-tooltip md-direction="bottom">
-                    Logout
-                </md-tooltip>
-            </md-button>
+        <div flex="40" layout layout-align="end center" ng-show="toolbarCtrl.authenticated" style="height:100%;">
+            <div style="height:100%;">
+                <div ng-style="toolbarCtrl.feedbackMenuBackground" layout layout-align="center center" style="height: 100%;">
+                <md-button ng-class="toolbarCtrl.feedbackOpen ? 'sp-icon-button-no-hover' : 'sp-icon-button'" ng-click="toolbarCtrl.toggleFeedback()" style="min-width:0px;" layout layout-align="center center">
+                    <i ng-style="toolbarCtrl.feedbackMenuIconColor" class="material-icons">feedback</i>
+                    <md-tooltip md-direction="bottom">
+                        Feedback
+                    </md-tooltip>
+                </md-button>
+                </div>
+                <sp-feedback style="position:relative;left: -348px;" ng-if="toolbarCtrl.feedbackOpen" close-feedback-window="toolbarCtrl.closeFeedbackWindow()"></sp-feedback>
+            </div>
+            <md-menu id="account" ng-style="toolbarCtrl.accountMenuBackground" md-position-mode="target-right target" md-offset="8 52" style="margin:inherit;height:100%;" layout layout-align="center center">
+                <md-button layout layout-align="center center" aria-label="Open menu" ng-class="toolbarCtrl.accountMenuOpen ? 'sp-icon-button-no-hover' : 'sp-icon-button'"  ng-click="toolbarCtrl.triggerAccountMenu($mdMenu, $event)" style="min-width:0px;">
+                    <i ng-style="toolbarCtrl.accountMenuIconColor" class="material-icons">account_circle</i>
+                    <md-tooltip md-direction="bottom">
+                        User Preferences
+                    </md-tooltip>
+                </md-button>
+                <md-menu-content width="4">
+                    <md-menu-item>
+                        <md-button ng-click="toolbarCtrl.openInfo()" style="min-width:0px;">
+                            <md-icon md-svg-icon="action:ic_help_24px" aria-label="Info"></md-icon>
+                            Info
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="toolbarCtrl.openDocumentation()"
+                                   style="min-width:0px;">
+                            <md-icon md-svg-icon="action:ic_description_24px" aria-label="Documentation"></md-icon>
+                            Documentation
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-divider></md-menu-divider>
+                    <md-menu-item>
+                        <md-button id="sp_logout" ng-click="toolbarCtrl.logout()"
+                                   style="min-width:0px;">
+                            <md-icon md-svg-icon="action:ic_exit_to_app_24px" aria-label="Logout"></md-icon>
+                            Logout
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
         </div>
     </div>
 </md-toolbar>
@@ -47,13 +73,15 @@
                 <div style="color:white;margin-left:10px; margin-right:10px;">{{toolbarCtrl.AuthStatusService.email}}</div>
             </div>
             <div style="margin-top:20px;">
-                <md-button style="background:rgb(63,81,181);color:white;" class="md-accent" ng-click="toolbarCtrl.logout()">Logout
+                <md-button style="background:rgb(63,81,181);color:white;" class="md-accent"
+                           ng-click="toolbarCtrl.logout()">Logout
                 </md-button>
             </div>
         </div>
     </md-toolbar>
     <md-list>
-        <md-list-item class="md-2-line" ng-repeat="item in toolbarCtrl.menu" role="link" ng-click="toolbarCtrl.go(item.link)">
+        <md-list-item class="md-2-line" ng-repeat="item in toolbarCtrl.menu" role="link"
+                      ng-click="toolbarCtrl.go(item.link)">
 
             <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"></md-icon>
             <div class="md-list-item-text">
@@ -64,12 +92,14 @@
         <md-list-item class="md-2-line" role="link" ng-click="toolbarCtrl.go('streampipes.notifications')">
             <md-icon md-svg-icon="communication:ic_chat_24px" aria-label="Notifications"></md-icon>
             <div class="md-list-item-text">
-                <span class="md-body-2">Notifications  <span class="sidebar-badge">{{toolbarCtrl.unreadNotifications.length}}</span></span>
+                <span class="md-body-2">Notifications  <span
+                        class="sidebar-badge">{{toolbarCtrl.unreadNotifications.length}}</span></span>
             </div>
         </md-list-item>
         <md-divider></md-divider>
         <md-subheader class="md-no-sticky">Management</md-subheader>
-        <md-list-item class="md-2-line" ng-repeat="item in toolbarCtrl.admin" role="link" ng-click="toolbarCtrl.go(item.link)">
+        <md-list-item class="md-2-line" ng-repeat="item in toolbarCtrl.admin" role="link"
+                      ng-click="toolbarCtrl.go(item.link)">
             <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"></md-icon>
             <div class="md-list-item-text">
                 <span class="md-body-2">{{item.title}}</span>

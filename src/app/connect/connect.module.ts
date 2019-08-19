@@ -15,7 +15,6 @@ import { NewAdapterComponent } from './new-adapter/new-adapter.component';
 import { FormatFormComponent } from './format-form/format-form.component';
 import { SelectProtocolComponent } from './select-protocol-component/select-protocol.component';
 
-import { EventPropertyNestedComponent } from './schema-editor/event-property-nested/event-property-nested.component';
 import { EventPropertyPrimitiveComponent } from './schema-editor/event-property-primitive/event-property-primitive.component';
 import { EventPropertyComponent } from './schema-editor/event-property/event-property.component';
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
@@ -57,8 +56,11 @@ import { StaticFileInputComponent } from './static-properties/static-file-input/
 import { StaticFileRestService } from './static-properties/static-file-input/static-file-rest.service';
 import { FileManagementComponent } from './file-management/file-management.component';
 import { FileRestService } from './file-management/service/filerest.service';
-import { StaticRuntimeResolvableAnyInputComponent} from "./static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component";
-import { StaticRuntimeResolvableOneOfInputComponent} from "./static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component";
+import { StaticRuntimeResolvableAnyInputComponent } from "./static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component";
+import { StaticRuntimeResolvableOneOfInputComponent } from "./static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component";
+import { StaticGroupComponent } from './static-properties/static-group/static-group.component';
+import { StaticAlternativesComponent } from './static-properties/static-alternatives/static-alternatives.component';
+
 
 import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
 import { AdapterExportDialog } from './data-marketplace/adapter-export/adapter-export-dialog.component';
@@ -70,6 +72,7 @@ import { TimestampPipe } from './filter/timestamp.pipe';
 import { PlatformServicesModule } from '../platform-services/platform.module';
 
 import { TreeModule } from 'angular-tree-component';
+import { EventSchemaPreviewComponent } from './schema-editor/event-schema-preview/event-schema-preview.component';
 
 
 @NgModule({
@@ -99,7 +102,6 @@ import { TreeModule } from 'angular-tree-component';
         EventSchemaComponent,
         EventPropertyPrimitiveComponent,
         EventPropertyComponent,
-        EventPropertyNestedComponent,
         EventPropertyListComponent,
         StaticPropertyComponent,
         AdapterStartedDialog,
@@ -127,7 +129,10 @@ import { TreeModule } from 'angular-tree-component';
         StaticRuntimeResolvableAnyInputComponent,
         StaticRuntimeResolvableOneOfInputComponent,
         FileManagementComponent,
-        FilterPipe
+        FilterPipe,
+        EventSchemaPreviewComponent,
+        StaticGroupComponent,
+        StaticAlternativesComponent,
     ],
     providers: [
         RestService,
@@ -158,6 +163,6 @@ import { TreeModule } from 'angular-tree-component';
             deps: ['$injector'],
         },
     ],
-    entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog],
+    entryComponents: [ConnectComponent, AdapterStartedDialog, AdapterExportDialog, AdapterUploadDialog, EventPropertyComponent],
 })
-export class ConnectModule {}
+export class ConnectModule { }

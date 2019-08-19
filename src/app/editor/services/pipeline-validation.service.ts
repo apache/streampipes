@@ -28,11 +28,11 @@ export class PipelineValidationService {
         let onlyOnePipelineCreated = true;
 
         if (streamInAssembly && (sepaInAssembly || actionInAssembly)) {
-            allElementsConnected = this.allElementsConnected();
+            allElementsConnected = this.allElementsConnected(rawPipelineModel);
         }
 
         if (streamInAssembly && actionInAssembly && allElementsConnected) {
-            onlyOnePipelineCreated = this.onlyOnePipelineCreated();
+            onlyOnePipelineCreated = this.onlyOnePipelineCreated(rawPipelineModel);
         }
 
         if (!this.isEmptyPipeline(rawPipelineModel)) {
@@ -64,9 +64,14 @@ export class PipelineValidationService {
         }
     }
 
-    allElementsConnected() {
-        let g = this.makeGraph();
-        return g.nodes().every(node => g.outEdges(node).length > 0);
+    allElementsConnected(rawPipelineModel) {
+        let g = this.makeGraph(rawPipelineModel);
+        return g.nodes().every(node => this.isFullyConnected(g, node, rawPipelineModel));
+    }
+
+    isFullyConnected(g, node, rawPipelineModel) {
+        var nodeProperty = g.node(node);
+        return g.outEdges(node).length >= nodeProperty.endpointCount;
     }
 
     isStreamInAssembly(rawPipelineModel) {
@@ -81,8 +86,8 @@ export class PipelineValidationService {
         return this.isInAssembly(rawPipelineModel, "sepa");
     }
 
-    onlyOnePipelineCreated() {
-        let g = this.makeGraph();
+    onlyOnePipelineCreated(rawPipelineModel) {
+        let g = this.makeGraph(rawPipelineModel);
         let tarjan = dagre.graphlib.alg.tarjan(g);
 
         return tarjan.length == 1;
@@ -98,7 +103,7 @@ export class PipelineValidationService {
         return isElementInAssembly;
     }
 
-    makeGraph() {
+    makeGraph(rawPipelineModel) {
         var g = new dagre.graphlib.Graph();
         g.setGraph({rankdir: "LR"});
         g.setDefaultEdgeLabel(function () {
@@ -108,7 +113,15 @@ export class PipelineValidationService {
 
         for (var i = 0; i < nodes.length; i++) {
             var n = nodes[i];
-            g.setNode(n.id, {label: n.id});
+            var elementOptions = this.getElementOptions(n.id, rawPipelineModel);
+            if (!elementOptions.settings.disabled) {
+                g.setNode(n.id, {
+                    label: n.id,
+                    type: elementOptions.type,
+                    name: elementOptions.payload.name,
+                    endpointCount: this.JsplumbBridge.getEndpointCount(n.id)
+                });
+            }
         }
         var edges = this.JsplumbBridge.getAllConnections();
         for (var i = 0; i < edges.length; i++) {
@@ -117,6 +130,16 @@ export class PipelineValidationService {
             g.setEdge(c.target.id, c.source.id);
         }
         return g;
+    }
+
+    getElementOptions(id, rawPipelineModel) {
+        var pipelineElement;
+        rawPipelineModel.forEach(pe => {
+           if (pe.payload.DOM === id) {
+               pipelineElement = pe;
+           }
+        });
+        return pipelineElement;
     }
 }
 

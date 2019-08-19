@@ -10,9 +10,7 @@ export class CustomizeDialogController {
     }
 
     $onInit() {
-        console.log(this.selectedElement);
     }
-
 
     getMappingProperty(mapsTo) {
         var sps;
