@@ -15,3 +15,6 @@ Run command in chart directory
 ```sh
 helm install ./ --name streampipes
 ```
+
+## Known problems
+kafka must be kafka-service
