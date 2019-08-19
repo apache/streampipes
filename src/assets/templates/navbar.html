@@ -17,16 +17,21 @@
             </h1>
         </div>
         <span flex></span>
-        <div flex="40" layout layout-align="end center" ng-show="toolbarCtrl.authenticated">
-            <md-button class="sp-icon-button" ng-click="toolbarCtrl.openInfo()" style="min-width:0px;">
-                <md-icon md-svg-icon="action:ic_feedback_24px" aria-label="Info" style="color:white;"></md-icon>
-                <md-tooltip md-direction="bottom">
-                    Feedback
-                </md-tooltip>
-            </md-button>
-            <md-menu md-position-mode="target-right target" md-offset="-4 52" style="margin:inherit">
-                <md-button aria-label="Open menu" class="sp-icon-button" ng-click="$mdMenu.open($event)" style="min-width:0px;">
-                    <md-icon md-svg-icon="action:ic_account_circle_24px" aria-label="Logout"></md-icon>
+        <div flex="40" layout layout-align="end center" ng-show="toolbarCtrl.authenticated" style="height:100%;">
+            <div style="height:100%;">
+                <div ng-style="toolbarCtrl.feedbackMenuBackground" layout layout-align="center center" style="height: 100%;">
+                <md-button ng-class="toolbarCtrl.feedbackOpen ? 'sp-icon-button-no-hover' : 'sp-icon-button'" ng-click="toolbarCtrl.toggleFeedback()" style="min-width:0px;" layout layout-align="center center">
+                    <i ng-style="toolbarCtrl.feedbackMenuIconColor" class="material-icons">feedback</i>
+                    <md-tooltip md-direction="bottom">
+                        Feedback
+                    </md-tooltip>
+                </md-button>
+                </div>
+                <sp-feedback style="position:relative;left: -348px;" ng-if="toolbarCtrl.feedbackOpen" close-feedback-window="toolbarCtrl.closeFeedbackWindow()"></sp-feedback>
+            </div>
+            <md-menu id="account" ng-style="toolbarCtrl.accountMenuBackground" md-position-mode="target-right target" md-offset="8 52" style="margin:inherit;height:100%;" layout layout-align="center center">
+                <md-button layout layout-align="center center" aria-label="Open menu" ng-class="toolbarCtrl.accountMenuOpen ? 'sp-icon-button-no-hover' : 'sp-icon-button'"  ng-click="toolbarCtrl.triggerAccountMenu($mdMenu, $event)" style="min-width:0px;">
+                    <i ng-style="toolbarCtrl.accountMenuIconColor" class="material-icons">account_circle</i>
                     <md-tooltip md-direction="bottom">
                         User Preferences
                     </md-tooltip>

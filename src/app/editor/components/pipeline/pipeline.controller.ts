@@ -1,10 +1,12 @@
 import * as angular from "angular";
+import {PipelineValidationService} from "../../services/pipeline-validation.service";
 
 export class PipelineController {
 
     $timeout: any;
     JsplumbService: any;
     PipelineEditorService: any;
+    PipelineValidationService: PipelineValidationService;
     JsplumbBridge: any;
     ObjectProvider: any;
     DialogBuilder: any;
@@ -22,7 +24,10 @@ export class PipelineController {
     ShepherdService: any;
     $rootScope: any;
 
-    constructor($timeout, JsplumbService, PipelineEditorService, JsplumbBridge, ObjectProvider, DialogBuilder, EditorDialogManager, TransitionService, ShepherdService, $rootScope) {
+    pipelineValid: boolean = false;
+
+    constructor($timeout, JsplumbService, PipelineEditorService, JsplumbBridge, ObjectProvider, DialogBuilder,
+                EditorDialogManager, TransitionService, ShepherdService, $rootScope, PipelineValidationService) {
         this.plumbReady = false;
         this.JsplumbBridge = JsplumbBridge;
         this.JsplumbService = JsplumbService;
@@ -35,6 +40,7 @@ export class PipelineController {
         this.TransitionService = TransitionService;
         this.ShepherdService = ShepherdService;
         this.$rootScope = $rootScope;
+        this.PipelineValidationService = PipelineValidationService;
 
         this.currentPipelineModel = {};
         this.idCounter = 0;
@@ -46,6 +52,13 @@ export class PipelineController {
         this.JsplumbBridge.setContainer(this.canvasId);
         this.initAssembly();
         this.initPlumb();
+        this.validatePipeline();
+    }
+
+    validatePipeline() {
+        this.$timeout(() => {
+            this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
+        }, 100);
     }
 
     $onDestroy() {
@@ -137,6 +150,7 @@ export class PipelineController {
                     }
                 }
                 this.JsplumbBridge.repaintEverything();
+                this.validatePipeline();
             }
 
         }); //End #assembly.droppable()
@@ -228,6 +242,7 @@ export class PipelineController {
                         pe.settings.loadingStatus = false;
                         if (data.success) {
                             info.targetEndpoint.setType("token");
+                            this.validatePipeline();
                             this.modifyPipeline(data.pipelineModifications);
                             var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
                             if (this.PipelineEditorService.isFullyConnected(pe)) {
@@ -285,4 +300,5 @@ export class PipelineController {
 
 }
 
-PipelineController.$inject = ['$timeout', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ObjectProvider', 'DialogBuilder', 'EditorDialogManager', 'TransitionService', 'ShepherdService', '$rootScope']
+PipelineController.$inject = ['$timeout', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ObjectProvider',
+    'DialogBuilder', 'EditorDialogManager', 'TransitionService', 'ShepherdService', '$rootScope', 'PipelineValidationService']
