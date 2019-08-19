@@ -18,14 +18,7 @@ export class AppContainerService {
     getInstalledApps(): Observable<InstalledApp[]> {
         //return this.http.get(this.getServerUrl() + '/api/v2/consul').map(res => <InstalledApp[]>res);
         //TODO: Mock
-        return <Observable<InstalledApp[]>>Observable.create(observer => {
-            observer.next([{
-                bundleUrl: '/apps/app.bundle.js',
-                appName: 'Example App',
-                appDescription: 'This is an example app',
-            }]);
-            observer.complete();
-        });
+        return this.http.get('/streampipes-apps/') as Observable<InstalledApp[]>;
     }
 
 }

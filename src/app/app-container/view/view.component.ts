@@ -87,7 +87,7 @@ export class ViewComponent implements AfterViewInit {
     }
 
     async load() {
-        const module = await SystemJS.import(this.installedApp.bundleUrl);
+        const module = await SystemJS.import('/streampipes-apps' + this.installedApp.entry);
         const moduleFactory = await this.compiler.compileModuleAndAllComponentsAsync<any>(module["AppModule"]);
         const moduleRef = moduleFactory.ngModuleFactory.create(this.injector);
         for (const component of moduleFactory.componentFactories) {
