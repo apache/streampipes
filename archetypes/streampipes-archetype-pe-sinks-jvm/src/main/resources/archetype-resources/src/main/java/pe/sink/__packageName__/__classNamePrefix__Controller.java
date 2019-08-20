@@ -15,6 +15,8 @@ import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
+import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 
 public class ${classNamePrefix}Controller extends StandaloneEventSinkDeclarer<${classNamePrefix}Parameters> {
 
@@ -22,8 +24,10 @@ public class ${classNamePrefix}Controller extends StandaloneEventSinkDeclarer<${
 
 	@Override
 	public DataSinkDescription declareModel() {
-		return DataSinkBuilder.create("${package}-${packageName}", "${classNamePrefix}", "Description")
+		return DataSinkBuilder.create("${package}.pe.sink.${packageName}")
 						.category(DataSinkType.NOTIFICATION)
+						.withAssets(Assets.DOCUMENTATION, Assets.ICON)
+						.withLocales(Locales.EN)
 						.requiredStream(StreamRequirementsBuilder
 							.create()
 							.requiredProperty(EpRequirements.anyProperty())

@@ -17,6 +17,8 @@ import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
+import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 
 public class ${classNamePrefix}Controller extends FlinkDataSinkDeclarer<${classNamePrefix}Parameters> {
 
@@ -24,16 +26,17 @@ public class ${classNamePrefix}Controller extends FlinkDataSinkDeclarer<${classN
 
 	@Override
 	public DataSinkDescription declareModel() {
-		return DataSinkBuilder.create("${package}-${packageName}", "${classNamePrefix}", "Description")
+		return DataSinkBuilder.create("${package}.pe.sink.${packageName}")
 						.category(DataSinkType.NOTIFICATION)
+						.withAssets(Assets.DOCUMENTATION, Assets.ICON)
+						.withLocales(Locales.EN)
 						.requiredStream(StreamRequirementsBuilder
 							.create()
 							.requiredProperty(EpRequirements.anyProperty())
 							.build())
 						.supportedFormats(SupportedFormats.jsonFormat())
 						.supportedProtocols(SupportedProtocols.kafka())
-						.requiredTextParameter(Labels.from(EXAMPLE_KEY, "Example Text Parameter", "Example " +
-				"Text Parameter Description"))
+						.requiredTextParameter(Labels.withId(EXAMPLE_KEY))
 						.build();
 	}
 
