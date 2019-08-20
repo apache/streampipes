@@ -118,6 +118,15 @@ export class EventSchemaComponent implements OnChanges {
     return instance instanceof EventPropertyList;
   }
 
+  isTimestampProperty(node) {
+        if (node.domainProperty === "http://schema.org/DateTime") {
+            node.runtimeType = "http://www.w3.org/2001/XMLSchema#float";
+            return true;
+        } else {
+            return false;
+        }
+    }
+
   public getDomainProbability(name: string): DomainPropertyProbabilityList {
     let result: DomainPropertyProbabilityList;
 
