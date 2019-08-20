@@ -75,7 +75,8 @@ public class SepElement extends Element<SemanticEventProducerDeclarer> {
     try {
       return javax.ws.rs.core.Response
               .ok()
-              .entity(new AssetZipGenerator(streamId, getDeclarerById(streamId).declareModel()
+              .entity(new AssetZipGenerator(streamId,
+                      getStreamBySourceId(sourceId, streamId).get()
                       .getIncludedAssets()).makeZip())
               .build();
     } catch (IOException e) {

@@ -149,14 +149,17 @@ public class Cloner {
   }
 
   public List<TransportProtocol> protocols(List<TransportProtocol> protocols) {
-    return protocols.stream().map(o -> protocol(o)).collect(Collectors.toList());
+    return protocols.stream().map(this::protocol).collect(Collectors.toList());
   }
 
   public TransportProtocol protocol(TransportProtocol protocol) {
     if (protocol instanceof KafkaTransportProtocol) {
       return new KafkaTransportProtocol((KafkaTransportProtocol) protocol);
-    } else {
+    } else if (protocol instanceof JmsTransportProtocol){
       return new JmsTransportProtocol((JmsTransportProtocol) protocol);
+    } else {
+      LOG.error("Could not clone protocol of type {}", protocol.getClass().getCanonicalName());
+      return protocol;
     }
   }
 
