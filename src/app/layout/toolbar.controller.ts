@@ -86,31 +86,6 @@ export class ToolbarController {
                 icon: 'navigation:ic_apps_24px'
             },
             {
-                link: 'streampipes.appfiledownload',
-                title: 'File Download',
-                icon: 'file:ic_file_download_24px'
-            },
-            {
-                link: 'streampipes.kvi',
-                title: 'KVI Editor',
-                icon: 'action:ic_trending_up_24px'
-            },
-            {
-                link: 'streampipes.ontology',
-                title: 'Knowledge Management',
-                icon: 'social:ic_share_24px'
-            },
-            {
-                link: 'streampipes.sensors',
-                title: 'Pipeline Element Generator',
-                icon: 'content:ic_add_24px'
-            },
-            {
-                link: 'streampipes.file-upload',
-                title: 'File Upload',
-                icon: 'file:ic_file_upload_24px'
-            },
-            {
                 link: 'streampipes.data-explorer',
                 title: 'Data Explorer',
                 icon: 'action:ic_view_headline_24px'

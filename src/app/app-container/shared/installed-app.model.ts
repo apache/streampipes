@@ -1,5 +1,6 @@
 export interface InstalledApp {
-    appName: string;
-    appDescription: string;
-    bundleUrl: string;
+    name: string;
+    version: string;
+    description: string;
+    entry: string;
 }
