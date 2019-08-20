@@ -21,7 +21,7 @@ export class EditorCtrl {
     ShepherdService: any;
     isTutorialOpen: boolean = false;
 
-    requiredStreamForTutorialAppId: any = "org.streampipes.pe.random.number.json";
+    requiredStreamForTutorialAppId: any = "org.streampipes.sources.simulator.flowrate1";
     requiredProcessorForTutorialAppId: any = "org.streampipes.processors.filters.jvm.numericalfilter";
     requiredSinkForTutorialAppId: any = "org.streampipes.sinks.internal.jvm.dashboard";
     missingElementsForTutorial: any = [];
@@ -117,7 +117,7 @@ export class EditorCtrl {
         } else {
             this.missingElementsForTutorial = [];
             if (!this.requiredStreamForTourPresent()) {
-                this.missingElementsForTutorial.push({"name" : "Random Number Stream", "appId" : this.requiredStreamForTutorialAppId });
+                this.missingElementsForTutorial.push({"name" : "Flow Rate 1", "appId" : this.requiredStreamForTutorialAppId });
             }
             if (!this.requiredProcessorForTourPresent()) {
                 this.missingElementsForTutorial.push({"name" : "Field Hasher", "appId" : this.requiredProcessorForTutorialAppId});
