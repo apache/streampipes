@@ -89,9 +89,9 @@ public class CsvFormat extends Format {
         } else {
             for (int i = 0; i <= arr.length - 1; i++) {
 
-                if (StringUtils.isNumeric(arr[i])) {
+                if (!arr[i].equals("") && StringUtils.isNumeric(arr[i])) {
                     map.put(keyValues[i], Long.parseLong(arr[i]));
-                } else if ("true".equals(arr[i].toLowerCase()) || "true".equals(arr[i].toLowerCase())) {
+                } else if ("true".equals(arr[i].toLowerCase()) || "false".equals(arr[i].toLowerCase())) {
                     map.put(keyValues[i], Boolean.parseBoolean(arr[i]));
                 } else {
 

@@ -39,6 +39,7 @@ import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SourcesManagement {
@@ -163,7 +164,7 @@ public class SourcesManagement {
             ds = ((AdapterSetDescription) adapterDescription).getDataSet();
             EventGrounding eg = new EventGrounding();
             eg.setTransportProtocol(SupportedProtocols.kafka());
-            eg.setTransportFormats(TransportFormatGenerator.getAllFormats());
+            eg.setTransportFormats(Arrays.asList(TransportFormatGenerator.getTransportFormat()));
             ((SpDataSet) ds).setSupportedGrounding(eg);
         } else {
             ds = ((AdapterStreamDescription) adapterDescription).getDataStream();
