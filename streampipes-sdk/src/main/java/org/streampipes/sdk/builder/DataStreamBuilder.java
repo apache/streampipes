@@ -39,6 +39,12 @@ public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStream
         this.eventGrounding = new EventGrounding();
     }
 
+    protected DataStreamBuilder(String id) {
+        super(id, new SpDataStream());
+        this.eventProperties = new ArrayList<>();
+        this.eventGrounding = new EventGrounding();
+    }
+
     /**
      * Creates a new data stream using the builder pattern.
      * @param id A unique identifier of the new element, e.g., com.mycompany.stream.mynewdatastream
@@ -48,6 +54,15 @@ public class DataStreamBuilder extends AbstractPipelineElementBuilder<DataStream
      */
     public static DataStreamBuilder create(String id, String label, String description) {
         return new DataStreamBuilder(id, label, description);
+    }
+
+    /**
+     * Creates a new data stream using the builder pattern.
+     * @param id A unique identifier of the new element, e.g., com.mycompany.stream.mynewdatastream
+     * @return a new instance of {@link DataStreamBuilder}
+     */
+    public static DataStreamBuilder create(String id) {
+        return new DataStreamBuilder(id);
     }
 
     /**
