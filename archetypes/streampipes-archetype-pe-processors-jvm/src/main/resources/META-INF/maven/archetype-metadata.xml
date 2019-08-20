@@ -32,11 +32,17 @@
         <fileSet filtered="true" packaged="false" encoding="UTF-8">
             <directory>src/main/resources</directory>
             <includes>
-                <include>**/*.png</include>
+                <!--<include>**/*.png</include>-->
                 <include>**/*.en</include>
                 <include>**/*.md</include>
             </includes>
         </fileSet>
+        <binaries filtered="true" packaged="false" >
+            <outputDirectory>src/main/resources</outputDirectory>
+             <includes>
+                <include>**/icon.png</include>
+            </includes>
+        </binaries>
         <fileSet filtered="true" packaged="false" encoding="UTF-8">
             <directory/>
             <includes>
