@@ -184,7 +184,7 @@ public abstract class Element<D extends Declarer> {
           // TODO remove after full internationalization support has been implemented
           if (stream.isIncludesLocales()) {
             try {
-              LabelGenerator lg = new LabelGenerator(desc);
+              LabelGenerator lg = new LabelGenerator(stream);
               stream.setName(lg.getElementTitle());
               stream.setDescription(lg.getElementDescription());
             } catch (IOException e) {
