@@ -23,7 +23,9 @@ import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Formats;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Protocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
 import org.streampipes.sources.watertank.simulator.config.WatertankSimulatorConfig;
@@ -34,8 +36,9 @@ public class WaterLevel1Stream extends AbstractAlreadyExistingStream {
 
   @Override
   public SpDataStream declareModel(DataSourceDescription sep) {
-    return DataStreamBuilder.create("water-level-1", "Water Level 1", "")
-            .iconUrl(WatertankSimulatorConfig.iconBaseUrl + "/icon-water-level.png")
+    return DataStreamBuilder.create("org.streampipes.sources.simulator.waterlevel1")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .property(EpProperties.timestampProperty("timestamp"))
             .property(PrimitivePropertyBuilder
                     .create(Datatypes.String, "sensorId")
