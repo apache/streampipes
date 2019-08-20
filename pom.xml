@@ -38,7 +38,7 @@
         <spring.version>2.1.6.RELEASE</spring.version>
         <maven-shade-plugin.version>3.0.0</maven-shade-plugin.version>
         <jackson.version>2.9.9</jackson.version>
-        <javax-validation.version>2.0.1.final</javax-validation.version>
+        <javax-validation.version>2.0.1.Final</javax-validation.version>
     </properties>
 
     <dependencyManagement>
