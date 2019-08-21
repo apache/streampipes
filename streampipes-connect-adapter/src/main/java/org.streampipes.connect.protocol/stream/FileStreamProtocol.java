@@ -52,7 +52,7 @@ public class FileStreamProtocol extends Protocol {
   private String filePath;
   private String timestampKey;
   private boolean replaceTimestamp;
-  private int speedUp;
+  private float speedUp;
 
   private Thread task;
   private boolean running;
@@ -62,7 +62,7 @@ public class FileStreamProtocol extends Protocol {
   }
 
   public FileStreamProtocol(Parser parser, Format format, String filePath, String timestampKey,
-                            boolean replaceTimestamp, int speedUp) {
+                            boolean replaceTimestamp, float speedUp) {
     super(parser, format);
     this.filePath = filePath;
     this.timestampKey = timestampKey;
@@ -133,7 +133,7 @@ public class FileStreamProtocol extends Protocol {
     ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
     String replaceTimestampString = extractor.selectedSingleValueOption("replaceTimestamp");
     boolean replaceTimestamp = replaceTimestampString.equals("True") ? true : false;
-    int speedUp = Integer.parseInt(extractor.singleValue("speed"));
+    float speedUp = Float.parseFloat(extractor.singleValue("speed"));
 
     // TODO
     String timestampKey = "timestamp";
@@ -155,9 +155,8 @@ public class FileStreamProtocol extends Protocol {
             .requiredSingleValueSelection(Labels.from("replaceTimestamp", "Replace Timestamp?",
                     "Keep timestamps from File or replace with current."),
                 Options.from("True", "False"))
-            .requiredIntegerParameter(Labels.from("speed", "Replay Speed",
-                    "Replay Speed"),
-                    1)
+            .requiredFloatParameter(Labels.from("speed", "Replay Speed",
+                    "Replay Speed"))
             .build();
   }
 
