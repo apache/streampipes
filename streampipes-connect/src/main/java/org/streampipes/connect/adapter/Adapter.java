@@ -80,7 +80,7 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
 
     public void changeEventGrounding(TransportProtocol transportProtocol) {
         List<AdapterPipelineElement> pipelineElements =  this.adapterPipeline.getPipelineElements();
-        SendToKafkaAdapterSink sink = (SendToKafkaAdapterSink) pipelineElements.get(pipelineElements.size() - 1);
+        SendToKafkaAdapterSink sink = (SendToKafkaAdapterSink) this.adapterPipeline.getPipelineSink();
         sink.changeTransportProtocol(transportProtocol);
     }
 
