@@ -31,7 +31,7 @@ public enum TextMiningJvmConfig implements PeConfig {
 
 	private final static String service_id = "pe/org.streampipes.processors.textmining.jvm";
 	private final static String service_name = "Processors Text Mining JVM";
-    private final static String service_container_name = "processors-text-miming-jvm";
+    private final static String service_container_name = "processors-text-mining-jvm";
 
 	TextMiningJvmConfig() {
 		config = SpConfig.getSpConfig(service_id);
