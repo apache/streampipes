@@ -118,12 +118,10 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
         }
         pipelineElements.add(transformStreamAdapterElement);
 
-
-
-        // Needed when adapter is
+        // Needed when adapter is (
         if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
                 && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
-            pipelineElements.add(new SendToKafkaAdapterSink( adapterDescription));
+            return new AdapterPipeline(pipelineElements, new SendToKafkaAdapterSink(adapterDescription));
         }
 
         return new AdapterPipeline(pipelineElements);
