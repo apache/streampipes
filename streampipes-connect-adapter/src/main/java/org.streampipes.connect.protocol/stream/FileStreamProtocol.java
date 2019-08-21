@@ -18,11 +18,15 @@ package org.streampipes.connect.protocol.stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.connect.SendToPipeline;
 import org.streampipes.connect.adapter.exception.ParseException;
 import org.streampipes.connect.adapter.guess.SchemaGuesser;
 import org.streampipes.connect.adapter.model.generic.Format;
 import org.streampipes.connect.adapter.model.generic.Parser;
 import org.streampipes.connect.adapter.model.generic.Protocol;
+import org.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
+import org.streampipes.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
+import org.streampipes.connect.adapter.preprocessing.elements.SendToKafkaReplayAdapterSink;
 import org.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
@@ -32,29 +36,73 @@ import org.streampipes.model.staticproperty.FileStaticProperty;
 import org.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.streampipes.sdk.helpers.AdapterSourceType;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Options;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class FileStreamProtocol extends PullProtocol {
+public class FileStreamProtocol extends Protocol {
 
   private static Logger logger = LoggerFactory.getLogger(FileStreamProtocol.class);
 
   public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/file";
 
   private String filePath;
+  private String timestampKey;
+  private boolean replaceTimestamp;
+
+  private Thread task;
+  private boolean running;
+
 
   public FileStreamProtocol() {
   }
 
-  public FileStreamProtocol(Parser parser, Format format, long interval, String filePath) {
-    super(parser, format, interval);
+  public FileStreamProtocol(Parser parser, Format format, String filePath, String timestampKey, boolean replaceTimestamp) {
+    super(parser, format);
     this.filePath = filePath;
+    this.timestampKey = timestampKey;
+    this.replaceTimestamp = replaceTimestamp;
   }
 
   @Override
+  public void run(AdapterPipeline adapterPipeline) {
+    SendToKafkaAdapterSink adapterPipelineSink = (SendToKafkaAdapterSink) adapterPipeline.getPipelineSink();
+    adapterPipeline.changePipelineSink(new SendToKafkaReplayAdapterSink(adapterPipelineSink, timestampKey, replaceTimestamp));
+
+    running = true;
+
+    task = new Thread() {
+        @Override
+        public void run() {
+          while (running) {
+            format.reset();
+            adapterPipeline.changePipelineSink(new SendToKafkaReplayAdapterSink(adapterPipelineSink, timestampKey, replaceTimestamp));
+            SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
+            InputStream data = getDataFromEndpoint();
+            try {
+              if(data != null) {
+                parser.parse(data, stk);
+              } else {
+                logger.warn("Could not read data from file.");
+              }
+            } catch (ParseException e) {
+              logger.error("Error while parsing: " + e.getMessage());
+            }
+          }
+        }
+    };
+    task.start();
+  }
+
+
+  @Override
+  public void stop() {
+    running = false;
+  }
+
   InputStream getDataFromEndpoint() throws ParseException {
     FileReader fr = null;
     InputStream inn = null;
@@ -79,12 +127,16 @@ public class FileStreamProtocol extends PullProtocol {
   @Override
   public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
     ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
-    long intervalProperty = Long.parseLong(extractor.singleValue("interval"));
+    String replaceTimestampString = extractor.selectedSingleValueOption("replaceTimestamp");
+    boolean replaceTimestamp = replaceTimestampString.equals("True") ? true : false;
+
+    // TODO
+    String timestampKey = "timestamp";
 
     FileStaticProperty fileStaticProperty = (FileStaticProperty) extractor.getStaticPropertyByName("filePath");
 
     String fileUri = fileStaticProperty.getLocationPath();
-    return new FileStreamProtocol(parser, format, intervalProperty, fileUri);
+    return new FileStreamProtocol(parser, format, fileUri, timestampKey, replaceTimestamp);
   }
 
   @Override
@@ -95,7 +147,9 @@ public class FileStreamProtocol extends PullProtocol {
             .category(AdapterType.Generic)
             .iconUrl("file.png")
             .requiredFile(Labels.from("filePath", "File", "File path"))
-            .requiredIntegerParameter(Labels.from("interval", "Interval", "Example: 5 (Polling interval in seconds)"))
+            .requiredSingleValueSelection(Labels.from("replaceTimestamp", "Replace Timestamp?",
+                    "Keep timestamps from File or repalce with current."),
+                Options.from("True", "False"))
             .build();
   }
 
@@ -132,6 +186,7 @@ public class FileStreamProtocol extends PullProtocol {
 
     return result;
   }
+
 
   @Override
   public String getId() {
