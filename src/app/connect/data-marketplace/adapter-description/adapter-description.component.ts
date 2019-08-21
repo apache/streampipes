@@ -100,7 +100,6 @@ export class AdapterDescriptionComponent {
   }
 
   deleteInProgress(adapterCouchDbId) {
-      console.log("delete");
     return this.deleting && (adapterCouchDbId === this.adapterToDelete);
   }
 }
