@@ -14,6 +14,8 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -23,8 +25,9 @@ public class ${classNamePrefix}Controller extends StandaloneEventProcessingDecla
 
 	@Override
 	public DataProcessorDescription declareModel() {
-		return ProcessingElementBuilder.create("${package}-${packageName}", "${classNamePrefix}",
-				"Description")
+		return ProcessingElementBuilder.create("${package}.pe.processor.${packageName}")
+						.withAssets(Assets.DOCUMENTATION, Assets.ICON)
+						.withLocales(Locales.EN)
 						.category(DataProcessorType.AGGREGATE)
 						.requiredStream(StreamRequirementsBuilder
 							.create()
@@ -32,8 +35,7 @@ public class ${classNamePrefix}Controller extends StandaloneEventProcessingDecla
 							.build())
 						.supportedFormats(SupportedFormats.jsonFormat())
 						.supportedProtocols(SupportedProtocols.kafka())
-						.requiredTextParameter(Labels.from(EXAMPLE_KEY, "Example Text Parameter", "Example " +
-				"Text Parameter Description"))
+						.requiredTextParameter(Labels.withId(EXAMPLE_KEY))
 						.outputStrategy(OutputStrategies.keep())
 						.build();
 	}

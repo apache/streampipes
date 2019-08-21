@@ -12,6 +12,13 @@ import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import ${package}.config.Config;
 import ${package}.pe.sink.${packageName}.${classNamePrefix}Controller;
 
+import org.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.streampipes.dataformat.fst.FstDataFormatFactory;
+import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.streampipes.messaging.jms.SpJmsProtocolFactory;
+import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
+
 public class Init extends StandaloneModelSubmitter {
 
   public static void main(String[] args) throws Exception {
@@ -21,8 +28,13 @@ public class Init extends StandaloneModelSubmitter {
     DeclarersSingleton.getInstance().setPort(Config.INSTANCE.getPort());
     DeclarersSingleton.getInstance().setHostName(Config.INSTANCE.getHost());
 
-    DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
-    DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
+    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory());
+
+    DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory());
 
     new Init().init(Config.INSTANCE);
 
