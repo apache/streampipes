@@ -30,6 +30,7 @@ import org.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.streampipes.messaging.SpProtocolManager;
 import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
@@ -38,6 +39,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DeclarersSingleton {
 
@@ -186,11 +188,18 @@ public class DeclarersSingleton {
   }
 
   public Collection<TransportProtocol> getSupportedProtocols() {
-    return this.supportedProtocols.values();
+    return this.supportedProtocols
+            .values()
+            .stream()
+            .map(p -> new Cloner().protocol(p))
+            .collect(Collectors.toList());
   }
 
   public Collection<TransportFormat> getSupportedFormats() {
-    return this.supportedFormats.values();
+    return this.supportedFormats.values()
+            .stream()
+            .map(TransportFormat::new)
+            .collect(Collectors.toList());
   }
 
   public Map<String, DataStreamDeclarer> getStreamDeclarers() {
