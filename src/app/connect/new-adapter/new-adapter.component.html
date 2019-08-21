@@ -4,12 +4,12 @@
             <div fxLayout="column">
                 <div fxLayout="column" fxLayoutAlign="start start">
                     <div fxLayout="row" fxLayoutAlign="start start">
-                        <mat-icon *ngIf="connectService.isDataSetDescription(adapter)" class="historic">lens</mat-icon>
-                        <mat-icon *ngIf="connectService.isDataStreamDescription(adapter)" class="real-time">lens
+                        <mat-icon *ngIf="isDataSetDescription" class="historic">lens</mat-icon>
+                        <mat-icon *ngIf="isDataStreamDescription" class="real-time">lens
                         </mat-icon>
                         <div fxLayoutAlign="start center">
-                            <p *ngIf="connectService.isDataSetDescription(adapter)">&nbsp;Data Set</p>
-                            <p *ngIf="connectService.isDataStreamDescription(adapter)">&nbsp;Data Stream</p>
+                            <p *ngIf="isDataSetDescription">&nbsp;Data Set</p>
+                            <p *ngIf="isDataStreamDescription">&nbsp;Data Stream</p>
                         </div>
                     </div>
                 </div>
@@ -31,8 +31,8 @@
 
             <div [ngClass]="{'disable-editing': !isEditable}">
                 <div class="assemblyOptions sp-blue-bg">
-                    <h4 *ngIf="!isGenericAdapter()">Basic settings</h4>
-                    <h4 *ngIf="isGenericAdapter()">Protocol settings</h4>
+                    <h4 *ngIf="!isGenericAdapter">Basic settings</h4>
+                    <h4 *ngIf="isGenericAdapter">Protocol settings</h4>
                 </div>
                 <div class="sp-blue-border padding">
                     <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"
@@ -40,23 +40,23 @@
                         (updateEmitter)="triggerUpdate($event)" [completedStaticProperty]="completedStaticProperty">
                     </app-static-property>
                     <app-protocol (validateEmitter)="validateProtocol($event)" [protocol]="adapter.protocol"
-                        *ngIf="isGenericAdapter()"></app-protocol>
+                        *ngIf="isGenericAdapter"></app-protocol>
                 </div>
             </div>
             <div fxLayoutAlign="end">
                 <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
                 <div id="specific-settings-next-button">
-                    <button class="stepper-button" *ngIf="isGenericAdapter()" [disabled]="!protocolConfigurationValid"
+                    <button class="stepper-button" *ngIf="isGenericAdapter" [disabled]="!protocolConfigurationValid"
                         (click)="clickProtocolSettingsNextButton(stepper)" color="primary" mat-raised-button>Next
                     </button>
-                    <button class="stepper-button" *ngIf="!isGenericAdapter()"
+                    <button class="stepper-button" *ngIf="!isGenericAdapter"
                         (click)="clickSpecificSettingsNextButton(stepper)" color="primary" mat-raised-button>Next
                     </button>
                 </div>
             </div>
         </mat-step>
 
-        <mat-step *ngIf="isGenericAdapter()">
+        <mat-step *ngIf="isGenericAdapter">
             <form>
                 <ng-template matStepLabel>Select Format</ng-template>
 

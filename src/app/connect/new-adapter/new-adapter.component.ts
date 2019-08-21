@@ -35,6 +35,9 @@ export class NewAdapterComponent implements OnInit {
 
     selectedUploadFile: File;
     fileName;
+    isGenericAdapter: boolean = false;
+    isDataSetDescription: boolean = false;
+    isDataStreamDescription: boolean = false;
 
     handleFileInput(files: any) {
         this.selectedUploadFile = files[0];
@@ -115,6 +118,9 @@ export class NewAdapterComponent implements OnInit {
 
     ngOnInit() {
 
+        this.isGenericAdapter = this.connectService.isGenericDescription(this.adapter);
+        this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
+        this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
         this.formatConfigurationValid = false;
 
         if (this.adapter instanceof GenericAdapterSetDescription) {
@@ -307,10 +313,6 @@ export class NewAdapterComponent implements OnInit {
                 this.validateFormat(true);
             }
         }
-    }
-
-    isGenericAdapter() {
-        return this.connectService.isGenericDescription(this.adapter);
     }
 
     goBack(stepper: MatStepper) {
