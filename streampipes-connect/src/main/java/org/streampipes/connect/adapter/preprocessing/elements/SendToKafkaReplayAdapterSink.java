@@ -30,14 +30,16 @@ public class SendToKafkaReplayAdapterSink implements AdapterPipelineElement {
     private long lastEventTimestamp;
     private List<String> timestampKeys;
     private boolean replaceTimestamp;
+    private int speedUp;
 
 
     public SendToKafkaReplayAdapterSink(SendToKafkaAdapterSink sendToKafkaAdapterSink,
-                                        String timestampKey, boolean replaceTimestamp) {
+                                        String timestampKey, boolean replaceTimestamp, int speedUp) {
         this.sendToKafkaAdapterSink = sendToKafkaAdapterSink;
         this.lastEventTimestamp = -1;
         this.timestampKeys = Util.toKeyArray(timestampKey);
         this.replaceTimestamp = replaceTimestamp;
+        this.speedUp = speedUp;
     }
 
     @Override
@@ -45,7 +47,9 @@ public class SendToKafkaReplayAdapterSink implements AdapterPipelineElement {
         if ((event != null) && (lastEventTimestamp != -1)) {
             long actualEventTimestamp = getTimestampInEvent(event);
             try {
-                Thread.sleep(actualEventTimestamp - lastEventTimestamp);
+                if ((actualEventTimestamp - lastEventTimestamp) > 0) {
+                    Thread.sleep((actualEventTimestamp - lastEventTimestamp) / speedUp);
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
