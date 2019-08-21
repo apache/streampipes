@@ -52,6 +52,7 @@ public class FileStreamProtocol extends Protocol {
   private String filePath;
   private String timestampKey;
   private boolean replaceTimestamp;
+  private int speedUp;
 
   private Thread task;
   private boolean running;
@@ -60,17 +61,19 @@ public class FileStreamProtocol extends Protocol {
   public FileStreamProtocol() {
   }
 
-  public FileStreamProtocol(Parser parser, Format format, String filePath, String timestampKey, boolean replaceTimestamp) {
+  public FileStreamProtocol(Parser parser, Format format, String filePath, String timestampKey,
+                            boolean replaceTimestamp, int speedUp) {
     super(parser, format);
     this.filePath = filePath;
     this.timestampKey = timestampKey;
     this.replaceTimestamp = replaceTimestamp;
+    this.speedUp = speedUp;
   }
 
   @Override
   public void run(AdapterPipeline adapterPipeline) {
     SendToKafkaAdapterSink adapterPipelineSink = (SendToKafkaAdapterSink) adapterPipeline.getPipelineSink();
-    adapterPipeline.changePipelineSink(new SendToKafkaReplayAdapterSink(adapterPipelineSink, timestampKey, replaceTimestamp));
+    adapterPipeline.changePipelineSink(new SendToKafkaReplayAdapterSink(adapterPipelineSink, timestampKey, replaceTimestamp, speedUp));
 
     running = true;
 
@@ -79,7 +82,8 @@ public class FileStreamProtocol extends Protocol {
         public void run() {
           while (running) {
             format.reset();
-            adapterPipeline.changePipelineSink(new SendToKafkaReplayAdapterSink(adapterPipelineSink, timestampKey, replaceTimestamp));
+            adapterPipeline.changePipelineSink(new SendToKafkaReplayAdapterSink(adapterPipelineSink, timestampKey,
+                    replaceTimestamp, speedUp));
             SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
             InputStream data = getDataFromEndpoint();
             try {
@@ -129,6 +133,7 @@ public class FileStreamProtocol extends Protocol {
     ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
     String replaceTimestampString = extractor.selectedSingleValueOption("replaceTimestamp");
     boolean replaceTimestamp = replaceTimestampString.equals("True") ? true : false;
+    int speedUp = Integer.parseInt(extractor.singleValue("speed"));
 
     // TODO
     String timestampKey = "timestamp";
@@ -136,7 +141,7 @@ public class FileStreamProtocol extends Protocol {
     FileStaticProperty fileStaticProperty = (FileStaticProperty) extractor.getStaticPropertyByName("filePath");
 
     String fileUri = fileStaticProperty.getLocationPath();
-    return new FileStreamProtocol(parser, format, fileUri, timestampKey, replaceTimestamp);
+    return new FileStreamProtocol(parser, format, fileUri, timestampKey, replaceTimestamp, speedUp);
   }
 
   @Override
@@ -148,8 +153,11 @@ public class FileStreamProtocol extends Protocol {
             .iconUrl("file.png")
             .requiredFile(Labels.from("filePath", "File", "File path"))
             .requiredSingleValueSelection(Labels.from("replaceTimestamp", "Replace Timestamp?",
-                    "Keep timestamps from File or repalce with current."),
+                    "Keep timestamps from File or replace with current."),
                 Options.from("True", "False"))
+            .requiredIntegerParameter(Labels.from("speed", "Replay Speed",
+                    "Replay Speed"),
+                    1)
             .build();
   }
 
