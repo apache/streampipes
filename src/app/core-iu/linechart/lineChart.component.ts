@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {keyframes} from '@angular/animations';
+import {hasUndefined} from 'fast-json-patch/lib/helpers';
 
 @Component({
     selector: 'sp-lineChart',
@@ -79,17 +80,23 @@ export class LineChartComponent {
         }
 
         dataKeys.forEach(key => {
-            const serie = [];
-            this._data.forEach(date => {
-                if (date[key] !== undefined) {
-                    serie.push({name: new Date(date[this._xAxesKey]), value: date[key]})
+            tmp.push({
+                type: 'scatter', mode: 'lines+markers', name: key, connectgaps: false, x: [], y: []})
+        });
+        for (let event of this._data) {
+            let i = 0;
+            for (let dataKey of dataKeys) {
+                tmp[i].x.push(new Date(event[this._xAxesKey]));
+                if ((event[dataKey]) !== undefined) {
+                    tmp[i].x.push(event[dataKey])
+                } else {
+                    tmp[i].x.push(null)
                 }
-            });
-            tmp.push({name: key, series: serie});
-        })
+                i++;
+            }
+        }
+
         this.processedData = tmp;
-
-
         this.displayData = tmp;
     }
 
@@ -109,7 +116,6 @@ export class LineChartComponent {
 
 
     }
-
 
 
     clickPreviousPage(){
