@@ -31,7 +31,7 @@ import org.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
-import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.schema.*;
 import org.streampipes.model.staticproperty.FileStaticProperty;
 import org.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.streampipes.sdk.helpers.AdapterSourceType;
@@ -39,9 +39,7 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Options;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FileStreamProtocol extends Protocol {
 
@@ -50,7 +48,7 @@ public class FileStreamProtocol extends Protocol {
   public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/file";
 
   private String filePath;
-  private String timestampKey;
+ // private String timestampKey;
   private boolean replaceTimestamp;
   private float speedUp;
 
@@ -61,19 +59,19 @@ public class FileStreamProtocol extends Protocol {
   public FileStreamProtocol() {
   }
 
-  public FileStreamProtocol(Parser parser, Format format, String filePath, String timestampKey,
+  public FileStreamProtocol(Parser parser, Format format, String filePath, //String timestampKey,
                             boolean replaceTimestamp, float speedUp) {
     super(parser, format);
     this.filePath = filePath;
-    this.timestampKey = timestampKey;
+    //this.timestampKey = timestampKey;
     this.replaceTimestamp = replaceTimestamp;
     this.speedUp = speedUp;
   }
 
   @Override
   public void run(AdapterPipeline adapterPipeline) {
+    String timestampKey = getTimestampKey(eventSchema.getEventProperties(), "");
     SendToKafkaAdapterSink adapterPipelineSink = (SendToKafkaAdapterSink) adapterPipeline.getPipelineSink();
-    adapterPipeline.changePipelineSink(new SendToKafkaReplayAdapterSink(adapterPipelineSink, timestampKey, replaceTimestamp, speedUp));
 
     running = true;
 
@@ -81,9 +79,9 @@ public class FileStreamProtocol extends Protocol {
         @Override
         public void run() {
           while (running) {
-            format.reset();
             adapterPipeline.changePipelineSink(new SendToKafkaReplayAdapterSink(adapterPipelineSink, timestampKey,
                     replaceTimestamp, speedUp));
+            format.reset();
             SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
             InputStream data = getDataFromEndpoint();
             try {
@@ -135,13 +133,33 @@ public class FileStreamProtocol extends Protocol {
     boolean replaceTimestamp = replaceTimestampString.equals("True") ? true : false;
     float speedUp = Float.parseFloat(extractor.singleValue("speed"));
 
-    // TODO
-    String timestampKey = "timestamp";
-
     FileStaticProperty fileStaticProperty = (FileStaticProperty) extractor.getStaticPropertyByName("filePath");
 
     String fileUri = fileStaticProperty.getLocationPath();
-    return new FileStreamProtocol(parser, format, fileUri, timestampKey, replaceTimestamp, speedUp);
+    return new FileStreamProtocol(parser, format, fileUri, replaceTimestamp, speedUp);
+  }
+
+  private String getTimestampKey(List<EventProperty> eventProperties, String prefixKey) {
+    String result = null;
+    for (EventProperty eventProperty : eventProperties) {
+      if (eventProperty instanceof EventPropertyPrimitive && eventProperty.getDomainProperties() != null) {
+        for (int i = eventProperty.getDomainProperties().size() - 1; i >= 0; i--) {
+          if (eventProperty.getDomainProperties().get(0).toString().equals("http://schema.org/DateTime")) {
+            result = prefixKey + eventProperty.getRuntimeName();
+          }
+        }
+      } else if (eventProperty instanceof EventPropertyNested && ((EventPropertyNested) eventProperty).getEventProperties() != null) {
+        result = getTimestampKey(((EventPropertyNested) eventProperty).getEventProperties(),
+                prefixKey + eventProperty.getRuntimeName() + ".");
+      } else if (eventProperty instanceof EventPropertyList && ((EventPropertyList) eventProperty).getEventProperty() != null) {
+        result = getTimestampKey(Arrays.asList(((EventPropertyList) eventProperty).getEventProperty()),
+                prefixKey + eventProperty.getRuntimeName() + ".");
+      }
+      if (result != null) {
+        return result;
+      }
+    }
+    return result;
   }
 
   @Override
