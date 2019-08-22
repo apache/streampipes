@@ -167,7 +167,9 @@ _arg_operation="$(operation "$_arg_operation" "operation")" || exit 1
 # [ <-- needed because of Argbash
 
 
-SP_HOME=${SP_HOME:-/opt/streampipes}
+#SP_HOME=${SP_HOME:-/opt/streampipes}
+curr_dir=$(PWD)
+SP_HOME=${SP_HOME:-$curr_dir}
 
 # --- helper functions for logs ---
 info()
@@ -311,13 +313,14 @@ setEnv() {
 }
 
 moveSystemConfig() {
-  if [ -e $SP_HOME/streampipes-cli/templates/"$1" ]; then
-		cp $SP_HOME/streampipes-cli/templates/$1 $SP_HOME/streampipes-cli/system
+  if [ -e $SP_HOME/templates/"$1" ]; then
+		cp $SP_HOME/templates/$1 $SP_HOME/system
 	  info "Set configuration for template: $1"
 	else
 		info "Configuration $1 was not found"
 	fi
 }
+
 createNetwork() {
 	if [ ! "$(docker network ls | grep spnet)" ]; then
 	  info "Creating StreamPipes network"
@@ -342,31 +345,31 @@ setVersion() {
 }
 
 getCommand() {
-		command="env $(cat $SP_HOME/streampipes-cli/.env) docker-compose --project-name streampipes"
+		command="env $(cat $SP_HOME/.env) docker-compose --project-name streampipes"
     while IFS='' read -r line || [[ -n "$line" ]]; do
-        command="$command -f $SP_HOME/streampipes-cli/services/$line/docker-compose.yml"
-    done < "$SP_HOME/streampipes-cli/system"
+        command="$command -f $SP_HOME/services/$line/docker-compose.yml"
+    done < "$SP_HOME/system"
 }
 
 startStreamPipes() {
 
-	if [ ! -f "$SP_HOME/streampipes-cli/system" ];
+	if [ ! -f "$SP_HOME/system" ];
 	then
 		moveSystemConfig default
 	fi
 
-	if [ ! -f "$SP_HOME/streampipes-cli/.env" ] || [ $_arg_defaultip = "on" ];
+	if [ ! -f "$SP_HOME/.env" ] || [ $_arg_defaultip = "on" ];
     then
 		getIp
-		sed "s/##IP##/${ip}/g" $SP_HOME/streampipes-cli/tmpl_env > $SP_HOME/streampipes-cli/.env
+		sed "s/##IP##/${ip}/g" $SP_HOME/tmpl_env > $SP_HOME/.env
 	fi
     info "Starting StreamPipes ${_arg_operation[1]}"
 		createNetwork
     getCommand
     run "$command up -d ${_arg_operation[1]}"
 
-		SP_BACKEND_VERSION=`grep SP_BACKEND_VERSION "$SP_HOME/streampipes-cli/.env" | awk -F= '{print $2}'`
-		SP_HOST=`grep SP_HOST "$SP_HOME/streampipes-cli/.env" | awk -F= '{print $2}'`
+		SP_BACKEND_VERSION=`grep SP_BACKEND_VERSION "$SP_HOME/.env" | awk -F= '{print $2}'`
+		SP_HOST=`grep SP_HOST "$SP_HOME/.env" | awk -F= '{print $2}'`
 
     #info "StreamPipes started ${_arg_operation[1]}"
 		deployment_notice $SP_BACKEND_VERSION $SP_HOST
@@ -445,18 +448,18 @@ forceCleanStreamPipes() {
 
 removeStreamPipesSettings() {
     stopStreamPipes
-		rm $SP_HOME/streampipes-cli/.env
+		rm $SP_HOME/.env
 }
 
 resetStreamPipes() {
     cleanStreamPipes
-    rm $SP_HOME/streampipes-cli/.env
+    rm $SP_HOME/.env
     info "All configurations of StreamPipes have been deleted."
 }
 
 listAvailableServices() {
 	info "Available StreamPipes services:"
-  for dir in $SP_HOME/streampipes-cli/services/* ; do
+  for dir in $SP_HOME/services/* ; do
   	#echo $dir | sed "s/\///g"
     echo ${dir##*/}
   done
@@ -473,7 +476,7 @@ listActiveServices() {
 
 listTemplates() {
   info "Available StreamPipes templates:"
-  for file in $SP_HOME/streampipes-cli/templates/* ; do
+  for file in $SP_HOME/templates/* ; do
   	echo ${file##*/}
   done
 }
@@ -483,8 +486,8 @@ deactivateService() {
     then
         removeAllServices
     else
-        if grep -iq "${_arg_operation[1]}" $SP_HOME/streampipes-cli/system;then
-            sed -i "/${_arg_operation[1]}/d" $SP_HOME/streampipes-cli/system
+        if grep -iq "${_arg_operation[1]}" $SP_HOME/system;then
+            sed -i "/${_arg_operation[1]}/d" $SP_HOME/system
             info "Service ${_arg_operation[1]} removed"
             else
             info "Service ${_arg_operation[1]} is currently not running"
@@ -502,10 +505,10 @@ addService() {
     then
         addAllServices
     else
-        if grep -iq "${_arg_operation[1]}" $SP_HOME/streampipes-cli/system;then
+        if grep -iq "${_arg_operation[1]}" $SP_HOME/system;then
             warning "StreamPipes service ${_arg_operation[1]} already exists"
         else
-            echo ${_arg_operation[1]} >> $SP_HOME/streampipes-cli/system
+            echo ${_arg_operation[1]} >> $SP_HOME/system
         fi
     fi
 
