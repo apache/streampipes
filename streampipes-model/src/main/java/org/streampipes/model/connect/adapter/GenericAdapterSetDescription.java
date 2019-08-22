@@ -23,6 +23,7 @@ import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.grounding.ProtocolSetDescription;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
@@ -62,6 +63,14 @@ public class GenericAdapterSetDescription extends AdapterSetDescription implemen
 
     public FormatDescription getFormatDescription() {
         return formatDescription;
+    }
+
+    @Override
+    public EventSchema getEventSchema() {
+        if (this.getDataSet() != null) {
+            return this.getDataSet().getEventSchema();
+        }
+        return null;
     }
 
     public void setFormatDescription(FormatDescription formatDescription) {

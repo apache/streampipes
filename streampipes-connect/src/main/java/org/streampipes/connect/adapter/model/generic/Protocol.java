@@ -22,6 +22,7 @@ import org.streampipes.connect.adapter.model.Connector;
 import org.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.model.schema.EventSchema;
 
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,9 @@ public abstract class Protocol implements Connector {
 
     protected Parser parser;
     protected Format format;
+
+    //TODO remove
+    protected EventSchema eventSchema;
 
     public Protocol() {
 
@@ -57,4 +61,9 @@ public abstract class Protocol implements Connector {
     public abstract void stop();
 
     public abstract String getId();
+
+    //TODO remove
+    public void setEventSchema(EventSchema eventSchema) {
+        this.eventSchema = eventSchema;
+    }
 }
