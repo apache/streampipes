@@ -174,7 +174,7 @@ public class FileStreamProtocol extends Protocol {
                     "Keep timestamps from File or replace with current."),
                 Options.from("True", "False"))
             .requiredFloatParameter(Labels.from("speed", "Replay Speed",
-                    "Replay Speed"))
+                    "Replay Speed. For original speed set it to 1"))
             .build();
   }
 
