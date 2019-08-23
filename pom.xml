@@ -42,7 +42,7 @@
         <rdf4j.version>2.4.5</rdf4j.version>
         <shiro.version>1.2.3</shiro.version>
         <spring.version>2.1.6.RELEASE</spring.version>
-        <streampipes-empire.version>1.9.9</streampipes-empire.version>
+        <streampipes-empire.version>1.9.11-SNAPSHOT</streampipes-empire.version>
         <swagger.version>2.0.0</swagger.version>
         <type-parser.version>0.6.0</type-parser.version>
 
