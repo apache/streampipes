@@ -56,12 +56,9 @@ public class SendToKafkaAdapterSink implements AdapterPipelineElement  {
     public Map<String, Object> process(Map<String, Object> event) {
         try {
             if (event != null) {
-                System.out.println(IOUtils.toString(dataFormatDefinition.fromMap(event)));
-               // producer.publish(dataFormatDefinition.fromMap(event));
+                producer.publish(dataFormatDefinition.fromMap(event));
             }
         } catch (SpRuntimeException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
 
