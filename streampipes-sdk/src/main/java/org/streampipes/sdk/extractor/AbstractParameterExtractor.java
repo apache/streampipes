@@ -165,7 +165,10 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
       } else if (p.getStaticPropertyType() == StaticPropertyType.StaticPropertyGroup) {
         return getStaticPropertyByName(((StaticPropertyGroup) p).getStaticProperties(), name);
       } else if (p.getStaticPropertyType() == StaticPropertyType.StaticPropertyAlternatives) {
-        return getStaticPropertyByName(Collections.singletonList(getStaticPropertyFromSelectedAlternative((StaticPropertyAlternatives) p)), name);
+        StaticProperty tmp = getStaticPropertyFromSelectedAlternative((StaticPropertyAlternatives) p);
+        if (tmp != null) {
+          return getStaticPropertyByName(Collections.singletonList(tmp), name);
+        }
       }
     }
     return null;

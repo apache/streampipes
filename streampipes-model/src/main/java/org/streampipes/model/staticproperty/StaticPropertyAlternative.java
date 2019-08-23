@@ -51,7 +51,9 @@ public class StaticPropertyAlternative extends StaticProperty {
   public StaticPropertyAlternative(StaticPropertyAlternative other) {
     super(other);
     this.selected = other.getSelected();
-    this.staticProperty = new Cloner().staticProperty(other.getStaticProperty());
+    if (other.getStaticProperty() != null) {
+      this.staticProperty = new Cloner().staticProperty(other.getStaticProperty());
+    }
   }
 
   public Boolean getSelected() {
