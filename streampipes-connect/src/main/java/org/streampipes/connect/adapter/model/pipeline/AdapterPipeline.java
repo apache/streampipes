@@ -23,16 +23,25 @@ import java.util.Map;
 public class AdapterPipeline {
 
     private List<AdapterPipelineElement> pipelineElements;
+    private AdapterPipelineElement pipelineSink;
 
 
     public AdapterPipeline(List<AdapterPipelineElement> pipelineElements) {
         this.pipelineElements = pipelineElements;
     }
 
+    public AdapterPipeline(List<AdapterPipelineElement> pipelineElements, AdapterPipelineElement pipelineSink) {
+        this.pipelineElements = pipelineElements;
+        this.pipelineSink = pipelineSink;
+    }
+
     public void process(Map<String, Object> event) {
 
         for (AdapterPipelineElement pipelineElement : pipelineElements) {
             event = pipelineElement.process(event);
+        }
+        if (pipelineSink != null) {
+            pipelineSink.process(event);
         }
 
     }
@@ -43,5 +52,13 @@ public class AdapterPipeline {
 
     public void setPipelineElements(List<AdapterPipelineElement> pipelineElements) {
         this.pipelineElements = pipelineElements;
+    }
+
+    public void changePipelineSink(AdapterPipelineElement pipelineSink) {
+        this.pipelineSink = pipelineSink;
+    }
+
+    public AdapterPipelineElement getPipelineSink() {
+        return pipelineSink;
     }
 }

@@ -17,6 +17,7 @@
 
 package org.streampipes.connect.adapter.preprocessing.elements;
 
+import org.apache.commons.io.IOUtils;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
 import org.streampipes.connect.adapter.util.TransportFormatSelector;
@@ -27,6 +28,7 @@ import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class SendToKafkaAdapterSink implements AdapterPipelineElement  {

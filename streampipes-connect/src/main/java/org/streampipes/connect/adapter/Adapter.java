@@ -80,7 +80,7 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
 
     public void changeEventGrounding(TransportProtocol transportProtocol) {
         List<AdapterPipelineElement> pipelineElements =  this.adapterPipeline.getPipelineElements();
-        SendToKafkaAdapterSink sink = (SendToKafkaAdapterSink) pipelineElements.get(pipelineElements.size() - 1);
+        SendToKafkaAdapterSink sink = (SendToKafkaAdapterSink) this.adapterPipeline.getPipelineSink();
         sink.changeTransportProtocol(transportProtocol);
     }
 
@@ -118,12 +118,10 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
         }
         pipelineElements.add(transformStreamAdapterElement);
 
-
-
-        // Needed when adapter is
+        // Needed when adapter is (
         if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
                 && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
-            pipelineElements.add(new SendToKafkaAdapterSink( adapterDescription));
+            return new AdapterPipeline(pipelineElements, new SendToKafkaAdapterSink(adapterDescription));
         }
 
         return new AdapterPipeline(pipelineElements);

@@ -55,22 +55,6 @@ public class SendToPipeline implements EmitBinaryEvent {
         if (result != null) {
             adapterPipeline.process(result);
         }
-
-        // TODO Get the rules
-
-
-        // TODO Apply on events
-
-
-
-//        try {
-//            if (result != null) {
-//                producer.publish(objectMapper.writeValueAsBytes(result));
-//                System.out.println("send to kafka: " + result);
-//            }
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
         return true;
     }
 }

@@ -23,10 +23,10 @@ import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.exception.ParseException;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterDescription;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.model.schema.EventSchema;
 
 public abstract class GenericAdapter<T extends AdapterDescription> extends Adapter<T> {
 
@@ -63,6 +63,9 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
         Protocol protocolInstance = this.protocol.getInstance(protocolDescription, parser, format);
         this.protocol = protocolInstance;
 
+        //TODO remove
+        EventSchema eventSchema = adapterDescription.getEventSchema();
+        this.protocol.setEventSchema(eventSchema);
 
         logger.debug("Start adatper with format: " + format.getId() + " and " + protocol.getId());
 
