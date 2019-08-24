@@ -51,6 +51,7 @@ public class FileStreamProtocol extends Protocol {
  // private String timestampKey;
   private boolean replaceTimestamp;
   private float speedUp;
+  private int timeBetweenReplay;
 
   private Thread task;
   private boolean running;
@@ -59,13 +60,13 @@ public class FileStreamProtocol extends Protocol {
   public FileStreamProtocol() {
   }
 
-  public FileStreamProtocol(Parser parser, Format format, String filePath, //String timestampKey,
-                            boolean replaceTimestamp, float speedUp) {
+  public FileStreamProtocol(Parser parser, Format format, String filePath,
+                            boolean replaceTimestamp, float speedUp, int timeBetweenReplay) {
     super(parser, format);
     this.filePath = filePath;
-    //this.timestampKey = timestampKey;
     this.replaceTimestamp = replaceTimestamp;
     this.speedUp = speedUp;
+    this.timeBetweenReplay = timeBetweenReplay;
   }
 
   @Override
@@ -93,6 +94,12 @@ public class FileStreamProtocol extends Protocol {
             } catch (ParseException e) {
               logger.error("Error while parsing: " + e.getMessage());
             }
+
+              try {
+                  Thread.sleep(timeBetweenReplay * 1000);
+              } catch (InterruptedException e) {
+                  logger.error("Error while waiting for next replay round" + e.getMessage());
+              }
           }
         }
     };
@@ -132,11 +139,12 @@ public class FileStreamProtocol extends Protocol {
     String replaceTimestampString = extractor.selectedSingleValueOption("replaceTimestamp");
     boolean replaceTimestamp = replaceTimestampString.equals("True") ? true : false;
     float speedUp = Float.parseFloat(extractor.singleValue("speed"));
+    int timeBetweenReplay = Integer.parseInt(extractor.singleValue("time-between-replay"));
 
     FileStaticProperty fileStaticProperty = (FileStaticProperty) extractor.getStaticPropertyByName("filePath");
 
     String fileUri = fileStaticProperty.getLocationPath();
-    return new FileStreamProtocol(parser, format, fileUri, replaceTimestamp, speedUp);
+    return new FileStreamProtocol(parser, format, fileUri, replaceTimestamp, speedUp, timeBetweenReplay);
   }
 
   private String getTimestampKey(List<EventProperty> eventProperties, String prefixKey) {
@@ -170,11 +178,13 @@ public class FileStreamProtocol extends Protocol {
             .category(AdapterType.Generic)
             .iconUrl("file.png")
             .requiredFile(Labels.from("filePath", "File", "File path"))
-            .requiredSingleValueSelection(Labels.from("replaceTimestamp", "Replace Timestamp?",
+            .requiredSingleValueSelection(Labels.from("replaceTimestamp", "Use current time for timestamp?",
                     "Keep timestamps from File or replace with current."),
                 Options.from("True", "False"))
             .requiredFloatParameter(Labels.from("speed", "Replay Speed",
                     "Replay Speed. For original speed set it to 1"))
+            .requiredFloatParameter(Labels.from("time-between-replay", "Time Between Replay",
+                    "Time between two rounds of replay. Time in seconds"))
             .build();
   }
 
