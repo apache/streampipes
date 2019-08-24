@@ -117,6 +117,7 @@ export class EventPropertyComponent implements OnInit {
         this.property.domainProperty = this.cachedProperty.domainProperty;
         this.property.runTimeName = this.cachedProperty.runTimeName;
 
+
         if (this.property instanceof EventPropertyList) {
             // @ts-ignore
             this.property.eventProperty.runtimeType = (this.cachedProperty as EventPropertyList).eventProperty.runtimeType;
@@ -125,6 +126,15 @@ export class EventPropertyComponent implements OnInit {
         if (this.property instanceof EventPropertyPrimitive) {
             this.property.runtimeType = (this.cachedProperty as EventPropertyPrimitive).runtimeType;
             this.property.measurementUnit = (this.cachedProperty as EventPropertyPrimitive).measurementUnit;
+
+            this.property.measurementUnitTmp = (this.cachedProperty as EventPropertyPrimitive).measurementUnitTmp;
+            this.property.oldMeasurementUnit = (this.cachedProperty as EventPropertyPrimitive).oldMeasurementUnit;
+            this.property.hadMeasarumentUnit = (this.cachedProperty as EventPropertyPrimitive).hadMeasarumentUnit;;
+
+            this.property.timestampTransformationMode = (this.cachedProperty as EventPropertyPrimitive).timestampTransformationMode;
+            this.property.timestampTransformationFormatString = (this.cachedProperty as EventPropertyPrimitive).timestampTransformationFormatString;
+            this.property.timestampTransformationMultiplier = (this.cachedProperty as EventPropertyPrimitive).timestampTransformationMultiplier;
+
         }
         this.dialogRef.close({ data: this.property});
     }

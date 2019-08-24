@@ -37,6 +37,8 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   private selectUnit: UnitDescription;
   private allUnits: UnitDescription[];
   private stateCtrl = new FormControl();
+
+  private newUnitStateCtrl = new FormControl();
   private filteredUnits: Observable<UnitDescription[]>;
   private hadMesarumentUnit = false;
   private oldMeasurementUnitDipsplay;
@@ -71,18 +73,34 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
 
   ngOnInit() {
     //   this.property.propertyNumber = this.index;
-    if (this.property.measurementUnit !== undefined) {
-      this.property.oldMeasurementUnit = this.property.measurementUnit;
+    if (this.property.measurementUnitTmp !== undefined) {
+      this.property.oldMeasurementUnit = this.property.oldMeasurementUnit;
       // TODO: use if backend deserialize URI correct
-      this.property.measurementUnitTmp = this.property.measurementUnit;
-      this.hadMesarumentUnit = true;
-      const unit = this.allUnits.find(unitTmp => unitTmp.resource === this.property.measurementUnit);
+      this.property.measurementUnitTmp = this.property.measurementUnitTmp;
+      this.hadMesarumentUnit = this.property.hadMeasarumentUnit;
+      this.transformUnitEnable = this.property.hadMeasarumentUnit;
+      const unit = this.allUnits.find(unitTmp => unitTmp.resource === this.property.oldMeasurementUnit);
       this.oldMeasurementUnitDipsplay = unit.label;
       this.stateCtrl.setValue(unit.label);
+
+      this.restService.getFittingUnits(unit).subscribe(result => {
+        this.possibleUnitTransformations = result;
+        // this.selectUnit = this.possibleUnitTransformations[0];
+        this.selectUnit = this.allUnits.find(unitTmp => unitTmp.resource === this.property.measurementUnitTmp);
+        this.transformUnitEnable = true
+        this.changeTargetUnit(this.selectUnit);
+      });
+      // const newUnit = this.allUnits.find(unitTmp => unitTmp.resource === this.property.measurementUnitTmp);
+      // this.newUnitStateCtrl.setValue(newUnit);
+      // this.selectUnit = newUnit;
     }
     this.property.timestampTransformationMultiplier = 1000;
 
   }
+
+    compareFn(c1: any, c2:any): boolean {
+        return c1 && c2 ? c1.resource === c2.resource : c1 === c2;
+    }
 
   ngDoCheck() {
     this.property.propertyNumber = this.index;
@@ -94,8 +112,10 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
       // TODO: use if backend deserialize URI correct
       // this.property.measurementUnit = this.property.oldMeasurementUnit;
       this.property.measurementUnitTmp = this.property.oldMeasurementUnit;
+      this.property.hadMeasarumentUnit = false;
     } else {
       const unit = this.allUnits.find(unitTmp => unitTmp.label === this.stateCtrl.value);
+      this.property.hadMeasarumentUnit = true;
       if (!unit) {
         return;
       }
@@ -131,6 +151,7 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
     // TODO: use if backend deserialize URI correct
     // this.property.measurementUnit = unit.resource;
     this.property.measurementUnitTmp = unit.resource;
+      this.newUnitStateCtrl.setValue(unit);
   }
 
   staticValueAddedByUser() {
