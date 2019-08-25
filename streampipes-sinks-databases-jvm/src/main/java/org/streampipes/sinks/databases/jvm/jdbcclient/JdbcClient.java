@@ -16,16 +16,6 @@
 
 package org.streampipes.sinks.databases.jvm.jdbcclient;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
@@ -33,6 +23,11 @@ import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.vocabulary.XSD;
+
+import java.sql.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class JdbcClient {
@@ -167,17 +162,20 @@ public class JdbcClient {
 	}
 
 
-	public JdbcClient(List<EventProperty> eventProperties,
-			String host,
-			Integer post,
-			String databaseName,
-			String tableName,
-			String user,
-			String password,
-			String allowedRegEx,
-			String driver,
-			String urlName,
-			Logger logger) throws SpRuntimeException {
+	public JdbcClient() {
+	}
+
+	protected void initializeJdbc(List<EventProperty> eventProperties,
+						String host,
+						Integer post,
+						String databaseName,
+						String tableName,
+						String user,
+						String password,
+						String allowedRegEx,
+						String driver,
+						String urlName,
+						Logger logger) throws SpRuntimeException {
 		this.host = host;
 		this.port = post;
 		this.databaseName = databaseName;
@@ -271,6 +269,7 @@ public class JdbcClient {
 	 * @throws SpRuntimeException When there was an error in the saving process
 	 */
 	public void save(final Event event) throws SpRuntimeException {
+		checkConnected();
 		Map<String, Object> eventMap = event.getRaw();
 		if (event == null) {
 			throw new SpRuntimeException("event is null");
@@ -313,6 +312,7 @@ public class JdbcClient {
 	 */
 	private void executePreparedStatement(final Map<String, Object> event)
 			throws SQLException, SpRuntimeException {
+		checkConnected();
 		if (ps != null) {
 			ps.clearParameters();
 		}
@@ -336,7 +336,8 @@ public class JdbcClient {
    */
   private void fillPreparedStatement(final Map<String, Object> event, String pre)
       throws SQLException, SpRuntimeException {
-    //TODO: Possible error: when the event does not contain all objects of the parameter list
+	  // checkConnected();
+	  //TODO: Possible error: when the event does not contain all objects of the parameter list
     for (Map.Entry<String, Object> pair : event.entrySet()) {
       String newKey = pre + pair.getKey();
       if (pair.getValue() instanceof Map) {
@@ -365,6 +366,7 @@ public class JdbcClient {
 			throws SQLException, SpRuntimeException {
 		// input: event
 		// wanted: INSERT INTO test4321 ( randomString, randomValue ) VALUES ( ?,? );
+		checkConnected();
 		parameters.clear();
 		StringBuilder statement1 = new StringBuilder("INSERT  INTO ");
 		StringBuilder statement2 = new StringBuilder("VALUES ( ");
@@ -400,6 +402,7 @@ public class JdbcClient {
   private int extendPreparedStatement(final Map<String, Object> event,
       StringBuilder s1, StringBuilder s2, int index, String preProperty, String pre)
       throws SpRuntimeException {
+  	  checkConnected();
 	  for (Map.Entry<String, Object> pair : event.entrySet()) {
 	    if (pair.getValue() instanceof Map) {
 	      index = extendPreparedStatement((Map<String, Object>)pair.getValue(), s1, s2, index,
@@ -428,6 +431,7 @@ public class JdbcClient {
    *    throws an exception
    */
 	private void createTable() throws SpRuntimeException {
+	  checkConnected();
 	  checkRegEx(tableName, "Tablename");
 
 	  StringBuilder statement = new StringBuilder("CREATE TABLE \"");
@@ -519,18 +523,19 @@ public class JdbcClient {
 
 	private void validateTable() throws SpRuntimeException {
 		if(false) {
-		  throw new SpRuntimeException("Table '" + tableName + "' does not match the eventproperties");
-    }
+			throw new SpRuntimeException("Table '" + tableName + "' does not match the eventproperties");
+    	}
 	}
 
 	/**
 	 * Closes all open connections and statements of JDBC
 	 */
-	public void closeAll() {
+	protected void closeAll() {
 	  boolean error = false;
 		try {
       if (st != null) {
         st.close();
+        st = null;
       }
     } catch (SQLException e) {
 		  error = true;
@@ -539,6 +544,7 @@ public class JdbcClient {
     try {
       if (c != null) {
         c.close();
+        c = null;
       }
     } catch (SQLException e) {
       error = true;
@@ -547,6 +553,7 @@ public class JdbcClient {
     try {
       if (ps != null) {
         ps.close();
+        ps = null;
       }
     } catch (SQLException e) {
       error = true;
@@ -556,4 +563,10 @@ public class JdbcClient {
       logger.info("Shutdown all connections successfully.");
     }
   }
+
+	private void checkConnected() throws SpRuntimeException {
+		if (c == null) {
+			throw new SpRuntimeException("Connection is not established.");
+		}
+	}
 }
