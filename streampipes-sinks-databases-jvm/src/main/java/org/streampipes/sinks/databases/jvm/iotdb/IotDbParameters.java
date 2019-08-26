@@ -22,18 +22,26 @@ import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 public class IotDbParameters extends EventSinkBindingParams {
 
   private String iotDbHost;
-  private Integer iotdbPort;
+  private Integer iotDbPort;
   private String dbStorageGroup;
   private String user;
   private String password;
+  private String timestampField;
 
-  public IotDbParameters(DataSinkInvocation graph, String iotDbHost, Integer iotdbPort, String dbStorageGroup, String user, String password) {
+  public IotDbParameters(DataSinkInvocation graph,
+                         String iotDbHost,
+                         Integer iotDbPort,
+                         String dbStorageGroup,
+                         String user,
+                         String password,
+                         String timestampField) {
     super(graph);
     this.iotDbHost = iotDbHost;
-    this.iotdbPort = iotdbPort;
+    this.iotDbPort = iotDbPort;
     this.dbStorageGroup = dbStorageGroup;
     this.user = user;
     this.password = password;
+    this.timestampField = timestampField;
   }
 
   public String getIotDbHost() {
@@ -41,7 +49,7 @@ public class IotDbParameters extends EventSinkBindingParams {
   }
 
   public Integer getIotDbPort() {
-    return iotdbPort;
+    return iotDbPort;
   }
 
   public String getDbStorageGroup() {
@@ -54,5 +62,9 @@ public class IotDbParameters extends EventSinkBindingParams {
 
   public String getPassword() {
     return password;
+  }
+
+  public String getTimestampField() {
+    return timestampField;
   }
 }

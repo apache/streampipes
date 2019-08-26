@@ -28,17 +28,17 @@ import org.streampipes.wrapper.runtime.EventSink;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
 
 public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
 
   private static Logger LOG;
-  private int counter = 0;
 
+  private String timestampField;
 
   @Override
   public void onInvocation(IotDbParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     LOG = parameters.getGraph().getLogger(IotDb.class);
+    timestampField = parameters.getTimestampField();
 
     // tablename is the identifier for the storage group in the IoTDB Adapter (e.g. root.data.table1) in which all
     // time series are written
@@ -55,6 +55,7 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
             "org.apache.iotdb.jdbc.IoTDBDriver",
             "iotdb",
             LOG);
+
   }
 
   @Override
@@ -79,14 +80,17 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
   @Override
   protected void save(final Event event) throws SpRuntimeException {
     checkConnected();
-    Statement statement = null;
     try {
-      Date date = new Date();
+      Long timestampValue = event.getFieldBySelector(timestampField).getAsPrimitive().getAsLong();
+      event.removeFieldBySelector(timestampField);
+      Statement statement;
       statement = c.createStatement();
       StringBuilder sb1 = new StringBuilder();
       StringBuilder sb2 = new StringBuilder();
+      //TODO: Check for SQL-Injection
+      // Timestamp must be in the beginning of the values
       sb1.append("INSERT INTO ").append(tableName).append("(timestamp, ");
-      sb2.append(" VALUES (").append(date.getTime()).append(", ");
+      sb2.append(" VALUES (").append(timestampValue).append(", ");
       for (String s : event.getRaw().keySet()) {
         sb1.append(s).append(", ");
         if (event.getFieldByRuntimeName(s).getRawValue() instanceof String) {
@@ -129,6 +133,9 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
     parameters.put("timestamp", new Parameterinfo(index++, SqlAttribute.LONG));
     for (EventProperty eventProperty : eventProperties) {
       try {
+        if (eventProperty.getRuntimeName().equals(timestampField.substring(4))) {
+          continue;
+        }
         Statement statement = null;
         statement = c.createStatement();
         // The identifier cannot be called "value"

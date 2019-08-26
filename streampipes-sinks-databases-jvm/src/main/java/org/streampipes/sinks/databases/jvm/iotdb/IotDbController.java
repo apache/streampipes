@@ -19,6 +19,7 @@ package org.streampipes.sinks.databases.jvm.iotdb;
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -36,6 +37,7 @@ public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters
   private static final String STORAGE_GROUP_KEY = "db_storage_group";
   private static final String DATABASE_USER_KEY = "db_user";
   private static final String DATABASE_PASSWORD_KEY = "db_password";
+  private static final String TIMESTAMPE_MAPPING_KEY = "timestamp_mapping";
 
   @Override
   public DataSinkDescription declareModel() {
@@ -44,7 +46,10 @@ public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(DataSinkType.STORAGE)
             .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredProperty(EpRequirements.anyProperty())
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.timestampReq(),
+                            Labels.withId(TIMESTAMPE_MAPPING_KEY),
+                            PropertyScope.NONE)
                     .build())
             .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
             .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 6667)
@@ -63,13 +68,15 @@ public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters
     String dbStorageGroup = extractor.singleValueParameter(STORAGE_GROUP_KEY, String.class);
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
     String password = extractor.singleValueParameter(DATABASE_PASSWORD_KEY, String.class);
+    String timestampField = extractor.mappingPropertyValue(TIMESTAMPE_MAPPING_KEY);
 
     IotDbParameters params = new IotDbParameters(graph,
             hostname,
             port,
             dbStorageGroup,
             user,
-            password);
+            password,
+            timestampField);
 
     return new ConfiguredEventSink<>(params, IotDb::new);
   }

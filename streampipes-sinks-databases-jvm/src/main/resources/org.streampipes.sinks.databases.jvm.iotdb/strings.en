@@ -16,3 +16,5 @@ db_user.description=The username for the IoTDB Server
 db_password.title=Password
 db_password.description=The password for the IoTDB Server
 
+timestamp_mapping.title=Timestamp
+timestamp_mapping.description=The timestamp of the event
