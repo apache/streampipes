@@ -1,0 +1,17 @@
+version: "2.0"
+services:
+  iotdb:
+    image: xingtanzjr/iotdb
+    volumes:
+      - iotdb:/iotdb/data
+    ports:
+      - 6667:6667
+    networks:
+      spnet:
+
+volumes:
+  iotdb:
+
+networks:
+  spnet:
+    external: true
