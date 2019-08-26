@@ -55,7 +55,7 @@ public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters
             .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 6667)
             .requiredTextParameter(Labels.withId(STORAGE_GROUP_KEY))
             .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
-            .requiredTextParameter(Labels.withId(DATABASE_PASSWORD_KEY))
+            .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
             .build();
   }
 
@@ -67,7 +67,7 @@ public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
     String dbStorageGroup = extractor.singleValueParameter(STORAGE_GROUP_KEY, String.class);
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
-    String password = extractor.singleValueParameter(DATABASE_PASSWORD_KEY, String.class);
+    String password = extractor.secretValue(DATABASE_PASSWORD_KEY);
     String timestampField = extractor.mappingPropertyValue(TIMESTAMPE_MAPPING_KEY);
 
     IotDbParameters params = new IotDbParameters(graph,
