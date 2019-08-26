@@ -14,7 +14,7 @@
 # [ <-- needed because of Argbash
 
 #SP_HOME=${SP_HOME:-/opt/streampipes}
-curr_dir=$(PWD)
+curr_dir=$(pwd)
 SP_HOME=${SP_HOME:-$curr_dir}
 
 # --- helper functions for logs ---
