@@ -28,17 +28,18 @@ import org.streampipes.wrapper.runtime.EventSink;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 
 public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
 
   private static Logger LOG;
-  int counter = 0;
+  private int counter = 0;
+
 
   @Override
   public void onInvocation(IotDbParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     LOG = parameters.getGraph().getLogger(IotDb.class);
 
-    // get(0) because it is the only input stream of the sink (and not two)
     // tablename is the identifier for the storage group in the IoTDB Adapter (e.g. root.data.table1) in which all
     // time series are written
     //TODO: Add better regular expression
@@ -59,7 +60,6 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
   @Override
   public void onEvent(Event event) {
     try {
-      event.addField("timestamp", counter++);
       if (event.getRaw().containsKey("value")) {
         // Renaming value. Very ugly
         event.addField("value_1", event.getFieldBySelector("s0::value").getRawValue());
@@ -76,13 +76,29 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
     closeAll();
   }
 
-  /*@Override
+  @Override
   protected void save(final Event event) throws SpRuntimeException {
     checkConnected();
-    // Needs to enrich the event with a timestamp, if it does not exist
-    //TODO: Add batch support
-    event.addField("timesstamp", 0);
-  }*/
+    Statement statement = null;
+    try {
+      Date date = new Date();
+      statement = c.createStatement();
+      StringBuilder sb1 = new StringBuilder();
+      StringBuilder sb2 = new StringBuilder();
+      sb1.append("INSERT INTO ").append(tableName).append("(timestamp, ");
+      sb2.append(" VALUES (").append(date.getTime()).append(", ");
+      for (String s : event.getRaw().keySet()) {
+        sb1.append(s).append(", ");
+        sb2.append(event.getFieldByRuntimeName(s).getRawValue().toString()).append(", ");
+      }
+      sb1.setLength(sb1.length() - 2);
+      sb2.setLength(sb2.length() - 2);
+      sb1.append(") ").append(sb2).append(")");
+      statement.execute(sb1.toString());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
 
   @Override
   protected void ensureDatabaseExists(String url, String databaseName) throws SpRuntimeException {
@@ -105,10 +121,8 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
    */
   @Override
   protected void ensureTableExists(String url, String databaseName) throws SpRuntimeException {
-    StringBuilder statement1 = new StringBuilder("INSERT INTO ").append(tableName).append(" (timestamp, ");
-    StringBuilder statement2 = new StringBuilder("VALUES (?, ");
     int index = 1;
-    parameters.put("timestamp", new Parameterinfo(index++, SqlAttribute.INTEGER));
+    parameters.put("timestamp", new Parameterinfo(index++, SqlAttribute.LONG));
     for (EventProperty eventProperty : eventProperties) {
       try {
         Statement statement = null;
@@ -120,8 +134,6 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
           runtimeName = "value_1";
         }
         String datatype = extractAndAddEventPropertyRuntimeType(eventProperty, index++);
-        statement1.append(eventProperty.getRuntimeName()).append(", ");
-        statement2.append("?, ");
 
         statement.execute("CREATE TIMESERIES "
                 + tableName
@@ -135,16 +147,6 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
         //TODO: Add better exception handling
         e.printStackTrace();
       }
-    }
-    // Removing the space and comma at the end
-    statement1.setLength(Math.max(0, statement1.length() - 2));
-    statement2.setLength(Math.max(0, statement2.length() - 2));
-    // Finish preparedStatement
-    String finalStatement = statement1.append(") ").append(statement2.append(")")).toString();
-    try {
-      ps = c.prepareStatement(finalStatement);
-    } catch (SQLException e) {
-      throw new SpRuntimeException("Could not initialize prepared statement: " + e.getMessage());
     }
     tableExists = true;
   }
