@@ -89,7 +89,11 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
       sb2.append(" VALUES (").append(date.getTime()).append(", ");
       for (String s : event.getRaw().keySet()) {
         sb1.append(s).append(", ");
-        sb2.append(event.getFieldByRuntimeName(s).getRawValue().toString()).append(", ");
+        if (event.getFieldByRuntimeName(s).getRawValue() instanceof String) {
+          sb2.append("\"").append(event.getFieldByRuntimeName(s).getRawValue().toString()).append("\", ");
+        } else {
+          sb2.append(event.getFieldByRuntimeName(s).getRawValue().toString()).append(", ");
+        }
       }
       sb1.setLength(sb1.length() - 2);
       sb2.setLength(sb2.length() - 2);
