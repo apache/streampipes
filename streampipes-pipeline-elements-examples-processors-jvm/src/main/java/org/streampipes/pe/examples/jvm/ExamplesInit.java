@@ -21,6 +21,7 @@ import org.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.pe.examples.jvm.config.ExamplesJvmConfig;
+import org.streampipes.pe.examples.jvm.engine.ExampleExternalEngineController;
 import org.streampipes.pe.examples.jvm.outputstrategy.AppendOutputController;
 import org.streampipes.pe.examples.jvm.outputstrategy.CustomOutputController;
 import org.streampipes.pe.examples.jvm.outputstrategy.CustomTransformOutputController;
@@ -61,7 +62,9 @@ public class ExamplesInit extends StandaloneModelSubmitter {
             .add(new FixedOutputController())
             .add(new CustomTransformOutputController())
             .add(new TransformOutputController())
-            .add(new KeepOutputController());
+            .add(new KeepOutputController())
+
+            .add(new ExampleExternalEngineController());
 
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());

@@ -16,6 +16,8 @@
         <streampipes.version>0.62.1-SNAPSHOT</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
         <spring.version>2.1.6.RELEASE</spring.version>
+
+        <maven-shade-plugin.version>3.0.0</maven-shade-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -198,6 +200,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven-shade-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
