@@ -29,6 +29,7 @@ import java.util.List;
 public class FileManagement {
 
     public String saveFile(InputStream inputStream, String fileName) throws IOException {
+        fileName = fileName.replaceAll("\\s+", "-");
         String filePath = getMainFilePath() + fileName;
         saveFile(filePath, inputStream);
         return filePath;

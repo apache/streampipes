@@ -17,6 +17,7 @@ package org.streampipes.model.staticproperty;
 
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class StaticPropertyAlternatives extends StaticProperty {
 
   public StaticPropertyAlternatives(StaticPropertyAlternatives other) {
     super(other);
+//    this.alternatives = new Cloner().staticProperties()
     this.alternatives = other
             .getAlternatives()
             .stream()
