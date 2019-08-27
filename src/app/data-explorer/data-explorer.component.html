@@ -33,7 +33,7 @@
 
                         <mat-tab-group>
                             <mat-tab label="Table">
-                                <sp-datalake-table [index]="selectedIndex" *ngIf="selectedIndex != ''"></sp-datalake-table>
+                                <sp-datalake-table *ngIf="selectedInfoResult !== undefined" [index]="selectedInfoResult" *ngIf="selectedIndex != ''"></sp-datalake-table>
                             </mat-tab>
                             <mat-tab label="Line chart">
                                 <sp-datalake-lineChart [index]="selectedIndex" *ngIf="selectedIndex != ''"></sp-datalake-lineChart>

@@ -1,6 +1,8 @@
 import {Component, Input} from '@angular/core';
 import {MatSnackBar} from '@angular/material';
 import {DatalakeRestService} from '../../../core-services/datalake/datalake-rest.service';
+import {EventSchema} from '../../../connect/schema-editor/model/EventSchema';
+import {InfoResult} from '../../../core-model/datalake/InfoResult';
 
 @Component({
     selector: 'sp-datalake-table',
@@ -9,12 +11,13 @@ import {DatalakeRestService} from '../../../core-services/datalake/datalake-rest
 })
 export class DatalakeTableComponent {
 
-    @Input() set index(value: string) {
-        this._index = value;
+    @Input() set index(value: InfoResult) {
+        this._index = value.measureName;
         this.loadData();
     }
+    @Input() eventschema: EventSchema;
     data;
-    _index: string;
+    _index: String;
 
     currentPage: number = 0;
     maxPage: number = 0;

@@ -4,9 +4,13 @@
     [enablePaging]="true"
     [currentPage]="currentPage"
     [maxPage]="maxPage"
+    [xAxesKey]=""
+    [yAxesKeys]=""
+    [eventschema]="eventschema"
     (itemPerPageChange)="handleItemsPerPageChange($event)"
     (nextPage)="handleNextPage()"
     (previousPage)="handlePreviousPage()"
     (firstPage)=handleFirstPage()
-    (lastPage)="handleLastPage()">
+    (lastPage)="handleLastPage()"
+>
 </sp-table>

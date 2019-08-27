@@ -1,19 +1,14 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
+import {BaseChartComponent} from '../chart/baseChart.component';
 
 @Component({
     selector: 'sp-table',
     templateUrl: './table.component.html',
     styleUrls: ['./table.component.css']
 })
-export class TableComponent {
+export class TableComponent extends BaseChartComponent {
 
-    @Input() set data(value: any[]) {
-        if (value != undefined) {
-            this.dataSource.data = value;
-            this.displayedColumns = Object.keys(value[0]);
-        }
-    }
     @Input() currentPage: number = undefined;
     @Input() maxPage: number = undefined;
     @Input() enablePaging: boolean = false;
@@ -31,15 +26,7 @@ export class TableComponent {
     itemsPerPage = 10;
 
     constructor() {
-    }
-
-
-    clickPreviousPage(){
-        this.previousPage.emit()
-    }
-
-    clickNextPage() {
-        this.nextPage.emit()
+        super();
     }
 
     selectItemsPerPage(num) {
@@ -47,12 +34,22 @@ export class TableComponent {
         this.itemPerPageChange.emit(this.itemsPerPage);
     }
 
-    clickFirstPage(){
-        this.firstPage.emit()
+    transformData(data: any[], xKey: String): any[] {
+        return data;
     }
 
-    clickLastPage() {
-        this.lastPage.emit()
+    displayData(transformedData: any[], yKeys: String[]) {
+        //   this.dataSource.data = value;
+       // this.displayedColumns = Object.keys(value[0]);
+        return [];
     }
+
+    stopDisplayData() {
+    }
+
+
+
+
+
 
 }

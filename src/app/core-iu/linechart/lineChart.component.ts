@@ -166,7 +166,6 @@ export class LineChartComponent {
 
     }
 
-
     clickPreviousPage(){
         this.previousPage.emit()
     }
