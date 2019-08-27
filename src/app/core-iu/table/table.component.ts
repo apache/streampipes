@@ -9,16 +9,11 @@ import {BaseChartComponent} from '../chart/baseChart.component';
 })
 export class TableComponent extends BaseChartComponent {
 
-    @Input() currentPage: number = undefined;
-    @Input() maxPage: number = undefined;
-    @Input() enablePaging: boolean = false;
     @Input() enableItemsPerPage: boolean = false;
 
-    @Output() previousPage = new EventEmitter<boolean>();
-    @Output() nextPage = new EventEmitter<boolean>();
+
     @Output() itemPerPageChange = new EventEmitter<number>();
-    @Output() firstPage = new EventEmitter<boolean>();
-    @Output() lastPage = new EventEmitter<boolean>();
+
 
     displayedColumns: string[] = [];
     dataSource = new MatTableDataSource();

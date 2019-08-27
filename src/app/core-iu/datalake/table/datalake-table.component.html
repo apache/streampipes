@@ -1,5 +1,5 @@
 <sp-table
-    [data]="data"
+    [datas]="data"
     [enableItemsPerPage]="true"
     [enablePaging]="true"
     [currentPage]="currentPage"
@@ -7,7 +7,6 @@
     [xAxesKey]=""
     [yAxesKeys]=""
     [eventschema]="eventschema"
-    (itemPerPageChange)="handleItemsPerPageChange($event)"
     (nextPage)="handleNextPage()"
     (previousPage)="handlePreviousPage()"
     (firstPage)=handleFirstPage()
