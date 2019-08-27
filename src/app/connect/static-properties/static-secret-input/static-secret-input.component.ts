@@ -40,6 +40,8 @@ export class StaticSecretInputComponent implements OnInit {
 
         if (inputValue == "" || !inputValue) {
             this.hasInput = false;
+        } else {
+            this.hasInput = true;
         }
 
         this.inputEmitter.emit(this.hasInput);

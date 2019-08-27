@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AlternativesStaticProperty} from '../../model/AlternativesStaticProperty';
 import {EventSchema} from '../../schema-editor/model/EventSchema';
+import {GroupStaticProperty} from '../../model/GroupStaticProperty';
 
 @Component({
     selector: 'app-static-alternatives',
@@ -43,7 +44,13 @@ export class StaticAlternativesComponent implements OnInit {
             let alternative = this.staticProperty.alternatives.find(alternative => alternative.selected == true);
             if (alternative !== undefined) {
                 if (alternative.staticProperty !== undefined) {
-                    this.hasInput = alternative.staticProperty.isValid;
+                    var childsAreValid = true;
+                    (<GroupStaticProperty> alternative.staticProperty).staticProperties.forEach(property => {
+                        if (!property.isValid) {
+                            childsAreValid = false
+                        }
+                    });
+                    this.hasInput = childsAreValid;
                 } else {
                     this.hasInput = true;
                 }
