@@ -17,6 +17,7 @@
 
 package org.streampipes.rest.impl.datalake;
 
+import com.google.gson.Gson;
 import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.datalake.DataLakeMeasure;
 import org.streampipes.rest.impl.AbstractRestInterface;
@@ -84,7 +85,7 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   public Response getAllInfos() {
     List<DataLakeMeasure> result = this.dataLakeManagement.getInfos();
 
-    return Response.ok(result).build();
+    return Response.ok(new Gson().toJson(result)).build();
   }
 
   @Deprecated
