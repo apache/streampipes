@@ -36,7 +36,7 @@ export class DatalakeLineChartComponent {
     dataKeys: string[] = [];
 
     //timeunit selection
-    selectedTimeUnit = 'All';
+    selectedTimeUnit = '24 Hours';
 
     //aggregation / advanced options
     //group by

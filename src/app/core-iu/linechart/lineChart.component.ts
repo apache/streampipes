@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {BaseChartComponent} from '../chart/baseChart.component';
 
 
 @Component({
@@ -6,52 +7,12 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
     templateUrl: './lineChart.component.html',
     styleUrls: ['./lineChart.component.css']
 })
-export class LineChartComponent {
+export class LineChartComponent extends BaseChartComponent {
 
     constructor() {
+        super();
     }
 
-    @Input() set data(value: any[]) {
-        if (value != undefined) {
-            this._data = value;
-            if (this._data !== undefined && this._xAxesKey !== undefined && this._yAxesKeys !== undefined) {
-                this.processData();
-                this.selectDataToDisplay();
-            }
-        } else {
-            this.displayData = undefined;
-            this._data = undefined;
-        }
-    }
-    @Input() set xAxesKey(value: string) {
-        if (value != undefined) {
-            this._xAxesKey = value;
-            if (this._data !== undefined && this._xAxesKey !== undefined && this._yAxesKeys !== undefined) {
-                this.processData();
-                this.selectDataToDisplay();
-            }
-        }
-    }
-    @Input() set yAxesKeys(value: string[]) {
-        if (value !== undefined) {
-            this._yAxesKeys = value;
-            if (this._data !== undefined && this._xAxesKey !== undefined && this._yAxesKeys !== undefined) {
-                if (this.processedData === undefined)
-                    this.processData();
-                this.selectDataToDisplay();
-            }
-        }
-    }
-    @Input() currentPage: number = undefined;
-    @Input() maxPage: number = undefined;
-    @Input() enablePaging: boolean = false;
-    @Input() enableItemsPerPage: boolean = false;
-    @Input() isLoadingData: boolean = false;
-
-    @Output() previousPage = new EventEmitter<boolean>();
-    @Output() nextPage = new EventEmitter<boolean>();
-    @Output() firstPage = new EventEmitter<boolean>();
-    @Output() lastPage = new EventEmitter<boolean>();
     @Output() itemPerPageChange = new EventEmitter<number>();
 
 
@@ -59,9 +20,7 @@ export class LineChartComponent {
     _yAxesKeys: string[] = undefined;
     _data: any[] = undefined;
 
-    processedData: any[] = undefined;
-
-    displayData: any[] = undefined;
+    dataToDisplay: any[] = undefined;
     itemsPerPage = 50;
 
 
@@ -113,8 +72,22 @@ export class LineChartComponent {
         }
     };
 
+    displayData(transformedData: any[], yKeys: String[]) {
+        if (this._yAxesKeys.length > 0) {
+            const tmp = [];
+            this._yAxesKeys.forEach(key => {
+                this.transformedData.forEach(serie => {
+                    if (serie.name === key)
+                        tmp.push(serie)
+                })
+            });
+            this.dataToDisplay = tmp;
+        } else {
+            this.dataToDisplay = undefined;
+        }
+    }
 
-    processData() {
+    transformData(data: any[], xKey: String): any[] {
         const tmp = [];
 
         let dataKeys = [];
@@ -145,45 +118,18 @@ export class LineChartComponent {
             }
         }
 
-        this.processedData = tmp;
-        this.displayData = tmp;
+        return tmp;
     }
 
-    selectDataToDisplay() {
-        if (this._yAxesKeys.length > 0) {
-            const tmp = [];
-            this._yAxesKeys.forEach(key => {
-                this.processedData.forEach(serie => {
-                    if (serie.name === key)
-                        tmp.push(serie)
-                })
-            });
-            this.displayData = tmp;
-        } else {
-            this.displayData = undefined;
-        }
-
-
-    }
-
-    clickPreviousPage(){
-        this.previousPage.emit()
-    }
-
-    clickNextPage() {
-        this.nextPage.emit()
-    }
-
-    clickFirstPage(){
-        this.firstPage.emit()
-    }
-
-    clickLastPage() {
-        this.lastPage.emit()
+    stopDisplayData() {
     }
 
     selectItemsPerPage(num) {
         this.itemsPerPage = num;
         this.itemPerPageChange.emit(this.itemsPerPage);
     }
+
+
+
+
 }

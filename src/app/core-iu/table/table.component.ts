@@ -30,13 +30,16 @@ export class TableComponent extends BaseChartComponent {
     }
 
     transformData(data: any[], xKey: String): any[] {
+        console.log("TRANSFORM DATA");
+        console.log(data);
+        console.log(xKey);
         return data;
     }
 
     displayData(transformedData: any[], yKeys: String[]) {
-        //   this.dataSource.data = value;
-       // this.displayedColumns = Object.keys(value[0]);
-        return [];
+        console.log("DISPLAY");
+        console.log(transformedData);
+        console.log(yKeys);
     }
 
     stopDisplayData() {

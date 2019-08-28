@@ -1,0 +1,103 @@
+<div>
+    <div class="assemblyOptions sp-blue-bg">
+
+        <div fxLayout="row" fxLayoutAlign="space-between center" >
+            <div>
+                <h4 style="display: initial">Select Index:</h4>
+                <mat-form-field style="margin-top: -10px; margin-bottom: -20px; margin-left: 10px;">
+                    <input type="text" matInput  [formControl]="myControl" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectIndex($event.option.value)">
+                        <mat-option  *ngFor="let indexInfo of filteredIndexInfos | async" [value]="indexInfo.measureName">
+                            {{indexInfo.measureName}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start stretch" style="margin-top: 10px; margin-left: 5px">
+                <mat-form-field style="margin-right: 1px;top: -3px;height: 1px;" appearance="outline">
+                    <mat-label>Select Data</mat-label>
+                    <mat-select (selectionChange)="selectKey($event.value)" multiple>
+                        <mat-option *ngFor="let key of dataKeys" [value]="key" style="background-color: #FFFFFF">
+                            {{key}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== 'All'" (click)="selectTimeUnit('All')">All</button>
+                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === 'All'" color="primary" mat-raised-button>All</button>
+                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '24 Hours'" (click)="selectTimeUnit('24 Hours')">24 Hours</button>
+                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '24 Hours'"color="primary" mat-raised-button>24 Hours</button>
+                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Week'" (click)="selectTimeUnit('1 Week')">1 Week</button>
+                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Week'" color="primary" mat-raised-button>1 Week</button>
+                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Month'" (click)="selectTimeUnit('1 Month')">1 Month</button>
+                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Month'" color="primary" mat-raised-button>1 Month</button>
+                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Year'" (click)="selectTimeUnit('1 Year')">1 Year</button>
+                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Year'" color="primary" mat-raised-button>1 Year</button>
+
+                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== 'Custom'" (click)="selectTimeUnit('Custom')">Custom</button>
+                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === 'Custom'" color="primary" mat-raised-button>Custom</button>
+
+                <button mat-icon-button *ngIf="!enableAdvanceOptions" class="icon" (click)="enableAdvanceOptions = true"
+                        style="margin-left: 5px; margin-top: -15px;" color="primary" matTooltip="Display Advanced Options">
+                    <mat-icon style="font-size: 30px;height: 30px; width: 30px">expand_more</mat-icon>
+                </button>
+                <button mat-icon-button *ngIf="enableAdvanceOptions" mat-raised-button class="icon" (click)="enableAdvanceOptions = false"
+                        style="margin-left: 5px; margin-top: -15px;" color="primary" matTooltip="Hide Advanced Options">
+                    <mat-icon style="font-size: 30px;height: 30px; width: 30px">expand_less</mat-icon>
+                </button>
+
+                <button  mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()"
+                         style="margin-top: -15px;" color="primary">
+                    <mat-icon style="font-size: 30px;height: 30px; width: 30px">
+                        get_app
+                    </mat-icon>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <div layout="row">
+        <div class="sp-blue-border">
+
+            <!-- loading -->
+            <div *ngIf="isLoadingData" fxLayout="column" fxLayoutAlign="space-around center" >
+                <div  fxLayout="row" fxLayoutAlign="center center" style="margin-top: 30px">
+                    <mat-spinner></mat-spinner>
+                </div>
+                <div  fxLayout="row" fxLayoutAlign="center center" style="margin-top: 30px">
+                    <h3>Loading Data</h3>
+                </div>
+            </div>
+
+
+            <mat-tab-group *ngIf="!isLoadingData">
+                <mat-tab label="Table">
+                    <sp-table
+                            *ngIf="selectedInfoResult !== undefined"
+                            [datas]="data"
+                            [xAxesKey]="xAxesKey"
+                            [yAxesKeys]="yAxesKeys"
+                            [eventschema]="eventschema"
+                            [startDateData]=""
+                            [endDateData]=""
+                            [currentPage]="currentPage"
+                            [maxPage]="maxPage"
+                            [enablePaging]="true"
+                            (nextPage)="handleNextPage()"
+                            (previousPage)="handlePreviousPage()"
+                            (firstPage)=handleFirstPage()
+                            (lastPage)="handleLastPage()"
+                    >
+                    </sp-table>
+                </mat-tab>
+                <mat-tab label="Line chart">
+               <!--     <sp-datalake-lineChart [index]="selectedIndex" *ngIf="selectedIndex != ''"></sp-datalake-lineChart> -->
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+
+    </div>
+</div>

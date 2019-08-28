@@ -11,6 +11,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
 import {MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
 import {CoreUiModule} from '../core-iu/core-ui.module';
+import {ExplorerComponent} from './explorer/explorer.component';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import {CoreUiModule} from '../core-iu/core-ui.module';
     ],
     declarations: [
         DataExplorerComponent,
+        ExplorerComponent,
     ],
     providers: [
         DatalakeRestService
