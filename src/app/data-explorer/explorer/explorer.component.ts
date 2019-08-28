@@ -194,8 +194,9 @@ export class ExplorerComponent implements OnInit {
         this.dataKeys = [];
         this.selectedInfoResult = this._filter(index)[0];
         this.selectedInfoResult.eventSchema.eventProperties.forEach(property => {
-           if (property.domainProperty !== 'http://schema.org/DateTime') {
-               this.dataKeys.push(property.runtimeName);
+    
+           if (property.domainProperty !== 'http://schema.org/DateTime' && property['domainProperties'][0] != "http://schema.org/DateTime") {
+               this.dataKeys.push(property['runtimeName']);
            }
         });
         this.loadData();

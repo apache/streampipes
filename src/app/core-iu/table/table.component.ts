@@ -15,7 +15,7 @@ export class TableComponent extends BaseChartComponent {
     @Output() itemPerPageChange = new EventEmitter<number>();
 
 
-    displayedColumns: string[] = [];
+    displayedColumns: String[] = [];
     dataSource = new MatTableDataSource();
 
     itemsPerPage = 10;
@@ -34,12 +34,18 @@ export class TableComponent extends BaseChartComponent {
         console.log(data);
         console.log(xKey);
         return data;
+    
     }
 
     displayData(transformedData: any[], yKeys: String[]) {
         console.log("DISPLAY");
         console.log(transformedData);
         console.log(yKeys);
+
+        this.displayedColumns = yKeys;
+        this.displayedColumns.unshift(this.xKey)
+
+        this.dataSource = transformedData
     }
 
     stopDisplayData() {
