@@ -94,7 +94,22 @@
                     </sp-table>
                 </mat-tab>
                 <mat-tab label="Line chart">
-               <!--     <sp-datalake-lineChart [index]="selectedIndex" *ngIf="selectedIndex != ''"></sp-datalake-lineChart> -->
+                    <sp-lineChart
+                            *ngIf="selectedInfoResult !== undefined"
+                            [datas]="data"
+                            [xAxesKey]="xAxesKey"
+                            [yAxesKeys]="yAxesKeys"
+                            [eventschema]="eventschema"
+                            [startDateData]=""
+                            [endDateData]=""
+                            [currentPage]="currentPage"
+                            [maxPage]="maxPage"
+                            [enablePaging]="true"
+                            (nextPage)="handleNextPage()"
+                            (previousPage)="handlePreviousPage()"
+                            (firstPage)=handleFirstPage()
+                            (lastPage)="handleLastPage()">
+                    </sp-lineChart>
                 </mat-tab>
             </mat-tab-group>
         </div>

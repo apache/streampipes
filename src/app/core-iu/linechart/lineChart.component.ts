@@ -16,10 +16,6 @@ export class LineChartComponent extends BaseChartComponent {
     @Output() itemPerPageChange = new EventEmitter<number>();
 
 
-    _xAxesKey: string = undefined;
-    _yAxesKeys: string[] = undefined;
-    _data: any[] = undefined;
-
     dataToDisplay: any[] = undefined;
     itemsPerPage = 50;
 
@@ -73,10 +69,10 @@ export class LineChartComponent extends BaseChartComponent {
     };
 
     displayData(transformedData: any[], yKeys: String[]) {
-        if (this._yAxesKeys.length > 0) {
+        if (this.yKeys.length > 0) {
             const tmp = [];
-            this._yAxesKeys.forEach(key => {
-                this.transformedData.forEach(serie => {
+            this.yKeys.forEach(key => {
+                transformedData.forEach(serie => {
                     if (serie.name === key)
                         tmp.push(serie)
                 })
@@ -87,11 +83,11 @@ export class LineChartComponent extends BaseChartComponent {
         }
     }
 
-    transformData(data: any[], xKey: String): any[] {
+    transformData(data: any[], xKey: string): any[] {
         const tmp = [];
 
         let dataKeys = [];
-        for (let event of this._data) {
+        for (let event of this.data) {
             for (let key in event) {
                 if (typeof event[key] == 'number') {
                     if (!dataKeys.includes(key)) {
@@ -105,10 +101,10 @@ export class LineChartComponent extends BaseChartComponent {
             tmp.push({
                 type: 'scatter', mode: 'lines', name: key, connectgaps: false, x: [], y: []})
         });
-        for (let event of this._data) {
+        for (let event of this.data) {
             let i = 0;
             for (let dataKey of dataKeys) {
-                tmp[i].x.push(new Date(event[this._xAxesKey]));
+                tmp[i].x.push(new Date(event[xKey]));
                 if ((event[dataKey]) !== undefined) {
                     tmp[i].y.push(event[dataKey])
                 } else {

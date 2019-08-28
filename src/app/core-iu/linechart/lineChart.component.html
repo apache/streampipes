@@ -76,8 +76,8 @@
     <div>
 
         <plotly-plot
+                *ngIf="dataToDisplay !== undefined"
                 flex
-                *ngIf="dataToDisplay != undefined && isLoadingData == false"
                 [data]="dataToDisplay"
                 [layout]="graph.layout">
         </plotly-plot>
