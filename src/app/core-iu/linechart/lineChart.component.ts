@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-
+import {keyframes} from '@angular/animations';
+import {hasUndefined} from 'fast-json-patch/lib/helpers';
 
 @Component({
     selector: 'sp-lineChart',
@@ -64,56 +65,6 @@ export class LineChartComponent {
     displayData: any[] = undefined;
     itemsPerPage = 50;
 
-
-    updatemenus=[
-        {
-            buttons: [
-                {
-                    args: ['mode', 'lines'],
-                    label:'Line',
-                    method:'restyle'
-                },
-                {
-                    args: ['mode', 'markers'],
-                    label: 'Dots',
-                    method: 'restyle'
-                },
-
-                {
-                    args: ['mode', 'lines+markers'],
-                    label:'Dots + Lines',
-                    method:'restyle'
-                }
-            ],
-            direction: 'left',
-            pad: {'r': 10, 't': 10},
-            showactive: true,
-            type: 'buttons',
-            x: 0.0,
-            xanchor: 'left',
-            y: 1.3,
-            yanchor: 'top',
-            font: {color: '#000'},
-            bgcolor: '#fafafa',
-            bordercolor: '#000'
-        }
-    ];
-
-    graph = {
-        layout: {
-            plot_bgcolor:"#fafafa",
-            paper_bgcolor:"#fafafa",
-            xaxis: {
-                type: 'date',
-            },
-            yaxis: {
-                fixedrange: true
-            },
-            updatemenus: this.updatemenus,
-        }
-    };
-
-
     processData() {
         const tmp = [];
 
@@ -129,23 +80,17 @@ export class LineChartComponent {
         }
 
         dataKeys.forEach(key => {
-            tmp.push({
-                type: 'scatter', mode: 'lines', name: key, connectgaps: false, x: [], y: []})
-        });
-        for (let event of this._data) {
-            let i = 0;
-            for (let dataKey of dataKeys) {
-                tmp[i].x.push(new Date(event[this._xAxesKey]));
-                if ((event[dataKey]) !== undefined) {
-                    tmp[i].y.push(event[dataKey])
-                } else {
-                    tmp[i].y.push(null)
+            const serie = [];
+            this._data.forEach(date => {
+                if (date[key] !== undefined) {
+                    serie.push({name: new Date(date[this._xAxesKey]), value: date[key]})
                 }
-                i++;
-            }
-        }
-
+            });
+            tmp.push({name: key, series: serie});
+        })
         this.processedData = tmp;
+
+
         this.displayData = tmp;
     }
 

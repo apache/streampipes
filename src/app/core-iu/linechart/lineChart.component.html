@@ -20,9 +20,7 @@
 
 
     <!-- chart header -->
-    <div fxLayout="row" fxLayoutAlign="space-between center"  *ngIf="displayData != undefined && isLoadingData == false"
-        style="min-height: 5px" >
-
+    <div fxLayout="row" fxLayoutAlign="space-between center"  *ngIf="displayData != undefined && isLoadingData == false" style="height: 60px">
         <!-- left button + date -->
         <div>
             <div *ngIf="enablePaging">
@@ -73,17 +71,26 @@
     </div>
 
     <!-- Chart -->
-    <div>
-
-        <plotly-plot
+    <div style="height: 400px">
+        <ngx-charts-line-chart
                 flex
                 *ngIf="displayData != undefined && isLoadingData == false"
-                [data]="displayData"
-                [layout]="graph.layout">
-        </plotly-plot>
+                [results]="displayData"
+                [gradient]="false"
+                [xAxis]="true"
+                [yAxis]="true"
+                [legend]="false"
+                [showXAxisLabel]="true"
+                [showYAxisLabel]="true"
+                [xAxisLabel]="_xAxesKey"
+                [yAxisLabel]="_yAxesKeys"
+                [autoScale]="true"
+                [timeline]="true"
+                (select)="onSelect($event)">
+        </ngx-charts-line-chart>
     </div>
 
-<!--
+
     <div fxLayout="column">
         <div fxLayout="row" fxLayoutAlign="space-between center"  *ngIf="displayData != undefined && isLoadingData == false" style="padding-left: 95px; padding-right: 30px">
             <label>{{displayData[0].series[0].name | date:'MM/dd/yyyy'}} </label>
@@ -94,7 +101,6 @@
             <label>{{displayData[0].series[ displayData[0].series.length - 1].name | date:'HH:mm:ss'}} </label>
         </div>
     </div>
-    -->
 
 
 </div>
