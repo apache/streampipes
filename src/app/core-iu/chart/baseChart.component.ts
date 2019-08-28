@@ -45,6 +45,10 @@ export abstract class BaseChartComponent {
 
     @Input() eventschema: EventSchema = undefined;
 
+    @Input() startDateData:Date = undefined;
+    @Input() endDateData:Date = undefined;
+
+
     @Input() currentPage: number = undefined;
     @Input() maxPage: number = undefined;
     @Input() enablePaging: boolean = false;
