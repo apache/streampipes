@@ -69,7 +69,7 @@ export abstract class BaseChartComponent {
     abstract transformData(data: any[], xKey: String): any[];
 
     //display the data
-    abstract displayData(transformedData: any[], yKeys: String[]): any[]
+    abstract displayData(transformedData: any[], yKeys: String[]);
 
     //
     abstract stopDisplayData()
