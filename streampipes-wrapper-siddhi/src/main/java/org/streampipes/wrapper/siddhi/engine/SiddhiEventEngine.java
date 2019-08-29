@@ -51,6 +51,9 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
 
   private List<String> sortedEventKeys;
 
+  private Boolean debugMode;
+  private SiddhiDebugCallback debugCallback;
+
   private static final Logger LOG = LoggerFactory.getLogger(SiddhiEventEngine.class);
 
   public SiddhiEventEngine() {
@@ -58,6 +61,13 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     this.siddhiInputHandlers = new HashMap<>();
     this.inputStreamNames = new ArrayList<>();
     sortedEventKeys = new ArrayList<>();
+    this.debugMode = false;
+  }
+
+  public SiddhiEventEngine(SiddhiDebugCallback debugCallback) {
+    this();
+    this.debugCallback = debugCallback;
+    this.debugMode = true;
   }
 
   @Override
@@ -85,16 +95,29 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
             .getInEventTypes()
             .forEach((key, value) -> siddhiInputHandlers.put(key, siddhiAppRuntime.getInputHandler(prepareName(key))));
 
-    siddhiAppRuntime.addCallback(prepareName(getOutputTopicName(parameters)), new StreamCallback() {
-      @Override
-      public void receive(Event[] events) {
-        for (Event event : events) {
-          // TODO provide collector in RuntimeContext
-          spOutputCollector.collect(toSpEvent(event, parameters, runtimeContext.getOutputSchemaInfo
-                  (), runtimeContext.getOutputSourceInfo()));
+    if (!debugMode) {
+      siddhiAppRuntime.addCallback(prepareName(getOutputTopicName(parameters)), new StreamCallback() {
+        @Override
+        public void receive(Event[] events) {
+          if (events.length > 0) {
+            Event lastEvent = events[events.length - 1];
+            spOutputCollector.collect(toSpEvent(lastEvent, parameters,
+                    runtimeContext.getOutputSchemaInfo
+                    (), runtimeContext.getOutputSourceInfo()));
+          }
         }
-      }
-    });
+      });
+    } else {
+      siddhiAppRuntime.addCallback(prepareName(getOutputTopicName(parameters)), new StreamCallback() {
+        @Override
+        public void receive(Event[] events) {
+          LOG.info("Siddhi is firing");
+          if (events.length > 0) {
+            SiddhiEventEngine.this.debugCallback.onEvent(events[events.length - 1]);
+          }
+        }
+      });
+    }
 
   }
 
@@ -109,8 +132,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   }
 
   private org.streampipes.model.runtime.Event toSpEvent(Event event, B parameters, SchemaInfo
-          schemaInfo,
-                                                        SourceInfo sourceInfo) {
+          schemaInfo, SourceInfo sourceInfo) {
     Map<String, Object> outMap = new HashMap<>();
     for (int i = 0; i < sortedEventKeys.size(); i++) {
       outMap.put(sortedEventKeys.get(i), event.getData(i));
@@ -127,7 +149,6 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
       sortedEventKeys.add(key);
       Collections.sort(sortedEventKeys);
     }
-    ;
 
     for (String key : sortedEventKeys) {
       joiner.add("s0" + key + " " + toType((Class<?>) typeMap.get(key)));
