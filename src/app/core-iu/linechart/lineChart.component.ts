@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {keyframes} from '@angular/animations';
+import {hasUndefined} from 'fast-json-patch/lib/helpers';
 
 @Component({
     selector: 'sp-lineChart',
@@ -101,7 +102,7 @@ export class LineChartComponent {
                     if (serie.name === key)
                         tmp.push(serie)
                 })
-            })
+            });
             this.displayData = tmp;
         } else {
             this.displayData = undefined;
@@ -109,7 +110,6 @@ export class LineChartComponent {
 
 
     }
-
 
 
     clickPreviousPage(){

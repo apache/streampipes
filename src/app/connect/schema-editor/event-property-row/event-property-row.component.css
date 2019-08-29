@@ -1,0 +1,12 @@
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: rgb(27, 20, 100) !important;
+}
+
+::ng-deep .mat-checkbox:not(.mat-checkbox-disabled).mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    background-color: rgb(27, 20, 100) !important;
+}
+
+.checkbox-selected {
+    opacity: 1 !important;
+}

@@ -73,6 +73,7 @@ import { PlatformServicesModule } from '../platform-services/platform.module';
 
 import { TreeModule } from 'angular-tree-component';
 import { EventSchemaPreviewComponent } from './schema-editor/event-schema-preview/event-schema-preview.component';
+import {EventPropertyRowComponent} from "./schema-editor/event-property-row/event-property-row.component";
 
 
 @NgModule({
@@ -102,6 +103,7 @@ import { EventSchemaPreviewComponent } from './schema-editor/event-schema-previe
         EventSchemaComponent,
         EventPropertyPrimitiveComponent,
         EventPropertyComponent,
+        EventPropertyRowComponent,
         EventPropertyListComponent,
         StaticPropertyComponent,
         AdapterStartedDialog,

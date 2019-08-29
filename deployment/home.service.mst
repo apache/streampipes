@@ -27,15 +27,6 @@ export class HomeService {
                    newWindow: false,
                    value: "streampipes.notifications"
                }
-           },
-           {
-               name: "ElasticSearch",
-               description: "Offline visual analytics of data",
-               imageUrl: "assets/img/home/elastic.png",
-               link: {
-                   newWindow: true,
-                   value: window.location.protocol + '//' + window.location.hostname + '/kibana'
-               }
            }
        ];
     }

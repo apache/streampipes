@@ -7,11 +7,11 @@
                         <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty()>
                             <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
                         </button>
-                        <button [disabled]="!isEditable" *ngIf="!eventPropertyNested" color="primary" mat-button
+                        <button [disabled]="!isEditable" color="primary" mat-button
                             (click)="addStaticValueProperty()">
                             <mat-icon matTooltip="Add a static value to event">add</mat-icon>
                         </button>
-                        <button [disabled]="!isEditable" *ngIf="!eventPropertyNested" color="primary" mat-button
+                        <button [disabled]="!isEditable" color="primary" mat-button
                             (click)=addTimestampProperty()>
                             <mat-icon matTooltip="Add timestamp to event schema">access_time</mat-icon>
                         </button>
@@ -69,43 +69,9 @@
             <div fxLayout="column" fxLayoutAlign="space-evenly stretched" class="drag-drop-tree">
                 <tree-root #tree [nodes]="nodes" [options]="options" (updateData)="onUpdateData(tree)">
                     <ng-template #treeNodeTemplate let-node let-index="index">
-                        <div fxLayout="row">
-                            <div fxFlex="1 1 auto" fxLayout="row">
-                                <b>
-                                    {{ getLabel(node.data) }}
-                                </b>
-                                <p style="margin: 0px 10px 10px;" *ngIf="isEventPropertyList(node.data)">[List]</p>
-                            </div>
-                            <!--
-                            <div fxFlex="15" *ngIf="isEventPropertyPrimitive(node.data)">
-                                <mat-select [(value)]="node.data.propertyScope">
-                                    <mat-option value="MEASUREMENT_PROPERTY">Measurement</mat-option>
-                                    <mat-option value="DIMENSION_PROPERTY">Dimension</mat-option>
-                                    <mat-option value="HEADER_PROPERTY">Header</mat-option>
-                                </mat-select>
-                            </div>
-                        -->
-                            <div fxFlex="0 1 auto" fxLayoutAlign="center center"
-                                *ngIf="isEventPropertyNested(node.data)">
-                                <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty()>
-                                    <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
-                                </button>
-                            </div>
-                            <div fxFlex="0 1 auto" fxLayoutAlign="center center"
-                                *ngIf="isEventPropertyNested(node.data) || isEventPropertyPrimitive(node.data) || isEventPropertyList(node.data)">
-                                <button [disabled]="!isEditable" color="primary" mat-button
-                                    (click)="openEditDialog(node.data)">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-                            </div>
-                            <div fxFlex="0 1 auto" fxLayoutAlign="center center">
-                                <mat-checkbox
-                                    *ngIf="isEventPropertyNested(node.data) || isEventPropertyPrimitive(node.data) || isEventPropertyList(node.data)"
-                                    (click)="selectProperty(node.data.id)" [disabled]="!isEditable"
-                                    [class.checkbox-selected]="node.data.selected" [checked]="node.data.selected">
-                                </mat-checkbox>
-                            </div>
-                        </div>
+                        <event-property-row [(node)]="node"  [(isEditable)]="isEditable"
+                                            [(eventSchema)]="eventSchema"
+                                            (refreshTreeEmitter)="refreshTree()" [(countSelected)]="countSelected"></event-property-row>
                     </ng-template>
                 </tree-root>
             </div>

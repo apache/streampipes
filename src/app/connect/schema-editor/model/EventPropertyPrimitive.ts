@@ -21,6 +21,8 @@ export class EventPropertyPrimitive extends EventProperty {
 
     public oldMeasurementUnit: string;
 
+    public hadMeasarumentUnit: boolean
+
     // used to add a EventProperty Primitive with a static value in the event schema
     public staticValue: string = "";
 
@@ -45,13 +47,17 @@ export class EventPropertyPrimitive extends EventProperty {
 
         result.runtimeType = this.runtimeType;
         result.measurementUnit = this.measurementUnit;
+        result.measurementUnitTmp = this.measurementUnitTmp;
+        result.oldMeasurementUnit = this.oldMeasurementUnit;
         result.valueSpecification = this.valueSpecification;
+
+        result.hadMeasarumentUnit = this.hadMeasarumentUnit;
 
         result.staticValue = this.staticValue;
 
-        this.timestampTransformationMode = this.timestampTransformationMode;
-        this.timestampTransformationFormatString = this.timestampTransformationFormatString;
-        this.timestampTransformationMultiplier = this.timestampTransformationMultiplier;
+        result.timestampTransformationMode = this.timestampTransformationMode;
+        result.timestampTransformationFormatString = this.timestampTransformationFormatString;
+        result.timestampTransformationMultiplier = this.timestampTransformationMultiplier;
 
         return result;
     }
@@ -68,5 +74,7 @@ export class EventPropertyPrimitive extends EventProperty {
             return false;
         }
     }
+
+
 
 }

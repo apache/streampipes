@@ -11,7 +11,6 @@ import { VersionService } from "../services/version/version.service";
 
 import ngFileUpload from 'ng-file-upload';
 
-
 export default angular.module('sp.pipeline', [spServices, ngFileUpload])
 	.controller('PipelineCtrl', PipelineCtrl)
 	.component('pipelineDetails', PipelineDetailsComponent)

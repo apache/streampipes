@@ -23,16 +23,20 @@ export class AdapterDescriptionComponent {
 
   adapterToDelete: string;
   deleting: boolean = false;
+  className: string = "";
+  isDataSetDescription: boolean = false;
+  isDataStreamDescription: boolean = false;
+  isRunningAdapter: boolean = false;
+  adapterLabel: string;
 
   constructor(private connectService: ConnectService, private dataMarketplaceService: DataMarketplaceService, public dialog: MatDialog) {}
 
-
-  isDataStreamDescription(): boolean {
-    return this.connectService.isDataStreamDescription(this.adapter);
-  }
-
-  isDataSetDescription(): boolean {
-    return this.connectService.isDataSetDescription(this.adapter);
+  ngOnInit() {
+      this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
+      this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
+      this.isRunningAdapter = (this.adapter.couchDbId != undefined && !this.adapter.isTemplate);
+      this.adapterLabel = this.adapter.label.split(' ').join('_');
+      this.className = this.getClassName();
   }
 
   isGenericDescription(): boolean {
@@ -84,19 +88,15 @@ export class AdapterDescriptionComponent {
   }
 
   getClassName() {
-    let className = this.isRunningAdapter(this.adapter) ? "adapter-box" : "adapter-description-box";
+    let className = this.isRunningAdapter ? "adapter-box" : "adapter-description-box";
 
-    if (this.isDataSetDescription()) {
+    if (this.isDataSetDescription) {
       className += " adapter-box-set";
     } else {
       className +=" adapter-box-stream";
     }
 
     return className;
-  }
-
-  isRunningAdapter(adapter: AdapterDescription) {
-    return (adapter.couchDbId != undefined && !adapter.isTemplate);
   }
 
   deleteInProgress(adapterCouchDbId) {

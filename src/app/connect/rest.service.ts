@@ -115,10 +115,6 @@ export class RestService {
     removeHeaderKeys(eventProperties: EventProperty[]) {
         // remove header key form schema
         for (let ep of eventProperties) {
-            if (ep.getRuntimeName() == "header") {
-                ep.setRuntimeName("header_1");
-            }
-
             if (ep instanceof EventPropertyNested) {
                 this.removeHeaderKeys((<EventPropertyNested>ep).eventProperties);
             }

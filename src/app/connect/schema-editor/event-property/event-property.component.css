@@ -2,3 +2,7 @@
     width: 370px !important;
 }
 
+.mat-dialog-actions {
+    justify-content: flex-end;
+}
+

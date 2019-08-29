@@ -26,8 +26,8 @@ export default {
             {
                 stepId: "step-3",
                 title: "Selecting data streams",
-                text: "The first element of a pipeline is a data stream, which produces data you'd like to transform. <p>To select a stream, drag and drop the stream named <b>Random Number Stream</b> to the assembly area below.</p>",
-                attachToElement: "#pe-icon-stand-org\\.streampipes\\.pe\\.random\\.number\\.json",
+                text: "The first element of a pipeline is a data stream, which produces data you'd like to transform. <p>To select a stream, drag and drop the stream named <b>Flow Rate 1</b> to the assembly area below.</p>",
+                attachToElement: "#pe-icon-stand-org\\.streampipes\\.sources\\.simulator\\.flowrate1",
                 attachPosition: "left",
                 buttons: [
                     "cancel",
