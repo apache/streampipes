@@ -20,6 +20,7 @@ import org.streampipes.model.SpDataStream;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.test.generator.grounding.EventGroundingGenerator;
+import org.streampipes.vocabulary.XSD;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class EventStreamGenerator {
             .getEventSchema()
             .setEventProperties(runtimeNames
                     .stream()
-                    .map(r -> new EventPropertyPrimitive("", r, "", new ArrayList<>()))
+                    .map(r -> new EventPropertyPrimitive(XSD._integer.toString(), r, "", new ArrayList<>()))
                     .collect(Collectors.toList()));
 
     return stream;

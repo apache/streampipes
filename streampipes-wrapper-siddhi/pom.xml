@@ -27,7 +27,7 @@
     <artifactId>streampipes-wrapper-siddhi</artifactId>
 
     <properties>
-        <siddhi.version>4.5.4</siddhi.version>
+        <siddhi.version>4.5.11</siddhi.version>
     </properties>
 
     <dependencies>
@@ -47,12 +47,12 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.siddhi</groupId>
-            <artifactId>siddhi-query-compiler</artifactId>
+            <artifactId>siddhi-annotations</artifactId>
             <version>${siddhi.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.siddhi</groupId>
-            <artifactId>siddhi-annotations</artifactId>
+            <artifactId>siddhi-query-compiler</artifactId>
             <version>${siddhi.version}</version>
         </dependency>
     </dependencies>
