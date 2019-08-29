@@ -18,6 +18,7 @@
 package org.streampipes.rest.impl.datalake;
 
 import com.google.gson.Gson;
+import okhttp3.OkHttpClient;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Query;
@@ -37,6 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.WebApplicationException;
@@ -424,7 +426,12 @@ public class DataLakeManagementV3 {
 
 
   private InfluxDB getInfluxDBClient() {
-    return InfluxDBFactory.connect(BackendConfig.INSTANCE.getInfluxUrl());
+    OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient().newBuilder()
+            .connectTimeout(120, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
+            .writeTimeout(120, TimeUnit.SECONDS);
+
+    return InfluxDBFactory.connect(BackendConfig.INSTANCE.getInfluxUrl(), okHttpClientBuilder);
   }
 
   private Date tryParseDate(String v) throws ParseException {
