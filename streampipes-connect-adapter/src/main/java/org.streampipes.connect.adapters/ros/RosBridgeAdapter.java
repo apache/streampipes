@@ -24,6 +24,7 @@ import edu.wpi.rail.jrosbridge.callback.TopicCallback;
 import edu.wpi.rail.jrosbridge.messages.Message;
 import edu.wpi.rail.jrosbridge.services.ServiceRequest;
 import edu.wpi.rail.jrosbridge.services.ServiceResponse;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.adapter.Adapter;
@@ -46,6 +47,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -73,7 +75,7 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements Reso
         super(adapterDescription);
 
         getConfigurations(adapterDescription);
-        
+
         this.jsonObjectParser = new JsonObjectParser();
     }
 
@@ -84,11 +86,11 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements Reso
                 .category(AdapterType.Manufacturing)
                 .requiredTextParameter(Labels.from(ROS_HOST_KEY, "Ros Bridge", "Example: test-server.com (No protocol) "))
                 .requiredTextParameter(Labels.from(ROS_PORT_KEY, "Port", "Example: 9090"))
-//                .requiredSingleValueSelectionFromContainer(Labels.from(TOPIC_KEY, "Topic",
-//                        "Example: /battery (Starts with /) "), Arrays.asList(ROS_HOST_KEY,
-//                        ROS_PORT_KEY))
-                .requiredTextParameter(Labels.from(TOPIC_KEY, "Topic", "Example: /battery " +
-                "(Starts with /) "))
+                .requiredSingleValueSelectionFromContainer(Labels.from(TOPIC_KEY, "Topic",
+                        "Example: /battery (Starts with /) "), Arrays.asList(ROS_HOST_KEY,
+                        ROS_PORT_KEY))
+//                .requiredTextParameter(Labels.from(TOPIC_KEY, "Topic", "Example: /battery " +
+//                        "(Starts with /) "))
                 .build();
         description.setAppId(ID);
 
@@ -124,7 +126,9 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements Reso
 
         Ros ros = new Ros(rosBridgeHost, rosBridgePort);
 
-        List<String> topics =getListOfAllTopics(ros);
+        ros.connect();
+        List<String> topics = getListOfAllTopics(ros);
+        ros.disconnect();
         return topics.stream().map(Option::new).collect(Collectors.toList());
     }
 
@@ -149,7 +153,7 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements Reso
             echoBack.subscribe(new TopicCallback() {
                 @Override
                 public void handleMessage(Message message) {
-                   events.add(message.toString().getBytes());
+                    events.add(message.toString().getBytes());
                 }
             });
         }
@@ -242,15 +246,46 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements Reso
     private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
         ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
         this.host = extractor.singleValue(ROS_HOST_KEY, String.class);
-        this.topic = extractor.singleValue(TOPIC_KEY, String.class);
+        this.topic = extractor.selectedSingleValueOption(TOPIC_KEY);
         this.port = extractor.singleValue(ROS_PORT_KEY, Integer.class);
     }
 
     // Ignore for now, but is interesting for future implementations
     private List<String> getListOfAllTopics(Ros ros) {
+        List<String> result = new ArrayList<>();
         Service service = new Service(ros, "/rosapi/topics", "rosapi/Topics");
         ServiceRequest request = new ServiceRequest();
         ServiceResponse response = service.callServiceAndWait(request);
-        return new ArrayList<>();
+        JSONObject ob = new JSONObject(response.toString());
+
+        if (ob.has("topics")) {
+            JSONArray topics = ((JSONArray) ob.get("topics"));
+            for (int i = 0; i < topics.length(); i++) {
+                result.add((String) topics.get(i));
+            }
+
+        }
+
+        return result;
+
+    }
+
+    public static void main(String... args) {
+        Ros ros = new Ros("ipe-girlitz.fzi.de", 9090);
+        boolean connect = ros.connect();
+
+        Service service = new Service(ros, "/rosapi/topics", "rosapi/Topics");
+        ServiceRequest request = new ServiceRequest();
+        ServiceResponse response = service.callServiceAndWait(request);
+
+        JSONObject ob = new JSONObject(response.toString());
+
+        ros.disconnect();
+
+
+        System.out.println(ob.get("topics"));
+
+
+
     }
 }
