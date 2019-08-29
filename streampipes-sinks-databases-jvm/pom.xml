@@ -73,6 +73,11 @@
             <version>${influxdb.java.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.iotdb</groupId>
+            <artifactId>iotdb-jdbc</artifactId>
+            <version>0.8.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-milo</artifactId>
             <version>${milo.version}</version>

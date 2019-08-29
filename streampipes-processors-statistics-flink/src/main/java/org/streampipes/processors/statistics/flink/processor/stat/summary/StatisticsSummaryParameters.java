@@ -20,16 +20,18 @@ package org.streampipes.processors.statistics.flink.processor.stat.summary;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
+import java.util.List;
+
 public class StatisticsSummaryParameters extends EventProcessorBindingParams {
 
-  private String listPropertyName;
+  private List<String> listPropertyMappings;
 
-  public StatisticsSummaryParameters(DataProcessorInvocation graph, String listPropertyName) {
+  public StatisticsSummaryParameters(DataProcessorInvocation graph, List<String> listPropertyMappings) {
     super(graph);
-    this.listPropertyName = listPropertyName;
+    this.listPropertyMappings = listPropertyMappings;
   }
 
-  public String getListPropertyName() {
-    return listPropertyName;
+  public List<String> getListPropertyMappings() {
+    return listPropertyMappings;
   }
 }

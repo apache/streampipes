@@ -23,11 +23,7 @@ import org.streampipes.sinks.databases.jvm.jdbcclient.JdbcClient;
 import org.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.streampipes.wrapper.runtime.EventSink;
 
-import java.util.Map;
-
-public class PostgreSql implements EventSink<PostgreSqlParameters> {
-
-  private JdbcClient jdbcClient;
+public class PostgreSql extends JdbcClient implements EventSink<PostgreSqlParameters> {
 
   private static Logger LOG;
 
@@ -38,25 +34,24 @@ public class PostgreSql implements EventSink<PostgreSqlParameters> {
     // get(0) because it is the only input stream of the sink (and not two)
     // See (https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS)
     // for allowed postgres identifiers (for the regex)
-    this.jdbcClient = new JdbcClient(
-        parameters.getGraph().getInputStreams().get(0).getEventSchema().getEventProperties(),
-        parameters.getPostgreSqlHost(),
-        parameters.getPostgreSqlPort(),
-        parameters.getDatabaseName(),
-        parameters.getTableName(),
-        parameters.getUsername(),
-        parameters.getPassword(),
-        "^[a-zA-Z_][a-zA-Z0-9_]*$",
-        "org.postgresql.Driver",
-        "postgresql",
-        LOG
-    );
+    initializeJdbc(
+            parameters.getGraph().getInputStreams().get(0).getEventSchema().getEventProperties(),
+            parameters.getPostgreSqlHost(),
+            parameters.getPostgreSqlPort(),
+            parameters.getDatabaseName(),
+            parameters.getTableName(),
+            parameters.getUsername(),
+            parameters.getPassword(),
+            "^[a-zA-Z_][a-zA-Z0-9_]*$",
+            "org.postgresql.Driver",
+            "postgresql",
+            LOG);
   }
 
   @Override
   public void onEvent(Event event) {
     try {
-      jdbcClient.save(event);
+      save(event);
     } catch (SpRuntimeException e) {
       //TODO: error or warn?
       LOG.error(e.getMessage());
@@ -66,6 +61,6 @@ public class PostgreSql implements EventSink<PostgreSqlParameters> {
 
   @Override
   public void onDetach() throws SpRuntimeException {
-    jdbcClient.closeAll();
+    closeAll();
   }
 }

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.streampipes.sinks.databases.jvm.postgresql;
+package org.streampipes.sinks.databases.jvm.iotdb;
 
 import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -29,52 +30,54 @@ import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
-public class PostgreSqlController extends StandaloneEventSinkDeclarer<PostgreSqlParameters> {
+public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters> {
 
   private static final String DATABASE_HOST_KEY = "db_host";
   private static final String DATABASE_PORT_KEY = "db_port";
-  private static final String DATABASE_NAME_KEY = "db_name";
-  private static final String DATABASE_TABLE_KEY = "db_table";
+  private static final String STORAGE_GROUP_KEY = "db_storage_group";
   private static final String DATABASE_USER_KEY = "db_user";
   private static final String DATABASE_PASSWORD_KEY = "db_password";
+  private static final String TIMESTAMPE_MAPPING_KEY = "timestamp_mapping";
 
   @Override
   public DataSinkDescription declareModel() {
-    return DataSinkBuilder.create("org.streampipes.sinks.databases.jvm.postgresql")
+    return DataSinkBuilder.create("org.streampipes.sinks.databases.jvm.iotdb")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(DataSinkType.STORAGE)
             .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredProperty(EpRequirements.anyProperty())
+                    .requiredPropertyWithUnaryMapping(
+                            EpRequirements.timestampReq(),
+                            Labels.withId(TIMESTAMPE_MAPPING_KEY),
+                            PropertyScope.NONE)
                     .build())
             .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
-            .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 5432)
-            .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
-            .requiredTextParameter(Labels.withId(DATABASE_TABLE_KEY))
+            .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 6667)
+            .requiredTextParameter(Labels.withId(STORAGE_GROUP_KEY))
             .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
-            .requiredTextParameter(Labels.withId(DATABASE_PASSWORD_KEY))
+            .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
             .build();
   }
 
   @Override
-  public ConfiguredEventSink<PostgreSqlParameters> onInvocation(DataSinkInvocation graph,
-                                                                DataSinkParameterExtractor extractor) {
+  public ConfiguredEventSink<IotDbParameters> onInvocation(DataSinkInvocation graph,
+                                                           DataSinkParameterExtractor extractor) {
 
     String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
-    String dbName = extractor.singleValueParameter(DATABASE_NAME_KEY, String.class);
-    String tableName = extractor.singleValueParameter(DATABASE_TABLE_KEY, String.class);
+    String dbStorageGroup = extractor.singleValueParameter(STORAGE_GROUP_KEY, String.class);
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
-    String password = extractor.singleValueParameter(DATABASE_PASSWORD_KEY, String.class);
+    String password = extractor.secretValue(DATABASE_PASSWORD_KEY);
+    String timestampField = extractor.mappingPropertyValue(TIMESTAMPE_MAPPING_KEY);
 
-    PostgreSqlParameters params = new PostgreSqlParameters(graph,
+    IotDbParameters params = new IotDbParameters(graph,
             hostname,
             port,
-            dbName,
-            tableName,
+            dbStorageGroup,
             user,
-            password);
+            password,
+            timestampField);
 
-    return new ConfiguredEventSink<>(params, PostgreSql::new);
+    return new ConfiguredEventSink<>(params, IotDb::new);
   }
 }
