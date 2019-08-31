@@ -23,13 +23,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.exception.ParseException;
+import org.streampipes.model.client.messages.ErrorMessageLd;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.rest.shared.util.JsonLdUtils;
+import org.streampipes.vocabulary.StreamPipes;
 
 import java.io.IOException;
 
 public class GuessManagement {
+
+    private String errorMessage = "Sorry, something went wrong! Hit the feedback button (top right corner) to ask for help. If you think you've found a bug, fill an issue on our Github Page";
 
     private static Logger LOG = LoggerFactory.getLogger(GuessManagement.class);
 
@@ -57,11 +62,27 @@ public class GuessManagement {
                     .socketTimeout(100000)
                     .execute().returnContent().asString();
 
-            return JsonLdUtils.fromJsonLd(responseString, GuessSchema.class);
+            GuessSchema guessSchema = JsonLdUtils.fromJsonLd(responseString, GuessSchema.class);
+
+            if (guessSchema.getEventSchema() != null) {
+                return guessSchema;
+            } else {
+                ErrorMessageLd errorMessageLd = JsonLdUtils.fromJsonLd(responseString, ErrorMessageLd.class, StreamPipes.ERROR_MESSAGE);
+                if (errorMessageLd.getNotifications() != null && errorMessageLd.getNotifications().get(0) != null) {
+                    throw new AdapterException(errorMessageLd.getNotifications().get(0).getTitle());
+                } else {
+                    throw new AdapterException("There was an error while guessing the schema in the worker with the URL: " + workerUrl + "\n" +
+                            errorMessage);
+                }
+
+
+            }
+
 
         } catch (IOException e) {
             e.printStackTrace();
-            throw new AdapterException("Worker: " + workerUrl + " is currently not available");
+            throw new AdapterException("Connect Worker: " + workerUrl + " is currently not available.\n" +
+                    errorMessage);
         }
     }
 
