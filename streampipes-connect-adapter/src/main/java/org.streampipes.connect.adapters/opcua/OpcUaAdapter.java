@@ -173,7 +173,9 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
 
             opc.disconnect();
         } catch (Exception e) {
-            e.printStackTrace();
+
+            throw new AdapterException("Could not guess schema for opc node! " + e.getMessage());
+
         }
 
         eventSchema.setEventProperties(allProperties);

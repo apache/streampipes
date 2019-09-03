@@ -33,6 +33,7 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.*;
 import org.eclipse.milo.opcua.stack.core.types.structured.*;
+import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.sdk.utils.Datatypes;
 
 import java.net.URI;
@@ -61,7 +62,15 @@ public class OpcUa {
 
         this.opcServerHost = opcServerURL;
         this.opcServerPort = opcServerPort;
-        this.node  = new NodeId(namespaceIndex, nodeId);
+
+        Integer.parseInt(nodeId);
+
+        if (isInteger(nodeId)) {
+            int integerNodeId = Integer.parseInt(nodeId);
+            this.node  = new NodeId(namespaceIndex, integerNodeId);
+        } else {
+            this.node  = new NodeId(namespaceIndex, nodeId);
+        }
 
     }
 
@@ -124,7 +133,7 @@ public class OpcUa {
         );
     }
 
-    public List<OpcNode> browseNode() {
+    public List<OpcNode> browseNode() throws AdapterException {
         List<OpcNode> referenceDescriptions = browseNode(node);
 
         if (referenceDescriptions.size() == 0) {
@@ -153,8 +162,9 @@ public class OpcUa {
         return result;
     }
 
-    private List<OpcNode> browseNode(NodeId browseRoot) {
+    private List<OpcNode> browseNode(NodeId browseRoot) throws AdapterException {
         List<OpcNode> result = new ArrayList<>();
+
 
         BrowseDescription browse = new BrowseDescription(
                 browseRoot,
@@ -168,6 +178,10 @@ public class OpcUa {
         try {
             BrowseResult browseResult = client.browse(browse).get();
 
+            if (browseResult.getStatusCode().isBad()) {
+                throw new AdapterException(browseResult.getStatusCode().toString());
+            }
+
             List<ReferenceDescription> references = toList(browseResult.getReferences());
 
             for (ReferenceDescription rd : references) {
@@ -177,11 +191,17 @@ public class OpcUa {
                     rd.getNodeId();
 
                     result.add(opcNode);
-                    rd.getNodeId().local().ifPresent(nodeId -> browseNode(nodeId));
+                    rd.getNodeId().local().ifPresent(nodeId -> {
+                        try {
+                            browseNode(nodeId);
+                        } catch (AdapterException e) {
+                            e.printStackTrace();
+                        }
+                    });
                 }
             }
         } catch (InterruptedException | ExecutionException e) {
-            System.out.println("Browsing nodeId=" + browse + " failed: " + e.getMessage());
+            throw new AdapterException("Browsing nodeId=" + browse + " failed: " + e.getMessage());
         }
 
         return result;
@@ -252,6 +272,18 @@ public class OpcUa {
             }
         }
 
+    }
+
+    public static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch(NumberFormatException e) {
+            return false;
+        } catch(NullPointerException e) {
+            return false;
+        }
+        // only got here if we didn't return false
+        return true;
     }
 
 
