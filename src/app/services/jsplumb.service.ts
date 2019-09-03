@@ -156,7 +156,7 @@ export class JsplumbService {
             }, payload: Object.assign({}, json)
         };
         if (!pipelineElementConfig.payload.DOM) {
-            pipelineElementConfig.payload.DOM = "jsplumb_" + this.idCounter +"_" +this.makeId(4);
+            pipelineElementConfig.payload.DOM = "jsplumb_" + this.idCounter + "_" + this.makeId(4);
             this.idCounter++;
         }
 
@@ -173,15 +173,15 @@ export class JsplumbService {
         return text;
     }
 
-    streamDropped($newElement, json, endpoints, preview) {
-        var jsplumbConfig = this.getJsplumbConfig(preview);
+    streamDropped(pipelineElementDomId, json, endpoints, preview) {
         if (endpoints) {
             if (!preview) {
-                this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
+                this.JsplumbBridge.draggable(pipelineElementDomId, {containment: 'parent'});
             }
-            this.JsplumbBridge.addEndpoint($newElement, jsplumbConfig.streamEndpointOptions);
+
+            this.JsplumbBridge.addEndpoint(pipelineElementDomId, this.getStreamEndpoint(preview, pipelineElementDomId));
         }
-        return $newElement;
+        return pipelineElementDomId;
     };
 
     setDropped($newElement, json, endpoints, preview) {
@@ -193,47 +193,62 @@ export class JsplumbService {
         });
     }
 
-    sepaDropped($newElement, json, endpoints, preview) {
-        var jsplumbConfig = this.getJsplumbConfig(preview);
-        if (!preview) {
-            this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
-        }
+    sepaDropped(pipelineElementDomId, json, endpoints, preview) {
+        this.actionDropped(pipelineElementDomId, json, endpoints, preview);
         if (endpoints) {
-            if (json.inputStreams.length < 2) { //1 InputNode
-                this.JsplumbBridge.addEndpoint($newElement, jsplumbConfig.leftTargetPointOptions);
-            } else {
-                this.JsplumbBridge.addEndpoint($newElement, this.getNewTargetPoint(0, 0.25));
-
-                this.JsplumbBridge.addEndpoint($newElement, this.getNewTargetPoint(0, 0.75));
-            }
-            this.JsplumbBridge.addEndpoint($newElement, jsplumbConfig.sepaEndpointOptions);
+            this.JsplumbBridge.addEndpoint(pipelineElementDomId, this.getOutputEndpoint(preview, pipelineElementDomId));
         }
-        return $newElement;
+        return pipelineElementDomId;
     };
 
-    actionDropped($newElement, json, endpoints, preview) {
-        var jsplumbConfig = this.getJsplumbConfig(preview);
+    actionDropped(pipelineElementDomId, json, endpoints, preview) {
         if (!preview) {
-            this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
+            this.JsplumbBridge.draggable(pipelineElementDomId, {containment: 'parent'});
         }
 
         if (endpoints) {
-            this.JsplumbBridge.addEndpoint($newElement, jsplumbConfig.leftTargetPointOptions);
+            if (json.inputStreams.length < 2) { //1 InputNode
+                this.JsplumbBridge.addEndpoint(pipelineElementDomId, this.getInputEndpoint(preview, pipelineElementDomId, 0));
+            } else {
+                this.JsplumbBridge.addEndpoint(pipelineElementDomId, this.getNewTargetPoint(preview, 0, 0.25, pipelineElementDomId, 0));
+                this.JsplumbBridge.addEndpoint(pipelineElementDomId, this.getNewTargetPoint(preview, 0, 0.75, pipelineElementDomId, 1));
+            }
         }
-        return $newElement;
+        return pipelineElementDomId;
     };
 
     getJsplumbConfig(preview) {
         return preview ? this.JsplumbConfigService.getPreviewConfig() : this.JsplumbConfigService.getEditorConfig();
     }
 
-    getNewTargetPoint(x, y) {
-        return {
-            endpoint: ["Dot", {radius: 12}],
-            type: "empty",
-            anchor: [x, y, -1, 0],
-            isTarget: true
-        };
+    getStreamEndpoint(preview, pipelineElementDomId) {
+        var jsplumbConfig = this.getJsplumbConfig(preview);
+        let config = jsplumbConfig.streamEndpointOptions;
+        config.uuid = "out-" + pipelineElementDomId;
+        return config;
+    }
+
+    getInputEndpoint(preview, pipelineElementDomId, index): any {
+        var jsplumbConfig = this.getJsplumbConfig(preview);
+        let inConfig = jsplumbConfig.leftTargetPointOptions;
+        inConfig.uuid = "in-" + index + "-" + pipelineElementDomId;
+        return inConfig;
+    }
+
+    getOutputEndpoint(preview, pipelineElementDomId): any {
+        var jsplumbConfig = this.getJsplumbConfig(preview);
+        let outConfig = jsplumbConfig.sepaEndpointOptions;
+        outConfig.uuid = "out-" + pipelineElementDomId;
+        return outConfig;
+    }
+
+    getNewTargetPoint(preview, x, y, pipelineElementDomId, index): any {
+        let inConfig = this.getInputEndpoint(preview, pipelineElementDomId, index);
+        inConfig.type = "empty";
+        inConfig.anchor = [x, y, -1, 0];
+        inConfig.isTarget = true;
+
+        return inConfig;
     }
 }
 

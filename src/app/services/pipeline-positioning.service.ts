@@ -17,15 +17,21 @@
 
 //import * from 'lodash';
 import * as dagre from "dagre";
+import {PipelineValidationService} from "../editor/services/pipeline-validation.service";
+import {JsplumbBridge} from "./jsplumb-bridge.service";
+import {JsplumbConfigService} from "./jsplumb-config.service";
+import {JsplumbService} from "./jsplumb.service";
+
 declare const jsPlumb: any;
 
 export class PipelinePositioningService {
 
-    JsplumbService: any;
-    JsplumbConfigService: any;
-    JsplumbBridge: any;
+    JsplumbService: JsplumbService;
+    JsplumbConfigService: JsplumbConfigService;
+    JsplumbBridge: JsplumbBridge;
+    PipelineValidationService: PipelineValidationService;
 
-    constructor(JsplumbService, JsplumbConfigService, JsplumbBridge) {
+    constructor(JsplumbService, JsplumbConfigService, JsplumbBridge, PipelineValidationService) {
         this.JsplumbService = JsplumbService;
         this.JsplumbConfigService = JsplumbConfigService;
         this.JsplumbBridge = JsplumbBridge;
@@ -38,25 +44,19 @@ export class PipelinePositioningService {
         for (var i = 0; i < rawPipelineModel.length; i++) {
             var currentPe = rawPipelineModel[i];
             if (currentPe.type === "stream") {
-                this.JsplumbService
-                    .streamDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
+                this.JsplumbService.streamDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
             }
             if (currentPe.type === "sepa") {
-                var $sepa = this.JsplumbService.sepaDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
-                if (this.JsplumbBridge.getConnections({source: currentPe.payload.DOM}).length == 0) { //Output Element
-                    this.JsplumbBridge.addEndpoint($sepa, jsplumbConfig.sepaEndpointOptions);
-                }
+                this.JsplumbService.sepaDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
             }
             if (currentPe.type === "action") {
-                var $action = this.JsplumbService.actionDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
-                this.JsplumbBridge.addEndpoint($action, jsplumbConfig.leftTargetPointOptions);
+                this.JsplumbService.actionDropped(currentPe.payload.DOM, currentPe.payload, true, isPreview);
             }
         }
 
         this.connectPipelineElements(rawPipelineModel, !isPreview, jsplumbConfig);
         this.layoutGraph(targetCanvas, "span[id^='jsplumb']", isPreview ? 75 : 110, isPreview);
         this.JsplumbBridge.repaintEverything();
-
     }
 
     layoutGraph(canvas, nodeIdentifier, dimension, isPreview) {
@@ -85,8 +85,6 @@ export class PipelinePositioningService {
 
     connectPipelineElements(json, detachable, jsplumbConfig) {
         var source, target;
-        var sourceEndpoint;
-        var targetEndpoint
 
         this.JsplumbBridge.setSuspendDrawing(true);
         for (var i = 0; i < json.length; i++) {
@@ -105,28 +103,22 @@ export class PipelinePositioningService {
                         options = jsplumbConfig.streamEndpointOptions;
                     }
 
-                    sourceEndpoint = this.JsplumbBridge.addEndpoint(source, options);
-                    targetEndpoint = this.JsplumbBridge.addEndpoint(target, jsplumbConfig.leftTargetPointOptions);
-                    this.JsplumbBridge.connect({
-                        source: sourceEndpoint,
-                        target: targetEndpoint,
-                        detachable: detachable
-                    });
+                    let sourceEndpointId = "out-" + connection;
+                    let targetEndpointId = "in-" + j + "-" + pe.payload.DOM;
+                    this.JsplumbBridge.connect(
+                        {uuids: [sourceEndpointId, targetEndpointId], detachable: detachable}
+                    );
                 }
             } else if (pe.type == "action") {
                 target = pe.payload.DOM;
 
                 for (var j = 0, connection; connection = pe.payload.connectedTo[j]; j++) {
                     source = connection;
-                    sourceEndpoint = this.JsplumbBridge.addEndpoint(source, jsplumbConfig.sepaEndpointOptions);
-                    targetEndpoint = this.JsplumbBridge.addEndpoint(target, jsplumbConfig.leftTargetPointOptions);
-                    this.JsplumbBridge.connect({
-                        source: sourceEndpoint,
-                        target: targetEndpoint,
-                        detachable: detachable
-                    });
-
-
+                    let sourceEndpointId = "out-" + connection;
+                    let targetEndpointId = "in-" + j + "-" + target;
+                    this.JsplumbBridge.connect(
+                        {uuids: [sourceEndpointId, targetEndpointId], detachable: detachable}
+                    );
                 }
             }
         }

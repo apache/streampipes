@@ -58,6 +58,14 @@ export class JsplumbBridge {
         return jsPlumb.selectEndpoints({source: id});
     }
 
+    getSourceEndpoint(id) {
+        return jsPlumb.selectEndpoints({source: id});
+    }
+
+    getTargetEndpoint(id) {
+        return jsPlumb.selectEndpoints({target: id});
+    }
+
     getEndpointCount(id) {
         return jsPlumb.selectEndpoints({element: id}).length;
     }

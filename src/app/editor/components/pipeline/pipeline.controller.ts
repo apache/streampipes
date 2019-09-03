@@ -69,13 +69,13 @@ export class PipelineController {
         this.JsplumbBridge.setContainer(this.canvasId);
         this.initAssembly();
         this.initPlumb();
-        this.validatePipeline();
+        //this.validatePipeline();
     }
 
     validatePipeline() {
         this.$timeout(() => {
             this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
-        }, 100);
+        }, 200);
     }
 
     $onDestroy() {
@@ -229,7 +229,9 @@ export class PipelineController {
         this.JsplumbBridge.bind("connectionDetached", (info, originalEvent) => {
             var pe = this.objectProvider.findElement(info.targetEndpoint.elementId, this.rawPipelineModel);
             pe.payload.configured = false;
+            pe.settings.openCustomize = true;
             info.targetEndpoint.setType("empty");
+            this.validatePipeline();
         });
 
         this.JsplumbBridge.bind("connectionDrag", connection => {

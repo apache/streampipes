@@ -182,6 +182,7 @@ export class PipelineAssemblyController {
                 this.$timeout(() => {
                     this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false);
                     this.TransitionService.makePipelineAssemblyEmpty(false);
+                    this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
                 });
             });
     };
