@@ -1,0 +1,253 @@
+version: "3"
+services:
+
+#### Mandatory external services
+  activemq:
+    image: streampipes/activemq
+    ports:
+      - "61616:61616"
+      - "61614:61614"
+      - "8161:8161"
+      - "1883:1883"
+    networks:
+      spnet:
+      
+  consul:
+    image: consul:1.6.0
+    environment:
+      - "CONSUL_LOCAL_CONFIG={\"disable_update_check\": true}"
+      - "CONSUL_BIND_INTERFACE=eth0"
+      - "CONSUL_HTTP_ADDR=0.0.0.0"
+    entrypoint:
+      - consul
+      - agent
+      - -server
+      - -bootstrap-expect=1
+      - -data-dir=/consul/data
+      - -node=consul-one
+      - -bind={{ GetInterfaceIP "eth0" }}
+      - -client=0.0.0.0
+      - -enable-script-checks=true
+      - -ui
+    volumes:
+      - consul:/consul/data
+    ports:
+      - "8500:8500"
+      - "8600:8600"
+    networks:
+      spnet:
+        ipv4_address: 172.31.0.9
+  
+  couchdb:
+    image: couchdb:2.3.1
+    ports:
+      - "5984:5984"
+    volumes:
+      - couchdb:/opt/couchdb/data
+    networks:
+      spnet:
+      
+  rdf4j:
+    image: streampipes/rdf4j:2.4.5
+    ports:
+      - "8031:8031"
+    volumes:
+      - rdf4j:/root/.RDF4J
+    networks:
+      spnet:    
+            
+  kafka:
+    image: wurstmeister/kafka:2.12-2.2.0
+    hostname: kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${SP_HOST}:9092
+      KAFKA_ADVERTISED_HOST_NAME: ${SP_HOST}
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_MESSAGE_MAX_BYTES: 5000012
+      KAFKA_FETCH_MESSAGE_MAX_BYTES: 5000012
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 10000000
+    volumes:
+      - kafka:/kafka
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      spnet:
+
+  kafka-rest:
+    image: confluentinc/cp-kafka-rest:5.2.3
+    ports:
+      - "8073:8082"
+    depends_on:
+      - zookeeper
+    environment:
+      - ZK_CONNECTION_STRING=zookeeper:2181
+      - KAFKA_REST_HOST_NAME=${SP_HOST}
+      - KAFKA_REST_ZOOKEEPER_CONNECT=zookeeper:2181
+    networks:
+      spnet:
+      
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    volumes:
+      - zk-conf:/opt/zookeeper-3.4.13/conf
+      - zk-data:/opt/zookeeper-3.4.13/data
+    networks:
+      spnet:
+      
+      
+      
+#### StreamPipes services
+
+  backend:
+    image: "${SP_REGISTRY_MAIN}/backend:${SP_VERSION}"
+    depends_on:
+      - consul
+      - couchdb
+    ports:
+      - "8030:8030"
+    environment:
+      - SP_KAFKA_HOST=${SP_KAFKA_HOST}
+    volumes:
+      - backend:/root/.streampipes
+      - backend:/streampipes-assets
+    networks:
+      spnet:  
+      
+  connect-master:
+    image: "${SP_REGISTRY_MAIN}/streampipes-connect-container:${SP_VERSION}"
+    depends_on:
+      - consul
+      - couchdb
+    ports:
+      - "8099:8099"
+    environment:
+      - EXECUTION_MODE=MASTER
+      - SP_CONNECT_CONTAINER_HOST=connect-master
+      - SP_CONNECT_CONTAINER_WORKER=connect-worker
+      - SP_KAFKA_HOST=${SP_KAFKA_HOST}
+    volumes:
+      - connect:/data/
+    networks:
+      spnet: 
+
+  connect-worker-main:
+    image: "${SP_REGISTRY_CONNECT}/streampipes-connect-worker:${SP_VERSION}"
+    depends_on:
+      - consul
+      - couchdb
+    ports:
+      - "8098:8098"
+    environment:
+      - SP_CONNECT_CONTAINER_HOST=connect-master
+      - SP_CONNECT_CONTAINER_WORKER=connect-worker-main
+      - SP_KAFKA_HOST=${SP_KAFKA_HOST}
+    volumes:
+      - connect:/data/
+    networks:
+      spnet:
+      
+  nginx:
+    image: "${SP_REGISTRY_UI}/ui:${SP_UI_VERSION}"
+    ports:
+      - "80:80"
+    depends_on:
+      - couchdb
+      - activemq
+      - consul
+      - swagger-ui
+      - connect-master
+      - backend
+    networks:
+      spnet:
+
+
+#### Lite version pipeline elements
+
+  processors-filters-jvm:
+    image: "${SP_REGISTRY_PE}/processors-filters-jvm:${SP_VERSION}"
+    depends_on:
+      - "consul"
+    networks:
+      spnet:
+      
+  processors-filters-siddhi:
+    image: "${SP_REGISTRY_PE}/processors-filters-siddhi:${SP_VERSION}"
+    depends_on:
+      - "consul"
+    networks:
+      spnet:
+      
+  processors-image-processing-jvm:
+    image: "${SP_REGISTRY_PE}/processors-image-processing-jvm:${SP_VERSION}"
+    depends_on:
+      - "consul"
+    networks:
+      spnet:
+      
+  processors-transformation-jvm:
+    image: "${SP_REGISTRY_PE}/processors-transformation-jvm:${SP_VERSION}"
+    depends_on:
+      - "consul"
+    networks:
+      spnet:
+     
+  sinks-brokers-jvm:
+    image: "${SP_REGISTRY_PE}/sinks-brokers-jvm:${SP_VERSION}"
+    depends_on:
+      - "consul"
+    networks:
+      spnet:
+
+  sinks-databases-jvm:
+    image: "${SP_REGISTRY_PE}/sinks-databases-jvm:${SP_VERSION}"
+    depends_on:
+      - "consul"
+    networks:
+      spnet:
+      
+  sinks-internal-jvm:
+    image: "${SP_REGISTRY_PE}/sinks-internal-jvm:${SP_VERSION}"
+    depends_on:
+      - "consul"
+    environment:
+      - STREAMPIPES_HOST=${SP_HOST}
+      - SP_NGINX_HOST=${SP_HOST}
+    networks:
+      spnet:
+      
+  sinks-notifications-jvm:
+    image: "${SP_REGISTRY_PE}/sinks-notifications-jvm:${SP_VERSION}"
+    depends_on:
+      - "consul"
+    networks:
+      spnet:
+      
+  sources-watertank-simulator:
+    image: "${SP_REGISTRY_PE}/sources-watertank-simulator:${SP_VERSION}"
+    depends_on:
+      - "consul"
+    networks:
+      spnet:
+    
+
+volumes:
+  backend:
+  consul:
+  connect:
+  couchdb:
+  kafka:
+  rdf4j:
+  zk-conf:
+  zk-data:
+
+
+networks:
+  spnet:
+    external: true

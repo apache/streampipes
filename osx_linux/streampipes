@@ -7,76 +7,104 @@ fi
 
 if [ $1 = "start" ];
 then
-	if [ -z "$2" ] || [ $2 = "desktop" ];
+
+echo ' _______ __                              ______ __                    '
+echo '|     __|  |_.----.-----.---.-.--------.|   __ \__|.-----.-----.-----.'
+echo '|__     |   _|   _|  -__|  _  |        ||    __/  ||  _  |  -__|__ --|'
+echo '|_______|____|__| |_____|___._|__|__|__||___|  |__||   __|_____|_____|'
+echo '                                                   |__|'
+echo ''
+echo 'Welcome to StreamPipes!'
+echo ''
+
+if [ ! -f ./docker-compose.yml ]; 
 	then
-		curl https://raw.githubusercontent.com/streampipes/preview-docker/master/desktop/docker-compose.yml > ./tmpl-docker-compose.yml
-
-	else
-		if [ $2 = "bigdata" ];
-		then
-			curl https://raw.githubusercontent.com/streampipes/preview-docker/master/big-data/docker-compose.yml > ./tmpl-docker-compose.yml
-
-		else
-			echo "Wrong starting command. Use 'streampipes start desktop' or 'streampipes start bigdata'"
-			exit 1
-		fi
-	fi
-
-
-	if [ ! -f ./tmpl-docker-compose.yml ]; then
-		curl https://raw.githubusercontent.com/streampipes/preview-docker/master/docker-compose.yml > ./tmpl-docker-compose.yml
-	fi
-
-	if command -v ip;
-	then
-		# If Unix
-		#        ip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -1)
-		rawip=$(ip address list | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-
-		rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
-		IFS=' ' declare -a 'allips=($rawip)'
-
-		allips+=( 'Enter IP manually' )
-
+		echo ''; 
 		echo ''
-		echo 'Please select your IP address or add one manually: '
-		PS3='Select option: '
-		select opt in "${allips[@]}"
-		do
+		echo 'StreamPipes can be started in two different setups:'
+		echo ''
+		PS3='Which StreamPipes version should be installed? '
+		options=("StreamPipes Lite (few pipeline elements, needs less memory)" "StreamPipes Full (more pipeline elements, requires > 16 GB RAM)")
+		select opt in "${options[@]}"
+		do 
 		if [ -z "${opt}" ];
 			then 
-				echo "Wrong input select one of the options"; 
+				echo "Wrong input, select one of the options";
 			else
-				ip="$opt"
-
-				if [ "$opt" == "Enter IP manually" ];
-				then
-					read -p "Enter Ip: " ip
-				fi
+				case $opt in
+			"StreamPipes Lite (few pipeline elements, needs less memory)")
+				version="lite"
+				;;
+			"StreamPipes Full (more pipeline elements, requires > 16 GB RAM)")
+				version="full"	
+				;;
+				esac
 				break
+				
 			fi
 		done
+	echo $version;
+		if [ $version == "lite" ];
+		then
+			echo 'Configuring StreamPipes Lite'
+			cp ../templates/docker-compose.lite.yml ./docker-compose.yml
 
-	else
-		# If Windows
-		ip=$(ipconfig | grep -Eo '(IPv4.*)' | grep -Eo '([0-9]*\.){3}[0-9]*' | tail -1)
-		# Workaround for Kafka (https://github.com/docker/for-win/issues/1829)
-		export COMPOSE_CONVERT_WINDOWS_PATHS=1
+		else
+			echo 'Configuring StreamPipes Full'
+			cp ../templates/docker-compose.full.yml ./docker-compose.yml
+		fi
+		
+		cp ../templates/.env ./.env
+		
+		if command -v ip;
+		then
+			# If Unix
+			#        ip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -1)
+			rawip=$(ip address list | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+
+			rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
+			IFS=' ' declare -a 'allips=($rawip)'
+
+			allips+=( 'Enter IP manually' )
+
+			echo ''
+			echo 'Please select your IP address or add one manually: '
+			PS3='Select option: '
+			select opt in "${allips[@]}"
+			do
+			if [ -z "${opt}" ];
+				then 
+					echo "Wrong input select one of the options"; 
+				else
+					ip="$opt"
+
+					if [ "$opt" == "Enter IP manually" ];
+					then
+						read -p "Enter Ip: " ip
+					fi
+					break
+				fi
+			done
+
+		else
+			# If Windows
+			ip=$(ipconfig | grep -Eo '(IPv4.*)' | grep -Eo '([0-9]*\.){3}[0-9]*' | tail -1)
+			# Workaround for Kafka (https://github.com/docker/for-win/issues/1829)
+			export COMPOSE_CONVERT_WINDOWS_PATHS=1
+		fi
+
+		sed -i -e "s/SP_HOST=.*/SP_HOST=${ip}/g" .env
+		sed -i -e "s/SP_KAFKA_HOST=.*/SP_KAFKA_HOST=${ip}/g" .env		
 	fi
 
-	sed "s/###TODO ADD HOSTNAME HERE ###/${ip}/g" ./tmpl-docker-compose.yml > ./docker-compose.yml
 
-
-	# Remove old containers
-	docker-compose stop
-	yes Y | docker-compose down -v
 
 	docker-compose pull
 
 	docker-compose up -d
 
 	if [ $? -eq 0 ]; then
-		echo "StreamPipes successfully started. Open Browser and navigate to 'localhost'"
+		echo "StreamPipes successfully started. open Browser and navigate to 'localhost'"
 	else
 		echo "ERROR: There was a problem while starting StreamPipes"
 	fi
@@ -84,15 +112,17 @@ then
 else
 	if [ $1 = "stop" ] || [ $1 = "clean" ];
 	then
-		docker-compose stop
-		yes Y | docker-compose down -v
-
-		echo "StreamPipes successfully stopped"
+	    if [ $1 = "stop" ]; 
+		then 
+			docker-compose down
+			echo "StreamPipes successfully stopped"
+		fi
 
 		if [ $1 = "clean" ];
 		then
+		    yes Y | docker-compose down -v
 			rm ./docker-compose.yml
-			rm ./tmpl-docker-compose.yml
+			rm ./.env
 			rm -r ./config/
 			echo "All StreamPipes System informations were deleted. The system can now be installed again."
 		fi
