@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {BaseChartComponent} from '../chart/baseChart.component';
 
 
@@ -7,14 +7,11 @@ import {BaseChartComponent} from '../chart/baseChart.component';
     templateUrl: './lineChart.component.html',
     styleUrls: ['./lineChart.component.css']
 })
-export class LineChartComponent extends BaseChartComponent {
+export class LineChartComponent extends BaseChartComponent implements OnChanges {
 
     constructor() {
         super();
     }
-
-    @Output() itemPerPageChange = new EventEmitter<number>();
-
 
     dataToDisplay: any[] = undefined;
     itemsPerPage = 50;
@@ -68,6 +65,22 @@ export class LineChartComponent extends BaseChartComponent {
         }
     };
 
+    ngOnChanges(changes: SimpleChanges) {
+        //TODO: is needed because bindings are not working correct
+        if (changes.endDateData !== undefined) {
+            this.endDateData = changes.endDateData.currentValue;
+        }
+        if (changes.startDateData !== undefined) {
+            this.startDateData = changes.startDateData.currentValue;
+        }
+        //TODO should be done in displaydata
+        if (this.startDateData !== undefined && this.endDateData !== undefined) {
+            this.graph.layout.xaxis['range'] = [this.startDateData.getTime(), this.endDateData.getTime()];
+        }
+    }
+
+
+
     displayData(transformedData: any[], yKeys: String[]) {
         if (this.yKeys.length > 0) {
             const tmp = [];
@@ -78,8 +91,12 @@ export class LineChartComponent extends BaseChartComponent {
                 })
             });
             this.dataToDisplay = tmp;
+
+        //    this.graph.layout.xaxis['range'] = [this.startDateData.getTime(), this.endDateData.getTime()];
         } else {
             this.dataToDisplay = undefined;
+       //     this.graph.layout.xaxis['range'] = undefined;
+
         }
     }
 
@@ -119,13 +136,6 @@ export class LineChartComponent extends BaseChartComponent {
 
     stopDisplayData() {
     }
-
-    selectItemsPerPage(num) {
-        this.itemsPerPage = num;
-        this.itemPerPageChange.emit(this.itemsPerPage);
-    }
-
-
 
 
 }

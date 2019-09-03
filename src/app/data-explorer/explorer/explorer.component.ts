@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DatalakeRestService} from '../../core-services/datalake/datalake-rest.service';
 import {InfoResult} from '../../core-model/datalake/InfoResult';
 import {Observable} from 'rxjs/Observable';
 import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
-import {MatSnackBar} from '@angular/material';
+import {MatDialog, MatSnackBar} from '@angular/material';
+import {DataDownloadDialog} from './datadownloadDialog/dataDownload.dialog';
 
 @Component({
     selector: 'sp-explorer',
@@ -22,7 +23,7 @@ export class ExplorerComponent implements OnInit {
     selectedInfoResult: InfoResult = undefined;
 
     //timeunit selection
-    selectedTimeUnit = 'All';
+    selectedTimeUnit = '1 Day';
 
     //aggregation / advanced options
     //group by
@@ -34,7 +35,7 @@ export class ExplorerComponent implements OnInit {
     dataKeys: string[] = [];
 
     //y and x axe
-    yAxesKeys: [] = undefined;
+    yAxesKeys: [] = [];
     xAxesKey = 'time';
 
     downloadFormat: string = 'csv';
@@ -44,16 +45,20 @@ export class ExplorerComponent implements OnInit {
 
     isLoadingData;
 
-    //TODO REMOVE
-    itemsPerPage = 50;
+    //user messages
+    noDateFoundinTimeRange;
+    noKeySelected;
+    noIndexSelection;
 
     //custom time range
-    customStartDate = new Date();
-    customEndDate = new Date(this.customStartDate.getTime() + 60000 * 60 * 24);
+    customEndDate: Date;
+    customStartDate: Date;
 
 
-    constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar) {
-
+    constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar, public dialog: MatDialog) {
+        this.customEndDate = new Date();
+        this.customEndDate.setHours(0,0,0,0);
+        this.customStartDate = new Date(this.customEndDate.getTime() - 60000 * 60 * 24);
     }
 
     ngOnInit(): void {
@@ -64,6 +69,7 @@ export class ExplorerComponent implements OnInit {
                         startWith(''),
                         map(value => this._filter(value))
                     );
+                this.noIndexSelection = true;
             }
         );
     }
@@ -71,7 +77,7 @@ export class ExplorerComponent implements OnInit {
     selectTimeUnit(value) {
         this.selectedTimeUnit = value;
 
-        if (this.selectedTimeUnit === '24 Hours') {
+        if (this.selectedTimeUnit === '1 Day') {
             this.groupbyUnit = 'm';
             this.groupbyValue = 1;
         } else if (this.selectedTimeUnit === '1 Week') {
@@ -89,96 +95,35 @@ export class ExplorerComponent implements OnInit {
     }
 
     loadData() {
-        if (this.selectedTimeUnit === 'All') {
-            this.loadAllData();
-        } else if(this.selectedTimeUnit == 'Custom') {
-            this.loadCustomData();
-        } else {
-            this.loadLastData();
-        }
-    }
-
-    loadAllData() {
         this.isLoadingData = true;
-        this.restService.getDataPageWithoutPage(this.selectedInfoResult.measureName,this.itemsPerPage).subscribe(
-            res => {
-                if(res.events.length > 0) {
-                //    this.currentPage = res.page;
-                //    this.maxPage = res.pageSum;
-                    this.data = res.events as [];
-               //     this.setDataKeys(res.events)
-                } else {
-                    this.data = undefined;
-                }
-                this.isLoadingData = false;
+        this.noDateFoundinTimeRange = false;
+        this.noIndexSelection = false;
+
+        if (this.selectedTimeUnit !== 'Custom') {
+            this.customEndDate = new Date();
+            this.customEndDate.setHours(0,0,0,0);
+
+            if (this.selectedTimeUnit === '1 Day') {
+                this.customStartDate = new Date(this.customEndDate.getTime() - 60000 * 60 * 24 * 1);
+            } else if (this.selectedTimeUnit === '1 Week') {
+                this.customStartDate = new Date(this.customEndDate.getTime() - 60000 * 60 * 24 * 7);
+            } else if (this.selectedTimeUnit === '1 Month') {
+                this.customStartDate = new Date(this.customEndDate.getTime() - 60000 * 60 * 24 * 30);
+            } else if (this.selectedTimeUnit === '1 Year') {
+                this.customStartDate = new Date(this.customEndDate.getTime() - 60000 * 60 * 24 * 365);
             }
-        );
-    }
-
-    loadLastData() {
-        let timeunit = '';
-        let timevalue = 0;
-        if (this.selectedTimeUnit === '24 Hours') {
-            timeunit = 'h';
-            timevalue = 24;
-        } else if (this.selectedTimeUnit === '1 Week') {
-            timeunit = 'w';
-            timevalue = 1;
-        } else if (this.selectedTimeUnit === '1 Month') {
-            timeunit = 'w';
-            timevalue = 4;
-        } else if (this.selectedTimeUnit === '1 Year') {
-            timeunit = 'd';
-            timevalue = 365;
         }
 
-        this.isLoadingData = true;
         if (this.enableAdvanceOptions) {
             let groupbyUnit = this.groupbyUnit;
             let groupbyValue = this.groupbyValue;
             if (this.groupbyUnit === 'month') {
-                groupbyUnit = 'd';
-                groupbyValue = 30 * this.groupbyValue;
+                groupbyUnit = 'w';
+                groupbyValue = 4 * groupbyValue;
             } else if(this.groupbyUnit === 'year') {
                 groupbyUnit = 'd';
-                groupbyValue = 365 * this.groupbyValue;
+                groupbyValue = 365 * groupbyValue;
             }
-
-            this.restService.getLastData(this.selectedInfoResult.measureName, timeunit, timevalue, groupbyUnit, groupbyValue).subscribe(
-                res => this.processRevicedData(res)
-            );
-        } else {
-            this.restService.getLastDataAutoAggregation(this.selectedInfoResult.measureName, timeunit, timevalue).subscribe(
-                res => this.processRevicedData(res)
-            );
-        }
-
-
-    }
-
-    processRevicedData(res) {
-        if(res.events.length > 0) {
-            this.data = res.events as [];
-        //    this.setDataKeys(res.events);
-       //     this.currentPage = undefined;
-        } else {
-            this.data = undefined;
-        }
-        this.isLoadingData = false;
-    }
-
-    loadCustomData() {
-        this.isLoadingData = true;
-        let groupbyUnit = this.groupbyUnit;
-        let groupbyValue = this.groupbyValue;
-        if (this.groupbyUnit === 'month') {
-            groupbyUnit = 'w';
-            this.groupbyValue = 4 * this.groupbyValue;
-        } else if(this.groupbyUnit === 'year') {
-            groupbyUnit = 'd';
-            this.groupbyValue = 365 * this.groupbyValue;
-        }
-        if (this.enableAdvanceOptions) {
             this.restService.getData(this.selectedInfoResult.measureName, this.customStartDate.getTime(), this.customEndDate.getTime(), groupbyUnit, groupbyValue).subscribe(
                 res => this.processRevicedData(res)
             );
@@ -190,21 +135,51 @@ export class ExplorerComponent implements OnInit {
 
     }
 
+    pageDate() {
+
+    }
+
+    processRevicedData(res) {
+        if(res.events.length > 0) {
+            this.data = res.events as [];
+            this.noDateFoundinTimeRange = false;
+            if (this.yAxesKeys.length === 0) {
+                this.noKeySelected = true;
+            }
+        } else {
+            this.data = undefined;
+            this.noDateFoundinTimeRange = true;
+            this.noKeySelected = false;
+        }
+        this.isLoadingData = false;
+    }
+
     selectIndex(index: string) {
         this.dataKeys = [];
         this.selectedInfoResult = this._filter(index)[0];
         this.selectedInfoResult.eventSchema.eventProperties.forEach(property => {
             if (property['domainProperties'] === undefined) {
                 this.dataKeys.push(property['runtimeName']);
-            } else if (property.domainProperty !== 'http://schema.org/DateTime'&& property['domainProperties'][0] != "http://schema.org/DateTime") {
+            } else if (property.domainProperty !== 'http://schema.org/DateTime'&& property['domainProperties'][0] != 'http://schema.org/DateTime') {
                 this.dataKeys.push(property['runtimeName']);
             }
-            });
+        });
         this.loadData();
     }
 
     selectKey(value) {
+        if (this.data === undefined) {
+            this.noDateFoundinTimeRange = true;
+        } else {
+            this.noDateFoundinTimeRange = false;
+        }
+        if (value.length === 0 && !this.noDateFoundinTimeRange) {
+            this.noKeySelected = true;
+        } else {
+            this.noKeySelected = false;
+        }
         this.yAxesKeys = value;
+
     }
 
     _filter(value: string): InfoResult[] {
@@ -213,9 +188,39 @@ export class ExplorerComponent implements OnInit {
         return this.infoResult.filter(option => option.measureName.toLowerCase().includes(filterValue));
     }
 
+    downloadDataAsFile() {
+        const dialogRef = this.dialog.open(DataDownloadDialog, {
+            width: '600px',
+            data: {data: this.data, xAxesKey: this.xAxesKey, yAxesKeys: this.yAxesKeys, index: this.selectedInfoResult.measureName}
+
+        });
+    }
+
     openSnackBar(message: string) {
         this.snackBar.open(message, 'Close', {
             duration: 2000,
         });
+    }
+
+    handleNextPage() {
+        //TODO
+      //  this.selectedTimeUnit = 'Custom';
+     //   this.customStartDate =
+     //   this.customEndDate =
+    }
+
+    handlePreviousPage() {
+        //TODO
+    //    this.selectedTimeUnit = 'Custom';
+   //     this.customStartDate =
+   //         this.customEndDate =
+    }
+
+    handleFirstPage() {
+
+    }
+
+    handleLastPage() {
+
     }
 }

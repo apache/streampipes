@@ -1,0 +1,85 @@
+<h1 mat-dialog-title>
+    <div fxLayout="row" fxLayoutAlign="space-between center" >
+        <div>Download Data</div>
+        <button mat-icon-button (click)="exitDialog()"
+                style="" color="primary">
+            <mat-icon style="font-size: 30px;height: 30px; width: 30px; color:#b3b3b3;">close</mat-icon>
+        </button>
+    </div>
+</h1>
+
+<div mat-dialog-content>
+
+
+    <mat-horizontal-stepper  #stepper style="margin-top: -20px">
+        <mat-step>
+            <ng-template matStepLabel>Select Data</ng-template>
+            <div>
+                <mat-radio-group class="example-radio-group" [(ngModel)]="selectedData">
+                    <mat-radio-button value="visible" class="example-radio-button">
+                        Visible data in line chart
+                    </mat-radio-button>
+                    <mat-radio-button value="all" class="example-radio-button">
+                        All data in database
+                    </mat-radio-button>
+                    <mat-radio-button value="customInterval" class="example-radio-button">
+                        All data in custom time interval
+                    </mat-radio-button>
+                </mat-radio-group>
+                <div fxLayout="row" fxLayoutAlign="start center" style="margin-left: 35px">
+                        <mat-form-field style="top: -10px" >
+                            <input matInput [matDatepicker]="picker" [disabled]="selectedData !== 'customInterval'" [(ngModel)]="customStartDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field style="top: -10px; margin-left: 5px">
+                            <input matInput [min]="customStartDate" [disabled]="selectedData !== 'customInterval'" [matDatepicker]="picker2" [(ngModel)]="customEndDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2></mat-datepicker>
+                        </mat-form-field>
+                </div>
+            </div>
+        </mat-step>
+
+
+
+
+        <mat-step>
+            <ng-template matStepLabel>Select Format</ng-template>
+            <div>
+                <mat-radio-group class="example-radio-group" [(ngModel)]="downloadFormat">
+                    <mat-radio-button value="json" class="example-radio-button">
+                        JSON
+                    </mat-radio-button>
+                    <mat-radio-button value="csv" class="example-radio-button">
+                        CSV
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </mat-step>
+
+
+
+
+
+        <mat-step>
+            <ng-template matStepLabel>Download</ng-template>
+            <div div fxLayout="column" fxLayoutAlign="space-around center" *ngIf="!downloadFinish">
+                <mat-spinner></mat-spinner>
+                <label *ngIf="downloadedMBs !== undefined">{{downloadedMBs      | number : '1.0-2' }} Mb</label>
+                <button mat-button warn  color="warn" (click)="cancelDownload()">Cancel</button>
+            </div>
+            <div div fxLayout="column" fxLayoutAlign="space-around center" *ngIf="downloadFinish">
+                <mat-icon style="font-size: 100px;height: 100px; width: 100px; color:#b3b3b3;">check</mat-icon>
+            </div>
+        </mat-step>
+    </mat-horizontal-stepper>
+
+</div>
+
+<div mat-dialog-actions style="float: right">
+    <button mat-button *ngIf="stepper.selectedIndex == 1" color="primary" (click)="previousStep()">Previous</button>
+    <button mat-button mat-raised-button *ngIf="stepper.selectedIndex < 1" color="primary" (click)="nextStep()">Next</button>
+    <button mat-button mat-raised-button *ngIf="stepper.selectedIndex == 1" color="accent" (click)="downloadData()">Download</button>
+    <button mat-button mat-raised-button *ngIf="downloadFinish" color="primary" (click)="exitDialog()">Close</button>
+</div>
