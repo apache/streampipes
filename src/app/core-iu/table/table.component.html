@@ -1,24 +1,25 @@
 <div>
+    <!--
+        <div fxLayout="row" fxLayoutAlign=" center" style="height: 40px;">
+            <div  *ngIf="enablePaging">
+                <button mat-icon-button (click)="clickFirstPage()">
+                    <mat-icon>first_page</mat-icon>
+                </button>
+                <button mat-icon-button (click)="clickPreviousPage()">
+                    <mat-icon>chevron_left</mat-icon>
+                </button>
+                Page: <label *ngIf="currentPage !== undefined">{{currentPage}}</label>
+                <label *ngIf="maxPage !== undefined"> - {{maxPage}}</label>
+                <button mat-icon-button (click)="clickNextPage()">
+                    <mat-icon>chevron_right</mat-icon>
+                </button>
+                <button mat-icon-button (click)="clickLastPage()">
+                    <mat-icon>last_page</mat-icon>
+                </button>
+            </div>
+            -->
 
-    <div fxLayout="row" fxLayoutAlign=" center" style="height: 40px;">
-        <div  *ngIf="enablePaging">
-            <button mat-icon-button (click)="clickFirstPage()">
-                <mat-icon>first_page</mat-icon>
-            </button>
-            <button mat-icon-button (click)="clickPreviousPage()">
-                <mat-icon>chevron_left</mat-icon>
-            </button>
-            Page: <label *ngIf="currentPage !== undefined">{{currentPage}}</label>
-            <label *ngIf="maxPage !== undefined"> - {{maxPage}}</label>
-            <button mat-icon-button (click)="clickNextPage()">
-                <mat-icon>chevron_right</mat-icon>
-            </button>
-            <button mat-icon-button (click)="clickLastPage()">
-                <mat-icon>last_page</mat-icon>
-            </button>
-        </div>
-
-        <div *ngIf="enableItemsPerPage">
+  <!--      <div *ngIf="enableItemsPerPage">
             Items per page:
             <mat-form-field style="width: 50px; margin-top: 10px;" >
                 <mat-select [(ngModel)]="itemsPerPage" (valueChange)="selectItemsPerPage($event)">
@@ -35,6 +36,7 @@
             </mat-form-field>
         </div>
     </div>
+    -->
 
     <table mat-table [dataSource]="dataSource" class="table">
 
@@ -48,7 +50,7 @@
 
     </table>
 
-
+<!--
     <div fxLayout="row" fxLayoutAlign=" center" style="height: 40px;">
         <div  *ngIf="enablePaging">
             <button mat-icon-button (click)="clickFirstPage()">
@@ -66,6 +68,8 @@
                 <mat-icon>last_page</mat-icon>
             </button>
         </div>
+
     </div>
+     -->
 
 </div>

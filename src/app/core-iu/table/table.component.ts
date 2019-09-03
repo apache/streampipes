@@ -9,51 +9,26 @@ import {BaseChartComponent} from '../chart/baseChart.component';
 })
 export class TableComponent extends BaseChartComponent {
 
-    @Input() enableItemsPerPage: boolean = false;
-
-
-    @Output() itemPerPageChange = new EventEmitter<number>();
-
-
     displayedColumns: String[] = [];
     dataSource = new MatTableDataSource();
-
-    itemsPerPage = 10;
 
     constructor() {
         super();
     }
 
-    selectItemsPerPage(num) {
-        this.itemsPerPage = num;
-        this.itemPerPageChange.emit(this.itemsPerPage);
-    }
-
     transformData(data: any[], xKey: String): any[] {
-        console.log("TRANSFORM DATA");
-        console.log(data);
-        console.log(xKey);
         return data;
-    
     }
 
     displayData(transformedData: any[], yKeys: String[]) {
-        console.log("DISPLAY");
-        console.log(transformedData);
-        console.log(yKeys);
+        this.displayedColumns = Object.assign([], yKeys);
+        this.displayedColumns.unshift(this.xKey);
 
-        this.displayedColumns = yKeys;
-        this.displayedColumns.unshift(this.xKey)
-
-        this.dataSource = transformedData
+        this.dataSource.data = transformedData;
     }
 
     stopDisplayData() {
+        this.dataSource.data = []
     }
-
-
-
-
-
 
 }
