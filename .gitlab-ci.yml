@@ -38,8 +38,8 @@ docker-connect-container:
      - build
    script:
      - cd streampipes-connect-adapter/
-#     - export MVN_VERSION=0.62.1-SNAPSHOT
-     - export MVN_VERSION=$(cat ./target/mvn_version)
+     - export MVN_VERSION=0.62.1-SNAPSHOT
+#     - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
      - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
      - docker build --pull -t $IMAGE_NAME/streampipes-connect-worker:latest -t $IMAGE_NAME/streampipes-connect-worker:$MVN_VERSION -t $HARBOR_IMAGE_NAME/streampipes-connect-worker:latest -t $HARBOR_IMAGE_NAME/streampipes-connect-worker:$MVN_VERSION .
