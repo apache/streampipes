@@ -53,7 +53,7 @@ export class SocketConnectionDataModel extends WidgetDataModel {
 					brokerUrl = brokerUrl.replace('ws:', 'wss:');
 					brokerUrl = brokerUrl.replace(':80', '');
 				}
-				var inputTopic = '/topic/' + element.doc.visualisation['pipelineId'];
+				var inputTopic = '/topic/' + element.doc.visualisation['topic'];
 
 				self.client = Stomp.client(brokerUrl + inputTopic);
 
