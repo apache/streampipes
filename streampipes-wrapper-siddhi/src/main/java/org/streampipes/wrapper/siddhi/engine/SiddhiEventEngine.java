@@ -224,20 +224,24 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   }
 
 
-  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation) {
+  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation,
+                                                  String eventName) {
     StringBuilder selectString = new StringBuilder();
     selectString.append("select ");
 
     if (sortedEventKeys.size() > 0) {
       for (int i = 0; i < sortedEventKeys.size() - 1; i++) {
-        selectString.append("e1.s0" + sortedEventKeys.get(i) + ",");
-
+        selectString.append(eventName + ".s0" + sortedEventKeys.get(i) + ",");
       }
-      selectString.append("e1.s0" + sortedEventKeys.get(sortedEventKeys.size() - 1));
+      selectString.append(eventName + ".s0" + sortedEventKeys.get(sortedEventKeys.size() - 1));
 
     }
 
     return selectString.toString();
+  }
+
+  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation) {
+    return getCustomOutputSelectStatement(invocation, "e1");
   }
 
   public void setSortedEventKeys(List<String> sortedEventKeys) {
