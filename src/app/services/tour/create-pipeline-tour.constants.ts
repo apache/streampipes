@@ -94,7 +94,7 @@ export default {
             {
                 stepId: "step-8",
                 title: "Customize elements",
-                text: "<p>Most pipeline elements can be customized according to your needs. Whenever you connect two elements with each other, a configuration dialog pops up.</p><p>Select <b>randomValue</b> as the field to filter, select <b>greater than (>) </b> as operation, select <b>10</b> as the threshold value and click <b>Save</b>.</p>",
+                text: "<p>Most pipeline elements can be customized according to your needs. Whenever you connect two elements with each other, a configuration dialog pops up.</p><p>Select <b>Mass Flow</b> as the field to filter, select <b>greater than (>) </b> as operation, select <b>10</b> as the threshold value and click <b>Save</b>.</p>",
                 attachToElement: "#tutorial-placeholder",
                 attachPosition: "top",
                 buttons: [
