@@ -27,6 +27,7 @@ build:
       - /release-.*$/
       - ./streampipes-connect-container/target/*.jar
       - ./*/target/*.jar
+      - ./target/mvn_version
     expire_in:  1 hour
 
 
@@ -44,7 +45,7 @@ docker-connect-container:
      - docker build --pull -t $IMAGE_NAME/streampipes-connect-worker:latest -t $IMAGE_NAME/streampipes-connect-worker:$MVN_VERSION -t $HARBOR_IMAGE_NAME/streampipes-connect-worker:latest -t $HARBOR_IMAGE_NAME/streampipes-connect-worker:$MVN_VERSION .
      - docker push $IMAGE_NAME/streampipes-connect-worker:$MVN_VERSION
      - docker push $IMAGE_NAME/streampipes-connect-worker:latest
-#     - docker push $HARBOR_IMAGE_NAME/streampipes-connect:$MVN_VERSION
-#     - docker push $HARBOR_IMAGE_NAME/streampipes-connect:latest
+     - docker push $HARBOR_IMAGE_NAME/streampipes-connect-worker:$MVN_VERSION
+     - docker push $HARBOR_IMAGE_NAME/streampipes-connect-worker:latest
    only:
      - dev
