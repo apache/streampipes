@@ -96,14 +96,14 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
 
     public void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
 
-        String[] keys = item.getReadValueId().getNodeId().getIdentifier().toString().split("\\.");
-        String key;
-
-        if (keys.length > 0) {
-            key = keys[keys.length - 1];
-        } else {
-            key = item.getReadValueId().getNodeId().getIdentifier().toString();
-        }
+//        String[] keys = item.getReadValueId().getNodeId().getIdentifier().toString().split("\\.");
+//        String key;
+//
+//        if (keys.length > 0) {
+//            key = keys[keys.length - 1];
+//        } else {
+        String key = item.getReadValueId().getNodeId().getIdentifier().toString();
+//        }
 
         event.put(key, value.getValue().getValue());
 
