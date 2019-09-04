@@ -23,7 +23,6 @@ import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 import org.streampipes.model.runtime.Event;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class StatisticsSummaryCalculator implements FlatMapFunction<Event, Event> {

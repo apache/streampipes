@@ -25,12 +25,14 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.pattern.detection.flink.processor.and.AndController;
 import org.streampipes.processors.pattern.detection.flink.processor.and.AndParameters;
 import org.streampipes.processors.pattern.detection.flink.processor.and.AndProgram;
 import org.streampipes.processors.pattern.detection.flink.processor.and.TimeUnit;
 import org.streampipes.test.generator.InvocationGraphGenerator;
+import org.streampipes.test.generator.grounding.EventGroundingGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,7 +79,11 @@ public class TestAnd extends DataStreamTestBase {
 
   @Test
   public void testAndProgram() {
-    AndParameters params = new AndParameters(InvocationGraphGenerator.makeEmptyInvocation(new AndController().declareModel()), timeUnit, timeWindow, leftMapping, rightMapping);
+    DataProcessorDescription description = new AndController().declareModel();
+    description.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
+    AndParameters params =
+            new AndParameters(InvocationGraphGenerator.makeEmptyInvocation(description), timeUnit,
+                    timeWindow, leftMapping, rightMapping);
 
     AndProgram program = new AndProgram(params, true);
 
