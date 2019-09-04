@@ -80,16 +80,6 @@ export class ToolbarController {
                 title: 'Live Dashboard',
                 icon: 'editor:ic_insert_chart_24px'
             },
-            {
-                link: 'streampipes.sensors',
-                title: 'Pipeline Element Generator',
-                icon: 'content:ic_add_24px'
-            },
-            {
-                link: 'streampipes.data-explorer',
-                title: 'Data Explorer',
-                icon: 'action:ic_view_headline_24px'
-            },
         ];
 
         this.admin = [
