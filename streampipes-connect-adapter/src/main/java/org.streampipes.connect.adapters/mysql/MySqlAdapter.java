@@ -89,7 +89,7 @@ public class MySqlAdapter extends SpecificDataStreamAdapter {
             .build();
 
     description.setAppId(ID);
-    return  description;
+    return description;
   }
 
   @Override
