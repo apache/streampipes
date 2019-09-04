@@ -126,7 +126,7 @@ public class PipelineElementImport extends AbstractRestInterface {
         requestor.deleteSEP(requestor.getSEPById(elementId));
         userService.deleteOwnSource(username, elementId);
       } else if (requestor.getSECById(elementId) != null) {
-        appId = requestor.getSEPById(elementId).getAppId();
+        appId = requestor.getSECById(elementId).getAppId();
         requestor.deleteSEC(requestor.getSECById(elementId));
         userService.deleteOwnAction(username, elementId);
       } else {
