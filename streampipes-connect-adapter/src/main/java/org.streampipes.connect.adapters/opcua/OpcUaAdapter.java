@@ -96,14 +96,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
 
     public void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
 
-//        String[] keys = item.getReadValueId().getNodeId().getIdentifier().toString().split("\\.");
-//        String key;
-//
-//        if (keys.length > 0) {
-//            key = keys[keys.length - 1];
-//        } else {
-        String key = item.getReadValueId().getNodeId().getIdentifier().toString();
-//        }
+        String key = getRuntimeNameOfNode(item.getReadValueId().getNodeId());
 
         event.put(key, value.getValue().getValue());
 
@@ -164,8 +157,10 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
 
             if (res.size() > 0) {
                 for (OpcNode opcNode : res) {
+
+                    String runtimeName = getRuntimeNameOfNode(opcNode.getNodeId());
                     allProperties.add(PrimitivePropertyBuilder
-                            .create(opcNode.getType(), opcNode.getNodeId().getIdentifier().toString())
+                            .create(opcNode.getType(), runtimeName)
                             .label(opcNode.getLabel())
                             .build());
                 }
@@ -215,5 +210,19 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
         }
 
         return new ArrayList<>();
+    }
+
+
+    private String getRuntimeNameOfNode(NodeId nodeId) {
+        String[] keys = nodeId.getIdentifier().toString().split("\\.");
+        String key;
+
+        if (keys.length > 0) {
+            key = keys[keys.length - 1];
+        } else {
+            key = nodeId.getIdentifier().toString();
+        }
+
+        return key;
     }
 }
