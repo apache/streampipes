@@ -31,6 +31,7 @@
 
     <properties>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
+        <influxdb.java.version>2.14</influxdb.java.version>
     </properties>
 
     <dependencies>
@@ -58,6 +59,11 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>fluent-hc</artifactId>
             <version>4.5.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.influxdb</groupId>
+            <artifactId>influxdb-java</artifactId>
+            <version>${influxdb.java.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
