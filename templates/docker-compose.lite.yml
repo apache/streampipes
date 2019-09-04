@@ -161,7 +161,6 @@ services:
       - couchdb
       - activemq
       - consul
-      - swagger-ui
       - connect-master
       - backend
     networks:
