@@ -839,7 +839,7 @@
         <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce.git
         </developerConnection>
         <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce.git</connection>
-        <url>https://github.com/streampipes/streampipes-ce</url>
+        <url>https://github.com/streampipes/streampipes</url>
     </scm>
 
     <licenses>
