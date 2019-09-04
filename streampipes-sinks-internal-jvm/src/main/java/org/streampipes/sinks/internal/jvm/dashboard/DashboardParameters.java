@@ -23,6 +23,7 @@ import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class DashboardParameters extends EventSinkBindingParams {
     private String pipelineId;
+    private String elementId;
     private EventSchema schema;
     private String broker;
     private String visualizationName;
@@ -35,10 +36,9 @@ public class DashboardParameters extends EventSinkBindingParams {
                 .getNginxPort()
                 +"/streampipes/ws";
         this.visualizationName = visualizationName;
-    }
 
-    private String removeProtocol(String url) {
-       return url.replaceFirst("^(tcp://|ws://)","");
+        this.elementId = invocationGraph.getElementId();
+        this.elementId = this.elementId.substring(this.elementId.lastIndexOf("/"));
     }
 
     public String getPipelineId() {
@@ -55,5 +55,9 @@ public class DashboardParameters extends EventSinkBindingParams {
 
     public String getVisualizationName() {
         return visualizationName;
+    }
+
+    public String getElementId() {
+        return elementId;
     }
 }
