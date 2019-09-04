@@ -63,8 +63,6 @@ public class OpcUa {
         this.opcServerHost = opcServerURL;
         this.opcServerPort = opcServerPort;
 
-        Integer.parseInt(nodeId);
-
         if (isInteger(nodeId)) {
             int integerNodeId = Integer.parseInt(nodeId);
             this.node  = new NodeId(namespaceIndex, integerNodeId);
