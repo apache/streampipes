@@ -71,7 +71,7 @@ public class Trend extends SiddhiEventEngine<TrendParameters> {
 
   @Override
   protected String selectStatement(TrendParameters params) {
-      return getCustomOutputSelectStatement(params.getGraph());
+      return getCustomOutputSelectStatement(params.getGraph(), "e2");
   }
 
 }
