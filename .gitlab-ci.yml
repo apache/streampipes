@@ -11,6 +11,7 @@ stages:
   - docker
   - deploy
   - release
+  - github
   - docker-hub
 
 build:
