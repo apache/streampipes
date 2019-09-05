@@ -136,11 +136,8 @@ docker hub:
   when: manual
   script:
     - export MVN_VERSION=$(cat ./target/mvn_version)
+    - cd streampipes-connect-adapter/
     - docker login -u streampipesbuild -p $DOCKER_HUB_USER_PWD
-    - docker build --pull -t streampipes/backend:$MVN_VERSION ./streampipes-backend/
-    - docker push streampipes/backend:$MVN_VERSION
-    - docker build --pull -t streampipes/backend ./streampipes-backend/
-    - docker push streampipes/backend
     - docker build --pull -t streampipes/streampipes-connect-worker:latest -t streampipes/streampipes-connect-worker:$MVN_VERSION .
     - docker push streampipes/streampipes-connect-worker:$MVN_VERSION
     - docker push streampipes/streampipes-connect-worker:latest
