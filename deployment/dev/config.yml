@@ -8,7 +8,5 @@ modules:
   - spConnect
   - spDashboard
   - spAdd
-  - spSensors
   - spMyElements
   - spConfiguration
-  - spDataExplorer
