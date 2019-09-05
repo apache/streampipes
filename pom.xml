@@ -5,21 +5,57 @@
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-connect-adapters</artifactId>
     <packaging>pom</packaging>
-    <version>0.62.1-SNAPSHOT</version>
+    <version>0.63.0</version>
     <modules>
         <module>streampipes-connect-adapter</module>
     </modules>
 
+
     <properties>
-        <streampipes.version>0.62.1-SNAPSHOT</streampipes.version>
+        <streampipes.version>0.63.0</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
+        <junit.version>4.12</junit.version>
+        <mockito.version>2.18.3</mockito.version>
+        <powermock.version>2.0.2</powermock.version>
+        <wiremock.version>2.24.1</wiremock.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-connect-container</artifactId>
+                <artifactId>streampipes-connect-container-worker</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.tomakehurst</groupId>
+                <artifactId>wiremock</artifactId>
+                <version>${wiremock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito2</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.jayway.restassured</groupId>
+                <artifactId>rest-assured</artifactId>
+                <version>2.3.2</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -34,22 +70,6 @@
             </activation>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <failOnError>false</failOnError>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                        </configuration>
-                    </plugin>
                     <plugin>
                         <groupId>external.atlassian.jgitflow</groupId>
                         <artifactId>jgitflow-maven-plugin</artifactId>
@@ -122,54 +142,8 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                            <configuration>
-                                <doclint>none</doclint>
-                                <additionalparam>-Xdoclint:none</additionalparam>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!--                <plugin>-->
-                <!--                    <groupId>org.apache.maven.plugins</groupId>-->
-                <!--                    <artifactId>maven-javadoc-plugin</artifactId>-->
-                <!--                    <version>3.0.0</version>-->
-                <!--                </plugin>-->
             </plugins>
         </pluginManagement>
-        <!--<plugins>-->
-            <!--<plugin>-->
-                <!--<groupId>org.streampipes</groupId>-->
-                <!--<artifactId>streampipes-maven-plugin</artifactId>-->
-                <!--<version>1.0-SNAPSHOT</version>-->
-            <!--</plugin>-->
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-javadoc-plugin</artifactId>-->
-                <!--<version>3.0.0</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>attach-javadocs</id>-->
-                        <!--<goals>-->
-                            <!--<goal>jar</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--<configuration>-->
-                    <!--<failOnError>false</failOnError>-->
-                    <!--<doclint>none</doclint>-->
-                    <!--<additionalparam>-Xdoclint:none</additionalparam>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
-        <!--</plugins>-->
     </build>
 
     <scm>
@@ -177,7 +151,7 @@
         </developerConnection>
         <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-connect-adapters.git
         </connection>
-        <url>https://github.com/streampipes/streampipes-connet-adapters</url>
+        <url>https://github.com/streampipes/streampipes-connect-adapters</url>
     </scm>
 
     <licenses>
@@ -199,27 +173,11 @@
         </developer>
     </developers>
 
-    <repositories>
-        <repository>
-            <id>laus</id>
-            <name>nexus repository</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <distributionManagement>
         <repository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/releases/</url>
+            <id>sonatype</id>
+            <name>Releases</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
         <snapshotRepository>
             <id>deployment</id>

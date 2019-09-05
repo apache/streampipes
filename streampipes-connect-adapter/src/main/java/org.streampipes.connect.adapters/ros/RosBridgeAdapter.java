@@ -24,6 +24,7 @@ import edu.wpi.rail.jrosbridge.callback.TopicCallback;
 import edu.wpi.rail.jrosbridge.messages.Message;
 import edu.wpi.rail.jrosbridge.services.ServiceRequest;
 import edu.wpi.rail.jrosbridge.services.ServiceResponse;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.adapter.Adapter;
@@ -32,21 +33,26 @@ import org.streampipes.connect.adapter.format.json.object.JsonObjectFormat;
 import org.streampipes.connect.adapter.format.json.object.JsonObjectParser;
 import org.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.adapter.sdk.ParameterExtractor;
+import org.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.staticproperty.Option;
 import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+import org.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.streampipes.sdk.helpers.Labels;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class RosBridgeAdapter extends SpecificDataStreamAdapter {
+public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements ResolvesContainerProvidedOptions {
 
     public static final String ID = "http://streampipes.org/adapter/specific/ros";
 
@@ -69,7 +75,7 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
         super(adapterDescription);
 
         getConfigurations(adapterDescription);
-        
+
         this.jsonObjectParser = new JsonObjectParser();
     }
 
@@ -80,7 +86,11 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
                 .category(AdapterType.Manufacturing)
                 .requiredTextParameter(Labels.from(ROS_HOST_KEY, "Ros Bridge", "Example: test-server.com (No protocol) "))
                 .requiredTextParameter(Labels.from(ROS_PORT_KEY, "Port", "Example: 9090"))
-                .requiredTextParameter(Labels.from(TOPIC_KEY, "Topic", "Example: /battery (Starts with /) "))
+                .requiredSingleValueSelectionFromContainer(Labels.from(TOPIC_KEY, "Topic",
+                        "Example: /battery (Starts with /) "), Arrays.asList(ROS_HOST_KEY,
+                        ROS_PORT_KEY))
+//                .requiredTextParameter(Labels.from(TOPIC_KEY, "Topic", "Example: /battery " +
+//                        "(Starts with /) "))
                 .build();
         description.setAppId(ID);
 
@@ -109,6 +119,19 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
 
     }
 
+    @Override
+    public List<Option> resolveOptions(String requestId, StaticPropertyExtractor extractor) {
+        String rosBridgeHost = extractor.singleValueParameter(ROS_HOST_KEY, String.class);
+        Integer rosBridgePort = extractor.singleValueParameter(ROS_PORT_KEY, Integer.class);
+
+        Ros ros = new Ros(rosBridgeHost, rosBridgePort);
+
+        ros.connect();
+        List<String> topics = getListOfAllTopics(ros);
+        ros.disconnect();
+        return topics.stream().map(Option::new).collect(Collectors.toList());
+    }
+
     private class GetNEvents implements Runnable {
 
         private String topic;
@@ -130,7 +153,7 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
             echoBack.subscribe(new TopicCallback() {
                 @Override
                 public void handleMessage(Message message) {
-                   events.add(message.toString().getBytes());
+                    events.add(message.toString().getBytes());
                 }
             });
         }
@@ -222,19 +245,47 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter {
 
     private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
         ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
-        String host = extractor.singleValue(ROS_HOST_KEY, String.class);
-        String topic = extractor.singleValue(TOPIC_KEY, String.class);
-        int port = extractor.singleValue(ROS_PORT_KEY, Integer.class);
+        this.host = extractor.singleValue(ROS_HOST_KEY, String.class);
+        this.topic = extractor.selectedSingleValueOption(TOPIC_KEY);
+        this.port = extractor.singleValue(ROS_PORT_KEY, Integer.class);
     }
 
     // Ignore for now, but is interesting for future implementations
-    private void getListOfAllTopics() {
-        // Get a list of all topics
-//        Service addTwoInts = new Service(ros, "/rosapi/topics", "rosapi/Topics");
-//        ServiceRequest request = new ServiceRequest();
-//        ServiceResponse response = addTwoInts.callServiceAndWait(request);
-//        System.out.println(response.toString());
+    private List<String> getListOfAllTopics(Ros ros) {
+        List<String> result = new ArrayList<>();
+        Service service = new Service(ros, "/rosapi/topics", "rosapi/Topics");
+        ServiceRequest request = new ServiceRequest();
+        ServiceResponse response = service.callServiceAndWait(request);
+        JSONObject ob = new JSONObject(response.toString());
+
+        if (ob.has("topics")) {
+            JSONArray topics = ((JSONArray) ob.get("topics"));
+            for (int i = 0; i < topics.length(); i++) {
+                result.add((String) topics.get(i));
+            }
+
+        }
+
+        return result;
+
     }
 
+    public static void main(String... args) {
+        Ros ros = new Ros("ipe-girlitz.fzi.de", 9090);
+        boolean connect = ros.connect();
 
+        Service service = new Service(ros, "/rosapi/topics", "rosapi/Topics");
+        ServiceRequest request = new ServiceRequest();
+        ServiceResponse response = service.callServiceAndWait(request);
+
+        JSONObject ob = new JSONObject(response.toString());
+
+        ros.disconnect();
+
+
+        System.out.println(ob.get("topics"));
+
+
+
+    }
 }

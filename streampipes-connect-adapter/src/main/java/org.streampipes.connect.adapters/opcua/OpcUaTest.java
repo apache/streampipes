@@ -51,7 +51,7 @@ import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 public class OpcUaTest {
 
     //    private OpcUaClient myClient;
-    private static String opcServerURL = "opc.tcp://141.21.43.39:4840";
+    private static String opcServerURL = "opc.tcp://141.21.12.160:4840";
     //    private static String opcServerURL = "opc.tcp://192.168.0.144:4840";
     private static final AtomicLong clientHandles = new AtomicLong(1L);
 
@@ -62,12 +62,12 @@ public class OpcUaTest {
 //        client.connect().get();
         client.connect().get();
 
-        NodeId node1 = new NodeId(4, "|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG.auto_gruen");
-        NodeId node2 = new NodeId(4, "|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG.auto_rot");
-        NodeId node3 = new NodeId(4, "|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG.fuss_rot");
-        NodeId node4 = new NodeId(4, "|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG");
+        NodeId node1 = new NodeId(1, "Sensor");
+//        NodeId node2 = new NodeId(4, "|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG.auto_rot");
+//        NodeId node3 = new NodeId(4, "|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG.fuss_rot");
+//        NodeId node4 = new NodeId(4, "|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG");
 
-//        browseNodeTest("", client, node4);
+        browseNodeTest("", client, Identifiers.RootFolder);
 
 //        CompletableFuture<DataValue> va1 = client.readValue(0, TimestampsToReturn.Both, node1);
 //        CompletableFuture<DataValue> va2 = client.readValue(0, TimestampsToReturn.Both, node2);
@@ -81,7 +81,7 @@ public class OpcUaTest {
 	 /*   JSONParser parser = new JSONParser();
 	    JSONObject json = (JSONObject) parser.parse(exchange.getIn().getBody().toString());*/
 
-	 createListSubscription(client, Arrays.asList(node1, node2));
+//	 createListSubscription(client, Arrays.asList(node1, node2));
 //        createSubscription(client, node1);
 //        createSubscription(client, node2);
 
@@ -98,7 +98,7 @@ public class OpcUaTest {
         EndpointDescription[] endpoints = UaTcpStackClient.getEndpoints(opcServerURL).get();
 
         EndpointDescription tmpEndpoint = endpoints[0];
-        tmpEndpoint = updateEndpointUrl(tmpEndpoint, "141.21.43.39");
+        tmpEndpoint = updateEndpointUrl(tmpEndpoint, "141.21.12.160");
         endpoints = new EndpointDescription[]{tmpEndpoint};
 
         EndpointDescription endpoint = Arrays.stream(endpoints)
@@ -294,7 +294,13 @@ public class OpcUaTest {
                 System.out.println("Node={} " + indent + " " + rd.getBrowseName().getName());
                 System.out.println("=====================================================================");
                 // recursively browse to children
-                rd.getNodeId().local().ifPresent(nodeId -> browseNodeTest(indent + "  ", client, nodeId));
+                rd.getNodeId().local().ifPresent(nodeId -> {
+                    System.out.println("NodeId: " + nodeId.getNamespaceIndex());
+                    System.out.println("NodeId: " + nodeId.getIdentifier());
+                    System.out.println("NodeId: " + nodeId.getType());
+                    browseNodeTest(indent + "  ", client, nodeId);
+
+                });
             }
         } catch (InterruptedException | ExecutionException e) {
             System.out.println("Browsing nodeId=" + browseRoot + " failed: " + e.getMessage());

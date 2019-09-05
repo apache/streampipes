@@ -18,30 +18,29 @@
 package org.streampipes.connect.adapters.opcua;
 
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
+import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
-import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
-import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.exception.ParseException;
 import org.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.streampipes.connect.adapter.sdk.ParameterExtractor;
+import org.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.staticproperty.Option;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
+import org.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.streampipes.sdk.helpers.Labels;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class OpcUaAdapter extends SpecificDataStreamAdapter {
+public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesContainerProvidedOptions {
 
     public static final String ID = "http://streampipes.org/adapter/specific/opcua";
 
@@ -86,6 +85,8 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
                 .requiredTextParameter(Labels.from(OPC_SERVER_PORT, "OPC Server Port", "Example: 4840"))
                 .requiredTextParameter(Labels.from(NAMESPACE_INDEX, "Namespace Index", "Example: 2"))
                 .requiredTextParameter(Labels.from(NODE_ID, "Node Id", "Id of the Node to read the values from"))
+//                .requiredSingleValueSelectionFromContainer(Labels.from(NODE_ID, "Node Id",
+//                        "Id of the Node to read the values from"), Arrays.asList(OPC_SERVER_HOST, OPC_SERVER_PORT, NAMESPACE_INDEX))
                 .build();
         description.setAppId(ID);
 
@@ -95,19 +96,13 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
     public void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
 
-        String[] keys = item.getReadValueId().getNodeId().getIdentifier().toString().split("\\.");
-        String key;
+        String key = getRuntimeNameOfNode(item.getReadValueId().getNodeId());
 
-        if (keys.length > 0) {
-            key = keys[keys.length - 1];
-        } else {
-            key = item.getReadValueId().getNodeId().getIdentifier().toString();
-        }
         event.put(key, value.getValue().getValue());
 
-        if (event.keySet().size() == this.numberProperties) {
+        if (event.keySet().size() >= this.numberProperties) {
             adapterPipeline.process(event);
-            System.out.println(event);
+//            System.out.println(event);
         }
     }
 
@@ -118,12 +113,11 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
         try {
             this.opcUa.connect();
 
-            List<ReferenceDescription> allNodes = this.opcUa.browseNode();
+            List<OpcNode> allNodes = this.opcUa.browseNode();
             List<NodeId> nodeIds = new ArrayList<>();
 
-
-            for (ReferenceDescription rd : allNodes) {
-                rd.getNodeId().local().ifPresent(nodeId -> nodeIds.add(nodeId));
+            for (OpcNode rd : allNodes) {
+                nodeIds.add(rd.nodeId);
             }
 
             this.numberProperties = nodeIds.size();
@@ -158,17 +152,25 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
         OpcUa opc = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId);
         try {
             opc.connect();
-            List<ReferenceDescription> res =  opc.browseNode();
+            List<OpcNode> res =  opc.browseNode();
 
-            for (ReferenceDescription r : res) {
-                allProperties.add(PrimitivePropertyBuilder
-                        .create(OpcUaTypes.getType((UInteger) r.getTypeDefinition().getIdentifier()), r.getBrowseName().getName())
-                        .build());
+
+            if (res.size() > 0) {
+                for (OpcNode opcNode : res) {
+
+                    String runtimeName = getRuntimeNameOfNode(opcNode.getNodeId());
+                    allProperties.add(PrimitivePropertyBuilder
+                            .create(opcNode.getType(), runtimeName)
+                            .label(opcNode.getLabel())
+                            .build());
+                }
             }
 
             opc.disconnect();
         } catch (Exception e) {
-            e.printStackTrace();
+
+            throw new AdapterException("Could not guess schema for opc node! " + e.getMessage());
+
         }
 
         eventSchema.setEventProperties(allProperties);
@@ -189,5 +191,38 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
         this.port = extractor.singleValue(OPC_SERVER_PORT, String.class);
         this.namespaceIndex = extractor.singleValue(NAMESPACE_INDEX, String.class);
         this.nodeId = extractor.singleValue(NODE_ID, String.class);
+    }
+
+    @Override
+    public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
+        String opcUaServer = parameterExtractor.singleValueParameter(OPC_SERVER_HOST, String.class);
+        int port = parameterExtractor.singleValueParameter(OPC_SERVER_PORT, Integer.class);
+        int namespaceIndex = parameterExtractor.singleValueParameter(NAMESPACE_INDEX, Integer.class);
+
+        OpcUa opc = new OpcUa(opcUaServer, port, namespaceIndex, Identifiers.RootFolder);
+
+        try {
+            opc.connect();
+            List<OpcNode> res =  opc.browseNode();
+            System.out.println(res);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
+
+
+    private String getRuntimeNameOfNode(NodeId nodeId) {
+        String[] keys = nodeId.getIdentifier().toString().split("\\.");
+        String key;
+
+        if (keys.length > 0) {
+            key = keys[keys.length - 1];
+        } else {
+            key = nodeId.getIdentifier().toString();
+        }
+
+        return key;
     }
 }

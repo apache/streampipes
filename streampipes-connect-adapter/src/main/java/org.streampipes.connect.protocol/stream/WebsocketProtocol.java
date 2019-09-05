@@ -13,68 +13,82 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.streampipes.connect.adapters.simulator;
+package org.streampipes.connect.protocol.stream;
+
+import static org.streampipes.sdk.helpers.EpProperties.stringEp;
+import static org.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.connect.adapter.exception.ParseException;
 import org.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
-import org.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.vocabulary.SO;
 
-public class RandomDataStreamAdapter extends SpecificDataStreamAdapter {
+import java.net.URI;
+import java.net.URISyntaxException;
 
-  public static final String ID = "http://streampipes.org/adapter/specific/randomdatastream";
+public class WebsocketProtocol extends SpecificDataStreamAdapter {
 
-  private final static String WaitTimeMs = "wait-time-ms";
+  public static final String ID = "http://streampipes.org/adapter/specific/turtlebot";
 
-  private RandomDataSimulator randomDataSimulator;
+  private WebsocketClient websocketClient;
 
-  public RandomDataStreamAdapter() {
-    super();
+  public WebsocketProtocol() {
   }
 
-  public RandomDataStreamAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
-    super(adapterStreamDescription);
-    ParameterExtractor extractor = new ParameterExtractor(adapterStreamDescription.getConfig());
-    Integer waitTimeMs = extractor.singleValue(WaitTimeMs, Integer.class);
-    this.randomDataSimulator = new RandomDataSimulator(adapterPipeline, waitTimeMs);
+  public WebsocketProtocol(SpecificAdapterStreamDescription adapterDescription) {
+    super(adapterDescription);
+
+    //getConfigurations(adapterDescription);
+
+    //this.jsonObjectParser = new JsonObjectParser();
   }
 
   @Override
   public SpecificAdapterStreamDescription declareModel() {
-    return SpecificDataStreamAdapterBuilder.create(ID, "Random Data Simulator (Stream)",
-            "Publishes an endless stream of random events")
-            .iconUrl("dice.png")
-            .category(AdapterType.Debugging)
-            .requiredIntegerParameter(Labels.from(WaitTimeMs, "Wait Time (MS)", "The time to " +
-                    "wait between two events in milliseconds"))
-            .build();
+    SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID,
+            "Turtlebot Map", "")
+            .iconUrl("ros.png")
+            .category(AdapterType.Manufacturing).build();
+    description.setAppId(ID);
+
+
+    return description;
   }
 
   @Override
   public void startAdapter() throws AdapterException {
-    Thread thread = new Thread(this.randomDataSimulator);
-    thread.start();
+    try {
+      this.websocketClient = new WebsocketClient(adapterPipeline, new URI("ws://192.168.178" +
+              ".40:9090"));
+      this.websocketClient.connect();
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public void stopAdapter() throws AdapterException {
-    this.randomDataSimulator.setRunning(false);
+    this.websocketClient.close();
   }
 
   @Override
   public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-    return new RandomDataStreamAdapter(adapterDescription);
+    return new WebsocketProtocol(adapterDescription);
   }
 
   @Override
   public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException, ParseException {
-    return RandomDataSimulatorUtils.randomSchema();
+    return GuessSchemaBuilder.create()
+            .property(timestampProperty("timestamp"))
+            .property(stringEp(Labels.from("data", "image", ""), "data", SO.Image))
+            .build();
   }
 
   @Override
@@ -82,3 +96,4 @@ public class RandomDataStreamAdapter extends SpecificDataStreamAdapter {
     return ID;
   }
 }
+

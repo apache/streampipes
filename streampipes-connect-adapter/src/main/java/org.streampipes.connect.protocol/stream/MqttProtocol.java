@@ -23,12 +23,14 @@ import org.streampipes.connect.adapter.model.generic.Format;
 import org.streampipes.connect.adapter.model.generic.Parser;
 import org.streampipes.connect.adapter.model.generic.Protocol;
 import org.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
-import org.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
+import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
+import org.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.streampipes.sdk.helpers.AdapterSourceType;
+import org.streampipes.sdk.helpers.Alternatives;
 import org.streampipes.sdk.helpers.Labels;
 
 import java.io.IOException;
@@ -39,23 +41,49 @@ public class MqttProtocol extends BrokerProtocol {
 
   public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/mqtt";
 
+  private static final String ACCESS_MODE = "access_mode";
+  private static final String ANONYMOUS_ACCESS = "anonymous-alternative";
+  private static final String USERNAME_ACCESS = "username-alternative";
+  private static final String USERNAME = "username";
+  private static final String PASSWORD = "password";
+
   private Thread thread;
   private MqttConsumer mqttConsumer;
+  private MqttConfig mqttConfig;
 
   public MqttProtocol() {
   }
 
-  public MqttProtocol(Parser parser, Format format, String brokerUrl, String topic) {
-    super(parser, format, brokerUrl, topic);
+  public MqttProtocol(Parser parser, Format format, MqttConfig mqttConfig) {
+    super(parser, format, mqttConfig.getUrl(), mqttConfig.getTopic());
+    this.mqttConfig = mqttConfig;
   }
 
   @Override
   public Protocol getInstance(ProtocolDescription protocolDescription, Parser parser, Format format) {
-    ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
-    String brokerUrl = extractor.singleValue("broker_url");
-    String topic = extractor.singleValue("topic");
+    MqttConfig mqttConfig;
+    StaticPropertyExtractor extractor =
+            StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
 
-    return new MqttProtocol(parser, format, brokerUrl, topic);
+    String brokerUrl = extractor.singleValueParameter("broker_url", String.class);
+//    String brokerUrl = "tcp://ipe-girlitz.fzi.de:1883";
+
+    String topic = extractor.singleValueParameter("topic", String.class);
+//    String topic = "acceleration";
+
+    String selectedAlternative = extractor.selectedAlternativeInternalId("access_mode");
+//    String selectedAlternative = ANONYMOUS_ACCESS;
+
+
+    if (selectedAlternative.equals(ANONYMOUS_ACCESS)) {
+      mqttConfig = new MqttConfig(brokerUrl, topic);
+    } else {
+      String username = extractor.singleValueParameter(USERNAME, String.class);
+      String password = extractor.secretValue(PASSWORD);
+      mqttConfig = new MqttConfig(brokerUrl, topic, username, password);
+    }
+
+    return new MqttProtocol(parser, format, mqttConfig);
   }
 
   @Override
@@ -67,6 +95,14 @@ public class MqttProtocol extends BrokerProtocol {
             .sourceType(AdapterSourceType.STREAM)
             .requiredTextParameter(Labels.from("broker_url", "Broker URL",
                     "Example: tcp://test-server.com:1883 (Protocol required. Port required)"))
+            .requiredAlternatives(Labels.from(ACCESS_MODE, "Access Mode", ""),
+                    Alternatives.from(Labels.from(ANONYMOUS_ACCESS, "Unauthenticated", "")),
+                    Alternatives.from(Labels.from(USERNAME_ACCESS, "Username/Password", ""),
+                            StaticProperties.group(Labels.withId("username-group"),
+                                    StaticProperties.stringFreeTextProperty(Labels.from(USERNAME,
+                                            "Username", "")),
+                                    StaticProperties.secretValue(Labels.from(PASSWORD,
+                                            "Password", "")))))
             .requiredTextParameter(Labels.from("topic", "Topic","Example: test/topic"))
             .build();
   }
@@ -78,7 +114,7 @@ public class MqttProtocol extends BrokerProtocol {
 
     InternalEventProcessor<byte[]> eventProcessor = elements::add;
 
-    MqttConsumer consumer = new MqttConsumer(this.brokerUrl, this.topic, eventProcessor);
+    MqttConsumer consumer = new MqttConsumer(this.mqttConfig, eventProcessor);
 
     Thread thread = new Thread(consumer);
     thread.start();
@@ -90,14 +126,13 @@ public class MqttProtocol extends BrokerProtocol {
         e.printStackTrace();
       }
     }
-
     return elements;
   }
 
   @Override
   public void run(AdapterPipeline adapterPipeline) {
     SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
-    this.mqttConsumer = new MqttConsumer(this.brokerUrl, this.topic, new MqttProtocol.EventProcessor(stk));
+    this.mqttConsumer = new MqttConsumer(this.mqttConfig, new MqttProtocol.EventProcessor(stk));
 
     thread = new Thread(this.mqttConsumer);
     thread.start();
@@ -124,12 +159,10 @@ public class MqttProtocol extends BrokerProtocol {
     public void onEvent(byte[] payload) {
       try {
         parser.parse(IOUtils.toInputStream(new String(payload), "UTF-8"), stk);
-      } catch (IOException e) {
+      } catch (IOException | ParseException e) {
         e.printStackTrace();
         //logger.error("Adapter " + ID + " could not read value!",e);
-      } catch (ParseException e) {
-        e.printStackTrace();
-    }
+      }
     }
   }
 }

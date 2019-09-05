@@ -16,28 +16,25 @@
   ~
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>streampipes-parent</artifactId>
+        <artifactId>streampipes-connect-adapters</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.62.1-SNAPSHOT</version>
+        <version>0.63.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+
     <artifactId>streampipes-connect-adapter</artifactId>
+
+    <properties>
+        <jsrosbridge.version>0.2.0</jsrosbridge.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-connect-container</artifactId>
-            <version>0.62.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20180130</version>
-            <scope>test</scope>
+            <artifactId>streampipes-connect-container-worker</artifactId>
         </dependency>
         <dependency>
             <groupId>org.fusesource.mqtt-client</groupId>
@@ -66,14 +63,30 @@
             <version>2.22.1</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-jetty-http</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-client</artifactId>
-            <version>3.0.0</version>
+            <version>3.2.0</version>
             <exclusions>
+                <exclusion>
+                    <artifactId>jetty-server</artifactId>
+                    <groupId>org.eclipse.jetty</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jetty-servlet</artifactId>
+                    <groupId>org.eclipse.jetty</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jetty-servlets</artifactId>
+                    <groupId>org.eclipse.jetty</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jetty-webapp</artifactId>
+                    <groupId>org.eclipse.jetty</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jetty-util</artifactId>
+                    <groupId>org.eclipse.jetty</groupId>
+                </exclusion>
                 <exclusion>
                     <groupId>com.sun.jersey</groupId>
                     <artifactId>jersey-core</artifactId>
@@ -101,13 +114,83 @@
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-sse</artifactId>
+            <version>2.27</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.jersey.core</groupId>
+                    <artifactId>jersey-server</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.ullink.slack</groupId>
             <artifactId>simpleslackapi</artifactId>
             <version>1.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>edu.wpi.rail</groupId>
+            <artifactId>jrosbridge</artifactId>
+            <version>${jsrosbridge.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-client-api</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jetty-server</artifactId>
+                    <groupId>org.eclipse.jetty</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jetty-servlet</artifactId>
+                    <groupId>org.eclipse.jetty</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jetty-servlets</artifactId>
+                    <groupId>org.eclipse.jetty</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jetty-webapp</artifactId>
+                    <groupId>org.eclipse.jetty</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.streampipes.connect.ConnectAdapterInit</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <finalName>streampipes-connect-adapter</finalName>
+    </build>
 
 </project>

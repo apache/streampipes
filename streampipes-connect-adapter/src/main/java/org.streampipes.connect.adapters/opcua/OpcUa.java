@@ -33,6 +33,8 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.*;
 import org.eclipse.milo.opcua.stack.core.types.structured.*;
+import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.sdk.utils.Datatypes;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -60,9 +62,23 @@ public class OpcUa {
 
         this.opcServerHost = opcServerURL;
         this.opcServerPort = opcServerPort;
-        this.node  = new NodeId(namespaceIndex, nodeId);
+
+        if (isInteger(nodeId)) {
+            int integerNodeId = Integer.parseInt(nodeId);
+            this.node  = new NodeId(namespaceIndex, integerNodeId);
+        } else {
+            this.node  = new NodeId(namespaceIndex, nodeId);
+        }
 
     }
+
+    public OpcUa(String opcServerURL, int opcServerPort, int namespaceIndex, NodeId nodeId) {
+
+        this.opcServerHost = opcServerURL;
+        this.opcServerPort = opcServerPort;
+        this.node  = nodeId;
+    }
+
 
     public void connect() throws Exception {
 
@@ -115,12 +131,38 @@ public class OpcUa {
         );
     }
 
-    public List<ReferenceDescription> browseNode() {
-       return browseNode(node);
+    public List<OpcNode> browseNode() throws AdapterException {
+        List<OpcNode> referenceDescriptions = browseNode(node);
+
+        if (referenceDescriptions.size() == 0) {
+            referenceDescriptions = getRootNote(node);
+        }
+
+        return referenceDescriptions;
     }
 
-    private List<ReferenceDescription> browseNode(NodeId browseRoot) {
-        List<ReferenceDescription> result = new ArrayList<>();
+    private List<OpcNode> getRootNote(NodeId browseRoot) {
+        List<OpcNode> result = new ArrayList<>();
+
+        try {
+//            VariableNode resultNode = client.getAddressSpace().getVariableNode(browseRoot).get();
+            String label = client.getAddressSpace().getVariableNode(browseRoot).get().getDisplayName().get().getText();
+            Datatypes type = OpcUaTypes.getType((UInteger)client.getAddressSpace().getVariableNode(browseRoot).get().getDataType().get().getIdentifier());
+            NodeId nodeId = client.getAddressSpace().getVariableNode(browseRoot).get().getNodeId().get();
+            result.add(new OpcNode(label, type, nodeId));
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    private List<OpcNode> browseNode(NodeId browseRoot) throws AdapterException {
+        List<OpcNode> result = new ArrayList<>();
+
 
         BrowseDescription browse = new BrowseDescription(
                 browseRoot,
@@ -134,14 +176,30 @@ public class OpcUa {
         try {
             BrowseResult browseResult = client.browse(browse).get();
 
+            if (browseResult.getStatusCode().isBad()) {
+                throw new AdapterException(browseResult.getStatusCode().toString());
+            }
+
             List<ReferenceDescription> references = toList(browseResult.getReferences());
 
             for (ReferenceDescription rd : references) {
-                result.add(rd);
-                rd.getNodeId().local().ifPresent(nodeId -> browseNode(nodeId));
+                if (rd.getNodeClass() == NodeClass.Variable) {
+
+                    OpcNode opcNode = new OpcNode( rd.getBrowseName().getName(), OpcUaTypes.getType((UInteger) rd.getTypeDefinition().getIdentifier()), rd.getNodeId().local().get());
+                    rd.getNodeId();
+
+                    result.add(opcNode);
+                    rd.getNodeId().local().ifPresent(nodeId -> {
+                        try {
+                            browseNode(nodeId);
+                        } catch (AdapterException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
             }
         } catch (InterruptedException | ExecutionException e) {
-            System.out.println("Browsing nodeId=" + browse + " failed: " + e.getMessage());
+            throw new AdapterException("Browsing nodeId=" + browse + " failed: " + e.getMessage());
         }
 
         return result;
@@ -170,48 +228,60 @@ public class OpcUa {
 
 
         List<ReadValueId> readValues = new ArrayList<>();
-            // Read a specific value attribute
+        // Read a specific value attribute
         for (NodeId node : nodes) {
             readValues.add(new ReadValueId(node, AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE));
         }
 
-            List<MonitoredItemCreateRequest> requests = new ArrayList<>();
+        List<MonitoredItemCreateRequest> requests = new ArrayList<>();
 
-            for (ReadValueId readValue : readValues) {
-                // important: client handle must be unique per item
-                UInteger clientHandle = uint(clientHandles.getAndIncrement());
+        for (ReadValueId readValue : readValues) {
+            // important: client handle must be unique per item
+            UInteger clientHandle = uint(clientHandles.getAndIncrement());
 
-                MonitoringParameters parameters = new MonitoringParameters(
-                        clientHandle,
-                        1000.0,     // sampling interval
-                        null,      // filter, null means use default
-                        uint(10),   // queue size
-                        true         // discard oldest
-                );
+            MonitoringParameters parameters = new MonitoringParameters(
+                    clientHandle,
+                    1000.0,     // sampling interval
+                    null,      // filter, null means use default
+                    uint(10),   // queue size
+                    true         // discard oldest
+            );
 
-                requests.add(new MonitoredItemCreateRequest(readValue, MonitoringMode.Reporting, parameters));
+            requests.add(new MonitoredItemCreateRequest(readValue, MonitoringMode.Reporting, parameters));
+        }
+
+        BiConsumer<UaMonitoredItem, Integer> onItemCreated =
+                (item, id) -> {
+                    item.setValueConsumer(opcUaAdapter::onSubscriptionValue);
+                };
+
+        List<UaMonitoredItem> items = subscription.createMonitoredItems(
+                TimestampsToReturn.Both,
+                requests,
+                onItemCreated
+        ).get();
+
+        for (UaMonitoredItem item : items) {
+            NodeId tagId = item.getReadValueId().getNodeId();
+            if (item.getStatusCode().isGood()) {
+                System.out.println("item created for nodeId="+ tagId);
+            } else {
+                System.out.println("failed to create item for " + item.getReadValueId().getNodeId() + item.getStatusCode());
             }
+        }
 
-            BiConsumer<UaMonitoredItem, Integer> onItemCreated =
-                    (item, id) -> {
-                        item.setValueConsumer(opcUaAdapter::onSubscriptionValue);
-                    };
+    }
 
-            List<UaMonitoredItem> items = subscription.createMonitoredItems(
-                    TimestampsToReturn.Both,
-                    requests,
-                    onItemCreated
-            ).get();
-
-            for (UaMonitoredItem item : items) {
-                NodeId tagId = item.getReadValueId().getNodeId();
-                if (item.getStatusCode().isGood()) {
-                    System.out.println("item created for nodeId="+ tagId);
-                } else {
-                    System.out.println("failed to create item for " + item.getReadValueId().getNodeId() + item.getStatusCode());
-                }
-            }
-
+    public static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch(NumberFormatException e) {
+            return false;
+        } catch(NullPointerException e) {
+            return false;
+        }
+        // only got here if we didn't return false
+        return true;
     }
 
 

@@ -57,7 +57,7 @@ public class IexCloudStockAdapter extends IexCloudAdapter {
             " provided by <a href='https://iexcloud.io'>IEX Cloud</a>")
             .iconUrl("iexcloud.png")
             .category(AdapterType.Finance)
-            .requiredTextParameter(Labels.from("token", "API Token", "The IEXCloud API token"))
+            .requiredSecret(Labels.from("token", "API Token", "The IEXCloud API token"))
             .requiredTextParameter(Labels.from("stock", "Stock", "The stock symbol (e.g., AAPL)"))
             .build();
 

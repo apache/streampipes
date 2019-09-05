@@ -21,54 +21,40 @@ import org.streampipes.messaging.InternalEventProcessor;
 
 public class MqttConsumer implements Runnable {
 
-  private String broker;
-  private String topic;
   private InternalEventProcessor<byte[]> consumer;
   private boolean running;
   private int maxElementsToReceive = -1;
   private int messageCount = 0;
 
-  private Boolean authenticatedConnection;
-  private String username;
-  private String password;
+  private MqttConfig mqttConfig;
 
-  public MqttConsumer(String broker, String topic, InternalEventProcessor<byte[]> consumer) {
-    this.broker = broker;
-    this.topic = topic;
+  public MqttConsumer(MqttConfig mqttConfig, InternalEventProcessor<byte[]> consumer) {
+    this.mqttConfig = mqttConfig;
     this.consumer = consumer;
-    this.authenticatedConnection = false;
   }
 
-  public MqttConsumer(String broker, String topic, InternalEventProcessor<byte[]> consumer, int maxElementsToReceive) {
-    this(broker, topic, consumer);
+  public MqttConsumer(MqttConfig mqttConfig, InternalEventProcessor<byte[]> consumer,
+                      int maxElementsToReceive) {
+    this(mqttConfig, consumer);
     this.maxElementsToReceive = maxElementsToReceive;
   }
-
-  public MqttConsumer(String broker, String topic, String username, String password,
-                      InternalEventProcessor<byte[]> consumer) {
-    this(broker, topic, consumer);
-    this.username = username;
-    this.password = password;
-    this.authenticatedConnection = true;
-  }
-
 
   @Override
   public void run() {
     this.running = true;
     MQTT mqtt = new MQTT();
     try {
-      mqtt.setHost(broker);
-      if (authenticatedConnection) {
-        mqtt.setUserName(username);
-        mqtt.setPassword(password);
+      mqtt.setHost(mqttConfig.getUrl());
+      if (mqttConfig.getAuthenticated()) {
+        mqtt.setUserName(mqttConfig.getUsername());
+        mqtt.setPassword(mqttConfig.getPassword());
       }
       BlockingConnection connection = mqtt.blockingConnection();
       connection.connect();
-      Topic[] topics = {new Topic(topic, QoS.AT_LEAST_ONCE)};
+      Topic[] topics = {new Topic(mqttConfig.getTopic(), QoS.AT_LEAST_ONCE)};
       byte[] qoses = connection.subscribe(topics);
 
-      while(running && ((maxElementsToReceive == -1) || (this.messageCount <= maxElementsToReceive))) {
+      while (running && ((maxElementsToReceive == -1) || (this.messageCount <= maxElementsToReceive))) {
         Message message = connection.receive();
         byte[] payload = message.getPayload();
         consumer.onEvent(payload);
