@@ -50,6 +50,19 @@ build:
       - dist/style.css.gz
     expire_in: 1 hour
 
+#github:
+#  image: maven:3-jdk-8
+#  stage: github
+#  script:
+#    - git config --global user.email 'zehnder@fzi.de'
+#    - git config --global user.name 'zehnder'
+#    - git checkout $CI_COMMIT_REF_NAME
+#    - git pull
+#    - git remote add github https://$GITHUB_TOKEN:x-oauth-basic@github.com/streampipes/streampipes-ui.git
+#    - git push github $CI_COMMIT_REF_NAME
+#  only:
+#    - dev
+
 nginx:
   image: docker:17.06.0-ce
   stage: docker
@@ -81,7 +94,7 @@ nginx-docker-hub:
   when: manual
   only:
     - 0.63.0
-    
+
 nginx-testfeld:
   image: docker:17.06.0-ce
   stage: docker
