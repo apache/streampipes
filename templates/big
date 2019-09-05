@@ -30,3 +30,4 @@ sources-watertank-simulator
 swagger-ui
 taskmanager
 zookeeper
+processors-python
