@@ -13,7 +13,7 @@
 
 
     <properties>
-        <streampipes.version>0.62.1-SNAPSHOT</streampipes.version>
+        <streampipes.version>0.63.0</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
         <junit.version>4.12</junit.version>
         <mockito.version>2.18.3</mockito.version>
@@ -61,7 +61,6 @@
         </dependencies>
     </dependencyManagement>
 
-
     <profiles>
         <profile>
             <id>release</id>
@@ -93,26 +92,26 @@
                             <enableSshAgent>true</enableSshAgent>
                         </configuration>
                     </plugin>
-                    <!--<plugin>-->
-                    <!--<groupId>org.apache.maven.plugins</groupId>-->
-                    <!--<artifactId>maven-gpg-plugin</artifactId>-->
-                    <!--<version>1.6</version>-->
-                    <!--<executions>-->
-                    <!--<execution>-->
-                    <!--<id>sign-artifacts</id>-->
-                    <!--<phase>verify</phase>-->
-                    <!--<goals>-->
-                    <!--<goal>sign</goal>-->
-                    <!--</goals>-->
-                    <!--</execution>-->
-                    <!--</executions>-->
-                    <!--<configuration>-->
-                    <!--<gpgArguments>-->
-                    <!--<arg>&#45;&#45;pinentry-mode</arg>-->
-                    <!--<arg>loopback</arg>-->
-                    <!--</gpgArguments>-->
-                    <!--</configuration>-->
-                    <!--</plugin>-->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
