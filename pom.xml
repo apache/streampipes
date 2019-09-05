@@ -6,7 +6,7 @@
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-connect-adapters</artifactId>
     <packaging>pom</packaging>
-    <version>0.62.1-SNAPSHOT</version>
+    <version>0.63.0-SNAPSHOT</version>
     <modules>
         <module>streampipes-connect-adapter</module>
     </modules>
