@@ -21,7 +21,6 @@ public class InfluxDbClient {
     static final String INFLUX_DB_MEASUREMENT = "influxDbMeasurement";
     static final String INFLUX_DB_USERNAME = "influxDbUsername";
     static final String INFLUX_DB_PASSWORD = "influxDbPassword";
-    static final String INFLUX_DB_POLLING_INTERVAL = "influxDbPollingInterval";
 
     private String host;
     private int port;
@@ -29,7 +28,6 @@ public class InfluxDbClient {
     private String measurement;
     private String username;
     private String password;
-    private double pollingInterval;
 
     private boolean connected;
 
@@ -38,15 +36,13 @@ public class InfluxDbClient {
                           String database,
                           String measurement,
                           String username,
-                          String password,
-                          double pollingInterval) {
+                          String password) {
         this.host = host;
         this.port = port;
         this.database = database;
         this.measurement = measurement;
         this.username = username;
         this.password = password;
-        this.pollingInterval = pollingInterval;
 
         this.connected = false;
     }

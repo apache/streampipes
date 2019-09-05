@@ -12,9 +12,9 @@ import org.streampipes.sdk.helpers.Labels;
 
 public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
 
-    public static final String ID = "http://streampipes.org/adapter/specific/influxfbset";
+    public static final String ID = "http://streampipes.org/adapter/specific/influxdbset";
 
-    InfluxDbClient influxDbClient;
+    private InfluxDbClient influxDbClient;
 
     public InfluxDbSetAdapter() {
     }
@@ -30,14 +30,13 @@ public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
         SpecificAdapterSetDescription description = SpecificDataSetAdapterBuilder.create(
                 ID,
                 "InfluxDB Set Adapter",
-                "Creates a data stream for a InfluxDB measurement")
+                "Creates a data set for a InfluxDB measurement")
                 .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_HOST, "Hostname", "Hostname of the InfluxDB Server"))
                 .requiredIntegerParameter(Labels.from(InfluxDbClient.INFLUX_DB_PORT, "Port", "Port of the InfluxDB Server"))
                 .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_DATABASE, "Database", "Name of the database"))
                 .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_MEASUREMENT, "Measurement", "Name of the measurement, which should be observed"))
                 .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_USERNAME, "Username", "The username to log into the InfluxDB"))
                 .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_PASSWORD, "Password", "The password to log into the InfluxDB"))
-                .requiredIntegerParameter(Labels.from(InfluxDbClient.INFLUX_DB_POLLING_INTERVAL, "Polling interval", "How often the database should be checked for new entries"))
                 .build();
 
         description.setAppId(ID);
@@ -78,7 +77,6 @@ public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
                 extractor.singleValue(InfluxDbClient.INFLUX_DB_DATABASE, String.class),
                 extractor.singleValue(InfluxDbClient.INFLUX_DB_MEASUREMENT, String.class),
                 extractor.singleValue(InfluxDbClient.INFLUX_DB_USERNAME, String.class),
-                extractor.singleValue(InfluxDbClient.INFLUX_DB_PASSWORD, String.class),
-                extractor.singleValue(InfluxDbClient.INFLUX_DB_POLLING_INTERVAL, Integer.class));
+                extractor.singleValue(InfluxDbClient.INFLUX_DB_PASSWORD, String.class));
     }
 }

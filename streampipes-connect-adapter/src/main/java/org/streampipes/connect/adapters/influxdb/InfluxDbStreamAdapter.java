@@ -12,9 +12,13 @@ import org.streampipes.sdk.helpers.Labels;
 
 public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
 
-    public static final String ID = "http://streampipes.org/adapter/specific/influxfbstream";
+    public static final String ID = "http://streampipes.org/adapter/specific/influxdbstream";
 
-    InfluxDbClient influxDbClient;
+    private static final String INFLUX_DB_POLLING_INTERVAL = "pollingInterval";
+
+    private InfluxDbClient influxDbClient;
+    long lastTimestamp;
+    int pollingInterval;
 
     public InfluxDbStreamAdapter() {
     }
@@ -37,7 +41,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
                 .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_MEASUREMENT, "Measurement", "Name of the measurement, which should be observed"))
                 .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_USERNAME, "Username", "The username to log into the InfluxDB"))
                 .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_PASSWORD, "Password", "The password to log into the InfluxDB"))
-                .requiredIntegerParameter(Labels.from(InfluxDbClient.INFLUX_DB_POLLING_INTERVAL, "Polling interval", "How often the database should be checked for new entries"))
+                .requiredIntegerParameter(Labels.from(INFLUX_DB_POLLING_INTERVAL, "Polling interval", "How often the database should be checked for new entries"))
                 .build();
 
         description.setAppId(ID);
@@ -78,7 +82,8 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
                 extractor.singleValue(InfluxDbClient.INFLUX_DB_DATABASE, String.class),
                 extractor.singleValue(InfluxDbClient.INFLUX_DB_MEASUREMENT, String.class),
                 extractor.singleValue(InfluxDbClient.INFLUX_DB_USERNAME, String.class),
-                extractor.singleValue(InfluxDbClient.INFLUX_DB_PASSWORD, String.class),
-                extractor.singleValue(InfluxDbClient.INFLUX_DB_POLLING_INTERVAL, Integer.class));
+                extractor.singleValue(InfluxDbClient.INFLUX_DB_PASSWORD, String.class));
+
+        pollingInterval = extractor.singleValue(INFLUX_DB_POLLING_INTERVAL, Integer.class);
     }
 }
