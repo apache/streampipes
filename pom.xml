@@ -153,7 +153,7 @@
         </developerConnection>
         <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-connect-adapters.git
         </connection>
-        <url>https://github.com/streampipes/streampipes-connet-adapters</url>
+        <url>https://github.com/streampipes/streampipes-connect-adapters</url>
     </scm>
 
     <licenses>
@@ -175,27 +175,11 @@
         </developer>
     </developers>
 
-    <repositories>
-        <repository>
-            <id>laus</id>
-            <name>nexus repository</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <distributionManagement>
         <repository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/releases/</url>
+            <id>sonatype</id>
+            <name>Releases</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
         <snapshotRepository>
             <id>deployment</id>
