@@ -6,21 +6,38 @@ import org.influxdb.InfluxDBIOException;
 import org.influxdb.dto.Pong;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
+import org.streampipes.sdk.utils.Datatypes;
 
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.streampipes.vocabulary.SO.DateTime;
 
 public class InfluxDbClient {
 
     private InfluxDB influxDb;
 
-    static final String INFLUX_DB_HOST = "influxDbHost";
-    static final String INFLUX_DB_PORT = "influxDbPort";
-    static final String INFLUX_DB_DATABASE = "influxDbDatabase";
-    static final String INFLUX_DB_MEASUREMENT = "influxDbMeasurement";
-    static final String INFLUX_DB_USERNAME = "influxDbUsername";
-    static final String INFLUX_DB_PASSWORD = "influxDbPassword";
+    static final String HOST = "influxDbHost";
+    static final String PORT = "influxDbPort";
+    static final String DATABASE = "influxDbDatabase";
+    static final String MEASUREMENT = "influxDbMeasurement";
+    static final String USERNAME = "influxDbUsername";
+    static final String PASSWORD = "influxDbPassword";
+
+    static final String REPLACE_NULL_VALUES = "replaceNullValues";
+    static final String DO_REPLACE = "doReplace";
+    static final String DO_NOT_REPLACE = "doNotReplace";
 
     private String host;
     private int port;
@@ -29,22 +46,51 @@ public class InfluxDbClient {
     private String username;
     private String password;
 
+    boolean replaceNullValues;
+
+    private List<Column> columns;
+    private String columnsString;
+
     private boolean connected;
+
+    public static class Column {
+        private String name;
+        private Datatypes datatypes;
+
+        public Column(String name, Datatypes datatypes) {
+            this.name = name;
+            this.datatypes = datatypes;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Datatypes getDatatypes() {
+            return datatypes;
+        }
+    }
 
     public InfluxDbClient(String host,
                           int port,
                           String database,
                           String measurement,
                           String username,
-                          String password) {
+                          String password,
+                          boolean replaceNullValues) {
         this.host = host;
         this.port = port;
         this.database = database;
         this.measurement = measurement;
         this.username = username;
         this.password = password;
+        this.replaceNullValues = replaceNullValues;
 
         this.connected = false;
+    }
+
+    public InfluxDB getInfluxDb() {
+        return influxDb;
     }
 
     public void connect() throws AdapterException {
@@ -101,9 +147,158 @@ public class InfluxDbClient {
     }
 
     public GuessSchema getSchema() throws AdapterException {
-        if (!connected) {
-            throw new AdapterException("Could not get Schema: InfluxDB not initialized.");
+        connect();
+
+        EventSchema eventSchema = new EventSchema();
+        GuessSchema guessSchema = new GuessSchema();
+        List<EventProperty> allProperties = new ArrayList<>();
+
+        QueryResult fieldKeys = query("SHOW FIELD KEYS FROM " + measurement);
+        QueryResult tagKeys = query("SHOW TAG KEYS FROM " + measurement);
+
+        if (fieldKeys.getResults().get(0).getSeries() == null || tagKeys.getResults().get(0).getSeries() == null) {
+            throw new AdapterException("Error while checking the Schema");
         }
-        return null;
+        columns = new ArrayList<>();
+
+        //TODO: Add timestamp description here
+        allProperties.add(PrimitivePropertyBuilder
+                .create(Datatypes.Long, "time")
+                .label("time")
+                .domainProperty(DateTime)
+                .build());
+        columns.add(new Column("time", Datatypes.Long));
+        for (List o : fieldKeys.getResults().get(0).getSeries().get(0).getValues()) {
+            String name = o.get(0).toString();
+            Datatypes datatype;
+            // Data types: https://docs.influxdata.com/influxdb/v1.7/write_protocols/line_protocol_reference/#data-types
+            // Maybe add timestamps somehow (also long)?
+            switch (o.get(1).toString()) {
+                case "float":
+                    datatype = Datatypes.Float;
+                    break;
+                case "boolean":
+                    datatype = Datatypes.Boolean;
+                    break;
+                case "integer":
+                    datatype = Datatypes.Integer;
+                    break;
+                default:
+                    datatype = Datatypes.String;
+                    break;
+            }
+            allProperties.add(PrimitivePropertyBuilder
+                    .create(datatype, name)
+                    .label(name)
+                    .build());
+            columns.add(new Column(name, datatype));
+        }
+        for (List o : tagKeys.getResults().get(0).getSeries().get(0).getValues()) {
+            // All tag keys are strings
+            String name = o.get(0).toString();
+            allProperties.add(PrimitivePropertyBuilder
+                    .create(Datatypes.String, name)
+                    .label(name)
+                    .build());
+            columns.add(new Column(name, Datatypes.String));
+        }
+
+        updateColumnString();
+        eventSchema.setEventProperties(allProperties);
+        guessSchema.setEventSchema(eventSchema);
+
+        disconnect();
+        return guessSchema;
+    }
+
+    public QueryResult query(String query) {
+        if (!connected) {
+            throw new RuntimeException("InfluxDbClient not connnected");
+        }
+        return influxDb.query(new Query(query, database));
+    }
+
+    public Map<String, Object> extractEvent(List<Object> items) throws SpRuntimeException {
+        if (items.size() != columns.size()) {
+            throw new SpRuntimeException("Converter: Item list length is not the same as column list length");
+        }
+        Map<String, Object> out = new HashMap<>();
+
+        // First element is the timestamp, which needs to be converted
+        TemporalAccessor temporalAccessor = DateTimeFormatter.ISO_INSTANT.parse((String)items.get(0));
+        Instant time = Instant.from(temporalAccessor);
+        out.put("time", time.toEpochMilli());
+
+        for (int i = 1; i < items.size(); i++) {
+            if (items.get(i) != null) {
+                out.put(columns.get(i).getName(), items.get(i));
+            } else {
+                if (replaceNullValues) {
+                    // Replace null values with defaults
+                    switch (columns.get(i).getDatatypes()) {
+                        case String:
+                            out.put(columns.get(i).getName(), "");
+                            break;
+                        case Integer:
+                            out.put(columns.get(i).getName(), 0);
+                            break;
+                        case Float:
+                            out.put(columns.get(i).getName(), 0.0f);
+                            break;
+                        case Boolean:
+                            out.put(columns.get(i).getName(), false);
+                            break;
+                        default:
+                            throw new SpRuntimeException("Unexpected value: " + columns.get(i).getDatatypes());
+                    }
+                } else {
+                    // One field == null is enough to skip this event
+                    // Or maybe throw an exception instead?
+                    return null;
+                }
+            }
+        }
+        return out;
+    }
+
+    public void updateColumnString() {
+        StringBuilder sb = new StringBuilder();
+        for (Column column : columns) {
+            sb.append(column.getName()).append(", ");
+        }
+        sb.setLength(sb.length() - 2);
+        columnsString = sb.toString();
+    }
+
+    public String getColumnsString() {
+        return columnsString;
+    }
+
+    public List<Column> getColumns() {
+        return columns;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public String getMeasurement() {
+        return measurement;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public boolean isConnected() {
+        return connected;
     }
 }

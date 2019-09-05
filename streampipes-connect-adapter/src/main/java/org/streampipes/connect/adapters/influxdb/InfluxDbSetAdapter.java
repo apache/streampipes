@@ -9,6 +9,8 @@ import org.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.sdk.builder.adapter.SpecificDataSetAdapterBuilder;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Options;
+import org.streampipes.sdk.helpers.Tuple2;
 
 public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
 
@@ -31,12 +33,16 @@ public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
                 ID,
                 "InfluxDB Set Adapter",
                 "Creates a data set for a InfluxDB measurement")
-                .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_HOST, "Hostname", "Hostname of the InfluxDB Server"))
-                .requiredIntegerParameter(Labels.from(InfluxDbClient.INFLUX_DB_PORT, "Port", "Port of the InfluxDB Server"))
-                .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_DATABASE, "Database", "Name of the database"))
-                .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_MEASUREMENT, "Measurement", "Name of the measurement, which should be observed"))
-                .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_USERNAME, "Username", "The username to log into the InfluxDB"))
-                .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_PASSWORD, "Password", "The password to log into the InfluxDB"))
+                .requiredTextParameter(Labels.from(InfluxDbClient.HOST, "Hostname", "Hostname of the InfluxDB Server"))
+                .requiredIntegerParameter(Labels.from(InfluxDbClient.PORT, "Port", "Port of the InfluxDB Server"))
+                .requiredTextParameter(Labels.from(InfluxDbClient.DATABASE, "Database", "Name of the database"))
+                .requiredTextParameter(Labels.from(InfluxDbClient.MEASUREMENT, "Measurement", "Name of the measurement, which should be observed"))
+                .requiredTextParameter(Labels.from(InfluxDbClient.USERNAME, "Username", "The username to log into the InfluxDB"))
+                .requiredTextParameter(Labels.from(InfluxDbClient.PASSWORD, "Password", "The password to log into the InfluxDB"))
+                .requiredSingleValueSelection(Labels.from(InfluxDbClient.REPLACE_NULL_VALUES, "", ""),
+                        Options.from(
+                                new Tuple2<>("Yes", InfluxDbClient.DO_REPLACE),
+                                new Tuple2<>("No", InfluxDbClient.DO_NOT_REPLACE)))
                 .build();
 
         description.setAppId(ID);
@@ -71,12 +77,15 @@ public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
     private void getConfigurations(SpecificAdapterSetDescription adapterDescription) {
         ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
 
+        String replace = extractor.selectedSingleValueInternalName(InfluxDbClient.REPLACE_NULL_VALUES);
+
         influxDbClient = new InfluxDbClient(
-                extractor.singleValue(InfluxDbClient.INFLUX_DB_HOST, String.class),
-                extractor.singleValue(InfluxDbClient.INFLUX_DB_PORT, Integer.class),
-                extractor.singleValue(InfluxDbClient.INFLUX_DB_DATABASE, String.class),
-                extractor.singleValue(InfluxDbClient.INFLUX_DB_MEASUREMENT, String.class),
-                extractor.singleValue(InfluxDbClient.INFLUX_DB_USERNAME, String.class),
-                extractor.singleValue(InfluxDbClient.INFLUX_DB_PASSWORD, String.class));
+                extractor.singleValue(InfluxDbClient.HOST, String.class),
+                extractor.singleValue(InfluxDbClient.PORT, Integer.class),
+                extractor.singleValue(InfluxDbClient.DATABASE, String.class),
+                extractor.singleValue(InfluxDbClient.MEASUREMENT, String.class),
+                extractor.singleValue(InfluxDbClient.USERNAME, String.class),
+                extractor.singleValue(InfluxDbClient.PASSWORD, String.class),
+                replace.equals(InfluxDbClient.DO_REPLACE));
     }
 }
