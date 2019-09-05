@@ -6,6 +6,7 @@ variables:
 stages:
    - build
    - docker
+   - github
    - docker-hub
 
 #test:
