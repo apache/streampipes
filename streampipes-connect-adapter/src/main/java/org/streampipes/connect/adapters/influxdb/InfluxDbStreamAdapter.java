@@ -30,8 +30,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
         SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(
                 ID,
                 "InfluxDB Stream Adapter",
-                "Creates a data stream for a SQL table")
-                .iconUrl("sql.png")
+                "Creates a data stream for a InfluxDB measurement")
                 .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_HOST, "Hostname", "Hostname of the InfluxDB Server"))
                 .requiredIntegerParameter(Labels.from(InfluxDbClient.INFLUX_DB_PORT, "Port", "Port of the InfluxDB Server"))
                 .requiredTextParameter(Labels.from(InfluxDbClient.INFLUX_DB_DATABASE, "Database", "Name of the database"))
