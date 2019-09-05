@@ -19,6 +19,10 @@ package org.streampipes.processor.geo.flink;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.streampipes.dataformat.fst.FstDataFormatFactory;
+import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.streampipes.processor.geo.flink.config.GeoFlinkConfig;
 import org.streampipes.processor.geo.flink.processor.gridenricher.SpatialGridEnrichmentController;
 
@@ -27,6 +31,11 @@ public class GeoFlinkInit extends StandaloneModelSubmitter {
   public static void main(String[] args) {
     DeclarersSingleton.getInstance()
             .add(new SpatialGridEnrichmentController());
+
+    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory());
 
     new GeoFlinkInit().init(GeoFlinkConfig.INSTANCE);
   }

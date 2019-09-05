@@ -36,8 +36,6 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
@@ -70,8 +68,6 @@ public class MathOpController extends FlinkDataProcessorDeclarer<MathOpParameter
                             EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
             .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("+", "-", "/",
                     "*", "%"))
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka())
             .build();
   }
 

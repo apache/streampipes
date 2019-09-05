@@ -26,8 +26,6 @@ import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.sinks.databases.flink.config.DatabasesFlinkConfig;
 import org.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
@@ -50,8 +48,6 @@ public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearch
                             Labels.withId(TIMESTAMP_MAPPING), PropertyScope.HEADER_PROPERTY)
                     .build())
             .requiredTextParameter(Labels.withId(INDEX_NAME))
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 

@@ -19,11 +19,14 @@ package org.streampipes.processors.aggregation.flink.processor.aggregation;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AggregationProgram extends AbstractAggregationProgram<AggregationParameters> {
@@ -39,24 +42,40 @@ public class AggregationProgram extends AbstractAggregationProgram<AggregationPa
   }
 
   private DataStream<Event> getKeyedStream(DataStream<Event> dataStream) {
-    if (params.getGroupBy().size() > 0) {
-      return dataStream
-              .keyBy(getKeySelector())
-              .window(SlidingEventTimeWindows.of(Time.seconds(params.getTimeWindowSize()), Time.seconds(params.getOutputEvery())))
-              .apply(new Aggregation(params.getAggregationType(), params.getAggregate(), params.getGroupBy().get(0)));
+    if (bindingParams.getGroupBy().size() > 0) {
+      KeyedStream<Event, Map<String, String>> keyedStream = dataStream.keyBy(getKeySelector());
+      if (bindingParams.getTimeWindow()) {
+        return keyedStream
+                .window(SlidingEventTimeWindows.of(Time.seconds(bindingParams.getWindowSize()), Time.seconds(bindingParams.getOutputEvery())))
+                .apply(new TimeAggregation(bindingParams.getAggregationType(), bindingParams.getAggregate(), bindingParams.getGroupBy()));
+      } else {
+        return keyedStream
+                .countWindow(bindingParams.getWindowSize(), bindingParams.getOutputEvery())
+                .apply(new CountAggregation(bindingParams.getAggregationType(), bindingParams.getAggregate(), bindingParams.getGroupBy()));
+      }
     } else {
-      return dataStream.timeWindowAll(Time.seconds(params.getTimeWindowSize()), Time.seconds(params.getOutputEvery()))
-              .apply(new Aggregation(params.getAggregationType(), params.getAggregate()));
+      if (bindingParams.getTimeWindow()) {
+        return dataStream
+                .timeWindowAll(Time.seconds(bindingParams.getWindowSize()), Time.seconds(bindingParams.getOutputEvery()))
+                .apply(new TimeAggregation(bindingParams.getAggregationType(), bindingParams.getAggregate()));
+      } else {
+        return dataStream
+                .countWindowAll(bindingParams.getWindowSize(), bindingParams.getOutputEvery())
+                .apply(new CountAggregation(bindingParams.getAggregationType(), bindingParams.getAggregate()));
+      }
     }
   }
 
-  private KeySelector<Event, String> getKeySelector() {
-    // TODO allow multiple keys
-    String groupBy = params.getGroupBy().get(0);
-    return new KeySelector<Event, String>() {
+  private KeySelector<Event, Map<String, String>> getKeySelector() {
+    List<String> groupBy = bindingParams.getGroupBy();
+    return new KeySelector<Event, Map<String, String>>() {
       @Override
-      public String getKey(Event in) throws Exception {
-        return String.valueOf(in.getFieldBySelector(groupBy));
+      public Map<String, String> getKey(Event event) throws Exception {
+        Map<String, String> keys = new HashMap<>();
+        for (String groupBy : groupBy) {
+          keys.put(groupBy, event.getFieldBySelector(groupBy).getAsPrimitive().getAsString());
+        }
+        return keys;
       }
     };
   }

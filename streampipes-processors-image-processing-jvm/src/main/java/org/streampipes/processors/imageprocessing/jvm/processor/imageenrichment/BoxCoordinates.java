@@ -23,12 +23,12 @@ public class BoxCoordinates {
   private int x;
   private int y;
 
-  public static BoxCoordinates make(int originalWidth, int originalHeight, Float width, Float height, Float x, Float
+  public static BoxCoordinates make(Float width, Float height, Float x, Float
           y) {
-    return new BoxCoordinates(Math.round(width * originalWidth),
-            Math.round(height * originalHeight),
-            Math.round(x * originalWidth),
-            Math.round(y* originalHeight));
+    return new BoxCoordinates(Math.round(width),
+            Math.round(height),
+            Math.round(x),
+            Math.round(y));
   }
 
   public BoxCoordinates(int width, int height, int x, int y) {

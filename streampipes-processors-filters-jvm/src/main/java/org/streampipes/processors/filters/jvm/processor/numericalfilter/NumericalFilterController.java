@@ -28,8 +28,6 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -55,8 +53,6 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
             .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
                     ">=", "==", "!="))
             .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING)
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .build();
 
   }

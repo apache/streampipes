@@ -1,0 +1,11 @@
+org.streampipes.processors.textmining.jvm.namefinder.title=Name Finder
+org.streampipes.processors.textmining.jvm.namefinder.description=Finds a name in given Tokens of one document
+
+model.title=Model
+model.description=Select the model which should be used
+
+tokensField.title=List of Tokens
+tokensField.description=List of the tokens of the document
+
+foundNames.title=Found Names
+foundNames.description=The found names in the tokens

@@ -27,8 +27,6 @@ import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.helpers.TransformOperations;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
@@ -50,8 +48,6 @@ public class FieldRenamerController extends FlinkDataProcessorDeclarer<FieldRena
                             (CONVERT_PROPERTY), PropertyScope.NONE)
                     .build())
             .requiredTextParameter(Labels.withId(FIELD_NAME))
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .outputStrategy(OutputStrategies.transform(TransformOperations
                     .dynamicRuntimeNameTransformation(CONVERT_PROPERTY, FIELD_NAME)))
             .build();

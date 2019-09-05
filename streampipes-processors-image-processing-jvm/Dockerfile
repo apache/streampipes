@@ -1,4 +1,4 @@
-FROM anapsix/alpine-java
+FROM openjdk:8-jre-alpine
 
 EXPOSE 8090
 ENV CONSUL_LOCATION consul

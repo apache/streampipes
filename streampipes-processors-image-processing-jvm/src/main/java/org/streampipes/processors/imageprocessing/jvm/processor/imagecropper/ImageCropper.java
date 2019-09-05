@@ -25,6 +25,8 @@ import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.awt.image.BufferedImage;
 import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class ImageCropper implements EventProcessor<ImageCropperParameters> {
@@ -43,17 +45,21 @@ public class ImageCropper implements EventProcessor<ImageCropperParameters> {
 
     if (imageOpt.isPresent()) {
       BufferedImage image = imageOpt.get();
-      BoxCoordinates boxCoordinates = imageTransformer.getBoxCoordinates(image);
+      List<Map<String, Object>> allBoxCoordinates = imageTransformer.getAllBoxCoordinates();
 
-      BufferedImage dest = image.getSubimage(boxCoordinates.getX(), boxCoordinates.getY(), boxCoordinates.getWidth(),
-              boxCoordinates.getHeight());
+      for (Map<String, Object> box : allBoxCoordinates) {
+        BoxCoordinates boxCoordinates = imageTransformer.getBoxCoordinates(image, box);
 
-      Optional<byte[]> finalImage = imageTransformer.makeImage(dest);
+        BufferedImage dest = image.getSubimage(boxCoordinates.getX(), boxCoordinates.getY(), boxCoordinates.getWidth(),
+                boxCoordinates.getHeight());
 
-      if (finalImage.isPresent()) {
-        Event outEvent = new Event();
-        outEvent.addField("image", Base64.getEncoder().encodeToString(finalImage.get()));
-        out.collect(outEvent);
+        Optional<byte[]> finalImage = imageTransformer.makeImage(dest);
+
+        if (finalImage.isPresent()) {
+          Event outEvent = new Event();
+          outEvent.addField("image", Base64.getEncoder().encodeToString(finalImage.get()));
+          out.collect(outEvent);
+        }
       }
     }
   }

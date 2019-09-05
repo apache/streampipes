@@ -23,12 +23,16 @@ public class DashboardModel {
   private String pipelineId;
   private EventSchema schema;
   private String broker;
+  private String visualizationName;
+  private String topic;
 
   public static DashboardModel from(DashboardParameters params) {
     DashboardModel model = new DashboardModel();
     model.setPipelineId(params.getPipelineId());
     model.setSchema(params.getSchema());
     model.setBroker(params.getBroker());
+    model.setVisualizationName(params.getVisualizationName());
+    model.setTopic(params.getElementId());
 
     return model;
   }
@@ -55,5 +59,21 @@ public class DashboardModel {
 
   public void setBroker(String broker) {
     this.broker = broker;
+  }
+
+  public String getVisualizationName() {
+    return visualizationName;
+  }
+
+  public void setVisualizationName(String visualizationName) {
+    this.visualizationName = visualizationName;
+  }
+
+  public String getTopic() {
+    return topic;
+  }
+
+  public void setTopic(String topic) {
+    this.topic = topic;
   }
 }

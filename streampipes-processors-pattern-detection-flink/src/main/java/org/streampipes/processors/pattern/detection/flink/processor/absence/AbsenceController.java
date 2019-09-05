@@ -40,8 +40,6 @@ public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParamet
                     "Minutes", "Hours"))
             .requiredIntegerParameter(Labels.withId(TIME_WINDOW))
             .outputStrategy(OutputStrategies.custom(false))
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }
 

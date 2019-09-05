@@ -19,11 +19,15 @@ package org.streampipes.processors.imageprocessing.jvm;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.imageprocessing.jvm.config.ImageProcessingJvmConfig;
 import org.streampipes.processors.imageprocessing.jvm.processor.genericclassification.GenericImageClassificationController;
+import org.streampipes.processors.imageprocessing.jvm.processor.imagecropper.ImageCropperController;
 import org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentController;
 import org.streampipes.processors.imageprocessing.jvm.processor.qrreader.QrCodeReaderController;
 
@@ -33,13 +37,17 @@ public class ImageProcessingJvmInit extends StandaloneModelSubmitter {
     DeclarersSingleton
             .getInstance()
             .add(new ImageEnrichmentController())
-//            .add(new ImageCropperController())
+            .add(new ImageCropperController())
             .add(new QrCodeReaderController())
             .add(new GenericImageClassificationController());
 
-    DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
-    DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
-    DeclarersSingleton.getInstance().registerProtocol(new SpJmsProtocolFactory());
+    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory());
+
+    DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory());
 
     new ImageProcessingJvmInit().init(ImageProcessingJvmConfig.INSTANCE);
   }

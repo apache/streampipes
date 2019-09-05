@@ -3,7 +3,7 @@
     <parent>
         <artifactId>streampipes-pipeline-elements</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.62.0</version>
+        <version>0.63.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -11,6 +11,9 @@
 
     <properties>
         <lightcouch.version>0.1.8</lightcouch.version>
+        <milo.version>2.22.1</milo.version>
+        <influxdb.java.version>2.14</influxdb.java.version>
+        <postgresql.version>42.2.2</postgresql.version>
     </properties>
 
     <dependencies>
@@ -36,6 +39,22 @@
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-cbor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-smile</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-fst</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging-jms</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
         </dependency>
         <dependency>
@@ -46,49 +65,37 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.2</version>
+            <version>${postgresql.version}</version>
         </dependency>
         <dependency>
             <groupId>org.influxdb</groupId>
             <artifactId>influxdb-java</artifactId>
-            <version>2.14</version>
+            <version>${influxdb.java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.iotdb</groupId>
+            <artifactId>iotdb-jdbc</artifactId>
+            <version>0.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-milo</artifactId>
+            <version>${milo.version}</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>package</phase>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.streampipes.sinks.databases.jvm.DatabasesJvmInit</mainClass>
-                                </transformer>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                            </transformers>
-                            <filters>
-
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                        <exclude>META-INF/maven/com.github.jsonld-java/jsonld-java/pom.xml</exclude>
-                                        <exclude>META-INF/maven/com.github.jsonld-java/jsonld-java-sesame/pom.xml
-                                        </exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
+                            <mainClass>org.streampipes.sinks.databases.jvm.DatabasesJvmInit</mainClass>
                         </configuration>
                     </execution>
                 </executions>

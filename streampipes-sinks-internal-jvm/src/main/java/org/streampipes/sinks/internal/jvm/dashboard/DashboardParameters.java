@@ -23,42 +23,41 @@ import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class DashboardParameters extends EventSinkBindingParams {
     private String pipelineId;
+    private String elementId;
     private EventSchema schema;
     private String broker;
+    private String visualizationName;
 
-    public DashboardParameters(DataSinkInvocation invocationGraph) {
+    public DashboardParameters(DataSinkInvocation invocationGraph, String visualizationName) {
         super(invocationGraph);
         this.schema = invocationGraph.getInputStreams().get(0).getEventSchema();
         this.pipelineId = invocationGraph.getCorrespondingPipeline();
         this.broker = "ws://" + SinksInternalJvmConfig.INSTANCE.getNginxHost() +":" +SinksInternalJvmConfig.INSTANCE
                 .getNginxPort()
                 +"/streampipes/ws";
+        this.visualizationName = visualizationName;
+
+        this.elementId = invocationGraph.getElementId();
+        this.elementId = this.elementId.substring(this.elementId.lastIndexOf("/"));
     }
 
-    private String removeProtocol(String url) {
-       return url.replaceFirst("^(tcp://|ws://)","");
-    }
     public String getPipelineId() {
         return pipelineId;
-    }
-
-    public void setPipelineId(String pipelineId) {
-        this.pipelineId = pipelineId;
     }
 
     public EventSchema getSchema() {
         return schema;
     }
 
-    public void setSchema(EventSchema schema) {
-        this.schema = schema;
-    }
-
     public String getBroker() {
         return broker;
     }
 
-    public void setBroker(String broker) {
-        this.broker = broker;
+    public String getVisualizationName() {
+        return visualizationName;
+    }
+
+    public String getElementId() {
+        return elementId;
     }
 }

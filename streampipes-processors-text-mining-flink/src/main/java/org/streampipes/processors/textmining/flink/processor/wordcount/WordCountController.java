@@ -26,8 +26,6 @@ public class WordCountController extends FlinkDataProcessorDeclarer<WordCountPar
             .withAssets(Assets.DOCUMENTATION)
             .withLocales(Locales.EN)
             .category(DataProcessorType.AGGREGATE)
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(

@@ -23,7 +23,9 @@ import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Formats;
+import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Protocols;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
 import org.streampipes.sources.watertank.simulator.config.WatertankSimulatorConfig;
@@ -31,35 +33,36 @@ import org.streampipes.sources.watertank.simulator.vocabulary.WaterTankVocabular
 
 public class WaterLevel2Stream extends AbstractAlreadyExistingStream {
 
-	@Override
-	public SpDataStream declareModel(DataSourceDescription sep) {
-		return DataStreamBuilder.create("water-level-2", "Water Level 2", "")
-						.iconUrl(WatertankSimulatorConfig.iconBaseUrl + "/icon-water-level.png")
-						.property(EpProperties.timestampProperty("timestamp"))
-						.property(PrimitivePropertyBuilder
-										.create(Datatypes.String, "sensorId")
-										.label("Sensor ID")
-										.description("The ID of the sensor")
-										.domainProperty(WaterTankVocabulary.HAS_SENSOR_ID)
-										.scope(PropertyScope.DIMENSION_PROPERTY)
-										.build())
-						.property(PrimitivePropertyBuilder
-										.create(Datatypes.Float, "level")
-										.label("Water Level")
-										.description("Denotes the current water level in the container")
-										.domainProperty(WaterTankVocabulary.HAS_WATER_LEVEL)
-										.scope(PropertyScope.MEASUREMENT_PROPERTY)
-										.build())
-						.property(PrimitivePropertyBuilder
-										.create(Datatypes.Boolean, "underflow")
-										.label("Underflow")
-										.description("Indicates whether the tank underflows")
-										.domainProperty(WaterTankVocabulary.IS_UNDERFLOW)
-										.scope(PropertyScope.MEASUREMENT_PROPERTY)
-										.build())
-						.format(Formats.jsonFormat())
-						.protocol(Protocols.kafka(WatertankSimulatorConfig.INSTANCE.getKafkaHost(), WatertankSimulatorConfig.INSTANCE.getKafkaPort(),
-										"org.streampipes.examples.waterlevel2"))
-						.build();
-	}
+  @Override
+  public SpDataStream declareModel(DataSourceDescription sep) {
+    return DataStreamBuilder.create("org.streampipes.sources.simulator.waterlevel2")
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .property(EpProperties.timestampProperty("timestamp"))
+            .property(PrimitivePropertyBuilder
+                    .create(Datatypes.String, "sensorId")
+                    .label("Sensor ID")
+                    .description("The ID of the sensor")
+                    .domainProperty(WaterTankVocabulary.HAS_SENSOR_ID)
+                    .scope(PropertyScope.DIMENSION_PROPERTY)
+                    .build())
+            .property(PrimitivePropertyBuilder
+                    .create(Datatypes.Float, "level")
+                    .label("Water Level")
+                    .description("Denotes the current water level in the container")
+                    .domainProperty(WaterTankVocabulary.HAS_WATER_LEVEL)
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .property(PrimitivePropertyBuilder
+                    .create(Datatypes.Boolean, "underflow")
+                    .label("Underflow")
+                    .description("Indicates whether the tank underflows")
+                    .domainProperty(WaterTankVocabulary.IS_UNDERFLOW)
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .format(Formats.jsonFormat())
+            .protocol(Protocols.kafka(WatertankSimulatorConfig.INSTANCE.getKafkaHost(), WatertankSimulatorConfig.INSTANCE.getKafkaPort(),
+                    "org.streampipes.examples.waterlevel2"))
+            .build();
+  }
 }

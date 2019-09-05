@@ -17,12 +17,17 @@
 package org.streampipes.processors.imageprocessing.jvm.processor.commons;
 
 import org.streampipes.model.runtime.Event;
+import org.streampipes.model.runtime.field.AbstractField;
 import org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.BoxCoordinates;
 import org.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentParameters;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.imageio.ImageIO;
@@ -30,7 +35,7 @@ import javax.imageio.ImageIO;
 public class ImageTransformer extends PlainImageTransformer<ImageEnrichmentParameters> {
 
   public ImageTransformer(Event in, ImageEnrichmentParameters params) {
-   super(in, params);
+    super(in, params);
   }
 
   public Optional<BufferedImage> getImage() {
@@ -38,14 +43,34 @@ public class ImageTransformer extends PlainImageTransformer<ImageEnrichmentParam
     return getImage(params.getImageProperty());
   }
 
-  public BoxCoordinates getBoxCoordinates(BufferedImage image) {
-    Float x = in.getFieldBySelector(params.getBoxX()).getAsPrimitive().getAsFloat();
-    Float y = in.getFieldBySelector(params.getBoxY()).getAsPrimitive().getAsFloat();
-    Float width = in.getFieldBySelector(params.getBoxWidth()).getAsPrimitive().getAsFloat();
-    Float height = in.getFieldBySelector(params.getBoxHeight()).getAsPrimitive().getAsFloat();
+  public List<Map<String, Object>> getAllBoxCoordinates() {
+    List<Map<String, AbstractField>> allBoxes = in.getFieldBySelector(params.getBoxArray())
+            .getAsList()
+            .parseAsCustomType(value -> value.getAsComposite().getRawValue());
 
-    return BoxCoordinates.make(image.getWidth(), image.getHeight(), width, height, x, y);
+    List<Map<String, Object>> allBoxesMap = new ArrayList<>();
+    allBoxes.forEach(box -> {
+      Map<String, Object> boxMap = new HashMap<>();
+      box.forEach((key, value) -> boxMap.put(value.getFieldNameIn(), value.getRawValue()));
+      allBoxesMap.add(boxMap);
+    });
+
+    return allBoxesMap;
   }
+
+  public BoxCoordinates getBoxCoordinates(BufferedImage image, Map<String, Object> box) {
+    Float x = toFloat(box.get(params.getBoxX()));
+    Float y = toFloat(box.get(params.getBoxY()));
+    Float width = toFloat(box.get(params.getBoxWidth()));
+    Float height = toFloat(box.get(params.getBoxHeight()));
+
+    return BoxCoordinates.make(width, height, x, y);
+  }
+
+  private Float toFloat(Object obj) {
+    return Float.parseFloat(String.valueOf(obj));
+  }
+
 
   public Optional<byte[]> makeImage(BufferedImage image) {
 

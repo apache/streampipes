@@ -16,14 +16,17 @@
 
 package org.streampipes.processors.enricher.flink.processor.timestamp;
 
-import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Locales;
+import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
@@ -44,8 +47,6 @@ public class TimestampController extends FlinkDataProcessorDeclarer<TimestampPar
                     .build())
             .outputStrategy(OutputStrategies.append(
                     EpProperties.longEp(Labels.empty(), APPEND_PROPERTY, SO.DateTime)))
-            .supportedProtocols(StandardTransportFormat.standardProtocols())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }
 

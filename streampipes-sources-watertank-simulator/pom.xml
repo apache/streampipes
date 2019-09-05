@@ -3,7 +3,7 @@
     <parent>
         <artifactId>streampipes-pipeline-elements</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.62.0</version>
+        <version>0.63.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,15 +17,15 @@
     <dependencies>
         <dependency>
             <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-container-standalone</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sources</artifactId>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sdk</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-container-standalone</artifactId>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
@@ -35,44 +35,33 @@
             <groupId>net.acesinc.data</groupId>
             <artifactId>json-data-generator</artifactId>
             <version>${data-generator.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-server</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-validator</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>package</phase>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>repackage</goal>
                         </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.streampipes.sources.watertank.simulator.WatertankSimulatorInit</mainClass>
-                                </transformer>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                            </transformers>
-                            <filters>
-
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                        <exclude>META-INF/maven/com.github.jsonld-java/jsonld-java/pom.xml</exclude>
-                                        <exclude>META-INF/maven/com.github.jsonld-java/jsonld-java-sesame/pom.xml
-                                        </exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

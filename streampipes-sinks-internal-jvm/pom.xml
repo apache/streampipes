@@ -3,7 +3,7 @@
     <parent>
         <artifactId>streampipes-pipeline-elements</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.62.0</version>
+        <version>0.63.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -11,6 +11,7 @@
 
     <properties>
         <lightcouch.version>0.1.8</lightcouch.version>
+        <influxdb.java.version>2.14</influxdb.java.version>
     </properties>
 
     <dependencies>
@@ -36,56 +37,55 @@
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-cbor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-smile</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-fst</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging-jms</artifactId>
         </dependency>
         <dependency>
             <groupId>org.lightcouch</groupId>
             <artifactId>lightcouch</artifactId>
             <version>${lightcouch.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.influxdb</groupId>
+            <artifactId>influxdb-java</artifactId>
+            <version>${influxdb.java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>package</phase>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>repackage</goal>
                         </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.streampipes.sinks.internal.jvm.SinksInternalJvmInit</mainClass>
-                                </transformer>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                            </transformers>
-                            <filters>
-
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                        <exclude>META-INF/maven/com.github.jsonld-java/jsonld-java/pom.xml</exclude>
-                                        <exclude>META-INF/maven/com.github.jsonld-java/jsonld-java-sesame/pom.xml
-                                        </exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
         <finalName>streampipes-sinks-internal-jvm</finalName>
-
     </build>
-
 </project>

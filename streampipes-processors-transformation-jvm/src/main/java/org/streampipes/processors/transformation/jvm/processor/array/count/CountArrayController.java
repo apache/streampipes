@@ -28,8 +28,6 @@ import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
@@ -52,8 +50,6 @@ public class CountArrayController extends StandaloneEventProcessingDeclarer<Coun
                             .build())
             .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), COUNT_NAME,
                     SO.Number)))
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 

@@ -17,6 +17,7 @@
 
 package org.streampipes.processors.statistics.flink.processor.stat.summary;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
@@ -26,29 +27,34 @@ import java.util.List;
 
 public class StatisticsSummaryCalculator implements FlatMapFunction<Event, Event> {
 
-  private String listPropertyName;
+  private List<String> listPropertyMappings;
 
-  public StatisticsSummaryCalculator(String listPropertyName) {
-    this.listPropertyName = listPropertyName;
+  public StatisticsSummaryCalculator(List<String> listPropertyMappings) {
+    this.listPropertyMappings = listPropertyMappings;
   }
 
   @Override
   public void flatMap(Event in, Collector<Event> out) throws
           Exception {
-    List<Double> listValues = (in.getFieldBySelector(listPropertyName).getAsList().castItems
-            (Double.class));
 
-    SummaryStatistics stats = new SummaryStatistics();
+    for (String property: listPropertyMappings) {
+      List<Double> listValues = (in.getFieldBySelector(property).getAsList().castItems
+              (Double.class));
 
-    listValues.forEach(stats::addValue);
+      SummaryStatistics stats = new SummaryStatistics();
 
-    in.addField(StatisticsSummaryController.MIN, stats.getMin());
-    in.addField(StatisticsSummaryController.MAX, stats.getMax());
-    in.addField(StatisticsSummaryController.MEAN, stats.getMean());
-    in.addField(StatisticsSummaryController.N, stats.getN());
-    in.addField(StatisticsSummaryController.SUM, stats.getSum());
-    in.addField(StatisticsSummaryController.STDDEV, stats.getStandardDeviation());
-    in.addField(StatisticsSummaryController.VARIANCE, stats.getVariance());
+      listValues.forEach(stats::addValue);
+
+      String propertyPrefix = StringUtils.substringAfterLast(property, ":");
+      in.addField(propertyPrefix + "_" + StatisticsSummaryController.MIN, stats.getMin());
+      in.addField(propertyPrefix + "_" + StatisticsSummaryController.MAX, stats.getMax());
+      in.addField(propertyPrefix + "_" + StatisticsSummaryController.MEAN, stats.getMean());
+      in.addField(propertyPrefix + "_" + StatisticsSummaryController.N, stats.getN());
+      in.addField(propertyPrefix + "_" + StatisticsSummaryController.SUM, stats.getSum());
+      in.addField(propertyPrefix + "_" + StatisticsSummaryController.STDDEV, stats.getStandardDeviation());
+      in.addField(propertyPrefix + "_" + StatisticsSummaryController.VARIANCE, stats.getVariance());
+
+    }
 
     out.collect(in);
 

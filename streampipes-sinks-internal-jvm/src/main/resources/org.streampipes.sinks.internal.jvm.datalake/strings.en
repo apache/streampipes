@@ -1,0 +1,8 @@
+org.streampipes.sinks.internal.jvm.datalake.title=Data Lake
+org.streampipes.sinks.internal.jvm.datalake.description=Stores events in the StreamPipes data lake.
+
+db_measurement.title=Identifier
+db_measurement.description=The name of the identifier under which the data is to be stored.
+
+timestamp_mapping.title=Timestamp Field
+timestamp_mapping.description=The value which contains a timestamp

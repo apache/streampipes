@@ -1,0 +1,5 @@
+org.streampipes.processors.transformation.jvm.boolean-inverter.title=Boolean Inverter
+org.streampipes.processors.transformation.jvm.boolean-inverter.description=Inverts a specific boolean.
+
+invert-field.title=Invert field
+invert-field.description=The field which should be inverted

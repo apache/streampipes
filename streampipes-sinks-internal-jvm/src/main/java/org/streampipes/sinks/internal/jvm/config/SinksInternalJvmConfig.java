@@ -47,6 +47,13 @@ public enum SinksInternalJvmConfig implements PeConfig {
 		config.register(ConfigKeys.COUCHDB_PORT, 5984, "Port for couchdb of the pe sinks project");
 		config.register(ConfigKeys.JMS_HOST, "activemq", "Hostname for pe actions service for active mq");
 		config.register(ConfigKeys.JMS_PORT, 61616, "Port for pe actions service for active mq");
+		config.register(ConfigKeys.DATA_LAKE_HOST, "influxdb", "Hostname for the StreamPipes data lake database");
+		config.register(ConfigKeys.DATA_LAKE_PROTOCOL, "http", "Protocol for the StreamPipes data lake database");
+		config.register(ConfigKeys.DATA_LAKE_PORT, 8086, "Port for the StreamPipes data lake database");
+		config.register(ConfigKeys.BACKEND_HOST, "backend", "Hostname for the StreamPipes-Backend");
+		config.register(ConfigKeys.BACKEND_PORT, 8030, "Port for the StreamPipes-Backend");
+		config.register(ConfigKeys.BACKEND_PROTOCOL, "http", "Protocol for the StreamPipes-Backend");
+
 
 		config.register(ConfigKeys.SERVICE_NAME, service_name, "The name of the service");
 
@@ -108,6 +115,18 @@ public enum SinksInternalJvmConfig implements PeConfig {
 		return config.getInteger(ConfigKeys.NGINX_PORT);
 	}
 
+	public String getDataLakeHost() {
+		return config.getString(ConfigKeys.DATA_LAKE_HOST);
+	}
+
+	public String getDataLakeProtocol() {
+		return config.getString(ConfigKeys.DATA_LAKE_PROTOCOL);
+	}
+
+	public Integer getDataLakePort() {
+		return config.getInteger(ConfigKeys.DATA_LAKE_PORT);
+	}
+
 	@Override
 	public String getId() {
 		return service_id;
@@ -118,6 +137,21 @@ public enum SinksInternalJvmConfig implements PeConfig {
 		return config.getString(ConfigKeys.SERVICE_NAME);
 	}
 
+
+	public String getStreamPipesBackendHost() {
+		return config.getString(ConfigKeys.BACKEND_HOST);
+	}
+
+	public String getStreamPipesBackendProtocol() {
+		return config.getString(ConfigKeys.BACKEND_PROTOCOL);
+	}
+
+	public Integer getStreamPipesBackendPort() {
+		return config.getInteger(ConfigKeys.BACKEND_PORT);
+	}
+
+	public String getStreamPipesBackendUrl() { return getStreamPipesBackendProtocol() + "://"
+			+ getStreamPipesBackendHost() + ":" + getStreamPipesBackendPort(); }
 
 
 

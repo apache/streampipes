@@ -19,12 +19,16 @@ package org.streampipes.processors.transformation.jvm;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.transformation.jvm.config.TransformationJvmConfig;
 import org.streampipes.processors.transformation.jvm.processor.array.count.CountArrayController;
 import org.streampipes.processors.transformation.jvm.processor.array.split.SplitArrayController;
+import org.streampipes.processors.transformation.jvm.processor.booleaninverter.BooleanInverterController;
 import org.streampipes.processors.transformation.jvm.processor.value.change.ChangedValueDetectionController;
 import org.streampipes.processors.transformation.jvm.processor.value.duration.CalculateDurationController;
 import org.streampipes.processors.transformation.jvm.processor.timestampextractor.TimestampExtractorController;
@@ -38,11 +42,16 @@ public class TransformationJvmInit extends StandaloneModelSubmitter {
             .add(new SplitArrayController())
             .add(new CalculateDurationController())
             .add(new ChangedValueDetectionController())
-            .add(new TimestampExtractorController());
+            .add(new TimestampExtractorController())
+            .add(new BooleanInverterController());
 
-    DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
-    DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
-    DeclarersSingleton.getInstance().registerProtocol(new SpJmsProtocolFactory());
+    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory());
+
+    DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory());
 
     new TransformationJvmInit().init(TransformationJvmConfig.INSTANCE);
   }

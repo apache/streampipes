@@ -18,6 +18,12 @@ package org.streampipes.sinks.databases.flink;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.streampipes.dataformat.fst.FstDataFormatFactory;
+import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.streampipes.messaging.jms.SpJmsProtocolFactory;
+import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.sinks.databases.flink.config.DatabasesFlinkConfig;
 import org.streampipes.sinks.databases.flink.elasticsearch.ElasticSearchController;
 
@@ -27,6 +33,14 @@ public class DatabasesFlinkInit extends StandaloneModelSubmitter {
     DeclarersSingleton.getInstance()
             .add(new ElasticSearchController());
 
+    DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory());
+
+    DeclarersSingleton.getInstance().registerProtocols(new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory());
+    
     new DatabasesFlinkInit().init(DatabasesFlinkConfig.INSTANCE);
   }
 

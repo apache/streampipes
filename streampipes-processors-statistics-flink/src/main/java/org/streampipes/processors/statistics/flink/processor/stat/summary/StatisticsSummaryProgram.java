@@ -33,6 +33,6 @@ public class StatisticsSummaryProgram extends AbstractStatisticsProgram<Statisti
 
   @Override
   protected DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
-    return messageStream[0].flatMap(new StatisticsSummaryCalculator(bindingParams.getListPropertyName()));
+    return messageStream[0].flatMap(new StatisticsSummaryCalculator(bindingParams.getListPropertyMappings()));
   }
 }

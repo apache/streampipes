@@ -28,8 +28,6 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -56,8 +54,6 @@ public class TrendController extends StandaloneEventProcessingDeclarer<TrendPara
                 .requiredIntegerParameter(Labels.withId(Increase), 0, 500, 1)
                 .requiredIntegerParameter(Labels.withId(Duration))
                 .outputStrategy(OutputStrategies.custom())
-                .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
                 .build();
     }
 

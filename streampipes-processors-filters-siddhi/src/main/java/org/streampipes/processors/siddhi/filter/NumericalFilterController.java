@@ -47,8 +47,6 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
             .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
                     ">=", "=="))
             .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING)
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .supportedFormats(SupportedFormats.jsonFormat())
             .build();
   }
 

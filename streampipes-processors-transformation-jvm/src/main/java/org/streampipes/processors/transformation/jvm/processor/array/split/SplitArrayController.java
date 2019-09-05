@@ -31,8 +31,6 @@ import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -60,8 +58,6 @@ public class SplitArrayController extends StandaloneEventProcessingDeclarer<Spli
                             PropertyScope.NONE)
                     .build())
             .outputStrategy(OutputStrategies.customTransformation())
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 

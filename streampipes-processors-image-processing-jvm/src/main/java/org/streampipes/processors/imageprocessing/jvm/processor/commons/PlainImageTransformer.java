@@ -39,7 +39,6 @@ public class PlainImageTransformer<T extends EventProcessorBindingParams> {
   }
 
   public Optional<BufferedImage> getImage(String imagePropertyName) {
-    System.out.println(imagePropertyName);
     String imageBase64 = in.getFieldBySelector(imagePropertyName).getAsPrimitive().getAsString();
 
     InputStream img = new ByteArrayInputStream(Base64.getDecoder().decode(imageBase64));

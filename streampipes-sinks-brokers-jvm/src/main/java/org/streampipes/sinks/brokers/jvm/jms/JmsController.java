@@ -27,8 +27,6 @@ import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.OntologyProperties;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
@@ -54,8 +52,6 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
             .requiredOntologyConcept(Labels.withId(JMS_BROKER_SETTINGS_KEY),
                     OntologyProperties.mandatory(JMS_HOST_URI),
                     OntologyProperties.mandatory(JMS_PORT_URI))
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 

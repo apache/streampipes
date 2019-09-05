@@ -31,8 +31,6 @@ import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Locales;
 import org.streampipes.sdk.helpers.Options;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Assets;
 import org.streampipes.sinks.notifications.jvm.config.ConfigKeys;
 import org.streampipes.sinks.notifications.jvm.config.SinksNotificationsJvmConfig;
@@ -58,8 +56,6 @@ public class SlackNotificationController extends StandaloneEventSinkDeclarer<Sla
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .requiredTextParameter(Labels.withId(RECEIVER))
             .requiredTextParameter(Labels.withId(CONTENT))
             .requiredSingleValueSelection(Labels.withId(CHANNEL_TYPE),

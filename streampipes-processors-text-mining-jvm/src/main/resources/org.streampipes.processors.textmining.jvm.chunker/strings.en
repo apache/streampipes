@@ -1,0 +1,14 @@
+org.streampipes.processors.textmining.jvm.chunker.title=Chunker (English)
+org.streampipes.processors.textmining.jvm.chunker.description=Segments given tokens of a text into different chunks
+
+tagsField.title=Part of Speech tags
+tagsField.description=The tags which mark every token with a part of speech tag
+
+tokensField.title=Tokens
+tokensField.description=The tokens of the text
+
+confidence.title=Confidence Chunker
+confidence.description=The confidence with which each Chunk is tagged
+
+chunk.title=Chunk
+chunk.description=The chunk each token belongs to

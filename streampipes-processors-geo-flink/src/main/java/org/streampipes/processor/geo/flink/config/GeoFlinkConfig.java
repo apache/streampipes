@@ -35,7 +35,7 @@ public enum GeoFlinkConfig implements PeConfig {
     config.register(ConfigKeys.HOST, service_container_name, "Hostname for the geo flink component");
     config.register(ConfigKeys.PORT, 8090, "Port for the geo flink component");
     config.register(ConfigKeys.FLINK_HOST, "jobmanager", "Host for the flink cluster");
-    config.register(ConfigKeys.FLINK_PORT, 6123, "Port for the flink cluster");
+    config.register(ConfigKeys.FLINK_PORT, 8081, "Port for the flink cluster");
     config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
 

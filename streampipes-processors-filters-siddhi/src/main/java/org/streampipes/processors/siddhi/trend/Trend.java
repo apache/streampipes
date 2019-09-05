@@ -16,11 +16,20 @@
  */
 package org.streampipes.processors.siddhi.trend;
 
+import org.streampipes.wrapper.siddhi.engine.SiddhiDebugCallback;
 import org.streampipes.wrapper.siddhi.engine.SiddhiEventEngine;
 
 import java.util.List;
 
 public class Trend extends SiddhiEventEngine<TrendParameters> {
+
+  public Trend() {
+    super();
+  }
+
+  public Trend(SiddhiDebugCallback callback) {
+    super(callback);
+  }
 
   @Override
   protected String fromStatement(List<String> inputStreamNames, TrendParameters params) {
@@ -41,15 +50,28 @@ public class Trend extends SiddhiEventEngine<TrendParameters> {
           operator = "*";
       }
 
-      String s = "from every(e1=" + inputStreamNames.get(0) +") -> e2=" +inputStreamNames.get(0) + "[e1." + mappingProperty + inequaloperator + mappingProperty + operator + increase + "]<1>" +
-            " within " + duration + " sec";
+      String s = "from every(e1="
+              + inputStreamNames.get(0)
+              +") -> e2="
+              +inputStreamNames.get(0)
+              + "[e1." + mappingProperty
+              + inequaloperator
+              + "("
+              + mappingProperty
+              + operator
+              + increase
+              +")"
+              + "]<1>"
+              + " within " + duration + " sec";
+
+    //String s = "from e1="+inputStreamNames.get(0) + "[e1.s0randomValue > 5]";
 
     return s;
   }
 
   @Override
   protected String selectStatement(TrendParameters params) {
-      return getCustomOutputSelectStatement(params.getGraph());
+      return getCustomOutputSelectStatement(params.getGraph(), "e2");
   }
 
 }

@@ -54,8 +54,6 @@ public class TrigonometryController extends FlinkDataProcessorDeclarer<Trigonome
                                 EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
                 .requiredSingleValueSelection(Labels.withId(OPERATION),
                         Options.from("sin(a)", "cos(a)", "tan(a)" ))
-                .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka())
                 .build();
     }
 

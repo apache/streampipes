@@ -5,7 +5,7 @@
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-pipeline-elements</artifactId>
     <packaging>pom</packaging>
-    <version>0.62.0</version>
+    <version>0.63.0</version>
     <modules>
         <module>streampipes-sinks-databases-jvm</module>
         <module>streampipes-sinks-internal-jvm</module>
@@ -22,6 +22,7 @@
         <module>streampipes-processors-statistics-flink</module>
         <module>streampipes-processors-filters-siddhi</module>
         <module>streampipes-processors-text-mining-flink</module>
+        <module>streampipes-processors-text-mining-jvm</module>
         <module>streampipes-sources-random-data-generator</module>
         <module>streampipes-sinks-notifications-jvm</module>
         <module>streampipes-pipeline-elements-shared</module>
@@ -31,12 +32,46 @@
     </modules>
 
     <properties>
-        <streampipes.version>0.62.0</streampipes.version>
+        <streampipes.version>0.63.0</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
+        <spring.version>2.1.6.RELEASE</spring.version>
+        <maven-shade-plugin.version>3.0.0</maven-shade-plugin.version>
+        <jackson.version>2.9.9</jackson.version>
+        <javax-validation.version>2.0.1.Final</javax-validation.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${javax-validation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-datatype-jdk8</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-datatype-guava</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-commons</artifactId>
@@ -75,6 +110,21 @@
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-dataformat-json</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-cbor</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-fst</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-smile</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
@@ -121,6 +171,12 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.flinkspector</groupId>
+                <artifactId>flinkspector-datastream_2.11</artifactId>
+                <version>0.9.4</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -202,6 +258,11 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.version}</version>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.1</version>
@@ -213,18 +274,80 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.0.1</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                            <configuration>
+                                <doclint>none</doclint>
+                                <additionalparam>-Xdoclint:none</additionalparam>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven-shade-plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-maven-plugin</artifactId>
+                            <version>${spring.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>
-<!--        <plugins>-->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.4.1</version>
+                <configuration>
+                    <rules><dependencyConvergence /></rules>
+                </configuration>
+            </plugin>
 <!--            <plugin>-->
 <!--                <groupId>org.streampipes</groupId>-->
 <!--                <artifactId>streampipes-maven-plugin</artifactId>-->
 <!--                <version>1.0-SNAPSHOT</version>-->
 <!--            </plugin>-->
-<!--        </plugins>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <failOnError>false</failOnError>
+                    <doclint>none</doclint>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <scm>
