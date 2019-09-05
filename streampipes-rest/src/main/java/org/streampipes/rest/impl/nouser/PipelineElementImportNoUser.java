@@ -22,70 +22,73 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.manager.endpoint.EndpointItemParser;
 import org.streampipes.manager.storage.UserService;
 import org.streampipes.model.client.messages.Message;
-import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notification;
+import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.rest.impl.AbstractRestInterface;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 
-import javax.ws.rs.*;
+import java.net.URISyntaxException;
+
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 @Path("/v2/noauth/users/{username}/element")
 public class PipelineElementImportNoUser extends AbstractRestInterface {
 
-	private static final Logger logger = LoggerFactory.getLogger(PipelineElementImportNoUser.class);
+  private static final Logger logger = LoggerFactory.getLogger(PipelineElementImportNoUser.class);
 
-	@Context
-	UriInfo uri;
+  @Context
+  UriInfo uri;
 
-	@Path("/")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addElement(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement)
-    {
-
-//		URI myUri = uri.getBaseUri();
-//		String id = myUri.toString()  + "v2/adapter/all/" + elementId;
-
-		logger.info("User " + username + " adds element with URI: " + uri + " to triplestore");
-
-        return ok(verifyAndAddElement(uri, username, publicElement));
-    }
-
-    private Message verifyAndAddElement(String uri, String username, boolean publicElement) {
-        return new EndpointItemParser().parseAndAddEndpointItem(uri, username, publicElement);
-    }
-
-    @Path("/delete")
-    @POST
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteElement(@PathParam("username") String username, @FormParam("uri") String uri) {
+  @Path("/")
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response addElement(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement) {
 
 //		URI myUri = uri.getBaseUri();
 //		String id = myUri.toString()  + "v2/adapter/all/" + elementId;
 
+    logger.info("User " + username + " adds element with URI: " + uri + " to triplestore");
 
-		UserService userService = getUserService();
-		IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
+    return ok(verifyAndAddElement(uri, username, publicElement));
+  }
 
-		logger.info("User " + username + " deletes element with URI: " + uri + " from triplestore");
+  private Message verifyAndAddElement(String uri, String username, boolean publicElement) {
+    return new EndpointItemParser().parseAndAddEndpointItem(uri, username, publicElement);
+  }
 
-		try {
-			if (requestor.getSEPById(uri) != null)
-				{
-					requestor.deleteSEP(requestor.getSEPById(uri));
-					userService.deleteOwnSource(username, uri);
-				}
-			else return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
-		} catch (URISyntaxException e) {
-			return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
-		}
-		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
-	}
+  @Path("/delete")
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response deleteElement(@PathParam("username") String username, @FormParam("uri") String uri) {
+
+//		URI myUri = uri.getBaseUri();
+//		String id = myUri.toString()  + "v2/adapter/all/" + elementId;
+
+
+    UserService userService = getUserService();
+    IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
+
+    logger.info("User " + username + " deletes element with URI: " + uri + " from triplestore");
+
+    try {
+      if (requestor.getSEPById(uri) != null) {
+        requestor.deleteSEP(requestor.getSEPById(uri));
+        userService.deleteOwnSource(username, uri);
+      } else {
+        return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
+      }
+    } catch (URISyntaxException e) {
+      return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
+    }
+    return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
+  }
 
 }

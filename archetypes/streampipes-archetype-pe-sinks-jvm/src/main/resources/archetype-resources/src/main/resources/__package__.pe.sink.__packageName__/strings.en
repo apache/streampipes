@@ -1,0 +1,5 @@
+${package}.pe.sink.${packageName}.title=${classNamePrefix}
+${package}.pe.sink.${packageName}.description=Description of sink
+
+example-key.title=Example Text Parameter
+example-key.description=Example Text Parameter Description

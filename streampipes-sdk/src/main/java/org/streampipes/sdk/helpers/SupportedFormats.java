@@ -38,4 +38,31 @@ public class SupportedFormats {
   public static TransportFormat thriftFormat() {
     return new TransportFormat(MessageFormat.Thrift);
   }
+
+  /**
+   * Defines that a pipeline element (data processor or data sink) supports processing messaging
+   * arriving in Cbor format
+   * @return The resulting {@link org.streampipes.model.grounding.TransportFormat}.
+   */
+  public static TransportFormat cborFormat() {
+    return new TransportFormat(MessageFormat.Cbor);
+  }
+
+  /**
+   * Defines that a pipeline element (data processor or data sink) supports processing messaging
+   * arriving in fast-serialization format
+   * @return The resulting {@link org.streampipes.model.grounding.TransportFormat}.
+   */
+  public static TransportFormat fstFormat() {
+    return new TransportFormat(MessageFormat.Fst);
+  }
+
+  /**
+   * Defines that a pipeline element (data processor or data sink) supports processing messaging
+   * arriving in smile format
+   * @return The resulting {@link org.streampipes.model.grounding.TransportFormat}.
+   */
+  public static TransportFormat smileFormat() {
+    return new TransportFormat(MessageFormat.Smile);
+  }
 }

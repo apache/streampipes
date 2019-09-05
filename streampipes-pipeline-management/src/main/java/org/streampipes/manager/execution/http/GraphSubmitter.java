@@ -64,7 +64,7 @@ public class GraphSubmitter {
     } else {
       LOG.info("Could not start pipeline, initializing rollback...");
       rollbackInvokedPipelineElements(status);
-      status.setTitle("Could not start pipeline " + pipelineName + ".");
+      status.setTitle("Could not start pipeline" + pipelineName + ".");
     }
     return status;
   }
@@ -88,6 +88,7 @@ public class GraphSubmitter {
   public PipelineOperationStatus detachGraphs() {
     PipelineOperationStatus status = new PipelineOperationStatus();
     status.setPipelineId(pipelineId);
+    status.setPipelineName(pipelineName);
 
     graphs.forEach(g -> status.addPipelineElementStatus(new HttpRequestBuilder(g, g.getUri()).detach()));
     dataSets.forEach(dataSet -> status.addPipelineElementStatus(new HttpRequestBuilder(dataSet, dataSet.getUri() +

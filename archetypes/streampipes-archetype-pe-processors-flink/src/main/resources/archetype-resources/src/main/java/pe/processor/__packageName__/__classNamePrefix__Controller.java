@@ -16,6 +16,8 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.sdk.helpers.*;
+import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -26,8 +28,9 @@ public class ${classNamePrefix}Controller extends
 
 	@Override
 	public DataProcessorDescription declareModel() {
-		return ProcessingElementBuilder.create("${package}-${packageName}", "${classNamePrefix}",
-				"Description")
+		return ProcessingElementBuilder.create("${package}.pe.processor.${packageName}")
+        		.withAssets(Assets.DOCUMENTATION, Assets.ICON)
+						.withLocales(Locales.EN)
 						.category(DataProcessorType.ENRICH)
 						.requiredStream(StreamRequirementsBuilder
 							.create()
@@ -36,8 +39,7 @@ public class ${classNamePrefix}Controller extends
 						.supportedFormats(SupportedFormats.jsonFormat())
 						.supportedProtocols(SupportedProtocols.kafka())
 						.outputStrategy(OutputStrategies.keep())
-						.requiredTextParameter(Labels.from(EXAMPLE_KEY, "Example Text Parameter", "Example " +
-				"Text Parameter Description"))
+						.requiredTextParameter(Labels.withId(EXAMPLE_KEY))
 						.build();
 	}
 

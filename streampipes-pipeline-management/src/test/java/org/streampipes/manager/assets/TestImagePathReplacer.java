@@ -15,27 +15,28 @@ limitations under the License.
 */
 package org.streampipes.manager.assets;
 
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
 
 public class TestImagePathReplacer {
 
-  private String TEST_CONTENT = "## Numerical Filter\n" +
-          "\n" +
-          "<img src=\"logo.png\"/>\n" +
-          "\n" +
-          "## Description\n" +
-          "\n" +
-          "Lorem ipsu";
-  private String TEST_CONTENT_REPLACED = "## Numerical Filter\n" +
-          "\n" +
-          "<img src=\"streampipes-backend/api/v2/pe/app/assets/logo.png\"/>\n" +
-          "\n" +
-          "## Description\n" +
-          "\n" +
-          "Lorem ipsu";
+  private String TEST_CONTENT = "## Numerical Filter\n"
+          +"\n"
+          + "<img src=\"logo.png\"/>\n"
+          + "\n"
+          + "## Description\n"
+          + "\n"
+          + "Lorem ipsu";
+
+  private String TEST_CONTENT_REPLACED = "## Numerical Filter\n"
+          + "\n"
+          + "<img src=\"streampipes-backend/api/v2/pe/app/assets/logo.png\"/>\n"
+          + "\n"
+          + "## Description\n"
+          + "\n"
+          + "Lorem ipsu";
 
   private String appId = "app";
 

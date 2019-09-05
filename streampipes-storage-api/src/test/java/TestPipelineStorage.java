@@ -1,5 +1,5 @@
 //import com.google.common.io.Resources;
-//import org.streampipes.model.client.pipeline.Pipeline;
+//import org.streampipes.model.client.preprocessing.Pipeline;
 //import org.streampipes.storage.controller.StorageManager;
 //
 //import java.io.File;

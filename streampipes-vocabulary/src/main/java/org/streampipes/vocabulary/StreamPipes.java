@@ -145,13 +145,21 @@ public class StreamPipes {
 
   public static final String ZOOKEEPER_HOST = NS + "zookeeperHost";
   public static final String ZOOKEEPER_PORT = NS + "zookeeperPort";
-  public static final String KAFKA_PORT = NS + "kafkaPort";
 
   public static final String BROKER_HOSTNAME = NS + "brokerHostname";
   public static final String TOPIC = NS + "topic";
 
   public static final String ELEMENT_IDENTIFIER = NS + "elementIdentifier";
+
+  public static final String KAFKA_PORT = NS + "kafkaPort";
   public static final String KAFKA_HOST = NS + "kafkaHost";
+  public static final String KAFKA_LINGER_MS = NS + "kafkaLingerMs";
+  public static final String KAFKA_MESSAGE_MAX_BYTES = NS + "kafkaMessageMaxBytes";
+  public static final String KAFKA_ACKS = NS + "kafkaAcks";
+  public static final String KAFKA_BATCH_SIZE = NS + "kafkaBatchSize";
+  public static final String KAFKA_OFFSET = NS + "kafkaOffset";
+  public static final String KAFKA_GROUP_ID = NS + "kafkaGroupId";
+
   public static final String ERROR_TOPIC = NS + "errorTopic";
   public static final String STATS_TOPIC = NS + "statsTopic";
 
@@ -283,6 +291,8 @@ public class StreamPipes {
   public static final String OLD_RUNTIME_NAME = NS + "oldRuntimeKey";
   public static final String NEW_RUNTIME_NAME = NS + "newRuntimeKey";
   public static final String FILTER_TIME_WINDOW = NS + "filterTimeWindow";
+  public static final String AGGREGATION_TIME_WINDOW = NS + "aggregationTimeWindow";
+  public static final String AGGREGATION_TYPE = NS + "aggregationType";
 
   //Class
 
@@ -294,6 +304,7 @@ public class StreamPipes {
   public static final String CREATE_NESTED_RULE_DESCRIPTION = NS + "CreateNestedRuleDescription";
 
   public static final String REMOVE_DUPLICATES_RULE_DESCRIPTION = NS + "RemoveDuplicatesRuleDescription";
+  public static final String EVENT_RATE_RULE_DESCRIPTION = NS + "EventRateRuleDescription";
 
   public static final String TIMESTAMP_TRANSFORMATION_RULE_DESCRIPTION = NS + "TimestampTransformationRuleDescription";
   public static final String ADD_TIMESTAMP_RULE_DESCRIPTION = NS + "AddTimestampRuleDescription";
@@ -325,4 +336,19 @@ public class StreamPipes {
   public static final String INCLUDED_ASSETS = NS + "includedAssets";
   public static final String INCLUDES_LOCALES = NS + "includesLocales";
   public static final String INCLUDED_LOCALES = NS + "includedLocales";
+
+  public static final String DEPENDS_ON_STATIC_PROPERTY = NS + "dependsOnStaticProperty";
+  public static final String RUNTIME_OPTIONS_REQUEST = NS + "RuntimeOptionsRequest";
+  public static final String RUNTIME_OPTIONS_RESPONSE = NS + "RuntimeOptionsResponse";
+  public static final String HAS_REQUEST_ID = NS + "hasRequestId";
+
+  public static final String STATIC_PROPERTY_ALTERNATIVE = NS + "StaticPropertyAlternative";
+  public static final String STATIC_PROPERTY_ALTERNATIVES = NS + "StaticPropertyAlternatives";
+  public static final String HAS_STATIC_PROPERTY_ALTERNATIVE = NS + "hasStaticPropertyAlternative";
+  public static final String STATIC_PROPERTY_GROUP = NS + "StaticPropertyGroup";
+  public static final String SHOW_LABEL = NS + "showLabel";
+  public static final String CONNECT_WORKER_CONTAINER = NS + "ConnectWorkerContainer";
+
+  public static final String SECRET_STATIC_PROPERTY = NS + "SecretStaticProperty";
+  public static final String IS_ENCRYPTED = NS + "isEncrypted";
 }

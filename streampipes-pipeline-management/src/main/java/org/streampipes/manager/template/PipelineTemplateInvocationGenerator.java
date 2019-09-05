@@ -18,7 +18,6 @@ package org.streampipes.manager.template;
 
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.client.pipeline.Pipeline;
-import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.model.template.PipelineTemplateInvocation;
@@ -61,13 +60,14 @@ public class PipelineTemplateInvocationGenerator {
       staticProperties.addAll(pe.getStaticProperties());
     });
 
-    staticProperties
-            .stream()
-            .filter(sp -> sp instanceof MappingPropertyUnary)
-            .forEach(mp -> ((MappingPropertyUnary) mp)
-                    .setSelectedProperty(((MappingPropertyUnary) mp)
-                            .getMapsFromOptions()
-                            .get(0)));
+    // Not sure what it does
+//    staticProperties
+//            .stream()
+//            .filter(sp -> sp instanceof MappingPropertyUnary)
+//            .forEach(mp -> ((MappingPropertyUnary) mp)
+//                    .setSelectedProperty(((MappingPropertyUnary) mp)
+//                            .getMapsFromOptions()
+//                            .get(0)));
 
     return staticProperties;
   }

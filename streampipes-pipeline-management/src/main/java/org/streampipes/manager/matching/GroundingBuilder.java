@@ -23,7 +23,7 @@ import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 
 public class GroundingBuilder {
@@ -38,8 +38,8 @@ public class GroundingBuilder {
 
     public EventGrounding getEventGrounding() {
         EventGrounding grounding = new EventGrounding();
-        grounding.setTransportFormats(Arrays.asList(getFormat()));
-        grounding.setTransportProtocols(Arrays.asList(getProtocol()));
+        grounding.setTransportFormats(Collections.singletonList(getFormat()));
+        grounding.setTransportProtocols(Collections.singletonList(getProtocol()));
         return grounding;
     }
 

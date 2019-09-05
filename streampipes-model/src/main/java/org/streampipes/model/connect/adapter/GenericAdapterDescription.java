@@ -20,6 +20,7 @@ package org.streampipes.model.connect.adapter;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.streampipes.model.schema.EventSchema;
 
 import java.util.List;
 
@@ -30,6 +31,8 @@ public interface GenericAdapterDescription {
     FormatDescription getFormatDescription();
 
     List<TransformationRuleDescription> getRules();
+
+    EventSchema getEventSchema();
 
 }
 

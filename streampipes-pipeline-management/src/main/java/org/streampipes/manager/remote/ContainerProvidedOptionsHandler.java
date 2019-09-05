@@ -23,18 +23,12 @@ import org.apache.http.entity.ContentType;
 import org.streampipes.model.client.runtime.ContainerProvidedOptionsParameterRequest;
 import org.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.Option;
-import org.streampipes.model.staticproperty.RuntimeResolvableSelectionStaticProperty;
-import org.streampipes.model.staticproperty.StaticProperty;
-import org.streampipes.model.staticproperty.StaticPropertyType;
 import org.streampipes.serializers.json.GsonSerializer;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ContainerProvidedOptionsHandler {
@@ -42,30 +36,31 @@ public class ContainerProvidedOptionsHandler {
 
   public List<Option> fetchRemoteOptions(ContainerProvidedOptionsParameterRequest parameterRequest) {
 
-    Optional<RuntimeResolvableSelectionStaticProperty> runtimeResolvableOpt = findProperty
-            (parameterRequest.getStaticProperties(), parameterRequest.getRuntimeResolvableInternalId());
-
-    if (runtimeResolvableOpt.isPresent()) {
-      RuntimeResolvableSelectionStaticProperty rsp = runtimeResolvableOpt.get();
-      RuntimeOptionsRequest request = new RuntimeOptionsRequest(rsp.getInternalName());
-
-      if (rsp.getLinkedMappingPropertyId() != null) {
-        Optional<EventProperty> eventPropertyOpt = findEventProperty(parameterRequest.getEventProperties(),
-                parameterRequest.getStaticProperties(), rsp
-                        .getLinkedMappingPropertyId());
-        eventPropertyOpt.ifPresent(request::setMappedEventProperty);
-      }
-      String httpRequestBody = GsonSerializer.getGsonWithIds()
-              .toJson
-                      (request);
-      try {
-        Response httpResp = Request.Post(parameterRequest.getBelongsTo() +"/configurations").bodyString(httpRequestBody, ContentType.APPLICATION_JSON).execute();
-        return handleResponse(httpResp);
-      } catch (Exception e) {
-        e.printStackTrace();
-        return new ArrayList<>();
-      }
-    } else {
+    RuntimeOptionsRequest request = new RuntimeOptionsRequest();
+    request.setRequestId(parameterRequest.getRuntimeResolvableInternalId());
+    request.setInputStreams(parameterRequest.getInputStreams());
+    request.setStaticProperties(parameterRequest.getStaticProperties());
+//    Optional<RuntimeResolvableSelectionStaticProperty> runtimeResolvableOpt = findProperty
+//            (parameterRequest.getStaticProperties(), parameterRequest.getRuntimeResolvableInternalId());
+//
+//    if (runtimeResolvableOpt.isPresent()) {
+//      RuntimeResolvableSelectionStaticProperty rsp = runtimeResolvableOpt.get();
+//      RuntimeOptionsRequest request = new RuntimeOptionsRequest(rsp.getInternalName());
+//
+//      if (rsp.getLinkedMappingPropertyId() != null) {
+//        Optional<EventProperty> eventPropertyOpt = findEventProperty(parameterRequest.getEventProperties(),
+//                parameterRequest.getStaticProperties(), rsp
+//                        .getLinkedMappingPropertyId());
+//        eventPropertyOpt.ifPresent(request::setMappedEventProperty);
+//      }
+    String httpRequestBody = GsonSerializer.getGsonWithIds()
+            .toJson
+                    (request);
+    try {
+      Response httpResp = Request.Post(parameterRequest.getBelongsTo() + "/configurations").bodyString(httpRequestBody, ContentType.APPLICATION_JSON).execute();
+      return handleResponse(httpResp);
+    } catch (Exception e) {
+      e.printStackTrace();
       return new ArrayList<>();
     }
   }
@@ -79,37 +74,7 @@ public class ContainerProvidedOptionsHandler {
     return response
             .getOptions()
             .stream()
-            .map(o -> new Option(o.getLabel(), o.getAdditionalPayload()))
+            .map(Option::new)
             .collect(Collectors.toList());
-  }
-
-  private Optional<EventProperty> findEventProperty(List<EventProperty> eventProperties, List<StaticProperty>
-          staticProperties, String linkedMappingPropertyId) {
-
-    Optional<MappingPropertyUnary> mappingProperty = staticProperties
-            .stream()
-            .filter(sp -> sp.getInternalName().equals(linkedMappingPropertyId))
-            .map(sp -> (MappingPropertyUnary) sp)
-            .findFirst();
-
-    if (mappingProperty.isPresent()) {
-      return eventProperties
-              .stream()
-              .filter(ep -> ep.getElementId().equals(mappingProperty.get().getSelectedProperty()))
-              .findFirst();
-    } else {
-      return Optional.empty();
-    }
-  }
-
-  private Optional<RuntimeResolvableSelectionStaticProperty> findProperty(List<StaticProperty> staticProperties, String
-          runtimeResolvablePropertyId) {
-
-    return staticProperties.stream()
-            .filter(sp -> sp.getInternalName().equals(runtimeResolvablePropertyId))
-            .filter(sp -> sp.getStaticPropertyType() == StaticPropertyType.RuntimeResolvableAnyStaticProperty || sp
-                    .getStaticPropertyType() == StaticPropertyType.RuntimeResolvableOneOfStaticProperty)
-            .map(sp -> (RuntimeResolvableSelectionStaticProperty) sp)
-            .findFirst();
   }
 }

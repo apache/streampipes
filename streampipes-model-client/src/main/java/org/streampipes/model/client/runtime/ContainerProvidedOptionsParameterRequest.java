@@ -16,7 +16,7 @@
  */
 package org.streampipes.model.client.runtime;
 
-import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.staticproperty.StaticProperty;
 
 import java.util.List;
@@ -24,14 +24,15 @@ import java.util.List;
 public class ContainerProvidedOptionsParameterRequest {
 
   private List<StaticProperty> staticProperties;
-  private List<EventProperty> eventProperties;
+  private List<SpDataStream> inputStreams;
 
   private String belongsTo;
   private String runtimeResolvableInternalId;
 
-  public ContainerProvidedOptionsParameterRequest(List<StaticProperty> staticProperties, List<EventProperty> eventProperties, String belongsTo) {
+  public ContainerProvidedOptionsParameterRequest(List<StaticProperty> staticProperties,
+                                                  List<SpDataStream> inputStreams, String belongsTo) {
     this.staticProperties = staticProperties;
-    this.eventProperties = eventProperties;
+    this.inputStreams = inputStreams;
     this.belongsTo = belongsTo;
   }
 
@@ -47,12 +48,12 @@ public class ContainerProvidedOptionsParameterRequest {
     this.staticProperties = staticProperties;
   }
 
-  public List<EventProperty> getEventProperties() {
-    return eventProperties;
+  public List<SpDataStream> getInputStreams() {
+    return inputStreams;
   }
 
-  public void setEventProperties(List<EventProperty> eventProperties) {
-    this.eventProperties = eventProperties;
+  public void setInputStreams(List<SpDataStream> inputStreams) {
+    this.inputStreams = inputStreams;
   }
 
   public String getBelongsTo() {

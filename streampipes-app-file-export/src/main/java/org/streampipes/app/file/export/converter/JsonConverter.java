@@ -16,7 +16,6 @@
  */
 package org.streampipes.app.file.export.converter;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -40,7 +39,7 @@ public class JsonConverter {
     Set<Map.Entry<String, JsonElement>> elements = inContent.entrySet();
     StringJoiner sj = new StringJoiner(";");
 
-    for (Map.Entry<String, JsonElement> entry: elements) {
+    for (Map.Entry<String, JsonElement> entry : elements) {
       sj.add(entry.getKey().toString());
     }
 
@@ -54,7 +53,7 @@ public class JsonConverter {
     Set<Map.Entry<String, JsonElement>> elements = inContent.entrySet();
     StringJoiner sj = new StringJoiner(";");
 
-    for (Map.Entry<String, JsonElement> entry: elements) {
+    for (Map.Entry<String, JsonElement> entry : elements) {
       sj.add(entry.getValue().toString());
     }
 

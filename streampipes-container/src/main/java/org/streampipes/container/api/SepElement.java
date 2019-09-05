@@ -75,7 +75,8 @@ public class SepElement extends Element<SemanticEventProducerDeclarer> {
     try {
       return javax.ws.rs.core.Response
               .ok()
-              .entity(new AssetZipGenerator(streamId, getDeclarerById(streamId).declareModel()
+              .entity(new AssetZipGenerator(streamId,
+                      getStreamBySourceId(sourceId, streamId).get()
                       .getIncludedAssets()).makeZip())
               .build();
     } catch (IOException e) {
@@ -112,7 +113,7 @@ public class SepElement extends Element<SemanticEventProducerDeclarer> {
         SpDataSet dataSet = Transformer.fromJsonLd(SpDataSet.class, payload, StreamPipes.DATA_SET);
         String runningInstanceId = dataSet.getDatasetInvocationId();
         RunningDatasetInstances.INSTANCE.add(runningInstanceId, dataSet, (DataSetDeclarer) streamDeclarer.get().getClass().newInstance());
-        boolean success = RunningDatasetInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(dataSet, ()
+        RunningDatasetInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(dataSet, ()
                 -> {
           // TODO notify
         });

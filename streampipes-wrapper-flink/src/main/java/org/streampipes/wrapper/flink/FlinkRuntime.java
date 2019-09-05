@@ -17,30 +17,39 @@
 
 package org.streampipes.wrapper.flink;
 
+import org.apache.flink.client.program.rest.RestClusterClient;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.configuration.JobManagerOptions;
+import org.apache.flink.runtime.client.JobStatusMessage;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
-import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.dataformat.SpDataFormatDefinition;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
+import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.wrapper.context.RuntimeContext;
 import org.streampipes.wrapper.distributed.runtime.DistributedRuntime;
 import org.streampipes.wrapper.flink.consumer.JmsConsumer;
-import org.streampipes.wrapper.flink.converter.EventGenerator;
-import org.streampipes.wrapper.flink.converter.JsonToMapFormat;
+import org.streampipes.wrapper.flink.converter.MapToEventConverter;
 import org.streampipes.wrapper.flink.logger.StatisticLogger;
+import org.streampipes.wrapper.flink.serializer.ByteArrayDeserializer;
 import org.streampipes.wrapper.params.binding.BindingParams;
 import org.streampipes.wrapper.params.runtime.RuntimeParams;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends BindingParams<I>, I
@@ -101,11 +110,11 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
     this.streamTimeCharacteristic = streamTimeCharacteristic;
   }
 
-  private SourceFunction<String> getStream1Source() {
+  private SourceFunction<Map<String, Object>> getStream1Source() {
     return getStreamSource(0);
   }
 
-  private SourceFunction<String> getStream2Source() {
+  private SourceFunction<Map<String, Object>> getStream2Source() {
     return getStreamSource(1);
   }
 
@@ -117,17 +126,18 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
    * @param i
    * @return
    */
-  private SourceFunction<String> getStreamSource(int i) {
+  private SourceFunction<Map<String, Object>> getStreamSource(int i) {
     if (bindingParams.getGraph().getInputStreams().size() - 1 >= i) {
 
       SpDataStream stream = bindingParams.getGraph().getInputStreams().get(i);
       if (stream != null) {
         TransportProtocol protocol = stream.getEventGrounding().getTransportProtocol();
-
+        TransportFormat format = stream.getEventGrounding().getTransportFormats().get(0);
+        SpDataFormatDefinition dataFormatDefinition = getDataFormatDefinition(format);
         if (protocol instanceof KafkaTransportProtocol) {
-          return getKafkaConsumer((KafkaTransportProtocol) protocol);
+          return getKafkaConsumer((KafkaTransportProtocol) protocol, dataFormatDefinition);
         } else {
-          return getJmsConsumer((JmsTransportProtocol) protocol);
+          return getJmsConsumer((JmsTransportProtocol) protocol, dataFormatDefinition);
         }
       } else {
         return null;
@@ -137,20 +147,21 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
     }
   }
 
-  private SourceFunction<String> getJmsConsumer(JmsTransportProtocol protocol) {
-    return new JmsConsumer(protocol);
+  private SourceFunction<Map<String, Object>> getJmsConsumer(JmsTransportProtocol protocol,
+                                                SpDataFormatDefinition spDataFormatDefinition) {
+    return new JmsConsumer(protocol, spDataFormatDefinition);
   }
 
-  private SourceFunction<String> getKafkaConsumer(KafkaTransportProtocol protocol) {
+  private SourceFunction<Map<String, Object>> getKafkaConsumer(KafkaTransportProtocol protocol,
+                                                               SpDataFormatDefinition spDataFormatDefinition) {
     if (protocol.getTopicDefinition() instanceof SimpleTopicDefinition) {
-      return new FlinkKafkaConsumer010<>(protocol
+      return new FlinkKafkaConsumer<>(protocol
               .getTopicDefinition()
-              .getActualTopicName(), new SimpleStringSchema
-              (), getProperties(protocol));
+              .getActualTopicName(), new ByteArrayDeserializer(spDataFormatDefinition), getProperties(protocol));
     } else {
       String patternTopic = replaceWildcardWithPatternFormat(protocol.getTopicDefinition().getActualTopicName());
-      return new FlinkKafkaConsumer010<>(Pattern.compile(patternTopic), new SimpleStringSchema
-              (), getProperties(protocol));
+      return new FlinkKafkaConsumer<>(Pattern.compile(patternTopic), new ByteArrayDeserializer(spDataFormatDefinition),
+              getProperties(protocol));
     }
   }
 
@@ -166,33 +177,29 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
     appendEnvironmentConfig(this.env);
     // Add the first source to the topology
     DataStream<Event> messageStream1;
-    SourceFunction<String> source1 = getStream1Source();
+    SourceFunction<Map<String, Object>> source1 = getStream1Source();
     if (source1 != null) {
-      messageStream1 = env
-              .addSource(source1)
-              .flatMap(new JsonToMapFormat())
-              .flatMap(new EventGenerator<>(runtimeParams.getSourceInfo(0).getSourceId(),
-                      runtimeParams))
-              .flatMap(new StatisticLogger(getGraph()));
+      messageStream1 = addSource(source1, 0);
     } else {
       throw new SpRuntimeException("At least one source must be defined for a flink sepa");
     }
 
-    DataStream<Event> messageStream2;
-    SourceFunction<String> source2 = getStream2Source();
+    SourceFunction<Map<String, Object>> source2 = getStream2Source();
     if (source2 != null) {
-      messageStream2 = env
-              .addSource(source2)
-              .flatMap(new JsonToMapFormat())
-              .flatMap(new EventGenerator<>(runtimeParams.getSourceInfo(1).getSourceId(),
-                      runtimeParams))
-              .flatMap(new StatisticLogger(getGraph()));
-
+      DataStream<Event> messageStream2 = addSource(source2, 1);
       appendExecutionConfig(messageStream1, messageStream2);
     } else {
       appendExecutionConfig(messageStream1);
     }
+  }
 
+  private DataStream<Event> addSource(SourceFunction<Map<String, Object>> sourceFunction,
+                                      Integer sourceIndex) {
+    return env
+            .addSource(sourceFunction)
+            .flatMap(new MapToEventConverter<>(runtimeParams.getSourceInfo(sourceIndex).getSourceId(),
+                    runtimeParams))
+            .flatMap(new StatisticLogger(getGraph()));
   }
 
   @Override
@@ -213,15 +220,17 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
       // When the deployment takes longer then 60 seconds it returns false
       // This check is not needed when the execution environment is st to local
       if (!debug) {
-        FlinkJobController ctrl = new FlinkJobController(config.getHost(), config.getPort());
         boolean isDeployed = false;
         int count = 0;
         do {
           try {
             count++;
             Thread.sleep(1000);
-            ctrl.findJobId(ctrl.getJobManagerGateway(), bindingParams.getGraph().getElementId());
-            isDeployed = true;
+            Optional<JobStatusMessage> statusMessageOpt =
+                    getJobStatus(bindingParams.getGraph().getElementId());
+            if (statusMessageOpt.isPresent()) {
+              isDeployed = true;
+            }
 
           } catch (Exception e) {
 
@@ -241,10 +250,13 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
 
   @Override
   public void discardRuntime() throws SpRuntimeException {
-    FlinkJobController ctrl = new FlinkJobController(config.getHost(), config.getPort());
-
     try {
-      if (!ctrl.deleteJob(ctrl.findJobId(ctrl.getJobManagerGateway(), bindingParams.getGraph().getElementId()))) {
+      RestClusterClient<String> restClient = getRestClient();
+      Optional<JobStatusMessage> jobStatusMessage =
+              getJobStatus(bindingParams.getGraph().getElementId());
+      if (jobStatusMessage.isPresent()) {
+        restClient.cancel(jobStatusMessage.get().getJobId());
+      } else {
         throw new SpRuntimeException("Could not stop Flink Job");
       }
     } catch (Exception e) {
@@ -263,6 +275,27 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
     if (this.streamTimeCharacteristic != null) {
       env.setStreamTimeCharacteristic(this.streamTimeCharacteristic);
       env.setParallelism(1);
+    }
+  }
+
+  private RestClusterClient<String> getRestClient() throws Exception {
+    Configuration restConfig = new Configuration();
+    restConfig.setString(JobManagerOptions.ADDRESS, config.getHost());
+    restConfig.setInteger(JobManagerOptions.PORT, config.getPort());
+    return new RestClusterClient<>(restConfig, "");
+  }
+
+  private Optional<JobStatusMessage> getJobStatus(String jobName) {
+    try {
+      RestClusterClient<String> restClient = getRestClient();
+      CompletableFuture<Collection<JobStatusMessage>> jobs = restClient.listJobs();
+      return jobs.get()
+              .stream()
+              .filter(j -> j.getJobName().equals(jobName) && j.getJobState().name().equals("RUNNING")).findFirst();
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      return Optional.empty();
     }
   }
 

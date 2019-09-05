@@ -21,25 +21,39 @@
 
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.62.0</version>
+    <version>0.63.0</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <rdf4j.version>2.4.5</rdf4j.version>
-        <commons-beanutils.version>1.9.2</commons-beanutils.version>
-        <javassist.version>3.19.0-GA</javassist.version>
-        <logback-classic.version>1.1.9</logback-classic.version>
-        <jackson.version>2.7.4</jackson.version>
-        <type-parser.version>0.6.0</type-parser.version>
-        <consul-client.version>1.1.1</consul-client.version>
-        <persistence-api.version>1.0.2</persistence-api.version>
-        <junit.version>4.12</junit.version>
-        <kafka.version>1.0.0</kafka.version>
-        <shiro.version>1.2.3</shiro.version>
-        <streampipes-empire.version>1.9.9</streampipes-empire.version>
         <dependency.locations.enabled>false</dependency.locations.enabled>
+
+        <commons-beanutils.version>1.9.2</commons-beanutils.version>
+        <consul-client.version>1.3.5</consul-client.version>
+        <jackson.version>2.9.9</jackson.version>
+        <javax.ws.rs.version>2.1</javax.ws.rs.version>
+        <javax-servlet-api.version>3.1.0</javax-servlet-api.version>
+        <javassist.version>3.19.0-GA</javassist.version>
+        <jersey.version>2.27</jersey.version>
+        <jetty.version>9.4.19.v20190610</jetty.version>
+        <kafka.version>2.2.0</kafka.version>
+        <logback-classic.version>1.2.3</logback-classic.version>
+        <persistence-api.version>1.0.2</persistence-api.version>
+        <rdf4j.version>2.4.5</rdf4j.version>
+        <shiro.version>1.2.3</shiro.version>
+        <spring.version>2.1.6.RELEASE</spring.version>
+        <streampipes-empire.version>1.9.11</streampipes-empire.version>
+        <swagger.version>2.0.0</swagger.version>
+        <type-parser.version>0.6.0</type-parser.version>
+
+        <junit.version>4.12</junit.version>
         <mockito.version>2.18.3</mockito.version>
-        <powermock.version>2.0.0-beta.5</powermock.version>
+        <powermock.version>2.0.2</powermock.version>
+        <wiremock.version>2.23.2</wiremock.version>
+
+        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+        <maven.jar.plugin.version>3.1.2</maven.jar.plugin.version>
+        <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
+        <maven.source.plugin.version>3.1.0</maven.source.plugin.version>
     </properties>
 
     <name>StreamPipes Parent Pom</name>
@@ -54,8 +68,18 @@
                 <version>${logback-classic.version}</version>
             </dependency>
             <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>${javax.ws.rs.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
@@ -84,10 +108,61 @@
                 <version>${commons-beanutils.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-jaxrs2</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-jaxrs2-servlet-initializer</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>javax.persistence</groupId>
                 <artifactId>persistence-api</artifactId>
                 <version>${persistence-api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax-servlet-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-jetty-http</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-servlet</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.inject</groupId>
+                <artifactId>jersey-hk2</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.inject</groupId>
+                <artifactId>jersey-hk2</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-json-jackson</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-multipart</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-sse</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -96,7 +171,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.kafka</groupId>
-                <artifactId>kafka_2.10</artifactId>
+                <artifactId>kafka_2.12</artifactId>
                 <version>${kafka.version}</version>
             </dependency>
             <dependency>
@@ -195,6 +270,21 @@
                 <version>0.9.10</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-jersey</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-jetty</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-config</artifactId>
                 <version>${project.version}</version>
@@ -202,6 +292,11 @@
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-connect</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-connect-container</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -236,7 +331,22 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-cbor</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-fst</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-dataformat-json</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-smile</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -397,7 +507,7 @@
             <dependency>
                 <groupId>com.github.tomakehurst</groupId>
                 <artifactId>wiremock</artifactId>
-                <version>2.18.0</version>
+                <version>${wiremock.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -427,17 +537,32 @@
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-server</artifactId>
-                <version>9.2.24.v20180105</version>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-servlet</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-servlets</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-webapp</artifactId>
+                <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-util</artifactId>
-                <version>9.2.24.v20180105</version>
+                <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-continuation</artifactId>
-                <version>9.2.24.v20180105</version>
+                <version>${jetty.version}</version>
             </dependency>
 
         </dependencies>
@@ -499,7 +624,10 @@
         <module>streampipes-container-embedded</module>
         <module>streampipes-container-standalone</module>
         <module>streampipes-dataformat</module>
+        <module>streampipes-dataformat-cbor</module>
+        <module>streampipes-dataformat-fst</module>
         <module>streampipes-dataformat-json</module>
+        <module>streampipes-dataformat-smile</module>
         <module>streampipes-logging</module>
         <module>streampipes-measurement-units</module>
         <module>streampipes-messaging-kafka</module>
@@ -529,6 +657,8 @@
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-spark</module>
         <module>streampipes-wrapper-standalone</module>
+        <module>streampipes-connect-container-master</module>
+        <module>streampipes-connect-container-worker</module>
     </modules>
 
     <profiles>
@@ -622,16 +752,25 @@
 
     <!-- Build Settings -->
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.10</version>
+                <version>${maven.dependency.plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>${maven.source.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -644,7 +783,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -654,13 +793,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.17</version>
+                <version>3.1.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <!-- Note: match version with docs/internals/ide_setup.md -->
-                        <version>8.4</version>
+                        <version>8.19</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -683,7 +821,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>${maven.jar.plugin.version}</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -700,7 +838,7 @@
         <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce.git
         </developerConnection>
         <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce.git</connection>
-        <url>https://github.com/streampipes/streampipes-ce</url>
+        <url>https://github.com/streampipes/streampipes</url>
     </scm>
 
     <licenses>

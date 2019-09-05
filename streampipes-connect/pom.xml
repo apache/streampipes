@@ -3,17 +3,18 @@
     <parent>
         <groupId>org.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.62.0</version>
+        <version>0.63.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>streampipes-connect</artifactId>
 
-    <properties>
-        <jsrosbridge.version>0.2.0</jsrosbridge.version>
-    </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-config</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
@@ -24,18 +25,29 @@
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-smile</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-cbor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-fst</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sdk</artifactId>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-serializers</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>edu.wpi.rail</groupId>
-            <artifactId>jrosbridge</artifactId>
-            <version>${jsrosbridge.version}</version>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-container</artifactId>
         </dependency>
+
 
         <dependency>
             <groupId>org.streampipes</groupId>
@@ -63,7 +75,6 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.1.9</version>
         </dependency>
         <dependency>
             <groupId>javax.persistence</groupId>
@@ -75,15 +86,9 @@
             <artifactId>streampipes-messaging-kafka</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20180130</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.fusesource.mqtt-client</groupId>
-            <artifactId>mqtt-client</artifactId>
-            <version>1.12</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
+            <version>4.5.5</version>
         </dependency>
         <dependency>
             <groupId>de.grundid.opendatalab</groupId>
@@ -94,50 +99,6 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20171018</version>
-        </dependency>
-        <dependency>
-            <groupId>com.opencsv</groupId>
-            <artifactId>opencsv</artifactId>
-            <version>4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>fluent-hc</artifactId>
-            <version>4.5.5</version>
-        </dependency>
-         <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-milo</artifactId>
-            <version>2.22.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <version>3.0.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.jersey</groupId>
-                    <artifactId>jersey-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.jersey</groupId>
-                    <artifactId>jersey-client</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.jersey</groupId>
-                    <artifactId>jersey-servlet</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-sse</artifactId>
-            <version>2.22.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ullink.slack</groupId>
-            <artifactId>simpleslackapi</artifactId>
-            <version>1.2.0</version>
         </dependency>
     </dependencies>
 </project>

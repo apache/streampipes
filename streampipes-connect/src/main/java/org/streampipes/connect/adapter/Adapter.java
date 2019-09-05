@@ -19,14 +19,16 @@ package org.streampipes.connect.adapter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipelineElement;
-import org.streampipes.connect.adapter.generic.pipeline.elements.*;
-import org.streampipes.connect.exception.AdapterException;
-import org.streampipes.connect.exception.ParseException;
+import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.connect.adapter.exception.ParseException;
+import org.streampipes.connect.adapter.model.Connector;
+import org.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
+import org.streampipes.connect.adapter.model.pipeline.AdapterPipelineElement;
+import org.streampipes.connect.adapter.preprocessing.elements.*;
+import org.streampipes.connect.adapter.preprocessing.transform.stream.EventRateTransformationRule;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.model.connect.rules.Stream.EventRateTransformationRuleDescription;
 import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
 import org.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
@@ -36,7 +38,7 @@ import org.streampipes.model.grounding.TransportProtocol;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Adapter<T extends AdapterDescription> {
+public abstract class Adapter<T extends AdapterDescription> implements Connector {
     Logger logger = LoggerFactory.getLogger(Adapter.class);
 
     private boolean debug;
@@ -78,7 +80,7 @@ public abstract class Adapter<T extends AdapterDescription> {
 
     public void changeEventGrounding(TransportProtocol transportProtocol) {
         List<AdapterPipelineElement> pipelineElements =  this.adapterPipeline.getPipelineElements();
-        SendToKafkaAdapterSink sink = (SendToKafkaAdapterSink) pipelineElements.get(pipelineElements.size() - 1);
+        SendToKafkaAdapterSink sink = (SendToKafkaAdapterSink) this.adapterPipeline.getPipelineSink();
         sink.changeTransportProtocol(transportProtocol);
     }
 
@@ -109,11 +111,17 @@ public abstract class Adapter<T extends AdapterDescription> {
             pipelineElements.add(new DuplicateFilterPipelineElement(duplicatesTransformationRuleDescription.getFilterTimeWindow()));
         }
 
+        TransformStreamAdapterElement transformStreamAdapterElement = new TransformStreamAdapterElement();
+        EventRateTransformationRuleDescription eventRateTransformationRuleDescription = getEventRateTransformationRule(adapterDescription);
+        if (eventRateTransformationRuleDescription != null) {
+            transformStreamAdapterElement.addStreamTransformationRuleDescription(eventRateTransformationRuleDescription);
+        }
+        pipelineElements.add(transformStreamAdapterElement);
 
-        // Needed when adapter is
+        // Needed when adapter is (
         if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
                 && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
-            pipelineElements.add(new SendToKafkaAdapterSink( adapterDescription));
+            return new AdapterPipeline(pipelineElements, new SendToKafkaAdapterSink(adapterDescription));
         }
 
         return new AdapterPipeline(pipelineElements);
@@ -121,6 +129,10 @@ public abstract class Adapter<T extends AdapterDescription> {
 
     private RemoveDuplicatesTransformationRuleDescription getRemoveDuplicateRule(T adapterDescription) {
         return getRule(adapterDescription, RemoveDuplicatesTransformationRuleDescription.class);
+    }
+
+    private EventRateTransformationRuleDescription getEventRateTransformationRule(T adapterDescription) {
+        return getRule(adapterDescription, EventRateTransformationRuleDescription.class);
     }
 
     private AddTimestampRuleDescription getTimestampRule(T adapterDescription) {
@@ -148,4 +160,5 @@ public abstract class Adapter<T extends AdapterDescription> {
     public boolean isDebug() {
         return debug;
     }
+
 }

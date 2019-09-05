@@ -52,7 +52,7 @@ public class PropertySelector {
   }
 
   private List<EventProperty> extractProperties(List<EventProperty> inputProperties, List<String>
-          propertySelectors, String currentPropertyPointer) {
+          propertySelectors, String currentPropertyPointer, List<EventProperty> appendProperties) {
     List<EventProperty> outputProperties = new ArrayList<>();
 
     for (EventProperty inputProperty : inputProperties) {
@@ -63,11 +63,11 @@ public class PropertySelector {
             ((EventPropertyNested) outputProperty).setEventProperties(extractProperties
                     (((EventPropertyNested) outputProperty).getEventProperties
                             (), propertySelectors, makeSelector(currentPropertyPointer,
-                            inputProperty.getRuntimeName())));
+                            inputProperty.getRuntimeName()), appendProperties));
           }
-          if (isPresent(outputProperty.getRuntimeName())) {
+          if (isPresent(outputProperty.getRuntimeName(), outputProperties, appendProperties)) {
             String newRuntimeName = createRuntimeName(outputProperty
-                    .getRuntimeName());
+                    .getRuntimeName(), outputProperties, appendProperties);
             propertyRenameRules.add(new PropertyRenameRule(makeSelector(currentPropertyPointer,
                     outputProperty.getRuntimeName()), newRuntimeName));
             outputProperty.setRuntimeName(newRuntimeName);
@@ -78,15 +78,16 @@ public class PropertySelector {
     }
 
     return outputProperties;
-
   }
 
-  private String createRuntimeName(String runtimeName) {
+  private String createRuntimeName(String runtimeName,
+                                   List<EventProperty> outputProperties,
+                                   List<EventProperty> appendProperties) {
     int i = 0;
     String newRuntimeName;
     for (;;) {
-      if (!isPresent(runtimeName + "_" + i)) {
-        newRuntimeName = runtimeName + "_" +i;
+      if (!isPresent(runtimeName + "_" + i, outputProperties, appendProperties)) {
+        newRuntimeName = runtimeName + "_" + i;
         break;
       }
       i++;
@@ -95,13 +96,14 @@ public class PropertySelector {
     return newRuntimeName;
   }
 
-  private Boolean isPresent(String runtimeName) {
-    return isPresent(runtimeName, outputProperties);
+  private Boolean isPresent(String runtimeName,
+                            List<EventProperty> outputProperties,
+                            List<EventProperty> appendProperties) {
+    return outputProperties.stream().anyMatch(p -> p.getRuntimeName().equals(runtimeName)) ||
+            this.outputProperties.stream().anyMatch(p -> p.getRuntimeName().equals(runtimeName)) ||
+            appendProperties.stream().anyMatch(ap -> ap.getRuntimeName().equals(runtimeName));
   }
 
-  private Boolean isPresent(String runtimeName, List<EventProperty> eventProperties) {
-    return eventProperties.stream().anyMatch(p -> p.getRuntimeName().equals(runtimeName));
-  }
 
   private boolean isInSelection(EventProperty inputProperty, String propertySelector, String currentPropertyPointer) {
     return (currentPropertyPointer
@@ -110,19 +112,30 @@ public class PropertySelector {
   }
 
   public List<EventProperty> createPropertyList(final List<String> propertySelectors) {
+    return createPropertyList(propertySelectors, new ArrayList<>());
+  }
+
+  public List<EventProperty> createPropertyList(final List<String> propertySelectors,
+                                                List<EventProperty> appendProperties) {
 
     outputProperties.addAll(extractProperties(PropertySelectorUtils.getProperties(firstSchema),
             getPropertySelectors
-            (propertySelectors, FIRST_STREAM_ID_PREFIX), FIRST_STREAM_ID_PREFIX));
+            (propertySelectors, FIRST_STREAM_ID_PREFIX), FIRST_STREAM_ID_PREFIX, appendProperties));
     outputProperties.addAll(extractProperties(PropertySelectorUtils.getProperties(secondSchema),
             getPropertySelectors
-            (propertySelectors, SECOND_STREAM_ID_PREFIX), SECOND_STREAM_ID_PREFIX));
+            (propertySelectors, SECOND_STREAM_ID_PREFIX), SECOND_STREAM_ID_PREFIX, appendProperties));
+
+    outputProperties.addAll(appendProperties.stream().map(ep -> new Cloner().property(ep)).collect(Collectors.toList()));
 
     return outputProperties;
   }
 
   public Tuple2<List<EventProperty>, List<PropertyRenameRule>> createRenamedPropertyList(final List<String> propertySelectors) {
-    return new Tuple2<>(createPropertyList(propertySelectors), propertyRenameRules);
+    return new Tuple2<>(createPropertyList(propertySelectors, new ArrayList<>()), propertyRenameRules);
+  }
+
+  public Tuple2<List<EventProperty>, List<PropertyRenameRule>> createRenamedPropertyList(final List<String> propertySelectors, List<EventProperty> appendProperties) {
+    return new Tuple2<>(createPropertyList(propertySelectors, appendProperties), propertyRenameRules);
   }
 
   private String makeSelector(String prefix, String current) {

@@ -1,10 +1,7 @@
 variables:
-  REGISTRY_HOST: ipe-wim-gitlab.fzi.de:5000
-  HARBOR_REGISTRY_HOST: laus.fzi.de:8201
   IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH
   HARBOR_IMAGE_NAME: $HARBOR_REGISTRY_HOST/$CI_PROJECT_PATH
   MAVEN_CLI_OPTS: -DskipTests --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true
-  GIT_REPO_ORIGIN: ssh://git@ipe-wim-gitlab.fzi.de:2222
   GIT_STRATEGY: clone
 
 stages:
@@ -31,8 +28,8 @@ build:
     - "echo $MVN_VERSION >> ./target/mvn_version"
   artifacts:
     paths:
-      - ./streampipes-backend/target/*.war
-      - ./streampipes-connect-container/target/*.jar
+      - ./streampipes-backend/target/streampipes-backend.jar
+      - ./streampipes-connect-container-master/target/streampipes-connect-container-master.jar
       - ./target/site/apidocs/**
       - ./target/mvn_version
     expire_in:  1 week
@@ -47,7 +44,7 @@ github:
     - git config --global user.name 'zehnder'
     - git checkout $CI_COMMIT_REF_NAME
     - git pull
-    - git remote add github https://$GITHUB_TOKEN:x-oauth-basic@github.com/streampipes/streampipes-ce.git
+    - git remote add github https://$GITHUB_TOKEN:x-oauth-basic@github.com/streampipes/streampipes.git
     - git push github $CI_COMMIT_REF_NAME
   only:
     - dev
@@ -62,9 +59,8 @@ docker-backend:
    script: 
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
+     - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
      - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION -t $HARBOR_IMAGE_NAME/backend:latest -t $HARBOR_IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
-     - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
      - docker push $IMAGE_NAME/backend:$MVN_VERSION
      - docker push $IMAGE_NAME/backend:latest
      - docker push $HARBOR_IMAGE_NAME/backend:$MVN_VERSION
@@ -80,9 +76,8 @@ docker-connect-container:
    script:
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker login -u riemer -p $HARBOR_PASSWORD laus.fzi.de:8201
-     - docker build --pull -t $IMAGE_NAME/streampipes-connect-container:latest -t $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION -t $HARBOR_IMAGE_NAME/streampipes-connect-container:latest -t $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container/
-     - docker build --pull -t $IMAGE_NAME/streampipes-connect-container:latest -t $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION  ./streampipes-connect-container/
+     - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
+     - docker build --pull -t $IMAGE_NAME/streampipes-connect-container:latest -t $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION -t $HARBOR_IMAGE_NAME/streampipes-connect-container:latest -t $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container-master/
      - docker push $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
      - docker push $IMAGE_NAME/streampipes-connect-container:latest
      - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
@@ -151,7 +146,7 @@ finish release:
     - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
-    - git remote add github https://$GITHUB_TOKEN:x-oauth-basic@github.com/streampipes/streampipes-ce.git
+    - git remote add github https://$GITHUB_TOKEN:x-oauth-basic@github.com/streampipes/streampipes.git
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH")
     - mkdir ~/.ssh
@@ -185,7 +180,7 @@ docker hub:
     - docker push streampipes/backend:$MVN_VERSION
     - docker build --pull -t streampipes/backend ./streampipes-backend/
     - docker push streampipes/backend
-    - docker build --pull -t streampipes/streampipes-connect-container:latest -t streampipes/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container/
+    - docker build --pull -t streampipes/streampipes-connect-container:latest -t streampipes/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container-master/
     - docker push streampipes/streampipes-connect-container:$MVN_VERSION
     - docker push streampipes/streampipes-connect-container:latest
   when: manual

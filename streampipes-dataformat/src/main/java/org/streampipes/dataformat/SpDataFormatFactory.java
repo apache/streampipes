@@ -17,7 +17,13 @@
 
 package org.streampipes.dataformat;
 
+import org.streampipes.model.grounding.TransportFormat;
+
 public abstract class SpDataFormatFactory {
+
+  public TransportFormat getTransportFormat() {
+    return new TransportFormat(getTransportFormatRdfUri());
+  }
 
   public abstract String getTransportFormatRdfUri();
 

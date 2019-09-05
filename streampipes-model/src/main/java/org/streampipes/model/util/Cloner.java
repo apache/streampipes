@@ -23,6 +23,13 @@ import org.streampipes.model.ApplicationLink;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.AdapterSetDescription;
+import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
+import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.grounding.JmsTransportProtocol;
@@ -69,8 +76,13 @@ import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
 import org.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
 import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
+import org.streampipes.model.staticproperty.SecretStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.streampipes.model.staticproperty.SupportedProperty;
+import org.streampipes.model.staticproperty.FileStaticProperty;
 import org.streampipes.model.template.BoundPipelineElement;
 
 import java.util.ArrayList;
@@ -102,6 +114,10 @@ public class Cloner {
   public StaticProperty staticProperty(StaticProperty o) {
     if (o instanceof FreeTextStaticProperty) {
       return new FreeTextStaticProperty((FreeTextStaticProperty) o);
+    } else if (o instanceof RuntimeResolvableOneOfStaticProperty) {
+      return new RuntimeResolvableOneOfStaticProperty((RuntimeResolvableOneOfStaticProperty) o);
+    } else if (o instanceof RuntimeResolvableAnyStaticProperty) {
+      return new RuntimeResolvableAnyStaticProperty((RuntimeResolvableAnyStaticProperty) o);
     } else if (o instanceof OneOfStaticProperty) {
       return new OneOfStaticProperty((OneOfStaticProperty) o);
     } else if (o instanceof RemoteOneOfStaticProperty) {
@@ -116,25 +132,34 @@ public class Cloner {
       return new CollectionStaticProperty((CollectionStaticProperty) o);
     } else if (o instanceof MatchingStaticProperty) {
       return new MatchingStaticProperty((MatchingStaticProperty) o);
-    } else if (o instanceof RuntimeResolvableOneOfStaticProperty) {
-      return new RuntimeResolvableOneOfStaticProperty((RuntimeResolvableOneOfStaticProperty) o);
-    } else if (o instanceof RuntimeResolvableAnyStaticProperty) {
-      return new RuntimeResolvableAnyStaticProperty((RuntimeResolvableAnyStaticProperty) o);
-    } else {
+    } else if (o instanceof MappingPropertyUnary) {
       return new MappingPropertyUnary((MappingPropertyUnary) o);
+    } else if (o instanceof StaticPropertyGroup) {
+      return new StaticPropertyGroup((StaticPropertyGroup) o);
+    } else if (o instanceof StaticPropertyAlternatives) {
+      return new StaticPropertyAlternatives((StaticPropertyAlternatives) o);
+    } else if (o instanceof SecretStaticProperty) {
+      return new SecretStaticProperty((SecretStaticProperty) o);
+    } else if (o instanceof FileStaticProperty) {
+      return new FileStaticProperty((FileStaticProperty) o);
+    } else {
+      return new StaticPropertyAlternative((StaticPropertyAlternative) o);
     }
 
   }
 
   public List<TransportProtocol> protocols(List<TransportProtocol> protocols) {
-    return protocols.stream().map(o -> protocol(o)).collect(Collectors.toList());
+    return protocols.stream().map(this::protocol).collect(Collectors.toList());
   }
 
   public TransportProtocol protocol(TransportProtocol protocol) {
     if (protocol instanceof KafkaTransportProtocol) {
       return new KafkaTransportProtocol((KafkaTransportProtocol) protocol);
-    } else {
+    } else if (protocol instanceof JmsTransportProtocol){
       return new JmsTransportProtocol((JmsTransportProtocol) protocol);
+    } else {
+      LOG.error("Could not clone protocol of type {}", protocol.getClass().getCanonicalName());
+      return protocol;
     }
   }
 
@@ -209,7 +234,11 @@ public class Cloner {
 
   public List<StaticProperty> staticProperties(
           List<StaticProperty> staticProperties) {
-    return staticProperties.stream().map(o -> staticProperty(o)).collect(Collectors.toList());
+    if (staticProperties != null) {
+      return staticProperties.stream().map(o -> staticProperty(o)).collect(Collectors.toList());
+    } else {
+      return new ArrayList<>();
+    }
   }
 
   public List<TransportFormat> transportFormats(
@@ -297,7 +326,7 @@ public class Cloner {
     } else if (pe instanceof DataSinkDescription) {
       return new DataSinkDescription((DataSinkDescription) pe);
     } else {
-      LOG.error("Description is of unknown type: " +pe.getClass().getCanonicalName());
+      LOG.error("Description is of unknown type: " + pe.getClass().getCanonicalName());
       return pe;
     }
   }
@@ -307,5 +336,20 @@ public class Cloner {
             .stream()
             .map(PropertyRenameRule::new)
             .collect(Collectors.toList());
+  }
+
+  public AdapterDescription adapterDescription(AdapterDescription ad) {
+    if (ad instanceof GenericAdapterSetDescription) {
+      return new GenericAdapterSetDescription((GenericAdapterSetDescription) ad);
+    } else if (ad instanceof GenericAdapterStreamDescription) {
+      return new GenericAdapterStreamDescription((GenericAdapterStreamDescription) ad);
+    } else if (ad instanceof SpecificAdapterSetDescription) {
+      return new SpecificAdapterSetDescription((AdapterSetDescription) ad);
+    } else if (ad instanceof SpecificAdapterStreamDescription) {
+      return new SpecificAdapterStreamDescription((AdapterStreamDescription) ad);
+    } else {
+      LOG.error("Could not clone adapter description of type: " +ad.getClass().getCanonicalName());
+      return ad;
+    }
   }
 }

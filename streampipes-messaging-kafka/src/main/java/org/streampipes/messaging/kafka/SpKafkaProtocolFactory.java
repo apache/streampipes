@@ -20,8 +20,14 @@ package org.streampipes.messaging.kafka;
 import org.streampipes.messaging.SpProtocolDefinition;
 import org.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.TransportProtocol;
 
 public class SpKafkaProtocolFactory extends SpProtocolDefinitionFactory<KafkaTransportProtocol> {
+
+  @Override
+  public TransportProtocol getTransportProtocol() {
+    return new KafkaTransportProtocol();
+  }
 
   @Override
   public String getTransportProtocolClass() {

@@ -23,6 +23,7 @@ import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.connect.grounding.ProtocolDescription;
 import org.streampipes.model.connect.grounding.ProtocolStreamDescription;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
@@ -30,7 +31,7 @@ import javax.persistence.Entity;
 @Namespaces({"sp", "https://streampipes.org/vocabulary/v1/"})
 @RdfsClass(StreamPipes.GENERIC_ADAPTER_STREAM_DESCRIPTION)
 @Entity
-public class GenericAdapterStreamDescription extends AdapterStreamDescription implements  GenericAdapterDescription{
+public class GenericAdapterStreamDescription extends AdapterStreamDescription implements GenericAdapterDescription{
     public static final String ID = "http://streampipes.org/genericadapterstreamdescription";
 
 
@@ -59,6 +60,14 @@ public class GenericAdapterStreamDescription extends AdapterStreamDescription im
 
     public FormatDescription getFormatDescription() {
         return formatDescription;
+    }
+
+    @Override
+    public EventSchema getEventSchema() {
+        if (this.getDataStream() != null) {
+            return this.getDataStream().getEventSchema();
+        }
+        return null;
     }
 
     public void setFormatDescription(FormatDescription formatDescription) {

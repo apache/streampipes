@@ -18,8 +18,8 @@
 package org.streampipes.connect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.streampipes.connect.adapter.generic.format.Format;
-import org.streampipes.connect.adapter.generic.pipeline.AdapterPipeline;
+import org.streampipes.connect.adapter.model.generic.Format;
+import org.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 
 import java.util.Map;
@@ -55,22 +55,6 @@ public class SendToPipeline implements EmitBinaryEvent {
         if (result != null) {
             adapterPipeline.process(result);
         }
-
-        // TODO Get the rules
-
-
-        // TODO Apply on events
-
-
-
-//        try {
-//            if (result != null) {
-//                producer.publish(objectMapper.writeValueAsBytes(result));
-//                System.out.println("send to kafka: " + result);
-//            }
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
         return true;
     }
 }

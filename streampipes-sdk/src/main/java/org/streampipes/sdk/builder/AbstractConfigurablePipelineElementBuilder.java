@@ -24,7 +24,11 @@ import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.PropertyValueSpecification;
+import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
+import org.streampipes.model.staticproperty.SecretStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.streampipes.model.staticproperty.SupportedProperty;
 import org.streampipes.sdk.helpers.Label;
 import org.streampipes.sdk.helpers.Labels;
@@ -126,6 +130,22 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
     return me();
   }
+
+  /**
+   * Assigns a new secret text-based configuration parameter (e.g., a password) which is required
+   * by the processing element.
+   * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @return
+   */
+  public BU requiredSecret(Label label) {
+    SecretStaticProperty secretStaticProperty = new SecretStaticProperty(label.getInternalId(),
+            label.getLabel(), label.getDescription());
+    this.staticProperties.add(secretStaticProperty);
+
+    return me();
+  }
+
 
   /**
    * Assigns a new text-based configuration parameter (a string) which is required by the pipeline
@@ -413,7 +433,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a number-based configuration parameter of type float provided by pipeline developers at pipeline
+   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
    * authoring time and initializes the parameter with a default value.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
@@ -441,7 +461,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
 
   /**
-   * Defines a configuration parameter that lets pipeline developers select from a list of pre-defined configuration
+   * Defines a configuration parameter that lets preprocessing developers select from a list of pre-defined configuration
    * options. The parameter will be rendered as a RadioGroup in the StreamPipes UI.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
@@ -473,7 +493,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a configuration parameter that lets pipeline developers select from a list of pre-defined configuration
+   * Defines a configuration parameter that lets preprocessing developers select from a list of pre-defined configuration
    * options. The parameter will be rendered as a RadioGroup in the StreamPipes UI.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
@@ -505,7 +525,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a configuration parameter that lets pipeline developers select from a list of pre-defined configuration
+   * Defines a configuration parameter that lets preprocessing developers select from a list of pre-defined configuration
    * options, but multiple selections are allowed. The parameter will be rendered as a Checkbox group in the StreamPipes
    * UI.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
@@ -537,7 +557,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a configuration parameter that lets pipeline developers select from a list of pre-defined configuration
+   * Defines a configuration parameter that lets preprocessing developers select from a list of pre-defined configuration
    * options, but multiple selections are allowed. The parameter will be rendered as a Checkbox group in the StreamPipes
    * UI.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
@@ -572,7 +592,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a number-based configuration parameter of type float provided by pipeline developers at pipeline
+   * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
    * authoring time. In addition, an allowed value range of the expected input can be assigned.
    * @param label The {@link org.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
@@ -608,6 +628,39 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
     return me();
 
+  }
+
+  public BU requiredAlternatives(Label label, StaticPropertyAlternative... alternatives) {
+    StaticPropertyAlternatives alternativesContainer =
+            new StaticPropertyAlternatives(label.getInternalId(), label.getLabel(), label.getDescription());
+
+    for (int i = 0; i < alternatives.length; i++) {
+      alternatives[i].setIndex(i);
+    }
+
+    alternativesContainer.setAlternatives(Arrays.asList(alternatives));
+    this.staticProperties.add(alternativesContainer);
+
+    return me();
+  }
+
+  public BU requiredSingleValueSelectionFromContainer(Label label) {
+    RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
+            .getLabel(), label.getDescription());
+
+    this.staticProperties.add(rsp);
+    return me();
+  }
+
+  public BU requiredSingleValueSelectionFromContainer(Label label,
+                                                      List<String> dependsOn) {
+    RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
+            .getLabel(), label.getDescription());
+
+    rsp.setDependsOn(dependsOn);
+
+    this.staticProperties.add(rsp);
+    return me();
   }
 
   private FreeTextStaticProperty prepareFreeTextStaticProperty(String internalId, String label, String description, String type) {

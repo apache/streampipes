@@ -44,7 +44,7 @@ public class BoundPipelineElementBuilder {
   }
 
   public static BoundPipelineElementBuilder create(DataProcessorDescription dataProcessorDescription) {
-    return new BoundPipelineElementBuilder(new DataProcessorInvocation(dataProcessorDescription));
+        return new BoundPipelineElementBuilder(new DataProcessorInvocation(dataProcessorDescription));
   }
 
   public static BoundPipelineElementBuilder create(DataSinkDescription dataSinkDescription) {

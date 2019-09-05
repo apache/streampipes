@@ -17,18 +17,41 @@
 
 package org.streampipes.connect.adapter;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
+import org.streampipes.config.SpConfig;
+import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.config.backend.MessagingSettings;
+import org.streampipes.config.consul.MockSpConfig;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
-import org.streampipes.model.grounding.*;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.SimpleTopicDefinition;
+import org.streampipes.model.grounding.TopicDefinition;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ BackendConfig.class, SpConfig.class})
 public class GroundingServiceTest {
 
+    @Before
+    public  void before() {
+        PowerMockito.mockStatic(SpConfig.class);
+    }
 
     @Test
     public void extractBrokerForGenericAdapterSetTest() {
@@ -90,6 +113,12 @@ public class GroundingServiceTest {
     @Test
     public void createEventGroundingTest() {
 
+        when(SpConfig.getSpConfig(anyString())).thenReturn(new MockSpConfig(""));
+
+        BackendConfig backendConfig = mock(BackendConfig.INSTANCE.getClass());
+        when(backendConfig.getMessagingSettings()).thenReturn(MessagingSettings.fromDefault());
+        Whitebox.setInternalState(BackendConfig.class, "INSTANCE", backendConfig);
+
         EventGrounding eventGrounding = GroundingService.createEventGrounding("localhost", 1, null);
 
         assertEquals("localhost", eventGrounding.getTransportProtocol().getBrokerHostname());
@@ -136,5 +165,6 @@ public class GroundingServiceTest {
 
         return eventGrounding;
     }
+
 
 }

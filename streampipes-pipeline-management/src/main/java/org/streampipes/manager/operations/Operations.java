@@ -38,12 +38,18 @@ import org.streampipes.model.SpDataStream;
 import org.streampipes.model.client.endpoint.RdfEndpoint;
 import org.streampipes.model.client.endpoint.RdfEndpointItem;
 import org.streampipes.model.client.messages.Message;
-import org.streampipes.model.client.pipeline.*;
+import org.streampipes.model.client.pipeline.DataSetModificationMessage;
+import org.streampipes.model.client.pipeline.Pipeline;
+import org.streampipes.model.client.pipeline.PipelineElementRecommendationMessage;
+import org.streampipes.model.client.pipeline.PipelineModificationMessage;
+import org.streampipes.model.client.pipeline.PipelineOperationStatus;
 import org.streampipes.model.client.runtime.ContainerProvidedOptionsParameterRequest;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.template.PipelineTemplateDescription;
 import org.streampipes.model.template.PipelineTemplateInvocation;
+import org.streampipes.storage.management.StorageDispatcher;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -106,11 +112,12 @@ public class Operations {
 
   public static PipelineOperationStatus startPipeline(
           Pipeline pipeline) {
-    return startPipeline(pipeline, true, true, false);
+    return startPipeline(pipeline,true, true, false);
   }
 
   public static PipelineOperationStatus startPipeline(
-          Pipeline pipeline, boolean visualize, boolean storeStatus, boolean monitor) {
+          Pipeline pipeline, boolean visualize, boolean storeStatus,
+          boolean monitor) {
     return new PipelineExecutor(pipeline, visualize, storeStatus, monitor).startPipeline();
   }
 
@@ -119,9 +126,22 @@ public class Operations {
     return stopPipeline(pipeline, true, true, false);
   }
 
+  public static List<PipelineOperationStatus> stopAllPipelines() {
+    List<PipelineOperationStatus> status = new ArrayList<>();
+    List<Pipeline> pipelines =
+            StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines();
+
+    pipelines.forEach(p -> {
+      if (p.isRunning()) {
+        status.add(Operations.stopPipeline(p));
+      }
+    });
+    return status;
+  }
 
   public static PipelineOperationStatus stopPipeline(
-          Pipeline pipeline, boolean visualize, boolean storeStatus, boolean monitor) {
+          Pipeline pipeline, boolean visualize, boolean storeStatus,
+          boolean monitor) {
     return new PipelineExecutor(pipeline, visualize, storeStatus, monitor).stopPipeline();
   }
 
@@ -138,7 +158,7 @@ public class Operations {
   }
 
   public static List<PipelineTemplateDescription> getAllPipelineTemplates() {
-    return new PipelineTemplateGenerator().makeExampleTemplates();
+    return new PipelineTemplateGenerator().getAllPipelineTemplates();
   }
 
   public static List<PipelineTemplateDescription> getCompatiblePipelineTemplates(String streamId) {
@@ -158,6 +178,6 @@ public class Operations {
   }
 
   public static String getRuntimeInfo(SpDataStream spDataStream) throws SpRuntimeException {
-    return new PipelineElementRuntimeInfoFetcher(spDataStream).getCurrentData();
+    return PipelineElementRuntimeInfoFetcher.INSTANCE.getCurrentData(spDataStream);
   }
 }

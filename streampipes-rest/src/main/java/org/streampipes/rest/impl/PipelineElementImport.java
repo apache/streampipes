@@ -57,10 +57,12 @@ public class PipelineElementImport extends AbstractRestInterface {
   @POST
   @Path("/batch")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response addBatch(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement) {
+  public Response addBatch(@PathParam("username") String username,
+                           @FormParam("uri") String uri,
+                           @FormParam("publicElement") boolean publicElement) {
     try {
       uri = URLDecoder.decode(uri, "UTF-8");
-      JsonElement element = new JsonParser().parse(parseURIContent(uri, "application/json"));
+      JsonElement element = new JsonParser().parse(parseURIContent(uri, MediaType.APPLICATION_JSON));
       List<Message> messages = new ArrayList<>();
       if (element.isJsonArray()) {
         for (JsonElement jsonObj : element.getAsJsonArray()) {
@@ -76,7 +78,9 @@ public class PipelineElementImport extends AbstractRestInterface {
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response addElement(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement) {
+  public Response addElement(@PathParam("username") String username,
+                             @FormParam("uri") String uri,
+                             @FormParam("publicElement") boolean publicElement) {
     if (!authorized(username)) {
       return ok(Notifications.error(NotificationType.UNAUTHORIZED));
     }
@@ -98,12 +102,9 @@ public class PipelineElementImport extends AbstractRestInterface {
       uri = URLDecoder.decode(uri, "UTF-8");
       String payload = parseURIContent(uri);
       return ok(Operations.verifyAndUpdateElement(payload, username));
-    } catch (URISyntaxException | IOException e) {
+    } catch (URISyntaxException | IOException | SepaParseException e) {
       e.printStackTrace();
-      return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR.title(), NotificationType.PARSE_ERROR.description(), e.getMessage()));
-    } catch (SepaParseException e) {
-      e.printStackTrace();
-      return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR.title(), NotificationType.PARSE_ERROR.description(), e.getMessage()));
+      return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR, e.getMessage()));
     }
   }
 
@@ -125,7 +126,7 @@ public class PipelineElementImport extends AbstractRestInterface {
         requestor.deleteSEP(requestor.getSEPById(elementId));
         userService.deleteOwnSource(username, elementId);
       } else if (requestor.getSECById(elementId) != null) {
-        appId = requestor.getSEPById(elementId).getAppId();
+        appId = requestor.getSECById(elementId).getAppId();
         requestor.deleteSEC(requestor.getSECById(elementId));
         userService.deleteOwnAction(username, elementId);
       } else {

@@ -17,6 +17,10 @@
 
 package org.streampipes.rest.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
+
 import com.google.gson.JsonObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,15 +29,11 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.streampipes.config.model.ConfigItem;
-import org.streampipes.connect.adapter.AdapterRegistry;
 import org.streampipes.container.util.ConsulUtil;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyString;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ ConsulUtil.class })

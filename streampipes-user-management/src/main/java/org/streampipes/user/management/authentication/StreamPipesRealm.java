@@ -18,17 +18,17 @@
 package org.streampipes.user.management.authentication;
 
 
-import com.google.gson.JsonObject;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.storage.couchdb.utils.Utils;
-
-import java.util.List;
+import org.streampipes.user.management.service.UserService;
 
 
 /**
@@ -66,16 +66,10 @@ public class StreamPipesRealm implements Realm {
   public AuthenticationInfo getAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
 
     if (authenticationToken instanceof UsernamePasswordToken) {
-      CouchDbClient dbClient = Utils.getCouchDbUserClient();
+
       try {
         String email = ((UsernamePasswordToken) authenticationToken).getUsername();
-        List<JsonObject> users = dbClient.view("users/password").key(email).includeDocs(true).query(JsonObject.class);
-        if (users.size() != 1) {
-          throw new AuthenticationException("None or too many users " +
-                  "with matching username");
-        }
-        JsonObject user = users.get(0);
-        String password = user.get("password").getAsString();
+        UserService userService = new UserService(email);
 
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo();
         SimplePrincipalCollection principals = new SimplePrincipalCollection();
@@ -83,18 +77,16 @@ public class StreamPipesRealm implements Realm {
 
         LOG.info(principals.toString());
         info.setPrincipals(principals);
-        info.setCredentials(password);
+        info.setCredentials(userService.getPassword());
 
         if (credentialsMatcher.doCredentialsMatch(authenticationToken, info)) {
-          System.out.println("User successfully authenticated");
+          LOG.info("User successfully authenticated");
         } else {
           throw new AuthenticationException("Could not authenticate");
         }
         return info;
 
-      } catch (CouchDbException e) {
-        e.printStackTrace();
-      } catch (NullPointerException e) {
+      } catch (CouchDbException | NullPointerException e) {
         e.printStackTrace();
       }
     }

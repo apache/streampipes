@@ -17,11 +17,6 @@
 
 package org.streampipes.codegeneration.flink;
 
-import org.junit.Test;
-
-import org.streampipes.codegeneration.utils.TV;
-import org.streampipes.codegeneration.utils.Utils;
-
 public class ConfigGeneratorTest {
 
 //	@Test

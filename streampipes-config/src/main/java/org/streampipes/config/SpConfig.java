@@ -51,6 +51,8 @@ public abstract class SpConfig {
 
     public abstract void register(String key, String defaultValue, String description);
 
+    public abstract void registerObject(String key, Object defaultValue, String description);
+
     public abstract void registerPassword(String key, String defaultValue, String description);
 
     public abstract boolean getBoolean(String key);
@@ -61,6 +63,8 @@ public abstract class SpConfig {
 
     public abstract String getString(String key);
 
+    public abstract <T> T getObject(String key, Class<T> clazz, T defaultValue);
+
     public abstract ConfigItem getConfigItem(String key);
 
     public abstract void setBoolean(String key, Boolean value);
@@ -70,5 +74,7 @@ public abstract class SpConfig {
     public abstract void setDouble(String key, double value);
 
     public abstract void setString(String key, String value);
+
+    public abstract void setObject(String key, Object value);
 
 }

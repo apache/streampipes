@@ -70,7 +70,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
     @RdfProperty("sp:config")
-    List<StaticProperty> config;
+    private List<StaticProperty> config;
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
@@ -108,6 +108,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     public AdapterDescription(AdapterDescription other) {
         super(other);
         this.adapterId = other.getAdapterId();
+        this.config = new Cloner().staticProperties(other.getConfig());
         this.userName = other.getUserName();
         this.rules = other.getRules();
         this.adapterType = other.getAdapterType();

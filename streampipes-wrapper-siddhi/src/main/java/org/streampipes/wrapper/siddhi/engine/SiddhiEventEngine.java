@@ -33,7 +33,12 @@ import org.wso2.siddhi.core.event.Event;
 import org.wso2.siddhi.core.stream.input.InputHandler;
 import org.wso2.siddhi.core.stream.output.StreamCallback;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
 
 public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> implements
         EventProcessor<B> {
@@ -46,6 +51,9 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
 
   private List<String> sortedEventKeys;
 
+  private Boolean debugMode;
+  private SiddhiDebugCallback debugCallback;
+
   private static final Logger LOG = LoggerFactory.getLogger(SiddhiEventEngine.class);
 
   public SiddhiEventEngine() {
@@ -53,6 +61,13 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     this.siddhiInputHandlers = new HashMap<>();
     this.inputStreamNames = new ArrayList<>();
     sortedEventKeys = new ArrayList<>();
+    this.debugMode = false;
+  }
+
+  public SiddhiEventEngine(SiddhiDebugCallback debugCallback) {
+    this();
+    this.debugCallback = debugCallback;
+    this.debugMode = true;
   }
 
   @Override
@@ -67,7 +82,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     LOG.info("Configuring event types for graph " + parameters.getGraph().getName());
     parameters.getInEventTypes().forEach((key, value) -> {
       // TODO why is the prefix not in the parameters.getInEventType
-      registerEventTypeIfNotExists( key, value);
+      registerEventTypeIfNotExists(key, value);
       this.inputStreamNames.add(prepareName(key));
     });
 
@@ -80,16 +95,29 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
             .getInEventTypes()
             .forEach((key, value) -> siddhiInputHandlers.put(key, siddhiAppRuntime.getInputHandler(prepareName(key))));
 
-    siddhiAppRuntime.addCallback(prepareName(getOutputTopicName(parameters)), new StreamCallback() {
-      @Override
-      public void receive(Event[] events) {
-        for(Event event : events) {
-          // TODO provide collector in RuntimeContext
-          spOutputCollector.collect(toSpEvent(event, parameters, runtimeContext.getOutputSchemaInfo
-                  (), runtimeContext.getOutputSourceInfo()));
+    if (!debugMode) {
+      siddhiAppRuntime.addCallback(prepareName(getOutputTopicName(parameters)), new StreamCallback() {
+        @Override
+        public void receive(Event[] events) {
+          if (events.length > 0) {
+            Event lastEvent = events[events.length - 1];
+            spOutputCollector.collect(toSpEvent(lastEvent, parameters,
+                    runtimeContext.getOutputSchemaInfo
+                    (), runtimeContext.getOutputSourceInfo()));
+          }
         }
-      }
-    });
+      });
+    } else {
+      siddhiAppRuntime.addCallback(prepareName(getOutputTopicName(parameters)), new StreamCallback() {
+        @Override
+        public void receive(Event[] events) {
+          LOG.info("Siddhi is firing");
+          if (events.length > 0) {
+            SiddhiEventEngine.this.debugCallback.onEvent(events[events.length - 1]);
+          }
+        }
+      });
+    }
 
   }
 
@@ -104,8 +132,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   }
 
   private org.streampipes.model.runtime.Event toSpEvent(Event event, B parameters, SchemaInfo
-          schemaInfo,
-                                                        SourceInfo sourceInfo) {
+          schemaInfo, SourceInfo sourceInfo) {
     Map<String, Object> outMap = new HashMap<>();
     for (int i = 0; i < sortedEventKeys.size(); i++) {
       outMap.put(sortedEventKeys.get(i), event.getData(i));
@@ -121,7 +148,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
     for (String key : typeMap.keySet()) {
       sortedEventKeys.add(key);
       Collections.sort(sortedEventKeys);
-    };
+    }
 
     for (String key : sortedEventKeys) {
       joiner.add("s0" + key + " " + toType((Class<?>) typeMap.get(key)));
@@ -158,7 +185,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
             .append(prepareName(outputStream))
             .append(";");
 
-    LOG.info("Registering statement: \n" +this.siddhiAppString.toString());
+    LOG.info("Registering statement: \n" + this.siddhiAppString.toString());
 
   }
 
@@ -186,6 +213,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   }
 
   protected abstract String fromStatement(List<String> inputStreamNames, final B bindingParameters);
+
   protected abstract String selectStatement(final B bindingParameters);
 
   protected String prepareName(String eventName) {
@@ -196,20 +224,24 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   }
 
 
-  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation) {
+  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation,
+                                                  String eventName) {
     StringBuilder selectString = new StringBuilder();
     selectString.append("select ");
 
     if (sortedEventKeys.size() > 0) {
-      for (int i = 0; i < sortedEventKeys.size() -1; i++) {
-        selectString.append("e1.s0" + sortedEventKeys.get(i) + ",");
-
+      for (int i = 0; i < sortedEventKeys.size() - 1; i++) {
+        selectString.append(eventName + ".s0" + sortedEventKeys.get(i) + ",");
       }
-      selectString.append("e1.s0" + sortedEventKeys.get(sortedEventKeys.size() - 1));
+      selectString.append(eventName + ".s0" + sortedEventKeys.get(sortedEventKeys.size() - 1));
 
     }
 
     return selectString.toString();
+  }
+
+  protected String getCustomOutputSelectStatement(DataProcessorInvocation invocation) {
+    return getCustomOutputSelectStatement(invocation, "e1");
   }
 
   public void setSortedEventKeys(List<String> sortedEventKeys) {

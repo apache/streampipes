@@ -26,7 +26,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.logging.Logger;
 
 
 @SuppressWarnings("deprecation")
@@ -47,7 +46,6 @@ public class HttpJsonParser {
     HttpResponse response = client.execute(request);
 
     String pageContent = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
-    Logger.getAnonymousLogger().info("Content: " + pageContent);
 
     return pageContent;
 

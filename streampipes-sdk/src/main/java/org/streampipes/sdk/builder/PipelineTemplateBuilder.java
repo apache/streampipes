@@ -26,6 +26,7 @@ public class PipelineTemplateBuilder {
 
   private PipelineTemplateDescription pipelineTemplateDescription;
   private List<BoundPipelineElement> boundPipelineElements;
+  private String appId;
 
   private PipelineTemplateBuilder(String internalId, String pipelineTemplateName, String pipelineTemplateDescription) {
     this.pipelineTemplateDescription = new PipelineTemplateDescription();
@@ -38,6 +39,12 @@ public class PipelineTemplateBuilder {
   public static PipelineTemplateBuilder create(String internalId, String pipelineTemplateName, String pipelineTemplateDescription) {
     return new PipelineTemplateBuilder(internalId, pipelineTemplateName, pipelineTemplateDescription);
   }
+
+  public PipelineTemplateBuilder setAppId(String id) {
+    this.pipelineTemplateDescription.setAppId(id);
+    return this;
+  }
+
 
   public PipelineTemplateBuilder boundPipelineElementTemplate(BoundPipelineElement boundPipelineElement) {
     this.boundPipelineElements.add(boundPipelineElement);

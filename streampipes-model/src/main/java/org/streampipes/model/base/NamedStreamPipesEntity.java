@@ -25,12 +25,11 @@ import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.RDFS;
 import org.streampipes.vocabulary.StreamPipes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * named pipeline element, can be accessed via the URI provided in @RdfId

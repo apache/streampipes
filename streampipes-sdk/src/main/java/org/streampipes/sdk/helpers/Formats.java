@@ -31,6 +31,30 @@ public class Formats {
   }
 
   /**
+   * Defines the transport format CBOR used by a data stream at runtime.
+   * @return The {@link org.streampipes.model.grounding.TransportFormat} of type CBOR.
+   */
+  public static TransportFormat cborFormat() {
+    return new TransportFormat(MessageFormat.Cbor);
+  }
+
+  /**
+   * Defines the transport format Fast-Serializer used by a data stream at runtime.
+   * @return The {@link org.streampipes.model.grounding.TransportFormat} of type FST.
+   */
+  public static TransportFormat fstFormat() {
+    return new TransportFormat(MessageFormat.Fst);
+  }
+
+  /**
+   * Defines the transport format SMILE used by a data stream at runtime.
+   * @return The {@link org.streampipes.model.grounding.TransportFormat} of type SMILE.
+   */
+  public static TransportFormat smileFormat() {
+    return new TransportFormat(MessageFormat.Smile);
+  }
+
+  /**
    * Defines the transport format Apache Thrift used by a data stream at runtime.
    * @return The {@link org.streampipes.model.grounding.TransportFormat} of type Thrift.
    */

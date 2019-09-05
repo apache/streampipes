@@ -16,24 +16,44 @@
  */
 package org.streampipes.model.staticproperty;
 
+import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.vocabulary.StreamPipes;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 
 @RdfsClass(StreamPipes.RUNTIME_RESOLVABLE_ANY_STATIC_PROPERTY)
 @Entity
-public class RuntimeResolvableAnyStaticProperty extends RuntimeResolvableSelectionStaticProperty {
+public class RuntimeResolvableAnyStaticProperty extends OneOfStaticProperty {
 
-    public RuntimeResolvableAnyStaticProperty() {
-      super(StaticPropertyType.RuntimeResolvableAnyStaticProperty);
-    }
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.DEPENDS_ON_STATIC_PROPERTY)
+  private List<String> dependsOn;
 
-    public RuntimeResolvableAnyStaticProperty(org.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty other) {
-      super(other);
-    }
+  public RuntimeResolvableAnyStaticProperty() {
+    super(StaticPropertyType.RuntimeResolvableAnyStaticProperty);
+  }
 
-    public RuntimeResolvableAnyStaticProperty(String internalName, String label, String description) {
-      super(StaticPropertyType.RuntimeResolvableAnyStaticProperty, internalName, label, description);
-    }
+  public RuntimeResolvableAnyStaticProperty(RuntimeResolvableAnyStaticProperty other) {
+    super(other);
+    this.dependsOn = other.getDependsOn();
+  }
+
+  public RuntimeResolvableAnyStaticProperty(String internalName, String label, String description) {
+    super(StaticPropertyType.RuntimeResolvableAnyStaticProperty, internalName, label, description);
+  }
+
+  public List<String> getDependsOn() {
+    return dependsOn;
+  }
+
+  public void setDependsOn(List<String> dependsOn) {
+    this.dependsOn = dependsOn;
+  }
 }

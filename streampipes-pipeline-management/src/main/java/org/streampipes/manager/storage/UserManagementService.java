@@ -30,7 +30,7 @@ import java.util.Set;
 public class UserManagementService {
 
   public Boolean registerUser(RegistrationData data, Set<Role> roles) {
-    org.streampipes.model.client.user.User user = new User(data.getEmail(), data.getPassword(), roles);
+    User user = new User(data.getEmail(), data.getPassword(), roles);
 
     try {
       String encryptedPassword = PasswordUtil.encryptPassword(data.getPassword());

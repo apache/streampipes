@@ -21,21 +21,18 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.streampipes.model.AdapterType;
-import org.streampipes.model.DataProcessorType;
-import org.streampipes.model.DataSinkType;
-import org.streampipes.model.SpDataSet;
-import org.streampipes.model.SpDataStream;
+import org.streampipes.model.*;
 import org.streampipes.model.client.messages.Message;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.rules.*;
+import org.streampipes.model.connect.adapter.*;
 import org.streampipes.model.connect.rules.Schema.CreateNestedRuleDescription;
 import org.streampipes.model.connect.rules.Schema.DeleteRuleDescription;
 import org.streampipes.model.connect.rules.Schema.MoveRuleDescription;
 import org.streampipes.model.connect.rules.Schema.RenameRuleDescription;
+import org.streampipes.model.connect.rules.Stream.EventRateTransformationRuleDescription;
 import org.streampipes.model.connect.rules.Stream.RemoveDuplicatesTransformationRuleDescription;
-import org.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
+import org.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
+import org.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
 import org.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.streampipes.model.grounding.TopicDefinition;
@@ -101,7 +98,14 @@ public class GsonSerializer {
             .registerSubtype(AddTimestampRuleDescription.class, "org.streampipes.model.AddTimestampRuleDescription")
             .registerSubtype(AddValueTransformationRuleDescription.class, "org.streampipes.model.AddValueTransformationRuleDescription")
             .registerSubtype(UnitTransformRuleDescription.class, "org.streampipes.model.UnitTransformRuleDescription")
-            .registerSubtype(TimestampTranfsformationRuleDescription.class, "org.streampipes.model.TimestampTranfsformationRuleDescription"));
+            .registerSubtype(TimestampTranfsformationRuleDescription.class, "org.streampipes.model.TimestampTranfsformationRuleDescription")
+            .registerSubtype(EventRateTransformationRuleDescription.class, "org.streampipes.model.EventRateTransformationRuleDescription"));
+
+    builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "type")
+            .registerSubtype(SpecificAdapterSetDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterSetDescription")
+            .registerSubtype(SpecificAdapterStreamDescription.class, "org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription")
+            .registerSubtype(GenericAdapterSetDescription.class, "org.streampipes.model.connect.adapter.GenericAdapterSetDescription")
+            .registerSubtype(GenericAdapterStreamDescription.class, "org.streampipes.model.connect.adapter.GenericAdapterStreamDescription"));
 
     builder.setPrettyPrinting();
     return builder;
@@ -139,5 +143,4 @@ public class GsonSerializer {
     });
     return builder.create();
   }
-
 }

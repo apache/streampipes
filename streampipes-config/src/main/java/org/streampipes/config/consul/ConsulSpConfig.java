@@ -135,6 +135,14 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
     }
 
     @Override
+    public void registerObject(String key, Object defaultValue, String description) {
+        Optional<String> i = kvClient.getValueAsString(addSn(key));
+        if (!i.isPresent()) {
+            kvClient.putValue(addSn(key), toJson(defaultValue));
+        }
+    }
+
+    @Override
     public void registerPassword(String key, String defaultValue, String description) {
         register(key, defaultValue, "xs:string", description, ConfigurationScope.CONTAINER_STARTUP_CONFIG, true);
     }
@@ -182,6 +190,17 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
     }
 
     @Override
+    public <T> T getObject(String key, Class<T> clazz, T defaultValue) {
+        Optional<String> os = kvClient.getValueAsString(addSn(key));
+        if (os.isPresent()) {
+            Gson gson = new Gson();
+            return gson.fromJson(os.get(), clazz);
+        } else {
+            return defaultValue;
+        }
+    }
+
+    @Override
     public ConfigItem getConfigItem(String key) {
       Optional<String> os = kvClient.getValueAsString(addSn(key));
 
@@ -206,6 +225,12 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
     @Override
     public void setString(String key, String value) {
         kvClient.putValue(addSn(key), value);
+    }
+
+    @Override
+    public void setObject(String key, Object value) {
+        Gson gson = new Gson();
+        kvClient.putValue(addSn(key), gson.toJson(value));
     }
 
     private String addSn(String key) {
@@ -233,7 +258,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
         return configItem;
     }
 
-    private String toJson(ConfigItem configItem) {
-        return new Gson().toJson(configItem);
+    private String toJson(Object object) {
+        return new Gson().toJson(object);
     }
 }

@@ -26,6 +26,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class PropertyDuplicateRemover {
 
   private List<EventProperty> existingProperties;
@@ -46,7 +47,7 @@ public class PropertyDuplicateRemover {
         if (newProperty instanceof EventPropertyPrimitive) {
           EventPropertyPrimitive primitive = (EventPropertyPrimitive) newProperty;
           newProperty = new EventPropertyPrimitive(primitive.getRuntimeType(), primitive.getRuntimeName() + i, "", primitive.getDomainProperties());
-          newProperty.setRdfId(new SupportsRdfId.URIKey(URI.create(primitive.getRdfId().toString() + i)));
+          newProperty.setRdfId(new SupportsRdfId.URIKey(URI.create(primitive.getElementId() + i)));
         }
         if (newProperty instanceof EventPropertyNested) {
           EventPropertyNested nested = (EventPropertyNested) newProperty;
@@ -59,7 +60,7 @@ public class PropertyDuplicateRemover {
               EventPropertyPrimitive thisPrimitive = (EventPropertyPrimitive) np;
               EventProperty newNested = new EventPropertyPrimitive(thisPrimitive.getRuntimeType(), thisPrimitive.getRuntimeName(), "", thisPrimitive.getDomainProperties());
               //newNested.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
-              newNested.setRdfId(new SupportsRdfId.URIKey(URI.create(thisPrimitive.getRdfId().toString())));
+              newNested.setRdfId(new SupportsRdfId.URIKey(URI.create(thisPrimitive.getElementId())));
               nestedProperties.add(newNested);
             }
 
@@ -67,7 +68,7 @@ public class PropertyDuplicateRemover {
           newProperty = new EventPropertyNested(nested.getRuntimeName() + i, nestedProperties);
           //newProperty = new EventPropertyNested(nested.getPropertyName() +i, nested.getEventProperties());
           //newProperty.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
-          newProperty.setRdfId(new SupportsRdfId.URIKey(URI.create(nested.getRdfId().toString() + i)));
+          newProperty.setRdfId(new SupportsRdfId.URIKey(URI.create(nested.getElementId() + i)));
         }
         i++;
       }

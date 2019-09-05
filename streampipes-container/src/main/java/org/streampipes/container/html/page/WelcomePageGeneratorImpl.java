@@ -21,6 +21,7 @@ import org.streampipes.container.declarer.*;
 import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.streampipes.container.html.model.Description;
 import org.streampipes.container.locales.LabelGenerator;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.graph.DataSinkDescription;
 
 import java.io.IOException;
@@ -55,18 +56,7 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
     private Description getDescription(Declarer declarer) {
         Description desc = new Description();
         // TODO remove after full internationalization support has been implemented
-        if (!declarer.declareModel().isIncludesLocales()) {
-            desc.setName(declarer.declareModel().getName());
-            desc.setDescription(declarer.declareModel().getDescription());
-        } else {
-            LabelGenerator lg = new LabelGenerator(declarer.declareModel());
-            try {
-                desc.setName(lg.getElementTitle());
-                desc.setDescription(lg.getElementDescription());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        updateLabel(declarer.declareModel(), desc);
         desc.setType(getType(declarer));
         String uri = baseUri;
         if (declarer instanceof SemanticEventConsumerDeclarer) {
@@ -88,19 +78,36 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
     private Description getDescription(SemanticEventProducerDeclarer declarer) {
         List<Description> streams = new ArrayList<>();
         DataSourceDescriptionHtml desc = new DataSourceDescriptionHtml();
-        desc.setName(declarer.declareModel().getName());
-        desc.setDescription(declarer.declareModel().getDescription());
+        updateLabel(declarer.declareModel(), desc);
+//        desc.setName(declarer.declareModel().getName());
+//        desc.setDescription(declarer.declareModel().getDescription());
         desc.setUri(URI.create(baseUri + "sep/" + declarer.declareModel().getUri()));
         desc.setType("source");
         for (DataStreamDeclarer streamDeclarer : declarer.getEventStreams()) {
             Description ad = new Description();
-            ad.setDescription(streamDeclarer.declareModel(declarer.declareModel()).getDescription());
+//            ad.setDescription(streamDeclarer.declareModel(declarer.declareModel()).getDescription());
+//            ad.setName(streamDeclarer.declareModel(declarer.declareModel()).getName());
+            updateLabel(streamDeclarer.declareModel(declarer.declareModel()), ad);
             ad.setUri(URI.create(baseUri +"stream/" + streamDeclarer.declareModel(declarer.declareModel()).getUri()));
-            ad.setName(streamDeclarer.declareModel(declarer.declareModel()).getName());
             ad.setType("stream");
             streams.add(ad);
         }
         desc.setStreams(streams);
         return desc;
+    }
+
+    private void updateLabel(NamedStreamPipesEntity entity, Description desc) {
+        if (!entity.isIncludesLocales()) {
+            desc.setName(entity.getName());
+            desc.setDescription(entity.getDescription());
+        } else {
+            LabelGenerator lg = new LabelGenerator(entity);
+            try {
+                desc.setName(lg.getElementTitle());
+                desc.setDescription(lg.getElementDescription());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -17,27 +17,24 @@
 
 package org.streampipes.manager.matching.v2;
 
+import junit.framework.TestCase;
+import org.junit.Test;
+import org.streampipes.model.client.matching.MatchingResultMessage;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
-import org.junit.Test;
-
-import org.streampipes.model.client.matching.MatchingResultMessage;
-import org.streampipes.units.UnitProvider;
-
 public class TestMeasurementUnitMatch extends TestCase {
 
-	@Test
-	public void testPositiveMeasurementUnitMatch() {
-		URI offered = URI.create(	"http://qudt.org/1.1/schema/qudt#DegreeCelsius");
-		URI required = URI.create(	"http://qudt.org/1.1/schema/qudt#DegreeCelsius");
+  @Test
+  public void testPositiveMeasurementUnitMatch() {
+    URI offered = URI.create("http://qudt.org/1.1/schema/qudt#DegreeCelsius");
+    URI required = URI.create("http://qudt.org/1.1/schema/qudt#DegreeCelsius");
 
-		List<MatchingResultMessage> errorLog = new ArrayList<>();
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
 
-		boolean matches = new MeasurementUnitMatch().match(offered, required, errorLog);
-		assertTrue(matches);
-	}
+    boolean matches = new MeasurementUnitMatch().match(offered, required, errorLog);
+    assertTrue(matches);
+  }
 }

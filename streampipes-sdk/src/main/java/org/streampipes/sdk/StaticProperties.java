@@ -18,13 +18,19 @@
 package org.streampipes.sdk;
 
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.PropertyValueSpecification;
+import org.streampipes.model.staticproperty.SecretStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.streampipes.model.staticproperty.SupportedProperty;
 import org.streampipes.sdk.helpers.Label;
 import org.streampipes.sdk.utils.Datatypes;
 
 import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
 
 public class StaticProperties {
 
@@ -56,5 +62,27 @@ public class StaticProperties {
 
   public static SupportedProperty supportedDomainProperty(String rdfPropertyUri, boolean required) {
     return new SupportedProperty(rdfPropertyUri, required);
+  }
+
+  public static StaticPropertyGroup group(Label label, StaticProperty... sp) {
+    List<StaticProperty> staticProperties = Arrays.asList(sp);
+    for(int i = 0; i < staticProperties.size(); i++) {
+      staticProperties.get(i).setIndex(i);
+    }
+    return new StaticPropertyGroup(label.getInternalId(), label.getLabel(),
+            label.getDescription(), staticProperties);
+  }
+
+  public static OneOfStaticProperty singleValueSelection(Label label, List<Option> options) {
+    OneOfStaticProperty osp = new OneOfStaticProperty(label.getInternalId(), label.getLabel(),
+            label.getDescription());
+    osp.setOptions(options);
+
+    return osp;
+  }
+
+  public static SecretStaticProperty secretValue(Label label) {
+    return new SecretStaticProperty(label.getInternalId(),
+            label.getLabel(), label.getDescription());
   }
 }

@@ -213,7 +213,6 @@ public class Elasticsearch implements IElasticsearch {
   private FileOutputStream getFileStream(String filePath) throws IOException {
     File file = new File(filePath);
     file.getParentFile().mkdirs();
-    FileWriter fileWriter = new FileWriter(file, true);
     return new FileOutputStream(filePath);
   }
 

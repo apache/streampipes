@@ -20,7 +20,6 @@ package org.streampipes.model.connect.rules.Schema;
 import org.streampipes.empire.annotations.Namespaces;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
-import org.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
@@ -30,42 +29,42 @@ import javax.persistence.Entity;
 @Entity
 public class MoveRuleDescription extends SchemaTransformationRuleDescription {
 
-    @RdfProperty(StreamPipes.OLD_RUNTIME_NAME)
-    private String oldRuntimeKey;
+  @RdfProperty(StreamPipes.OLD_RUNTIME_NAME)
+  private String oldRuntimeKey;
 
-    @RdfProperty(StreamPipes.NEW_RUNTIME_NAME)
-    private String newRuntimeKey;
+  @RdfProperty(StreamPipes.NEW_RUNTIME_NAME)
+  private String newRuntimeKey;
 
-    public MoveRuleDescription() {
-        super();
-    }
+  public MoveRuleDescription() {
+    super();
+  }
 
-    public MoveRuleDescription(String oldRuntimeKey, String newRuntimeKey) {
-        super();
-        this.oldRuntimeKey = oldRuntimeKey;
-        this.newRuntimeKey = newRuntimeKey;
-    }
+  public MoveRuleDescription(String oldRuntimeKey, String newRuntimeKey) {
+    super();
+    this.oldRuntimeKey = oldRuntimeKey;
+    this.newRuntimeKey = newRuntimeKey;
+  }
 
-    public MoveRuleDescription(MoveRuleDescription other) {
-        super(other);
-        this.oldRuntimeKey = other.getOldRuntimeKey();
-        this.newRuntimeKey = other.getNewRuntimeKey();
-    }
+  public MoveRuleDescription(MoveRuleDescription other) {
+    super(other);
+    this.oldRuntimeKey = other.getOldRuntimeKey();
+    this.newRuntimeKey = other.getNewRuntimeKey();
+  }
 
-    public String getOldRuntimeKey() {
-        return oldRuntimeKey;
-    }
+  public String getOldRuntimeKey() {
+    return oldRuntimeKey;
+  }
 
-    public void setOldRuntimeKey(String oldRuntimeKey) {
-        this.oldRuntimeKey = oldRuntimeKey;
-    }
+  public void setOldRuntimeKey(String oldRuntimeKey) {
+    this.oldRuntimeKey = oldRuntimeKey;
+  }
 
-    public String getNewRuntimeKey() {
-        return newRuntimeKey;
-    }
+  public String getNewRuntimeKey() {
+    return newRuntimeKey;
+  }
 
-    public void setNewRuntimeKey(String newRuntimeKey) {
-        this.newRuntimeKey = newRuntimeKey;
-    }
+  public void setNewRuntimeKey(String newRuntimeKey) {
+    this.newRuntimeKey = newRuntimeKey;
+  }
 }
 

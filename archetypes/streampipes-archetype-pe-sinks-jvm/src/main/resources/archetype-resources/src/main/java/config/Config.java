@@ -47,46 +47,6 @@ public enum Config implements PeConfig {
     return config.getInteger(PORT);
   }
 
-  public String getKafkaHost() {
-    return config.getString(KAFKA_HOST);
-  }
-
-  public int getKafkaPort() {
-    return config.getInteger(KAFKA_PORT);
-  }
-
-  public String getKafkaUrl() {
-    return getKafkaHost() + ":" + getKafkaPort();
-  }
-
-  public String getZookeeperHost() {
-    return config.getString(ZOOKEEPER_HOST);
-  }
-
-  public int getZookeeperPort() {
-    return config.getInteger(ZOOKEEPER_PORT);
-  }
-
-  public String getJmsHost() {
-    return "tcp://" + config.getString(JMS_HOST);
-  }
-
-  public int getJmsPort() {
-    return config.getInteger(JMS_PORT);
-  }
-
-  public String getJmsUrl() {
-    return getJmsHost() + ":" + getJmsPort();
-  }
-
-  public String getNginxHost() {
-    return config.getString(NGINX_HOST);
-  }
-
-  public Integer getNginxPort() {
-    return config.getInteger(NGINX_PORT);
-  }
-
   public String getIconHost() {
     return config.getString(ICON_HOST);
   }

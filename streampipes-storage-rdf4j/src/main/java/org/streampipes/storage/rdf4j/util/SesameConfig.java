@@ -31,7 +31,7 @@ public enum SesameConfig {
     SesameConfig() {
         config = SpConfig.getSpConfig("storage/sesame");
 
-        config.register(URI, "http://backend:8030/rdf4j-server", "URI for the sesame repository");
+        config.register(URI, "http://rdf4j:8031/rdf4j-server", "URI for the sesame repository");
     }
 
     public String getUri() {

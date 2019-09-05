@@ -23,9 +23,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ValidatableResponseOptions;
 import org.eclipse.jetty.server.Server;
-import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.streampipes.connect.init.Config;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
@@ -42,11 +40,11 @@ public abstract class ConnectContainerResourceTest {
     protected static final String ERROR_MESSAGE = "error";
 
     protected Server getMasterServer(AbstractContainerResource resource) {
-        return getServer(resource, Config.getMasterBaseUrl());
+        return getServer(resource, "http://localhost:8099");
     }
 
     protected Server getWorkerServer(AbstractContainerResource resource) {
-        return getServer(resource, Config.getWorkerBaseUrl());
+        return getServer(resource, "http://localhost:8099");
 
     }
 
@@ -63,7 +61,9 @@ public abstract class ConnectContainerResourceTest {
                 .fromUri(url)
                 .build();
 
-        return JettyHttpContainerFactory.createServer(baseUri, config);
+        //TODO after ref
+        // return JettyHttpContainerFactory.createServer(baseUri, config);
+        return null;
     }
 
 
