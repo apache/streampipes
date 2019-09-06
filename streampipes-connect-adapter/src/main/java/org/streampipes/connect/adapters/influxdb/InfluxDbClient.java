@@ -57,21 +57,21 @@ public class InfluxDbClient {
         private String name;
         private Datatypes datatypes;
 
-        public Column(String name, Datatypes datatypes) {
+        Column(String name, Datatypes datatypes) {
             this.name = name;
             this.datatypes = datatypes;
         }
 
-        public String getName() {
+        String getName() {
             return name;
         }
 
-        public Datatypes getDatatypes() {
+        Datatypes getDatatypes() {
             return datatypes;
         }
     }
 
-    public InfluxDbClient(String host,
+    InfluxDbClient(String host,
                           int port,
                           String database,
                           String measurement,
@@ -175,7 +175,7 @@ public class InfluxDbClient {
     }
 
     // Client must be connected before calling this method
-    public void loadColumns() throws SpRuntimeException {
+    void loadColumns() throws SpRuntimeException {
         if (!connected) {
             throw new SpRuntimeException("Client must be connected to the server in order to load the columns.");
         }
@@ -226,7 +226,7 @@ public class InfluxDbClient {
     }
 
     // Returns a list with the entries of the query. If there are no entries, it returns an empty list
-    public List<List<Object>> query(String query) {
+    List<List<Object>> query(String query) {
         if (!connected) {
             throw new RuntimeException("InfluxDbClient not connected");
         }
@@ -240,7 +240,7 @@ public class InfluxDbClient {
 
     // Returns null, if replaceNullValues == false and if in items is a null value
     // Otherwise it returns a Map containing the runtimenames and the correctly parsed values
-    public Map<String, Object> extractEvent(List<Object> items) throws SpRuntimeException {
+    Map<String, Object> extractEvent(List<Object> items) throws SpRuntimeException {
         if (items.size() != columns.size()) {
             throw new SpRuntimeException("Converter: Item list length is not the same as column list length");
         }
@@ -285,35 +285,23 @@ public class InfluxDbClient {
         return out;
     }
 
-    public String getColumnsString() {
+    // Converts a string date from ISO_INSTANT format in a unix timestamp in nanoseconds
+    static String getTimestamp(String date) {
+        TemporalAccessor temporalAccessor = DateTimeFormatter.ISO_INSTANT.parse(date);
+
+        Instant time = Instant.from(temporalAccessor);
+        return time.getEpochSecond() + String.format("%09d", time.getNano());
+    }
+
+    String getColumnsString() {
         return columnsString;
     }
 
-    public List<Column> getColumns() {
-        return columns;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public String getDatabase() {
-        return database;
-    }
-
-    public String getMeasurement() {
+    String getMeasurement() {
         return measurement;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public boolean isConnected() {
+    boolean isConnected() {
         return connected;
     }
 }

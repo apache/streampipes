@@ -13,11 +13,10 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.Tuple2;
 
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 import java.util.List;
 import java.util.Map;
+
+import static org.streampipes.connect.adapters.influxdb.InfluxDbClient.getTimestamp;
 
 public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
 
@@ -59,7 +58,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
             // Timestamp is a string, because a long might not be big enough (it includes nano seconds)
             String lastTimestamp;
             try {
-                lastTimestamp = getLastTimestamp();
+                lastTimestamp = getNewestTimestamp();
             } catch (SpRuntimeException e) {
                 System.out.println(e.getMessage());
                 return;
@@ -92,22 +91,16 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
             influxDbClient.disconnect();
         }
 
-        // Returns the latest timestamp in Milliseconds
-        private String getLastTimestamp() throws SpRuntimeException {
-            List<List<Object>> queryResult = influxDbClient
-                    .query("SELECT * FROM " + influxDbClient.getMeasurement() + " ORDER BY time DESC LIMIT 1");
+        // Returns the newest timestamp in the measurement as unix timestamp in Nanoseconds.
+        // If no entry is found, a SpRuntimeException is thrown
+        String getNewestTimestamp() throws SpRuntimeException {
+            List<List<Object>> queryResult = influxDbClient.query("SELECT * FROM " + influxDbClient.getMeasurement()
+                    + " ORDER BY time DESC LIMIT 1");
             if (queryResult.size() > 0) {
                 return getTimestamp((String)queryResult.get(0).get(0));
             } else {
                 throw new SpRuntimeException("No entry found in query");
             }
-        }
-
-        private String getTimestamp(String date) {
-            TemporalAccessor temporalAccessor = DateTimeFormatter.ISO_INSTANT.parse(date);
-
-            Instant time = Instant.from(temporalAccessor);
-            return time.getEpochSecond() + String.format("%09d", time.getNano());
         }
     }
 
@@ -180,7 +173,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
         return ID;
     }
 
-    public void send(Map<String, Object> map) {
+    private void send(Map<String, Object> map) {
         adapterPipeline.process(map);
     }
 
