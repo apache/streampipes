@@ -1,6 +1,5 @@
 package org.streampipes.connect.adapters.influxdb;
 
-import org.influxdb.dto.QueryResult;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.exception.AdapterException;
@@ -37,17 +36,34 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
         private InfluxDbClient influxDbClient;
         private InfluxDbStreamAdapter influxDbStreamAdapter;
 
-        PollingThread(int pollingInterval, InfluxDbStreamAdapter influxDbStreamAdapter) {
+        PollingThread(InfluxDbStreamAdapter influxDbStreamAdapter, int pollingInterval) throws AdapterException {
             this.pollingInterval = pollingInterval;
             this.influxDbStreamAdapter = influxDbStreamAdapter;
             this.influxDbClient = influxDbStreamAdapter.getInfluxDbClient();
+
+            influxDbClient.connect();
+            try {
+                influxDbClient.loadColumns();
+            } catch (SpRuntimeException e) {
+                throw new AdapterException(e.getMessage());
+            }
         }
 
         @Override
         public void run() {
+            if (!influxDbClient.isConnected()) {
+                System.out.println("Cannot start PollingThread, when the client is not connected");
+                return;
+            }
             // Checking the most recent timestamp
             // Timestamp is a string, because a long might not be big enough (it includes nano seconds)
-            String lastTimestamp = getLastTimestamp();
+            String lastTimestamp;
+            try {
+                lastTimestamp = getLastTimestamp();
+            } catch (SpRuntimeException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
 
             while (!Thread.interrupted()) {
                 try {
@@ -55,17 +71,13 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
                 } catch (InterruptedException e) {
                     break;
                 }
-                QueryResult queryResult = influxDbClient.query("SELECT " + influxDbClient.getColumnsString()
+                List<List<Object>> queryResult = influxDbClient.query("SELECT " + influxDbClient.getColumnsString()
                         + " FROM cpu WHERE time > " + lastTimestamp + " ORDER BY time ASC ");
-                if (queryResult.getResults().get(0).getSeries() != null) {
-                    // Iterate through all new entries
-                    List<List<Object>> entries = queryResult.getResults().get(0).getSeries().get(0).getValues();
-
+                if (queryResult.size() > 0) {
                     // The last element has the highest timestamp (ordered asc) -> Set the new latest timestamp
-                    if (entries.size() > 0) {
-                        lastTimestamp = getTimestamp((String)entries.get(entries.size() - 1).get(0));
-                    }
-                    for (List<Object> value : entries) {
+                    lastTimestamp = getTimestamp((String)queryResult.get(queryResult.size() - 1).get(0));
+
+                    for (List<Object> value : queryResult) {
                         try {
                             Map<String, Object> out = influxDbClient.extractEvent(value);
                             if (out != null) {
@@ -77,15 +89,18 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
                     }
                 }
             }
+            influxDbClient.disconnect();
         }
 
         // Returns the latest timestamp in Milliseconds
-        private String getLastTimestamp() {
-            QueryResult queryResult = influxDbClient
+        private String getLastTimestamp() throws SpRuntimeException {
+            List<List<Object>> queryResult = influxDbClient
                     .query("SELECT * FROM " + influxDbClient.getMeasurement() + " ORDER BY time DESC LIMIT 1");
-            String date = (String)queryResult.getResults().get(0).getSeries().get(0).getValues().get(0).get(0);
-
-            return getTimestamp(date);
+            if (queryResult.size() > 0) {
+                return getTimestamp((String)queryResult.get(0).get(0));
+            } else {
+                throw new SpRuntimeException("No entry found in query");
+            }
         }
 
         private String getTimestamp(String date) {
@@ -134,15 +149,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public void startAdapter() throws AdapterException {
-        try {
-            influxDbClient.connect();
-            influxDbClient.loadColumns();
-        } catch (SpRuntimeException e) {
-            throw new AdapterException(e.getMessage());
-        }
-
-        // No exceptions are thrown => Connected successfully. So now start polling
-        pollingThread = new Thread(new PollingThread(pollingInterval, this));
+        pollingThread = new Thread(new PollingThread(this, pollingInterval));
         pollingThread.start();
     }
 
@@ -152,7 +159,6 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
         pollingThread.interrupt();
         try {
             pollingThread.join();
-            influxDbClient.disconnect();
         } catch (InterruptedException e) {
             throw new AdapterException("Unexpected Error while joining polling thread: " + e.getMessage());
         }

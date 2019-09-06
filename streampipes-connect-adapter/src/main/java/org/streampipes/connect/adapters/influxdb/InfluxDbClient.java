@@ -179,16 +179,16 @@ public class InfluxDbClient {
         if (!connected) {
             throw new SpRuntimeException("Client must be connected to the server in order to load the columns.");
         }
-        QueryResult fieldKeys = query("SHOW FIELD KEYS FROM " + measurement);
-        QueryResult tagKeys = query("SHOW TAG KEYS FROM " + measurement);
-        if (fieldKeys.getResults().get(0).getSeries() == null || tagKeys.getResults().get(0).getSeries() == null) {
+        List<List<Object>> fieldKeys = query("SHOW FIELD KEYS FROM " + measurement);
+        List<List<Object>> tagKeys = query("SHOW TAG KEYS FROM " + measurement);
+        if (fieldKeys.size() == 0 || tagKeys.size() == 0) {
             throw new SpRuntimeException("Error while checking the Schema (does the measurement exist?)");
         }
 
         columns = new ArrayList<>();
         columns.add(new Column("time", Datatypes.Long));
 
-        for (List o : fieldKeys.getResults().get(0).getSeries().get(0).getValues()) {
+        for (List o : fieldKeys) {
             // o.get(0): Name, o.get(1): Datatype
             // Data types: https://docs.influxdata.com/influxdb/v1.7/write_protocols/line_protocol_reference/#data-types
             String name = o.get(0).toString();
@@ -209,7 +209,7 @@ public class InfluxDbClient {
             }
             columns.add(new Column(name, datatype));
         }
-        for (List o : tagKeys.getResults().get(0).getSeries().get(0).getValues()) {
+        for (List o : tagKeys) {
             // All tag keys are strings
             String name = o.get(0).toString();
             columns.add(new Column(name, Datatypes.String));
@@ -225,11 +225,17 @@ public class InfluxDbClient {
         columnsString = sb.toString();
     }
 
-    public QueryResult query(String query) {
+    // Returns a list with the entries of the query. If there are no entries, it returns an empty list
+    public List<List<Object>> query(String query) {
         if (!connected) {
-            throw new RuntimeException("InfluxDbClient not connnected");
+            throw new RuntimeException("InfluxDbClient not connected");
         }
-        return influxDb.query(new Query(query, database));
+        QueryResult queryResult = influxDb.query(new Query(query, database));
+        if (queryResult.getResults().get(0).getSeries() != null) {
+            return queryResult.getResults().get(0).getSeries().get(0).getValues();
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     // Returns null, if replaceNullValues == false and if in items is a null value
