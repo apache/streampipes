@@ -46,7 +46,7 @@ public class InfluxDbClient {
     private String username;
     private String password;
 
-    boolean replaceNullValues;
+    private boolean replaceNullValues;
 
     private List<Column> columns;
     private String columnsString;
@@ -87,10 +87,6 @@ public class InfluxDbClient {
         this.replaceNullValues = replaceNullValues;
 
         this.connected = false;
-    }
-
-    public InfluxDB getInfluxDb() {
-        return influxDb;
     }
 
     public void connect() throws AdapterException {
@@ -164,6 +160,7 @@ public class InfluxDbClient {
             PrimitivePropertyBuilder property = PrimitivePropertyBuilder
                     .create(column.getDatatypes(), column.getName())
                     .label(column.getName());
+            // Setting the timestamp field to the correct domainProperty
             if (column.getName().equals("time")) {
                 property.domainProperty(DateTime);
             }
@@ -235,6 +232,8 @@ public class InfluxDbClient {
         return influxDb.query(new Query(query, database));
     }
 
+    // Returns null, if replaceNullValues == false and if in items is a null value
+    // Otherwise it returns a Map containing the runtimenames and the correctly parsed values
     public Map<String, Object> extractEvent(List<Object> items) throws SpRuntimeException {
         if (items.size() != columns.size()) {
             throw new SpRuntimeException("Converter: Item list length is not the same as column list length");
@@ -247,6 +246,8 @@ public class InfluxDbClient {
         out.put("time", time.toEpochMilli());
 
         for (int i = 1; i < items.size(); i++) {
+            // The order of columns and items is the same, because the order in columnsString (which is used for the
+            // query) is based on the order of columns
             if (items.get(i) != null) {
                 out.put(columns.get(i).getName(), items.get(i));
             } else {

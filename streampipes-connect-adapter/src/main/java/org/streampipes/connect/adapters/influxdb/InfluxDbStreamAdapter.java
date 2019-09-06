@@ -24,7 +24,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
 
     public static final String ID = "http://streampipes.org/adapter/specific/influxdbstream";
 
-    private static final String INFLUX_DB_POLLING_INTERVAL = "pollingInterval";
+    private static final String POLLING_INTERVAL = "pollingInterval";
 
     private InfluxDbClient influxDbClient;
 
@@ -48,38 +48,33 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
             // Checking the most recent timestamp
             // Timestamp is a string, because a long might not be big enough (it includes nano seconds)
             String lastTimestamp = getLastTimestamp();
-            try {
-                influxDbClient.loadColumns();
-            } catch (SpRuntimeException e) {
-                e.printStackTrace();
-            }
 
-            while (true) {
+            while (!Thread.interrupted()) {
                 try {
                     Thread.sleep(pollingInterval);
-                    QueryResult queryResult = influxDbClient.query("SELECT " + influxDbClient.getColumnsString()
-                            + " FROM cpu WHERE time > " + lastTimestamp + " ORDER BY time DESC ");
-                    if (queryResult.getResults().get(0).getSeries() != null) {
-                        boolean checked = false;
-                        // Iterate through all new entries
-                        for (List<Object> values : queryResult.getResults().get(0).getSeries().get(0).getValues()) {
-                            if (!checked) {
-                                // The first element has the highest timestamp (ordered) -> Set the new latest timestamp
-                                lastTimestamp = getTimestamp((String)values.get(0));
-                                checked = true;
-                            }
-                            try {
-                                Map<String, Object> out = influxDbClient.extractEvent(values);
-                                if (out != null) {
-                                    influxDbStreamAdapter.send(out);
-                                }
-                            } catch (SpRuntimeException e) {
-                                System.out.println("Error: " + e.getMessage());
-                            }
-                        }
-                    }
                 } catch (InterruptedException e) {
                     break;
+                }
+                QueryResult queryResult = influxDbClient.query("SELECT " + influxDbClient.getColumnsString()
+                        + " FROM cpu WHERE time > " + lastTimestamp + " ORDER BY time ASC ");
+                if (queryResult.getResults().get(0).getSeries() != null) {
+                    // Iterate through all new entries
+                    List<List<Object>> entries = queryResult.getResults().get(0).getSeries().get(0).getValues();
+
+                    // The last element has the highest timestamp (ordered asc) -> Set the new latest timestamp
+                    if (entries.size() > 0) {
+                        lastTimestamp = getTimestamp((String)entries.get(entries.size() - 1).get(0));
+                    }
+                    for (List<Object> value : entries) {
+                        try {
+                            Map<String, Object> out = influxDbClient.extractEvent(value);
+                            if (out != null) {
+                                influxDbStreamAdapter.send(out);
+                            }
+                        } catch (SpRuntimeException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    }
                 }
             }
         }
@@ -97,7 +92,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
             TemporalAccessor temporalAccessor = DateTimeFormatter.ISO_INSTANT.parse(date);
 
             Instant time = Instant.from(temporalAccessor);
-            return String.valueOf(time.getEpochSecond()) + time.getNano();
+            return time.getEpochSecond() + String.format("%09d", time.getNano());
         }
     }
 
@@ -126,7 +121,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
                 .requiredTextParameter(Labels.from(InfluxDbClient.MEASUREMENT, "Measurement", "Name of the measurement, which should be observed"))
                 .requiredTextParameter(Labels.from(InfluxDbClient.USERNAME, "Username", "The username to log into the InfluxDB"))
                 .requiredTextParameter(Labels.from(InfluxDbClient.PASSWORD, "Password", "The password to log into the InfluxDB"))
-                .requiredIntegerParameter(Labels.from(INFLUX_DB_POLLING_INTERVAL, "Polling interval (MS)", "How often the database should be checked for new entries (in MS)"))
+                .requiredIntegerParameter(Labels.from(POLLING_INTERVAL, "Polling interval (MS)", "How often the database should be checked for new entries (in MS)"))
                 .requiredSingleValueSelection(Labels.from(InfluxDbClient.REPLACE_NULL_VALUES, "Replace Null Values", "Should null values in the incoming data be replace by defaults? If not, these events are skipped"),
                         Options.from(
                                 new Tuple2<>("Yes", InfluxDbClient.DO_REPLACE),
@@ -139,7 +134,12 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public void startAdapter() throws AdapterException {
-        influxDbClient.connect();
+        try {
+            influxDbClient.connect();
+            influxDbClient.loadColumns();
+        } catch (SpRuntimeException e) {
+            throw new AdapterException(e.getMessage());
+        }
 
         // No exceptions are thrown => Connected successfully. So now start polling
         pollingThread = new Thread(new PollingThread(pollingInterval, this));
@@ -192,6 +192,6 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
                 extractor.singleValue(InfluxDbClient.PASSWORD, String.class),
                 replace.equals(InfluxDbClient.DO_REPLACE));
 
-        pollingInterval = extractor.singleValue(INFLUX_DB_POLLING_INTERVAL, Integer.class);
+        pollingInterval = extractor.singleValue(POLLING_INTERVAL, Integer.class);
     }
 }
