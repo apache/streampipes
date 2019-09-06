@@ -22,6 +22,7 @@ import org.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
 import org.streampipes.connect.adapters.gdelt.GdeltAdapter;
 import org.streampipes.connect.adapters.iex.IexCloudNewsAdapter;
 import org.streampipes.connect.adapters.iex.IexCloudStockAdapter;
+import org.streampipes.connect.adapters.influxdb.InfluxDbSetAdapter;
 import org.streampipes.connect.adapters.influxdb.InfluxDbStreamAdapter;
 import org.streampipes.connect.adapters.mysql.MySqlAdapter;
 import org.streampipes.connect.adapters.opcua.OpcUaAdapter;
@@ -69,7 +70,8 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new WikipediaNewArticlesAdapter())
             .add(new RosBridgeAdapter())
             .add(new OpcUaAdapter())
-            .add(new InfluxDbStreamAdapter());
+            .add(new InfluxDbStreamAdapter())
+            .add(new InfluxDbSetAdapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
     String masterUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerMasterUrl();
