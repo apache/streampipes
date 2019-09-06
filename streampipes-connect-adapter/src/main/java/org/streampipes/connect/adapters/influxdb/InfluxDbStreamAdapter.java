@@ -28,17 +28,16 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
 
     private InfluxDbClient influxDbClient;
 
-    Thread pollingThread;
-    int pollingInterval;
+    private Thread pollingThread;
+    private int pollingInterval;
 
     public static class PollingThread implements Runnable {
         private int pollingInterval;
-        private String lastTimestamp;
 
         private InfluxDbClient influxDbClient;
         private InfluxDbStreamAdapter influxDbStreamAdapter;
 
-        public PollingThread(int pollingInterval, InfluxDbStreamAdapter influxDbStreamAdapter) {
+        PollingThread(int pollingInterval, InfluxDbStreamAdapter influxDbStreamAdapter) {
             this.pollingInterval = pollingInterval;
             this.influxDbStreamAdapter = influxDbStreamAdapter;
             this.influxDbClient = influxDbStreamAdapter.getInfluxDbClient();
@@ -46,11 +45,12 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
 
         @Override
         public void run() {
-            // Check last timestamp
-            lastTimestamp = getLastTimestamp();
+            // Checking the most recent timestamp
+            // Timestamp is a string, because a long might not be big enough (it includes nano seconds)
+            String lastTimestamp = getLastTimestamp();
             try {
-                influxDbClient.getSchema();
-            } catch (AdapterException e) {
+                influxDbClient.loadColumns();
+            } catch (SpRuntimeException e) {
                 e.printStackTrace();
             }
 

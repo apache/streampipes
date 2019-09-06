@@ -122,6 +122,7 @@ public class InfluxDbClient {
     public void disconnect() {
         if (connected) {
             influxDb.close();
+            connected = false;
         }
     }
 
@@ -153,26 +154,48 @@ public class InfluxDbClient {
         GuessSchema guessSchema = new GuessSchema();
         List<EventProperty> allProperties = new ArrayList<>();
 
+        try {
+            loadColumns();
+        } catch (SpRuntimeException e) {
+            throw new AdapterException(e.getMessage());
+        }
+
+        for (Column column : columns) {
+            PrimitivePropertyBuilder property = PrimitivePropertyBuilder
+                    .create(column.getDatatypes(), column.getName())
+                    .label(column.getName());
+            if (column.getName().equals("time")) {
+                property.domainProperty(DateTime);
+            }
+            allProperties.add(property.build());
+        }
+
+        eventSchema.setEventProperties(allProperties);
+        guessSchema.setEventSchema(eventSchema);
+
+        disconnect();
+        return guessSchema;
+    }
+
+    // Client must be connected before calling this method
+    public void loadColumns() throws SpRuntimeException {
+        if (!connected) {
+            throw new SpRuntimeException("Client must be connected to the server in order to load the columns.");
+        }
         QueryResult fieldKeys = query("SHOW FIELD KEYS FROM " + measurement);
         QueryResult tagKeys = query("SHOW TAG KEYS FROM " + measurement);
-
         if (fieldKeys.getResults().get(0).getSeries() == null || tagKeys.getResults().get(0).getSeries() == null) {
-            throw new AdapterException("Error while checking the Schema");
+            throw new SpRuntimeException("Error while checking the Schema (does the measurement exist?)");
         }
-        columns = new ArrayList<>();
 
-        //TODO: Add timestamp description here
-        allProperties.add(PrimitivePropertyBuilder
-                .create(Datatypes.Long, "time")
-                .label("time")
-                .domainProperty(DateTime)
-                .build());
+        columns = new ArrayList<>();
         columns.add(new Column("time", Datatypes.Long));
+
         for (List o : fieldKeys.getResults().get(0).getSeries().get(0).getValues()) {
+            // o.get(0): Name, o.get(1): Datatype
+            // Data types: https://docs.influxdata.com/influxdb/v1.7/write_protocols/line_protocol_reference/#data-types
             String name = o.get(0).toString();
             Datatypes datatype;
-            // Data types: https://docs.influxdata.com/influxdb/v1.7/write_protocols/line_protocol_reference/#data-types
-            // Maybe add timestamps somehow (also long)?
             switch (o.get(1).toString()) {
                 case "float":
                     datatype = Datatypes.Float;
@@ -187,28 +210,22 @@ public class InfluxDbClient {
                     datatype = Datatypes.String;
                     break;
             }
-            allProperties.add(PrimitivePropertyBuilder
-                    .create(datatype, name)
-                    .label(name)
-                    .build());
             columns.add(new Column(name, datatype));
         }
         for (List o : tagKeys.getResults().get(0).getSeries().get(0).getValues()) {
             // All tag keys are strings
             String name = o.get(0).toString();
-            allProperties.add(PrimitivePropertyBuilder
-                    .create(Datatypes.String, name)
-                    .label(name)
-                    .build());
             columns.add(new Column(name, Datatypes.String));
         }
 
-        updateColumnString();
-        eventSchema.setEventProperties(allProperties);
-        guessSchema.setEventSchema(eventSchema);
-
-        disconnect();
-        return guessSchema;
+        // Update the column String
+        // Do it only here, because it is needed every time for the query (performance)
+        StringBuilder sb = new StringBuilder();
+        for (Column column : columns) {
+            sb.append(column.getName()).append(", ");
+        }
+        sb.setLength(sb.length() - 2);
+        columnsString = sb.toString();
     }
 
     public QueryResult query(String query) {
@@ -224,7 +241,7 @@ public class InfluxDbClient {
         }
         Map<String, Object> out = new HashMap<>();
 
-        // First element is the timestamp, which needs to be converted
+        // First element is the timestamp, which will be converted to milli seconds
         TemporalAccessor temporalAccessor = DateTimeFormatter.ISO_INSTANT.parse((String)items.get(0));
         Instant time = Instant.from(temporalAccessor);
         out.put("time", time.toEpochMilli());
@@ -259,15 +276,6 @@ public class InfluxDbClient {
             }
         }
         return out;
-    }
-
-    public void updateColumnString() {
-        StringBuilder sb = new StringBuilder();
-        for (Column column : columns) {
-            sb.append(column.getName()).append(", ");
-        }
-        sb.setLength(sb.length() - 2);
-        columnsString = sb.toString();
     }
 
     public String getColumnsString() {
