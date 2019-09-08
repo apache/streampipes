@@ -19,11 +19,9 @@ import java.util.Map;
 public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
 
     public static final String ID = "http://streampipes.org/adapter/specific/influxdbset";
-
     public static final int BATCH_SIZE = 8192;
 
     private InfluxDbClient influxDbClient;
-
     private Thread fetchDataThread;
 
     public static class FetchDataThread implements Runnable {
@@ -105,8 +103,6 @@ public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
 
     @Override
     public void startAdapter() throws AdapterException {
-        influxDbClient.connect();
-        influxDbClient.loadColumns();
         fetchDataThread = new Thread(new FetchDataThread(this));
         fetchDataThread.start();
     }
