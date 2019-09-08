@@ -38,6 +38,10 @@ public class MySqlClient {
   static final String USER = "mysqlUser";
   static final String PASSWORD = "mysqlPassword";
 
+  static final String REPLACE_NULL_VALUES = "replaceNullValues";
+  static final String DO_REPLACE_NULL_VALUES = "doReplaceNullValues";
+  static final String DO_NOT_REPLACE_NULL_VALUES = "doNotReplaceNullValues";
+
   private String host;
   private Integer port;
   private String database;
@@ -46,9 +50,11 @@ public class MySqlClient {
   private String username;
   private String password;
 
+
   private List<Column> columns;
 
   Connection connection;
+
   MySqlClient(String host,
               int port,
               String database,
@@ -69,7 +75,7 @@ public class MySqlClient {
     checkJdbcDriver();
     String server = "jdbc:mysql://" + host + ":" + port + "/" + "?sslMode=DISABLED&allowPublicKeyRetrieval=true";
     try {
-      Connection con = DriverManager.getConnection(server, username, password);
+      connection = DriverManager.getConnection(server, username, password);
     } catch (SQLException e) {
       throw new AdapterException("Could not connect to server: " + e.getMessage());
     }
@@ -191,5 +197,9 @@ public class MySqlClient {
 
   public boolean isConnected() {
     return connection != null;
+  }
+
+  Connection getConnection() {
+    return connection;
   }
 }

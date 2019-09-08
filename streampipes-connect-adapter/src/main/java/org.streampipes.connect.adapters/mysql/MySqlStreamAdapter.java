@@ -12,6 +12,8 @@ import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.Options;
+import org.streampipes.sdk.helpers.Tuple2;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -25,6 +27,15 @@ public class MySqlStreamAdapter extends SpecificDataStreamAdapter {
     private MySqlClient mySqlClient;
     private BinaryLogClient binaryLogClient;
 
+    private Thread subscriptionThread  = new Thread(()-> {
+        try {
+            binaryLogClient.connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    });
+
+    private boolean replaceNullValues;
     private boolean dataComing = false;
 
     public MySqlStreamAdapter() {
@@ -47,6 +58,10 @@ public class MySqlStreamAdapter extends SpecificDataStreamAdapter {
                 .requiredTextParameter(Labels.from(MySqlClient.TABLE, "Table", "Table which should be watched"))
                 .requiredTextParameter(Labels.from(MySqlClient.USER, "Username", "Username of the user"))
                 .requiredTextParameter(Labels.from(MySqlClient.PASSWORD, "Password", "Password of the user"))
+                .requiredSingleValueSelection(Labels.from(MySqlClient.REPLACE_NULL_VALUES, "Replace Null Values", "Should null values in the incoming data be replace by defaults? If not, these events are skipped"),
+                        Options.from(
+                                new Tuple2<>("Yes", MySqlClient.DO_REPLACE_NULL_VALUES),
+                                new Tuple2<>("No", MySqlClient.DO_NOT_REPLACE_NULL_VALUES)))
                 .build();
 
         description.setAppId(ID);
@@ -74,11 +89,7 @@ public class MySqlStreamAdapter extends SpecificDataStreamAdapter {
         );
         binaryLogClient.setEventDeserializer(eventDeserializer);
         binaryLogClient.registerEventListener(event -> sendEvent(event));
-        try {
-            binaryLogClient.connect();
-        } catch (IOException e) {
-            throw new AdapterException(e.getMessage());
-        }
+        subscriptionThread.start();
     }
 
 
@@ -117,8 +128,11 @@ public class MySqlStreamAdapter extends SpecificDataStreamAdapter {
                 } else {
                     out.put(mySqlClient.getColumns().get(i).getName(), rows[i]);
                 }
-            } else {
+            } else if (replaceNullValues) {
                 out.put(mySqlClient.getColumns().get(i).getName(), mySqlClient.getColumns().get(i).getDefault());
+            } else {
+                // We should skip events with null values
+                return;
             }
         }
         adapterPipeline.process(out);
@@ -128,7 +142,8 @@ public class MySqlStreamAdapter extends SpecificDataStreamAdapter {
     public void stopAdapter() throws AdapterException {
         try {
             binaryLogClient.disconnect();
-        } catch (IOException e) {
+            subscriptionThread.join();
+        } catch (IOException | InterruptedException e) {
             throw new AdapterException("Thrown exception: " + e.getMessage());
         }
     }
@@ -151,6 +166,9 @@ public class MySqlStreamAdapter extends SpecificDataStreamAdapter {
 
     private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
         ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
+
+        String replace = extractor.selectedSingleValueInternalName(MySqlClient.REPLACE_NULL_VALUES);
+        replaceNullValues = replace.equals(MySqlClient.DO_REPLACE_NULL_VALUES);
 
         mySqlClient = new MySqlClient(
                 extractor.singleValue(MySqlClient.HOST, String.class),

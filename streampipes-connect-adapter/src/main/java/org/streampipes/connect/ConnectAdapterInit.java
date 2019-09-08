@@ -24,6 +24,7 @@ import org.streampipes.connect.adapters.iex.IexCloudNewsAdapter;
 import org.streampipes.connect.adapters.iex.IexCloudStockAdapter;
 import org.streampipes.connect.adapters.influxdb.InfluxDbSetAdapter;
 import org.streampipes.connect.adapters.influxdb.InfluxDbStreamAdapter;
+import org.streampipes.connect.adapters.mysql.MySqlSetAdapter;
 import org.streampipes.connect.adapters.mysql.MySqlStreamAdapter;
 import org.streampipes.connect.adapters.opcua.OpcUaAdapter;
 import org.streampipes.connect.adapters.ros.RosBridgeAdapter;
@@ -59,6 +60,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new IexCloudNewsAdapter())
             .add(new IexCloudStockAdapter())
             .add(new MySqlStreamAdapter())
+            .add(new MySqlSetAdapter())
             .add(new RandomDataSetAdapter())
             .add(new RandomDataStreamAdapter())
             .add(new SlackAdapter())
