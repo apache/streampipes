@@ -80,6 +80,7 @@ public class MySqlSetAdapter extends SpecificDataSetAdapter {
                             mySqlSetAdapter.send(event);
                         }
                     }
+                    resultSet.close();
                 }
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
