@@ -145,16 +145,11 @@ public class InfluxDbClient {
 
     public GuessSchema getSchema() throws AdapterException {
         connect();
+        loadColumns();
 
         EventSchema eventSchema = new EventSchema();
         GuessSchema guessSchema = new GuessSchema();
         List<EventProperty> allProperties = new ArrayList<>();
-
-        try {
-            loadColumns();
-        } catch (SpRuntimeException e) {
-            throw new AdapterException(e.getMessage());
-        }
 
         for (Column column : columns) {
             PrimitivePropertyBuilder property = PrimitivePropertyBuilder
@@ -175,14 +170,14 @@ public class InfluxDbClient {
     }
 
     // Client must be connected before calling this method
-    void loadColumns() throws SpRuntimeException {
+    void loadColumns() throws AdapterException {
         if (!connected) {
-            throw new SpRuntimeException("Client must be connected to the server in order to load the columns.");
+            throw new AdapterException("Client must be connected to the server in order to load the columns.");
         }
         List<List<Object>> fieldKeys = query("SHOW FIELD KEYS FROM " + measurement);
         List<List<Object>> tagKeys = query("SHOW TAG KEYS FROM " + measurement);
         if (fieldKeys.size() == 0 || tagKeys.size() == 0) {
-            throw new SpRuntimeException("Error while checking the Schema (does the measurement exist?)");
+            throw new AdapterException("Error while checking the Schema (does the measurement exist?)");
         }
 
         columns = new ArrayList<>();

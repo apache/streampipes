@@ -135,7 +135,9 @@ public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
     }
 
     @Override
-    public GuessSchema getSchema(SpecificAdapterSetDescription adapterDescription) throws AdapterException, ParseException {
+    public GuessSchema getSchema(SpecificAdapterSetDescription adapterDescription)
+            throws AdapterException, ParseException {
+        getConfigurations(adapterDescription);
         return influxDbClient.getSchema();
     }
 

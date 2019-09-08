@@ -165,6 +165,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
     @Override
     public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
             throws AdapterException, ParseException {
+        getConfigurations(adapterDescription);
         return influxDbClient.getSchema();
     }
 
@@ -180,6 +181,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
     private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
         ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
 
+        pollingInterval = extractor.singleValue(POLLING_INTERVAL, Integer.class);
         String replace = extractor.selectedSingleValueInternalName(InfluxDbClient.REPLACE_NULL_VALUES);
 
         influxDbClient = new InfluxDbClient(
@@ -191,6 +193,5 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
                 extractor.singleValue(InfluxDbClient.PASSWORD, String.class),
                 replace.equals(InfluxDbClient.DO_REPLACE));
 
-        pollingInterval = extractor.singleValue(POLLING_INTERVAL, Integer.class);
     }
 }
