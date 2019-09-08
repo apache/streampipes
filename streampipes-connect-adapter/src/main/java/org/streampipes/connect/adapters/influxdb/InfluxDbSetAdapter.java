@@ -36,11 +36,7 @@ public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
             this.influxDbClient = influxDbSetAdapter.getInfluxDbClient();
 
             influxDbClient.connect();
-            try {
-                influxDbClient.loadColumns();
-            } catch (SpRuntimeException e) {
-                throw new AdapterException(e.getMessage());
-            }
+            influxDbClient.loadColumns();
         }
 
         @Override
@@ -109,12 +105,8 @@ public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
 
     @Override
     public void startAdapter() throws AdapterException {
-        try {
-            influxDbClient.connect();
-            influxDbClient.loadColumns();
-        } catch (SpRuntimeException e) {
-            throw new AdapterException(e.getMessage());
-        }
+        influxDbClient.connect();
+        influxDbClient.loadColumns();
         fetchDataThread = new Thread(new FetchDataThread(this));
         fetchDataThread.start();
     }

@@ -41,11 +41,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
             this.influxDbClient = influxDbStreamAdapter.getInfluxDbClient();
 
             influxDbClient.connect();
-            try {
-                influxDbClient.loadColumns();
-            } catch (SpRuntimeException e) {
-                throw new AdapterException(e.getMessage());
-            }
+            influxDbClient.loadColumns();
         }
 
         @Override
