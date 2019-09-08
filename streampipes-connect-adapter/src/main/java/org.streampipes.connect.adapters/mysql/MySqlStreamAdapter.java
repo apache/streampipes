@@ -140,6 +140,7 @@ public class MySqlStreamAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException, ParseException {
+        getConfigurations(adapterDescription);
         return mySqlClient.getSchema();
     }
 

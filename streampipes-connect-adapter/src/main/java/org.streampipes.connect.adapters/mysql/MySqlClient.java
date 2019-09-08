@@ -188,4 +188,8 @@ public class MySqlClient {
   public List<Column> getColumns() {
     return columns;
   }
+
+  public boolean isConnected() {
+    return connection != null;
+  }
 }
