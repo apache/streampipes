@@ -24,7 +24,7 @@ import org.streampipes.connect.adapters.iex.IexCloudNewsAdapter;
 import org.streampipes.connect.adapters.iex.IexCloudStockAdapter;
 import org.streampipes.connect.adapters.influxdb.InfluxDbSetAdapter;
 import org.streampipes.connect.adapters.influxdb.InfluxDbStreamAdapter;
-import org.streampipes.connect.adapters.mysql.MySqlAdapter;
+import org.streampipes.connect.adapters.mysql.MySqlStreamAdapter;
 import org.streampipes.connect.adapters.opcua.OpcUaAdapter;
 import org.streampipes.connect.adapters.ros.RosBridgeAdapter;
 import org.streampipes.connect.adapters.simulator.RandomDataSetAdapter;
@@ -36,11 +36,7 @@ import org.streampipes.connect.config.ConnectWorkerConfig;
 import org.streampipes.connect.container.worker.init.AdapterWorkerContainer;
 import org.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.streampipes.connect.protocol.set.FileProtocol;
-import org.streampipes.connect.protocol.stream.FileStreamProtocol;
-import org.streampipes.connect.protocol.stream.HDFSProtocol;
-import org.streampipes.connect.protocol.stream.KafkaProtocol;
-import org.streampipes.connect.protocol.stream.MqttProtocol;
-import org.streampipes.connect.protocol.stream.HttpStreamProtocol;
+import org.streampipes.connect.protocol.stream.*;
 
 public class ConnectAdapterInit extends AdapterWorkerContainer {
 
@@ -62,7 +58,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new CoindeskBitcoinAdapter())
             .add(new IexCloudNewsAdapter())
             .add(new IexCloudStockAdapter())
-            .add(new MySqlAdapter())
+            .add(new MySqlStreamAdapter())
             .add(new RandomDataSetAdapter())
             .add(new RandomDataStreamAdapter())
             .add(new SlackAdapter())
