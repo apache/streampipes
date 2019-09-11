@@ -14,6 +14,7 @@
     <properties>
         <streampipes.version>0.63.0</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
+        <javax-validation.version>2.0.1.FINAL</javax-validation.version>
         <junit.version>4.12</junit.version>
         <mockito.version>2.18.3</mockito.version>
         <powermock.version>2.0.2</powermock.version>
@@ -22,6 +23,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${javax-validation.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-connect-container-worker</artifactId>

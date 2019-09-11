@@ -29,6 +29,7 @@
 
     <properties>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
+        <pulsar.version>2.4.1</pulsar.version>
     </properties>
 
     <dependencies>
@@ -170,6 +171,11 @@
                     <groupId>org.eclipse.jetty</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pulsar</groupId>
+            <artifactId>pulsar-client</artifactId>
+            <version>${pulsar.version}</version>
         </dependency>
     </dependencies>
 
