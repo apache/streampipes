@@ -60,8 +60,7 @@ public class HttpProtocol extends Protocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        return ProtocolDescriptionBuilder.create(ID, "HTTP Set", "Reads the content from an HTTP " +
-                "endpoint.")
+        return ProtocolDescriptionBuilder.create(ID, "HTTP Set", "Regularly poll an HTTP endpoint")
                 .category(AdapterType.Generic)
                 .sourceType(AdapterSourceType.SET)
                 .iconUrl("rest.png")

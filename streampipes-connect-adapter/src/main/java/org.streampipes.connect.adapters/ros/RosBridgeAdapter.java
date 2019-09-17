@@ -269,23 +269,4 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements Reso
         return result;
 
     }
-
-    public static void main(String... args) {
-        Ros ros = new Ros("ipe-girlitz.fzi.de", 9090);
-        boolean connect = ros.connect();
-
-        Service service = new Service(ros, "/rosapi/topics", "rosapi/Topics");
-        ServiceRequest request = new ServiceRequest();
-        ServiceResponse response = service.callServiceAndWait(request);
-
-        JSONObject ob = new JSONObject(response.toString());
-
-        ros.disconnect();
-
-
-        System.out.println(ob.get("topics"));
-
-
-
-    }
 }

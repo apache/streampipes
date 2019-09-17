@@ -24,6 +24,7 @@ import org.streampipes.connect.adapters.iex.IexCloudNewsAdapter;
 import org.streampipes.connect.adapters.iex.IexCloudStockAdapter;
 import org.streampipes.connect.adapters.mysql.MySqlAdapter;
 import org.streampipes.connect.adapters.opcua.OpcUaAdapter;
+import org.streampipes.connect.adapters.plc4x.Plc4xS7Adapter;
 import org.streampipes.connect.adapters.ros.RosBridgeAdapter;
 import org.streampipes.connect.adapters.simulator.RandomDataSetAdapter;
 import org.streampipes.connect.adapters.simulator.RandomDataStreamAdapter;
@@ -67,6 +68,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new WikipediaEditedArticlesAdapter())
             .add(new WikipediaNewArticlesAdapter())
             .add(new RosBridgeAdapter())
+            .add(new Plc4xS7Adapter())
             .add(new OpcUaAdapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
