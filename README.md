@@ -1,3 +1,21 @@
+<!--
+
+  Copyright 2018 FZI Forschungszentrum Informatik
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+
 [![Travis Badge](https://travis-ci.org/streampipes/streampipes.svg?branch=dev)](https://travis-ci.org/streampipes/streampipes.svg?branch=dev)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/34a7e26be4fc4fa284ee5201b6d386ea)](https://www.codacy.com/app/dominikriemer/streampipes-ce?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=streampipes/streampipes-ce&amp;utm_campaign=Badge_Grade)
 [![Docker pulls](https://img.shields.io/docker/pulls/streampipes/backend.svg)](https://hub.docker.com/r/streampipes/backend/)
