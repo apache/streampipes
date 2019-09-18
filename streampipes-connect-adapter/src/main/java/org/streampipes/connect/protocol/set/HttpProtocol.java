@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.connect.adapter.generic.protocol.set;
+package org.streampipes.connect.protocol.set;
 
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
