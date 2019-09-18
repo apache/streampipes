@@ -179,6 +179,22 @@
         </developer>
     </developers>
 
+    <repositories>
+        <repository>
+            <id>laus</id>
+            <name>nexus repository</name>
+            <url>https://laus.fzi.de/nexus/content/repositories/public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <distributionManagement>
         <repository>
             <id>sonatype</id>
