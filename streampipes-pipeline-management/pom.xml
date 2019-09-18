@@ -95,7 +95,7 @@
         <dependency>
             <groupId>org.jgrapht</groupId>
             <artifactId>jgrapht-core</artifactId>
-            <version>1.0.0</version>
+            <version>1.3.1</version>
         </dependency>
         <dependency>
             <groupId>uk.com.robust-it</groupId>

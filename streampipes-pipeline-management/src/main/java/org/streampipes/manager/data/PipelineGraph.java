@@ -17,12 +17,12 @@
 
 package org.streampipes.manager.data;
 
-import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.jgrapht.graph.SimpleDirectedGraph;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 
 public class PipelineGraph extends SimpleDirectedGraph<NamedStreamPipesEntity, String> {
 
     public PipelineGraph() {
-        super(new PipelineEdgeFactory());
+        super(String.class);
     }
 }
