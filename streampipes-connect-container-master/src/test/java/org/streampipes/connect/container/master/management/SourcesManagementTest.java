@@ -29,6 +29,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.streampipes.connect.adapter.exception.AdapterException;
@@ -42,6 +43,7 @@ import java.util.List;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ WorkerRestClient.class })
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
 public class SourcesManagementTest {
     private final static String ID = "id_1234";
 
