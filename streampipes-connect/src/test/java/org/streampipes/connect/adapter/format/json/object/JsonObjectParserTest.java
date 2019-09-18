@@ -17,8 +17,11 @@
 
 package org.streampipes.connect.adapter.format.json.object;
 
+import static org.junit.Assert.assertEquals;
+import static org.streampipes.connect.adapter.TestUtils.makeJsonObject;
+
+import com.google.gson.JsonObject;
 import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.streampipes.connect.adapter.exception.AdapterException;
 
@@ -27,23 +30,16 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
 public class JsonObjectParserTest {
 
     @Test
     public void parseOneEvent() throws AdapterException {
 
-//        String jo = getJsonArrayWithThreeElements();
-
-        String jo = new JSONObject()
-                .put("one", 1)
-                .toString();
-
+        JsonObject jo = makeJsonObject("one", 1);
 
         JsonObjectParser parser = new JsonObjectParser();
 
-        List<byte[]> parsedEvent = parser.parseNEvents(getInputStream(jo), 1);
+        List<byte[]> parsedEvent = parser.parseNEvents(getInputStream(jo.toString()), 1);
 
         assertEquals(parsedEvent.size(), 1);
         String parsedStringEvent = new String(parsedEvent.get(0), StandardCharsets.UTF_8);
@@ -54,13 +50,11 @@ public class JsonObjectParserTest {
     @Test
     public void parseMoreThenExist() throws AdapterException {
 
-        String jo = new JSONObject()
-                .put("one", 1)
-                .toString();
+        JsonObject jo = makeJsonObject("one", 1);
 
         JsonObjectParser parser = new JsonObjectParser();
 
-        List<byte[]> parsedEvent = parser.parseNEvents(getInputStream(jo), 10);
+        List<byte[]> parsedEvent = parser.parseNEvents(getInputStream(jo.toString()), 10);
 
         assertEquals(1, parsedEvent.size());
         String parsedStringEventOne = new String(parsedEvent.get(0), StandardCharsets.UTF_8);
@@ -78,6 +72,4 @@ public class JsonObjectParserTest {
 
         return null;
     }
-
-
 }

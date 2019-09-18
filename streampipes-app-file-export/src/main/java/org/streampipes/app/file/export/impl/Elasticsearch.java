@@ -19,15 +19,17 @@ package org.streampipes.app.file.export.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
-import org.elasticsearch.action.search.*;
+import org.apache.http.client.fluent.Request;
+import org.elasticsearch.action.search.ClearScrollRequest;
+import org.elasticsearch.action.search.ClearScrollResponse;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchScrollRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
@@ -47,7 +49,9 @@ import org.streampipes.app.file.export.converter.JsonConverter;
 import org.streampipes.app.file.export.model.IndexInfo;
 import org.streampipes.storage.couchdb.utils.Utils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -158,9 +162,9 @@ public class Elasticsearch implements IElasticsearch {
   public Response getIndices() {
     String url = ElasticsearchConfig.INSTANCE.getElasticsearchURL() + "/_cat/indices?v";
     try {
-      HttpResponse<JsonNode> jsonResponse = unirestGet(url);
+      JsonElement jsonResponse = get(url);
 
-      JsonArray response = new JsonParser().parse(jsonResponse.getBody().toString()).getAsJsonArray();
+      JsonArray response = jsonResponse.getAsJsonArray();
       List<IndexInfo> availableIndices = new ArrayList<>();
       for(int i = 0; i < response.size(); i++) {
        JsonObject object = response.get(i).getAsJsonObject();
@@ -171,7 +175,7 @@ public class Elasticsearch implements IElasticsearch {
        }
       }
       return Response.ok(availableIndices).build();
-    } catch (UnirestException e) {
+    } catch (IOException e) {
       e.printStackTrace();
       return Response.serverError().build();
     }
@@ -216,12 +220,13 @@ public class Elasticsearch implements IElasticsearch {
     return new FileOutputStream(filePath);
   }
 
-  private HttpResponse<JsonNode> unirestGet(String url) throws UnirestException {
-    HttpResponse<JsonNode> jsonResponse = Unirest.get(url)
-            .header("accept", "application/json")
-            .header("Content-Type", "application/json")
-            .asJson();
-    return jsonResponse;
+  private JsonElement get(String url) throws IOException {
+    String jsonResponse = Request.Get(url)
+            .addHeader("accept", "application/json")
+            .addHeader("Content-Type", "application/json")
+            .execute()
+            .returnContent().asString();
+    return new JsonParser().parse(jsonResponse);
   }
 
   private RestHighLevelClient getRestHighLevelClient() {

@@ -113,11 +113,6 @@
             <version>2.0.1</version>
         </dependency>
         <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20180130</version>
-        </dependency>
-        <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container</artifactId>
         </dependency>

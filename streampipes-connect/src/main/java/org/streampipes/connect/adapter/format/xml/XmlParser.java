@@ -16,20 +16,18 @@ limitations under the License.
 
 package org.streampipes.connect.adapter.format.xml;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import com.google.gson.Gson;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.XML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.connect.EmitBinaryEvent;
-import org.streampipes.connect.adapter.model.generic.Parser;
-import org.streampipes.connect.adapter.format.util.JsonEventProperty;
-import org.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.streampipes.connect.adapter.exception.ParseException;
+import org.streampipes.connect.adapter.format.util.JsonEventProperty;
+import org.streampipes.connect.adapter.model.generic.Parser;
+import org.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.model.connect.grounding.FormatDescription;
 import org.streampipes.model.schema.EventProperty;
@@ -38,7 +36,8 @@ import org.streampipes.model.schema.EventSchema;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 public class XmlParser extends Parser {
 
@@ -68,12 +67,10 @@ public class XmlParser extends Parser {
         try {
             String dataString = CharStreams.toString(new InputStreamReader(data, Charsets.UTF_8));
 
-            JSONObject xmlJSONObj = XML.toJSONObject(dataString);
-            searchAndEmitEvents(xmlJSONObj.toMap(), tag, emitBinaryEvent);
+            XmlMapper xmlMapper = new XmlMapper();
+            Map<String, Object> map = xmlMapper.readValue(dataString.getBytes(), Map.class);
+            searchAndEmitEvents(map, tag, emitBinaryEvent);
 
-        } catch (JSONException e) {
-            logger.error(e.toString());
-            throw new ParseException(e.getMessage());
         } catch (IOException e) {
             logger.error(e.toString());
             throw new ParseException(e.getMessage());
