@@ -68,7 +68,6 @@ public class Plc4xS7Adapter extends PullAdapter {
     }
 
 
-
     @Override
     public SpecificAdapterStreamDescription declareModel() {
 
@@ -85,9 +84,17 @@ public class Plc4xS7Adapter extends PullAdapter {
         return description;
     }
 
+    /**
+     * Creates the schema based on the user input
+     * @param adapterDescription
+     * @return
+     * @throws AdapterException
+     */
     @Override
     public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException {
+        // TODO add a validation to check if the user input is available in the PLC
 
+        // Extract user input
         getConfigurations(adapterDescription);
 
         GuessSchema guessSchema = new GuessSchema();
@@ -127,21 +134,18 @@ public class Plc4xS7Adapter extends PullAdapter {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-//        CompletableFuture<? extends PlcReadResponse> asyncResponse = readRequest.execute();
-//            asyncResponse.whenComplete((response, throwable) -> {
 
-                for (String fieldName : response.getFieldNames()) {
-                    if(response.getResponseCode(fieldName) == PlcResponseCode.OK) {
-                        System.out.println(response.getObject(fieldName));
-                        event.put(fieldName, response.getObject(fieldName));
-                    }
+        // Create event from response of plc
+        for (String fieldName : response.getFieldNames()) {
+            if(response.getResponseCode(fieldName) == PlcResponseCode.OK) {
+                event.put(fieldName, response.getObject(fieldName));
+            }
 
-                    else {
-                        logger.error("Error[" + fieldName + "]: " + response.getResponseCode(fieldName).name());
-                    }
-                }
+            else {
+                logger.error("Error[" + fieldName + "]: " + response.getResponseCode(fieldName).name());
+            }
+        }
 
-//            });
 
 
         adapterPipeline.process(event);
@@ -150,6 +154,7 @@ public class Plc4xS7Adapter extends PullAdapter {
 
     @Override
     protected void before() throws AdapterException {
+        // Extract user input
         getConfigurations(adapterDescription);
 
         try {
@@ -185,11 +190,6 @@ public class Plc4xS7Adapter extends PullAdapter {
         this.ip = extractor.singleValue(PLC_IP, String.class);
         this.nodeName = extractor.singleValue(PLC_NODE_NAME, String.class);
         this.nodeType = extractor.singleValue(PLC_NODE_TYPE, String.class);
-        System.out.println("==================");
-        System.out.println(ip);
-        System.out.println(nodeName);
-        System.out.println(nodeType);
-        System.out.println("==================");
     }
 
     private Datatypes getStreamPipesDataType(String plcType) throws AdapterException {
@@ -203,60 +203,12 @@ public class Plc4xS7Adapter extends PullAdapter {
                 return Datatypes.Float;
             case "INT":
                 return Datatypes.Integer;
+            case "WORD":
+                return Datatypes.String;
+            case "REAL":
+                return Datatypes.Float;
             default:
                 throw new AdapterException("Datatype " + plcType + " is not supported");
-        }
-    }
-
-    public static void main(String... args) throws Exception {
-        String connectionString = "s7://10.10.64.20/1/1";
-
-        try (PlcConnection plcConnection = new PlcDriverManager().getConnection(connectionString)) {
-
-            if (!plcConnection.getMetadata().canRead()) {
-                logger.error("This connection doesn't support reading.");
-                return;
-            }
-
-            PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
-//            builder.addItem("value-1", "%Q0.0:BOOL");
-            builder.addItem("value-1", "%DB10.DBW2:INT");
-//            builder.addItem("value-2", "%Q0:BYTE");
-//            builder.addItem("value-3", "%I0.2:BOOL");
-//            builder.addItem("value-4", "%DB.DB1.4:INT");
-            PlcReadRequest readRequest = builder.build();
-
-
-            // Synchronous call
-//            PlcReadResponse response = readRequest.execute().get();
-
-            // Asynchronous call
-            CompletableFuture<? extends PlcReadResponse> asyncResponse = readRequest.execute();
-            asyncResponse.whenComplete((response, throwable) -> {
-
-                for (String fieldName : response.getFieldNames()) {
-                    if(response.getResponseCode(fieldName) == PlcResponseCode.OK) {
-                        int numValues = response.getNumberOfValues(fieldName);
-                        // If it's just one element, output just one single line.
-                        if(numValues == 1) {
-                            logger.info("Value[" + fieldName + "]: " + response.getObject(fieldName));
-                        }
-                        // If it's more than one element, output each in a single row.
-                        else {
-                            logger.info("Value[" + fieldName + "]:");
-                            for(int i = 0; i < numValues; i++) {
-                                logger.info(" - " + response.getObject(fieldName, i));
-                            }
-                        }
-                    }
-                    // Something went wrong, to output an error message instead.
-                    else {
-                        logger.error("Error[" + fieldName + "]: " + response.getResponseCode(fieldName).name());
-                    }
-                }
-
-            });
-
         }
     }
 
