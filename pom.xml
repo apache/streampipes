@@ -447,11 +447,6 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-wrapper-esper</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-user-management</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -662,7 +657,6 @@
         <module>streampipes-vocabulary</module>
         <module>streampipes-wrapper</module>
         <module>streampipes-wrapper-distributed</module>
-        <module>streampipes-wrapper-esper</module>
         <module>streampipes-wrapper-flink</module>
         <module>streampipes-wrapper-kafka-streams</module>
         <module>streampipes-wrapper-siddhi</module>
