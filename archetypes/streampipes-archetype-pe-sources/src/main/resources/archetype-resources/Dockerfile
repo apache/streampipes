@@ -1,4 +1,4 @@
-FROM anapsix/alpine-java:8
+FROM adoptopenjdk/openjdk8-openj9:alpine-slim
 
 ENV CONSUL_LOCATION consul
 
