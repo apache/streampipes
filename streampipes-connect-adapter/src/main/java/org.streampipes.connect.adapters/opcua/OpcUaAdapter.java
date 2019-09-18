@@ -78,7 +78,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
     @Override
     public SpecificAdapterStreamDescription declareModel() {
 
-        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "OPC UA", "Read values form an opc ua server")
+        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "OPC UA", "Reads values from an OPC-UA server")
                 .iconUrl("opc.jpg")
                 .category(AdapterType.Generic, AdapterType.Manufacturing)
                 .requiredTextParameter(Labels.from(OPC_SERVER_HOST, "OPC Server", "Example: test-server.com (No leading opc.tcp://) "))

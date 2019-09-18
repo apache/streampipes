@@ -47,6 +47,7 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public void startAdapter() throws AdapterException {
+        before();
 
         final Runnable errorThread = () -> {
             executeAdpaterLogic();
@@ -77,6 +78,21 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
 
     @Override
     public void stopAdapter() throws AdapterException {
+        after();
         scheduler.shutdownNow();
+    }
+
+    /**
+     * Called before adapter is started (e.g. initialize connections)
+     */
+    protected void before() throws AdapterException {
+
+    }
+
+    /**
+     * Called before adapter is stopped (e.g. shutdown connections)
+     */
+    protected void after() throws AdapterException {
+
     }
 }
