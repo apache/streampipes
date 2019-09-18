@@ -21,7 +21,9 @@ package org.streampipes.container.standalone.init;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.init.ModelSubmitter;
 import org.streampipes.container.init.RunningInstances;
@@ -32,7 +34,9 @@ import java.util.Collections;
 
 import javax.annotation.PreDestroy;
 
-@SpringBootApplication
+@Configuration
+@EnableAutoConfiguration
+@Import({ PipelineElementContainerResourceConfig.class })
 public abstract class StandaloneModelSubmitter extends ModelSubmitter {
 
     private static final Logger LOG =

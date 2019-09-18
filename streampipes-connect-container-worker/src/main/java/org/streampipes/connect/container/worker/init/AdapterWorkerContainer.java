@@ -20,7 +20,9 @@ package org.streampipes.connect.container.worker.init;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.model.generic.Protocol;
 import org.streampipes.connect.container.worker.management.MasterRestClient;
@@ -33,7 +35,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@SpringBootApplication
+@Configuration
+@EnableAutoConfiguration
+@Import({ AdapterWorkerContainerResourceConfig.class })
 public abstract class AdapterWorkerContainer {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerContainer.class);

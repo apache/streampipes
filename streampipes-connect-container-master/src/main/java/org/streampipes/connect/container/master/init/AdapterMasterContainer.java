@@ -20,12 +20,16 @@ package org.streampipes.connect.container.master.init;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.streampipes.connect.config.ConnectContainerConfig;
 
 import java.util.Collections;
 
-@SpringBootApplication
+@Configuration
+@EnableAutoConfiguration
+@Import({ AdapterMasterContainerResourceConfig.class })
 public class AdapterMasterContainer {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterContainer.class);
