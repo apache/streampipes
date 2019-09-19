@@ -46,8 +46,7 @@ public class XmlTest {
         assertEquals(6, parsedEvent.size());
         String parsedStringEvent = new String(parsedEvent.get(0), StandardCharsets.UTF_8);
 
-        assertEquals("{\"lfdnr\":1,\"bezeichnung\":\"bahnhof.txt\",\"gesamt\":114,\"frei\":0," +
-                "\"status\":1,\"zeitstempel\":\"25.07.2018 10:45\",\"tendenz\":3}", parsedStringEvent);
+        assertEquals("{\"frei\":0,\"tendenz\":3,\"bezeichnung\":\"bahnhof.txt\",\"zeitstempel\":\"25.07.2018 10:45\",\"gesamt\":114,\"lfdnr\":1,\"status\":1}", parsedStringEvent);
     }
 
     @Test
