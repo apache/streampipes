@@ -73,7 +73,7 @@ public class XmlParser extends Parser {
       String dataString = CharStreams.toString(new InputStreamReader(data, Charsets.UTF_8));
 
       Map<String, Object> map =
-              (Map<String, Object>) U.fromXmlWithoutNamespacesAndAttributes(dataString);
+              (Map<String, Object>) U.fromXmlWithoutNamespaces(dataString);
       map.remove(ENCODING);
       Map<String, Object> convertedMap = new XmlMapConverter(map).convert();
       searchAndEmitEvents(convertedMap, tag, emitBinaryEvent);

@@ -15,6 +15,8 @@ limitations under the License.
 */
 package org.streampipes.connect.adapter.format.xml;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +30,7 @@ public class XmlMapConverter {
 
   public Map<String, Object> convert() {
     convert(inMap);
+    this.inMap = replaceKeys(inMap);
     return this.inMap;
   }
 
@@ -41,6 +44,8 @@ public class XmlMapConverter {
         String stringValue = String.valueOf(value);
         if (isInteger(stringValue)) {
           map.put(key, Integer.parseInt(stringValue));
+        } else if (isFloat(stringValue)) {
+          map.put(key, Float.parseFloat(stringValue));
         }
       } else if (value instanceof List) {
         ((List) value).forEach(item -> convert((Map<String, Object>) item));
@@ -48,9 +53,46 @@ public class XmlMapConverter {
     }
   }
 
+  @SuppressWarnings({"unchecked"})
+  private Map<String, Object> replaceKeys(Map<String, Object> map) {
+    Map<String, Object> outMap = new HashMap<>();
+    for (String key : map.keySet()) {
+      String newKey = key;
+      if (key.startsWith("-")) {
+        newKey = key.substring(1);
+      }
+      if (!key.equals("-self-closing")) {
+        outMap.put(newKey, makeObject(map.get(key)));
+      }
+    }
+    return outMap;
+  }
+
+  @SuppressWarnings({"unchecked"})
+  private Object makeObject(Object value) {
+    if (value instanceof List) {
+      List<Map<String, Object>> values = new ArrayList<>();
+      ((List) value).forEach(item -> values.add(replaceKeys((Map<String, Object>) item)));
+      return values;
+    } else if (value instanceof Map) {
+      return replaceKeys((Map<String, Object>) value);
+    } else {
+      return value;
+    }
+  }
+
   private Boolean isInteger(String value) {
     try {
-      Integer integer = Integer.parseInt(value);
+      Integer.parseInt(value);
+      return true;
+    } catch (NumberFormatException e) {
+      return false;
+    }
+  }
+
+  private Boolean isFloat(String value) {
+    try {
+      Float.parseFloat(value);
       return true;
     } catch (NumberFormatException e) {
       return false;
