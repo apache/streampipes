@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM adoptopenjdk/openjdk8-openj9:alpine-slim
 
 EXPOSE 8090
 ENV CONSUL_LOCATION consul

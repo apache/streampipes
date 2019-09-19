@@ -27,6 +27,7 @@ import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.sinks.brokers.jvm.config.BrokersJvmConfig;
 import org.streampipes.sinks.brokers.jvm.jms.JmsController;
 import org.streampipes.sinks.brokers.jvm.kafka.KafkaController;
+import org.streampipes.sinks.brokers.jvm.pulsar.PulsarController;
 import org.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqController;
 import org.streampipes.sinks.brokers.jvm.rest.RestController;
 
@@ -38,7 +39,8 @@ public class BrokersJvmInit extends StandaloneModelSubmitter {
             .add(new KafkaController())
             .add(new JmsController())
             .add(new RestController())
-            .add(new RabbitMqController());
+            .add(new RabbitMqController())
+            .add(new PulsarController());
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

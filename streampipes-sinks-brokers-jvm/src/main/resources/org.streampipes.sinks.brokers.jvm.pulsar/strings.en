@@ -1,0 +1,11 @@
+org.streampipes.sinks.brokers.jvm.pulsar.title=Pulsar Publisher
+org.streampipes.sinks.brokers.jvm.pulsar.description=Publish events to Apache Pulsar
+
+topic.title=Topic
+topic.description=Select a Pulsar topic
+
+pulsar-host.title=Pulsar Hostname
+pulsar-host.description=The hostname of the Pulsar broker
+
+pulsar-port.title=Pulsar Port
+pulsar-port.description=The port of the Pulsar broker (e.g., 6650)
