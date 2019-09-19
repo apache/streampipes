@@ -16,10 +16,12 @@ limitations under the License.
 
 package org.streampipes.connect.adapter.format.json.xml;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-import org.streampipes.connect.adapter.format.xml.XmlParser;
 import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.connect.adapter.format.xml.XmlParser;
 import org.streampipes.model.schema.EventSchema;
 
 import java.io.IOException;
@@ -30,8 +32,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
 public class XmlTest {
 
     @Test
@@ -41,14 +41,13 @@ public class XmlTest {
 
         XmlParser parser = new XmlParser("parkhaus");
 
-
         List<byte[]> parsedEvent = parser.parseNEvents(getInputStream(jo), 1);
 
-        assertEquals(parsedEvent.size(), 6);
+        assertEquals(6, parsedEvent.size());
         String parsedStringEvent = new String(parsedEvent.get(0), StandardCharsets.UTF_8);
 
-        assertEquals(parsedStringEvent, "{\"frei\":\"000\",\"tendenz\":3,\"bezeichnung\":\"bahnhof.txt\"," +
-                "\"zeitstempel\":\"25.07.2018 10:45\",\"gesamt\":114,\"lfdnr\":1,\"status\":1}");
+        assertEquals("{\"lfdnr\":1,\"bezeichnung\":\"bahnhof.txt\",\"gesamt\":114,\"frei\":0," +
+                "\"status\":1,\"zeitstempel\":\"25.07.2018 10:45\",\"tendenz\":3}", parsedStringEvent);
     }
 
     @Test
