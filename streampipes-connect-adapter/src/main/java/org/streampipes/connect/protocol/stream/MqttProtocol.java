@@ -110,8 +110,6 @@ public class MqttProtocol extends BrokerProtocol {
   @Override
   protected List<byte[]> getNByteElements(int n) throws ParseException {
     List<byte[]> elements = new ArrayList<>();
-    int i = 0;
-
     InternalEventProcessor<byte[]> eventProcessor = elements::add;
 
     MqttConsumer consumer = new MqttConsumer(this.mqttConfig, eventProcessor);

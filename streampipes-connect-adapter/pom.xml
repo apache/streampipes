@@ -20,7 +20,7 @@
     <parent>
         <artifactId>streampipes-connect-adapters</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.63.0</version>
+        <version>0.64.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -29,6 +29,8 @@
 
     <properties>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
+        <plc4x.version>0.4.0</plc4x.version>
+        <pulsar.version>2.4.1</pulsar.version>
     </properties>
 
     <dependencies>
@@ -170,6 +172,22 @@
                     <groupId>org.eclipse.jetty</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.plc4x</groupId>
+            <artifactId>plc4j-api</artifactId>
+            <version>${plc4x.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.plc4x</groupId>
+            <artifactId>plc4j-driver-s7</artifactId>
+            <version>${plc4x.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pulsar</groupId>
+            <artifactId>pulsar-client</artifactId>
+            <version>${pulsar.version}</version>
         </dependency>
     </dependencies>
 

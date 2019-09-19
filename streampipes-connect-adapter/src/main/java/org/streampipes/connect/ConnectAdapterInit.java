@@ -17,13 +17,14 @@
 
 package org.streampipes.connect;
 
-import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
+import org.streampipes.connect.protocol.set.HttpProtocol;
 import org.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
 import org.streampipes.connect.adapters.gdelt.GdeltAdapter;
 import org.streampipes.connect.adapters.iex.IexCloudNewsAdapter;
 import org.streampipes.connect.adapters.iex.IexCloudStockAdapter;
 import org.streampipes.connect.adapters.mysql.MySqlAdapter;
 import org.streampipes.connect.adapters.opcua.OpcUaAdapter;
+import org.streampipes.connect.adapters.plc4x.Plc4xS7Adapter;
 import org.streampipes.connect.adapters.ros.RosBridgeAdapter;
 import org.streampipes.connect.adapters.simulator.RandomDataSetAdapter;
 import org.streampipes.connect.adapters.simulator.RandomDataStreamAdapter;
@@ -39,6 +40,7 @@ import org.streampipes.connect.protocol.stream.HDFSProtocol;
 import org.streampipes.connect.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.protocol.stream.MqttProtocol;
 import org.streampipes.connect.protocol.stream.HttpStreamProtocol;
+import org.streampipes.connect.protocol.stream.pulsar.PulsarProtocol;
 
 public class ConnectAdapterInit extends AdapterWorkerContainer {
 
@@ -54,6 +56,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new KafkaProtocol())
             .add(new MqttProtocol())
             .add(new HttpStreamProtocol())
+            .add(new PulsarProtocol())
 
             // Specific Adapters
             .add(new GdeltAdapter())
@@ -67,6 +70,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new WikipediaEditedArticlesAdapter())
             .add(new WikipediaNewArticlesAdapter())
             .add(new RosBridgeAdapter())
+            .add(new Plc4xS7Adapter())
             .add(new OpcUaAdapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();

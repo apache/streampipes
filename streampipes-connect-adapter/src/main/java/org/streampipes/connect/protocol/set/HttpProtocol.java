@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.connect.adapter.generic.protocol.set;
+package org.streampipes.connect.protocol.set;
 
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
@@ -60,8 +60,7 @@ public class HttpProtocol extends Protocol {
 
     @Override
     public ProtocolDescription declareModel() {
-        return ProtocolDescriptionBuilder.create(ID, "HTTP Set", "Reads the content from an HTTP " +
-                "endpoint.")
+        return ProtocolDescriptionBuilder.create(ID, "HTTP Set", "Regularly poll an HTTP endpoint")
                 .category(AdapterType.Generic)
                 .sourceType(AdapterSourceType.SET)
                 .iconUrl("rest.png")
