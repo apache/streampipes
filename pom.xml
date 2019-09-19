@@ -32,7 +32,7 @@
     </modules>
 
     <properties>
-        <streampipes.version>0.63.1-SNAPSHOT</streampipes.version>
+        <streampipes.version>0.64.0</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
         <spring.version>2.1.6.RELEASE</spring.version>
         <maven-shade-plugin.version>3.0.0</maven-shade-plugin.version>
