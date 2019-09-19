@@ -23,31 +23,29 @@ import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 
 public abstract class AbstractSparkDeclarer<D extends NamedStreamPipesEntity, I extends InvocableStreamPipesEntity, SR extends SparkRuntime> implements InvocableDeclarer<D, I> {
-    protected SR runtime;
-    protected I graph;
+  protected SR runtime;
+  protected I graph;
 
-    @Override
-    public Response invokeRuntime(I sepaInvocation) {
-        runtime = getRuntime(sepaInvocation);
-        graph = sepaInvocation;
+  @Override
+  public Response invokeRuntime(I sepaInvocation) {
+    runtime = getRuntime(sepaInvocation);
+    graph = sepaInvocation;
 
-        if (runtime.startExecution()) {
-            return new Response(graph.getElementId(), true);
-        }
-        else {
-            return new Response(graph.getElementId(), false);
-        }
+    if (runtime.startExecution()) {
+      return new Response(graph.getElementId(), true);
+    } else {
+      return new Response(graph.getElementId(), false);
     }
+  }
 
-    @Override
-    public Response detachRuntime(String s) {
-        if (runtime.stop()) {
-            return new Response(graph.getElementId(), true);
-        }
-        else {
-            return new Response(graph.getElementId(), false);
-        }
+  @Override
+  public Response detachRuntime(String s) {
+    if (runtime.stop()) {
+      return new Response(graph.getElementId(), true);
+    } else {
+      return new Response(graph.getElementId(), false);
     }
+  }
 
-    protected abstract SR getRuntime(I graph);
+  protected abstract SR getRuntime(I graph);
 }

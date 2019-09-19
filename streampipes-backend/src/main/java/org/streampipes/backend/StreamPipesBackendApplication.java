@@ -23,11 +23,13 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.streampipes.app.file.export.application.AppFileExportApplication;
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
@@ -41,7 +43,9 @@ import javax.annotation.PreDestroy;
 import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpServlet;
 
-@SpringBootApplication
+@Configuration
+@EnableAutoConfiguration
+@Import({ StreamPipesResourceConfig.class, WelcomePageController.class })
 public class StreamPipesBackendApplication {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesBackendApplication.class.getCanonicalName());

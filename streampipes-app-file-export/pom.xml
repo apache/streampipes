@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.63.0</version>
+        <version>0.64.0</version>
     </parent>
     <name>StreamPipes App File Export</name>
     <artifactId>streampipes-app-file-export</artifactId>
@@ -42,9 +42,8 @@
             <artifactId>streampipes-storage-couchdb</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.mashape.unirest</groupId>
-            <artifactId>unirest-java</artifactId>
-            <version>1.4.9</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
         </dependency>
         <dependency>
             <groupId>com.jayway.restassured</groupId>

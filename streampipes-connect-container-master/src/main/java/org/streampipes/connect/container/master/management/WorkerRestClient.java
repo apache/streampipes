@@ -18,7 +18,6 @@
 package org.streampipes.connect.container.master.management;
 
 import com.google.gson.Gson;
-import org.apache.http.HttpEntity;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -155,8 +154,8 @@ public class WorkerRestClient {
         logger.info("Trying to start save file on endpoint: " + url);
 
 
-        HttpEntity httpEntity = new MultipartEntity();
-        ((MultipartEntity) httpEntity).addPart("file_upload", new InputStreamBody(inputStream, fileName));
+        MultipartEntity httpEntity = new MultipartEntity();
+        httpEntity.addPart("file_upload", new InputStreamBody(inputStream, fileName));
 
         try {
             String responseString = Request.Post(url)
