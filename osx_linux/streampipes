@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ -z "$1" ] || [ "$#" -lt 1 ]; 
+if [ -z "$1" ] || [ "$#" -lt 1 ];
 then
 	echo "Use 'streampipes start' to start StreamPipes, 'streampipes stop' to stop it, and 'streampipes clean' to remove streampipes."
 	exit 1
@@ -17,18 +17,18 @@ echo ''
 echo 'Welcome to StreamPipes!'
 echo ''
 
-if [ ! -f ./docker-compose.yml ]; 
+if [ ! -f ./docker-compose.yml ];
 	then
-		echo ''; 
+		echo '';
 		echo ''
 		echo 'StreamPipes can be started in two different setups:'
 		echo ''
 		PS3='Which StreamPipes version should be installed? '
 		options=("StreamPipes Lite (few pipeline elements, needs less memory)" "StreamPipes Full (more pipeline elements, requires > 16 GB RAM)")
 		select opt in "${options[@]}"
-		do 
+		do
 		if [ -z "${opt}" ];
-			then 
+			then
 				echo "Wrong input, select one of the options";
 			else
 				case $opt in
@@ -36,11 +36,11 @@ if [ ! -f ./docker-compose.yml ];
 				version="lite"
 				;;
 			"StreamPipes Full (more pipeline elements, requires > 16 GB RAM)")
-				version="full"	
+				version="full"
 				;;
 				esac
 				break
-				
+
 			fi
 		done
 	echo $version;
@@ -53,58 +53,88 @@ if [ ! -f ./docker-compose.yml ];
 			echo 'Configuring StreamPipes Full'
 			cp ../templates/docker-compose.full.yml ./docker-compose.yml
 		fi
-		
+
 		cp ../templates/.env ./.env
-		
-		if command -v ip;
-		then
-			# If Unix
-			#        ip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -1)
-			rawip=$(ip address list | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
-			rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
-			IFS=' ' declare -a 'allips=($rawip)'
+		# Check OS type
+		OS_TYPE="$(uname -s)"
+		case $OS_TYPE in
+			Linux*)
+					# If Unix
+					rawip=$(ip address list | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
-			allips+=( 'Enter IP manually' )
+					rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
+					IFS=' ' declare -a 'allips=($rawip)'
 
-			echo ''
-			echo 'Please select your IP address or add one manually: '
-			PS3='Select option: '
-			select opt in "${allips[@]}"
-			do
-			if [ -z "${opt}" ];
-				then 
-					echo "Wrong input select one of the options"; 
-				else
-					ip="$opt"
+					allips+=( 'Enter IP manually' )
 
-					if [ "$opt" == "Enter IP manually" ];
-					then
-						read -p "Enter Ip: " ip
-					fi
-					break
-				fi
-			done
+					echo ''
+					echo 'Please select your IP address or add one manually: '
+					PS3='Select option: '
+					select opt in "${allips[@]}"
+					do
+					if [ -z "${opt}" ];
+						then
+							echo "Wrong input select one of the options";
+						else
+							ip="$opt"
 
-		else
-			# If Windows
-			ip=$(ipconfig | grep -Eo '(IPv4.*)' | grep -Eo '([0-9]*\.){3}[0-9]*' | tail -1)
-			# Workaround for Kafka (https://github.com/docker/for-win/issues/1829)
-			export COMPOSE_CONVERT_WINDOWS_PATHS=1
-		fi
+							if [ "$opt" == "Enter IP manually" ];
+							then
+								read -p "Enter Ip: " ip
+							fi
+							break
+						fi
+					done
+					;;
+			Darwin*)
+					# If Darwin (MacOS)
+					rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
-		sed -i -e "s/SP_HOST=.*/SP_HOST=${ip}/g" .env
-		sed -i -e "s/SP_KAFKA_HOST=.*/SP_KAFKA_HOST=${ip}/g" .env		
+					rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
+					IFS=' ' declare -a 'allips=($rawip)'
+
+					allips+=( 'Enter IP manually' )
+
+					echo ''
+					echo 'Please select your IP address or add one manually: '
+					PS3='Select option: '
+					select opt in "${allips[@]}"
+					do
+					if [ -z "${opt}" ];
+						then
+							echo "Wrong input select one of the options";
+						else
+							ip="$opt"
+
+							if [ "$opt" == "Enter IP manually" ];
+							then
+								read -p "Enter Ip: " ip
+							fi
+							break
+						fi
+					done
+					;;
+			CYGWIN*)
+					# If Windows
+					ip=$(ipconfig | grep -Eo '(IPv4.*)' | grep -Eo '([0-9]*\.){3}[0-9]*' | tail -1)
+					# Workaround for Kafka (https://github.com/docker/for-win/issues/1829)
+					export COMPOSE_CONVERT_WINDOWS_PATHS=1
+			    ;;
+			*)
+					fatal "Unsupported OS $OS_TYPE"
+		esac
+
+		# only update existing .env file
+		sed -i '' -e "s/SP_HOST=.*/SP_HOST=${ip}/g" .env
+		sed -i '' -e "s/SP_KAFKA_HOST=.*/SP_KAFKA_HOST=${ip}/g" .env
 	fi
 
-
-
 	docker-compose pull
-
 	docker-compose up -d
 
 	if [ $? -eq 0 ]; then
-		echo "StreamPipes successfully started. open Browser and navigate to 'localhost'"
+		echo "StreamPipes successfully started. open Browser and navigate to 'http://localhost'"
 	else
 		echo "ERROR: There was a problem while starting StreamPipes"
 	fi
@@ -112,8 +142,8 @@ if [ ! -f ./docker-compose.yml ];
 else
 	if [ $1 = "stop" ] || [ $1 = "clean" ];
 	then
-	    if [ $1 = "stop" ]; 
-		then 
+	    if [ $1 = "stop" ];
+		then
 			docker-compose down
 			echo "StreamPipes successfully stopped"
 		fi
@@ -123,7 +153,6 @@ else
 		    yes Y | docker-compose down -v
 			rm ./docker-compose.yml
 			rm ./.env
-			rm -r ./config/
 			echo "All StreamPipes System informations were deleted. The system can now be installed again."
 		fi
 
@@ -132,4 +161,3 @@ else
 	fi
 
 fi
-
