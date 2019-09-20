@@ -15,20 +15,26 @@
  *
  */
 
-package org.streampipes.processors.transformation.jvm.processor.booleaninverter;
+package org.streampipes.processors.transformation.jvm.processor.booloperator.counter;
 
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class BooleanInverterParameters extends EventProcessorBindingParams {
+public class BooleanCounterParameters extends EventProcessorBindingParams {
     private String invertFieldName;
+    private boolean flankUp;
 
-    public BooleanInverterParameters(DataProcessorInvocation graph, String invertFieldName) {
+    public BooleanCounterParameters(DataProcessorInvocation graph, String invertFieldName, boolean flankUp) {
         super(graph);
         this.invertFieldName = invertFieldName;
+        this.flankUp = flankUp;
     }
 
     public String getInvertFieldName() {
         return invertFieldName;
+    }
+
+    public boolean isFlankUp() {
+        return flankUp;
     }
 }

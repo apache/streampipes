@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.processors.transformation.jvm.processor.booleaninverter;
+package org.streampipes.processors.transformation.jvm.processor.booloperator.inverter;
 
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -35,7 +35,7 @@ public class BooleanInverterController extends StandaloneEventProcessingDeclarer
   //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.boolean-inverter")
+    return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.booloperator.inverter")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION)
             .requiredStream(StreamRequirementsBuilder.create()
@@ -45,8 +45,6 @@ public class BooleanInverterController extends StandaloneEventProcessingDeclarer
                             PropertyScope.NONE)
                     .build())
             .outputStrategy(OutputStrategies.keep())
-            .supportedFormats(SupportedFormats.jsonFormat())
-            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
             .build();
   }
 

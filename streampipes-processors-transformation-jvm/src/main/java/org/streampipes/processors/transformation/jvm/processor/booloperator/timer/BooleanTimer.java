@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.processors.transformation.jvm.processor.booleaninverter;
+package org.streampipes.processors.transformation.jvm.processor.booloperator.timer;
 
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;
@@ -23,29 +23,45 @@ import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
-public class BooleanInverter implements EventProcessor<BooleanInverterParameters> {
+public class BooleanTimer implements EventProcessor<BooleanTimerParameters> {
 
   private static Logger LOG;
 
-  private String invertFieldName;
+  private String fieldName;
+  private boolean measureTrue;
 
+  private Long timestamp;
 
 
   @Override
-  public void onInvocation(BooleanInverterParameters booleanInverterParameters,
+  public void onInvocation(BooleanTimerParameters booleanInverterParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = booleanInverterParameters.getGraph().getLogger(BooleanInverter.class);
-    this.invertFieldName = booleanInverterParameters.getInvertFieldName();
+    LOG = booleanInverterParameters.getGraph().getLogger(BooleanTimer.class);
+    this.fieldName = booleanInverterParameters.getFieldName();
+    this.measureTrue = booleanInverterParameters.isMeasureTrue();
+    this.timestamp = Long.MIN_VALUE;
   }
 
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
 
-    boolean field = inputEvent.getFieldBySelector(invertFieldName).getAsPrimitive().getAsBoolean();
-    inputEvent.updateFieldBySelector(invertFieldName, !field);
+    boolean field = inputEvent.getFieldBySelector(this.fieldName).getAsPrimitive().getAsBoolean();
 
-    out.collect(inputEvent);
+    if (this.measureTrue == field) {
+      if (timestamp == Long.MIN_VALUE) {
+        timestamp = System.currentTimeMillis();
+      }
+    } else {
+      if (timestamp != Long.MIN_VALUE) {
+        Long difference = System.currentTimeMillis() - timestamp;
+
+        inputEvent.addField("measured_time", difference);
+        timestamp = Long.MIN_VALUE;
+        out.collect(inputEvent);
+      }
+    }
+    
   }
 
   @Override
