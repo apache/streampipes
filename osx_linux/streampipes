@@ -86,6 +86,10 @@ if [ ! -f ./docker-compose.yml ];
 							break
 						fi
 					done
+
+					# OS dependent
+					sed -i -e "s/SP_HOST=.*/SP_HOST=${ip}/g" .env
+					sed -i -e "s/SP_KAFKA_HOST=.*/SP_KAFKA_HOST=${ip}/g" .env
 					;;
 			Darwin*)
 					# If Darwin (MacOS)
@@ -114,20 +118,25 @@ if [ ! -f ./docker-compose.yml ];
 							break
 						fi
 					done
+
+					# OS dependent
+					sed -i '' -e "s/SP_HOST=.*/SP_HOST=${ip}/g" .env
+					sed -i '' -e "s/SP_KAFKA_HOST=.*/SP_KAFKA_HOST=${ip}/g" .env
 					;;
 			CYGWIN*)
 					# If Windows
 					ip=$(ipconfig | grep -Eo '(IPv4.*)' | grep -Eo '([0-9]*\.){3}[0-9]*' | tail -1)
 					# Workaround for Kafka (https://github.com/docker/for-win/issues/1829)
 					export COMPOSE_CONVERT_WINDOWS_PATHS=1
+
+					# OS dependent
+					sed -i -e "s/SP_HOST=.*/SP_HOST=${ip}/g" .env
+					sed -i -e "s/SP_KAFKA_HOST=.*/SP_KAFKA_HOST=${ip}/g" .env
 			    ;;
 			*)
 					fatal "Unsupported OS $OS_TYPE"
 		esac
 
-		# only update existing .env file
-		sed -i '' -e "s/SP_HOST=.*/SP_HOST=${ip}/g" .env
-		sed -i '' -e "s/SP_KAFKA_HOST=.*/SP_KAFKA_HOST=${ip}/g" .env
 	fi
 
 	docker-compose pull
