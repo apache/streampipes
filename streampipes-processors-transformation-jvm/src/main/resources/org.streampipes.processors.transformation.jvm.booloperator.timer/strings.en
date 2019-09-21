@@ -1,5 +1,5 @@
-org.streampipes.processors.transformation.jvm.booloperator.timer.title=Boolean Inverter
-org.streampipes.processors.transformation.jvm.booloperator.timer.description=Inverts a specific boolean.
+org.streampipes.processors.transformation.jvm.booloperator.timer.title=Boolean Timer
+org.streampipes.processors.transformation.jvm.booloperator.timer.description=Measures how long a boolean measure does not change
 
 field.title=Boolean Timer
 field.description=Timer that measures how long a boolean signal does not change

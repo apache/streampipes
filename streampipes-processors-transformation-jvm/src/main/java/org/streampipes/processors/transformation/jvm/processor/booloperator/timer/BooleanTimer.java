@@ -61,7 +61,7 @@ public class BooleanTimer implements EventProcessor<BooleanTimerParameters> {
         out.collect(inputEvent);
       }
     }
-    
+
   }
 
   @Override
