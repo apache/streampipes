@@ -1,5 +1,5 @@
-org.streampipes.processors.transformation.jvm.booloperator.timekeeping.title=Measure Time Between Sensors
-org.streampipes.processors.transformation.jvm.booloperator.timekeeping.description=Requires two boolean and measures the time between two signals
+org.streampipes.processors.transformation.jvm.booloperator.timekeeping.title=Measure Time Between Two Sensors
+org.streampipes.processors.transformation.jvm.booloperator.timekeeping.description=Requires two booleans and measures the time between two signals
 
 left-field.title=Left Field
 left-field.description=The boolean that starts the timer
