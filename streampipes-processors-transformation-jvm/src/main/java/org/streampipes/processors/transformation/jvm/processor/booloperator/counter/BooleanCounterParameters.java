@@ -22,9 +22,16 @@ import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class BooleanCounterParameters extends EventProcessorBindingParams {
     private String invertFieldName;
-    private boolean flankUp;
 
-    public BooleanCounterParameters(DataProcessorInvocation graph, String invertFieldName, boolean flankUp) {
+    /**
+     * Defines which boolean changes should be counted
+     * 0: BOTH
+     * 1: TRUE -> FALSE
+     * 2: FALSE -> TRUE
+     */
+    private int flankUp;
+
+    public BooleanCounterParameters(DataProcessorInvocation graph, String invertFieldName, int flankUp) {
         super(graph);
         this.invertFieldName = invertFieldName;
         this.flankUp = flankUp;
@@ -34,7 +41,7 @@ public class BooleanCounterParameters extends EventProcessorBindingParams {
         return invertFieldName;
     }
 
-    public boolean isFlankUp() {
+    public int getFlankUp() {
         return flankUp;
     }
 }

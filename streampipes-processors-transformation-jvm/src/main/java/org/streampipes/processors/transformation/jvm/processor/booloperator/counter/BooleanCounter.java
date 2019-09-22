@@ -30,7 +30,7 @@ public class BooleanCounter implements EventProcessor<BooleanCounterParameters> 
   private static Logger LOG;
 
   private String fieldName;
-  private boolean flankUp;
+  private int flankUp;
 
   private boolean fieldValueOfLastEvent;
   private int counter;
@@ -43,9 +43,14 @@ public class BooleanCounter implements EventProcessor<BooleanCounterParameters> 
                            EventProcessorRuntimeContext runtimeContext) {
     LOG = booleanCounterParametersParameters.getGraph().getLogger(BooleanCounter.class);
     this.fieldName = booleanCounterParametersParameters.getInvertFieldName();
-    this.flankUp = booleanCounterParametersParameters.isFlankUp();
+    this.flankUp = booleanCounterParametersParameters.getFlankUp();
 
-    this.fieldValueOfLastEvent = !this.flankUp;
+    if (flankUp == 1) {
+        this.fieldValueOfLastEvent = true;
+    } else {
+        this.fieldValueOfLastEvent = false;
+    }
+
     this.counter = 0;
   }
 
@@ -55,16 +60,20 @@ public class BooleanCounter implements EventProcessor<BooleanCounterParameters> 
       boolean value = inputEvent.getFieldBySelector(fieldName).getAsPrimitive().getAsBoolean();
       boolean updateCounter = false;
 
-      if (this.flankUp) {
+      if (this.flankUp == 2) {
         // detect up flanks
         if (this.fieldValueOfLastEvent == false && value == true) {
             updateCounter = true;
         }
-      } else {
+      } else if (this.flankUp == 1){
         // detect up flanks
         if (this.fieldValueOfLastEvent == true && value == false) {
             updateCounter = true;
         }
+      } else {
+          if (this.fieldValueOfLastEvent != value) {
+              updateCounter = true;
+          }
       }
 
       if (updateCounter) {

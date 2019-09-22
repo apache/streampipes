@@ -38,6 +38,7 @@ public class BooleanCounterController extends StandaloneEventProcessingDeclarer<
 
   private static final String FLANK_UP = "FALSE -> TRUE";
   private static final String FLANK_DOWN = "TRUE -> FALSE";
+  private static final String BOTH = "BOTH";
 
   //TODO: Change Icon
   @Override
@@ -52,7 +53,7 @@ public class BooleanCounterController extends StandaloneEventProcessingDeclarer<
                             PropertyScope.NONE)
                     .build())
 
-            .requiredSingleValueSelection(Labels.withId(FLANK_ID), Options.from(FLANK_UP, FLANK_DOWN))
+            .requiredSingleValueSelection(Labels.withId(FLANK_ID), Options.from(BOTH, FLANK_UP, FLANK_DOWN))
             .outputStrategy(OutputStrategies.append(
                     EpProperties.numberEp(Labels.withId(COUNT_FIELD_ID), COUNT_FIELD_RUNTIME_NAME, "http://schema.org/Number")
             ))
@@ -65,9 +66,11 @@ public class BooleanCounterController extends StandaloneEventProcessingDeclarer<
     String invertFieldName = extractor.mappingPropertyValue(FIELD_ID);
     String flank = extractor.selectedSingleValue(FLANK_ID, String.class);
 
-    boolean flankUp = false;
-    if (flank.equals(FLANK_UP)) {
-      flankUp = true;
+    int flankUp = 0;
+    if (flank.equals(FLANK_DOWN)) {
+      flankUp = 1;
+    } else if (flank.equals(FLANK_UP)) {
+      flankUp = 2;
     }
 
     BooleanCounterParameters params = new BooleanCounterParameters(graph, invertFieldName, flankUp);
