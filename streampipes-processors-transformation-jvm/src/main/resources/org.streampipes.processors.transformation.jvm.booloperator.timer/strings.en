@@ -1,10 +1,10 @@
 org.streampipes.processors.transformation.jvm.booloperator.timer.title=Boolean Timer
 org.streampipes.processors.transformation.jvm.booloperator.timer.description=Measures how long a boolean measure does not change
 
-field.title=Boolean Timer
-field.description=Timer that measures how long a boolean signal does not change
+field.title=Boolean Field
+field.description=The boolean field that is monitored
 
-timerField.title=Time
-timerField.description=Time of the measurement how long a boolean signal did not change
+timerField.title=Value to observe
+timerField.description=Define whether the time for true or false should be measured
 
 

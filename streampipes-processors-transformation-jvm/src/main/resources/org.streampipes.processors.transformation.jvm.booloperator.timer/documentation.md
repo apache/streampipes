@@ -1,4 +1,4 @@
-## Value Changed
+## Boolean Timer
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -8,25 +8,25 @@
 
 ## Description
 
-This processor inverts the value of a boolean field. A TRUE is changed to a FALSE and a FALSE is changed to a TRUE.
+This processor measures how long a boolean value does not change. Once the value is changes the event with the measured time is emitted.
 
 
 ***
 
 ## Required input
 
-A boolean value is required in the data stream and can be selected with the field mapping.
+A boolean value is required in the data stream.
 
-### Invert Field
+### Field
 
-The boolean value to be inverted.
+The boolean field which is monitored for state changes.
 
 ***
 
 ## Configuration
 
-No further configuration is required
+### Timer value
+Define whether it should be measured how long the value is true or how long the value is false.
 
 ## Output
-
-The event schema does not change, just the value of the selected field is changed. For each event a result event is emitted.
+Appends a field with the time how long the value did not change. Is emitted on the change of the boolean value. Runtime name: measured_time 
