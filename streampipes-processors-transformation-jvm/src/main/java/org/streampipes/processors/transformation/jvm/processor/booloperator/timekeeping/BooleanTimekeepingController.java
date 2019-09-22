@@ -42,7 +42,7 @@ public class BooleanTimekeepingController extends StandaloneEventProcessingDecla
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.booloperator.timekeeping")
             .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredPropertyWithUnaryMapping(
                             EpRequirements.booleanReq(),

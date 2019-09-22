@@ -45,7 +45,7 @@ public class BooleanCounterController extends StandaloneEventProcessingDeclarer<
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.booloperator.counter")
             .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredPropertyWithUnaryMapping(
                             EpRequirements.booleanReq(),
