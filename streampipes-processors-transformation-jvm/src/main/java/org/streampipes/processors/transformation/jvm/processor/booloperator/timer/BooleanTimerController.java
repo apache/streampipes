@@ -37,8 +37,12 @@ public class BooleanTimerController extends StandaloneEventProcessingDeclarer<Bo
   private static final String TRUE = "TRUE";
   private static final String FALSE = "FALSE";
 
+  public static final String OUTPUT_UNIT_ID = "outputUnit";
+  private static final String MILLISECONDS = "Milliseconds";
+  private static final String SECONDS = "Seconds";
+  private static final String MINUTES = "Minutes";
 
-  //TODO: Change Icon
+
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.booloperator.timer")
@@ -51,6 +55,7 @@ public class BooleanTimerController extends StandaloneEventProcessingDeclarer<Bo
                             PropertyScope.NONE)
                     .build())
             .requiredSingleValueSelection(Labels.withId(TIMER_FIELD_ID), Options.from(TRUE, FALSE))
+            .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
             .outputStrategy(OutputStrategies.append(
                     EpProperties.numberEp(Labels.withId(MEASURED_TIME_ID), "measured_time", "http://schema.org/Number")
             ))
@@ -62,13 +67,22 @@ public class BooleanTimerController extends StandaloneEventProcessingDeclarer<Bo
 
     String invertFieldName = extractor.mappingPropertyValue(FIELD_ID);
     String measureTrueString = extractor.selectedSingleValue(TIMER_FIELD_ID, String.class);
+    String outputUnit = extractor.selectedSingleValue(OUTPUT_UNIT_ID, String.class);
+
     boolean measureTrue = false;
 
     if (measureTrueString.equals(TRUE)) {
       measureTrue = true;
     }
 
-    BooleanTimerParameters params = new BooleanTimerParameters(graph, invertFieldName, measureTrue);
+    double outputDivisor= 1.0;
+    if (outputUnit.equals(SECONDS)) {
+      outputDivisor = 1000.0;
+    } else if (outputUnit.equals(MINUTES)) {
+      outputDivisor = 60000.0;
+    }
+
+    BooleanTimerParameters params = new BooleanTimerParameters(graph, invertFieldName, measureTrue, outputDivisor);
 
     return new ConfiguredEventProcessor<>(params, BooleanTimer::new);
   }

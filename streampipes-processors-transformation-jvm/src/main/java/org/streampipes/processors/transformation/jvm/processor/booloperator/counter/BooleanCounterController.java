@@ -40,7 +40,6 @@ public class BooleanCounterController extends StandaloneEventProcessingDeclarer<
   private static final String FLANK_DOWN = "TRUE -> FALSE";
   private static final String BOTH = "BOTH";
 
-  //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.booloperator.counter")

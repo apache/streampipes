@@ -32,6 +32,8 @@ public class BooleanTimer implements EventProcessor<BooleanTimerParameters> {
 
   private Long timestamp;
 
+  private double outputDivisor;
+
 
   @Override
   public void onInvocation(BooleanTimerParameters booleanInverterParameters,
@@ -41,6 +43,7 @@ public class BooleanTimer implements EventProcessor<BooleanTimerParameters> {
     this.fieldName = booleanInverterParameters.getFieldName();
     this.measureTrue = booleanInverterParameters.isMeasureTrue();
     this.timestamp = Long.MIN_VALUE;
+    this.outputDivisor = booleanInverterParameters.getOutputDivisor();
   }
 
   @Override
@@ -56,7 +59,9 @@ public class BooleanTimer implements EventProcessor<BooleanTimerParameters> {
       if (timestamp != Long.MIN_VALUE) {
         Long difference = System.currentTimeMillis() - timestamp;
 
-        inputEvent.addField("measured_time", difference);
+        double result = difference / this.outputDivisor;
+
+        inputEvent.addField("measured_time", result);
         timestamp = Long.MIN_VALUE;
         out.collect(inputEvent);
       }
@@ -66,5 +71,14 @@ public class BooleanTimer implements EventProcessor<BooleanTimerParameters> {
 
   @Override
   public void onDetach() {
+  }
+
+  public static void main(String... args) {
+
+    double result = (60000L / 631.1);
+
+    System.out.println(result);
+
+
   }
 }

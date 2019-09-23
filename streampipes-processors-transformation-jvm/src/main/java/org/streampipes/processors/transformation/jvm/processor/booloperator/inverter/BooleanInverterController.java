@@ -32,7 +32,6 @@ public class BooleanInverterController extends StandaloneEventProcessingDeclarer
 
   public static final String INVERT_FIELD_ID = "invert-field";
 
-  //TODO: Change Icon
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.booloperator.inverter")

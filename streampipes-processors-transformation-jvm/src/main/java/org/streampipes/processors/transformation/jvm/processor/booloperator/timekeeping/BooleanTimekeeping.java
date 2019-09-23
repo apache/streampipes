@@ -39,6 +39,7 @@ public class BooleanTimekeeping implements EventProcessor<BooleanTimekeepingPara
   private LinkedList<Long> allPending;
   private Long counter;
 
+  private double outputDivisor;
 
   @Override
   public void onInvocation(BooleanTimekeepingParameters booleanInverterParameters,
@@ -47,6 +48,7 @@ public class BooleanTimekeeping implements EventProcessor<BooleanTimekeepingPara
     LOG = booleanInverterParameters.getGraph().getLogger(BooleanTimekeeping.class);
     this.leftFieldName = booleanInverterParameters.getLeftFieldName();
     this.rightFieldName = booleanInverterParameters.getRightFieldName();
+    this.outputDivisor = booleanInverterParameters.getOutputDivisor();
     this.leftFieldLast = false;
     this.rightFieldLast = false;
     this.allPending = new LinkedList<>();
@@ -66,7 +68,10 @@ public class BooleanTimekeeping implements EventProcessor<BooleanTimekeepingPara
       Long startTime = this.allPending.removeLast();
       if (startTime != null) {
 
-        Long result = System.currentTimeMillis() - startTime;
+        Long timeDifference  = System.currentTimeMillis() - startTime;
+
+        double result = timeDifference  / this.outputDivisor;
+
         this.counter++;
 
         if (this.counter == Long.MAX_VALUE) {

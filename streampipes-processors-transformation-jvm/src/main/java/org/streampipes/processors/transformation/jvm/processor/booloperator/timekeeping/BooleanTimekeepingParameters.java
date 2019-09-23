@@ -23,11 +23,13 @@ import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 public class BooleanTimekeepingParameters extends EventProcessorBindingParams {
     private String leftFieldName;
     private String rightFieldName;
+    private double outputDivisor;
 
-    public BooleanTimekeepingParameters(DataProcessorInvocation graph, String leftFieldName, String rightFieldName) {
+    public BooleanTimekeepingParameters(DataProcessorInvocation graph, String leftFieldName, String rightFieldName, double outputDivisor) {
         super(graph);
         this.leftFieldName = leftFieldName;
         this.rightFieldName = rightFieldName;
+        this.outputDivisor = outputDivisor;
     }
 
     public String getLeftFieldName() {
@@ -36,5 +38,9 @@ public class BooleanTimekeepingParameters extends EventProcessorBindingParams {
 
     public String getRightFieldName() {
         return rightFieldName;
+    }
+
+    public double getOutputDivisor() {
+        return outputDivisor;
     }
 }

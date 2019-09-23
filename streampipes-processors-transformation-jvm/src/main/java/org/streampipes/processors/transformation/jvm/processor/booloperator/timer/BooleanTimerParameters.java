@@ -23,11 +23,13 @@ import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 public class BooleanTimerParameters extends EventProcessorBindingParams {
     private String fieldName;
     private boolean measureTrue;
+    private double outputDivisor;
 
-    public BooleanTimerParameters(DataProcessorInvocation graph, String fieldName, boolean measureTrue) {
+    public BooleanTimerParameters(DataProcessorInvocation graph, String fieldName, boolean measureTrue, double outputDivisor) {
         super(graph);
         this.fieldName = fieldName;
         this.measureTrue = measureTrue;
+        this.outputDivisor = outputDivisor;
     }
 
     public String getFieldName() {
@@ -36,5 +38,9 @@ public class BooleanTimerParameters extends EventProcessorBindingParams {
 
     public boolean isMeasureTrue() {
         return measureTrue;
+    }
+
+    public double getOutputDivisor() {
+        return outputDivisor;
     }
 }

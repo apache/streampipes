@@ -1,5 +1,4 @@
-/*
- * Copyright 2019 FZI Forschungszentrum Informatik
+/* * Copyright 2019 FZI Forschungszentrum Informatik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +36,11 @@ public class BooleanTimekeepingController extends StandaloneEventProcessingDecla
   public static final String TIME_FIELD_ID = "time-field";
   public static final String COUNT_FIELD_ID = "count-field";
 
-  //TODO: Change Icon
+  public static final String OUTPUT_UNIT_ID = "outputUnit";
+  private static final String MILLISECONDS = "Milliseconds";
+  private static final String SECONDS = "Seconds";
+  private static final String MINUTES = "Minutes";
+
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm.booloperator.timekeeping")
@@ -53,6 +56,7 @@ public class BooleanTimekeepingController extends StandaloneEventProcessingDecla
                             Labels.withId(RIGHT_FIELD_ID),
                             PropertyScope.NONE)
                     .build())
+            .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
             .outputStrategy(OutputStrategies.append(
                     EpProperties.numberEp(Labels.withId(TIME_FIELD_ID), "measured_time", "http://schema.org/Number"),
                     EpProperties.numberEp(Labels.withId(COUNT_FIELD_ID), "counter", "http://schema.org/Number")
@@ -66,7 +70,17 @@ public class BooleanTimekeepingController extends StandaloneEventProcessingDecla
 
     String leftFieldName = extractor.mappingPropertyValue(LEFT_FIELD_ID);
     String rightFieldName = extractor.mappingPropertyValue(LEFT_FIELD_ID);
-    BooleanTimekeepingParameters params = new BooleanTimekeepingParameters(graph, leftFieldName, rightFieldName);
+    String outputUnit = extractor.selectedSingleValue(OUTPUT_UNIT_ID, String.class);
+
+    double outputDivisor= 1.0;
+    if (outputUnit.equals(SECONDS)) {
+      outputDivisor = 1000.0;
+    } else if (outputUnit.equals(MINUTES)) {
+      outputDivisor = 60000.0;
+    }
+
+    BooleanTimekeepingParameters params = new BooleanTimekeepingParameters(graph, leftFieldName, rightFieldName, outputDivisor);
+
 
     return new ConfiguredEventProcessor<>(params, BooleanTimekeeping::new);
   }
