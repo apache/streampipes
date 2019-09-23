@@ -3,7 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.streampipes</groupId>
+    <parent>
+        <groupId>org.streampipes</groupId>
+        <artifactId>streampipes-parent</artifactId>
+        <version>0.64.1-SNAPSHOT</version>
+    </parent>
+
     <artifactId>streampipes-connect-adapters</artifactId>
     <version>0.64.1-SNAPSHOT</version>
 
@@ -15,30 +20,156 @@
 
     <properties>
         <streampipes.version>0.64.1-SNAPSHOT</streampipes.version>
-        <lightcouch.version>0.1.8</lightcouch.version>
+
+        <camel.version>2.22.1</camel.version>
+        <java-websocket.version>1.4.0</java-websocket.version>
         <javax-validation.version>2.0.1.Final</javax-validation.version>
+        <javax-websocket-client-api.version>1.1</javax-websocket-client-api.version>
+        <jsrosbridge.version>0.2.0</jsrosbridge.version>
+        <hadoop.version>3.2.0</hadoop.version>
+        <lightcouch.version>0.1.8</lightcouch.version>
+        <mqtt-client.version>1.12</mqtt-client.version>
+        <mysql-binlog-connector.version>0.18.1</mysql-binlog-connector.version>
+        <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
         <okio.version>1.15.0</okio.version>
-        <spring-boot.version>2.1.8.RELEASE</spring-boot.version>
+        <opencsv.version>4.0</opencsv.version>
+        <plc4x.version>0.4.0</plc4x.version>
+        <pulsar.version>2.4.1</pulsar.version>
+        <slack.version>1.2.0</slack.version>
+
         <junit.version>4.12</junit.version>
         <mockito.version>2.18.3</mockito.version>
         <powermock.version>2.0.2</powermock.version>
         <wiremock.version>2.24.1</wiremock.version>
+
+        <spring-boot.version>2.1.8.RELEASE</spring-boot.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- External dependencies -->
-
-
+            <!-- StreamPipes dependencies -->
             <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>${javax-validation.version}</version>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-connect-container-worker</artifactId>
+                <version>0.64.1-SNAPSHOT</version>
+            </dependency>
+
+            <!-- External dependencies -->
+            <dependency>
+                <groupId>com.github.shyiko</groupId>
+                <artifactId>mysql-binlog-connector-java</artifactId>
+                <version>${mysql-binlog-connector.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.squareup.okio</groupId>
-                <artifactId>okio</artifactId>
-                <version>${okio.version}</version>
+                <groupId>com.opencsv</groupId>
+                <artifactId>opencsv</artifactId>
+                <version>${opencsv.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ullink.slack</groupId>
+                <artifactId>simpleslackapi</artifactId>
+                <version>${slack.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>edu.wpi.rail</groupId>
+                <artifactId>jrosbridge</artifactId>
+                <version>${jsrosbridge.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.websocket</groupId>
+                <artifactId>javax.websocket-client-api</artifactId>
+                <version>${javax-websocket-client-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-milo</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-client</artifactId>
+                <version>${hadoop.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>jetty-server</artifactId>
+                        <groupId>org.eclipse.jetty</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jetty-servlet</artifactId>
+                        <groupId>org.eclipse.jetty</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jetty-servlets</artifactId>
+                        <groupId>org.eclipse.jetty</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jetty-webapp</artifactId>
+                        <groupId>org.eclipse.jetty</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jetty-util</artifactId>
+                        <groupId>org.eclipse.jetty</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.jersey</groupId>
+                        <artifactId>jersey-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.jersey</groupId>
+                        <artifactId>jersey-client</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.jersey</groupId>
+                        <artifactId>jersey-servlet</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.plc4x</groupId>
+                <artifactId>plc4j-api</artifactId>
+                <version>${plc4x.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.plc4x</groupId>
+                <artifactId>plc4j-driver-s7</artifactId>
+                <version>${plc4x.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.pulsar</groupId>
+                <artifactId>pulsar-client</artifactId>
+                <version>${pulsar.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.fusesource.mqtt-client</groupId>
+                <artifactId>mqtt-client</artifactId>
+                <version>${mqtt-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-sse</artifactId>
+                <version>${jersey.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.glassfish.jersey.core</groupId>
+                        <artifactId>jersey-server</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.java-websocket</groupId>
+                <artifactId>Java-WebSocket</artifactId>
+                <version>${java-websocket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>20171018</version>
             </dependency>
 
             <!-- Test dependencies -->
@@ -47,24 +178,24 @@
                 <artifactId>wiremock</artifactId>
                 <version>${wiremock.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-module-junit4</artifactId>
-                <version>${powermock.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito2</artifactId>
-                <version>${powermock.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.jayway.restassured</groupId>
-                <artifactId>rest-assured</artifactId>
-                <version>2.3.2</version>
-                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>jetty-server</artifactId>
+                        <groupId>org.eclipse.jetty</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jetty-servlet</artifactId>
+                        <groupId>org.eclipse.jetty</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jetty-servlets</artifactId>
+                        <groupId>org.eclipse.jetty</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jetty-webapp</artifactId>
+                        <groupId>org.eclipse.jetty</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -155,6 +286,12 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
