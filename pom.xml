@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-connect-adapters</artifactId>
-    <packaging>pom</packaging>
     <version>0.64.1-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
     <modules>
         <module>streampipes-connect-adapter</module>
     </modules>
-
 
     <properties>
         <streampipes.version>0.64.1-SNAPSHOT</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
         <javax-validation.version>2.0.1.Final</javax-validation.version>
+        <okio.version>1.15.0</okio.version>
+        <spring-boot.version>2.1.8.RELEASE</spring-boot.version>
         <junit.version>4.12</junit.version>
         <mockito.version>2.18.3</mockito.version>
         <powermock.version>2.0.2</powermock.version>
@@ -23,26 +27,25 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- External dependencies -->
+
+
             <dependency>
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
                 <version>${javax-validation.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-connect-container-worker</artifactId>
-                <version>${streampipes.version}</version>
+                <groupId>com.squareup.okio</groupId>
+                <artifactId>okio</artifactId>
+                <version>${okio.version}</version>
             </dependency>
+
+            <!-- Test dependencies -->
             <dependency>
                 <groupId>com.github.tomakehurst</groupId>
                 <artifactId>wiremock</artifactId>
                 <version>${wiremock.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -125,6 +128,11 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>

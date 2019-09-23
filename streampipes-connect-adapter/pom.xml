@@ -31,12 +31,15 @@
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <plc4x.version>0.4.0</plc4x.version>
         <pulsar.version>2.4.1</pulsar.version>
+        <spring-boot.version></spring-boot.version>
     </properties>
 
     <dependencies>
+        <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-connect-container-worker</artifactId>
+            <version>0.64.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.fusesource.mqtt-client</groupId>
