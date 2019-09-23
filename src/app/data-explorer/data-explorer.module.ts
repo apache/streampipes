@@ -56,6 +56,7 @@ import {DataDownloadDialog} from './explorer/datadownloadDialog/dataDownload.dia
     ],
     entryComponents: [
         DataExplorerComponent,
+        DataDownloadDialog,
     ],
     exports: [
     ]

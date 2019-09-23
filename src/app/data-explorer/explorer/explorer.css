@@ -8,10 +8,8 @@
     font-size: 10px;
 }
 
-
-
 .option {
-    border: #202020 solid 1px;
+    border: #ffffff solid 1px;
     border-radius: 5px;
     margin-top: 10px;
     height: 50px;
@@ -26,7 +24,7 @@
     padding-left: 3px;
     padding-right: 2px;
     width: fit-content;
-    background:#fafafa;
+    background:#9c9c9c;
 }
 
 .icon {
@@ -42,4 +40,14 @@
     content: "";
     display: table;
     clear: both;
+}
+
+.paging-button {
+    top: 6px;
+    margin: 10px;
+    border: #202020 solid 1px;
+}
+
+.custom-dialog-container .mat-dialog-container {
+    padding-top: 0px !important;
 }

@@ -1,10 +1,10 @@
 <div>
     <div class="assemblyOptions sp-blue-bg">
 
-        <div fxLayout="row" fxLayoutAlign="space-between center" >
+        <div fxLayout="row" fxLayoutAlign="space-between start" >
             <div>
                 <h4 style="display: initial">Select Index:</h4>
-                <mat-form-field style="margin-top: -10px; margin-bottom: -20px; margin-left: 10px;">
+                <mat-form-field style="margin-top: 0px; margin-bottom: -20px; margin-left: 10px;">
                     <input type="text" matInput  [formControl]="myControl" [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectIndex($event.option.value)">
                         <mat-option  *ngFor="let indexInfo of filteredIndexInfos | async" [value]="indexInfo.measureName">
@@ -13,112 +13,109 @@
                     </mat-autocomplete>
                 </mat-form-field>
             </div>
-            <div fxLayout="row" fxLayoutAlign="start stretch" style="margin-top: 10px; margin-left: 5px">
-                <mat-form-field style="margin-right: 1px;top: -3px;height: 1px;" appearance="outline">
-                    <mat-label>Select Data</mat-label>
-                    <mat-select (selectionChange)="selectKey($event.value)" multiple>
-                        <mat-option *ngFor="let key of dataKeys" [value]="key" style="background-color: #FFFFFF">
-                            {{key}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Day'" (click)="selectTimeUnit('1 Day')">1 Day</button>
-                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Day'"color="primary" mat-raised-button>1 Day</button>
-                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Week'" (click)="selectTimeUnit('1 Week')">1 Week</button>
-                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Week'" color="primary" mat-raised-button>1 Week</button>
-                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Month'" (click)="selectTimeUnit('1 Month')">1 Month</button>
-                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Month'" color="primary" mat-raised-button>1 Month</button>
-                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Year'" (click)="selectTimeUnit('1 Year')">1 Year</button>
-                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Year'" color="primary" mat-raised-button>1 Year</button>
+            <div fxLayout="column" style="margin-top: 10px; margin-left: 5px">
+                <div fxLayout="row" fxLayoutAlign="start stretch">
+                    <mat-form-field style="margin-right: 1px;top: -3px;height: 1px;" appearance="outline">
+                        <mat-label>Select Data</mat-label>
+                        <mat-select (selectionChange)="selectKey($event.value)" multiple>
+                            <mat-option *ngFor="let key of dataKeys" [value]="key" style="background-color: #FFFFFF">
+                                {{key}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Day'" (click)="selectTimeUnit('1 Day')">1 Day</button>
+                    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Day'"color="primary" mat-raised-button>1 Day</button>
+                    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Week'" (click)="selectTimeUnit('1 Week')">1 Week</button>
+                    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Week'" color="primary" mat-raised-button>1 Week</button>
+                    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Month'" (click)="selectTimeUnit('1 Month')">1 Month</button>
+                    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Month'" color="primary" mat-raised-button>1 Month</button>
+                    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Year'" (click)="selectTimeUnit('1 Year')">1 Year</button>
+                    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Year'" color="primary" mat-raised-button>1 Year</button>
 
-                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== 'Custom'" (click)="selectTimeUnit('Custom')">Custom</button>
-                <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === 'Custom'" color="primary" mat-raised-button>Custom</button>
+                    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== 'Custom'" (click)="selectTimeUnit('Custom')">Custom</button>
+                    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === 'Custom'" color="primary" mat-raised-button>Custom</button>
 
-                <button mat-icon-button *ngIf="!enableAdvanceOptions" class="icon" (click)="enableAdvanceOptions = true"
-                        style="margin-left: 5px; margin-top: -15px;" color="primary" matTooltip="Display Advanced Options">
-                    <mat-icon style="font-size: 30px;height: 30px; width: 30px">expand_more</mat-icon>
-                </button>
-                <button mat-icon-button *ngIf="enableAdvanceOptions" mat-raised-button class="icon" (click)="enableAdvanceOptions = false"
-                        style="margin-left: 5px; margin-top: -15px;" color="primary" matTooltip="Hide Advanced Options">
-                    <mat-icon style="font-size: 30px;height: 30px; width: 30px">expand_less</mat-icon>
-                </button>
+                    <button mat-icon-button *ngIf="!enableAdvanceOptions" class="icon" (click)="enableAdvanceOptions = true"
+                            style="margin-left: 5px; margin-top: -15px;" color="primary" matTooltip="Display Advanced Options">
+                        <mat-icon style="font-size: 30px;height: 30px; width: 30px">expand_more</mat-icon>
+                    </button>
+                    <button mat-icon-button *ngIf="enableAdvanceOptions" mat-raised-button class="icon" (click)="enableAdvanceOptions = false"
+                            style="margin-left: 5px; margin-top: -15px;" color="primary" matTooltip="Hide Advanced Options">
+                        <mat-icon style="font-size: 30px;height: 30px; width: 30px">expand_less</mat-icon>
+                    </button>
 
-                <button mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()"
-                         style="margin-top: -15px;" color="primary">
-                    <mat-icon style="font-size: 30px;height: 30px; width: 30px">
-                        get_app
-                    </mat-icon>
-                </button>
-            </div>
-
-
-            <div class="optionContainer clearfix">
-                <div *ngIf=enableAdvanceOptions>
-                    <div class="option" style="margin-left: 5px">
-                        <div class="optionName">Group values by time</div>
-                        <mat-form-field style="top: -10px; width: 80px; margin-right: 5px">
-                            <input matInput type="number" [(ngModel)]="groupbyValue">
-                        </mat-form-field>
-                        <mat-form-field style="top: -10px; width: 100px">
-                            <mat-select [(value)]="groupbyUnit">
-                                <!--      <mat-option style="background-color: #FFFFFF" value="ns">Nanoseconds</mat-option>
-                                      <mat-option style="background-color: #FFFFFF" value="u">Microseconds</mat-option> -->
-                                <mat-option style="background-color: #FFFFFF" value="ms">Milliseconds</mat-option>
-                                <mat-option style="background-color: #FFFFFF" value="s">Second</mat-option>
-                                <mat-option style="background-color: #FFFFFF" value="m">Minute</mat-option>
-                                <mat-option style="background-color: #FFFFFF" value="h">Hour</mat-option>
-                                <mat-option style="background-color: #FFFFFF" value="d">Day</mat-option>
-                                <mat-option style="background-color: #FFFFFF" value="w">Week</mat-option>
-                                <mat-option style="background-color: #FFFFFF" value="month">Month</mat-option>
-                                <mat-option style="background-color: #FFFFFF" value="year">Year</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
+                    <button mat-icon-button matTooltip="Download data" class="icon" (click)="downloadDataAsFile()"
+                            style="margin-top: -15px;" color="primary">
+                        <mat-icon style="font-size: 30px;height: 30px; width: 30px">
+                            get_app
+                        </mat-icon>
+                    </button>
                 </div>
-
-                <div *ngIf="selectedTimeUnit === 'Custom'">
-                    <div class="option" style="margin-left: 5px">
-                        <div class="optionName">Start date</div>
-                        <mat-form-field style="top: -10px">
-                            <input matInput [matDatepicker]="picker" [(ngModel)]="customStartDate">
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                    <div class="option" style="margin-left: 5px">
-                        <div class="optionName">End date</div>
-                        <mat-form-field style="top: -10px">
-                            <input matInput [min]="customStartDate" [matDatepicker]="picker2" [(ngModel)]="customEndDate">
-                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                            <mat-datepicker #picker2></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <button *ngIf="enableAdvanceOptions || selectedTimeUnit === 'Custom'" mat-icon-button class="icon" style="margin-left: 5px" color="primary">
-                    <mat-icon style="font-size: 30px;height: 30px; width: 30px" (click)="loadData()">autorenew</mat-icon>
-                </button>
-
-
-
-                <!--
+                <div class="optionContainer clearfix">
+                    <div *ngIf=enableAdvanceOptions>
                         <div class="option" style="margin-left: 5px">
-                            <div class="optionName">Aggregation</div>
-                            <mat-form-field style="top: -10px">
-                                <mat-select [(value)]="sad">
-                                    <mat-option style="background-color: #FFFFFF" value="ns">Min</mat-option>
-                                    <mat-option style="background-color: #FFFFFF" value="u">Max</mat-option>
-                                    <mat-option style="background-color: #FFFFFF" value="ms">Mean</mat-option>
+                            <div class="optionName">Group values by time</div>
+                            <mat-form-field style="top: -10px; width: 80px; margin-right: 5px">
+                                <input matInput type="number" [(ngModel)]="groupbyValue">
+                            </mat-form-field>
+                            <mat-form-field style="top: -10px; width: 100px">
+                                <mat-select [(value)]="groupbyUnit">
+                                    <!--      <mat-option style="background-color: #FFFFFF" value="ns">Nanoseconds</mat-option>
+                                          <mat-option style="background-color: #FFFFFF" value="u">Microseconds</mat-option> -->
+                                    <mat-option style="background-color: #FFFFFF" value="ms">Milliseconds</mat-option>
+                                    <mat-option style="background-color: #FFFFFF" value="s">Second</mat-option>
+                                    <mat-option style="background-color: #FFFFFF" value="m">Minute</mat-option>
+                                    <mat-option style="background-color: #FFFFFF" value="h">Hour</mat-option>
+                                    <mat-option style="background-color: #FFFFFF" value="d">Day</mat-option>
+                                    <mat-option style="background-color: #FFFFFF" value="w">Week</mat-option>
+                                    <mat-option style="background-color: #FFFFFF" value="month">Month</mat-option>
+                                    <mat-option style="background-color: #FFFFFF" value="year">Year</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                -->
+                    </div>
+
+                    <div *ngIf="selectedTimeUnit === 'Custom'">
+                        <div class="option">
+                            <div class="optionName">Start date</div>
+                            <mat-form-field style="top: -10px">
+                                <input matInput [matDatepicker]="picker" [(ngModel)]="customStartDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="option" style="margin-left: 5px">
+                            <div class="optionName">End date</div>
+                            <mat-form-field style="top: -10px">
+                                <input matInput [min]="customStartDate" [min]="customStartDate" [matDatepicker]="picker2" [(ngModel)]="customEndDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                <mat-datepicker #picker2></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <button *ngIf="enableAdvanceOptions || selectedTimeUnit === 'Custom'"
+                            mat-icon-button class="icon" style="margin-left: 5px" color="primary">
+                        <mat-icon style="font-size: 30px;height: 30px; width: 30px" (click)="loadData()">autorenew</mat-icon>
+                    </button>
+                    <!--
+                            <div class="option" style="margin-left: 5px">
+                                <div class="optionName">Aggregation</div>
+                                <mat-form-field style="top: -10px">
+                                    <mat-select [(value)]="sad">
+                                        <mat-option style="background-color: #FFFFFF" value="ns">Min</mat-option>
+                                        <mat-option style="background-color: #FFFFFF" value="u">Max</mat-option>
+                                        <mat-option style="background-color: #FFFFFF" value="ms">Mean</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                    -->
+                </div>
 
             </div>
-
-
-
         </div>
+
+
 
     </div>
 
@@ -144,7 +141,17 @@
                     <!-- TODO Icon -->
                 </div>
                 <div fxLayout="row" fxLayoutAlign="center center" style="margin-top: 30px">
-                    <h3>Found no data in selected time range ( {{customStartDate | date:'yyyy-MM-dd HH:mm'}} - {{customEndDate | date:'yyyy-MM-dd HH:mm'}} )</h3>
+                    <button mat-icon-button (click)="handlePreviousPage()" class="paging-button" matTooltip="Going backwards in time">
+                        <mat-icon style="font-size: 30px;height: 30px; width: 30px">
+                            chevron_left
+                        </mat-icon>
+                    </button>
+                    <h3>Found no data in selected time range ({{customStartDate | date:'yyyy-MM-dd HH:mm'}} - {{customEndDate | date:'yyyy-MM-dd HH:mm'}})</h3>
+                    <button mat-icon-button (click)="handleNextPage()" class="paging-button" matTooltip="Going forwards in time">
+                        <mat-icon style="font-size: 30px;height: 30px; width: 30px">
+                            chevron_right
+                        </mat-icon>
+                    </button>
                 </div>
             </div>
 
@@ -170,7 +177,9 @@
 
 
             <!-- Charts -->
-            <mat-tab-group *ngIf="!isLoadingData && data !== undefined && yAxesKeys.length > 0">
+            <mat-tab-group *ngIf="!isLoadingData && data !== undefined && yAxesKeys.length > 0"
+                           [selectedIndex]="selectedMatGroup.value"
+                           (selectedIndexChange)="selectedMatGroup.setValue($event)">
                 <mat-tab label="Table">
                     <sp-table
                             *ngIf="selectedInfoResult !== undefined"

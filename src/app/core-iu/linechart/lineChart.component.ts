@@ -14,8 +14,6 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
     }
 
     dataToDisplay: any[] = undefined;
-    itemsPerPage = 50;
-
 
     updatemenus=[
         {
@@ -53,6 +51,7 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
 
     graph = {
         layout: {
+            autosize: true,
             plot_bgcolor:"#fafafa",
             paper_bgcolor:"#fafafa",
             xaxis: {

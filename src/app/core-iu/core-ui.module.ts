@@ -31,6 +31,9 @@ import {LineChartComponent} from './linechart/lineChart.component';
 import {DatalakeLineChartComponent} from './datalake/linechart/datalake-lineChart.component';
 import {DatalakeLineChartDataDownloadDialog} from './datalake/linechart/datadownloadDialog/datalake-lineChart-dataDownload.dialog';
 
+import * as PlotlyJS from 'plotly.js/dist/plotly.js';
+import { PlotlyModule } from 'angular-plotly.js';
+PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
     imports: [
@@ -44,6 +47,7 @@ import {DatalakeLineChartDataDownloadDialog} from './datalake/linechart/datadown
         MatProgressSpinnerModule,
         NgxChartsModule, MatDatepickerModule,
         MatNativeDateModule,
+        PlotlyModule,
     ],
     declarations: [
         TableComponent,

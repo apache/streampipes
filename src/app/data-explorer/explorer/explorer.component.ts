@@ -54,6 +54,9 @@ export class ExplorerComponent implements OnInit {
     customEndDate: Date;
     customStartDate: Date;
 
+    //Mat Group
+    selectedMatGroup = new FormControl(0);
+
 
     constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar, public dialog: MatDialog) {
         this.customEndDate = new Date();
@@ -125,21 +128,17 @@ export class ExplorerComponent implements OnInit {
                 groupbyValue = 365 * groupbyValue;
             }
             this.restService.getData(this.selectedInfoResult.measureName, this.customStartDate.getTime(), this.customEndDate.getTime(), groupbyUnit, groupbyValue).subscribe(
-                res => this.processRevicedData(res)
+                res => this.processReceivedData(res)
             );
         } else {
             this.restService.getDataAutoAggergation(this.selectedInfoResult.measureName, this.customStartDate.getTime(), this.customEndDate.getTime()).subscribe(
-                res => this.processRevicedData(res)
+                res => this.processReceivedData(res)
             );
         }
 
     }
 
-    pageDate() {
-
-    }
-
-    processRevicedData(res) {
+    processReceivedData(res) {
         if(res.events.length > 0) {
             this.data = res.events as [];
             this.noDateFoundinTimeRange = false;
@@ -182,18 +181,64 @@ export class ExplorerComponent implements OnInit {
 
     }
 
-    _filter(value: string): InfoResult[] {
-        const filterValue = value.toLowerCase();
-
-        return this.infoResult.filter(option => option.measureName.toLowerCase().includes(filterValue));
-    }
-
     downloadDataAsFile() {
         const dialogRef = this.dialog.open(DataDownloadDialog, {
             width: '600px',
-            data: {data: this.data, xAxesKey: this.xAxesKey, yAxesKeys: this.yAxesKeys, index: this.selectedInfoResult.measureName}
+            data: {data: this.data, xAxesKey: this.xAxesKey, yAxesKeys: this.yAxesKeys, index: this.selectedInfoResult.measureName},
+            panelClass: 'custom-dialog-container'
 
         });
+    }
+
+
+    handleNextPage() {
+        let offset;
+        if (this.selectedTimeUnit === 'Custom') {
+            offset = this.customEndDate.getTime() - this.customStartDate.getTime();
+        } else {
+            if (this.selectedTimeUnit === '1 Day') {
+                offset =  60000 * 60 * 24 * 1;
+            } else if (this.selectedTimeUnit === '1 Week') {
+                offset =  60000 * 60 * 24 * 7;
+            } else if (this.selectedTimeUnit === '1 Month') {
+                offset =  60000 * 60 * 24 * 30;
+            } else if (this.selectedTimeUnit === '1 Year') {
+                offset =  60000 * 60 * 24 * 365;
+            }
+            this.selectedTimeUnit = 'Custom';
+        }
+        this.customStartDate = new Date(this.customStartDate.getTime() + offset);
+        this.customEndDate = new Date(this.customEndDate.getTime() + offset);
+        this.loadData();
+    }
+
+    handlePreviousPage() {
+        let offset;
+        if (this.selectedTimeUnit === 'Custom') {
+            offset = -(this.customEndDate.getTime() - this.customStartDate.getTime());
+        } else {
+            if (this.selectedTimeUnit === '1 Day') {
+                offset =  -60000 * 60 * 24 * 1;
+            } else if (this.selectedTimeUnit === '1 Week') {
+                offset =  -60000 * 60 * 24 * 7;
+            } else if (this.selectedTimeUnit === '1 Month') {
+                offset =  -60000 * 60 * 24 * 30;
+            } else if (this.selectedTimeUnit === '1 Year') {
+                offset =  -60000 * 60 * 24 * 365;
+            }
+            this.selectedTimeUnit = 'Custom';
+        }
+        this.customStartDate = new Date(this.customStartDate.getTime() + offset);
+        this.customEndDate = new Date(this.customEndDate.getTime() + offset);
+        this.loadData();
+    }
+
+    handleFirstPage() {
+        //TODO
+    }
+
+    handleLastPage() {
+        //TODO
     }
 
     openSnackBar(message: string) {
@@ -202,25 +247,9 @@ export class ExplorerComponent implements OnInit {
         });
     }
 
-    handleNextPage() {
-        //TODO
-      //  this.selectedTimeUnit = 'Custom';
-     //   this.customStartDate =
-     //   this.customEndDate =
-    }
+    _filter(value: string): InfoResult[] {
+        const filterValue = value.toLowerCase();
 
-    handlePreviousPage() {
-        //TODO
-    //    this.selectedTimeUnit = 'Custom';
-   //     this.customStartDate =
-   //         this.customEndDate =
-    }
-
-    handleFirstPage() {
-
-    }
-
-    handleLastPage() {
-
+        return this.infoResult.filter(option => option.measureName.toLowerCase().includes(filterValue));
     }
 }

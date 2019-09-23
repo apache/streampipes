@@ -1,9 +1,9 @@
-<h1 mat-dialog-title>
-    <div fxLayout="row" fxLayoutAlign="space-between center" >
+<h1 mat-dialog-title style="background-color: rgb(57, 181, 74); height: 60px; color: white;">
+    <div fxLayout="row" fxLayoutAlign="space-between center" style="padding-top: 10px; padding-left: 10px;">
         <div>Download Data</div>
         <button mat-icon-button (click)="exitDialog()"
                 style="" color="primary">
-            <mat-icon style="font-size: 30px;height: 30px; width: 30px; color:#b3b3b3;">close</mat-icon>
+            <mat-icon style="font-size: 30px;height: 30px; width: 30px; color:white;">close</mat-icon>
         </button>
     </div>
 </h1>
@@ -17,7 +17,7 @@
             <div>
                 <mat-radio-group class="example-radio-group" [(ngModel)]="selectedData">
                     <mat-radio-button value="visible" class="example-radio-button">
-                        Visible data in line chart
+                        Visible data in charts
                     </mat-radio-button>
                     <mat-radio-button value="all" class="example-radio-button">
                         All data in database
@@ -77,7 +77,7 @@
 
 </div>
 
-<div mat-dialog-actions style="float: right">
+<div mat-dialog-actions style="float: right; margin: 10px">
     <button mat-button *ngIf="stepper.selectedIndex == 1" color="primary" (click)="previousStep()">Previous</button>
     <button mat-button mat-raised-button *ngIf="stepper.selectedIndex < 1" color="primary" (click)="nextStep()">Next</button>
     <button mat-button mat-raised-button *ngIf="stepper.selectedIndex == 1" color="accent" (click)="downloadData()">Download</button>
