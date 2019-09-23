@@ -1,11 +1,26 @@
+/*
+ * Copyright 2019 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 import { HomeComponent } from '../home/home.component';
 import { ConfigurationComponent } from '../configuration/configuration.component';
 import { AppContainerModule } from '../app-container/app-container.module';
 import { AppContainerComponent } from '../app-container/app-container.component';
 import { NewAdapterComponent } from '../connect/new-adapter/new-adapter.component';
-import { KviComponent } from '../kvi/kvi.component';
 import { ConnectComponent } from '../connect/connect.component';
-import { KviVisualizationComponent } from '../kvi-visualization/kvi-visualization.component';
 
 export default function stateConfig($stateProvider, $urlRouterProvider) {
   //	    $urlRouterProvider.otherwise( function($injector, $location) {
@@ -42,7 +57,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         },
       },
       resolve: {
-        authData: function(AuthService) {
+        authData: function (AuthService) {
           return AuthService.authenticate();
         },
       },
@@ -142,24 +157,6 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         },
       },
     })
-    .state('streampipes.appfiledownload', {
-      url: '/appfiledownload',
-      views: {
-        'spMain@streampipes': {
-          templateUrl: '../app-file-download/app-file-download.tmpl.html',
-          controller: 'AppFileDownloadCtrl',
-        },
-      },
-    })
-    .state('streampipes.ontology', {
-      url: '',
-      views: {
-        'spMain@streampipes': {
-          templateUrl: '../ontology/ontology.html',
-          controller: 'OntologyCtrl',
-        },
-      },
-    })
     .state('streampipes.sensors', {
       url: '',
       views: {
@@ -208,22 +205,6 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
       views: {
         'spMain@streampipes': {
           component: ConnectComponent,
-        },
-      },
-    })
-    .state('streampipes.kvi', {
-      url: '/kvi',
-      views: {
-        'spMain@streampipes': {
-          component: KviComponent,
-        },
-      },
-    })
-    .state('streampipes.kvivisualization', {
-      url: '/kvivisualization',
-      views: {
-        'spMain@streampipes': {
-          component: KviVisualizationComponent,
         },
       },
     });

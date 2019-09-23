@@ -1,3 +1,20 @@
+/*
+ * Copyright 2019 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 export default {
     createPipelineTour: {
         id: "create-pipeline",
@@ -77,7 +94,7 @@ export default {
             {
                 stepId: "step-8",
                 title: "Customize elements",
-                text: "<p>Most pipeline elements can be customized according to your needs. Whenever you connect two elements with each other, a configuration dialog pops up.</p><p>Select <b>randomValue</b> as the field to filter, select <b>greater than (>) </b> as operation, select <b>10</b> as the threshold value and click <b>Save</b>.</p>",
+                text: "<p>Most pipeline elements can be customized according to your needs. Whenever you connect two elements with each other, a configuration dialog pops up.</p><p>Select <b>Mass Flow</b> as the field to filter, select <b>greater than (>) </b> as operation, select <b>2</b> as the threshold value and click <b>Save</b>.</p>",
                 attachToElement: "#tutorial-placeholder",
                 attachPosition: "top",
                 buttons: [
