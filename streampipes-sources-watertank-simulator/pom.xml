@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>streampipes-pipeline-elements</artifactId>
         <groupId>org.streampipes</groupId>
@@ -9,19 +10,39 @@
 
     <artifactId>streampipes-sources-watertank-simulator</artifactId>
 
-
-    <properties>
-        <data-generator.version>1.3.1</data-generator.version>
-    </properties>
-
     <dependencies>
+        <!-- StreamPipes dependencies -->
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-config</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container-standalone</artifactId>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-sources</artifactId>
+            <artifactId>streampipes-dataformat-json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-cbor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-smile</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-fst</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging-jms</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging-kafka</artifactId>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
@@ -29,12 +50,17 @@
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-config</artifactId>
+            <artifactId>streampipes-sources</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-wrapper-standalone</artifactId>
+        </dependency>
+
+        <!-- External dependencies -->
         <dependency>
             <groupId>net.acesinc.data</groupId>
             <artifactId>json-data-generator</artifactId>
-            <version>${data-generator.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.eclipse.jetty</groupId>

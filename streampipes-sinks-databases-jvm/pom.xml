@@ -9,29 +9,15 @@
 
     <artifactId>streampipes-sinks-databases-jvm</artifactId>
 
-    <properties>
-        <lightcouch.version>0.1.8</lightcouch.version>
-        <milo.version>2.22.1</milo.version>
-        <influxdb.java.version>2.14</influxdb.java.version>
-        <postgresql.version>42.2.2</postgresql.version>
-    </properties>
-
     <dependencies>
+        <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-wrapper-standalone</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-sdk</artifactId>
+            <artifactId>streampipes-config</artifactId>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container-standalone</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-config</artifactId>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
@@ -58,29 +44,34 @@
             <artifactId>streampipes-messaging-kafka</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-sdk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-wrapper-standalone</artifactId>
+        </dependency>
+
+        <!-- External dependencies -->
+        <dependency>
             <groupId>org.lightcouch</groupId>
             <artifactId>lightcouch</artifactId>
-            <version>${lightcouch.version}</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
         </dependency>
         <dependency>
             <groupId>org.influxdb</groupId>
             <artifactId>influxdb-java</artifactId>
-            <version>${influxdb.java.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.iotdb</groupId>
             <artifactId>iotdb-jdbc</artifactId>
-            <version>0.8.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-milo</artifactId>
-            <version>${milo.version}</version>
         </dependency>
     </dependencies>
 

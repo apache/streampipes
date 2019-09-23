@@ -9,11 +9,16 @@
 
     <artifactId>streampipes-processors-text-mining-flink</artifactId>
 
-    <properties>
-        <opennlp.version>1.9.0</opennlp.version>
-    </properties>
-
     <dependencies>
+        <!-- StreamPipes dependencies -->
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-config</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container-standalone</artifactId>
@@ -36,53 +41,36 @@
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-commons</artifactId>
+            <artifactId>streampipes-sdk</artifactId>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-wrapper-flink</artifactId>
         </dependency>
+
+        <!-- External dependencies -->
         <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-sdk</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-to-slf4j</artifactId>
-            <version>2.8.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.24</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-config</artifactId>
+            <groupId>com.optimaize.languagedetector</groupId>
+            <artifactId>language-detector</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-cep-scala_2.11</artifactId>
-            <version>1.8.0</version>
         </dependency>
         <dependency>
-            <groupId>com.optimaize.languagedetector</groupId>
-            <artifactId>language-detector</artifactId>
-            <version>0.6</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-to-slf4j</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.opennlp</groupId>
             <artifactId>opennlp-tools</artifactId>
-            <version>${opennlp.version}</version>
         </dependency>
+
+        <!-- Test dependencies -->
         <dependency>
             <groupId>io.flinkspector</groupId>
             <artifactId>flinkspector-datastream_2.11</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
@@ -92,6 +80,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
