@@ -27,13 +27,20 @@
     <artifactId>streampipes-container-standalone</artifactId>
 
     <dependencies>
+        <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container</artifactId>
+            <version>0.64.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container-base</artifactId>
+            <version>0.64.1-SNAPSHOT</version>
         </dependency>
+
+        <!-- External dependencies -->
+
+        <!-- Test dependencies -->
     </dependencies>
 </project>

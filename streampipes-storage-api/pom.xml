@@ -22,39 +22,23 @@
         <artifactId>streampipes-parent</artifactId>
         <version>0.64.1-SNAPSHOT</version>
     </parent>
+
     <artifactId>streampipes-storage-api</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
+        <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-config</artifactId>
+            <version>0.64.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-model-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-serializers</artifactId>
+            <version>0.64.1-SNAPSHOT</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>uk.com.robust-it</groupId>
-            <artifactId>cloning</artifactId>
-            <version>1.9.0</version>
-        </dependency>
+        <!-- External dependencies -->
     </dependencies>
 </project>

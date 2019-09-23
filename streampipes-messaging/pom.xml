@@ -27,9 +27,11 @@
     <artifactId>streampipes-messaging</artifactId>
 
     <dependencies>
+        <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
+            <version>0.64.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

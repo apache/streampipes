@@ -25,21 +25,26 @@
 	<artifactId>streampipes-wrapper</artifactId>
 
 	<dependencies>
+		<!-- StreamPipes dependencies -->
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-container</artifactId>
+			<version>0.64.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-dataformat</artifactId>
+			<version>0.64.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-messaging</artifactId>
+			<version>0.64.1-SNAPSHOT</version>
 		</dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sdk</artifactId>
+			<version>0.64.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

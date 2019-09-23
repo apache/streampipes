@@ -27,19 +27,21 @@
     <artifactId>streampipes-storage-management</artifactId>
 
     <dependencies>
+        <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-storage-api</artifactId>
+            <version>0.64.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-storage-couchdb</artifactId>
+            <version>0.64.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-storage-rdf4j</artifactId>
+            <version>0.64.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
-
 </project>
