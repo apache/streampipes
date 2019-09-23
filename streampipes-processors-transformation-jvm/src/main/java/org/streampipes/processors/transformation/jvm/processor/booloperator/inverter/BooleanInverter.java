@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.processors.transformation.jvm.processor.booleaninverter;
+package org.streampipes.processors.transformation.jvm.processor.booloperator.inverter;
 
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.runtime.Event;

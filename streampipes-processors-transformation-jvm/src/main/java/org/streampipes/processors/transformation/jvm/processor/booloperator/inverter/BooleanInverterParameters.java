@@ -15,7 +15,7 @@
  *
  */
 
-package org.streampipes.processors.transformation.jvm.processor.booleaninverter;
+package org.streampipes.processors.transformation.jvm.processor.booloperator.inverter;
 
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
