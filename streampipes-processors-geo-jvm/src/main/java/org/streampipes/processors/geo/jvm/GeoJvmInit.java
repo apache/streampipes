@@ -26,6 +26,7 @@ import org.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.geo.jvm.config.GeoJvmConfig;
+import org.streampipes.processors.geo.jvm.processor.distancecalculator.DistanceCalculatorController;
 import org.streampipes.processors.geo.jvm.processor.geocoder.GoogleMapsGeocodingController;
 import org.streampipes.processors.geo.jvm.processor.revgeocoder.ReverseGeocodingController;
 import org.streampipes.processors.geo.jvm.processor.staticgeocoder.StaticGoogleMapsGeocodingController;
@@ -35,6 +36,7 @@ public class GeoJvmInit extends StandaloneModelSubmitter {
   public static void main(String[] args) {
     DeclarersSingleton
             .getInstance()
+            .add(new DistanceCalculatorController())
             .add(new GoogleMapsGeocodingController())
             .add(new StaticGoogleMapsGeocodingController())
             .add(new ReverseGeocodingController());
