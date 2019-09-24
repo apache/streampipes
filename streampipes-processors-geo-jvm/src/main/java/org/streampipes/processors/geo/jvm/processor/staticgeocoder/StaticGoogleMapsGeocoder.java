@@ -70,4 +70,5 @@ public class StaticGoogleMapsGeocoder implements EventProcessor<StaticGoogleMaps
   public void onDetach() throws SpRuntimeException {
 
   }
+
 }

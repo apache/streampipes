@@ -43,8 +43,8 @@ public class ReverseGeocoding implements EventProcessor<ReverseGeocodingParamete
     InputStream stream = getClass()
             .getClassLoader().getResourceAsStream("cities1000.zip");
     if (stream != null) {
-      ZipInputStream zipInputStream = new ZipInputStream(stream);
-
+      ZipInputStream zipInputStream = null;
+      zipInputStream = new ZipInputStream(stream);
       try {
         this.reverseGeoCode = new ReverseGeoCode(zipInputStream, false);
       } catch (IOException e) {
@@ -60,7 +60,7 @@ public class ReverseGeocoding implements EventProcessor<ReverseGeocodingParamete
 
     GeoName geoName = this.reverseGeoCode.nearestPlace(latitude, longitude);
 
-    event.addField("", geoName.name + ", " + geoName.country);
+    event.addField("place", geoName.name + ", " + geoName.country);
     collector.collect(event);
   }
 

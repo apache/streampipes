@@ -66,6 +66,10 @@ public class ReverseGeoCode {
 
   }
 
+  public ReverseGeoCode(InputStream inputStream, boolean majorOnly, boolean extract) throws IOException {
+    createKdTree(inputStream, majorOnly);
+  }
+
   /**
    * Parse the raw text geonames file.
    *
