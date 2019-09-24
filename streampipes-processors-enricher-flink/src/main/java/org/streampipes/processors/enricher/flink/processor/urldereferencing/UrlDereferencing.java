@@ -16,10 +16,10 @@ limitations under the License.
 
 package org.streampipes.processors.enricher.flink.processor.urldereferencing;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
 import org.streampipes.logging.api.Logger;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.runtime.Event;
@@ -38,13 +38,13 @@ public class UrlDereferencing implements FlatMapFunction<Event, Event> {
 
     @Override
     public void flatMap(Event in, Collector<Event> out) throws Exception {
-        HttpResponse<String> response;
+        Response response;
 
         try {
-            response = Unirest.get(
+            response = Request.Get(
                         in.getFieldBySelector(urlString).getAsPrimitive().getAsString()
-                    ).asString();
-            String body = response.getBody();
+                    ).execute();
+            String body = response.returnContent().asString();
 
             in.addField(appendHtml, body);
         } catch (Exception e) {

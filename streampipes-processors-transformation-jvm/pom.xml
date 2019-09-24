@@ -80,6 +80,9 @@
                         <goals>
                             <goal>repackage</goal>
                         </goals>
+                        <configuration>
+                            <mainClass>org.streampipes.processors.transformation.jvm.TransformationJvmInit</mainClass>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
