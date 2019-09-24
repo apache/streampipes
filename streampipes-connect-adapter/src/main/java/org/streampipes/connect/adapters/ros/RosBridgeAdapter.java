@@ -17,6 +17,9 @@
 
 package org.streampipes.connect.adapters.ros;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import edu.wpi.rail.jrosbridge.Ros;
 import edu.wpi.rail.jrosbridge.Service;
 import edu.wpi.rail.jrosbridge.Topic;
@@ -24,8 +27,6 @@ import edu.wpi.rail.jrosbridge.callback.TopicCallback;
 import edu.wpi.rail.jrosbridge.messages.Message;
 import edu.wpi.rail.jrosbridge.services.ServiceRequest;
 import edu.wpi.rail.jrosbridge.services.ServiceResponse;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.streampipes.connect.EmitBinaryEvent;
 import org.streampipes.connect.adapter.Adapter;
 import org.streampipes.connect.adapter.exception.AdapterException;
@@ -223,8 +224,8 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements Reso
         ServiceRequest request = new ServiceRequest("{\"topic\": \""+ topic +"\"}");
         ServiceResponse response = addTwoInts.callServiceAndWait(request);
 
-        JSONObject ob = new JSONObject(response.toString());
-        return ob.getString("type");
+        JsonObject ob = new JsonParser().parse(response.toString()).getAsJsonObject();
+        return ob.get("type").getAsString();
     }
 
     private class ParseData implements EmitBinaryEvent {
@@ -256,12 +257,12 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements Reso
         Service service = new Service(ros, "/rosapi/topics", "rosapi/Topics");
         ServiceRequest request = new ServiceRequest();
         ServiceResponse response = service.callServiceAndWait(request);
-        JSONObject ob = new JSONObject(response.toString());
+        JsonObject ob = new JsonParser().parse(response.toString()).getAsJsonObject();
 
         if (ob.has("topics")) {
-            JSONArray topics = ((JSONArray) ob.get("topics"));
-            for (int i = 0; i < topics.length(); i++) {
-                result.add((String) topics.get(i));
+            JsonArray topics = ob.get("topics").getAsJsonArray();
+            for (int i = 0; i < topics.size(); i++) {
+                result.add(topics.get(i).getAsString());
             }
 
         }
