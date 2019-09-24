@@ -26,13 +26,14 @@ import org.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.geo.jvm.config.GeoJvmConfig;
+import org.streampipes.processors.geo.jvm.processor.distancecalculator.DistanceCalculatorController;
 
 public class GeoJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton
-            .getInstance();
-//            .add(new GeocodingController())
+            .getInstance()
+            .add(new DistanceCalculatorController());
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

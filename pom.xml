@@ -67,7 +67,7 @@
         <mailapi.version>1.4.3</mailapi.version>
         <milo.version>2.22.1</milo.version>
         <nekohtml.version>1.9.13</nekohtml.version>
-        <okhttp.version>3.9.0</okhttp.version>
+        <okhttp.version>3.13.1</okhttp.version>
         <opennlp.version>1.9.0</opennlp.version>
         <postgresql.version>42.2.2</postgresql.version>
         <pulsar.version>2.4.1</pulsar.version>
