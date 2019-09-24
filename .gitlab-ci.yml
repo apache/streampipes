@@ -37,7 +37,7 @@ build:
     - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - mvn clean package javadoc:aggregate -U -DskipTests
-    - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
+    - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
     - echo $MVN_VERSION >> ./target/mvn_version
   artifacts:
     paths:
@@ -70,8 +70,6 @@ github:
      - build
    script:
      - export MVN_VERSION=$(cat ./target/mvn_version)
-     - echo "MVN_VERSION:"
-     - echo $MVN_VERSION
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
      - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
      - echo -e "docker build --no-cache --pull -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME/Dockerfile ./streampipes-$CONTAINER_NAME"
