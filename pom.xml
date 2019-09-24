@@ -764,6 +764,7 @@
                         <!-- Git related files -->
                         <exclude>**/.git/**</exclude>
                         <exclude>**/.gitignore</exclude>
+                        <exclude>**/.spignore</exclude>
 
                         <!-- License Files for other licenses -->
                         <exclude>**/UNLICENSE</exclude>
