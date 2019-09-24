@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!--
+  ~ Copyright 2018 FZI Forschungszentrum Informatik
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ you may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.streampipes</groupId>
+    <parent>
+        <groupId>org.streampipes</groupId>
+        <artifactId>streampipes-parent</artifactId>
+        <version>0.64.1-SNAPSHOT</version>
+    </parent>
+
     <artifactId>streampipes-pipeline-elements</artifactId>
-    <packaging>pom</packaging>
     <version>0.64.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
     <modules>
         <module>streampipes-sinks-databases-jvm</module>
         <module>streampipes-sinks-internal-jvm</module>
@@ -23,7 +47,6 @@
         <module>streampipes-processors-filters-siddhi</module>
         <module>streampipes-processors-text-mining-flink</module>
         <module>streampipes-processors-text-mining-jvm</module>
-        <module>streampipes-sources-random-data-generator</module>
         <module>streampipes-sinks-notifications-jvm</module>
         <module>streampipes-pipeline-elements-shared</module>
         <module>streampipes-processors-geo-flink</module>
@@ -32,46 +55,31 @@
     </modules>
 
     <properties>
-        <streampipes.version>0.64.0</streampipes.version>
-        <lightcouch.version>0.1.8</lightcouch.version>
-        <spring.version>2.1.6.RELEASE</spring.version>
+        <streampipes.version>0.64.1-SNAPSHOT</streampipes.version>
+
+        <amqp-client.version>4.1.0</amqp-client.version>
+        <boofcv.version>0.33</boofcv.version>
+        <commons-math3.version>3.6.1</commons-math3.version>
+        <data-generator.version>1.3.1</data-generator.version>
+        <iotdb.version>0.8.0</iotdb.version>
+        <language-detector.version>0.6</language-detector.version>
+        <log4j-to-slf4j.version>2.8.2</log4j-to-slf4j.version>
+        <mailapi.version>1.4.3</mailapi.version>
+        <milo.version>2.22.1</milo.version>
+        <nekohtml.version>1.9.13</nekohtml.version>
+        <okhttp.version>3.9.0</okhttp.version>
+        <opennlp.version>1.9.0</opennlp.version>
+        <postgresql.version>42.2.2</postgresql.version>
+        <pulsar.version>2.4.1</pulsar.version>
+        <slack-api.version>0.5.1</slack-api.version>
+        <xerces.version>2.9.1</xerces.version>
+
         <maven-shade-plugin.version>3.0.0</maven-shade-plugin.version>
-        <jackson.version>2.9.9</jackson.version>
-        <javax-validation.version>2.0.1.Final</javax-validation.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>${javax-validation.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-annotations</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-datatype-jdk8</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-datatype-guava</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
+            <!-- StreamPipes dependencies -->
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-commons</artifactId>
@@ -79,32 +87,12 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-sources</artifactId>
+                <artifactId>streampipes-config</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-container-standalone</artifactId>
-                <version>${streampipes.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-wrapper-standalone</artifactId>
-                <version>${streampipes.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-wrapper-flink</artifactId>
-                <version>${streampipes.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-sdk</artifactId>
-                <version>${streampipes.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-config</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
@@ -119,12 +107,22 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-smile</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-dataformat-fst</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-dataformat-smile</artifactId>
+                <artifactId>streampipes-measurement-units</artifactId>
+                <version>${streampipes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-messaging-jms</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
@@ -134,27 +132,12 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-messaging-jms</artifactId>
-                <version>${streampipes.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.lightcouch</groupId>
-                <artifactId>lightcouch</artifactId>
-                <version>${lightcouch.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-measurement-units</artifactId>
+                <artifactId>streampipes-sdk</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pipeline-elements-shared</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-test-utils</artifactId>
+                <artifactId>streampipes-sources</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
@@ -163,10 +146,129 @@
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>2.8.5</version>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-standalone</artifactId>
+                <version>${streampipes.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-flink</artifactId>
+                <version>${streampipes.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- External dependencies -->
+            <dependency>
+                <groupId>com.optimaize.languagedetector</groupId>
+                <artifactId>language-detector</artifactId>
+                <version>${language-detector.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.rabbitmq</groupId>
+                <artifactId>amqp-client</artifactId>
+                <version>${amqp-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ullink.slack</groupId>
+                <artifactId>simpleslackapi</artifactId>
+                <version>${slack-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mailapi</artifactId>
+                <version>${mailapi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.acesinc.data</groupId>
+                <artifactId>json-data-generator</artifactId>
+                <version>${data-generator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sourceforge.nekohtml</groupId>
+                <artifactId>nekohtml</artifactId>
+                <version>${nekohtml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-milo</artifactId>
+                <version>${milo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math3</artifactId>
+                <version>${commons-math3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-cep_2.11</artifactId>
+                <version>${flink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-cep-scala_2.11</artifactId>
+                <version>${flink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.iotdb</groupId>
+                <artifactId>iotdb-jdbc</artifactId>
+                <version>${iotdb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-to-slf4j</artifactId>
+                <version>${log4j-to-slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.opennlp</groupId>
+                <artifactId>opennlp-tools</artifactId>
+                <version>${opennlp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.pulsar</groupId>
+                <artifactId>pulsar-client</artifactId>
+                <version>${pulsar.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.boofcv</groupId>
+                <artifactId>boofcv-core</artifactId>
+                <version>${boofcv.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>xerces</groupId>
+                <artifactId>xercesImpl</artifactId>
+                <version>${xerces.version}</version>
+            </dependency>
+
+            <!-- Test dependencies -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -177,6 +279,12 @@
                 <groupId>io.flinkspector</groupId>
                 <artifactId>flinkspector-datastream_2.11</artifactId>
                 <version>0.9.4</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-test-utils</artifactId>
+                <version>${streampipes.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -260,7 +368,7 @@
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring.version}</version>
+                    <version>${spring-boot.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -309,9 +417,15 @@
                         <dependency>
                             <groupId>org.springframework.boot</groupId>
                             <artifactId>spring-boot-maven-plugin</artifactId>
-                            <version>${spring.version}</version>
+                            <version>${spring-boot.version}</version>
                         </dependency>
                     </dependencies>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -321,14 +435,16 @@
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>1.4.1</version>
                 <configuration>
-                    <rules><dependencyConvergence /></rules>
+                    <rules>
+                        <dependencyConvergence/>
+                    </rules>
                 </configuration>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.streampipes</groupId>-->
-<!--                <artifactId>streampipes-maven-plugin</artifactId>-->
-<!--                <version>1.0-SNAPSHOT</version>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.streampipes</groupId>-->
+            <!--                <artifactId>streampipes-maven-plugin</artifactId>-->
+            <!--                <version>1.0-SNAPSHOT</version>-->
+            <!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>

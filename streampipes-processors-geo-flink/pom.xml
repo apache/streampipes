@@ -27,40 +27,18 @@
     <artifactId>streampipes-processors-geo-flink</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-container-standalone</artifactId>
-        </dependency>
+        <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-commons</artifactId>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-wrapper-flink</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-sdk</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-container-standalone</artifactId>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
@@ -77,6 +55,14 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-dataformat-fst</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-sdk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-wrapper-flink</artifactId>
         </dependency>
     </dependencies>
 
