@@ -1,0 +1,5 @@
+org.streampipes.processor.geo.jvm.geocoding.title=Google Maps Geocoder
+org.streampipes.processor.geo.jvm.geocoding.description=Geocodes a placename to a latitude/longitude combination
+
+place-mapping.title=Place
+place-mapping.description=The field of the input event that should be used to compute the lat/lng values.

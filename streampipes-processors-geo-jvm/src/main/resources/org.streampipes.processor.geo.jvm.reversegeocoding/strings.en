@@ -1,0 +1,9 @@
+org.streampipes.processor.geo.jvm.reversegeocoding.title=Reverse Geocoder
+org.streampipes.processor.geo.jvm.reversegeocoding.description=Finds the nearest place based on latitude and longitude
+values.
+
+latitude-mapping.title=Latitude
+latitude-mapping.description=The field containing the latitude value.
+
+longitude-mapping.title=Longitude
+longitude-mapping.description=The field containing the longitude value.
