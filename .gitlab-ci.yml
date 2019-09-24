@@ -29,6 +29,7 @@ build:
   stage: build
   script:
     - export NODE_PATH=/cache/node_modules
+    - export NODE_OPTIONS=--max_old_space_size=4096
     - npm install --unsafe-perm
     - npm run build
   artifacts:
