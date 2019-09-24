@@ -70,6 +70,8 @@ github:
      - build
    script:
      - export MVN_VERSION=$(cat ./target/mvn_version)
+     - echo "MVN_VERSION:"
+     - echo $MVN_VERSION
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
      - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
      - echo -e "docker build --no-cache --pull -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME/Dockerfile ./streampipes-$CONTAINER_NAME"
