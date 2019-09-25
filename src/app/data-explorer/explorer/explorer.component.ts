@@ -19,7 +19,7 @@ import {Component, OnInit} from '@angular/core';
 import {DatalakeRestService} from '../../core-services/datalake/datalake-rest.service';
 import {InfoResult} from '../../core-model/datalake/InfoResult';
 import {Observable} from 'rxjs/Observable';
-import {FormControl} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {DataDownloadDialog} from './datadownloadDialog/dataDownload.dialog';
@@ -77,7 +77,7 @@ export class ExplorerComponent implements OnInit {
 
     constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar, public dialog: MatDialog) {
         this.customEndDate = new Date();
-        this.customEndDate.setHours(0,0,0,0);
+        //this.customEndDate.setHours(0,0,0,0);
         this.customStartDate = new Date(this.customEndDate.getTime() - 60000 * 60 * 24);
     }
 
@@ -121,7 +121,7 @@ export class ExplorerComponent implements OnInit {
 
         if (this.selectedTimeUnit !== 'Custom') {
             this.customEndDate = new Date();
-            this.customEndDate.setHours(0,0,0,0);
+            //this.customEndDate.setHours(0,0,0,0);
 
             if (this.selectedTimeUnit === '1 Day') {
                 this.customStartDate = new Date(this.customEndDate.getTime() - 60000 * 60 * 24 * 1);
@@ -180,6 +180,7 @@ export class ExplorerComponent implements OnInit {
                 this.dataKeys.push(property['runtimeName']);
             }
         });
+        this.selectKey(this.dataKeys.slice(0, 3));
         this.loadData();
     }
 
