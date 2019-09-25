@@ -1,43 +1,4 @@
 <div>
-    <!--
-        <div fxLayout="row" fxLayoutAlign=" center" style="height: 40px;">
-            <div  *ngIf="enablePaging">
-                <button mat-icon-button (click)="clickFirstPage()">
-                    <mat-icon>first_page</mat-icon>
-                </button>
-                <button mat-icon-button (click)="clickPreviousPage()">
-                    <mat-icon>chevron_left</mat-icon>
-                </button>
-                Page: <label *ngIf="currentPage !== undefined">{{currentPage}}</label>
-                <label *ngIf="maxPage !== undefined"> - {{maxPage}}</label>
-                <button mat-icon-button (click)="clickNextPage()">
-                    <mat-icon>chevron_right</mat-icon>
-                </button>
-                <button mat-icon-button (click)="clickLastPage()">
-                    <mat-icon>last_page</mat-icon>
-                </button>
-            </div>
-            -->
-
-  <!--      <div *ngIf="enableItemsPerPage">
-            Items per page:
-            <mat-form-field style="width: 50px; margin-top: 10px;" >
-                <mat-select [(ngModel)]="itemsPerPage" (valueChange)="selectItemsPerPage($event)">
-                    <mat-option [value]=10 style="background-color: #FFFFFF">
-                        10
-                    </mat-option>
-                    <mat-option [value]=25 style="background-color: #FFFFFF">
-                        25
-                    </mat-option>
-                    <mat-option [value]=50 style="background-color: #FFFFFF">
-                        50
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-    </div>
-    -->
-
     <div fxLayout="row">
         <div *ngIf="enablePaging" fxFlex="5">
             <button mat-icon-button (click)="clickPreviousPage()" class="paging-button">
@@ -67,27 +28,4 @@
             </button>
         </div>
     </div>
-
-<!--
-    <div fxLayout="row" fxLayoutAlign=" center" style="height: 40px;">
-        <div  *ngIf="enablePaging">
-            <button mat-icon-button (click)="clickFirstPage()">
-                <mat-icon>first_page</mat-icon>
-            </button>
-            <button mat-icon-button (click)="clickPreviousPage()">
-                <mat-icon>keyboard_arrow_left</mat-icon>
-            </button>
-            Page: <label *ngIf="currentPage !== undefined">{{currentPage}}</label>
-            <label *ngIf="maxPage !== undefined"> - {{maxPage}}</label>
-            <button mat-icon-button (click)="clickNextPage()">
-                <mat-icon>keyboard_arrow_right</mat-icon>
-            </button>
-            <button mat-icon-button (click)="clickLastPage()">
-                <mat-icon>last_page</mat-icon>
-            </button>
-        </div>
-
-    </div>
-     -->
-
 </div>
