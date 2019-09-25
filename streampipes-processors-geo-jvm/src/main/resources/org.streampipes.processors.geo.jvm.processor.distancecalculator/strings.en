@@ -1,5 +1,5 @@
-org.streampipes.processors.geo.jvm.processor.distancecalculator.title=Spatial Grid Enrichment
-org.streampipes.processors.geo.jvm.processor.distancecalculator.description=Groups spatial events into cells of a given size
+org.streampipes.processors.geo.jvm.processor.distancecalculator.title=Distance Calculator
+org.streampipes.processors.geo.jvm.processor.distancecalculator.description=Calculates the distance between two geo points
 
 lat1.title=First Latitude
 lat1.description=
