@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package org.streampipes.connect.adapters.plc4x;
+package org.streampipes.connect.adapters.plc4x.s7;
 
 import org.apache.plc4x.java.PlcDriverManager;
 import org.apache.plc4x.java.api.PlcConnection;
@@ -30,7 +30,6 @@ import org.streampipes.connect.adapters.PullAdapter;
 import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
-import org.streampipes.model.runtime.Event;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
@@ -42,7 +41,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 

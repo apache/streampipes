@@ -17,6 +17,7 @@
 
 package org.streampipes.connect;
 
+import org.streampipes.connect.adapters.plc4x.passive.Plc4xPassiveAdapter;
 import org.streampipes.connect.protocol.set.HttpProtocol;
 import org.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
 import org.streampipes.connect.adapters.gdelt.GdeltAdapter;
@@ -24,7 +25,7 @@ import org.streampipes.connect.adapters.iex.IexCloudNewsAdapter;
 import org.streampipes.connect.adapters.iex.IexCloudStockAdapter;
 import org.streampipes.connect.adapters.mysql.MySqlAdapter;
 import org.streampipes.connect.adapters.opcua.OpcUaAdapter;
-import org.streampipes.connect.adapters.plc4x.Plc4xS7Adapter;
+import org.streampipes.connect.adapters.plc4x.s7.Plc4xS7Adapter;
 import org.streampipes.connect.adapters.ros.RosBridgeAdapter;
 import org.streampipes.connect.adapters.simulator.RandomDataSetAdapter;
 import org.streampipes.connect.adapters.simulator.RandomDataStreamAdapter;
@@ -71,6 +72,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new WikipediaNewArticlesAdapter())
             .add(new RosBridgeAdapter())
             .add(new Plc4xS7Adapter())
+            .add(new Plc4xPassiveAdapter())
             .add(new OpcUaAdapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
