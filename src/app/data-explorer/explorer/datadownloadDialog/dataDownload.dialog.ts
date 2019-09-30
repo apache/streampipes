@@ -37,14 +37,13 @@ export class DataDownloadDialog {
 
     downloadHttpRequestSubscribtion;
 
-
-    customStartDate = new Date();
-    customEndDate = new Date(this.customStartDate.getTime() + 60000 * 60 * 24);
+    dateRange: Date [] = []; // [0] start, [1] end
 
 
     constructor(public dialogRef: MatDialogRef<DataDownloadDialog>,
                 @Inject(MAT_DIALOG_DATA) public data, private restService: DatalakeRestService,) {
-
+        this.dateRange[0] = new Date();
+        this.dateRange[1] = new Date(this.dateRange[0].getTime() + 60000 * 60 * 24);
     }
 
     createFile(data, format) {
@@ -113,7 +112,7 @@ export class DataDownloadDialog {
                 break;
             case "customInterval":
                 this.performRequest(this.restService.downloadRowDataTimeInterval(this.data.index, this.downloadFormat,
-                    this.customStartDate.getTime(), this.customEndDate.getTime()));
+                    this.dateRange[0].getTime(), this.dateRange[1].getTime()));
 
         }
     }
@@ -127,7 +126,7 @@ export class DataDownloadDialog {
 
             // finished
             if (event.type === HttpEventType.Response) {
-                this.createFile(event.body, this.downloadFormat)
+                this.createFile(event.body, this.downloadFormat);
                 this.downloadFinish = true
             }
         });

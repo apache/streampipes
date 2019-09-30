@@ -26,7 +26,7 @@ import {NguiDatetimePickerModule} from '@ngui/datetime-picker';
 import {DatalakeRestService} from '../core-services/datalake/datalake-rest.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
-import {MatDatepickerModule, MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
+import {MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
 import {CoreUiModule} from '../core-ui/core-ui.module';
 import {ExplorerComponent} from './explorer/explorer.component';
 import {DataDownloadDialog} from './explorer/datadownloadDialog/dataDownload.dialog';
@@ -54,7 +54,6 @@ export const MY_NATIVE_FORMATS = {
         MatSnackBarModule,
         MatProgressSpinnerModule,
         CoreUiModule,
-        MatDatepickerModule,
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
     ],
