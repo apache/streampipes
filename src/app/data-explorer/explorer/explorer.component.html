@@ -77,19 +77,12 @@
 
                     <div *ngIf="selectedTimeUnit === 'Custom'">
                         <div class="option">
-                            <div class="optionName">Start date</div>
-                            <mat-form-field style="top: -10px">
-                                <input matInput [matDatepicker]="picker" [(ngModel)]="customStartDate">
-                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-datepicker #picker></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-                        <div class="option" style="margin-left: 5px">
-                            <div class="optionName">End date</div>
-                            <mat-form-field style="top: -10px">
-                                <input matInput [min]="customStartDate" [min]="customStartDate" [matDatepicker]="picker2" [(ngModel)]="customEndDate">
-                                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                                <mat-datepicker #picker2></mat-datepicker>
+                            <div class="optionName">Date range</div>
+                            <mat-form-field style="top: -10px; width: 270px">
+                                <input matInput [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1"
+                                       [(ngModel)]="dateRange" [selectMode]="'range'">
+                                <mat-icon matSuffix style="color: white">event</mat-icon>
+                                <owl-date-time #dt1></owl-date-time>
                             </mat-form-field>
                         </div>
                     </div>
@@ -146,7 +139,7 @@
                             chevron_left
                         </mat-icon>
                     </button>
-                    <h3>Found no data in selected time range ({{customStartDate | date:'yyyy-MM-dd HH:mm'}} - {{customEndDate | date:'yyyy-MM-dd HH:mm'}})</h3>
+                    <h3>Found no data in selected time range ({{dateRange[0] | date:'MM/dd/yyyy HH:mm'}} - {{dateRange[1] | date:'MM/dd/yyyy HH:mm'}})</h3>
                     <button mat-icon-button (click)="handleNextPage()" class="paging-button" matTooltip="Going forwards in time">
                         <mat-icon style="font-size: 30px;height: 30px; width: 30px">
                             chevron_right

@@ -31,6 +31,16 @@ import {CoreUiModule} from '../core-iu/core-ui.module';
 import {ExplorerComponent} from './explorer/explorer.component';
 import {DataDownloadDialog} from './explorer/datadownloadDialog/dataDownload.dialog';
 
+import {OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
+
+export const MY_NATIVE_FORMATS = {
+    fullPickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false},
+    datePickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false},
+    timePickerInput: {hour: 'numeric', minute: 'numeric', hour12: false},
+    monthYearLabel: {year: 'numeric', month: 'short', hour12: false},
+    dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric', hour12: false},
+    monthYearA11yLabel: {year: 'numeric', month: 'long', hour12: false},
+};
 
 @NgModule({
     imports: [
@@ -45,6 +55,8 @@ import {DataDownloadDialog} from './explorer/datadownloadDialog/dataDownload.dia
         MatProgressSpinnerModule,
         CoreUiModule,
         MatDatepickerModule,
+        OwlDateTimeModule,
+        OwlNativeDateTimeModule,
     ],
     declarations: [
         DataExplorerComponent,
@@ -52,7 +64,10 @@ import {DataDownloadDialog} from './explorer/datadownloadDialog/dataDownload.dia
         DataDownloadDialog,
     ],
     providers: [
-        DatalakeRestService
+        DatalakeRestService,
+        {
+            provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS
+        },
     ],
     entryComponents: [
         DataExplorerComponent,

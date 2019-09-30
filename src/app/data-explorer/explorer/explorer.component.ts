@@ -68,17 +68,15 @@ export class ExplorerComponent implements OnInit {
     noIndexSelection;
 
     //custom time range
-    customEndDate: Date;
-    customStartDate: Date;
+    dateRange: Date []; // [0] start, [1] end
 
     //Mat Group
     selectedMatGroup = new FormControl(0);
 
 
     constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar, public dialog: MatDialog) {
-        this.customEndDate = new Date();
-        //this.customEndDate.setHours(0,0,0,0);
-        this.customStartDate = new Date(this.customEndDate.getTime() - 60000 * 60 * 24);
+        let dateTmp = new Date();
+        this.setDateRange(dateTmp, new Date(dateTmp.getTime() - 60000 * 60 * 24));
     }
 
     ngOnInit(): void {
@@ -120,18 +118,19 @@ export class ExplorerComponent implements OnInit {
         this.noIndexSelection = false;
 
         if (this.selectedTimeUnit !== 'Custom') {
-            this.customEndDate = new Date();
-            //this.customEndDate.setHours(0,0,0,0);
+            let endDateTmp = new Date();
+            let startDateTmp;
 
             if (this.selectedTimeUnit === '1 Day') {
-                this.customStartDate = new Date(this.customEndDate.getTime() - 60000 * 60 * 24 * 1);
+                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 1);
             } else if (this.selectedTimeUnit === '1 Week') {
-                this.customStartDate = new Date(this.customEndDate.getTime() - 60000 * 60 * 24 * 7);
+                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 7);
             } else if (this.selectedTimeUnit === '1 Month') {
-                this.customStartDate = new Date(this.customEndDate.getTime() - 60000 * 60 * 24 * 30);
+                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 30);
             } else if (this.selectedTimeUnit === '1 Year') {
-                this.customStartDate = new Date(this.customEndDate.getTime() - 60000 * 60 * 24 * 365);
+                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 365);
             }
+            this.setDateRange(startDateTmp, endDateTmp);
         }
 
         if (this.enableAdvanceOptions) {
@@ -144,11 +143,11 @@ export class ExplorerComponent implements OnInit {
                 groupbyUnit = 'd';
                 groupbyValue = 365 * groupbyValue;
             }
-            this.restService.getData(this.selectedInfoResult.measureName, this.customStartDate.getTime(), this.customEndDate.getTime(), groupbyUnit, groupbyValue).subscribe(
+            this.restService.getData(this.selectedInfoResult.measureName, this.dateRange[0].getTime(), this.dateRange[1].getTime(), groupbyUnit, groupbyValue).subscribe(
                 res => this.processReceivedData(res)
             );
         } else {
-            this.restService.getDataAutoAggergation(this.selectedInfoResult.measureName, this.customStartDate.getTime(), this.customEndDate.getTime()).subscribe(
+            this.restService.getDataAutoAggergation(this.selectedInfoResult.measureName, this.dateRange[0].getTime(), this.dateRange[1].getTime()).subscribe(
                 res => this.processReceivedData(res)
             );
         }
@@ -212,7 +211,7 @@ export class ExplorerComponent implements OnInit {
     handleNextPage() {
         let offset;
         if (this.selectedTimeUnit === 'Custom') {
-            offset = this.customEndDate.getTime() - this.customStartDate.getTime();
+            offset = this.dateRange[1].getTime() - this.dateRange[0].getTime();
         } else {
             if (this.selectedTimeUnit === '1 Day') {
                 offset =  60000 * 60 * 24 * 1;
@@ -225,15 +224,14 @@ export class ExplorerComponent implements OnInit {
             }
             this.selectedTimeUnit = 'Custom';
         }
-        this.customStartDate = new Date(this.customStartDate.getTime() + offset);
-        this.customEndDate = new Date(this.customEndDate.getTime() + offset);
+        this.setDateRange(new Date(this.dateRange[0].getTime() + offset), new Date(this.dateRange[1].getTime() + offset));
         this.loadData();
     }
 
     handlePreviousPage() {
         let offset;
         if (this.selectedTimeUnit === 'Custom') {
-            offset = -(this.customEndDate.getTime() - this.customStartDate.getTime());
+            offset = -(this.dateRange[1].getTime() - this.dateRange[0].getTime());
         } else {
             if (this.selectedTimeUnit === '1 Day') {
                 offset =  -60000 * 60 * 24 * 1;
@@ -246,8 +244,7 @@ export class ExplorerComponent implements OnInit {
             }
             this.selectedTimeUnit = 'Custom';
         }
-        this.customStartDate = new Date(this.customStartDate.getTime() + offset);
-        this.customEndDate = new Date(this.customEndDate.getTime() + offset);
+        this.setDateRange(new Date(this.dateRange[0].getTime() + offset), new Date(this.dateRange[1].getTime() + offset));
         this.loadData();
     }
 
@@ -257,6 +254,12 @@ export class ExplorerComponent implements OnInit {
 
     handleLastPage() {
         //TODO
+    }
+
+    setDateRange(start, end) {
+        this.dateRange = [];
+        this.dateRange[0] = start;
+        this.dateRange[1] = end;
     }
 
     openSnackBar(message: string) {
