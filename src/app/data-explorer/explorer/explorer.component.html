@@ -201,7 +201,7 @@
                 </mat-tab>
                 <mat-tab label="Line chart">
                     <sp-lineChart
-                            *ngIf="selectedInfoResult !== undefined"
+                            *ngIf="selectedInfoResult !== undefined && selectedMatGroup.value === 1"
                             [datas]="data"
                             [xAxesKey]="xAxesKey"
                             [yAxesKeys]="yAxesKeys"
