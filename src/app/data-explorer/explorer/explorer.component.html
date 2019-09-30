@@ -4,7 +4,7 @@
         <div fxLayout="row" fxLayoutAlign="space-between start" >
             <div>
                 <h4 style="display: initial">Select Index:</h4>
-                <mat-form-field style="margin-top: 0px; margin-bottom: -20px; margin-left: 10px;">
+                <mat-form-field style="margin-top: 0px; margin-bottom: -20px; margin-left: 14px;">
                     <input type="text" matInput  [formControl]="myControl" [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectIndex($event.option.value)">
                         <mat-option  *ngFor="let indexInfo of filteredIndexInfos | async" [value]="indexInfo.measureName">
@@ -116,10 +116,10 @@
 
 
     <div layout="row">
-        <div class="sp-blue-border">
+        <div class="sp-blue-border" style="padding-top: 0px">
 
             <!-- loading -->
-            <div *ngIf="isLoadingData" fxLayout="column" fxLayoutAlign="space-around center" >
+            <div *ngIf="displayIsLoadingData" fxLayout="column" fxLayoutAlign="space-around center" >
                 <div  fxLayout="row" fxLayoutAlign="center center" style="margin-top: 30px">
                     <mat-spinner></mat-spinner>
                 </div>
@@ -168,11 +168,53 @@
                 </div>
             </div>
 
+            <!-- update data -->
+            <div fxLayout="row" fxLayoutAlign="end center" *ngIf="!displayIsLoadingData && data !== undefined && yAxesKeys.length > 0">
+                <button mat-icon-button class="icon" (click)="reloadData()" style="margin-right: 5px; top: 5px; z-index: 100" color="primary">
+                    <mat-icon style="font-size: 30px; margin-top: -4px; width: 30px"
+                              [ngClass]="{'rotate': autoUpdateData}">autorenew</mat-icon>
+                    <label *ngIf="optionAutoUpdateData" style="font-size: 12px; position: absolute;
+                    margin-left: -19px;">A</label>
+                </button>
+
+                <button mat-icon-button [matMenuTriggerFor]="menu" style="z-index: 100;top: 4px; margin-left: -10px;
+                    margin-right: -5px;">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <div  mat-menu-item (click)="$event.stopPropagation();">
+                        <mat-slide-toggle
+                                [checked]="optionAutoUpdateData"
+                                (change)="optionAutoUpdateData = $event.checked"
+                                [color]="'primary'">
+                            Automatic periodic update
+                        </mat-slide-toggle>
+                    </div>
+                    <div mat-menu-item *ngIf="optionAutoUpdateData" (click)="$event.stopPropagation();">
+                        <mat-icon>timelapse</mat-icon>
+                        <mat-form-field>
+                            <input matInput type="number" [(ngModel)]="autoUpdatePeriod"
+                                   placeholder="Update period in secs">
+                        </mat-form-field>
+                    </div>
+                   <!--
+                    <div mat-menu-item disabled (click)="$event.stopPropagation();">
+                        <mat-slide-toggle
+                                [color]="'primary'">
+                            Reload all data instead just new ones
+                        </mat-slide-toggle>
+                    </div>
+                    -->
+                </mat-menu>
+
+            </div>
+
 
             <!-- Charts -->
-            <mat-tab-group *ngIf="!isLoadingData && data !== undefined && yAxesKeys.length > 0"
+            <mat-tab-group *ngIf="!displayIsLoadingData && data !== undefined && yAxesKeys.length > 0"
                            [selectedIndex]="selectedMatGroup.value"
-                           (selectedIndexChange)="selectedMatGroup.setValue($event)">
+                           (selectedIndexChange)="selectedMatGroup.setValue($event)"
+                            style="margin-top: -35px;">
                 <mat-tab label="Table">
                     <sp-table
                             *ngIf="selectedInfoResult !== undefined"

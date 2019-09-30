@@ -23,6 +23,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {DataDownloadDialog} from './datadownloadDialog/dataDownload.dialog';
+import {timer} from 'rxjs/internal/observable/timer';
 
 @Component({
     selector: 'sp-explorer',
@@ -61,6 +62,7 @@ export class ExplorerComponent implements OnInit {
     data;
 
     isLoadingData;
+    displayIsLoadingData = false;
 
     //user messages
     noDateFoundinTimeRange;
@@ -73,6 +75,12 @@ export class ExplorerComponent implements OnInit {
     //Mat Group
     selectedMatGroup = new FormControl(0);
 
+    //auto update data
+    optionAutoUpdateData: boolean = false;
+    autoUpdateData:boolean = false;
+    autoUpdatePeriod: number = 10;
+    autoUpdateTimer;
+    autoUpdateTimerSubcribtion;
 
     constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar, public dialog: MatDialog) {
         let dateTmp = new Date();
@@ -109,13 +117,17 @@ export class ExplorerComponent implements OnInit {
             this.groupbyValue = 12;
         }
 
-     this.loadData();
+     this.loadData(false);
     }
 
-    loadData() {
+    loadData(silentLoading) {
         this.isLoadingData = true;
         this.noDateFoundinTimeRange = false;
         this.noIndexSelection = false;
+
+        if (!silentLoading) {
+           this.displayIsLoadingData = true;
+        }
 
         if (this.selectedTimeUnit !== 'Custom') {
             let endDateTmp = new Date();
@@ -154,6 +166,26 @@ export class ExplorerComponent implements OnInit {
 
     }
 
+    reloadData() {
+        if (this.optionAutoUpdateData) {
+            if (this.autoUpdateData) {
+                this.autoUpdateData = false;
+                this.autoUpdateTimerSubcribtion.unsubscribe();
+            } else {
+                this.autoUpdateData = true;
+                this.autoUpdateTimer = timer(this.autoUpdatePeriod * 1000, this.autoUpdatePeriod * 1000);
+                this.autoUpdateTimerSubcribtion = this.autoUpdateTimer.subscribe(val => {
+                    //Just Load new data if last request finished
+                    if (!this.isLoadingData) {
+                        this.loadData(true)
+                    }
+                })
+            }
+        } else {
+            this.loadData(false)
+        }
+    }
+
     processReceivedData(res) {
         if(res.events.length > 0) {
             this.data = res.events as [];
@@ -167,6 +199,7 @@ export class ExplorerComponent implements OnInit {
             this.noKeySelected = false;
         }
         this.isLoadingData = false;
+        this.displayIsLoadingData = false;
     }
 
     selectIndex(index: string) {
@@ -180,7 +213,7 @@ export class ExplorerComponent implements OnInit {
             }
         });
         this.selectKey(this.dataKeys.slice(0, 3));
-        this.loadData();
+        this.loadData(false);
     }
 
     selectKey(value) {
@@ -225,7 +258,7 @@ export class ExplorerComponent implements OnInit {
             this.selectedTimeUnit = 'Custom';
         }
         this.setDateRange(new Date(this.dateRange[0].getTime() + offset), new Date(this.dateRange[1].getTime() + offset));
-        this.loadData();
+        this.loadData(false);
     }
 
     handlePreviousPage() {
@@ -245,7 +278,7 @@ export class ExplorerComponent implements OnInit {
             this.selectedTimeUnit = 'Custom';
         }
         this.setDateRange(new Date(this.dateRange[0].getTime() + offset), new Date(this.dateRange[1].getTime() + offset));
-        this.loadData();
+        this.loadData(false);
     }
 
     handleFirstPage() {
