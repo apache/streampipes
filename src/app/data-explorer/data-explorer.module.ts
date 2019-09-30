@@ -27,7 +27,7 @@ import {DatalakeRestService} from '../core-services/datalake/datalake-rest.servi
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
 import {MatDatepickerModule, MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
-import {CoreUiModule} from '../core-iu/core-ui.module';
+import {CoreUiModule} from '../core-ui/core-ui.module';
 import {ExplorerComponent} from './explorer/explorer.component';
 import {DataDownloadDialog} from './explorer/datadownloadDialog/dataDownload.dialog';
 
