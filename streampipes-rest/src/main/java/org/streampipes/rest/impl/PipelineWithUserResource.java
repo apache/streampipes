@@ -249,7 +249,7 @@ public class PipelineWithUserResource extends AbstractRestInterface implements I
         storedPipeline.setSepas(pipeline.getSepas());
         storedPipeline.setActions(pipeline.getActions());
         storedPipeline.setCreatedAt(System.currentTimeMillis());
-        getPipelineStorage().updatePipeline(storedPipeline);
+        Operations.updatePipeline(storedPipeline);
         return statusMessage(Notifications.success("Pipeline modified"));
     }
 

@@ -110,6 +110,10 @@ public class Operations {
     new PipelineStorageService(pipeline).addPipeline();
   }
 
+  public static void updatePipeline(Pipeline pipeline) {
+    new PipelineStorageService(pipeline).updatePipeline();
+  }
+
   public static PipelineOperationStatus startPipeline(
           Pipeline pipeline) {
     return startPipeline(pipeline,true, true, false);

@@ -17,7 +17,6 @@
 
 package org.streampipes.manager.matching;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.manager.data.PipelineGraph;
 import org.streampipes.manager.data.PipelineGraphHelpers;
@@ -43,6 +42,7 @@ public class InvocationGraphBuilder {
 
   private PipelineGraph pipelineGraph;
   private String pipelineId;
+  private Integer uniquePeIndex = 0;
 
   private List<InvocableStreamPipesEntity> graphs;
 
@@ -121,6 +121,8 @@ public class InvocationGraphBuilder {
       t.setCorrespondingPipeline(pipelineId);
       t.setStatusInfoSettings(makeStatusInfoSettings(elementIdentifier));
 
+      uniquePeIndex++;
+
       configure(t, getConnections(t));
 
     });
@@ -141,8 +143,11 @@ public class InvocationGraphBuilder {
   private String makeElementIdentifier(String pipelineId, String topic, String elementName) {
     return pipelineId
             + "-"
-            + topic + "-" + elementName.replaceAll(" ", "").toLowerCase() + "-" +
-            RandomStringUtils.randomAlphabetic(5);
+            + topic
+            + "-"
+            + elementName.replaceAll(" ", "").toLowerCase()
+            + "-"
+            + uniquePeIndex;
   }
 
   private EventSchema getInputSchema(NamedStreamPipesEntity source) {
