@@ -21,7 +21,6 @@ import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.windowing.time.Time;
 import org.junit.Test;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.test.generator.InvocationGraphGenerator;
@@ -56,7 +55,8 @@ public class TestCountProgram extends DataStreamTestBase {
 
   private void runProgram(EventTimeInput<Event> input, ExpectedRecords<Event>
           expected) {
-    CountParameters params = new CountParameters(InvocationGraphGenerator.makeEmptyInvocation(new CountController().declareModel()), Time.seconds(10), "field");
+    CountParameters params =
+            new CountParameters(InvocationGraphGenerator.makeEmptyInvocation(new CountController().declareModel()), 10,"SECONDS", "field");
 
     CountProgram program = new CountProgram(params, true);
 
