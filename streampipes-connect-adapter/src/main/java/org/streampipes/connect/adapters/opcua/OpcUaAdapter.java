@@ -100,9 +100,9 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
 
         event.put(key, value.getValue().getValue());
 
+        // ensure that event is complete and all opc ua subscriptions transmitted at least one value
         if (event.keySet().size() >= this.numberProperties) {
             adapterPipeline.process(event);
-//            System.out.println(event);
         }
     }
 

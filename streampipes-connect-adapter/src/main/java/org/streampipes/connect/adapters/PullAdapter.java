@@ -26,6 +26,7 @@ import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 
 import java.util.concurrent.*;
 
+
 public abstract class PullAdapter extends SpecificDataStreamAdapter {
 
     protected static Logger logger = LoggerFactory.getLogger(PullAdapter.class);
