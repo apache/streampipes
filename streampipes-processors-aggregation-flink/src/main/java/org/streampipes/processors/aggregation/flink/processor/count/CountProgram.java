@@ -19,13 +19,12 @@ import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.triggers.Trigger;
 import org.apache.flink.streaming.api.windowing.triggers.TriggerResult;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
-
-import java.util.Map;
 
 public class CountProgram extends AbstractAggregationProgram<CountParameters> {
 
@@ -36,10 +35,11 @@ public class CountProgram extends AbstractAggregationProgram<CountParameters> {
 
   @Override
   protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
+    Time time = makeTimeWindow(params.getTimeWindowSize(), params.getTimeWindowScale());
     return dataStreams[0]
             .map(new CountMapper(params.getFieldToCount()))
             .keyBy(1)
-            .timeWindow(params.getTime())
+            .timeWindow(time)
             .trigger(new Trigger<Tuple3<String, String, Integer>, TimeWindow>() {
               @Override
               public TriggerResult onElement(Tuple3<String, String, Integer> stringStringIntegerTuple3, long l, TimeWindow timeWindow, TriggerContext triggerContext) throws Exception {
@@ -63,33 +63,16 @@ public class CountProgram extends AbstractAggregationProgram<CountParameters> {
             })
             .sum(2)
             .map(new Tuple2MapMapper());
-//            .map()
-//            .map(new MapFunction<Map<String, Object>, Map<String, Object>>() {
-//              @Override
-//              public Map<String, Object> map(Map<String, Object> stringObjectMap) throws Exception {
-//                Map<String, Object> outMap = new HashMap<>();
-//              outMap.put("value", params.getFieldToCount());
-//              outMap.put("count", "");
-//              return outMap;
-//              }
-//            });
-//            .apply((WindowFunction<String, Map<String, Object>, Map<String, Object>, TimeWindow>) (map, timeWindow, iterable, collector) -> {
-//              Integer count = 0;
-//              Iterator<String> it = iterable.iterator();
-//              while(it.hasNext()) {
-//                String next = it.next();
-//                if (next.equals(map.get(params.getFieldToCount()))) {
-//                  count++;
-//                }
-//              }
-//
-//              Map<String, Object> outMap = new HashMap<>();
-//              outMap.put("value", map.get(params.getFieldToCount()));
-//              outMap.put("count", count);
-//              collector.collect(outMap);
-//            });
+  }
 
-
+  private Time makeTimeWindow(Integer count, String type) {
+    if (type.equals(CountController.MINUTES_INTERNAL_NAME)) {
+      return Time.minutes(count);
+    } else if (type.equals(CountController.SECONDS_INTERNAL_NAME)) {
+      return Time.seconds(count);
+    } else {
+      return Time.hours(count);
+    }
   }
 
   @Override

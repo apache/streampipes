@@ -17,7 +17,6 @@
 
 package org.streampipes.processors.aggregation.flink.processor.count;
 
-import org.apache.flink.streaming.api.windowing.time.Time;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -77,10 +76,7 @@ public class CountController extends FlinkDataProcessorDeclarer<CountParameters>
     String scale = extractor.selectedSingleValueInternalName(SCALE_KEY, String.class);
     String fieldToCount = extractor.mappingPropertyValue(COUNT_MAPPING);
 
-    Time time = new TimeScale(scale).toFlinkTime(timeWindowSize);
-
-
-    CountParameters staticParam = new CountParameters(graph, time,
+    CountParameters staticParam = new CountParameters(graph, timeWindowSize, scale,
             fieldToCount);
 
     return new CountProgram(staticParam, AggregationFlinkConfig.INSTANCE.getDebug());
