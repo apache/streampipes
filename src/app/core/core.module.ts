@@ -23,6 +23,7 @@ import 'angular-loading-bar';
 import stateConfig from './state.config'
 import iconProviderConfig from './icon-provider.config'
 import httpProviderConfig from './http-provider.config'
+import nagPrism from './prism/nag-prism.directive'
 
 export default angular.module('sp.core', ['ui.router', 'ui.router.upgrade', 'ngMaterial', 'ngMdIcons', 'angular-loading-bar'])
     .config(stateConfig)
@@ -31,4 +32,5 @@ export default angular.module('sp.core', ['ui.router', 'ui.router.upgrade', 'ngM
     }])
     .config(iconProviderConfig)
     .config(httpProviderConfig)
+    .directive('nagPrism', nagPrism)
     .name;

@@ -27,7 +27,6 @@ import {DeploymentComponent} from './components/deployment/deployment.component'
 
 import {AdvancedSettingsComponent} from './components/general/advanced-settings.component'
 import {CollapsibleComponent} from './components/general/collapsible.component'
-import nagPrism from './components/general/nag-prism.directive'
 import {OptionsComponent} from './components/general/options.component'
 import {ValueSpecificationComponent} from './components/general/value-specification.component'
 
@@ -67,7 +66,6 @@ export default angular.module('sp.sensors', [spServices])
 
 	.component('advancedSettings', AdvancedSettingsComponent)
 	.component('collapsible', CollapsibleComponent)
-	.directive('nagPrism', nagPrism)
 	.component('options', OptionsComponent)
 	.component('valueSpecification', ValueSpecificationComponent)
 
