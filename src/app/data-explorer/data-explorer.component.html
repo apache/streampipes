@@ -7,41 +7,6 @@
     </div>
 
     <div class="container-fluid">
-            <div layout-padding>
-                    <div class="assemblyOptions sp-blue-bg">
-
-                        <div fxLayout="row" fxLayoutAlign="space-between center" >
-                            <div>
-                                <h4 style="display: initial">Select Index:</h4>
-                                <mat-form-field style="margin-top: -10px; margin-bottom: -20px; margin-left: 10px;">
-                                    <input type="text" matInput  [formControl]="myControl" [matAutocomplete]="auto">
-                                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectIndex($event.option.value)">
-                                        <mat-option  *ngFor="let indexInfo of filteredIndexInfos | async" [value]="indexInfo.measureName">
-                                            {{indexInfo.measureName}}
-                                        </mat-option>
-                                    </mat-autocomplete>
-                                </mat-form-field>
-                            </div>
-                           <!--
-                            <sp-datalake-data-download *ngIf="selectedIndex != ''" [index]="selectedIndex" ></sp-datalake-data-download>
-                            -->
-                        </div>
-
-                    </div>
-                <div layout="row">
-                    <div class="sp-blue-border">
-
-                        <mat-tab-group>
-                            <mat-tab label="Table">
-                                <sp-datalake-table [index]="selectedIndex" *ngIf="selectedIndex != ''"></sp-datalake-table>
-                            </mat-tab>
-                            <mat-tab label="Line chart">
-                                <sp-datalake-lineChart [index]="selectedIndex" *ngIf="selectedIndex != ''"></sp-datalake-lineChart>
-                            </mat-tab>
-                        </mat-tab-group>
-                    </div>
-
-                </div>
-            </div>
+            <sp-explorer></sp-explorer>
     </div>
 </div>

@@ -35,7 +35,8 @@ export class DataExplorerComponent implements OnInit {
     filteredIndexInfos: Observable<InfoResult[]>;
 
     page: number = 0;
-    selectedIndex: string = '';
+    //selectedIndex: string = '';
+    selectedInfoResult: InfoResult = undefined;
 
     downloadFormat: string = 'csv';
     isDownloading: boolean = false;
@@ -57,7 +58,9 @@ export class DataExplorerComponent implements OnInit {
     }
 
     selectIndex(index: string) {
-        this.selectedIndex = index;
+        this.selectedInfoResult = this._filter(index)[0]
+
+      //  this.selectedIndex = index;
     }
 
     _filter(value: string): InfoResult[] {

@@ -18,14 +18,14 @@
 import {Component, Inject, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef, MatStepper} from '@angular/material';
 import {HttpEventType} from '@angular/common/http';
-import {DatalakeRestService} from '../../../../core-services/datalake/datalake-rest.service';
+import {DatalakeRestService} from '../../../core-services/datalake/datalake-rest.service';
 
 @Component({
-    selector: 'sp-datalake-lineChart-dataDownload-dialog',
-    templateUrl: 'datalake-lineChart-dataDownload.dialog.html',
-    styleUrls: ['./datalake-lineChart-dataDownload.dialog.css']
+    selector: 'sp-dataDownload-dialog',
+    templateUrl: 'dataDownload.dialog.html',
+    styleUrls: ['./dataDownload.dialog.css']
 })
-export class DatalakeLineChartDataDownloadDialog {
+export class DataDownloadDialog {
 
 
     downloadFormat: string = 'csv';
@@ -37,14 +37,13 @@ export class DatalakeLineChartDataDownloadDialog {
 
     downloadHttpRequestSubscribtion;
 
-
-    customStartDate = new Date();
-    customEndDate = new Date(this.customStartDate.getTime() + 60000 * 60 * 24);
+    dateRange: Date [] = []; // [0] start, [1] end
 
 
-    constructor(public dialogRef: MatDialogRef<DatalakeLineChartDataDownloadDialog>,
+    constructor(public dialogRef: MatDialogRef<DataDownloadDialog>,
                 @Inject(MAT_DIALOG_DATA) public data, private restService: DatalakeRestService,) {
-
+        this.dateRange[0] = new Date();
+        this.dateRange[1] = new Date(this.dateRange[0].getTime() + 60000 * 60 * 24);
     }
 
     createFile(data, format) {
@@ -113,7 +112,7 @@ export class DatalakeLineChartDataDownloadDialog {
                 break;
             case "customInterval":
                 this.performRequest(this.restService.downloadRowDataTimeInterval(this.data.index, this.downloadFormat,
-                    this.customStartDate.getTime(), this.customEndDate.getTime()));
+                    this.dateRange[0].getTime(), this.dateRange[1].getTime()));
 
         }
     }
@@ -127,7 +126,7 @@ export class DatalakeLineChartDataDownloadDialog {
 
             // finished
             if (event.type === HttpEventType.Response) {
-                this.createFile(event.body, this.downloadFormat)
+                this.createFile(event.body, this.downloadFormat);
                 this.downloadFinish = true
             }
         });

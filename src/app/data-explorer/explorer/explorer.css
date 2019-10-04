@@ -1,0 +1,63 @@
+::ng-deep .mat-form-field-underline {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+::ng-deep .mat-select-content{
+    width:2000px;
+    background-color: red;
+    font-size: 10px;
+}
+
+.option {
+    border: #ffffff solid 1px;
+    border-radius: 5px;
+    margin-top: 10px;
+    height: 50px;
+    float: left;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.optionName {
+    margin-top: -10px;
+    margin-left: 8px;
+    padding-left: 3px;
+    padding-right: 2px;
+    width: fit-content;
+    background:#9c9c9c;
+}
+
+.icon {
+    top: 15px;
+    border: #202020 solid 1px;
+    margin-left: 5px
+}
+
+.optionContainer {
+}
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.paging-button {
+    top: 6px;
+    margin: 10px;
+    border: #202020 solid 1px;
+}
+
+.custom-dialog-container .mat-dialog-container {
+    padding-top: 0px !important;
+}
+
+.rotate {
+    -webkit-animation:spin 4s linear infinite;
+    -moz-animation:spin 4s linear infinite;
+    animation:spin 4s linear infinite;
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }

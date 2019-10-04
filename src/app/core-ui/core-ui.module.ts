@@ -24,13 +24,11 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
 import {MatDatepickerModule, MatNativeDateModule, MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
 import {TableComponent} from './table/table.component';
-import {DatalakeTableComponent} from './datalake/table/datalake-table.component';
-import {DatalakeDataDownloadcomponent} from './datalake/datadownload/datalake-dataDownloadcomponent';
-import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {LineChartComponent} from './linechart/lineChart.component';
-import {DatalakeLineChartComponent} from './datalake/linechart/datalake-lineChart.component';
-import {DatalakeLineChartDataDownloadDialog} from './datalake/linechart/datadownloadDialog/datalake-lineChart-dataDownload.dialog';
 
+import * as PlotlyJS from 'plotly.js/dist/plotly.js';
+import { PlotlyModule } from 'angular-plotly.js';
+PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
     imports: [
@@ -42,29 +40,22 @@ import {DatalakeLineChartDataDownloadDialog} from './datalake/linechart/datadown
         CdkTableModule,
         MatSnackBarModule,
         MatProgressSpinnerModule,
-        NgxChartsModule, MatDatepickerModule,
+        MatDatepickerModule,
         MatNativeDateModule,
+        PlotlyModule,
     ],
     declarations: [
         TableComponent,
         LineChartComponent,
-        DatalakeTableComponent,
-        DatalakeDataDownloadcomponent,
-        DatalakeLineChartComponent,
-        DatalakeLineChartDataDownloadDialog,
     ],
     providers: [
         MatDatepickerModule
     ],
     entryComponents: [
-        DatalakeLineChartDataDownloadDialog
     ],
     exports: [
         TableComponent,
         LineChartComponent,
-        DatalakeTableComponent,
-        DatalakeDataDownloadcomponent,
-        DatalakeLineChartComponent
     ]
 })
 export class CoreUiModule {

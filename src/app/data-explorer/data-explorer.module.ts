@@ -27,8 +27,20 @@ import {DatalakeRestService} from '../core-services/datalake/datalake-rest.servi
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
 import {MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
-import {CoreUiModule} from '../core-iu/core-ui.module';
+import {CoreUiModule} from '../core-ui/core-ui.module';
+import {ExplorerComponent} from './explorer/explorer.component';
+import {DataDownloadDialog} from './explorer/datadownloadDialog/dataDownload.dialog';
 
+import {OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
+
+export const MY_NATIVE_FORMATS = {
+    fullPickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false},
+    datePickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false},
+    timePickerInput: {hour: 'numeric', minute: 'numeric', hour12: false},
+    monthYearLabel: {year: 'numeric', month: 'short', hour12: false},
+    dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric', hour12: false},
+    monthYearA11yLabel: {year: 'numeric', month: 'long', hour12: false},
+};
 
 @NgModule({
     imports: [
@@ -42,15 +54,23 @@ import {CoreUiModule} from '../core-iu/core-ui.module';
         MatSnackBarModule,
         MatProgressSpinnerModule,
         CoreUiModule,
+        OwlDateTimeModule,
+        OwlNativeDateTimeModule,
     ],
     declarations: [
         DataExplorerComponent,
+        ExplorerComponent,
+        DataDownloadDialog,
     ],
     providers: [
-        DatalakeRestService
+        DatalakeRestService,
+        {
+            provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS
+        },
     ],
     entryComponents: [
         DataExplorerComponent,
+        DataDownloadDialog,
     ],
     exports: [
     ]
