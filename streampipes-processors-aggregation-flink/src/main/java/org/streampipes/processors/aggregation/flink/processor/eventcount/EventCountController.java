@@ -14,13 +14,11 @@
  * limitations under the License.
  *
  */
-
-package org.streampipes.processors.aggregation.flink.processor.count;
+package org.streampipes.processors.aggregation.flink.processor.eventcount;
 
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.processors.aggregation.flink.config.AggregationFlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -36,11 +34,10 @@ import org.streampipes.sdk.utils.Assets;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
-public class CountController extends FlinkDataProcessorDeclarer<CountParameters> {
+public class EventCountController extends FlinkDataProcessorDeclarer<EventCountParameters> {
 
   private static final String TIME_WINDOW_KEY = "time-window";
   private static final String SCALE_KEY = "scale";
-  private static final String COUNT_MAPPING = "count-mapping";
 
   static final String HOURS_INTERNAL_NAME = "HOURS";
   static final String MINUTES_INTERNAL_NAME = "MINUTES";
@@ -48,18 +45,17 @@ public class CountController extends FlinkDataProcessorDeclarer<CountParameters>
 
   @Override
   public DataProcessorDescription declareModel() {
-
-    return ProcessingElementBuilder.create("org.streampipes.processors.aggregation.flink.count")
+    return ProcessingElementBuilder.create("org.streampipes.processors.aggregation.flink"
+            + ".eventcount")
             .category(DataProcessorType.AGGREGATE)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withAssets(Assets.DOCUMENTATION)
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                            Labels.withId(COUNT_MAPPING), PropertyScope.DIMENSION_PROPERTY)
+                    .requiredProperty(EpRequirements.anyProperty())
                     .build())
-            .outputStrategy(OutputStrategies.fixed(EpProperties.stringEp(Labels.empty(), "value",
-                    "http://schema.org/Text"), EpProperties.integerEp(Labels.empty(), "count",
+            .outputStrategy(OutputStrategies.fixed(EpProperties.timestampProperty("timestamp"),
+                    EpProperties.integerEp(Labels.empty(), "count",
                     "http://schema.org/Number")))
             .requiredIntegerParameter(Labels.withId(TIME_WINDOW_KEY))
             .requiredSingleValueSelection(Labels.withId(SCALE_KEY),
@@ -70,17 +66,11 @@ public class CountController extends FlinkDataProcessorDeclarer<CountParameters>
   }
 
   @Override
-  public FlinkDataProcessorRuntime<CountParameters> getRuntime(DataProcessorInvocation graph,
-                                                               ProcessingElementParameterExtractor extractor) {
-
+  public FlinkDataProcessorRuntime<EventCountParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
     Integer timeWindowSize = extractor.singleValueParameter(TIME_WINDOW_KEY, Integer.class);
     String scale = extractor.selectedSingleValueInternalName(SCALE_KEY, String.class);
-    String fieldToCount = extractor.mappingPropertyValue(COUNT_MAPPING);
+    EventCountParameters staticParam = new EventCountParameters(graph, timeWindowSize, scale);
 
-    CountParameters staticParam = new CountParameters(graph, timeWindowSize, scale,
-            fieldToCount);
-
-    return new CountProgram(staticParam, AggregationFlinkConfig.INSTANCE.getDebug());
-
+    return new EventCountProgram(staticParam, AggregationFlinkConfig.INSTANCE.getDebug());
   }
 }

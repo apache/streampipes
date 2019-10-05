@@ -16,20 +16,15 @@
 
 -->
 
-## Count
+## Event Counter
 
-<p align="center"> 
-    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
-</p>
+
 
 ***
 
 ## Description
 
-Performs an aggregation based on a given field and outputs the number of occurrences.
-Example: Count the number of vehicle positions per vehicleId.
-The Count aggregation requires a time window, used to perform the count aggregation and a field used to aggregate
- values.
+Counts the number of events arriving within a time window. An event is emitted every time the time window expires.
 
 ***
 
@@ -40,7 +35,7 @@ The Count aggregation requires a time window, used to perform the count aggregat
 
 ## Configuration
 
-Describe the configuration parameters here
+Time Window: The scale and size of the time window.
 
 ### 1st parameter
 
