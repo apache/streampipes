@@ -1,0 +1,9 @@
+org.streampipes.processors.transformation.jvm.csvmetadata.title=CSV Metadata Enricher
+org.streampipes.processors.transformation.jvm.csvmetadata.description=Enriches an event with additional fields from a
+CSV file based on a common ID.
+
+field.title=Boolean Field
+field.description=The field of the boolean to monitor
+
+countField.title=Counter
+countField.description=Amount of changes of boolean value

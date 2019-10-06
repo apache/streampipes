@@ -32,9 +32,11 @@ import org.streampipes.processors.transformation.jvm.processor.booloperator.coun
 import org.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterController;
 import org.streampipes.processors.transformation.jvm.processor.booloperator.timekeeping.BooleanTimekeepingController;
 import org.streampipes.processors.transformation.jvm.processor.booloperator.timer.BooleanTimerController;
+import org.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentController;
+import org.streampipes.processors.transformation.jvm.processor.task.TaskDurationController;
+import org.streampipes.processors.transformation.jvm.processor.timestampextractor.TimestampExtractorController;
 import org.streampipes.processors.transformation.jvm.processor.value.change.ChangedValueDetectionController;
 import org.streampipes.processors.transformation.jvm.processor.value.duration.CalculateDurationController;
-import org.streampipes.processors.transformation.jvm.processor.timestampextractor.TimestampExtractorController;
 
 public class TransformationJvmInit extends StandaloneModelSubmitter {
 
@@ -49,7 +51,9 @@ public class TransformationJvmInit extends StandaloneModelSubmitter {
             .add(new BooleanCounterController())
             .add(new BooleanInverterController())
             .add(new BooleanTimekeepingController())
-            .add(new BooleanTimerController());
+            .add(new BooleanTimerController())
+            .add(new CsvMetadataEnrichmentController())
+            .add(new TaskDurationController());
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
