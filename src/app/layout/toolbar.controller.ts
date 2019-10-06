@@ -81,6 +81,11 @@ export class ToolbarController {
                 icon: 'editor:ic_insert_chart_24px'
             },
             {
+                link: 'streampipes.app-overview',
+                title: 'Apps',
+                icon: 'navigation:ic_apps_24px'
+            },
+            {
                 link: 'streampipes.data-explorer',
                 title: 'Data Explorer',
                 icon: 'action:ic_view_headline_24px'

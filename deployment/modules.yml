@@ -125,3 +125,18 @@ spDataExplorer:
   icon: 'action:ic_view_headline_24px'
   homeImage: ''
   admin: false
+spAppOverview:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'AppOverviewModule'
+  ng5_component: 'AppOverviewComponent'
+  ng5_componentPath: '../app-overview/app-overview.component'
+  path: './app-overview/app-overview.module'
+  link: 'streampipes.app-overview'
+  url: '/apps'
+  title: 'Apps'
+  description: 'app-overview'
+  icon: 'navigation:ic_apps_24px'
+  homeImage: '/assets/img/home/configuration.png'
+  admin: false

@@ -7,6 +7,7 @@ modules:
   - spPipelines
   - spConnect
   - spDashboard
+  - spAppOverview
   - spAdd
   - spMyElements
   - spDataExplorer
