@@ -46,7 +46,7 @@ public class TaskDurationController extends StandaloneEventProcessingDeclarer<Ta
     return ProcessingElementBuilder.create("org.streampipes.processors.transformation.jvm"
             + ".taskduration")
             .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredPropertyWithUnaryMapping(
                             EpRequirements.anyProperty(),
