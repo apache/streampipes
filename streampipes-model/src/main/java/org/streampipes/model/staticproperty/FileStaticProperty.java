@@ -27,42 +27,41 @@ import javax.persistence.Entity;
 @Entity
 public class FileStaticProperty extends StaticProperty {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @RdfProperty(StreamPipes.HAS_ENDPOINT_URL)
-	private String endpointUrl;
+  @RdfProperty(StreamPipes.HAS_ENDPOINT_URL)
+  private String endpointUrl;
 
-    @RdfProperty(StreamPipes.HAS_LOCATION_PATH)
-	private String locationPath;
+  @RdfProperty(StreamPipes.HAS_LOCATION_PATH)
+  private String locationPath;
 
-    public FileStaticProperty() {
-        super(StaticPropertyType.FileStaticProperty);
-    }
+  public FileStaticProperty() {
+    super(StaticPropertyType.FileStaticProperty);
+  }
 
-    public FileStaticProperty(FileStaticProperty other) {
-        super(other);
-        this.endpointUrl = other.getEndpointUrl();
-        this.locationPath = other.getLocationPath();
-    }
+  public FileStaticProperty(FileStaticProperty other) {
+    super(other);
+    this.endpointUrl = other.getEndpointUrl();
+    this.locationPath = other.getLocationPath();
+  }
 
-    public FileStaticProperty(String internalName, String label, String description)
-	{
-		super(StaticPropertyType.FileStaticProperty, internalName, label, description);
-	}
+  public FileStaticProperty(String internalName, String label, String description) {
+    super(StaticPropertyType.FileStaticProperty, internalName, label, description);
+  }
 
-    public String getEndpointUrl() {
-        return endpointUrl;
-    }
+  public String getEndpointUrl() {
+    return endpointUrl;
+  }
 
-    public void setEndpointUrl(String endpointUrl) {
-        this.endpointUrl = endpointUrl;
-    }
+  public void setEndpointUrl(String endpointUrl) {
+    this.endpointUrl = endpointUrl;
+  }
 
-    public String getLocationPath() {
-        return locationPath;
-    }
+  public String getLocationPath() {
+    return locationPath;
+  }
 
-    public void setLocationPath(String locationPath) {
-        this.locationPath = locationPath;
-    }
+  public void setLocationPath(String locationPath) {
+    this.locationPath = locationPath;
+  }
 }

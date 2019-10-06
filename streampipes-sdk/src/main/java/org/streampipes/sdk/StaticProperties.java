@@ -21,6 +21,8 @@ import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.PropertyValueSpecification;
+import org.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
+import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.model.staticproperty.SecretStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.StaticPropertyGroup;
@@ -53,6 +55,32 @@ public class StaticProperties {
     return fsp;
   }
 
+  public static RuntimeResolvableOneOfStaticProperty singleValueSelectionFromContainer(Label label) {
+    return new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
+            .getLabel(), label.getDescription());
+  }
+
+  public static RuntimeResolvableOneOfStaticProperty singleValueSelectionFromContainer(Label label, List<String> dependsOn) {
+    RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
+            .getLabel(), label.getDescription());
+    rsp.setDependsOn(dependsOn);
+    return rsp;
+  }
+
+  public static RuntimeResolvableAnyStaticProperty multiValueSelectionFromContainer(Label label) {
+    return new RuntimeResolvableAnyStaticProperty(label.getInternalId(), label
+            .getLabel(), label.getDescription());
+  }
+
+  public static RuntimeResolvableAnyStaticProperty multiValueSelectionFromContainer(Label label,
+                                                                                  List<String> dependsOn) {
+    RuntimeResolvableAnyStaticProperty rsp =
+            new RuntimeResolvableAnyStaticProperty(label.getInternalId(), label
+            .getLabel(), label.getDescription());
+    rsp.setDependsOn(dependsOn);
+    return rsp;
+  }
+
   public static StaticProperty integerFreeTextProperty(Label label,
                                                        PropertyValueSpecification propertyValueSpecification) {
     FreeTextStaticProperty fsp = integerFreeTextProperty(label);
@@ -66,7 +94,7 @@ public class StaticProperties {
 
   public static StaticPropertyGroup group(Label label, StaticProperty... sp) {
     List<StaticProperty> staticProperties = Arrays.asList(sp);
-    for(int i = 0; i < staticProperties.size(); i++) {
+    for (int i = 0; i < staticProperties.size(); i++) {
       staticProperties.get(i).setIndex(i);
     }
     return new StaticPropertyGroup(label.getInternalId(), label.getLabel(),
