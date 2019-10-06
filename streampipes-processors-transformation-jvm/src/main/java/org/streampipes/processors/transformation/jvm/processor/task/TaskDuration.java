@@ -29,11 +29,13 @@ public class TaskDuration implements EventProcessor<TaskDurationParameters> {
 
   private String lastValue;
   private Long lastTimestamp;
+  private Double outputDivisor;
 
   @Override
   public void onInvocation(TaskDurationParameters parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.taskFieldSelector = parameters.getTaskFieldSelector();
     this.timestampFieldSelector = parameters.getTimestampFieldSelector();
+    this.outputDivisor = parameters.getOutputDivisor();
   }
 
   @Override
@@ -49,9 +51,12 @@ public class TaskDuration implements EventProcessor<TaskDurationParameters> {
       if (!this.lastValue.equals(taskValue)) {
         Long duration = timestampValue - this.lastTimestamp;
 
+
+        double result = duration / this.outputDivisor;
+
         Event outEvent = new Event();
         outEvent.addField("processId", makeProcessId(taskValue));
-        outEvent.addField("duration", duration);
+        outEvent.addField("duration", result);
 
         this.lastValue = taskValue;
         this.lastTimestamp = timestampValue;
