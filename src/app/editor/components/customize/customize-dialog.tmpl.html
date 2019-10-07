@@ -56,5 +56,9 @@
             <group customize-form="ctrl.customizeForm" display-recommended="ctrl.displayRecommended"
                    static-property="ctrl.staticProperty" selected-element="ctrl.selectedElement"></group>
         </div>
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'FileStaticProperty'">
+            <file-static-property customize-form="ctrl.customizeForm" display-recommended="ctrl.displayRecommended"
+                   static-property="ctrl.staticProperty" selected-element="ctrl.selectedElement"></file-static-property>
+        </div>
     </div>
 </div>

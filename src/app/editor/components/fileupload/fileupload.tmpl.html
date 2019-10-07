@@ -1,0 +1,13 @@
+<h5>Hi</h5>
+<div>
+    <input ng-model="ctrl.file" type="file" name="file" id="file">
+    <sp-button sp-button-blue sp-button-small-padding ng-click="ctrl.uploadFile()">
+        <i class="material-icons" style="font-size:18px;">refresh</i>
+        <md-tooltip md-direction="top">
+            Upload
+        </md-tooltip>
+        Upload File</sp-button>&nbsp;&nbsp;
+    <pre ng-repeat="(key, value) in ctrl.fileLog">
+    {{key}} {{ value }}
+  </pre>
+</div>

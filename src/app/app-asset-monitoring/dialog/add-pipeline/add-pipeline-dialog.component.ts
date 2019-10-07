@@ -124,7 +124,7 @@ export class AddPipelineDialogComponent {
             selectedConfig.visualizationId = this.selectedVisualization.pipelineId;
             selectedConfig.label = this.selectedLabel;
             selectedConfig.brokerUrl = this.selectedVisualization.broker;
-            selectedConfig.topic = this.selectedVisualization.pipelineId;
+            selectedConfig.topic = this.selectedVisualization.topic;
 
             this.dialogRef.close(selectedConfig);
         }

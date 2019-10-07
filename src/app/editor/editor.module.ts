@@ -71,6 +71,7 @@ import {CustomOutputValidatorDirective} from "./validator/text/custom-output-val
 import {AlternativeComponent} from "./components/alternative/alternative.component";
 import {GroupComponent} from "./components/group/group.component";
 import {SecretComponent} from "./components/secret/secret.component";
+import {FileUploadComponent} from "./components/fileupload/fileupload.component";
 
 
 export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate', 'datatables', 'ng-showdown'])
@@ -107,6 +108,7 @@ export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimat
     .component('pipelineElementDocumentation', PipelineElementDocumentationComponent)
     .component('alternative', AlternativeComponent)
     .component('group', GroupComponent)
+    .component('fileStaticProperty', FileUploadComponent)
     .service('EditorDialogManager', EditorDialogManager)
     .service('PipelineElementRecommendationService', PipelineElementRecommendationService)
     .service('PipelineValidationService', PipelineValidationService)

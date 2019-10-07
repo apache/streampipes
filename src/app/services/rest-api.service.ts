@@ -547,6 +547,10 @@ export class RestApi {
     getDocumentation(appId) {
         return this.$http.get(this.getAssetUrl(appId) +"/documentation");
     }
+
+    uploadFile(data) {
+        return this.$http.post('streampipes-connect/api/v1/' + this.AuthStatusService.email + '/master/file', data);
+    }
 }
 
 //RestApi.$inject = ['$http', 'apiConstants', 'AuthStatusService'];
