@@ -62,8 +62,16 @@ export class DatalakeRestService {
         return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
     }
 
+    getDataWithGroupingTag(index, startDate, endDate, aggregationTimeUnit, aggregationValue, groupingTag) {
+        return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + 'grouping/' + groupingTag + '?aggregationUnit=' + aggregationTimeUnit + '&aggregationValue=' + aggregationValue);
+    }
+
     getDataAutoAggergation(index, startDate, endDate) {
         return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate);
+    }
+
+    getDataAutoAggergationWithGroupingTag(index, startDate, endDate, groupingTag) {
+            return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + 'grouping/' + groupingTag);
     }
 
 
