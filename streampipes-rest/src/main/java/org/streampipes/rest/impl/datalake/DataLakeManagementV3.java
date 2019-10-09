@@ -26,6 +26,7 @@ import org.influxdb.dto.QueryResult;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.model.datalake.DataLakeMeasure;
 import org.streampipes.rest.impl.datalake.model.DataResult;
+import org.streampipes.rest.impl.datalake.model.GroupedDataResult;
 import org.streampipes.rest.impl.datalake.model.PageResult;
 import org.streampipes.storage.management.StorageDispatcher;
 
@@ -33,11 +34,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
@@ -70,6 +67,21 @@ public class DataLakeManagementV3 {
     return new DataResult(events.size(), events);
   }
 
+
+  public GroupedDataResult getEvents(String index, long startDate, long endDate, String aggregationUnit, int aggregationValue,
+                                     String groupingTag) {
+    InfluxDB influxDB = getInfluxDBClient();
+    Query query = new Query("SELECT mean(*) FROM " + index + " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000
+            + " GROUP BY time(" + aggregationValue + aggregationUnit + ") fill(none) ORDER BY " + groupingTag + ",time",
+            BackendConfig.INSTANCE.getInfluxDatabaseName());
+    QueryResult result = influxDB.query(query);
+
+    Map<String, List<Map<String, Object>>> events = convertMultiResult(result);
+    influxDB.close();
+
+    return new GroupedDataResult(events.size(), events);
+  }
+
   public DataResult getEvents(String index, long startDate, long endDate) {
     InfluxDB influxDB = getInfluxDBClient();
     Query query = new Query("SELECT * FROM " + index
@@ -82,6 +94,20 @@ public class DataLakeManagementV3 {
     influxDB.close();
 
     return new DataResult(events.size(), events);
+  }
+
+  public GroupedDataResult getEvents(String index, long startDate, long endDate, String groupingTag) {
+    InfluxDB influxDB = getInfluxDBClient();
+    Query query = new Query("SELECT * FROM " + index
+            + " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000
+            + " ORDER BY " + groupingTag + ",time",
+            BackendConfig.INSTANCE.getInfluxDatabaseName());
+    QueryResult result = influxDB.query(query);
+
+    Map<String, List<Map<String, Object>>> events = convertMultiResult(result);
+    influxDB.close();
+
+    return new GroupedDataResult(events.size(), events);
   }
 
   public DataResult getEventsAutoAggregation(String index, long startDate, long endDate)
@@ -100,6 +126,25 @@ public class DataLakeManagementV3 {
       int aggregatinValue = getAggregationValue(index, influxDB);
       influxDB.close();
       return getEvents(index, startDate, endDate, "ms", aggregatinValue);
+    }
+  }
+
+  public GroupedDataResult getEventsAutoAggregation(String index, long startDate, long endDate, String groupingTag)
+          throws ParseException {
+    InfluxDB influxDB = getInfluxDBClient();
+    double numberOfRecords = getNumOfRecordsOfTable(index, influxDB, startDate, endDate);
+    influxDB.close();
+
+    if (numberOfRecords == 0) {
+      influxDB.close();
+      return new GroupedDataResult(0, new HashMap<>());
+    } else if (numberOfRecords <= NUM_OF_AUTO_AGGREGATION_VALUES) {
+      influxDB.close();
+      return getEvents(index, startDate, endDate, groupingTag);
+    } else {
+      int aggregatinValue = getAggregationValue(index, influxDB);
+      influxDB.close();
+      return getEvents(index, startDate, endDate, "ms", aggregatinValue, groupingTag);
     }
   }
 
@@ -313,7 +358,7 @@ public class DataLakeManagementV3 {
   private List<Map<String, Object>> convertResult(QueryResult result) {
     List<Map<String, Object>> events = new ArrayList<>();
     if (result.getResults().get(0).getSeries() != null) {
-      events = convertResult(result.getResults().get(0).getSeries().get(0));
+        events = convertResult(result.getResults().get(0).getSeries().get(0));
     }
     return events;
   }
@@ -335,6 +380,17 @@ public class DataLakeManagementV3 {
         }
       }
       events.add(event);
+    }
+
+    return events;
+  }
+
+  private Map<String, List<Map<String, Object>>> convertMultiResult(QueryResult result) {
+    Map<String, List<Map<String, Object>>> events = new HashMap<>();
+    for (QueryResult.Series series : result.getResults().get(0).getSeries()) {
+      String groupName = series.getTags().entrySet().toArray()[0].toString();
+      List<Map<String, Object>> convertResult = convertResult(series);
+      events.put(groupName, convertResult);
     }
 
     return events;

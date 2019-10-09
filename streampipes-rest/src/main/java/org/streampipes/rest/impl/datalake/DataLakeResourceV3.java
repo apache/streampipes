@@ -22,6 +22,7 @@ import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.datalake.DataLakeMeasure;
 import org.streampipes.rest.impl.AbstractRestInterface;
 import org.streampipes.rest.impl.datalake.model.DataResult;
+import org.streampipes.rest.impl.datalake.model.GroupedDataResult;
 import org.streampipes.rest.impl.datalake.model.PageResult;
 import org.streampipes.rest.shared.annotation.GsonWithIds;
 
@@ -156,10 +157,37 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     DataResult result;
     try {
       if (aggregationUnit != null && aggregationValue != null) {
-        result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit,
-                Integer.parseInt(aggregationValue));
+          result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit,
+                  Integer.parseInt(aggregationValue));
+
       } else {
-        result = dataLakeManagement.getEventsAutoAggregation(index, startdate, enddate);
+          result = dataLakeManagement.getEventsAutoAggregation(index, startdate, enddate);
+      }
+      return Response.ok(result).build();
+    } catch (IllegalArgumentException | ParseException e) {
+      return constructErrorMessage(new Notification(e.getMessage(), ""));
+    }
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/data/{index}/{startdate}/{enddate}/grouping/{groupingTag}")
+  public Response getAllDataGrouping(@Context UriInfo info,
+                             @PathParam("index") String index,
+                             @PathParam("startdate") long startdate,
+                             @PathParam("enddate") long enddate,
+                             @PathParam("groupingTag") String groupingTag) {
+
+    String aggregationUnit = info.getQueryParameters().getFirst("aggregationUnit");
+    String aggregationValue = info.getQueryParameters().getFirst("aggregationValue");
+
+    GroupedDataResult result;
+    try {
+      if (aggregationUnit != null && aggregationValue != null) {
+          result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit,
+                  Integer.parseInt(aggregationValue), groupingTag);
+      } else {
+          result = dataLakeManagement.getEventsAutoAggregation(index, startdate, enddate, groupingTag);
       }
       return Response.ok(result).build();
     } catch (IllegalArgumentException | ParseException e) {
