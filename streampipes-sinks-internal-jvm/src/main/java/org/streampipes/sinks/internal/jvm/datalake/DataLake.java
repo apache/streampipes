@@ -59,6 +59,7 @@ public class DataLake implements EventSink<DataLakeParameters> {
         parameters.getTimestampField(),
         parameters.getBatchSize(),
         parameters.getFlushDuration(),
+        parameters.getDimensionProperties(),
         LOG
     );
     registerAtDataLake(parameters.getMeasurementName(), runtimeContext.getInputSchemaInfo().get(0).getEventSchema());
