@@ -1,10 +1,9 @@
-.table {
-    width: 100%;
+table {
     background: none;
+    width: 100%;
 }
 
 .paging-button {
-    margin-top: 10px;
     border: #202020 solid 1px;
-    position: fixed;
+    margin: 5px;
 }
