@@ -1,17 +1,17 @@
-<h1 mat-dialog-title style="background-color: rgb(57, 181, 74); height: 60px; color: white;">
-    <div fxLayout="row" fxLayoutAlign="space-between center" style="padding-top: 10px; padding-left: 10px;">
-        <div>Download Data</div>
-        <button mat-icon-button (click)="exitDialog()"
-                style="" color="primary">
-            <mat-icon style="font-size: 30px;height: 30px; width: 30px; color:white;">close</mat-icon>
+<mat-toolbar>
+    <div class="md-toolbar-tools">
+        <h2>Download Data</h2>
+        <span fxFlex></span>
+        <button mat-icon-button (click)="exitDialog()">
+            <i class="material-icons">close</i>
         </button>
     </div>
-</h1>
+</mat-toolbar>
 
-<div mat-dialog-content>
+<div mat-dialog-content class="md-dialog-content">
 
 
-    <mat-horizontal-stepper  #stepper style="margin-top: -20px">
+    <mat-horizontal-stepper  #stepper>
         <mat-step>
             <ng-template matStepLabel>Select Data</ng-template>
             <div>
@@ -73,7 +73,8 @@
 
 </div>
 
-<div mat-dialog-actions style="float: right; margin: 10px">
+<mat-divider></mat-divider>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
     <button mat-button *ngIf="stepper.selectedIndex == 1" color="primary" (click)="previousStep()">Previous</button>
     <button mat-button mat-raised-button *ngIf="stepper.selectedIndex < 1" color="primary" (click)="nextStep()">Next</button>
     <button mat-button mat-raised-button *ngIf="stepper.selectedIndex == 1" color="accent" (click)="downloadData()">Download</button>
