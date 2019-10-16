@@ -72,7 +72,7 @@ public class DataLakeManagementV3 {
                                      String groupingTag) {
     InfluxDB influxDB = getInfluxDBClient();
     Query query = new Query("SELECT mean(*) FROM " + index + " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000
-            + " GROUP BY time(" + aggregationValue + aggregationUnit + ") fill(none) ORDER BY " + groupingTag + ",time",
+            + " GROUP BY " + groupingTag + ",time(" + aggregationValue + aggregationUnit + ") fill(none) ORDER BY time",
             BackendConfig.INSTANCE.getInfluxDatabaseName());
     QueryResult result = influxDB.query(query);
 
@@ -100,7 +100,8 @@ public class DataLakeManagementV3 {
     InfluxDB influxDB = getInfluxDBClient();
     Query query = new Query("SELECT * FROM " + index
             + " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000
-            + " ORDER BY " + groupingTag + ",time",
+            + " GROUP BY " + groupingTag
+            + " ORDER BY time",
             BackendConfig.INSTANCE.getInfluxDatabaseName());
     QueryResult result = influxDB.query(query);
 
