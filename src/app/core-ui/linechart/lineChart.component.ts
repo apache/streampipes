@@ -91,19 +91,42 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
             });
             this.dataToDisplay = tmp;
 
-        //    this.graph.layout.xaxis['range'] = [this.startDateData.getTime(), this.endDateData.getTime()];
         } else {
             this.dataToDisplay = undefined;
-       //     this.graph.layout.xaxis['range'] = undefined;
 
         }
     }
+
+    displayGroupedData(transformedData: Map<string, any[]>, yKeys: String[]) {
+        if (this.yKeys.length > 0) {
+
+            const tmp = [];
+
+            let groupNames = Array.from(transformedData.keys());
+            for(let groupName of groupNames)  {
+                let value = transformedData.get(groupName);
+                this.yKeys.forEach(key => {
+                    value.forEach(serie => {
+                        if (serie.name === key) {
+                            serie.name = groupName + ' ' + serie.name;
+                            tmp.push(serie)
+                        }
+                    })
+                });
+            }
+            this.dataToDisplay = tmp;
+
+        } else {
+            this.dataToDisplay = undefined;
+        }
+    }
+
 
     transformData(data: any[], xKey: string): any[] {
         const tmp = [];
 
         let dataKeys = [];
-        for (let event of this.data) {
+        for (let event of data) {
             for (let key in event) {
                 if (typeof event[key] == 'number') {
                     if (!dataKeys.includes(key)) {
@@ -117,7 +140,7 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
             tmp.push({
                 type: 'scatter', mode: 'lines', name: key, connectgaps: false, x: [], y: []})
         });
-        for (let event of this.data) {
+        for (let event of data) {
             let i = 0;
             for (let dataKey of dataKeys) {
                 tmp[i].x.push(new Date(event[xKey]));
@@ -133,8 +156,22 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
         return tmp;
     }
 
+    transformGroupedDate(data: Map<string, any[]>, xKey: string): Map<string, any[]> {
+        let map: Map<string, []> = new Map();
+
+        Object.keys(data).forEach( key => {
+            let events = data[key]
+            let tmp = this.transformData(events, xKey) as [];
+            map.set(key, tmp);
+        });
+
+
+        return map;
+    }
+
     stopDisplayData() {
     }
+
 
 
 }

@@ -5,24 +5,24 @@ import {EventSchema} from '../../connect/schema-editor/model/EventSchema';
 export abstract class BaseChartComponent {
 
 
-    @Input() set datas(value: any[]) {
+    @Input() set datas(value: any[] | Map<string, any[]>) {
         if (value != undefined) {
-            this.data = value;
-            if (this.data !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
-                this.transformedData = this.transformData(this.data, this.xKey);
-                this.displayData(this.transformedData, this.yKeys);
+            this.rowData = value;
+            if (this.rowData !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
+                this.transform();
+                this.display();
             }
         } else {
             this.stopDisplayData();
-            this.data = undefined;
+            this.rowData = undefined;
         }
     }
     @Input() set xAxesKey(value: string) {
         if (value != undefined) {
             this.xKey = value;
-            if (this.data !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
-                this.transformedData = this.transformData(this.data, this.xKey);
-                this.displayData(this.transformedData, this.yKeys);
+            if (this.rowData !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
+                this.transform();
+                this.display();
             }
         } else {
             this.stopDisplayData();
@@ -32,10 +32,10 @@ export abstract class BaseChartComponent {
     @Input() set yAxesKeys(value: string[]) {
         if (value !== undefined) {
             this.yKeys = value;
-            if (this.data !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
+            if (this.rowData !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
                 if (this.transformedData === undefined)
-                    this.transformedData = this.transformData(this.data, this.xKey);
-                this.displayData(this.transformedData, this.yKeys);
+                    this.transform();
+                this.display();
             }
         } else {
             this.stopDisplayData();
@@ -58,18 +58,45 @@ export abstract class BaseChartComponent {
     @Output() firstPage = new EventEmitter<boolean>();
     @Output() lastPage = new EventEmitter<boolean>();
 
-    xKey: String = undefined;
-    yKeys: String[] = undefined;
-    data: any[] = undefined;
+    xKey: string = undefined;
+    yKeys: string[] = undefined;
 
-    transformedData: any[] = undefined;
+    rowData: any[] | Map<string, any[]> = undefined;
+    transformedData: any[] | Map<string, any[]> = undefined;
 
+
+    dataMode: string = '';
+
+
+    transform() {
+        if (Array.isArray(this.rowData)) {
+            this.transformedData = this.transformData(this.rowData, this.xKey);
+            this.dataMode = 'single';
+        } else {
+            this.transformedData = this.transformGroupedDate(this.rowData, this.xKey);
+            this.dataMode = 'group';
+        }
+    }
+
+    display() {
+        if (this.dataMode === 'single') {
+            this.displayData(this.transformedData as any[], this.yKeys);
+        } else {
+            this.displayGroupedData(this.transformedData as Map<string, any[]>, this.yKeys);
+        }
+    }
 
     //transform the input data to the schema of the chart
     abstract transformData(data: any[], xKey: String): any[];
 
+    //transform the grouped input data to the schema of the chart
+    abstract transformGroupedDate(data: Map<string, any[]>, xKey: string): Map<string, any[]>;
+
     //display the data
-    abstract displayData(transformedData: any[], yKeys: String[]);
+    abstract displayData(transformedData: any[], yKeys: string[]);
+
+    //display the grouped data
+    abstract displayGroupedData(transformedData: Map<string, any[]>, yKeys: string[]);
 
     //
     abstract stopDisplayData()

@@ -29,11 +29,17 @@ export class TableComponent extends BaseChartComponent {
     displayedColumns: String[] = [];
     dataSource = new MatTableDataSource();
 
+    selectedGroup: string = undefined;
+
     constructor() {
         super();
     }
 
     transformData(data: any[], xKey: String): any[] {
+        return data;
+    }
+
+    transformGroupedDate(data: Map<string, any[]>, xKey: String): Map<string, any[]> {
         return data;
     }
 
@@ -44,8 +50,30 @@ export class TableComponent extends BaseChartComponent {
         this.dataSource.data = transformedData;
     }
 
+    displayGroupedData(transformedData: Map<string, any[]>, yKeys: String[]) {
+        this.displayedColumns = Object.assign([], yKeys);
+        this.displayedColumns.unshift(this.xKey);
+
+        if (this.selectedGroup === undefined) {
+            this.selectedGroup = this.getGroupKeys()[0];
+        }
+        this.dataSource.data = transformedData[this.selectedGroup];
+
+    }
+
     stopDisplayData() {
         this.dataSource.data = []
     }
 
+    getGroupKeys() {
+       return Object.keys(this.transformedData);
+    }
+
+
+    selectGroup(value) {
+        this.selectedGroup = value;
+        if (this.selectedGroup !== undefined) {
+            this.dataSource.data = this.transformedData[this.selectedGroup];
+        }
+    }
 }
