@@ -27,6 +27,14 @@
     <artifactId>streampipes-processors-transformation-jvm</artifactId>
 
     <dependencies>
+        <!-- External dependencies -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+
         <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.streampipes</groupId>
