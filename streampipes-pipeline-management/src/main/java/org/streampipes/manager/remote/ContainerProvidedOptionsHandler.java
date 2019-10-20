@@ -40,6 +40,7 @@ public class ContainerProvidedOptionsHandler {
     request.setRequestId(parameterRequest.getRuntimeResolvableInternalId());
     request.setInputStreams(parameterRequest.getInputStreams());
     request.setStaticProperties(parameterRequest.getStaticProperties());
+    request.setAppId(parameterRequest.getAppId());
 //    Optional<RuntimeResolvableSelectionStaticProperty> runtimeResolvableOpt = findProperty
 //            (parameterRequest.getStaticProperties(), parameterRequest.getRuntimeResolvableInternalId());
 //
@@ -54,8 +55,8 @@ public class ContainerProvidedOptionsHandler {
 //        eventPropertyOpt.ifPresent(request::setMappedEventProperty);
 //      }
     String httpRequestBody = GsonSerializer.getGsonWithIds()
-            .toJson
-                    (request);
+            .toJson(request);
+
     try {
       Response httpResp = Request.Post(parameterRequest.getBelongsTo() + "/configurations").bodyString(httpRequestBody, ContentType.APPLICATION_JSON).execute();
       return handleResponse(httpResp);

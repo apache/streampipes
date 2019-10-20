@@ -37,6 +37,9 @@ public class RuntimeOptionsRequest extends UnnamedStreamPipesEntity {
   @RdfProperty(StreamPipes.HAS_REQUEST_ID)
   protected String requestId;
 
+  @RdfProperty(StreamPipes.HAS_APP_ID)
+  protected String appId;
+
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})
   @RdfProperty(StreamPipes.HAS_STATIC_PROPERTY)
@@ -86,5 +89,13 @@ public class RuntimeOptionsRequest extends UnnamedStreamPipesEntity {
 
   public void setInputStreams(List<SpDataStream> inputStreams) {
     this.inputStreams = inputStreams;
+  }
+
+  public String getAppId() {
+    return appId;
+  }
+
+  public void setAppId(String appId) {
+    this.appId = appId;
   }
 }

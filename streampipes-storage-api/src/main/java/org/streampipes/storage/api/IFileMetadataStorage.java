@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * you may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -14,25 +14,21 @@
  * limitations under the License.
  *
  */
-
 package org.streampipes.storage.api;
 
-import org.streampipes.model.Notification;
+import org.streampipes.model.client.file.FileMetadata;
 
 import java.util.List;
 
-public interface INotificationStorage {
+public interface IFileMetadataStorage {
 
-  Notification getNotification(String notificationId);
+  FileMetadata getMetadataById(String id);
 
-  List<Notification> getAllNotifications();
+  List<FileMetadata> getAllFileMetadataDescriptions();
 
-  List<Notification> getUnreadNotifications();
+  List<FileMetadata> getFilteredFileMetadataDescriptions(String filetype);
 
-  boolean addNotification(Notification notification);
+  void deleteFileMetadata(String id);
 
-  boolean changeNotificationStatus(String notificationId);
-
-  boolean deleteNotification(String notificationId);
-
+  void addFileMetadata(FileMetadata fileMetadata);
 }

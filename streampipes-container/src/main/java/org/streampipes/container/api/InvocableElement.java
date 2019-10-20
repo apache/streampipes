@@ -92,8 +92,11 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
 
         List<Option> availableOptions =
                 resolvesOptions.resolveOptions(runtimeOptionsRequest.getRequestId(),
-                StaticPropertyExtractor.from(runtimeOptionsRequest.getStaticProperties(),
-                        runtimeOptionsRequest.getInputStreams()));
+                StaticPropertyExtractor.from(
+                        runtimeOptionsRequest.getStaticProperties(),
+                        runtimeOptionsRequest.getInputStreams(),
+                        runtimeOptionsRequest.getAppId()
+                ));
 
         return GsonSerializer.getGsonWithIds().toJson(new RuntimeOptionsResponse(runtimeOptionsRequest,
                 availableOptions));

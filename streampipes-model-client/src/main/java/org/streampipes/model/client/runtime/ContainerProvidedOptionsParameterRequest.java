@@ -26,6 +26,7 @@ public class ContainerProvidedOptionsParameterRequest {
   private List<StaticProperty> staticProperties;
   private List<SpDataStream> inputStreams;
 
+  private String appId;
   private String belongsTo;
   private String runtimeResolvableInternalId;
 
@@ -70,5 +71,13 @@ public class ContainerProvidedOptionsParameterRequest {
 
   public void setRuntimeResolvableInternalId(String runtimeResolvableInternalId) {
     this.runtimeResolvableInternalId = runtimeResolvableInternalId;
+  }
+
+  public String getAppId() {
+    return appId;
+  }
+
+  public void setAppId(String appId) {
+    this.appId = appId;
   }
 }

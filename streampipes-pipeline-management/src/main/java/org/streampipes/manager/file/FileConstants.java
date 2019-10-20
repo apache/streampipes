@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * you may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -14,25 +14,12 @@
  * limitations under the License.
  *
  */
+package org.streampipes.manager.file;
 
-package org.streampipes.storage.api;
+import org.streampipes.config.backend.BackendConfig;
 
-import org.streampipes.model.Notification;
+public class FileConstants {
 
-import java.util.List;
-
-public interface INotificationStorage {
-
-  Notification getNotification(String notificationId);
-
-  List<Notification> getAllNotifications();
-
-  List<Notification> getUnreadNotifications();
-
-  boolean addNotification(Notification notification);
-
-  boolean changeNotificationStatus(String notificationId);
-
-  boolean deleteNotification(String notificationId);
+  public static final String FILES_BASE_DIR = BackendConfig.INSTANCE.getFilesDir();
 
 }

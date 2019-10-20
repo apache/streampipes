@@ -29,6 +29,12 @@ public class Utils {
     return dbClient;
   }
 
+  public static CouchDbClient getCouchDbFileMetadataClient() {
+    CouchDbClient dbClient = new CouchDbClient(props("filemetadata"));
+    dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+    return dbClient;
+  }
+
   public static CouchDbClient getCouchDbAdapterTemplateClient() {
     CouchDbClient dbClient = new CouchDbClient(props("adaptertemplate"));
     dbClient.setGsonBuilder(GsonSerializer.getAdapterGsonBuilder());

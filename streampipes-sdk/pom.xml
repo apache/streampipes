@@ -30,6 +30,11 @@
         <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-config</artifactId>
+            <version>0.64.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
             <version>0.64.1-SNAPSHOT</version>
         </dependency>
@@ -43,6 +48,10 @@
         <dependency>
             <groupId>com.github.drapostolos</groupId>
             <artifactId>type-parser</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
         </dependency>
 
         <!-- Test dependencies -->

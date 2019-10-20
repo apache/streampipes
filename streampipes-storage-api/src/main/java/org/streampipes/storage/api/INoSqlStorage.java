@@ -36,4 +36,6 @@ public interface INoSqlStorage {
   IAssetDashboardStorage getAssetDashboardStorage();
 
   IDataLakeStorage getDataLakeStorage();
+
+  IFileMetadataStorage getFileMetadataStorage();
 }

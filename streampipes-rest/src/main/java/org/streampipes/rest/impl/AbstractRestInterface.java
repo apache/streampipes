@@ -38,6 +38,7 @@ import org.streampipes.model.client.messages.SuccessMessage;
 import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.api.IDataLakeStorage;
+import org.streampipes.storage.api.IFileMetadataStorage;
 import org.streampipes.storage.api.INoSqlStorage;
 import org.streampipes.storage.api.INotificationStorage;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
@@ -111,6 +112,10 @@ public abstract class AbstractRestInterface {
 
   protected INoSqlStorage getNoSqlStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore();
+  }
+
+  protected IFileMetadataStorage getFileMetadataStorage() {
+    return getNoSqlStorage().getFileMetadataStorage();
   }
 
   protected ITripleStorage getTripleStorage() {

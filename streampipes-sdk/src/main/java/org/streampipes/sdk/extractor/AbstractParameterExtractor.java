@@ -18,7 +18,9 @@
 package org.streampipes.sdk.extractor;
 
 import com.github.drapostolos.typeparser.TypeParser;
+import org.apache.http.client.fluent.Request;
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.constants.PropertySelectorConstants;
@@ -29,6 +31,7 @@ import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.staticproperty.AnyStaticProperty;
 import org.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
+import org.streampipes.model.staticproperty.FileStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.MappingPropertyNary;
 import org.streampipes.model.staticproperty.MappingPropertyUnary;
@@ -43,6 +46,7 @@ import org.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.streampipes.model.staticproperty.StaticPropertyType;
 import org.streampipes.model.staticproperty.SupportedProperty;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -92,6 +96,25 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   public String secretValue(String internalName) {
     return (getStaticPropertyByName(internalName, SecretStaticProperty.class)
             .getValue());
+  }
+
+  public String fileContentsAsString(String internalName) throws IOException {
+    String filename =
+            getStaticPropertyByName(internalName, FileStaticProperty.class).getLocationPath();
+    return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asString();
+  }
+
+  public byte[] fileContentsAsByteArray(String internalName) throws IOException {
+    String filename =
+            getStaticPropertyByName(internalName, FileStaticProperty.class).getLocationPath();
+    return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asBytes();
+  }
+
+  private String makeFileRequestPath(String filename) {
+    return BackendConfig.INSTANCE.getBackendUrl()
+            + "/streampipes-backend/api/v2/noauth"
+            + "/files/"
+            + filename;
   }
 
   private <V, T extends SelectionStaticProperty> V selectedSingleValue(String internalName, Class<V> targetClass, Class<T> oneOfStaticProperty) {

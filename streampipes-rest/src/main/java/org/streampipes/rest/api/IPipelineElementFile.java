@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * you may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -14,25 +14,18 @@
  * limitations under the License.
  *
  */
+package org.streampipes.rest.api;
 
-package org.streampipes.storage.api;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
-import org.streampipes.model.Notification;
+import java.io.InputStream;
 
-import java.util.List;
+import javax.ws.rs.core.Response;
 
-public interface INotificationStorage {
+public interface IPipelineElementFile {
 
-  Notification getNotification(String notificationId);
+  Response storeFile(String username, InputStream inputStream, FormDataContentDisposition formData);
 
-  List<Notification> getAllNotifications();
-
-  List<Notification> getUnreadNotifications();
-
-  boolean addNotification(Notification notification);
-
-  boolean changeNotificationStatus(String notificationId);
-
-  boolean deleteNotification(String notificationId);
+  Response getFileInfo();
 
 }

@@ -54,6 +54,8 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
     config.register(BackendConfigKeys.ASSETS_DIR, "/streampipes-assets", "The directory where " +
             "pipeline element assets are stored.");
+    config.register(BackendConfigKeys.FILES_DIR, "/streampipes-files", "The directory where " +
+            "pipeline element files are stored.");
     config.register(BackendConfigKeys.DATA_LAKE_HOST, "elasticsearch", "The host of the data base used for the data lake");
     config.register(BackendConfigKeys.DATA_LAKE_PORT, 9200, "The port of the data base used for the data lake");
 
@@ -77,6 +79,10 @@ public enum BackendConfig {
 
   public int getBackendPort() {
     return config.getInteger(BackendConfigKeys.BACKEND_PORT);
+  }
+
+  public String getBackendUrl() {
+    return "http://" + getBackendHost() + ":" + getBackendPort();
   }
 
   public String getJmsHost() {
@@ -161,11 +167,15 @@ public enum BackendConfig {
   }
 
   public String getKafkaRestUrl() {
-    return "http://" +getKafkaRestHost() +":" +getKafkaRestPort();
+    return "http://" + getKafkaRestHost() + ":" + getKafkaRestPort();
   }
 
   public String getAssetDir() {
     return config.getString(BackendConfigKeys.ASSETS_DIR);
+  }
+
+  public String getFilesDir() {
+    return config.getString(BackendConfigKeys.FILES_DIR);
   }
 
   public String getDatalakeHost() {

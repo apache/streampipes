@@ -651,12 +651,12 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
   public BU requiredSingleValueSelectionFromContainer(Label label,
                                                       List<String> dependsOn) {
-    this.staticProperties.add(StaticProperties.multiValueSelectionFromContainer(label, dependsOn));
+    this.staticProperties.add(StaticProperties.singleValueSelectionFromContainer(label, dependsOn));
     return me();
   }
 
   public BU requiredMultiValueSelectionFromContainer(Label label) {
-    this.staticProperties.add(StaticProperties.singleValueSelectionFromContainer(label));
+    this.staticProperties.add(StaticProperties.multiValueSelectionFromContainer(label));
     return me();
   }
 
