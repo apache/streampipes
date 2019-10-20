@@ -3,7 +3,7 @@
 
     <div fxLayout="row">
         <div *ngIf="enablePaging" fxFlex="5">
-            <button mat-icon-button (click)="clickPreviousPage()" class="paging-button">
+            <button mat-icon-button (click)="clickPreviousPage()" class="paging-button" matTooltip="Going backwards in time">
                 <mat-icon style="font-size: 30px;height: 30px; width: 30px">
                     chevron_left
                 </mat-icon>
@@ -20,7 +20,7 @@
         </plotly-plot>
 
         <div *ngIf="enablePaging" fxFlex="5">
-            <button mat-icon-button (click)="clickNextPage()" class="paging-button">
+            <button mat-icon-button (click)="clickNextPage()" class="paging-button" matTooltip="Going forwards in time">
                 <mat-icon style="font-size: 30px;height: 30px; width: 30px">
                     chevron_right
                 </mat-icon>
