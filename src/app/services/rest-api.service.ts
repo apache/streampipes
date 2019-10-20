@@ -19,6 +19,7 @@
 
 
 import {Inject, Injectable} from "@angular/core";
+import * as angular from 'angular';
 
 @Injectable()
 export class RestApi {
@@ -44,6 +45,10 @@ export class RestApi {
 
     getAssetUrl(appId) {
         return this.getServerUrl() +"/pe/" +appId +"/assets";
+    }
+
+    getFileUrl(appId) {
+        return this.getServerUrl() + "/pe/" + appId + "/file"
     }
 
     getUserDetails() {
@@ -549,7 +554,12 @@ export class RestApi {
     }
 
     uploadFile(data) {
-        return this.$http.post('streampipes-connect/api/v1/' + this.AuthStatusService.email + '/master/file', data);
+        return this.$http.post(this.urlBase() + "/files", data, {headers: {'Content-Type': undefined },
+            transformRequest: angular.identity});
+    }
+
+    getFileMetadata() {
+        return this.$http.get(this.urlBase() + "/files");
     }
 }
 

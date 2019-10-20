@@ -1,13 +1,19 @@
-<h5>Hi</h5>
 <div>
+    <h5>Select File</h5>
+    <md-input-container flex="100" layout="column">
+        <md-select required class="md-accent" name="{{ctrl.staticProperty.properties.elementId}}" ng-model="ctrl.staticProperty.properties.locationPath">
+            <md-option ng-repeat="fileMetadata in ctrl.fileMetadataDescriptions track by $index" ng-value="fileMetadata.internalFilename" ng-selected="fileMetadata.internalFilename == ctrl.staticProperty.properties.locationPath">
+                <b>{{fileMetadata.originalFilename}}</b><br/>
+            </md-option>
+        </md-select>
+    </md-input-container>
+    <hr/>
+    <h5>Upload new file</h5>
     <input ng-model="ctrl.file" type="file" name="file" id="file">
-    <sp-button sp-button-blue sp-button-small-padding ng-click="ctrl.uploadFile()">
-        <i class="material-icons" style="font-size:18px;">refresh</i>
+    <sp-button sp-button-blue sp-button-small-padding ng-click="ctrl.uploadFile()" style="margin-top:10px;">
+        <i class="material-icons" style="font-size:18px;">file_upload</i>
         <md-tooltip md-direction="top">
             Upload
         </md-tooltip>
         Upload File</sp-button>&nbsp;&nbsp;
-    <pre ng-repeat="(key, value) in ctrl.fileLog">
-    {{key}} {{ value }}
-  </pre>
 </div>

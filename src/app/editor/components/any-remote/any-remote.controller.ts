@@ -17,29 +17,33 @@
 
 import * as angular from 'angular';
 
-export class OneOfRemoteController {
+export class AnyRemoteController {
 
     RestApi: any;
     $rootScope: any;
     $scope: any;
+    $timeout;
     staticProperty: any;
     selectedElement: any;
     currentlyLinkedProperty: any;
 
-    showOptions: boolean = false;
+    showOptions: boolean;
 
     dependentStaticProperties: any = new Map();
-    loading: boolean = false;
+    loading: boolean;
 
-    constructor(RestApi, $rootScope, $scope) {
+    constructor(RestApi, $rootScope, $scope, $timeout) {
         this.RestApi = RestApi;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.$timeout = $timeout;
     }
 
     $onInit() {
+        this.showOptions = false;
+        this.loading = false;
         if (this.staticProperty.properties.options.length == 0) {
-            if ((!this.staticProperty.properties.dependsOn || this.staticProperty.properties.dependsOn.length == 0)) {
+            if ((!this.staticProperty.properties.dependsOn) || (this.staticProperty.properties.dependsOn.length == 0)) {
                 this.loadOptionsFromRestApi();
             }
         } else {
@@ -53,11 +57,10 @@ export class OneOfRemoteController {
             }
         });
 
-        if (this.staticProperty.properties.dependsOn && this.staticProperty.properties.dependsOn.length > 0 && !this.staticProperty.properties.currentSelection) {
+        if (this.staticProperty.properties.dependsOn && this.staticProperty.properties.dependsOn.length > 0) {
             angular.forEach(this.staticProperty.properties.dependsOn, dp => {
                 this.dependentStaticProperties.set(dp, false);
                 this.$rootScope.$on(dp, (valid) => {
-                    this.showOptions = false;
                     this.dependentStaticProperties.set(dp, true);
                     if (Array.from(this.dependentStaticProperties.values()).every(v => v === true)) {
                         this.loadOptionsFromRestApi();
@@ -65,7 +68,6 @@ export class OneOfRemoteController {
                 });
             });
         }
-
     }
 
     loadOptionsFromRestApi() {
@@ -79,36 +81,20 @@ export class OneOfRemoteController {
         this.showOptions = false;
         this.loading = true;
         this.RestApi.fetchRemoteOptions(resolvableOptionsParameterRequest).then(msg => {
-            let data = msg.data;
-            this.staticProperty.properties.options = data;
+            this.staticProperty.properties.options = [];
+            this.staticProperty.properties.options = msg.data;
             if (this.staticProperty.properties.options.length > 0) {
                 this.staticProperty.properties.options[0].selected = true;
             }
-            this.loading = false;
-            this.$rootScope.$emit(this.staticProperty.properties.internalName);
             this.loadSavedProperty();
         });
     }
 
-    toggle() {
-        this.staticProperty.properties.options.forEach(option => {
-            if (option.name === this.staticProperty.properties.currentSelection.name) {
-                option.selected = true;
-            }  else {
-                option.selected = false;
-            }
-        });
-        this.$rootScope.$emit(this.staticProperty.properties.internalName);
-    }
 
     loadSavedProperty() {
-        angular.forEach(this.staticProperty.properties.options, option => {
-            if (option.selected) {
-                this.staticProperty.properties.currentSelection = option;
-            }
-        });
+        this.loading = false;
         this.showOptions = true;
     }
 }
 
-OneOfRemoteController.$inject = ['RestApi', '$rootScope', '$scope'];
+AnyRemoteController.$inject = ['RestApi', '$rootScope', '$scope', '$timeout'];

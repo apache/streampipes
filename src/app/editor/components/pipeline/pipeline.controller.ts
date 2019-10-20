@@ -211,7 +211,6 @@ export class PipelineController {
             this.TransitionService.makePipelineAssemblyEmpty(true);
         }
         this.JsplumbBridge.repaintEverything();
-        this.validatePipeline();
     }
 
     initPlumb() {
