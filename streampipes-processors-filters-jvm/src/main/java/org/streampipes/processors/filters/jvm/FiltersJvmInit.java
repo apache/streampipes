@@ -29,6 +29,7 @@ import org.streampipes.processors.filters.jvm.processor.compose.ComposeControlle
 import org.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterController;
 import org.streampipes.processors.filters.jvm.processor.projection.ProjectionController;
 import org.streampipes.processors.filters.jvm.processor.textfilter.TextFilterController;
+import org.streampipes.processors.filters.jvm.processor.threshold.ThresholdDetectionController;
 
 public class FiltersJvmInit extends StandaloneModelSubmitter {
 
@@ -36,6 +37,7 @@ public class FiltersJvmInit extends StandaloneModelSubmitter {
     DeclarersSingleton
             .getInstance()
             .add(new NumericalFilterController())
+            .add(new ThresholdDetectionController())
             .add(new TextFilterController())
             .add(new ProjectionController())
             .add(new ComposeController());

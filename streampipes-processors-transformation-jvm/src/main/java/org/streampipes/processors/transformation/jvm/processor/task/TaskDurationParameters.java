@@ -23,12 +23,14 @@ public class TaskDurationParameters extends EventProcessorBindingParams {
 
   private String taskFieldSelector;
   private String timestampFieldSelector;
+  private Double outputDivisor;
 
   public TaskDurationParameters(DataProcessorInvocation graph, String taskFieldSelector,
-                                String timestampFieldSelector) {
+                                String timestampFieldSelector, Double outputDivisor) {
     super(graph);
     this.taskFieldSelector = taskFieldSelector;
     this.timestampFieldSelector = timestampFieldSelector;
+    this.outputDivisor = outputDivisor;
   }
 
   public String getTaskFieldSelector() {
@@ -37,5 +39,9 @@ public class TaskDurationParameters extends EventProcessorBindingParams {
 
   public String getTimestampFieldSelector() {
     return timestampFieldSelector;
+  }
+
+  public Double getOutputDivisor() {
+    return outputDivisor;
   }
 }
