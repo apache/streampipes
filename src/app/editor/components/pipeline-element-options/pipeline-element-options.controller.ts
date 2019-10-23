@@ -40,11 +40,12 @@ export class PipelineElementOptionsController {
     deleteFunction: any;
     TransitionService: TransitionService;
     $rootScope: any;
+    $timeout: any;
 
     pipelineValid: boolean;
 
     constructor($rootScope, ObjectProvider, PipelineElementRecommendationService, InitTooltips, JsplumbBridge,
-                EditorDialogManager, JsplumbService, TransitionService, PipelineValidationService) {
+                EditorDialogManager, JsplumbService, TransitionService, PipelineValidationService, $timeout) {
         this.$rootScope = $rootScope;
         this.ObjectProvider = ObjectProvider;
         this.PipelineElementRecommendationService = PipelineElementRecommendationService;
@@ -59,6 +60,8 @@ export class PipelineElementOptionsController {
         this.possibleElements = [];
         this.recommendedElements = [];
         this.recommendationsShown = false;
+
+        this.$timeout = $timeout;
     }
 
     $onInit() {
@@ -75,7 +78,10 @@ export class PipelineElementOptionsController {
 
     removeElement(pipelineElement) {
         this.deleteFunction(pipelineElement);
-        this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
+        this.$timeout(() => {
+            this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
+        }, 200);
+
     }
 
     openCustomizeDialog() {
@@ -136,4 +142,5 @@ export class PipelineElementOptionsController {
 }
 
 PipelineElementOptionsController.$inject = ['$rootScope', 'ObjectProvider', 'PipelineElementRecommendationService',
-    'InitTooltips', 'JsplumbBridge', 'EditorDialogManager', 'JsplumbService', 'TransitionService', 'PipelineValidationService'];
+    'InitTooltips', 'JsplumbBridge', 'EditorDialogManager', 'JsplumbService',
+    'TransitionService', 'PipelineValidationService', '$timeout'];

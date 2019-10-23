@@ -72,6 +72,7 @@ import {AlternativeComponent} from "./components/alternative/alternative.compone
 import {GroupComponent} from "./components/group/group.component";
 import {SecretComponent} from "./components/secret/secret.component";
 import {FileUploadComponent} from "./components/fileupload/fileupload.component";
+import {AnyRemoteComponent} from "./components/any-remote/any-remote.component";
 
 
 export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate', 'datatables', 'ng-showdown'])
@@ -84,6 +85,7 @@ export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimat
     .filter('selectFilter', selectFilter)
     .filter('elementNameFilter', elementNameFilter)
     .component('any', AnyComponent)
+    .component('anyRemote', AnyRemoteComponent)
     .component('customOutput', CustomOutputComponent)
     .component('domainConceptInput', DomainConceptComponent)
     .component('freetext', FreeTextComponent)

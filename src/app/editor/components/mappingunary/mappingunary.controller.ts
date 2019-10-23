@@ -35,12 +35,17 @@ export class MappingUnaryController {
 
     $onInit() {
         this.availableProperties = this.PropertySelectorService.makeFlatProperties(this.getProperties(this.findIndex()), this.staticProperty.properties.mapsFromOptions);
+
+        this.$scope.$watch(() => this.staticProperty.properties.selectedProperty, (newValue, oldValue) => {
+            if (newValue !== oldValue) {
+                this.$rootScope.$emit(this.staticProperty.properties.internalName);
+            }
+        });
+
         if (!this.staticProperty.properties.selectedProperty) {
             this.staticProperty.properties.selectedProperty = this.availableProperties[0].properties.runtimeId;
-        }
-        this.$scope.$watch(() => this.staticProperty.properties.selectedProperty, () => {
             this.$rootScope.$emit(this.staticProperty.properties.internalName);
-        });
+        }
     }
 
     getProperties(streamIndex) {

@@ -1,0 +1,20 @@
+<div ng-if="ctrl.loading" flex="100" layout="column" layout-align="center center">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+</div>
+<div ng-if="!ctrl.loading">
+    <div flex="100" layout="column" layout-align="center start" ng-if="ctrl.showOptions">
+        <sp-button sp-button-blue sp-button-small-padding ng-click="ctrl.loadOptionsFromRestApi()">
+            <i class="material-icons" style="font-size:18px;">refresh</i>
+            <md-tooltip md-direction="top">
+                Reload
+            </md-tooltip>
+            Reload</sp-button>&nbsp;&nbsp;
+    </div>
+    <md-input-container flex="100" layout="column">
+        <div ng-repeat="option in ctrl.staticProperty.properties.options">
+            <md-checkbox ng-model="option.selected">
+                {{option.name}}
+            </md-checkbox>
+        </div>
+    </md-input-container>
+</div>

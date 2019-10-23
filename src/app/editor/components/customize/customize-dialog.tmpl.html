@@ -48,6 +48,9 @@
         <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'RuntimeResolvableOneOfStaticProperty'">
             <oneof-remote static-property="ctrl.staticProperty" selected-element="ctrl.selectedElement"></oneof-remote>
         </div>
+        <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'RuntimeResolvableAnyStaticProperty'">
+            <any-remote static-property="ctrl.staticProperty" selected-element="ctrl.selectedElement"></any-remote>
+        </div>
         <div ng-if="ctrl.staticProperty.properties.staticPropertyType == 'StaticPropertyAlternatives'">
             <alternative customize-form="ctrl.customizeForm" display-recommended="ctrl.displayRecommended"
                          static-property="ctrl.staticProperty" selected-element="ctrl.selectedElement"></alternative>
