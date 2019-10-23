@@ -238,13 +238,22 @@ export class ExplorerComponent implements OnInit {
         this.dimensionProperties = [];
         this.selectedInfoResult = this._filter(index)[0];
         this.selectedInfoResult.eventSchema.eventProperties.forEach(property => {
-            if (property['domainProperties'] === undefined) {
-                this.dataKeys.push(property['runtimeName']);
-            } else if (property.domainProperty !== 'http://schema.org/DateTime'&& property['domainProperties'][0] != 'http://schema.org/DateTime') {
-                this.dataKeys.push(property['runtimeName']);
-            }
-            if (property['propertyScope'] !== undefined && property['propertyScope'] === 'DIMENSION_PROPERTY') {
-                this.dimensionProperties.push(property['runtimeName'])
+
+            //Check if property is Primitive (only primitives has a runtimeType
+            if (property['runtimeType'] !== undefined) {
+                if (property['propertyScope'] !== undefined && property['propertyScope'] === 'DIMENSION_PROPERTY') {
+                    this.dimensionProperties.push(property['runtimeName'])
+                }
+                //if property is number and is no timestamp property
+                else if (this.isNumberProperty(property) &&
+                    (property['domainProperties'] === undefined || (property.domainProperty !== 'http://schema.org/DateTime' &&
+                        property['domainProperties'][0] != 'http://schema.org/DateTime'))) {
+
+                    this.dataKeys.push(property['runtimeName']);
+                }
+            } else {
+                //list and nested properties
+                this.dataKeys.push(property['runtimeName'])
             }
         });
         this.selectKey(this.dataKeys.slice(0, 3));
@@ -357,5 +366,18 @@ export class ExplorerComponent implements OnInit {
         const filterValue = value.toLowerCase();
 
         return this.infoResult.filter(option => option.measureName.toLowerCase().includes(filterValue));
+    }
+
+
+    isNumberProperty(prop) {
+        if (prop.runtimeType === 'http://schema.org/Number' ||
+            prop.runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
+            prop.runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
+            prop.runtimeType === 'http://www.w3.org/2001/XMLSchema#decimal') {
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }
