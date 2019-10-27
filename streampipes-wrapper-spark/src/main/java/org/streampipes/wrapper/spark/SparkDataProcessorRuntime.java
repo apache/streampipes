@@ -29,9 +29,6 @@ import java.lang.reflect.Constructor;
 import java.util.Base64;
 import java.util.Map;
 
-/**
- * Created by Jochen Lutz on 2017-12-07.
- */
 public abstract class SparkDataProcessorRuntime<B extends EventProcessorBindingParams> extends SparkRuntime<DataProcessorInvocation> {
     private static final long serialVersionUID = 1L;
     protected B params;

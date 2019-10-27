@@ -28,9 +28,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * Created by Jochen Lutz on 2018-01-11.
- */
 public class JsonToMapFormat implements FlatMapFunction<ConsumerRecord<String, String>, Map<String, Object>> {
 
     private static final long serialVersionUID = 1L;

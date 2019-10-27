@@ -28,19 +28,28 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
 
-        <activemq-client.version>5.9.1</activemq-client.version>
-        <cloning.version>1.9.0</cloning.version>
+        <activemq-client.version>5.15.9</activemq-client.version>
+        <asm.version>7.0</asm.version>
+        <byte-buddy.version>1.9.7</byte-buddy.version>
+        <cloning.version>1.9.12</cloning.version>
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
+        <commons-io.version>2.6</commons-io.version>
         <commons-lang.version>2.3</commons-lang.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
-        <consul-client.version>1.3.8</consul-client.version>
+        <commons-logging.version>1.2</commons-logging.version>
+        <consul-client.version>1.3.9</consul-client.version>
         <elasticsearch.version>6.6.2</elasticsearch.version>
-        <flink.version>1.8.0</flink.version>
+        <flink.version>1.9.1</flink.version>
         <fst.version>2.56</fst.version>
         <geojson-jackson.version>1.8</geojson-jackson.version>
+        <guava.version>27.1-jre</guava.version>
         <httpclient.version>4.5.5</httpclient.version>
-        <influxdb.version>2.14</influxdb.version>
-        <jackson.version>2.9.9</jackson.version>
+        <httpcore.version>4.4.9</httpcore.version>
+        <influxdb.version>2.16</influxdb.version>
+        <jackson.version>2.10.0</jackson.version>
+        <jakarta-annotation.version>1.3.5</jakarta-annotation.version>
+        <jakarta-validation.version>2.0.2</jakarta-validation.version>
         <javapoet.version>1.6.1</javapoet.version>
         <javax-annotation.version>1.3.2</javax-annotation.version>
         <javax-json.version>1.0.2</javax-json.version>
@@ -49,33 +58,40 @@
         <javax-validation.version>2.0.1.Final</javax-validation.version>
         <javax.ws.rs.version>2.1</javax.ws.rs.version>
         <javassist.version>3.19.0-GA</javassist.version>
-        <jersey.version>2.27</jersey.version>
+        <jboss-logging.version>3.4.0.Final</jboss-logging.version>
+        <jersey.version>2.29.1</jersey.version>
         <jetty.version>9.4.19.v20190610</jetty.version>
         <jgrapht.version>1.3.1</jgrapht.version>
         <json-path.version>3.1.0</json-path.version>
+        <jsr305.version>3.0.2</jsr305.version>
         <kafka.version>2.2.0</kafka.version>
         <lightcouch.version>0.2.0</lightcouch.version>
+        <log4j.version>2.12.1</log4j.version>
         <logback-classic.version>1.2.3</logback-classic.version>
         <maven-invoker.version>2.2</maven-invoker.version>
+        <objenesis.version>2.5.1</objenesis.version>
         <okio.version>1.15.0</okio.version>
+        <okhttp.version>3.12.2</okhttp.version>
         <rdf4j.version>2.4.5</rdf4j.version>
         <rendersnake.version>1.8</rendersnake.version>
+        <retrofit.version>2.5.0</retrofit.version>
         <shiro.version>1.2.3</shiro.version>
         <siddhi.version>4.5.11</siddhi.version>
         <slf4j.version>1.7.25</slf4j.version>
+        <snappy-java.version>1.1.7.2</snappy-java.version>
         <spark.version>2.1.2</spark.version>
-        <spring.version>5.1.9.RELEASE</spring.version>
-        <spring-boot.version>2.1.8.RELEASE</spring-boot.version>
+        <spring.version>5.2.0.RELEASE</spring.version>
+        <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
         <streampipes-empire.version>1.9.11</streampipes-empire.version>
         <type-parser.version>0.6.0</type-parser.version>
         <underscore.version>1.47</underscore.version>
 
         <!-- Test dependencies -->
         <junit.version>4.12</junit.version>
-        <mockito.version>2.18.3</mockito.version>
-        <powermock.version>2.0.2</powermock.version>
-        <rest-assured.version>2.3.2</rest-assured.version>
-        <wiremock.version>2.23.2</wiremock.version>
+        <mockito.version>3.1.0</mockito.version>
+        <powermock.version>2.0.4</powermock.version>
+        <rest-assured.version>2.9.0</rest-assured.version>
+        <wiremock.version>2.25.1</wiremock.version>
 
         <!-- Maven Plugins -->
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
@@ -126,14 +142,29 @@
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jdk8</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.github.drapostolos</groupId>
                 <artifactId>type-parser</artifactId>
                 <version>${type-parser.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${jsr305.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>2.8.5</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.orbitz.consul</groupId>
@@ -146,14 +177,39 @@
                 <version>${okio.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.retrofit2</groupId>
+                <artifactId>retrofit</artifactId>
+                <version>${retrofit.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
                 <version>${commons-beanutils.version}</version>
             </dependency>
             <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-collections.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>${commons-lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>${commons-logging.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.javadev</groupId>
@@ -179,6 +235,16 @@
                 <groupId>io.rest-assured</groupId>
                 <artifactId>json-path</artifactId>
                 <version>${json-path.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta.annotation-api</artifactId>
+                <version>${jakarta-annotation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>jakarta.validation-api</artifactId>
+                <version>${jakarta-validation.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.annotation</groupId>
@@ -214,6 +280,21 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpmime</artifactId>
                 <version>${httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>${httpcore.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven.shared</groupId>
@@ -391,6 +472,11 @@
                 <version>${elasticsearch.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.jboss.logging</groupId>
+                <artifactId>jboss-logging</artifactId>
+                <version>${jboss-logging.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jgrapht</groupId>
                 <artifactId>jgrapht-core</artifactId>
                 <version>${jgrapht.version}</version>
@@ -401,6 +487,21 @@
                 <version>${javax-json.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.glassfish.jersey.core</groupId>
+                <artifactId>jersey-client</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.core</groupId>
+                <artifactId>jersey-common</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.core</groupId>
+                <artifactId>jersey-server</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.glassfish.jersey.containers</groupId>
                 <artifactId>jersey-container-jetty-http</artifactId>
                 <version>${jersey.version}</version>
@@ -408,6 +509,11 @@
             <dependency>
                 <groupId>org.glassfish.jersey.containers</groupId>
                 <artifactId>jersey-container-servlet</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-servlet-core</artifactId>
                 <version>${jersey.version}</version>
             </dependency>
             <dependency>
@@ -451,6 +557,16 @@
                 <version>${lightcouch.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.objenesis</groupId>
+                <artifactId>objenesis</artifactId>
+                <version>${objenesis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
                 <version>0.9.10</version>
@@ -472,7 +588,22 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
@@ -516,6 +647,11 @@
                 <version>${streampipes-empire.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.xerial.snappy</groupId>
+                <artifactId>snappy-java</artifactId>
+                <version>${snappy-java.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>uk.com.robust-it</groupId>
                 <artifactId>cloning</artifactId>
                 <version>${cloning.version}</version>
@@ -552,6 +688,18 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>${byte-buddy.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy-agent</artifactId>
+                <version>${byte-buddy.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -744,6 +892,51 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M2</version>
+                <executions>
+                    <execution>
+                        <id>check-at-least-java-8</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>1.8.0</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                    <!-- Ensure we're not mixing dependency versions -->
+                    <execution>
+                        <id>enforce-version-convergence</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <dependencyConvergence />
+                            </rules>
+                        </configuration>
+                    </execution>
+                    <!--
+                        Fails the build if classes are included from multiple
+                        artifacts and these are not identical.
+                    -->
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>extra-enforcer-rules</artifactId>
+                        <version>1.2</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
