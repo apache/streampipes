@@ -61,10 +61,10 @@ public class DataLakeManagementV3 {
             BackendConfig.INSTANCE.getInfluxDatabaseName());
     QueryResult result = influxDB.query(query);
 
-    List<Map<String, Object>> events = convertResult(result);
+    DataResult dataResult = convertResult(result);
     influxDB.close();
 
-    return new DataResult(events.size(), events);
+    return dataResult;
   }
 
 
@@ -76,10 +76,10 @@ public class DataLakeManagementV3 {
             BackendConfig.INSTANCE.getInfluxDatabaseName());
     QueryResult result = influxDB.query(query);
 
-    Map<String, List<Map<String, Object>>> events = convertMultiResult(result);
+    GroupedDataResult groupedDataResult = convertMultiResult(result);
     influxDB.close();
 
-    return new GroupedDataResult(events.size(), events);
+    return groupedDataResult;
   }
 
   public DataResult getEvents(String index, long startDate, long endDate) {
@@ -90,10 +90,10 @@ public class DataLakeManagementV3 {
             BackendConfig.INSTANCE.getInfluxDatabaseName());
     QueryResult result = influxDB.query(query);
 
-    List<Map<String, Object>> events = convertResult(result);
+    DataResult dataResult = convertResult(result);
     influxDB.close();
 
-    return new DataResult(events.size(), events);
+    return dataResult;
   }
 
   public GroupedDataResult getEvents(String index, long startDate, long endDate, String groupingTag) {
@@ -105,10 +105,10 @@ public class DataLakeManagementV3 {
             BackendConfig.INSTANCE.getInfluxDatabaseName());
     QueryResult result = influxDB.query(query);
 
-    Map<String, List<Map<String, Object>>> events = convertMultiResult(result);
+    GroupedDataResult groupedDataResult = convertMultiResult(result);
     influxDB.close();
 
-    return new GroupedDataResult(events.size(), events);
+    return groupedDataResult;
   }
 
   public DataResult getEventsAutoAggregation(String index, long startDate, long endDate)
@@ -119,7 +119,7 @@ public class DataLakeManagementV3 {
 
     if (numberOfRecords == 0) {
       influxDB.close();
-      return new DataResult(0, new ArrayList<>());
+      return new DataResult();
     } else if (numberOfRecords <= NUM_OF_AUTO_AGGREGATION_VALUES) {
       influxDB.close();
       return getEvents(index, startDate, endDate);
@@ -160,9 +160,9 @@ public class DataLakeManagementV3 {
             BackendConfig.INSTANCE.getInfluxDatabaseName());
     QueryResult result = influxDB.query(query);
 
-    List<Map<String, Object>> events = convertResult(result);
+    DataResult dataResult = convertResult(result);
 
-    return new DataResult(events.size(), events);
+    return dataResult;
   }
 
 
@@ -177,10 +177,10 @@ public class DataLakeManagementV3 {
             BackendConfig.INSTANCE.getInfluxDatabaseName());
     QueryResult result = influxDB.query(query);
 
-    List<Map<String, Object>> events = convertResult(result);
+    DataResult dataResult = convertResult(result);
     influxDB.close();
 
-    return new DataResult(events.size(), events);
+    return dataResult;
 
   }
 
@@ -190,7 +190,7 @@ public class DataLakeManagementV3 {
     double numberOfRecords = getNumOfRecordsOfTableFromNow(index, influxDB, timeunit, value);
     if (numberOfRecords == 0) {
       influxDB.close();
-      return new DataResult(0, new ArrayList<>());
+      return new DataResult();
     } else if (numberOfRecords <= NUM_OF_AUTO_AGGREGATION_VALUES) {
       influxDB.close();
       return getEventsFromNow(index, timeunit, value);
@@ -213,12 +213,12 @@ public class DataLakeManagementV3 {
             BackendConfig.INSTANCE.getInfluxDatabaseName());
     QueryResult result = influxDB.query(query);
 
-    List<Map<String, Object>> events = convertResult(result);
+    DataResult dataResult = convertResult(result);
     influxDB.close();
 
     int pageSum = getMaxPage(index, itemsPerPage);
 
-    return new PageResult(events.size(), events, page, pageSum);
+    return new PageResult(dataResult.getTotal(), dataResult.getHeaders(), dataResult.getRows(), page, pageSum);
   }
 
   public PageResult getEvents(String index, int itemsPerPage) throws IOException {
@@ -238,75 +238,95 @@ public class DataLakeManagementV3 {
         InfluxDB influxDB = getInfluxDBClient();
         int itemsPerRequest = 10000;
 
+        DataResult dataResult;
         //JSON
         if (outputFormat.equals("json")) {
-          int i = 0;
-          boolean isFirstElement = true;
-          List<Map<String, Object>> convertResult = new ArrayList<>();
+
           Gson gson = new Gson();
+          int i = 0;
+          boolean isFirstDataObject = true;
 
           outputStream.write(toBytes("["));
           do {
             Query query = getRawDataQueryWithPage(i, itemsPerRequest, index, startDate, endDate);
             QueryResult result = influxDB.query(query);
+            dataResult = new DataResult();
             if ((result.getResults().get(0).getSeries() != null)) {
-              convertResult = convertResult(result.getResults().get(0).getSeries().get(0));
-            } else {
-              convertResult = new ArrayList<>();
+              dataResult = convertResult(result.getResults().get(0).getSeries().get(0));
             }
 
-            for (Map<String, Object> event : convertResult) {
-              if (!isFirstElement) {
-                outputStream.write(toBytes(","));
+            if (dataResult.getTotal() > 0 ) {
+              for (List<Object> row : dataResult.getRows()) {
+                if (!isFirstDataObject) {
+                  outputStream.write(toBytes(","));
+                }
+
+                //produce one json object
+                boolean isFirstElementInRow = true;
+                outputStream.write(toBytes("{"));
+                for (int i1 = 0; i1 < row.size(); i1++) {
+                  if (!isFirstElementInRow) {
+                    outputStream.write(toBytes(","));
+                  }
+                  isFirstElementInRow = false;
+                  //produce json e.g. "name": "Pipes" or "load": 42
+                  outputStream.write(toBytes("\"" + dataResult.getHeaders().get(i1) + "\": "
+                          + gson.toJson(row.get(i1))));
+                }
+                outputStream.write(toBytes("}"));
+                isFirstDataObject = false;
               }
-              isFirstElement = false;
-              outputStream.write(toBytes(gson.toJson(event)));
+
+              i++;
             }
-            i++;
-          } while (convertResult.size() > 0);
+          } while (dataResult.getTotal() > 0);
           outputStream.write(toBytes("]"));
 
           //CSV
         } else if (outputFormat.equals("csv")) {
           int i = 0;
 
-          Query query = getRawDataQueryWithPage(i, itemsPerRequest, index, startDate, endDate);
-          QueryResult result = influxDB.query(query);
-          if ((result.getResults().get(0).getSeries() != null)) {
-            //HEADER
-            QueryResult.Series serie = result.getResults().get(0).getSeries().get(0);
-            for (int i2 = 0; i2 < serie.getColumns().size(); i2++) {
-              outputStream.write(toBytes(serie.getColumns().get(i2)));
-              if (i2 < serie.getColumns().size() - 1) {
-                outputStream.write(toBytes(";"));
-              }
-            }
-            outputStream.write(toBytes("\n"));
-          }
+          boolean isFirstDataObject = true;
 
-          boolean newResults;
           do {
-            newResults = false;
-            query = getRawDataQueryWithPage(i, itemsPerRequest, index, startDate, endDate);
-            result = influxDB.query(query);
+            Query query = getRawDataQueryWithPage(i, itemsPerRequest, index, startDate, endDate);
+            QueryResult result = influxDB.query(query);
+            dataResult = new DataResult();
             if ((result.getResults().get(0).getSeries() != null)) {
-              newResults = true;
-              QueryResult.Series serie = result.getResults().get(0).getSeries().get(0);
-              for (int i2 = 0; i2 < serie.getValues().size() - 1; i2++) {
-                for (int i3 = 0; i3 < serie.getValues().get(i2).size(); i3++) {
-                  if (serie.getValues().get(i2).get(i3) != null) {
-                    outputStream.write(toBytes(serie.getValues().get(i2).get(i3).toString()));
-                  }
-                  if (i3 < serie.getValues().get(i2).size() - 1) {
+              dataResult = convertResult(result.getResults().get(0).getSeries().get(0));
+            }
+
+            //Send first header
+            if (dataResult.getTotal() > 0) {
+              if (isFirstDataObject) {
+                boolean isFirst = true;
+                for (int i1 = 0; i1 < dataResult.getHeaders().size(); i1++) {
+                  if (!isFirst) {
                     outputStream.write(toBytes(";"));
                   }
+                  isFirst = false;
+                  outputStream.write(toBytes(dataResult.getHeaders().get(i1)));
+                }
+              }
+              outputStream.write(toBytes("\n"));
+              isFirstDataObject = false;
+            }
+
+            if (dataResult.getTotal() > 0) {
+              for (List<Object> row : dataResult.getRows()) {
+                boolean isFirstInRow = true;
+                for (Object element : row) {
+                  if (!isFirstInRow) {
+                    outputStream.write(toBytes(";"));
+                  }
+                  isFirstInRow = false;
+                  outputStream.write(toBytes(element.toString()));
                 }
                 outputStream.write(toBytes("\n"));
               }
             }
             i++;
-          } while (newResults);
-
+          } while (dataResult.getTotal() > 0);
         }
       }
     };
@@ -356,45 +376,38 @@ public class DataLakeManagementV3 {
     return page;
   }
 
-  private List<Map<String, Object>> convertResult(QueryResult result) {
+  private DataResult convertResult(QueryResult result) {
     List<Map<String, Object>> events = new ArrayList<>();
     if (result.getResults().get(0).getSeries() != null) {
-        events = convertResult(result.getResults().get(0).getSeries().get(0));
+        return convertResult(result.getResults().get(0).getSeries().get(0));
     }
-    return events;
+    return new DataResult();
   }
 
 
-  private List<Map<String, Object>> convertResult(QueryResult.Series serie) {
+  private DataResult convertResult(QueryResult.Series serie) {
+
     List<Map<String, Object>> events = new ArrayList<>();
     List<String> columns = serie.getColumns();
     for (int i = 0; i < columns.size(); i++) {
       String replacedColumnName = columns.get(i).replaceAll("mean_", "");
       columns.set(i, replacedColumnName);
     }
-
-    for (List<Object> value : serie.getValues()) {
-      Map<String, Object> event = new HashMap<>();
-      for (int i = 0; i < value.size(); i++) {
-        if (value.get(i) != null) {
-          event.put(columns.get(i), value.get(i));
-        }
-      }
-      events.add(event);
-    }
-
-    return events;
+    List values = serie.getValues();
+    return new DataResult(values.size(), columns, values);
   }
 
-  private Map<String, List<Map<String, Object>>> convertMultiResult(QueryResult result) {
-    Map<String, List<Map<String, Object>>> events = new HashMap<>();
-    for (QueryResult.Series series : result.getResults().get(0).getSeries()) {
-      String groupName = series.getTags().entrySet().toArray()[0].toString();
-      List<Map<String, Object>> convertResult = convertResult(series);
-      events.put(groupName, convertResult);
+  private GroupedDataResult convertMultiResult(QueryResult result) {
+    GroupedDataResult groupedDataResult = new GroupedDataResult();
+    if (result.getResults().get(0).getSeries() != null) {
+      for (QueryResult.Series series : result.getResults().get(0).getSeries()) {
+        String groupName = series.getTags().entrySet().toArray()[0].toString();
+        DataResult dataResult = convertResult(series);
+        groupedDataResult.addDataResult(groupName, dataResult);
+      }
     }
+    return groupedDataResult;
 
-    return events;
   }
 
   private int getAggregationValue(String index, InfluxDB influxDB) throws ParseException {

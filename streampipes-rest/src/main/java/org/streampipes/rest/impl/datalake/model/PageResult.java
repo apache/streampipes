@@ -25,8 +25,8 @@ public class PageResult extends DataResult {
 
     private int pageSum;
 
-    public PageResult(int total, List<Map<String, Object>> events, int page, int pageSum) {
-        super(total, events);
+    public PageResult(int total, List<String> headers, List<List<Object>> rows, int page, int pageSum) {
+        super(total, headers, rows);
         this.page = page;
         this.pageSum = pageSum;
     }

@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DataLakeManagement {
-
+    /*
     public DataResult getEvents(String index) throws IOException {
         List<Map<String, Object>> events = getDataLakeData(index);
         DataResult dataResult = new DataResult(events.size(), events);
@@ -143,5 +143,6 @@ public class DataLakeManagement {
 
         return "Index: " + index + " did not exist!";
     }
+    */
 
 }

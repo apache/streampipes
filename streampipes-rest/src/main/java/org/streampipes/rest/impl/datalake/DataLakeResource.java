@@ -32,9 +32,9 @@ import java.io.IOException;
 import java.util.List;
 
 
-@Path("/v2/users/{username}/datalake")
+//@Path("/v2/users/{username}/datalake")
 public class DataLakeResource extends AbstractRestInterface {
-    private DataLakeManagement dataLakeManagement;
+ /*   private DataLakeManagement dataLakeManagement;
 
     public DataLakeResource() {
         this.dataLakeManagement = new DataLakeManagement();
@@ -113,5 +113,6 @@ public class DataLakeResource extends AbstractRestInterface {
 
         return Response.ok(result).build();
     }
+    */
 
 }

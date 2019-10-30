@@ -17,35 +17,36 @@
 
 package org.streampipes.rest.impl.datalake.model;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class GroupedDataResult {
 
     private int total;
-    private Map<String, List<Map<String, Object>>> groupedEvents;
+    private Map<String, DataResult> dataResults;
 
     public GroupedDataResult() {
+        this.total = 0;
     }
 
-    public GroupedDataResult(int total, Map<String, List<Map<String, Object>>> groupedEvents) {
+    public GroupedDataResult(int total, Map<String, DataResult> dataResults) {
         this.total = total;
-        this.groupedEvents = groupedEvents;
+        this.dataResults = dataResults;
     }
 
     public int getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
+    public Map<String, DataResult> getDataResults() {
+        return dataResults;
     }
 
-    public Map<String, List<Map<String, Object>>> getEvents() {
-        return groupedEvents;
-    }
-
-    public void setEvents(Map<String, List<Map<String, Object>>>groupedEvents) {
-        this.groupedEvents = groupedEvents;
+    public void addDataResult(String index, DataResult dataResult) {
+        if (dataResults == null) {
+            dataResults = new HashMap<>();
+        }
+        dataResults.put(index, dataResult);
+        this.total += 1;
     }
 }
