@@ -17,5 +17,6 @@
 
 export class DataResult {
     total: number;
-    events: any;
+    headers: string[];
+    rows: any[];
 }

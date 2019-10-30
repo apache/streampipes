@@ -1,5 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {BaseChartComponent} from '../chart/baseChart.component';
+import {DataResult} from '../../core-model/datalake/DataResult';
+import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
 
 
 @Component({
@@ -80,11 +82,11 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
 
 
 
-    displayData(transformedData: any[], yKeys: String[]) {
+    displayData(transformedData: DataResult, yKeys: string[]) {
         if (this.yKeys.length > 0) {
             const tmp = [];
             this.yKeys.forEach(key => {
-                transformedData.forEach(serie => {
+                transformedData.rows.forEach(serie => {
                     if (serie.name === key)
                         tmp.push(serie)
                 })
@@ -97,16 +99,16 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
         }
     }
 
-    displayGroupedData(transformedData: Map<string, any[]>, yKeys: String[]) {
+    displayGroupedData(transformedData: GroupedDataResult, yKeys: string[]) {
         if (this.yKeys.length > 0) {
 
             const tmp = [];
 
-            let groupNames = Array.from(transformedData.keys());
+            let groupNames = Object.keys(transformedData.dataResults);
             for(let groupName of groupNames)  {
-                let value = transformedData.get(groupName);
+                let value = transformedData.dataResults[groupName];
                 this.yKeys.forEach(key => {
-                    value.forEach(serie => {
+                    value.rows.forEach(serie => {
                         if (serie.name === key) {
                             serie.name = groupName + ' ' + serie.name;
                             tmp.push(serie)
@@ -121,57 +123,53 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
         }
     }
 
-
-    transformData(data: any[], xKey: string): any[] {
-        const tmp = [];
+    transformData(data: DataResult, xKey: String): DataResult {
+        const tmp: any[] = [];
 
         let dataKeys = [];
-        for (let event of data) {
-            for (let key in event) {
-                if (typeof event[key] == 'number') {
-                    if (!dataKeys.includes(key)) {
-                        dataKeys.push(key)
-                    }
+
+        data.rows.forEach(row => {
+            data.headers.forEach((headerName, index) => {
+                if (!dataKeys.includes(index) && typeof row[index] == 'number') {
+                    dataKeys.push(index);
                 }
-            }
-        }
+            });
+        });
+
+        let indexXkey = data.headers.findIndex(headerName => headerName === this.xKey);
 
         dataKeys.forEach(key => {
-            tmp.push({
-                type: 'scatter', mode: 'lines', name: key, connectgaps: false, x: [], y: []})
+            let headerName = data.headers[key];
+            tmp[key] = {
+                type: 'scatter', mode: 'lines', name: headerName, connectgaps: false, x: [], y: []}
+            });
+        data.rows.forEach(row => {
+           data.headers.forEach((headerName, index) => {
+               if (dataKeys.includes(index)) {
+                   tmp[index].x.push(new Date(row[indexXkey]));
+                   if ((row[index]) !== undefined) {
+                       tmp[index].y.push(row[index])
+                   } else {
+                       tmp[index].y.push(null)
+                   }
+               }
+           })
         });
-        for (let event of data) {
-            let i = 0;
-            for (let dataKey of dataKeys) {
-                tmp[i].x.push(new Date(event[xKey]));
-                if ((event[dataKey]) !== undefined) {
-                    tmp[i].y.push(event[dataKey])
-                } else {
-                    tmp[i].y.push(null)
-                }
-                i++;
-            }
-        }
+        data.rows = tmp;
 
-        return tmp;
+        return data;
     }
 
-    transformGroupedDate(data: Map<string, any[]>, xKey: string): Map<string, any[]> {
-        let map: Map<string, []> = new Map();
+    transformGroupedData(data: GroupedDataResult, xKey: string): GroupedDataResult {
+        for (var key in data.dataResults) {
+            let dataResult = data.dataResults[key];
+            dataResult.rows = this.transformData(dataResult, xKey).rows;
+        }
 
-        Object.keys(data).forEach( key => {
-            let events = data[key]
-            let tmp = this.transformData(events, xKey) as [];
-            map.set(key, tmp);
-        });
-
-
-        return map;
+        return data;
     }
 
     stopDisplayData() {
     }
-
-
 
 }

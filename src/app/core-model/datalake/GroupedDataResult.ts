@@ -15,7 +15,9 @@
  *
  */
 
+import {DataResult} from './DataResult';
+
 export class GroupedDataResult {
     total: number;
-    groupedEvents: Map<string, []>;
+    dataResults: Map<string, DataResult>;
 }

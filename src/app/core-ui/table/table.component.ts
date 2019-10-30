@@ -18,6 +18,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
 import {BaseChartComponent} from '../chart/baseChart.component';
+import {DataResult} from '../../core-model/datalake/DataResult';
+import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
 
 @Component({
     selector: 'sp-table',
@@ -35,45 +37,62 @@ export class TableComponent extends BaseChartComponent {
         super();
     }
 
-    transformData(data: any[], xKey: String): any[] {
+    transformData(data: DataResult, xKey: String): DataResult {
+        let tmp = [];
+        data.rows.forEach(row =>
+            tmp.push(this.createTableObject(data.headers, row))
+        );
+        data.rows = tmp;
+
         return data;
     }
 
-    transformGroupedDate(data: Map<string, any[]>, xKey: String): Map<string, any[]> {
+    transformGroupedData(data: GroupedDataResult, xKey: string): GroupedDataResult {
+        for (var key in data.dataResults) {
+            let dataResult = data.dataResults[key];
+            dataResult.rows = this.transformData(dataResult, xKey).rows;
+        }
         return data;
     }
 
-    displayData(transformedData: any[], yKeys: String[]) {
+    displayData(transformedData: DataResult, yKeys: string[]) {
         this.displayedColumns = Object.assign([], yKeys);
         this.displayedColumns.unshift(this.xKey);
 
-        this.dataSource.data = transformedData;
+        this.dataSource.data = transformedData.rows;
     }
 
-    displayGroupedData(transformedData: Map<string, any[]>, yKeys: String[]) {
+    displayGroupedData(transformedData: GroupedDataResult, yKeys: string[]) {
         this.displayedColumns = Object.assign([], yKeys);
         this.displayedColumns.unshift(this.xKey);
 
         if (this.selectedGroup === undefined) {
             this.selectedGroup = this.getGroupKeys()[0];
         }
-        this.dataSource.data = transformedData[this.selectedGroup];
-
+        this.dataSource.data = transformedData.dataResults[this.selectedGroup].rows;
     }
 
     stopDisplayData() {
         this.dataSource.data = []
     }
 
-    getGroupKeys() {
-       return Object.keys(this.transformedData);
+    createTableObject(keys, values) {
+        let object = {};
+        keys.forEach((key, index) => {
+            object[key] = values[index];
+        });
+        return object;
     }
 
+    getGroupKeys() {
+       return Object.keys((this.transformedData as GroupedDataResult).dataResults);
+    }
 
     selectGroup(value) {
         this.selectedGroup = value;
         if (this.selectedGroup !== undefined) {
-            this.dataSource.data = this.transformedData[this.selectedGroup];
+            this.dataSource.data = (this.transformedData as GroupedDataResult)
+                .dataResults[this.selectedGroup].rows;
         }
     }
 }

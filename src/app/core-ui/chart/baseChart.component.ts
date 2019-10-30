@@ -1,26 +1,28 @@
 import {EventEmitter, Injectable, Input, Output} from '@angular/core';
 import {EventSchema} from '../../connect/schema-editor/model/EventSchema';
+import {DataResult} from '../../core-model/datalake/DataResult';
+import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
 
 @Injectable()
 export abstract class BaseChartComponent {
 
 
-    @Input() set datas(value: any[] | Map<string, any[]>) {
+    @Input() set datas(value: DataResult | GroupedDataResult) {
         if (value != undefined) {
-            this.rowData = value;
-            if (this.rowData !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
+            this.data = this.clone(value);
+            if (this.data !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
                 this.transform();
                 this.display();
             }
         } else {
             this.stopDisplayData();
-            this.rowData = undefined;
+            this.data = undefined;
         }
     }
     @Input() set xAxesKey(value: string) {
         if (value != undefined) {
             this.xKey = value;
-            if (this.rowData !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
+            if (this.data !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
                 this.transform();
                 this.display();
             }
@@ -32,7 +34,7 @@ export abstract class BaseChartComponent {
     @Input() set yAxesKeys(value: string[]) {
         if (value !== undefined) {
             this.yKeys = value;
-            if (this.rowData !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
+            if (this.data !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
                 if (this.transformedData === undefined)
                     this.transform();
                 this.display();
@@ -61,42 +63,42 @@ export abstract class BaseChartComponent {
     xKey: string = undefined;
     yKeys: string[] = undefined;
 
-    rowData: any[] | Map<string, any[]> = undefined;
-    transformedData: any[] | Map<string, any[]> = undefined;
+    data: DataResult | GroupedDataResult = undefined;
+    transformedData: DataResult | GroupedDataResult = undefined;
 
 
     dataMode: string = '';
 
 
     transform() {
-        if (Array.isArray(this.rowData)) {
-            this.transformedData = this.transformData(this.rowData, this.xKey);
+        if (this.data["headers"] !== undefined) {
+            this.transformedData = this.transformData(this.data as DataResult, this.xKey);
             this.dataMode = 'single';
         } else {
-            this.transformedData = this.transformGroupedDate(this.rowData, this.xKey);
+            this.transformedData = this.transformGroupedData(this.data as GroupedDataResult, this.xKey);
             this.dataMode = 'group';
         }
     }
 
     display() {
-        if (this.dataMode === 'single') {
-            this.displayData(this.transformedData as any[], this.yKeys);
+        if (this.data["headers"] !== undefined) {
+            this.displayData(this.transformedData as DataResult, this.yKeys);
         } else {
-            this.displayGroupedData(this.transformedData as Map<string, any[]>, this.yKeys);
+            this.displayGroupedData(this.transformedData as GroupedDataResult, this.yKeys);
         }
     }
 
     //transform the input data to the schema of the chart
-    abstract transformData(data: any[], xKey: String): any[];
+    abstract transformData(data: DataResult, xKey: String): DataResult;
 
     //transform the grouped input data to the schema of the chart
-    abstract transformGroupedDate(data: Map<string, any[]>, xKey: string): Map<string, any[]>;
+    abstract transformGroupedData(data: GroupedDataResult, xKey: string): GroupedDataResult;
 
     //display the data
-    abstract displayData(transformedData: any[], yKeys: string[]);
+    abstract displayData(transformedData: DataResult, yKeys: string[]);
 
     //display the grouped data
-    abstract displayGroupedData(transformedData: Map<string, any[]>, yKeys: string[]);
+    abstract displayGroupedData(transformedData: GroupedDataResult, yKeys: string[]);
 
     //
     abstract stopDisplayData()
@@ -115,6 +117,10 @@ export abstract class BaseChartComponent {
 
     clickLastPage() {
         this.lastPage.emit()
+    }
+
+    clone(value): DataResult {
+        return (JSON.parse(JSON.stringify(value)));
     }
 
 }

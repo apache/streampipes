@@ -24,6 +24,8 @@ import {map, startWith} from 'rxjs/operators';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {DataDownloadDialog} from './datadownloadDialog/dataDownload.dialog';
 import {timer} from 'rxjs/internal/observable/timer';
+import {DataResult} from '../../core-model/datalake/DataResult';
+import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
 
 @Component({
     selector: 'sp-explorer',
@@ -156,28 +158,37 @@ export class ExplorerComponent implements OnInit {
                 groupbyUnit = 'd';
                 groupbyValue = 365 * groupbyValue;
             }
-
             if (this.selectedGroup === undefined) {
+                let startTime = new Date().getTime();
                 this.restService.getData(this.selectedInfoResult.measureName, this.dateRange[0].getTime(), this.dateRange[1].getTime(),
                     groupbyUnit, groupbyValue).subscribe(
-                    res => this.processReceivedData(res)
+                    res => {
+                        this.processReceivedData(res);
+
+                    }
                 );
             } else {
                 this.restService.getGroupedData(this.selectedInfoResult.measureName, this.dateRange[0].getTime(),
                     this.dateRange[1].getTime(), groupbyUnit, groupbyValue, this.selectedGroup).subscribe(
-                        res => this.processReceivedGroupedData(res)
+                        res => {
+                            this.processReceivedGroupedData(res);
+                        }
                 )
             }
 
         } else {
             if (this.selectedGroup === undefined) {
                 this.restService.getDataAutoAggergation(this.selectedInfoResult.measureName, this.dateRange[0].getTime(), this.dateRange[1].getTime()).subscribe(
-                    res => this.processReceivedData(res)
+                    res => {
+                        this.processReceivedData(res);
+                    }
                 );
             } else {
                 this.restService.getGroupedDataAutoAggergation(this.selectedInfoResult.measureName, this.dateRange[0].getTime(),
                     this.dateRange[1].getTime(), this.selectedGroup).subscribe(
-                    res => this.processReceivedGroupedData(res)
+                    res => {
+                        this.processReceivedGroupedData(res);
+                    }
                 )
             }
 
@@ -206,8 +217,8 @@ export class ExplorerComponent implements OnInit {
     }
 
     processReceivedData(res) {
-        if(res.events.length > 0) {
-            this.data = res.events as [];
+        if(res.total > 0) {
+            this.data = res as DataResult;
             this.noDateFoundinTimeRange = false;
             if (this.yAxesKeys.length === 0) {
                 this.noKeySelected = true;
@@ -223,7 +234,7 @@ export class ExplorerComponent implements OnInit {
 
     processReceivedGroupedData(res) {
         if (res.total > 0) {
-            this.data = res.groupedEvents as Map<string, []>;
+            this.data = res as GroupedDataResult;
         } else {
             this.data = undefined;
             this.noDateFoundinTimeRange = true;
@@ -236,6 +247,7 @@ export class ExplorerComponent implements OnInit {
     selectIndex(index: string) {
         this.dataKeys = [];
         this.dimensionProperties = [];
+        this.selectedGroup = undefined;
         this.selectedInfoResult = this._filter(index)[0];
         this.selectedInfoResult.eventSchema.eventProperties.forEach(property => {
 

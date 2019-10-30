@@ -54,15 +54,15 @@ export class DataDownloadDialog {
                 if (this.data.yAxesKeys === undefined) {
                     this.createFile('', this.downloadFormat, this.data.index)
 
-                } else if (Array.isArray(this.data.data)) {
+                } else if (this.data.data["headers"] !== undefined) {
                  //Single Data
-                    let result = this.convertData(this.data.data, this.data.downloadFormat, this.data.xAxesKey, this.data.yAxesKeys);
+                    let result = this.convertData(this.data.data, this.downloadFormat, this.data.xAxesKey, this.data.yAxesKeys);
                     this.createFile(result, this.data.downloadFormat, this.data.index);
                 } else {
                     //group data
-                    Object.keys(this.data.data).forEach( groupName => {
-                        let events = this.data.data[groupName];
-                        let result = this.convertData(events, this.data.downloadFormat, this.data.xAxesKey, this.data.yAxesKeys);
+                    Object.keys(this.data.data.dataResults).forEach( groupName => {
+                        let dataResult = this.data.data.dataResults[groupName];
+                        let result = this.convertData(dataResult, this.downloadFormat, this.data.xAxesKey, this.data.yAxesKeys);
                         let fileName = this.data.index + ' ' + groupName;
                         this.createFile(result, this.data.downloadFormat, fileName);
                     });
@@ -96,19 +96,27 @@ export class DataDownloadDialog {
     }
 
     convertData(data, format, xAxesKey, yAxesKeys) {
+        let indexXKey = data.headers.findIndex(headerName => headerName === xAxesKey);
+        let indicesYKeys = [];
+        yAxesKeys.forEach(key => {
+            indicesYKeys.push(data.headers.findIndex(headerName => headerName === key))
+        });
+
         if (format === "json") {
-            let visibleData = [];
-            data.forEach(elem => {
-                let tmp = {"time": elem[xAxesKey]};
-                yAxesKeys.forEach(key => {
-                    if (elem[key] !== undefined) {
-                        tmp[key] = elem[key]
+            let resultJson = [];
+
+
+            data.rows.forEach(row => {
+                let tmp = {"time": row[indexXKey]};
+                indicesYKeys.forEach(index => {
+                    if (row[index] !== undefined) {
+                        tmp[data.headers[index]] = row[index]
                     }
                 });
-                visibleData.push(tmp)
+                resultJson.push(tmp)
             });
 
-            return visibleData;
+            return JSON.stringify(resultJson);
         } else {
             //CSV
             let resultCsv: string = '';
@@ -122,13 +130,13 @@ export class DataDownloadDialog {
 
 
             //content
-            data.forEach(elem => {
+            data.rows.forEach(row => {
                 resultCsv += '\n';
-                resultCsv += elem[xAxesKey];
-                yAxesKeys.forEach(key => {
+                resultCsv += row[indexXKey];
+                indicesYKeys.forEach(index => {
                     resultCsv += ';';
-                    if (elem[key] !== undefined) {
-                        resultCsv += elem[key]
+                    if (row[index] !== undefined) {
+                        resultCsv += row[index]
                     }
                 })
             });
@@ -149,11 +157,14 @@ export class DataDownloadDialog {
         window.URL.revokeObjectURL(url)
     }
 
-
     cancelDownload() {
-        this.downloadHttpRequestSubscribtion.unsubscribe();
-        this.exitDialog();
+        try {
+            this.downloadHttpRequestSubscribtion.unsubscribe();
+        } finally {
+            this.exitDialog();
+        }
     }
+
 
     exitDialog(): void {
         this.dialogRef.close();
