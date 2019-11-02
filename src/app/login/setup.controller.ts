@@ -43,7 +43,6 @@ export class SetupCtrl {
 
         this.setup = {
             couchDbHost: '',
-            sesameHost: '',
             kafkaHost: '',
             zookeeperHost: '',
             jmsHost: '',
