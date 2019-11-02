@@ -33,7 +33,7 @@ public class ZipFileExtractor {
   public void extractZipToFile(String targetFolder) throws IOException {
     File destDir = new File(targetFolder);
     if (!destDir.exists()) {
-      destDir.mkdir();
+      destDir.mkdirs();
     }
     byte[] buffer = new byte[1024];
     ZipInputStream zis = new ZipInputStream(zipInputStream);
