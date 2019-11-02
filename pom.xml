@@ -52,6 +52,7 @@
         <module>streampipes-processors-geo-flink</module>
         <module>streampipes-processors-image-processing-jvm</module>
         <module>streampipes-processors-transformation-jvm</module>
+        <module>streampipes-pipeline-elements-all-jvm</module>
     </modules>
 
     <properties>
@@ -371,6 +372,11 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.1.1</version>
+                </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
