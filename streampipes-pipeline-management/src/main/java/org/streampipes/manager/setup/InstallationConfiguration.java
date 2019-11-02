@@ -33,8 +33,7 @@ public class InstallationConfiguration {
 
 		setInitialConfiguration(settings);
 		List<InstallationStep> steps = new ArrayList<>();
-		
-		//steps.add(new SesameDbInstallationStep());
+
 		steps.add(new CouchDbInstallationStep());
 		steps.add(new UserRegistrationInstallationStep(settings.getAdminEmail(), settings.getAdminPassword()));
 

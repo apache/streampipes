@@ -30,7 +30,8 @@ import java.util.*;
 
 public class CouchDbInstallationStep implements InstallationStep {
 
-    private static List<String> initRdfEndpointPorts = Arrays.asList("8099/api/v1/admin@streampipes.org/master/sources/");
+    private static List<String> initRdfEndpointPorts =
+            Collections.singletonList("8099/api/v1/admin@streampipes.org/master/sources/");
     private static final String initRdfEndpointHost = "http://localhost:";
 
     public CouchDbInstallationStep() {
@@ -70,9 +71,9 @@ public class CouchDbInstallationStep implements InstallationStep {
             Utils.getCouchDbDashboardClient();
             Utils.getCouchDbVisualizablePipelineClient();
 
-            return Arrays.asList(Notifications.success(getTitle()));
+            return Collections.singletonList(Notifications.success(getTitle()));
         } catch (Exception e) {
-            return Arrays.asList(Notifications.error(getTitle()));
+            return Collections.singletonList(Notifications.error(getTitle()));
         }
     }
 
