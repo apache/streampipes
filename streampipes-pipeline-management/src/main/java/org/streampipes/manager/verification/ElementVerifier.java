@@ -53,7 +53,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   protected List<VerificationResult> validationResults;
   protected List<Verifier> validators;
 
-  protected IPipelineElementDescriptionStorage storageApi = StorageManager.INSTANCE.getStorageAPI();
+  protected IPipelineElementDescriptionStorage storageApi = StorageManager.INSTANCE.getPipelineElementStorage();
   protected UserService userService = UserManagementService.getUserService();
 
   public ElementVerifier(String graphData, Class<T> elementClass) {

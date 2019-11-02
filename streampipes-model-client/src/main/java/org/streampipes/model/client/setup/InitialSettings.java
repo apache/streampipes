@@ -23,17 +23,15 @@ public class InitialSettings {
 	private String adminEmail;
 	private String adminPassword;
 	private String couchDbHost;
-	private String sesameHost;
 	private String kafkaHost;
 	private String zookeeperHost;
 	private String jmsHost;
 	private Boolean installPipelineElements;
 
-	public InitialSettings(String adminEmail, String adminPassword, String couchDbHost, String sesameHost, String kafkaHost, String zookeeperHost, String jmsHost, Boolean installPipelineElements) {
+	public InitialSettings(String adminEmail, String adminPassword, String couchDbHost, String kafkaHost, String zookeeperHost, String jmsHost, Boolean installPipelineElements) {
 		this.adminEmail = adminEmail;
 		this.adminPassword = adminPassword;
 		this.couchDbHost = couchDbHost;
-		this.sesameHost = sesameHost;
 		this.kafkaHost = kafkaHost;
 		this.zookeeperHost = zookeeperHost;
 		this.jmsHost = jmsHost;
@@ -66,14 +64,6 @@ public class InitialSettings {
 	public void setCouchDbHost(String couchDbHost) {
 		this.couchDbHost = couchDbHost;
     }
-
-	public String getSesameHost() {
-		return sesameHost;
-	}
-
-	public void setSesameHost(String sesameHost) {
-		this.sesameHost = sesameHost;
-	}
 
 	public String getKafkaHost() {
 		return kafkaHost;

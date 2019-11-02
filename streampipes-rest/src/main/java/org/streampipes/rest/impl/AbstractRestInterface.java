@@ -83,7 +83,7 @@ public abstract class AbstractRestInterface {
   }
 
   protected IPipelineElementDescriptionStorage getPipelineElementRdfStorage() {
-    return StorageManager.INSTANCE.getStorageAPI();
+    return StorageManager.INSTANCE.getPipelineElementStorage();
   }
 
   protected IPipelineStorage getPipelineStorage() {

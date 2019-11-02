@@ -48,7 +48,7 @@ public class SimilarStreamFinder {
 
 	private boolean isSimilarStreamAvailable() {
 		
-		List<DataSourceDescription> seps = StorageManager.INSTANCE.getStorageAPI().getAllSEPs();
+		List<DataSourceDescription> seps = StorageManager.INSTANCE.getPipelineElementStorage().getAllSEPs();
 		List<SpDataStream> streams = getEventStreams(seps);
 		
 		SpDataStream pipelineInputStream = getStream();
@@ -92,7 +92,7 @@ public class SimilarStreamFinder {
 	private SpDataStream getStream() {
 		String streamId = pipeline.getStreams().get(0).getElementId();
 		
-		return StorageManager.INSTANCE.getStorageAPI().getEventStreamById(streamId);
+		return StorageManager.INSTANCE.getPipelineElementStorage().getEventStreamById(streamId);
 	}
 	
 	private List<SpDataStream> getEventStreams(List<DataSourceDescription> seps) {

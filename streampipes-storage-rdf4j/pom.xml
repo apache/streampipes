@@ -74,6 +74,10 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-sail-nativerdf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-queryparser-sparql</artifactId>
         </dependency>
         <dependency>

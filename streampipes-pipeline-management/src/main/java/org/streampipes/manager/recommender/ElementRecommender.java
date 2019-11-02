@@ -174,7 +174,7 @@ public class ElementRecommender {
   }
 
   private IPipelineElementDescriptionStorage getTripleStore() {
-    return StorageManager.INSTANCE.getStorageAPI();
+    return StorageManager.INSTANCE.getPipelineElementStorage();
   }
 
   private NamedStreamPipesEntity getRootNode() throws NoSepaInPipelineException {

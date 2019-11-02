@@ -27,8 +27,8 @@ public enum StorageManager {
 
   INSTANCE;
 
-  public IPipelineElementDescriptionStorage getStorageAPI() {
-    return Rdf4JStorageManager.INSTANCE.getStorageAPI();
+  public IPipelineElementDescriptionStorage getPipelineElementStorage() {
+    return Rdf4JStorageManager.INSTANCE.getPipelineElementStorage();
   }
 
   public IBackgroundKnowledgeStorage getBackgroundKnowledgeStorage() {

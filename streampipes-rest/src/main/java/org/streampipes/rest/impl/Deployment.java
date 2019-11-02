@@ -120,11 +120,11 @@ public class Deployment extends AbstractRestInterface {
 
         if (deploymentConfig.getElementType().equals("Sepa")) {
             DataProcessorDescription sepa = GsonSerializer.getGsonWithIds().fromJson(model, DataProcessorDescription.class);
-            success = StorageManager.INSTANCE.getStorageAPI().deleteSEPA(sepa.getElementId());
-            StorageManager.INSTANCE.getStorageAPI().storeSEPA(sepa);
+            success = StorageManager.INSTANCE.getPipelineElementStorage().deleteSEPA(sepa.getElementId());
+            StorageManager.INSTANCE.getPipelineElementStorage().storeSEPA(sepa);
         } else {
             DataSinkDescription sec = new DataSinkDescription(GsonSerializer.getGsonWithIds().fromJson(model, DataSinkDescription.class));
-            success = StorageManager.INSTANCE.getStorageAPI().update(sec);
+            success = StorageManager.INSTANCE.getPipelineElementStorage().update(sec);
         }
 
         if (success) return ok(Notifications.success("Element description updated."));

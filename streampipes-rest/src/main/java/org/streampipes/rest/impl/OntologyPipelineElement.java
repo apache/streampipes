@@ -52,7 +52,7 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
   @Produces(MediaType.APPLICATION_JSON)
   public Response getStreams() {
     List<DataSourceDescription> result = new ArrayList<>();
-    List<DataSourceDescription> sesameSeps = StorageManager.INSTANCE.getStorageAPI().getAllSEPs();
+    List<DataSourceDescription> sesameSeps = StorageManager.INSTANCE.getPipelineElementStorage().getAllSEPs();
 
     for (DataSourceDescription sep : sesameSeps) {
       result.add(new DataSourceDescription(sep));
@@ -67,7 +67,7 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
   public Response getSourceDetails(@PathParam("sourceId") String sepaId, @QueryParam("keepIds") boolean keepIds) {
 
     try {
-      DataSourceDescription sepaDescription = new DataSourceDescription(StorageManager.INSTANCE.getStorageAPI().getSEPById(sepaId));
+      DataSourceDescription sepaDescription = new DataSourceDescription(StorageManager.INSTANCE.getPipelineElementStorage().getSEPById(sepaId));
       return ok(sepaDescription);
     } catch (URISyntaxException e) {
       return ok(Notifications.error("Error"));
@@ -81,7 +81,7 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
   @Produces(MediaType.APPLICATION_JSON)
   public Response getSepas() {
     JsonArray result = new JsonArray();
-    List<DataProcessorDescription> sesameSepas = StorageManager.INSTANCE.getStorageAPI().getAllSEPAs();
+    List<DataProcessorDescription> sesameSepas = StorageManager.INSTANCE.getPipelineElementStorage().getAllSEPAs();
 
     for (DataProcessorDescription sepa : sesameSepas) {
       result.add(getHeader(sepa.getUri(), sepa.getName()));
@@ -97,7 +97,7 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
   @Produces(MediaType.APPLICATION_JSON)
   public Response getActions() {
     List<DataSinkDescription> result = new ArrayList<>();
-    List<DataSinkDescription> sesameSecs = StorageManager.INSTANCE.getStorageAPI().getAllSECs();
+    List<DataSinkDescription> sesameSecs = StorageManager.INSTANCE.getPipelineElementStorage().getAllSECs();
 
     for (DataSinkDescription sec : sesameSecs) {
       result.add(new DataSinkDescription(sec));
@@ -118,7 +118,7 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
   public Response getSepa(@PathParam("sepaId") String sepaId, @QueryParam("keepIds") boolean keepIds) {
 
     try {
-      DataProcessorDescription dataProcessorDescription = new DataProcessorDescription(StorageManager.INSTANCE.getStorageAPI().getSEPAById(sepaId));
+      DataProcessorDescription dataProcessorDescription = new DataProcessorDescription(StorageManager.INSTANCE.getPipelineElementStorage().getSEPAById(sepaId));
       return ok(dataProcessorDescription);
     } catch (URISyntaxException e) {
       return ok(Notifications.error("Error"));
@@ -131,7 +131,7 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
   @Override
   public Response getAction(@PathParam("actionId") String actionId, @QueryParam("keepIds") boolean keepIds) {
     try {
-      DataSinkDescription dataSinkDescription = new DataSinkDescription(StorageManager.INSTANCE.getStorageAPI().getSECById(actionId));
+      DataSinkDescription dataSinkDescription = new DataSinkDescription(StorageManager.INSTANCE.getPipelineElementStorage().getSECById(actionId));
       return ok(dataSinkDescription);
     } catch (URISyntaxException e) {
       return ok(Notifications.error("Error"));

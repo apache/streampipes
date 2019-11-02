@@ -131,7 +131,7 @@ public class PipelineGenerator {
     return StorageDispatcher
             .INSTANCE
             .getTripleStore()
-            .getStorageAPI()
+            .getPipelineElementStorage()
             .getEventStreamById(datasetId);
   }
 

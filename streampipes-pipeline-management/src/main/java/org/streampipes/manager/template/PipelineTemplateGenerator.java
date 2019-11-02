@@ -152,6 +152,6 @@ public class PipelineTemplateGenerator {
     return StorageDispatcher
             .INSTANCE
             .getTripleStore()
-            .getStorageAPI();
+            .getPipelineElementStorage();
   }
 }

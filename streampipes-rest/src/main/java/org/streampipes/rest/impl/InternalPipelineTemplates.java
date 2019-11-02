@@ -110,7 +110,7 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
         return StorageDispatcher
                 .INSTANCE
                 .getTripleStore()
-                .getStorageAPI();
+                .getPipelineElementStorage();
     }
 
     private List<SpDataStream> getAllDataStreams() {

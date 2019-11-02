@@ -22,6 +22,6 @@ import org.streampipes.storage.management.StorageDispatcher;
 public class TestTemplateGenerator {
 
   private static SpDataStream getSource() {
-    return StorageDispatcher.INSTANCE.getTripleStore().getStorageAPI().getEventStreamById("http://localhost:8089/sep/source_random/random-data-set");
+    return StorageDispatcher.INSTANCE.getTripleStore().getPipelineElementStorage().getEventStreamById("http://localhost:8089/sep/source_random/random-data-set");
   }
 }

@@ -30,7 +30,6 @@ import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.staticproperty.StaticProperty;
-import org.streampipes.storage.Rdf4JStorageManager;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.streampipes.storage.rdf4j.sparql.QueryBuilder;
 import org.streampipes.storage.rdf4j.util.Transformer;
@@ -43,15 +42,14 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-public class SesameStorageRequests implements IPipelineElementDescriptionStorage {
+public class PipelineElementStorageRequests implements IPipelineElementDescriptionStorage {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SesameStorageRequests.class);
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineElementStorageRequests.class);
 
   private EntityManager entityManager;
 
-  public SesameStorageRequests() {
-    Rdf4JStorageManager manager = Rdf4JStorageManager.INSTANCE;
-    this.entityManager = manager.getEntityManager();
+  public PipelineElementStorageRequests(EntityManager entityManager) {
+    this.entityManager = entityManager;
   }
 
   //TODO: exception handling

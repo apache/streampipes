@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class InMemoryStorage implements IPipelineElementDescriptionStorage {
+public class PipelineElementInMemoryStorage implements IPipelineElementDescriptionStorage {
 
   private Map<String, DataSinkDescription> inMemorySECStorage;
   private Map<String, DataSourceDescription> inMemorySEPStorage;
@@ -49,7 +49,7 @@ public class InMemoryStorage implements IPipelineElementDescriptionStorage {
   private Cloner cloner;
 
 
-  public InMemoryStorage(IPipelineElementDescriptionStorage sesameStorage) {
+  public PipelineElementInMemoryStorage(IPipelineElementDescriptionStorage sesameStorage) {
     this.inMemorySECStorage = new HashMap<>();
     this.inMemorySEPAStorage = new HashMap<>();
     this.inMemorySEPStorage = new HashMap<>();

@@ -27,13 +27,13 @@ import java.util.stream.Collectors;
 public class TestSerializer {
 
   public static void main(String[] args) {
-    List<DataSourceDescription> sep = StorageDispatcher.INSTANCE.getTripleStore().getStorageAPI().getAllSEPs().stream
+    List<DataSourceDescription> sep = StorageDispatcher.INSTANCE.getTripleStore().getPipelineElementStorage().getAllSEPs().stream
             ().map(m -> new DataSourceDescription(m)).collect(Collectors.toList());
 
     String json = GsonSerializer.getGson().toJson(sep.get(0));
     System.out.println(json);
 
-    List<DataProcessorDescription> processors = StorageDispatcher.INSTANCE.getTripleStore().getStorageAPI()
+    List<DataProcessorDescription> processors = StorageDispatcher.INSTANCE.getTripleStore().getPipelineElementStorage()
             .getAllSEPAs().stream().map(m -> new DataProcessorDescription(m)).collect(Collectors.toList());
     String json2 = GsonSerializer.getGson().toJson(processors.get(0));
     System.out.println(json2);
