@@ -36,7 +36,7 @@ public class WaterTankSource  implements SemanticEventProducerDeclarer {
   public List<DataStreamDeclarer> getEventStreams() {
     return Arrays.asList(new WaterLevel1Stream(),
             new WaterLevel2Stream(),
-            //new FlowRate1Stream(),
+            new FlowRate1Stream(),
             new PressureTankStream(),
             new FlowRate2Stream());
   }
