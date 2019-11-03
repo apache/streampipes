@@ -28,7 +28,7 @@ public enum AllPipelineElementsConfig implements PeConfig {
 
   private final static String service_id = "pe/org.streampipes.processors.all.jvm";
   private final static String service_name = "Processors JVM (Bundle)";
-  private final static String service_container_name = "processors-all-jvm";
+  private final static String service_container_name = "pipeline-elements-all-jvm";
 
   AllPipelineElementsConfig() {
     config = SpConfig.getSpConfig(service_id);
