@@ -26,7 +26,7 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Protocols;
 import org.streampipes.sources.AbstractAdapterIncludedStream;
 import org.streampipes.sources.vehicle.simulator.config.VehicleSimulatorConfig;
-import org.streampipes.sources.vehicle.simulator.simulator.ExampleSourceDataSimulator;
+import org.streampipes.sources.vehicle.simulator.simulator.VehicleDataSimulator;
 import org.streampipes.vocabulary.Geo;
 
 public class VehicleStream extends AbstractAdapterIncludedStream {
@@ -51,7 +51,7 @@ public class VehicleStream extends AbstractAdapterIncludedStream {
 
   @Override
   public void executeStream() {
-    Thread thread = new Thread(new ExampleSourceDataSimulator());
+    Thread thread = new Thread(new VehicleDataSimulator());
     thread.start();
   }
 }

@@ -4,9 +4,7 @@
   "repeatWorkflow": true,
   "timeBetweenRepeat": 1000,
   "varyRepeatFrequency": true,
-  "producerConfig" : {
-    "topic" : "org.streampipes.examples.pressuretank"
-  },
+  "targetTopic" : "org.streampipes.examples.pressuretank",
   "steps": [{
     "config": [{
       "timestamp": "nowTimestamp()",

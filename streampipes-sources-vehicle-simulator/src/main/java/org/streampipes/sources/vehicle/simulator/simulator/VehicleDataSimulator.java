@@ -16,46 +16,45 @@
 
 package org.streampipes.sources.vehicle.simulator.simulator;
 
-import net.acesinc.data.json.generator.DataSimulator;
-import net.acesinc.data.json.generator.JsonDataGenerator;
-import net.acesinc.data.json.generator.SimulationUtils;
 import net.acesinc.data.json.generator.config.JSONConfigReader;
 import net.acesinc.data.json.generator.config.SimulationConfig;
 import net.acesinc.data.json.generator.config.WorkflowConfig;
-import net.acesinc.data.json.generator.workflow.Workflow;
+import org.streampipes.pe.simulator.StreamPipesSimulationRunner;
+import org.streampipes.pe.simulator.TopicAwareWorkflow;
+import org.streampipes.sources.vehicle.simulator.config.VehicleSimulatorConfig;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExampleSourceDataSimulator implements Runnable {
+public class VehicleDataSimulator implements Runnable {
 
   private static final String EXAMPLES_CONFIG_FILE = "streampipesDemoConfig.json";
 
   private void initSimulation() {
-    SimulationConfig config = null;
     try {
-      config = buildSimulationConfig();
-      Map<String, Workflow> workflows = buildSimWorkflows(config);
-      JsonDataGenerator generator = new JsonDataGenerator(config, workflows);
+      SimulationConfig config = buildSimulationConfig();
+      Map<String, TopicAwareWorkflow> workflows = buildSimWorkflows(config);
+      String kafkaHost = VehicleSimulatorConfig.INSTANCE.getKafkaHost();
+      Integer kafkaPort = VehicleSimulatorConfig.INSTANCE.getKafkaPort();
+      new StreamPipesSimulationRunner(config, workflows, kafkaHost, kafkaPort).startSimulation();
 
-      new DataSimulator().runSimulation(generator);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   private SimulationConfig buildSimulationConfig() throws IOException {
-    return JSONConfigReader.readConfig(SimulationUtils.class.getClassLoader().getResourceAsStream(EXAMPLES_CONFIG_FILE),
+    return JSONConfigReader.readConfig(VehicleDataSimulator.class.getClassLoader().getResourceAsStream(EXAMPLES_CONFIG_FILE),
             SimulationConfig.class);
   }
 
-  private Map<String, Workflow> buildSimWorkflows(SimulationConfig config) throws IOException {
-    Map<String, Workflow> workflows = new HashMap<>();
+  private Map<String, TopicAwareWorkflow> buildSimWorkflows(SimulationConfig config) throws IOException {
+    Map<String, TopicAwareWorkflow> workflows = new HashMap<>();
     for(WorkflowConfig workflowConfig : config.getWorkflows()) {
-      workflows.put(workflowConfig.getWorkflowFilename(), JSONConfigReader.readConfig(SimulationUtils.class
+      workflows.put(workflowConfig.getWorkflowFilename(), JSONConfigReader.readConfig(VehicleDataSimulator.class
                       .getClassLoader().getResourceAsStream(workflowConfig.getWorkflowFilename()),
-              Workflow.class));
+              TopicAwareWorkflow.class));
     }
 
     return workflows;

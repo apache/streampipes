@@ -29,7 +29,7 @@ import org.streampipes.sdk.utils.Assets;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
 import org.streampipes.sources.watertank.simulator.config.WatertankSimulatorConfig;
-import org.streampipes.sources.watertank.simulator.utils.ExampleSourceDataSimulator;
+import org.streampipes.sources.watertank.simulator.utils.WatertankDataSimulator;
 import org.streampipes.sources.watertank.simulator.vocabulary.WaterTankVocabulary;
 
 public class WaterLevel1Stream extends AbstractAlreadyExistingStream {
@@ -76,7 +76,7 @@ public class WaterLevel1Stream extends AbstractAlreadyExistingStream {
 
   @Override
   public void executeStream() {
-    Thread thread = new Thread(new ExampleSourceDataSimulator());
+    Thread thread = new Thread(new WatertankDataSimulator());
     thread.start();
   }
 }
