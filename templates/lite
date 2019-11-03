@@ -7,12 +7,6 @@ couchdb
 kafka
 kafka-rest
 nginx
-processors-filters-jvm
-processors-geo-flink
-processors-image-processing-jvm
-processors-transformation-jvm
-sinks-brokers-jvm
-sinks-databases-jvm
-sinks-internal-jvm
 sources-watertank-simulator
 zookeeper
+pipeline-elemnts-all-jvm
