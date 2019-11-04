@@ -3,7 +3,7 @@ services:
 
 #### Mandatory external services
   activemq:
-    image: streampipes/activemq
+    image: streampipes/activemq:5.15.9
     ports:
       - "61616:61616"
       - "61614:61614"
@@ -46,15 +46,6 @@ services:
       - couchdb:/opt/couchdb/data
     networks:
       spnet:
-      
-  rdf4j:
-    image: streampipes/rdf4j:2.4.5
-    ports:
-      - "8031:8031"
-    volumes:
-      - rdf4j:/root/.RDF4J
-    networks:
-      spnet:    
             
   kafka:
     image: wurstmeister/kafka:2.12-2.2.0
@@ -290,7 +281,7 @@ services:
 #### Full version service extensions
 
   jobmanager:
-    image: flink:1.8.0-scala_2.11-alpine
+    image: flink:1.9.1-scala_2.11
     ports:
       - "8081:8081"
       - "6123:6123"
@@ -301,7 +292,7 @@ services:
       spnet:
 
   taskmanager:
-    image: flink:1.8.0-scala_2.11-alpine
+    image: flink:1.9.1-scala_2.11
     depends_on:
       - jobmanager
     command: taskmanager
@@ -329,15 +320,6 @@ services:
       - influx:/var/lib/influxdb
     networks:
       spnet:   
-
-  swagger-ui:
-    image: swaggerapi/swagger-ui
-    ports:
-      - "8080:8080"
-    environment:
-      - "API_URL=http://${SP_HOST}/streampipes-backend/api/docs/swagger.json"
-    networks:
-      spnet:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3

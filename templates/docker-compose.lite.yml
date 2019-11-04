@@ -3,7 +3,7 @@ services:
 
 #### Mandatory external services
   activemq:
-    image: streampipes/activemq
+    image: streampipes/activemq:5.15.9
     ports:
       - "61616:61616"
       - "61614:61614"
@@ -46,15 +46,6 @@ services:
       - couchdb:/opt/couchdb/data
     networks:
       spnet:
-      
-  rdf4j:
-    image: streampipes/rdf4j:2.4.5
-    ports:
-      - "8031:8031"
-    volumes:
-      - rdf4j:/root/.RDF4J
-    networks:
-      spnet:    
             
   kafka:
     image: wurstmeister/kafka:2.12-2.2.0
@@ -116,7 +107,6 @@ services:
       - SP_KAFKA_HOST=${SP_KAFKA_HOST}
     volumes:
       - backend:/root/.streampipes
-      - backend:/streampipes-assets
     networks:
       spnet:  
       
