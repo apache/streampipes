@@ -56,7 +56,7 @@ if [ ! -f ./docker-compose.yml ];
 
 		cp ../templates/.env ./.env
 
-		if [ $1 == "start" ] && [ "$#" -gt 1 ] && [ $2 == "-d" ];
+		if [ $1 == "start" ] && [ "$#" -gt 1 ] && [ $2 == "-ip" ];
 		then 
 			# Check OS type
 			OS_TYPE="$(uname -s)"
