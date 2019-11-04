@@ -1,6 +1,5 @@
 activemq
 backend
-rdf4j
 consul
 connect-master
 connect-worker-main
