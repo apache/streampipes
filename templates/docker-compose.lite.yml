@@ -159,60 +159,8 @@ services:
 
 #### Lite version pipeline elements
 
-  processors-filters-jvm:
-    image: "${SP_REGISTRY_PE}/processors-filters-jvm:${SP_VERSION}"
-    depends_on:
-      - "consul"
-    networks:
-      spnet:
-      
-  processors-filters-siddhi:
-    image: "${SP_REGISTRY_PE}/processors-filters-siddhi:${SP_VERSION}"
-    depends_on:
-      - "consul"
-    networks:
-      spnet:
-      
-  processors-image-processing-jvm:
-    image: "${SP_REGISTRY_PE}/processors-image-processing-jvm:${SP_VERSION}"
-    depends_on:
-      - "consul"
-    networks:
-      spnet:
-      
-  processors-transformation-jvm:
-    image: "${SP_REGISTRY_PE}/processors-transformation-jvm:${SP_VERSION}"
-    depends_on:
-      - "consul"
-    networks:
-      spnet:
-     
-  sinks-brokers-jvm:
-    image: "${SP_REGISTRY_PE}/sinks-brokers-jvm:${SP_VERSION}"
-    depends_on:
-      - "consul"
-    networks:
-      spnet:
-
-  sinks-databases-jvm:
-    image: "${SP_REGISTRY_PE}/sinks-databases-jvm:${SP_VERSION}"
-    depends_on:
-      - "consul"
-    networks:
-      spnet:
-      
-  sinks-internal-jvm:
-    image: "${SP_REGISTRY_PE}/sinks-internal-jvm:${SP_VERSION}"
-    depends_on:
-      - "consul"
-    environment:
-      - STREAMPIPES_HOST=${SP_HOST}
-      - SP_NGINX_HOST=${SP_HOST}
-    networks:
-      spnet:
-      
-  sinks-notifications-jvm:
-    image: "${SP_REGISTRY_PE}/sinks-notifications-jvm:${SP_VERSION}"
+  pipeline-elements-all-jvm:
+    image: "${SP_REGISTRY_PE}/pipeline-elements-all-jvm:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
@@ -232,7 +180,6 @@ volumes:
   connect:
   couchdb:
   kafka:
-  rdf4j:
   zk-conf:
   zk-data:
 

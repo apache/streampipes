@@ -56,87 +56,99 @@ if [ ! -f ./docker-compose.yml ];
 
 		cp ../templates/.env ./.env
 
-		# Check OS type
-		OS_TYPE="$(uname -s)"
-		case $OS_TYPE in
-			Linux*)
-					# If Unix
-					rawip=$(ip address list | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+		if [ $1 == "start" ] && [ "$#" -gt 1 ] && [ $2 == "-d" ];
+		then 
+			# Check OS type
+			OS_TYPE="$(uname -s)"
+			case $OS_TYPE in
+				Linux*)
+						# If Unix
+						rawip=$(ip address list | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
-					rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
-					IFS=' ' declare -a 'allips=($rawip)'
+						rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
+						IFS=' ' declare -a 'allips=($rawip)'
 
-					allips+=( 'Enter IP manually' )
+						allips+=( 'Enter IP manually' )
 
-					echo ''
-					echo 'Please select your IP address or add one manually: '
-					PS3='Select option: '
-					select opt in "${allips[@]}"
-					do
-					if [ -z "${opt}" ];
-						then
-							echo "Wrong input select one of the options";
-						else
-							ip="$opt"
-
-							if [ "$opt" == "Enter IP manually" ];
+						echo ''
+						echo 'Please select your IP address or add one manually: '
+						PS3='Select option: '
+						select opt in "${allips[@]}"
+						do
+						if [ -z "${opt}" ];
 							then
-								read -p "Enter Ip: " ip
+								echo "Wrong input select one of the options";
+							else
+								ip="$opt"
+
+								if [ "$opt" == "Enter IP manually" ];
+								then
+									read -p "Enter Ip: " ip
+								fi
+								break
 							fi
-							break
-						fi
-					done
+						done
 
-					# OS dependent
-					sed -i -e "s/SP_HOST=.*/SP_HOST=${ip}/g" .env
-					sed -i -e "s/SP_KAFKA_HOST=.*/SP_KAFKA_HOST=${ip}/g" .env
-					;;
-			Darwin*)
-					# If Darwin (MacOS)
-					rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+						# OS dependent
+						sed -i -e "s/SP_HOST=.*/SP_HOST=${ip}/g" .env
+						sed -i -e "s/SP_KAFKA_HOST=.*/SP_KAFKA_HOST=${ip}/g" .env
+						;;
+				Darwin*)
+						# If Darwin (MacOS)
+						rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
-					rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
-					IFS=' ' declare -a 'allips=($rawip)'
+						rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
+						IFS=' ' declare -a 'allips=($rawip)'
 
-					allips+=( 'Enter IP manually' )
+						allips+=( 'Enter IP manually' )
 
-					echo ''
-					echo 'Please select your IP address or add one manually: '
-					PS3='Select option: '
-					select opt in "${allips[@]}"
-					do
-					if [ -z "${opt}" ];
-						then
-							echo "Wrong input select one of the options";
-						else
-							ip="$opt"
-
-							if [ "$opt" == "Enter IP manually" ];
+						echo ''
+						echo 'Please select your IP address or add one manually: '
+						PS3='Select option: '
+						select opt in "${allips[@]}"
+						do
+						if [ -z "${opt}" ];
 							then
-								read -p "Enter Ip: " ip
+								echo "Wrong input select one of the options";
+							else
+								ip="$opt"
+
+								if [ "$opt" == "Enter IP manually" ];
+								then
+									read -p "Enter Ip: " ip
+								fi
+								break
 							fi
-							break
-						fi
-					done
+						done
 
-					# OS dependent
-					sed -i '' -e "s/SP_HOST=.*/SP_HOST=${ip}/g" .env
-					sed -i '' -e "s/SP_KAFKA_HOST=.*/SP_KAFKA_HOST=${ip}/g" .env
-					;;
-			CYGWIN*)
-					# If Windows
-					ip=$(ipconfig | grep -Eo '(IPv4.*)' | grep -Eo '([0-9]*\.){3}[0-9]*' | tail -1)
-					# Workaround for Kafka (https://github.com/docker/for-win/issues/1829)
-					export COMPOSE_CONVERT_WINDOWS_PATHS=1
+						# OS dependent
+						sed -i '' -e "s/SP_HOST=.*/SP_HOST=${ip}/g" .env
+						sed -i '' -e "s/SP_KAFKA_HOST=.*/SP_KAFKA_HOST=${ip}/g" .env
+						;;
+				CYGWIN*)
+						# If Windows
+						ip=$(ipconfig | grep -Eo '(IPv4.*)' | grep -Eo '([0-9]*\.){3}[0-9]*' | tail -1)
+						# Workaround for Kafka (https://github.com/docker/for-win/issues/1829)
+						export COMPOSE_CONVERT_WINDOWS_PATHS=1
 
-					# OS dependent
-					sed -i -e "s/SP_HOST=.*/SP_HOST=${ip}/g" .env
-					sed -i -e "s/SP_KAFKA_HOST=.*/SP_KAFKA_HOST=${ip}/g" .env
-			    ;;
-			*)
-					fatal "Unsupported OS $OS_TYPE"
-		esac
+						# OS dependent
+						sed -i -e "s/SP_HOST=.*/SP_HOST=${ip}/g" .env
+						sed -i -e "s/SP_KAFKA_HOST=.*/SP_KAFKA_HOST=${ip}/g" .env
+						;;
+				MINGW64_NT*)
+						# If Windows
+						ip=$(ipconfig | grep -Eo '(IPv4.*)' | grep -Eo '([0-9]*\.){3}[0-9]*' | tail -1)
+						# Workaround for Kafka (https://github.com/docker/for-win/issues/1829)
+						export COMPOSE_CONVERT_WINDOWS_PATHS=1
 
+						# OS dependent
+						sed -i -e "s/SP_HOST=.*/SP_HOST=${ip}/g" .env
+						sed -i -e "s/SP_KAFKA_HOST=.*/SP_KAFKA_HOST=${ip}/g" .env
+						;;
+				*)
+						fatal "Unsupported OS $OS_TYPE"
+			esac
+		fi
 	fi
 
 	docker-compose pull

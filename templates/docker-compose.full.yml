@@ -366,7 +366,6 @@ volumes:
   couchdb:
   influx:
   kafka:
-  rdf4j:
   zk-conf:
   zk-data:
   elastic:
