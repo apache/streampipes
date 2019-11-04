@@ -22,7 +22,6 @@ public class DashboardModel {
 
   private String pipelineId;
   private EventSchema schema;
-  private String broker;
   private String visualizationName;
   private String topic;
 
@@ -30,7 +29,6 @@ public class DashboardModel {
     DashboardModel model = new DashboardModel();
     model.setPipelineId(params.getPipelineId());
     model.setSchema(params.getSchema());
-    model.setBroker(params.getBroker());
     model.setVisualizationName(params.getVisualizationName());
     model.setTopic(params.getElementId());
 
@@ -51,14 +49,6 @@ public class DashboardModel {
 
   public void setSchema(EventSchema schema) {
     this.schema = schema;
-  }
-
-  public String getBroker() {
-    return broker;
-  }
-
-  public void setBroker(String broker) {
-    this.broker = broker;
   }
 
   public String getVisualizationName() {
