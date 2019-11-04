@@ -48,12 +48,14 @@ export class SocketConnectionDataModel extends WidgetDataModel {
 					return elem.doc.visualisation._id == self.visualisationId;
 				});
 
-				var brokerUrl = element.doc.visualisation['broker'];
+				var websocketScheme;
 				if(location.protocol === 'https:') {
-					brokerUrl = brokerUrl.replace('ws:', 'wss:');
-					brokerUrl = brokerUrl.replace(':80', '');
+					websocketScheme = "wss:";
+				} else {
+					websocketScheme = "ws:";
 				}
 				var inputTopic = '/topic/' + element.doc.visualisation['topic'];
+				var brokerUrl = websocketScheme + "//" + location.host + "/streampipes/ws";
 
 				self.client = Stomp.client(brokerUrl + inputTopic);
 
