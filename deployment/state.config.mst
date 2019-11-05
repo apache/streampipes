@@ -58,6 +58,15 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('startup', {
+            url: '/startup',
+            params: {target: null},
+            views: {
+                'container': {
+                    template: require('../login/startup/startup.html')
+                }
+            }
+        })
         .state('streampipes.appcontainer', {
             url: '/appcontainer',
             views: {

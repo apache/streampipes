@@ -34,32 +34,40 @@ export class RouteTransitionInterceptorService {
 
     onTransitionStarted(transitionInfo) {
         return new Promise(resolve => {
-            this.AuthService.checkConfiguration().then(() => {
-                if (this.AuthStatusService.configured) {
-                    this.AuthService.checkAuthentication().then(() => {
-                        if (this.isProtectedPage(transitionInfo.$to().name) && !(this.AuthStatusService.authenticated)) {
-                            resolve(transitionInfo.router.stateService.target('login'));
-                        } else {
-                            if (this.AuthStatusService.authenticated && (transitionInfo.$to().name === 'login'
-                                || transitionInfo.$to().name === 'setup')) {
-                                resolve(transitionInfo.router.stateService.target('streampipes'));
+            if (transitionInfo.$to().name !== "startup") {
+                this.AuthService.checkConfiguration().then(() => {
+                    if (this.AuthStatusService.configured) {
+                        this.AuthService.checkAuthentication().then(() => {
+                            if (this.isProtectedPage(transitionInfo.$to().name) && !(this.AuthStatusService.authenticated)) {
+                                resolve(transitionInfo.router.stateService.target('login'));
                             } else {
-                                if (transitionInfo.$to().name === 'setup') {
+                                if (this.AuthStatusService.authenticated && (transitionInfo.$to().name === 'login'
+                                    || transitionInfo.$to().name === 'setup')) {
                                     resolve(transitionInfo.router.stateService.target('streampipes'));
                                 } else {
-                                    resolve(true);
+                                    if (transitionInfo.$to().name === 'setup') {
+                                        resolve(transitionInfo.router.stateService.target('streampipes'));
+                                    } else {
+                                        resolve(true);
+                                    }
                                 }
                             }
-                        }
-                    })
-                } else {
-                    if (transitionInfo.$to().name == 'setup') {
-                        resolve(true);
+                        })
                     } else {
-                        resolve(transitionInfo.router.stateService.target('setup'));
+                        if (transitionInfo.$to().name == 'setup') {
+                            resolve(true);
+                        } else {
+                            resolve(transitionInfo.router.stateService.target('setup'));
+                        }
                     }
-                }
-            });
+                }, (error) => {
+                    console.log("error");
+                    console.log(error);
+                    resolve(transitionInfo.router.stateService.target('startup'));
+                });
+            } else {
+                resolve(true);
+            }
         });
     }
 

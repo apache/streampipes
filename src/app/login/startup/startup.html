@@ -1,0 +1,20 @@
+<div class="md-padding sp-fade" layout-xs="column" layout="row" layout-align="center center"
+     style="min-height:100vh !important; background:white;" ng-controller="StartupCtrl as ctrl">
+    <div flex="80" layout="column" layout-align="center center" style="display:flex;">
+        <img src="/assets/img/sp/sp-logo-center-color.png" style="max-width:500px;"/>
+
+        <div flex="100">
+            <h2>Welcome!</h2>
+        </div>
+        <div flex="100">
+            <h4 style="text-align:center;">Please wait while StreamPipes is starting up.</h4>
+            <h5 style="text-align:center;"><i>On some systems, initial startup might take a few minutes. We'll automatically forward you once StreamPipes is ready.</i></h5>
+        </div>
+
+        <div flex="100" layout-align="center center">
+            <md-progress-linear style="margin-top:10px;width:800px;" class="md-accent" md-mode="determinate" value="{{ctrl.progress}}"></md-progress-linear>
+
+        </div>
+    </div>
+
+</div>

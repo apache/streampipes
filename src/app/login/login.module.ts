@@ -22,9 +22,11 @@ import spServices from '../services/services.module'
 import { RegisterCtrl } from './register.controller'
 import { LoginCtrl } from './login.controller'
 import { SetupCtrl } from './setup.controller'
+import {StartupCtrl} from "./startup/startup.controller";
 
 export default angular.module('sp.login', [spServices])
 	.controller('RegisterCtrl', RegisterCtrl)
 	.controller('LoginCtrl', LoginCtrl)
 	.controller('SetupCtrl', SetupCtrl)
+	.controller('StartupCtrl', StartupCtrl)
 	.name;

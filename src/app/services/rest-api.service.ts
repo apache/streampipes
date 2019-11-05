@@ -192,7 +192,9 @@ export class RestApi {
     }
 
     configured() {
-        return this.$http.get(this.getServerUrl() + "/setup/configured");
+        return this.$http.get(this.getServerUrl() + "/setup/configured", {
+            ignoreLoadingBar: true
+        });
 
     }
 
