@@ -61,9 +61,10 @@ export class RouteTransitionInterceptorService {
                         }
                     }
                 }, (error) => {
-                    console.log("error");
                     console.log(error);
-                    resolve(transitionInfo.router.stateService.target('startup'));
+                    if (error.status === 504) {
+                        resolve(transitionInfo.router.stateService.target('startup'));
+                    }
                 });
             } else {
                 resolve(true);

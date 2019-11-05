@@ -39,20 +39,16 @@ export class StartupCtrl {
     }
 
     $onInit() {
-        console.log("hi");
         this.checkStatus();
     }
 
     checkStatus() {
         this.AuthService.checkConfiguration().then(() => {
-            if (this.AuthStatusService.configured) {
-                this.$state.go("setup");
-            }
+            this.progress = 100;
+            this.$state.go("setup");
         }, () => {
             this.currentStep += this.loadingIntervalInSeconds;
             this.progress = (this.currentStep / this.maxLoadingTimeInSeconds) * 100;
-            console.log(this.currentStep);
-            console.log(this.progress);
             this.$timeout(() => {
                 this.checkStatus();
             }, this.loadingIntervalInSeconds*1000);
