@@ -86,7 +86,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter {
     public SpecificAdapterStreamDescription declareModel() {
 
         SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "OPC UA", "Reads values from an OPC-UA server")
-                .iconUrl("opc.jpg")
+                .iconUrl("opc.png")
                 .category(AdapterType.Generic, AdapterType.Manufacturing)
                 .requiredAlternatives(Labels.from(OPC_HOST_OR_URL, "OPC Server", ""),
                         Alternatives.from(Labels.from(OPC_URL, "URL", ""),

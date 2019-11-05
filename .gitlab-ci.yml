@@ -71,7 +71,7 @@ deploy:
   stage: deploy
   script:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn deploy -DskipTests
+    - mvn deploy -DskipTests -Denforcer.skip
   only:
     - dev
   artifacts:
