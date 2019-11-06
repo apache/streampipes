@@ -54,7 +54,6 @@ import org.streampipes.rest.impl.Version;
 import org.streampipes.rest.impl.VirtualSensor;
 import org.streampipes.rest.impl.Visualization;
 import org.streampipes.rest.impl.datalake.DataLakeNoUserResourceV3;
-import org.streampipes.rest.impl.datalake.DataLakeResource;
 import org.streampipes.rest.impl.datalake.DataLakeResourceV3;
 import org.streampipes.rest.impl.nouser.FileServingResource;
 import org.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
@@ -86,7 +85,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(PipelineNoUserResource.class);
     register(PipelineElementImportNoUser.class);
     register(PipelineCategory.class);
-    register(DataLakeResource.class);
     register(PipelineElementImport.class);
     register(SemanticEventConsumer.class);
     register(SemanticEventProcessingAgent.class);
