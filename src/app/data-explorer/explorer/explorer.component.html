@@ -85,11 +85,6 @@
                         </div>
                     </div>
 
-                    <button *ngIf="enableAdvanceOptions"
-                            mat-icon-button class="icon" style="margin-left: 5px" color="primary">
-                        <mat-icon style="font-size: 30px;height: 30px; width: 30px" (click)="loadData()">autorenew</mat-icon>
-                    </button>
-
                     <div *ngIf="selectedTimeUnit === 'Custom'">
                         <div class="option">
                             <div class="optionName">Date range</div>
@@ -101,6 +96,11 @@
                             </mat-form-field>
                         </div>
                     </div>
+
+                    <button *ngIf="enableAdvanceOptions"
+                            mat-icon-button class="icon" style="margin-left: 5px" color="primary">
+                        <mat-icon style="font-size: 30px;height: 30px; width: 30px" (click)="loadData()">autorenew</mat-icon>
+                    </button>
                     <!--
                             <div class="option" style="margin-left: 5px">
                                 <div class="optionName">Aggregation</div>
