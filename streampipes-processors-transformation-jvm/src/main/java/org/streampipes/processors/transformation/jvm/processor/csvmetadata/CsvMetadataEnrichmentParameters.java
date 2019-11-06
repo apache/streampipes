@@ -19,9 +19,39 @@ package org.streampipes.processors.transformation.jvm.processor.csvmetadata;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
+import java.util.List;
+
 public class CsvMetadataEnrichmentParameters extends EventProcessorBindingParams {
 
-  public CsvMetadataEnrichmentParameters(DataProcessorInvocation graph) {
+  private String mappingFieldSelector;
+  private List<String> fieldsToAppend;
+  private String lookupField;
+  private String fileContents;
+
+  public CsvMetadataEnrichmentParameters(DataProcessorInvocation graph, String mappingFieldSelector,
+                                         List<String> fieldsToAppend,
+                                         String lookupField,
+                                         String fileContents) {
     super(graph);
+    this.mappingFieldSelector = mappingFieldSelector;
+    this.fieldsToAppend = fieldsToAppend;
+    this.lookupField = lookupField;
+    this.fileContents = fileContents;
+  }
+
+  public String getMappingFieldSelector() {
+    return mappingFieldSelector;
+  }
+
+  public List<String> getFieldsToAppend() {
+    return fieldsToAppend;
+  }
+
+  public String getLookupField() {
+    return lookupField;
+  }
+
+  public String getFileContents() {
+    return fileContents;
   }
 }

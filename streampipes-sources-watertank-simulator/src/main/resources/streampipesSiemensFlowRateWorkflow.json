@@ -4,9 +4,7 @@
   "repeatWorkflow": true,
   "timeBetweenRepeat": 1000,
   "varyRepeatFrequency": true,
-  "producerConfig" : {
-    "topic" : "org.streampipes.examples.flowrate2"
-  },
+  "targetTopic" : "org.streampipes.examples.flowrate2",
   "steps": [{
     "config": [{
       "timestamp": "nowTimestamp()",

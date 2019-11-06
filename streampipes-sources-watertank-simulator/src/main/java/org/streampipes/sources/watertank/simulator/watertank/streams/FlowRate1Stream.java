@@ -29,7 +29,7 @@ import org.streampipes.sdk.utils.Assets;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.sources.AbstractAdapterIncludedStream;
 import org.streampipes.sources.watertank.simulator.config.WatertankSimulatorConfig;
-import org.streampipes.sources.watertank.simulator.utils.ExampleSourceDataSimulator;
+import org.streampipes.sources.watertank.simulator.utils.WatertankDataSimulator;
 import org.streampipes.sources.watertank.simulator.vocabulary.WaterTankVocabulary;
 
 import java.net.URI;
@@ -73,7 +73,7 @@ public class FlowRate1Stream extends AbstractAdapterIncludedStream {
 
   @Override
   public void executeStream() {
-    Thread thread = new Thread(new ExampleSourceDataSimulator());
+    Thread thread = new Thread(new WatertankDataSimulator());
     thread.start();
   }
 

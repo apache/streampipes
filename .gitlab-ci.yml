@@ -36,7 +36,7 @@ build:
   script:
     - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn clean package javadoc:aggregate -U -DskipTests
+    - mvn clean package javadoc:aggregate -U -DskipTests -Denforcer.skip
     - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
     - echo $MVN_VERSION >> ./target/mvn_version
   artifacts:
@@ -159,6 +159,11 @@ finish release:
   except:
     - master
 
+docker-pe-all-jvm:
+  <<: *docker_script
+  variables:
+    CONTAINER_NAME: "pipeline-elements-all-jvm"
+
 docker-processors-aggregation-flink:
     <<: *docker_script
     variables:
@@ -254,12 +259,15 @@ docker-sources-vehicle-simulator:
     variables:
       CONTAINER_NAME: "sources-vehicle-simulator"
 
-
 docker-sources-watertank-simulator:
     <<: *docker_script
     variables:
       CONTAINER_NAME: "sources-watertank-simulator"
 
+docker-hub-pe-all-jvm:
+  <<: *docker_hub_script
+  variables:
+    CONTAINER_NAME: "pipeline-elements-all-jvm"
 
 docker-hub-processors-aggregation-flink:
     <<: *docker_hub_script
