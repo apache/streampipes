@@ -13,7 +13,7 @@
                     </mat-autocomplete>
                 </mat-form-field>
             </div>
-            <div fxLayout="column" style="margin-top: 10px; margin-left: 5px">
+            <div fxLayout="column" style="margin-top: 10px; margin-left: 5px" *ngIf="selectedInfoResult !== Undefined">
                 <div fxLayout="row" fxLayoutAlign="start stretch">
                     <mat-form-field style="margin-right: 1px;top: -3px;height: 1px; width: 100px" appearance="outline"
                         *ngIf="dimensionProperties.length > 0">
@@ -85,22 +85,22 @@
                         </div>
                     </div>
 
+                    <button *ngIf="enableAdvanceOptions"
+                            mat-icon-button class="icon" style="margin-left: 5px" color="primary">
+                        <mat-icon style="font-size: 30px;height: 30px; width: 30px" (click)="loadData()">autorenew</mat-icon>
+                    </button>
+
                     <div *ngIf="selectedTimeUnit === 'Custom'">
                         <div class="option">
                             <div class="optionName">Date range</div>
                             <mat-form-field style="top: -10px; width: 270px">
                                 <input matInput [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1"
-                                       [(ngModel)]="dateRange" [selectMode]="'range'">
+                                       [(ngModel)]="dateRange" [selectMode]="'range'" (dateTimeChange)="loadData()">
                                 <mat-icon matSuffix [owlDateTimeTrigger]="dt1" style="color: white">event</mat-icon>
                                 <owl-date-time #dt1></owl-date-time>
                             </mat-form-field>
                         </div>
                     </div>
-
-                    <button *ngIf="enableAdvanceOptions || selectedTimeUnit === 'Custom'"
-                            mat-icon-button class="icon" style="margin-left: 5px" color="primary">
-                        <mat-icon style="font-size: 30px;height: 30px; width: 30px" (click)="loadData()">autorenew</mat-icon>
-                    </button>
                     <!--
                             <div class="option" style="margin-left: 5px">
                                 <div class="optionName">Aggregation</div>
