@@ -46,64 +46,27 @@ export class DataDownloadDialog {
         this.dateRange[1] = new Date(this.dateRange[0].getTime() + 60000 * 60 * 24);
     }
 
-    createFile(data, format) {
-        var a = document.createElement("a");
-        document.body.appendChild(a);
-        a.style.display = "display: none";
-
-        var url = window.URL.createObjectURL(new Blob([String(data)], { type: 'data:text/' + format + ';charset=utf-8' }));
-        a.href = url;
-        a.download = 'spDatalake.' + this.downloadFormat;
-        a.click();
-        window.URL.revokeObjectURL(url)
-    }
-
-
     downloadData() {
         this.nextStep();
         switch (this.selectedData) {
             case "visible":
+
                 if (this.data.yAxesKeys === undefined) {
-                    this.createFile('', this.downloadFormat)
+                    this.createFile('', this.downloadFormat, this.data.index)
+
+                } else if (this.data.data["headers"] !== undefined) {
+                 //Single Data
+                    let result = this.convertData(this.data.data, this.downloadFormat, this.data.xAxesKey, this.data.yAxesKeys);
+                    this.createFile(result, this.data.downloadFormat, this.data.index);
                 } else {
+                    //group data
+                    Object.keys(this.data.data.dataResults).forEach( groupName => {
+                        let dataResult = this.data.data.dataResults[groupName];
+                        let result = this.convertData(dataResult, this.downloadFormat, this.data.xAxesKey, this.data.yAxesKeys);
+                        let fileName = this.data.index + ' ' + groupName;
+                        this.createFile(result, this.data.downloadFormat, fileName);
+                    });
 
-                    if (this.downloadFormat === "json") {
-                        let visibleData = [];
-                        this.data.data.forEach(elem => {
-                            let tmp = {"time": elem[this.data.xAxesKey]}
-                            this.data.yAxesKeys.forEach(key => {
-                                if (elem[key] !== undefined) {
-                                    tmp[key] = elem[key]
-                                }
-                            });
-                            visibleData.push(tmp)
-                        });
-                        this.createFile(JSON.stringify(visibleData), 'json')
-                    } else {
-                        //CSV
-                        let resultCsv: string = '';
-
-                        //header
-                        resultCsv += this.data.xAxesKey;
-                        this.data.yAxesKeys.forEach(key => {
-                            resultCsv += ';';
-                            resultCsv += key;
-                        });
-
-
-                        //content
-                        this.data.data.forEach(elem => {
-                            resultCsv += '\n';
-                            resultCsv += elem[this.data.xAxesKey];
-                            this.data.yAxesKeys.forEach(key => {
-                                resultCsv += ';';
-                                if (elem[key] !== undefined) {
-                                    resultCsv += elem[key]
-                                }
-                            })
-                        });
-                        this.createFile(resultCsv, 'csv')
-                    }
                 }
                 this.downloadFinish = true;
                 break;
@@ -126,16 +89,82 @@ export class DataDownloadDialog {
 
             // finished
             if (event.type === HttpEventType.Response) {
-                this.createFile(event.body, this.downloadFormat);
+                this.createFile(event.body, this.downloadFormat, this.data.index);
                 this.downloadFinish = true
             }
         });
     }
 
-    cancelDownload() {
-        this.downloadHttpRequestSubscribtion.unsubscribe();
-        this.exitDialog();
+    convertData(data, format, xAxesKey, yAxesKeys) {
+        let indexXKey = data.headers.findIndex(headerName => headerName === xAxesKey);
+        let indicesYKeys = [];
+        yAxesKeys.forEach(key => {
+            indicesYKeys.push(data.headers.findIndex(headerName => headerName === key))
+        });
+
+        if (format === "json") {
+            let resultJson = [];
+
+
+            data.rows.forEach(row => {
+                let tmp = {"time": row[indexXKey]};
+                indicesYKeys.forEach(index => {
+                    if (row[index] !== undefined) {
+                        tmp[data.headers[index]] = row[index]
+                    }
+                });
+                resultJson.push(tmp)
+            });
+
+            return JSON.stringify(resultJson);
+        } else {
+            //CSV
+            let resultCsv: string = '';
+
+            //header
+            resultCsv += xAxesKey;
+            yAxesKeys.forEach(key => {
+                resultCsv += ';';
+                resultCsv += key;
+            });
+
+
+            //content
+            data.rows.forEach(row => {
+                resultCsv += '\n';
+                resultCsv += row[indexXKey];
+                indicesYKeys.forEach(index => {
+                    resultCsv += ';';
+                    if (row[index] !== undefined) {
+                        resultCsv += row[index]
+                    }
+                })
+            });
+
+            return resultCsv;
+        }
     }
+
+    createFile(data, format, fileName) {
+        var a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style.display = "display: none";
+
+        var url = window.URL.createObjectURL(new Blob([String(data)], { type: 'data:text/' + format + ';charset=utf-8' }));
+        a.href = url;
+        a.download = 'spDatalake ' +  fileName + '.' + this.downloadFormat;
+        a.click();
+        window.URL.revokeObjectURL(url)
+    }
+
+    cancelDownload() {
+        try {
+            this.downloadHttpRequestSubscribtion.unsubscribe();
+        } finally {
+            this.exitDialog();
+        }
+    }
+
 
     exitDialog(): void {
         this.dialogRef.close();

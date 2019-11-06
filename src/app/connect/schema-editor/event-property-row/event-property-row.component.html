@@ -8,15 +8,15 @@
             access_time</mat-icon>
         <p style="margin: 0px 10px 10px;" *ngIf="isList">[List]</p>
     </div>
-    <!--
+
     <div fxFlex="15" *ngIf="isPrimitive">
-        <mat-select [(value)]="node.data.propertyScope">
+        <mat-select [(ngModel)]="node.data.propertyScope">
             <mat-option value="MEASUREMENT_PROPERTY">Measurement</mat-option>
             <mat-option value="DIMENSION_PROPERTY">Dimension</mat-option>
             <mat-option value="HEADER_PROPERTY">Header</mat-option>
         </mat-select>
     </div>
--->
+
     <div fxFlex="0 1 auto" fxLayoutAlign="center center"
          *ngIf="isNested">
         <button [disabled]="!isEditable" color="primary" mat-button (click)=addNestedProperty(node.data)>

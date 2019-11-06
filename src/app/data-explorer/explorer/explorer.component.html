@@ -13,8 +13,18 @@
                     </mat-autocomplete>
                 </mat-form-field>
             </div>
-            <div fxLayout="column" style="margin-top: 10px; margin-left: 5px">
+            <div fxLayout="column" style="margin-top: 10px; margin-left: 5px" *ngIf="selectedInfoResult !== Undefined">
                 <div fxLayout="row" fxLayoutAlign="start stretch">
+                    <mat-form-field style="margin-right: 1px;top: -3px;height: 1px; width: 100px" appearance="outline"
+                        *ngIf="dimensionProperties.length > 0">
+                        <mat-label>Group by</mat-label>
+                        <mat-select (selectionChange)="selectDimensionProperty($event.value)">
+                            <mat-option style="background-color: #FFFFFF">None</mat-option>
+                            <mat-option *ngFor="let key of dimensionProperties" [value]="key" style="background-color: #FFFFFF">
+                                {{key}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
                     <mat-form-field style="margin-right: 1px;top: -3px;height: 1px;" appearance="outline">
                         <mat-label>Select Data</mat-label>
                         <mat-select [ngModel]="this.yAxesKeys" (selectionChange)="selectKey($event.value)" multiple>
@@ -80,14 +90,14 @@
                             <div class="optionName">Date range</div>
                             <mat-form-field style="top: -10px; width: 270px">
                                 <input matInput [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1"
-                                       [(ngModel)]="dateRange" [selectMode]="'range'">
+                                       [(ngModel)]="dateRange" [selectMode]="'range'" (dateTimeChange)="loadData()">
                                 <mat-icon matSuffix [owlDateTimeTrigger]="dt1" style="color: white">event</mat-icon>
                                 <owl-date-time #dt1></owl-date-time>
                             </mat-form-field>
                         </div>
                     </div>
 
-                    <button *ngIf="enableAdvanceOptions || selectedTimeUnit === 'Custom'"
+                    <button *ngIf="enableAdvanceOptions"
                             mat-icon-button class="icon" style="margin-left: 5px" color="primary">
                         <mat-icon style="font-size: 30px;height: 30px; width: 30px" (click)="loadData()">autorenew</mat-icon>
                     </button>
@@ -222,16 +232,15 @@
                             [xAxesKey]="xAxesKey"
                             [yAxesKeys]="yAxesKeys"
                             [eventschema]="selectedInfoResult.eventSchema"
-                            [startDateData]="customStartDate"
-                            [endDateData]="customEndDate"
+                            [startDateData]="dateRange[0]"
+                            [endDateData]="dateRange[1]"
                             [currentPage]="currentPage"
                             [maxPage]="maxPage"
                             [enablePaging]="true"
                             (nextPage)="handleNextPage()"
                             (previousPage)="handlePreviousPage()"
                             (firstPage)=handleFirstPage()
-                            (lastPage)="handleLastPage()"
-                    >
+                            (lastPage)="handleLastPage()">
                     </sp-table>
                 </mat-tab>
                 <mat-tab label="Line chart">
@@ -241,8 +250,8 @@
                             [xAxesKey]="xAxesKey"
                             [yAxesKeys]="yAxesKeys"
                             [eventschema]="selectedInfoResult.eventSchema"
-                            [startDateData]="customStartDate"
-                            [endDateData]="customEndDate"
+                            [startDateData]="dateRange[0]"
+                            [endDateData]="dateRange[1]"
                             [currentPage]="currentPage"
                             [maxPage]="maxPage"
                             [enablePaging]="true"

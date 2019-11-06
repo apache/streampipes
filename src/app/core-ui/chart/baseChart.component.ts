@@ -1,16 +1,18 @@
 import {EventEmitter, Injectable, Input, Output} from '@angular/core';
 import {EventSchema} from '../../connect/schema-editor/model/EventSchema';
+import {DataResult} from '../../core-model/datalake/DataResult';
+import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
 
 @Injectable()
 export abstract class BaseChartComponent {
 
 
-    @Input() set datas(value: any[]) {
+    @Input() set datas(value: DataResult | GroupedDataResult) {
         if (value != undefined) {
-            this.data = value;
+            this.data = this.clone(value);
             if (this.data !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
-                this.transformedData = this.transformData(this.data, this.xKey);
-                this.displayData(this.transformedData, this.yKeys);
+                this.transform();
+                this.display();
             }
         } else {
             this.stopDisplayData();
@@ -21,8 +23,8 @@ export abstract class BaseChartComponent {
         if (value != undefined) {
             this.xKey = value;
             if (this.data !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
-                this.transformedData = this.transformData(this.data, this.xKey);
-                this.displayData(this.transformedData, this.yKeys);
+                this.transform();
+                this.display();
             }
         } else {
             this.stopDisplayData();
@@ -34,8 +36,8 @@ export abstract class BaseChartComponent {
             this.yKeys = value;
             if (this.data !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
                 if (this.transformedData === undefined)
-                    this.transformedData = this.transformData(this.data, this.xKey);
-                this.displayData(this.transformedData, this.yKeys);
+                    this.transform();
+                this.display();
             }
         } else {
             this.stopDisplayData();
@@ -58,18 +60,45 @@ export abstract class BaseChartComponent {
     @Output() firstPage = new EventEmitter<boolean>();
     @Output() lastPage = new EventEmitter<boolean>();
 
-    xKey: String = undefined;
-    yKeys: String[] = undefined;
-    data: any[] = undefined;
+    xKey: string = undefined;
+    yKeys: string[] = undefined;
 
-    transformedData: any[] = undefined;
+    data: DataResult | GroupedDataResult = undefined;
+    transformedData: DataResult | GroupedDataResult = undefined;
 
+
+    dataMode: string = '';
+
+
+    transform() {
+        if (this.data["headers"] !== undefined) {
+            this.transformedData = this.transformData(this.data as DataResult, this.xKey);
+            this.dataMode = 'single';
+        } else {
+            this.transformedData = this.transformGroupedData(this.data as GroupedDataResult, this.xKey);
+            this.dataMode = 'group';
+        }
+    }
+
+    display() {
+        if (this.data["headers"] !== undefined) {
+            this.displayData(this.transformedData as DataResult, this.yKeys);
+        } else {
+            this.displayGroupedData(this.transformedData as GroupedDataResult, this.yKeys);
+        }
+    }
 
     //transform the input data to the schema of the chart
-    abstract transformData(data: any[], xKey: String): any[];
+    abstract transformData(data: DataResult, xKey: String): DataResult;
+
+    //transform the grouped input data to the schema of the chart
+    abstract transformGroupedData(data: GroupedDataResult, xKey: string): GroupedDataResult;
 
     //display the data
-    abstract displayData(transformedData: any[], yKeys: String[]);
+    abstract displayData(transformedData: DataResult, yKeys: string[]);
+
+    //display the grouped data
+    abstract displayGroupedData(transformedData: GroupedDataResult, yKeys: string[]);
 
     //
     abstract stopDisplayData()
@@ -88,6 +117,10 @@ export abstract class BaseChartComponent {
 
     clickLastPage() {
         this.lastPage.emit()
+    }
+
+    clone(value): DataResult {
+        return (JSON.parse(JSON.stringify(value)));
     }
 
 }
