@@ -28,6 +28,7 @@ import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
 import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.model.staticproperty.AnyStaticProperty;
 import org.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
@@ -400,5 +401,55 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .filter(StaticPropertyAlternative::getSelected)
             .map(StaticProperty::getInternalName)
             .findFirst().get();
+  }
+
+  public List<String> getEventPropertiesRuntimeNamesByScope(PropertyScope scope) {
+    List<String> propertiesSelector = new ArrayList<>();
+
+    List<EventProperty> properties = new ArrayList<>();
+    for (SpDataStream stream : sepaElement.getInputStreams()) {
+      int streamIndex = sepaElement.getInputStreams().indexOf(stream);
+      getEventPropertiesByScope(scope, streamIndex)
+              .stream()
+              .forEach(ep -> propertiesSelector.add(ep.getRuntimeName()));
+
+      properties.addAll(getEventPropertiesByScope(scope, sepaElement.getInputStreams().indexOf(stream)));
+    }
+    return propertiesSelector;
+  }
+
+  public List<String> getEventPropertiesSelectorByScope(PropertyScope scope) {
+    List<String> propertiesSelector = new ArrayList<>();
+
+    List<EventProperty> properties = new ArrayList<>();
+    for (SpDataStream stream : sepaElement.getInputStreams()) {
+      int streamIndex = sepaElement.getInputStreams().indexOf(stream);
+      getEventPropertiesByScope(scope, streamIndex)
+              .stream()
+              .forEach(ep -> propertiesSelector.add(getBySelector(ep.getRuntimeName(), streamIndex)));
+
+      properties.addAll(getEventPropertiesByScope(scope, sepaElement.getInputStreams().indexOf(stream)));
+    }
+    return propertiesSelector;
+  }
+
+  public List<EventProperty> getEventPropertiesByScope(PropertyScope scope) {
+    List<EventProperty> properties = new ArrayList<>();
+    for (SpDataStream stream : sepaElement.getInputStreams()) {
+      properties.addAll(getEventPropertiesByScope(scope, sepaElement.getInputStreams().indexOf(stream)));
+    }
+    return properties;
+  }
+
+  private List<EventProperty> getEventPropertiesByScope(PropertyScope scope, Integer streamIndex) {
+    return sepaElement
+            .getInputStreams()
+            .get(streamIndex)
+            .getEventSchema()
+            .getEventProperties()
+            .stream()
+            .filter(ep ->
+                    ep.getPropertyScope().equals(scope.name()))
+            .collect(Collectors.toList());
   }
 }
