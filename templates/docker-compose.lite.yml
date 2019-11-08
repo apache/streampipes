@@ -55,7 +55,7 @@ services:
     depends_on:
       - zookeeper
     environment:
-      # TODO: change named listener to INSIDE once kafka connect is done
+      # TODO: change named listener to INSIDE (kafka-rest)
       # KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       # KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://localhost:9094 #(local, i.e. Single-Node with IDE + Docker)
       # KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
