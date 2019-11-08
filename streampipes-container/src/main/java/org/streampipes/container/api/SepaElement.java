@@ -21,6 +21,9 @@ import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.util.Util;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 
 import java.util.Map;
@@ -49,5 +52,24 @@ public class SepaElement extends InvocableElement<DataProcessorInvocation,
     @Override
     protected ProcessingElementParameterExtractor getExtractor(DataProcessorInvocation graph) {
         return new ProcessingElementParameterExtractor(graph);
+    }
+
+    @Override
+    protected DataProcessorInvocation createGroundingDebugInformation(DataProcessorInvocation graph) {
+        graph.getInputStreams().forEach(is -> {
+           modifyGrounding(is.getEventGrounding());
+
+        });
+
+        modifyGrounding(graph.getOutputStream().getEventGrounding());
+        return graph;
+    }
+
+    private void modifyGrounding(EventGrounding grounding) {
+        TransportProtocol protocol = grounding.getTransportProtocol();
+        protocol.setBrokerHostname("localhost");
+        if (protocol instanceof KafkaTransportProtocol) {
+            ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
+        }
     }
 }

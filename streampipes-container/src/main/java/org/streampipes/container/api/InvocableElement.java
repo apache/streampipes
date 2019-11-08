@@ -66,6 +66,11 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
 
         try {
             I graph = Transformer.fromJsonLd(clazz, payload);
+
+            if (System.getenv("SP_DEBUG").equals("true")) {
+              graph = createGroundingDebugInformation(graph);
+            }
+
             InvocableDeclarer declarer = (InvocableDeclarer) getDeclarerById(elementId);
 
             if (declarer != null) {
@@ -144,5 +149,7 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
     }
 
     protected abstract P getExtractor(I graph);
+
+    protected abstract I createGroundingDebugInformation(I graph);
 }
 

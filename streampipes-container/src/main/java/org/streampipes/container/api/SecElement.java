@@ -24,6 +24,9 @@ import org.streampipes.container.init.RunningInstances;
 import org.streampipes.container.util.Util;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 
 import java.util.Map;
@@ -56,6 +59,20 @@ public class SecElement extends InvocableElement<DataSinkInvocation,
     @Override
     protected DataSinkParameterExtractor getExtractor(DataSinkInvocation graph) {
         return new DataSinkParameterExtractor(graph);
+    }
+
+    @Override
+    protected DataSinkInvocation createGroundingDebugInformation(DataSinkInvocation graph) {
+        graph.getInputStreams().forEach(is -> {
+            TransportProtocol protocol = is.getEventGrounding().getTransportProtocol();
+            protocol.setBrokerHostname("localhost");
+            if (protocol instanceof KafkaTransportProtocol) {
+                ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
+            }
+
+        });
+
+        return graph;
     }
 
     @GET
