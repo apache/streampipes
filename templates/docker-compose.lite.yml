@@ -11,7 +11,7 @@ services:
       - "1883:1883"
     networks:
       spnet:
-      
+
   consul:
     image: consul:1.6.0
     environment:
@@ -37,7 +37,7 @@ services:
     networks:
       spnet:
         ipv4_address: 172.31.0.9
-  
+
   couchdb:
     image: couchdb:2.3.1
     ports:
@@ -46,19 +46,28 @@ services:
       - couchdb:/opt/couchdb/data
     networks:
       spnet:
-            
+
   kafka:
     image: wurstmeister/kafka:2.12-2.2.0
     hostname: kafka
     ports:
-      - "9092:9092"
+      - "9094:9094"
     depends_on:
       - zookeeper
     environment:
-      KAFKA_LISTENERS: PLAINTEXT://:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${SP_HOST}:9092
-      KAFKA_ADVERTISED_HOST_NAME: ${SP_HOST}
-      KAFKA_ADVERTISED_PORT: 9092
+      # TODO: change named listener to INSIDE once kafka connect is done
+      # KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      # KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://localhost:9094 #(local, i.e. Single-Node with IDE + Docker)
+      # KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
+      # KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      #
+      #
+      # see: https://github.com/confluentinc/schema-registry/issues/648
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092,OUTSIDE://localhost:9094 #(local, i.e. Single-Node with IDE + Docker)
+      KAFKA_LISTENERS: PLAINTEXT://:9092,OUTSIDE://:9094
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_MESSAGE_MAX_BYTES: 5000012
       KAFKA_FETCH_MESSAGE_MAX_BYTES: 5000012
@@ -81,7 +90,7 @@ services:
       - KAFKA_REST_ZOOKEEPER_CONNECT=zookeeper:2181
     networks:
       spnet:
-      
+
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
@@ -91,9 +100,9 @@ services:
       - zk-data:/opt/zookeeper-3.4.13/data
     networks:
       spnet:
-      
-      
-      
+
+
+
 #### StreamPipes services
 
   backend:
@@ -108,8 +117,8 @@ services:
     volumes:
       - backend:/root/.streampipes
     networks:
-      spnet:  
-      
+      spnet:
+
   connect-master:
     image: "${SP_REGISTRY_MAIN}/streampipes-connect-container:${SP_VERSION}"
     depends_on:
@@ -125,7 +134,7 @@ services:
     volumes:
       - connect:/data/
     networks:
-      spnet: 
+      spnet:
 
   connect-worker-main:
     image: "${SP_REGISTRY_CONNECT}/streampipes-connect-worker:${SP_VERSION}"
@@ -142,7 +151,7 @@ services:
       - connect:/data/
     networks:
       spnet:
-      
+
   nginx:
     image: "${SP_REGISTRY_UI}/ui:${SP_UI_VERSION}"
     ports:
@@ -165,14 +174,14 @@ services:
       - "consul"
     networks:
       spnet:
-      
+
   sources-watertank-simulator:
     image: "${SP_REGISTRY_PE}/sources-watertank-simulator:${SP_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
-    
+
 
 volumes:
   backend:
