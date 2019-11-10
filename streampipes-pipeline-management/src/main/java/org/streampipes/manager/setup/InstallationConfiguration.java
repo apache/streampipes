@@ -36,12 +36,15 @@ public class InstallationConfiguration {
 
 		steps.add(new CouchDbInstallationStep());
 		steps.add(new UserRegistrationInstallationStep(settings.getAdminEmail(), settings.getAdminPassword()));
+    steps.add(new EmpireInitializerInstallationStep());
 
 		if (settings.getInstallPipelineElements()) {
 			for(RdfEndpoint endpoint : new EndpointFetcher().getEndpoints()) {
 				steps.add(new PipelineElementInstallationStep(endpoint, settings.getAdminEmail()));
 			}
 		}
+
+		steps.add(new CacheInitializationInstallationStep());
 		
 		return steps;
 	}

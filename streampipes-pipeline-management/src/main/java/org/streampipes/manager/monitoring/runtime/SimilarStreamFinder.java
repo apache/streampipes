@@ -48,7 +48,7 @@ public class SimilarStreamFinder {
 
 	private boolean isSimilarStreamAvailable() {
 		
-		List<DataSourceDescription> seps = StorageManager.INSTANCE.getPipelineElementStorage().getAllSEPs();
+		List<DataSourceDescription> seps = StorageManager.INSTANCE.getPipelineElementStorage().getAllDataSources();
 		List<SpDataStream> streams = getEventStreams(seps);
 		
 		SpDataStream pipelineInputStream = getStream();

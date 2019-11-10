@@ -95,7 +95,7 @@ public class PipelineStreamReplacer {
 	}
 
 	private DataSourceDescription getSep(SpDataStream streamToReplace2) throws Exception {
-		List<DataSourceDescription> seps = StorageManager.INSTANCE.getPipelineElementStorage().getAllSEPs();
+		List<DataSourceDescription> seps = StorageManager.INSTANCE.getPipelineElementStorage().getAllDataSources();
 		
 		for(DataSourceDescription sep : seps) {
 			for(SpDataStream stream : sep.getSpDataStreams()) {

@@ -148,7 +148,7 @@ public class ElementRecommender {
   private List<ConsumableStreamPipesEntity> getAllSepas() {
     List<String> userObjects = UserManagementService.getUserService().getOwnSepaUris(email);
     return getTripleStore()
-            .getAllSEPAs()
+            .getAllDataProcessors()
             .stream()
             .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getElementId())))
             .map(DataProcessorDescription::new)
@@ -159,7 +159,7 @@ public class ElementRecommender {
   private List<ConsumableStreamPipesEntity> getAllSecs() {
     List<String> userObjects = UserManagementService.getUserService().getOwnActionUris(email);
     return getTripleStore()
-            .getAllSECs()
+            .getAllDataSinks()
             .stream()
             .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getElementId())))
             .map(DataSinkDescription::new)

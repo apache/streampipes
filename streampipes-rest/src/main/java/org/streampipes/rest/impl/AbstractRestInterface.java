@@ -41,7 +41,7 @@ import org.streampipes.storage.api.IDataLakeStorage;
 import org.streampipes.storage.api.IFileMetadataStorage;
 import org.streampipes.storage.api.INoSqlStorage;
 import org.streampipes.storage.api.INotificationStorage;
-import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.streampipes.storage.api.IPipelineStorage;
 import org.streampipes.storage.api.ITripleStorage;
 import org.streampipes.storage.api.IUserStorage;
@@ -82,7 +82,7 @@ public abstract class AbstractRestInterface {
     }
   }
 
-  protected IPipelineElementDescriptionStorage getPipelineElementRdfStorage() {
+  protected IPipelineElementDescriptionStorageCache getPipelineElementRdfStorage() {
     return StorageManager.INSTANCE.getPipelineElementStorage();
   }
 

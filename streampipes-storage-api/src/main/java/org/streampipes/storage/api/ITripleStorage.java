@@ -24,7 +24,7 @@ public interface ITripleStorage {
 
   Repository getRepository();
 
-  IPipelineElementDescriptionStorage getPipelineElementStorage();
+  IPipelineElementDescriptionStorageCache getPipelineElementStorage();
 
   IOntologyContextStorage getContextStorage();
 

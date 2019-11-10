@@ -42,7 +42,8 @@ public class PipelineElementInstallationStep implements InstallationStep {
     List<Message> statusMessages = new ArrayList<>();
     List<RdfEndpointItem> items = Operations.getEndpointUriContents(Collections.singletonList(endpoint));
     for(RdfEndpointItem item : items) {
-      statusMessages.add(new EndpointItemParser().parseAndAddEndpointItem(item.getUri(), userEmail, true));
+      statusMessages.add(new EndpointItemParser().parseAndAddEndpointItem(item.getUri(),
+              userEmail, true, false));
     }
 
     Message installMessage;

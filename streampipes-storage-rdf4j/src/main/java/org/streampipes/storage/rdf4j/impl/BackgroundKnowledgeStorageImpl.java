@@ -61,7 +61,7 @@ import java.util.Optional;
 public class BackgroundKnowledgeStorageImpl implements
         IBackgroundKnowledgeStorage {
 
-	Repository repo;
+	private Repository repo;
 
 	public BackgroundKnowledgeStorageImpl(Repository repo) {
 		this.repo = repo;

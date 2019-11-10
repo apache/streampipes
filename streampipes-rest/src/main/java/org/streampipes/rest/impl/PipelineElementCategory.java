@@ -41,7 +41,7 @@ public class PipelineElementCategory extends AbstractRestInterface implements IP
 	@Produces("application/json")
 	@Override
 	public Response getEps() {
-		return ok(makeCategories(StorageManager.INSTANCE.getPipelineElementStorage().getAllSEPs()));
+		return ok(makeCategories(StorageManager.INSTANCE.getPipelineElementStorage().getAllDataSources()));
 	}
 
 	@GET

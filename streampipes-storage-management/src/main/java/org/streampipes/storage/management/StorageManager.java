@@ -21,13 +21,13 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.streampipes.storage.Rdf4JStorageManager;
 import org.streampipes.storage.api.IBackgroundKnowledgeStorage;
 import org.streampipes.storage.api.IOntologyContextStorage;
-import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 
 public enum StorageManager {
 
   INSTANCE;
 
-  public IPipelineElementDescriptionStorage getPipelineElementStorage() {
+  public IPipelineElementDescriptionStorageCache getPipelineElementStorage() {
     return Rdf4JStorageManager.INSTANCE.getPipelineElementStorage();
   }
 

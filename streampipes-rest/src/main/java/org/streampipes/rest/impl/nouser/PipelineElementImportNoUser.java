@@ -25,7 +25,7 @@ import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.rest.impl.AbstractRestInterface;
-import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 
 import java.net.URISyntaxException;
 
@@ -61,7 +61,7 @@ public class PipelineElementImportNoUser extends AbstractRestInterface {
   }
 
   private Message verifyAndAddElement(String uri, String username, boolean publicElement) {
-    return new EndpointItemParser().parseAndAddEndpointItem(uri, username, publicElement);
+    return new EndpointItemParser().parseAndAddEndpointItem(uri, username, publicElement, true);
   }
 
   @Path("/delete")
@@ -74,14 +74,15 @@ public class PipelineElementImportNoUser extends AbstractRestInterface {
 
 
     UserService userService = getUserService();
-    IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
+    IPipelineElementDescriptionStorageCache requestor = getPipelineElementRdfStorage();
 
     logger.info("User " + username + " deletes element with URI: " + uri + " from triplestore");
 
     try {
-      if (requestor.getSEPById(uri) != null) {
-        requestor.deleteSEP(requestor.getSEPById(uri));
+      if (requestor.getDataSourceById(uri) != null) {
+        requestor.deleteDataSource(requestor.getDataSourceById(uri));
         userService.deleteOwnSource(username, uri);
+        requestor.refreshDataSourceCache();
       } else {
         return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
       }

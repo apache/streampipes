@@ -97,7 +97,8 @@ public class Deployment extends AbstractRestInterface {
 
         DataSourceDescription sep = new DataSourceDescription(GsonSerializer.getGsonWithIds().fromJson(model, DataSourceDescription.class));
         try {
-            Message message = Operations.verifyAndAddElement(Utils.asString(new JsonLdTransformer().toJsonLd(sep)), username, true);
+            Message message =
+                    Operations.verifyAndAddElement(Utils.asString(new JsonLdTransformer().toJsonLd(sep)), username, true, true);
             return ok(message);
         } catch (RDFHandlerException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException
@@ -120,8 +121,8 @@ public class Deployment extends AbstractRestInterface {
 
         if (deploymentConfig.getElementType().equals("Sepa")) {
             DataProcessorDescription sepa = GsonSerializer.getGsonWithIds().fromJson(model, DataProcessorDescription.class);
-            success = StorageManager.INSTANCE.getPipelineElementStorage().deleteSEPA(sepa.getElementId());
-            StorageManager.INSTANCE.getPipelineElementStorage().storeSEPA(sepa);
+            success = StorageManager.INSTANCE.getPipelineElementStorage().deleteDataProcessor(sepa.getElementId());
+            StorageManager.INSTANCE.getPipelineElementStorage().storeDataProcessor(sepa);
         } else {
             DataSinkDescription sec = new DataSinkDescription(GsonSerializer.getGsonWithIds().fromJson(model, DataSinkDescription.class));
             success = StorageManager.INSTANCE.getPipelineElementStorage().update(sec);

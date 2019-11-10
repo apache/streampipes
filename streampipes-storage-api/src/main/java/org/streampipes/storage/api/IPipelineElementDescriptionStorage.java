@@ -30,55 +30,55 @@ import java.util.List;
 
 public interface IPipelineElementDescriptionStorage {
 	
-	boolean storeInvocableSEPAElement(InvocableStreamPipesEntity element);
+	boolean storeInvocablePipelineElement(InvocableStreamPipesEntity element);
 
-	boolean storeSEP(DataSourceDescription sep);
+	boolean storeDataSource(DataSourceDescription sep);
 	
-	boolean storeSEP(String jsonld);
+	boolean storeDataSource(String jsonld);
 	
-	boolean storeSEPA(DataProcessorDescription sepa);
+	boolean storeDataProcessor(DataProcessorDescription sepa);
 	
-	boolean storeSEPA(String jsonld);
+	boolean storeDataProcessor(String jsonld);
 	
-	DataSourceDescription getSEPById(URI rdfId);
+	DataSourceDescription getDataSourceById(URI rdfId);
 
-	DataSourceDescription getSEPByAppId(String appId);
+	DataSourceDescription getDataSourceByAppId(String appId);
 
-	DataSourceDescription getSEPById(String rdfId) throws URISyntaxException;
+	DataSourceDescription getDataSourceById(String rdfId) throws URISyntaxException;
 	
-	DataProcessorDescription getSEPAById(String rdfId) throws URISyntaxException;
+	DataProcessorDescription getDataProcessorById(String rdfId) throws URISyntaxException;
 	
-	DataProcessorDescription getSEPAById(URI rdfId);
+	DataProcessorDescription getDataProcessorById(URI rdfId);
 
-	DataProcessorDescription getSEPAByAppId(String appId);
+	DataProcessorDescription getDataProcessorByAppId(String appId);
 	
-	DataSinkDescription getSECById(String rdfId) throws URISyntaxException;
+	DataSinkDescription getDataSinkById(String rdfId) throws URISyntaxException;
 	
-	DataSinkDescription getSECById(URI rdfId);
+	DataSinkDescription getDataSinkById(URI rdfId);
 
-	DataSinkDescription getSECByAppId(String appId);
+	DataSinkDescription getDataSinkByAppId(String appId);
 	
-	List<DataSourceDescription> getAllSEPs();
+	List<DataSourceDescription> getAllDataSources();
 	
-	List<DataProcessorDescription> getAllSEPAs();
+	List<DataProcessorDescription> getAllDataProcessors();
 	
-	List<DataSourceDescription> getSEPsByDomain(String domain);
+	boolean deleteDataSource(DataSourceDescription sep);
 	
-	List<DataProcessorDescription> getSEPAsByDomain(String domain);
+	boolean deleteDataSource(String rdfId);
 	
-	boolean deleteSEP(DataSourceDescription sep);
+	boolean deleteDataProcessor(DataProcessorDescription sepa);
 	
-	boolean deleteSEP(String rdfId);
-	
-	boolean deleteSEPA(DataProcessorDescription sepa);
-	
-	boolean deleteSEPA(String rdfId);
+	boolean deleteDataProcessor(String rdfId);
 	
 	boolean exists(DataSourceDescription sep);
 	
 	boolean exists(DataProcessorDescription sepa);
 
-	boolean existsSepa(String rdfid);
+	boolean existsDataProcessor(String elementId);
+
+	boolean existsDataSource(String elementId);
+
+	boolean existsDataSink(String elementId);
 	
 	boolean update(DataSourceDescription sep);
 	
@@ -88,13 +88,13 @@ public interface IPipelineElementDescriptionStorage {
 
 	boolean update(DataSinkDescription sec);
 
-	boolean deleteSEC(DataSinkDescription sec);
+	boolean deleteDataSink(DataSinkDescription sec);
 
-	boolean deleteSEC(String rdfId);
+	boolean deleteDataSink(String rdfId);
 	
-	boolean storeSEC(DataSinkDescription sec);
+	boolean storeDataSink(DataSinkDescription sec);
 
-	List<DataSinkDescription> getAllSECs();
+	List<DataSinkDescription> getAllDataSinks();
 	
 	StaticProperty getStaticPropertyById(String rdfId);
 	

@@ -20,8 +20,6 @@ package org.streampipes.storage.rdf4j.impl;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.streampipes.empire.core.empire.impl.RdfQuery;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
@@ -44,8 +42,6 @@ import javax.persistence.Query;
 
 public class PipelineElementStorageRequests implements IPipelineElementDescriptionStorage {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PipelineElementStorageRequests.class);
-
   private EntityManager entityManager;
 
   public PipelineElementStorageRequests(EntityManager entityManager) {
@@ -55,7 +51,7 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   //TODO: exception handling
 
   @Override
-  public boolean storeSEP(DataSourceDescription sep) {
+  public boolean storeDataSource(DataSourceDescription sep) {
     if (exists(sep)) {
       return false;
     }
@@ -64,11 +60,11 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   }
 
   @Override
-  public boolean storeSEP(String jsonld) {
+  public boolean storeDataSource(String jsonld) {
     DataSourceDescription sep;
     try {
       sep = Transformer.fromJsonLd(DataSourceDescription.class, jsonld);
-      return storeSEP(sep);
+      return storeDataSource(sep);
     } catch (RDFParseException | IOException | RepositoryException | UnsupportedRDFormatException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -77,8 +73,8 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   }
 
   @Override
-  public boolean storeSEPA(DataProcessorDescription sepa) {
-    if (existsSepa(sepa.getElementId())) {
+  public boolean storeDataProcessor(DataProcessorDescription sepa) {
+    if (existsDataProcessor(sepa.getElementId())) {
       return false;
     }
     entityManager.persist(sepa);
@@ -86,17 +82,26 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   }
 
   @Override
-  public boolean existsSepa(String rdfId) {
-    DataProcessorDescription storedSEPA = entityManager.find(DataProcessorDescription.class, rdfId);
-    return storedSEPA != null;
+  public boolean existsDataProcessor(String rdfId) {
+    return entityManager.find(DataProcessorDescription.class, rdfId) != null;
   }
 
   @Override
-  public boolean storeSEPA(String jsonld) {
+  public boolean existsDataSource(String rdfId) {
+    return entityManager.find(DataSourceDescription.class, rdfId) != null;
+  }
+
+  @Override
+  public boolean existsDataSink(String rdfId) {
+    return entityManager.find(DataSinkDescription.class, rdfId) != null;
+  }
+
+  @Override
+  public boolean storeDataProcessor(String jsonld) {
     DataProcessorDescription sepa;
     try {
       sepa = Transformer.fromJsonLd(DataProcessorDescription.class, jsonld);
-      return storeSEPA(sepa);
+      return storeDataProcessor(sepa);
     } catch (RDFParseException | IOException | RepositoryException | UnsupportedRDFormatException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -105,23 +110,23 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   }
 
   @Override
-  public DataSourceDescription getSEPById(URI rdfId) {
+  public DataSourceDescription getDataSourceById(URI rdfId) {
     return entityManager.find(DataSourceDescription.class, rdfId);
   }
 
   @Override
-  public DataSourceDescription getSEPByAppId(String appId) {
-    return getByAppId(getAllSEPs(), appId);
+  public DataSourceDescription getDataSourceByAppId(String appId) {
+    return getByAppId(getAllDataSources(), appId);
   }
 
   @Override
-  public DataSourceDescription getSEPById(String rdfId) throws URISyntaxException {
-    return getSEPById(new URI(rdfId));
+  public DataSourceDescription getDataSourceById(String rdfId) throws URISyntaxException {
+    return getDataSourceById(new URI(rdfId));
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<DataSourceDescription> getAllSEPs() {
+  public List<DataSourceDescription> getAllDataSources() {
     Query query = entityManager.createQuery(QueryBuilder.buildListSEPQuery());
     query.setHint(RdfQuery.HINT_ENTITY_CLASS, DataSourceDescription.class);
     return query.getResultList();
@@ -129,33 +134,33 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<DataProcessorDescription> getAllSEPAs() {
+  public List<DataProcessorDescription> getAllDataProcessors() {
     Query query = entityManager.createQuery(QueryBuilder.buildListSEPAQuery());
     query.setHint(RdfQuery.HINT_ENTITY_CLASS, DataProcessorDescription.class);
     return query.getResultList();
   }
 
   @Override
-  public boolean deleteSEP(DataSourceDescription sep) {
-    deleteSEP(sep.getElementId());
+  public boolean deleteDataSource(DataSourceDescription sep) {
+    deleteDataSource(sep.getElementId());
     return true;
   }
 
   @Override
-  public boolean deleteSEP(String rdfId) {
+  public boolean deleteDataSource(String rdfId) {
     DataSourceDescription sep = entityManager.find(DataSourceDescription.class, rdfId);
     entityManager.remove(sep);
     return true;
   }
 
   @Override
-  public boolean deleteSEPA(DataProcessorDescription sepa) {
-    deleteSEPA(sepa.getElementId());
+  public boolean deleteDataProcessor(DataProcessorDescription sepa) {
+    deleteDataProcessor(sepa.getElementId());
     return true;
   }
 
   @Override
-  public boolean deleteSEPA(String rdfId) {
+  public boolean deleteDataProcessor(String rdfId) {
     DataProcessorDescription sepa = entityManager.find(DataProcessorDescription.class, rdfId);
     entityManager.remove(sepa);
     return true;
@@ -175,60 +180,42 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
 
   @Override
   public boolean update(DataSourceDescription sep) {
-    return deleteSEP(sep) && storeSEP(sep);
+    return deleteDataSource(sep) && storeDataSource(sep);
   }
 
   @Override
   public boolean update(DataProcessorDescription sepa) {
-    return deleteSEPA(sepa) && storeSEPA(sepa);
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public List<DataSourceDescription> getSEPsByDomain(String domain) {
-    Query query = entityManager.createQuery(QueryBuilder.buildSEPByDomainQuery(domain));
-    query.setHint(RdfQuery.HINT_ENTITY_CLASS, DataSourceDescription.class);
-    LOG.info(query.toString());
-    return query.getResultList();
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public List<DataProcessorDescription> getSEPAsByDomain(String domain) {
-    Query query = entityManager.createQuery(QueryBuilder.buildSEPAByDomainQuery(domain));
-    query.setHint(RdfQuery.HINT_ENTITY_CLASS, DataProcessorDescription.class);
-    LOG.info(query.toString());
-    return query.getResultList();
+    return deleteDataProcessor(sepa) && storeDataProcessor(sepa);
   }
 
   @Override
-  public DataProcessorDescription getSEPAById(String rdfId) throws URISyntaxException {
-    return getSEPAById(new URI(rdfId));
+  public DataProcessorDescription getDataProcessorById(String rdfId) throws URISyntaxException {
+    return getDataProcessorById(new URI(rdfId));
   }
 
   @Override
-  public DataProcessorDescription getSEPAById(URI rdfId) {
+  public DataProcessorDescription getDataProcessorById(URI rdfId) {
     return entityManager.find(DataProcessorDescription.class, rdfId);
   }
 
   @Override
-  public DataProcessorDescription getSEPAByAppId(String appId) {
-    return getByAppId(getAllSEPAs(), appId);
+  public DataProcessorDescription getDataProcessorByAppId(String appId) {
+    return getByAppId(getAllDataProcessors(), appId);
   }
 
   @Override
-  public DataSinkDescription getSECById(String rdfId) throws URISyntaxException {
-    return getSECById(new URI(rdfId));
+  public DataSinkDescription getDataSinkById(String rdfId) throws URISyntaxException {
+    return getDataSinkById(new URI(rdfId));
   }
 
   @Override
-  public DataSinkDescription getSECById(URI rdfId) {
+  public DataSinkDescription getDataSinkById(URI rdfId) {
     return entityManager.find(DataSinkDescription.class, rdfId);
   }
 
   @Override
-  public DataSinkDescription getSECByAppId(String appId) {
-    return getByAppId(getAllSECs(), appId);
+  public DataSinkDescription getDataSinkByAppId(String appId) {
+    return getByAppId(getAllDataSinks(), appId);
   }
 
   @Override
@@ -239,24 +226,24 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
 
   @Override
   public boolean update(DataSinkDescription sec) {
-    return deleteSEC(sec) && storeSEC(sec);
+    return deleteDataSink(sec) && storeDataSink(sec);
 
   }
 
   @Override
-  public boolean deleteSEC(DataSinkDescription sec) {
-    return deleteSEC(sec.getElementId());
+  public boolean deleteDataSink(DataSinkDescription sec) {
+    return deleteDataSink(sec.getElementId());
   }
 
   @Override
-  public boolean deleteSEC(String rdfId) {
+  public boolean deleteDataSink(String rdfId) {
     DataSinkDescription sec = entityManager.find(DataSinkDescription.class, rdfId);
     entityManager.remove(sec);
     return true;
   }
 
   @Override
-  public boolean storeSEC(DataSinkDescription sec) {
+  public boolean storeDataSink(DataSinkDescription sec) {
     if (exists(sec)) {
       return false;
     }
@@ -266,7 +253,7 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<DataSinkDescription> getAllSECs() {
+  public List<DataSinkDescription> getAllDataSinks() {
     Query query = entityManager.createQuery(QueryBuilder.buildListSECQuery());
     query.setHint(RdfQuery.HINT_ENTITY_CLASS, DataSinkDescription.class);
     return query.getResultList();
@@ -278,7 +265,7 @@ public class PipelineElementStorageRequests implements IPipelineElementDescripti
   }
 
   @Override
-  public boolean storeInvocableSEPAElement(InvocableStreamPipesEntity element) {
+  public boolean storeInvocablePipelineElement(InvocableStreamPipesEntity element) {
     entityManager.persist(element);
     return true;
   }

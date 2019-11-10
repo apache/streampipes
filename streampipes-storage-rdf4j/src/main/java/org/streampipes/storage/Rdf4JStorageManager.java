@@ -19,8 +19,7 @@ package org.streampipes.storage;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
-import org.eclipse.rdf4j.sail.inferencer.fc.ForwardChainingRDFSInferencer;
-import org.eclipse.rdf4j.sail.memory.MemoryStore;
+import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.empire.core.empire.Empire;
@@ -32,7 +31,7 @@ import org.streampipes.empire.rdf4j.RepositoryFactoryKeys;
 import org.streampipes.serializers.jsonld.CustomAnnotationProvider;
 import org.streampipes.storage.api.IBackgroundKnowledgeStorage;
 import org.streampipes.storage.api.IOntologyContextStorage;
-import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.streampipes.storage.api.ITripleStorage;
 import org.streampipes.storage.rdf4j.config.Rdf4JConfig;
 import org.streampipes.storage.rdf4j.impl.BackgroundKnowledgeStorageImpl;
@@ -56,7 +55,7 @@ public enum Rdf4JStorageManager implements ITripleStorage {
   private Repository pipelineElementRepository;
   private Repository backgroundKnowledgeRepository;
 
-  private PipelineElementInMemoryStorage pipelineElementInMemoryStorage;
+  private IPipelineElementDescriptionStorageCache pipelineElementInMemoryStorage;
   private IBackgroundKnowledgeStorage backgroundKnowledgeStorage;
 
   Rdf4JStorageManager() {
@@ -113,11 +112,9 @@ public enum Rdf4JStorageManager implements ITripleStorage {
   }
 
   private Repository makeRepo(String storageDir) {
-    MemoryStore memoryStore = new MemoryStore();
-    memoryStore.setPersist(true);
-    memoryStore.setSyncDelay(1000);
-    memoryStore.setDataDir(new File(storageDir));
-    return new SailRepository(new ForwardChainingRDFSInferencer(memoryStore));
+    NativeStore nativeStore = new NativeStore();
+    nativeStore.setDataDir(new File(storageDir));
+    return new SailRepository(nativeStore);
   }
 
   @Override
@@ -131,7 +128,7 @@ public enum Rdf4JStorageManager implements ITripleStorage {
   }
 
   @Override
-  public IPipelineElementDescriptionStorage getPipelineElementStorage() {
+  public IPipelineElementDescriptionStorageCache getPipelineElementStorage() {
     return this.pipelineElementInMemoryStorage;
   }
 

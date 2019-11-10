@@ -49,7 +49,7 @@ public class CouchDbInstallationStep implements InstallationStep {
 
     @Override
     public String getTitle() {
-        return "Creating CouchDB databases...";
+        return "Creating databases...";
     }
 
     private List<Message> createDatabases() {
@@ -90,7 +90,7 @@ public class CouchDbInstallationStep implements InstallationStep {
                 .forEach(p -> rdfEndpointStorage
                         .addRdfEndpoint(new RdfEndpoint(initRdfEndpointHost + p)));
 
-        return Notifications.success("Creating RDF endpoints...");
+        return Notifications.success("Discovering pipeline element endpoints...");
     }
 
     private Message addUserView() {

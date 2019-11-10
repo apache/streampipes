@@ -98,12 +98,12 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
 
     private DataProcessorDescription getProcessor(String id) throws URISyntaxException {
         return getStorage()
-                .getSEPAById(id);
+                .getDataProcessorById(id);
     }
 
     private DataSinkDescription getSink(String id) throws URISyntaxException {
         return getStorage()
-                .getSECByAppId(id);
+                .getDataSinkByAppId(id);
     }
 
     private IPipelineElementDescriptionStorage getStorage() {
@@ -114,7 +114,7 @@ public class InternalPipelineTemplates extends AbstractRestInterface implements 
     }
 
     private List<SpDataStream> getAllDataStreams() {
-        List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllSEPs();
+        List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllDataSources();
         List<SpDataStream> datasets = new ArrayList<>();
         for (DataSourceDescription source : sources) {
             datasets.addAll(source

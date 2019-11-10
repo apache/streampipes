@@ -128,7 +128,7 @@ public class PipelineTemplateGenerator {
 
   protected DataProcessorDescription getProcessor(String id) throws URISyntaxException, ElementNotFoundException {
     DataProcessorDescription result = getStorage()
-            .getSEPAByAppId(id);
+            .getDataProcessorByAppId(id);
 
     if (result == null) {
       throw new ElementNotFoundException("Data processor " + id + " is not installed!");
@@ -139,7 +139,7 @@ public class PipelineTemplateGenerator {
 
   protected DataSinkDescription getSink(String id) throws URISyntaxException, ElementNotFoundException {
     DataSinkDescription result = getStorage()
-            .getSECByAppId(id);
+            .getDataSinkByAppId(id);
 
     if (result == null) {
       throw new ElementNotFoundException("Data stream " + id + " is not installed!");

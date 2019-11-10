@@ -69,7 +69,7 @@ public class SepStoppedMonitoringPipelineBuilder {
 	public SepStoppedMonitoringPipelineBuilder(String sepUri, String streamUri) throws URISyntaxException {
 		this.outputTopic = OUTPUT_TOPIC;
 		this.streamUri = streamUri;
-		DataSourceDescription desc = StorageManager.INSTANCE.getPipelineElementStorage().getSEPById(sepUri);
+		DataSourceDescription desc = StorageManager.INSTANCE.getPipelineElementStorage().getDataSourceById(sepUri);
 		this.stream = StorageManager.INSTANCE.getPipelineElementStorage().getEventStreamById(streamUri);
 		this.dataSourceDescription = desc;
 		this.streamStoppedDataProcessorDescription = getStreamStoppedEpa();
@@ -117,11 +117,11 @@ public class SepStoppedMonitoringPipelineBuilder {
 	}
 
 	private DataSinkDescription getKafkaPublisherEc() throws URISyntaxException {
-		return StorageManager.INSTANCE.getPipelineElementStorage().getSECById(KAFKA_SEC_URI);
+		return StorageManager.INSTANCE.getPipelineElementStorage().getDataSinkById(KAFKA_SEC_URI);
 	}
 
 	private DataProcessorDescription getStreamStoppedEpa() throws URISyntaxException {
-		return StorageManager.INSTANCE.getPipelineElementStorage().getSEPAById(RATE_SEPA_URI);
+		return StorageManager.INSTANCE.getPipelineElementStorage().getDataProcessorById(RATE_SEPA_URI);
 	}
 
 	private DataSinkInvocation updateKafkaSec(DataSinkInvocation actionClient, PipelineModificationMessage message) {

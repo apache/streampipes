@@ -34,7 +34,6 @@ import org.streampipes.storage.api.IOntologyContextStorage;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 public class ContextStorageImpl implements IOntologyContextStorage {
@@ -58,10 +57,8 @@ public class ContextStorageImpl implements IOntologyContextStorage {
 				rdfParser.setRDFHandler(handler);
 				rdfParser.parse(context.getInputStream(),  context.getBaseUri());
 				Collection<Statement> col = handler.getStatements();
-				Iterator<Statement> it = col.iterator();
 
-				while(it.hasNext()) {
-					org.eclipse.rdf4j.model.Statement statement = it.next();
+				for (Statement statement : col) {
 					conn.add(statement, vf.createURI(context.getContextId()));
 				}
 			}

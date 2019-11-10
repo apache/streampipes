@@ -31,6 +31,7 @@ import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -88,7 +89,7 @@ public class PipelineElementImport extends AbstractRestInterface {
   }
 
   private Message verifyAndAddElement(String uri, String username, boolean publicElement) {
-    return new EndpointItemParser().parseAndAddEndpointItem(uri, username, publicElement);
+    return new EndpointItemParser().parseAndAddEndpointItem(uri, username, publicElement, true);
   }
 
   @PUT
@@ -114,21 +115,24 @@ public class PipelineElementImport extends AbstractRestInterface {
   public Response deleteElement(@PathParam("username") String username, @PathParam("id") String elementId) {
 
     UserService userService = getUserService();
-    IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
+    IPipelineElementDescriptionStorageCache requestor = getPipelineElementRdfStorage();
     String appId;
     try {
-      if (requestor.getSEPAById(elementId) != null) {
-        appId = requestor.getSEPAById(elementId).getAppId();
-        requestor.deleteSEPA(requestor.getSEPAById(elementId));
+      if (requestor.existsDataProcessor(elementId)) {
+        appId = requestor.getDataProcessorById(elementId).getAppId();
+        requestor.deleteDataProcessor(requestor.getDataProcessorById(elementId));
         userService.deleteOwnSepa(username, elementId);
-      } else if (requestor.getSEPById(elementId) != null) {
-        appId = requestor.getSEPById(elementId).getAppId();
-        requestor.deleteSEP(requestor.getSEPById(elementId));
+        requestor.refreshDataProcessorCache();
+      } else if (requestor.existsDataSource(elementId)) {
+        appId = requestor.getDataSourceById(elementId).getAppId();
+        requestor.deleteDataSource(requestor.getDataSourceById(elementId));
         userService.deleteOwnSource(username, elementId);
-      } else if (requestor.getSECById(elementId) != null) {
-        appId = requestor.getSECById(elementId).getAppId();
-        requestor.deleteSEC(requestor.getSECById(elementId));
+        requestor.refreshDataSourceCache();
+      } else if (requestor.existsDataSink(elementId)) {
+        appId = requestor.getDataSinkById(elementId).getAppId();
+        requestor.deleteDataSink(requestor.getDataSinkById(elementId));
         userService.deleteOwnAction(username, elementId);
+        requestor.refreshDataSinkCache();
       } else {
         return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(),
                 NotificationType.STORAGE_ERROR.description()));
@@ -148,12 +152,12 @@ public class PipelineElementImport extends AbstractRestInterface {
     IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
     elementId = decode(elementId);
     try {
-      if (requestor.getSEPAById(elementId) != null) {
-        return ok(toJsonLd(requestor.getSEPAById(elementId)));
-      } else if (requestor.getSEPById(elementId) != null) {
-        return ok(toJsonLd(requestor.getSEPById(elementId)));
-      } else if (requestor.getSECById(elementId) != null) {
-        return ok(toJsonLd(requestor.getSECById(elementId)));
+      if (requestor.getDataProcessorById(elementId) != null) {
+        return ok(toJsonLd(requestor.getDataProcessorById(elementId)));
+      } else if (requestor.getDataSourceById(elementId) != null) {
+        return ok(toJsonLd(requestor.getDataSourceById(elementId)));
+      } else if (requestor.getDataSinkById(elementId) != null) {
+        return ok(toJsonLd(requestor.getDataSinkById(elementId)));
       } else {
         return ok(Notifications.create(NotificationType.UNKNOWN_ERROR));
       }

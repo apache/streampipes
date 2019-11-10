@@ -33,7 +33,7 @@ public class SecVerifier extends ElementVerifier<DataSinkDescription> {
 
 
 	@Override
-	protected StorageState store(String username, boolean publicElement) {
+	protected StorageState store(String username, boolean publicElement, boolean refreshCache) {
 		StorageState storageState = StorageState.STORED;
 		/*
 		if (SecurityUtils.getSubject().isAuthenticated()) {
@@ -41,10 +41,21 @@ public class SecVerifier extends ElementVerifier<DataSinkDescription> {
 			StorageManager.INSTANCE.getUserStorageAPI().addAction(username, elementDescription.getElementId());
 		}
 */
-		if (!storageApi.exists(elementDescription)) storageApi.storeSEC(elementDescription);
-		else storageState = StorageState.ALREADY_IN_SESAME;
-		if (!(userService.getOwnActionUris(username).contains(elementDescription.getUri()))) userService.addOwnAction(username, elementDescription.getUri(), publicElement);
-		else storageState = StorageState.ALREADY_IN_SESAME_AND_USER_DB;
+		if (!storageApi.exists(elementDescription)) {
+			storageApi.storeDataSink(elementDescription);
+			if (refreshCache) {
+				storageApi.refreshDataSinkCache();
+			}
+		}
+		else {
+			storageState = StorageState.ALREADY_IN_SESAME;
+		}
+		if (!(userService.getOwnActionUris(username).contains(elementDescription.getUri()))) {
+			userService.addOwnAction(username, elementDescription.getUri(), publicElement);
+		}
+		else {
+			storageState = StorageState.ALREADY_IN_SESAME_AND_USER_DB;
+		}
 		return storageState;
 	}
 
@@ -57,6 +68,7 @@ public class SecVerifier extends ElementVerifier<DataSinkDescription> {
 	@Override
 	protected void update(String username) {
 		storageApi.update(elementDescription);
+		storageApi.refreshDataSinkCache();
 	}
 
 	@Override
