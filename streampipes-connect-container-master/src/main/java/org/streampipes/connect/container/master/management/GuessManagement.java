@@ -26,7 +26,6 @@ import org.streampipes.connect.adapter.exception.ParseException;
 import org.streampipes.model.client.messages.ErrorMessageLd;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.vocabulary.StreamPipes;
 

@@ -25,7 +25,11 @@ import org.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.streampipes.rest.shared.annotation.JsonLdSerialized;
 import org.streampipes.rest.shared.util.SpMediaType;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 @Path("/api/v1/{username}/master/resolvable")

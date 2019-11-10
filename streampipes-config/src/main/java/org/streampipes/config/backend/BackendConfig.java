@@ -27,8 +27,7 @@ import java.security.SecureRandom;
 public enum BackendConfig {
   INSTANCE;
 
-  private final char[] possibleCharacters = (new String(
-          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?")).toCharArray();
+  private final char[] possibleCharacters = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?").toCharArray();
   private SpConfig config;
 
   BackendConfig() {

@@ -19,10 +19,9 @@ package org.streampipes.connect.container.master.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.adapter.exception.AdapterException;
+import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.container.master.management.SourcesManagement;
-import org.streampipes.connect.container.master.management.Utils;
 import org.streampipes.connect.rest.AbstractContainerResource;
 import org.streampipes.model.SpDataSet;
 import org.streampipes.model.client.messages.Notifications;
@@ -33,7 +32,13 @@ import org.streampipes.rest.shared.util.JsonLdUtils;
 import org.streampipes.rest.shared.util.SpMediaType;
 import org.streampipes.vocabulary.StreamPipes;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 

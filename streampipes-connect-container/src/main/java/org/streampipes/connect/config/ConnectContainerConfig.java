@@ -17,7 +17,6 @@
 
 package org.streampipes.connect.config;
 
-
 import org.streampipes.config.SpConfig;
 import org.streampipes.connect.init.Config;
 
