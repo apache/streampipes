@@ -8,6 +8,18 @@
                     </mat-icon>
                 </button>
             </div>
+
+            <div *ngIf="dataMode === 'group' && transformedData !== undefined">
+                <mat-form-field style="margin-right: 1px;top: -3px;height: 1px" appearance="outline">
+                    <mat-label>Select Group</mat-label>
+                    <mat-select [ngModel]="this.selectedGroup" (selectionChange)="selectGroup($event.value)">
+                        <mat-option *ngFor="let key of getGroupKeys()" [value]="key" style="background-color: #FFFFFF">
+                            {{key}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
             <div>
                 <button mat-icon-button (click)="clickNextPage()" class="paging-button" matTooltip="Going forwards in time">
                     <mat-icon style="font-size: 30px;height: 30px; width: 30px">

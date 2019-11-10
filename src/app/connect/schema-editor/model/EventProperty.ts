@@ -50,6 +50,7 @@ export abstract class EventProperty {
   @RdfProperty('sp:hasIndex')
   public index: number;
 
+  @RdfProperty('sp:hasPropertyScope')
   public propertyScope = 'MEASUREMENT_PROPERTY';
 
   constructor(propertyID: string, parent: EventProperty, child?: EventProperty) {

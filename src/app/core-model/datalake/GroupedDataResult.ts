@@ -15,8 +15,9 @@
  *
  */
 
-export class DataResult {
+import {DataResult} from './DataResult';
+
+export class GroupedDataResult {
     total: number;
-    headers: string[];
-    rows: any[];
+    dataResults: Map<string, DataResult>;
 }

@@ -24,6 +24,8 @@ import {map, startWith} from 'rxjs/operators';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {DataDownloadDialog} from './datadownloadDialog/dataDownload.dialog';
 import {timer} from 'rxjs/internal/observable/timer';
+import {DataResult} from '../../core-model/datalake/DataResult';
+import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
 
 @Component({
     selector: 'sp-explorer',
@@ -52,12 +54,13 @@ export class ExplorerComponent implements OnInit {
     //key selections
     dataKeys: string[] = [];
 
+    //grouped Data
+    dimensionProperties: string[] = [];
+    selectedGroup = undefined;
+
     //y and x axe
     yAxesKeys: [] = [];
     xAxesKey = 'time';
-
-    downloadFormat: string = 'csv';
-    isDownloading: boolean = false;
 
     data;
 
@@ -155,13 +158,40 @@ export class ExplorerComponent implements OnInit {
                 groupbyUnit = 'd';
                 groupbyValue = 365 * groupbyValue;
             }
-            this.restService.getData(this.selectedInfoResult.measureName, this.dateRange[0].getTime(), this.dateRange[1].getTime(), groupbyUnit, groupbyValue).subscribe(
-                res => this.processReceivedData(res)
-            );
+            if (this.selectedGroup === undefined) {
+                let startTime = new Date().getTime();
+                this.restService.getData(this.selectedInfoResult.measureName, this.dateRange[0].getTime(), this.dateRange[1].getTime(),
+                    groupbyUnit, groupbyValue).subscribe(
+                    res => {
+                        this.processReceivedData(res);
+
+                    }
+                );
+            } else {
+                this.restService.getGroupedData(this.selectedInfoResult.measureName, this.dateRange[0].getTime(),
+                    this.dateRange[1].getTime(), groupbyUnit, groupbyValue, this.selectedGroup).subscribe(
+                        res => {
+                            this.processReceivedGroupedData(res);
+                        }
+                )
+            }
+
         } else {
-            this.restService.getDataAutoAggergation(this.selectedInfoResult.measureName, this.dateRange[0].getTime(), this.dateRange[1].getTime()).subscribe(
-                res => this.processReceivedData(res)
-            );
+            if (this.selectedGroup === undefined) {
+                this.restService.getDataAutoAggergation(this.selectedInfoResult.measureName, this.dateRange[0].getTime(), this.dateRange[1].getTime()).subscribe(
+                    res => {
+                        this.processReceivedData(res);
+                    }
+                );
+            } else {
+                this.restService.getGroupedDataAutoAggergation(this.selectedInfoResult.measureName, this.dateRange[0].getTime(),
+                    this.dateRange[1].getTime(), this.selectedGroup).subscribe(
+                    res => {
+                        this.processReceivedGroupedData(res);
+                    }
+                )
+            }
+
         }
 
     }
@@ -187,8 +217,8 @@ export class ExplorerComponent implements OnInit {
     }
 
     processReceivedData(res) {
-        if(res.events.length > 0) {
-            this.data = res.events as [];
+        if(res.total > 0) {
+            this.data = res as DataResult;
             this.noDateFoundinTimeRange = false;
             if (this.yAxesKeys.length === 0) {
                 this.noKeySelected = true;
@@ -202,14 +232,40 @@ export class ExplorerComponent implements OnInit {
         this.displayIsLoadingData = false;
     }
 
+    processReceivedGroupedData(res) {
+        if (res.total > 0) {
+            this.data = res as GroupedDataResult;
+        } else {
+            this.data = undefined;
+            this.noDateFoundinTimeRange = true;
+            this.noKeySelected = false;
+        }
+        this.isLoadingData = false;
+        this.displayIsLoadingData = false;
+    }
+
     selectIndex(index: string) {
         this.dataKeys = [];
+        this.dimensionProperties = [];
+        this.selectedGroup = undefined;
         this.selectedInfoResult = this._filter(index)[0];
         this.selectedInfoResult.eventSchema.eventProperties.forEach(property => {
-            if (property['domainProperties'] === undefined) {
-                this.dataKeys.push(property['runtimeName']);
-            } else if (property.domainProperty !== 'http://schema.org/DateTime'&& property['domainProperties'][0] != 'http://schema.org/DateTime') {
-                this.dataKeys.push(property['runtimeName']);
+
+            //Check if property is Primitive (only primitives has a runtimeType
+            if (property['runtimeType'] !== undefined) {
+                if (property['propertyScope'] !== undefined && property['propertyScope'] === 'DIMENSION_PROPERTY') {
+                    this.dimensionProperties.push(property['runtimeName'])
+                }
+                //if property is number and is no timestamp property
+                else if (this.isNumberProperty(property) &&
+                    (property['domainProperties'] === undefined || (property.domainProperty !== 'http://schema.org/DateTime' &&
+                        property['domainProperties'][0] != 'http://schema.org/DateTime'))) {
+
+                    this.dataKeys.push(property['runtimeName']);
+                }
+            } else {
+                //list and nested properties
+                this.dataKeys.push(property['runtimeName'])
             }
         });
         this.selectKey(this.dataKeys.slice(0, 3));
@@ -229,6 +285,23 @@ export class ExplorerComponent implements OnInit {
         }
         this.yAxesKeys = value;
 
+    }
+
+    selectDimensionProperty(value) {
+        if (value !== this.selectedGroup) {
+            //remove group property from the "data selection"
+            this.dataKeys = this.dataKeys.filter(key => key !== value);
+            this.selectKey(this.dataKeys.filter(key => key !== value));
+
+            //add last grouped property
+            if (this.selectedGroup !== undefined) {
+                this.dataKeys.push(this.selectedGroup);
+            }
+
+
+            this.selectedGroup = value;
+            this.loadData(false);
+        }
     }
 
     downloadDataAsFile() {
@@ -305,5 +378,18 @@ export class ExplorerComponent implements OnInit {
         const filterValue = value.toLowerCase();
 
         return this.infoResult.filter(option => option.measureName.toLowerCase().includes(filterValue));
+    }
+
+
+    isNumberProperty(prop) {
+        if (prop.runtimeType === 'http://schema.org/Number' ||
+            prop.runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
+            prop.runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
+            prop.runtimeType === 'http://www.w3.org/2001/XMLSchema#decimal') {
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }
