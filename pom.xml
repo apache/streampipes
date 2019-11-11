@@ -1115,9 +1115,9 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
         <snapshotRepository>
-            <id>deployment</id>
+            <id>ipe-nexus</id>
             <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/snapshots/</url>
+            <url>https://ipe-nexus.fzi.de/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
