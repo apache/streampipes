@@ -543,9 +543,9 @@
 
     <repositories>
         <repository>
-            <id>laus</id>
+            <id>ipe-nexus</id>
             <name>nexus repository</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/public/</url>
+            <url>https://ipe-nexus.fzi.de/repository/maven-public/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -559,14 +559,14 @@
 
     <distributionManagement>
         <repository>
-            <id>deployment</id>
+            <id>ipe-nexus</id>
             <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/releases/</url>
+            <url>https://ipe-nexus.fzi.de/repository/maven-public/</url>
         </repository>
         <snapshotRepository>
             <id>deployment</id>
             <name>Internal Releases</name>
-            <url>https://laus.fzi.de/nexus/content/repositories/snapshots/</url>
+            <url>https://ipe-nexus.fzi.de/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
