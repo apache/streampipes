@@ -43,7 +43,7 @@ public class SendToKafkaAdapterSink implements AdapterPipelineElement  {
                 .getEventGrounding()
                 .getTransportProtocol();
 
-        if (System.getenv("SP_DEBUG").equals("true")) {
+        if ("true".equals(System.getenv("SP_DEBUG"))) {
             kafkaTransportProtocol.setBrokerHostname("localhost");
             kafkaTransportProtocol.setKafkaPort(9094);
         }
