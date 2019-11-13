@@ -26,7 +26,6 @@ sinks-internal-jvm
 sources-random-data-generator
 sources-vehicle-simulator
 sources-watertank-simulator
-swagger-ui
 taskmanager
 zookeeper
 processors-python
