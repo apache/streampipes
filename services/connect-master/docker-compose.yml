@@ -9,8 +9,7 @@ services:
       - "8099:8099"
     environment:
       - EXECUTION_MODE=MASTER
-      - SP_CONNECT_CONTAINER_HOST=connect-master
-      - SP_CONNECT_CONTAINER_WORKER=connect-worker
+      - SP_CONNECT_CONTAINER_MASTER_HOST=connect-master
       - SP_KAFKA_HOST=${SP_KAFKA_HOST}
     volumes:
       - connect:/data/
