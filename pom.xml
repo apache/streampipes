@@ -70,7 +70,7 @@
         <logback-classic.version>1.2.3</logback-classic.version>
         <maven-invoker.version>2.2</maven-invoker.version>
         <objenesis.version>2.5.1</objenesis.version>
-        <okio.version>1.15.0</okio.version>
+        <okio.version>1.16.0</okio.version>
         <okhttp.version>3.12.2</okhttp.version>
         <rdf4j.version>2.4.5</rdf4j.version>
         <rendersnake.version>1.8</rendersnake.version>
