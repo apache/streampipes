@@ -62,7 +62,7 @@ export class RouteTransitionInterceptorService {
                     }
                 }, (error) => {
                     console.log(error);
-                    if (error.status === 504) {
+                    if (error.status === 504 || error.status === 502) {
                         resolve(transitionInfo.router.stateService.target('startup'));
                     }
                 });
