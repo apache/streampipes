@@ -33,6 +33,8 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.*;
 import org.eclipse.milo.opcua.stack.core.types.structured.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.sdk.utils.Datatypes;
 
@@ -50,6 +52,8 @@ import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.
 import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
 public class OpcUa {
+
+    static Logger LOG = LoggerFactory.getLogger(OpcUa.class);
 
     private NodeId node;
     private String opcServerURL;
@@ -98,7 +102,11 @@ public class OpcUa {
         EndpointDescription[] endpoints = UaTcpStackClient.getEndpoints(this.opcServerURL).get();
         String host = this.opcServerURL.split("://")[1].split(":")[0];
 
-        EndpointDescription tmpEndpoint = endpoints[0];
+        EndpointDescription tmpEndpoint = Arrays.stream(endpoints).filter(e ->
+            e.getSecurityPolicyUri().equals(SecurityPolicy.None.getSecurityPolicyUri())
+        ).findFirst().orElseThrow(() -> new Exception("No endpoint with security policy none"));
+
+//        EndpointDescription tmpEndpoint = endpoints[0];
         tmpEndpoint = updateEndpointUrl(tmpEndpoint, host);
         endpoints = new EndpointDescription[]{tmpEndpoint};
 
