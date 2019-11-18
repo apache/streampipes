@@ -249,7 +249,7 @@ public class DataLakeManagementV3 {
           outputStream.write(toBytes("["));
           do {
             Query query = getRawDataQueryWithPage(i, itemsPerRequest, index, startDate, endDate);
-            QueryResult result = influxDB.query(query);
+            QueryResult result = influxDB.query(query, TimeUnit.MILLISECONDS);
             dataResult = new DataResult();
             if ((result.getResults().get(0).getSeries() != null)) {
               dataResult = convertResult(result.getResults().get(0).getSeries().get(0));
@@ -265,13 +265,17 @@ public class DataLakeManagementV3 {
                 boolean isFirstElementInRow = true;
                 outputStream.write(toBytes("{"));
                 for (int i1 = 0; i1 < row.size(); i1++) {
+                  Object element = row.get(i1);
                   if (!isFirstElementInRow) {
                     outputStream.write(toBytes(","));
                   }
                   isFirstElementInRow = false;
+                  if (i1 == 0) {
+                    element = ((Double) element).longValue();
+                  }
                   //produce json e.g. "name": "Pipes" or "load": 42
                   outputStream.write(toBytes("\"" + dataResult.getHeaders().get(i1) + "\": "
-                          + gson.toJson(row.get(i1))));
+                          + gson.toJson(element)));
                 }
                 outputStream.write(toBytes("}"));
                 isFirstDataObject = false;
@@ -290,7 +294,7 @@ public class DataLakeManagementV3 {
 
           do {
             Query query = getRawDataQueryWithPage(i, itemsPerRequest, index, startDate, endDate);
-            QueryResult result = influxDB.query(query);
+            QueryResult result = influxDB.query(query, TimeUnit.MILLISECONDS);
             dataResult = new DataResult();
             if ((result.getResults().get(0).getSeries() != null)) {
               dataResult = convertResult(result.getResults().get(0).getSeries().get(0));
@@ -315,11 +319,15 @@ public class DataLakeManagementV3 {
             if (dataResult.getTotal() > 0) {
               for (List<Object> row : dataResult.getRows()) {
                 boolean isFirstInRow = true;
-                for (Object element : row) {
+                for (int i1 = 0; i1 < row.size(); i1++) {
+                  Object element = row.get(i1);
                   if (!isFirstInRow) {
                     outputStream.write(toBytes(";"));
                   }
                   isFirstInRow = false;
+                  if (i1 == 0) {
+                    element = ((Double) element).longValue();
+                  }
                   outputStream.write(toBytes(element.toString()));
                 }
                 outputStream.write(toBytes("\n"));
