@@ -449,7 +449,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .getEventProperties()
             .stream()
             .filter(ep ->
-                    ep.getPropertyScope().equals(scope.name()))
+                    ep.getPropertyScope() != null && ep.getPropertyScope().equals(scope.name()))
             .collect(Collectors.toList());
   }
 }
