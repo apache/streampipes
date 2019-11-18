@@ -107,7 +107,7 @@ export class DataDownloadDialog {
 
 
             data.rows.forEach(row => {
-                let tmp = {"time": row[indexXKey]};
+                let tmp = {"time": new Date(row[indexXKey]).getTime()};
                 indicesYKeys.forEach(index => {
                     if (row[index] !== undefined) {
                         tmp[data.headers[index]] = row[index]
@@ -132,7 +132,7 @@ export class DataDownloadDialog {
             //content
             data.rows.forEach(row => {
                 resultCsv += '\n';
-                resultCsv += row[indexXKey];
+                resultCsv += new Date(row[indexXKey]).getTime();
                 indicesYKeys.forEach(index => {
                     resultCsv += ';';
                     if (row[index] !== undefined) {
