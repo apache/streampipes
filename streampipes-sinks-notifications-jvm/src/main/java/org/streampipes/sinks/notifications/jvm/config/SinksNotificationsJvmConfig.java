@@ -41,7 +41,6 @@ public enum SinksNotificationsJvmConfig implements PeConfig {
 
     config.register(ConfigKeys.ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ConfigKeys.ICON_PORT, 80, "Port for the icons in nginx");
-    config.register(ConfigKeys.NGINX_PORT, 80, "External port of StreamPipes Nginx");
 
     config.register(ConfigKeys.SLACK_TOKEN, ConfigKeys.SLACK_NOT_INITIALIZED, "Token for the slack bot. Must be generated in slack");
 

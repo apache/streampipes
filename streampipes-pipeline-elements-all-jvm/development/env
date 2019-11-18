@@ -15,7 +15,13 @@
 #
 
 # Those parameters are used by IntelliJ to set the default consul parameters for development
-SP_PORT=6045
+SP_PORT=7023
 SP_HOST=host.docker.internal
 SP_DEBUG=true
-SP_FLINK_DEBUG=true
+SP_COUCHDB_HOST=localhost
+SP_JMS_HOST=localhost
+SP_JMS_PORT=61616
+SP_DATA_LAKE_HOST=localhost
+SP_DATA_LAKE_PORT=8086
+SP_BACKEND_HOST=localhost
+SP_BACKEND_PORT=8030
