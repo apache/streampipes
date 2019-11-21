@@ -228,6 +228,7 @@ services:
     image: "${SP_REGISTRY_PE}/sources-watertank-simulator:${SP_VERSION}"
     depends_on:
       - "consul"
+      - "kafka"
     networks:
       spnet:
 
@@ -279,6 +280,7 @@ services:
     image: "${SP_REGISTRY_PE}/sources-vehicle-simulator:${SP_VERSION}"
     depends_on:
       - "consul"
+      - "kafka"
     networks:
       spnet:
 
