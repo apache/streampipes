@@ -384,6 +384,7 @@ export class ExplorerComponent implements OnInit {
     isNumberProperty(prop) {
         if (prop.runtimeType === 'http://schema.org/Number' ||
             prop.runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
+            prop.runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
             prop.runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
             prop.runtimeType === 'http://www.w3.org/2001/XMLSchema#decimal') {
 
