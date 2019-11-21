@@ -112,8 +112,6 @@ services:
       - couchdb
     ports:
       - "8030:8030"
-    environment:
-      - SP_KAFKA_HOST=${SP_KAFKA_HOST}
     volumes:
       - backend:/root/.streampipes
     networks:
