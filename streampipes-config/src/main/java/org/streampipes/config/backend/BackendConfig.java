@@ -36,7 +36,7 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.SERVICE_NAME, "Backend", "Backend Configuration");
 
     config.register(BackendConfigKeys.BACKEND_HOST, "backend", "Hostname for backend");
-    config.register(BackendConfigKeys.BACKEND_PORT, 8082, "Port for backend");
+    config.register(BackendConfigKeys.BACKEND_PORT, 8030, "Port for backend");
 
     config.register(BackendConfigKeys.JMS_HOST, "activemq", "Hostname for backend service for active mq");
     config.register(BackendConfigKeys.JMS_PORT, 61616, "Port for backend service for active mq");
