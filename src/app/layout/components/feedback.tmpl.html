@@ -10,10 +10,6 @@
         </div>
         <div layout="column" flex="40" layout-align="start center" style="margin-bottom:20px;">
             <md-input-container class="md-block feedback-width-100 feedback-font-size-small">
-                <label>Your email (optional)</label>
-                <input ng-model="ctrl.feedback.email" type="email" ng-required="false">
-            </md-input-container>
-            <md-input-container class="md-block feedback-width-100 feedback-font-size-small">
                 <label>Your feedback</label>
                 <textarea ng-model="ctrl.feedback.feedbackText" md-maxlength="500" rows="5"
                           md-select-on-focus></textarea>
@@ -25,8 +21,8 @@
                     Close
                 </sp-button>
                 <sp-button sp-button-blue type="submit"
-                           ng-click="ctrl.sendFeedback()">
-                    Send Feedback
+                           ng-click="ctrl.sendMail()">
+                    Send Mail
                 </sp-button>
             </div>
         </div>

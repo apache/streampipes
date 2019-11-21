@@ -18,6 +18,7 @@
 export class FeedbackController {
 
     $http: any;
+    $window: any;
 
     closeFeedbackWindow: any;
     feedback: any = {};
@@ -25,11 +26,15 @@ export class FeedbackController {
     sendingFeedback: boolean = false;
     sendingFeedbackFinished: boolean = false;
 
-    feedbackUrl = "https://www.streampipes.org/app/feedback";
-    debugFeedbackUrl = "http://localhost:5000/app/feedback";
+    // deactivate direct feedback for Apache transition
+    feedbackUrl = "";
+    debugFeedbackUrl = "";
 
-    constructor($http) {
+    targetEmail = "dev@streampipes.apache.org";
+
+    constructor($http, $window) {
         this.$http = $http;
+        this.$window = $window;
     }
 
     $onInit() {
@@ -40,6 +45,12 @@ export class FeedbackController {
     closeDialog() {
         this.closeFeedbackWindow();
     }
+
+    sendMail(){
+        this.sendingFeedback = true;
+        this.$window.open("mailto:"+ this.targetEmail + "?subject=" +"[USER-FEEDBACK]" +"&body=" +this.feedback.feedbackText, "_self");
+        this.sendingFeedbackFinished = true;
+    };
 
     sendFeedback() {
         this.sendingFeedback = true;
