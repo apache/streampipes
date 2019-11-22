@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.65.0-SNAPSHOT</version>
+		<version>0.65.0</version>
 	</parent>
 
 	<artifactId>streampipes-container</artifactId>
@@ -32,22 +32,22 @@
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-dataformat</artifactId>
-			<version>0.65.0-SNAPSHOT</version>
+			<version>0.65.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-messaging</artifactId>
-			<version>0.65.0-SNAPSHOT</version>
+			<version>0.65.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-sdk</artifactId>
-			<version>0.65.0-SNAPSHOT</version>
+			<version>0.65.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-serializers</artifactId>
-			<version>0.65.0-SNAPSHOT</version>
+			<version>0.65.0</version>
 		</dependency>
 
 		<!-- External dependencies -->
