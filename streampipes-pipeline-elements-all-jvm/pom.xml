@@ -3,7 +3,7 @@
     <parent>
         <artifactId>streampipes-pipeline-elements</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.65.1-SNAPSHOT</version>
+        <version>0.65.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,49 +13,49 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-processors-filters-jvm</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-processors-image-processing-jvm</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-processors-filters-siddhi</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-processors-transformation-jvm</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sinks-brokers-jvm</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sinks-databases-jvm</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sinks-internal-jvm</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sinks-notifications-jvm</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
             <classifier>embed</classifier>
         </dependency>
     </dependencies>
