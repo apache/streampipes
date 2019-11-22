@@ -1,3 +1,19 @@
+#
+# Copyright 2018 FZI Forschungszentrum Informatik
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 variables:
   IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH
   DOCKER_HUB_IMAGE_NAME: streampipes
@@ -20,8 +36,8 @@ build:
   script:
 #    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn clean package javadoc:aggregate -U -DskipTests
-    - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
+    - mvn clean package javadoc:aggregate -U -DskipTests -Denforcer.skip
+    - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
     - "echo $MVN_VERSION >> ./target/mvn_version"
   artifacts:
     paths:
@@ -55,7 +71,7 @@ deploy:
   stage: deploy
   script:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn deploy -DskipTests
+    - mvn deploy -DskipTests -Denforcer.skip
   only:
     - dev
   artifacts:
@@ -93,7 +109,7 @@ start release:
     - git fetch
     - git checkout master
     - git checkout dev
-    - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS -Drelease=true
+    - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS -Drelease=true -Denforcer.skip
     - git push origin --all
   only:
     - dev
@@ -118,7 +134,7 @@ finish release:
     - git checkout master
     - git checkout dev
     - git checkout $CI_BUILD_REF_NAME
-    - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS -Drelease=true
+    - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS -Drelease=true -Denforcer.skip
     - git push origin --all
     - git push origin --tags
     - git checkout master

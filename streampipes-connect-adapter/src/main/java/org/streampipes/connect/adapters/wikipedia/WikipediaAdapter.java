@@ -101,7 +101,7 @@ public abstract class WikipediaAdapter extends SpecificDataStreamAdapter {
     return GuessSchemaBuilder.create()
             .property(timestampProperty(TIMESTAMP))
             .property(stringEp(Labels.from(EVENT_ID, "ID", ""), EVENT_ID, dp(EVENT_ID)))
-            .property(doubleEp(Labels.from(TYPE, "Type", "The change type (edit|new)"),
+            .property(stringEp(Labels.from(TYPE, "Type", "The change type (edit|new)"),
                     TYPE, dp(TYPE)))
             .property(integerEp(Labels.from(NAMESPACE, "Namespace",
                     "The Wikipedia namespace"), NAMESPACE, dp(NAMESPACE)))

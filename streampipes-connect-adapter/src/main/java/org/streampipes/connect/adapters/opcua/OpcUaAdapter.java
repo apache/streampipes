@@ -33,17 +33,23 @@ import org.streampipes.model.connect.guess.GuessSchema;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.Option;
+import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.streampipes.sdk.helpers.Alternatives;
 import org.streampipes.sdk.helpers.Labels;
 
 import java.util.*;
 
-public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesContainerProvidedOptions {
+public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
     public static final String ID = "http://streampipes.org/adapter/specific/opcua";
 
+    private static final String OPC_HOST_OR_URL = "OPC_HOST_OR_URL";
+    private static final String OPC_URL = "OPC_URL";
+    private static final String OPC_HOST = "OPC_HOST";
+    private static final String OPC_SERVER_URL = "OPC_SERVER_URL";
     private static final String OPC_SERVER_HOST = "OPC_SERVER_HOST";
     private static final String OPC_SERVER_PORT = "OPC_SERVER_PORT";
     private static final String NAMESPACE_INDEX = "NAMESPACE_INDEX";
@@ -53,6 +59,7 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
     private String namespaceIndex;
     private String nodeId;
     private String port;
+    private boolean selectedURL;
 
     private Map<String, Object> event;
 
@@ -79,14 +86,18 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
     public SpecificAdapterStreamDescription declareModel() {
 
         SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "OPC UA", "Reads values from an OPC-UA server")
-                .iconUrl("opc.jpg")
+                .iconUrl("opc.png")
                 .category(AdapterType.Generic, AdapterType.Manufacturing)
-                .requiredTextParameter(Labels.from(OPC_SERVER_HOST, "OPC Server", "Example: test-server.com (No leading opc.tcp://) "))
-                .requiredTextParameter(Labels.from(OPC_SERVER_PORT, "OPC Server Port", "Example: 4840"))
+                .requiredAlternatives(Labels.from(OPC_HOST_OR_URL, "OPC Server", ""),
+                        Alternatives.from(Labels.from(OPC_URL, "URL", ""),
+                                StaticProperties.stringFreeTextProperty(Labels.from(OPC_SERVER_URL, "URL", "Example: opc.tcp://test-server.com:4840"))
+                        ),
+                        Alternatives.from(Labels.from(OPC_HOST, "Host/Port", ""),
+                                StaticProperties.group(Labels.withId("host-port"),
+                                        StaticProperties.stringFreeTextProperty(Labels.from(OPC_SERVER_HOST, "Host", "Example: test-server.com (No leading opc.tcp://) ")),
+                                        StaticProperties.stringFreeTextProperty(Labels.from(OPC_SERVER_PORT, "Port", "Example: 4840")))))
                 .requiredTextParameter(Labels.from(NAMESPACE_INDEX, "Namespace Index", "Example: 2"))
                 .requiredTextParameter(Labels.from(NODE_ID, "Node Id", "Id of the Node to read the values from"))
-//                .requiredSingleValueSelectionFromContainer(Labels.from(NODE_ID, "Node Id",
-//                        "Id of the Node to read the values from"), Arrays.asList(OPC_SERVER_HOST, OPC_SERVER_PORT, NAMESPACE_INDEX))
                 .build();
         description.setAppId(ID);
 
@@ -100,16 +111,21 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
 
         event.put(key, value.getValue().getValue());
 
+        // ensure that event is complete and all opc ua subscriptions transmitted at least one value
         if (event.keySet().size() >= this.numberProperties) {
             adapterPipeline.process(event);
-//            System.out.println(event);
         }
     }
 
 
     @Override
     public void startAdapter() throws AdapterException {
-        this.opcUa = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId);
+        if (this.selectedURL) {
+            this.opcUa = new OpcUa(opcUaServer, Integer.parseInt(namespaceIndex), nodeId);
+        } else {
+            this.opcUa = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId);
+        }
+
         try {
             this.opcUa.connect();
 
@@ -148,8 +164,13 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
 
 
         getConfigurations(adapterDescription);
+        OpcUa opc;
+        if (this.selectedURL) {
+            opc = new OpcUa(opcUaServer, Integer.parseInt(namespaceIndex), nodeId);
+        } else {
+            opc = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId);
+        }
 
-        OpcUa opc = new OpcUa(opcUaServer, Integer.parseInt(port), Integer.parseInt(namespaceIndex), nodeId);
         try {
             opc.connect();
             List<OpcNode> res =  opc.browseNode();
@@ -185,32 +206,42 @@ public class OpcUaAdapter extends SpecificDataStreamAdapter implements ResolvesC
     }
 
     private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
-        ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
+        StaticPropertyExtractor extractor =
+                StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
 
-        this.opcUaServer = extractor.singleValue(OPC_SERVER_HOST, String.class);
-        this.port = extractor.singleValue(OPC_SERVER_PORT, String.class);
-        this.namespaceIndex = extractor.singleValue(NAMESPACE_INDEX, String.class);
-        this.nodeId = extractor.singleValue(NODE_ID, String.class);
-    }
+        String selectedAlternative = extractor.selectedAlternativeInternalId(OPC_HOST_OR_URL);
 
-    @Override
-    public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
-        String opcUaServer = parameterExtractor.singleValueParameter(OPC_SERVER_HOST, String.class);
-        int port = parameterExtractor.singleValueParameter(OPC_SERVER_PORT, Integer.class);
-        int namespaceIndex = parameterExtractor.singleValueParameter(NAMESPACE_INDEX, Integer.class);
-
-        OpcUa opc = new OpcUa(opcUaServer, port, namespaceIndex, Identifiers.RootFolder);
-
-        try {
-            opc.connect();
-            List<OpcNode> res =  opc.browseNode();
-            System.out.println(res);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (selectedAlternative.equals(OPC_URL)) {
+            this.opcUaServer = extractor.singleValueParameter(OPC_SERVER_URL, String.class);
+            this.selectedURL = true;
+        } else {
+            this.opcUaServer = extractor.singleValueParameter(OPC_SERVER_HOST, String.class);
+            this.port = extractor.singleValueParameter(OPC_SERVER_PORT, String.class);
+            this.selectedURL = false;
         }
 
-        return new ArrayList<>();
+        this.namespaceIndex = extractor.singleValueParameter(NAMESPACE_INDEX, String.class);
+        this.nodeId = extractor.singleValueParameter(NODE_ID, String.class);
     }
+
+//    @Override
+//    public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
+//        String opcUaServer = parameterExtractor.singleValueParameter(OPC_SERVER_HOST, String.class);
+//        int port = parameterExtractor.singleValueParameter(OPC_SERVER_PORT, Integer.class);
+//        int namespaceIndex = parameterExtractor.singleValueParameter(NAMESPACE_INDEX, Integer.class);
+//
+//        OpcUa opc = new OpcUa(opcUaServer, port, namespaceIndex, Identifiers.RootFolder);
+//
+//        try {
+//            opc.connect();
+//            List<OpcNode> res =  opc.browseNode();
+//            System.out.println(res);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return new ArrayList<>();
+//    }
 
 
     private String getRuntimeNameOfNode(NodeId nodeId) {

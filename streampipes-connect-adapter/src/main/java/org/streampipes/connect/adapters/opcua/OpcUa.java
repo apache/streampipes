@@ -33,6 +33,8 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.*;
 import org.eclipse.milo.opcua.stack.core.types.structured.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.connect.adapter.exception.AdapterException;
 import org.streampipes.sdk.utils.Datatypes;
 
@@ -51,18 +53,41 @@ import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
 public class OpcUa {
 
+    static Logger LOG = LoggerFactory.getLogger(OpcUa.class);
+
     private NodeId node;
-    private String opcServerHost;
-    private int opcServerPort;
+    private String opcServerURL;
     private OpcUaClient client;
 
     private static final AtomicLong clientHandles = new AtomicLong(1L);
 
-    public OpcUa(String opcServerURL, int opcServerPort, int namespaceIndex, String nodeId) {
 
-        this.opcServerHost = opcServerURL;
-        this.opcServerPort = opcServerPort;
+    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId) {
 
+        this.opcServerURL = opcServerURL;
+
+        if (isInteger(nodeId)) {
+            int integerNodeId = Integer.parseInt(nodeId);
+            this.node  = new NodeId(namespaceIndex, integerNodeId);
+        } else {
+            this.node  = new NodeId(namespaceIndex, nodeId);
+        }
+    }
+
+    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId) {
+
+
+        this.opcServerURL = "opc.tcp://" + opcServer + ":" + opcServerPort;
+
+        if (isInteger(nodeId)) {
+            int integerNodeId = Integer.parseInt(nodeId);
+            this.node  = new NodeId(namespaceIndex, integerNodeId);
+        } else {
+            this.node  = new NodeId(namespaceIndex, nodeId);
+        }
+    }
+
+    public OpcUa(int namespaceIndex, String nodeId) {
         if (isInteger(nodeId)) {
             int integerNodeId = Integer.parseInt(nodeId);
             this.node  = new NodeId(namespaceIndex, integerNodeId);
@@ -72,20 +97,17 @@ public class OpcUa {
 
     }
 
-    public OpcUa(String opcServerURL, int opcServerPort, int namespaceIndex, NodeId nodeId) {
-
-        this.opcServerHost = opcServerURL;
-        this.opcServerPort = opcServerPort;
-        this.node  = nodeId;
-    }
-
-
     public void connect() throws Exception {
 
-        EndpointDescription[] endpoints = UaTcpStackClient.getEndpoints("opc.tcp://" + opcServerHost + ":" + opcServerPort).get();
+        EndpointDescription[] endpoints = UaTcpStackClient.getEndpoints(this.opcServerURL).get();
+        String host = this.opcServerURL.split("://")[1].split(":")[0];
 
-        EndpointDescription tmpEndpoint = endpoints[0];
-        tmpEndpoint = updateEndpointUrl(tmpEndpoint, opcServerHost);
+        EndpointDescription tmpEndpoint = Arrays.stream(endpoints).filter(e ->
+            e.getSecurityPolicyUri().equals(SecurityPolicy.None.getSecurityPolicyUri())
+        ).findFirst().orElseThrow(() -> new Exception("No endpoint with security policy none"));
+
+//        EndpointDescription tmpEndpoint = endpoints[0];
+        tmpEndpoint = updateEndpointUrl(tmpEndpoint, host);
         endpoints = new EndpointDescription[]{tmpEndpoint};
 
         EndpointDescription endpoint = Arrays.stream(endpoints)

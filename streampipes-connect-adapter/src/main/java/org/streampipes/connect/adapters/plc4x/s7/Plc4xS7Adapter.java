@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package org.streampipes.connect.adapters.plc4x;
+package org.streampipes.connect.adapters.plc4x.s7;
 
 import org.apache.plc4x.java.PlcDriverManager;
 import org.apache.plc4x.java.api.PlcConnection;
@@ -30,7 +30,6 @@ import org.streampipes.connect.adapters.PullAdapter;
 import org.streampipes.model.AdapterType;
 import org.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
-import org.streampipes.model.runtime.Event;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
@@ -42,24 +41,38 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class Plc4xS7Adapter extends PullAdapter {
 
+    /**
+     * A unique id to identify the Plc4xS7Adapter
+      */
     public static final String ID = "http://streampipes.org/adapter/specific/plc4xs7";
 
+    /**
+     * Keys of user configuration parameters
+     */
     private static final String PLC_IP = "PLC_IP";
     private static final String PLC_NODE_NAME = "PLC_NODE_NAME";
     private static final String PLC_NODE_TYPE = "PLC_NODE_TYPE";
 
+    /**
+     * Values of user configuration parameters
+     */
     private String ip;
     private String nodeName;
     private String nodeType;
 
+    /**
+     * Connection to the PLC
+     */
     private PlcConnection plcConnection;
 
+    /**
+     * Empty constructor and a constructor with SpecificAdapterStreamDescription are mandatory
+     */
     public Plc4xS7Adapter() {
     }
 
@@ -68,6 +81,10 @@ public class Plc4xS7Adapter extends PullAdapter {
     }
 
 
+    /**
+     * Describe the adapter adapter and define what user inputs are required. Currently users can just select one node, this will be extended in the future
+     * @return
+     */
     @Override
     public SpecificAdapterStreamDescription declareModel() {
 
@@ -85,7 +102,7 @@ public class Plc4xS7Adapter extends PullAdapter {
     }
 
     /**
-     * Creates the schema based on the user input
+     * Takes the user input and creates the event schema. The event schema describes the properties of the event stream.
      * @param adapterDescription
      * @return
      * @throws AdapterException
@@ -117,41 +134,10 @@ public class Plc4xS7Adapter extends PullAdapter {
         return guessSchema;
     }
 
-    @Override
-    protected void pullData() {
-
-        PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
-        builder.addItem(this.nodeName, this.nodeType);
-        PlcReadRequest readRequest = builder.build();
-
-        Map<String, Object> event = new HashMap<>();
-
-        PlcReadResponse response = null;
-        try {
-            response = readRequest.execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        // Create event from response of plc
-        for (String fieldName : response.getFieldNames()) {
-            if(response.getResponseCode(fieldName) == PlcResponseCode.OK) {
-                event.put(fieldName, response.getObject(fieldName));
-            }
-
-            else {
-                logger.error("Error[" + fieldName + "]: " + response.getResponseCode(fieldName).name());
-            }
-        }
-
-
-
-        adapterPipeline.process(event);
-    }
-
-
+    /**
+     * This method is executed when the adapter is started. A connection to the PLC is initialized
+     * @throws AdapterException
+     */
     @Override
     protected void before() throws AdapterException {
         // Extract user input
@@ -169,22 +155,78 @@ public class Plc4xS7Adapter extends PullAdapter {
         }
     }
 
+
+    /**
+     * pullData is called iteratively according to the polling interval defined in getPollInterval.
+     */
+    @Override
+    protected void pullData() {
+
+        // Create PLC read request
+        PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
+        builder.addItem(this.nodeName, this.nodeType);
+        PlcReadRequest readRequest = builder.build();
+
+        // Execute the request
+        PlcReadResponse response = null;
+        try {
+            response = readRequest.execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        // Create an event containing the value of the PLC
+        Map<String, Object> event = new HashMap<>();
+        for (String fieldName : response.getFieldNames()) {
+            if(response.getResponseCode(fieldName) == PlcResponseCode.OK) {
+                event.put(fieldName, response.getObject(fieldName));
+            }
+
+            else {
+                logger.error("Error[" + fieldName + "]: " + response.getResponseCode(fieldName).name());
+            }
+        }
+
+        // publish the final event
+        adapterPipeline.process(event);
+    }
+
+
+    /**
+     * Define the polling interval of this adapter. Default is to poll every second
+     * @return
+     */
     @Override
     protected PollingSettings getPollingInterval() {
         return PollingSettings.from(TimeUnit.SECONDS, 1);
     }
 
+    /**
+     * Required by StreamPipes return a new adapter instance by calling the constructor with SpecificAdapterStreamDescription
+     * @param adapterDescription
+     * @return
+     */
     @Override
     public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
         return new Plc4xS7Adapter(adapterDescription);
     }
 
 
+    /**
+     * Required by StreamPipes. Return the id of the adapter
+     * @return
+     */
     @Override
     public String getId() {
         return ID;
     }
 
+    /**
+     * Extracts the user configuration from the SpecificAdapterStreamDescription and sets the local variales
+     * @param adapterDescription
+     */
     private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
         ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
         this.ip = extractor.singleValue(PLC_IP, String.class);
@@ -192,6 +234,12 @@ public class Plc4xS7Adapter extends PullAdapter {
         this.nodeType = extractor.singleValue(PLC_NODE_TYPE, String.class);
     }
 
+    /**
+     * Transforms PLC4X data types to datatypes supported in StreamPipes
+     * @param plcType
+     * @return
+     * @throws AdapterException
+     */
     private Datatypes getStreamPipesDataType(String plcType) throws AdapterException {
 
         String type = plcType.substring(plcType.lastIndexOf(":")+1);
