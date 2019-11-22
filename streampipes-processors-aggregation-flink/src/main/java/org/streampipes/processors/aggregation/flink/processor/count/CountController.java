@@ -1,6 +1,22 @@
+/*
+ * Copyright 2018 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * you may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.streampipes.processors.aggregation.flink.processor.count;
 
-import org.apache.flink.streaming.api.windowing.time.Time;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -42,7 +58,8 @@ public class CountController extends FlinkDataProcessorDeclarer<CountParameters>
                     .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
                             Labels.withId(COUNT_MAPPING), PropertyScope.DIMENSION_PROPERTY)
                     .build())
-            .outputStrategy(OutputStrategies.fixed(EpProperties.stringEp(Labels.empty(), "value", "http://schema.org/Text"), EpProperties.integerEp(Labels.empty(), "countValue",
+            .outputStrategy(OutputStrategies.fixed(EpProperties.stringEp(Labels.empty(), "value",
+                    "http://schema.org/Text"), EpProperties.integerEp(Labels.empty(), "count",
                     "http://schema.org/Number")))
             .requiredIntegerParameter(Labels.withId(TIME_WINDOW_KEY))
             .requiredSingleValueSelection(Labels.withId(SCALE_KEY),
@@ -60,10 +77,7 @@ public class CountController extends FlinkDataProcessorDeclarer<CountParameters>
     String scale = extractor.selectedSingleValueInternalName(SCALE_KEY, String.class);
     String fieldToCount = extractor.mappingPropertyValue(COUNT_MAPPING);
 
-    Time time = new TimeScale(scale).toFlinkTime(timeWindowSize);
-
-
-    CountParameters staticParam = new CountParameters(graph, time,
+    CountParameters staticParam = new CountParameters(graph, timeWindowSize, scale,
             fieldToCount);
 
     return new CountProgram(staticParam, AggregationFlinkConfig.INSTANCE.getDebug());

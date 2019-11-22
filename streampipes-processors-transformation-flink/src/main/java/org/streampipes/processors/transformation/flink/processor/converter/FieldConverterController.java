@@ -39,6 +39,7 @@ public class FieldConverterController extends
 
   public static final String CONVERT_PROPERTY = "convert-property";
   public static final String TARGET_TYPE = "target-type";
+  private static final String FIELD_TO_CONVERT_KEY = "fieldToConvert";
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -47,9 +48,15 @@ public class FieldConverterController extends
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId
-                            (CONVERT_PROPERTY), PropertyScope.NONE)
+                    .requiredProperty(EpRequirements.anyProperty())
+//                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId
+//                            (CONVERT_PROPERTY), PropertyScope.NONE)
                     .build())
+
+            .naryMappingPropertyWithoutRequirement(
+                    Labels.withId(FIELD_TO_CONVERT_KEY),
+                    PropertyScope.NONE)
+
             .requiredSingleValueSelection(Labels.withId(TARGET_TYPE), Options.from
                     (new Tuple2<>("Float", XSD._float.toString()), new Tuple2<>
                             ("Integer", XSD._integer.toString())))

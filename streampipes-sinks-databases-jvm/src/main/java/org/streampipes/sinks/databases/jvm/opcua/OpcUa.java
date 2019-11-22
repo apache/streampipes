@@ -51,8 +51,14 @@ public class OpcUa implements EventSink<OpcUaParameters> {
 		LOG = parameters.getGraph().getLogger(OpcUa.class);
 
 		serverUrl = "opc.tcp://" + parameters.getHostName() + ":" + parameters.getPort();
+    if (isInteger(parameters.getNodeId())) {
+			int integerNodeId = Integer.parseInt(parameters.getNodeId());
+			node = new NodeId(parameters.getNameSpaceIndex(), integerNodeId);
+		} else {
+			node = new NodeId(parameters.getNameSpaceIndex(), parameters.getNodeId());
+		}
 
-		node = new NodeId(parameters.getNameSpaceIndex(), parameters.getNodeId());
+
 		this.params = parameters;
 
 		EndpointDescription[] endpoints;
@@ -137,52 +143,15 @@ public class OpcUa implements EventSink<OpcUaParameters> {
 		return result;
 	}
 
-
-	public static void main(String... args) throws Exception {
-		String serverUrl = "opc.tcp://141.21.43.39:4840";
-
-//		NodeId node = NodeId.parse("|var|CODESYSControlforRaspberryPiSL.Application.PLC_PRG.auto_rot");
-//
-		NodeId node = new NodeId(4, "|var|CODESYS Control for Raspberry Pi SL.Application.PLC_PRG.new");
-
-
-		EndpointDescription[] endpoints;
-
-		endpoints = UaTcpStackClient.getEndpoints(serverUrl).get();
-
-		EndpointDescription endpoint = null;
-
-		endpoint = Arrays.stream(endpoints)
-				.filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getSecurityPolicyUri()))
-				.findFirst().orElseThrow(() -> new Exception("no desired endpoints returned"));
-
-		OpcUaClientConfig config = OpcUaClientConfig.builder()
-				.setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
-				.setApplicationUri("urn:eclipse:milo:examples:client")
-				.setEndpoint(endpoint)
-				.build();
-
-		new OpcUaClient(config);
-		OpcUaClient	opcUaClient = new OpcUaClient(config);
-		opcUaClient.connect().get();
-
-		Variant v = new Variant(new Boolean(true));
-
-		DataValue value = new DataValue(v);
-		CompletableFuture<StatusCode> f = opcUaClient.writeValue(node, value);
-		StatusCode status = f.get();
-
-		if (status.isBad()) {
-			System.out.println(status);
-
-			System.out.println("Did not work");
-
-		}
-
-
-		CompletableFuture<DataValue> va1 = opcUaClient.readValue(0, TimestampsToReturn.Both, node);
-
-		System.out.println("Auto grün: " + va1.get().getValue());
-
-	}
+    public static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch(NumberFormatException e) {
+            return false;
+        } catch(NullPointerException e) {
+            return false;
+        }
+        // only got here if we didn't return false
+        return true;
+    }
 }

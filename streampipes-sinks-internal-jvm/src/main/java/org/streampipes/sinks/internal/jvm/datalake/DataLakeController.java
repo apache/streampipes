@@ -32,6 +32,8 @@ import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
+import java.util.List;
+
 public class DataLakeController extends StandaloneEventSinkDeclarer<DataLakeParameters> {
 
   private static final String DATABASE_MEASUREMENT_KEY = "db_measurement";
@@ -68,6 +70,8 @@ public class DataLakeController extends StandaloneEventSinkDeclarer<DataLakePara
     Integer batch_size = 100;
     Integer flush_duration = 1000;
 
+    List<String> dimensionProperties = extractor.getEventPropertiesRuntimeNamesByScope(PropertyScope.DIMENSION_PROPERTY);
+
     DataLakeParameters params = new DataLakeParameters(graph,
             hostname,
             port,
@@ -77,7 +81,8 @@ public class DataLakeController extends StandaloneEventSinkDeclarer<DataLakePara
             password,
             timestampField,
             batch_size,
-            flush_duration);
+            flush_duration,
+            dimensionProperties);
 
 
     return new ConfiguredEventSink<>(params, DataLake::new);

@@ -1,3 +1,19 @@
+#
+# Copyright 2018 FZI Forschungszentrum Informatik
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# you may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 variables:
   IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH
   DOCKER_HUB_IMAGE_NAME: streampipes
@@ -20,8 +36,8 @@ build:
   script:
     - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn clean package javadoc:aggregate -U -DskipTests
-    - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
+    - mvn clean package javadoc:aggregate -U -DskipTests -Denforcer.skip
+    - export MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
     - echo $MVN_VERSION >> ./target/mvn_version
   artifacts:
     paths:
@@ -57,7 +73,6 @@ github:
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
      - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
      - docker build --no-cache --pull -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
-     - docker build --no-cache --pull -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION  ./streampipes-$CONTAINER_NAME
      - docker push $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
      - docker push $IMAGE_NAME/$CONTAINER_NAME:latest
      - docker push $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
@@ -72,10 +87,8 @@ github:
   script:
     - export MVN_VERSION=$(cat ./target/mvn_version)
     - docker login -u streampipesbuild -p $DOCKER_HUB_USER_PWD
-    - docker build --no-cache --pull -t $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:latest -t $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
-    - docker push $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
+    - docker build --no-cache --pull -t $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:latest -t $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME/Dockerfile ./streampipes-$CONTAINER_NAME - docker push $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
     - docker push $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:latest
-  when: manual
   only:
     - master
 
@@ -85,7 +98,7 @@ deploy:
   script:
     - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn deploy -DskipTests
+    - mvn deploy -DskipTests -Denforcer.skip
   artifacts:
     paths:
       - ./**/*.jar
@@ -108,7 +121,7 @@ start release:
     - git fetch
     - git checkout master
     - git checkout dev
-    - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS -Drelease=true
+    - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS -Drelease=true -Denforcer.skip
     - git push origin --all
   only:
     - dev
@@ -133,7 +146,7 @@ finish release:
     - git checkout master
     - git checkout dev
     - git checkout $CI_BUILD_REF_NAME
-    - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS -Drelease=true
+    - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS -Drelease=true -Denforcer.skip
     - git push origin --all
     - git push origin --tags
     - git checkout master
@@ -144,6 +157,11 @@ finish release:
   when: manual
   except:
     - master
+
+docker-pe-all-jvm:
+  <<: *docker_script
+  variables:
+    CONTAINER_NAME: "pipeline-elements-all-jvm"
 
 docker-processors-aggregation-flink:
     <<: *docker_script
@@ -240,16 +258,15 @@ docker-sources-vehicle-simulator:
     variables:
       CONTAINER_NAME: "sources-vehicle-simulator"
 
-docker-sources-random:
-    <<: *docker_script
-    variables:
-      CONTAINER_NAME: "sources-random-data-generator"
-
 docker-sources-watertank-simulator:
     <<: *docker_script
     variables:
       CONTAINER_NAME: "sources-watertank-simulator"
 
+docker-hub-pe-all-jvm:
+  <<: *docker_hub_script
+  variables:
+    CONTAINER_NAME: "pipeline-elements-all-jvm"
 
 docker-hub-processors-aggregation-flink:
     <<: *docker_hub_script
@@ -281,10 +298,10 @@ docker-hub-processors-pattern-detection-flink:
     variables:
       CONTAINER_NAME: "processors-pattern-detection-flink"
 
-#docker-hub-processors-filters-siddhi:
-#    <<: *docker_hub_script
-#    variables:
-#      CONTAINER_NAME: "processors-filters-siddhi"
+docker-hub-processors-filters-siddhi:
+    <<: *docker_hub_script
+    variables:
+      CONTAINER_NAME: "processors-filters-siddhi"
 
 docker-hub-processors-statistics-flink:
     <<: *docker_hub_script
@@ -340,11 +357,6 @@ docker-hub-sources-vehicle-simulator:
     <<: *docker_hub_script
     variables:
       CONTAINER_NAME: "sources-vehicle-simulator"
-
-docker-hub-sources-random:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "sources-random-data-generator"
 
 docker-hub-sources-watertank-simulator:
     <<: *docker_hub_script

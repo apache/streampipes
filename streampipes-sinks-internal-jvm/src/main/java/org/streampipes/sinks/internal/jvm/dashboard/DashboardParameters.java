@@ -18,27 +18,22 @@ package org.streampipes.sinks.internal.jvm.dashboard;
 
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.schema.EventSchema;
-import org.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class DashboardParameters extends EventSinkBindingParams {
     private String pipelineId;
     private String elementId;
     private EventSchema schema;
-    private String broker;
     private String visualizationName;
 
     public DashboardParameters(DataSinkInvocation invocationGraph, String visualizationName) {
         super(invocationGraph);
         this.schema = invocationGraph.getInputStreams().get(0).getEventSchema();
         this.pipelineId = invocationGraph.getCorrespondingPipeline();
-        this.broker = "ws://" + SinksInternalJvmConfig.INSTANCE.getNginxHost() +":" +SinksInternalJvmConfig.INSTANCE
-                .getNginxPort()
-                +"/streampipes/ws";
         this.visualizationName = visualizationName;
 
         this.elementId = invocationGraph.getElementId();
-        this.elementId = this.elementId.substring(this.elementId.lastIndexOf("/"));
+        this.elementId = this.elementId.substring(this.elementId.lastIndexOf("/") + 1);
     }
 
     public String getPipelineId() {
@@ -47,10 +42,6 @@ public class DashboardParameters extends EventSinkBindingParams {
 
     public EventSchema getSchema() {
         return schema;
-    }
-
-    public String getBroker() {
-        return broker;
     }
 
     public String getVisualizationName() {

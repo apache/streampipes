@@ -1,0 +1,17 @@
+org.streampipes.processors.geo.jvm.processor.distancecalculator.title=Distance Calculator
+org.streampipes.processors.geo.jvm.processor.distancecalculator.description=Calculates the distance between two geo points
+
+lat1.title=First Latitude
+lat1.description=
+
+long1.title=First Longitude
+long1.description=
+
+lat2.title=Second Latitude
+lat2.description=
+
+long2.title=Second Longitude
+long2.description=
+
+calculatedDistance.title=Distance Field
+startingCell.description=

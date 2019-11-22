@@ -20,6 +20,8 @@ package org.streampipes.sinks.internal.jvm.datalake;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
+import java.util.List;
+
 /**
  * Code is the same as InfluxDB (org.streampipes.sinks.databases.jvm.influxdb) sink. Changes applied here should also be applied in the InfluxDB sink
  */
@@ -34,6 +36,7 @@ public class DataLakeParameters extends EventSinkBindingParams {
   private String timestampField;
   private Integer batchSize;
   private Integer flushDuration;
+  private List<String> dimensionProperties;
 
   public DataLakeParameters(DataSinkInvocation graph,
                             String influxDbHost,
@@ -44,7 +47,8 @@ public class DataLakeParameters extends EventSinkBindingParams {
                             String password,
                             String timestampField,
                             Integer batchSize,
-                            Integer flushDuration) {
+                            Integer flushDuration,
+                            List<String> dimensionProperties) {
     super(graph);
 
     this.influxDbHost = influxDbHost;
@@ -56,6 +60,7 @@ public class DataLakeParameters extends EventSinkBindingParams {
     this.timestampField = timestampField;
     this.batchSize = batchSize;
     this.flushDuration = flushDuration;
+    this.dimensionProperties = dimensionProperties;
   }
 
   public String getInfluxDbHost() {
@@ -92,5 +97,9 @@ public class DataLakeParameters extends EventSinkBindingParams {
 
   public Integer getFlushDuration() {
     return flushDuration;
+  }
+
+  public List<String> getDimensionProperties() {
+    return dimensionProperties;
   }
 }

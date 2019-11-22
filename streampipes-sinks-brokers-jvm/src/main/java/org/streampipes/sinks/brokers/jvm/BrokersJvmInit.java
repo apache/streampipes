@@ -24,6 +24,7 @@ import org.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
+import org.streampipes.sinks.brokers.jvm.bufferrest.BufferRestController;
 import org.streampipes.sinks.brokers.jvm.config.BrokersJvmConfig;
 import org.streampipes.sinks.brokers.jvm.jms.JmsController;
 import org.streampipes.sinks.brokers.jvm.kafka.KafkaController;
@@ -39,6 +40,7 @@ public class BrokersJvmInit extends StandaloneModelSubmitter {
             .add(new KafkaController())
             .add(new JmsController())
             .add(new RestController())
+            .add(new BufferRestController())
             .add(new RabbitMqController())
             .add(new PulsarController());
 

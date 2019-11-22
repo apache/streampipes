@@ -43,10 +43,12 @@ public class InfluxDbClient {
 	private String user;
 	private String password;
 	private String timestampField;
-  private Integer batchSize;
-  private Integer flushDuration;
+    private Integer batchSize;
+    private Integer flushDuration;
+    private List<String> tagFields;
 
-	private Logger logger;
+
+    private Logger logger;
 
 	private InfluxDB influxDb = null;
 
@@ -57,8 +59,9 @@ public class InfluxDbClient {
 			String user,
 			String password,
 			String timestampField,
-      Integer batchSize,
-      Integer flushDuration,
+            Integer batchSize,
+            Integer flushDuration,
+			List<String> tagsFields,
 			Logger logger) throws SpRuntimeException {
 		this.influxDbHost = influxDbHost;
 		this.influxDbPort = influxDbPort;
@@ -70,6 +73,7 @@ public class InfluxDbClient {
 		this.batchSize = batchSize;
 		this.flushDuration = flushDuration;
 		this.logger = logger;
+		this.tagFields = tagsFields;
 
 		validate();
 		connect();
@@ -165,24 +169,33 @@ public class InfluxDbClient {
 		if (event == null) {
 			throw new SpRuntimeException("event is null");
 		}
+
 		Long timestampValue = event.getFieldBySelector(timestampField).getAsPrimitive().getAsLong();
-    Point.Builder p = Point.measurement(measureName).time(timestampValue, TimeUnit.MILLISECONDS);
-		for (Map.Entry<String, Object> pair : event.getRaw().entrySet()) {
-      if(!pair.getKey().matches("^[a-zA-Z_][a-zA-Z0-9_]*$")) {
-        throw new SpRuntimeException("Column name '" + pair.getKey() + "' not allowed "
-            + "(allowed: '^[a-zA-Z_][a-zA-Z0-9_]*$')");
-      }
-      if (pair.getValue() instanceof Integer) {
-        p.addField(pair.getKey(), (Integer)pair.getValue());
-      } else if (pair.getValue() instanceof Long) {
-        p.addField(pair.getKey(), (Long)pair.getValue());
-      } else if (pair.getValue() instanceof Double) {
-        p.addField(pair.getKey(), (Double)pair.getValue());
-      } else if (pair.getValue() instanceof Boolean) {
-        p.addField(pair.getKey(), (Boolean)pair.getValue());
-      } else {
-        p.addField(pair.getKey(), pair.getValue().toString());
-      }
+        Point.Builder p = Point.measurement(measureName).time(timestampValue, TimeUnit.MILLISECONDS);
+
+        for (Map.Entry<String, Object> pair : event.getRaw().entrySet()) {
+            if (!pair.getKey().matches("^[a-zA-Z_][a-zA-Z0-9_]*$")) {
+                throw new SpRuntimeException("Column name '" + pair.getKey() + "' not allowed "
+                        + "(allowed: '^[a-zA-Z_][a-zA-Z0-9_]*$')");
+            }
+
+
+            if (tagFields != null && tagFields.stream().anyMatch(tag -> tag.equals(pair.getKey()))) {
+                p.tag(pair.getKey(), pair.getValue().toString());
+            } else {
+                if (pair.getValue() instanceof Integer) {
+                    p.addField(pair.getKey(), (Integer)pair.getValue());
+                } else if (pair.getValue() instanceof Long) {
+                    p.addField(pair.getKey(), (Long)pair.getValue());
+                } else if (pair.getValue() instanceof Double) {
+                    p.addField(pair.getKey(), (Double)pair.getValue());
+                } else if (pair.getValue() instanceof Boolean) {
+                    p.addField(pair.getKey(), (Boolean)pair.getValue());
+                } else {
+                    p.addField(pair.getKey(), pair.getValue().toString());
+                }
+            }
+
     }
 
     influxDb.write(p.build());

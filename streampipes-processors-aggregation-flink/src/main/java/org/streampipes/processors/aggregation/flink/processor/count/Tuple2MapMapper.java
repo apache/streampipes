@@ -18,14 +18,20 @@ package org.streampipes.processors.aggregation.flink.processor.count;
 
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple3;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.model.runtime.Event;
 
 public class Tuple2MapMapper implements MapFunction<Tuple3<String, String, Integer>, Event> {
+
+  private static final Logger LOG = LoggerFactory.getLogger(Tuple2MapMapper.class);
+
   @Override
   public Event map(Tuple3<String, String, Integer> in) throws Exception {
     Event outEvent = new Event();
     outEvent.addField("value", in.f1);
     outEvent.addField("count", in.f2);
+
     return outEvent;
   }
 }

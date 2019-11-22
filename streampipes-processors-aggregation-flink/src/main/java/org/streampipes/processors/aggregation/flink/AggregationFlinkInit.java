@@ -27,6 +27,7 @@ import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.processors.aggregation.flink.config.AggregationFlinkConfig;
 import org.streampipes.processors.aggregation.flink.processor.aggregation.AggregationController;
 import org.streampipes.processors.aggregation.flink.processor.count.CountController;
+import org.streampipes.processors.aggregation.flink.processor.eventcount.EventCountController;
 import org.streampipes.processors.aggregation.flink.processor.rate.EventRateController;
 
 public class AggregationFlinkInit extends StandaloneModelSubmitter {
@@ -35,7 +36,8 @@ public class AggregationFlinkInit extends StandaloneModelSubmitter {
     DeclarersSingleton.getInstance()
             .add(new AggregationController())
             .add(new CountController())
-            .add(new EventRateController());
+            .add(new EventRateController())
+            .add(new EventCountController());
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
             new CborDataFormatFactory(),
