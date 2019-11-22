@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.64.1-SNAPSHOT</version>
+        <version>0.65.0</version>
     </parent>
 
     <artifactId>streampipes-connect-adapters</artifactId>
@@ -36,7 +36,7 @@
     </modules>
 
     <properties>
-        <streampipes.version>0.64.1-SNAPSHOT</streampipes.version>
+        <streampipes.version>0.65.0</streampipes.version>
 
         <camel.version>2.22.1</camel.version>
         <java-websocket.version>1.4.0</java-websocket.version>
