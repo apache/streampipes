@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.65.1-SNAPSHOT</version>
+        <version>0.65.0</version>
     </parent>
 
     <artifactId>streampipes-pipeline-management</artifactId>
@@ -29,72 +29,72 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-code-generation</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-commons</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
         </dependency>
               <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-dataformat-cbor</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-dataformat-fst</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-dataformat-json</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-dataformat-smile</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-jms</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-model-client</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sdk</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-storage-management</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-user-management</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
         </dependency>
 
         <!-- External dependencies -->
@@ -120,7 +120,7 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-measurement-units</artifactId>
-            <version>0.65.1-SNAPSHOT</version>
+            <version>0.65.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
