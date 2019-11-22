@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.65.0-SNAPSHOT</version>
+		<version>0.65.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>streampipes-wrapper</artifactId>
 
@@ -29,22 +29,22 @@
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-container</artifactId>
-			<version>0.65.0-SNAPSHOT</version>
+			<version>0.65.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-dataformat</artifactId>
-			<version>0.65.0-SNAPSHOT</version>
+			<version>0.65.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-messaging</artifactId>
-			<version>0.65.0-SNAPSHOT</version>
+			<version>0.65.1-SNAPSHOT</version>
 		</dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-sdk</artifactId>
-			<version>0.65.0-SNAPSHOT</version>
+			<version>0.65.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
