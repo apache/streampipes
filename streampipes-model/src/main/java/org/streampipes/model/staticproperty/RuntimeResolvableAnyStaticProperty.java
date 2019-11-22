@@ -29,7 +29,7 @@ import javax.persistence.OneToMany;
 
 @RdfsClass(StreamPipes.RUNTIME_RESOLVABLE_ANY_STATIC_PROPERTY)
 @Entity
-public class RuntimeResolvableAnyStaticProperty extends OneOfStaticProperty {
+public class RuntimeResolvableAnyStaticProperty extends AnyStaticProperty {
 
   @OneToMany(fetch = FetchType.EAGER,
           cascade = {CascadeType.ALL})

@@ -20,40 +20,36 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.64.0</version>
+        <version>0.65.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>streampipes-wrapper-siddhi</artifactId>
 
-    <properties>
-        <siddhi.version>4.5.11</siddhi.version>
-    </properties>
-
     <dependencies>
+        <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-wrapper-standalone</artifactId>
+            <version>0.65.0</version>
+        </dependency>
+
+        <!-- External dependencies -->
+        <dependency>
+            <groupId>org.wso2.siddhi</groupId>
+            <artifactId>siddhi-annotations</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.siddhi</groupId>
             <artifactId>siddhi-core</artifactId>
-            <version>${siddhi.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.siddhi</groupId>
             <artifactId>siddhi-query-api</artifactId>
-            <version>${siddhi.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.siddhi</groupId>
-            <artifactId>siddhi-annotations</artifactId>
-            <version>${siddhi.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.siddhi</groupId>
             <artifactId>siddhi-query-compiler</artifactId>
-            <version>${siddhi.version}</version>
         </dependency>
     </dependencies>
 
@@ -69,6 +65,4 @@
             </releases>
         </repository>
     </repositories>
-
-
 </project>

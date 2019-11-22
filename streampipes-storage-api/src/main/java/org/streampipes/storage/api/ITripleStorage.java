@@ -18,19 +18,14 @@ package org.streampipes.storage.api;
 
 import org.eclipse.rdf4j.repository.Repository;
 
-import javax.persistence.EntityManager;
-
 public interface ITripleStorage {
 
   IBackgroundKnowledgeStorage getBackgroundKnowledgeStorage();
 
   Repository getRepository();
 
-  IPipelineElementDescriptionStorage getStorageAPI();
-
-  EntityManager getEntityManager();
+  IPipelineElementDescriptionStorageCache getPipelineElementStorage();
 
   IOntologyContextStorage getContextStorage();
 
-  IPipelineElementDescriptionStorage getSesameStorage();
 }

@@ -20,29 +20,29 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.64.0</version>
+        <version>0.65.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>streampipes-dataformat-fst</artifactId>
 
-    <properties>
-        <fst.version>2.56</fst.version>
-    </properties>
-
     <dependencies>
+        <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-dataformat</artifactId>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-vocabulary</artifactId>
+            <version>0.65.0</version>
         </dependency>
+
+        <!-- External dependencies -->
         <dependency>
             <groupId>de.ruedigermoeller</groupId>
             <artifactId>fst</artifactId>
-            <version>${fst.version}</version>
         </dependency>
     </dependencies>
 

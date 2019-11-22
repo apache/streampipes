@@ -28,7 +28,11 @@ import org.streampipes.connect.config.ConnectContainerConfig;
 import org.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.streampipes.connect.management.AdapterUtils;
 import org.streampipes.model.SpDataSet;
-import org.streampipes.model.connect.adapter.*;
+import org.streampipes.model.connect.adapter.AdapterDescription;
+import org.streampipes.model.connect.adapter.AdapterSetDescription;
+import org.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 
 import java.util.Collection;
 

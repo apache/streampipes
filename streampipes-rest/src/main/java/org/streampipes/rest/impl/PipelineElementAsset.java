@@ -15,6 +15,8 @@ limitations under the License.
 */
 package org.streampipes.rest.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.manager.assets.AssetManager;
 import org.streampipes.rest.api.IPipelineElementAsset;
 
@@ -29,6 +31,8 @@ import javax.ws.rs.core.Response;
 
 @Path("/v2/pe")
 public class PipelineElementAsset extends AbstractRestInterface implements IPipelineElementAsset {
+
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineElementAsset.class);
 
   @GET
   @Path("{appId}/assets/icon")
@@ -62,7 +66,7 @@ public class PipelineElementAsset extends AbstractRestInterface implements IPipe
       byte[] asset = AssetManager.getAsset(appId, assetName);
       return ok(asset);
     } catch (IOException e) {
-      e.printStackTrace();
+      LOG.error("Could not find asset {}", assetName);
       return fail();
     }
   }

@@ -22,7 +22,6 @@ import org.streampipes.manager.endpoint.EndpointFetcher;
 import org.streampipes.model.client.endpoint.RdfEndpoint;
 import org.streampipes.model.client.setup.InitialSettings;
 import org.streampipes.storage.couchdb.utils.CouchDbConfig;
-import org.streampipes.storage.rdf4j.util.SesameConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +33,18 @@ public class InstallationConfiguration {
 
 		setInitialConfiguration(settings);
 		List<InstallationStep> steps = new ArrayList<>();
-		
-		steps.add(new SesameDbInstallationStep());
+
 		steps.add(new CouchDbInstallationStep());
 		steps.add(new UserRegistrationInstallationStep(settings.getAdminEmail(), settings.getAdminPassword()));
+    steps.add(new EmpireInitializerInstallationStep());
 
 		if (settings.getInstallPipelineElements()) {
 			for(RdfEndpoint endpoint : new EndpointFetcher().getEndpoints()) {
 				steps.add(new PipelineElementInstallationStep(endpoint, settings.getAdminEmail()));
 			}
 		}
+
+		steps.add(new CacheInitializationInstallationStep());
 		
 		return steps;
 	}
@@ -55,9 +56,6 @@ public class InstallationConfiguration {
 	private static void setInitialConfiguration(InitialSettings s) {
 	   if (!"".equals(s.getCouchDbHost())) {
 		   CouchDbConfig.INSTANCE.setHost(s.getCouchDbHost());
-	   }
-	   if (!"".equals(s.getSesameHost())) {
-		   SesameConfig.INSTANCE.setUri("http://" + s.getSesameHost() + ":8031/rdf4j-server");
 	   }
 	   if (!"".equals(s.getKafkaHost())) {
 		   BackendConfig.INSTANCE.setKafkaHost(s.getKafkaHost());

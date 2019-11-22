@@ -20,20 +20,31 @@
     <parent>
         <groupId>org.streampipes</groupId>
        <artifactId>streampipes-parent</artifactId>
-        <version>0.64.0</version>
+        <version>0.65.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>streampipes-container-standalone</artifactId>
 
     <dependencies>
+        <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container</artifactId>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container-base</artifactId>
+            <version>0.65.0</version>
         </dependency>
+
+        <!-- External dependencies -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+        </dependency>
+
+        <!-- Test dependencies -->
     </dependencies>
 </project>

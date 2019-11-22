@@ -20,16 +20,32 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.64.0</version>
+        <version>0.65.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>streampipes-connect-container-worker</artifactId>
 
     <dependencies>
+        <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-connect-container</artifactId>
+            <version>0.65.0</version>
+        </dependency>
+
+        <!-- External dependencies -->
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

@@ -51,7 +51,7 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   @Produces(MediaType.APPLICATION_JSON)
   @Override
   public Response getAvailableDataStreams() {
-    List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllSEPs();
+    List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllDataSources();
     List<SpDataStream> datasets = new ArrayList<>();
 
     for (DataSourceDescription source : sources) {
@@ -72,7 +72,7 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   @Override
   public Response getAvailableDataSets() {
 
-    List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllSEPs();
+    List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllDataSources();
     List<SpDataStream> datasets = new ArrayList<>();
 
     for (DataSourceDescription source : sources) {
@@ -126,7 +126,7 @@ public class PipelineTemplate extends AbstractRestInterface implements IPipeline
   }
 
   private List<SpDataStream> getAllDataStreams() {
-    List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllSEPs();
+    List<DataSourceDescription> sources = getPipelineElementRdfStorage().getAllDataSources();
     List<SpDataStream> datasets = new ArrayList<>();
 
     for (DataSourceDescription source : sources) {

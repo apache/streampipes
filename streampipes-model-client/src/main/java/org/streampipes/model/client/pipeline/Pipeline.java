@@ -20,127 +20,128 @@ package org.streampipes.model.client.pipeline;
 import com.google.gson.annotations.SerializedName;
 import org.streampipes.model.graph.DataSinkInvocation;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+
 @Entity
 public class Pipeline extends ElementComposition {
-	
-	@OneToOne(cascade=CascadeType.ALL)
-	private List<DataSinkInvocation> actions;
-	
-	@OneToOne(cascade=CascadeType.ALL)
-	private boolean running;
-	private long startedAt;
-	private long createdAt;
-	
-	private boolean publicElement;
-	
-	private String createdByUser;
-	
-	private List<String> pipelineCategories;
-	
-	private @SerializedName("_id") String pipelineId;
-    private @SerializedName("_rev") String rev;
 
-	public Pipeline() {
-		super();
-		this.actions = new ArrayList<>();
-	}
+  @OneToOne(cascade = CascadeType.ALL)
+  private List<DataSinkInvocation> actions;
 
-	public List<DataSinkInvocation> getActions() {
-		return actions;
-	}
+  @OneToOne(cascade = CascadeType.ALL)
+  private boolean running;
+  private long startedAt;
+  private long createdAt;
 
-	public void setActions(List<DataSinkInvocation> actions) {
-		this.actions = actions;
-	}
+  private boolean publicElement;
 
-	public boolean isRunning() {
-		return running;
-	}
+  private String createdByUser;
 
-	public void setRunning(boolean running) {
-		this.running = running;
-	}
+  private List<String> pipelineCategories;
 
-	public long getStartedAt() {
-		return startedAt;
-	}
+  private @SerializedName("_id")
+  String pipelineId;
+  private @SerializedName("_rev")
+  String rev;
 
-	public void setStartedAt(long startedAt) {
-		this.startedAt = startedAt;
-	}
-	
-	public boolean isPublicElement() {
-		return publicElement;
-	}
+  public Pipeline() {
+    super();
+    this.actions = new ArrayList<>();
+  }
 
-	public void setPublicElement(boolean publicElement) {
-		this.publicElement = publicElement;
-	}
+  public List<DataSinkInvocation> getActions() {
+    return actions;
+  }
 
-	
-	public String getCreatedByUser() {
-		return createdByUser;
-	}
+  public void setActions(List<DataSinkInvocation> actions) {
+    this.actions = actions;
+  }
 
-	public void setCreatedByUser(String createdByUser) {
-		this.createdByUser = createdByUser;
-	}
-	
-	
+  public boolean isRunning() {
+    return running;
+  }
 
-	public String getPipelineId() {
-		return pipelineId;
-	}
+  public void setRunning(boolean running) {
+    this.running = running;
+  }
 
-	public void setPipelineId(String pipelineId) {
-		this.pipelineId = pipelineId;
-	}
+  public long getStartedAt() {
+    return startedAt;
+  }
 
-	public String getRev() {
-		return rev;
-	}
+  public void setStartedAt(long startedAt) {
+    this.startedAt = startedAt;
+  }
 
-	public void setRev(String rev) {
-		this.rev = rev;
-	}
-	
-	public List<String> getPipelineCategories() {
-		return pipelineCategories;
-	}
+  public boolean isPublicElement() {
+    return publicElement;
+  }
 
-	public void setPipelineCategories(List<String> pipelineCategories) {
-		this.pipelineCategories = pipelineCategories;
-	}
+  public void setPublicElement(boolean publicElement) {
+    this.publicElement = publicElement;
+  }
 
-	public long getCreatedAt() {
-		return createdAt;
-	}
 
-	public void setCreatedAt(long createdAt) {
-		this.createdAt = createdAt;
-	}
+  public String getCreatedByUser() {
+    return createdByUser;
+  }
 
-	public Pipeline clone()
-	{
-		Pipeline pipeline = new Pipeline();
-		pipeline.setName(name);
-		pipeline.setDescription(description);
-		pipeline.setSepas(sepas);
-		pipeline.setStreams(streams);
-		pipeline.setActions(actions);
-		pipeline.setCreatedByUser(createdByUser);
-		pipeline.setPipelineCategories(pipelineCategories);
-		pipeline.setCreatedAt(createdAt);
-		pipeline.setPipelineId(pipelineId);
-		pipeline.setRev(rev);
-		return pipeline;
-	}
-	
-	
+  public void setCreatedByUser(String createdByUser) {
+    this.createdByUser = createdByUser;
+  }
+
+
+  public String getPipelineId() {
+    return pipelineId;
+  }
+
+  public void setPipelineId(String pipelineId) {
+    this.pipelineId = pipelineId;
+  }
+
+  public String getRev() {
+    return rev;
+  }
+
+  public void setRev(String rev) {
+    this.rev = rev;
+  }
+
+  public List<String> getPipelineCategories() {
+    return pipelineCategories;
+  }
+
+  public void setPipelineCategories(List<String> pipelineCategories) {
+    this.pipelineCategories = pipelineCategories;
+  }
+
+  public long getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(long createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Pipeline clone() {
+    Pipeline pipeline = new Pipeline();
+    pipeline.setName(name);
+    pipeline.setDescription(description);
+    pipeline.setSepas(sepas);
+    pipeline.setStreams(streams);
+    pipeline.setActions(actions);
+    pipeline.setCreatedByUser(createdByUser);
+    pipeline.setPipelineCategories(pipelineCategories);
+    pipeline.setCreatedAt(createdAt);
+    pipeline.setPipelineId(pipelineId);
+    pipeline.setRev(rev);
+    return pipeline;
+  }
+
+
 }

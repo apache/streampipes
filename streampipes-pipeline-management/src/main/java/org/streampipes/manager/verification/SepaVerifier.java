@@ -37,11 +37,14 @@ public class SepaVerifier extends ElementVerifier<DataProcessorDescription> {
   }
 
   @Override
-  protected StorageState store(String username, boolean publicElement) {
+  protected StorageState store(String username, boolean publicElement, boolean refreshCache) {
     StorageState storageState = StorageState.STORED;
 
     if (!storageApi.exists(elementDescription)) {
-      storageApi.storeSEPA(elementDescription);
+      storageApi.storeDataProcessor(elementDescription);
+      if (refreshCache) {
+        storageApi.refreshDataProcessorCache();
+      }
     } else {
       storageState = StorageState.ALREADY_IN_SESAME;
     }
@@ -56,6 +59,7 @@ public class SepaVerifier extends ElementVerifier<DataProcessorDescription> {
   @Override
   protected void update(String username) {
     storageApi.update(elementDescription);
+    storageApi.refreshDataProcessorCache();
   }
 
   @Override

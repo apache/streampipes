@@ -40,7 +40,17 @@ public class PipelineStorageService {
         this.pipeline = pipeline;
     }
 
+    public void updatePipeline() {
+     preparePipeline();
+     StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updatePipeline(pipeline);
+    }
+
     public void addPipeline() {
+        preparePipeline();
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().store(pipeline);
+    }
+
+    private void preparePipeline() {
         PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
         InvocationGraphBuilder builder = new InvocationGraphBuilder(pipelineGraph, pipeline.getPipelineId());
         List<InvocableStreamPipesEntity> graphs = encryptSecrets(builder.buildGraphs());
@@ -50,8 +60,6 @@ public class PipelineStorageService {
 
         pipeline.setSepas(sepas);
         pipeline.setActions(secs);
-
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().store(pipeline);
     }
 
     private List<InvocableStreamPipesEntity> encryptSecrets(List<InvocableStreamPipesEntity> graphs) {

@@ -38,7 +38,7 @@ public class SepVerifier extends ElementVerifier<DataSourceDescription> {
   }
 
   @Override
-  protected StorageState store(String username, boolean publicElement) {
+  protected StorageState store(String username, boolean publicElement, boolean refreshCache) {
     StorageState storageState = StorageState.STORED;
 		/*
 		if (SecurityUtils.getSubject().isAuthenticated()) {
@@ -47,7 +47,10 @@ public class SepVerifier extends ElementVerifier<DataSourceDescription> {
 		}
 */
     if (!storageApi.exists(elementDescription)) {
-      storageApi.storeSEP(elementDescription);
+      storageApi.storeDataSource(elementDescription);
+      if (refreshCache) {
+        storageApi.refreshDataSourceCache();
+      }
     } else {
       storageState = StorageState.ALREADY_IN_SESAME;
     }
@@ -62,6 +65,7 @@ public class SepVerifier extends ElementVerifier<DataSourceDescription> {
   @Override
   protected void update(String username) {
     storageApi.update(elementDescription);
+    storageApi.refreshDataSourceCache();
   }
 
   @Override

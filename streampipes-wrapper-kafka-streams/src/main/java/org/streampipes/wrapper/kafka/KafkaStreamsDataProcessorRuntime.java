@@ -16,7 +16,6 @@
  */
 package org.streampipes.wrapper.kafka;
 
-import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
@@ -66,7 +65,7 @@ public abstract class KafkaStreamsDataProcessorRuntime<B extends
 
       KStream<String, String> outStream = getApplicationLogic(mapFormat).flatMapValues(new
               MapToJsonFormat());
-      outStream.to(Serdes.String(), Serdes.String(), getTopic(runtimeParams.getBindingParams().getGraph()
+      outStream.to(getTopic(runtimeParams.getBindingParams().getGraph()
               .getOutputStream()));
       streams = new KafkaStreams(builder.build(), config);
 

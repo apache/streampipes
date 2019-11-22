@@ -23,16 +23,16 @@ import java.util.List;
 
 public interface INotificationStorage {
 
-	Notification getNotification(String notificationId);
-	
-	List<Notification> getAllNotifications();
-	
-	List<Notification> getUnreadNotifications();
-	
-	boolean addNotification(Notification notification);
-	
-	boolean changeNotificationStatus(String notificationId);
-	
-	boolean deleteNotification(String notificationId);
+  Notification getNotification(String notificationId);
+
+  List<Notification> getAllNotifications();
+
+  List<Notification> getUnreadNotifications();
+
+  boolean addNotification(Notification notification);
+
+  boolean changeNotificationStatus(String notificationId);
+
+  boolean deleteNotification(String notificationId);
 
 }

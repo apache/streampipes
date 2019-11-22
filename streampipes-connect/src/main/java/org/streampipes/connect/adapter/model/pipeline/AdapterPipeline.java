@@ -37,6 +37,12 @@ public class AdapterPipeline {
 
     public void process(Map<String, Object> event) {
 
+        // TODO remove, just for performance tests
+        if ("true".equals(System.getenv("SP_DEBUG_CONNECT"))) {
+            event.put("internal_t1", System.currentTimeMillis());
+        }
+
+
         for (AdapterPipelineElement pipelineElement : pipelineElements) {
             event = pipelineElement.process(event);
         }

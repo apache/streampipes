@@ -52,7 +52,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
   @GsonWithIds
   @Override
   public Response getAvailable(@PathParam("username") String username) {
-    List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllSECs(),
+    List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllDataSinks(),
             getUserService().getAvailableActionUris(username));
     return ok(secs);
   }
@@ -64,7 +64,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
   @GsonWithIds
   @Override
   public Response getFavorites(@PathParam("username") String username) {
-    List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllSECs(),
+    List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllDataSinks(),
             getUserService().getFavoriteActionUris(username));
     return ok(secs);
   }
@@ -76,7 +76,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
   @GsonWithIds
   @Override
   public Response getOwn(@PathParam("username") String username) {
-    List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllSECs(),
+    List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllDataSinks(),
             getUserService().getOwnActionUris(username));
     List<DataSinkInvocation> si = secs.stream().map(s -> new DataSinkInvocation(new DataSinkInvocation(s))).collect(Collectors.toList());
     return ok(si);
@@ -114,7 +114,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
     try {
       IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
       getUserService().deleteOwnAction(username, elementUri);
-      requestor.deleteSEC(requestor.getSECById(elementUri));
+      requestor.deleteDataSink(requestor.getDataSinkById(elementUri));
     } catch (URISyntaxException e) {
       return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description(), e.getMessage()));
     }
@@ -127,7 +127,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
   @Override
   public String getAsJsonLd(@PathParam("elementUri") String elementUri) {
     try {
-      return toJsonLd(getPipelineElementRdfStorage().getSECById(elementUri));
+      return toJsonLd(getPipelineElementRdfStorage().getDataSinkById(elementUri));
     } catch (URISyntaxException e) {
       return toJson(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage())));
     }
@@ -140,7 +140,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
   @Override
   public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
     try {
-      return ok(new DataSinkInvocation(new DataSinkInvocation(getPipelineElementRdfStorage().getSECById(elementUri))));
+      return ok(new DataSinkInvocation(new DataSinkInvocation(getPipelineElementRdfStorage().getDataSinkById(elementUri))));
     } catch (URISyntaxException e) {
       return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
     }

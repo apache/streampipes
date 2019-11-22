@@ -20,24 +20,20 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.64.0</version>
+		<version>0.65.0</version>
 	</parent>
+
 	<artifactId>streampipes-model-client</artifactId>
 	<packaging>jar</packaging>
-	<dependencies>
 
-		<dependency>
-			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-commons</artifactId>
-		</dependency>
+	<dependencies>
+		<!-- StreamPipes dependencies -->
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-model</artifactId>
+			<version>0.65.0</version>
 		</dependency>
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-            <version>1.0.2</version>
-        </dependency>
+
+		<!-- External dependencies -->
 	</dependencies>
 </project>

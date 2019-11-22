@@ -19,9 +19,6 @@ package org.streampipes.wrapper.spark;
 
 import java.io.Serializable;
 
-/**
- * Created by Jochen Lutz on 2018-01-18.
- */
 public class SparkDeploymentConfig implements Serializable {
     private static final long serialVersionUID = 1L;
 

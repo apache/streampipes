@@ -18,7 +18,9 @@
 package org.streampipes.sdk.extractor;
 
 import com.github.drapostolos.typeparser.TypeParser;
+import org.apache.http.client.fluent.Request;
 import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.constants.PropertySelectorConstants;
@@ -26,9 +28,11 @@ import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
 import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.model.staticproperty.AnyStaticProperty;
 import org.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
+import org.streampipes.model.staticproperty.FileStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.MappingPropertyNary;
 import org.streampipes.model.staticproperty.MappingPropertyUnary;
@@ -43,6 +47,7 @@ import org.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.streampipes.model.staticproperty.StaticPropertyType;
 import org.streampipes.model.staticproperty.SupportedProperty;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -92,6 +97,25 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   public String secretValue(String internalName) {
     return (getStaticPropertyByName(internalName, SecretStaticProperty.class)
             .getValue());
+  }
+
+  public String fileContentsAsString(String internalName) throws IOException {
+    String filename =
+            getStaticPropertyByName(internalName, FileStaticProperty.class).getLocationPath();
+    return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asString();
+  }
+
+  public byte[] fileContentsAsByteArray(String internalName) throws IOException {
+    String filename =
+            getStaticPropertyByName(internalName, FileStaticProperty.class).getLocationPath();
+    return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asBytes();
+  }
+
+  private String makeFileRequestPath(String filename) {
+    return BackendConfig.INSTANCE.getBackendUrl()
+            + "/streampipes-backend/api/v2/noauth"
+            + "/files/"
+            + filename;
   }
 
   private <V, T extends SelectionStaticProperty> V selectedSingleValue(String internalName, Class<V> targetClass, Class<T> oneOfStaticProperty) {
@@ -167,7 +191,10 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
       } else if (p.getStaticPropertyType() == StaticPropertyType.StaticPropertyAlternatives) {
         StaticProperty tmp = getStaticPropertyFromSelectedAlternative((StaticPropertyAlternatives) p);
         if (tmp != null) {
-          return getStaticPropertyByName(Collections.singletonList(tmp), name);
+          tmp = getStaticPropertyByName(Collections.singletonList(tmp), name);
+          if (tmp != null && tmp.getInternalName().equals(name)) {
+            return tmp;
+          }
         }
       }
     }
@@ -374,5 +401,55 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .filter(StaticPropertyAlternative::getSelected)
             .map(StaticProperty::getInternalName)
             .findFirst().get();
+  }
+
+  public List<String> getEventPropertiesRuntimeNamesByScope(PropertyScope scope) {
+    List<String> propertiesSelector = new ArrayList<>();
+
+    List<EventProperty> properties = new ArrayList<>();
+    for (SpDataStream stream : sepaElement.getInputStreams()) {
+      int streamIndex = sepaElement.getInputStreams().indexOf(stream);
+      getEventPropertiesByScope(scope, streamIndex)
+              .stream()
+              .forEach(ep -> propertiesSelector.add(ep.getRuntimeName()));
+
+      properties.addAll(getEventPropertiesByScope(scope, sepaElement.getInputStreams().indexOf(stream)));
+    }
+    return propertiesSelector;
+  }
+
+  public List<String> getEventPropertiesSelectorByScope(PropertyScope scope) {
+    List<String> propertiesSelector = new ArrayList<>();
+
+    List<EventProperty> properties = new ArrayList<>();
+    for (SpDataStream stream : sepaElement.getInputStreams()) {
+      int streamIndex = sepaElement.getInputStreams().indexOf(stream);
+      getEventPropertiesByScope(scope, streamIndex)
+              .stream()
+              .forEach(ep -> propertiesSelector.add(getBySelector(ep.getRuntimeName(), streamIndex)));
+
+      properties.addAll(getEventPropertiesByScope(scope, sepaElement.getInputStreams().indexOf(stream)));
+    }
+    return propertiesSelector;
+  }
+
+  public List<EventProperty> getEventPropertiesByScope(PropertyScope scope) {
+    List<EventProperty> properties = new ArrayList<>();
+    for (SpDataStream stream : sepaElement.getInputStreams()) {
+      properties.addAll(getEventPropertiesByScope(scope, sepaElement.getInputStreams().indexOf(stream)));
+    }
+    return properties;
+  }
+
+  private List<EventProperty> getEventPropertiesByScope(PropertyScope scope, Integer streamIndex) {
+    return sepaElement
+            .getInputStreams()
+            .get(streamIndex)
+            .getEventSchema()
+            .getEventProperties()
+            .stream()
+            .filter(ep ->
+                    ep.getPropertyScope() != null && ep.getPropertyScope().equals(scope.name()))
+            .collect(Collectors.toList());
   }
 }

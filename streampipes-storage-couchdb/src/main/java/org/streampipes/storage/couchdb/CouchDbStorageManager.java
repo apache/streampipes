@@ -72,4 +72,9 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   public IDataLakeStorage getDataLakeStorage() {
     return new DataLakeStorageImpl();
   }
+
+  @Override
+  public IFileMetadataStorage getFileMetadataStorage() {
+    return new FileMetadataStorageImpl();
+  }
 }

@@ -36,6 +36,15 @@ public class AnyStaticProperty extends SelectionStaticProperty {
     super(other);
   }
 
+  public AnyStaticProperty(StaticPropertyType staticPropertyType) {
+    super(staticPropertyType);
+  }
+
+  public AnyStaticProperty(StaticPropertyType staticPropertyType, String internalName,
+                             String label, String description) {
+    super(staticPropertyType, internalName, label, description);
+  }
+
   public AnyStaticProperty(String internalName, String label, String description) {
     super(StaticPropertyType.AnyStaticProperty, internalName, label, description);
   }

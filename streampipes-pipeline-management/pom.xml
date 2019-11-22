@@ -20,105 +20,108 @@
     <parent>
         <groupId>org.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.64.0</version>
+        <version>0.65.0</version>
     </parent>
+
     <artifactId>streampipes-pipeline-management</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-sdk</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-dataformat-json</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-dataformat-cbor</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-dataformat-fst</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-dataformat-smile</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-storage-management</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-model</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-user-management</artifactId>
+            <artifactId>streampipes-code-generation</artifactId>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-commons</artifactId>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-model-client</artifactId>
+            <artifactId>streampipes-container</artifactId>
+            <version>0.65.0</version>
+        </dependency>
+              <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-cbor</artifactId>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-code-generation</artifactId>
+            <artifactId>streampipes-dataformat-fst</artifactId>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-messaging-kafka</artifactId>
+            <artifactId>streampipes-dataformat-json</artifactId>
+            <version>0.65.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-smile</artifactId>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-jms</artifactId>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-measurement-units</artifactId>
-            <scope>test</scope>
+            <artifactId>streampipes-messaging-kafka</artifactId>
+            <version>0.65.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-model</artifactId>
+            <version>0.65.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-model-client</artifactId>
+            <version>0.65.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-sdk</artifactId>
+            <version>0.65.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-storage-management</artifactId>
+            <version>0.65.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-user-management</artifactId>
+            <version>0.65.0</version>
+        </dependency>
+
+        <!-- External dependencies -->
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-invoker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jgrapht</groupId>
+            <artifactId>jgrapht-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.objenesis</groupId>
+            <artifactId>objenesis</artifactId>
+        </dependency>
+
+        <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.maven.shared</groupId>
-            <artifactId>maven-invoker</artifactId>
-            <version>2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jgrapht</groupId>
-            <artifactId>jgrapht-core</artifactId>
-            <version>1.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.com.robust-it</groupId>
-            <artifactId>cloning</artifactId>
-            <version>1.9.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.sling</groupId>
-            <artifactId>org.apache.sling.commons.json</artifactId>
-            <version>2.0.20</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-container</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-messaging-jms</artifactId>
+            <artifactId>streampipes-measurement-units</artifactId>
+            <version>0.65.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

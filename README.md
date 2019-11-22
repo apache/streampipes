@@ -21,7 +21,9 @@
 [![Docker pulls](https://img.shields.io/docker/pulls/streampipes/backend.svg)](https://hub.docker.com/r/streampipes/backend/)
 [![Maven central](https://img.shields.io/maven-central/v/org.streampipes/streampipes-backend.svg)](https://img.shields.io/maven-central/v/org.streampipes/streampipes-backend.svg)
 [![License](https://img.shields.io/github/license/streampipes/streampipes-ce.svg)](https://docs.streampipes.org/license/)
-[![License](https://img.shields.io/github/last-commit/streampipes/streampipes-ce.svg)]()
+[![Last commit](https://img.shields.io/github/last-commit/streampipes/streampipes-ce.svg)]()
+[![Twitter](https://img.shields.io/twitter/follow/StreamPipes.svg?label=Follow&style=social)](https://twitter.com/StreamPipes)
+
 <h1 align="center">
   <br>
    <img src="https://docs.streampipes.org/img/logo.png" 
@@ -86,9 +88,10 @@ The quickest way to run StreamPipes is the Docker-based installer script availab
 It's easy to get started:
 1. Make sure you have [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
 2. Clone or download the installer script from [https://www.github.com/streampipes/streampipes-installer](https://www.github.com/streampipes/streampipes-installer)
-3. Execute ``./streampipes start`` to run a lightweight StreamPipes version with few pipelines elements (not including Big Data frameworks) or start the full version (16GB RAM recommended) by executing ``./streampipes start bigdata`` 
-4. Open your browser, navigate to ``http://YOUR_HOSTNAME_HERE`` and follow the installation instructions.
-5. Once finished, switch to the pipeline editor and start the interactive tour or check the [online tour](https://docs.streampipes.org/docs/user-guide-tour) to learn how to create your first pipeline!
+3. Execute ``./streampipes start`` 
+4. Enter the hostname and choose the version you'd like to run (the Lite version runs with less memory assigned to Docker (< 6 GB), use the full version if you have more memory available)
+5. Open your browser, navigate to ``http://YOUR_HOSTNAME_HERE`` and follow the installation instructions.
+6. Once finished, switch to the pipeline editor and start the interactive tour or check the [online tour](https://docs.streampipes.org/docs/user-guide-tour) to learn how to create your first pipeline!
 
 For a more in-depth manual, read the installation guide at [https://docs.streampipes.org/docs/user-guide-installation](https://docs.streampipes.org/docs/user-guide-installation)!
 

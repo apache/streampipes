@@ -38,9 +38,10 @@ import org.streampipes.model.client.messages.SuccessMessage;
 import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.api.IDataLakeStorage;
+import org.streampipes.storage.api.IFileMetadataStorage;
 import org.streampipes.storage.api.INoSqlStorage;
 import org.streampipes.storage.api.INotificationStorage;
-import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.streampipes.storage.api.IPipelineStorage;
 import org.streampipes.storage.api.ITripleStorage;
 import org.streampipes.storage.api.IUserStorage;
@@ -81,8 +82,8 @@ public abstract class AbstractRestInterface {
     }
   }
 
-  protected IPipelineElementDescriptionStorage getPipelineElementRdfStorage() {
-    return StorageManager.INSTANCE.getStorageAPI();
+  protected IPipelineElementDescriptionStorageCache getPipelineElementRdfStorage() {
+    return StorageManager.INSTANCE.getPipelineElementStorage();
   }
 
   protected IPipelineStorage getPipelineStorage() {
@@ -111,6 +112,10 @@ public abstract class AbstractRestInterface {
 
   protected INoSqlStorage getNoSqlStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore();
+  }
+
+  protected IFileMetadataStorage getFileMetadataStorage() {
+    return getNoSqlStorage().getFileMetadataStorage();
   }
 
   protected ITripleStorage getTripleStorage() {

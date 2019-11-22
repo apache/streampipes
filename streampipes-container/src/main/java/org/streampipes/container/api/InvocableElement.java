@@ -66,6 +66,11 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
 
         try {
             I graph = Transformer.fromJsonLd(clazz, payload);
+
+            if (isDebug()) {
+              graph = createGroundingDebugInformation(graph);
+            }
+
             InvocableDeclarer declarer = (InvocableDeclarer) getDeclarerById(elementId);
 
             if (declarer != null) {
@@ -92,8 +97,11 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
 
         List<Option> availableOptions =
                 resolvesOptions.resolveOptions(runtimeOptionsRequest.getRequestId(),
-                StaticPropertyExtractor.from(runtimeOptionsRequest.getStaticProperties(),
-                        runtimeOptionsRequest.getInputStreams()));
+                StaticPropertyExtractor.from(
+                        runtimeOptionsRequest.getStaticProperties(),
+                        runtimeOptionsRequest.getInputStreams(),
+                        runtimeOptionsRequest.getAppId()
+                ));
 
         return GsonSerializer.getGsonWithIds().toJson(new RuntimeOptionsResponse(runtimeOptionsRequest,
                 availableOptions));
@@ -141,5 +149,11 @@ public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D e
     }
 
     protected abstract P getExtractor(I graph);
+
+    protected abstract I createGroundingDebugInformation(I graph);
+
+    private Boolean isDebug() {
+        return "true".equals(System.getenv("SP_DEBUG"));
+    }
 }
 

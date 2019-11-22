@@ -29,50 +29,50 @@ import javax.persistence.OneToMany;
 
 public abstract class ElementComposition {
 
-	@OneToMany(cascade=CascadeType.ALL)
-	protected List<DataProcessorInvocation> sepas;
-	
-	@OneToMany(cascade=CascadeType.ALL)
-	protected List<SpDataStream> streams;
-	
-	protected String name;
-	protected String description;
+  @OneToMany(cascade = CascadeType.ALL)
+  protected List<DataProcessorInvocation> sepas;
 
-	public ElementComposition() {
-		this.sepas = new ArrayList<>();
-		this.streams = new ArrayList<>();
-	}
+  @OneToMany(cascade = CascadeType.ALL)
+  protected List<SpDataStream> streams;
 
-	public List<DataProcessorInvocation> getSepas() {
-		return sepas;
-	}
+  protected String name;
+  protected String description;
 
-	public void setSepas(List<DataProcessorInvocation> sepas) {
-		this.sepas = sepas;
-	}
+  public ElementComposition() {
+    this.sepas = new ArrayList<>();
+    this.streams = new ArrayList<>();
+  }
 
-	public List<SpDataStream> getStreams() {
-		return streams;
-	}
+  public List<DataProcessorInvocation> getSepas() {
+    return sepas;
+  }
 
-	public void setStreams(List<SpDataStream> streams) {
-		this.streams = streams;
-	}
-	
-	public String getName() {
-		return name;
-	}
+  public void setSepas(List<DataProcessorInvocation> sepas) {
+    this.sepas = sepas;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public List<SpDataStream> getStreams() {
+    return streams;
+  }
 
-	public String getDescription() {
-		return description;
-	}
+  public void setStreams(List<SpDataStream> streams) {
+    this.streams = streams;
+  }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
 }

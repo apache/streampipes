@@ -26,7 +26,6 @@ import java.io.IOException;
 
 public class Transformer {
 
-
 	public static <T> T fromJsonLd(Class<T> destination, String jsonld) throws RDFParseException, UnsupportedRDFormatException, RepositoryException, IOException {
 		return new JsonLdTransformer().fromJsonLd(jsonld, destination);
 	}

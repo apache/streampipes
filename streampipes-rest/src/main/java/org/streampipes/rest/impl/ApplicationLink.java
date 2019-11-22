@@ -48,11 +48,11 @@ public class ApplicationLink extends AbstractRestInterface implements IApplicati
         List<org.streampipes.model.ApplicationLink> allApplicationLinks = new ArrayList<>();
 
         allElements.addAll(getPipelineElementRdfStorage()
-                .getAllSEPAs().stream().map(e -> new DataProcessorDescription(e)).collect(Collectors.toList()));
+                .getAllDataProcessors().stream().map(e -> new DataProcessorDescription(e)).collect(Collectors.toList()));
         allElements.addAll(getPipelineElementRdfStorage()
-                .getAllSECs().stream().map(e -> new DataSinkDescription(e)).collect(Collectors.toList()));
+                .getAllDataSinks().stream().map(e -> new DataSinkDescription(e)).collect(Collectors.toList()));
         allElements.addAll(getPipelineElementRdfStorage()
-                .getAllSEPs().stream().map(e -> new DataSourceDescription(e)).collect(Collectors.toList()));
+                .getAllDataSources().stream().map(e -> new DataSourceDescription(e)).collect(Collectors.toList()));
 
         allElements.stream().forEach(e -> allApplicationLinks.addAll(removeDuplicates(allApplicationLinks, e.getApplicationLinks())));
 

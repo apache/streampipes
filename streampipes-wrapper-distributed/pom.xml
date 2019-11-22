@@ -20,25 +20,28 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.64.0</version>
+        <version>0.65.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>streampipes-wrapper-distributed</artifactId>
 
     <dependencies>
+        <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-wrapper</artifactId>
+            <artifactId>streampipes-messaging-jms</artifactId>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
+            <version>0.65.0</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-messaging-jms</artifactId>
+            <artifactId>streampipes-wrapper</artifactId>
+            <version>0.65.0</version>
         </dependency>
     </dependencies>
-
 </project>

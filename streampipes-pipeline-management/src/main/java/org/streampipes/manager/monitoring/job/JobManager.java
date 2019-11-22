@@ -56,8 +56,8 @@ public enum JobManager {
 	}
 	
 	public void prepareMonitoring() {
-		StorageManager.INSTANCE.getStorageAPI().getAllSEPAs().forEach(s -> addJob(new SepaMonitoringJob(s)));
-		StorageManager.INSTANCE.getStorageAPI().getAllSECs().forEach(s -> addJob(new SecMonitoringJob(s)));
+		StorageManager.INSTANCE.getPipelineElementStorage().getAllDataProcessors().forEach(s -> addJob(new SepaMonitoringJob(s)));
+		StorageManager.INSTANCE.getPipelineElementStorage().getAllDataSinks().forEach(s -> addJob(new SecMonitoringJob(s)));
 		//TODO: add seps StorageManager.INSTANCE.getStorageAPI().getAllSECs().forEach(s -> currentJobs.add(new SecMonitoringJob(s)));
 	}
 }

@@ -25,6 +25,7 @@ import org.streampipes.connect.adapter.exception.ParseException;
 import org.streampipes.connect.management.AdapterUtils;
 import org.streampipes.model.connect.adapter.AdapterDescription;
 import org.streampipes.model.connect.guess.GuessSchema;
+import org.streampipes.sdk.helpers.EpProperties;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -41,6 +42,13 @@ public class GuessManagement {
         GuessSchema guessSchema;
         try {
             guessSchema = adapter.getSchema(adapterDescription);
+
+             // TODO remove, just for performance tests
+            if ("true".equals(System.getenv("SP_DEBUG_CONNECT"))) {
+
+                guessSchema.getEventSchema().addEventProperty(EpProperties.timestampProperty("internal_t1"));
+                guessSchema.getEventSchema().addEventProperty(EpProperties.timestampProperty("internal_t2"));
+            }
 
             for (int i = 0; i < guessSchema.getEventSchema().getEventProperties().size(); i++) {
                 guessSchema.getEventSchema().getEventProperties().get(i).setIndex(i);

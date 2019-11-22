@@ -43,6 +43,11 @@ public class SendToKafkaAdapterSink implements AdapterPipelineElement  {
                 .getEventGrounding()
                 .getTransportProtocol();
 
+        if ("true".equals(System.getenv("SP_DEBUG"))) {
+            kafkaTransportProtocol.setBrokerHostname("localhost");
+            kafkaTransportProtocol.setKafkaPort(9094);
+        }
+
         TransportFormat transportFormat =
                 adapterDescription.getEventGrounding().getTransportFormats().get(0);
 
@@ -56,6 +61,12 @@ public class SendToKafkaAdapterSink implements AdapterPipelineElement  {
     public Map<String, Object> process(Map<String, Object> event) {
         try {
             if (event != null) {
+
+                // TODO remove, just for performance tests
+                if ("true".equals(System.getenv("SP_DEBUG_CONNECT"))) {
+                    event.put("internal_t2", System.currentTimeMillis());
+                }
+
                 producer.publish(dataFormatDefinition.fromMap(event));
             }
         } catch (SpRuntimeException e) {

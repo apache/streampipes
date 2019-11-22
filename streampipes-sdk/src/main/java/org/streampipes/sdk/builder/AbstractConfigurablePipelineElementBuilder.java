@@ -24,12 +24,12 @@ import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.PropertyValueSpecification;
-import org.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.streampipes.model.staticproperty.SecretStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.streampipes.model.staticproperty.SupportedProperty;
+import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.helpers.Label;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.vocabulary.XSD;
@@ -645,21 +645,24 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   public BU requiredSingleValueSelectionFromContainer(Label label) {
-    RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
-            .getLabel(), label.getDescription());
-
-    this.staticProperties.add(rsp);
+    this.staticProperties.add(StaticProperties.singleValueSelectionFromContainer(label));
     return me();
   }
 
   public BU requiredSingleValueSelectionFromContainer(Label label,
                                                       List<String> dependsOn) {
-    RuntimeResolvableOneOfStaticProperty rsp = new RuntimeResolvableOneOfStaticProperty(label.getInternalId(), label
-            .getLabel(), label.getDescription());
+    this.staticProperties.add(StaticProperties.singleValueSelectionFromContainer(label, dependsOn));
+    return me();
+  }
 
-    rsp.setDependsOn(dependsOn);
+  public BU requiredMultiValueSelectionFromContainer(Label label) {
+    this.staticProperties.add(StaticProperties.multiValueSelectionFromContainer(label));
+    return me();
+  }
 
-    this.staticProperties.add(rsp);
+  public BU requiredMultiValueSelectionFromContainer(Label label,
+                                                      List<String> dependsOn) {
+    this.staticProperties.add(StaticProperties.multiValueSelectionFromContainer(label, dependsOn));
     return me();
   }
 

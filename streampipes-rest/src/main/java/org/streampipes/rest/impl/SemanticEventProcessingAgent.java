@@ -51,7 +51,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@GsonWithIds
 	@Override
 	public Response getAvailable(@PathParam("username") String username) {
-		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllSEPAs(),
+		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllDataProcessors(),
 				getUserService().getAvailableSepaUris(username));
 		return ok(sepas);
 	}
@@ -63,7 +63,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@GsonWithIds
 	@Override
 	public Response getFavorites(@PathParam("username") String username) {
-		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllSEPAs(),
+		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllDataProcessors(),
 				getUserService().getFavoriteSepaUris(username));
 		return ok(sepas);
 	}
@@ -75,7 +75,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@GsonWithIds
 	@Override
 	public Response getOwn(@PathParam("username") String username) {
-		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllSEPAs(),
+		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllDataProcessors(),
 				getUserService().getOwnSepaUris(username));
 		List<DataProcessorInvocation> si = sepas.stream().map(s -> new DataProcessorInvocation(new DataProcessorInvocation(s))).collect(Collectors.toList());
 
@@ -113,7 +113,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	public Response removeOwn(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		try {
 			getUserService().deleteOwnSepa(username, elementUri);
-			getPipelineElementRdfStorage().deleteSEPA(getPipelineElementRdfStorage().getSEPAById(elementUri));
+			getPipelineElementRdfStorage().deleteDataProcessor(getPipelineElementRdfStorage().getDataProcessorById(elementUri));
 		} catch (URISyntaxException e) {
 			return constructErrorMessage(Notifications.create(NotificationType.STORAGE_ERROR, e.getMessage()));
 		}
@@ -126,7 +126,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@Override
 	public String getAsJsonLd(@PathParam("elementUri") String elementUri) {
 		try {
-			return toJsonLd(getPipelineElementRdfStorage().getSEPAById(elementUri));
+			return toJsonLd(getPipelineElementRdfStorage().getDataProcessorById(elementUri));
 		} catch (URISyntaxException e) {
 			return toJson(constructErrorMessage(Notifications.create(NotificationType.UNKNOWN_ERROR, e.getMessage())));
 		}
@@ -140,7 +140,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		// TODO Access rights
 		try {
-			return ok(new DataProcessorInvocation(new DataProcessorInvocation(getPipelineElementRdfStorage().getSEPAById(elementUri))));
+			return ok(new DataProcessorInvocation(new DataProcessorInvocation(getPipelineElementRdfStorage().getDataProcessorById(elementUri))));
 		} catch (URISyntaxException e) {
 			return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
 		}

@@ -34,7 +34,7 @@ import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.SuccessMessage;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
-import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.streampipes.storage.management.StorageManager;
 
 import java.io.IOException;
@@ -53,7 +53,8 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   protected List<VerificationResult> validationResults;
   protected List<Verifier> validators;
 
-  protected IPipelineElementDescriptionStorage storageApi = StorageManager.INSTANCE.getStorageAPI();
+  protected IPipelineElementDescriptionStorageCache storageApi =
+          StorageManager.INSTANCE.getPipelineElementStorage();
   protected UserService userService = UserManagementService.getUserService();
 
   public ElementVerifier(String graphData, Class<T> elementClass) {
@@ -67,7 +68,8 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
     validators.add(new GeneralVerifier<>(elementDescription));
   }
 
-  protected abstract StorageState store(String username, boolean publicElement);
+  protected abstract StorageState store(String username, boolean publicElement,
+                                        boolean refreshCache);
 
   protected abstract void update(String username);
 
@@ -76,7 +78,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
     validators.forEach(validator -> validationResults.addAll(validator.validate()));
   }
 
-  public Message verifyAndAdd(String username, boolean publicElement) throws SepaParseException {
+  public Message verifyAndAdd(String username, boolean publicElement, boolean refreshCache) throws SepaParseException {
     try {
       this.elementDescription = transform();
     } catch (RDFParseException | UnsupportedRDFormatException
@@ -85,7 +87,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
     }
     verify();
     if (isVerifiedSuccessfully()) {
-      StorageState state = store(username, publicElement);
+      StorageState state = store(username, publicElement, refreshCache);
       if (state == StorageState.STORED) {
         try {
           storeAssets();

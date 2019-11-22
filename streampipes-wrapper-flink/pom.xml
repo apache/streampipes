@@ -20,18 +20,24 @@
     <parent>
         <groupId>org.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.64.0</version>
+        <version>0.65.0</version>
     </parent>
+
     <artifactId>streampipes-wrapper-flink</artifactId>
     <name>StreamPipes Wrapper for Apache Flink</name>
-    <properties>
-        <flink.version>1.8.0</flink.version>
-    </properties>
+
     <dependencies>
+        <!-- StreamPipes dependencies -->
         <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.8.3</version>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-wrapper-distributed</artifactId>
+            <version>0.65.0</version>
+        </dependency>
+
+        <!-- External dependencies -->
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -40,6 +46,11 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-kafka_2.11</artifactId>
+            <version>${flink.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
@@ -80,13 +91,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-wrapper-distributed</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-kafka_2.11</artifactId>
-            <version>${flink.version}</version>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
         </dependency>
     </dependencies>
 </project>

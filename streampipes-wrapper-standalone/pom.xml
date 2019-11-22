@@ -20,15 +20,18 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.64.0</version>
+		<version>0.65.0</version>
 	</parent>
+
 	<artifactId>streampipes-wrapper-standalone</artifactId>
 	<name>StreamPipes Wrapper for Standalone Pipeline Element Implementations</name>
 
 	<dependencies>
+		<!-- StreamPipes dependencies -->
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-wrapper</artifactId>
+			<version>0.65.0</version>
 		</dependency>
 	</dependencies>
 </project>

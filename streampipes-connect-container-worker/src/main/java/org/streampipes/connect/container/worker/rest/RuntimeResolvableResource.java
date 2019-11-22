@@ -28,10 +28,14 @@ import org.streampipes.rest.shared.util.SpMediaType;
 import org.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
+
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
 @Path("/api/v1/{username}/worker/resolvable")
 public class RuntimeResolvableResource extends AbstractContainerResource {
@@ -53,7 +57,8 @@ public class RuntimeResolvableResource extends AbstractContainerResource {
             List<Option> availableOptions =
                     adapterClass.resolveOptions(runtimeOptionsRequest.getRequestId(),
                             StaticPropertyExtractor.from(runtimeOptionsRequest.getStaticProperties(),
-                                    runtimeOptionsRequest.getInputStreams()));
+                                    runtimeOptionsRequest.getInputStreams(),
+                                    runtimeOptionsRequest.getAppId()));
 
             return ok(new RuntimeOptionsResponse(runtimeOptionsRequest,
                     availableOptions));

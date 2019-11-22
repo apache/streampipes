@@ -17,7 +17,6 @@ limitations under the License.
 package org.streampipes.connect.container.worker.management;
 
 import org.apache.commons.io.IOUtils;
-import org.streampipes.connect.config.ConnectContainerConfig;
 
 import java.io.File;
 import java.io.FileOutputStream;

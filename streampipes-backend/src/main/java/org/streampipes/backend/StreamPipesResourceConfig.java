@@ -38,6 +38,7 @@ import org.streampipes.rest.impl.OntologyPipelineElement;
 import org.streampipes.rest.impl.PipelineCategory;
 import org.streampipes.rest.impl.PipelineElementAsset;
 import org.streampipes.rest.impl.PipelineElementCategory;
+import org.streampipes.rest.impl.PipelineElementFile;
 import org.streampipes.rest.impl.PipelineElementImport;
 import org.streampipes.rest.impl.PipelineElementRuntimeInfo;
 import org.streampipes.rest.impl.PipelineTemplate;
@@ -53,8 +54,8 @@ import org.streampipes.rest.impl.Version;
 import org.streampipes.rest.impl.VirtualSensor;
 import org.streampipes.rest.impl.Visualization;
 import org.streampipes.rest.impl.datalake.DataLakeNoUserResourceV3;
-import org.streampipes.rest.impl.datalake.DataLakeResource;
 import org.streampipes.rest.impl.datalake.DataLakeResourceV3;
+import org.streampipes.rest.impl.nouser.FileServingResource;
 import org.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
 import org.streampipes.rest.impl.nouser.PipelineNoUserResource;
 import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
@@ -84,7 +85,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(PipelineNoUserResource.class);
     register(PipelineElementImportNoUser.class);
     register(PipelineCategory.class);
-    register(DataLakeResource.class);
     register(PipelineElementImport.class);
     register(SemanticEventConsumer.class);
     register(SemanticEventProcessingAgent.class);
@@ -107,6 +107,8 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(PipelineElementAsset.class);
     register(DataLakeResourceV3.class);
     register(DataLakeNoUserResourceV3.class);
+    register(PipelineElementFile.class);
+    register(FileServingResource.class);
 
 
     // Serializers

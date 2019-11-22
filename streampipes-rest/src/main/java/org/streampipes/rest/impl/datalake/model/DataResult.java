@@ -18,34 +18,34 @@
 package org.streampipes.rest.impl.datalake.model;
 
 import java.util.List;
-import java.util.Map;
 
 public class DataResult {
 
     private int total;
-    private List<Map<String, Object>> events;
+    private List<String> headers;
+    private List<List<Object>> rows;
 
     public DataResult() {
+        this.total = 0;
     }
 
-    public DataResult(int total, List<Map<String, Object>> events) {
+    public DataResult(int total, List<String> headers, List<List<Object>> rows) {
         this.total = total;
-        this.events = events;
+        this.headers = headers;
+        this.rows = rows;
     }
 
     public int getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
+    public List<String> getHeaders() {
+        return headers;
     }
 
-    public List<Map<String, Object>> getEvents() {
-        return events;
+
+    public List<List<Object>> getRows() {
+        return rows;
     }
 
-    public void setEvents(List<Map<String, Object>> events) {
-        this.events = events;
-    }
 }

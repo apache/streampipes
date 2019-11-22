@@ -20,27 +20,25 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.64.0</version>
+		<version>0.65.0</version>
 	</parent>
+
 	<artifactId>streampipes-container-embedded</artifactId>
 	<packaging>jar</packaging>
 
 	<dependencies>
+		<!-- StreamPipes dependencies -->
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-container</artifactId>
+			<version>0.65.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-servlet</artifactId>
-			<version>${jersey.version}</version>
-		</dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-	</dependencies>
 
+		<!-- External dependencies -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 </project>

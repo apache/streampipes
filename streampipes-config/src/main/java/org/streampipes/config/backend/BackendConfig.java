@@ -21,13 +21,13 @@ package org.streampipes.config.backend;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.streampipes.config.SpConfig;
 
+import java.io.File;
 import java.security.SecureRandom;
 
 public enum BackendConfig {
   INSTANCE;
 
-  private final char[] possibleCharacters = (new String(
-          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?")).toCharArray();
+  private final char[] possibleCharacters = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?").toCharArray();
   private SpConfig config;
 
   BackendConfig() {
@@ -36,7 +36,7 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.SERVICE_NAME, "Backend", "Backend Configuration");
 
     config.register(BackendConfigKeys.BACKEND_HOST, "backend", "Hostname for backend");
-    config.register(BackendConfigKeys.BACKEND_PORT, 8082, "Port for backend");
+    config.register(BackendConfigKeys.BACKEND_PORT, 8030, "Port for backend");
 
     config.register(BackendConfigKeys.JMS_HOST, "activemq", "Hostname for backend service for active mq");
     config.register(BackendConfigKeys.JMS_PORT, 61616, "Port for backend service for active mq");
@@ -52,8 +52,10 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
     config.register(BackendConfigKeys.KAFKA_REST_PORT, 8082, "The port of the kafka-rest module");
     config.register(BackendConfigKeys.KAFKA_REST_HOST, "kafka-rest", "The hostname of the kafka-rest module");
-    config.register(BackendConfigKeys.ASSETS_DIR, "/streampipes-assets", "The directory where " +
+    config.register(BackendConfigKeys.ASSETS_DIR, makeAssetLocation(), "The directory where " +
             "pipeline element assets are stored.");
+    config.register(BackendConfigKeys.FILES_DIR, makeFileLocation(), "The directory where " +
+            "pipeline element files are stored.");
     config.register(BackendConfigKeys.DATA_LAKE_HOST, "elasticsearch", "The host of the data base used for the data lake");
     config.register(BackendConfigKeys.DATA_LAKE_PORT, 9200, "The port of the data base used for the data lake");
 
@@ -64,6 +66,23 @@ public enum BackendConfig {
             "Default Messaging Settings");
 
     config.register(BackendConfigKeys.ENCRYPTION_KEY, randomKey(), "A random secret key");
+  }
+
+  private String makeAssetLocation() {
+    return makeStreamPipesHomeLocation()
+            + "assets";
+  }
+
+  private String makeFileLocation() {
+    return makeStreamPipesHomeLocation()
+            + "files";
+  }
+
+  private String makeStreamPipesHomeLocation() {
+    return System.getProperty("user.home")
+            + File.separator
+            + ".streampipes"
+            + File.separator;
   }
 
   private String randomKey() {
@@ -77,6 +96,10 @@ public enum BackendConfig {
 
   public int getBackendPort() {
     return config.getInteger(BackendConfigKeys.BACKEND_PORT);
+  }
+
+  public String getBackendUrl() {
+    return "http://" + getBackendHost() + ":" + getBackendPort();
   }
 
   public String getJmsHost() {
@@ -161,11 +184,15 @@ public enum BackendConfig {
   }
 
   public String getKafkaRestUrl() {
-    return "http://" +getKafkaRestHost() +":" +getKafkaRestPort();
+    return "http://" + getKafkaRestHost() + ":" + getKafkaRestPort();
   }
 
   public String getAssetDir() {
     return config.getString(BackendConfigKeys.ASSETS_DIR);
+  }
+
+  public String getFilesDir() {
+    return config.getString(BackendConfigKeys.FILES_DIR);
   }
 
   public String getDatalakeHost() {

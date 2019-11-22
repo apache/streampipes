@@ -47,7 +47,9 @@ public class HttpRequestBuilder {
   public PipelineElementStatus invoke() {
     LOG.info("Invoking element: " + belongsTo);
     try {
-			Response httpResp = Request.Post(belongsTo).bodyString(jsonLd(), ContentType.APPLICATION_JSON).connectTimeout(10000).execute();
+      String jsonLd = jsonLd();
+      Response httpResp =
+              Request.Post(belongsTo).bodyString(jsonLd, ContentType.APPLICATION_JSON).connectTimeout(10000).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       LOG.error(e.getMessage());

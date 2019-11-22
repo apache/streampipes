@@ -20,55 +20,59 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.64.0</version>
+		<version>0.65.0</version>
 	</parent>
+
 	<artifactId>streampipes-container</artifactId>
-	<description>Large scale event processing agents with semantic checking for combinability.
-	Context: semantic-enabled complex event processing</description>
+
 	<name>Semantic Event Processing Agents</name>
 
-	<properties>
-		<camel.version>2.15.2</camel.version>
-	</properties>
 	<dependencies>
-   		<dependency>
+		<!-- StreamPipes dependencies -->
+		<dependency>
 			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-sdk</artifactId>
+			<artifactId>streampipes-dataformat</artifactId>
+			<version>0.65.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-messaging</artifactId>
+			<version>0.65.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-dataformat</artifactId>
+			<artifactId>streampipes-sdk</artifactId>
+			<version>0.65.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-serializers</artifactId>
+			<version>0.65.0</version>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.rendersnake</groupId>
-			<artifactId>rendersnake</artifactId>
-			<version>1.8</version>
-		</dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-        </dependency>
+
+		<!-- External dependencies -->
 		<dependency>
 			<groupId>com.orbitz.consul</groupId>
 			<artifactId>consul-client</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>fluent-hc</artifactId>
-			<version>4.5.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.rendersnake</groupId>
+			<artifactId>rendersnake</artifactId>
+		</dependency>
+
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

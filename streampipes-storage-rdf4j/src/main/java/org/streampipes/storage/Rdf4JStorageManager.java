@@ -18,7 +18,10 @@ package org.streampipes.storage;
 
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.repository.http.HTTPRepository;
+import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.empire.core.empire.Empire;
 import org.streampipes.empire.core.empire.EmpireOptions;
 import org.streampipes.empire.core.empire.config.ConfigKeys;
@@ -28,14 +31,15 @@ import org.streampipes.empire.rdf4j.RepositoryFactoryKeys;
 import org.streampipes.serializers.jsonld.CustomAnnotationProvider;
 import org.streampipes.storage.api.IBackgroundKnowledgeStorage;
 import org.streampipes.storage.api.IOntologyContextStorage;
-import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.streampipes.storage.api.ITripleStorage;
+import org.streampipes.storage.rdf4j.config.Rdf4JConfig;
 import org.streampipes.storage.rdf4j.impl.BackgroundKnowledgeStorageImpl;
 import org.streampipes.storage.rdf4j.impl.ContextStorageImpl;
-import org.streampipes.storage.rdf4j.impl.InMemoryStorage;
-import org.streampipes.storage.rdf4j.impl.SesameStorageRequests;
-import org.streampipes.storage.rdf4j.util.SesameConfig;
+import org.streampipes.storage.rdf4j.impl.PipelineElementInMemoryStorage;
+import org.streampipes.storage.rdf4j.impl.PipelineElementStorageRequests;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,119 +50,91 @@ public enum Rdf4JStorageManager implements ITripleStorage {
 
   INSTANCE;
 
-  private EntityManager storageManager;
+  private final Logger LOG = LoggerFactory.getLogger(Rdf4JStorageManager.class);
 
-  private Repository repository;
-  private Repository bkrepo;
+  private Repository pipelineElementRepository;
+  private Repository backgroundKnowledgeRepository;
 
-  private InMemoryStorage inMemoryStorage;
+  private IPipelineElementDescriptionStorageCache pipelineElementInMemoryStorage;
   private IBackgroundKnowledgeStorage backgroundKnowledgeStorage;
 
-  private boolean inMemoryInitialized = false;
-
   Rdf4JStorageManager() {
-    initSesameDatabases();
-  }
-
-  public void initSesameDatabases() {
-    initStorage();
-    initEmpire();
+    initPipelineElementStorage();
     initBackgroundKnowledgeStorage();
   }
 
   private void initBackgroundKnowledgeStorage() {
-    bkrepo = new HTTPRepository(SesameConfig.INSTANCE.getUri(),
-            SesameConfig.INSTANCE.getRepositoryId());
+    backgroundKnowledgeRepository = makeRepo(Rdf4JConfig
+            .INSTANCE
+            .getBackgroundKnowledgeStorageLocation());
     try {
-      bkrepo.initialize();
-      this.backgroundKnowledgeStorage = new BackgroundKnowledgeStorageImpl(bkrepo);
+      backgroundKnowledgeRepository.initialize();
+      this.backgroundKnowledgeStorage =
+              new BackgroundKnowledgeStorageImpl(backgroundKnowledgeRepository);
     } catch (RepositoryException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      LOG.error("Could not initialize background knowledge repository", e);
     }
   }
 
-  private boolean initStorage() {
+  private void initPipelineElementStorage() {
     try {
-      repository = new HTTPRepository(SesameConfig.INSTANCE.getUri(),
-              SesameConfig.INSTANCE.getRepositoryId());
+      pipelineElementRepository = makeRepo(Rdf4JConfig.INSTANCE.getPipelineElementStorageLocation());
+      pipelineElementRepository.initialize();
 
       initEmpire();
-
-      return true;
     } catch (Exception e) {
-      e.printStackTrace();
-      return false;
+      LOG.error("Could not initialize pipeline element repository", e);
     }
-
   }
 
-  private boolean initEmpire() {
-
+  private void initEmpire() {
     try {
       EmpireOptions.STRICT_MODE = false;
       EmpireConfiguration empireCfg = new EmpireConfiguration();
       empireCfg.setAnnotationProvider(CustomAnnotationProvider.class);
 
       Empire.init(empireCfg, new OpenRdfEmpireModule());
-      Map<Object, Object> map = new HashMap<>();
+      Map<Object, Object> configMap = new HashMap<>();
 
-      map.put(RepositoryFactoryKeys.REPO_HANDLE, repository);
-      map.put(ConfigKeys.FACTORY, "sesame");
-      map.put(ConfigKeys.NAME, "sepa-server");
-      map.put("url", SesameConfig.INSTANCE.getUri());
-      map.put("repo", SesameConfig.INSTANCE.getRepositoryId());
+      configMap.put(RepositoryFactoryKeys.REPO_HANDLE, pipelineElementRepository);
+      configMap.put(ConfigKeys.FACTORY, "sesame");
+      configMap.put(ConfigKeys.NAME, "streampipes-server");
 
       PersistenceProvider provider = Empire.get().persistenceProvider();
-      storageManager = provider.createEntityManagerFactory("sepa-server", map).createEntityManager();
+      EntityManager storageManager =
+              provider.createEntityManagerFactory("streampipes-server", configMap).createEntityManager();
+      PipelineElementStorageRequests storageRequests = new PipelineElementStorageRequests(storageManager);
+      this.pipelineElementInMemoryStorage = new PipelineElementInMemoryStorage(storageRequests);
 
-      return true;
     } catch (Exception e) {
-      e.printStackTrace();
-      return false;
+      LOG.error("Could not initialize empire", e);
     }
+  }
 
+  private Repository makeRepo(String storageDir) {
+    NativeStore nativeStore = new NativeStore();
+    nativeStore.setDataDir(new File(storageDir));
+    return new SailRepository(nativeStore);
   }
 
   @Override
   public IBackgroundKnowledgeStorage getBackgroundKnowledgeStorage() {
-    if (backgroundKnowledgeStorage == null) {
-      initSesameDatabases();
-    }
     return this.backgroundKnowledgeStorage;
   }
 
   @Override
   public Repository getRepository() {
-    return bkrepo;
+    return backgroundKnowledgeRepository;
   }
 
   @Override
-  public IPipelineElementDescriptionStorage getStorageAPI() {
-    if (backgroundKnowledgeStorage == null) {
-      initSesameDatabases();
-    }
-    if (!inMemoryInitialized) {
-      this.inMemoryStorage = new InMemoryStorage(getSesameStorage());
-      inMemoryInitialized = true;
-    }
-    return this.inMemoryStorage;
-
-  }
-
-  @Override
-  public EntityManager getEntityManager() {
-    return storageManager;
+  public IPipelineElementDescriptionStorageCache getPipelineElementStorage() {
+    return this.pipelineElementInMemoryStorage;
   }
 
   @Override
   public IOntologyContextStorage getContextStorage() {
-    return new ContextStorageImpl(bkrepo);
-  }
-
-  @Override
-  public IPipelineElementDescriptionStorage getSesameStorage() {
-    return new SesameStorageRequests();
+    return new ContextStorageImpl(backgroundKnowledgeRepository);
   }
 
 }

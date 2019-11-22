@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.64.0</version>
+        <version>0.65.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>streampipes-archetype-pe-processors-jvm</artifactId>

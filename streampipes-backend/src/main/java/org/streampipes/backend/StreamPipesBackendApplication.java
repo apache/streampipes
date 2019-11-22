@@ -15,7 +15,6 @@ limitations under the License.
 */
 package org.streampipes.backend;
 
-import io.swagger.v3.jaxrs2.integration.OpenApiServlet;
 import org.apache.shiro.web.env.EnvironmentLoaderListener;
 import org.apache.shiro.web.servlet.OncePerRequestFilter;
 import org.apache.shiro.web.servlet.ShiroFilter;
@@ -35,13 +34,10 @@ import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
 import org.streampipes.rest.notifications.NotificationListener;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PreDestroy;
 import javax.servlet.ServletContextListener;
-import javax.servlet.http.HttpServlet;
 
 @Configuration
 @EnableAutoConfiguration
@@ -72,16 +68,6 @@ public class StreamPipesBackendApplication {
   public ServletRegistrationBean appFileExportRegistrationBean() {
     ServletContainer jerseyContainer = new ServletContainer(new AppFileExportApplication());
     return new ServletRegistrationBean<>(jerseyContainer, "/api/apps/*");
-  }
-
-  @Bean
-  public ServletRegistrationBean swaggerRegistrationBean() {
-    ServletRegistrationBean<HttpServlet> bean = new ServletRegistrationBean<>(new OpenApiServlet()
-            , "/api/docs/*");
-    Map<String, String> params = new HashMap<>();
-    params.put("openApi.configuration.resourcePackages", "io.swagger.sample.resource");
-    bean.setInitParameters(params);
-    return bean;
   }
 
   @Bean

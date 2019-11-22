@@ -20,20 +20,18 @@
 	<parent>
 		<artifactId>streampipes-parent</artifactId>
 		<groupId>org.streampipes</groupId>
-		<version>0.64.0</version>
+		<version>0.65.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>streampipes-rest-shared</artifactId>
 
 	<dependencies>
-        <dependency>
-			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-serializers</artifactId>
-		</dependency>
+		<!-- StreamPipes dependencies -->
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-commons</artifactId>
+			<version>0.65.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.httpcomponents</groupId>
@@ -42,8 +40,23 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-servlet</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-serializers</artifactId>
+			<version>0.65.0</version>
+		</dependency>
+
+		<!-- External dependencies -->
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
@@ -53,6 +66,8 @@
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-multipart</artifactId>
 		</dependency>
+
+		<!-- Test dependencies -->
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-jetty-http</artifactId>
@@ -73,9 +88,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 
 </project>
