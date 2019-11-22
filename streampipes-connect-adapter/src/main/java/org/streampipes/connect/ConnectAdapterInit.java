@@ -72,7 +72,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new WikipediaNewArticlesAdapter())
             .add(new RosBridgeAdapter())
             .add(new Plc4xS7Adapter())
-            .add(new Plc4xPassiveAdapter())
+//            .add(new Plc4xPassiveAdapter())
             .add(new OpcUaAdapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
