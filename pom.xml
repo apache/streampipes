@@ -57,7 +57,7 @@
     </modules>
 
     <properties>
-        <streampipes.version>0.64.1-SNAPSHOT</streampipes.version>
+        <streampipes.version>0.65.0</streampipes.version>
 
         <amqp-client.version>4.1.0</amqp-client.version>
         <boofcv.version>0.33</boofcv.version>
