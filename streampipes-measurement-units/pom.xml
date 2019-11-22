@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.65.0</version>
+		<version>0.65.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>streampipes-measurement-units</artifactId>
@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-commons</artifactId>
-			<version>0.65.0</version>
+			<version>0.65.1-SNAPSHOT</version>
 		</dependency>
 
 		<!-- External dependencies -->

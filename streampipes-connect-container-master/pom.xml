@@ -20,7 +20,7 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.streampipes</groupId>
-        <version>0.65.0</version>
+        <version>0.65.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -31,17 +31,17 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-connect-container</artifactId>
-            <version>0.65.0</version>
+            <version>0.65.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-storage-couchdb</artifactId>
-            <version>0.65.0</version>
+            <version>0.65.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-user-management</artifactId>
-            <version>0.65.0</version>
+            <version>0.65.1-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
