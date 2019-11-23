@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.65.0</version>
+        <version>0.65.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>streampipes-pipeline-elements</artifactId>
@@ -56,7 +56,7 @@
     </modules>
 
     <properties>
-        <streampipes.version>0.65.0</streampipes.version>
+        <streampipes.version>0.65.1-SNAPSHOT</streampipes.version>
 
         <amqp-client.version>4.1.0</amqp-client.version>
         <boofcv.version>0.33</boofcv.version>
