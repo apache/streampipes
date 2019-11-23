@@ -64,16 +64,12 @@ if ($args[0] -eq "start")
 		{
 			Copy-Item $dockerComposeFullTemp -Destination $dockerCompose
 		}
-		if ($args[1] -eq "")
+		if ($args[1] -eq "-ip")
 		{
 			$ip = (Get-NetIPConfiguration | Where-Object { $_.IPv4DefaultGateway -ne $null -and $_.NetAdapter.Status -ne "Disconnected" }).IPv4Address.IPAddress
-		} 
-		else 
-		{
-			$ip = $args[1]
-		}
-		(Get-Content $envFileDest).replace('SP_HOST=', 'SP_HOST=' +$ip) | Set-Content $envFileDest
-		(Get-Content $envFileDest).replace('SP_KAFKA_HOST=', 'SP_KAFKA_HOST=' +$ip) | Set-Content $envFileDest
+			(Get-Content $envFileDest).replace('SP_HOST=kafka', 'SP_HOST=' +$ip) | Set-Content $envFileDest
+			(Get-Content $envFileDest).replace('SP_KAFKA_HOST=kafka', 'SP_KAFKA_HOST=' +$ip) | Set-Content $envFileDest
+		} 		
 	} 	
 
 
