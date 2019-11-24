@@ -1,39 +1,40 @@
-{{- if eq .Values.deployment "full" }}
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: elasticsearch
-spec:
-  selector:
-    matchLabels:
-      app: elasticsearch
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: elasticsearch
-    spec:
-      volumes:
-        - name: elasticsearch-pv
-          persistentVolumeClaim:
-            claimName: elasticsearch-pvc
-      containers:
-        - name: elasticsearch
-          image: docker.elastic.co/elasticsearch/elasticsearch-os:{{ .Values.external.elasticsearchVersion }}
-          imagePullPolicy: {{ .Values.pullPolicy }}
-          ports:
-            - containerPort: 9200
-            - containerPort: 9300
-          env:
-            - name: cluster.name
-              value: streampipes-cluster
-            - name: bootstrap.memory_lock
-              value: true
-            - name: ES_JAVA_OPTS
-              value: -Xms512m -Xmx512m
-            - name: discovery.zen.ping.unicast.hosts
-              value: elasticsearch
-          volumeMounts:
-            - mountPath: "/usr/share/elasticsearch/data"
-              name: elasticsearch-pv
-{{- end }}
+# TODO: fix - currently not working
+# {{- if eq .Values.deployment "full" }}
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: elasticsearch
+# spec:
+#   selector:
+#     matchLabels:
+#       app: elasticsearch
+#   replicas: 1
+#   template:
+#     metadata:
+#       labels:
+#         app: elasticsearch
+#     spec:
+#       volumes:
+#         - name: elasticsearch-pv
+#           persistentVolumeClaim:
+#             claimName: elasticsearch-pvc
+#       containers:
+#         - name: elasticsearch
+#           image: docker.elastic.co/elasticsearch/elasticsearch-os:{{ .Values.external.elasticsearchVersion }}
+#           imagePullPolicy: {{ .Values.pullPolicy }}
+#           ports:
+#             - containerPort: 9200
+#             - containerPort: 9300
+#           env:
+#             - name: cluster.name
+#               value: streampipes-cluster
+#             - name: bootstrap.memory_lock
+#               value: true
+#             - name: ES_JAVA_OPTS
+#               value: -Xms512m -Xmx512m
+#             - name: discovery.zen.ping.unicast.hosts
+#               value: elasticsearch
+#           volumeMounts:
+#             - mountPath: "/usr/share/elasticsearch/data"
+#               name: elasticsearch-pv
+# {{- end }}

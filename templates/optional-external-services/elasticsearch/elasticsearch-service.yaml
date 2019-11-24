@@ -1,18 +1,19 @@
-{{- if eq .Values.deployment "full" }}
-apiVersion: v1
-kind: Service
-metadata:
-  name: elasticsearch
-spec:
-  selector:
-    app: elasticsearch
-  ports:
-    - name: main
-      protocol: TCP
-      port: 9200
-      targetPort: 9200
-    - name: transport
-      protocol: TCP
-      port: 9300
-      targetPort: 9300
-{{- end}}
+# TODO: fix - currently not working
+# {{- if eq .Values.deployment "full" }}
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: elasticsearch
+# spec:
+#   selector:
+#     app: elasticsearch
+#   ports:
+#     - name: main
+#       protocol: TCP
+#       port: 9200
+#       targetPort: 9200
+#     - name: transport
+#       protocol: TCP
+#       port: 9300
+#       targetPort: 9300
+# {{- end}}
