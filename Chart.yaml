@@ -1,9 +1,9 @@
 apiVersion: v1
-appVersion: "0.62.0"
+appVersion: "0.65.0"
 description: Self-Service Data Analytics for the Industrial IoT
 name: streampipes-helm-chart
 home: https://streampipes.org
-version: 0.62.0
+version: 0.65.0
 icon: https://avatars1.githubusercontent.com/u/33908576
 maintainers:
   - name: Dominik Riemer
@@ -12,3 +12,5 @@ maintainers:
     email: zehnder@fzi.de
   - name: Samuel Abt
     email: abt@fzi.de
+  - name: Patrick Wiener
+    email: wiener@fzi.de

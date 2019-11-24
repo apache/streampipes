@@ -1,0 +1,27 @@
+{{- if eq .Values.deployment "full" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobmanager
+spec:
+  selector:
+    matchLabels:
+      app: jobmanager
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jobmanager
+    spec:
+      containers:
+        - name: jobmanager
+          image: flink:{{ .Values.external.flinkVersion }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          args: ["jobmanager"]
+          ports:
+            - containerPort: 8081
+            - containerPort: 6123
+          env:
+            - name: JOB_MANAGER_RPC_ADDRESS
+              value: jobmanager
+{{- end }}

@@ -1,0 +1,28 @@
+{{- if (eq .Values.deployment "full") }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: processors-transformation-jvm
+spec:
+  selector:
+    matchLabels:
+      app: processors-transformation-jvm
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: processors-transformation-jvm
+    spec:
+      initContainers:
+        - name: init-wait-consul
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8600 && exit 0 || sleep 3; done; exit 1"]
+      containers:
+        - name: processors-transformation-jvm
+          image: {{ .Values.streampipes.registry }}/processors-transformation-jvm:{{ .Values.streampipes.version }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - containerPort: 8090
+      imagePullSecrets:
+        - name: gitlab-registry
+{{- end }}

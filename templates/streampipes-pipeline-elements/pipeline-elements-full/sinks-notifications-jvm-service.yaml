@@ -1,0 +1,16 @@
+{{- if (eq .Values.deployment "full") }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: sinks-notifications-jvm
+  labels:
+    name: sinks-notifications-jvm
+spec:
+  selector:
+    app: sinks-notifications-jvm
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8090
+      targetPort: 8090
+{{- end }}

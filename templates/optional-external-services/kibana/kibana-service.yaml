@@ -1,0 +1,14 @@
+{{- if eq .Values.deployment "full" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+spec:
+  selector:
+    app: kibana
+  ports:
+    - name: main
+      protocol: TCP
+      port: 5601
+      targetPort: 5601
+{{- end }}

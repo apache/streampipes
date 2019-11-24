@@ -1,20 +1,30 @@
-# Streampipes Helm Chart
+# StreamPipes Helm Chart
+StreamPipes helm chart to deploy StreamPipes on Kubernetes.
 
-## Installation
+Currently: **StreamPipes v0.65.0**
 
-Requires Helm (https://helm.sh/) and an active connection to a kubernetes cluster with a running tiller server
+## Prerequisite
 
-```sh
-$ brew install helm kubernetes-cli
-```
+Requires Helm (https://helm.sh/) and an active connection to a kubernetes cluster with a running tiller server.
+
+Tested with:
+* Kubernetes v1.14.8
+* Helm v2.16.1
 
 ## Start Streampipes
 
-Run command in chart directory
+Run command:
 
 ```sh
-helm install ./ --name streampipes
+helm install ./ --name streampipes --set deployment=lite
 ```
 
-## Known problems
-kafka must be kafka-service
+```sh
+helm install ./ --name streampipes --set deployment=full
+```
+
+## Delete StreamPipes
+
+```sh
+helm del --purge streampipes
+```

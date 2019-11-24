@@ -1,0 +1,8 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: streampipes
+spec:
+  backend:
+    serviceName: nginx
+    servicePort: 80

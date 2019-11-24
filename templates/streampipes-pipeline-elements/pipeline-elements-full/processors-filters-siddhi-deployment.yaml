@@ -1,0 +1,28 @@
+{{- if (eq .Values.deployment "full") }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: processors-filters-siddhi
+spec:
+  selector:
+    matchLabels:
+      app: processors-filters-siddhi
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: processors-filters-siddhi
+    spec:
+      initContainers:
+        - name: init-wait-consul
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8600 && exit 0 || sleep 3; done; exit 1"]
+      containers:
+        - name: processors-filters-siddhi
+          image: {{ .Values.streampipes.registry }}/processors-filters-siddhi:{{ .Values.streampipes.version }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - containerPort: 8090
+      imagePullSecrets:
+        - name: gitlab-registry
+{{- end }}

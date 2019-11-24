@@ -1,0 +1,29 @@
+{{- if eq .Values.deployment "full" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iotdb
+spec:
+  selector:
+    matchLabels:
+      app: iotdb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: iotdb
+    spec:
+      volumes:
+        - name: iotdb-pv
+          persistentVolumeClaim:
+            claimName: iotdb-pvc
+      containers:
+        - name: iotdb
+          image: xingtanzjr/iotdb:{{ .Values.external.iotdbVersion }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - containerPort: 6667
+          volumeMounts:
+            - mountPath: "/iotdb/data"
+              name: iotdb-pv
+{{- end }}
