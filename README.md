@@ -11,7 +11,7 @@ Tested with:
 * Kubernetes v1.14.8
 * Helm v2.16.1
 
-## Start Streampipes
+## Start StreamPipes
 
 Run command:
 
