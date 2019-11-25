@@ -102,7 +102,7 @@ public class MySqlClient {
 
     for (Column column : columns) {
       allProperties.add(PrimitivePropertyBuilder
-              .create(column.getType(), database + "." + table + "." + column.getName())
+              .create(column.getType(), column.getName())
               .label(column.getName())
               .build());
     }

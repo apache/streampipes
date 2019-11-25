@@ -114,7 +114,7 @@ public class MySqlSetAdapter extends SpecificDataSetAdapter {
                 .requiredTextParameter(Labels.from(MySqlClient.DATABASE, "Database", "Database in which the table is located"))
                 .requiredTextParameter(Labels.from(MySqlClient.TABLE, "Table", "Table which should be watched"))
                 .requiredTextParameter(Labels.from(MySqlClient.USER, "Username", "Username of the user"))
-                .requiredTextParameter(Labels.from(MySqlClient.PASSWORD, "Password", "Password of the user"))
+                .requiredSecret(Labels.from(MySqlClient.PASSWORD, "Password", "Password of the user"))
                 .requiredSingleValueSelection(Labels.from(MySqlClient.REPLACE_NULL_VALUES, "Replace Null Values", "Should null values in the incoming data be replace by defaults? If not, these events are skipped"),
                         Options.from(
                                 new Tuple2<>("Yes", MySqlClient.DO_REPLACE_NULL_VALUES),
@@ -173,7 +173,7 @@ public class MySqlSetAdapter extends SpecificDataSetAdapter {
                 extractor.singleValue(MySqlClient.DATABASE, String.class),
                 extractor.singleValue(MySqlClient.TABLE, String.class),
                 extractor.singleValue(MySqlClient.USER, String.class),
-                extractor.singleValue(MySqlClient.PASSWORD, String.class));
+                extractor.secretValue(MySqlClient.PASSWORD));
     }
 
     public MySqlClient getMySqlClient() {

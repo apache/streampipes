@@ -90,7 +90,7 @@ public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
                 .requiredTextParameter(Labels.from(InfluxDbClient.DATABASE, "Database", "Name of the database"))
                 .requiredTextParameter(Labels.from(InfluxDbClient.MEASUREMENT, "Measurement", "Name of the measurement, which should be observed"))
                 .requiredTextParameter(Labels.from(InfluxDbClient.USERNAME, "Username", "The username to log into the InfluxDB"))
-                .requiredTextParameter(Labels.from(InfluxDbClient.PASSWORD, "Password", "The password to log into the InfluxDB"))
+                .requiredSecret(Labels.from(InfluxDbClient.PASSWORD, "Password", "The password to log into the InfluxDB"))
                 .requiredSingleValueSelection(Labels.from(InfluxDbClient.REPLACE_NULL_VALUES, "Replace Null Values", "Should null values in the incoming data be replace by defaults? If not, these events are skipped"),
                         Options.from(
                                 new Tuple2<>("Yes", InfluxDbClient.DO_REPLACE),
@@ -149,7 +149,7 @@ public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
                 extractor.singleValue(InfluxDbClient.DATABASE, String.class),
                 extractor.singleValue(InfluxDbClient.MEASUREMENT, String.class),
                 extractor.singleValue(InfluxDbClient.USERNAME, String.class),
-                extractor.singleValue(InfluxDbClient.PASSWORD, String.class),
+                extractor.secretValue(InfluxDbClient.PASSWORD),
                 replace.equals(InfluxDbClient.DO_REPLACE));
     }
 

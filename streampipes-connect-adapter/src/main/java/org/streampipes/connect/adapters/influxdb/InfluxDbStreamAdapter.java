@@ -67,7 +67,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
                     break;
                 }
                 List<List<Object>> queryResult = influxDbClient.query("SELECT " + influxDbClient.getColumnsString()
-                        + " FROM cpu WHERE time > " + lastTimestamp + " ORDER BY time ASC ");
+                        + " FROM " + influxDbClient.getMeasurement() + " WHERE time > " + lastTimestamp + " ORDER BY time ASC ");
                 if (queryResult.size() > 0) {
                     // The last element has the highest timestamp (ordered asc) -> Set the new latest timestamp
                     lastTimestamp = getTimestamp((String)queryResult.get(queryResult.size() - 1).get(0));
@@ -120,11 +120,11 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
                 "InfluxDB Stream Adapter",
                 "Creates a data stream for a InfluxDB measurement")
                 .requiredTextParameter(Labels.from(InfluxDbClient.HOST, "Hostname", "Hostname of the InfluxDB Server (needs an \"http://\" in front)"))
-                .requiredIntegerParameter(Labels.from(InfluxDbClient.PORT, "Port", "Port of the InfluxDB Server"))
+                .requiredIntegerParameter(Labels.from(InfluxDbClient.PORT, "Port", "Port of the InfluxDB Server (e.g. 8086"), 8086)
                 .requiredTextParameter(Labels.from(InfluxDbClient.DATABASE, "Database", "Name of the database"))
                 .requiredTextParameter(Labels.from(InfluxDbClient.MEASUREMENT, "Measurement", "Name of the measurement, which should be observed"))
                 .requiredTextParameter(Labels.from(InfluxDbClient.USERNAME, "Username", "The username to log into the InfluxDB"))
-                .requiredTextParameter(Labels.from(InfluxDbClient.PASSWORD, "Password", "The password to log into the InfluxDB"))
+                .requiredSecret(Labels.from(InfluxDbClient.PASSWORD, "Password", "The password to log into the InfluxDB"))
                 .requiredIntegerParameter(Labels.from(POLLING_INTERVAL, "Polling interval (MS)", "How often the database should be checked for new entries (in MS)"))
                 .requiredSingleValueSelection(Labels.from(InfluxDbClient.REPLACE_NULL_VALUES, "Replace Null Values", "Should null values in the incoming data be replace by defaults? If not, these events are skipped"),
                         Options.from(
@@ -186,7 +186,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
                 extractor.singleValue(InfluxDbClient.DATABASE, String.class),
                 extractor.singleValue(InfluxDbClient.MEASUREMENT, String.class),
                 extractor.singleValue(InfluxDbClient.USERNAME, String.class),
-                extractor.singleValue(InfluxDbClient.PASSWORD, String.class),
+                extractor.secretValue(InfluxDbClient.PASSWORD),
                 replace.equals(InfluxDbClient.DO_REPLACE));
 
     }

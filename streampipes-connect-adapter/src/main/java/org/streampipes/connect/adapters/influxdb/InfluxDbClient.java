@@ -176,7 +176,8 @@ public class InfluxDbClient {
         }
         List<List<Object>> fieldKeys = query("SHOW FIELD KEYS FROM " + measurement);
         List<List<Object>> tagKeys = query("SHOW TAG KEYS FROM " + measurement);
-        if (fieldKeys.size() == 0 || tagKeys.size() == 0) {
+//        if (fieldKeys.size() == 0 || tagKeys.size() == 0) {
+        if (fieldKeys.size() == 0) {
             throw new AdapterException("Error while checking the Schema (does the measurement exist?)");
         }
 
