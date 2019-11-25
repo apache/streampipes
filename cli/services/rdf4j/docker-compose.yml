@@ -1,0 +1,17 @@
+version: "2"
+services:
+  rdf4j:
+    image: streampipes/rdf4j
+    ports:
+      - "8031:8031"
+    volumes:
+      - rdf4j:/root/.RDF4J
+    networks:
+      spnet:
+
+volumes:
+  rdf4j:
+
+networks:
+  spnet:
+    external: true

@@ -1,0 +1,7 @@
+activemq
+kafka
+consul
+zookeeper
+couchdb
+kafka-rest
+test-connect-datasources-rest

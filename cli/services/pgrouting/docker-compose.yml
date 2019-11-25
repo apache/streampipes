@@ -1,0 +1,21 @@
+version: "2"
+services:
+  pgrouting:
+    image: starefossen/pgrouting
+    environment:
+      - POSTGRES_PASSWORD=streampipes
+      - POSTGRES_USER=streampipes
+      - POSTGRES_DB=streampipes
+    ports:
+      - "65432:5432"
+    volumes:
+      - pgrouting_data:/var/lib/postgresql/data
+    networks:
+      spnet:
+
+volumes:
+  pgrouting_data:
+
+networks:
+  spnet:
+    external: true

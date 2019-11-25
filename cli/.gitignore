@@ -1,0 +1,8 @@
+config/
+.env
+.DS_Store
+.idea
+
+*-generated
+
+system

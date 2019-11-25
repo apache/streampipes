@@ -1,0 +1,25 @@
+version: "2"
+services:
+  influxdb:
+    image: influxdb:1.7
+    ports:
+      - "8083:8083"
+      - "8086:8086"
+      - "8090:8090"
+    environment:
+      - INFLUXDB_DATA_ENGINE=tsm1
+      - INFLUXDB_REPORTING_DISABLED=false
+      - INFLUXDB_ADMIN_ENABLED=true
+    volumes:
+      # Data persistency
+      # sudo mkdir -p /srv/docker/influxdb/data
+      - influx:/var/lib/influxdb
+    networks:
+      spnet:
+
+volumes:
+  influx:
+
+networks:
+  spnet:
+    external: true

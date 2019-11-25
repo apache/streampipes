@@ -1,0 +1,10 @@
+version: "2.0"
+services:
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8050:80
+    environment:
+      PMA_ARBITRARY: 1
+    networks:
+      spnet:

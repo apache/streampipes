@@ -1,0 +1,11 @@
+nginx
+backend
+consul
+connect-master
+connect-worker-main
+couchdb
+activemq
+kafka
+kafka-rest
+zookeeper
+app-container

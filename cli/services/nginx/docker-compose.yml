@@ -1,0 +1,18 @@
+version: "2"
+services:
+  nginx:
+    image: ${SP_DOCKER_REGISTRY}streampipes/ui/dev
+    ports:
+      - "80:80"
+    depends_on:
+      - couchdb
+      - activemq
+      - consul
+      - connect-master
+      - backend
+    networks:
+      spnet:
+
+networks:
+  spnet:
+    external: true

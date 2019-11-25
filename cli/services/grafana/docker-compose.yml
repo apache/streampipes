@@ -1,0 +1,17 @@
+version: "2"
+services:
+  grafana:
+    image: grafana/grafana:5.4.2
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana:/var/lib/grafana
+    networks:
+      spnet:
+
+volumes:
+  grafana:
+
+networks:
+  spnet:
+    external: true

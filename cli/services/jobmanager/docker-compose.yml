@@ -1,0 +1,16 @@
+version: "2"
+services:
+  jobmanager:
+    image: flink:1.9.1-scala_2.11
+    ports:
+      - "8081:8081"
+      - "6123:6123"
+    command: jobmanager
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    networks:
+      spnet:
+
+networks:
+  spnet:
+    external: true

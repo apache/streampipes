@@ -1,0 +1,18 @@
+version: "2"
+services:
+  taskmanager:
+    image: flink:1.9.1-scala_2.11
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    links:
+      - "jobmanager:jobmanager"
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+      - TASK_MANAGER_NUMBER_OF_TASK_SLOTS=20
+    networks:
+      spnet:
+
+networks:
+  spnet:
+    external: true

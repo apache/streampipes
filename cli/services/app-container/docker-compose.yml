@@ -1,0 +1,17 @@
+version: "2"
+services:
+  app-container:
+    image: ${SP_DOCKER_REGISTRY}streampipes/app-container/master:latest
+    ports:
+      - "3002:3000"
+    volumes:
+      - "../../apps:/usr/src/app/public/apps"
+    networks:
+      spnet:
+
+volumes:
+  connect:
+
+networks:
+  spnet:
+    external: true

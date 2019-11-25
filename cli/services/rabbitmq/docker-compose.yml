@@ -1,0 +1,15 @@
+version: "2"
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - ./services/rabbittmq/rabbitmq-isolated.conf:/etc/rabbitmq/rabbitmq.config
+    networks:
+      spnet:
+
+networks:
+  spnet:
+    external: true

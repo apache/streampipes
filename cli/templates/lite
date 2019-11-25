@@ -1,0 +1,12 @@
+activemq
+backend
+consul
+connect-master
+connect-worker-main
+couchdb
+kafka
+kafka-rest
+nginx
+sources-watertank-simulator
+zookeeper
+pipeline-elements-all-jvm
