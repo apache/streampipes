@@ -53,6 +53,8 @@
         <module>streampipes-processors-transformation-jvm</module>
         <module>streampipes-pipeline-elements-all-jvm</module>
         <module>streampipes-pipeline-elements-data-simulator</module>
+
+        <module>streampipes-connect-adapters</module>
     </modules>
 
     <properties>

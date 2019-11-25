@@ -61,6 +61,26 @@ github:
   only:
     - dev
     - master
+    - merge
+
+docker-connect-container:
+  image: docker:17.06.0-ce
+  stage: docker
+  dependencies:
+    - build
+  script:
+    - export MVN_VERSION=$(cat ./target/mvn_version)
+    - cd streampipes-connect-adapters/streampipes-connect-adapter
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+    - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
+    - docker build --pull -t $IMAGE_NAME/streampipes-connect-worker:latest -t $IMAGE_NAME/streampipes-connect-worker:$MVN_VERSION -t $HARBOR_IMAGE_NAME/streampipes-connect-worker:latest -t $HARBOR_IMAGE_NAME/streampipes-connect-worker:$MVN_VERSION .
+    - docker push $IMAGE_NAME/streampipes-connect-worker:$MVN_VERSION
+    - docker push $IMAGE_NAME/streampipes-connect-worker:latest
+    - docker push $HARBOR_IMAGE_NAME/streampipes-connect-worker:$MVN_VERSION
+    - docker push $HARBOR_IMAGE_NAME/streampipes-connect-worker:latest
+  only:
+    - dev
+    - merge
 
 
 .docker_script: &docker_script
@@ -79,6 +99,7 @@ github:
      - docker push $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest
    only:
      - dev
+     - merge
 
 .docker_hub: &docker_hub_script
   image: docker:17.06.0-ce
@@ -105,6 +126,7 @@ deploy:
       - ./**/*.jar
   only:
     - dev
+    - merge
 
 start release:
   image: maven:3-jdk-8
