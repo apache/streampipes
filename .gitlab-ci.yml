@@ -42,6 +42,7 @@ build:
   artifacts:
     paths:
       - ./*/target/*.jar
+      - ./streampipes-connect-adapters/streampipes-connect-adapter/target/*.jar
       - ./target/mvn_version
     expire_in:  1 hour
   except:
