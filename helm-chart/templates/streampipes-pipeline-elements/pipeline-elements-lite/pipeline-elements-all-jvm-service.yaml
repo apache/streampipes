@@ -1,0 +1,16 @@
+{{- if (eq .Values.deployment "lite") }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: pipeline-elements-all-jvm
+  labels:
+    name: pipeline-elements-all-jvm
+spec:
+  selector:
+    app: pipeline-elements-all-jvm
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8090
+      targetPort: 8090
+{{- end }}

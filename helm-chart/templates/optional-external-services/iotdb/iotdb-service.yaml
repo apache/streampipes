@@ -1,0 +1,14 @@
+{{- if eq .Values.deployment "full" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: iotdb
+spec:
+  selector:
+    app: iotdb
+  ports:
+    - name: main
+      protocol: TCP
+      port: 6667
+      targetPort: 6667
+{{- end}}

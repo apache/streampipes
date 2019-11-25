@@ -1,0 +1,16 @@
+{{- if (eq .Values.deployment "full") }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: processors-enricher-flink
+  labels:
+    name: processors-enricher-flink
+spec:
+  selector:
+    app: processors-enricher-flink
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8090
+      targetPort: 8090
+{{- end }}

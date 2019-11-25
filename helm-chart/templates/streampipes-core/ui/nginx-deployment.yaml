@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      initContainers:
+        - name: init-wait-backend
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 backend 8030 && exit 0 || sleep 3; done; exit 1"]
+        - name: init-wait-connect-master
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 connect-master 8099 && exit 0 || sleep 3; done; exit 1"]
+        - name: init-wait-consul
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8600 && exit 0 || sleep 3; done; exit 1"]
+        - name: init-wait-couchdb
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 couchdb 5984 && exit 0 || sleep 3; done; exit 1"]
+        - name: init-wait-activemq
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 activemq 61614 && exit 0 || sleep 3; done; exit 1"]
+      containers:
+        - name: nginx
+          image: {{ .Values.streampipes.registry }}/ui:{{ .Values.streampipes.version }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - containerPort: 80
+        # This is necessary because a custom dns resolver is set in nginx default conf
+        - name: dnsmasq
+          image: janeczku/go-dnsmasq:release-1.0.7
+          args:
+            - --listen
+            - "127.0.0.11:53"
+            - --default-resolver
+            - --append-search-domains
+            - --hostsfile=/etc/hosts
+            - --verbose
+      imagePullSecrets:
+        - name: gitlab-registry

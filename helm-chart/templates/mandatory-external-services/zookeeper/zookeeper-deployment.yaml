@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper
+spec:
+  selector:
+    matchLabels:
+      app: zookeeper
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      volumes:
+        - name: zookeeper-pv
+          persistentVolumeClaim:
+            claimName: zookeeper-pvc
+      containers:
+        #TODO: wurstmeister/zookeeper:latest is running ZK 3.4.13. Once this
+        #      changes, the mount path needs to be adapted
+        - name: zookeeper
+          image: wurstmeister/zookeeper
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - containerPort: 2181
+          volumeMounts:
+            - mountPath: "/opt/zookeeper-{{ .Values.external.zookeeperVersion }}/data"
+              name: zookeeper-pv

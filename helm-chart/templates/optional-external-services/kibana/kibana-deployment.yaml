@@ -1,0 +1,31 @@
+{{- if eq .Values.deployment "full" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+spec:
+  selector:
+    matchLabels:
+      app: kibana
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      initContainers:
+        - name: init-wait-elasticsearch
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 elasticsearch 9200 && exit 0 || sleep 3; done; exit 1"]
+      containers:
+        - name: kibana
+          image: docker.elastic.co/kibana/kibana-oss:{{ .Values.external.kibanaVersion }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - containerPort: 5601
+          env:
+            - name: ELASTICSEARCH_URL
+              value: http://elasticsearch:9200
+            - name: SERVER_NAME
+              value: kibana
+{{- end }}

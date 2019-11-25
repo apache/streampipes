@@ -1,0 +1,22 @@
+{{- if eq .Values.deployment "full" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: influxdb
+spec:
+  selector:
+    app: influxdb
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8083
+      targetPort: 8083
+    - name: api
+      protocol: TCP
+      port: 8086
+      targetPort: 8086
+    - name: internal
+      protocol: TCP
+      port: 8090
+      targetPort: 8090
+{{- end}}

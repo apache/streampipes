@@ -1,0 +1,13 @@
+# TODO: fix - currently not working
+# {{- if eq .Values.deployment "full" }}
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: elasticsearch-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 5Gi
+# {{- end}}

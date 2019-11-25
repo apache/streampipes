@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-rest
+spec:
+  selector:
+    matchLabels:
+      app: kafka-rest
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kafka-rest
+    spec:
+      initContainers:
+        - name: init-wait-consul
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 zookeeper 2181 && exit 0 || sleep 3; done; exit 1"]
+      containers:
+        - name: kafka-rest
+          image:  confluentinc/cp-kafka-rest:{{ .Values.external.kafkarestVersion }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          # known issue:
+          # https://github.com/confluentinc/cp-docker-images/issues/286
+          command: ["bash", "-c", "unset KAFKA_REST_PORT; /etc/confluent/docker/run"]
+          ports:
+            - containerPort: 8082
+          env:
+            - name: KAFKA_REST_HOST_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: KAFKA_REST_ZOOKEEPER_CONNECT
+              value: zookeeper:2181
