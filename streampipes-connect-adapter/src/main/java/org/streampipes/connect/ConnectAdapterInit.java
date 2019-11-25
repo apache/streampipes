@@ -17,7 +17,8 @@
 
 package org.streampipes.connect;
 
-import org.streampipes.connect.adapter.generic.protocol.set.HttpProtocol;
+import org.streampipes.connect.adapters.plc4x.passive.Plc4xPassiveAdapter;
+import org.streampipes.connect.protocol.set.HttpProtocol;
 import org.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
 import org.streampipes.connect.adapters.gdelt.GdeltAdapter;
 import org.streampipes.connect.adapters.iex.IexCloudNewsAdapter;
@@ -27,6 +28,7 @@ import org.streampipes.connect.adapters.influxdb.InfluxDbStreamAdapter;
 import org.streampipes.connect.adapters.mysql.MySqlSetAdapter;
 import org.streampipes.connect.adapters.mysql.MySqlStreamAdapter;
 import org.streampipes.connect.adapters.opcua.OpcUaAdapter;
+import org.streampipes.connect.adapters.plc4x.s7.Plc4xS7Adapter;
 import org.streampipes.connect.adapters.ros.RosBridgeAdapter;
 import org.streampipes.connect.adapters.simulator.RandomDataSetAdapter;
 import org.streampipes.connect.adapters.simulator.RandomDataStreamAdapter;
@@ -37,7 +39,12 @@ import org.streampipes.connect.config.ConnectWorkerConfig;
 import org.streampipes.connect.container.worker.init.AdapterWorkerContainer;
 import org.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.streampipes.connect.protocol.set.FileProtocol;
-import org.streampipes.connect.protocol.stream.*;
+import org.streampipes.connect.protocol.stream.FileStreamProtocol;
+import org.streampipes.connect.protocol.stream.HDFSProtocol;
+import org.streampipes.connect.protocol.stream.KafkaProtocol;
+import org.streampipes.connect.protocol.stream.MqttProtocol;
+import org.streampipes.connect.protocol.stream.HttpStreamProtocol;
+import org.streampipes.connect.protocol.stream.pulsar.PulsarProtocol;
 
 public class ConnectAdapterInit extends AdapterWorkerContainer {
 
@@ -53,6 +60,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new KafkaProtocol())
             .add(new MqttProtocol())
             .add(new HttpStreamProtocol())
+            .add(new PulsarProtocol())
 
             // Specific Adapters
             .add(new GdeltAdapter())
@@ -69,7 +77,8 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new RosBridgeAdapter())
             .add(new OpcUaAdapter())
             .add(new InfluxDbStreamAdapter())
-            .add(new InfluxDbSetAdapter());
+            .add(new InfluxDbSetAdapter())
+            .add(new Plc4xS7Adapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
     String masterUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerMasterUrl();
