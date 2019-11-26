@@ -1006,6 +1006,9 @@
                         <exclude>archetypes/streampipes-archetype-pe-sinks-jvm/src/main/resources/**</exclude>
                         <exclude>archetypes/streampipes-archetype-pe-sources/src/main/resources/**</exclude>
 
+                        <!-- Exclude UI directory for now -->
+                        <exclude>ui/**</exclude>
+
                         <!-- External vocabularies -->
                         <exclude>streampipes-measurement-units/src/main/resources/onto/**</exclude>
                     </excludes>

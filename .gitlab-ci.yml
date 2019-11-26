@@ -102,6 +102,7 @@ docker-ui:
   stage: docker
   dependencies:
     - build
+    - build-ui
   script:
     - export MVN_VERSION=$(cat ./target/mvn_version)
     - apk update
