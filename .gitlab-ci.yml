@@ -51,6 +51,37 @@ build:
     expire_in:  1 week
   except:
       - /release-.*$/
+
+build-ui:
+  image: node:8-alpine
+  stage: build
+  script:
+    - cd ui
+    - export NODE_PATH=/cache/node_modules
+    - export NODE_OPTIONS=--max_old_space_size=4096
+    - npm install --unsafe-perm
+    - npm run build
+  artifacts:
+    paths:
+      - ui/dist/assets/css/
+      - ui/dist/assets/img/
+      - ui/dist/assets/lib/
+      - ui/dist/assets/templates/
+      - ui/dist/assets/fonts/
+      - ui/dist/index.html
+      - ui/dist/main.bundle.js
+      - ui/dist/main.bundle.js.gz
+      - ui/dist/polyfills.bundle.js
+      - ui/dist/polyfills.bundle.js.gz
+      - ui/dist/style.bundle.css
+      - ui/dist/style.bundle.css.gz
+      - ui/dist/style.bundle.js
+      - ui/dist/style.bundle.js.gz
+      - ui/dist/style.css
+      - ui/dist/style.css.gz
+    expire_in: 1 hour
+  only:
+    - dev
       
 github:
   image: maven:3-jdk-8
@@ -66,6 +97,24 @@ github:
     - dev
     - master
 
+docker-ui:
+  image: docker:17.06.0-ce
+  stage: docker
+  dependencies:
+    - build
+  script:
+    - export MVN_VERSION=$(cat ./target/mvn_version)
+    - apk update
+    - apk add curl
+    - apk add unzip
+    #    - 'curl -k -f -L -H "PRIVATE-TOKEN: ${API_KEY}" -o javadoc.zip "https://ipe-wim-gitlab.fzi.de/streampipes/ce/-/jobs/artifacts/dev/download?job=build"'
+    #    - unzip javadoc.zip
+    #    - mkdir javadoc && mv target/site/apidocs/* ./javadoc
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+    - docker login -u zehnder -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST
+    - docker build --no-cache --pull -t $HARBOR_IMAGE_NAME/ui:$MVN_VERSION -t $IMAGE_NAME/ui:$MVN_VERSION ./ui
+    - docker push $IMAGE_NAME/ui:$MVN_VERSION
+    - docker push $HARBOR_IMAGE_NAME/ui:$MVN_VERSION
 
 docker-backend:
    image: docker:17.06.0-ce

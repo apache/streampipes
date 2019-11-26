@@ -24,33 +24,7 @@ stages:
 #    - npm install --unsafe-perm
 #    - npm test
 
-build:
-  image: node:8-alpine
-  stage: build
-  script:
-    - export NODE_PATH=/cache/node_modules
-    - export NODE_OPTIONS=--max_old_space_size=4096
-    - npm install --unsafe-perm
-    - npm run build
-  artifacts:
-    paths:
-      - dist/assets/css/
-      - dist/assets/img/
-      - dist/assets/lib/
-      - dist/assets/templates/
-      - dist/assets/fonts/
-      - dist/index.html
-      - dist/main.bundle.js
-      - dist/main.bundle.js.gz
-      - dist/polyfills.bundle.js
-      - dist/polyfills.bundle.js.gz
-      - dist/style.bundle.css
-      - dist/style.bundle.css.gz
-      - dist/style.bundle.js
-      - dist/style.bundle.js.gz
-      - dist/style.css
-      - dist/style.css.gz
-    expire_in: 1 hour
+
 
 github:
   image: maven:3-jdk-8
