@@ -25,7 +25,7 @@
         <version>0.65.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>streampipes-pipeline-elements</artifactId>
+    <artifactId>streampipes-extensions</artifactId>
     <version>0.65.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -516,11 +516,11 @@
     </build>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-pipeline-elements.git
+        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-extensions.git
         </developerConnection>
-        <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-pipeline-elements.git
+        <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-extensions.git
         </connection>
-        <url>https://github.com/streampipes/streampipes-pipeline-elements</url>
+        <url>https://github.com/streampipes/streampipes-extensions</url>
     </scm>
 
     <licenses>
