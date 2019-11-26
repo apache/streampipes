@@ -1,0 +1,60 @@
+<div fxFlex="100" fxLayout="column" style="margin-top:40px;">
+    <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch">
+        <div fxFlex="100" class="assemblyOptions sp-blue-bg" style="padding:5px;">
+            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
+                <h4>Kafka Settings</h4>
+                <span flex></span>
+            </div>
+        </div>
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="sp-blue-border page-container-padding-inner">
+            <form (ngSubmit)="updateMessagingSettings()" class="form-width" fxFlex="100" fxLayout="column" *ngIf="loadingCompleted">
+                <mat-form-field class="form-field" fxFlex="100">
+                    <input matInput [(ngModel)]="messagingSettings.batchSize"
+                           [placeholder]="'Batch Size'" type="text"
+                           [ngModelOptions]="{standalone: true}">
+                </mat-form-field>
+                <mat-form-field class="form-field" fxFlex="100">
+                    <input matInput [(ngModel)]="messagingSettings.messageMaxBytes"
+                           [placeholder]="'Message Max Bytes'" type="text"
+                           [ngModelOptions]="{standalone: true}">
+                </mat-form-field>
+                <mat-form-field class="form-field" fxFlex="100">
+                    <input matInput [(ngModel)]="messagingSettings.acks"
+                           [placeholder]="'Acks'" type="text"
+                           [ngModelOptions]="{standalone: true}">
+                </mat-form-field>
+                <mat-form-field class="form-field" fxFlex="100">
+                    <input matInput [(ngModel)]="messagingSettings.lingerMs"
+                           [placeholder]="'Linger MS'" type="text"
+                           [ngModelOptions]="{standalone: true}">
+                </mat-form-field>
+                <div fxLayoutAlign="end center">
+                    <button mat-raised-button color="primary" type="submit" class="md-raised md-primary submit-button">Update
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start stretch" style="margin-top:40px;">
+        <div fxFlex="100" class="assemblyOptions sp-blue-bg" style="padding:5px;">
+            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
+                <h4>Message Formats</h4>
+                <span flex></span>
+            </div>
+        </div>
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="sp-blue-border page-container-padding-inner">
+            <div cdkDropList class="data-format-list" (cdkDropListDropped)="drop($event)" *ngIf="loadingCompleted">
+                <div class="data-format-box" *ngFor="let format of messagingSettings.prioritizedFormats" cdkDrag>
+                    {{format}}
+                </div>
+            </div>
+            <div fxLayoutAlign="end center">
+                <button mat-raised-button color="primary" type="submit" class="md-raised md-primary submit-button" (click)="updateMessagingSettings()">Update
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

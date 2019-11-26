@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="EN" dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <base href="/" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>StreamPipes GUI</title>
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/jquery-ui.css">
+    <link rel="stylesheet" href="assets/css/epoch.min.css">
+    <link rel="stylesheet" href="assets/css/angular-material.css"/>
+    <link rel="stylesheet" href="assets/fonts/robotodraft.css"/>
+    <link href="assets/fonts/archivoRailwyRoboto.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/materialicons.css">
+    <link rel="stylesheet" href="assets/css/slick.min.css">
+    <link rel="stylesheet" href="assets/css/slick-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/trix.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/jquery.dataTables.min.css">
+
+    <!-- leafelet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+    <!-- leafelet -->
+
+    <!-- ng-pick-datetime -->
+    <link rel="stylesheet" href="assets/css/picker.min.css"/>
+    <!-- ng-pick-datetime -->
+
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="assets/img/favicon/apple-touch-icon-57x57.png?v=2"/>
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/img/favicon/apple-touch-icon-114x114.png?v=2"/>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/img/favicon/apple-touch-icon-72x72.png?v=2"/>
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/img/favicon/apple-touch-icon-144x144.png?v=2"/>
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="assets/img/favicon/apple-touch-icon-60x60.png?v=2"/>
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="assets/img/favicon/apple-touch-icon-120x120.png?v=2"/>
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="assets/img/favicon/apple-touch-icon-76x76.png?v=2"/>
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="assets/img/favicon/apple-touch-icon-152x152.png?v=2"/>
+    <link rel="icon" type="image/png" href="assets/img/favicon/favicon-196x196.png?v=2" sizes="196x196"/>
+    <link rel="icon" type="image/png" href="assets/img/favicon/favicon-96x96.png?v=2" sizes="96x96"/>
+    <link rel="icon" type="image/png" href="assets/img/favicon/favicon-32x32.png?v=2" sizes="32x32"/>
+    <link rel="icon" type="image/png" href="assets/img/favicon/favicon-16x16.png?v=2" sizes="16x16"/>
+    <link rel="icon" type="image/png" href="assets/img/favicon/favicon-128.png?v=2" sizes="128x128"/>
+
+    <meta name="application-name" content="&nbsp;"/>
+    <meta name="msapplication-TileColor" content="#FFFFFF"/>
+    <meta name="msapplication-TileImage" content="assets/img/favicon/mstile-144x144.png?v=2"/>
+    <meta name="msapplication-square70x70logo" content="assets/img/favicon/mstile-70x70.png?v=2"/>
+    <meta name="msapplication-square150x150logo" content="assets/img/favicon/mstile-150x150.png?v=2"/>
+    <meta name="msapplication-wide310x150logo" content="assets/img/favicon/mstile-310x150.png?v=2"/>
+    <meta name="msapplication-square310x310logo" content="assets/img/favicon/mstile-310x310.png?v=2"/>
+
+    <script type="text/javascript">
+        var domain = "";
+        var standardUrl = window.location.protocol + "//" + window.location.host + "/semantic-epa-backend/api/";
+    </script>
+</head>
+
+<body layout="row" ng-controller="AppCtrl as appCtrl">
+<app-root></app-root>
+<script type="text/javascript" src="assets/lib/please-wait.min.js"></script>
+<script type="text/javascript">
+    window.loading_screen = window.pleaseWait({
+        logo: "assets/img/sp/sp-logo-center-color.png",
+        backgroundColor: '#ffffff',
+        loadingHtml: "<div class='sk-rotating-plane'><div class='sk-rect3'></div></div>"
+
+    });
+</script>
+
+<div layout="column" style="height:100%;" role="main" tabindex="-1" flex>
+    <div class="sp-fade" ui-view="container" flex layout="column" style="min-height: 100vh"></div>
+</div>
+
+<script src="assets/lib/jquery-2.2.4.min.js"></script>
+<script type="text/javascript" src="assets/lib/jquery-ui.min.js"></script>
+<script type="text/javascript" src="assets/lib/jquery.dataTables.min.js"></script>
+<script src="assets/lib/d3.min.js"></script>
+<script type="text/javascript" src="assets/lib/jquery-touch-punch.js"></script>
+<script type="text/javascript" src="assets/lib/jsPlumb-2.1.0-min.js"></script>
+<script src="assets/lib/trix.js"></script>
+<script src="assets/lib/epoch.min.js"></script>
+<script src="assets/lib/jquery.panzoom.min.js"></script>
+<script src="assets/lib/system.js"></script>
+
+<!-- leafelet -->
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+<!-- leafelet -->
+
+
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch" style="margin-top:40px;">
+    <div fxFlex="100" class="assemblyOptions sp-blue-bg" style="padding:5px;">
+        <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
+            <h4>Pipeline Element Configuration</h4>
+            <span flex></span>
+        </div>
+    </div>
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="sp-blue-border">
+        <table fxFlex="100" mat-table [dataSource]="dataSource" multiTemplateDataRows>
+
+            <ng-container matColumnDef="status">
+                <th fxFlex="30" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Status</th>
+                <td fxFlex="30" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                            <span *ngIf="element.meta.status === 'passing'" fxLayoutAlign="center center">
+                                <mat-icon class="service-icon-passing">lens</mat-icon>
+                            </span>
+                    <span *ngIf="element.meta.status === 'critical'" fxLayoutAlign="center center">
+                                <mat-icon class="service-icon-critical">lens</mat-icon>
+                            </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th fxFlex="40" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Pipeline Element
+                    Container
+                </th>
+                <td fxFlex="40" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                    {{element.name}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+                <th fxFlex="30" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Action</th>
+                <td fxFlex="30" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                    <button mat-button mat-raised-button color="primary" (click)="expand(element)">
+                        Edit
+                    </button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+                    <div class="consul-configuration-detail"
+                         [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        <div fxFlex="100">
+                            <consul-configs [consulService]="element"
+                                            (updateConsulService)="updateConsulService($event)"></consul-configs>
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+                class="consul-configuration-row"
+                [class.consul-configuration-row-expanded]="expandedElement === element">
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="consul-configuration-detail-row"></tr>
+        </table>
+        <!--                <mat-paginator [pageSize]="20" [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons></mat-paginator>-->
+    </div>
+</div>

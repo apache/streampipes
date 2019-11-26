@@ -1,0 +1,62 @@
+<div flex class="page-container page-container-padding" ng-controller="SensorsCtrl as ctrl">
+    <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+        <div layout-fill>
+            <md-tabs md-border-bottom>
+                <md-tab label="Data Sources" md-on-select="ctrl.setSelectedTab('SOURCES')"></md-tab>
+                <md-tab label="Processing Elements" md-on-select="ctrl.setSelectedTab('EPAS')"></md-tab>
+                <md-tab label="Data Sinks" md-on-select="ctrl.setSelectedTab('SINKS')"></md-tab>
+            </md-tabs>
+        </div>
+    </div>
+
+    <div layout="column" flex="100" ng-if="ctrl.selectedTab === 'SOURCES'">
+        <ng-include src="'templates/sep-menu-bar.html'"></ng-include>
+        <div flex="100" layout="row" layout-align="center center" class="md-padding">
+            <div flex="100" layout="column" ng-if="ctrl.sourceSelected">
+                <div flex="none" layout-wrap layout="row">
+                    <h4 class="md-display-1">{{ctrl.selectedSource.name == '' ? 'Unnamed Element' :
+                        ctrl.selectedSource.name}}</h4>
+                </div>
+
+                <ng-include src="'templates/sep.html'"></ng-include>
+                <md-divider></md-divider>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div layout="column" flex="100" ng-if="ctrl.selectedTab === 'EPAS'">
+        <ng-include src="'templates/sepa-menu-bar.html'"></ng-include>
+        <div flex="100" layout="row" layout-align="center center" class="md-padding">
+            <div flex="100" layout="column" ng-if="ctrl.sepaSelected">
+                <div flex="none" layout-wrap layout="row">
+                    <h4 class="md-display-1">{{ctrl.selectedSepa.name == '' ? 'Unnamed Element' :
+                        ctrl.selectedSepa.name}}</h4>
+                </div>
+
+                <ng-include src="'templates/sepa.html'"></ng-include>
+                <md-divider></md-divider>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div layout="column" flex="100" ng-if="ctrl.selectedTab === 'SINKS'">
+        <ng-include src="'templates/sec-menu-bar.html'"></ng-include>
+        <div flex="100" layout="row" layout-align="center center" class="md-padding">
+            <div flex="100" layout="column" ng-if="ctrl.actionSelected">
+                <div flex="none" layout-wrap layout="row">
+                    <h4 class="md-display-1">{{ctrl.selectedAction.name == '' ? 'Unnamed Element' :
+                        ctrl.selectedAction.name}}</h4>
+                </div>
+                <md-content class="md-padding">
+                    <ng-include src="'templates/sec.html'"></ng-include>
+                    <md-divider></md-divider>
+                </md-content>
+            </div>
+        </div>
+    </div>
+</div>
+

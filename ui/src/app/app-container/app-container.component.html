@@ -1,0 +1,34 @@
+<div fxLayout="column" fxFlex="100" class="page-container page-container-padding page-container-connect">
+    <div fxLayout="row" style="padding:0px;background-color:#f6f6f6;">
+        <div fxLayoutAlign="end center" fxLayout="fill"
+            style="padding-right:10px; width:100%;min-height:50px;line-height:24px;border-bottom:1px solid #ccc;margin-bottom:1px;">
+            <div *ngIf="isAppActive">
+                <button mat-button mat-raised-button color="primary" (click)="appClosed()">
+                    Close App
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="!isAppActive">
+        <div fxFlex="100" fxLayout="column">
+            <h1>My apps</h1>
+            <mat-card class="example-card" *ngFor="let installedApp of installedApps">
+                <div fxFlex="100" fxLayout="row">
+                    <div fxFlex="75" fxLayout="column" fxLayoutAlign="center start">
+                        <mat-card-header>
+                            <mat-card-title> {{installedApp.name}} - {{installedApp.version}} </mat-card-title>
+                            <mat-card-subtitle>{{installedApp.description}}</mat-card-subtitle>
+                        </mat-card-header>
+                    </div>
+                    <div fxFlex="25" fxLayoutAlign="center end" fxLayout="column">
+                        <button mat-button mat-raised-button color="primary" (click)="activateApp(installedApp)">Open
+                            App
+                        </button>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+    <view *ngIf="isAppActive" [installedApp]="activeApp"></view>
+</div>

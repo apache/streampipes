@@ -1,0 +1,9 @@
+table {
+    background: none;
+    width: 100%;
+}
+
+.paging-button {
+    border: #202020 solid 1px;
+    margin: 5px;
+}

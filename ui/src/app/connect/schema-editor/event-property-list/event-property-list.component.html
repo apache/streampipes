@@ -1,0 +1,9 @@
+<div class="body">
+    <mat-form-field class="doubleWidth">
+        <mat-select placeholder="Runtime Type" [(ngModel)]="property.eventProperty.runtimeType">
+            <mat-option *ngFor="let dataType of runtimeDataTypes" [value]="dataType.url">
+                {{ dataType.label }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>

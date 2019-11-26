@@ -1,0 +1,57 @@
+<div [className]="className" fxFlex="100"
+ fxLayout="column">
+    <div fxLayout="column">
+        <div class="type" fxLayout="column" fxLayoutAlign="start start">
+            <div class="type-data" fxLayout="row" fxLayoutAlign="start start">
+                <mat-icon *ngIf="isDataSetDescription" class="historic">lens</mat-icon>
+                <mat-icon *ngIf="isDataStreamDescription" class="real-time">lens</mat-icon>
+                <p *ngIf="isDataSetDescription">Data Set</p>
+                <p *ngIf="isDataStreamDescription">Data Stream</p>
+            </div>
+        </div>
+        <div fxLayoutAlign="start center" fxLayout="column" class="icon">
+            <img *ngIf="adapter.iconUrl && !adapter.icon" [src]="'assets/img/connect/' +adapter.iconUrl" class="iconImg"/>
+            <img *ngIf="adapter.icon" [src]="adapter.icon" style="min-height: 50px;" class="iconImg"/>
+        </div>
+        <h3>{{adapter.label}}</h3>
+    </div>
+    <div fxLayout="row">
+        <div fxFlex="70" class="description" fxLayoutAlign="start start">
+            <p [innerHTML]="adapter.description"></p>
+        </div>
+        <div fxFlex="30" fxLayout="row" fxLayoutAlign="end end" *ngIf="isRunningAdapter" class="delete">
+            <button id="{{ 'create-template-' + adapter.label.split(' ').join('_') }}" matTooltip="Create Adapter Template" color="secondary" class="edit" mat-fab (click)="createTemplate(adapter)">
+                <i class="material-icons">
+                   file_copy
+                </i>
+            </button>
+            <button id="{{ 'delete-' + adapterLabel }}" matTooltip="Delete Adapter" color="primary" mat-fab (click)="deleteAdapter(adapter)" [disabled]="deleteInProgress(adapter.couchDbId)">
+                <i class="material-icons" *ngIf="!deleteInProgress(adapter.couchDbId)">
+                    delete
+                </i>
+                <mat-spinner *ngIf="deleteInProgress(adapter.couchDbId)" [diameter]="20" fxLayoutAlign="center"></mat-spinner>
+            </button>
+        </div>
+        <div fxFlex="30" fxLayout="row" fxLayoutAlign="end end" *ngIf="adapter.isTemplate" class="delete">
+            <button id="{{ 'share-template-' + adapterLabel }}" matTooltip="Delete Adapter Template" color="secondary" mat-fab (click)="shareAdapterTemplate(adapter); $event.stopPropagation()">
+                <i class="material-icons" *ngIf="!deleteInProgress(adapter.couchDbId)">
+                    share
+                </i>
+            </button>
+            <button id="{{ 'delete-template-' + adapterLabel }}" matTooltip="Share Adapter Template" color="primary" mat-fab (click)="deleteAdapterTemplate(adapter); $event.stopPropagation()" [disabled]="deleteInProgress(adapter.couchDbId)">
+                <i class="material-icons" *ngIf="!deleteInProgress(adapter.couchDbId)">
+                    delete
+                </i>
+                <mat-spinner *ngIf="deleteInProgress(adapter.couchDbId)" [diameter]="20" fxLayoutAlign="center"></mat-spinner>
+            </button>
+
+        </div>
+        <!--<div fxFlex="30" *ngIf="!adapter.couchDbId" fxLayout="row" fxLayoutAlign="end end">-->
+            <!--<button color="primary" mat-fab>-->
+                <!--<i class="material-icons">-->
+                    <!--add-->
+                <!--</i>-->
+            <!--</button>-->
+        <!--</div>-->
+    </div>
+</div>

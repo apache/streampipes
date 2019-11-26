@@ -1,0 +1,153 @@
+//stateConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
+declare const require: any;
+{{#modulesActive}}
+{{#ng5}}
+import { {{{ng5_component}}} } from '{{{ng5_componentPath}}}';
+{{/ng5}}
+{{/modulesActive}}
+import { HomeComponent } from '../home/home.component';
+import { InfoComponent } from '../info/info.component';
+import { AppContainerComponent } from '../app-container/app-container.component';
+
+export default function stateConfig($stateProvider, $urlRouterProvider) {
+
+    $urlRouterProvider.otherwise($injector => {
+        var $state = $injector.get('$state');
+        $state.go('streampipes');
+    });
+
+    var spNavbar = {
+            templateUrl: '../../assets/templates/navbar.html',
+    };
+
+    var spIconBar = {
+        templateUrl: '../../assets/templates/iconbar.html',
+    };
+
+    var container = {
+        templateUrl: '../../assets/templates/streampipes.html',
+    };
+
+    $stateProvider
+        .state('streampipes', {
+            url: '/streampipes',
+            views: {
+                'container': container,
+                'spNavbar@streampipes': spNavbar,
+                'spIconBar@streampipes': spIconBar,
+                'spMain@streampipes': {
+                    component: HomeComponent
+                }
+            }
+        })
+        .state('streampipes.pipelineDetails', {
+            url: '/pipelines/:pipeline/details',
+            params: {pipeline: null},
+            views: {
+                'spMain@streampipes': {
+                    template: require('../pipeline-details/pipeline-details.html')
+                }
+            }
+        })
+        .state('login', {
+            url: '/login/:target?session',
+            params: {target: null},
+            views: {
+                'container': {
+                    templateUrl: '../../assets/templates/login.html'
+                }
+            }
+        })
+        .state('startup', {
+            url: '/startup',
+            params: {target: null},
+            views: {
+                'container': {
+                    template: require('../login/startup/startup.html')
+                }
+            }
+        })
+        .state('streampipes.appcontainer', {
+            url: '/appcontainer',
+            views: {
+              'spMain@streampipes': {
+                component: AppContainerComponent,
+              },
+            },
+        })
+        /*
+        .state('streampipes.applinks', {
+            url: '/applinks',
+            views: {
+                "spMain@streampipes": {
+                    template: require('../applinks/applinks.tmpl.html')
+                }
+            }
+        })
+        */
+        .state('register', {
+            url: '/register',
+            views: {
+                'container': {
+                    templateUrl: '../../assets/templates/register.html'
+                }
+            }
+        })
+        .state('setup', {
+            url: '/setup',
+            views: {
+                'container': {
+                    templateUrl: '../../assets/templates/setup.html'
+                }
+            }
+        })
+        .state('streampipes.error', {
+            url: '/error',
+            views: {
+                'spMain@streampipes': {
+                    templateUrl: '../../assets/templates/error.html'
+                }
+            }
+        })
+        .state('streampipes.notifications', {
+            url: '/notifications',
+            views: {
+                'spMain@streampipes': {
+                    template: require('../notifications/notifications.html')
+                }
+            }
+        })
+        .state('streampipes.info', {
+                    url: '/info',
+                    views: {
+                        'spMain@streampipes': {
+                            component: InfoComponent
+                        }
+                    }
+                })
+        {{#modulesActive}}
+        {{^ng5}}
+        .state('{{{link}}}', {
+            url: '{{{url}}}',
+            {{#containsPipeline}}{{ng1_templateUrl}}{{/containsPipeline}}
+            views: {
+                "spMain@streampipes": {
+                    template: require('{{{ng1_templateUrl}}}')
+                }
+            }
+        })
+        {{/ng5}}
+        {{/modulesActive}}
+        {{#modulesActive}}
+        {{#ng5}}
+        .state('{{{link}}}', {
+            url: '{{{url}}}',
+            views: {
+                "spMain@streampipes": {
+                    component: {{{ng5_component}}}
+                }
+            }
+        })
+        {{/ng5}}
+        {{/modulesActive}};
+};

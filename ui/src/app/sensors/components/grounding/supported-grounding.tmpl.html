@@ -1,0 +1,10 @@
+<h4>Transport Protocols</h4>
+	<md-input-container flex> 
+		<md-checkbox ng-checked="ctrl.kafkaSelected(ctrl.grounding.transportProtocols)" ng-click="ctrl.toggleKafka(ctrl.grounding.transportProtocols)" ng-disabled="ctrl.disabled" >Supports Kafka Protocol</md-checkbox>
+		<md-checkbox ng-checked="ctrl.jmsSelected(ctrl.grounding.transportProtocols)" ng-click="ctrl.toggleJms(ctrl.grounding.transportProtocols)" ng-disabled="ctrl.disabled" >Supports JMS Protocol</md-checkbox>
+	</md-input-container>
+<h4>Transport Formats</h4>
+	<md-input-container flex> 
+		<md-checkbox ng-checked="ctrl.jsonSelected(ctrl.grounding.transportFormats)" ng-click="ctrl.toggleJson(ctrl.grounding.transportFormats)" ng-disabled="ctrl.disabled" >Supports JSON format</md-checkbox>
+		<md-checkbox ng-checked="ctrl.thriftSelected(ctrl.grounding.transportFormats)" ng-click="ctrl.toggleThrift(ctrl.grounding.transportFormats)" ng-disabled="ctrl.disabled" >Supports ProaSense Thrift format</md-checkbox>
+	</md-input-container>

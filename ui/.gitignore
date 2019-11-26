@@ -1,0 +1,63 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# apps
+src/assets/lib/apps/*
+
+
+# prebuild
+src/app/app.module.ts
+src/app/appng5.module.ts
+src/app/core/state.config.ts
+src/app/layout/toolbar.controller.ts
+src/app/home/home.service.ts
+src/app/services/version/version.service.ts
+
+# compiled output
+/dist
+/dist-server
+/tmp
+/out-tsc
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+npm-debug.log.*
+testem.log
+/typings
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+# System Files
+.DS_Store
+Thumbs.db
+
+bundle.js
+bundle.js.map
+
+.vscode/
+
+package-lock.json

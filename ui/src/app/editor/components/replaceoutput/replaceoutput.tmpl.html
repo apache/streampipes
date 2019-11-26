@@ -1,0 +1,12 @@
+<div ng-repeat="replaceOutput in ctrl.outputStrategy.properties.replaceProperties">
+    <md-select ng-model="ctrl.selection[replaceOutput.elementName]"  placeholder="Replace property">
+        <md-option ng-repeat="property in replaceOutput.replaceWithOptions" ng-value="property.properties.elementName">
+            <b>{{property.properties.runtimeName}}</b><br/>
+        </md-option>
+    </md-select>
+    <div ng-show="replaceOutput.renamingAllowed">
+        <md-input-container flex> <label>New property name</label>
+            <input ng-model="replaceOutput.runtimeName"/>
+        </md-input-container>
+    </div>
+</div>

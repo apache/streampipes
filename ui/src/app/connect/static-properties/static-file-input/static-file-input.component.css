@@ -1,0 +1,20 @@
+#formWrapper {
+    height: 60px;
+}
+
+p {
+    width: 100px;
+    float: left;
+    margin: 20px  15px 0 0;
+}
+form {
+    float: left;
+}
+
+.green-icon {
+    color: green;
+}
+
+.green-icon svg {
+    fill: green;
+}

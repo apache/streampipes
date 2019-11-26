@@ -1,0 +1,42 @@
+<div flex="100">
+    <config-item flex="100" layout="row" element-title="Select time field">
+        <div flex="100" layout="column">
+            <md-input-container class="md-block" flex-gt-sm>
+                <md-select ng-model="ctrl.wid.schema.config.selectedTimestampMapping">
+                    <md-option ng-value="time" ng-selected="index == 0"
+                               ng-repeat="(index, time) in ctrl.wid.schema.eventProperties | soDateTime">{{
+                        time.properties.runtimeName }}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+    </config-item>
+    <config-item flex="100" layout="row" element-title="Select number field">
+        <div flex="100" layout="column">
+            <md-input-container class="md-block" flex-gt-sm>
+                <md-select ng-model="ctrl.wid.schema.config.selectedNumberMapping">
+                    <md-option ng-value="lineValue" ng-selected="index == 0"
+                               ng-repeat="(index, lineValue) in ctrl.wid.schema.eventProperties | numberFilter">{{
+                        lineValue.properties.runtimeName }}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+    </config-item>
+    <config-item flex="100" layout="row" element-title="Range">
+        <div flex="100" layout="row">
+            <div flex="50">
+                <md-input-container>
+                    <label>Minimum</label>
+                    <input required ng-model="ctrl.wid.schema.config.range.min" style="color:black;">
+                </md-input-container>
+            </div>
+            <div flex="50">
+                <md-input-container>
+                    <label>Maximum</label>
+                    <input required ng-model="ctrl.wid.schema.config.range.max" style="color:black;">
+                </md-input-container>
+            </div>
+        </div>
+    </config-item>
+</div>

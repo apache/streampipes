@@ -1,0 +1,27 @@
+.md-toolbar {
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+    font-size: 20px;
+    min-height: 64px;
+    width: 100%;
+}
+
+.code-container {
+    position: relative;
+}
+
+.download-icon {
+    cursor: pointer;
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    font-size: 18px;
+}

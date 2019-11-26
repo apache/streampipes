@@ -1,0 +1,13 @@
+::ng-deep .mat-radio-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: rgb(27, 20, 100);
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: rgb(27, 20, 100);
+}
+

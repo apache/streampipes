@@ -1,0 +1,11 @@
+<div fxFlex="100" fxLayout="column">
+    <div fxLayout="row">
+        <div fxLayout="fill">
+            <h1>{{dashboardConfig.dashboardName}}</h1>
+        </div>
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+            <button mat-button mat-raised-button class="mat-basic" (click)="closeDashboard()">Close dashboard</button>
+        </div>
+    </div>
+    <div id="container" class="asset-view-canvas"></div>
+</div>

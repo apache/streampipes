@@ -1,0 +1,16 @@
+@import '../_variables';
+
+.pipeline-validation-summary {
+  background: white;
+  border-radius: 3px;
+  color: #5b5b5b;
+  padding: 2px 5px;
+  width:120px;
+  -moz-box-shadow:    inset 0 0 2px #5b5b5b;
+  -webkit-box-shadow: inset 0 0 2px #5b5b5b;
+  box-shadow:         inset 0 0 2px #5b5b5b;
+}
+
+.pipeline-validation-summary-error {
+  color: $sp-color-error;
+}

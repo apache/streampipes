@@ -1,0 +1,21 @@
+<div id="formWrapper" fxFlex="90" fxLayout="row">
+    <div fxFlex="20">
+        <p>{{staticProperty.label}}: </p>
+    </div>
+    <div fxFlex fxLayout="row">
+        <div fxLayout="column" *ngIf="showOptions || staticProperty.options">
+            <mat-radio-button *ngFor="let option of staticProperty.options"
+                              (click)="select(option.id)" [checked]="option.selected">
+                <label style="font-weight: normal; padding-top: 8px;">
+                    {{option.name}}
+                </label>
+            </mat-radio-button>
+        </div>
+        <div fxLayout="column" *ngIf="!showOptions && !staticProperty.options && !loading">
+            (waiting for input)
+        </div>
+        <div fxLayout="column" *ngIf="loading">
+            <mat-spinner [diameter]="20"></mat-spinner>
+        </div>
+    </div>
+</div>

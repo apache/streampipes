@@ -1,0 +1,44 @@
+<div flex="100">
+    <config-item flex="100" layout="row" element-title="Select value">
+        <div flex="100" layout="column">
+            <md-select ng-model="ctrl.wid.schema.selectedNumberProperty">
+                <md-option ng-value="prop" ng-selected="index == 0"
+                           ng-repeat="(index, prop) in ctrl.wid.schema.eventProperties | numberFilter">{{
+                    prop.properties.runtimeName
+                    }}
+                </md-option>
+            </md-select>
+        </div>
+    </config-item>
+
+    <config-item flex="100" layout="row" element-title="Critical Threshold">
+        <div flex="100" layout="row">
+            <div flex="50">
+                <md-input-container>
+                    <label>Operator</label>
+                    <md-select required ng-model="ctrl.wid.config.critical.operator">
+                        <md-option ng-value="'ge'">upper limit</md-option>
+                        <md-option ng-value="'le'">under limit</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <div flex="50">
+                <md-input-container>
+                    <label>Value</label>
+                    <input required ng-model="ctrl.wid.config.critical.value" style="color:black;">
+                </md-input-container>
+            </div>
+        </div>
+    </config-item>
+
+    <config-item flex="100" layout="row" element-title="Warning Range">
+        <div flex="100" layout="column">
+            <div flex="100">
+                <md-input-container>
+                    <label>Value</label>
+                    <input required ng-model="ctrl.wid.config.critical.range" style="color:black;">
+                </md-input-container>
+            </div>
+        </div>
+    </config-item>
+</div>

@@ -1,0 +1,25 @@
+
+<div fxFlex="100" fxLayout="column" style="margin: 0px; min-height: calc(100vh - 135px);">
+  <div class="assemblyOptions sp-blue-bg">
+    <h4>Uploaded Files</h4>
+  </div>
+  <div class="sp-blue-border">
+    <mat-list style="max-height: 300px; overflow-y: scroll" style="margin-top: -25px;">
+      <mat-list-item *ngFor="let url of urls" style="width: 100%">
+
+        <div mat-line>
+          <button mat-icon-button matTooltip="Copy File Path" (click)="copyText(url.url)">
+            <mat-icon>file_copy</mat-icon>
+          </button>
+          <label  style="font-weight: normal; padding-top: 8px;">
+            {{url.name}}
+          </label>
+        </div>
+        <button mat-icon-button (click)="delete(url.name)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-list>
+  </div>
+
+</div>

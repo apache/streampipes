@@ -1,0 +1,69 @@
+<div class="editorIconStandOptions" style="padding:0px;">
+    <div flex="100" layout="row" layout-align="start start" style="padding-top:2px;padding-left:10px;">
+
+        <div layout-align="start center" layout="row">
+            <div layout="row" style="margin-right: 5px">
+                <md-icon md-svg-icon="action:ic_search_24px" class="sp-accent"></md-icon>
+                <input type="text" ng-model="ctrl.elName" placeholder="Find Element"
+                       style="background-color:#f6f6f6;border: none;border-bottom: solid 2px rgb(27, 20, 100);">&nbsp;
+            </div>
+            <div layout="row">
+                <md-menu-bar>
+                    <md-menu>
+                        <button ng-click="$mdOpenMenu()" class="sp-accent">
+                            <md-icon md-svg-icon="action:ic_view_list_24px"
+                                     class="sp-accent"></md-icon>
+                            Filter by category
+                        </button>
+                        <md-menu-content>
+                            <md-menu-item class="md-indent">
+                                <md-icon md-svg-icon="action:ic_done_24px"
+                                         class="sp-accent"></md-icon>
+                                <md-button ng-click="ctrl.selectAllOptions()">&nbsp;Select all</md-button>
+                            </md-menu-item>
+                            <md-menu-item class="md-indent">
+                                <md-icon md-svg-icon="content:ic_clear_24px"
+                                         class="sp-accent"></md-icon>
+                                <md-button ng-click="ctrl.deselectAllOptions()">&nbsp;Deselect all</md-button>
+                            </md-menu-item>
+                            <md-menu-divider></md-menu-divider>
+                            <div ng-repeat="option in ctrl.availableOptions[ctrl.activeType] | orderBy: 'label'">
+                                <md-menu-item class="md-indent">
+                                    <md-icon md-svg-icon="action:ic_visibility_24px"
+                                             class="sp-accent"
+                                             ng-if="ctrl.optionSelected(option)"></md-icon>
+                                    <md-icon md-svg-icon="action:ic_visibility_off_24px"
+                                             class="sp-accent"
+                                             ng-if="!ctrl.optionSelected(option)"></md-icon>
+                                    <md-button ng-click="ctrl.toggleFilter(option)">&nbsp;{{option.label}}
+                                    </md-button>
+                                </md-menu-item>
+                            </div>
+                        </md-menu-content>
+                    </md-menu>
+                </md-menu-bar>
+            </div>
+        </div>
+    </div>
+</div>
+<div flex id="editor-icon-stand" class="icon-stand" ng-if="ctrl.currentElements">
+    <!-- selectFilter:ctrl.selectedOptions | -->
+    <span id="{{ element.name }}" ng-mouseover="ctrl.updateMouseOver(element.name)"
+          ng-mouseleave="ctrl.updateMouseOver('')"
+          ng-repeat="element in ctrl.currentElements |  selectFilter:ctrl.selectedOptions | elementNameFilter:ctrl.elName | orderBy: 'name'"
+          my-data-bind class="draggable-icon tt"
+          ng-class="element.type">
+        <span id="container" style="position:relative;display:block;width:80px;height:80px;">
+        <pipeline-element id="pe-icon-stand-{{ element.appId }}" style="margin-left:-3%" icon-stand-size="true" pipeline-element="element"
+                          preview="false"></pipeline-element>
+            <span style="display:block;width:100%;height:100%;position:absolute; top:0; left:0;"
+                  ng-if="ctrl.currentElementName==element.name">
+                <span class="help-button-icon-stand" style="z-index:10"><md-button
+                        ng-click="ctrl.openHelpDialog(element)"
+                        class="md-icon-button"
+                        style="margin:0px;font-size:20px;">?</md-button>
+                </span>
+                </span>
+        </span>
+    </span>
+</div>

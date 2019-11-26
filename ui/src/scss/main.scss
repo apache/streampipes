@@ -1,0 +1,42 @@
+@import './_variables';
+
+@import './thirdparty/spinkit';
+@import './thirdparty/please-wait';
+@import './thirdparty/jsplumb';
+@import './thirdparty/toastr';
+@import './thirdparty/prism';
+@import './thirdparty/loading-bar.min';
+@import './thirdparty/ng-prettyjson.min';
+@import './thirdparty/angular-ui-tree.min';
+@import './thirdparty/mlhr-table';
+@import './thirdparty/malhar-angular-dashboard';
+//@import './thirdparty/epoch.min';
+@import './thirdparty/trafficlight';
+@import './thirdparty/angularjs-datetime-picker';
+@import './thirdparty/angular-notification-icons.min';
+@import './thirdparty/indigo-pink';
+@import './thirdparty/shepherd-theme-default';
+@import './thirdparty/shepherd-theme-arrows';
+@import './thirdparty/shepherd-new';
+
+@import './sp/main';
+@import './sp/buttons';
+@import './sp/buttons.ng1';
+@import './sp/spinner';
+@import './sp/dialog';
+@import './sp/pipeline-element-options';
+@import './sp/pipeline-element-loading';
+@import './sp/pipeline-element';
+@import './sp/pipeline-validation';
+@import './sp/animations.ng1';
+@import './sp/mat-tab';
+@import './sp/dialog.ng5';
+@import './sp/feedback.ng1';
+
+@import './sp/input.ng1';
+@import './sp/documentation.ng1';
+@import './sp/stepper';
+
+@import './thirdparty/colors.scss';
+
+@import '~angular-tree-component/dist/angular-tree-component.css';

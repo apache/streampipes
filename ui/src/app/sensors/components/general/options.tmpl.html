@@ -1,0 +1,14 @@
+<h4>Options</h4>
+<div ng-repeat = "(index, option) in ctrl.options">
+	<div layout="column" flex="100" class="panel-margin ontology-panel-property">
+		<div flex="100" layout="row">
+				<div flex="70" layout="row" layout-align="start center">	<h5>Option {{index+1}}</h5></div>
+				<div flex="30" layout="row" layout-align="end center"><md-button  ng-disabled="ctrl.disabled" ng-click="ctrl.removeOption(ctrl.options, index)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Delete Option"></md-icon></md-button></div>
+		</div>
+		<md-input-container>
+    	<label>Label</label>
+        <input ng-model="option.name"  ng-disabled="ctrl.disabled">
+		</md-input-container>
+	</div>
+</div>
+<md-button class="md-accent" ng-click="ctrl.addOption(ctrl.options)" ng-disabled="ctrl.disabled">Add Option</md-button>

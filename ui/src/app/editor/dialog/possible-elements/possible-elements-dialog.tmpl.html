@@ -1,0 +1,32 @@
+<md-dialog aria-label="Compatible Elements" flex="80" style="height:80%;">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Compatible Elements</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content flex="100" class="md-dialog-content">
+        <md-list>
+        <md-list-item class="md-2-line" ng-repeat="possibleElement in ctrl.possibleElements | orderBy: '+name'" ng-click="ctrl.create(possibleElement)">
+            <div class="draggable-icon-preview {{possibleElement.type}}">
+                <pipeline-element pipeline-element="possibleElement" icon-size="true"></pipeline-element>
+            </div>
+            <div class="md-list-item-text">
+                <h3>{{ possibleElement.name }}</h3>
+                <p>{{ possibleElement.description }}</p>
+            </div>
+            <md-divider ></md-divider>
+        </md-list-item>
+        </md-list>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <sp-button sp-button-gray ng-click="ctrl.hide()">
+            Close
+        </sp-button>
+    </md-dialog-actions>
+</md-dialog>

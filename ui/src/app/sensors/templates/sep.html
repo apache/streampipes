@@ -1,0 +1,67 @@
+<div layout="row" flex="100" layout-align="center center" class="wizard-row" style="margin-bottom:5%;">
+    <div layout="column" flex="33" layout-align="center center">
+        <md-button ng-class="ctrl.getProducerActiveTabCss('basics')" aria-label="Basics"
+                   ng-click="ctrl.selectProducerTab('basics')">1
+        </md-button>
+        Basics
+    </div>
+    <div layout="column" flex="33" layout-align="center center">
+        <md-button ng-class="ctrl.getProducerActiveTabCss('streams')" aria-label="Streams"
+                   ng-click="ctrl.selectProducerTab('streams')">2
+        </md-button>
+        Streams
+    </div>
+    <div layout="column" flex="33" layout-align="center center">
+        <md-button ng-class="ctrl.getProducerActiveTabCss('deployment')" aria-label="Deployment"
+                   ng-click="ctrl.selectProducerTab('deployment')">3
+        </md-button>
+        Deployment
+    </div>
+</div>
+<div flex="100" layout-wrap class="md-whiteframe-z1">
+    <collapsible layout-wrap title-label="'Basics'" disabled="ctrl.disabled" removable="false" collapsible="false"
+                 subtitle="false" ng-if="ctrl.isProducerTabSelected('basics')">
+        <sepa-basics element="ctrl.selectedSource" disabled="ctrl.editingDisabled"></sepa-basics>
+    </collapsible>
+    <collapsible title-label="'Streams'" disabled="ctrl.disabled" removable="false" collapsible="false"
+                 ng-if="ctrl.isProducerTabSelected('streams')">
+        <sepa-streams element="ctrl.selectedSource.spDataStreams" disabled="ctrl.editingDisabled"></sepa-streams>
+        <div class="md-padding">
+            <md-list-item class="md-3-line" ng-repeat="(key, stream) in ctrl.selectedSource.spDataStreams track by $index">
+                <img ng-src="{{stream.iconUrl}}" class="md-avatar" alt="{{Icon}}"
+                     ng-show="stream.iconUrl != undefined"/>
+                <div flex="50" layout="row" layout-align="start center">
+                    <div class="md-list-item-text" layout="column">
+                        <h3>{{ stream.name == '' ? 'Unnamed stream' : stream.name }}</h3>
+                        <h4>{{ stream.description == '' ? '-' : stream.description}}</h4>
+                    </div>
+                </div>
+                <div flex="50" layout="row" layout-align="start center">
+                    <md-button class="md-accent" ng-click="ctrl.loadStreamDetails(stream, ctrl.editingDisabled)">View</md-button>
+                    <md-button class="md-accent" ng-click="ctrl.cloneStream(ctrl.selectedSource.spDataStreams, stream)">Clone
+                    </md-button>
+                    <md-button class="md-accent" ng-click="ctrl.loadStreamDetails(stream, ctrl.editingDisabled)"
+                               ng-disabled="ctrl.editingDisabled">Modify
+                    </md-button>
+                    <md-button class="md-accent" ng-click="removeStream(ctrl.selectedSource.spDataStreams, stream)"
+                               ng-disabled="ctrl.editingDisabled">Delete
+                    </md-button>
+                </div>
+            </md-list-item>
+            <div ng-if="ctrl.selectedSource.spDataStreams.length == 0">No streams configured yet.</div>
+            <md-button class="md-accent" ng-click="ctrl.addStream(ctrl.selectedSource.spDataStreams)">Add Stream</md-button>
+            <md-divider></md-divider>
+            <div ng-show="ctrl.streamSelected">
+                <div flex="none" layout-wrap layout="row">
+                    <h4 class="md-headline">{{ctrl.selectedStream.name}}</h4>
+                </div>
+                <sepa-stream-detail stream="ctrl.selectedStream" disabled="ctrl.editingDisabled"></sepa-stream-detail>
+            </div>
+        </div>
+    </collapsible>
+    <collapsible title-label="'Deployment'" disabled="ctrl.disabled" removable="false" collapsible="false" layout-fill
+                 ng-if="ctrl.isProducerTabSelected('deployment')">
+        <deployment element="ctrl.selectedSource" deployment-settings="ctrl.deploymentSettings[1]" disabled="ctrl.disabled"
+                    style="width:100%;"></deployment>
+    </collapsible>
+</div>

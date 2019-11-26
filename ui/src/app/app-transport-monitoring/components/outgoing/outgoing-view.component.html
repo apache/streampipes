@@ -1,0 +1,21 @@
+<div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
+    <div fxFlex="67">
+        <dashboard-item [panelTitle]="'Image'">
+            <dashboard-image *ngIf="showImage" [parcelInfoEventModel]="_parcelInfo"></dashboard-image>
+        </dashboard-item>
+    </div>
+    <div fxFlex="33" fxLayout="column">
+        <div fxFill fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
+            <dashboard-status-filled fxFlex="100" [label]="'Total Boxes Detected'"
+                                     [statusValue]="totalBoxes"></dashboard-status-filled>
+        </div>
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
+            <dashboard-status-filled fxFlex="100" [label]="'Transparent Boxes Detected'"
+                              [statusValue]="cardboardBoxes"></dashboard-status-filled>
+        </div>
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
+            <dashboard-status-filled fxFlex="100" [label]="'Cardboard Boxes Detected'"
+                              [statusValue]="transparentBoxes"></dashboard-status-filled>
+        </div>
+    </div>
+</div>

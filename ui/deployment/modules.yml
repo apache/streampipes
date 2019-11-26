@@ -1,0 +1,142 @@
+spEditor:
+  ng5: False
+  ng1_templateUrl: '../editor/editor.html'
+  ng5_moduleName: ''
+  ng5_component: ''
+  ng5_componentPath: ''
+  path: './editor/editor.module'
+  link: 'streampipes.editor'
+  url: '/editor/:pipeline'
+  title: 'Pipeline Editor'
+  description: 'The editor can be used to model new pipelines'
+  icon: 'action:ic_dashboard_24px'
+  homeImage: '/assets/img/home/editor.png'
+  admin: False
+spConnect:
+  ng5: True
+  ng1_templateUrl: ''
+  ng5_moduleName: 'ConnectModule'
+  ng5_component: 'ConnectComponent'
+  ng5_componentPath: '../connect/connect.component'
+  path: './connect/connect.module'
+  link: 'streampipes.connect'
+  url: '/connect'
+  title: 'StreamPipes Connect'
+  description: 'Missing Description'
+  icon: 'notification:ic_power_24px'
+  homeImage: '/assets/img/home/editor.png'
+  admin: False
+spPipelines:
+  ng5: False
+  ng1_templateUrl: '../pipelines/pipelines.html'
+  ng5_moduleName: ''
+  ng5_component: ''
+  ng5_componentPath: ''
+  path: './pipelines/pipelines.module'
+  link: 'streampipes.pipelines'
+  url: '/pipelines/:pipeline'
+  title: 'Pipelines'
+  description: 'Pipelines'
+  icon: 'av:ic_play_arrow_24px'
+  homeImage: '/assets/img/home/pipelines.png'
+  admin: False
+spDashboard:
+  ng5: False
+  ng1_templateUrl: '../dashboard/dashboard.html'
+  ng5_moduleName: ''
+  ng5_component: ''
+  ng5_componentPath: ''
+  path: './dashboard/dashboard.module'
+  link: 'streampipes.dashboard'
+  url: '/dashboard'
+  title: 'Live Dashboard'
+  description: 'The live dashboard visualizes data in real-time'
+  icon: 'editor:ic_insert_chart_24px'
+  homeImage: '/assets/img/home/dashboard.png'
+  admin: False
+spSensors:
+  ng5: False
+  ng1_templateUrl: '../sensors/sensors.html'
+  ng5_moduleName: ''
+  ng5_component: ''
+  ng5_componentPath: ''
+  path: './sensors/sensors.module'
+  link: 'streampipes.sensors'
+  title: 'Pipeline Element Generator'
+  description: 'Pipeline Element Generator'
+  icon: 'content:ic_add_24px'
+  homeImage: '/assets/img/home/sensors.png'
+  admin: False
+spAdd:
+  ng5: False
+  ng1_templateUrl: '../add/add.html'
+  ng5_moduleName: ''
+  ng5_component: ''
+  ng5_componentPath: ''
+  path: './add/add.module'
+  link: 'streampipes.add'
+  url: '/add'
+  title: 'Install Pipeline Elements'
+  description: 'The marketplace can be used to extend StreamPipes with new algorithms and data sinks'
+  icon: 'file:ic_cloud_download_24px'
+  homeImage: '/assets/img/home/add.png'
+  admin: True
+spMyElements:
+  ng5: False
+  ng1_templateUrl: '../myelements/myelements.html'
+  ng5_moduleName: ''
+  ng5_component: ''
+  ng5_componentPath: ''
+  path: './myelements/my-elements.module'
+  link: 'streampipes.myelements'
+  url: '/myelements'
+  title: 'My Elements'
+  description: 'My Elements'
+  icon: 'image:ic_portrait_24px'
+  homeImage: '/assets/img/home/myelements.png'
+  admin: True
+spConfiguration:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'ConfigurationModule'
+  ng5_component: 'ConfigurationComponent'
+  ng5_componentPath: '../configuration/configuration.component'
+  path: './configuration/configuration.module'
+  link: 'streampipes.configuration'
+  url: '/configuration'
+  title: 'Configuration'
+  description: 'Configuration'
+  icon: 'action:ic_settings_24px'
+  homeImage: '/assets/img/home/configuration.png'
+  admin: True
+spDataExplorer:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'DataExplorerModule'
+  ng5_component: 'DataExplorerComponent'
+  ng5_componentPath: '../data-explorer/data-explorer.component'
+  path: './data-explorer/data-explorer.module'
+  link: 'streampipes.data-explorer'
+  url: '/data-explorer'
+  title: 'Data Explorer'
+  description: 'Data Explorer'
+  icon: 'action:ic_view_headline_24px'
+  homeImage: ''
+  admin: false
+spAppOverview:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'AppOverviewModule'
+  ng5_component: 'AppOverviewComponent'
+  ng5_componentPath: '../app-overview/app-overview.component'
+  path: './app-overview/app-overview.module'
+  link: 'streampipes.app-overview'
+  url: '/apps'
+  title: 'Apps'
+  description: 'app-overview'
+  icon: 'navigation:ic_apps_24px'
+  homeImage: '/assets/img/home/configuration.png'
+  admin: false

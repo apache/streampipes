@@ -1,0 +1,20 @@
+<div fxFlex="100">
+    <div fxFlex="33" class="status-container pipelines">
+        <div fxFill="100" fxLayout="column" fxLayoutAlign="center center">
+            <div class="status-container-number" fxLayoutAlign="start center">{{pipelines}}</div>
+            <div class="status-container-text">pipelines created</div>
+        </div>
+    </div>
+    <div fxFlex="33" class="status-container pipelines-running">
+        <div fxFill="100" fxLayout="column" fxLayoutAlign="center center">
+            <div class="status-container-number" fxLayoutAlign="start center">{{runningPipelines}}</div>
+            <div class="status-container-text">pipelines running</div>
+        </div>
+    </div>
+    <div fxFlex="33" class="status-container pipeline-elements-installed">
+        <div fxFill="100" fxLayout="column" fxLayoutAlign="center center">
+            <div class="status-container-number" fxLayoutAlign="start center">{{installedPipelineElements}}</div>
+            <div class="status-container-text">installed pipeline elements</div>
+        </div>
+    </div>
+</div>

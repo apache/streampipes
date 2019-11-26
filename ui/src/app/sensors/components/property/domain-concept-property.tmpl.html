@@ -1,0 +1,43 @@
+<md-checkbox ng-checked="ctrl.conceptRestricted(ctrl.domainProperty)" ng-click="ctrl.toggleConceptRestriction(ctrl.domainProperty)"
+             aria-label="Concept restriction" ng-disabled="ctrl.disabled">
+    Restrict concept
+</md-checkbox>
+<div ng-show="ctrl.conceptRestricted(ctrl.domainProperty)">
+    <md-input-container>
+        <label>Required Class</label>
+        <select ng-model="ctrl.domainProperty.requiredClass" placeholder="Select required class" ng-disabled="ctrl.disabled">
+            <option ng-repeat="concept in ctrl.concepts" value="{{concept.id}}"
+                    ng-selected="ctrl.conceptSelected(ctrl.domainProperty.requiredClass, concept.id)">
+                {{concept.title}}
+            </option>
+        </select>
+    </md-input-container>
+</div>
+<h4>Supported Properties</h4>
+<div ng-repeat="(index, supportedProperty) in ctrl.domainProperty.supportedProperties">
+    <div layout="column" flex="100" class="panel-margin ontology-panel-property">
+        <div flex="100" layout="row">
+            <div flex="70" layout="row" layout-align="start center"><h5>Supported Property {{index+1}}</h5></div>
+            <div flex="30" layout="row" layout-align="end center">
+                <md-button ng-disabled="ctrl.disabled"
+                           ng-click="ctrl.removeSupportedProperty(ctrl.domainProperty.supportedProperties, index)"
+                           class="md-icon-button tree-node-action" style="width:24px;height:24px;">
+                    <md-icon md-svg-icon="content:ic_clear_24px" aria-label="Delete supported property"></md-icon>
+                </md-button>
+            </div>
+        </div>
+        <md-input-container>
+            <label>Property Id</label>
+            <select ng-model="supportedProperty.propertyId" placeholder="Select required property"
+                    ng-disabled="ctrl.disabled">
+                <option ng-repeat="property in ctrl.properties" value="{{property.id}}"
+                        ng-selected="ctrl.isSelectedProperty(property.id, supportedProperty.propertyId)">
+                    {{property.title}}
+                </option>
+            </select>
+        </md-input-container>
+    </div>
+</div>
+<md-button class="md-accent" ng-click="ctrl.addSupportedProperty(ctrl.domainProperty.supportedProperties)" ng-disabled="ctrl.disabled">
+    Add suported property
+</md-button>

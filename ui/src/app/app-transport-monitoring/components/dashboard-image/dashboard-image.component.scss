@@ -1,0 +1,33 @@
+/*!
+ * Copyright 2019 FZI Forschungszentrum Informatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+.slideshow-container .slick-dots li {
+  display: inline-block !important;
+}
+
+.slideshow-container .arrow-container .arrow {
+  border-top: 2px solid rgb(156, 156, 156) !important;
+  border-left: 2px solid rgb(156, 156, 156) !important;
+}
+
+.slideshow-container .arrow-container.prev:before {
+  background-image: none !important;
+}
+
+.slideshow-container .arrow-container.next:before {
+  background-image: none !important;
+}

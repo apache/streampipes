@@ -1,0 +1,104 @@
+@import '../_variables';
+
+.options-button {
+  cursor: pointer;
+  position: absolute;
+  height: 40%;
+  width: 40%;
+  border-radius: 50%;
+  box-shadow: 0 0 3px $sp-color-accent;
+  line-height: 1.6;
+  text-align: center;
+  padding: 2px 0;
+  background-color: $sp-color-accent;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.customize-button {
+  left: 5%;
+  top: -10%;
+}
+
+.delete-button {
+  left: 55%;
+  top: -10%;
+  background-color: darkred;
+  box-shadow: 0 0 3px darkred;
+}
+
+.help-button {
+  left: 70%;
+  top: 70%;
+}
+
+.recommended-button {
+  left: 25%;
+  top: 70%;
+}
+
+.possible-button {
+  left: -20%;
+  top: 70%;
+}
+
+.help-button-icon-stand {
+  display: block;
+  cursor: pointer;
+  position: relative;
+  left: 20px;
+  top: 40px;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  background-color: $sp-color-accent;
+  color: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 0 2px $sp-color-accent;
+  line-height: 1.6;
+  text-align: center;
+
+}
+
+.editor-pe-info {
+  position: absolute;
+  left: 0%;
+  top: 50%;
+  width: 100%;
+  padding: 70px 10px 10px;
+  font-size: smaller;
+  text-align: center;
+  box-shadow: 0 0 2px #555;
+  -webkit-animation: slidein 0.5s;
+}
+
+@keyframes slidein {
+  0% {
+    top: 0;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+  }
+  100% {
+    top: 50%;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}
+
+.pe-info-action {
+  background: $sp-color-sink;
+  color: white;
+}
+
+.pe-info-sepa {
+  background: $sp-color-processor;
+  color: white;
+}
+
+.pe-info-stream {
+  background: $sp-color-stream;
+  color: #343434;
+}
+
+.pe-info-set {
+  background: $sp-color-set;
+  color: white;
+}

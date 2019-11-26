@@ -1,0 +1,56 @@
+<md-dialog aria-label="Save" flex="60">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Save Pipeline</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="ctrl.hide()">
+                <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content flex="100" class="md-dialog-content">
+        <form name="ctrl.submitPipelineForm">
+            <div flex="100" layout="column">
+                <div id="overwriteCheckbox" class="checkbox" ng-show="ctrl.modificationMode">
+                    <md-radio-group class="md-accent" ng-model="ctrl.updateMode">
+                        <md-radio-button ng-value="'update'">
+                            Update pipeline <b>{{ctrl.pipeline.name}}</b>
+                        </md-radio-button>
+                        <md-radio-button ng-value="'clone'">
+                            Create new pipeline
+                        </md-radio-button>
+                    </md-radio-group>
+                </div>
+                <div flex="100" layout="column" ng-if="!ctrl.modificationMode || ctrl.updateMode=='clone'">
+                    <md-input-container flex><label>Pipeline Name</label>
+                        <input name="pipelineName" ng-model="ctrl.pipeline.name" required ng-maxlength="40"/>
+                        <span ng-show="ctrl.submitPipelineForm.pipelineName.$touched && ctrl.submitPipelineForm.pipelineName.$error.required">Please provide a pipeline name.</span>
+                        <span ng-show="ctrl.submitPipelineForm.pipelineName.$error.maxlength">Please provide a shorter pipeline name.</span>
+                    </md-input-container>
+                    <md-input-container flex><label>Description</label>
+                        <input name="pipelineDescription" ng-model="ctrl.pipeline.description" ng-maxlength="80"/>
+                        <span ng-show="ctrl.submitPipelineForm.pipelineDescription.$error.maxlength">Please provide a shorter description.</span>
+                    </md-input-container>
+                </div>
+                <md-checkbox ng-click="ctrl.triggerTutorial()" ng-disabled="false" aria-label="Start Pipeline" ng-model="ctrl.startPipelineAfterStorage">
+                    Start pipeline immediately
+                </md-checkbox>
+            </div>
+        </form>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <sp-button sp-button-gray ng-click="ctrl.hide()">
+            Close
+        </sp-button>
+        <sp-button sp-button-blue ng-disabled="ctrl.submitPipelineForm.$invalid"
+                   ng-click="ctrl.savePipelineName(false)"
+                   ng-disabled="ctrl.startPipelineAfterStorage">
+            Save
+        </sp-button>
+        <sp-button sp-button-blue ng-disabled="ctrl.submitPipelineForm.$invalid"
+                   ng-click="ctrl.savePipelineName(true)">
+            Save and go to pipeline view
+        </sp-button>
+    </md-dialog-actions>
+</md-dialog>
