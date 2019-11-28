@@ -16,6 +16,7 @@
 
 package org.streampipes.processors.aggregation.flink.processor.aggregation;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.flink.util.Collector;
 import org.streampipes.model.runtime.Event;
 
@@ -70,7 +71,10 @@ public class Aggregation implements Serializable {
       lastEvent = anInput;
     }
 
-    lastEvent.addField("aggregatedValue", getAggregate(values));
+    String propertyPrefix = StringUtils.substringAfterLast(fieldToAggregate, ":");
+    String runtimeName = propertyPrefix + "_" + aggregationType.toString().toLowerCase();
+
+    lastEvent.addField(runtimeName, getAggregate(values));
     out.collect(lastEvent);
   }
 }
