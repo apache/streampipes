@@ -32,6 +32,7 @@ import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
 import org.streampipes.sdk.utils.Assets;
+import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.vocabulary.Statistics;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -41,8 +42,7 @@ import java.util.List;
 
 public class AggregationController extends FlinkDataProcessorDeclarer<AggregationParameters> implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation,ProcessingElementParameterExtractor> {
 
-  private static final String AGGREGATE_KEY = "aggregate";
-  private static final String AGGREGATED_VALUE_KEY = "aggregatedValue";
+  private static final String AGGREGATE_KEY_LIST = "aggregate-list";
   private static final String GROUP_BY_KEY = "groupBy";
   private static final String OUTPUT_EVERY_KEY_SECOND = "outputEverySecond";
   private static final String OUTPUT_EVERY_KEY_EVENT = "outputEveryEvent";
@@ -61,27 +61,19 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.numberReq(),
-                            Labels.withId(AGGREGATE_KEY),
+                    .requiredPropertyWithNaryMapping(EpRequirements.numberReq(),
+                            Labels.withId(AGGREGATE_KEY_LIST),
                             PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
             .naryMappingPropertyWithoutRequirement(
                     Labels.withId(GROUP_BY_KEY),
                     PropertyScope.DIMENSION_PROPERTY)
             .outputStrategy(OutputStrategies.customTransformation())
-//            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(
-//                    Labels.withId(AGGREGATED_VALUE_KEY),
-//                    "aggregatedValue",
-//                    "http://schema.org/Number")))
             .requiredSingleValueSelection(Labels.withId(OPERATION_KEY),
                     Options.from(new Tuple2<>("Average", "AVG"),
                             new Tuple2<>("Sum", "SUM"),
                             new Tuple2<>("Min", "MIN"),
                             new Tuple2<>("Max", "MAX")))
-
-//            .requiredIntegerParameter(Labels.withId(OUTPUT_EVERY_KEY))
-
             .requiredAlternatives(Labels.withId(WINDOW),
                     Alternatives.from(Labels.withId(TIME_WINDOW_OPTION),
                                              StaticProperties.group(Labels.from("group2", "", ""),
@@ -94,11 +86,6 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
                             StaticProperties.integerFreeTextProperty(Labels.withId(OUTPUT_EVERY_KEY_EVENT))))
 
             )
-
-//            .requiredIntegerParameter(Labels.withId(TIME_WINDOW_KEY))
-//            .requiredSingleValueSelection(Labels.withId(TIME_COUNT_WINDOW_KEY),
-//                    Options.from(new Tuple2<>("Time Aggregation", TIME_WINDOW),
-//                            new Tuple2<>("Count Aggregation", COUNT_WINDOW)))
             .build();
   }
 
@@ -108,7 +95,7 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
 
     List<String> groupBy = extractor.mappingPropertyValues("groupBy");
 
-    String aggregate = extractor.mappingPropertyValue(AGGREGATE_KEY);
+    List<String> aggregateKeyList = extractor.mappingPropertyValues(AGGREGATE_KEY_LIST);
     String aggregateOperation = extractor.selectedSingleValueInternalName(OPERATION_KEY, String.class);
 
     String timeCountWindow = extractor.selectedAlternativeInternalId(WINDOW);
@@ -132,7 +119,7 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
             AggregationType.valueOf(aggregateOperation),
             outputEvery,
             groupBy,
-            aggregate,
+            aggregateKeyList,
             windowSize,
             selectProperties,
             timeCountWindow.equals(TIME_WINDOW_OPTION));
@@ -144,13 +131,15 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
   public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement, ProcessingElementParameterExtractor parameterExtractor) throws SpRuntimeException {
 
     EventSchema eventSchema = processingElement.getInputStreams().get(0).getEventSchema();
-    String aggregateKey = parameterExtractor.mappingPropertyValue(AGGREGATE_KEY);
+
+    List<String> aggregateKeyList = parameterExtractor.mappingPropertyValues(AGGREGATE_KEY_LIST);
     String operationKey = parameterExtractor.selectedSingleValueInternalName(OPERATION_KEY, String.class);
 
-    String propertyPrefix = StringUtils.substringAfterLast(aggregateKey, ":");
-    String runtimeName = propertyPrefix + "_" + operationKey.toLowerCase();
-    eventSchema.addEventProperty(EpProperties.doubleEp(Labels.withId(runtimeName), runtimeName, "http://schema.org/Number"));
-
+    for (String aggregate: aggregateKeyList) {
+      String propertyPrefix = StringUtils.substringAfterLast(aggregate, ":");
+      String runtimeName = propertyPrefix + "_" + operationKey.toLowerCase();
+      eventSchema.addEventProperty(EpProperties.doubleEp(Labels.withId(runtimeName), runtimeName, "http://schema.org/Number"));
+    }
     return eventSchema;
   }
 }

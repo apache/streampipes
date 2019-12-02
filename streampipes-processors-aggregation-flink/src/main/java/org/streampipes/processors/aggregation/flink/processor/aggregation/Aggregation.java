@@ -19,6 +19,8 @@ package org.streampipes.processors.aggregation.flink.processor.aggregation;
 import org.apache.commons.lang.StringUtils;
 import org.apache.flink.util.Collector;
 import org.streampipes.model.runtime.Event;
+import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.Labels;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,20 +30,21 @@ import java.util.List;
 public class Aggregation implements Serializable {
 
   private AggregationType aggregationType;
-  private String fieldToAggregate;
+//  private String fieldToAggregate;
+  private List<String> fieldsToAggregate;
   private List<String> keyIdentifiers;
 
   // Used for keyed streams
-  public Aggregation(AggregationType aggregationType, String fieldToAggregate, List<String> keyIdentifiers) {
+  public Aggregation(AggregationType aggregationType, List<String> fieldsToAggregate, List<String> keyIdentifiers) {
     this.aggregationType = aggregationType;
-    this.fieldToAggregate = fieldToAggregate;
+    this.fieldsToAggregate = fieldsToAggregate;
     this.keyIdentifiers = keyIdentifiers;
   }
 
   // Used for not keyed streams
-  public Aggregation(AggregationType aggregationType, String fieldToAggregate) {
+  public Aggregation(AggregationType aggregationType, List<String> fieldsToAggregate) {
     this.aggregationType = aggregationType;
-    this.fieldToAggregate = fieldToAggregate;
+    this.fieldsToAggregate = fieldsToAggregate;
     this.keyIdentifiers = null;
   }
 
@@ -67,14 +70,17 @@ public class Aggregation implements Serializable {
     // Dumps thereby all previous events and only emits the most recent event in the window with the
     // aggregated value added
     for (Event anInput : input) {
-      values.add(anInput.getFieldBySelector(fieldToAggregate).getAsPrimitive().getAsDouble());
-      lastEvent = anInput;
+      for(String aggregate : fieldsToAggregate) {
+        values.add(anInput.getFieldBySelector(aggregate).getAsPrimitive().getAsDouble());
+        lastEvent = anInput;
+
+        String propertyPrefix = StringUtils.substringAfterLast(aggregate, ":");
+        String runtimeName = propertyPrefix + "_" + aggregationType.toString().toLowerCase();
+
+        lastEvent.addField(runtimeName, getAggregate(values));
+      }
     }
 
-    String propertyPrefix = StringUtils.substringAfterLast(fieldToAggregate, ":");
-    String runtimeName = propertyPrefix + "_" + aggregationType.toString().toLowerCase();
-
-    lastEvent.addField(runtimeName, getAggregate(values));
     out.collect(lastEvent);
   }
 }

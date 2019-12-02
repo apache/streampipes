@@ -1,8 +1,8 @@
 org.streampipes.processors.aggregation.flink.aggregation.title=Aggregation
 org.streampipes.processors.aggregation.flink.aggregation.description=Performs different aggregation functions
 
-aggregate.title=Property Selection
-aggregate.description=Specifies the event property from your stream that should be aggregated.
+aggregate-list.title=Property Selection
+aggregate-list.description=Specifies the event properties from your stream that should be aggregated.
 
 groupBy.title=Group by
 groupBy.description=Partitions the incoming stream by the selected event properties.

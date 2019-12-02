@@ -22,6 +22,7 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
+import org.eclipse.rdf4j.query.algebra.Count;
 import org.streampipes.model.runtime.Event;
 import org.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
 
@@ -47,21 +48,21 @@ public class AggregationProgram extends AbstractAggregationProgram<AggregationPa
       if (bindingParams.getTimeWindow()) {
         return keyedStream
                 .window(SlidingEventTimeWindows.of(Time.seconds(bindingParams.getWindowSize()), Time.seconds(bindingParams.getOutputEvery())))
-                .apply(new TimeAggregation(bindingParams.getAggregationType(), bindingParams.getAggregate(), bindingParams.getGroupBy()));
+                .apply(new TimeAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList(), bindingParams.getGroupBy()));
       } else {
         return keyedStream
                 .countWindow(bindingParams.getWindowSize(), bindingParams.getOutputEvery())
-                .apply(new CountAggregation(bindingParams.getAggregationType(), bindingParams.getAggregate(), bindingParams.getGroupBy()));
+                .apply(new CountAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList(), bindingParams.getGroupBy()));
       }
     } else {
       if (bindingParams.getTimeWindow()) {
         return dataStream
                 .timeWindowAll(Time.seconds(bindingParams.getWindowSize()), Time.seconds(bindingParams.getOutputEvery()))
-                .apply(new TimeAggregation(bindingParams.getAggregationType(), bindingParams.getAggregate()));
+                .apply(new TimeAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList()));
       } else {
         return dataStream
                 .countWindowAll(bindingParams.getWindowSize(), bindingParams.getOutputEvery())
-                .apply(new CountAggregation(bindingParams.getAggregationType(), bindingParams.getAggregate()));
+                .apply(new CountAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList()));
       }
     }
   }

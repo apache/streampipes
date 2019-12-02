@@ -28,7 +28,7 @@ public class AggregationParameters extends EventProcessorBindingParams {
 	private AggregationType aggregationType;
 	private int outputEvery;
 	private int windowSize;
-	private String aggregate;
+	private List<String> aggregateKeyList;
 	private List<String> groupBy;
 	private List<String> selectProperties;
 	
@@ -37,7 +37,7 @@ public class AggregationParameters extends EventProcessorBindingParams {
 			AggregationType aggregationType,
 			int outputEvery,
 			List<String> groupBy,
-			String aggregate,
+			List<String> aggregateKeyList,
 			int windowSize,
 			List<String> selectProperties,
 			boolean timeWindow) {
@@ -46,7 +46,7 @@ public class AggregationParameters extends EventProcessorBindingParams {
 		this.outputEvery = outputEvery;
 		this.groupBy = groupBy;
 		this.windowSize= windowSize;
-		this.aggregate = aggregate;
+		this.aggregateKeyList = aggregateKeyList;
 		this.selectProperties = selectProperties;
 		this.timeWindow = timeWindow;
 	}
@@ -67,8 +67,8 @@ public class AggregationParameters extends EventProcessorBindingParams {
 		return windowSize;
 	}
 
-	public String getAggregate() {
-		return aggregate;
+	public List<String> getAggregateKeyList() {
+		return aggregateKeyList;
 	}
 
 	public List<String> getSelectProperties() {

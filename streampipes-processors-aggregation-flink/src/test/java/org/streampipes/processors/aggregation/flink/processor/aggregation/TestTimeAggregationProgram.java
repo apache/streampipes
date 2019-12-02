@@ -59,7 +59,7 @@ public class TestTimeAggregationProgram extends DataStreamTestBase {
             AggregationType.AVG,
             1,
             Arrays.asList("sensorId"),
-            "value",
+            Arrays.asList("value"),
             10,
             Arrays.asList("value"),
             true);

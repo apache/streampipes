@@ -29,13 +29,13 @@ public class CountAggregation extends Aggregation implements WindowFunction<Even
         AllWindowFunction<Event, Event, GlobalWindow> {
 
   // Keyed stream
-  public CountAggregation(AggregationType aggregationType, String fieldToAggregate, List<String> keyIdentifiers) {
-    super(aggregationType, fieldToAggregate, keyIdentifiers);
+  public CountAggregation(AggregationType aggregationType, List<String> fieldsToAggregate, List<String> keyIdentifiers) {
+    super(aggregationType, fieldsToAggregate, keyIdentifiers);
   }
 
   // Not keyed stream
-  public CountAggregation(AggregationType aggregationType, String fieldToAggregate) {
-    super(aggregationType, fieldToAggregate);
+  public CountAggregation(AggregationType aggregationType, List<String> fieldsToAggregate) {
+    super(aggregationType, fieldsToAggregate);
   }
 
   @Override

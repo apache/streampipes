@@ -29,13 +29,13 @@ public class TimeAggregation extends Aggregation implements WindowFunction<Event
         AllWindowFunction<Event, Event, TimeWindow> {
 
   // Keyed stream
-  public TimeAggregation(AggregationType aggregationType, String fieldToAggregate, List<String> keyIdentifiers) {
-    super(aggregationType, fieldToAggregate, keyIdentifiers);
+  public TimeAggregation(AggregationType aggregationType, List<String> fieldsToAggregate, List<String> keyIdentifiers) {
+    super(aggregationType, fieldsToAggregate, keyIdentifiers);
   }
 
   // Not keyed stream
-  public TimeAggregation(AggregationType aggregationType, String fieldToAggregate) {
-    super(aggregationType, fieldToAggregate);
+  public TimeAggregation(AggregationType aggregationType, List<String>fieldsToAggregate) {
+    super(aggregationType, fieldsToAggregate);
   }
 
   @Override
