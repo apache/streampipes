@@ -140,3 +140,18 @@ spAppOverview:
   icon: 'navigation:ic_apps_24px'
   homeImage: '/assets/img/home/configuration.png'
   admin: false
+spDashboard2:
+  ng5: True
+  ng1_templateUrl: ''
+  ng1_controller: ''
+  ng5_moduleName: 'DashboardModule'
+  ng5_component: 'DashboardComponent'
+  ng5_componentPath: '../dashboard-v2/dashboard.component'
+  path: './dashboard-v2/dashboard.module'
+  link: 'streampipes.dashboardv2'
+  url: '/dashboardv2'
+  title: 'Dashboard'
+  description: 'dashboard-v2'
+  icon: 'navigation:ic_apps_24px'
+  homeImage: '/assets/img/home/configuration.png'
+  admin: false

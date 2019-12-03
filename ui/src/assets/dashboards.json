@@ -1,0 +1,38 @@
+[
+
+  {
+    "id": "4",
+    "name": "Sample Dashboard 4",
+    "widgets": [
+      {
+        "id": "1",
+        "name": "Timeline",
+        "component": "timeline",
+        "widgetType": "number",
+        "settings": [],
+        "cols": 2,
+        "rows": 2,
+        "y": 0,
+        "x": 0
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "name": "Sample Dashboard 5",
+    "widgets": [
+      {
+        "id": "1",
+        "name": "Timeline",
+        "component": "timeline",
+        "widgetType": "number",
+        "settings": [],
+        "cols": 2,
+        "rows": 2,
+        "y": 0,
+        "x": 0
+      }
+    ]
+  }
+
+]

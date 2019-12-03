@@ -1,0 +1,13 @@
+<button mat-button mat-raised-button color="primary" (click)="addWidget()">Add visualization</button>
+
+<gridster [options]="options">
+
+    <ng-container *ngFor="let item of items">
+
+        <gridster-item [item]="item">
+            <dashboard-widget [widget]="item"></dashboard-widget>
+        </gridster-item>
+
+    </ng-container>
+
+</gridster>
