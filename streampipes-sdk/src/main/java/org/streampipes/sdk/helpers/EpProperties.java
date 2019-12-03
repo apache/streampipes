@@ -23,6 +23,7 @@ import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
 import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.model.schema.QuantitativeValue;
 import org.streampipes.sdk.utils.Datatypes;
 import org.streampipes.vocabulary.XSD;
@@ -68,7 +69,10 @@ public class EpProperties {
    */
   public static EventPropertyPrimitive timestampProperty(String runtimeName) {
     // TODO we need a real timestamp property!
-    return ep(Labels.from("", "Timestamp", "The current timestamp value"), XSD._long.toString(), runtimeName, "http://schema.org/DateTime");
+    EventPropertyPrimitive ep = ep(Labels.from("", "Timestamp", "The current timestamp value"),
+            XSD._long.toString(), runtimeName, "http://schema.org/DateTime");
+    ep.setPropertyScope(PropertyScope.HEADER_PROPERTY.name());
+    return ep;
   }
 
   /**

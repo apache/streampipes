@@ -29,7 +29,7 @@ export class CustomizeController {
     currentStaticProperty: any;
     validationErrors: any;
     configVisible: any;
-    displayRecommended: any;
+    displayRecommended: boolean;
     sourceEndpoint: any;
     $mdDialog: any;
     $rootScope: any;
@@ -47,7 +47,7 @@ export class CustomizeController {
         this.helpDialogVisible = false;
         this.validationErrors = [];
         this.configVisible = false;
-        this.displayRecommended = false;
+        this.displayRecommended = true;
         this.sourceEndpoint = sourceEndpoint;
         this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;

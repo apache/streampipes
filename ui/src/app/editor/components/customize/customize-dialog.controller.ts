@@ -22,6 +22,7 @@ export class CustomizeDialogController {
     selectedElement: any;
     staticProperty: any;
     customizeForm: any;
+    displayRecommended: boolean;
 
     constructor() {
     }

@@ -21,6 +21,7 @@ export class MappingNaryController {
     selectedElement: any;
     availableProperties: any;
     PropertySelectorService: any;
+    displayRecommended: boolean;
 
     constructor(PropertySelectorService) {
         this.PropertySelectorService = PropertySelectorService;
