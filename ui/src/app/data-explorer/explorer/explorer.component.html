@@ -33,6 +33,8 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Hour'" (click)="selectTimeUnit('1 Hour')">1 Hour</button>
+                    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Hour'"color="primary" mat-raised-button>1 Hour</button>
                     <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Day'" (click)="selectTimeUnit('1 Day')">1 Day</button>
                     <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Day'"color="primary" mat-raised-button>1 Day</button>
                     <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Week'" (click)="selectTimeUnit('1 Week')">1 Week</button>
@@ -221,7 +223,7 @@
 
 
             <!-- Charts -->
-            <mat-tab-group *ngIf="!displayIsLoadingData && data !== undefined && yAxesKeys.length > 0"
+            <mat-tab-group *ngIf="!displayIsLoadingData &&  data !== undefined && yAxesKeys.length > 0"
                            [selectedIndex]="selectedMatGroup.value"
                            (selectedIndexChange)="selectedMatGroup.setValue($event)"
                             style="margin-top: -35px;">
@@ -258,7 +260,8 @@
                             (nextPage)="handleNextPage()"
                             (previousPage)="handlePreviousPage()"
                             (firstPage)=handleFirstPage()
-                            (lastPage)="handleLastPage()">
+                            (lastPage)="handleLastPage()"
+                            (zoomEvent)="zoomEventHandler($event)">
                     </sp-lineChart>
                 </mat-tab>
             </mat-tab-group>

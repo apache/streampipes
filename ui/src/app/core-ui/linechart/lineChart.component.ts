@@ -11,6 +11,8 @@ import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
 })
 export class LineChartComponent extends BaseChartComponent implements OnChanges {
 
+    @Output() zoomEvent =  new EventEmitter<[number, number]>();
+
     constructor() {
         super();
     }
@@ -171,5 +173,10 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
 
     stopDisplayData() {
     }
+
+  zoomIn($event) {
+        console.log();
+        this.zoomEvent.emit([$event["xaxis.range[0]"], $event["xaxis.range[1]"]])
+  }
 
 }

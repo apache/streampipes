@@ -16,7 +16,8 @@
                 *ngIf="dataToDisplay !== undefined"
                 flex
                 [data]="dataToDisplay"
-                [layout]="graph.layout">
+                [layout]="graph.layout"
+                (relayout)="zoomIn($event)">
         </plotly-plot>
 
         <div *ngIf="enablePaging" fxFlex="5">
