@@ -15,6 +15,7 @@
  *
  */
 
+
 export class MappingNaryController {
 
     staticProperty: any;
@@ -22,9 +23,11 @@ export class MappingNaryController {
     availableProperties: any;
     PropertySelectorService: any;
     displayRecommended: boolean;
+    $filter: any;
 
-    constructor(PropertySelectorService) {
+    constructor(PropertySelectorService, $filter) {
         this.PropertySelectorService = PropertySelectorService;
+        this.$filter = $filter;
     }
 
     $onInit() {
@@ -67,7 +70,11 @@ export class MappingNaryController {
     }
 
     selectAll() {
-        this.staticProperty.properties.selectedProperties = this.staticProperty.properties.mapsFromOptions;
+        this.staticProperty.properties.selectedProperties = [];
+        let filteredProperties = this.$filter('displayRecommendedFilter')(this.availableProperties,  this.staticProperty.properties.propertyScope, this.displayRecommended);
+        filteredProperties.forEach(property => {
+           this.staticProperty.properties.selectedProperties.push(property.properties.runtimeId);
+        });
     }
 
     deselectAll() {
@@ -75,4 +82,4 @@ export class MappingNaryController {
     }
 }
 
-MappingNaryController.$inject=['PropertySelectorService']
+MappingNaryController.$inject=['PropertySelectorService', '$filter']
