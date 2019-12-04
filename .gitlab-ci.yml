@@ -197,6 +197,11 @@ docker-processors-enricher-flink:
     variables:
       CONTAINER_NAME: "processors-enricher-flink"
 
+docker-processors-enricher-jvm:
+    <<: *docker_script
+    variables:
+      CONTAINER_NAME: "processors-enricher-jvm"
+
 docker-processors-filters-jvm:
     <<: *docker_script
     variables:

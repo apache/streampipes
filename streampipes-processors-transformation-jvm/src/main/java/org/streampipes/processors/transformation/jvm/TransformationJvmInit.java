@@ -35,6 +35,7 @@ import org.streampipes.processors.transformation.jvm.processor.booloperator.time
 import org.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentController;
 import org.streampipes.processors.transformation.jvm.processor.task.TaskDurationController;
 import org.streampipes.processors.transformation.jvm.processor.timestampextractor.TimestampExtractorController;
+import org.streampipes.processors.transformation.jvm.processor.transformtoboolean.TransformToBooleanController;
 import org.streampipes.processors.transformation.jvm.processor.value.change.ChangedValueDetectionController;
 import org.streampipes.processors.transformation.jvm.processor.value.duration.CalculateDurationController;
 
@@ -53,7 +54,9 @@ public class TransformationJvmInit extends StandaloneModelSubmitter {
             .add(new BooleanTimekeepingController())
             .add(new BooleanTimerController())
             .add(new CsvMetadataEnrichmentController())
-            .add(new TaskDurationController());
+            .add(new TaskDurationController())
+            .add(new BooleanInverterController())
+            .add(new TransformToBooleanController());
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

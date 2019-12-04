@@ -38,6 +38,7 @@
         <module>streampipes-processors-aggregation-flink</module>
         <module>streampipes-processors-pattern-detection-flink</module>
         <module>streampipes-processors-enricher-flink</module>
+        <module>streampipes-processors-enricher-jvm</module>
         <module>streampipes-sources-watertank-simulator</module>
         <module>streampipes-sources-vehicle-simulator</module>
         <module>streampipes-processors-transformation-flink</module>
