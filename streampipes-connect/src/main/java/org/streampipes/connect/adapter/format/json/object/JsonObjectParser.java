@@ -18,6 +18,7 @@
 package org.streampipes.connect.adapter.format.json.object;
 
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
@@ -33,7 +34,9 @@ import org.streampipes.model.schema.EventSchema;
 import javax.json.Json;
 import javax.json.stream.JsonParserFactory;
 import javax.json.stream.JsonParsingException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,8 +90,13 @@ public class JsonObjectParser extends Parser {
             }
 
         } catch(JsonParsingException e) {
-          //  logger.error("Error. Currently just one Object is supported in JSONObjectParser");
             logger.error("Could not parse Data to JSONObject");
+            try {
+                String event = IOUtils.toString(data, StandardCharsets.UTF_8.name());
+                logger.error("Event no valid json: " + event);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
             throw new ParseException("Could not parse Data to JSONObject.");
         }
 
