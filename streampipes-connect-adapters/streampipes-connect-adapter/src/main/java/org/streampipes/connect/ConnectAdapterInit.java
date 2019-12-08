@@ -18,6 +18,7 @@
 package org.streampipes.connect;
 
 import org.streampipes.connect.adapters.plc4x.passive.Plc4xPassiveAdapter;
+import org.streampipes.connect.adapters.ti.TISensorTag;
 import org.streampipes.connect.protocol.set.HttpProtocol;
 import org.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
 import org.streampipes.connect.adapters.gdelt.GdeltAdapter;
@@ -78,6 +79,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new OpcUaAdapter())
             .add(new InfluxDbStreamAdapter())
             .add(new InfluxDbSetAdapter())
+            .add(new TISensorTag())
             .add(new Plc4xS7Adapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
