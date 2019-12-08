@@ -20,14 +20,13 @@
 export class PipelineActionsController {
 
     PipelineOperationsService: any;
-    VersionService: any;
     starting: any;
     stopping: any;
     pipeline: any;
     $state: any;
     loadPipeline: any;
 
-    constructor(PipelineOperationsService, $state, VersionService) {
+    constructor(PipelineOperationsService, $state) {
         this.PipelineOperationsService = PipelineOperationsService;
         this.starting = false;
         this.stopping = false;
@@ -58,4 +57,4 @@ export class PipelineActionsController {
 
 }
 
-PipelineActionsController.$inject = ['PipelineOperationsService', '$state', 'VersionService'];
+PipelineActionsController.$inject = ['PipelineOperationsService', '$state'];
