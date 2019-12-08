@@ -25,7 +25,6 @@ import { PipelineDetailsComponent } from './components/pipeline-details/pipeline
 import { PipelineCategoryFilter } from './pipeline-category.filter';
 import { CategoryAlreadyInPipelineFilter } from './category-already-in-pipeline.filter';
 import { PipelineOperationsService } from "./services/pipeline-operations.service";
-import { VersionService } from "../services/version/version.service";
 
 import ngFileUpload from 'ng-file-upload';
 
@@ -35,5 +34,4 @@ export default angular.module('sp.pipeline', [spServices, ngFileUpload])
 	.filter('pipelineCategoryFilter', PipelineCategoryFilter)
 	.filter('categoryAlreadyInPipelineFilter', CategoryAlreadyInPipelineFilter)
 	.service('PipelineOperationsService', PipelineOperationsService)
-	.service('VersionService', VersionService)
 	.name;
