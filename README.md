@@ -16,33 +16,18 @@
   ~
   -->
 
-# StreamPipes Helm Chart
-StreamPipes helm chart to deploy StreamPipes on Kubernetes.
+# Apache StreamPipes (incubating) installer
+This project contains StreamPipes installation files.
+Clone this project or download the complete repository. To download the ZIP of the installer click on the green button `Clone or download`on the top right. Then click on `download ZIP`.
 
-Currently: **StreamPipes v0.65.0**
+## Installer (Docker-based installation for users)
 
-## Prerequisite
+See the README in the ``installer`` directory.
 
-Requires Helm (https://helm.sh/) and an active connection to a kubernetes cluster with a running tiller server.
+## Helm Charts (Kubernetes)
 
-Tested with:
-* Kubernetes v1.14.8
-* Helm v2.16.1
+See the README in the ``helm-chart`` directory.
 
-## Start StreamPipes
+## CLI (Docker-based installation for developmenet purposes)
 
-Run command:
-
-```sh
-helm install ./ --name streampipes --set deployment=lite
-```
-
-```sh
-helm install ./ --name streampipes --set deployment=full
-```
-
-## Delete StreamPipes
-
-```sh
-helm del --purge streampipes
-```
+See the README in the ``cli`` directory.
