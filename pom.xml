@@ -4,7 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.streampipes</groupId>
+    <parent>
+        <groupId>org.streampipes</groupId>
+        <artifactId>streampipes-parent</artifactId>
+        <version>0.65.1-SNAPSHOT</version>
+    </parent>
+
     <artifactId>streampipes-pipeline-elements-examples</artifactId>
     <packaging>pom</packaging>
     <version>0.65.1-SNAPSHOT</version>
@@ -15,7 +20,6 @@
     <properties>
         <streampipes.version>0.65.1-SNAPSHOT</streampipes.version>
         <lightcouch.version>0.1.8</lightcouch.version>
-        <spring.version>2.1.6.RELEASE</spring.version>
 
         <maven-shade-plugin.version>3.0.0</maven-shade-plugin.version>
     </properties>
@@ -209,7 +213,13 @@
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring.version}</version>
+                    <version>${spring-boot.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
