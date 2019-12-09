@@ -67,14 +67,8 @@ public class MqttProtocol extends BrokerProtocol {
             StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
 
     String brokerUrl = extractor.singleValueParameter("broker_url", String.class);
-//    String brokerUrl = "tcp://ipe-girlitz.fzi.de:1883";
-
     String topic = extractor.singleValueParameter("topic", String.class);
-//    String topic = "acceleration";
-
     String selectedAlternative = extractor.selectedAlternativeInternalId("access_mode");
-//    String selectedAlternative = ANONYMOUS_ACCESS;
-
 
     if (selectedAlternative.equals(ANONYMOUS_ACCESS)) {
       mqttConfig = new MqttConfig(brokerUrl, topic);
