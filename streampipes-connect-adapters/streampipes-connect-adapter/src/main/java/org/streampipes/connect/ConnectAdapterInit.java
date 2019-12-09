@@ -1,11 +1,12 @@
 /*
- * Copyright 2019 FZI Forschungszentrum Informatik
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,8 +18,6 @@
 
 package org.streampipes.connect;
 
-import org.streampipes.connect.adapters.plc4x.passive.Plc4xPassiveAdapter;
-import org.streampipes.connect.protocol.set.HttpProtocol;
 import org.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
 import org.streampipes.connect.adapters.gdelt.GdeltAdapter;
 import org.streampipes.connect.adapters.iex.IexCloudNewsAdapter;
@@ -39,11 +38,12 @@ import org.streampipes.connect.config.ConnectWorkerConfig;
 import org.streampipes.connect.container.worker.init.AdapterWorkerContainer;
 import org.streampipes.connect.init.AdapterDeclarerSingleton;
 import org.streampipes.connect.protocol.set.FileProtocol;
+import org.streampipes.connect.protocol.set.HttpProtocol;
 import org.streampipes.connect.protocol.stream.FileStreamProtocol;
 import org.streampipes.connect.protocol.stream.HDFSProtocol;
+import org.streampipes.connect.protocol.stream.HttpStreamProtocol;
 import org.streampipes.connect.protocol.stream.KafkaProtocol;
 import org.streampipes.connect.protocol.stream.MqttProtocol;
-import org.streampipes.connect.protocol.stream.HttpStreamProtocol;
 import org.streampipes.connect.protocol.stream.pulsar.PulsarProtocol;
 
 public class ConnectAdapterInit extends AdapterWorkerContainer {
