@@ -16,6 +16,8 @@
 ARG BASE_IMAGE=arm64v8/nginx
 FROM $BASE_IMAGE
 
+COPY qemu-arm-static /usr/bin
+
 COPY dist/assets/img/ /usr/share/nginx/html/assets/img/
 COPY dist/assets/css/ /usr/share/nginx/html/assets/css/
 COPY dist/assets/lib/ /usr/share/nginx/html/assets/lib/
@@ -40,8 +42,7 @@ COPY nginx_config/ssl.conf /app/nginx-confs/ssl.conf
 
 COPY docker-entrypoint.sh /
 
-RUN ["/bin/bash", "-c", "chown -R nginx:nginx /usr/share/nginx/html/"]
+RUN chown -R nginx:nginx /usr/share/nginx/html/
 
-COPY qemu-arm-static /usr/bin
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
