@@ -23,8 +23,8 @@ variables:
   BASE_IMAGE_ARM32v7: arm32v7/openjdk:11-jre-slim
   BASE_IMAGE_ARM64v8: arm64v8/openjdk:11-jre-slim
   BASE_NGINX_AMD64: nginx
-  BASE_NGINX_ARM32v7: nginx@sha256:6e2a671de086d2e6849b2a9507af213b7e3dd4101f24e13eff5687036a04afb2
-  BASE_NGINX_ARM64v8: nginx@sha256:cedc7a962e459faa796cddbb535a9e3ba95e279e368b2ff59d08ced99e9d9d6b
+  BASE_NGINX_ARM32v7: arm32v7/nginx
+  BASE_NGINX_ARM64v8: arm64v8/nginx
 
 stages:
   - build
@@ -88,6 +88,7 @@ build-ui:
     expire_in: 1 hour
   only:
     - dev
+    - multiarch
       
 github:
   image: maven:3-jdk-8
