@@ -42,5 +42,6 @@ COPY docker-entrypoint.sh /
 
 RUN chown -R nginx:nginx /usr/share/nginx/html/
 
+COPY qemu-arm-static /usr/bin
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
