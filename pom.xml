@@ -1007,6 +1007,7 @@
                         <!-- Exclude some UI files which we need to check in more detail -->
                         <exclude>ui/src/assets/**</exclude>
                         <exclude>ui/src/scss/**</exclude>
+                        <exclude>ui/dist/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
