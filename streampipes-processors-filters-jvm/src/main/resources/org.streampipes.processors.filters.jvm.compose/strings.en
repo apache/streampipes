@@ -1,2 +1,0 @@
-org.streampipes.processors.filters.jvm.compose.title=Compose
-org.streampipes.processors.filters.jvm.compose.description=Merges two event streams

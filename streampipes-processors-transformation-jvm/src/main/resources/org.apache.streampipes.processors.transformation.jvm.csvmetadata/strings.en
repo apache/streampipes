@@ -1,0 +1,15 @@
+org.apache.streampipes.processors.transformation.jvm.csvmetadata.title=CSV Metadata Enricher
+org.apache.streampipes.processors.transformation.jvm.csvmetadata.description=Enriches an event with additional fields from a
+CSV file based on a common ID.
+
+mapping-field.title=ID Field
+mapping-field.description=The id field used to lookup the metadata
+
+csv-file.title=CSV File
+csv-file.description=The CSV file to upload
+
+fields-to-append.title=Fields to append
+fields-to-append.description=The fields from the CSV file that should be appended to the event.
+
+field-to-match.title=Field to match
+field-to-match.description=The field to match with the value of the selected ID field, used to lookup metadata

@@ -20,7 +20,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>streampipes-extensions</artifactId>
-        <groupId>org.streampipes</groupId>
+        <groupId>org.apache.streampipes</groupId>
         <version>0.65.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -30,39 +30,39 @@
     <dependencies>
         <!-- StreamPipes dependencies -->
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-commons</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-container-standalone</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-json</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-cbor</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-smile</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-fst</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sdk</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-wrapper-flink</artifactId>
         </dependency>
 
@@ -106,7 +106,7 @@
                                     <resource>reference.conf</resource>
                                 </transformer>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.streampipes.processors.statistics.flink.StatisticsFlinkInit
+                                    <mainClass>org.apache.streampipes.processors.statistics.flink.StatisticsFlinkInit
                                     </mainClass>
                                 </transformer>
                             </transformers>

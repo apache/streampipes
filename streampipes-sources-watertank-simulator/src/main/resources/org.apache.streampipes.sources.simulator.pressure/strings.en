@@ -1,0 +1,2 @@
+org.apache.streampipes.sources.simulator.pressure.title=Pressure Sensor
+org.apache.streampipes.sources.simulator.pressure.description=Simulates a water tank pressure sensor

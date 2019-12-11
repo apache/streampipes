@@ -4,7 +4,7 @@
   "repeatWorkflow": true,
   "timeBetweenRepeat": 1000,
   "varyRepeatFrequency": true,
-  "targetTopic": "org.streampipes.examples.sources.vehicle",
+  "targetTopic": "org.apache.streampipes.examples.sources.vehicle",
   "steps": [
     {
       "config": [

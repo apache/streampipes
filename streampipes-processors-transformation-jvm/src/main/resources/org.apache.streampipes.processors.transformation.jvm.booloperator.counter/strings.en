@@ -1,0 +1,8 @@
+org.apache.streampipes.processors.transformation.jvm.booloperator.counter.title=Boolean Counter
+org.apache.streampipes.processors.transformation.jvm.booloperator.counter.description=Increases a counter on each change of a boolean value
+
+field.title=Boolean Field
+field.description=The field of the boolean to monitor
+
+countField.title=Counter
+countField.description=Amount of changes of boolean value

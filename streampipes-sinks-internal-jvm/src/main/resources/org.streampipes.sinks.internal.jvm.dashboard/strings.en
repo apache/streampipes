@@ -1,5 +1,0 @@
-org.streampipes.sinks.internal.jvm.dashboard.title=Dashboard Sink
-org.streampipes.sinks.internal.jvm.dashboard.description=Visualizes data streams in the StreamPipes dashboard
-
-visualization-name.title=Visualization Name
-visualization-name.description=A name that identifies your visualization.

@@ -1,8 +1,0 @@
-org.streampipes.sinks.brokers.jvm.bufferrest.title=Buffered REST Publisher
-org.streampipes.sinks.brokers.jvm.bufferrest.description=Collects a given amount of events into a JSON array. Once this event count is reached the JSON array is posted to the given REST interface.
-
-bufferrest.uri.title=REST URL
-bufferrest.uri.description=URL of the REST endoint
-
-bufferrest.count.title=Buffer Size
-bufferrest.count=The amount of events to buffer before sending them on

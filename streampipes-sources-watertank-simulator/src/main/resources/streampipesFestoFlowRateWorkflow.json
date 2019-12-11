@@ -4,7 +4,7 @@
   "repeatWorkflow": true,
   "timeBetweenRepeat": 1000,
   "varyRepeatFrequency": true,
-  "targetTopic" : "org.streampipes.examples.flowrate-1",
+  "targetTopic" : "org.apache.streampipes.examples.flowrate-1",
   "steps": [{
     "config": [{
       "timestamp": "nowTimestamp()",

@@ -1,0 +1,5 @@
+org.apache.streampipes.processors.transformation.jvm.transform-to-boolean.title=Transform to boolean
+org.apache.streampipes.processors.transformation.jvm.transform-to-boolean.description=Transforms a string or number to a boolean
+
+transform-fields.title=Transform fields
+transform-fields.description=The fields which should be transformed

@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.streampipes</groupId>
+        <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
         <version>0.65.1-SNAPSHOT</version>
     </parent>
@@ -91,77 +91,77 @@
         <dependencies>
             <!-- StreamPipes dependencies -->
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-commons</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-config</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-container-standalone</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-dataformat-json</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-dataformat-cbor</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-dataformat-smile</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-dataformat-fst</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-measurement-units</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-messaging-jms</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-messaging-kafka</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-sdk</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-sources</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-wrapper-siddhi</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-wrapper-standalone</artifactId>
                 <version>${streampipes.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-wrapper-flink</artifactId>
                 <version>${streampipes.version}</version>
                 <exclusions>
@@ -327,7 +327,7 @@
                 <version>${flink.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.streampipes</groupId>
+                <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-test-utils</artifactId>
                 <version>${streampipes.version}</version>
                 <scope>test</scope>
@@ -546,7 +546,7 @@
                 </configuration>
             </plugin>
             <!--            <plugin>-->
-            <!--                <groupId>org.streampipes</groupId>-->
+            <!--                <groupId>org.apache.streampipes</groupId>-->
             <!--                <artifactId>streampipes-maven-plugin</artifactId>-->
             <!--                <version>1.0-SNAPSHOT</version>-->
             <!--            </plugin>-->

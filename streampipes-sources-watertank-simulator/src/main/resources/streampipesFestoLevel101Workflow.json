@@ -4,7 +4,7 @@
   "repeatWorkflow": true,
   "timeBetweenRepeat": 1000,
   "varyRepeatFrequency": true,
-  "targetTopic" : "org.streampipes.examples.waterlevel",
+  "targetTopic" : "org.apache.streampipes.examples.waterlevel",
   "steps": [{
     "config": [{
       "timestamp": "nowTimestamp()",

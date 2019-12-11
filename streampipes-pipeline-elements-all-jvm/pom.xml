@@ -20,7 +20,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>streampipes-extensions</artifactId>
-        <groupId>org.streampipes</groupId>
+        <groupId>org.apache.streampipes</groupId>
         <version>0.65.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -29,49 +29,49 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-filters-jvm</artifactId>
             <version>0.65.1-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-image-processing-jvm</artifactId>
             <version>0.65.1-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-filters-siddhi</artifactId>
             <version>0.65.1-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-transformation-jvm</artifactId>
             <version>0.65.1-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-brokers-jvm</artifactId>
             <version>0.65.1-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-databases-jvm</artifactId>
             <version>0.65.1-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-internal-jvm</artifactId>
             <version>0.65.1-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-notifications-jvm</artifactId>
             <version>0.65.1-SNAPSHOT</version>
             <classifier>embed</classifier>
@@ -89,7 +89,7 @@
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <mainClass>org.streampipes.pe.jvm.AllPipelineElementsInit</mainClass>
+                            <mainClass>org.apache.streampipes.pe.jvm.AllPipelineElementsInit</mainClass>
                         </configuration>
                     </execution>
                 </executions>

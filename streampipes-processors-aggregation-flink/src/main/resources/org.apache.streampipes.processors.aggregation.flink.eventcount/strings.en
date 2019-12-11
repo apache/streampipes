@@ -1,0 +1,8 @@
+org.apache.streampipes.processors.aggregation.flink.eventcount.title=Event Counter
+org.apache.streampipes.processors.aggregation.flink.eventcount.description=Counts the number of events within a time window.
+
+time-window.title=Time Window Size
+time-window.description=Size of the time window
+
+scale.title=Time Window Scale
+scale.description=
