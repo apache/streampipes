@@ -127,11 +127,13 @@ docker-ui:
     # Build ARMv7
     # Download qemu static and make it executable so it can be used during the docker build phase
     - wget https://github.com/multiarch/qemu-user-static/releases/download/v4.0.0/qemu-arm-static -P ./ui
+    - wget https://github.com/multiarch/qemu-user-static/releases/download/v4.0.0/qemu-aarch64-static -P ./ui
     - chmod 554 ./ui/qemu-arm-static
-    - docker build --pull --build-arg BASE_IMAGE=$BASE_NGINX_ARM32v7
+    - chmod 554 ./ui/qemu-aarch64-static
+    - docker build --pull --build-arg BASE_IMAGE=$BASE_NGINX_ARM32v7 --build-arg QEMU=qemu-arm-static
       -t $IMAGE_NAME/ui:arm32v7 -t $IMAGE_NAME/ui:arm32v7-$MVN_VERSION
       -f ./ui/Dockerfile.arm ./ui
-    - docker build --pull --build-arg BASE_IMAGE=$BASE_NGINX_ARM64v8
+    - docker build --pull --build-arg BASE_IMAGE=$BASE_NGINX_ARM64v8 --build-arg QEMU=qemu-aarch64-static
       -t $IMAGE_NAME/ui:arm64v8 -t $IMAGE_NAME/ui:arm64v8-$MVN_VERSION
       -f ./ui/Dockerfile.arm ./ui
     # Push Docker images: AMD64, ARMv7, ARMv8

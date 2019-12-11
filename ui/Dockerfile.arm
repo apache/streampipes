@@ -14,9 +14,10 @@
 # limitations under the License.
 
 ARG BASE_IMAGE=arm64v8/nginx
+ARG QEMU=qemu-aarch64-static
 FROM $BASE_IMAGE
 
-COPY qemu-arm-static /usr/bin
+COPY $QEMU /usr/bin
 
 COPY dist/assets/img/ /usr/share/nginx/html/assets/img/
 COPY dist/assets/css/ /usr/share/nginx/html/assets/css/
