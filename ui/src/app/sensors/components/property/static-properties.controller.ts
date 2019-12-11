@@ -30,17 +30,17 @@ export class StaticPropertiesController {
         this.RestApi = RestApi;
         this.staticPropertyTypes = [{
             label: "Text Input",
-            "type": "org.streampipes.model.staticproperty.FreeTextStaticProperty"
+            "type": "org.apache.streampipes.model.staticproperty.FreeTextStaticProperty"
         },
-            {label: "Single-Value Selection", "type": "org.streampipes.model.staticproperty.OneOfStaticProperty"},
-            {label: "Multi-Value Selection", "type": "org.streampipes.model.staticproperty.AnyStaticProperty"},
-            {label: "Domain Concept", "type": "org.streampipes.model.staticproperty.DomainStaticProperty"},
+            {label: "Single-Value Selection", "type": "org.apache.streampipes.model.staticproperty.OneOfStaticProperty"},
+            {label: "Multi-Value Selection", "type": "org.apache.streampipes.model.staticproperty.AnyStaticProperty"},
+            {label: "Domain Concept", "type": "org.apache.streampipes.model.staticproperty.DomainStaticProperty"},
             {
                 label: "Single-Value Mapping Property",
-                "type": "org.streampipes.model.staticproperty.MappingPropertyUnary"
+                "type": "org.apache.streampipes.model.staticproperty.MappingPropertyUnary"
             },
-            {label: "Multi-Value Mapping Property", "type": "org.streampipes.model.staticproperty.MappingPropertyNary"},
-            {label: "Collection", "type": "org.streampipes.model.staticproperty.CollectionStaticProperty"}];
+            {label: "Multi-Value Mapping Property", "type": "org.apache.streampipes.model.staticproperty.MappingPropertyNary"},
+            {label: "Collection", "type": "org.apache.streampipes.model.staticproperty.CollectionStaticProperty"}];
 
         this.newStaticPropertyType = this.staticPropertyTypes[0].type;
         this.memberTypeSelected = false;

@@ -16,26 +16,26 @@
  *
  */
 
-package org.streampipes.connect.container.master.management;
+package org.apache.streampipes.connect.container.master.management;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.connect.adapter.util.TransportFormatGenerator;
-import org.streampipes.connect.container.master.util.AdapterEncryptionService;
-import org.streampipes.container.html.JSONGenerator;
-import org.streampipes.container.html.model.DataSourceDescriptionHtml;
-import org.streampipes.container.html.model.Description;
-import org.streampipes.model.SpDataSet;
-import org.streampipes.model.SpDataStream;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.model.util.Cloner;
-import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.adapter.util.TransportFormatGenerator;
+import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
+import org.apache.streampipes.container.html.JSONGenerator;
+import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
+import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.model.SpDataSet;
+import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.apache.streampipes.model.graph.DataSourceDescription;
+import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.sdk.helpers.SupportedProtocols;
+import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import java.net.URI;
 import java.net.URISyntaxException;

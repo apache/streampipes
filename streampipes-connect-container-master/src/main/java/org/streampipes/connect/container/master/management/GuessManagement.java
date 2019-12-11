@@ -16,19 +16,19 @@
  *
  */
 
-package org.streampipes.connect.container.master.management;
+package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.connect.adapter.exception.ParseException;
-import org.streampipes.model.client.messages.ErrorMessageLd;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.guess.GuessSchema;
-import org.streampipes.rest.shared.util.JsonLdUtils;
-import org.streampipes.vocabulary.StreamPipes;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.model.client.messages.ErrorMessageLd;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.rest.shared.util.JsonLdUtils;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.io.IOException;
 

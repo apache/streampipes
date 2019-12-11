@@ -3,20 +3,20 @@
 #set( $symbol_escape = '\' )
 package ${package}.pe.sink.${packageName};
 
-import org.streampipes.model.DataSinkType;
-import org.streampipes.model.graph.DataSinkDescription;
-import org.streampipes.model.graph.DataSinkInvocation;
-import org.streampipes.sdk.builder.DataSinkBuilder;
-import org.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.sdk.helpers.SupportedFormats;
-import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.wrapper.standalone.ConfiguredEventSink;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
-import org.streampipes.sdk.helpers.*;
-import org.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.sdk.builder.DataSinkBuilder;
+import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.SupportedFormats;
+import org.apache.streampipes.sdk.helpers.SupportedProtocols;
+import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
+import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
+import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.utils.Assets;
 
 public class ${classNamePrefix}Controller extends StandaloneEventSinkDeclarer<${classNamePrefix}Parameters> {
 

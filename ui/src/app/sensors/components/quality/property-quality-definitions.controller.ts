@@ -22,9 +22,9 @@ export class PropertyQualityDefinitionsController {
     property: any;
 
     constructor() {
-        this.qualities = [{label: "Accuracy", "description": "", "type": "org.streampipes.model.quality.Accuracy"},
-            {label: "Precision", "description": "", "type": "org.streampipes.model.quality.Precision"},
-            {label: "Resolution", "description": "", "type": "org.streampipes.model.quality.Resolution"}];
+        this.qualities = [{label: "Accuracy", "description": "", "type": "org.apache.streampipes.model.quality.Accuracy"},
+            {label: "Precision", "description": "", "type": "org.apache.streampipes.model.quality.Precision"},
+            {label: "Resolution", "description": "", "type": "org.apache.streampipes.model.quality.Resolution"}];
     }
 
     add() {

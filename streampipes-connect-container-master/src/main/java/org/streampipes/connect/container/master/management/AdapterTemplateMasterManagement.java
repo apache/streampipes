@@ -16,16 +16,16 @@
  *
  */
 
-package org.streampipes.connect.container.master.management;
+package org.apache.streampipes.connect.container.master.management;
 
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterDescriptionList;
-import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.streampipes.model.util.Cloner;
-import org.streampipes.storage.api.IAdapterTemplateStorage;
-import org.streampipes.storage.couchdb.impl.AdapterTemplateStorageImpl;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.storage.api.IAdapterTemplateStorage;
+import org.apache.streampipes.storage.couchdb.impl.AdapterTemplateStorageImpl;
 
 import java.util.List;
 import java.util.UUID;

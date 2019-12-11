@@ -15,17 +15,17 @@
  * limitations under the License.
  *
  */
-package org.streampipes.container.standalone.init;
+package org.apache.streampipes.container.standalone.init;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
-import org.streampipes.container.api.Element;
-import org.streampipes.container.api.InvocableElement;
-import org.streampipes.container.api.PipelineTemplateElement;
-import org.streampipes.container.api.SecElement;
-import org.streampipes.container.api.SepElement;
-import org.streampipes.container.api.SepaElement;
-import org.streampipes.container.api.WelcomePage;
+import org.apache.streampipes.container.api.Element;
+import org.apache.streampipes.container.api.InvocableElement;
+import org.apache.streampipes.container.api.PipelineTemplateElement;
+import org.apache.streampipes.container.api.SecElement;
+import org.apache.streampipes.container.api.SepElement;
+import org.apache.streampipes.container.api.SepaElement;
+import org.apache.streampipes.container.api.WelcomePage;
 
 @Component
 public class PipelineElementContainerResourceConfig extends ResourceConfig {

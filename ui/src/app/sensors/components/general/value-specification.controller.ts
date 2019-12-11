@@ -24,8 +24,8 @@ export class ValueSpecificationController {
 
     constructor() {
         this.valueSpecifications = [{label: "None", "type": undefined},
-            {label: "Quantitative Value", "type": "org.streampipes.model.schema.QuantitativeValue"},
-            {label: "Enumeration", "type": "org.streampipes.model.schema.Enumeration"}];
+            {label: "Quantitative Value", "type": "org.apache.streampipes.model.schema.QuantitativeValue"},
+            {label: "Enumeration", "type": "org.apache.streampipes.model.schema.Enumeration"}];
     }
 
     isDisallowed(type) {

@@ -16,7 +16,7 @@
  *
  */
 
-package org.streampipes.connect.container.worker.init;
+package org.apache.streampipes.connect.container.worker.init;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +24,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.model.generic.Protocol;
-import org.streampipes.connect.container.worker.management.MasterRestClient;
-import org.streampipes.connect.init.AdapterDeclarerSingleton;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.grounding.ProtocolDescription;
-import org.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.connect.adapter.Adapter;
+import org.apache.streampipes.connect.adapter.model.generic.Protocol;
+import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
+import org.apache.streampipes.connect.init.AdapterDeclarerSingleton;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
+import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 
 import java.util.ArrayList;
 import java.util.Collections;

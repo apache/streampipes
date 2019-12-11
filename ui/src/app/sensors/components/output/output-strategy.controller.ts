@@ -25,11 +25,11 @@ export class OutputStrategyController {
     strategies: any;
 
     constructor() {
-        this.outputStrategyTypes = [{label: "Append", "type": "org.streampipes.model.output.AppendOutputStrategy"},
-            {label: "Custom", "type": "org.streampipes.model.output.CustomOutputStrategy"},
-            {label: "Fixed", "type": "org.streampipes.model.output.FixedOutputStrategy"},
-            {label: "List", "type": "org.streampipes.model.output.ListOutputStrategy"},
-            {label: "Keep", "type": "org.streampipes.model.output.RenameOutputStrategy"}];
+        this.outputStrategyTypes = [{label: "Append", "type": "org.apache.streampipes.model.output.AppendOutputStrategy"},
+            {label: "Custom", "type": "org.apache.streampipes.model.output.CustomOutputStrategy"},
+            {label: "Fixed", "type": "org.apache.streampipes.model.output.FixedOutputStrategy"},
+            {label: "List", "type": "org.apache.streampipes.model.output.ListOutputStrategy"},
+            {label: "Keep", "type": "org.apache.streampipes.model.output.RenameOutputStrategy"}];
 
         this.selectedOutputStrategy = this.outputStrategyTypes[0].type;
     }

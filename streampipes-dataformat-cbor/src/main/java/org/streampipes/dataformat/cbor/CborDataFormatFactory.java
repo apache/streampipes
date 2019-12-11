@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-package org.streampipes.dataformat.cbor;
+package org.apache.streampipes.dataformat.cbor;
 
-import org.streampipes.dataformat.SpDataFormatDefinition;
-import org.streampipes.dataformat.SpDataFormatFactory;
-import org.streampipes.vocabulary.MessageFormat;
+import org.apache.streampipes.dataformat.SpDataFormatDefinition;
+import org.apache.streampipes.dataformat.SpDataFormatFactory;
+import org.apache.streampipes.vocabulary.MessageFormat;
 
 public class CborDataFormatFactory extends SpDataFormatFactory {
 

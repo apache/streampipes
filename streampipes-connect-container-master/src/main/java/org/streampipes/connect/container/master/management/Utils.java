@@ -16,10 +16,10 @@
  *
  */
 
-package org.streampipes.connect.container.master.management;
+package org.apache.streampipes.connect.container.master.management;
 
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 
 public class Utils {
     private WorkerAdministrationManagement workerAdministrationManagement;

@@ -35,8 +35,8 @@ export class SupportedGroundingController {
         this.thriftFormat = "http://sepa.event-processing.org/sepa#thrift";
         this.jsonFormat = "http://sepa.event-processing.org/sepa#json";
 
-        this.kafkaClass = "org.streampipes.model.grounding.KafkaTransportProtocol";
-        this.jmsClass = "org.streampipes.model.grounding.JmsTransportProtocol";
+        this.kafkaClass = "org.apache.streampipes.model.grounding.KafkaTransportProtocol";
+        this.jmsClass = "org.apache.streampipes.model.grounding.JmsTransportProtocol";
     }
 
 

@@ -16,14 +16,14 @@
  *
  */
 
-package org.streampipes.connect.container.worker.rest;
+package org.apache.streampipes.connect.container.worker.rest;
 
 
 import org.rendersnake.HtmlCanvas;
-import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.model.generic.Protocol;
-import org.streampipes.connect.container.worker.management.AdapterWorkerManagement;
-import org.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.connect.adapter.Adapter;
+import org.apache.streampipes.connect.adapter.model.generic.Protocol;
+import org.apache.streampipes.connect.container.worker.management.AdapterWorkerManagement;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

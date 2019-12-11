@@ -16,24 +16,24 @@
  *
  */
 
-package org.streampipes.connect.container.master.management;
+package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.GroundingService;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.connect.config.ConnectContainerConfig;
-import org.streampipes.connect.container.master.util.AdapterEncryptionService;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.streampipes.model.connect.worker.ConnectWorkerContainer;
-import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.model.util.Cloner;
-import org.streampipes.rest.shared.util.JsonLdUtils;
-import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.connect.adapter.GroundingService;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.config.ConnectContainerConfig;
+import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.rest.shared.util.JsonLdUtils;
+import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import java.io.IOException;
 import java.util.List;

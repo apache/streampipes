@@ -16,17 +16,17 @@
  *
  */
 
-package org.streampipes.connect.container.worker.management;
+package org.apache.streampipes.connect.container.worker.management;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.connect.adapter.exception.ParseException;
-import org.streampipes.connect.management.AdapterUtils;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.guess.GuessSchema;
-import org.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.connect.adapter.Adapter;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.management.AdapterUtils;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.sdk.helpers.EpProperties;
 
 import java.util.Arrays;
 import java.util.Optional;

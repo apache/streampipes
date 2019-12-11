@@ -27,7 +27,7 @@ export class Protocol {
   constructor(
     public url: string,
     public selected: string,
-    public type: string = 'org.streampipes.streamconnect.model.adapter.Protocol'
+    public type: string = 'org.apache.streampipes.streamconnect.model.adapter.Protocol'
   ) {
     this.properties.url = url;
     this.properties.selected = url;

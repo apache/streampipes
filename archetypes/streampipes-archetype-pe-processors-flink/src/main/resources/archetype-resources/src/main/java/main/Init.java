@@ -3,18 +3,18 @@
 #set( $symbol_escape = '\' )
 package ${package}.main;
 
-import org.streampipes.container.init.DeclarersSingleton;
-import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 
 import ${package}.config.Config;
 import ${package}.pe.processor.${packageName}.${classNamePrefix}Controller;
 
-import org.streampipes.dataformat.cbor.CborDataFormatFactory;
-import org.streampipes.dataformat.fst.FstDataFormatFactory;
-import org.streampipes.dataformat.json.JsonDataFormatFactory;
-import org.streampipes.dataformat.smile.SmileDataFormatFactory;
-import org.streampipes.messaging.jms.SpJmsProtocolFactory;
-import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
+import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
+import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
+import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
+import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
+import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 
 public class Init extends StandaloneModelSubmitter {
 

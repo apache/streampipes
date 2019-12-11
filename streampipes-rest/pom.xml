@@ -19,7 +19,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.streampipes</groupId>
+        <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
         <version>0.65.1-SNAPSHOT</version>
     </parent>
@@ -30,7 +30,7 @@
     <dependencies>
         <!-- StreamPipes dependencies -->
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-commons</artifactId>
             <version>0.65.1-SNAPSHOT</version>
             <exclusions>
@@ -41,37 +41,37 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
             <version>0.65.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-measurement-units</artifactId>
             <version>0.65.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-jms</artifactId>
             <version>0.65.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model-client</artifactId>
             <version>0.65.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-pipeline-management</artifactId>
             <version>0.65.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-rest-shared</artifactId>
             <version>0.65.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-user-management</artifactId>
             <version>0.65.1-SNAPSHOT</version>
         </dependency>

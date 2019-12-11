@@ -15,19 +15,19 @@
  * limitations under the License.
  *
  */
-package org.streampipes.connect.utils;
+package org.apache.streampipes.connect.utils;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.streampipes.model.connect.grounding.FormatDescription;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.schema.EventPropertyPrimitive;
-import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.streampipes.serializers.json.GsonSerializer;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.serializers.json.GsonSerializer;
 
 import java.util.Arrays;
 

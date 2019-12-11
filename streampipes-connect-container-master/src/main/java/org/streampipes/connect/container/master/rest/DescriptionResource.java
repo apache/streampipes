@@ -16,17 +16,17 @@
  *
  */
 
-package org.streampipes.connect.container.master.rest;
+package org.apache.streampipes.connect.container.master.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.container.master.management.DescriptionManagement;
-import org.streampipes.connect.rest.AbstractContainerResource;
-import org.streampipes.model.connect.adapter.AdapterDescriptionList;
-import org.streampipes.model.connect.grounding.FormatDescriptionList;
-import org.streampipes.model.connect.grounding.ProtocolDescriptionList;
-import org.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.streampipes.rest.shared.util.SpMediaType;
+import org.apache.streampipes.connect.container.master.management.DescriptionManagement;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescriptionList;
+import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
+import org.apache.streampipes.rest.shared.util.SpMediaType;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

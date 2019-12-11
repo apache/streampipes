@@ -16,7 +16,7 @@
  *
  */
 
-package org.streampipes.connect.management;
+package org.apache.streampipes.connect.management;
 
 public class AdapterDeserializerTest {
 //

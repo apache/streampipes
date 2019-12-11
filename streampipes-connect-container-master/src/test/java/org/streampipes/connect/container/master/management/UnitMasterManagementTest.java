@@ -16,7 +16,7 @@
  *
  */
 
-package org.streampipes.connect.container.master.management;
+package org.apache.streampipes.connect.container.master.management;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,9 +33,9 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.model.connect.unit.UnitDescription;
-import org.streampipes.units.UnitProvider;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.model.connect.unit.UnitDescription;
+import org.apache.streampipes.units.UnitProvider;
 
 import java.net.URI;
 import java.util.ArrayList;

@@ -4,9 +4,9 @@
 
 package ${package}.pe.sink.${packageName};
 
-import org.streampipes.model.runtime.Event;
-import org.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.streampipes.wrapper.runtime.EventSink;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
+import org.apache.streampipes.wrapper.runtime.EventSink;
 
 import org.slf4j.Logger;
 

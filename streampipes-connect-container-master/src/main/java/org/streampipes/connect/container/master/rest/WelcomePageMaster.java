@@ -16,19 +16,19 @@
  *
  */
 
-package org.streampipes.connect.container.master.rest;
+package org.apache.streampipes.connect.container.master.rest;
 
 
 import org.rendersnake.HtmlCanvas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.GroundingService;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.connect.container.master.management.AdapterMasterManagement;
-import org.streampipes.connect.rest.AbstractContainerResource;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
-import org.streampipes.storage.couchdb.utils.CouchDbConfig;
+import org.apache.streampipes.connect.adapter.GroundingService;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.storage.couchdb.utils.CouchDbConfig;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

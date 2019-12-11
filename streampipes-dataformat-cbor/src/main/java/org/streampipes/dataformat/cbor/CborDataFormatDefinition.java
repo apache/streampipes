@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-package org.streampipes.dataformat.cbor;
+package org.apache.streampipes.dataformat.cbor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
-import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.dataformat.SpDataFormatDefinition;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 
 import java.io.IOException;
 import java.util.HashMap;

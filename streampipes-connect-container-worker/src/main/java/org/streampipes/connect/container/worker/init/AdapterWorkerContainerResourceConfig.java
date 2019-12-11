@@ -15,16 +15,16 @@
  * limitations under the License.
  *
  */
-package org.streampipes.connect.container.worker.init;
+package org.apache.streampipes.connect.container.worker.init;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.springframework.stereotype.Component;
-import org.streampipes.connect.container.worker.rest.FileResource;
-import org.streampipes.connect.container.worker.rest.GuessResource;
-import org.streampipes.connect.container.worker.rest.RuntimeResolvableResource;
-import org.streampipes.connect.container.worker.rest.WelcomePageWorker;
-import org.streampipes.connect.container.worker.rest.WorkerResource;
-import org.streampipes.connect.init.AdapterContainerConfig;
+import org.apache.streampipes.connect.container.worker.rest.FileResource;
+import org.apache.streampipes.connect.container.worker.rest.GuessResource;
+import org.apache.streampipes.connect.container.worker.rest.RuntimeResolvableResource;
+import org.apache.streampipes.connect.container.worker.rest.WelcomePageWorker;
+import org.apache.streampipes.connect.container.worker.rest.WorkerResource;
+import org.apache.streampipes.connect.init.AdapterContainerConfig;
 
 @Component
 public class AdapterWorkerContainerResourceConfig extends AdapterContainerConfig {

@@ -16,14 +16,14 @@
  *
  */
 
-package org.streampipes.connect.container.master.rest;
+package org.apache.streampipes.connect.container.master.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.connect.container.master.management.UnitMasterManagement;
-import org.streampipes.connect.rest.AbstractContainerResource;
-import org.streampipes.model.connect.unit.UnitDescription;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.container.master.management.UnitMasterManagement;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.model.connect.unit.UnitDescription;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

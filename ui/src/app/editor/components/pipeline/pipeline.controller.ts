@@ -195,7 +195,7 @@ export class PipelineController {
                 .eventGrounding
                 .transportProtocols[0]
                 .properties.topicDefinition
-                .type === "org.streampipes.model.grounding.WildcardTopicDefinition") {
+                .type === "org.apache.streampipes.model.grounding.WildcardTopicDefinition") {
             this.EditorDialogManager.showCustomizeStreamDialog(streamDescription);
         }
     }
@@ -310,7 +310,7 @@ export class PipelineController {
     isCustomOutput(pe) {
         var custom = false;
         angular.forEach(pe.payload.outputStrategies, strategy => {
-            if (strategy.type == 'org.streampipes.model.output.CustomOutputStrategy') {
+            if (strategy.type == 'org.apache.streampipes.model.output.CustomOutputStrategy') {
                 custom = true;
             }
         });

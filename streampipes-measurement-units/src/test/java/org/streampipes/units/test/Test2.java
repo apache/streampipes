@@ -16,11 +16,11 @@
  *
  */
 
-package org.streampipes.units.test;
+package org.apache.streampipes.units.test;
 
 import com.github.jqudt.Quantity;
 import com.github.jqudt.Unit;
-import org.streampipes.units.UnitProvider;
+import org.apache.streampipes.units.UnitProvider;
 
 import java.util.List;
 

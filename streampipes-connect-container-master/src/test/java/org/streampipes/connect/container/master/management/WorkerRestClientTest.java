@@ -16,7 +16,7 @@
  *
  */
 
-package org.streampipes.connect.container.master.management;
+package org.apache.streampipes.connect.container.master.management;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
@@ -29,9 +29,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ WorkerRestClient.class })

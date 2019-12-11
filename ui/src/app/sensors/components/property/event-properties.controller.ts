@@ -58,7 +58,7 @@ export class EventPropertiesController {
     addProperty(properties) {
         if (properties == undefined) properties = [];
         properties.push({
-            "type": "org.streampipes.model.schema.EventPropertyPrimitive",
+            "type": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
             "properties": {"runtimeType": "", "domainProperties": [""]}
         });
     }

@@ -132,7 +132,7 @@ export class CustomizeController {
         });
 
         angular.forEach(this.selectedElement.outputStrategies, strategy => {
-            if (strategy.type == 'org.streampipes.model.output.CustomOutputStrategy') {
+            if (strategy.type == 'org.apache.streampipes.model.output.CustomOutputStrategy') {
                 if (!strategy.properties.selectedPropertyKeys && !(strategy.properties.selectedPropertyKeys.length > 0)) {
                     valid = false;
                 }

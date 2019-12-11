@@ -16,7 +16,7 @@
  *
  */
 
-package org.streampipes.connect.container.worker.management;
+package org.apache.streampipes.connect.container.worker.management;
 
 import org.apache.commons.io.IOUtils;
 

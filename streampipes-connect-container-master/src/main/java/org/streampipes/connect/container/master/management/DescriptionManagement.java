@@ -16,15 +16,15 @@
  *
  */
 
-package org.streampipes.connect.container.master.management;
+package org.apache.streampipes.connect.container.master.management;
 
-import org.streampipes.connect.adapter.AdapterRegistry;
-import org.streampipes.connect.adapter.model.generic.Format;
-import org.streampipes.model.connect.adapter.AdapterDescriptionList;
-import org.streampipes.model.connect.grounding.FormatDescriptionList;
-import org.streampipes.model.connect.grounding.ProtocolDescriptionList;
-import org.streampipes.model.connect.worker.ConnectWorkerContainer;
-import org.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
+import org.apache.streampipes.connect.adapter.AdapterRegistry;
+import org.apache.streampipes.connect.adapter.model.generic.Format;
+import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescriptionList;
+import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
 
 import java.util.List;
 import java.util.Map;

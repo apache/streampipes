@@ -16,16 +16,16 @@
  *
  */
 
-package org.streampipes.connect.container.master.management;
+package org.apache.streampipes.connect.container.master.management;
 
 import com.github.jqudt.Unit;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.model.connect.unit.UnitDescription;
-import org.streampipes.units.UnitCollector;
-import org.streampipes.units.UnitProvider;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.model.connect.unit.UnitDescription;
+import org.apache.streampipes.units.UnitCollector;
+import org.apache.streampipes.units.UnitProvider;
 
 import java.util.Iterator;
 import java.util.LinkedList;

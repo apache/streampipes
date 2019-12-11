@@ -3,8 +3,8 @@
 #set( $symbol_escape = '\' )
 package ${package}.main;
 
-import org.streampipes.container.init.DeclarersSingleton;
-import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import ${package}.config.Config;
 import ${package}.pe.${packageName}.DataSource;
 

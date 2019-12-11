@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-package org.streampipes.dataformat.fst;
+package org.apache.streampipes.dataformat.fst;
 
 import org.nustaq.serialization.FSTConfiguration;
-import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.dataformat.SpDataFormatDefinition;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 
 import java.util.Map;
 

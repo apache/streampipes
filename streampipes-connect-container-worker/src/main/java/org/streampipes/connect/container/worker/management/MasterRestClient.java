@@ -16,14 +16,14 @@
  *
  */
 
-package org.streampipes.connect.container.worker.management;
+package org.apache.streampipes.connect.container.worker.management;
 
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.model.connect.worker.ConnectWorkerContainer;
-import org.streampipes.rest.shared.util.JsonLdUtils;
+import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.rest.shared.util.JsonLdUtils;
 
 import java.io.IOException;
 

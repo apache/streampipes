@@ -39,9 +39,9 @@ export class EditorCtrl {
     ShepherdService: any;
     isTutorialOpen: boolean = false;
 
-    requiredStreamForTutorialAppId: any = "org.streampipes.sources.simulator.flowrate1";
-    requiredProcessorForTutorialAppId: any = "org.streampipes.processors.filters.jvm.numericalfilter";
-    requiredSinkForTutorialAppId: any = "org.streampipes.sinks.internal.jvm.dashboard";
+    requiredStreamForTutorialAppId: any = "org.apache.streampipes.sources.simulator.flowrate1";
+    requiredProcessorForTutorialAppId: any = "org.apache.streampipes.processors.filters.jvm.numericalfilter";
+    requiredSinkForTutorialAppId: any = "org.apache.streampipes.sinks.internal.jvm.dashboard";
     missingElementsForTutorial: any = [];
 
     constructor($rootScope,
@@ -206,7 +206,7 @@ export class EditorCtrl {
                 let sources = msg.data;
                 sources.forEach((source, i, sources) => {
                     source.spDataStreams.forEach(stream => {
-                        if (stream.sourceType == 'org.streampipes.model.SpDataSet') {
+                        if (stream.sourceType == 'org.apache.streampipes.model.SpDataSet') {
                             stream.type = "set";
                             tempSets = tempSets.concat(stream);
                         } else {

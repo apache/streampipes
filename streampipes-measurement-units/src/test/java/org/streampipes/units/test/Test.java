@@ -16,7 +16,7 @@
  *
  */
 
-package org.streampipes.units.test;
+package org.apache.streampipes.units.test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import com.github.jqudt.Unit;
 import com.github.jqudt.onto.UnitFactory;
 import com.github.jqudt.onto.units.TemperatureUnit;
 
-import org.streampipes.units.UnitCollector;
+import org.apache.streampipes.units.UnitCollector;
 
 public class Test {
 

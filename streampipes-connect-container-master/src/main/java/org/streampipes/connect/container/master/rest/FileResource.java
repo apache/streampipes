@@ -16,15 +16,15 @@
  *
  */
 
-package org.streampipes.connect.container.master.rest;
+package org.apache.streampipes.connect.container.master.rest;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.connect.container.master.management.FileManagement;
-import org.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.container.master.management.FileManagement;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
 
 import java.io.InputStream;
 

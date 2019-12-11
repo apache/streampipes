@@ -21,7 +21,7 @@
 ### Usage
 
 mvn archetype:generate                                  \
-			-DarchetypeGroupId=org.streampipes                \
+			-DarchetypeGroupId=org.apache.streampipes                \
 			-DarchetypeArtifactId=streampipes-archetype-pe-processors-jvm          \
 			-DarchetypeVersion=0.60.2-SNAPSHOT               \
 			-DgroupId=my.groupId \

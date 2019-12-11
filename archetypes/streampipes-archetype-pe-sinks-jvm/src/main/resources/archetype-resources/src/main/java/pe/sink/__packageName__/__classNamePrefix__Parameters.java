@@ -3,8 +3,8 @@
 #set( $symbol_escape = '\' )
 package ${package}.pe.sink.${packageName};
 
-import org.streampipes.model.graph.DataSinkInvocation;
-import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class ${classNamePrefix}Parameters extends EventSinkBindingParams {
 

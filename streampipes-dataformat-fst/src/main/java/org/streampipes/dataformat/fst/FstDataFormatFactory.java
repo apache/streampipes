@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-package org.streampipes.dataformat.fst;
+package org.apache.streampipes.dataformat.fst;
 
-import org.streampipes.dataformat.SpDataFormatDefinition;
-import org.streampipes.dataformat.SpDataFormatFactory;
-import org.streampipes.vocabulary.MessageFormat;
+import org.apache.streampipes.dataformat.SpDataFormatDefinition;
+import org.apache.streampipes.dataformat.SpDataFormatFactory;
+import org.apache.streampipes.vocabulary.MessageFormat;
 
 public class FstDataFormatFactory extends SpDataFormatFactory {
 
