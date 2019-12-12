@@ -18,14 +18,15 @@
 
 # StreamPipes
 
-StreamPipes enables flexible modeling of stream processing pipelines by providing a graphical modeling editor on top of existing stream processing frameworks.
+Apache StreamPipes (incubating) A self-service (Industrial) IoT toolbox to enable non-technical users to connect
+, analyze and explore IoT data streams.
 
 It leverages non-technical users to quickly define and execute processing pipelines based on an easily extensible 
 toolbox of data sources, data processors and data sinks.
 
-Learn more about StreamPipes at [https://www.streampipes.org/](https://www.streampipes.org/)
+Learn more about StreamPipes at [https://streampipes.apache.org/](https://streampipes.apache.org/)
 
-Read the full documentation at [https://docs.streampipes.org](https://docs.streampipes.org)
+Read the full documentation at [https://streampipes.apache.org/docs](https://streampipes.apache.org/docs)
 
 ### StreamPipes Pipeline Elements Examples
 
@@ -34,9 +35,4 @@ elements can be created with StreamPipes. The examples are referenced in the SDK
 (https://docs.streampipes.org/docs/dev-guide-introduction)
 
 If you are looking for **real** pipeline elements that can be installed in StreamPipes, have a look at 
-[StreamPipes Pipeline Elements](https://www.github.com/streampipes/streampipes-pipeline-elements).
-
-### Feedback
-
-We'd love to hear your feedback! Contact us at [feedback@streampipes.org](mailto:feedback@streampipes.org)
-
+[StreamPipes Pipeline Elements](https://www.github.com/apache/incubator-streampipes-extensions).
