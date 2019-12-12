@@ -14,6 +14,10 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '10.x'
       - name: Build with Maven
         run: mvn clean package javadoc:aggregate
       - name: Login to Docker Hub
@@ -26,9 +30,22 @@ jobs:
           echo BACKEND_IMAGE_NAME=$BACKEND_IMAGE_NAME
           docker build --pull -t $BACKEND_IMAGE_NAME ./streampipes-backend/
           docker push $BACKEND_IMAGE_NAME
-      - name: Push and Push Docker Connect Image
+      - name: Build and Push Docker Connect Image
         run: |
           MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           CONNECT_IMAGE_NAME=apachestreampipes/streampipes-connect-container:$MVN_VERSION
           docker build --pull -t $CONNECT_IMAGE_NAME ./streampipes-connect-container-master/
           docker push $CONNECT_IMAGE_NAME
+      - name: Build UI
+        working-directory: ./ui
+        run: |
+          NODE_PATH=/cache/node_modules
+          NODE_OPTIONS=--max_old_space_size=4096
+          npm install --unsafe-perm
+          npm run build
+      - name: Build and Push Docker UI Image
+        run: |
+          MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          UI_IMAGE_NAME=apachestreampipes/ui:$MVN_VERSION
+          docker build --no-cache --pull -t $UI_IMAGE_NAME ./ui
+          docker push $UI_IMAGE_NAME
