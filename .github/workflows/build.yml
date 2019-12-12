@@ -21,7 +21,9 @@ jobs:
       - name: Build Docker Backend Image
         run: |
           MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
-          BACKEND_IMAGE_NAME = apachestreampipes/backend:$MVN_VERSION
+          BACKEND_IMAGE_NAME=apachestreampipes/backend:$MVN_VERSION
+          echo MVN_VERSION=$MVN_VERSION
+          echo BACKEND_IMAGE_NAME=$BACKEND_IMAGE_NAME
           docker build --pull -t $BACKEND_IMAGE_NAME ./streampipes-backend/
       - name: Push to Docker Hub
         run: docker push $BACKEND_IMAGE_NAME
