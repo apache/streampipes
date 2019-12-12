@@ -39,10 +39,10 @@ pull github:
     - ssh-add <(echo "$SSH")
     - mkdir ~/.ssh
     - touch ~/.ssh/known_hosts
-    - ssh-keyscan -p 2222 -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
-    - git config --global user.email 'zehnder@fzi.de'
-    - git config --global user.name 'zehnder'
-    - git pull github
+    - ssh-keyscan -p 2222 -t rsa $REGISTRY_HOST > ~/.ssh/known_hosts
+    - git config --global user.email '$USER_EMAIL'
+    - git config --global user.name '$USER_NAME'
+    - git pull --all
     - git push origin --all
 
 build:
