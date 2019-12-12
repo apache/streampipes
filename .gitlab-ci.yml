@@ -44,8 +44,6 @@ pull github:
     - git config --global user.name '$USER_NAME'
     - git checkout dev
     - git pull github dev
-    - git checkout master
-    - git pull github master
     - git push origin --all
 
 build:
