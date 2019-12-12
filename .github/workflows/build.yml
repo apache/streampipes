@@ -18,12 +18,17 @@ jobs:
         run: mvn clean package javadoc:aggregate
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
-      - name: Build Docker Backend Image
+      - name: Build and Push Docker Backend Image
         run: |
           MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           BACKEND_IMAGE_NAME=apachestreampipes/backend:$MVN_VERSION
           echo MVN_VERSION=$MVN_VERSION
           echo BACKEND_IMAGE_NAME=$BACKEND_IMAGE_NAME
           docker build --pull -t $BACKEND_IMAGE_NAME ./streampipes-backend/
-      - name: Push to Docker Hub
-        run: docker push $BACKEND_IMAGE_NAME
+          docker push $BACKEND_IMAGE_NAME
+      - name: Push and Push Docker Connect Image
+        run: |
+          MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          CONNECT_IMAGE_NAME=apachestreampipes/streampipes-connect-container:$MVN_VERSION
+          docker build --pull -t $CONNECT_IMAGE_NAME ./streampipes-connect-container-master/
+          docker push $CONNECT_IMAGE_NAME
