@@ -42,7 +42,10 @@ pull github:
     - ssh-keyscan -p 2222 -t rsa $REGISTRY_HOST > ~/.ssh/known_hosts
     - git config --global user.email '$USER_EMAIL'
     - git config --global user.name '$USER_NAME'
-    - git pull --all
+    - git checkout dev
+    - git pull github dev
+    - git checkout master
+    - git pull github master
     - git push origin --all
 
 build:
