@@ -20,7 +20,7 @@ jobs:
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
       - name: Build Docker Backend Image
         run: |
-          MVN_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
+          MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           BACKEND_IMAGE_NAME=apachestreampipes/backend:$MVN_VERSION
           echo MVN_VERSION=$MVN_VERSION
           echo BACKEND_IMAGE_NAME=$BACKEND_IMAGE_NAME
