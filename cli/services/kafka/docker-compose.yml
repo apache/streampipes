@@ -24,17 +24,10 @@ services:
     depends_on:
       - zookeeper
     environment:
-      # TODO: change named listener to INSIDE once kafka connect is done
-      # KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      # KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://localhost:9094 #(local, i.e. Single-Node with IDE + Docker)
-      # KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
-      # KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-      #
-      #
       # see: https://github.com/confluentinc/schema-registry/issues/648
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092,OUTSIDE://localhost:9094,EXTERNAL://ipe-girlitz.fzi.de:9095 #(local, i.e. Single-Node with IDE + Docker)
-      KAFKA_LISTENERS: PLAINTEXT://:9092,OUTSIDE://:9094,EXTERNAL://:9095
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092,OUTSIDE://localhost:9094 #(local, i.e. Single-Node with IDE + Docker)
+      KAFKA_LISTENERS: PLAINTEXT://:9092,OUTSIDE://:9094
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
