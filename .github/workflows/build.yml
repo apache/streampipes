@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v1
         with:
-          node-version: '10.x'
+          node-version: '12.x'
       - name: Build with Maven
         run: mvn clean package javadoc:aggregate
       - name: Login to Docker Hub
@@ -40,7 +40,7 @@ jobs:
         working-directory: ./ui
         run: |
           NODE_PATH=/cache/node_modules
-          NODE_OPTIONS=--max_old_space_size=4096
+          NODE_OPTIONS=--max_old_space_size=6096
           npm install --unsafe-perm
           npm run build
       - name: Build and Push Docker UI Image
