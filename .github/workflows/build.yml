@@ -15,7 +15,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Build Extensions with Maven
-        run: mvn clean package javadoc:aggregate
+        run: mvn clean package javadoc:aggregate -U -DskipTests -Denforcer.skip
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
       - name: Extract current snapshot version
