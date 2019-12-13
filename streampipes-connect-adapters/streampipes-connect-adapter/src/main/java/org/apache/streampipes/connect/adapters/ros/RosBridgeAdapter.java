@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.connect.adapters.ros;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -48,10 +50,7 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements ResolvesContainerProvidedOptions {
@@ -107,14 +106,19 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements Reso
 
         String topicType = getMethodType(this.ros, this.topic);
 
+        ObjectMapper mapper = new ObjectMapper();
         Topic echoBack = new Topic(ros, this.topic, topicType);
         echoBack.subscribe(new TopicCallback() {
             @Override
             public void handleMessage(Message message) {
 
-                InputStream stream = new ByteArrayInputStream(message.toString().getBytes(StandardCharsets.UTF_8));
 
-                jsonObjectParser.parse(stream, new ParseData());
+                try {
+                    Map<String, Object> result = mapper.readValue(message.toString(), HashMap.class);
+                    adapterPipeline.process(result);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -227,22 +231,6 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements Reso
 
         JsonObject ob = new JsonParser().parse(response.toString()).getAsJsonObject();
         return ob.get("type").getAsString();
-    }
-
-    private class ParseData implements EmitBinaryEvent {
-
-        private JsonObjectFormat jsonObjectFormat;
-
-        public ParseData() {
-            this.jsonObjectFormat = new JsonObjectFormat();
-        }
-
-        @Override
-        public Boolean emit(byte[] event) {
-            Map<String, Object> result = this.jsonObjectFormat.parse(event);
-            adapterPipeline.process(result);
-            return true;
-        }
     }
 
     private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
