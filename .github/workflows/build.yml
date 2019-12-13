@@ -117,11 +117,11 @@ jobs:
           docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
           docker push $IMAGE_NAME
       - name: Build and Push Docker Image sinks-databases-flink
-          run: |
-            COMPONENT_NAME=sinks-databases-flink
-            IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
-            docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
-            docker push $IMAGE_NAME
+        run: |
+          COMPONENT_NAME=sinks-databases-flink
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
       - name: Build and Push Docker Image sinks-databases-jvm
         run: |
           COMPONENT_NAME=sinks-databases-jvm
