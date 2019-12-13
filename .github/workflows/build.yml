@@ -22,9 +22,133 @@ jobs:
         run: echo "::set-env name=MVN_VERSION::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
       - name: Build and Push Docker Image pipeline-elements-all-jvm
         run: |
-          echo "${{env.MVN_VERSION}}"
           COMPONENT_NAME=pipeline-elements-all-jvm
           IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
-          echo BIMAGE_NAME=$IMAGE_NAME
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image processors-aggregation-flink
+        run: |
+          COMPONENT_NAME=processors-aggregation-flink
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image processors-enricher-flink
+        run: |
+          COMPONENT_NAME=processors-enricher-flink
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image processors-enricher-jvm
+        run: |
+          COMPONENT_NAME=processors-enricher-jvm
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image processors-filters-jvm
+        run: |
+          COMPONENT_NAME=processors-filters-jvm
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image processors-geo-jvm
+        run: |
+          COMPONENT_NAME=processors-geo-jvm
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image processors-image-processing-jvm
+        run: |
+          COMPONENT_NAME=processors-image-processing-jvm
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image processors-pattern-detection-flink
+        run: |
+          COMPONENT_NAME=processors-pattern-detection-flink
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image processors-filters-siddhi
+        run: |
+          COMPONENT_NAME=processors-filters-siddhi
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image processors-statistics-flink
+        run: |
+          COMPONENT_NAME=processors-statistics-flink
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image processors-geo-flink
+        run: |
+          COMPONENT_NAME=processors-geo-flink
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image processors-transformation-flink
+        run: |
+          COMPONENT_NAME=processors-transformation-flink
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image processors-transformation-jvm
+        run: |
+          COMPONENT_NAME=processors-transformation-jvm
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image processors-text-mining-flink
+        run: |
+          COMPONENT_NAME=processors-text-mining-flink
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image processors-text-mining-jvm
+        run: |
+          COMPONENT_NAME=processors-text-mining-jvm
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image sinks-brokers-jvm
+        run: |
+          COMPONENT_NAME=sinks-brokers-jvm
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image sinks-databases-flink
+          run: |
+            COMPONENT_NAME=sinks-databases-flink
+            IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+            docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+            docker push $IMAGE_NAME
+      - name: Build and Push Docker Image sinks-databases-jvm
+        run: |
+          COMPONENT_NAME=sinks-databases-jvm
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image sinks-notifications-jvm
+        run: |
+          COMPONENT_NAME=sinks-notifications-jvm
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image sinks-internal-jvm
+        run: |
+          COMPONENT_NAME=sinks-internal-jvm
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image sources-vehicle-simulator
+        run: |
+          COMPONENT_NAME=sources-vehicle-simulator
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+          docker push $IMAGE_NAME
+      - name: Build and Push Docker Image sources-watertank-simulator
+        run: |
+          COMPONENT_NAME=sources-watertank-simulator
+          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
           docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
           docker push $IMAGE_NAME
