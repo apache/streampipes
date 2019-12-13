@@ -20,7 +20,6 @@ services:
     hostname: kafka
     ports:
       - "9094:9094"
-      - "9095:9095"
     depends_on:
       - zookeeper
     environment:
