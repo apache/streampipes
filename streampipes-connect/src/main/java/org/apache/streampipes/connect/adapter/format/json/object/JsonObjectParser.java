@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.adapter.format.json.object;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,9 @@ public class JsonObjectParser extends Parser {
 
     private static final Logger logger = LoggerFactory.getLogger(JsonObjectParser.class);
 
+    private ObjectMapper mapper;
+    private JsonDataFormatDefinition jsonDefinition;
+
     @Override
     public Parser getInstance(FormatDescription formatDescription) {
         return new JsonObjectParser();
@@ -56,51 +60,21 @@ public class JsonObjectParser extends Parser {
      * Use this constructor when just a specific key of the object should be parsed
      */
     public JsonObjectParser() {
+        mapper = new ObjectMapper();
+        jsonDefinition = new JsonDataFormatDefinition();
     }
 
     @Override
     public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
-        JsonParserFactory factory = Json.createParserFactory(null);
-        javax.json.stream.JsonParser jsonParser = factory.createParser(data);
-
-        // Parse all events
-        JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
-        boolean isEvent = true;
-        boolean result = true;
-        int objectCount = 0;
-
-        if (!jsonParser.hasNext())
-            throw new ParseException("No JSONObject found");
 
         try {
-            while (jsonParser.hasNext() && isEvent && result) {
-                Map<String, Object> objectMap = parseObject(jsonParser, true, 1);
-                if (objectMap != null) {
-                    byte[] tmp = new byte[0];
-                    try {
-                        tmp = jsonDefinition.fromMap(objectMap);
-                    } catch (SpRuntimeException e) {
-                        e.printStackTrace();
-                    }
-//                    handleEvent(new EventObjectEndEvent(parseObject(tmp)));
-                    // TODO decide what happens id emit returns false
-                    result = emitBinaryEvent.emit(tmp);
-                } else {
-                    isEvent = false;
-                }
-            }
-
-        } catch(JsonParsingException e) {
-            logger.error("Could not parse Data to JSONObject");
-            try {
-                String event = IOUtils.toString(data, StandardCharsets.UTF_8.name());
-                logger.error("Event no valid json: " + event);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            throw new ParseException("Could not parse Data to JSONObject.");
+            Map<String, Object> map = mapper.readValue(data, HashMap.class);
+            emitBinaryEvent.emit(jsonDefinition.fromMap(map));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SpRuntimeException e) {
+            e.printStackTrace();
         }
-
 
     }
 
