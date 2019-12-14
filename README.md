@@ -16,9 +16,9 @@
   ~
   -->
 
-[![Travis Badge](https://travis-ci.org/apache/incubator-streampipes.svg?branch=dev)](https://travis-ci.org/apache/incubator-streampipes.svg?branch=dev)
+[![Github Actions](https://img.shields.io/github/workflow/status/apache/incubator-streampipes/build-and-deploy-docker-dev)](https://github.com/apache/incubator-streampipes/actions/)
 [![Docker pulls](https://img.shields.io/docker/pulls/streampipes/backend.svg)](https://hub.docker.com/r/streampipes/backend/)
-[![Maven central](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-backend.svg)](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-backend.svg)
+[![Maven central](https://img.shields.io/maven-central/v/org.streampipes/streampipes-backend.svg)](https://img.shields.io/maven-central/v/org.streampipes/streampipes-backend.svg)
 [![License](https://img.shields.io/github/license/apache/incubator-streampipes.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Last commit](https://img.shields.io/github/last-commit/apache/incubator-streampipes.svg)]()
 [![Twitter](https://img.shields.io/twitter/follow/StreamPipes.svg?label=Follow&style=social)](https://twitter.com/StreamPipes)
