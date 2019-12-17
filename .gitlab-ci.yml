@@ -39,7 +39,7 @@ pull github:
   - git config --global user.email '$USER_EMAIL'
   - git config --global user.name '$USER_NAME'
   - git checkout dev
-  - git pull github dev
+  - git pull github dev --allow-unrelated-histories
   - git push origin --all
 
 
