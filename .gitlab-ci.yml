@@ -30,7 +30,7 @@ pull github:
   stage: github
   script:
   - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
-  - git remote add github git@github.com:apache/incubator-streampipes.git
+  - git remote add github https://github.com/apache/incubator-streampipes-examples.git
   - eval $(ssh-agent -s)
   - ssh-add <(echo "$SSH")
   - mkdir ~/.ssh
