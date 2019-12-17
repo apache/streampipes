@@ -42,7 +42,6 @@ pull github:
   - git pull github dev --allow-unrelated-histories
   - git push origin --all
 
-
 build:
   image: maven:3-jdk-8
   stage: build
