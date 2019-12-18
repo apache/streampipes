@@ -34,6 +34,10 @@ export class SelectionStaticProperty extends StaticProperty {
   @RdfProperty('sp:hasOption')
   public options: Option[] = [];
 
+  //TODO remove setting true, if serialization is fixed
+  @RdfProperty('sp:horizontalRendering')
+  public horizontalRendering: boolean = true;
+
   constructor(id: string) {
     super();
     this.id = id;

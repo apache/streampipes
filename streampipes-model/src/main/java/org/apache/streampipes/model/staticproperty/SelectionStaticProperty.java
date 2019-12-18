@@ -41,6 +41,10 @@ public abstract class SelectionStaticProperty extends StaticProperty {
   @RdfProperty(StreamPipes.HAS_OPTION)
   private List<Option> options;
 
+  @RdfProperty(StreamPipes.IS_HORIZONTAL_RENDERING)
+  private boolean horizontalRendering;
+
+
   public SelectionStaticProperty(StaticPropertyType staticPropertyType) {
     super(staticPropertyType);
     this.options = new ArrayList<>();
@@ -49,12 +53,20 @@ public abstract class SelectionStaticProperty extends StaticProperty {
   public SelectionStaticProperty(SelectionStaticProperty other) {
     super(other);
     this.options = new Cloner().options(other.getOptions());
+    this.horizontalRendering = other.horizontalRendering;
   }
 
   public SelectionStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label, String
           description) {
     super(staticPropertyType, internalName, label, description);
     this.options = new ArrayList<>();
+  }
+
+  public SelectionStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label, String
+          description, boolean horizontalRendering) {
+    super(staticPropertyType, internalName, label, description);
+    this.options = new ArrayList<>();
+    this.horizontalRendering = horizontalRendering;
   }
 
   public List<Option> getOptions() {
@@ -68,5 +80,9 @@ public abstract class SelectionStaticProperty extends StaticProperty {
   public boolean addOption(Option option)
   {
     return options.add(option);
+  }
+
+  public void setHorizontalRendering(boolean horizontalRendering) {
+    this.horizontalRendering = horizontalRendering;
   }
 }

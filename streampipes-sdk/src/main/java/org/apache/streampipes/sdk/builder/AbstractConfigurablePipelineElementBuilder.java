@@ -668,6 +668,19 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     return me();
   }
 
+  /**
+   * Defines a collection of configuration parameters of the specified staticProperties.
+   * The developer can fill the staticProperties multiply times.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *    *              user-friendly manner.
+   * @param staticProperties A list of {@link org.apache.streampipes.model.staticproperty} elements.
+   * @return this
+   */
+  public BU requiredCollection(Label label, StaticProperty... staticProperties) {
+    this.staticProperties.add(StaticProperties.collection(label, staticProperties));
+    return me();
+  }
+
   private FreeTextStaticProperty prepareFreeTextStaticProperty(String internalId, String label, String description, String type) {
     return new FreeTextStaticProperty(internalId,
             label,

@@ -29,6 +29,10 @@ export class GroupStaticProperty extends StaticProperty {
     @RdfProperty('sp:showLabel')
     public showLabel: boolean;
 
+    //TODO remove setting true, if serialization is fixed
+    @RdfProperty('sp:horizontalRendering')
+    public horizontalRendering: boolean = true;
+
     constructor(id: string) {
         super();
         this.id = id;

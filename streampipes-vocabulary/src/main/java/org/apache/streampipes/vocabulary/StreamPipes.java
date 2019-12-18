@@ -352,4 +352,8 @@ public class StreamPipes {
 
   public static final String SECRET_STATIC_PROPERTY = NS + "SecretStaticProperty";
   public static final String IS_ENCRYPTED = NS + "isEncrypted";
+
+  // UI Rendering
+
+  public static final String IS_HORIZONTAL_RENDERING = NS + "isHorizontalRendering";
 }
