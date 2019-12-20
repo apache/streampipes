@@ -15,11 +15,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# ARG_OPTIONAL_SINGLE([hostname],, [Set the default hostname of your server by providing the IP or DNS name], )
-# ARG_OPTIONAL_BOOLEAN([defaultip],d, [When set the first ip is used as default])
+#!/bin/bash
+
 # ARG_OPTIONAL_BOOLEAN([all],a, [Select all available StreamPipes services])
 # ARG_POSITIONAL_MULTI([operation], [The StreamPipes operation (operation-name) (service-name (optional))], 3, [], [])
-# ARG_TYPE_GROUP_SET([operation], [type string], [operation], [start,stop,restart,update,set-template,logs,list-available,list-active,list-templates,activate,add,deactivate,clean,force-clean,remove-settings,set-env,unset-env,create-compose,set-version])
+# ARG_TYPE_GROUP_SET([operation], [type string], [operation], [start,stop,restart,update,set-template,logs,list-available,list-active,list-templates,activate,add,deactivate,clean,force-clean,remove-settings,set-version])
 # ARG_DEFAULTS_POS
 # ARG_HELP([This script provides advanced features to run StreamPipes on your server])
 # ARG_VERSION([echo This is the StreamPipes dev installer v0.1])
@@ -50,10 +50,10 @@ fatal()
 deployment_notice() {
 	echo
 	echo
-	echo "  INFO: StreamPipes CE $1 is now ready to be used on your system"
-	echo "        Check https://streampipes.org/ for information on StreamPipes"
+	echo "INFO: StreamPipes CE $1 is now ready to be used on your system"
+	echo "      Check https://streampipes.org/ for information on StreamPipes"
 	echo
-	echo "        Go to the UI and follow the instructions to get started: http://$2/"
+	echo "      Go to the UI and follow the instructions to get started: http://$2/"
 	echo
 }
 
@@ -64,113 +64,24 @@ if [ $? -ne 0 ]; then
     fatal "Error occured while executing the StreamPipes command."
 fi
 
-#	if [ $_arg_logs = "on" ];
-#	then
-
-#	else
-#		$1 > /dev/null 2>&1
-#	fi
 }
 
-getIp() {
-    if [ -x "$(command -v ifconfig)" ]; then
-        rawip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-    elif [ -x "$(command -v ipconfig)" ]; then
-        rawip=$(ipconfig | grep -Eo 'IPv4.*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-    fi
-
-    rawip=`echo $rawip | sed 's/(%s)*\n/ /g'`
-    IFS=' ' declare -a 'allips=($rawip)'
-
-    allips+=( 'Enter IP manually' )
-
-    # if default selected do not show prompt
-
-    if [ $_arg_hostname ] ;
-    then
-        ip=$_arg_hostname
-        info 'Default IP was selected: '${ip}
-    else
-
-				if [ $_arg_defaultip = "on" ];
-				then
-        	ip=${allips[0]}
-        	info 'Default IP was selected: '${ip}
-				else
-					echo ''
-					info 'Please select your IP address or add one manually: '
-					PS3='Select option: '
-					select opt in "${allips[@]}"
-					do
-							if [ -z "${opt}" ];
-							then
-									warning "Wrong input, select one of the options";
-							else
-									ip="$opt"
-
-									if [ "$opt" == "Enter IP manually" ];
-									then
-											read -p "Enter Ip: " ip
-									fi
-									break
-							fi
-        	done
-				fi
-    fi
-
-}
-
-#TODO: adapt to new format
-# createCompose() {
-#   IFS=''
-# 	# Get consul
-# 	#result=$(head -n 28 docker-compose.yml)
-#
-# 	while read service; do
-#   	result=$result"\n \n"$(tail -n +3 "services/$service/docker-compose.yml" | sed '/spnet:/q')
-# 	done <system
-#
-# 	# Generate network
-# 	#result=$result"\n \n"$(tail -n -13 docker-compose.yml)
-#
-# 	echo -e "$result" > "docker-compose.yml-generated"
-#
-# 	info "New compose file is generated: docker-compose.tml-generated"
-# }
-
-unsetEnv() {
-	cd services
-	for dir in */ ; do
-  file="$dir"docker-compose.yml
-
-    one=${_arg_operation[1]}"="
-	  two=${_arg_operation[2]}
-
-	  result="$one$two"
-
-	  IFS=''
-
-    while read a ; do echo ${a//      - $one*/#      - $one} ; done < $file > ./$file.t ; mv $file{.t,}
-	done
-	cd ..
-}
-
-setEnv() {
-	cd services
-	for dir in */ ; do
-  	file="$dir"docker-compose.yml
-
-    one=${_arg_operation[1]}"="
-	  two=${_arg_operation[2]}
-
-	  result="$one$two"
-
-	  IFS=''
-
-	  while read a ; do echo ${a//#      - $one/      - $result} ; done < $file > ./$file.t ; mv $file{.t,}
-
-	done
-	cd ..
+getHostDockerInteralIP() {
+  # get os type
+  OS_TYPE=`uname`
+  info "Detected OS: ${OS_TYPE}"
+  if [ "$OS_TYPE" == "Darwin" ] || [ "$OS_TYPE" == "CYGWIN" ]; then
+    # get IP of docker vm hosting docker for mac and docker windows
+    ip=$(docker run --rm -it alpine getent hosts host.docker.internal | awk '{ print $1 }') > /dev/null 2>&1
+    docker rmi alpine > /dev/null 2>&1
+    info "Detected Docker Host IP: ${ip}"
+    # get IP of docker0 bridge
+  elif [ "$OS_TYPE" == "Linux" ]; then
+    ip=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
+    info "Detected Docker0 bridge IP: ${ip}"
+  else
+    fatal "Detected OS not supporeted: ${OS_TYPE}"
+  fi
 }
 
 moveSystemConfig() {
@@ -202,7 +113,7 @@ setVersion() {
 	sed "s/SP_BACKEND_VERSION=.*/${version}/g" ./tmpl_env > ./del_tmpl_env
 	mv ./del_tmpl_env ./tmpl_env
 
-	echo "Change StreamPipes version to ${_arg_operation[1]}"
+	info "Change StreamPipes version to ${_arg_operation[1]}"
 }
 
 getCommand() {
@@ -219,10 +130,11 @@ startStreamPipes() {
 		moveSystemConfig default
 	fi
 
-	if [ ! -f "$SP_HOME/.env" ] || [ $_arg_defaultip = "on" ];
+	if [ ! -f "$SP_HOME/.env" ];
     then
-		getIp
-		sed "s/##IP##/${ip}/g" $SP_HOME/tmpl_env > $SP_HOME/.env
+    info 'Initial StreamPipes configuration'
+    getHostDockerInteralIP
+    sed "s/##HOST_DOCKER_INTERNAL##/${ip}/g" $SP_HOME/tmpl_env > $SP_HOME/.env
 	fi
     info "Starting StreamPipes ${_arg_operation[1]}"
 		createNetwork
@@ -230,10 +142,8 @@ startStreamPipes() {
     run "$command up -d ${_arg_operation[1]}"
 
 		SP_BACKEND_VERSION=`grep SP_BACKEND_VERSION "$SP_HOME/.env" | awk -F= '{print $2}'`
-		SP_HOST=`grep SP_HOST "$SP_HOME/.env" | awk -F= '{print $2}'`
 
-    #info "StreamPipes started ${_arg_operation[1]}"
-		deployment_notice $SP_BACKEND_VERSION $SP_HOST
+		deployment_notice $SP_BACKEND_VERSION "localhost"
 }
 
 updateStreamPipes() {
@@ -482,15 +392,6 @@ then
     setTemplate
 fi
 
-# if [ "$_arg_operation" = "set-env" ];
-# then
-#     setEnv
-# fi
-
-# if [ "$_arg_operation" = "create-compose" ];
-# then
-#    createCompose
-# fi
 
 if [ "$_arg_operation" = "set-version" ];
 then
