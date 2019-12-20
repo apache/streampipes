@@ -21,6 +21,8 @@ services:
       - "8031:8031"
     volumes:
       - rdf4j:/root/.RDF4J
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

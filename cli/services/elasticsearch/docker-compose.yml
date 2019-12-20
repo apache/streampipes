@@ -31,6 +31,8 @@ services:
         hard: -1
     volumes:
       - elastic:/usr/share/elasticsearch/data
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

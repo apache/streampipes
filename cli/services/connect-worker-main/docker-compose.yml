@@ -16,7 +16,7 @@
 version: "2"
 services:
   connect-worker-main:
-    image: ${SP_DOCKER_REGISTRY}streampipes/streampipes-connect-adapters/streampipes-connect-worker:${SP_BACKEND_VERSION}
+    image: ${SP_DOCKER_REGISTRY}streampipes-connect-worker:${SP_BACKEND_VERSION}
     depends_on:
       - consul
       - couchdb
@@ -25,9 +25,10 @@ services:
     environment:
       - SP_CONNECT_CONTAINER_MASTER_HOST=connect-master
       - SP_CONNECT_CONTAINER_WORKER_HOST=connect-worker-main
-      - SP_KAFKA_HOST=${SP_KAFKA_HOST}
     volumes:
       - connect:/data/
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

@@ -21,6 +21,8 @@ services:
       - "3002:3000"
     volumes:
       - "../../apps:/usr/src/app/public/apps"
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}  
     networks:
       spnet:
 

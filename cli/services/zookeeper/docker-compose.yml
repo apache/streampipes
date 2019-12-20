@@ -22,6 +22,8 @@ services:
     volumes:
       - zk-conf:/opt/zookeeper-3.4.13/conf
       - zk-data:/opt/zookeeper-3.4.13/data
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

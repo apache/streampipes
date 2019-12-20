@@ -21,6 +21,8 @@ services:
       - iotdb:/iotdb/data
     ports:
       - 6667:6667
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

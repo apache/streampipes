@@ -25,6 +25,8 @@ services:
       - consul
       - connect-master
       - backend
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

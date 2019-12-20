@@ -29,6 +29,8 @@ services:
       # Data persistency
       # sudo mkdir -p /srv/docker/influxdb/data
       - influx:/var/lib/influxdb
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

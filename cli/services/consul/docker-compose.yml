@@ -34,6 +34,8 @@ services:
       - -ui
     volumes:
       - consul:/consul/data
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     ports:
       - "8500:8500"
       - "8600:8600"

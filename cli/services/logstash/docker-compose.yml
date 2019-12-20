@@ -21,6 +21,8 @@ services:
       - kafka
     ports:
       - "5044:5044"
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

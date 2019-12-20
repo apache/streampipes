@@ -22,6 +22,8 @@ services:
       - "5672:5672"
     volumes:
       - ./services/rabbittmq/rabbitmq-isolated.conf:/etc/rabbitmq/rabbitmq.config
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

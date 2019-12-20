@@ -21,5 +21,7 @@ services:
       - 8050:80
     environment:
       PMA_ARBITRARY: 1
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:

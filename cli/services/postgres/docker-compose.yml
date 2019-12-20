@@ -24,6 +24,8 @@ services:
     environment:
        POSTGRES_USER: user1
        POSTGRES_PASSWORD: bQgu"FUR_VH6z>~j
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

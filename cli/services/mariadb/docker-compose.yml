@@ -25,6 +25,8 @@ services:
       MYSQL_USER: user1
       MYSQL_PASSWORD: 9N28_b2uhj./x-Vm
       MYSQL_ROOT_PASSWORD: uJ-ft,2CX7YD8N,P
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

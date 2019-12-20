@@ -24,6 +24,8 @@ services:
 #      - 5432:5432 # psql port
     environment:
       CREATE_HEAP_SIZE: 2g
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

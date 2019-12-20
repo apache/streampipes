@@ -21,6 +21,8 @@ services:
       - "8080:8080"
     environment:
       - "API_URL=http://${SP_HOST}/streampipes-backend/api/docs/swagger.json"
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

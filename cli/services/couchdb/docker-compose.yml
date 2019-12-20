@@ -21,6 +21,8 @@ services:
       - "5984:5984"
     volumes:
       - couchdb:/opt/couchdb/data
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

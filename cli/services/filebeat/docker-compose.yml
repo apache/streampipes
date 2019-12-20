@@ -22,6 +22,8 @@ services:
       - filebeat:/usr/share/filebeats/data
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/containers:/hostfs/var/lib/docker/containers
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

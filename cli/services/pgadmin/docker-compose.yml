@@ -25,6 +25,8 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: user1
       PGADMIN_DEFAULT_PASSWORD: ")d,?C3?G7y[@V6}
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

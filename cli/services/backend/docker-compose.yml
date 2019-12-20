@@ -16,14 +16,14 @@
 version: "2"
 services:
   backend:
-    image: ${SP_DOCKER_REGISTRY}streampipes/ce/backend:${SP_BACKEND_VERSION}
+    image: ${SP_DOCKER_REGISTRY}backend:${SP_BACKEND_VERSION}
     depends_on:
       - consul
       - couchdb
     ports:
       - "8030:8030"
-    environment:
-      - SP_KAFKA_HOST=${SP_KAFKA_HOST}
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}  
     volumes:
       - backend:/root/.streampipes
     networks:

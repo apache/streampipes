@@ -22,6 +22,8 @@ services:
       ELASTICSEARCH_URL: http://elasticsearch:9200
     ports:
       - "5601:5601"
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

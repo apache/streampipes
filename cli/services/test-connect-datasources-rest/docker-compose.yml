@@ -19,6 +19,8 @@ services:
     image: ${SP_DOCKER_REGISTRY}streampipes/streampipes-connect-datasources-for-testing/master
     ports:
       - "3001:3001"
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
 

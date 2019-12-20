@@ -21,7 +21,7 @@ services:
       - "consul"
 #    ports:
 #      - "8098:8090"
-    environment:
-      - SP_ICON_HOST=${SP_ICON_HOST}
+    extra_hosts:
+      - host.docker.internal:${HOST_DOCKER_INTERNAL}
     networks:
       spnet:
