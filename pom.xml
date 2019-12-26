@@ -1036,6 +1036,11 @@
                         <exclude>ui/src/assets/**</exclude>
                         <exclude>ui/src/scss/**</exclude>
                         <exclude>ui/dist/**</exclude>
+
+                        <!-- Exclude disclaimer and notice files -->
+                        <exclude>DISCLAIMER-WIP</exclude>
+                        <exclude>NOTICE-binary</exclude>
+
                     </excludes>
                 </configuration>
             </plugin>
