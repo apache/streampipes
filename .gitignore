@@ -67,6 +67,8 @@ fabric.properties
 */log/*
 */target/*
 
+**/target/*
+
 # JS 
 dist/
 
