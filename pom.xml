@@ -572,59 +572,10 @@
     </build>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-extensions.git
+        <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/incubator-streampipes-extensions.git
         </developerConnection>
-        <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/streampipes-extensions.git
-        </connection>
-        <url>https://github.com/streampipes/streampipes-extensions</url>
+        <connection>scm:git:https://gitbox.apache.org/repos/asf/incubator-streampipes-extensions.git</connection>
+        <url>https://github.com/apache/incubator-streampipes-extensions</url>
     </scm>
-
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>Dominik Riemer</name>
-            <email>riemer@fzi.de</email>
-        </developer>
-        <developer>
-            <name>Philipp Zehnder</name>
-            <email>zehnder@fzi.de</email>
-        </developer>
-    </developers>
-
-    <repositories>
-        <repository>
-            <id>ipe-nexus</id>
-            <name>nexus repository</name>
-            <url>https://ipe-nexus.fzi.de/repository/maven-public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>ipe-nexus</id>
-            <name>Internal Releases</name>
-            <url>https://ipe-nexus.fzi.de/repository/maven-public/</url>
-        </repository>
-        <snapshotRepository>
-            <id>ipe-nexus</id>
-            <name>Internal Releases</name>
-            <url>https://ipe-nexus.fzi.de/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
+    
 </project>
