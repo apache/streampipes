@@ -18,16 +18,31 @@ variables:
   DOCKER_HUB_IMAGE_NAME: streampipes
   MAVEN_CLI_OPTS: -DskipTests --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true
   HARBOR_IMAGE_NAME: $HARBOR_REGISTRY_HOST/$CI_PROJECT_PATH
+  GIT_REPO_ORIGIN: $GIT_REPO_ORIGIN
   GIT_STRATEGY: clone
 
 
 stages:
-  - build
   - github
+  - build
   - docker
-  - deploy
-  - release
-  - docker-hub
+
+pull github:
+  image: maven:3-jdk-8
+  stage: github
+  script:
+  - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+  - git remote add github https://github.com/apache/incubator-streampipes-extensions.git
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$SSH")
+  - mkdir ~/.ssh
+  - touch ~/.ssh/known_hosts
+  - ssh-keyscan -p 2222 -t rsa $GITLAB_HOST > ~/.ssh/known_hosts
+  - git config --global user.email '$USER_EMAIL'
+  - git config --global user.name '$USER_NAME'
+  - git checkout dev
+  - git pull github dev --allow-unrelated-histories
+  - git push origin --all
 
 build:
   image: maven:3.6.1-jdk-8
@@ -47,22 +62,6 @@ build:
   except:
       - /release-.*$/
 
-
-github:
-  image: maven:3-jdk-8
-  stage: github
-  script:
-    - git config --global user.email 'zehnder@fzi.de'
-    - git config --global user.name 'zehnder'
-    - git checkout $CI_COMMIT_REF_NAME
-    - git pull
-    - git remote add github https://$GITHUB_TOKEN:x-oauth-basic@github.com/streampipes/streampipes-extensions.git
-    - git push github $CI_COMMIT_REF_NAME
-  only:
-    - dev
-    - master
-    - merge
-
 docker-connect-container:
   image: docker:17.06.0-ce
   stage: docker
@@ -72,7 +71,7 @@ docker-connect-container:
     - export MVN_VERSION=$(cat ./target/mvn_version)
     - cd streampipes-connect-adapters/streampipes-connect-adapter
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-    - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
+    - docker login -u $USER_EMAIL -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST
     - docker build --pull -t $IMAGE_NAME/streampipes-connect-worker:latest -t $IMAGE_NAME/streampipes-connect-worker:$MVN_VERSION -t $HARBOR_IMAGE_NAME/streampipes-connect-worker:latest -t $HARBOR_IMAGE_NAME/streampipes-connect-worker:$MVN_VERSION .
     - docker push $IMAGE_NAME/streampipes-connect-worker:$MVN_VERSION
     - docker push $IMAGE_NAME/streampipes-connect-worker:latest
@@ -80,7 +79,6 @@ docker-connect-container:
     - docker push $HARBOR_IMAGE_NAME/streampipes-connect-worker:latest
   only:
     - dev
-    - merge
 
 
 .docker_script: &docker_script
@@ -91,7 +89,7 @@ docker-connect-container:
    script:
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
+     - docker login -u $USER_EMAIL -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST
      - docker build --no-cache --pull -t $IMAGE_NAME/$CONTAINER_NAME:latest -t $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest -t $HARBOR_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
      - docker push $IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
      - docker push $IMAGE_NAME/$CONTAINER_NAME:latest
@@ -99,87 +97,7 @@ docker-connect-container:
      - docker push $HARBOR_IMAGE_NAME/$CONTAINER_NAME:latest
    only:
      - dev
-     - merge
 
-.docker_hub: &docker_hub_script
-  image: docker:17.06.0-ce
-  stage: docker-hub
-  when: manual
-  script:
-    - export MVN_VERSION=$(cat ./target/mvn_version)
-    - docker login -u streampipesbuild -p $DOCKER_HUB_USER_PWD
-    - docker build --no-cache --pull -t $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:latest -t $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION ./streampipes-$CONTAINER_NAME
-    - docker push $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:$MVN_VERSION
-    - docker push $DOCKER_HUB_IMAGE_NAME/$CONTAINER_NAME:latest
-  only:
-    - master
-
-deploy:
-  image: maven:3-jdk-8
-  stage: deploy
-  script:
-    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
-    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn deploy -DskipTests -Denforcer.skip
-  artifacts:
-    paths:
-      - ./**/*.jar
-  only:
-    - dev
-    - merge
-
-start release:
-  image: maven:3-jdk-8
-  stage: release
-  script:
-    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH")
-    - mkdir ~/.ssh
-    - touch ~/.ssh/known_hosts
-    - ssh-keyscan -p 2222 -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
-    - git config --global user.email 'zehnder@fzi.de'
-    - git config --global user.name 'zehnder'
-    - git fetch
-    - git checkout master
-    - git checkout dev
-    - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS -Drelease=true -Denforcer.skip
-    - git push origin --all
-  only:
-    - dev
-  when: manual
-
-finish release:
-  image: maven:3-jdk-8
-  stage: release
-  script:
-    - export MVN_VERSION=$(cat ./target/mvn_version)
-    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
-    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
-    - git remote add github https://$GITHUB_TOKEN:x-oauth-basic@github.com/streampipes/streampipes-extensions.git
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH")
-    - mkdir ~/.ssh
-    - touch ~/.ssh/known_hosts
-    - ssh-keyscan -p 2222 -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
-    - git config --global user.email 'zehnder@fzi.de'
-    - git config --global user.name 'zehnder'
-    - git checkout master
-    - git checkout dev
-    - git checkout $CI_BUILD_REF_NAME
-    - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS -Drelease=true -Denforcer.skip
-    - git push origin --all
-    - git push origin --tags
-    - git checkout master
-    - git push github master
-    - git push github $CI_BUILD_REF_NAME
-    - git checkout dev
-    - git push github dev
-  when: manual
-  except:
-    - master
 
 docker-pe-all-jvm:
   <<: *docker_script
@@ -246,11 +164,6 @@ docker-processors-transformation-jvm:
     variables:
       CONTAINER_NAME: "processors-transformation-jvm"
 
-docker-processors-text-mining-flink:
-  <<: *docker_hub_script
-  variables:
-    CONTAINER_NAME: "processors-text-mining-flink"
-
 docker-processors-text-mining-jvm:
     <<: *docker_script
     variables:
@@ -288,105 +201,5 @@ docker-sources-vehicle-simulator:
 
 docker-sources-watertank-simulator:
     <<: *docker_script
-    variables:
-      CONTAINER_NAME: "sources-watertank-simulator"
-
-docker-hub-pe-all-jvm:
-  <<: *docker_hub_script
-  variables:
-    CONTAINER_NAME: "pipeline-elements-all-jvm"
-
-docker-hub-processors-aggregation-flink:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "processors-aggregation-flink"
-
-docker-hub-processors-enricher-flink:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "processors-enricher-flink"
-
-docker-hub-processors-filters-jvm:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "processors-filters-jvm"
-
-docker-hub-processors-geo-jvm:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "processors-geo-jvm"
-
-docker-hub-processors-image-processing-jvm:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "processors-image-processing-jvm"
-
-docker-hub-processors-pattern-detection-flink:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "processors-pattern-detection-flink"
-
-docker-hub-processors-filters-siddhi:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "processors-filters-siddhi"
-
-docker-hub-processors-statistics-flink:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "processors-statistics-flink"
-
-docker-hub-processors-geo-flink:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "processors-geo-flink"
-
-docker-hub-processors-transformation-flink:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "processors-transformation-flink"
-
-docker-hub-processors-transformation-jvm:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "processors-transformation-jvm"
-
-docker-hub-processors-text-mining-flink:
-  <<: *docker_hub_script
-  variables:
-    CONTAINER_NAME: "processors-text-mining-flink"
-
-docker-hub-sinks-brokers-jvm:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "sinks-brokers-jvm"
-
-docker-hub-sinks-databases-flink:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "sinks-databases-flink"
-
-docker-hub-sinks-databases-jvm:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "sinks-databases-jvm"
-
-docker-hub-sinks-notifications-jvm:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "sinks-notifications-jvm"
-
-docker-hub-sinks-internal-jvm:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "sinks-internal-jvm"
-
-docker-hub-sources-vehicle-simulator:
-    <<: *docker_hub_script
-    variables:
-      CONTAINER_NAME: "sources-vehicle-simulator"
-
-docker-hub-sources-watertank-simulator:
-    <<: *docker_hub_script
     variables:
       CONTAINER_NAME: "sources-watertank-simulator"
