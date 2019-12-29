@@ -98,12 +98,12 @@ jobs:
           IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
           docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
           docker push $IMAGE_NAME
-      - name: Build and Push Docker Image processors-text-mining-flink
-        run: |
-          COMPONENT_NAME=processors-text-mining-flink
-          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
-          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
-          docker push $IMAGE_NAME
+#      - name: Build and Push Docker Image processors-text-mining-flink
+#        run: |
+#          COMPONENT_NAME=processors-text-mining-flink
+#          IMAGE_NAME=apachestreampipes/$COMPONENT_NAME:$MVN_VERSION
+#          docker build --pull -t $IMAGE_NAME ./streampipes-$COMPONENT_NAME/
+#          docker push $IMAGE_NAME
       - name: Build and Push Docker Image processors-text-mining-jvm
         run: |
           COMPONENT_NAME=processors-text-mining-jvm
