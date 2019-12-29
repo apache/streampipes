@@ -1,15 +1,11 @@
 {
-  "name": "StreamPipes",
+  "name": "apache-streampipes",
   "version": "0.0.1",
-  "description": "This is the StreamPipes front end",
-  "authors": [
-    "Dominik Riemer",
-    "Philipp Zehnder"
-  ],
-  "homepage": "http://streampipes.fzi.de",
+  "description": "Apache StreamPipes (incubating) user interface",
+  "homepage": "http://streampipes.apache.org",
   "repository": {
     "type": "git",
-    "url": "https://laus.fzi.de/gitlab/streampipes/streampipes-ui"
+    "url": "https://github.com/apache/incubator-streampipes"
   },
   "scripts": {
     "start": "node ./deployment/prebuild.js && webpack-dev-server -d --env=dev",

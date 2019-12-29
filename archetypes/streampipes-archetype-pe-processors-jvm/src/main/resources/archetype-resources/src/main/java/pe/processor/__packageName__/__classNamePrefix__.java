@@ -4,10 +4,10 @@
 
 package ${package}.pe.processor.${packageName};
 
-import org.streampipes.model.runtime.Event;
-import org.streampipes.wrapper.context.EventProcessorRuntimeContext;
-import org.streampipes.wrapper.routing.SpOutputCollector;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
 import org.slf4j.Logger;
 

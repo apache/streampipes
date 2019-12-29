@@ -1,10 +1,10 @@
 
 package ${package}.pe.${packageName};
 
-import org.streampipes.container.declarer.DataStreamDeclarer;
-import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.sdk.builder.DataSourceBuilder;
+import org.apache.streampipes.container.declarer.DataStreamDeclarer;
+import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
+import org.apache.streampipes.model.graph.DataSourceDescription;
+import org.apache.streampipes.sdk.builder.DataSourceBuilder;
 
 import java.util.Arrays;
 import java.util.List;

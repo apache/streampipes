@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2018 FZI Forschungszentrum Informatik
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
   ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ you may obtain a copy of the License at
-  ~
-  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~    http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing, software
   ~ distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,10 +20,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.streampipes</groupId>
+    <parent>
+        <groupId>org.apache</groupId>
+        <artifactId>apache</artifactId>
+        <version>21</version>
+    </parent>
+
+    <groupId>org.apache.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
     <version>0.65.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
@@ -99,9 +107,9 @@
         <maven.source.plugin.version>3.1.0</maven.source.plugin.version>
     </properties>
 
-    <name>StreamPipes Parent Pom</name>
-    <description>StreamPipes</description>
-    <url>https://streampipes.org</url>
+    <name>Apache StreamPipes</name>
+    <description>A self-service (Industrial) IoT toolbox to enable non-technical users to connect, analyze and explore IoT data streams.</description>
+    <url>https://streampipes.apache.org</url>
 
     <dependencyManagement>
         <dependencies>
@@ -831,6 +839,7 @@
                                 </configuration>
                             </execution>
                         </executions>
+
                     </plugin>
                     <plugin>
                         <groupId>external.atlassian.jgitflow</groupId>
@@ -844,7 +853,7 @@
                                 <releaseBranchPrefix>release-</releaseBranchPrefix>
                                 <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
                             </flowInitContext>
-                            <noDeploy>false</noDeploy>
+                            <noDeploy>true</noDeploy>
                             <autoVersionSubmodules>true</autoVersionSubmodules>
                             <pushReleases>false</pushReleases>
                             <localOnly>true</localOnly>
@@ -883,17 +892,29 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.1</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven-shade-plugin.version}</version>
+                </plugin>
+                <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.rat</groupId>
-                    <artifactId>apache-rat-plugin</artifactId>
-                    <version>0.13</version>
-                    <configuration>
-                        <consoleOutput>true</consoleOutput>
-                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -946,6 +967,7 @@
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
+                <version>0.13</version>
                 <executions>
                     <execution>
                         <id>license-check</id>
@@ -959,6 +981,7 @@
                 <configuration>
                     <excludeSubProjects>false</excludeSubProjects>
                     <useMavenDefaultExcludes>true</useMavenDefaultExcludes>
+                    <consoleOutput>true</consoleOutput>
                     <excludes>
                         <!-- Git related files -->
                         <exclude>**/.git/**</exclude>
@@ -1006,11 +1029,18 @@
                         <exclude>archetypes/streampipes-archetype-pe-sinks-jvm/src/main/resources/**</exclude>
                         <exclude>archetypes/streampipes-archetype-pe-sources/src/main/resources/**</exclude>
 
-                        <!-- Exclude UI directory for now -->
-                        <exclude>ui/**</exclude>
-
                         <!-- External vocabularies -->
                         <exclude>streampipes-measurement-units/src/main/resources/onto/**</exclude>
+
+                        <!-- Exclude some UI files which we need to check in more detail -->
+                        <exclude>ui/src/assets/**</exclude>
+                        <exclude>ui/src/scss/**</exclude>
+                        <exclude>ui/dist/**</exclude>
+
+                        <!-- Exclude disclaimer and notice files -->
+                        <exclude>DISCLAIMER-WIP</exclude>
+                        <exclude>NOTICE-binary</exclude>
+
                     </excludes>
                 </configuration>
             </plugin>
@@ -1087,41 +1117,46 @@
     </build>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce.git
+        <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/incubator-streampipes.git
         </developerConnection>
-        <connection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce.git</connection>
-        <url>https://github.com/streampipes/streampipes</url>
+        <connection>scm:git:https://gitbox.apache.org/repos/asf/incubator-streampipes.git</connection>
+        <url>https://github.com/apache/incubator-streampipes</url>
     </scm>
 
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+    <issueManagement>
+        <system>Jira</system>
+        <url>https://issues.apache.org/jira/browse/STREAMPIPES</url>
+    </issueManagement>
 
-    <developers>
-        <developer>
-            <name>Dominik Riemer</name>
-            <email>riemer@fzi.de</email>
-        </developer>
-        <developer>
-            <name>Philipp Zehnder</name>
-            <email>zehnder@fzi.de</email>
-        </developer>
-    </developers>
+    <mailingLists>
+        <mailingList>
+            <name>Apache StreamPipes Developer List</name>
+            <subscribe>mailto:dev-subscribe@streampipes.apache.org</subscribe>
+            <unsubscribe>mailto:dev-unsubscribe@streampipes.apache.org</unsubscribe>
+            <post>mailto:dev@streampipes.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/streampipes-dev/</archive>
+        </mailingList>
+        <mailingList>
+            <name>Apache StreamPipes User List</name>
+            <subscribe>mailto:users-subscribe@streampipes.apache.org</subscribe>
+            <unsubscribe>mailto:users-unsubscribe@streampipes.apache.org</unsubscribe>
+            <post>mailto:users@streampipes.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/streampipes-users/</archive>
+        </mailingList>
+        <mailingList>
+            <name>Apache StreamPipes Commits List</name>
+            <subscribe>mailto:commits-subscribe@streampipes.apache.org</subscribe>
+            <unsubscribe>mailto:commits-unsubscribe@streampipes.apache.org</unsubscribe>
+            <post>mailto:commits@streampipes.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/streampipes-commits/</archive>
+        </mailingList>
+        <mailingList>
+            <name>Apache StreamPipes Jira Notifications List</name>
+            <subscribe>mailto:issues-subscribe@streampipes.apache.org</subscribe>
+            <unsubscribe>mailto:issues-unsubscribe@streampipes.apache.org</unsubscribe>
+            <post>mailto:issues@streampipes.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/streampipes-issues/</archive>
+        </mailingList>
+    </mailingLists>
 
-    <distributionManagement>
-        <repository>
-            <id>sonatype</id>
-            <name>Releases</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
-        <snapshotRepository>
-            <id>ipe-nexus</id>
-            <name>Internal Releases</name>
-            <url>https://ipe-nexus.fzi.de/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>

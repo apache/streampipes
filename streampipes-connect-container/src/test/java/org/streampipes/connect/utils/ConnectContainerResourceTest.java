@@ -1,11 +1,12 @@
 /*
- * Copyright 2018 FZI Forschungszentrum Informatik
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +16,7 @@
  *
  */
 
-package org.streampipes.connect.utils;
+package org.apache.streampipes.connect.utils;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -24,12 +25,12 @@ import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ValidatableResponseOptions;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.streampipes.connect.rest.AbstractContainerResource;
-import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
-import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
-import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
-import org.streampipes.rest.shared.serializer.JsonLdProvider;
-import org.streampipes.rest.shared.util.JsonLdUtils;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.rest.shared.serializer.GsonClientModelProvider;
+import org.apache.streampipes.rest.shared.serializer.GsonWithIdProvider;
+import org.apache.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
+import org.apache.streampipes.rest.shared.serializer.JsonLdProvider;
+import org.apache.streampipes.rest.shared.util.JsonLdUtils;
 
 import java.net.URI;
 

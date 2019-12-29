@@ -12,7 +12,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-container-standalone</artifactId>
             <version>${sp.version}</version>
             <exclusions>
@@ -32,7 +32,7 @@
             <version>1.9.2</version>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sdk</artifactId>
             <version>${sp.version}</version>
         </dependency>
@@ -47,27 +47,27 @@
             <version>1.7.24</version>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
             <version>${sp.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-json</artifactId>
             <version>${sp.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
             <version>${sp.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-jms</artifactId>
             <version>${sp.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sources</artifactId>
             <version>${sp.version}</version>
         </dependency>

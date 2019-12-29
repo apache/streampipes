@@ -1,11 +1,12 @@
 /*
- * Copyright 2019 FZI Forschungszentrum Informatik
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,9 +39,9 @@ export class EditorCtrl {
     ShepherdService: any;
     isTutorialOpen: boolean = false;
 
-    requiredStreamForTutorialAppId: any = "org.streampipes.sources.simulator.flowrate1";
-    requiredProcessorForTutorialAppId: any = "org.streampipes.processors.filters.jvm.numericalfilter";
-    requiredSinkForTutorialAppId: any = "org.streampipes.sinks.internal.jvm.dashboard";
+    requiredStreamForTutorialAppId: any = "org.apache.streampipes.sources.simulator.flowrate1";
+    requiredProcessorForTutorialAppId: any = "org.apache.streampipes.processors.filters.jvm.numericalfilter";
+    requiredSinkForTutorialAppId: any = "org.apache.streampipes.sinks.internal.jvm.dashboard";
     missingElementsForTutorial: any = [];
 
     constructor($rootScope,
@@ -205,7 +206,7 @@ export class EditorCtrl {
                 let sources = msg.data;
                 sources.forEach((source, i, sources) => {
                     source.spDataStreams.forEach(stream => {
-                        if (stream.sourceType == 'org.streampipes.model.SpDataSet') {
+                        if (stream.sourceType == 'org.apache.streampipes.model.SpDataSet') {
                             stream.type = "set";
                             tempSets = tempSets.concat(stream);
                         } else {

@@ -1,11 +1,12 @@
 /*
- * Copyright 2019 FZI Forschungszentrum Informatik
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -52,35 +53,39 @@ export class DataDownloadDialog {
             case "visible":
 
                 if (this.data.yAxesKeys === undefined) {
-                    this.createFile('', this.downloadFormat, this.data.index)
+                    this.createFile('', this.downloadFormat, this.data.index, this.getDateString(this.data.date[0]),
+                      this.getDateString((this.data.date[1])));
 
                 } else if (this.data.data["headers"] !== undefined) {
                  //Single Data
                     let result = this.convertData(this.data.data, this.downloadFormat, this.data.xAxesKey, this.data.yAxesKeys);
-                    this.createFile(result, this.data.downloadFormat, this.data.index);
+                    this.createFile(result, this.data.downloadFormat, this.data.index, this.getDateString(this.data.date[0]),
+                      this.getDateString(this.data.date[1]));
                 } else {
                     //group data
                     Object.keys(this.data.data.dataResults).forEach( groupName => {
                         let dataResult = this.data.data.dataResults[groupName];
                         let result = this.convertData(dataResult, this.downloadFormat, this.data.xAxesKey, this.data.yAxesKeys);
                         let fileName = this.data.index + ' ' + groupName;
-                        this.createFile(result, this.data.downloadFormat, fileName);
+                        this.createFile(result, this.data.downloadFormat, fileName, this.getDateString(this.data.date[0]),
+                          this.getDateString(this.data.date[1]));
                     });
 
                 }
                 this.downloadFinish = true;
                 break;
             case "all":
-                this.performRequest(this.restService.downloadRowData(this.data.index, this.downloadFormat));
+                this.performRequest(this.restService.downloadRowData(this.data.index, this.downloadFormat), '', '');
                 break;
             case "customInterval":
                 this.performRequest(this.restService.downloadRowDataTimeInterval(this.data.index, this.downloadFormat,
-                    this.dateRange[0].getTime(), this.dateRange[1].getTime()));
+                    this.dateRange[0].getTime(), this.dateRange[1].getTime()), this.getDateString(this.dateRange[0]),
+                  this.getDateString(this.dateRange[1]));
 
         }
     }
 
-    performRequest(request) {
+    performRequest(request, startDate, endDate) {
         this.downloadHttpRequestSubscribtion = request.subscribe(event => {
             // progress
             if (event.type === HttpEventType.DownloadProgress) {
@@ -89,7 +94,7 @@ export class DataDownloadDialog {
 
             // finished
             if (event.type === HttpEventType.Response) {
-                this.createFile(event.body, this.downloadFormat, this.data.index);
+                this.createFile(event.body, this.downloadFormat, this.data.index, startDate, endDate);
                 this.downloadFinish = true
             }
         });
@@ -145,14 +150,18 @@ export class DataDownloadDialog {
         }
     }
 
-    createFile(data, format, fileName) {
+    createFile(data, format, fileName, startDate, endDate) {
         var a = document.createElement("a");
         document.body.appendChild(a);
         a.style.display = "display: none";
 
+        //let name = 'sp_' + startDate + '_' + endDate + '_' + fileName + '.' + this.downloadFormat;
+        let name = 'sp_' + startDate + '_' + fileName + '.' + this.downloadFormat;
+        name = name.replace('__','_');
+
         var url = window.URL.createObjectURL(new Blob([String(data)], { type: 'data:text/' + format + ';charset=utf-8' }));
         a.href = url;
-        a.download = 'spDatalake ' +  fileName + '.' + this.downloadFormat;
+        a.download = name;
         a.click();
         window.URL.revokeObjectURL(url)
     }
@@ -176,6 +185,11 @@ export class DataDownloadDialog {
 
     previousStep() {
         this.stepper.previous();
+    }
+
+    getDateString(date: Date) {
+        return date.toLocaleDateString() + 'T' + date.toLocaleTimeString().replace(':','.')
+                                                                          .replace(':','.');
     }
 
 }

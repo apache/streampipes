@@ -1,11 +1,12 @@
 /*
- * Copyright 2019 FZI Forschungszentrum Informatik
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,15 +16,19 @@
  *
  */
 
+
 export class MappingNaryController {
 
     staticProperty: any;
     selectedElement: any;
     availableProperties: any;
     PropertySelectorService: any;
+    displayRecommended: boolean;
+    $filter: any;
 
-    constructor(PropertySelectorService) {
+    constructor(PropertySelectorService, $filter) {
         this.PropertySelectorService = PropertySelectorService;
+        this.$filter = $filter;
     }
 
     $onInit() {
@@ -66,7 +71,11 @@ export class MappingNaryController {
     }
 
     selectAll() {
-        this.staticProperty.properties.selectedProperties = this.staticProperty.properties.mapsFromOptions;
+        this.staticProperty.properties.selectedProperties = [];
+        let filteredProperties = this.$filter('displayRecommendedFilter')(this.availableProperties,  this.staticProperty.properties.propertyScope, this.displayRecommended);
+        filteredProperties.forEach(property => {
+           this.staticProperty.properties.selectedProperties.push(property.properties.runtimeId);
+        });
     }
 
     deselectAll() {
@@ -74,4 +83,4 @@ export class MappingNaryController {
     }
 }
 
-MappingNaryController.$inject=['PropertySelectorService']
+MappingNaryController.$inject=['PropertySelectorService', '$filter']

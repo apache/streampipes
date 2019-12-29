@@ -1,11 +1,12 @@
 /*
- * Copyright 2018 FZI Forschungszentrum Informatik
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,22 +16,22 @@
  *
  */
 
-package org.streampipes.connect.container.master.rest;
+package org.apache.streampipes.connect.container.master.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.connect.container.master.management.AdapterMasterManagement;
-import org.streampipes.connect.container.master.management.Utils;
-import org.streampipes.connect.management.AdapterDeserializer;
-import org.streampipes.connect.rest.AbstractContainerResource;
-import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterDescriptionList;
-import org.streampipes.rest.shared.annotation.GsonWithIds;
-import org.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.streampipes.rest.shared.util.SpMediaType;
-import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
+import org.apache.streampipes.connect.container.master.management.Utils;
+import org.apache.streampipes.connect.management.AdapterDeserializer;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.model.client.messages.Notifications;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
+import org.apache.streampipes.rest.shared.util.SpMediaType;
+import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import java.util.List;
 

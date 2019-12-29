@@ -1,11 +1,12 @@
 /*
- * Copyright 2018 FZI Forschungszentrum Informatik
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,19 +16,19 @@
  *
  */
 
-package org.streampipes.connect.container.master.rest;
+package org.apache.streampipes.connect.container.master.rest;
 
 
 import org.rendersnake.HtmlCanvas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.GroundingService;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.connect.container.master.management.AdapterMasterManagement;
-import org.streampipes.connect.rest.AbstractContainerResource;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
-import org.streampipes.storage.couchdb.utils.CouchDbConfig;
+import org.apache.streampipes.connect.adapter.GroundingService;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.storage.couchdb.utils.CouchDbConfig;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

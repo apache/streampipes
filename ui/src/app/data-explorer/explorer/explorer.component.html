@@ -1,3 +1,21 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
 <div>
     <div class="assemblyOptions sp-blue-bg">
 
@@ -33,6 +51,8 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Hour'" (click)="selectTimeUnit('1 Hour')">1 Hour</button>
+                    <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Hour'"color="primary" mat-raised-button>1 Hour</button>
                     <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Day'" (click)="selectTimeUnit('1 Day')">1 Day</button>
                     <button mat-button mat-stroked-button *ngIf="selectedTimeUnit === '1 Day'"color="primary" mat-raised-button>1 Day</button>
                     <button mat-button mat-stroked-button *ngIf="selectedTimeUnit !== '1 Week'" (click)="selectTimeUnit('1 Week')">1 Week</button>
@@ -221,7 +241,7 @@
 
 
             <!-- Charts -->
-            <mat-tab-group *ngIf="!displayIsLoadingData && data !== undefined && yAxesKeys.length > 0"
+            <mat-tab-group *ngIf="!displayIsLoadingData &&  data !== undefined && yAxesKeys.length > 0"
                            [selectedIndex]="selectedMatGroup.value"
                            (selectedIndexChange)="selectedMatGroup.setValue($event)"
                             style="margin-top: -35px;">
@@ -258,7 +278,8 @@
                             (nextPage)="handleNextPage()"
                             (previousPage)="handlePreviousPage()"
                             (firstPage)=handleFirstPage()
-                            (lastPage)="handleLastPage()">
+                            (lastPage)="handleLastPage()"
+                            (zoomEvent)="zoomEventHandler($event)">
                     </sp-lineChart>
                 </mat-tab>
             </mat-tab-group>

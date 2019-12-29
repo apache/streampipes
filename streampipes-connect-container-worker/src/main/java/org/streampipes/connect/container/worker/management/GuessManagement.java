@@ -1,11 +1,12 @@
 /*
- * Copyright 2019 FZI Forschungszentrum Informatik
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,17 +16,17 @@
  *
  */
 
-package org.streampipes.connect.container.worker.management;
+package org.apache.streampipes.connect.container.worker.management;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.connect.adapter.exception.ParseException;
-import org.streampipes.connect.management.AdapterUtils;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.guess.GuessSchema;
-import org.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.connect.adapter.Adapter;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.adapter.exception.ParseException;
+import org.apache.streampipes.connect.management.AdapterUtils;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.sdk.helpers.EpProperties;
 
 import java.util.Arrays;
 import java.util.Optional;

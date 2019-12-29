@@ -1,11 +1,12 @@
 /*
- * Copyright 2019 FZI Forschungszentrum Informatik
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,7 +44,7 @@ export class ExplorerComponent implements OnInit {
     selectedInfoResult: InfoResult = undefined;
 
     //timeunit selection
-    selectedTimeUnit = '1 Day';
+    selectedTimeUnit = '1 Hour';
 
     //aggregation / advanced options
     //group by
@@ -87,7 +88,7 @@ export class ExplorerComponent implements OnInit {
 
     constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar, public dialog: MatDialog) {
         let dateTmp = new Date();
-        this.setDateRange(dateTmp, new Date(dateTmp.getTime() - 60000 * 60 * 24));
+        this.setDateRange(dateTmp, new Date(dateTmp.getTime() - 60000 * 60 * 1));
     }
 
     ngOnInit(): void {
@@ -107,6 +108,10 @@ export class ExplorerComponent implements OnInit {
         this.selectedTimeUnit = value;
 
         if (this.selectedTimeUnit === '1 Day') {
+            this.groupbyUnit = 's';
+            this.groupbyValue = 10;
+        }
+        else if (this.selectedTimeUnit === '1 Day') {
             this.groupbyUnit = 'm';
             this.groupbyValue = 1;
         } else if (this.selectedTimeUnit === '1 Week') {
@@ -136,14 +141,16 @@ export class ExplorerComponent implements OnInit {
             let endDateTmp = new Date();
             let startDateTmp;
 
-            if (this.selectedTimeUnit === '1 Day') {
-                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 1);
+            if (this.selectedTimeUnit === '1 Hour') {
+                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 1); // 1 Hour
+            } else if (this.selectedTimeUnit === '1 Day') {
+                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 1); // 1 Day
             } else if (this.selectedTimeUnit === '1 Week') {
-                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 7);
+                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 7); // 7 Days
             } else if (this.selectedTimeUnit === '1 Month') {
-                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 30);
+                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 30); // 30 Days
             } else if (this.selectedTimeUnit === '1 Year') {
-                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 365);
+                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 365); //365 Days
             }
             this.setDateRange(startDateTmp, endDateTmp);
         }
@@ -307,7 +314,7 @@ export class ExplorerComponent implements OnInit {
     downloadDataAsFile() {
         const dialogRef = this.dialog.open(DataDownloadDialog, {
             width: '600px',
-            data: {data: this.data, xAxesKey: this.xAxesKey, yAxesKeys: this.yAxesKeys, index: this.selectedInfoResult.measureName},
+            data: {data: this.data, xAxesKey: this.xAxesKey, yAxesKeys: this.yAxesKeys, index: this.selectedInfoResult.measureName, date: this.dateRange},
             panelClass: 'custom-dialog-container'
 
         });
@@ -392,5 +399,13 @@ export class ExplorerComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    zoomEventHandler(timeRange) {
+      this.selectedTimeUnit = 'Custom';
+      if (timeRange[0] !== undefined) {
+        this.setDateRange(new Date(timeRange[0]), new Date(timeRange[1]));
+      }
+      this.loadData(true);
     }
 }

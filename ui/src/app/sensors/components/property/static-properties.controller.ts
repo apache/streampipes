@@ -1,11 +1,12 @@
 /*
- * Copyright 2019 FZI Forschungszentrum Informatik
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,17 +30,17 @@ export class StaticPropertiesController {
         this.RestApi = RestApi;
         this.staticPropertyTypes = [{
             label: "Text Input",
-            "type": "org.streampipes.model.staticproperty.FreeTextStaticProperty"
+            "type": "org.apache.streampipes.model.staticproperty.FreeTextStaticProperty"
         },
-            {label: "Single-Value Selection", "type": "org.streampipes.model.staticproperty.OneOfStaticProperty"},
-            {label: "Multi-Value Selection", "type": "org.streampipes.model.staticproperty.AnyStaticProperty"},
-            {label: "Domain Concept", "type": "org.streampipes.model.staticproperty.DomainStaticProperty"},
+            {label: "Single-Value Selection", "type": "org.apache.streampipes.model.staticproperty.OneOfStaticProperty"},
+            {label: "Multi-Value Selection", "type": "org.apache.streampipes.model.staticproperty.AnyStaticProperty"},
+            {label: "Domain Concept", "type": "org.apache.streampipes.model.staticproperty.DomainStaticProperty"},
             {
                 label: "Single-Value Mapping Property",
-                "type": "org.streampipes.model.staticproperty.MappingPropertyUnary"
+                "type": "org.apache.streampipes.model.staticproperty.MappingPropertyUnary"
             },
-            {label: "Multi-Value Mapping Property", "type": "org.streampipes.model.staticproperty.MappingPropertyNary"},
-            {label: "Collection", "type": "org.streampipes.model.staticproperty.CollectionStaticProperty"}];
+            {label: "Multi-Value Mapping Property", "type": "org.apache.streampipes.model.staticproperty.MappingPropertyNary"},
+            {label: "Collection", "type": "org.apache.streampipes.model.staticproperty.CollectionStaticProperty"}];
 
         this.newStaticPropertyType = this.staticPropertyTypes[0].type;
         this.memberTypeSelected = false;

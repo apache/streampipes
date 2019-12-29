@@ -1,11 +1,12 @@
 /*
- * Copyright 2018 FZI Forschungszentrum Informatik
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +16,7 @@
  *
  */
 
-package org.streampipes.container.standalone.init;
+package org.apache.streampipes.container.standalone.init;
 
 
 import org.slf4j.Logger;
@@ -24,11 +25,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.streampipes.container.init.DeclarersSingleton;
-import org.streampipes.container.init.ModelSubmitter;
-import org.streampipes.container.init.RunningInstances;
-import org.streampipes.container.model.PeConfig;
-import org.streampipes.container.util.ConsulUtil;
+import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.init.ModelSubmitter;
+import org.apache.streampipes.container.init.RunningInstances;
+import org.apache.streampipes.container.model.PeConfig;
+import org.apache.streampipes.container.util.ConsulUtil;
 
 import java.util.Collections;
 
