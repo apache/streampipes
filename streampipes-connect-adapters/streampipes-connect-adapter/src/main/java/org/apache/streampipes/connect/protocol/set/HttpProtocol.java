@@ -47,7 +47,8 @@ public class HttpProtocol extends Protocol {
 
     Logger logger = LoggerFactory.getLogger(Protocol.class);
 
-    public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/set/http";
+    //public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/set/http";
+    public static final String ID = "org.apache.streampipes.protocol.set.http";
 
     private String url;
 

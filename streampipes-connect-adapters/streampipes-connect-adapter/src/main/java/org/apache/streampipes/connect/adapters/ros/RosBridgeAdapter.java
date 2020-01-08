@@ -46,6 +46,8 @@ import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -55,7 +57,7 @@ import java.util.stream.Collectors;
 
 public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements ResolvesContainerProvidedOptions {
 
-    public static final String ID = "http://streampipes.org/adapter/specific/ros";
+    public static final String ID = "org.apache.streampipes.adapters.specific.ros";
 
     private static final String ROS_HOST_KEY = "ROS_HOST_KEY";
     private static final String ROS_PORT_KEY = "ROS_PORT_KEY";
@@ -82,19 +84,17 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements Reso
 
     @Override
     public SpecificAdapterStreamDescription declareModel() {
-        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "ROS Bridge", "Connect Robots running on ROS")
-                .iconUrl("ros.png")
+        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
+                .withLocales(Locales.EN)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .category(AdapterType.Manufacturing)
-                .requiredTextParameter(Labels.from(ROS_HOST_KEY, "Ros Bridge", "Example: test-server.com (No protocol) "))
-                .requiredTextParameter(Labels.from(ROS_PORT_KEY, "Port", "Example: 9090"))
-                .requiredSingleValueSelectionFromContainer(Labels.from(TOPIC_KEY, "Topic",
-                        "Example: /battery (Starts with /) "), Arrays.asList(ROS_HOST_KEY,
+                .requiredTextParameter(Labels.withId(ROS_HOST_KEY))
+                .requiredTextParameter(Labels.withId(ROS_PORT_KEY))
+                .requiredSingleValueSelectionFromContainer(Labels.withId(TOPIC_KEY), Arrays.asList(ROS_HOST_KEY,
                         ROS_PORT_KEY))
 //                .requiredTextParameter(Labels.from(TOPIC_KEY, "Topic", "Example: /battery " +
 //                        "(Starts with /) "))
                 .build();
-        description.setAppId(ID);
-
 
         return  description;
     }
