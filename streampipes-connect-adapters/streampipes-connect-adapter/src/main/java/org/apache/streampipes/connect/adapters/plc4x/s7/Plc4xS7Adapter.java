@@ -34,9 +34,11 @@ import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescrip
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.util.ArrayList;
@@ -57,15 +59,16 @@ public class Plc4xS7Adapter extends PullAdapter {
      * Keys of user configuration parameters
      */
     private static final String PLC_IP = "PLC_IP";
+    private static final String PLC_NODES = "PLC_NODES";
     private static final String PLC_NODE_NAME = "PLC_NODE_NAME";
+    private static final String PLC_NODE_RUNTIME_NAME = "PLC_NODE_RUNTIME_NAME";
     private static final String PLC_NODE_TYPE = "PLC_NODE_TYPE";
 
     /**
      * Values of user configuration parameters
      */
     private String ip;
-    private String nodeName;
-    private String nodeType;
+    private List<Map<String, String>> nodes;
 
     /**
      * Connection to the PLC
@@ -94,8 +97,13 @@ public class Plc4xS7Adapter extends PullAdapter {
                 .iconUrl("plc4x.png")
                 .category(AdapterType.Manufacturing)
                 .requiredTextParameter(Labels.from(PLC_IP, "PLC Address", "Example: 192.168.34.56"))
-                .requiredTextParameter(Labels.from(PLC_NODE_NAME, "Node Name", "temperature"))
-                .requiredTextParameter(Labels.from(PLC_NODE_TYPE, "Node Type", "%Q0.4:BOOL"))
+                .requiredCollection(Labels.from(PLC_NODES, "Nodes", "The PLC Nodes"),
+                    StaticProperties.stringFreeTextProperty(Labels.from(PLC_NODE_RUNTIME_NAME, "Runtime Name", "example: temperatur")),
+                    StaticProperties.stringFreeTextProperty(Labels.from(PLC_NODE_NAME, "Node Name", "example: %Q0.4")),
+                    StaticProperties.singleValueSelection(Labels.from(PLC_NODE_TYPE, "Data Type", "example: bool"),
+                            Options.from("Bool",  "Byte", "Int", "Word", "Real"))
+
+                )
                 .build();
         description.setAppId(ID);
 
@@ -121,14 +129,16 @@ public class Plc4xS7Adapter extends PullAdapter {
         EventSchema eventSchema = new EventSchema();
         List<EventProperty> allProperties = new ArrayList<>();
 
-        Datatypes datatype = getStreamPipesDataType(this.nodeType);
+        for (Map<String, String> node : this.nodes) {
+            Datatypes datatype = getStreamPipesDataType(node.get(PLC_NODE_TYPE).toUpperCase());
 
-        allProperties.add(
-                PrimitivePropertyBuilder
-                        .create(datatype, this.nodeName)
-                        .label(this.nodeName)
-                        .description("")
-                        .build());
+            allProperties.add(
+                    PrimitivePropertyBuilder
+                            .create(datatype, node.get(PLC_NODE_RUNTIME_NAME))
+                            .label(node.get(PLC_NODE_RUNTIME_NAME))
+                            .description("")
+                            .build());
+        }
 
         eventSchema.setEventProperties(allProperties);
         guessSchema.setEventSchema(eventSchema);
@@ -166,7 +176,9 @@ public class Plc4xS7Adapter extends PullAdapter {
 
         // Create PLC read request
         PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
-        builder.addItem(this.nodeName, this.nodeType);
+        for (Map<String, String> node : this.nodes) {
+            builder.addItem(node.get(PLC_NODE_NAME), node.get(PLC_NODE_TYPE));
+        }
         PlcReadRequest readRequest = builder.build();
 
         // Execute the request
@@ -181,13 +193,14 @@ public class Plc4xS7Adapter extends PullAdapter {
 
         // Create an event containing the value of the PLC
         Map<String, Object> event = new HashMap<>();
-        for (String fieldName : response.getFieldNames()) {
-            if(response.getResponseCode(fieldName) == PlcResponseCode.OK) {
-                event.put(fieldName, response.getObject(fieldName));
+        for (Map<String, String> node : this.nodes) {
+            if(response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
+                event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
             }
 
             else {
-                logger.error("Error[" + fieldName + "]: " + response.getResponseCode(fieldName).name());
+                logger.error("Error[" + node.get(PLC_NODE_NAME) + "]: " +
+                        response.getResponseCode(node.get(PLC_NODE_NAME)).name());
             }
         }
 
@@ -231,9 +244,20 @@ public class Plc4xS7Adapter extends PullAdapter {
      */
     private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
         ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
+
         this.ip = extractor.singleValue(PLC_IP, String.class);
-        this.nodeName = extractor.singleValue(PLC_NODE_NAME, String.class);
-        this.nodeType = extractor.singleValue(PLC_NODE_TYPE, String.class);
+
+
+        this.nodes = new ArrayList<>();
+        List<ParameterExtractor> collectionExtractor = extractor.collectionGroup(PLC_NODES);
+        for (ParameterExtractor rowExtractor : collectionExtractor) {
+            Map map = new HashMap();
+            map.put(PLC_NODE_RUNTIME_NAME, rowExtractor.singleValue(PLC_NODE_RUNTIME_NAME, String.class));
+            map.put(PLC_NODE_NAME, rowExtractor.singleValue(PLC_NODE_NAME, String.class));
+            map.put(PLC_NODE_TYPE, rowExtractor.selectedSingleValueOption(PLC_NODE_TYPE));
+            this.nodes.add(map);
+        }
+
     }
 
     /**
