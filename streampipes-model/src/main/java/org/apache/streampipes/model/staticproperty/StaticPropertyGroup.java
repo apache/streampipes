@@ -41,6 +41,9 @@ public class StaticPropertyGroup extends StaticProperty {
   @RdfProperty(StreamPipes.SHOW_LABEL)
   private Boolean showLabel;
 
+  @RdfProperty(StreamPipes.IS_HORIZONTAL_RENDERING)
+  private boolean horizontalRendering;
+
   public StaticPropertyGroup() {
     super(StaticPropertyType.StaticPropertyGroup);
   }
@@ -49,10 +52,20 @@ public class StaticPropertyGroup extends StaticProperty {
     super(other);
     this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
     this.showLabel = other.showLabel;
+    this.horizontalRendering = other.horizontalRendering;
+  }
+
+  public void setShowLabel(Boolean showLabel) {
+    this.showLabel = showLabel;
   }
 
   public StaticPropertyGroup(String internalName, String label, String description) {
     super(StaticPropertyType.StaticPropertyGroup, internalName, label, description);
+  }
+
+  public StaticPropertyGroup(String internalName, String label, String description, boolean horizontalRendering) {
+    super(StaticPropertyType.StaticPropertyGroup, internalName, label, description);
+    this.horizontalRendering = horizontalRendering;
   }
 
   public StaticPropertyGroup(String internalName, String label, String description, List<StaticProperty> staticProperties) {
@@ -66,5 +79,17 @@ public class StaticPropertyGroup extends StaticProperty {
 
   public void setStaticProperties(List<StaticProperty> staticProperties) {
     this.staticProperties = staticProperties;
+  }
+
+  public void setHorizontalRendering(boolean horizontalRendering) {
+    this.horizontalRendering = horizontalRendering;
+  }
+
+  public Boolean getShowLabel() {
+    return showLabel;
+  }
+
+  public boolean isHorizontalRendering() {
+    return horizontalRendering;
   }
 }

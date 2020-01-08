@@ -42,13 +42,21 @@ public class AnyStaticProperty extends SelectionStaticProperty {
   }
 
   public AnyStaticProperty(StaticPropertyType staticPropertyType, String internalName,
-                             String label, String description) {
+                           String label, String description) {
     super(staticPropertyType, internalName, label, description);
+  }
+
+  public AnyStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label, String
+          description, boolean horizontalRendering) {
+    super(staticPropertyType, internalName, label, description, horizontalRendering);
   }
 
   public AnyStaticProperty(String internalName, String label, String description) {
     super(StaticPropertyType.AnyStaticProperty, internalName, label, description);
   }
 
+  public AnyStaticProperty(String internalName, String label, String description, boolean horizontalRendering) {
+    super(StaticPropertyType.AnyStaticProperty, internalName, label, description, horizontalRendering);
+  }
 
 }

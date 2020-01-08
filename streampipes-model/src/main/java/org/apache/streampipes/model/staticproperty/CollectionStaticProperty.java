@@ -62,6 +62,11 @@ public class CollectionStaticProperty extends StaticProperty {
     this.memberType = memberType;
   }
 
+  public CollectionStaticProperty(String internalName, String label, String description, StaticProperty propertyTemplate) {
+    super(StaticPropertyType.CollectionStaticProperty, internalName, label, description);
+    this.staticPropertyTemplate = propertyTemplate;
+  }
+
   public CollectionStaticProperty(CollectionStaticProperty other) {
     super(other);
     this.members = new Cloner().staticProperties(other.getMembers());

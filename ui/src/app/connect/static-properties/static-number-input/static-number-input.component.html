@@ -17,7 +17,6 @@
   -->
 
 <div id="formWrapper">
-    <p>{{staticProperty.label}}: </p>
     <form [formGroup]="freeTextForm">
         <mat-form-field>
             <input class="example-full-width" matInput id="{{ 'input-' + staticProperty.label.toLowerCase() }}" [placeholder]="staticProperty.label" [(ngModel)]="staticPropertyUtil.asFreeTextStaticProperty(staticProperty).value"
