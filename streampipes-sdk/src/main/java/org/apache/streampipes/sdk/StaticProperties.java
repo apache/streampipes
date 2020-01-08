@@ -126,6 +126,7 @@ public class StaticProperties {
     if (sp.length > 0) {
       StaticPropertyGroup group = StaticProperties.group(label);
       group.setHorizontalRendering(true);
+      group.setStaticProperties(Arrays.asList(sp));
 
       return new CollectionStaticProperty(label.getInternalId(), label.getLabel(),
               label.getDescription(), group);

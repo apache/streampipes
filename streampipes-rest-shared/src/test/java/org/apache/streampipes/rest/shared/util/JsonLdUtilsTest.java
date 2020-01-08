@@ -18,15 +18,18 @@
 
 package org.apache.streampipes.rest.shared.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.junit.Test;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class JsonLdUtilsTest {
 
@@ -83,4 +86,24 @@ public class JsonLdUtilsTest {
         assertEquals(result.getList().get(1).getUri(), "http://id.de#4");
         assertEquals(result.getList().get(1).getName(), "name2" );
     }
+
+    @Test
+    public void jsonldSeriaulizing() {
+        StaticPropertyGroup group = new StaticPropertyGroup();
+        group.setElementId("http://test");
+        List<StaticProperty> staticProperties = new ArrayList<>();
+        staticProperties.add(new FreeTextStaticProperty());
+        group.setStaticProperties(staticProperties);
+        group.setIndex(1);
+        group.setInternalName("interName");
+
+        group.setShowLabel(true);
+        group.setHorizontalRendering(true);
+
+        String adapterDescription = JsonLdUtils.toJsonLD(group);
+        System.out.println(adapterDescription);
+
+        assertTrue( adapterDescription.contains("isHorizontalRendering"));
+    }
+
 }

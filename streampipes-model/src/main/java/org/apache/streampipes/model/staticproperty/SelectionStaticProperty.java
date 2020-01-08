@@ -85,4 +85,8 @@ public abstract class SelectionStaticProperty extends StaticProperty {
   public void setHorizontalRendering(boolean horizontalRendering) {
     this.horizontalRendering = horizontalRendering;
   }
+
+  public boolean isHorizontalRendering() {
+    return horizontalRendering;
+  }
 }
