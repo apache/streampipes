@@ -27,6 +27,10 @@ public class SpecificDataStreamAdapterBuilder extends
     super(id, label, description, new SpecificAdapterStreamDescription());
   }
 
+  private SpecificDataStreamAdapterBuilder(String appId) {
+    super(appId, new SpecificAdapterStreamDescription());
+  }
+
   /**
    * Creates a new specific data stream adapter using the builder pattern.
    * @param appId A unique identifier of the new element, e.g., com.mycompany.set.mynewdataset
@@ -38,6 +42,17 @@ public class SpecificDataStreamAdapterBuilder extends
           description) {
     return new SpecificDataStreamAdapterBuilder(appId, label, description);
   }
+
+  /**
+   * Creates a new specific data stream adapter using the builder pattern.
+   * @param appId A unique identifier of the new element, e.g., com.mycompany.set.mynewdataset
+   * @return a new instance of {@link DataSetBuilder}
+   */
+  public static SpecificDataStreamAdapterBuilder create(String appId) {
+    return new SpecificDataStreamAdapterBuilder(appId);
+  }
+
+
 
   @Override
   protected SpecificDataStreamAdapterBuilder me() {

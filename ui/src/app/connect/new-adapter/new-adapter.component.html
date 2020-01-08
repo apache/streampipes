@@ -54,7 +54,7 @@
                 </div>
                 <div class="sp-blue-border padding">
                     <app-static-property *ngFor="let config of adapter.config" [staticProperty]="config"
-                        [staticProperties]="adapter.config" [adapterId]="adapter.id"
+                        [staticProperties]="adapter.config" [adapterId]="adapter.appId"
                         (updateEmitter)="triggerUpdate($event)" [completedStaticProperty]="completedStaticProperty">
                     </app-static-property>
                     <app-protocol (validateEmitter)="validateProtocol($event)" [protocol]="adapter.protocol"

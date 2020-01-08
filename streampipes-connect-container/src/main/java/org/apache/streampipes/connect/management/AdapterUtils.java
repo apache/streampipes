@@ -70,12 +70,12 @@ public class AdapterUtils {
 
         Protocol protocol = null;
         if (adapterDescription instanceof GenericAdapterSetDescription) {
-            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterSetDescription) adapterDescription).getProtocolDescription().getElementId());
+            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterSetDescription) adapterDescription).getProtocolDescription().getAppId());
             ((GenericAdapter) adapter).setProtocol(protocol);
         }
 
         if (adapterDescription instanceof GenericAdapterStreamDescription) {
-            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterDescription).getProtocolDescription().getElementId());
+            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterDescription).getProtocolDescription().getAppId());
             ((GenericAdapter) adapter).setProtocol(protocol);
         }
 

@@ -28,6 +28,11 @@ public abstract class AdapterDescriptionBuilder<BU extends
         AdapterDescriptionBuilder<BU, T>, T extends AdapterDescription> extends
         AbstractConfigurablePipelineElementBuilder<BU, T> {
 
+  protected AdapterDescriptionBuilder(String id, T element) {
+    super(id, element);
+    this.elementDescription.setAdapterId(id);
+  }
+
   protected AdapterDescriptionBuilder(String id, String label, String description,
                                    T adapterTypeInstance) {
     super(id, label, description, adapterTypeInstance);

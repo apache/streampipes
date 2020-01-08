@@ -185,11 +185,11 @@ export class DataMarketplaceService {
       return this.getProtocols().pipe(map(protocols => {
         for (let protocol of protocols) {
           let newAdapterDescription: AdapterDescription;
-          if (protocol.id.includes('sp:protocol/set')) {
+          if (protocol.id.includes('sp:protocol/set') || protocol.sourceType === 'SET') {
             newAdapterDescription = new GenericAdapterSetDescription(
               'http://streampipes.org/genericadaptersetdescription'
             );
-          } else if (protocol.id.includes('sp:protocol/stream')) {
+          } else if (protocol.id.includes('sp:protocol/stream') || protocol.sourceType === 'STREAM') {
             newAdapterDescription = new GenericAdapterStreamDescription(
               'http://streampipes.org/genericadapterstreamdescription'
             );
@@ -231,6 +231,10 @@ export class DataMarketplaceService {
       }
 
     return result;
+  }
+
+  getAssetUrl(appId) {
+    return this.host + 'api/v1/' + this.authStatusService.email + "/master/description/" + appId + "/assets"
   }
 
   private get baseUrl() {

@@ -28,6 +28,10 @@ public class SpecificDataSetAdapterBuilder extends
     super(id, label, description, new SpecificAdapterSetDescription());
   }
 
+  private SpecificDataSetAdapterBuilder(String appId) {
+    super(appId, new SpecificAdapterSetDescription());
+  }
+
   /**
    * Creates a new specific data set adapter using the builder pattern.
    * @param appId A unique identifier of the new element, e.g., com.mycompany.set.mynewdataset
@@ -38,6 +42,15 @@ public class SpecificDataSetAdapterBuilder extends
   public static SpecificDataSetAdapterBuilder create(String appId, String label, String
           description) {
     return new SpecificDataSetAdapterBuilder(appId, label, description);
+  }
+
+  /**
+   * Creates a new specific data set adapter using the builder pattern.
+   * @param appId A unique identifier of the new element, e.g., com.mycompany.set.mynewdataset
+   * @return a new instance of {@link DataSetBuilder}
+   */
+  public static SpecificDataSetAdapterBuilder create(String appId) {
+    return new SpecificDataSetAdapterBuilder(appId);
   }
 
   @Override

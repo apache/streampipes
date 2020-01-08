@@ -45,8 +45,16 @@ public class AdapterWorkerManagement {
         return AdapterDeclarerSingleton.getInstance().getAllProtocols();
     }
 
+    public Protocol getProtocol(String id) {
+        return AdapterDeclarerSingleton.getInstance().getProtocol(id);
+    }
+
     public Collection<Adapter> getAllAdapters() {
         return AdapterDeclarerSingleton.getInstance().getAllAdapters();
+    }
+
+    public Adapter getAdapter(String id) {
+        return AdapterDeclarerSingleton.getInstance().getAdapter(id);
     }
 
     public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
@@ -57,7 +65,9 @@ public class AdapterWorkerManagement {
 
         Protocol protocol = null;
         if (adapterStreamDescription instanceof GenericAdapterStreamDescription) {
-            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getElementId());
+            //TODO Need to check with ElementId?
+            //protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getElementId());
+            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getAppId());
             if (protocol == null) {
                 protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getAppId());
             }
