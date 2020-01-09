@@ -320,7 +320,7 @@ public class EpProperties {
     return ep;
   }
 
-  private static EventPropertyPrimitive ep(Label label, String runtimeType, String runtimeName, String domainProperty) {
+  public static EventPropertyPrimitive ep(Label label, String runtimeType, String runtimeName, String domainProperty) {
     return getPreparedProperty(label, new EventPropertyPrimitive(runtimeType, runtimeName, "", Utils.createURI
             (domainProperty)));
   }

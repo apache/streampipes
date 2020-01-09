@@ -24,6 +24,11 @@ public class SPSensor {
   public static final String ACCELERATION_Y = "http://streampipes.org/hmi/accelerationY";
   public static final String ACCELERATION_Z = "http://streampipes.org/hmi/accelerationZ";
 
+  public static final String GYROSCOPE_X = "http://streampipes.org/hmi/gyroscopeX";
+  public static final String GYROSCOPE_Y = "http://streampipes.org/hmi/gyroscopeY";
+  public static final String GYROSCOPE_Z = "http://streampipes.org/hmi/gyroscopeZ";
+
+
   public static final String AMBIENT_LIGHT = "http://streampipes.org/hmi/ambientLight";
 
   public static final String IMAGE = "https://image.com";
