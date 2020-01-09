@@ -37,7 +37,7 @@ import java.net.URISyntaxException;
 
 public class WebsocketProtocol extends SpecificDataStreamAdapter {
 
-  public static final String ID = "http://streampipes.org/adapter/specific/turtlebot";
+  public static final String ID = "org.apache.streampipes.connect.protocol.stream.turtlebot";
 
   private WebsocketClient websocketClient;
 

@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 
 public class HDFSProtocol extends Protocol {
 
-    public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/HDFS";
+    public static final String ID = "org.apache.streampipes.connect.protocol.stream.HDFS";
 
     private static String INTERVAL_PROPERTY = "intervalProperty";
     private static String URL_PROPERTY = "urlProperty";

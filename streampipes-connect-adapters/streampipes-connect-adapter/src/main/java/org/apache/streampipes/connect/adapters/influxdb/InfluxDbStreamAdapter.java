@@ -38,7 +38,7 @@ import static org.apache.streampipes.connect.adapters.influxdb.InfluxDbClient.ge
 
 public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
 
-    public static final String ID = "http://streampipes.org/adapter/specific/influxdbstream";
+    public static final String ID = "org.apache.streampipes.connect.adapters.influxdb";
 
     private static final String POLLING_INTERVAL = "pollingInterval";
 

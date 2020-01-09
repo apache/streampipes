@@ -1,5 +1,5 @@
-org.apache.streampipes.adapters.specific.ros.title=ROS Bridge
-org.apache.streampipes.adapters.specific.ros.description=Connect Robots running on ROS.
+org.apache.streampipes.connect.adapters.ros.title=ROS Bridge
+org.apache.streampipes.connect.adapters.ros.description=Connect Robots running on ROS.
 
 ROS_HOST_KEY.title=Ros Bridge
 ROS_HOST_KEY.description=Example: test-server.com (No protocol)

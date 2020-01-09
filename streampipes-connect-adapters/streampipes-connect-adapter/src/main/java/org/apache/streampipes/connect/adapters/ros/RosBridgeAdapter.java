@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
 
 public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements ResolvesContainerProvidedOptions {
 
-    public static final String ID = "org.apache.streampipes.adapters.specific.ros";
+    public static final String ID = "org.apache.streampipes.connect.adapters.ros";
 
     private static final String ROS_HOST_KEY = "ROS_HOST_KEY";
     private static final String ROS_PORT_KEY = "ROS_PORT_KEY";

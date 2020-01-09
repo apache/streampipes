@@ -47,7 +47,7 @@ public class FileStreamProtocol extends Protocol {
 
   private static Logger logger = LoggerFactory.getLogger(FileStreamProtocol.class);
 
-  public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/file";
+  public static final String ID = "org.apache.streampipes.connect.protocol.stream.file";
 
   private String filePath;
  // private String timestampKey;

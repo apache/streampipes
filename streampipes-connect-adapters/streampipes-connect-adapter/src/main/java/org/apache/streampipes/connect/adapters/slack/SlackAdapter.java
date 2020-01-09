@@ -35,7 +35,7 @@ import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 public class SlackAdapter extends SpecificDataStreamAdapter {
 
-  public static final String ID = "http://streampipes.org/adapter/specific/slack";
+  public static final String ID = "org.apache.streampipes.connect.adapters.slack";
 
   private static final String SlackToken = "slack-token";
   private static final String Timestamp = "timestamp";

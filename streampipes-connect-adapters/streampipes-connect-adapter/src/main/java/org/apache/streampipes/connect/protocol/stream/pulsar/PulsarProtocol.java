@@ -46,7 +46,7 @@ public class PulsarProtocol extends BrokerProtocol implements ResolvesContainerP
 
   private static final Logger LOG = LoggerFactory.getLogger(PulsarProtocol.class);
 
-  public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/pulsar";
+  public static final String ID = "org.apache.streampipes.connect.protocol.stream.pulsar";
 
   private static final String PULSAR_BROKER_HOST = "pulsar-broker-host";
   private static final String PULSAR_BROKER_PORT = "pulsar-broker-port";

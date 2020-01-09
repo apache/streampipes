@@ -30,7 +30,7 @@ import org.apache.streampipes.sdk.helpers.Labels;
 
 public class RandomDataStreamAdapter extends SpecificDataStreamAdapter {
 
-  public static final String ID = "http://streampipes.org/adapter/specific/randomdatastream";
+  public static final String ID = "org.apache.streampipes.connect.adapters.simulator.randomdatastream";
 
   private final static String WaitTimeMs = "wait-time-ms";
 

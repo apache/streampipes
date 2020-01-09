@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 
 public class CoindeskBitcoinAdapter extends PullAdapter {
 
-  public static final String ID = "http://streampipes.org/adapter/specific/coindesk/bitcoin";
+  public static final String ID = "org.apache.streampipes.connect.adapters.coindesk";
 
   private static final String CoindeskUrl = "https://api.coindesk.com/v1/bpi/currentprice.json";
 

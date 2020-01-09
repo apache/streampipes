@@ -53,7 +53,7 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
 
     Logger logger = LoggerFactory.getLogger(KafkaProtocol.class);
 
-    public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/kafka";
+    public static final String ID = "rg.apache.streampipes.connect.protocol.stream.kafka";
 
     private Thread thread;
     private SpKafkaConsumer kafkaConsumer;

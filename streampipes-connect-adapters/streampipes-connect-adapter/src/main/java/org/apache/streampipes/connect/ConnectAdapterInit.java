@@ -56,15 +56,15 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             // Protocols
             .add(new FileProtocol())
             .add(new HttpProtocol())
-   /*         .add(new FileStreamProtocol())
+            .add(new FileStreamProtocol())
             .add(new HDFSProtocol())
             .add(new KafkaProtocol())
             .add(new MqttProtocol())
             .add(new HttpStreamProtocol())
-            .add(new PulsarProtocol()) */
+            .add(new PulsarProtocol())
 
             // Specific Adapters
-   /*         .add(new GdeltAdapter())
+            .add(new GdeltAdapter())
             .add(new CoindeskBitcoinAdapter())
             .add(new IexCloudNewsAdapter())
             .add(new IexCloudStockAdapter())
@@ -74,13 +74,13 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new RandomDataStreamAdapter())
             .add(new SlackAdapter())
             .add(new WikipediaEditedArticlesAdapter())
-            .add(new WikipediaNewArticlesAdapter()) */
-            .add(new RosBridgeAdapter());
-    /*        .add(new OpcUaAdapter())
+            .add(new WikipediaNewArticlesAdapter())
+            .add(new RosBridgeAdapter())
+            .add(new OpcUaAdapter())
             .add(new InfluxDbStreamAdapter())
             .add(new InfluxDbSetAdapter())
             .add(new TISensorTag())
-            .add(new Plc4xS7Adapter()); */
+            .add(new Plc4xS7Adapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
     String masterUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerMasterUrl();

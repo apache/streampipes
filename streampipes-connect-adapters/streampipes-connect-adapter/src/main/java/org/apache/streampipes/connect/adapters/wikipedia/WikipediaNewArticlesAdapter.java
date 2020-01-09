@@ -24,7 +24,7 @@ import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuild
 
 public class WikipediaNewArticlesAdapter extends WikipediaAdapter {
 
-  public static final String ID = "http://streampipes.org/adapter/specific/wikipedia/new";
+  public static final String ID = "org.apache.streampipes.connect.adapters.wikipedia.new";
 
   private static final String Type = "new";
 

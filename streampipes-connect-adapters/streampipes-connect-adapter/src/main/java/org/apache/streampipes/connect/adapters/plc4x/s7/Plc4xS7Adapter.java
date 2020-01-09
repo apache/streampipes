@@ -53,7 +53,7 @@ public class Plc4xS7Adapter extends PullAdapter {
     /**
      * A unique id to identify the Plc4xS7Adapter
       */
-    public static final String ID = "http://streampipes.org/adapter/specific/plc4xs7";
+    public static final String ID = "org.apache.streampipes.connect.adapters.plc4x.s7";
 
     /**
      * Keys of user configuration parameters

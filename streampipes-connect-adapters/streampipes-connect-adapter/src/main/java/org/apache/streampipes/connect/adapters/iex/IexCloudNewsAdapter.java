@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 public class IexCloudNewsAdapter extends IexCloudAdapter {
 
-  public static final String ID = "http://streampipes.org/adapter/specific/iexcloud/news";
+  public static final String ID = "org.apache.streampipes.connect.adapters.iex.news";
   private static final String News = "/news";
 
   private static final String Timestamp = "timestamp";

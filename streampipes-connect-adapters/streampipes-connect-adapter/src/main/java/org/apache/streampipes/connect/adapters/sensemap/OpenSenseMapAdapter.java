@@ -52,7 +52,7 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
 
     private Logger logger = LoggerFactory.getLogger(OpenSenseMapAdapter.class);
 
-    public static final String ID = "http://streampipes.org/adapter/specific/opensensemap";
+    public static final String ID = "org.apache.streampipes.connect.adapters.sensemap";
     public static final int POLLING_INTERVALL = 5;
 
     private List<String> selectedSensors;
