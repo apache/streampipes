@@ -1041,6 +1041,16 @@
                         <exclude>DISCLAIMER-WIP</exclude>
                         <exclude>NOTICE-binary</exclude>
 
+                        <!-- Exclude license files in license folder -->
+                        <exclude>licenses/BSD_3-Clause</exclude>
+                        <exclude>licenses/CDDL_1.1</exclude>
+                        <exclude>licenses/CDDL_1.0</exclude>
+                        <exclude>licenses/Eclipse_Distribution_License_v1.0</exclude>
+                        <exclude>licenses/EPL_2.0</exclude>
+                        <exclude>licenses/CDDL_LICENSE_1.1</exclude>
+                        <exclude>licenses/EPL_1.0</exclude>
+                        <exclude>licenses/BSD_2-Clause</exclude>
+
                     </excludes>
                 </configuration>
             </plugin>
