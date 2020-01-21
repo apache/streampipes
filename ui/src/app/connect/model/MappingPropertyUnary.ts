@@ -33,7 +33,8 @@ export class MappingPropertyUnary extends StaticProperty {
     public propertyScope: string;
 
     @RdfProperty('sp:mapsTo')
-    public selectedProperties: string[];
+    public selectedProperty: string;
+
 
     constructor(id: string) {
         super();

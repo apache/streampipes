@@ -27,11 +27,9 @@ export class CollectionController {
     }
 
     $onInit() {
-        console.log(this.staticProperty);
     }
 
     addMember(sp) {
-        console.log(sp);
         let newMember = angular.copy(this.staticProperty.properties.staticPropertyTemplate);
         newMember.properties.elementId = newMember.properties.elementId.concat(this.makeId());
         sp.properties.members.push(newMember);

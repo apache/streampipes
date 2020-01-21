@@ -27,12 +27,10 @@ export class DashboardComponent implements OnInit {
 
     selectDashboard(index: number) {
         this.selectedDashboard = this.dashboards[index];
-        console.log(this.selectedDashboard);
     }
 
     protected getDashboards() {
         this.dashboardService.getDashboards().subscribe(data => {
-            console.log(data);
             this.dashboards = data;
             this.selectedIndex = 0;
             this.selectDashboard(0);

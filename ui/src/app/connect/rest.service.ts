@@ -113,7 +113,6 @@ export class RestService {
                     .post('/streampipes-connect/api/v1/' + this.authStatusService.email + '/master/guess/schema', res)
                     .pipe(map(response => {
                         if (JSON.stringify(response).includes('sp:GuessSchema')) {
-                            console.log(response)
                             const r = this.tsonLdSerializerService.fromJsonLd(response, 'sp:GuessSchema');
                             r.eventSchema.eventProperties.sort((a, b) => a.index - b.index);
                             this.removeHeaderKeys(r.eventSchema.eventProperties);

@@ -36,7 +36,7 @@ export class EventPropertyList extends EventProperty {
         result.id = this.id;
         result.label = this.label;
         result.description = this.description;
-        result.runTimeName = this.runTimeName;
+        result.runtimeName = this.runtimeName;
         result.domainProperty = this.domainProperty;
         result.eventProperty = this.eventProperty;
 

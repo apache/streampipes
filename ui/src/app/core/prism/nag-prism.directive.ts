@@ -30,7 +30,6 @@ export default function nagPrism($compile) {
 		},
 		link: function(scope, element, attrs, controller, transclude) {
 			scope.$watch('source', function(v) {
-				console.log(v);
 				v = scope.escape(v);
 				element.find("code").html(v);
 

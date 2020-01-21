@@ -3,6 +3,8 @@ import {Dashboard, DashboardConfig, DashboardWidget} from "../../models/dashboar
 import {Subscription} from "rxjs";
 import {MockDashboardService} from "../../services/MockDashboard.service";
 import {GridType} from "angular-gridster2";
+import {MatDialog} from "@angular/material/dialog";
+import {AddVisualizationDialogComponent} from "../../dialogs/add-visualization-dialog.component";
 
 @Component({
     selector: 'dashboard-panel',
@@ -18,10 +20,10 @@ export class DashboardPanelComponent implements OnInit {
 
     protected subscription: Subscription;
 
-    constructor(private dashboardService: MockDashboardService) {}
+    constructor(private dashboardService: MockDashboardService,
+                public dialog: MatDialog) {}
 
     public ngOnInit() {
-console.log(this.dashboard);
         this.options = {
             disablePushOnDrag: true,
             draggable: { enabled: true },
@@ -32,8 +34,22 @@ console.log(this.dashboard);
             resizable: { enabled: true }
         };
         this.items = this.dashboard.widgets;
-        console.log("items");
-        console.log(this.items);
+    }
+
+    addWidget(): void {
+        const dialogRef = this.dialog.open(AddVisualizationDialogComponent, {
+            width: '70%',
+            height: '500px',
+            panelClass: 'custom-dialog-container'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                // this.addNewVisulizationItem(result);
+                // this.measurementPresent = true;
+                // this.mainLayer.draw();
+            }
+        });
     }
 
 }

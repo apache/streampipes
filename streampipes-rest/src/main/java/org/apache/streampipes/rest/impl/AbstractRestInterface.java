@@ -21,6 +21,8 @@ package org.apache.streampipes.rest.impl;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.streampipes.model.base.AbstractStreamPipesEntity;
+import org.apache.streampipes.model.base.StreamPipesJsonLdContainer;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFParseException;
@@ -56,6 +58,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.util.List;
 
 import javax.ws.rs.core.Response;
 
@@ -179,6 +182,10 @@ public abstract class AbstractRestInterface {
     return Response
             .ok(entity)
             .build();
+  }
+
+  protected StreamPipesJsonLdContainer asContainer(List<? extends AbstractStreamPipesEntity> elements) {
+    return new StreamPipesJsonLdContainer(elements);
   }
 
   protected Response ok() {

@@ -34,7 +34,7 @@ export class MappingPropertyNary extends StaticProperty {
   public propertyScope: string;
 
   @RdfProperty('sp:mapsTo')
-  public selectedProperty: string;
+  public selectedProperties: string[];
 
 
   constructor(id: string) {

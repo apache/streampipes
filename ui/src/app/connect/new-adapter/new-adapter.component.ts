@@ -252,7 +252,7 @@ export class NewAdapterComponent implements OnInit {
         // Auto selection of timestamp field for datalake
         this.timestampPropertiesInSchema = this.timestampPipe.transform(this.eventSchema.eventProperties, "");
         if (this.timestampPropertiesInSchema.length > 0) {
-            this.dataLakeTimestampField = this.timestampPropertiesInSchema[0].runTimeName;
+            this.dataLakeTimestampField = this.timestampPropertiesInSchema[0].runtimeName;
         }
 
         this.ShepherdService.trigger("event-schema-next-button");

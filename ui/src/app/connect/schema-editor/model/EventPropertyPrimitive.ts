@@ -25,7 +25,8 @@ import {createElementCssSelector} from '@angular/compiler';
 @RdfsClass('sp:EventPropertyPrimitive')
 export class EventPropertyPrimitive extends EventProperty {
 
-    constructor (propertyID: string, parent: EventProperty) {
+
+    constructor (propertyID?: string, parent?: EventProperty) {
         super(propertyID, parent);
     }
 
@@ -60,7 +61,7 @@ export class EventPropertyPrimitive extends EventProperty {
         result.id = this.id;
         result.label = this.label;
         result.description = this.description;
-        result.runTimeName = this.runTimeName;
+        result.runtimeName = this.runtimeName;
         result.domainProperty = this.domainProperty;
 
         result.runtimeType = this.runtimeType;

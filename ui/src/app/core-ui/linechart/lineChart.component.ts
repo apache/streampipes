@@ -193,7 +193,6 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
     }
 
   zoomIn($event) {
-        console.log();
         this.zoomEvent.emit([$event["xaxis.range[0]"], $event["xaxis.range[1]"]])
   }
 

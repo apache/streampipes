@@ -156,11 +156,36 @@ export class TsonLd {
         obj['@graph'].splice(elem, 1);
       }
     }
-
     obj['@graph'].unshift(topElement);
     return this.fromJsonLd(obj);
   }
 
+  fromJsonLdContainer(obj: Object, type: string): Array<any> {
+    let topElements: Array<string> = [];
+    let deserializedObjects: Array<any> = [];
+    const graph = obj['@graph'];
+    for (const elem in graph) {
+      if (graph[elem]['@type'] === type) {
+        topElements.push(this.removeNonCurrentTopElements(graph[elem]['@id'], obj, type));
+        //obj['@graph'].splice(elem, 1);
+      }
+    }
+    topElements.forEach(topElement => {
+      deserializedObjects.push(this.fromJsonLdType(topElement, type));
+    });
+    return deserializedObjects;
+  }
+
+  removeNonCurrentTopElements(id: string, obj: any, type: string): any {
+    const graph = obj['@graph'];
+    for (const elem in graph) {
+      if ((graph[elem]['@type'] === type && graph[elem]['@id'] !== id) || graph[elem]['@type'] === "sp:EntityContainer") {
+        // TODO
+        //obj['@graph'].splice(elem, 1);
+      }
+    }
+    return obj;
+  }
 
 
   /**

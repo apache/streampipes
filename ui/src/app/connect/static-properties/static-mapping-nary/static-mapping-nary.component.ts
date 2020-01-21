@@ -21,6 +21,7 @@ import { FreeTextStaticProperty } from '../../model/FreeTextStaticProperty';
 import { StaticProperty } from '../../model/StaticProperty';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
+import {MappingPropertyNary} from "../../model/MappingPropertyNary";
 
 
 @Component({
@@ -31,7 +32,7 @@ import {StaticPropertyUtilService} from '../static-property-util.service';
 export class StaticMappingNaryComponent implements OnInit {
 
 
-    @Input() staticProperty: StaticProperty;
+    @Input() staticProperty: MappingPropertyNary;
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     
     private freeTextForm: FormGroup;

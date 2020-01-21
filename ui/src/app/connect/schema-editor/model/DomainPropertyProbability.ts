@@ -29,11 +29,11 @@ export class DomainPropertyProbability {
     public id: string;
 
     @RdfProperty('sp:domainProperty')
-    public domainProperty: String;
+    public domainProperty: string;
 
 
     @RdfProperty('sp:probability')
-    public probability: String;
+    public probability: string;
 
     constructor () {
     }

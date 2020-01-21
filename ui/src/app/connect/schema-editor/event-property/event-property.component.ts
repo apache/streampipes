@@ -133,7 +133,7 @@ export class EventPropertyComponent implements OnInit {
         this.property.label = this.cachedProperty.label;
         this.property.description = this.cachedProperty.description;
         this.property.domainProperty = this.cachedProperty.domainProperty;
-        this.property.runTimeName = this.cachedProperty.runTimeName;
+        this.property.runtimeName = this.cachedProperty.runtimeName;
 
 
         if (this.property instanceof EventPropertyList) {

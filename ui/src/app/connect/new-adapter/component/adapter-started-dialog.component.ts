@@ -94,7 +94,7 @@ export class AdapterStartedDialog {
                                     if (property instanceof FreeTextStaticProperty && "domId2db_measurement" == property.internalName) {
                                         property.value = this.data.adapter.label.toLowerCase().replace(" ", "_");
                                     } else if (property instanceof MappingPropertyUnary && "domId2timestamp_mapping" == property.internalName) {
-                                        property.selectedProperties = ["s0::" + this.data.dataLakeTimestampField]
+                                        property.selectedProperty = "s0::" + this.data.dataLakeTimestampField;
                                     }
 
 

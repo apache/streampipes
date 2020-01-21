@@ -52,7 +52,6 @@ export class DeploymentController {
                 this.loading = false;
                 this.zipFile = data;
             }).error((data, status, headers, config) => {
-            console.log(data);
             this.loading = false;
         });
     };
@@ -74,7 +73,6 @@ export class DeploymentController {
                 this.loading = false;
                 this.resultReturned = true;
                 this.jsonld = JSON.stringify(data, null, 2);
-                console.log(this.jsonld);
             }).error((data, status, headers, config) => {
             this.loading = false;
         });

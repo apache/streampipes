@@ -352,4 +352,21 @@ public class StreamPipes {
 
   public static final String SECRET_STATIC_PROPERTY = NS + "SecretStaticProperty";
   public static final String IS_ENCRYPTED = NS + "isEncrypted";
+
+  public static final String DASHBOARD_ENTITY = NS + "DashboardEntity";
+  public static final String DASHBOARD_MODEL = NS + "DashboardModel";
+  public static final String DASHBOARD_WIDGET_MODEL = NS + "DashboardWidgetModel";
+  public static final String DASHBOARD_WIDGET_SETTINGS = NS + "DashboardWidgetSettings";
+
+  public static final String HAS_DASHBOARD_WIDGET_SETTINGS = NS + "hasDashboardWidgetSettings";
+  public static final String HAS_DASHBOARD_WIDGET_DATA_CONFIG = NS + "hasDashboardWidgetDataConfig";
+  public static final String HAS_DASHBOARD_WIDGET_LABEL = NS + "hasDashboardWidgetLabel";
+  public static final String HAS_DASHBOARD_WIDGET_NAME = NS + "hasDashboardWidgetName";
+  public static final String HAS_VISUALIZATION_NAME = NS + "hasVisualizationName";
+  public static final String HAS_TOPIC = NS + "hasTopic";
+  public static final String HAS_PIPELINE_ID = NS + "hasPipelineId";
+  public static final String VISUALIZABLE_PIPELINE = NS + "VisualizablePipeline" ;
+  public static final String ENTITY_CONTAINER = NS + "EntityContainer";
+  public static final String CONTAINS_ELEMENTS = NS + "containsElement";
+  public static final String HAS_DASHBOARD_WIDGET_ID = "hasDashboardWidgetId";
 }

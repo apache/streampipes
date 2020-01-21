@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.backend;
 
+import org.apache.streampipes.rest.impl.dashboard.Dashboard;
+import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
+import org.apache.streampipes.rest.impl.dashboard.VisualizablePipeline;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
@@ -110,6 +113,9 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(DataLakeNoUserResourceV3.class);
     register(PipelineElementFile.class);
     register(FileServingResource.class);
+    register(DashboardWidget.class);
+    register(Dashboard.class);
+    register(VisualizablePipeline.class);
 
 
     // Serializers

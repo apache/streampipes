@@ -114,7 +114,7 @@ describe('TransformationRuleService', () => {
 
         const newEventSchema: EventSchema = new EventSchema();
         const propertyNested: EventPropertyNested = new EventPropertyNested("id", null);
-        propertyNested.runTimeName = 'a';
+        propertyNested.runtimeName = 'a';
         newEventSchema.eventProperties.push(propertyNested);
 
         var result: AddNestedRuleDescription[] = service.getCreateNestedRules(newEventSchema.eventProperties,
@@ -130,10 +130,10 @@ describe('TransformationRuleService', () => {
 
         const newEventSchema: EventSchema = new EventSchema();
         const nestedNested: EventPropertyNested = new EventPropertyNested("id_2", null);
-        nestedNested.runTimeName = 'a';
+        nestedNested.runtimeName = 'a';
 
         const nestedProperty: EventPropertyNested = new EventPropertyNested("id_1", null);
-        nestedProperty.runTimeName = 'b';
+        nestedProperty.runtimeName = 'b';
         nestedNested.eventProperties.push(nestedProperty);
         newEventSchema.eventProperties.push(nestedNested);
 
@@ -151,17 +151,17 @@ describe('TransformationRuleService', () => {
 
         const oldEventSchema: EventSchema = new EventSchema();
         const oldPropertyToMove: EventPropertyPrimitive = new EventPropertyPrimitive("id_1", null);
-        oldPropertyToMove.runTimeName = "a";
+        oldPropertyToMove.runtimeName = "a";
         const oldNestedProperty: EventPropertyNested = new EventPropertyNested("id_2", null);
-        oldNestedProperty.runTimeName = "b";
+        oldNestedProperty.runtimeName = "b";
         oldEventSchema.eventProperties.push(oldPropertyToMove);
         oldEventSchema.eventProperties.push(oldNestedProperty);
 
         const newEventSchema: EventSchema = new EventSchema();
         const newPropertyToMove: EventPropertyPrimitive = new EventPropertyPrimitive("id_1", null);
-        newPropertyToMove.runTimeName = "a";
+        newPropertyToMove.runtimeName = "a";
         const newNestedProperty: EventPropertyNested = new EventPropertyNested("id_2", null);
-        newNestedProperty.runTimeName = "b";
+        newNestedProperty.runtimeName = "b";
         newNestedProperty.eventProperties.push(newPropertyToMove);
         newEventSchema.eventProperties.push(newNestedProperty);
 
@@ -183,7 +183,7 @@ describe('TransformationRuleService', () => {
     it('Delete simple', () => {
         const oldEventSchema: EventSchema = new EventSchema();
         const eventProperty: EventPropertyPrimitive = new EventPropertyPrimitive("id", null);
-        eventProperty.runTimeName = "a";
+        eventProperty.runtimeName = "a";
         oldEventSchema.eventProperties.push(eventProperty);
 
         const newEventSchema: EventSchema = new EventSchema();
@@ -198,15 +198,15 @@ describe('TransformationRuleService', () => {
     it('Delete nested', () => {
         const oldEventSchema: EventSchema = new EventSchema();
         const eventProperty: EventPropertyPrimitive = new EventPropertyPrimitive("id_2", null);
-        eventProperty.runTimeName = "a";
+        eventProperty.runtimeName = "a";
         const eventPropertyNested: EventPropertyNested = new EventPropertyNested("id_1", null);
         eventPropertyNested.eventProperties.push(eventProperty);
-        eventPropertyNested.runTimeName = "b";
+        eventPropertyNested.runtimeName = "b";
         oldEventSchema.eventProperties.push(eventPropertyNested);
 
         var newEventSchema: EventSchema = new EventSchema();
         const newEventPropertyNested: EventPropertyNested = new EventPropertyNested("id_1", null);
-        newEventPropertyNested.runTimeName = "b";
+        newEventPropertyNested.runtimeName = "b";
         newEventSchema.eventProperties.push(newEventPropertyNested);
 
 
@@ -228,12 +228,12 @@ describe('TransformationRuleService', () => {
 
         var oldEventSchema: EventSchema = new EventSchema();
         var oldEventPropertyPrimitive: EventPropertyPrimitive = new EventPropertyPrimitive('id_1', null);
-        oldEventPropertyPrimitive.runTimeName = 'a';
+        oldEventPropertyPrimitive.runtimeName = 'a';
         oldEventSchema.eventProperties.push(oldEventPropertyPrimitive);
 
         var newEventSchema: EventSchema = new EventSchema();
         var newEventPropertyPrimitive: EventPropertyPrimitive = new EventPropertyPrimitive('id_1', null);
-        newEventPropertyPrimitive.runTimeName = 'b';
+        newEventPropertyPrimitive.runtimeName = 'b';
         newEventSchema.eventProperties.push(newEventPropertyPrimitive);
 
 
@@ -249,17 +249,17 @@ describe('TransformationRuleService', () => {
 
         var oldEventSchema: EventSchema = new EventSchema();
         var oldNestedEventProperty: EventPropertyNested = new EventPropertyNested('id_2', null);
-        oldNestedEventProperty.runTimeName = 'b';
+        oldNestedEventProperty.runtimeName = 'b';
         var oldEventPropertyPrimitive: EventPropertyPrimitive = new EventPropertyPrimitive('id_1', null);
-        oldEventPropertyPrimitive.runTimeName = 'a';
+        oldEventPropertyPrimitive.runtimeName = 'a';
         oldNestedEventProperty.eventProperties.push(oldEventPropertyPrimitive);
         oldEventSchema.eventProperties.push(oldNestedEventProperty);
 
         var newEventSchema: EventSchema = new EventSchema();
         var newNestedEventProperty: EventPropertyNested = new EventPropertyNested('id_2', null);
-        newNestedEventProperty.runTimeName = 'b';
+        newNestedEventProperty.runtimeName = 'b';
         var newEventPropertyPrimitive: EventPropertyPrimitive = new EventPropertyPrimitive('id_1', null);
-        newEventPropertyPrimitive.runTimeName = 'b';
+        newEventPropertyPrimitive.runtimeName = 'b';
         newNestedEventProperty.eventProperties.push(newEventPropertyPrimitive);
         newEventSchema.eventProperties.push(newNestedEventProperty);
 

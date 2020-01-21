@@ -16,7 +16,7 @@
   ~
   -->
 
-<h2 mat-dialog-title>Edit field {{property.runTimeName}}</h2>
+<h2 mat-dialog-title>Edit field {{property.runtimeName}}</h2>
 <mat-dialog-content>
   <form #propertyForm="ngForm">
     <div fxLayout="row" fxLayoutAlign="start">
@@ -28,7 +28,7 @@
       <div attr.id="input-runtime-name-{{cachedProperty.label}}" class="form-group" fxFlexAlign="center">
         <mat-form-field class="example-full-width">
           <input matInput placeholder="RuntimeName" name="runtimename" id="runtimename"
-            [(ngModel)]="cachedProperty.runTimeName">
+            [(ngModel)]="cachedProperty.runtimeName">
         </mat-form-field>
       </div>
     </div>

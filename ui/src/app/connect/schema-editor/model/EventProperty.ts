@@ -43,10 +43,10 @@ export abstract class EventProperty {
   public description: string;
 
   @RdfProperty('sp:hasRuntimeName')
-  public runTimeName: string;
+  public runtimeName: string;
 
   @RdfProperty('sp:domainProperty')
-  public domainProperty: String;
+  public domainProperty: string;
 
   @RdfProperty('sp:hasIndex')
   public index: number;
@@ -62,11 +62,11 @@ export abstract class EventProperty {
   }
 
   public getRuntimeName(): string {
-    return this.runTimeName;
+    return this.runtimeName;
   }
 
   public setRuntimeName(propertyName: string): void {
-    this.runTimeName = propertyName;
+    this.runtimeName = propertyName;
   }
 
   public setDomainProperty(domainProperty: string): void {

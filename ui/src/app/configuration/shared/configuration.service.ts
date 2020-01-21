@@ -39,7 +39,6 @@ export class ConfigurationService {
         return this.http.get(this.getServerUrl() + '/api/v2/consul/messaging')
             .pipe(
                 map(response => {
-                    console.log(response);
                     return response as MessagingSettings;
                 })
             )

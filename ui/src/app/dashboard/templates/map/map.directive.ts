@@ -113,7 +113,6 @@ export default function mapWidget(WidgetInstances, NgMap) {
                     for (var key in scope.markersTimeout) {
 
                         if (scope.markersTimeout[key] + 5000 < currentDate) {
-                            console.log(scope.markers[key]);
                             scope.map.removeLayer(scope.markers[key]);
                         }
                     }

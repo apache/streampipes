@@ -42,6 +42,10 @@ module.exports = merge(baseConfig, {
                 target: 'http://localhost:5984',
                 secure: false,
             },
+            '/widget': {
+                target: 'http://localhost:5984',
+                secure: false,
+            },
             '/pipeline': {
                 target: 'http://localhost:5984',
                 secure: false,

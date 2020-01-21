@@ -22,6 +22,9 @@ import { StaticProperty } from '../../model/StaticProperty';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {EventSchema} from '../../schema-editor/model/EventSchema';
+import {PropertySelectorService} from "../../../services/property-selector.service";
+import {MappingPropertyUnary} from "../../model/MappingPropertyUnary";
+import {EventProperty} from "../../schema-editor/model/EventProperty";
 
 
 @Component({
@@ -32,7 +35,7 @@ import {EventSchema} from '../../schema-editor/model/EventSchema';
 export class StaticMappingUnaryComponent implements OnInit {
 
 
-    @Input() staticProperty: StaticProperty;
+    @Input() staticProperty: MappingPropertyUnary;
     @Input() eventSchema: EventSchema;
 
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
@@ -41,18 +44,29 @@ export class StaticMappingUnaryComponent implements OnInit {
     private inputValue: String;
     private hasInput: Boolean;
     private errorMessage = "Please enter a value";
+    private availableProperties: Array<EventProperty>;
 
-    constructor(private staticPropertyUtil: StaticPropertyUtilService){
+    constructor(private staticPropertyUtil: StaticPropertyUtilService,
+                private PropertySelectorService: PropertySelectorService){
 
     }
 
 
     ngOnInit() {
+        this.availableProperties = this.extractPossibleSelections();
         this.unaryTextForm = new FormGroup({
             'unaryStaticText':new FormControl(this.inputValue, [
                 Validators.required,
             ]),
         })
+    }
+
+    extractPossibleSelections(): Array<EventProperty> {
+        return this.eventSchema.eventProperties.filter(ep => this.isInSelection(ep));
+    }
+
+    isInSelection(ep: EventProperty): boolean {
+        return this.staticProperty.mapsFromOptions.some(maps => maps === "s0::" + ep.runtimeName);
     }
 
     valueChange(inputValue) {

@@ -91,6 +91,10 @@ import {SecretStaticProperty} from "../connect/model/SecretStaticProperty";
 import {AlternativesStaticProperty} from '../connect/model/AlternativesStaticProperty';
 import {AlternativeStaticProperty} from '../connect/model/AlternativeStaticProperty';
 import {GroupStaticProperty} from '../connect/model/GroupStaticProperty';
+import {VisualizablePipeline} from "../core-model/dashboard/VisualizablePipeline";
+import {DashboardWidget} from "../core-model/dashboard/DashboardWidget";
+import {DashboardWidgetDataConfig} from "../core-model/dashboard/DashboardWidgetDataConfig";
+import {DashboardWidgetSettings} from "../core-model/dashboard/DashboardWidgetSettings";
 
 
 @Injectable()
@@ -177,6 +181,12 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(AlternativesStaticProperty);
         tsonld.addClassMapping(AlternativeStaticProperty);
 
+        tsonld.addClassMapping(DashboardWidget);
+        tsonld.addClassMapping(DashboardWidgetDataConfig);
+        tsonld.addClassMapping(DashboardWidgetSettings);
+
+        tsonld.addClassMapping(VisualizablePipeline);
+
         tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
         tsonld.addContext('spi', 'urn:streampipes.org:spi:');
         tsonld.addContext('foaf', 'http://xmlns.com/foaf/0.1/');
@@ -191,6 +201,11 @@ export class TsonLdSerializerService {
 
     public fromJsonLd(o: any, type: string): any {
         return this.getTsonLd().fromJsonLdType(o, type);
+    }
+
+    public fromJsonLdContainer(o: any, type:string): any {
+        console.log(o);
+        return this.getTsonLd().fromJsonLdContainer(o, type);
     }
 
 }

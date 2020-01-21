@@ -84,11 +84,19 @@ public class Utils {
 
   public static CouchDbClient getCouchDbVisualizablePipelineClient() {
     CouchDbClient dbClient = new CouchDbClient(props("visualizablepipeline"));
+    dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
     return dbClient;
   }
 
   public static CouchDbClient getCouchDbDashboardClient() {
     CouchDbClient dbClient = new CouchDbClient(props("dashboard"));
+    dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+    return dbClient;
+  }
+
+  public static CouchDbClient getCouchDbDashboardWidgetClient() {
+    CouchDbClient dbClient = new CouchDbClient(props("dashboardwidget"));
+    dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
     return dbClient;
   }
 

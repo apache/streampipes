@@ -106,7 +106,6 @@ export class AppTransportMonitoringComponent {
     }
 
     updateOutgoingBoxCount(boxCount: DetectedBoxModel) {
-        console.log("outgoing");
         this.outgoingBoxCount = boxCount;
     }
 

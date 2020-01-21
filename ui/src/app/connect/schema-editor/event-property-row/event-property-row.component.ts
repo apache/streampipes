@@ -85,8 +85,8 @@ export class EventPropertyRowComponent implements OnChanges {
     public getLabel(eventProperty: EventProperty) {
         if (eventProperty.label !== undefined && eventProperty.label !== '') {
             return eventProperty.label;
-        } else if (eventProperty.runTimeName !== undefined && eventProperty.runTimeName !== '') {
-            return eventProperty.runTimeName;
+        } else if (eventProperty.runtimeName !== undefined && eventProperty.runtimeName !== '') {
+            return eventProperty.runtimeName;
         }
         if (this.isEventPropertyNested(eventProperty)) {
             return 'Nested Property';

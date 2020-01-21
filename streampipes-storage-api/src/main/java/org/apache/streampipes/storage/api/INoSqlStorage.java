@@ -39,4 +39,11 @@ public interface INoSqlStorage {
   IDataLakeStorage getDataLakeStorage();
 
   IFileMetadataStorage getFileMetadataStorage();
+
+  IDashboardStorage getDashboardStorage();
+
+  IDashboardWidgetStorage getDashboardWidgetStorage();
+
+  IVisualizablePipelineStorage getVisualizablePipelineStorage();
+
 }

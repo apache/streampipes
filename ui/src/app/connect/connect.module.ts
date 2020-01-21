@@ -92,6 +92,7 @@ import { PlatformServicesModule } from '../platform-services/platform.module';
 import { TreeModule } from 'angular-tree-component';
 import { EventSchemaPreviewComponent } from './schema-editor/event-schema-preview/event-schema-preview.component';
 import {EventPropertyRowComponent} from "./schema-editor/event-property-row/event-property-row.component";
+import {PropertySelectorService} from "../services/property-selector.service";
 
 
 @NgModule({
@@ -167,6 +168,7 @@ import {EventPropertyRowComponent} from "./schema-editor/event-property-row/even
         TimestampPipe,
         FileRestService,
         StaticFileRestService,
+        PropertySelectorService,
         {
             provide: '$state',
             useFactory: ($injector: any) => $injector.get('$state'),

@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.serializers.jsonld;
 
-import org.streampipes.empire.core.empire.util.EmpireAnnotationProvider;
 import org.apache.streampipes.model.ApplicationLink;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.SpDataStreamContainer;
+import org.apache.streampipes.model.base.StreamPipesJsonLdContainer;
 import org.apache.streampipes.model.client.messages.ErrorMessageLd;
 import org.apache.streampipes.model.client.messages.MessageLd;
 import org.apache.streampipes.model.client.messages.NotificationLd;
@@ -50,6 +50,9 @@ import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRu
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.model.dashboard.DashboardModel;
+import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
+import org.apache.streampipes.model.dashboard.VisualizablePipeline;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -114,6 +117,7 @@ import org.apache.streampipes.model.template.BoundPipelineElement;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
+import org.streampipes.empire.core.empire.util.EmpireAnnotationProvider;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -141,22 +145,22 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
    */
   private List<Class<?>> getAnnotatedClasses() {
     return Arrays.asList(
-            ListOutputStrategy.class,
+            Accuracy.class,
             CustomOutputStrategy.class,
-            MappingPropertyUnary.class,
-            MappingPropertyNary.class,
-            EventPropertyList.class,
-            EventPropertyNested.class,
-            EventSchema.class,
-            EventPropertyPrimitive.class,
-            MatchingStaticProperty.class,
             DataSinkDescription.class,
             DataProcessorInvocation.class,
+            EventPropertyList.class,
+            EventPropertyNested.class,
+            EventPropertyPrimitive.class,
+            EventSchema.class,
+            ListOutputStrategy.class,
+            MappingPropertyUnary.class,
+            MappingPropertyNary.class,
+            MatchingStaticProperty.class,
             FixedOutputStrategy.class,
             AppendOutputStrategy.class,
             SpDataStream.class,
             SpDataSet.class,
-            Accuracy.class,
             EventPropertyQualityRequirement.class,
             EventStreamQualityRequirement.class,
             Frequency.class,
@@ -238,7 +242,12 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             ConnectWorkerContainer.class,
             RuntimeOptionsResponse.class,
             EventRateTransformationRuleDescription.class,
-            SecretStaticProperty.class
+            SecretStaticProperty.class,
+            DashboardWidgetModel.class,
+            DashboardModel.class,
+            VisualizablePipeline.class,
+            StreamPipesJsonLdContainer.class
+
     );
   }
 }

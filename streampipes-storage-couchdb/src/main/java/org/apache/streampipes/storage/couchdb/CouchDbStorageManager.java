@@ -78,4 +78,21 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   public IFileMetadataStorage getFileMetadataStorage() {
     return new FileMetadataStorageImpl();
   }
+
+  @Override
+  public IDashboardStorage getDashboardStorage() {
+    return new DashboardStorageImpl();
+  }
+
+  @Override
+  public IDashboardWidgetStorage getDashboardWidgetStorage() {
+    return new DashboardWidgetStorageImpl();
+  }
+
+  @Override
+  public IVisualizablePipelineStorage getVisualizablePipelineStorage() {
+    return new VisualizablePipelineStorageImpl();
+  }
+
+
 }

@@ -75,12 +75,10 @@ export class TransportSummaryComponent {
             //this.toggleStatusSuccess();
             this.statusMessages = [];
             if (this._outgoingBoxCount.cardboardBoxCount != this._incomingBoxCount.cardboardBoxCount) {
-                console.log("transparent box count not equal");
                 this.statusMessages.push("Check the number of transparent boxes (Actual: " + this._incomingBoxCount.cardboardBoxCount + ", expected: " + this._outgoingBoxCount.cardboardBoxCount +")");
                 this.toggleStatusError();
             }
             if (this._outgoingBoxCount.transparentBoxCount != this._incomingBoxCount.transparentBoxCount) {
-                console.log("cardboard box count not equal");
                 this.statusMessages.push("Check the number of cardboard boxes (Actual: " + this._incomingBoxCount.transparentBoxCount + ", expected: " + this._outgoingBoxCount.transparentBoxCount +")");
                 this.toggleStatusError();
             }
