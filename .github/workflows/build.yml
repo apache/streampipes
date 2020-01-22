@@ -20,6 +20,11 @@ jobs:
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
       - name: Extract current snapshot version
         run: echo "::set-env name=MVN_VERSION::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+      - name: Build and Push Docker Image connect-worker-main
+        run: |
+          IMAGE_NAME=apachestreampipes/connect-worker:$MVN_VERSION
+          docker build --pull -t $IMAGE_NAME ./streampipes-connect-adapters/streampipes-connect-adapter/
+          docker push $IMAGE_NAME
       - name: Build and Push Docker Image pipeline-elements-all-jvm
         run: |
           COMPONENT_NAME=pipeline-elements-all-jvm
