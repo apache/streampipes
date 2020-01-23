@@ -28,6 +28,7 @@ import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.processors.filters.jvm.config.FiltersJvmConfig;
 import org.apache.streampipes.processors.filters.jvm.processor.compose.ComposeController;
+import org.apache.streampipes.processors.filters.jvm.processor.merge.MergeByTimeController;
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterController;
 import org.apache.streampipes.processors.filters.jvm.processor.projection.ProjectionController;
 import org.apache.streampipes.processors.filters.jvm.processor.textfilter.TextFilterController;
@@ -42,6 +43,7 @@ public class FiltersJvmInit extends StandaloneModelSubmitter {
             .add(new ThresholdDetectionController())
             .add(new TextFilterController())
             .add(new ProjectionController())
+            .add(new MergeByTimeController())
             .add(new ComposeController());
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
