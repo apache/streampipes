@@ -16,9 +16,9 @@
  *
  */
 
-package org.streampipes.dataformat;
+package org.apache.streampipes.dataformat;
 
-import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
 import java.io.Serializable;
 import java.util.Map;

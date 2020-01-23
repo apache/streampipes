@@ -85,7 +85,7 @@ export class AdapterStartedDialog {
                     }
 
                     if (this.data.saveInDataLake) {
-                        const templateName = "org.streampipes.manager.template.instances.DataLakePipelineTemplate";
+                        const templateName = "org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate";
                         x.notifications[0].title
                         this.pipelineTemplateService.getPipelineTemplateInvocation(x.notifications[0].title + "/streams", templateName)
                             .subscribe(res => {

@@ -25,7 +25,7 @@
         </layout>
     </appender>
 
-    <logger name="org.streampipes" level="INFO"/>
+    <logger name="org.apache.streampipes" level="INFO"/>
     <logger name="org.lightcouch" level="ERROR"/>
 
 

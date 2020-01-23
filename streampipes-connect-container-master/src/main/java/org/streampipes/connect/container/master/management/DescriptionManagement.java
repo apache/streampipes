@@ -16,15 +16,18 @@
  *
  */
 
-package org.streampipes.connect.container.master.management;
+package org.apache.streampipes.connect.container.master.management;
 
-import org.streampipes.connect.adapter.AdapterRegistry;
-import org.streampipes.connect.adapter.model.generic.Format;
-import org.streampipes.model.connect.adapter.AdapterDescriptionList;
-import org.streampipes.model.connect.grounding.FormatDescriptionList;
-import org.streampipes.model.connect.grounding.ProtocolDescriptionList;
-import org.streampipes.model.connect.worker.ConnectWorkerContainer;
-import org.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
+import org.apache.streampipes.connect.adapter.AdapterRegistry;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.adapter.model.generic.Format;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
+import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescriptionList;
+import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
 
 import java.util.List;
 import java.util.Map;
@@ -69,5 +72,36 @@ public class DescriptionManagement {
         }
 
         return result;
+    }
+
+    public AdapterDescription getAdapter(String id) throws AdapterException {
+        return getAdapters().getList().stream()
+                .filter(desc -> desc.getAppId().equals(id))
+                .findFirst()
+                .orElseThrow(AdapterException::new);
+    }
+
+    public String getAdapterAssets(AdapterDescription desc, String baseUrl) throws AdapterException {
+        return WorkerRestClient.getAdapterAssets(baseUrl, desc);
+    }
+
+    public byte[] getAdapterIconAsset(AdapterDescription desc, String baseUrl) throws AdapterException {
+        return WorkerRestClient.getAdapterIconAsset(baseUrl, desc);
+    }
+
+    public String getAdapterDocumentationAsset(AdapterDescription desc, String baseUrl) throws AdapterException {
+        return WorkerRestClient.getAdapterDocumentationAsset(baseUrl, desc);
+    }
+
+    public String getProtocolAssets(AdapterDescription desc, String baseUrl) throws AdapterException {
+        return WorkerRestClient.getProtocolAssets(baseUrl, desc);
+    }
+
+    public byte[] getProtocolIconAsset(AdapterDescription desc, String baseUrl) throws AdapterException {
+        return WorkerRestClient.getProtocolIconAsset(baseUrl, desc);
+    }
+
+    public String getProtocolDocumentationAsset(AdapterDescription desc, String baseUrl) throws AdapterException {
+        return WorkerRestClient.getProtocolDocumentationAsset(baseUrl, desc);
     }
 }

@@ -314,7 +314,7 @@ export class ExplorerComponent implements OnInit {
     downloadDataAsFile() {
         const dialogRef = this.dialog.open(DataDownloadDialog, {
             width: '600px',
-            data: {data: this.data, xAxesKey: this.xAxesKey, yAxesKeys: this.yAxesKeys, index: this.selectedInfoResult.measureName},
+            data: {data: this.data, xAxesKey: this.xAxesKey, yAxesKeys: this.yAxesKeys, index: this.selectedInfoResult.measureName, date: this.dateRange},
             panelClass: 'custom-dialog-container'
 
         });

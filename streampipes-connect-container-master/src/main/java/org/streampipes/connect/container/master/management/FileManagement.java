@@ -16,11 +16,11 @@
  *
  */
 
-package org.streampipes.connect.container.master.management;
+package org.apache.streampipes.connect.container.master.management;
 
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.model.connect.worker.ConnectWorkerContainer;
-import org.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
 
 import java.io.InputStream;
 import java.util.LinkedList;

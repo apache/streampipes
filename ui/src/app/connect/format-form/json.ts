@@ -25,7 +25,7 @@ export class Json extends Format {
     public key: string,
     public name: string,
   ) {
-    super('org.streampipes.streamconnect.model.adapter.JsonFormat');
+    super('org.apache.streampipes.streamconnect.model.adapter.JsonFormat');
     this.properties.key = key;
   }
 }

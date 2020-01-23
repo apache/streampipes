@@ -25,7 +25,7 @@ export class PropertyRestrictionController {
     addPropertyRestriction(key, restriction) {
         if (restriction.eventSchema.eventProperties == undefined) restriction.eventSchema.eventProperties = [];
         restriction.eventSchema.eventProperties.push({
-            "type": "org.streampipes.model.schema.EventPropertyPrimitive",
+            "type": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
             "properties": {"elementName": this.makeElementName(), "runtimeType": "", "domainProperties": []}
         });
     }

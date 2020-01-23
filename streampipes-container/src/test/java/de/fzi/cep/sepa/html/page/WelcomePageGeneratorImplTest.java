@@ -19,18 +19,18 @@
 package de.fzi.cep.sepa.html.page;
 
 import org.junit.Test;
-import org.streampipes.container.declarer.DataStreamDeclarer;
-import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
-import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.container.html.model.DataSourceDescriptionHtml;
-import org.streampipes.container.html.model.Description;
-import org.streampipes.container.html.page.WelcomePageGenerator;
-import org.streampipes.container.html.page.WelcomePageGeneratorImpl;
-import org.streampipes.model.Response;
-import org.streampipes.model.SpDataStream;
-import org.streampipes.model.graph.DataProcessorDescription;
-import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.graph.DataSourceDescription;
+import org.apache.streampipes.container.declarer.DataStreamDeclarer;
+import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
+import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
+import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
+import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.container.html.page.WelcomePageGenerator;
+import org.apache.streampipes.container.html.page.WelcomePageGeneratorImpl;
+import org.apache.streampipes.model.Response;
+import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSourceDescription;
 
 import java.net.URI;
 import java.util.ArrayList;

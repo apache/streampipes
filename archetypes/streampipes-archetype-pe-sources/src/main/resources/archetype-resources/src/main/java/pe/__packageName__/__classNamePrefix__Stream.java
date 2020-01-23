@@ -4,13 +4,13 @@
 
 package ${package}.pe.${packageName};
 
-import org.streampipes.model.SpDataStream;
-import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.sdk.builder.DataStreamBuilder;
-import org.streampipes.sdk.helpers.EpProperties;
-import org.streampipes.sdk.helpers.Formats;
-import org.streampipes.sdk.helpers.Protocols;
-import org.streampipes.sources.AbstractAdapterIncludedStream;
+import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.graph.DataSourceDescription;
+import org.apache.streampipes.sdk.builder.DataStreamBuilder;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.Formats;
+import org.apache.streampipes.sdk.helpers.Protocols;
+import org.apache.streampipes.sources.AbstractAdapterIncludedStream;
 
 
 public class ${classNamePrefix}Stream extends AbstractAdapterIncludedStream {

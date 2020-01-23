@@ -16,13 +16,13 @@
  *
  */
 
-package org.streampipes.container.util;
+package org.apache.streampipes.container.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
-import org.streampipes.model.Response;
+import org.apache.streampipes.model.Response;
 
 public class UtilTest {
 

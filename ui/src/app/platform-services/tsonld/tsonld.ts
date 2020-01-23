@@ -315,7 +315,13 @@ export class TsonLd {
               } else {
                 // TODO check with Philipp
                 let type = jsonObject[property]['@type'];
-                if (type === 'xsd:int' || type === 'xsd:double' || type === 'xsd:float' || type === 'xsd:boolean') {
+                if(type === 'xsd:boolean') {
+                  if (jsonObject[property]['@value'].toLowerCase() === "true") {
+                    result[objectProp] = true;
+                  } else {
+                    result[objectProp] = false;
+                  }
+                } else if (type === 'xsd:int' || type === 'xsd:double' || type === 'xsd:float') {
                   result[objectProp] = +jsonObject[property]['@value'];
                 } else {
                   result[objectProp] = jsonObject[property]['@value'];

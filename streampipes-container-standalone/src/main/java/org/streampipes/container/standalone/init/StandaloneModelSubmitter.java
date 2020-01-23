@@ -16,7 +16,7 @@
  *
  */
 
-package org.streampipes.container.standalone.init;
+package org.apache.streampipes.container.standalone.init;
 
 
 import org.slf4j.Logger;
@@ -25,11 +25,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.streampipes.container.init.DeclarersSingleton;
-import org.streampipes.container.init.ModelSubmitter;
-import org.streampipes.container.init.RunningInstances;
-import org.streampipes.container.model.PeConfig;
-import org.streampipes.container.util.ConsulUtil;
+import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.init.ModelSubmitter;
+import org.apache.streampipes.container.init.RunningInstances;
+import org.apache.streampipes.container.model.PeConfig;
+import org.apache.streampipes.container.util.ConsulUtil;
 
 import java.util.Collections;
 

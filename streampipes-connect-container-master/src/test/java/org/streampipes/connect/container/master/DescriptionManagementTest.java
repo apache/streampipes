@@ -16,7 +16,7 @@
  *
  */
 
-package org.streampipes.connect.container.master;
+package org.apache.streampipes.connect.container.master;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -28,11 +28,11 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.streampipes.connect.adapter.AdapterRegistry;
-import org.streampipes.connect.adapter.format.json.arraykey.JsonFormat;
-import org.streampipes.connect.adapter.model.generic.Format;
-import org.streampipes.connect.container.master.management.DescriptionManagement;
-import org.streampipes.model.connect.grounding.FormatDescriptionList;
+import org.apache.streampipes.connect.adapter.AdapterRegistry;
+import org.apache.streampipes.connect.adapter.format.json.arraykey.JsonFormat;
+import org.apache.streampipes.connect.adapter.model.generic.Format;
+import org.apache.streampipes.connect.container.master.management.DescriptionManagement;
+import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
 
 import java.util.HashMap;
 import java.util.Map;

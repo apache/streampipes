@@ -75,7 +75,7 @@
                 <span ng-show="ctrl.customizeForm[ctrl.staticProperty.properties.internalName].$touched && ctrl.customizeForm[ctrl.staticProperty.properties.internalName].$error.textValidator">{{ctrl.getFriendlyDatatype()}}</span>
             </md-input-container>
         </div>
-        <div ng-if="ctrl.selectedEventProperty.properties.valueSpecification.type=='org.streampipes.model.schema.QuantitativeValue'">
+        <div ng-if="ctrl.selectedEventProperty.properties.valueSpecification.type=='org.apache.streampipes.model.schema.QuantitativeValue'">
             <md-slider md-discrete flex
                        min="{{ctrl.selectedEventProperty.properties.valueSpecification.properties.minValue}}"
                        max="{{ctrl.selectedEventProperty.properties.valueSpecification.properties.maxValue}}"
@@ -87,7 +87,7 @@
                        ng-model="ctrl.staticProperty.properties.value" ng-blur="ctrl.notifyListeners($event)">
             </md-input-container>
         </div>
-        <div ng-if="ctrl.selectedEventProperty.properties.valueSpecification.type=='org.streampipes.model.schema.Enumeration'">
+        <div ng-if="ctrl.selectedEventProperty.properties.valueSpecification.type=='org.apache.streampipes.model.schema.Enumeration'">
             <md-autocomplete md-no-cache="true" md-selected-item="ctrl.staticProperty.properties.value"
                              md-items="item in ctrl.selectedEventProperty.properties.valueSpecification.properties.runtimeValues"
                              md-search-text="ctrl.searchText" md-item-text="item" placeholder="Enter value">

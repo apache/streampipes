@@ -24,7 +24,7 @@
         </div>
     </md-checkbox>
 </div>
-<div ng-if="(ctrl.eventProperty.type==='org.streampipes.model.schema.EventPropertyNested')">
+<div ng-if="(ctrl.eventProperty.type==='org.apache.streampipes.model.schema.EventPropertyNested')">
     <div ng-repeat="nestedProperty in ctrl.eventProperty.properties.eventProperties">
         <property-selection output-strategy="ctrl.outputStrategy" event-property="nestedProperty"
                             layer="{{(ctrl.layer + 1)}}"></property-selection>

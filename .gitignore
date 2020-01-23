@@ -67,7 +67,9 @@ fabric.properties
 */log/*
 */target/*
 
-target/
+**/target/*
+/.m2/**
+
 # JS 
 dist/
 
@@ -137,3 +139,4 @@ bundle.js.map
 .vscode/
 
 package-lock.json
+logs/

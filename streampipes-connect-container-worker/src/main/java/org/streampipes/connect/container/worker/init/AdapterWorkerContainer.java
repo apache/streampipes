@@ -16,22 +16,26 @@
  *
  */
 
-package org.streampipes.connect.container.worker.init;
+package org.apache.streampipes.connect.container.worker.init;
 
+import org.apache.streampipes.container.locales.LabelGenerator;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.model.generic.Protocol;
-import org.streampipes.connect.container.worker.management.MasterRestClient;
-import org.streampipes.connect.init.AdapterDeclarerSingleton;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.grounding.ProtocolDescription;
-import org.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.connect.adapter.Adapter;
+import org.apache.streampipes.connect.adapter.model.generic.Protocol;
+import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
+import org.apache.streampipes.connect.init.AdapterDeclarerSingleton;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
+import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +54,6 @@ public abstract class AdapterWorkerContainer {
     SpringApplication app = new SpringApplication(AdapterWorkerContainer.class);
     app.setDefaultProperties(Collections.singletonMap("server.port", workerPort));
     app.run();
-
 
     boolean connected = false;
 
@@ -76,15 +79,40 @@ public abstract class AdapterWorkerContainer {
 
     List<AdapterDescription> adapters = new ArrayList<>();
     for (Adapter a : AdapterDeclarerSingleton.getInstance().getAllAdapters()) {
-      adapters.add(a.declareModel());
+      AdapterDescription desc = (AdapterDescription) rewrite(a.declareModel(), endpointUrl);
+      adapters.add(desc);
     }
 
     List<ProtocolDescription> protocols = new ArrayList<>();
     for (Protocol p : AdapterDeclarerSingleton.getInstance().getAllProtocols()) {
-      protocols.add(p.declareModel());
+      ProtocolDescription desc = (ProtocolDescription) rewrite(p.declareModel(), endpointUrl);
+      protocols.add(desc);
     }
 
     ConnectWorkerContainer result = new ConnectWorkerContainer(endpointUrl, protocols, adapters);
     return result;
   }
+
+  private NamedStreamPipesEntity rewrite(NamedStreamPipesEntity entity, String endpointUrl) {
+    if (!(entity instanceof GenericAdapterDescription)) {
+      if (entity instanceof  ProtocolDescription) {
+        entity.setElementId(endpointUrl +  "protocol/" + entity.getElementId());
+      } else if (entity instanceof  AdapterDescription) {
+        entity.setElementId(endpointUrl + "adapter/" + entity.getElementId());
+      }
+    }
+
+    // TODO remove after full internationalization support has been implemented
+    if (entity.isIncludesLocales()) {
+      LabelGenerator lg = new LabelGenerator(entity);
+      try {
+        entity = lg.generateLabels();
+      } catch (IOException e) {
+        LOG.error("Could not load labels for: " + entity.getAppId());
+      }
+    }
+    return entity;
+  }
+
+
 }

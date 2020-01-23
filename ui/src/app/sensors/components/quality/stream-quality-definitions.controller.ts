@@ -22,8 +22,8 @@ export class StreamQualityDefinitionsController {
     property: any;
 
     constructor() {
-        this.qualities = [{label: "Frequency", "description": "", "type": "org.streampipes.model.quality.Frequency"},
-            {label: "Latency", "description": "", "type": "org.streampipes.model.quality.Latency"}];
+        this.qualities = [{label: "Frequency", "description": "", "type": "org.apache.streampipes.model.quality.Frequency"},
+            {label: "Latency", "description": "", "type": "org.apache.streampipes.model.quality.Latency"}];
     }
     
     add() {

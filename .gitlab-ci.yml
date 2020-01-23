@@ -17,6 +17,7 @@ variables:
   IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH
   HARBOR_IMAGE_NAME: $HARBOR_REGISTRY_HOST/$CI_PROJECT_PATH
   MAVEN_CLI_OPTS: -DskipTests --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true
+  GIT_REPO_ORIGIN: $GIT_REPO_ORIGIN
   GIT_STRATEGY: clone
   DOCKER_CLI_EXPERIMENTAL: enabled
   BASE_IMAGE_AMD: adoptopenjdk/openjdk8-openj9:alpine-slim
@@ -27,16 +28,26 @@ variables:
   BASE_NGINX_ARM64v8: arm64v8/nginx
 
 stages:
-  - build
   - github
+  - build
   - docker
-  - deploy
-  - release
-  - docker-hub
 
-    #before_script:
-    #- echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    #- git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+pull github:
+  image: maven:3-jdk-8
+  stage: github
+  script:
+  - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+  - git remote add github https://github.com/apache/incubator-streampipes.git
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$SSH")
+  - mkdir ~/.ssh
+  - touch ~/.ssh/known_hosts
+  - ssh-keyscan -p 2222 -t rsa $GITLAB_HOST > ~/.ssh/known_hosts
+  - git config --global user.email '$USER_EMAIL'
+  - git config --global user.name '$USER_NAME'
+  - git checkout dev
+  - git pull github dev --allow-unrelated-histories
+  - git push origin --all
 
 build:
   image: maven:3-jdk-8
@@ -88,21 +99,6 @@ build-ui:
     expire_in: 1 hour
   only:
     - dev
-    - multiarch
-      
-github:
-  image: maven:3-jdk-8
-  stage: github
-  script:
-    - git config --global user.email 'zehnder@fzi.de'
-    - git config --global user.name 'zehnder'
-    - git checkout $CI_COMMIT_REF_NAME
-    - git pull
-    - git remote add github https://$GITHUB_TOKEN:x-oauth-basic@github.com/streampipes/streampipes.git
-    - git push github $CI_COMMIT_REF_NAME
-  only:
-    - dev
-    - master
 
 docker-ui:
   image: docker:19.03.5
@@ -275,7 +271,6 @@ docker-backend:
   #    - docker manifest push $IMAGE_NAME/backend:$MVN_VERSION
    only:
      - dev
-     - multiarch
 
 docker-connect-container:
    image: docker:19.03.5
@@ -358,109 +353,4 @@ docker-connect-container:
   #    - docker manifest push $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
    only:
      - dev
-     - multiarch
-
-deploy:
-  image: maven:3-jdk-8
-  stage: deploy
-  script:
-    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
-    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn deploy -DskipTests
-  only:
-    - dev
-  artifacts:
-    paths:
-      - ./**/*.jar
-    expire_in:  1 hour
-    
-#deploy to test:
-#  image: maven:3-jdk-8
-#  stage: deploy
-#  before_script:
-#    - mkdir -p ~/.ssh
-#    - echo -e "$TESTSERVER_SSH" > ~/.ssh/id_rsa
-#    - chmod 600 ~/.ssh/id_rsa
-#    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-#  script:
-#    - ssh "$TESTSERVER_USER"@"$TESTSERVER_HOSTNAME" "cd ~/streampipes-cd && docker-compose pull backend && docker-compose up -d"
-#  environment:
-#    name: test
-#    url: http://$TESTSERVER_HOSTNAME
-#  only:
-#    - dev
-
-
-start release:
-  image: maven:3-jdk-8
-  stage: release
-  script:
-    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH")
-    - mkdir ~/.ssh
-    - touch ~/.ssh/known_hosts
-    - ssh-keyscan -p 2222 -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
-    - git config --global user.email 'zehnder@fzi.de'
-    - git config --global user.name 'zehnder'
-    - git fetch
-    - git checkout master
-    - git checkout dev
-    - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS -Drelease=true
-    - git push origin --all
-  only:
-    - dev
-  when: manual
-
-finish release:
-  image: maven:3-jdk-8
-  stage: release
-  script:
-    - export MVN_VERSION=$(cat ./target/mvn_version)
-    - echo "$GPG_PRIVATE_KEY" | gpg --batch --import --passphrase "$GPG_PASSPHRASE"
-    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
-    - git remote add github https://$GITHUB_TOKEN:x-oauth-basic@github.com/streampipes/streampipes.git
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH")
-    - mkdir ~/.ssh
-    - touch ~/.ssh/known_hosts
-    - ssh-keyscan -p 2222 -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
-    - git config --global user.email 'zehnder@fzi.de'
-    - git config --global user.name 'zehnder'
-    - git checkout master
-    - git checkout dev
-    - git checkout $CI_BUILD_REF_NAME
-    - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS -Drelease=true
-    - git push origin --all
-    - git push origin --tags
-    - git checkout master
-    - git push github master
-    - git push github $MVN_VERSION
-    - git checkout dev
-    - git push github dev
-  when: manual
-  except:
-    - master
-
-docker hub:
-  image: docker:17.06.0-ce
-  stage: docker-hub
-  script:
-    - export MVN_VERSION=$(cat ./target/mvn_version)
-    - docker login -u streampipesbuild -p $DOCKER_HUB_USER_PWD
-    - docker build --pull -t streampipes/backend:$MVN_VERSION ./streampipes-backend/
-    - docker push streampipes/backend:$MVN_VERSION
-    - docker build --pull -t streampipes/backend ./streampipes-backend/
-    - docker push streampipes/backend
-    - docker build --pull -t streampipes/streampipes-connect-container:latest -t streampipes/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container-master/
-    - docker push streampipes/streampipes-connect-container:$MVN_VERSION
-    - docker push streampipes/streampipes-connect-container:latest
-  when: manual
-  only:
-    - master
-
-
-
 

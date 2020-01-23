@@ -16,24 +16,24 @@
  *
  */
 
-package org.streampipes.connect.container.worker.management;
+package org.apache.streampipes.connect.container.worker.management;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.RunningAdapterInstances;
-import org.streampipes.connect.adapter.Adapter;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.connect.adapter.model.generic.GenericAdapter;
-import org.streampipes.connect.adapter.model.generic.Protocol;
-import org.streampipes.connect.config.ConnectContainerConfig;
-import org.streampipes.connect.init.AdapterDeclarerSingleton;
-import org.streampipes.connect.management.AdapterUtils;
-import org.streampipes.model.SpDataSet;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.apache.streampipes.connect.RunningAdapterInstances;
+import org.apache.streampipes.connect.adapter.Adapter;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.adapter.model.generic.GenericAdapter;
+import org.apache.streampipes.connect.adapter.model.generic.Protocol;
+import org.apache.streampipes.connect.config.ConnectContainerConfig;
+import org.apache.streampipes.connect.init.AdapterDeclarerSingleton;
+import org.apache.streampipes.connect.management.AdapterUtils;
+import org.apache.streampipes.model.SpDataSet;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 
 import java.util.Collection;
 
@@ -45,8 +45,16 @@ public class AdapterWorkerManagement {
         return AdapterDeclarerSingleton.getInstance().getAllProtocols();
     }
 
+    public Protocol getProtocol(String id) {
+        return AdapterDeclarerSingleton.getInstance().getProtocol(id);
+    }
+
     public Collection<Adapter> getAllAdapters() {
         return AdapterDeclarerSingleton.getInstance().getAllAdapters();
+    }
+
+    public Adapter getAdapter(String id) {
+        return AdapterDeclarerSingleton.getInstance().getAdapter(id);
     }
 
     public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
@@ -57,7 +65,9 @@ public class AdapterWorkerManagement {
 
         Protocol protocol = null;
         if (adapterStreamDescription instanceof GenericAdapterStreamDescription) {
-            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getElementId());
+            //TODO Need to check with ElementId?
+            //protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getElementId());
+            protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getAppId());
             if (protocol == null) {
                 protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getAppId());
             }

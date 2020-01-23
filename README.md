@@ -16,7 +16,7 @@
   ~
   -->
 
-[![Travis Badge](https://travis-ci.org/apache/incubator-streampipes.svg?branch=dev)](https://travis-ci.org/apache/incubator-streampipes.svg?branch=dev)
+[![Github Actions](https://img.shields.io/github/workflow/status/apache/incubator-streampipes/build-and-deploy-docker-dev)](https://github.com/apache/incubator-streampipes/actions/)
 [![Docker pulls](https://img.shields.io/docker/pulls/streampipes/backend.svg)](https://hub.docker.com/r/streampipes/backend/)
 [![Maven central](https://img.shields.io/maven-central/v/org.streampipes/streampipes-backend.svg)](https://img.shields.io/maven-central/v/org.streampipes/streampipes-backend.svg)
 [![License](https://img.shields.io/github/license/apache/incubator-streampipes.svg)](http://www.apache.org/licenses/LICENSE-2.0)
@@ -64,10 +64,6 @@ toolbox of data sources, data processors and data sinks. StreamPipes has an exch
 
 Pipeline elements in StreamPipes can be installed at runtime - the built-in SDK allows to easily implement new 
 pipeline elements according to your needs. Pipeline elements are standalone microservices that can run anywhere - centrally on your server, in a large-scale cluster or close at the edge.
-
-Learn more about StreamPipes at [https://streampipes.apache.org/](https://streampipes.apache.org/)
-
-Read the full documentation at [https://streampipes.apache.org/docs](https://streampipes.apache.org/docs)
 
 ## Use Cases
 

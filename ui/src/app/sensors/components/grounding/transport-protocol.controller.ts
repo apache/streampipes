@@ -25,10 +25,10 @@ export class TransportProtocolController {
         this.availableTransportProtocols = [{
             "id": "kafka",
             "name": "Apache Kafka",
-            "type": "org.streampipes.model.grounding.KafkaTransportProtocol"
+            "type": "org.apache.streampipes.model.grounding.KafkaTransportProtocol"
         },
-            {"id": "jms", "name": "JMS", "type": "org.streampipes.model.grounding.JmsTransportProtocol"},
-            {"id": "mqtt", "name": "MQTT", "type": "org.streampipes.model.grounding.MqttTransportProtocol"}];
+            {"id": "jms", "name": "JMS", "type": "org.apache.streampipes.model.grounding.JmsTransportProtocol"},
+            {"id": "mqtt", "name": "MQTT", "type": "org.apache.streampipes.model.grounding.MqttTransportProtocol"}];
         this.selectedTransportProtocol = "";
     }
     

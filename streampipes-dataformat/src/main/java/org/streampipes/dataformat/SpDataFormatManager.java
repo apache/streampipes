@@ -16,9 +16,9 @@
  *
  */
 
-package org.streampipes.dataformat;
+package org.apache.streampipes.dataformat;
 
-import org.streampipes.model.grounding.TransportFormat;
+import org.apache.streampipes.model.grounding.TransportFormat;
 
 import java.util.ArrayList;
 import java.util.List;

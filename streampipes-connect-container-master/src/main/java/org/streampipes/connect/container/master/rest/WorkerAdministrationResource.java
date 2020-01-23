@@ -16,17 +16,17 @@
  *
  */
 
-package org.streampipes.connect.container.master.rest;
+package org.apache.streampipes.connect.container.master.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.container.master.management.WorkerAdministrationManagement;
-import org.streampipes.connect.rest.AbstractContainerResource;
-import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.model.connect.worker.ConnectWorkerContainer;
-import org.streampipes.rest.shared.annotation.GsonWithIds;
-import org.streampipes.rest.shared.util.JsonLdUtils;
-import org.streampipes.vocabulary.StreamPipes;
+import org.apache.streampipes.connect.container.master.management.WorkerAdministrationManagement;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.model.client.messages.Notifications;
+import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.shared.util.JsonLdUtils;
+import org.apache.streampipes.vocabulary.StreamPipes;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

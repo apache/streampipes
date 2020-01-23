@@ -21,24 +21,24 @@
 
 	<artifactId>streampipes-model</artifactId>
 	<parent>
-		<groupId>org.streampipes</groupId>
+		<groupId>org.apache.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
 		<version>0.65.1-SNAPSHOT</version>
 	</parent>
 	<dependencies>
 		<!-- StreamPipes dependencies -->
 		<dependency>
-			<groupId>org.streampipes</groupId>
+			<groupId>org.apache.streampipes</groupId>
 			<artifactId>streampipes-commons</artifactId>
 			<version>0.65.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.streampipes</groupId>
+			<groupId>org.apache.streampipes</groupId>
 			<artifactId>streampipes-logging</artifactId>
 			<version>0.65.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.streampipes</groupId>
+			<groupId>org.apache.streampipes</groupId>
 			<artifactId>streampipes-vocabulary</artifactId>
 			<version>0.65.1-SNAPSHOT</version>
 		</dependency>

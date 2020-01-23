@@ -91,6 +91,7 @@ import {SecretStaticProperty} from "../connect/model/SecretStaticProperty";
 import {AlternativesStaticProperty} from '../connect/model/AlternativesStaticProperty';
 import {AlternativeStaticProperty} from '../connect/model/AlternativeStaticProperty';
 import {GroupStaticProperty} from '../connect/model/GroupStaticProperty';
+import { CollectionStaticProperty } from "../connect/model/CollectionStaticProperty";
 
 
 @Injectable()
@@ -176,6 +177,7 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(GroupStaticProperty);
         tsonld.addClassMapping(AlternativesStaticProperty);
         tsonld.addClassMapping(AlternativeStaticProperty);
+        tsonld.addClassMapping(CollectionStaticProperty);
 
         tsonld.addContext('sp', 'https://streampipes.org/vocabulary/v1/');
         tsonld.addContext('spi', 'urn:streampipes.org:spi:');

@@ -16,9 +16,23 @@
   ~
   -->
 
-<div *ngFor="let property of staticProperty.staticProperties" class="padding">
-    <app-static-property [adapterId]="adapterId" [staticProperties]="staticProperties" [eventSchema]="eventSchema"
+<div *ngIf="!staticProperty.horizontalRendering" class="padding" fxLayout="column">
+    <app-static-property *ngFor="let property of staticProperty.staticProperties"
+                         [adapterId]="adapterId" [staticProperties]="staticProperties" [eventSchema]="eventSchema"
                          [staticProperty]="property" (validateEmitter)="valueChange($event)" class="test fullWidth">
     </app-static-property>
+</div>
+
+
+<div *ngIf="staticProperty.horizontalRendering"  class="padding" fxLayout="row" fxLayoutAlign="space-between center">
+    <ng-container *ngFor="let property of staticProperty.staticProperties; let i = index">
+        <span *ngIf="i > 0" style="margin-left: 10px;"></span>
+        <app-static-property
+                [adapterId]="adapterId" [staticProperties]="staticProperties" [eventSchema]="eventSchema"
+                [staticProperty]="property" (validateEmitter)="valueChange($event)" class="test fullWidth">
+        </app-static-property>
+    </ng-container>
 
 </div>
+
+

@@ -16,7 +16,7 @@
  *
  */
 
-package org.streampipes.rest.impl.connect;
+package org.apache.streampipes.rest.impl.connect;
 
 import com.jayway.restassured.RestAssured;
 import org.eclipse.jetty.server.Server;
@@ -25,11 +25,11 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.streampipes.model.SpDataSet;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.streampipes.rest.Mock;
-import org.streampipes.rest.TestUtil;
-import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.model.SpDataSet;
+import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.apache.streampipes.rest.Mock;
+import org.apache.streampipes.rest.TestUtil;
+import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;

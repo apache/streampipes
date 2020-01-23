@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-package org.streampipes.connect.container.master.util;
+package org.apache.streampipes.connect.container.master.util;
 
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.GenericAdapterDescription;
-import org.streampipes.model.staticproperty.SecretStaticProperty;
-import org.streampipes.model.staticproperty.StaticProperty;
-import org.streampipes.user.management.encryption.CredentialsManager;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
+import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.user.management.encryption.CredentialsManager;
 
 import java.security.GeneralSecurityException;
 import java.util.List;

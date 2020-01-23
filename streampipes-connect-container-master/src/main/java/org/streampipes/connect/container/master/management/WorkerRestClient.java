@@ -16,7 +16,7 @@
  *
  */
 
-package org.streampipes.connect.container.master.management;
+package org.apache.streampipes.connect.container.master.management;
 
 import com.google.gson.Gson;
 import org.apache.http.client.fluent.Request;
@@ -25,13 +25,13 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.model.connect.adapter.AdapterDescription;
-import org.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.streampipes.rest.shared.util.JsonLdUtils;
-import org.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
+import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.apache.streampipes.rest.shared.util.JsonLdUtils;
+import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -212,7 +212,7 @@ public class WorkerRestClient {
 
     public static void deleteFileFromWorker(String baseUrl, String fileName) throws AdapterException {
         String url = baseUrl + "worker/file/" + fileName;
-        logger.info("Trying to delete filefrom endpoint: " + url);
+        logger.info("Trying to delete file from endpoint: " + url);
 
         try {
             int statusCode = Request.Delete(url)
@@ -232,7 +232,82 @@ public class WorkerRestClient {
         }
     }
 
-   private static AdapterDescription getAdapterDescriptionById(AdapterStorageImpl adapterStorage, String id) {
+    public static String getAdapterAssets(String baseUrl,  AdapterDescription ad) throws AdapterException {
+        return getAssets(baseUrl + "worker/adapters", ad);
+    }
+
+    public static String getProtocolAssets(String baseUrl,  AdapterDescription ad) throws AdapterException {
+        return getAssets(baseUrl + "worker/protocol", ad);
+    }
+
+    private static String getAssets(String baseUrl,  AdapterDescription ad) throws AdapterException {
+        String url = baseUrl + "/" + ad.getAppId() + "/assets";
+        logger.info("Trying to Assets from endpoint: " + url + " for adapter: " + ad.getId());
+
+        try {
+            String responseString = Request.Get(url)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asString();
+            return responseString;
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            throw new AdapterException("Could not get assets endpoint: " + url + " for adapter: " + ad.getId());
+        }
+
+    }
+
+    public static byte[] getAdapterIconAsset(String baseUrl,  AdapterDescription ad) throws AdapterException {
+        return getIconAsset(baseUrl + "worker/adapters", ad);
+    }
+
+    public static byte[] getProtocolIconAsset(String baseUrl,  AdapterDescription ad) throws AdapterException {
+        return getIconAsset(baseUrl + "worker/protocols", ad);
+
+    }
+
+    private static byte[] getIconAsset(String baseUrl,  AdapterDescription ad) throws AdapterException {
+        String url = baseUrl + "/" + ad.getAppId() + "/assets/icon";
+        logger.info("Trying to Icon from endpoint: " + url);
+
+        try {
+            byte[] responseString = Request.Get(url)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asBytes();
+            return responseString;
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            throw new AdapterException("Could not get icon endpoint: " + url);
+        }
+    }
+
+    public static String getAdapterDocumentationAsset(String baseUrl,  AdapterDescription ad) throws AdapterException {
+        return getDocumentationAsset(baseUrl + "worker/adapters", ad);
+    }
+
+    public static String getProtocolDocumentationAsset(String baseUrl,  AdapterDescription ad) throws AdapterException {
+        return getDocumentationAsset(baseUrl + "worker/protocols", ad);
+    }
+
+    private static String getDocumentationAsset(String baseUrl,  AdapterDescription ad) throws AdapterException  {
+        String url = baseUrl + "/" + ad.getAppId() + "/assets/documentation";
+        logger.info("Trying to documentation from endpoint: " + url);
+
+        try {
+            String responseString = Request.Get(url)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asString();
+            return responseString;
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            throw new AdapterException("Could not get documentation endpoint: " + url + " for adapter: " + ad.getId());
+        }
+    }
+
+
+    private static AdapterDescription getAdapterDescriptionById(AdapterStorageImpl adapterStorage, String id) {
         AdapterDescription adapterDescription = null;
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
         for (AdapterDescription a : allAdapters) {

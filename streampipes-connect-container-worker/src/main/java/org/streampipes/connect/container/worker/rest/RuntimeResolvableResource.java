@@ -16,18 +16,18 @@
  *
  */
 
-package org.streampipes.connect.container.worker.rest;
+package org.apache.streampipes.connect.container.worker.rest;
 
-import org.streampipes.connect.management.RuntimeResovable;
-import org.streampipes.connect.rest.AbstractContainerResource;
-import org.streampipes.container.api.ResolvesContainerProvidedOptions;
-import org.streampipes.model.runtime.RuntimeOptionsRequest;
-import org.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.streampipes.model.staticproperty.Option;
-import org.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.streampipes.rest.shared.util.SpMediaType;
-import org.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.apache.streampipes.connect.management.RuntimeResovable;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
+import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
+import org.apache.streampipes.rest.shared.util.SpMediaType;
+import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.serializers.jsonld.JsonLdTransformer;
 
 import java.io.IOException;
 import java.util.List;

@@ -16,15 +16,15 @@
  *
  */
 
-package org.streampipes.connect.container.master.rest;
+package org.apache.streampipes.connect.container.master.rest;
 
-import org.streampipes.connect.adapter.exception.AdapterException;
-import org.streampipes.connect.container.master.management.WorkerAdministrationManagement;
-import org.streampipes.connect.container.master.management.WorkerRestClient;
-import org.streampipes.connect.rest.AbstractContainerResource;
-import org.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.streampipes.rest.shared.annotation.JsonLdSerialized;
-import org.streampipes.rest.shared.util.SpMediaType;
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.connect.container.master.management.WorkerAdministrationManagement;
+import org.apache.streampipes.connect.container.master.management.WorkerRestClient;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
+import org.apache.streampipes.rest.shared.util.SpMediaType;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

@@ -16,7 +16,7 @@
  *
  */
 
-package org.streampipes.connect.utils;
+package org.apache.streampipes.connect.utils;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -25,12 +25,12 @@ import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ValidatableResponseOptions;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.streampipes.connect.rest.AbstractContainerResource;
-import org.streampipes.rest.shared.serializer.GsonClientModelProvider;
-import org.streampipes.rest.shared.serializer.GsonWithIdProvider;
-import org.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
-import org.streampipes.rest.shared.serializer.JsonLdProvider;
-import org.streampipes.rest.shared.util.JsonLdUtils;
+import org.apache.streampipes.connect.rest.AbstractContainerResource;
+import org.apache.streampipes.rest.shared.serializer.GsonClientModelProvider;
+import org.apache.streampipes.rest.shared.serializer.GsonWithIdProvider;
+import org.apache.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
+import org.apache.streampipes.rest.shared.serializer.JsonLdProvider;
+import org.apache.streampipes.rest.shared.util.JsonLdUtils;
 
 import java.net.URI;
 

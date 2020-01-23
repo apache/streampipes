@@ -16,12 +16,13 @@
   ~
   -->
 
-<div id="formWrapper" fxFlex="90" fxLayout="row">
-    <div fxFlex="20">
-        <p>{{staticProperty.label}}: </p>
+<div id="formWrapper" fxFlex="100" fxLayout="column">
+    <div>
+        <p>{{staticProperty.label}}: <br>
+            <mat-hint class="description">{{staticProperty.description}}</mat-hint>
+        </p>
     </div>
     <div fxFlex fxLayout="column" class="content">
-        <div>{{staticProperty.description}}</div>
         <div>
             <mat-radio-group  *ngIf="staticProperty.alternatives.length > 1"
                     class="radio-group" (change)="radioSelectionChange($event)" required>
@@ -47,7 +48,8 @@
                      {{alternative.label}}
                  </div>
 
-                <div class="sp-blue-border" style="padding-top: 0px; padding-bottom: 0px;  padding-left: 10px;">
+                <div class="sp-blue-border" style="padding-top: 0px; padding-bottom: 0px;
+                                                   padding-left: 10px; padding-right: 10px">
                     <app-static-property [adapterId]="adapterId" [eventSchema]="eventSchema"
                                          [staticProperty]="alternative.staticProperty" (validateEmitter)="valueChange($event)"
                                          class="test fullWidth">

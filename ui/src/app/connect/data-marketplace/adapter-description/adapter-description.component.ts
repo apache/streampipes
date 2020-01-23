@@ -120,4 +120,13 @@ export class AdapterDescriptionComponent {
   deleteInProgress(adapterCouchDbId) {
     return this.deleting && (adapterCouchDbId === this.adapterToDelete);
   }
+
+  getIconUrl() {
+    //TODO Use "this.adapter.includesAssets" if boolean demoralizing is working
+    if (this.adapter.includedAssets.length > 0) {
+      return this.dataMarketplaceService.getAssetUrl(this.adapter.appId) + "/icon";
+    } else {
+      return 'assets/img/connect/' + this.adapter.iconUrl;
+    }
+  }
 }

@@ -76,7 +76,7 @@ export class PropertySelectorService {
     }
 
     isNested(ep) {
-        return ep.type === "org.streampipes.model.schema.EventPropertyNested";
+        return ep.type === "org.apache.streampipes.model.schema.EventPropertyNested";
     }
 
     isInSelection(inputProperty, propertySelector, currentPropertyPointer) {

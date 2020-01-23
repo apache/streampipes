@@ -16,12 +16,12 @@
  *
  */
 
-package org.streampipes.dataformat.json;
+package org.apache.streampipes.dataformat.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.dataformat.SpDataFormatDefinition;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 
 import java.io.IOException;
 import java.util.HashMap;

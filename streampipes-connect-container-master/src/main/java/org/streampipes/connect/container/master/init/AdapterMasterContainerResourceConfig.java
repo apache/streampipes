@@ -15,21 +15,21 @@
  * limitations under the License.
  *
  */
-package org.streampipes.connect.container.master.init;
+package org.apache.streampipes.connect.container.master.init;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.springframework.stereotype.Component;
-import org.streampipes.connect.container.master.rest.AdapterResource;
-import org.streampipes.connect.container.master.rest.AdapterTemplateResource;
-import org.streampipes.connect.container.master.rest.DescriptionResource;
-import org.streampipes.connect.container.master.rest.FileResource;
-import org.streampipes.connect.container.master.rest.GuessResource;
-import org.streampipes.connect.container.master.rest.RuntimeResolvableResource;
-import org.streampipes.connect.container.master.rest.SourcesResource;
-import org.streampipes.connect.container.master.rest.UnitResource;
-import org.streampipes.connect.container.master.rest.WelcomePageMaster;
-import org.streampipes.connect.container.master.rest.WorkerAdministrationResource;
-import org.streampipes.connect.init.AdapterContainerConfig;
+import org.apache.streampipes.connect.container.master.rest.AdapterResource;
+import org.apache.streampipes.connect.container.master.rest.AdapterTemplateResource;
+import org.apache.streampipes.connect.container.master.rest.DescriptionResource;
+import org.apache.streampipes.connect.container.master.rest.FileResource;
+import org.apache.streampipes.connect.container.master.rest.GuessResource;
+import org.apache.streampipes.connect.container.master.rest.RuntimeResolvableResource;
+import org.apache.streampipes.connect.container.master.rest.SourcesResource;
+import org.apache.streampipes.connect.container.master.rest.UnitResource;
+import org.apache.streampipes.connect.container.master.rest.WelcomePageMaster;
+import org.apache.streampipes.connect.container.master.rest.WorkerAdministrationResource;
+import org.apache.streampipes.connect.init.AdapterContainerConfig;
 
 
 @Component

@@ -16,13 +16,13 @@
  *
  */
 
-package org.streampipes.connect.management;
+package org.apache.streampipes.connect.management;
 
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Rule;
 import org.junit.Test;
-import org.streampipes.connect.Mock;
+import org.apache.streampipes.connect.Mock;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 

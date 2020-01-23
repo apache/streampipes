@@ -39,7 +39,7 @@ export class SepaStreamDetailController {
 
     addProperty(properties) {
         properties.push({
-            "type": "org.streampipes.model.schema.EventPropertyPrimitive",
+            "type": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
             "properties": {"runtimeName": "", "runtimeType": "", "domainProperties": []}
         });
     }

@@ -137,7 +137,7 @@ export class PipelineElementOptionsController {
             .transportProtocols[0]
             .properties
             .topicDefinition
-            .type === "org.streampipes.model.grounding.WildcardTopicDefinition";
+            .type === "org.apache.streampipes.model.grounding.WildcardTopicDefinition";
 
     }
 }

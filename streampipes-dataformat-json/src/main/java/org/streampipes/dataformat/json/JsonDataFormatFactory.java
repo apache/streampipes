@@ -16,11 +16,11 @@
  *
  */
 
-package org.streampipes.dataformat.json;
+package org.apache.streampipes.dataformat.json;
 
-import org.streampipes.dataformat.SpDataFormatDefinition;
-import org.streampipes.dataformat.SpDataFormatFactory;
-import org.streampipes.vocabulary.MessageFormat;
+import org.apache.streampipes.dataformat.SpDataFormatDefinition;
+import org.apache.streampipes.dataformat.SpDataFormatFactory;
+import org.apache.streampipes.vocabulary.MessageFormat;
 
 public class JsonDataFormatFactory extends SpDataFormatFactory {
 

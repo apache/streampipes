@@ -6,9 +6,9 @@ package ${package}.pe.processor.${packageName};
 import ${package}.config.Config;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.streampipes.model.runtime.Event;
-import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
 import java.io.Serializable;
 

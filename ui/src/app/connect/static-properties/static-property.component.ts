@@ -35,6 +35,7 @@ import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
 import {SecretStaticProperty} from "../model/SecretStaticProperty";
 import {AlternativesStaticProperty} from '../model/AlternativesStaticProperty';
 import {GroupStaticProperty} from '../model/GroupStaticProperty';
+import { CollectionStaticProperty } from "../model/CollectionStaticProperty";
 
 @Component({
   selector: 'app-static-property',
@@ -137,6 +138,10 @@ export class StaticPropertyComponent implements OnInit {
 
   isAlternativesStaticProperty(val) {
       return val instanceof AlternativesStaticProperty;
+  }
+
+  isCollectionStaticProperty(val) {
+    return val instanceof CollectionStaticProperty;
   }
 
   valueChange(hasInput) {

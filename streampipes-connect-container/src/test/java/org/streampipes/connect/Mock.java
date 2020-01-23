@@ -16,7 +16,7 @@
  *
  */
 
-package org.streampipes.connect;
+package org.apache.streampipes.connect;
 
 public class Mock {
     public static int PORT = 8042;

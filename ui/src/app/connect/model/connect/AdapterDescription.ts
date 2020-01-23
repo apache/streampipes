@@ -64,6 +64,19 @@ export class AdapterDescription {
   @RdfProperty('sp:config')
   public config: StaticProperty[] = [];
 
+  @RdfProperty('sp:includesAssets')
+  public includesAssets: Boolean;
+
+  @RdfProperty('sp:includesLocales')
+  public includesLocales: Boolean;
+
+  @RdfProperty('sp:includedAssets')
+  public includedAssets: string[] = [];
+
+  @RdfProperty('sp:includedLocales')
+  public includedLocales: string[] = [];
+
+
   public templateTitle: String;
 
   public isTemplate: boolean;

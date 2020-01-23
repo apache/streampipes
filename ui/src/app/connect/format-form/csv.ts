@@ -26,7 +26,7 @@ export class Csv extends Format {
     public offset: number,
     public name: string,
   ) {
-    super('org.streampipes.streamconnect.model.adapter.CsvFormat');
+    super('org.apache.streampipes.streamconnect.model.adapter.CsvFormat');
     this.properties.delimiter = delimiter;
     this.properties.offset = offset;
   }
