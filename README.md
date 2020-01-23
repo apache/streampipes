@@ -16,6 +16,7 @@
   ~
   -->
 
+![](https://github.com/apache/incubator-streampipes-extensions/workflows/Build%20and%20Deploy%20Extensions/badge.svg)
 # Apache StreamPipes
 
 Apache StreamPipes (incubating) enables flexible modeling of stream processing pipelines by providing a graphical
