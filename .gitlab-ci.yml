@@ -147,7 +147,7 @@ docker-ui:
     - docker manifest annotate $IMAGE_NAME/ui:$MVN_VERSION $IMAGE_NAME/ui:arm32v7-$MVN_VERSION --os linux --arch arm
     - docker manifest annotate $IMAGE_NAME/ui:$MVN_VERSION $IMAGE_NAME/ui:arm64v8-$MVN_VERSION --os linux --arch arm64
     - docker manifest push $IMAGE_NAME/ui:$MVN_VERSION
-#    - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
+
 #    # Build AMD64
 #    - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_AMD
 #      -t $IMAGE_NAME/backend:amd64 -t $IMAGE_NAME/backend:amd64-$MVN_VERSION
@@ -227,7 +227,6 @@ docker-backend:
      - docker manifest annotate $IMAGE_NAME/backend:$MVN_VERSION $IMAGE_NAME/backend:arm32v7-$MVN_VERSION --os linux --arch arm
      - docker manifest annotate $IMAGE_NAME/backend:$MVN_VERSION $IMAGE_NAME/backend:arm64v8-$MVN_VERSION --os linux --arch arm64
      - docker manifest push $IMAGE_NAME/backend:$MVN_VERSION
-  #    - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
   #    # Build AMD64
   #    - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_AMD
   #      -t $IMAGE_NAME/backend:amd64 -t $IMAGE_NAME/backend:amd64-$MVN_VERSION
@@ -309,7 +308,6 @@ docker-connect-container:
      - docker manifest annotate $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION $IMAGE_NAME/streampipes-connect-container:arm32v7-$MVN_VERSION --os linux --arch arm
      - docker manifest annotate $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION $IMAGE_NAME/streampipes-connect-container:arm64v8-$MVN_VERSION --os linux --arch arm64
      - docker manifest push $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
-  #    - docker login -u zehnder -p $HARBOR_PASSWORD ipe-harbor.fzi.de
   #    # Build AMD64
   #    - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_AMD
   #      -t $IMAGE_NAME/streampipes-connect-container:amd64 -t $IMAGE_NAME/streampipes-connect-container:amd64-$MVN_VERSION
