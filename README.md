@@ -15,8 +15,7 @@
   ~ limitations under the License.
   ~
   -->
-
-![](https://github.com/apache/incubator-streampipes-extensions/workflows/Build%20and%20Deploy%20Extensions/badge.svg)
+[![Github Actions](https://img.shields.io/github/workflow/status/apache/incubator-streampipes-extensions/Build%20and%20Deploy%20Extensions)](https://github.com/apache/incubator-streampipes-extensions/actions/)
 # Apache StreamPipes
 
 Apache StreamPipes (incubating) enables flexible modeling of stream processing pipelines by providing a graphical
