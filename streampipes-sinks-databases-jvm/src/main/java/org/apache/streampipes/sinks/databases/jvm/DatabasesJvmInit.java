@@ -28,6 +28,7 @@ import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.sinks.databases.jvm.config.DatabasesJvmConfig;
 import org.apache.streampipes.sinks.databases.jvm.couchdb.CouchDbController;
+import org.apache.streampipes.sinks.databases.jvm.ditto.DittoController;
 import org.apache.streampipes.sinks.databases.jvm.influxdb.InfluxDbController;
 import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbController;
 import org.apache.streampipes.sinks.databases.jvm.opcua.UpcUaController;
@@ -42,7 +43,8 @@ public class DatabasesJvmInit extends StandaloneModelSubmitter {
             .add(new InfluxDbController())
             .add(new UpcUaController())
             .add(new PostgreSqlController())
-            .add(new IotDbController());
+            .add(new IotDbController())
+            .add(new DittoController());
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

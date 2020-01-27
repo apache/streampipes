@@ -1,0 +1,20 @@
+org.apache.streampipes.sinks.databases.ditto.title=Eclipse Ditto
+org.apache.streampipes.sinks.databases.ditto.description=Publishes events to Eclipse Ditto.
+
+dittoApiEndpointKey.title=Ditto API endpoint
+dittoApiEndpointKey.description=The endpoint URL of the Ditto instance
+
+dittoUserKey.title=Username
+dittoUserKey.description=The Ditto username
+
+dittoPasswordKey.title=Password
+dittoPasswordKey.description=The Ditto password
+
+dittoThingIdKey.title=Thing ID
+dittoThingIdKey.description=The Ditto thing ID
+
+dittoFeatureIdKey.title=Feature ID
+dittoFeatureIdKey.description=The Ditto feature ID
+
+selectedFieldsKey.title=Fields to send
+selectedFieldsKey.description=The fields that should be stored as a property

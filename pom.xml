@@ -65,6 +65,7 @@
         <amqp-client.version>4.1.0</amqp-client.version>
         <boofcv.version>0.33</boofcv.version>
         <commons-math3.version>3.6.1</commons-math3.version>
+        <ditto-client.version>1.0.0</ditto-client.version>
         <data-generator.version>1.4.1</data-generator.version>
         <google-maps-services.version>0.10.0</google-maps-services.version>
         <iotdb.version>0.8.0</iotdb.version>
@@ -331,6 +332,11 @@
                 <artifactId>streampipes-test-utils</artifactId>
                 <version>${streampipes.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.ditto</groupId>
+                <artifactId>ditto-client</artifactId>
+                <version>${ditto-client.version}</version>
             </dependency>
 
         </dependencies>

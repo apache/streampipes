@@ -91,6 +91,11 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-milo</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.ditto</groupId>
+            <artifactId>ditto-client</artifactId>
+            <version>${ditto-client.version}</version>
+        </dependency>
 
     </dependencies>
 
