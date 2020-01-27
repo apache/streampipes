@@ -39,7 +39,7 @@ public class Plc4xPassiveAdapter extends SpecificDataStreamAdapter {
     /**
      * A unique id to identify the adapter
      */
-    public static final String ID = "http://streampipes.org/adapter/specific/plc4xpassive";
+    public static final String ID = " org.apache.streampipes.connect.adapters.plc4x.passive";
 
     public Plc4xPassiveAdapter() {
     }

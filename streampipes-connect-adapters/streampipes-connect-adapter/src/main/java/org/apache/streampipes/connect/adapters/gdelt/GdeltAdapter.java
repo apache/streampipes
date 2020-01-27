@@ -43,7 +43,7 @@ import java.util.zip.ZipInputStream;
 
 public class GdeltAdapter extends PullAdapter {
 
-    public static final String ID = "http://streampipes.org/adapter/specific/gdelt";
+    public static final String ID = "org.apache.streampipes.connect.adapters.gdelt";
     private String url = "http://data.gdeltproject.org/gdeltv2/lastupdate.txt";
 
     public GdeltAdapter() {

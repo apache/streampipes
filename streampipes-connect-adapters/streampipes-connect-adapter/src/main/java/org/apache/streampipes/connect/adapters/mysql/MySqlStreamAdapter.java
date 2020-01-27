@@ -40,7 +40,7 @@ import java.util.Map;
 
 public class MySqlStreamAdapter extends SpecificDataStreamAdapter {
 
-    public static final String ID = "http://streampipes.org/adapter/specific/mysqlstream";
+    public static final String ID = "org.apache.streampipes.connect.adapters.mysql.stream";
 
     private MySqlClient mySqlClient;
     private BinaryLogClient binaryLogClient;

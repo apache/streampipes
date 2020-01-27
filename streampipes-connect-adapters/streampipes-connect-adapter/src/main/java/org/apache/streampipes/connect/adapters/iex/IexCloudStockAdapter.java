@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 public class IexCloudStockAdapter extends IexCloudAdapter {
 
-  public static final String ID = "http://streampipes.org/adapter/specific/iexcloud/stocks";
+  public static final String ID = "org.apache.streampipes.connect.adapters.iex.stocks";
 
   private static final String Quotes = "/quote";
   private static final String LatestUpdate = "latestUpdate";

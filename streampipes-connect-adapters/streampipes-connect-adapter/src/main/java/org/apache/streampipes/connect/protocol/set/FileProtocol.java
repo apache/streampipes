@@ -47,7 +47,7 @@ public class FileProtocol extends Protocol {
 
     private static Logger logger = LoggerFactory.getLogger(FileProtocol.class);
 
-    public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/set/file";
+    public static final String ID = "org.apache.streampipes.protocol.set.file";
 
     private String fileUri;
 

@@ -43,7 +43,7 @@ import java.util.*;
 
 public class OpcUaAdapter extends SpecificDataStreamAdapter {
 
-    public static final String ID = "http://streampipes.org/adapter/specific/opcua";
+    public static final String ID = "org.apache.streampipes.connect.adapters.opcua";
 
     private static final String OPC_HOST_OR_URL = "OPC_HOST_OR_URL";
     private static final String OPC_URL = "OPC_URL";

@@ -1,0 +1,11 @@
+org.apache.streampipes.connect.adapters.ros.title=ROS Bridge
+org.apache.streampipes.connect.adapters.ros.description=Connect Robots running on ROS.
+
+ROS_HOST_KEY.title=Ros Bridge
+ROS_HOST_KEY.description=Example: test-server.com (No protocol)
+
+ROS_PORT_KEY.title=Port
+ROS_PORT_KEY.description=Example: 9090
+
+TOPIC_KEY.title=Topic
+TOPIC_KEY.description=Example: /battery (Starts with /)

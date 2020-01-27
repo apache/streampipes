@@ -40,7 +40,7 @@ import java.util.List;
 
 public class MqttProtocol extends BrokerProtocol {
 
-  public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/mqtt";
+  public static final String ID = "org.apache.streampipes.connect.protocol.stream.mqtt";
 
   private static final String ACCESS_MODE = "access_mode";
   private static final String ANONYMOUS_ACCESS = "anonymous-alternative";

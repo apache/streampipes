@@ -30,7 +30,7 @@ import org.apache.streampipes.sdk.helpers.Labels;
 
 public class RandomDataSetAdapter extends SpecificDataSetAdapter {
 
-  public static final String ID = "http://streampipes.org/adapter/specific/randomdataset";
+  public static final String ID = "org.apache.streampipes.connect.adapters.simulator.randomdataset";
 
   private static final String WaitTimeMs = "wait-time-ms";
   private static final String NumberOfEvents = "number-of-events";

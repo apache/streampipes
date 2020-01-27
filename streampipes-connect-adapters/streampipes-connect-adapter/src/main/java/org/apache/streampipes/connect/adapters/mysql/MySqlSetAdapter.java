@@ -38,7 +38,7 @@ import java.util.Map;
 
 public class MySqlSetAdapter extends SpecificDataSetAdapter {
 
-    public static final String ID = "http://streampipes.org/adapter/specific/mysqlset";
+    public static final String ID = "org.apache.streampipes.connect.adapters.mysql.set";
 
     private MySqlClient mySqlClient;
     private Thread fetchDataThread;

@@ -24,7 +24,7 @@ import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuild
 
 public class WikipediaEditedArticlesAdapter extends WikipediaAdapter {
 
-  public static final String ID = "http://streampipes.org/adapter/specific/wikipedia/edit";
+  public static final String ID = "org.apache.streampipes.connect.adapters.wikipedia.edit";
 
   private static final String Type = "edit";
 

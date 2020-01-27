@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 
 public class NswTrafficCameraAdapter extends PullAdapter {
 
-  public static final String ID = "http://streampipes.org/adapter/specific/nswtrafficcamera";
+  public static final String ID = "org.apache.streampipes.connect.adapters.nswaustralia.trafficcamera";
   private static final String API_KEY = "";
 
   public NswTrafficCameraAdapter() {

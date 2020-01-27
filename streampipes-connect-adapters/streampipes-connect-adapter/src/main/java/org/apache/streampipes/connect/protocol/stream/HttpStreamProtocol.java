@@ -44,7 +44,8 @@ public class HttpStreamProtocol extends PullProtocol {
 
     Logger logger = LoggerFactory.getLogger(HttpStreamProtocol.class);
 
-    public static final String ID = "https://streampipes.org/vocabulary/v1/protocol/stream/http";
+    public static final String ID = "org.apache.streampipes.connect.protocol.stream.http";
+
     private static String URL_PROPERTY ="url";
     private static String INTERVAL_PROPERTY ="interval";
     private static String ACCESS_TOKEN_PROPERTY ="access_token";

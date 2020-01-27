@@ -48,7 +48,7 @@ public class TISensorTag extends SpecificDataStreamAdapter {
 
     private Logger logger = LoggerFactory.getLogger(TISensorTag.class);
 
-    public static final String ID = "http://streampipes.org/adapter/specific/tisensortag";
+    public static final String ID = "org.apache.streampipes.connect.adapters.ti";
 
     private static final String ACCESS_MODE = "access_mode";
     private static final String ANONYMOUS_ACCESS = "anonymous-alternative";
