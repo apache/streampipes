@@ -28,6 +28,7 @@ toolbox of data sources, data processors and data sinks. StreamPipes has an exch
 Pipeline elements in StreamPipes can be installed at runtime - the built-in SDK allows to easily implement new 
 pipeline elements according to your needs. Pipeline elements are standalone microservices that can run anywhere - centrally on your server, in a large-scale cluster or close at the edge.
 
+Find the core project at [https://github.com/apache/incubator-streampipes](https://github.com/apache/incuabtor-streampipes)
 
 Learn more about StreamPipes at [https://streampipes.apache.org/](https://streampipes.apache.org/)
 
@@ -51,6 +52,11 @@ It's easy to get started:
 * Follow the installation guide at [https://streampipes.apache.org/docs/docs/user-guide-installation](https://streampipes.apache.org/docs/docs/user-guide-installation)
 * Check the [tour](https://streampipes.apache.org/docs/docs/user-guide-tour) and build your first pipeline!
 
+## Bugs and Feature Requests
+
+If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue in our Jira:
+[https://issues.apache.org/jira/projects/STREAMPIPES](https://issues.apache.org/jira/projects/STREAMPIPES)
+
 ## Get help
 
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our 
@@ -63,6 +69,15 @@ And don't forget to follow us on [Twitter](https://twitter.com/streampipes)!
 
 ## Contribute
 
-We welcome contributions to StreamPipes. If you are interested in contributing to StreamPipes, let us know (e.g
-., send an email to the dev list)!
+We welcome contributions to StreamPipes. If you are interested in contributing to StreamPipes, let us know! You'll
+ get to know an open-minded and motivated team working together to build the next IIoT analytics toolbox.
+
+Here are some first steps in case you want to contribute:
+* Subscribe to our dev mailing list [dev-subscribe@streampipes.apache.org](dev-subscribe@streampipes.apache.org)
+* Send an email, tell us about your interests and which parts of Streampipes you'd like to contribute (e.g., core or UI)!
+* Ask for a mentor who helps you understanding the code base and guides you through the first setup steps
+* Find an issue in our [Jira](https://issues.apache.org/jira/projects/STREAMPIPES) which is tagged with a _newbie_ tag
+* Have a look at our developer wiki at [https://cwiki.apache.org/confluence/display/STREAMPIPES/Home](https://cwiki.apache.org/confluence/display/STREAMPIPES/Home) to learn more about StreamPipes development.
+
+Have fun!
 
