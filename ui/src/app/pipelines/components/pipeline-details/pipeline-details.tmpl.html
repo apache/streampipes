@@ -30,7 +30,7 @@
     <tr ng-repeat="pipeline in ctrl.pipelines | pipelineCategoryFilter: ctrl.activeCategory | orderBy:'+name'">
         <td>
             <sp-button sp-button-icon
-                    ng-click="ctrl.PipelineOperationsService.startPipeline(pipeline._id, ctrl.toggleRunningOperation, ctrl.refreshPipelines, ctrl.reloadData)"
+                    ng-click="ctrl.PipelineOperationsService.startPipeline(pipeline._id, ctrl.toggleRunningOperation, ctrl.refreshPipelines)"
                     class="md-icon-button"
                     ng-disabled="ctrl.starting" ng-if="!pipeline.running">
                 <i class="material-icons">play_arrow</i>
@@ -39,7 +39,7 @@
                 </md-tooltip>
             </sp-button>
             <sp-button sp-button-icon
-                    ng-click="ctrl.PipelineOperationsService.stopPipeline(pipeline._id, ctrl.toggleRunningOperation, ctrl.refreshPipelines, ctrl.reloadData)"
+                    ng-click="ctrl.PipelineOperationsService.stopPipeline(pipeline._id, ctrl.toggleRunningOperation, ctrl.refreshPipelines)"
                     class="md-icon-button"
                     ng-disabled="ctrl.stopping" ng-if="pipeline.running">
                 <i class="material-icons">stop</i>
@@ -47,7 +47,6 @@
                     Stop Pipeline
                 </md-tooltip>
             </sp-button>
-            {{pipeline.running}}
         </td>
         <td>
             <h4 style="margin-bottom:0px;">{{pipeline.name}}</h4>
