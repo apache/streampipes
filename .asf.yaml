@@ -1,0 +1,14 @@
+github:
+  description: "Apache StreamPipes - A self-service (Industrial) IoT toolbox to enable non-technical users to connect, analyze and explore IoT data streams."
+  homepage: https://streampipes.apache.org
+  labels:
+    - iot
+    - iiot
+    - edge
+    - analytics
+    - stream-processing
+    - self-service
+  features:
+    wiki: false
+    issues: false
+    projects: false
