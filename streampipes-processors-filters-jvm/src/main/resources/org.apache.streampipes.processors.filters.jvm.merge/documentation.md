@@ -26,19 +26,24 @@
 
 ## Description
 
-Merges two event streams. Any time, a new input event arrives, it is merged with the last input event from the other 
-event stream and forwarded.
+Merges two event streams by their timestamp.
+Two events of the different streams are merged when they occure to the same time
 
+The following figure shows how the events of the two data streams will be mergrged:
+
+<p align="center"> 
+    <img src="merge_description.png" class="pe-image-documentation"/>
+</p>
 ***
 
 ## Required input
-The Compose processor does not have any specific input requirements.
-
+Each of the data streams needs a timestamp.
 ***
 
 ## Configuration
 
-(no further configuration required)
+* For each stream a the timestamp property on which the merger is performed has to be selected
+* The Time Interval describes the maximum value between two events to decide whether they are a match. To be a valid match the following function must be true: | timestamp_stream_1 - timestamp_stream_2 | < interval
 
 ## Output
 The compose processor has a configurable output that can be selected by the user at pipeline modeling time.

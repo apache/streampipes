@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.processors.filters.jvm.processor.merge;
 
-import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -25,29 +24,30 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class MergeByTime implements EventProcessor<MergeByTimeParameters> {
 
-  private Map<String, Event> lastEvents;
   private EventSchema outputSchema;
   private List<String> outputKeySelectors;
 
+  private String timestampFieldStream0;
   private String timestampFieldStream1;
-  private String timestampFieldStream2;
   private Integer timeInterval;
+
+  private StreamBuffer streamBufferS0;
+  private StreamBuffer streamBufferS1;
 
   @Override
   public void onInvocation(MergeByTimeParameters composeParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     this.outputSchema = composeParameters.getGraph().getOutputStream().getEventSchema();
     this.outputKeySelectors = composeParameters.getOutputKeySelectors();
-    this.timestampFieldStream1 = composeParameters.getTimestampFieldStream1();
-    this.timestampFieldStream2 = composeParameters.getTimestampFieldStream2();
+    this.timestampFieldStream0 = composeParameters.getTimestampFieldStream1();
+    this.timestampFieldStream1 = composeParameters.getTimestampFieldStream2();
     this.timeInterval = composeParameters.getTimeInterval();
-    this.lastEvents = new HashMap<>();
+
+    this.streamBufferS0 = new StreamBuffer(this.timestampFieldStream0);
+    this.streamBufferS1 = new StreamBuffer(this.timestampFieldStream1);
   }
 
 
@@ -55,51 +55,55 @@ public class MergeByTime implements EventProcessor<MergeByTimeParameters> {
   public void onEvent(Event event, SpOutputCollector spOutputCollector) {
     String streamId = event.getSourceInfo().getSelectorPrefix();
 
-    if (streamId != null) {
-
+    // Decide to which buffer the event should be added
+    if ("s0".equals(streamId)) {
+      this.streamBufferS0.add(event);
     } else {
-      // TODO add event to last Events
+      this.streamBufferS1.add(event);
     }
-  }
 
+    // Calculate matching events between data streams
+    for (Event e0 : this.streamBufferS0.getList()) {
+      long time0 = e0.getFieldBySelector(timestampFieldStream0).getAsPrimitive().getAsLong();
+      for (Event e1 : this.streamBufferS1.getList()) {
+        long time1 = e1.getFieldBySelector(timestampFieldStream1).getAsPrimitive().getAsLong();
+
+        if (time0 + timeInterval > time1 && time1 > time0 - timeInterval) {
+          Event resultingEvent = mergeEvents(e0, e1);
+          spOutputCollector.collect(resultingEvent);
+          this.streamBufferS0.removeOldEvents(time0);
+          this.streamBufferS1.removeOldEvents(time1);
+        }
+      }
+    }
+
+    // Clean up buffer if events do not match to avoid buffer overflow
+    if (this.streamBufferS0.getLength() > 0 && this.streamBufferS1.getLength() > 0) {
+      Event e0 = this.streamBufferS0.get(0);
+      Event e1 = this.streamBufferS1.get(0);
+
+      long time0 = e0.getFieldBySelector(this.timestampFieldStream0).getAsPrimitive().getAsLong();
+      long time1 = e1.getFieldBySelector(this.timestampFieldStream1).getAsPrimitive().getAsLong();
+
+      if (time0 > time1) {
+        this.streamBufferS0.removeOldEvents(time0);
+        this.streamBufferS1.removeOldEvents(time0);
+      } else {
+        this.streamBufferS0.removeOldEvents(time1);
+        this.streamBufferS1.removeOldEvents(time1);
+      }
+    }
+
+  }
 
   @Override
   public void onDetach() {
+    this.streamBufferS0.reset();
+    this.streamBufferS1.reset();
   }
 
-  private String getOtherStreamId(String streamId) {
-    Set<String> keys = this.lastEvents.keySet();
-
-    if (keys.size() != 2) {
-      return null;
-    } else {
-      return "ddd";
-    }
-
+  private Event mergeEvents(Event e1, Event e2) {
+    return EventFactory.fromEvents(e1, e2, outputSchema).getSubset(outputKeySelectors);
   }
-
-//  @Override
-//  public void onDetach() {
-//    this.lastEvents.clear();
-//  }
-//
-//  @Override
-//  public void onEvent(Event event, SpOutputCollector spOutputCollector) {
-//    this.lastEvents.put(event.getSourceInfo().getSelectorPrefix(), event);
-//    if (lastEvents.size() == 2) {
-//      spOutputCollector.collect(buildOutEvent(event.getSourceInfo().getSelectorPrefix()));
-//    }
-//  }
-//
-//  private Event buildOutEvent(String currentSelectorPrefix) {
-//    return EventFactory.fromEvents(lastEvents.get(currentSelectorPrefix), lastEvents.get
-//            (getOtherSelectorPrefix(currentSelectorPrefix)), outputSchema).getSubset(outputKeySelectors);
-//  }
-//
-//  private String getOtherSelectorPrefix(String currentSelectorPrefix) {
-//    return currentSelectorPrefix.equals(PropertySelectorConstants.FIRST_STREAM_ID_PREFIX) ?
-//            PropertySelectorConstants.SECOND_STREAM_ID_PREFIX : PropertySelectorConstants
-//            .FIRST_STREAM_ID_PREFIX;
-//  }
 
 }

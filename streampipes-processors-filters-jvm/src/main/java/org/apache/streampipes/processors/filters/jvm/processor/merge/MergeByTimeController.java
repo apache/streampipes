@@ -39,7 +39,7 @@ public class MergeByTimeController extends StandaloneEventProcessingDeclarer<Mer
 
   private static final String TIMESTAMP_MAPPING_STREAM_1_KEY = "timestamp_mapping_stream_1";
   private static final String TIMESTAMP_MAPPING_STREAM_2_KEY = "timestamp_mapping_stream_2";
-  private static final String NUMBER_MAPPING = "number-mapping";
+  private static final String NUMBER_MAPPING = "number_mapping";
   private static final String TIME_INTERVAL = "time-interval";
 
   @Override
@@ -57,7 +57,7 @@ public class MergeByTimeController extends StandaloneEventProcessingDeclarer<Mer
                     EpRequirements.timestampReq(),
                     Labels.withId(TIMESTAMP_MAPPING_STREAM_2_KEY),
                     PropertyScope.NONE).build())
-            .requiredFloatParameter(Labels.withId(TIME_INTERVAL), NUMBER_MAPPING)
+            .requiredIntegerParameter(Labels.withId(TIME_INTERVAL), NUMBER_MAPPING)
             .outputStrategy(OutputStrategies.custom(true))
             .build();
   }
@@ -70,7 +70,7 @@ public class MergeByTimeController extends StandaloneEventProcessingDeclarer<Mer
 
     String timestampFieldStream1 = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_STREAM_1_KEY);
     String timestampFieldStream2 = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_STREAM_2_KEY);
-    Integer timeInterval = extractor.singleValueParameter(NUMBER_MAPPING, Integer.class);
+    Integer timeInterval = extractor.singleValueParameter(TIME_INTERVAL, Integer.class);
 
     MergeByTimeParameters staticParam = new MergeByTimeParameters(
             graph, outputKeySelectors, timestampFieldStream1, timestampFieldStream2, timeInterval);

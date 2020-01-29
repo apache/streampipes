@@ -18,66 +18,46 @@ package org.apache.streampipes.processors.filters.jvm.processor.merge;
 
 import org.apache.streampipes.model.runtime.Event;
 
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 
 public class StreamBuffer {
     private String timestampProperty;
-    private Long timeInterval;
-    private Queue<Event> buffer;
+    private List<Event> buffer;
 
-    public StreamBuffer(String timestampProperty, long timeInterval) {
+    public StreamBuffer(String timestampProperty) {
         buffer = new LinkedList<>();
         this.timestampProperty = timestampProperty;
-        this.timeInterval = timeInterval;
     }
 
     public void add(Event event) {
         buffer.add(event);
     }
 
-    public Event getMatchingEvent(long eventTimestamp) {
-        Event result = null;
-
-        Long timestampOfHead = this.getHeadTimestamp();
-
-        // TODO remove all events that are too old
-
-        if (checkTimestamp(eventTimestamp, timestampOfHead)) {
-            // search for last event in timewindow
-            do {
-                result = buffer.remove();
-
-                timestampOfHead = this.getHeadTimestamp();
-
-            } while (checkTimestamp(eventTimestamp, timestampOfHead));
-
-        }
-
-        return result;
+    public int getLength(){
+        return buffer.size();
     }
 
-    /**
-     * Check if timestamp of head is within time window
-     * @param eventTimestamp
-     * @param timestampOfHead
-     * @return
-     */
-    private boolean checkTimestamp(long eventTimestamp, Long timestampOfHead) {
-        if (timestampOfHead == null) {
-            return false;
-        } else {
-            return eventTimestamp < timestampOfHead - timeInterval  || eventTimestamp > timestampOfHead + timeInterval;
+    public List<Event> getList() {
+        return this.buffer;
+    }
+
+    public Event get(int i) {
+        return this.buffer.get(i);
+    }
+
+    public void removeOldEvents(long timestamp) {
+        Iterator itr = this.buffer.iterator();
+        while (itr.hasNext())
+        {
+            Event e = (Event) itr.next();
+            if (e.getFieldBySelector(timestampProperty).getAsPrimitive().getAsLong() <= timestamp)
+                itr.remove();
         }
     }
 
-    private Long getHeadTimestamp() {
-        Event head = this.buffer.peek();
-        if (head != null) {
-            return head.getFieldBySelector(timestampProperty).getAsPrimitive().getAsLong();
-        } else {
-            return null;
-        }
+    public void reset() {
+        this.buffer = new LinkedList<>();
     }
-
 }
