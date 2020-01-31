@@ -46,7 +46,7 @@ public class MergeByTimeController extends StandaloneEventProcessingDeclarer<Mer
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.merge")
             .category(DataProcessorType.TRANSFORM)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON, "merge_description.png")
             .withLocales(Locales.EN)
             .iconUrl(FiltersJvmConfig.getIconUrl("projection"))
             .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(

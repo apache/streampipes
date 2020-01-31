@@ -32,7 +32,7 @@ Two events of the different streams are merged when they occure to the same time
 The following figure shows how the events of the two data streams will be mergrged:
 
 <p align="center"> 
-    <img src="merge_description.png" class="pe-image-documentation"/>
+    <img width="width: 50%;" src="merge_description.png" class="pe-image-documentation"/>
 </p>
 ***
 
