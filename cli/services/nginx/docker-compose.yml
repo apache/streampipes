@@ -16,7 +16,7 @@
 version: "2"
 services:
   nginx:
-    image: ${SP_DOCKER_REGISTRY}streampipes/ui/dev
+    image: ${SP_DOCKER_REGISTRY}ui:${SP_BACKEND_VERSION}
     ports:
       - "80:80"
     depends_on:
