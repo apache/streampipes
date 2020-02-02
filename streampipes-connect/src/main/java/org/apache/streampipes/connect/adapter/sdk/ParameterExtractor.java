@@ -48,24 +48,31 @@ public class ParameterExtractor {
     }
 
     public String selectedSingleValueInternalName(String internalName) {
-        return ((SelectionStaticProperty) getStaticPropertyByName(internalName))
-                .getOptions()
-                .stream()
-                .filter(Option::isSelected)
-                .findFirst()
-                .get()
-                .getInternalName();
+        return selectedSingleValueInternalName(((SelectionStaticProperty) getStaticPropertyByName(internalName)));
+    }
+
+    private String selectedSingleValueInternalName(SelectionStaticProperty sp) {
+        return  sp.getOptions()
+                    .stream()
+                    .filter(Option::isSelected)
+                    .findFirst()
+                    .get()
+                    .getInternalName();
     }
 
 
     public List<String> selectedMultiValues(String internalName) {
-        return ((SelectionStaticProperty) getStaticPropertyByName(internalName))
-                .getOptions()
-                .stream()
-                .filter(Option::isSelected)
-                .map(Option::getName)
-                .collect(Collectors.toList());
+        return selectedMultiValues((SelectionStaticProperty) getStaticPropertyByName(internalName));
     }
+
+    public List<String> selectedMultiValues(SelectionStaticProperty sp) {
+        return sp.getOptions()
+                    .stream()
+                    .filter(Option::isSelected)
+                    .map(Option::getName)
+                    .collect(Collectors.toList());
+    }
+
 
     public String selectedSingleValueOption(String internalName) {
         return selectedMultiValues(internalName).get(0);
@@ -78,5 +85,55 @@ public class ParameterExtractor {
             if (p.getInternalName().equals(name)) return p;
         }
         return null;
+    }
+
+    // Collection
+
+    public List<String> collectionSingleValue(String internalName) {
+        return ((CollectionStaticProperty) getStaticPropertyByName(internalName))
+                .getMembers()
+                .stream()
+                .map(sp -> ((FreeTextStaticProperty) sp).getValue())
+                .collect(Collectors.toList());
+    }
+
+    public <V> List<V> collectionSingleValue(String internalName, Class<V> targetClass) {
+        return ((CollectionStaticProperty) getStaticPropertyByName(internalName))
+                .getMembers()
+                .stream()
+                .map(sp -> typeParser.parse(((FreeTextStaticProperty) sp).getValue(), targetClass))
+                .collect(Collectors.toList());
+    }
+
+    public List<String> collectionSelectedSingleValueInternalName(String internalName) {
+        return ((CollectionStaticProperty) getStaticPropertyByName(internalName))
+                .getMembers()
+                .stream()
+                .map(sp -> selectedSingleValueInternalName(((SelectionStaticProperty) sp)))
+                .collect(Collectors.toList());
+
+    }
+
+    public List<List<String>> collectionSelectedMultiValues(String internalName) {
+        return ((CollectionStaticProperty) getStaticPropertyByName(internalName))
+                .getMembers()
+                .stream()
+                .map(sp -> selectedMultiValues(((SelectionStaticProperty) sp)))
+                .collect(Collectors.toList());
+    }
+
+    public List<String> collectionSelectedSingleValueOption(String internalName) {
+        return collectionSelectedMultiValues(internalName)
+                .stream()
+                .map(list -> list.get(0))
+                .collect(Collectors.toList());
+    }
+
+    public List<ParameterExtractor> collectionGroup(String internalName) {
+        return  ((CollectionStaticProperty) getStaticPropertyByName(internalName))
+                                                .getMembers()
+                                                .stream()
+                                                .map(sp -> new ParameterExtractor(((StaticPropertyGroup) sp).getStaticProperties()))
+                                                .collect(Collectors.toList());
     }
 }

@@ -16,12 +16,14 @@
   ~
   -->
 
-<div id="formWrapper" fxFlex="90" fxLayout="row">
-    <div fxFlex="20">
-    <p>{{staticProperty.label}}: </p>
+<div id="formWrapper" fxFlex="100" fxLayout="column">
+    <div>
+        <p>{{staticProperty.label}}: <br>
+            <mat-hint class="description">{{staticProperty.description}}</mat-hint>
+        </p>
     </div>
     <div fxFlex fxLayout="row">
-        <form fxFlex [formGroup]="unaryTextForm">
+        <form fxFlex [formGroup]="unaryTextForm" style="padding-left: 10px">
             <mat-form-field class="example-full-width">
                 <!--<mat-form-field class="example-full-width">-->
                 <mat-select [placeholder]="staticProperty.label" [(value)]="staticProperty.selectedProperty">

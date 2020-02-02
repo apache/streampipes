@@ -18,8 +18,13 @@
 
 package org.apache.streampipes.connect.container.master.rest;
 
+import org.apache.streampipes.connect.adapter.exception.AdapterException;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.streampipes.connect.container.master.management.Utils;
 import org.apache.streampipes.connect.container.master.management.DescriptionManagement;
 import org.apache.streampipes.connect.rest.AbstractContainerResource;
 import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
@@ -30,7 +35,9 @@ import org.apache.streampipes.rest.shared.util.SpMediaType;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/api/v1/{username}/master/description")
@@ -80,5 +87,76 @@ public class DescriptionResource extends AbstractContainerResource {
 
     public void setDescriptionManagement(DescriptionManagement descriptionManagement) {
         this.descriptionManagement = descriptionManagement;
+    }
+
+    @GET
+    @Path("/{id}/assets")
+    @Produces("application/zip")
+    public Response getAdapterAssets(@PathParam("id") String id, @PathParam("username") String userName) {
+        try {
+            AdapterDescription adapterDescription = descriptionManagement.getAdapter(id);
+
+            String workerUrl = new Utils().getWorkerUrl(adapterDescription);
+            String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+
+            String result = "";
+            if (adapterDescription instanceof GenericAdapterDescription) {
+                result = descriptionManagement.getProtocolAssets(adapterDescription, newUrl);
+            } else {
+                result = descriptionManagement.getAdapterAssets(adapterDescription, newUrl);
+
+            }
+            return ok(result);
+        } catch (AdapterException e) {
+            logger.error("Not found adapter with id " + id, e);
+            return fail();
+        }
+    }
+
+    @GET
+    @Path("/{id}/assets/icon")
+    @Produces("image/png")
+    public Response getAdapterIconAsset(@PathParam("id") String id, @PathParam("username") String userName) {
+        try {
+            AdapterDescription adapterDescription = descriptionManagement.getAdapter(id);
+
+            String workerUrl = new Utils().getWorkerUrl(adapterDescription);
+            String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+
+            byte[] result;
+            if (adapterDescription instanceof GenericAdapterDescription) {
+                result = descriptionManagement.getProtocolIconAsset(adapterDescription, newUrl);
+            } else {
+                result = descriptionManagement.getAdapterIconAsset(adapterDescription, newUrl);
+
+            }
+            return ok(result);
+        } catch (AdapterException e) {
+            logger.error("Not found adapter with id " + id, e);
+            return fail();
+        }
+    }
+
+    @GET
+    @Path("/{id}/assets/documentation")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getAdapterDocumentationAsset(@PathParam("id") String id, @PathParam("username") String userName) {
+        try {
+            AdapterDescription adapterDescription = descriptionManagement.getAdapter(id);
+
+            String workerUrl = new Utils().getWorkerUrl(adapterDescription);
+            String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+
+            String result = "";
+            if (adapterDescription instanceof GenericAdapterDescription) {
+                result =  descriptionManagement.getProtocolDocumentationAsset(adapterDescription, newUrl);
+            } else {
+                result =  descriptionManagement.getAdapterDocumentationAsset(adapterDescription, newUrl);
+            }
+            return ok(result);
+        } catch (AdapterException e) {
+            logger.error("Not found adapter with id " + id, e);
+            return fail();
+        }
     }
 }

@@ -28,6 +28,9 @@ import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.model.staticproperty.SupportedProperty;
+import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.SelectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.sdk.helpers.Label;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
@@ -114,4 +117,39 @@ public class StaticProperties {
     return new SecretStaticProperty(label.getInternalId(),
             label.getLabel(), label.getDescription());
   }
+
+  public static CollectionStaticProperty collection(Label label, StaticProperty... sp) {
+    for (StaticProperty staticProperty : sp) {
+      setHorizontalRendering(staticProperty);
+    }
+
+    if (sp.length > 0) {
+      StaticPropertyGroup group = StaticProperties.group(label);
+      group.setHorizontalRendering(true);
+      group.setStaticProperties(Arrays.asList(sp));
+
+      return new CollectionStaticProperty(label.getInternalId(), label.getLabel(),
+              label.getDescription(), group);
+    } else {
+      return new CollectionStaticProperty(label.getInternalId(), label.getLabel(),
+              label.getDescription(), sp[0]);
+    }
+  }
+
+  private static StaticProperty setHorizontalRendering(StaticProperty sp) {
+     if (sp instanceof StaticPropertyGroup) {
+      ((StaticPropertyGroup) sp).setHorizontalRendering(true);
+      ((StaticPropertyGroup) sp).getStaticProperties().stream()
+              .forEach(property -> setHorizontalRendering(property));
+    } else if (sp instanceof SelectionStaticProperty) {
+      ((SelectionStaticProperty) sp).setHorizontalRendering(true);
+    } else if (sp instanceof StaticPropertyAlternatives) {
+      ((StaticPropertyAlternatives) sp).getAlternatives().stream()
+              .forEach(property -> setHorizontalRendering(property.getStaticProperty()));
+
+    }
+
+    return sp;
+  }
+
 }

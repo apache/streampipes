@@ -21,14 +21,16 @@ import static org.apache.streampipes.container.util.LocalesUtil.makePath;
 
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.output.AppendOutputStrategy;
 import org.apache.streampipes.model.output.FixedOutputStrategy;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
-import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
+import org.apache.streampipes.model.staticproperty.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
 public class LabelGenerator {
@@ -49,24 +51,19 @@ public class LabelGenerator {
       desc.setName(getTitle(props, desc.getAppId()));
       desc.setDescription(getDescription(props, desc.getAppId()));
 
+      if (isAdapter() || isProtocol()) {
+          List<StaticProperty> properties = ((AdapterDescription) desc).getConfig();
+          if (properties != null) {
+              properties.forEach(sp -> {
+                  generateLabels(props, sp);
+              });
+          }
+      }
+
+
       if (isConsumable()) {
         ((ConsumableStreamPipesEntity) desc).getStaticProperties().forEach(sp -> {
-          sp.setLabel(getTitle(props, sp.getInternalName()));
-          sp.setDescription(getDescription(props, sp.getInternalName()));
-          if (sp instanceof StaticPropertyAlternatives) {
-            ((StaticPropertyAlternatives) sp).getAlternatives().forEach(a -> {
-              a.setLabel(getTitle(props, a.getInternalName()));
-              a.setDescription(getDescription(props, a.getInternalName()));
-              a.getStaticProperty().setLabel(getTitle(props, a.getStaticProperty().getInternalName()));
-              a.getStaticProperty().setDescription(getDescription(props, a.getStaticProperty().getInternalName()));
-              if (a.getStaticProperty() instanceof StaticPropertyGroup) {
-                ((StaticPropertyGroup) a.getStaticProperty()).getStaticProperties().forEach(g -> {
-                  g.setLabel(getTitle(props, g.getInternalName()));
-                  g.setDescription(getDescription(props, g.getInternalName()));
-                });
-              }
-            });
-          }
+            generateLabels(props, sp);
         });
       }
 
@@ -88,6 +85,29 @@ public class LabelGenerator {
     }
 
     return desc;
+  }
+
+  private StaticProperty generateLabels(Properties props, StaticProperty sp) {
+    sp.setLabel(getTitle(props, sp.getInternalName()));
+    sp.setDescription(getDescription(props, sp.getInternalName()));
+    if (sp instanceof CollectionStaticProperty) {
+      ((CollectionStaticProperty) sp).getMembers().forEach(a -> {
+        generateLabels(props, a);
+      });
+    } else if (sp instanceof StaticPropertyGroup) {
+      ((StaticPropertyGroup) sp).getStaticProperties().forEach(g -> {
+        g.setLabel(getTitle(props, g.getInternalName()));
+        g.setDescription(getDescription(props, g.getInternalName()));
+      });
+    } else if (sp instanceof StaticPropertyAlternatives) {
+      ((StaticPropertyAlternatives) sp).getAlternatives().forEach(a -> {
+        generateLabels(props, a);
+      });
+    } else if (sp instanceof StaticPropertyAlternative) {
+      generateLabels(props, ((StaticPropertyAlternative) sp).getStaticProperty());
+    }
+
+    return sp;
   }
 
   private Properties makeProperties() throws IOException {
@@ -118,6 +138,14 @@ public class LabelGenerator {
 
   private boolean isDataProcessor() {
     return desc instanceof DataProcessorDescription;
+  }
+
+  private boolean isAdapter() {
+    return desc instanceof AdapterDescription;
+  }
+
+  private boolean isProtocol() {
+    return desc instanceof ProtocolDescription;
   }
 
 

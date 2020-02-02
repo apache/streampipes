@@ -46,6 +46,7 @@
   * [Installation](#installation)
   * [Pipeline Elements](#pipeline-elements)
   * [Extending StreamPipes](#extending-streampipes)
+  * [Bugs and Feature Requests](#bugs-and-feature-requests)
   * [Get help](#get-help)
   * [Contribute](#contribute)
   * [Feedback](#feedback)
@@ -106,6 +107,11 @@ Kafka Streams (and also plain Java programs) can be used to integrate your exist
 
 Check our developer guide at [https://streampipes.apache.org/docs/docs/dev-guide-introduction](https://streampipes.apache.org/docs/docs/dev-guide-introduction).
 
+## Bugs and Feature Requests
+
+If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue in our Jira:
+[https://issues.apache.org/jira/projects/STREAMPIPES](https://issues.apache.org/jira/projects/STREAMPIPES)
+
 ## Get help
 
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our 
@@ -118,7 +124,17 @@ And don't forget to follow us on [Twitter](https://twitter.com/streampipes)!
 
 ## Contribute
 
-We welcome contributions to StreamPipes. If you are interested in contributing to StreamPipes, let us know!
+We welcome contributions to StreamPipes. If you are interested in contributing to StreamPipes, let us know! You'll
+ get to know an open-minded and motivated team working together to build the next IIoT analytics toolbox.
+
+Here are some first steps in case you want to contribute:
+* Subscribe to our dev mailing list [dev-subscribe@streampipes.apache.org](dev-subscribe@streampipes.apache.org)
+* Send an email, tell us about your interests and which parts of Streampipes you'd like to contribute (e.g., core or UI)!
+* Ask for a mentor who helps you understanding the code base and guides you through the first setup steps
+* Find an issue in our [Jira](https://issues.apache.org/jira/projects/STREAMPIPES) which is tagged with a _newbie_ tag
+* Have a look at our developer wiki at [https://cwiki.apache.org/confluence/display/STREAMPIPES/Home](https://cwiki.apache.org/confluence/display/STREAMPIPES/Home) to learn more about StreamPipes development.
+
+Have fun!
 
 ## Feedback
 

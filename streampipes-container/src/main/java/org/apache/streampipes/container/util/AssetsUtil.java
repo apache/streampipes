@@ -16,11 +16,21 @@
  *
  */
 
-package org.apache.streampipes.vocabulary;
+package org.apache.streampipes.container.util;
 
-public class ProaSense {
+import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 
-  public static final String PDFTYPE = "http://proasense.eu/schema/pdfType";
-  public static final String PREDICTED_PARAMS = "http://proasense.eu/schema/params";
-  public static final String PREDICTED_TIMESTAMPS = "http://proasense.eu/schema/timestamps";
+public class AssetsUtil {
+
+    public static String makeIconPath(String elementId) {
+        return makePath(elementId, GlobalStreamPipesConstants.STD_ICON_NAME);
+    }
+
+    public static String makeDocumentationPath(String elementId) {
+        return makePath(elementId, GlobalStreamPipesConstants.STD_DOCUMENTATION_NAME);
+    }
+
+    public static String makePath(String elementId, String assetAppendix) {
+        return elementId + "/" + assetAppendix;
+    }
 }

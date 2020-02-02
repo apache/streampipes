@@ -30,7 +30,7 @@ import java.util.Collections;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({ AdapterMasterContainerResourceConfig.class })
+@Import({ org.apache.streampipes.connect.container.master.init.AdapterMasterContainerResourceConfig.class })
 public class AdapterMasterContainer {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterContainer.class);

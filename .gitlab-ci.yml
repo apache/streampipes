@@ -19,6 +19,13 @@ variables:
   MAVEN_CLI_OPTS: -DskipTests --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true
   GIT_REPO_ORIGIN: $GIT_REPO_ORIGIN
   GIT_STRATEGY: clone
+  DOCKER_CLI_EXPERIMENTAL: enabled
+  BASE_IMAGE_AMD: adoptopenjdk/openjdk8-openj9:alpine-slim
+  BASE_IMAGE_ARM32v7: arm32v7/openjdk:11-jre-slim
+  BASE_IMAGE_ARM64v8: arm64v8/openjdk:11-jre-slim
+  BASE_NGINX_AMD64: nginx
+  BASE_NGINX_ARM32v7: arm32v7/nginx
+  BASE_NGINX_ARM64v8: arm64v8/nginx
 
 stages:
   - github
@@ -94,7 +101,7 @@ build-ui:
     - dev
 
 docker-ui:
-  image: docker:17.06.0-ce
+  image: docker:19.03.5
   stage: docker
   dependencies:
     - build
@@ -104,43 +111,244 @@ docker-ui:
     - apk update
     - apk add curl
     - apk add unzip
+    - apk add bash
+    #    - 'curl -k -f -L -H "PRIVATE-TOKEN: ${API_KEY}" -o javadoc.zip "https://ipe-wim-gitlab.fzi.de/streampipes/ce/-/jobs/artifacts/dev/download?job=build"'
+    #    - unzip javadoc.zip
+    #    - mkdir javadoc && mv target/site/apidocs/* ./javadoc
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-    - docker login -u $USER_NAME -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST
-    - docker build --no-cache --pull -t $HARBOR_IMAGE_NAME/ui:$MVN_VERSION -t $IMAGE_NAME/ui:$MVN_VERSION ./ui
-    - docker push $IMAGE_NAME/ui:$MVN_VERSION
-    - docker push $HARBOR_IMAGE_NAME/ui:$MVN_VERSION
+    # Build AMD64
+    - docker build --pull --build-arg BASE_IMAGE=$BASE_NGINX_AMD64
+      -t $IMAGE_NAME/ui:amd64 -t $IMAGE_NAME/ui:amd64-$MVN_VERSION
+      -f ./ui/Dockerfile ./ui
+    # Build ARMv7
+    # Download qemu static and make it executable so it can be used during the docker build phase
+    - wget https://github.com/multiarch/qemu-user-static/releases/download/v4.0.0/qemu-arm-static -P ./ui
+    - wget https://github.com/multiarch/qemu-user-static/releases/download/v4.0.0/qemu-aarch64-static -P ./ui
+    - chmod 554 ./ui/qemu-arm-static
+    - chmod 554 ./ui/qemu-aarch64-static
+    - docker build --pull --build-arg BASE_IMAGE=$BASE_NGINX_ARM32v7 --build-arg QEMU=qemu-arm-static
+      -t $IMAGE_NAME/ui:arm32v7 -t $IMAGE_NAME/ui:arm32v7-$MVN_VERSION
+      -f ./ui/Dockerfile.arm ./ui
+    - docker build --pull --build-arg BASE_IMAGE=$BASE_NGINX_ARM64v8 --build-arg QEMU=qemu-aarch64-static
+      -t $IMAGE_NAME/ui:arm64v8 -t $IMAGE_NAME/ui:arm64v8-$MVN_VERSION
+      -f ./ui/Dockerfile.arm ./ui
+    # Push Docker images: AMD64, ARMv7, ARMv8
+    - docker push $IMAGE_NAME/ui:amd64-$MVN_VERSION
+    - docker push $IMAGE_NAME/ui:amd64
+    - docker push $IMAGE_NAME/ui:arm32v7-$MVN_VERSION
+    - docker push $IMAGE_NAME/ui:arm32v7
+    - docker push $IMAGE_NAME/ui:arm64v8-$MVN_VERSION
+    - docker push $IMAGE_NAME/ui:arm64v8
+    # Create Docker manifest
+    - docker manifest create $IMAGE_NAME/ui:$MVN_VERSION
+      $IMAGE_NAME/ui:amd64-$MVN_VERSION
+      $IMAGE_NAME/ui:arm32v7-$MVN_VERSION
+      $IMAGE_NAME/ui:arm64v8-$MVN_VERSION
+    - docker manifest annotate $IMAGE_NAME/ui:$MVN_VERSION $IMAGE_NAME/ui:arm32v7-$MVN_VERSION --os linux --arch arm
+    - docker manifest annotate $IMAGE_NAME/ui:$MVN_VERSION $IMAGE_NAME/ui:arm64v8-$MVN_VERSION --os linux --arch arm64
+    - docker manifest push $IMAGE_NAME/ui:$MVN_VERSION
+
+#    # Build AMD64
+#    - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_AMD
+#      -t $IMAGE_NAME/backend:amd64 -t $IMAGE_NAME/backend:amd64-$MVN_VERSION
+#      -t $HARBOR_IMAGE_NAME/backend:amd64 -t $HARBOR_IMAGE_NAME/backend:amd64-$MVN_VERSION
+#      -f ./streampipes-backend/Dockerfile ./streampipes-backend
+#    # Build ARMv7
+#    # Download qemu static and make it executable so it can be used during the docker build phase
+#    - wget https://github.com/multiarch/qemu-user-static/releases/download/v4.0.0/qemu-arm-static -P ./streampipes-backend
+#    - chmod 554 ./streampipes-backend/qemu-arm-static
+#    - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_ARM32v7
+#      -t $IMAGE_NAME/backend:arm32v7 -t $IMAGE_NAME/backend:arm32v7-$MVN_VERSION
+#      -t $HARBOR_IMAGE_NAME/backend:arm32v7 -t $HARBOR_IMAGE_NAME/backend:arm32v7-$MVN_VERSION
+#      -f ./streampipes-backend/Dockerfile.arm ./streampipes-backend
+#    - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_ARM64v8
+#      -t $IMAGE_NAME/backend:arm64v8 -t $IMAGE_NAME/backend:arm64v8-$MVN_VERSION
+#      -t $HARBOR_IMAGE_NAME/backend:arm64v8 -t $HARBOR_IMAGE_NAME/backend:arm64v8-$MVN_VERSION
+#      -f ./streampipes-backend/Dockerfile.arm ./streampipes-backend
+#    # Push Docker images
+#    # Push AMD64
+#    - docker push $IMAGE_NAME/backend:amd64-$MVN_VERSION
+#    - docker push $IMAGE_NAME/backend:amd64
+#    - docker push $HARBOR_IMAGE_NAME/backend:amd64-$MVN_VERSION
+#    - docker push $HARBOR_IMAGE_NAME/backend:amd64
+#    # Push ARMv7
+#    - docker push $IMAGE_NAME/backend:arm32v7-$MVN_VERSION
+#    - docker push $IMAGE_NAME/backend:arm32v7
+#    - docker push $HARBOR_IMAGE_NAME/backend:arm32v7-$MVN_VERSION
+#    - docker push $HARBOR_IMAGE_NAME/backend:arm32v7
+#    # Push ARMv8
+#    - docker push $IMAGE_NAME/backend:arm64v8-$MVN_VERSION
+#    - docker push $IMAGE_NAME/backend:arm64v8
+#    - docker push $HARBOR_IMAGE_NAME/backend:arm64v8-$MVN_VERSION
+#    - docker push $HARBOR_IMAGE_NAME/backend:arm64v8
+#    # Create Docker manifest
+#    - docker manifest create $IMAGE_NAME/backend:$MVN_VERSION
+#      $IMAGE_NAME/backend:amd64-$MVN_VERSION
+#      $IMAGE_NAME/backend:arm32v7-$MVN_VERSION
+#      $IMAGE_NAME/backend:arm64v8-$MVN_VERSION
+#    - docker manifest annotate $IMAGE_NAME/backend:$MVN_VERSION $IMAGE_NAME/backend:arm32v7-$MVN_VERSION --os linux --arch arm
+#    - docker manifest annotate $IMAGE_NAME/backend:$MVN_VERSION $IMAGE_NAME/backend:arm64v8-$MVN_VERSION --os linux --arch arm64
+#    - docker manifest push $IMAGE_NAME/backend:$MVN_VERSION
 
 docker-backend:
-   image: docker:17.06.0-ce
+   image: docker:19.03.5
    stage: docker
-   dependencies:
+   dependencies: 
      - build
-   script:
+   script: 
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker login -u $USER_NAME -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/backend:latest -t $IMAGE_NAME/backend:$MVN_VERSION -t $HARBOR_IMAGE_NAME/backend:latest -t $HARBOR_IMAGE_NAME/backend:$MVN_VERSION ./streampipes-backend/
-     - docker push $IMAGE_NAME/backend:$MVN_VERSION
-     - docker push $IMAGE_NAME/backend:latest
-     - docker push $HARBOR_IMAGE_NAME/backend:$MVN_VERSION
-     - docker push $HARBOR_IMAGE_NAME/backend:latest
+     # Build AMD64
+     - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_AMD
+       -t $IMAGE_NAME/backend:amd64 -t $IMAGE_NAME/backend:amd64-$MVN_VERSION
+       -f ./streampipes-backend/Dockerfile ./streampipes-backend
+     # Build ARMv7
+     # Download qemu static and make it executable so it can be used during the docker build phase
+     - wget https://github.com/multiarch/qemu-user-static/releases/download/v4.0.0/qemu-arm-static -P ./streampipes-backend
+     - chmod 554 ./streampipes-backend/qemu-arm-static
+     - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_ARM32v7
+       -t $IMAGE_NAME/backend:arm32v7 -t $IMAGE_NAME/backend:arm32v7-$MVN_VERSION
+       -f ./streampipes-backend/Dockerfile.arm ./streampipes-backend
+     - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_ARM64v8
+       -t $IMAGE_NAME/backend:arm64v8 -t $IMAGE_NAME/backend:arm64v8-$MVN_VERSION
+       -f ./streampipes-backend/Dockerfile.arm ./streampipes-backend
+     # Push Docker images: AMD64, ARMv7, ARMv8
+     - docker push $IMAGE_NAME/backend:amd64-$MVN_VERSION
+     - docker push $IMAGE_NAME/backend:amd64
+     - docker push $IMAGE_NAME/backend:arm32v7-$MVN_VERSION
+     - docker push $IMAGE_NAME/backend:arm32v7
+     - docker push $IMAGE_NAME/backend:arm64v8-$MVN_VERSION
+     - docker push $IMAGE_NAME/backend:arm64v8
+     # Create Docker manifest
+     - docker manifest create $IMAGE_NAME/backend:$MVN_VERSION
+       $IMAGE_NAME/backend:amd64-$MVN_VERSION
+       $IMAGE_NAME/backend:arm32v7-$MVN_VERSION
+       $IMAGE_NAME/backend:arm64v8-$MVN_VERSION
+     - docker manifest annotate $IMAGE_NAME/backend:$MVN_VERSION $IMAGE_NAME/backend:arm32v7-$MVN_VERSION --os linux --arch arm
+     - docker manifest annotate $IMAGE_NAME/backend:$MVN_VERSION $IMAGE_NAME/backend:arm64v8-$MVN_VERSION --os linux --arch arm64
+     - docker manifest push $IMAGE_NAME/backend:$MVN_VERSION
+  #    # Build AMD64
+  #    - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_AMD
+  #      -t $IMAGE_NAME/backend:amd64 -t $IMAGE_NAME/backend:amd64-$MVN_VERSION
+  #      -t $HARBOR_IMAGE_NAME/backend:amd64 -t $HARBOR_IMAGE_NAME/backend:amd64-$MVN_VERSION
+  #      -f ./streampipes-backend/Dockerfile ./streampipes-backend
+  #    # Build ARMv7
+  #    # Download qemu static and make it executable so it can be used during the docker build phase
+  #    - wget https://github.com/multiarch/qemu-user-static/releases/download/v4.0.0/qemu-arm-static -P ./streampipes-backend
+  #    - chmod 554 ./streampipes-backend/qemu-arm-static
+  #    - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_ARM32v7
+  #      -t $IMAGE_NAME/backend:arm32v7 -t $IMAGE_NAME/backend:arm32v7-$MVN_VERSION
+  #      -t $HARBOR_IMAGE_NAME/backend:arm32v7 -t $HARBOR_IMAGE_NAME/backend:arm32v7-$MVN_VERSION
+  #      -f ./streampipes-backend/Dockerfile.arm ./streampipes-backend
+  #    - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_ARM64v8
+  #      -t $IMAGE_NAME/backend:arm64v8 -t $IMAGE_NAME/backend:arm64v8-$MVN_VERSION
+  #      -t $HARBOR_IMAGE_NAME/backend:arm64v8 -t $HARBOR_IMAGE_NAME/backend:arm64v8-$MVN_VERSION
+  #      -f ./streampipes-backend/Dockerfile.arm ./streampipes-backend
+  #    # Push Docker images
+  #    # Push AMD64
+  #    - docker push $IMAGE_NAME/backend:amd64-$MVN_VERSION
+  #    - docker push $IMAGE_NAME/backend:amd64
+  #    - docker push $HARBOR_IMAGE_NAME/backend:amd64-$MVN_VERSION
+  #    - docker push $HARBOR_IMAGE_NAME/backend:amd64
+  #    # Push ARMv7
+  #    - docker push $IMAGE_NAME/backend:arm32v7-$MVN_VERSION
+  #    - docker push $IMAGE_NAME/backend:arm32v7
+  #    - docker push $HARBOR_IMAGE_NAME/backend:arm32v7-$MVN_VERSION
+  #    - docker push $HARBOR_IMAGE_NAME/backend:arm32v7
+  #    # Push ARMv8
+  #    - docker push $IMAGE_NAME/backend:arm64v8-$MVN_VERSION
+  #    - docker push $IMAGE_NAME/backend:arm64v8
+  #    - docker push $HARBOR_IMAGE_NAME/backend:arm64v8-$MVN_VERSION
+  #    - docker push $HARBOR_IMAGE_NAME/backend:arm64v8
+  #    # Create Docker manifest
+  #    - docker manifest create $IMAGE_NAME/backend:$MVN_VERSION
+  #      $IMAGE_NAME/backend:amd64-$MVN_VERSION
+  #      $IMAGE_NAME/backend:arm32v7-$MVN_VERSION
+  #      $IMAGE_NAME/backend:arm64v8-$MVN_VERSION
+  #    - docker manifest annotate $IMAGE_NAME/backend:$MVN_VERSION $IMAGE_NAME/backend:arm32v7-$MVN_VERSION --os linux --arch arm
+  #    - docker manifest annotate $IMAGE_NAME/backend:$MVN_VERSION $IMAGE_NAME/backend:arm64v8-$MVN_VERSION --os linux --arch arm64
+  #    - docker manifest push $IMAGE_NAME/backend:$MVN_VERSION
    only:
      - dev
 
 docker-connect-container:
-   image: docker:17.06.0-ce
+   image: docker:19.03.5
    stage: docker
    dependencies:
      - build
    script:
      - export MVN_VERSION=$(cat ./target/mvn_version)
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker login -u $USER_NAME -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/streampipes-connect-container:latest -t $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION -t $HARBOR_IMAGE_NAME/streampipes-connect-container:latest -t $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION ./streampipes-connect-container-master/
-     - docker push $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
-     - docker push $IMAGE_NAME/streampipes-connect-container:latest
-     - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
-     - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:latest
+     # Build AMD64
+     - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_AMD
+       -t $IMAGE_NAME/streampipes-connect-container:amd64 -t $IMAGE_NAME/streampipes-connect-container:amd64-$MVN_VERSION
+       -f ./streampipes-connect-container-master/Dockerfile ./streampipes-connect-container-master
+     # Build ARMv7
+     # Download qemu static and make it executable so it can be used during the docker build phase
+     - wget https://github.com/multiarch/qemu-user-static/releases/download/v4.0.0/qemu-arm-static -P ./streampipes-connect-container-master
+     - chmod 554 ./streampipes-connect-container-master/qemu-arm-static
+     - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_ARM32v7
+       -t $IMAGE_NAME/streampipes-connect-container:arm32v7 -t $IMAGE_NAME/streampipes-connect-container:arm32v7-$MVN_VERSION
+       -f ./streampipes-connect-container-master/Dockerfile.arm ./streampipes-connect-container-master
+     - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_ARM64v8
+       -t $IMAGE_NAME/streampipes-connect-container:arm64v8 -t $IMAGE_NAME/streampipes-connect-container:arm64v8-$MVN_VERSION
+       -f ./streampipes-connect-container-master/Dockerfile.arm ./streampipes-connect-container-master
+     # Push Docker images: AMD64, ARMv7, ARMv8
+     - docker push $IMAGE_NAME/streampipes-connect-container:amd64-$MVN_VERSION
+     - docker push $IMAGE_NAME/streampipes-connect-container:amd64
+     - docker push $IMAGE_NAME/streampipes-connect-container:arm32v7-$MVN_VERSION
+     - docker push $IMAGE_NAME/streampipes-connect-container:arm32v7
+     - docker push $IMAGE_NAME/streampipes-connect-container:arm64v8-$MVN_VERSION
+     - docker push $IMAGE_NAME/streampipes-connect-container:arm64v8
+     # Create Docker manifest
+     - docker manifest create $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
+       $IMAGE_NAME/streampipes-connect-container:amd64-$MVN_VERSION
+       $IMAGE_NAME/streampipes-connect-container:arm32v7-$MVN_VERSION
+       $IMAGE_NAME/streampipes-connect-container:arm64v8-$MVN_VERSION
+     - docker manifest annotate $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION $IMAGE_NAME/streampipes-connect-container:arm32v7-$MVN_VERSION --os linux --arch arm
+     - docker manifest annotate $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION $IMAGE_NAME/streampipes-connect-container:arm64v8-$MVN_VERSION --os linux --arch arm64
+     - docker manifest push $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
+  #    # Build AMD64
+  #    - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_AMD
+  #      -t $IMAGE_NAME/streampipes-connect-container:amd64 -t $IMAGE_NAME/streampipes-connect-container:amd64-$MVN_VERSION
+  #      -t $HARBOR_IMAGE_NAME/streampipes-connect-container:amd64 -t $HARBOR_IMAGE_NAME/streampipes-connect-container:amd64-$MVN_VERSION
+  #      -f ./streampipes-connect-container-master/Dockerfile ./streampipes-connect-container-master
+  #    # Build ARMv7
+  #    # Download qemu static and make it executable so it can be used during the docker build phase
+  #    - wget https://github.com/multiarch/qemu-user-static/releases/download/v4.0.0/qemu-arm-static -P ./streampipes-connect-container-master
+  #    - chmod 554 ./streampipes-connect-container-master/qemu-arm-static
+  #    - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_ARM32v7
+  #      -t $IMAGE_NAME/streampipes-connect-container:arm32v7 -t $IMAGE_NAME/streampipes-connect-container:arm32v7-$MVN_VERSION
+  #      -t $HARBOR_IMAGE_NAME/streampipes-connect-container:arm32v7 -t $HARBOR_IMAGE_NAME/streampipes-connect-container:arm32v7-$MVN_VERSION
+  #      -f ./streampipes-connect-container-master/Dockerfile.arm ./streampipes-connect-container-master
+  #    - docker build --pull --build-arg BASE_IMAGE=$BASE_IMAGE_ARM64v8
+  #      -t $IMAGE_NAME/streampipes-connect-container:arm64v8 -t $IMAGE_NAME/streampipes-connect-container:arm64v8-$MVN_VERSION
+  #      -t $HARBOR_IMAGE_NAME/streampipes-connect-container:arm64v8 -t $HARBOR_IMAGE_NAME/streampipes-connect-container:arm64v8-$MVN_VERSION
+  #      -f ./streampipes-connect-container-master/Dockerfile.arm ./streampipes-connect-container-master
+  #    # Push Docker images
+  #    # Push AMD64
+  #    - docker push $IMAGE_NAME/streampipes-connect-container:amd64-$MVN_VERSION
+  #    - docker push $IMAGE_NAME/streampipes-connect-container:amd64
+  #    - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:amd64-$MVN_VERSION
+  #    - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:amd64
+  #    # Push ARMv7
+  #    - docker push $IMAGE_NAME/streampipes-connect-container:arm32v7-$MVN_VERSION
+  #    - docker push $IMAGE_NAME/streampipes-connect-container:arm32v7
+  #    - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:arm32v7-$MVN_VERSION
+  #    - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:arm32v7
+  #    # Push ARMv8
+  #    - docker push $IMAGE_NAME/streampipes-connect-container:arm64v8-$MVN_VERSION
+  #    - docker push $IMAGE_NAME/streampipes-connect-container:arm64v8
+  #    - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:arm64v8-$MVN_VERSION
+  #    - docker push $HARBOR_IMAGE_NAME/streampipes-connect-container:arm64v8
+  #    # Create Docker manifest
+  #    - docker manifest create $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
+  #      $IMAGE_NAME/streampipes-connect-container:amd64-$MVN_VERSION
+  #      $IMAGE_NAME/streampipes-connect-container:arm32v7-$MVN_VERSION
+  #      $IMAGE_NAME/streampipes-connect-container:arm64v8-$MVN_VERSION
+  #    - docker manifest annotate $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION $IMAGE_NAME/streampipes-connect-container:arm32v7-$MVN_VERSION --os linux --arch arm
+  #    - docker manifest annotate $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION $IMAGE_NAME/streampipes-connect-container:arm64v8-$MVN_VERSION --os linux --arch arm64
+  #    - docker manifest push $IMAGE_NAME/streampipes-connect-container:$MVN_VERSION
    only:
      - dev
 

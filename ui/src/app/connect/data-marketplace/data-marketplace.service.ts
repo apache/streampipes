@@ -62,6 +62,7 @@ import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer
 import {AlternativesStaticProperty} from "../model/AlternativesStaticProperty";
 import {GroupStaticProperty} from "../model/GroupStaticProperty";
 import {StaticProperty} from "../model/StaticProperty";
+import { CollectionStaticProperty } from "../model/CollectionStaticProperty";
 
 @Injectable()
 export class DataMarketplaceService {
@@ -167,10 +168,14 @@ export class DataMarketplaceService {
       sp.alternatives.forEach(a => {
         if (a.staticProperty instanceof GroupStaticProperty) {
           a.staticProperty.staticProperties.sort((a, b) => a.index - b.index);
+        } else if (a.staticProperty instanceof CollectionStaticProperty) {
+          this.sortStaticProperties((<CollectionStaticProperty> a.staticProperty).staticPropertyTemplate)
         }
       })
     } else if (sp instanceof GroupStaticProperty) {
-      sp.staticProperties.sort((a, b) => a.index - b.index);
+        sp.staticProperties.sort((a, b) => a.index - b.index);
+    } else if (sp instanceof CollectionStaticProperty) {
+        this.sortStaticProperties((<CollectionStaticProperty> sp).staticPropertyTemplate)
     }
   }
 
@@ -185,11 +190,11 @@ export class DataMarketplaceService {
       return this.getProtocols().pipe(map(protocols => {
         for (let protocol of protocols) {
           let newAdapterDescription: AdapterDescription;
-          if (protocol.id.includes('sp:protocol/set')) {
+          if (protocol.id.includes('sp:protocol/set') || protocol.sourceType === 'SET') {
             newAdapterDescription = new GenericAdapterSetDescription(
               'http://streampipes.org/genericadaptersetdescription'
             );
-          } else if (protocol.id.includes('sp:protocol/stream')) {
+          } else if (protocol.id.includes('sp:protocol/stream') || protocol.sourceType === 'STREAM') {
             newAdapterDescription = new GenericAdapterStreamDescription(
               'http://streampipes.org/genericadapterstreamdescription'
             );
@@ -231,6 +236,10 @@ export class DataMarketplaceService {
       }
 
     return result;
+  }
+
+  getAssetUrl(appId) {
+    return this.host + 'api/v1/' + this.authStatusService.email + "/master/description/" + appId + "/assets"
   }
 
   private get baseUrl() {

@@ -42,12 +42,21 @@ public class OneOfStaticProperty extends SelectionStaticProperty {
     super(staticPropertyType, internalName, label, description);
   }
 
+  public OneOfStaticProperty(StaticPropertyType staticPropertyType, String internalName,
+                             String label, String description, boolean horizontalRendering) {
+    super(staticPropertyType, internalName, label, description, horizontalRendering);
+  }
+
   public OneOfStaticProperty(OneOfStaticProperty other) {
     super(other);
   }
 
   public OneOfStaticProperty(String internalName, String label, String description) {
     super(StaticPropertyType.OneOfStaticProperty, internalName, label, description);
+  }
+
+  public OneOfStaticProperty(String internalName, String label, String description, boolean horizontalRendering) {
+    super(StaticPropertyType.OneOfStaticProperty, internalName, label, description, horizontalRendering);
   }
 
 

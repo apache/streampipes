@@ -32,14 +32,26 @@ public class ProtocolDescriptionBuilder extends
     super(appId, label, description, new ProtocolDescription());
   }
 
+  private ProtocolDescriptionBuilder(String id) {
+    super(id, new ProtocolDescription());
+  }
+
   /**
    * Creates a new protocol description using the builder pattern.
-   * @param id A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
+   * @param id A unique identifier of the new element, e.g., com.mycompany.protocol.mynewprotocol
    * @param label A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
    * @param description A human-readable description of the element.
    */
   public static ProtocolDescriptionBuilder create(String id, String label, String description) {
     return new ProtocolDescriptionBuilder(id, label, description);
+  }
+
+  /**
+   * Creates a new protocol description using the builder pattern.
+   * @param id A unique identifier of the new element, e.g., com.mycompany.protocol.mynewprotocol
+   */
+  public static ProtocolDescriptionBuilder create(String id) {
+    return new ProtocolDescriptionBuilder(id);
   }
 
   public ProtocolDescriptionBuilder sourceType(AdapterSourceType sourceType) {

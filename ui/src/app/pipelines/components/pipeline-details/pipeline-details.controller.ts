@@ -49,6 +49,7 @@ export class PipelineDetailsController {
                 }
             }
         });
+
     }
 
     toggleRunningOperation(currentOperation) {

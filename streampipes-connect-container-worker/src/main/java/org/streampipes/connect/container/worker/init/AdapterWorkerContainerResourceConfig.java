@@ -25,6 +25,8 @@ import org.apache.streampipes.connect.container.worker.rest.RuntimeResolvableRes
 import org.apache.streampipes.connect.container.worker.rest.WelcomePageWorker;
 import org.apache.streampipes.connect.container.worker.rest.WorkerResource;
 import org.apache.streampipes.connect.init.AdapterContainerConfig;
+import org.streampipes.connect.container.worker.rest.AdapterResource;
+import org.streampipes.connect.container.worker.rest.ProtocolResource;
 
 @Component
 public class AdapterWorkerContainerResourceConfig extends AdapterContainerConfig {
@@ -37,5 +39,7 @@ public class AdapterWorkerContainerResourceConfig extends AdapterContainerConfig
     register(WorkerResource.class);
     register(FileResource.class);
     register(MultiPartFeature.class);
+    register(AdapterResource.class);
+    register(ProtocolResource.class);
   }
 }

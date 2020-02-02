@@ -91,6 +91,7 @@ import {SecretStaticProperty} from "../connect/model/SecretStaticProperty";
 import {AlternativesStaticProperty} from '../connect/model/AlternativesStaticProperty';
 import {AlternativeStaticProperty} from '../connect/model/AlternativeStaticProperty';
 import {GroupStaticProperty} from '../connect/model/GroupStaticProperty';
+import { CollectionStaticProperty } from "../connect/model/CollectionStaticProperty";
 import {VisualizablePipeline} from "../core-model/dashboard/VisualizablePipeline";
 import {DashboardWidget} from "../core-model/dashboard/DashboardWidget";
 import {DashboardWidgetDataConfig} from "../core-model/dashboard/DashboardWidgetDataConfig";
@@ -180,6 +181,7 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(GroupStaticProperty);
         tsonld.addClassMapping(AlternativesStaticProperty);
         tsonld.addClassMapping(AlternativeStaticProperty);
+        tsonld.addClassMapping(CollectionStaticProperty);
 
         tsonld.addClassMapping(DashboardWidget);
         tsonld.addClassMapping(DashboardWidgetDataConfig);

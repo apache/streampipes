@@ -22,7 +22,7 @@ declare const require: any;
 export let PipelineDetailsComponent = {
     template: require('./pipeline-details.tmpl.html'),
     bindings: {
-        pipelines: "<",
+        pipelines: "=",
         refreshPipelines: "&",
         activeCategory: "<"
     },

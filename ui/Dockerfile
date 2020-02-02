@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM nginx
+ARG BASE_IMAGE=nginx
+FROM $BASE_IMAGE
 
 COPY dist/assets/img/ /usr/share/nginx/html/assets/img/
 COPY dist/assets/css/ /usr/share/nginx/html/assets/css/

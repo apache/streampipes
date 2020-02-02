@@ -92,6 +92,7 @@ export class PipelineCtrl {
 
 
     getPipelines() {
+        this.pipelines = [];
         this.RestApi.getOwnPipelines()
             .then(pipelines => {
                 this.pipelines = pipelines.data;
@@ -108,6 +109,7 @@ export class PipelineCtrl {
     };
 
     getSystemPipelines() {
+        this.systemPipelines = [];
         this.RestApi.getSystemPipelines()
             .then(pipelines => {
                 this.systemPipelines = pipelines.data;

@@ -78,6 +78,7 @@ import { StaticRuntimeResolvableAnyInputComponent } from "./static-properties/st
 import { StaticRuntimeResolvableOneOfInputComponent } from "./static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component";
 import { StaticGroupComponent } from './static-properties/static-group/static-group.component';
 import { StaticAlternativesComponent } from './static-properties/static-alternatives/static-alternatives.component';
+import {StaticCollectionComponent} from './static-properties/static-collection/static-collection.component';
 
 
 import { FilterPipe } from '../connect/data-marketplace/filter.pipe';
@@ -154,6 +155,7 @@ import {PropertySelectorService} from "../services/property-selector.service";
         EventSchemaPreviewComponent,
         StaticGroupComponent,
         StaticAlternativesComponent,
+        StaticCollectionComponent,
     ],
     providers: [
         RestService,

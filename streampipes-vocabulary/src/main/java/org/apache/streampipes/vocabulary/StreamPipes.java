@@ -353,6 +353,10 @@ public class StreamPipes {
   public static final String SECRET_STATIC_PROPERTY = NS + "SecretStaticProperty";
   public static final String IS_ENCRYPTED = NS + "isEncrypted";
 
+  // UI Rendering
+
+  public static final String IS_HORIZONTAL_RENDERING = NS + "isHorizontalRendering";
+
   public static final String DASHBOARD_ENTITY = NS + "DashboardEntity";
   public static final String DASHBOARD_MODEL = NS + "DashboardModel";
   public static final String DASHBOARD_WIDGET_MODEL = NS + "DashboardWidgetModel";
