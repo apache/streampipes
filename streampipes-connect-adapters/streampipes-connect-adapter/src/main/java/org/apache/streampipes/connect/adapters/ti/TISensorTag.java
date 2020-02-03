@@ -200,6 +200,11 @@ public class TISensorTag extends SpecificDataStreamAdapter {
         }
     }
 
+    /**
+     * This specific parser is required since the messages on mqtt produced by the app is not always valid JSON
+     * @param s
+     * @return
+     */
     public static Map<String, Object> parseEvent(String s) {
        Map<String, Object> result = new HashMap<>();
        String[] lines = s.split("\n");

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect;
 
+import org.apache.streampipes.connect.adapters.netio.NetioRestAdapter;
 import org.apache.streampipes.connect.adapters.ti.TISensorTag;
 import org.apache.streampipes.connect.protocol.set.HttpProtocol;
 import org.apache.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
@@ -80,6 +81,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new InfluxDbStreamAdapter())
             .add(new InfluxDbSetAdapter())
             .add(new TISensorTag())
+            .add(new NetioRestAdapter())
             .add(new Plc4xS7Adapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
