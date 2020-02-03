@@ -95,6 +95,10 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .getValue(), targetClass);
   }
 
+  public String textParameter(String internalName) {
+    return singleValueParameter(internalName, String.class);
+  }
+
   public String secretValue(String internalName) {
     return (getStaticPropertyByName(internalName, SecretStaticProperty.class)
             .getValue());
