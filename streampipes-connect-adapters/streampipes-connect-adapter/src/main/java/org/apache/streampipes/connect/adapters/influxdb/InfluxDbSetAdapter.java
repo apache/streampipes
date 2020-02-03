@@ -103,6 +103,7 @@ public class InfluxDbSetAdapter extends SpecificDataSetAdapter {
                 ID,
                 "InfluxDB Set Adapter",
                 "Creates a data set for a InfluxDB measurement")
+                .iconUrl("influxdb.png")
                 .requiredTextParameter(Labels.from(InfluxDbClient.HOST, "Hostname", "Hostname of the InfluxDB Server"))
                 .requiredIntegerParameter(Labels.from(InfluxDbClient.PORT, "Port", "Port of the InfluxDB Server"))
                 .requiredTextParameter(Labels.from(InfluxDbClient.DATABASE, "Database", "Name of the database"))
