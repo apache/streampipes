@@ -137,6 +137,7 @@ public class InfluxDbStreamAdapter extends SpecificDataStreamAdapter {
                 ID,
                 "InfluxDB Stream Adapter",
                 "Creates a data stream for a InfluxDB measurement")
+                .iconUrl("influxdb.png")
                 .requiredTextParameter(Labels.from(InfluxDbClient.HOST, "Hostname", "Hostname of the InfluxDB Server (needs an \"http://\" in front)"))
                 .requiredIntegerParameter(Labels.from(InfluxDbClient.PORT, "Port", "Port of the InfluxDB Server (e.g. 8086"), 8086)
                 .requiredTextParameter(Labels.from(InfluxDbClient.DATABASE, "Database", "Name of the database"))

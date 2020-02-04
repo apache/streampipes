@@ -70,6 +70,7 @@ public class MySqlStreamAdapter extends SpecificDataStreamAdapter {
         SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID,
                 "MySql Stream Adapter",
                 "Creates a data stream for a SQL table")
+                .iconUrl("sql.png")
                 .requiredTextParameter(Labels.from(MySqlClient.HOST, "Hostname", "Hostname of the MySql Server"))
                 .requiredIntegerParameter(Labels.from(MySqlClient.PORT, "Port", "Port of the MySql Server. Default: 3306"), 3306)
                 .requiredTextParameter(Labels.from(MySqlClient.DATABASE, "Database", "Database in which the table is located"))
