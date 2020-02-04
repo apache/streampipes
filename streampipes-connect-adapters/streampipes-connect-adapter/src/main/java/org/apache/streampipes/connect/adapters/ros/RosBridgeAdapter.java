@@ -55,7 +55,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements ResolvesContainerProvidedOptions {
+public class RosBridgeAdapter extends SpecificDataStreamAdapter implements ResolvesContainerProvidedOptions {
 
     public static final String ID = "org.apache.streampipes.connect.adapters.ros";
 
@@ -90,10 +90,7 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter  implements Reso
                 .category(AdapterType.Manufacturing)
                 .requiredTextParameter(Labels.withId(ROS_HOST_KEY))
                 .requiredTextParameter(Labels.withId(ROS_PORT_KEY))
-                .requiredSingleValueSelectionFromContainer(Labels.withId(TOPIC_KEY), Arrays.asList(ROS_HOST_KEY,
-                        ROS_PORT_KEY))
-//                .requiredTextParameter(Labels.from(TOPIC_KEY, "Topic", "Example: /battery " +
-//                        "(Starts with /) "))
+                .requiredSingleValueSelectionFromContainer(Labels.withId(TOPIC_KEY), Arrays.asList(ROS_HOST_KEY, ROS_PORT_KEY))
                 .build();
 
         return  description;

@@ -18,6 +18,7 @@
 package org.apache.streampipes.connect.protocol.stream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.streampipes.connect.utils.MqttConnectUtils;
 import org.apache.streampipes.connect.SendToPipeline;
 import org.apache.streampipes.connect.adapter.exception.ParseException;
 import org.apache.streampipes.connect.adapter.model.generic.Format;
@@ -27,12 +28,9 @@ import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
-import org.apache.streampipes.sdk.helpers.Alternatives;
-import org.apache.streampipes.sdk.helpers.Labels;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,17 +64,7 @@ public class MqttProtocol extends BrokerProtocol {
     StaticPropertyExtractor extractor =
             StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
 
-    String brokerUrl = extractor.singleValueParameter("broker_url", String.class);
-    String topic = extractor.singleValueParameter("topic", String.class);
-    String selectedAlternative = extractor.selectedAlternativeInternalId("access_mode");
-
-    if (selectedAlternative.equals(ANONYMOUS_ACCESS)) {
-      mqttConfig = new MqttConfig(brokerUrl, topic);
-    } else {
-      String username = extractor.singleValueParameter(USERNAME, String.class);
-      String password = extractor.secretValue(PASSWORD);
-      mqttConfig = new MqttConfig(brokerUrl, topic, username, password);
-    }
+    mqttConfig = MqttConnectUtils.getMqttConfig(extractor);
 
     return new MqttProtocol(parser, format, mqttConfig);
   }
@@ -88,17 +76,9 @@ public class MqttProtocol extends BrokerProtocol {
             .iconUrl("mqtt.png")
             .category(AdapterType.Generic, AdapterType.Manufacturing)
             .sourceType(AdapterSourceType.STREAM)
-            .requiredTextParameter(Labels.from("broker_url", "Broker URL",
-                    "Example: tcp://test-server.com:1883 (Protocol required. Port required)"))
-            .requiredAlternatives(Labels.from(ACCESS_MODE, "Access Mode", ""),
-                    Alternatives.from(Labels.from(ANONYMOUS_ACCESS, "Unauthenticated", "")),
-                    Alternatives.from(Labels.from(USERNAME_ACCESS, "Username/Password", ""),
-                            StaticProperties.group(Labels.withId("username-group"),
-                                    StaticProperties.stringFreeTextProperty(Labels.from(USERNAME,
-                                            "Username", "")),
-                                    StaticProperties.secretValue(Labels.from(PASSWORD,
-                                            "Password", "")))))
-            .requiredTextParameter(Labels.from("topic", "Topic","Example: test/topic"))
+            .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
+            .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(), MqttConnectUtils.getAlternativesTwo())
+            .requiredTextParameter(MqttConnectUtils.getTopicLabel())
             .build();
   }
 

@@ -18,31 +18,28 @@
 
 package org.apache.streampipes.connect.adapters.netio;
 
+import com.google.gson.Gson;
+import org.apache.streampipes.connect.utils.MqttConnectUtils;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
+import org.apache.streampipes.connect.adapters.netio.model.NetioAllPowerOutputs;
+import org.apache.streampipes.connect.adapters.netio.model.NetioPowerOutput;
 import org.apache.streampipes.connect.protocol.stream.MqttConfig;
 import org.apache.streampipes.connect.protocol.stream.MqttConsumer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.apache.streampipes.sdk.helpers.Alternatives;
-import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class NetioMQTTAdapter extends SpecificDataStreamAdapter {
-
-
 
     private MqttConsumer mqttConsumer;
     private MqttConfig mqttConfig;
@@ -52,20 +49,6 @@ public class NetioMQTTAdapter extends SpecificDataStreamAdapter {
      * A unique id to identify the adapter type
      */
     public static final String ID = "org.apache.streampipes.connect.adapters.netio.mqtt";
-
-    /**
-     * Keys of user configuration parameters
-     */
-    private static final String ACCESS_MODE = "access-mode";
-    private static final String ANONYMOUS_ACCESS = "anonymous-alternative";
-    private static final String USERNAME_ACCESS = "username-alternative";
-    private static final String USERNAME = "username";
-    private static final String PASSWORD = "password";
-
-    /**
-     * Values of user configuration parameters
-     */
-    private String ip;
 
     /**
      * Empty constructor and a constructor with SpecificAdapterStreamDescription are mandatory
@@ -89,14 +72,9 @@ public class NetioMQTTAdapter extends SpecificDataStreamAdapter {
                 .withLocales(Locales.EN)
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .category(AdapterType.Energy)
-                .requiredAlternatives(Labels.from(ACCESS_MODE, "Access Mode", ""),
-                        Alternatives.from(Labels.from(ANONYMOUS_ACCESS, "Unauthenticated", "")),
-                        Alternatives.from(Labels.from(USERNAME_ACCESS, "Username/Password", ""),
-                                StaticProperties.group(Labels.withId("username-group"),
-                                        StaticProperties.stringFreeTextProperty(Labels.from(USERNAME,
-                                                "Username", "")),
-                                        StaticProperties.secretValue(Labels.from(PASSWORD,
-                                                "Password", "")))))
+                .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
+                .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(), MqttConnectUtils.getAlternativesTwo())
+//                .requiredTextParameter(MqttConnectUtils.getTopicLabel())
                 .build();
         description.setAppId(ID);
 
@@ -116,6 +94,10 @@ public class NetioMQTTAdapter extends SpecificDataStreamAdapter {
     }
     @Override
     public void startAdapter() throws AdapterException {
+        StaticPropertyExtractor extractor =
+                StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
+
+        this.mqttConfig = MqttConnectUtils.getMqttConfig(extractor, "devices/netio/messages/events/");
         this.mqttConsumer = new MqttConsumer(this.mqttConfig, new EventProcessor(adapterPipeline));
 
         thread = new Thread(this.mqttConsumer);
@@ -126,6 +108,7 @@ public class NetioMQTTAdapter extends SpecificDataStreamAdapter {
     public void stopAdapter() throws AdapterException {
         this.mqttConsumer.close();
     }
+
     /**
      * Required by StreamPipes return a new adapter instance by calling the constructor with SpecificAdapterStreamDescription
      * @param adapterDescription
@@ -146,27 +129,6 @@ public class NetioMQTTAdapter extends SpecificDataStreamAdapter {
         return ID;
     }
 
-    /**
-     * Extracts the user configuration from the SpecificAdapterStreamDescription and sets the local variales
-     * @param adapterDescription
-     */
-    private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
-        StaticPropertyExtractor extractor =
-                StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
-
-        String brokerUrl = extractor.singleValueParameter("broker_url", String.class);
-        String topic = extractor.singleValueParameter("topic", String.class);
-        String selectedAlternative = extractor.selectedAlternativeInternalId("access_mode");
-
-        if (selectedAlternative.equals(ANONYMOUS_ACCESS)) {
-            mqttConfig = new MqttConfig(brokerUrl, topic);
-        } else {
-            String username = extractor.singleValueParameter(USERNAME, String.class);
-            String password = extractor.secretValue(PASSWORD);
-            mqttConfig = new MqttConfig(brokerUrl, topic, username, password);
-        }
-    }
-
     private class EventProcessor implements InternalEventProcessor<byte[]> {
         private AdapterPipeline adapterPipeline;
 
@@ -176,13 +138,29 @@ public class NetioMQTTAdapter extends SpecificDataStreamAdapter {
 
         @Override
         public void onEvent(byte[] payload) {
-            Map<String, Object> result = parseEvent(new String(payload));
-            adapterPipeline.process(result);
+            List<Map<String, Object>> events = parseEvent(payload);
+
+            for (Map<String, Object> event : events) {
+                adapterPipeline.process(event);
+            }
         }
     }
 
-    public static Map<String, Object> parseEvent(String s) {
-       return new HashMap<>();
+    public static List<Map<String, Object>> parseEvent(byte[] input) {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        String s = new String(input);
+
+        NetioAllPowerOutputs allPowerOutputs = new Gson().fromJson(s, NetioAllPowerOutputs.class);
+
+        for (NetioPowerOutput output : allPowerOutputs.getPowerOutputs()) {
+            if (allPowerOutputs.getGobalMeasure() != null && output != null) {
+                Map<String, Object> event = NetioUtils.getEvent(allPowerOutputs.getGobalMeasure(), output);
+                result.add(event);
+            }
+        }
+
+        return result;
     }
 
 }

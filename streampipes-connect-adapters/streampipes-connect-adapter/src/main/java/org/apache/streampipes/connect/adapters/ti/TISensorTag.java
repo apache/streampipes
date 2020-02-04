@@ -17,6 +17,7 @@
 
 package org.apache.streampipes.connect.adapters.ti;
 
+import org.apache.streampipes.connect.utils.MqttConnectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.Adapter;
@@ -29,11 +30,9 @@ import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.SPSensor;
@@ -49,13 +48,6 @@ public class TISensorTag extends SpecificDataStreamAdapter {
     private Logger logger = LoggerFactory.getLogger(TISensorTag.class);
 
     public static final String ID = "org.apache.streampipes.connect.adapters.ti";
-
-    private static final String ACCESS_MODE = "access_mode";
-    private static final String ANONYMOUS_ACCESS = "anonymous-alternative";
-    private static final String USERNAME_ACCESS = "username-alternative";
-    private static final String USERNAME = "username";
-    private static final String PASSWORD = "password";
-
 
     private static final String TIMESTAMP = "timestamp";
     private static final String AMBIENT_TEMP = "ambientTemp";
@@ -93,17 +85,9 @@ public class TISensorTag extends SpecificDataStreamAdapter {
         SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "TI Sensor Tag", "")
                 .iconUrl("ti_sensor_tag.png")
                 .category(AdapterType.Environment, AdapterType.OpenData)
-                .requiredTextParameter(Labels.from("broker_url", "Broker URL",
-                        "Example: tcp://test-server.com:1883 (Protocol required. Port required)"))
-                .requiredAlternatives(Labels.from(ACCESS_MODE, "Access Mode", ""),
-                        Alternatives.from(Labels.from(ANONYMOUS_ACCESS, "Unauthenticated", "")),
-                        Alternatives.from(Labels.from(USERNAME_ACCESS, "Username/Password", ""),
-                                StaticProperties.group(Labels.withId("username-group"),
-                                        StaticProperties.stringFreeTextProperty(Labels.from(USERNAME,
-                                                "Username", "")),
-                                        StaticProperties.secretValue(Labels.from(PASSWORD,
-                                                "Password", "")))))
-                .requiredTextParameter(Labels.from("topic", "Topic","Example: test/topic"))
+                .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
+                .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(), MqttConnectUtils.getAlternativesTwo())
+                .requiredTextParameter(MqttConnectUtils.getTopicLabel())
                 .build();
 
         description.setAppId(ID);
@@ -129,17 +113,7 @@ public class TISensorTag extends SpecificDataStreamAdapter {
         StaticPropertyExtractor extractor =
                 StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
 
-        String brokerUrl = extractor.singleValueParameter("broker_url", String.class);
-        String topic = extractor.singleValueParameter("topic", String.class);
-        String selectedAlternative = extractor.selectedAlternativeInternalId("access_mode");
-
-        if (selectedAlternative.equals(ANONYMOUS_ACCESS)) {
-            mqttConfig = new MqttConfig(brokerUrl, topic);
-        } else {
-            String username = extractor.singleValueParameter(USERNAME, String.class);
-            String password = extractor.secretValue(PASSWORD);
-            mqttConfig = new MqttConfig(brokerUrl, topic, username, password);
-        }
+        mqttConfig = MqttConnectUtils.getMqttConfig(extractor);
 
         return new TISensorTag(adapterDescription, mqttConfig);
     }

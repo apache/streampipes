@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect;
 
+import org.apache.streampipes.connect.adapters.netio.NetioMQTTAdapter;
 import org.apache.streampipes.connect.adapters.netio.NetioRestAdapter;
 import org.apache.streampipes.connect.adapters.ti.TISensorTag;
 import org.apache.streampipes.connect.protocol.set.HttpProtocol;
@@ -63,8 +64,8 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new MqttProtocol())
             .add(new HttpStreamProtocol())
             .add(new PulsarProtocol())
-
-            // Specific Adapters
+//
+//            // Specific Adapters
             .add(new GdeltAdapter())
             .add(new CoindeskBitcoinAdapter())
             .add(new IexCloudNewsAdapter())
@@ -82,6 +83,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .add(new InfluxDbSetAdapter())
             .add(new TISensorTag())
             .add(new NetioRestAdapter())
+            .add(new NetioMQTTAdapter())
             .add(new Plc4xS7Adapter());
 
     String workerUrl = ConnectWorkerConfig.INSTANCE.getConnectContainerWorkerUrl();
