@@ -53,6 +53,18 @@ export class ProtocolDescription {
   @RdfProperty('sp:hasAdapterType')
   public category: string[] = [];
 
+  @RdfProperty('sp:includesAssets')
+  public includesAssets: Boolean;
+
+  @RdfProperty('sp:includesLocales')
+  public includesLocales: Boolean;
+
+  @RdfProperty('sp:includedAssets')
+  public includedAssets: string[] = [];
+
+  @RdfProperty('sp:includedLocales')
+  public includedLocales: string[] = [];
+
   constructor(id: string) {
     this.id = id;
     this.edit = false;

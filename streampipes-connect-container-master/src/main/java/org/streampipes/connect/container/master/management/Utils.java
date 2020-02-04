@@ -20,6 +20,7 @@ package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 
 public class Utils {
     private WorkerAdministrationManagement workerAdministrationManagement;
@@ -43,6 +44,13 @@ public class Utils {
 
         return this.workerAdministrationManagement.getWorkerUrl(id);
     }
+
+    public String getWorkerUrl(ProtocolDescription protocolDescription) {
+        String id =  protocolDescription.getAppId();
+
+        return this.workerAdministrationManagement.getWorkerUrl(id);
+    }
+
 
     public String getWorkerUrlById(String id) {
         return this.workerAdministrationManagement.getWorkerUrl(id);
