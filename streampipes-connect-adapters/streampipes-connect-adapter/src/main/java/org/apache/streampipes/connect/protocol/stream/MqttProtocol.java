@@ -31,6 +31,8 @@ import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,12 +41,6 @@ import java.util.List;
 public class MqttProtocol extends BrokerProtocol {
 
   public static final String ID = "org.apache.streampipes.connect.protocol.stream.mqtt";
-
-  private static final String ACCESS_MODE = "access_mode";
-  private static final String ANONYMOUS_ACCESS = "anonymous-alternative";
-  private static final String USERNAME_ACCESS = "username-alternative";
-  private static final String USERNAME = "username";
-  private static final String PASSWORD = "password";
 
   private Thread thread;
   private MqttConsumer mqttConsumer;
@@ -71,9 +67,9 @@ public class MqttProtocol extends BrokerProtocol {
 
   @Override
   public ProtocolDescription declareModel() {
-    return ProtocolDescriptionBuilder.create(ID, "MQTT", "Consumes messages from a broker using " +
-            "the MQTT protocol")
-            .iconUrl("mqtt.png")
+    return ProtocolDescriptionBuilder.create(ID)
+            .withLocales(Locales.EN)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .category(AdapterType.Generic, AdapterType.Manufacturing)
             .sourceType(AdapterSourceType.STREAM)
             .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())

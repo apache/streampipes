@@ -18,6 +18,8 @@
 package org.apache.streampipes.connect.adapters.ti;
 
 import org.apache.streampipes.connect.utils.MqttConnectUtils;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.Adapter;
@@ -82,8 +84,9 @@ public class TISensorTag extends SpecificDataStreamAdapter {
     @Override
     public SpecificAdapterStreamDescription declareModel() {
 
-        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID, "TI Sensor Tag", "")
-                .iconUrl("ti_sensor_tag.png")
+        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
+                .withLocales(Locales.EN)
+                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .category(AdapterType.Environment, AdapterType.OpenData)
                 .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
                 .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(), MqttConnectUtils.getAlternativesTwo())

@@ -32,34 +32,35 @@ public class MqttConnectUtils {
     public static final String ACCESS_MODE = "access-mode";
     public static final String ANONYMOUS_ACCESS = "anonymous-alternative";
     public static final String USERNAME_ACCESS = "username-alternative";
+    public static final String USERNAME_GROUP = "username-group";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
+    public static final String BROKER_URL = "broker_url";
+    public static final String TOPIC = "topic";
 
     public static Label getAccessModeLabel() {
-        return Labels.from(ACCESS_MODE, "Access Mode", "");
+        return Labels.withId(ACCESS_MODE);
     }
 
     public static Label getBrokerUrlLabel() {
-        return Labels.from("broker_url", "Broker URL",
-                "Example: tcp://test-server.com:1883 (Protocol required. Port required)");
+        return Labels.withId(BROKER_URL);
     }
 
     public static Label getTopicLabel() {
-        return Labels.from("topic", "Topic","Example: test/topic");
+        return Labels.withId(TOPIC);
     }
 
     public static StaticPropertyAlternative getAlternativesOne() {
-        return Alternatives.from(Labels.from(ANONYMOUS_ACCESS, "Unauthenticated", ""));
+        //return Alternatives.from(Labels.from(ANONYMOUS_ACCESS, "Unauthenticated", ""));
+        return Alternatives.from(Labels.withId(ANONYMOUS_ACCESS));
 
     }
 
     public static StaticPropertyAlternative getAlternativesTwo() {
-        return Alternatives.from(Labels.from(USERNAME_ACCESS, "Username/Password", ""),
-                StaticProperties.group(Labels.from("username-group", "User Group", ""),
-                        StaticProperties.stringFreeTextProperty(Labels.from(USERNAME,
-                                "Username", "")),
-                        StaticProperties.secretValue(Labels.from(PASSWORD,
-                                "Password", ""))));
+        return Alternatives.from(Labels.withId(USERNAME_ACCESS),
+        StaticProperties.group(Labels.withId(USERNAME_GROUP),
+                StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME)),
+                StaticProperties.secretValue(Labels.withId(PASSWORD))));
 
     }
 
@@ -84,11 +85,11 @@ public class MqttConnectUtils {
 
     public static MqttConfig getMqttConfig(StaticPropertyExtractor extractor, String topicInput) {
         MqttConfig mqttConfig;
-        String brokerUrl = extractor.singleValueParameter("broker_url", String.class);
+        String brokerUrl = extractor.singleValueParameter(BROKER_URL, String.class);
 
         String topic;
         if (topicInput == null) {
-            topic = extractor.singleValueParameter("topic", String.class);
+            topic = extractor.singleValueParameter(TOPIC, String.class);
         } else {
             topic = topicInput;
         }

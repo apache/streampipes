@@ -1,5 +1,5 @@
-org.apache.streampipes.connect.adapters.netio.mqtt.title=NETIO MQTT
-org.apache.streampipes.connect.adapters.netio.mqtt.description=Connect a NETIO power plugs over MQTT
+org.apache.streampipes.connect.protocol.stream.mqtt.title=MQTT
+org.apache.streampipes.connect.protocol.stream.mqttdescription=Consumes messages from a broker using the MQTT protocol
 
 access-mode.title=Access Mode
 access-mode.description=
