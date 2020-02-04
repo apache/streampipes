@@ -104,7 +104,9 @@ public class LabelGenerator {
         generateLabels(props, a);
       });
     } else if (sp instanceof StaticPropertyAlternative) {
-      generateLabels(props, ((StaticPropertyAlternative) sp).getStaticProperty());
+      if (((StaticPropertyAlternative) sp).getStaticProperty() != null) {
+        generateLabels(props, ((StaticPropertyAlternative) sp).getStaticProperty());
+      }
     }
 
     return sp;
