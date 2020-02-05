@@ -18,9 +18,6 @@
 
 package org.apache.streampipes.backend;
 
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.springframework.context.annotation.Configuration;
 import org.apache.streampipes.rest.impl.ApplicationLink;
 import org.apache.streampipes.rest.impl.AssetDashboard;
 import org.apache.streampipes.rest.impl.Authentication;
@@ -36,6 +33,7 @@ import org.apache.streampipes.rest.impl.OntologyContext;
 import org.apache.streampipes.rest.impl.OntologyKnowledge;
 import org.apache.streampipes.rest.impl.OntologyMeasurementUnit;
 import org.apache.streampipes.rest.impl.OntologyPipelineElement;
+import org.apache.streampipes.rest.impl.PipelineCache;
 import org.apache.streampipes.rest.impl.PipelineCategory;
 import org.apache.streampipes.rest.impl.PipelineElementAsset;
 import org.apache.streampipes.rest.impl.PipelineElementCategory;
@@ -63,6 +61,9 @@ import org.apache.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.apache.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.apache.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
 import org.apache.streampipes.rest.shared.serializer.JsonLdProvider;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.springframework.context.annotation.Configuration;
 
 import javax.ws.rs.ApplicationPath;
 
@@ -110,6 +111,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(DataLakeNoUserResourceV3.class);
     register(PipelineElementFile.class);
     register(FileServingResource.class);
+    register(PipelineCache.class);
 
 
     // Serializers

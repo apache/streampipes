@@ -41,7 +41,7 @@ export class PipelinePreviewController {
             var elid = "#" + this.jspcanvas;
             this.rawPipelineModel = this.JsplumbService.makeRawPipeline(this.pipeline, true);
             this.$timeout(() => {
-                this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, elid, true);
+                this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, elid, true, true);
                 var existingEndpointIds = [];
                 this.$timeout(() => {
                     this.JsplumbBridge.selectEndpoints().each(endpoint => {

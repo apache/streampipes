@@ -56,6 +56,13 @@
                     Auto Layout
                 </md-tooltip>
             </md-button>
+            <div class="pipeline-cache-block">
+                <div ng-if="ctrl.pipelineCached">All pipeline modifications saved.</div>
+                <div ng-if="ctrl.pipelineCacheRunning"><md-progress-circular
+                        md-mode="indeterminate" class="pipeline-cache-progress"
+                        md-diameter="10"></md-progress-circular>&nbsp;Saving pipeline
+                    modifications</div>
+            </div>
             <span flex></span>
             <div style="position:relative;">
             <div ng-if="!ctrl.isPipelineAssemblyEmpty()" class="pipeline-validation-summary {{ctrl.PipelineValidationService.errorMessages.length > 0 ? 'pipeline-validation-summary-error' : ''}}" ng-click="ctrl.toggleErrorMessagesDisplayed()">
@@ -92,7 +99,13 @@
     </div>
     <div id="outerAssemblyArea" class="outerAssembly sp-blue-border-nopadding">
         <div id="assembly" class="canvas">
-            <pipeline pipeline-valid="ctrl.pipelineValid" canvas-id="assembly" raw-pipeline-model="ctrl.rawPipelineModel" all-elements="ctrl.allElements" preview="false"></pipeline>
+            <pipeline pipeline-valid="ctrl.pipelineValid"
+                      canvas-id="assembly"
+                      raw-pipeline-model="ctrl.rawPipelineModel"
+                      all-elements="ctrl.allElements"
+                      preview="false"
+                      pipeline-cached="ctrl.pipelineCached"
+                      pipeline-cache-running="ctrl.pipelineCacheRunning"></pipeline>
         </div>
     </div>
 </div>

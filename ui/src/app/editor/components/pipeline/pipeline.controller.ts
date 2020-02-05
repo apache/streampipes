@@ -18,6 +18,7 @@
 
 import * as angular from "angular";
 import {PipelineValidationService} from "../../services/pipeline-validation.service";
+import {RestApi} from "../../../services/rest-api.service";
 
 export class PipelineController {
 
@@ -41,11 +42,15 @@ export class PipelineController {
     TransitionService: any;
     ShepherdService: any;
     $rootScope: any;
+    RestApi: RestApi;
+
+    pipelineCacheRunning: boolean;
+    pipelineCached: boolean;
 
     pipelineValid: boolean = false;
 
     constructor($timeout, JsplumbService, PipelineEditorService, JsplumbBridge, ObjectProvider, DialogBuilder,
-                EditorDialogManager, TransitionService, ShepherdService, $rootScope, PipelineValidationService) {
+                EditorDialogManager, TransitionService, ShepherdService, $rootScope, PipelineValidationService, RestApi) {
         this.plumbReady = false;
         this.JsplumbBridge = JsplumbBridge;
         this.JsplumbService = JsplumbService;
@@ -59,6 +64,7 @@ export class PipelineController {
         this.ShepherdService = ShepherdService;
         this.$rootScope = $rootScope;
         this.PipelineValidationService = PipelineValidationService;
+        this.RestApi = RestApi;
 
         this.currentPipelineModel = {};
         this.idCounter = 0;
@@ -169,6 +175,7 @@ export class PipelineController {
                 }
                 this.JsplumbBridge.repaintEverything();
                 this.validatePipeline();
+                this.triggerPipelineCacheUpdate();
             }
 
         }); //End #assembly.droppable()
@@ -212,6 +219,7 @@ export class PipelineController {
             this.TransitionService.makePipelineAssemblyEmpty(true);
         }
         this.JsplumbBridge.repaintEverything();
+        this.RestApi.updateCachedPipeline(this.rawPipelineModel);
     }
 
     initPlumb() {
@@ -317,8 +325,26 @@ export class PipelineController {
         return custom;
     }
 
+    triggerPipelineCacheUpdate() {
+        this.pipelineCacheRunning = true;
+        this.RestApi.updateCachedPipeline(this.rawPipelineModel).then(msg => {
+           this.pipelineCacheRunning = false;
+           this.pipelineCached = true;
+        });
+    }
+
 
 }
 
-PipelineController.$inject = ['$timeout', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ObjectProvider',
-    'DialogBuilder', 'EditorDialogManager', 'TransitionService', 'ShepherdService', '$rootScope', 'PipelineValidationService']
+PipelineController.$inject = ['$timeout',
+    'JsplumbService',
+    'PipelineEditorService',
+    'JsplumbBridge',
+    'ObjectProvider',
+    'DialogBuilder',
+    'EditorDialogManager',
+    'TransitionService',
+    'ShepherdService',
+    '$rootScope',
+    'PipelineValidationService',
+    'RestApi'];

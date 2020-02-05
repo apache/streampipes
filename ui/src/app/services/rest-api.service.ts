@@ -565,6 +565,18 @@ export class RestApi {
     getFileMetadata() {
         return this.$http.get(this.urlBase() + "/files");
     }
+
+    getCachedPipeline() {
+        return this.$http.get(this.urlBase() + "/pipeline-cache");
+    }
+
+    updateCachedPipeline(rawPipelineModel: any) {
+        return this.$http.post(this.urlBase() + "/pipeline-cache", rawPipelineModel);
+    }
+
+    removePipelineFromCache() {
+        return this.$http.delete(this.urlBase() + "/pipeline-cache");
+    }
 }
 
 //RestApi.$inject = ['$http', 'apiConstants', 'AuthStatusService'];
