@@ -1,7 +1,7 @@
 import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
-import {WidgetSettings} from "../../../models/widget-settings.model";
 import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
 import {EpRequirements} from "../../../sdk/ep-requirements";
+import {DashboardWidgetSettings} from "../../../../core-model/dashboard/DashboardWidgetSettings";
 
 export class NumberConfig {
 
@@ -9,7 +9,7 @@ export class NumberConfig {
 
     }
 
-    static getConfig(): WidgetSettings {
+    static getConfig(): DashboardWidgetSettings {
         return WidgetConfigBuilder.create("number", "number")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()

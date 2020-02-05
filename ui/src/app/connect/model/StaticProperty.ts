@@ -19,13 +19,11 @@
 import {RdfId} from '../../platform-services/tsonld/RdfId';
 import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
 import {RdfsClass} from '../../platform-services/tsonld/RdfsClass';
+import {UnnamedStreamPipesEntity} from "./UnnamedStreamPipesEntity";
 
 @RdfsClass('sp:StaticProperty')
-export class StaticProperty {
+export class StaticProperty extends UnnamedStreamPipesEntity {
   public isValid = false;
-
-  @RdfId
-  public id: string;
 
   @RdfProperty('sp:elementName')
   public elementName: string;

@@ -22,11 +22,15 @@ import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.vocabulary.StreamPipes;
 import org.streampipes.empire.annotations.RdfProperty;
+import org.streampipes.empire.annotations.RdfsClass;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 
+@RdfsClass(StreamPipes.DASHBOARD_WIDGET_DATA_CONFIG)
+@Entity
 public class DashboardWidgetDataConfig extends UnnamedStreamPipesEntity {
 
   @RdfProperty(StreamPipes.HAS_VISUALIZATION_NAME)

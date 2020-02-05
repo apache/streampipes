@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {Subscription} from "rxjs";
 import {GridType} from "angular-gridster2";
-import {Dashboard, DashboardConfig, DashboardWidget} from "./models/dashboard.model";
+import {Dashboard, DashboardConfig} from "./models/dashboard.model";
 import {MockDashboardService} from "./services/MockDashboard.service";
 
 @Component({

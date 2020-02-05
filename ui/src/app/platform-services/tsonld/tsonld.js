@@ -157,12 +157,6 @@ var TsonLd = /** @class */ (function () {
         else if (!util_1.isUndefined(ids[id])) {
             return ids[id];
         }
-        else {
-            console.log('graph: ' + graph);
-            console.log('FIX BUG: Pass id to fromJSON-LD');
-            console.log('id: ' + id);
-            console.log('ids: ' + JSON.stringify(ids, null, 2));
-        }
         // Create the result object
         var c = this.classMapping[jsonObject['@type']];
         if (util_1.isUndefined(c)) {
@@ -202,9 +196,6 @@ var TsonLd = /** @class */ (function () {
                                     }
                                     var newObj = { '@context': context, '@graph': graph };
                                     ids[jsonObject['@id']] = result;
-                                    console.log('jsonObject: ' + JSON.stringify(jsonObject, null, 2));
-                                    console.log('elem: ' + JSON.stringify(elem, null, 2));
-                                    console.log('id: ' + jsonObject['@id']);
                                     var arrayResult = this.fromJsonLd(newObj, ids, elem['@id']);
                                     // TODO hot fix not sure if it works for all cases
                                     graph.splice(0, 1);
@@ -233,7 +224,6 @@ var TsonLd = /** @class */ (function () {
                             }
                             var newObj = { '@context': context, '@graph': graph };
                             ids[jsonObject['@id']] = result;
-                            console.log('ddddd: ' + JSON.stringify(ids, null, 2));
                             var nestedResult = this.fromJsonLd(newObj, ids);
                             result[objectProp] = nestedResult;
                         }

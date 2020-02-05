@@ -5,12 +5,10 @@ import {EventSchema} from "../../connect/schema-editor/model/EventSchema";
 import {DashboardWidgetSettings} from "./DashboardWidgetSettings";
 import {DashboardWidgetDataConfig} from "./DashboardWidgetDataConfig";
 import {VisualizablePipeline} from "./VisualizablePipeline";
+import {UnnamedStreamPipesEntity} from "../../connect/model/UnnamedStreamPipesEntity";
 
 @RdfsClass('sp:DashboardWidgetModel')
-export class DashboardWidget {
-
-    @RdfId
-    public id: string;
+export class DashboardWidget extends UnnamedStreamPipesEntity {
 
     @RdfProperty('sp:hasDashboardWidgetSettings')
     dashboardWidgetSettings: DashboardWidgetSettings;
@@ -27,8 +25,7 @@ export class DashboardWidget {
     @RdfProperty('sp:hasDashboardWidgetId')
     widgetId:string;
 
-
-    constructor(id: string) {
-        this.id = id;
+    constructor() {
+        super();
     }
 }

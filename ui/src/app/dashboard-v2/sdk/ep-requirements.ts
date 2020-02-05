@@ -5,7 +5,7 @@ import {Datatypes} from "./model/datatypes";
 export class EpRequirements {
 
     private static ep(): EventPropertyPrimitive {
-        let ep = new EventPropertyPrimitive(null, null);
+        let ep = new EventPropertyPrimitive(undefined, undefined);
         return ep;
     }
 

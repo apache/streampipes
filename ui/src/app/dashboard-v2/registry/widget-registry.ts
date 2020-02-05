@@ -1,11 +1,11 @@
 import {NumberConfig} from "../components/widgets/number/number-config.component";
-import {WidgetSettings} from "../models/widget-settings.model";
+import {DashboardWidgetSettings} from "../../core-model/dashboard/DashboardWidgetSettings";
 
 export class WidgetRegistry {
 
-    private static availableWidgets: Array<WidgetSettings> = [NumberConfig.getConfig()];
+    private static availableWidgets: Array<DashboardWidgetSettings> = [NumberConfig.getConfig()];
 
-    static getAvailableWidgets(): Array<WidgetSettings> {
+    static getAvailableWidgets(): Array<DashboardWidgetSettings> {
         return this.availableWidgets;
     }
 }

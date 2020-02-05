@@ -21,7 +21,7 @@ import {Injectable} from "@angular/core";
 import {map} from "rxjs/operators";
 import {from, Observable} from "rxjs";
 import {AuthStatusService} from "../../services/auth-status.service";
-import {ConfiguredWidget, Dashboard} from "../models/dashboard.model";
+import {Dashboard} from "../models/dashboard.model";
 import {EventSchema} from "../../connect/schema-editor/model/EventSchema";
 import {EventProperty} from "../../connect/schema-editor/model/EventProperty";
 import {EventPropertyPrimitive} from "../../connect/schema-editor/model/EventPropertyPrimitive";
@@ -87,6 +87,16 @@ export class DashboardService {
         return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/ld/pipelines'
     }
 
+    getWidget(widgetId: string): Observable<DashboardWidget> {
+        let promise = new Promise<DashboardWidget>((resolve, reject) => {
+            this.http.get(this.dashboardWidgetUrl + "/" +widgetId).subscribe(response => {
+                let dashboardWidget = this.tsonLdSerializerService.fromJsonLd(response, "sp:DashboardWidgetModel");
+                resolve(dashboardWidget);
+            });
+        });
+        return from(promise);
+    }
+
     saveWidget(widget: DashboardWidget): Observable<StatusMessage> {
         return this.serializeAndPost(this.dashboardWidgetUrl, widget);
     }
@@ -95,17 +105,15 @@ export class DashboardService {
         this.http.post('/dashboard', dashboard);
     }
 
-    serializeAndPost(url: string, object: DashboardWidget): Observable<StatusMessage> {
+    serializeAndPost(url: string, object: any): Observable<StatusMessage> {
         let promise = new Promise<StatusMessage>((resolve, reject) => {
             this.tsonLdSerializerService.toJsonLd(object).subscribe(serialized => {
-                console.log(serialized);
                 const httpOptions = {
                     headers: new HttpHeaders({
                         'Content-Type': 'application/ld+json',
                     }),
                 };
                 this.http.post(url, serialized, httpOptions).pipe(map(response => {
-                    console.log(response);
                     resolve(response as StatusMessage);
                 })).subscribe();
             });

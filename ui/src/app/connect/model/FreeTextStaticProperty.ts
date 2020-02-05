@@ -33,9 +33,8 @@ export class FreeTextStaticProperty extends StaticProperty {
   //TODO find better solution
   public render: boolean;
 
-  constructor(id: string) {
+  constructor() {
     super();
-    this.id = id;
     this.render = true;
   }
 

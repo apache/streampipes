@@ -1,16 +1,16 @@
-import {WidgetSettings} from "../models/widget-settings.model";
 import {FreeTextStaticProperty} from "../../connect/model/FreeTextStaticProperty";
 import {CollectedSchemaRequirements} from "../sdk/collected-schema-requirements";
 import {EventSchema} from "../../connect/schema-editor/model/EventSchema";
+import {DashboardWidgetSettings} from "../../core-model/dashboard/DashboardWidgetSettings";
 
 export class WidgetConfigBuilder {
 
-    private widget: WidgetSettings;
+    private widget: DashboardWidgetSettings;
 
     private constructor(widgetName: string, widgetLabel: string) {
-        this.widget = <WidgetSettings>{};
-        this.widget.label = widgetLabel;
-        this.widget.name = widgetName;
+        this.widget = new DashboardWidgetSettings();
+        this.widget.widgetLabel = widgetLabel;
+        this.widget.widgetName = widgetName;
         this.widget.config = [];
     }
 
@@ -19,7 +19,8 @@ export class WidgetConfigBuilder {
     }
 
     requiredTextParameter(id: string, label: string, description: string): WidgetConfigBuilder {
-        let fst: FreeTextStaticProperty = new FreeTextStaticProperty(id);
+        let fst: FreeTextStaticProperty = new FreeTextStaticProperty();
+        fst.internalName = id;
         fst.label = label;
         fst.description = description;
         this.widget.config.push(fst);
@@ -33,7 +34,7 @@ export class WidgetConfigBuilder {
         return this;
     }
 
-    build(): WidgetSettings {
+    build(): DashboardWidgetSettings {
         return this.widget;
     }
 

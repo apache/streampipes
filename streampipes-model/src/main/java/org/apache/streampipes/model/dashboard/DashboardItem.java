@@ -15,21 +15,7 @@
  * limitations under the License.
  *
  */
-
 package org.apache.streampipes.model.dashboard;
 
-import org.apache.streampipes.vocabulary.StreamPipes;
-import org.streampipes.empire.annotations.RdfsClass;
-
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
-
-@RdfsClass(StreamPipes.DASHBOARD_MODEL)
-@MappedSuperclass
-@Entity
-public class DashboardModel extends DashboardEntity {
-
-  public DashboardModel() {
-
-  }
+public class DashboardItem {
 }

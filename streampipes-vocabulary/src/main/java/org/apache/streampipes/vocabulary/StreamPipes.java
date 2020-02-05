@@ -372,5 +372,6 @@ public class StreamPipes {
   public static final String VISUALIZABLE_PIPELINE = NS + "VisualizablePipeline" ;
   public static final String ENTITY_CONTAINER = NS + "EntityContainer";
   public static final String CONTAINS_ELEMENTS = NS + "containsElement";
-  public static final String HAS_DASHBOARD_WIDGET_ID = "hasDashboardWidgetId";
+  public static final String HAS_DASHBOARD_WIDGET_ID = NS + "hasDashboardWidgetId";
+  public static final String DASHBOARD_WIDGET_DATA_CONFIG = NS + "DashboardWidgetDataConfig" ;
 }

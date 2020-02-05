@@ -43,7 +43,8 @@ export class StaticPropertyUtilService{
         let id = 'urn:streampipes.org:spi::' + this.generateID(6);
 
         if (val instanceof FreeTextStaticProperty) {
-            clone = new FreeTextStaticProperty(id);
+            clone = new FreeTextStaticProperty();
+            clone.id = id;
             clone.value = val.value;
             clone.requiredDomainProperty = val.requiredDomainProperty;
         }
@@ -53,18 +54,19 @@ export class StaticPropertyUtilService{
             clone.locationPath = val.locationPath;
         }
         else if (val instanceof MappingPropertyUnary) {
-            clone = new MappingPropertyUnary(id);
+            clone = new MappingPropertyUnary();
+            clone.id = id;
             clone.requirementSelector = val.requirementSelector;
             clone.mapsFromOptions = val.mapsFromOptions;
             clone.propertyScope = val.propertyScope;
-            clone.selectedProperties = val.selectedProperties;
+            clone.selectedProperty = val.selectedProperty;
         }
         else if (val instanceof MappingPropertyNary) {
             clone = new MappingPropertyNary(id);
             clone.requirementSelector = val.requirementSelector;
             clone.mapsFromOptions = val.mapsFromOptions;
             clone.propertyScope = val.propertyScope;
-            clone.selectedProperty = val.selectedProperty;
+            clone.selectedProperties = val.selectedProperties;
         }
         else if (val instanceof SecretStaticProperty) {
             clone = new SecretStaticProperty(id);

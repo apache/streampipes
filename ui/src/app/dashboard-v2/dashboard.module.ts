@@ -72,8 +72,6 @@ const dashboardWidgets = [
 export class DashboardModule {
 
     constructor() {
-
-        console.log('Dashboard Module initialised');
     }
 
 }

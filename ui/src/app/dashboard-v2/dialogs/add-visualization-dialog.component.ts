@@ -20,9 +20,7 @@ import {Component, Inject} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 import {DashboardService} from "../services/dashboard.service";
 import {ElementIconText} from "../../services/get-element-icon-text.service";
-import {WidgetSettings} from "../models/widget-settings.model";
 import {WidgetRegistry} from "../registry/widget-registry";
-import {ConfiguredWidget} from "../models/dashboard.model";
 import {MappingPropertyUnary} from "../../connect/model/MappingPropertyUnary";
 import {MappingPropertyGenerator} from "../sdk/matching/mapping-property-generator";
 import {EventProperty} from "../../connect/schema-editor/model/EventProperty";
@@ -53,7 +51,7 @@ export class AddVisualizationDialogComponent {
     }];
 
     visualizablePipelines: Array<VisualizablePipeline> = [];
-    availableWidgets:  Array<WidgetSettings>;
+    availableWidgets:  Array<DashboardWidgetSettings>;
 
     selectedPipeline: VisualizablePipeline;
     selectedWidget: DashboardWidgetSettings;
@@ -134,14 +132,11 @@ export class AddVisualizationDialogComponent {
         } else if (this.page == 'select-widget') {
             this.page = 'configure-widget';
         } else {
-            let configuredWidget: DashboardWidget = {} as DashboardWidget;
+            let configuredWidget: DashboardWidget = new DashboardWidget();
             configuredWidget.widgetId = "a";
-            configuredWidget.id = "asd";
-            //configuredWidget.dashboardWidgetSettings = this.selectedWidget;
-            //configuredWidget.dashboardWidgetDataConfig = this.selectedPipeline;
-            console.log(configuredWidget);
+            configuredWidget.dashboardWidgetSettings = this.selectedWidget;
+            configuredWidget.dashboardWidgetDataConfig = this.selectedPipeline;
             this.dashboardService.saveWidget(configuredWidget).subscribe(response => {
-                console.log(response);
                 this.dialogRef.close();
             });
         }

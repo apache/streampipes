@@ -49,7 +49,7 @@ public class DashboardWidget extends AbstractRestInterface implements IDashboard
 
   @GET
   @JsonLdSerialized
-  @Produces(MediaType.APPLICATION_JSON)
+  @Produces(SpMediaType.JSONLD)
   @Path("/{widgetId}")
   @Override
   public Response getDashboardWidget(@PathParam("widgetId") String widgetId) {

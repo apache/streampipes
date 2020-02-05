@@ -7,6 +7,9 @@
         </div>
     </div>
     <div class="sp-blue-border" style="height:100%;">
-<!--        <div *ngIf="widget."></div>-->
+        <!--        <div *ngIf="widget."></div>-->
+        <div *ngIf="widgetLoaded">
+            {{configuredWidget.dashboardWidgetSettings.widgetName}}
+        </div>
     </div>
 </div>

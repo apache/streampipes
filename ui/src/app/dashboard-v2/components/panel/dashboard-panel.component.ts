@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from "@angular/core";
-import {Dashboard, DashboardConfig, DashboardWidget} from "../../models/dashboard.model";
+import {Dashboard, DashboardConfig, DashboardItem} from "../../models/dashboard.model";
 import {Subscription} from "rxjs";
 import {MockDashboardService} from "../../services/MockDashboard.service";
 import {GridType} from "angular-gridster2";
@@ -16,7 +16,7 @@ export class DashboardPanelComponent implements OnInit {
     @Input() dashboard: Dashboard;
 
     public options: DashboardConfig;
-    public items: DashboardWidget[];
+    public items: DashboardItem[];
 
     protected subscription: Subscription;
 

@@ -36,9 +36,8 @@ export class MappingPropertyUnary extends StaticProperty {
     public selectedProperty: string;
 
 
-    constructor(id: string) {
+    constructor() {
         super();
-        this.id = id;
     }
 
 }
