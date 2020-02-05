@@ -70,17 +70,14 @@ getHostDockerInteralIP() {
   # get os type
   OS_TYPE=`uname`
   info "Detected OS: ${OS_TYPE}"
-  if [ "$OS_TYPE" == "Darwin" ] || [ "$OS_TYPE" == "CYGWIN" ] || [ "$OS_TYPE" == *"MINGW64_NT-10"* ]; then
+  if [ "$OS_TYPE" == "Linux" ]; then
+    ip=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
+    info "Detected Docker0 bridge IP: ${ip}"
+  else
     # get IP of docker vm hosting docker for mac and docker windows
     ip=$(docker run --rm -it alpine getent hosts host.docker.internal | awk '{ print $1 }') > /dev/null 2>&1
     docker rmi alpine > /dev/null 2>&1
     info "Detected Docker Host IP: ${ip}"
-    # get IP of docker0 bridge
-  elif [ "$OS_TYPE" == "Linux" ]; then
-    ip=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
-    info "Detected Docker0 bridge IP: ${ip}"
-  else
-    fatal "Detected OS not supporeted: ${OS_TYPE}"
   fi
 }
 
