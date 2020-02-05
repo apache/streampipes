@@ -199,11 +199,16 @@ export class DataMarketplaceService {
               'http://streampipes.org/genericadapterstreamdescription'
             );
           }
+          newAdapterDescription.appId = protocol.appId;
           newAdapterDescription.label = protocol.label;
           newAdapterDescription.description = protocol.description;
           newAdapterDescription.iconUrl = protocol.iconUrl;
           newAdapterDescription.uri = newAdapterDescription.id;
           newAdapterDescription.category = protocol.category;
+          newAdapterDescription.includedAssets = protocol.includedAssets;
+          newAdapterDescription.includesAssets = protocol.includesAssets;
+          newAdapterDescription.includedLocales = protocol.includedLocales;
+          newAdapterDescription.includesLocales = protocol.includesLocales;
 
           if (
             newAdapterDescription instanceof GenericAdapterSetDescription ||

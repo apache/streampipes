@@ -23,6 +23,7 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
@@ -233,16 +234,16 @@ public class WorkerRestClient {
     }
 
     public static String getAdapterAssets(String baseUrl,  AdapterDescription ad) throws AdapterException {
-        return getAssets(baseUrl + "worker/adapters", ad);
+        return getAssets(baseUrl + "worker/adapters", ad.getAppId());
     }
 
-    public static String getProtocolAssets(String baseUrl,  AdapterDescription ad) throws AdapterException {
-        return getAssets(baseUrl + "worker/protocol", ad);
+    public static String getProtocolAssets(String baseUrl,  ProtocolDescription ad) throws AdapterException {
+        return getAssets(baseUrl + "worker/protocol", ad.getAppId());
     }
 
-    private static String getAssets(String baseUrl,  AdapterDescription ad) throws AdapterException {
-        String url = baseUrl + "/" + ad.getAppId() + "/assets";
-        logger.info("Trying to Assets from endpoint: " + url + " for adapter: " + ad.getId());
+    private static String getAssets(String baseUrl,  String  appId) throws AdapterException {
+        String url = baseUrl + "/" + appId + "/assets";
+        logger.info("Trying to Assets from endpoint: " + url + " for adapter: " + appId);
 
         try {
             String responseString = Request.Get(url)
@@ -252,22 +253,22 @@ public class WorkerRestClient {
             return responseString;
         } catch (IOException e) {
             logger.error(e.getMessage());
-            throw new AdapterException("Could not get assets endpoint: " + url + " for adapter: " + ad.getId());
+            throw new AdapterException("Could not get assets endpoint: " + url + " for adapter: " + appId);
         }
 
     }
 
     public static byte[] getAdapterIconAsset(String baseUrl,  AdapterDescription ad) throws AdapterException {
-        return getIconAsset(baseUrl + "worker/adapters", ad);
+        return getIconAsset(baseUrl + "worker/adapters", ad.getAppId());
     }
 
-    public static byte[] getProtocolIconAsset(String baseUrl,  AdapterDescription ad) throws AdapterException {
-        return getIconAsset(baseUrl + "worker/protocols", ad);
+    public static byte[] getProtocolIconAsset(String baseUrl,  ProtocolDescription ad) throws AdapterException {
+        return getIconAsset(baseUrl + "worker/protocols", ad.getAppId());
 
     }
 
-    private static byte[] getIconAsset(String baseUrl,  AdapterDescription ad) throws AdapterException {
-        String url = baseUrl + "/" + ad.getAppId() + "/assets/icon";
+    private static byte[] getIconAsset(String baseUrl,  String appId) throws AdapterException {
+        String url = baseUrl + "/" + appId + "/assets/icon";
         logger.info("Trying to Icon from endpoint: " + url);
 
         try {
@@ -283,15 +284,15 @@ public class WorkerRestClient {
     }
 
     public static String getAdapterDocumentationAsset(String baseUrl,  AdapterDescription ad) throws AdapterException {
-        return getDocumentationAsset(baseUrl + "worker/adapters", ad);
+        return getDocumentationAsset(baseUrl + "worker/adapters", ad.getAppId());
     }
 
-    public static String getProtocolDocumentationAsset(String baseUrl,  AdapterDescription ad) throws AdapterException {
-        return getDocumentationAsset(baseUrl + "worker/protocols", ad);
+    public static String getProtocolDocumentationAsset(String baseUrl,  ProtocolDescription ad) throws AdapterException {
+        return getDocumentationAsset(baseUrl + "worker/protocols", ad.getAppId());
     }
 
-    private static String getDocumentationAsset(String baseUrl,  AdapterDescription ad) throws AdapterException  {
-        String url = baseUrl + "/" + ad.getAppId() + "/assets/documentation";
+    private static String getDocumentationAsset(String baseUrl,  String appId) throws AdapterException  {
+        String url = baseUrl + "/" + appId + "/assets/documentation";
         logger.info("Trying to documentation from endpoint: " + url);
 
         try {
@@ -302,7 +303,7 @@ public class WorkerRestClient {
             return responseString;
         } catch (IOException e) {
             logger.error(e.getMessage());
-            throw new AdapterException("Could not get documentation endpoint: " + url + " for adapter: " + ad.getId());
+            throw new AdapterException("Could not get documentation endpoint: " + url + " for adapter: " + appId);
         }
     }
 

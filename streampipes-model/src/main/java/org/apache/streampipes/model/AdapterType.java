@@ -26,6 +26,7 @@ public enum AdapterType {
   SocialMedia("Social Media", ""),
   OpenData("Open Data", ""),
   Manufacturing("Production & Manufacturing", ""),
+  Energy("Energy", ""),
   Debugging("Testing & Debugging", "");
 
   private String label;

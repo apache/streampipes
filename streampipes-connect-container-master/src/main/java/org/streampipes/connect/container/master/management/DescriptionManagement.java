@@ -31,6 +31,7 @@ import org.apache.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStor
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class DescriptionManagement {
 
@@ -74,11 +75,16 @@ public class DescriptionManagement {
         return result;
     }
 
-    public AdapterDescription getAdapter(String id) throws AdapterException {
+    public Optional<AdapterDescription> getAdapter(String id) {
         return getAdapters().getList().stream()
                 .filter(desc -> desc.getAppId().equals(id))
-                .findFirst()
-                .orElseThrow(AdapterException::new);
+                .findFirst();
+    }
+
+    public Optional<ProtocolDescription> getProtocol(String id) {
+        return getProtocols().getList().stream()
+                .filter(desc -> desc.getAppId().equals(id))
+                .findFirst();
     }
 
     public String getAdapterAssets(AdapterDescription desc, String baseUrl) throws AdapterException {
@@ -93,15 +99,15 @@ public class DescriptionManagement {
         return WorkerRestClient.getAdapterDocumentationAsset(baseUrl, desc);
     }
 
-    public String getProtocolAssets(AdapterDescription desc, String baseUrl) throws AdapterException {
+    public String getProtocolAssets(ProtocolDescription desc, String baseUrl) throws AdapterException {
         return WorkerRestClient.getProtocolAssets(baseUrl, desc);
     }
 
-    public byte[] getProtocolIconAsset(AdapterDescription desc, String baseUrl) throws AdapterException {
+    public byte[] getProtocolIconAsset(ProtocolDescription desc, String baseUrl) throws AdapterException {
         return WorkerRestClient.getProtocolIconAsset(baseUrl, desc);
     }
 
-    public String getProtocolDocumentationAsset(AdapterDescription desc, String baseUrl) throws AdapterException {
+    public String getProtocolDocumentationAsset(ProtocolDescription desc, String baseUrl) throws AdapterException {
         return WorkerRestClient.getProtocolDocumentationAsset(baseUrl, desc);
     }
 }
