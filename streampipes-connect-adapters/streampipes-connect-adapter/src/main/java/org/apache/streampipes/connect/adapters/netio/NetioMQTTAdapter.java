@@ -74,7 +74,6 @@ public class NetioMQTTAdapter extends SpecificDataStreamAdapter {
                 .category(AdapterType.Energy)
                 .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
                 .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(), MqttConnectUtils.getAlternativesTwo())
-//                .requiredTextParameter(MqttConnectUtils.getTopicLabel())
                 .build();
         description.setAppId(ID);
 
