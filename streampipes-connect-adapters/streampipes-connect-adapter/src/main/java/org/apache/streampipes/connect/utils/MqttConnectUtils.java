@@ -64,21 +64,6 @@ public class MqttConnectUtils {
 
     }
 
-
-//    public static StaticPropertyAlternative[] getAlternatives() {
-//        StaticPropertyAlternative[] result = {
-//                Alternatives.from(Labels.from(ANONYMOUS_ACCESS, "Unauthenticated", "")),
-//                Alternatives.from(Labels.from(USERNAME_ACCESS, "Username/Password", ""),
-//                        StaticProperties.group(Labels.from("username-group", "User Group", ""),
-//                                StaticProperties.stringFreeTextProperty(Labels.from(USERNAME,
-//                                        "Username", "")),
-//                                StaticProperties.secretValue(Labels.from(PASSWORD,
-//                                        "Password", ""))))
-//        };
-//        return result;
-//
-//    }
-
     public static MqttConfig getMqttConfig(StaticPropertyExtractor extractor) {
         return getMqttConfig(extractor, null);
     }
