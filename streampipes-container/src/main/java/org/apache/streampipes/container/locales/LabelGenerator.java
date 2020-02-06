@@ -52,7 +52,12 @@ public class LabelGenerator {
       desc.setDescription(getDescription(props, desc.getAppId()));
 
       if (isAdapter() || isProtocol()) {
-          List<StaticProperty> properties = ((AdapterDescription) desc).getConfig();
+          List<StaticProperty> properties;
+          if (isAdapter()) {
+            properties = ((AdapterDescription) desc).getConfig();
+          } else {
+            properties = ((ProtocolDescription) desc).getConfig();
+          }
           if (properties != null) {
               properties.forEach(sp -> {
                   generateLabels(props, sp);
@@ -104,7 +109,9 @@ public class LabelGenerator {
         generateLabels(props, a);
       });
     } else if (sp instanceof StaticPropertyAlternative) {
-      generateLabels(props, ((StaticPropertyAlternative) sp).getStaticProperty());
+      if (((StaticPropertyAlternative) sp).getStaticProperty() != null) {
+        generateLabels(props, ((StaticPropertyAlternative) sp).getStaticProperty());
+      }
     }
 
     return sp;

@@ -39,6 +39,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Optional;
 
 @Path("/api/v1/{username}/master/description")
 public class DescriptionResource extends AbstractContainerResource {
@@ -94,19 +95,32 @@ public class DescriptionResource extends AbstractContainerResource {
     @Produces("application/zip")
     public Response getAdapterAssets(@PathParam("id") String id, @PathParam("username") String userName) {
         try {
-            AdapterDescription adapterDescription = descriptionManagement.getAdapter(id);
+            String result = null;
 
-            String workerUrl = new Utils().getWorkerUrl(adapterDescription);
-            String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+            Optional<AdapterDescription> adapterDescriptionOptional = descriptionManagement.getAdapter(id);
+            if (adapterDescriptionOptional.isPresent()) {
+                AdapterDescription adapterDescription = adapterDescriptionOptional.get();
+                String workerUrl = new Utils().getWorkerUrl(adapterDescription);
+                String newUrl = Utils.addUserNameToApi(workerUrl, userName);
 
-            String result = "";
-            if (adapterDescription instanceof GenericAdapterDescription) {
-                result = descriptionManagement.getProtocolAssets(adapterDescription, newUrl);
-            } else {
                 result = descriptionManagement.getAdapterAssets(adapterDescription, newUrl);
-
             }
-            return ok(result);
+
+            Optional<ProtocolDescription> protocolDescriptionOptional  = descriptionManagement.getProtocol(id);
+            if (protocolDescriptionOptional.isPresent()) {
+                ProtocolDescription protocolDescription = protocolDescriptionOptional.get();
+                String workerUrl = new Utils().getWorkerUrl(protocolDescription);
+                String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+
+                result = descriptionManagement.getProtocolAssets(protocolDescription, newUrl);
+            }
+
+            if (result == null) {
+                logger.error("Not found adapter with id " + id);
+                return fail();
+            } else {
+                return ok(result);
+            }
         } catch (AdapterException e) {
             logger.error("Not found adapter with id " + id, e);
             return fail();
@@ -118,19 +132,33 @@ public class DescriptionResource extends AbstractContainerResource {
     @Produces("image/png")
     public Response getAdapterIconAsset(@PathParam("id") String id, @PathParam("username") String userName) {
         try {
-            AdapterDescription adapterDescription = descriptionManagement.getAdapter(id);
 
-            String workerUrl = new Utils().getWorkerUrl(adapterDescription);
-            String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+            byte[] result = null;
 
-            byte[] result;
-            if (adapterDescription instanceof GenericAdapterDescription) {
-                result = descriptionManagement.getProtocolIconAsset(adapterDescription, newUrl);
-            } else {
+            Optional<AdapterDescription> adapterDescriptionOptional = descriptionManagement.getAdapter(id);
+            if (adapterDescriptionOptional.isPresent()) {
+                AdapterDescription adapterDescription = adapterDescriptionOptional.get();
+                String workerUrl = new Utils().getWorkerUrl(adapterDescription);
+                String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+
                 result = descriptionManagement.getAdapterIconAsset(adapterDescription, newUrl);
-
             }
-            return ok(result);
+
+            Optional<ProtocolDescription> protocolDescriptionOptional  = descriptionManagement.getProtocol(id);
+            if (protocolDescriptionOptional.isPresent()) {
+                ProtocolDescription protocolDescription = protocolDescriptionOptional.get();
+                String workerUrl = new Utils().getWorkerUrl(protocolDescription);
+                String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+
+                result = descriptionManagement.getProtocolIconAsset(protocolDescription, newUrl);
+            }
+
+            if (result == null) {
+                logger.error("Not found adapter with id " + id);
+                return fail();
+            } else {
+                return ok(result);
+            }
         } catch (AdapterException e) {
             logger.error("Not found adapter with id " + id, e);
             return fail();
@@ -142,18 +170,32 @@ public class DescriptionResource extends AbstractContainerResource {
     @Produces(MediaType.TEXT_PLAIN)
     public Response getAdapterDocumentationAsset(@PathParam("id") String id, @PathParam("username") String userName) {
         try {
-            AdapterDescription adapterDescription = descriptionManagement.getAdapter(id);
+            String result = null;
 
-            String workerUrl = new Utils().getWorkerUrl(adapterDescription);
-            String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+            Optional<AdapterDescription> adapterDescriptionOptional = descriptionManagement.getAdapter(id);
+            if (adapterDescriptionOptional.isPresent()) {
+                AdapterDescription adapterDescription = adapterDescriptionOptional.get();
+                String workerUrl = new Utils().getWorkerUrl(adapterDescription);
+                String newUrl = Utils.addUserNameToApi(workerUrl, userName);
 
-            String result = "";
-            if (adapterDescription instanceof GenericAdapterDescription) {
-                result =  descriptionManagement.getProtocolDocumentationAsset(adapterDescription, newUrl);
-            } else {
                 result =  descriptionManagement.getAdapterDocumentationAsset(adapterDescription, newUrl);
             }
-            return ok(result);
+
+            Optional<ProtocolDescription> protocolDescriptionOptional  = descriptionManagement.getProtocol(id);
+            if (protocolDescriptionOptional.isPresent()) {
+                ProtocolDescription protocolDescription = protocolDescriptionOptional.get();
+                String workerUrl = new Utils().getWorkerUrl(protocolDescription);
+                String newUrl = Utils.addUserNameToApi(workerUrl, userName);
+
+                result =  descriptionManagement.getProtocolDocumentationAsset(protocolDescription, newUrl);
+            }
+
+            if (result == null) {
+                logger.error("Not found adapter with id " + id);
+                return fail();
+            } else {
+                return ok(result);
+            }
         } catch (AdapterException e) {
             logger.error("Not found adapter with id " + id, e);
             return fail();

@@ -15,33 +15,16 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model;
+package org.apache.streampipes.rest.api;
 
-public enum AdapterType {
+import javax.ws.rs.core.Response;
 
-  Generic("Generic Adapters", ""),
-  Finance("Finance", ""),
-  Environment("Environmental Data", ""),
-  News("News", ""),
-  SocialMedia("Social Media", ""),
-  OpenData("Open Data", ""),
-  Manufacturing("Production & Manufacturing", ""),
-  Energy("Energy", ""),
-  Debugging("Testing & Debugging", "");
+public interface IPipelineCache {
 
-  private String label;
-  private String description;
+  Response updateCachedPipeline(String user, String rawPipelineModel);
 
-  AdapterType(String label, String description) {
-    this.label = label;
-    this.description = description;
-  }
+  Response getCachedPipeline(String user);
 
-  public String getLabel() {
-    return label;
-  }
+  Response removePipelineFromCache(String user);
 
-  public String getDescription() {
-    return description;
-  }
 }

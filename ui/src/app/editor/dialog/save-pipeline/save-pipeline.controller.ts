@@ -122,6 +122,7 @@ export class SavePipelineController {
         this.displaySuccess(data);
         this.hide();
         this.TransitionService.makePipelineAssemblyEmpty(true);
+        this.RestApi.removePipelineFromCache();
         if (this.ShepherdService.isTourActive()) {
             this.ShepherdService.hideCurrentStep();
         }

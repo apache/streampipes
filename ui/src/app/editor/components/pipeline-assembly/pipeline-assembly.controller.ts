@@ -17,6 +17,7 @@
  */
 
 import {PipelineValidationService} from "../../services/pipeline-validation.service";
+import {RestApi} from "../../../services/rest-api.service";
 
 export class PipelineAssemblyController {
 
@@ -34,7 +35,7 @@ export class PipelineAssemblyController {
     rawPipelineModel: any;
     PipelinePositioningService: any;
     PipelineValidationService: PipelineValidationService;
-    RestApi: any;
+    RestApi: RestApi;
     selectMode: any;
     currentPipelineName: any;
     currentPipelineDescription: any;
@@ -44,6 +45,9 @@ export class PipelineAssemblyController {
     errorMessagesDisplayed: any = false;
 
     pipelineValid: boolean = false;
+
+    pipelineCacheRunning: boolean = false;
+    pipelineCached: boolean = false;
 
     constructor(JsplumbBridge,
                 PipelinePositioningService,
@@ -89,6 +93,8 @@ export class PipelineAssemblyController {
     $onInit() {
         if (this.currentModifiedPipelineId) {
             this.displayPipelineById();
+        } else {
+            this.checkAndDisplayCachedPipeline();
         }
     }
 
@@ -151,6 +157,10 @@ export class PipelineAssemblyController {
         this.currentZoomLevel = 1;
         this.JsplumbBridge.setZoom(this.currentZoomLevel);
         this.JsplumbBridge.repaintEverything();
+        this.RestApi.removePipelineFromCache().then(msg => {
+            this.pipelineCached = false;
+            this.pipelineCacheRunning = false;
+        });
     };
 
     /**
@@ -173,6 +183,17 @@ export class PipelineAssemblyController {
         this.EditorDialogManager.showSavePipelineDialog(pipeline, modificationMode);
     }
 
+    checkAndDisplayCachedPipeline() {
+        this.RestApi.getCachedPipeline().then(msg => {
+            if (msg.data !== "") {
+                this.rawPipelineModel = msg.data;
+                this.$timeout(() => {
+                    this.displayPipelineInEditor(true);
+                });
+            }
+        });
+    }
+
     displayPipelineById() {
         this.RestApi.getPipelineById(this.currentModifiedPipelineId)
             .then((msg) => {
@@ -181,12 +202,16 @@ export class PipelineAssemblyController {
                 this.currentPipelineDescription = pipeline.description;
                 this.rawPipelineModel = this.JsplumbService.makeRawPipeline(pipeline, false);
                 this.$timeout(() => {
-                    this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false);
-                    this.TransitionService.makePipelineAssemblyEmpty(false);
-                    this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
+                    this.displayPipelineInEditor(true);
                 });
             });
     };
+
+    displayPipelineInEditor(autoLayout) {
+        this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, "#assembly", false, autoLayout);
+        this.TransitionService.makePipelineAssemblyEmpty(false);
+        this.pipelineValid = this.PipelineValidationService.isValidPipeline(this.rawPipelineModel);
+    }
 
     toggleErrorMessagesDisplayed() {
         this.errorMessagesDisplayed = !(this.errorMessagesDisplayed);

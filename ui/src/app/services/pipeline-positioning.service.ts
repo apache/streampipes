@@ -39,7 +39,7 @@ export class PipelinePositioningService {
     }
 
 
-    displayPipeline(rawPipelineModel, targetCanvas, isPreview) {
+    displayPipeline(rawPipelineModel, targetCanvas, isPreview, autoLayout) {
         var jsplumbConfig = isPreview ? this.JsplumbConfigService.getPreviewConfig() : this.JsplumbConfigService.getEditorConfig();
 
         for (var i = 0; i < rawPipelineModel.length; i++) {
@@ -56,7 +56,9 @@ export class PipelinePositioningService {
         }
 
         this.connectPipelineElements(rawPipelineModel, !isPreview, jsplumbConfig);
-        this.layoutGraph(targetCanvas, "span[id^='jsplumb']", isPreview ? 75 : 110, isPreview);
+        if (autoLayout) {
+            this.layoutGraph(targetCanvas, "span[id^='jsplumb']", isPreview ? 75 : 110, isPreview);
+        }
         this.JsplumbBridge.repaintEverything();
     }
 
@@ -92,34 +94,38 @@ export class PipelinePositioningService {
             var pe = json[i];
 
             if (pe.type == "sepa") {
-                for (var j = 0, connection; connection = pe.payload.connectedTo[j]; j++) {
-                    source = connection;
-                    target = pe.payload.DOM;
+                if (pe.payload.connectedTo) {
+                    for (var j = 0, connection; connection = pe.payload.connectedTo[j]; j++) {
+                        source = connection;
+                        target = pe.payload.DOM;
 
-                    var options;
-                    var id = "#" + source;
-                    if ($(id).hasClass("sepa")) {
-                        options = jsplumbConfig.sepaEndpointOptions;
-                    } else {
-                        options = jsplumbConfig.streamEndpointOptions;
+                        var options;
+                        var id = "#" + source;
+                        if ($(id).hasClass("sepa")) {
+                            options = jsplumbConfig.sepaEndpointOptions;
+                        } else {
+                            options = jsplumbConfig.streamEndpointOptions;
+                        }
+
+                        let sourceEndpointId = "out-" + connection;
+                        let targetEndpointId = "in-" + j + "-" + pe.payload.DOM;
+                        this.JsplumbBridge.connect(
+                            {uuids: [sourceEndpointId, targetEndpointId], detachable: detachable}
+                        );
                     }
-
-                    let sourceEndpointId = "out-" + connection;
-                    let targetEndpointId = "in-" + j + "-" + pe.payload.DOM;
-                    this.JsplumbBridge.connect(
-                        {uuids: [sourceEndpointId, targetEndpointId], detachable: detachable}
-                    );
                 }
             } else if (pe.type == "action") {
                 target = pe.payload.DOM;
 
-                for (var j = 0, connection; connection = pe.payload.connectedTo[j]; j++) {
-                    source = connection;
-                    let sourceEndpointId = "out-" + connection;
-                    let targetEndpointId = "in-" + j + "-" + target;
-                    this.JsplumbBridge.connect(
-                        {uuids: [sourceEndpointId, targetEndpointId], detachable: detachable}
-                    );
+                if (pe.payload.connectedTo) {
+                    for (var j = 0, connection; connection = pe.payload.connectedTo[j]; j++) {
+                        source = connection;
+                        let sourceEndpointId = "out-" + connection;
+                        let targetEndpointId = "in-" + j + "-" + target;
+                        this.JsplumbBridge.connect(
+                            {uuids: [sourceEndpointId, targetEndpointId], detachable: detachable}
+                        );
+                    }
                 }
             }
         }

@@ -21,6 +21,7 @@ import {JsplumbBridge} from "../../../services/jsplumb-bridge.service";
 import {JsplumbService} from "../../../services/jsplumb.service";
 import {PipelineValidationService} from "../../services/pipeline-validation.service";
 import {TransitionService} from "../../../services/transition.service";
+import {RestApi} from "../../../services/rest-api.service";
 
 export class PipelineElementOptionsController {
 
@@ -42,11 +43,12 @@ export class PipelineElementOptionsController {
     TransitionService: TransitionService;
     $rootScope: any;
     $timeout: any;
+    RestApi: RestApi;
 
     pipelineValid: boolean;
 
     constructor($rootScope, ObjectProvider, PipelineElementRecommendationService, InitTooltips, JsplumbBridge,
-                EditorDialogManager, JsplumbService, TransitionService, PipelineValidationService, $timeout) {
+                EditorDialogManager, JsplumbService, TransitionService, PipelineValidationService, $timeout, RestApi) {
         this.$rootScope = $rootScope;
         this.ObjectProvider = ObjectProvider;
         this.PipelineElementRecommendationService = PipelineElementRecommendationService;
@@ -56,6 +58,7 @@ export class PipelineElementOptionsController {
         this.JsplumbService = JsplumbService;
         this.TransitionService = TransitionService;
         this.PipelineValidationService = PipelineValidationService;
+        this.RestApi = RestApi;
 
         this.recommendationsAvailable = false;
         this.possibleElements = [];
@@ -67,6 +70,8 @@ export class PipelineElementOptionsController {
 
     $onInit() {
         this.$rootScope.$on("SepaElementConfigured", (event, item) => {
+            this.pipelineElement.settings.openCustomize = false;
+            this.RestApi.updateCachedPipeline(this.rawPipelineModel);
             if (item === this.pipelineElement.payload.DOM) {
                 this.initRecs(this.pipelineElement.payload.DOM, this.rawPipelineModel);
             }
@@ -144,4 +149,4 @@ export class PipelineElementOptionsController {
 
 PipelineElementOptionsController.$inject = ['$rootScope', 'ObjectProvider', 'PipelineElementRecommendationService',
     'InitTooltips', 'JsplumbBridge', 'EditorDialogManager', 'JsplumbService',
-    'TransitionService', 'PipelineValidationService', '$timeout'];
+    'TransitionService', 'PipelineValidationService', '$timeout', 'RestApi'];

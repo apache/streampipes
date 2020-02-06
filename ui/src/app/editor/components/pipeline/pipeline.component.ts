@@ -27,7 +27,9 @@ export let PipelineComponent = {
         allElements: "=",
         preview: "<",
         canvasId: "@",
-        pipelineValid: "="
+        pipelineValid: "=",
+        pipelineCacheRunning: "=",
+        pipelineCached: "="
     },
     controller: PipelineController,
     controllerAs: 'ctrl'
