@@ -14,3 +14,4 @@ sinks-internal-jvm
 sources-random-data-generator
 processors-transformation-jvm
 processors-transformation-flink
+influxdb

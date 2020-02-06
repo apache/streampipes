@@ -18,3 +18,4 @@ elasticsearch
 kibana
 filebeat
 logstash
+influxdb

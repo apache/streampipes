@@ -9,3 +9,4 @@ kafka
 kafka-rest
 zookeeper
 app-container
+influxdb

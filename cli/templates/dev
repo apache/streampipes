@@ -4,3 +4,4 @@ consul
 zookeeper
 couchdb
 kafka-rest
+influxdb

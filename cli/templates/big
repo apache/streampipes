@@ -29,3 +29,4 @@ sources-watertank-simulator
 taskmanager
 zookeeper
 processors-python
+influxdb
