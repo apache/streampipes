@@ -27,6 +27,8 @@ import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.pe.jvm.config.AllPipelineElementsConfig;
 import org.apache.streampipes.processors.filters.jvm.processor.compose.ComposeController;
+import org.apache.streampipes.processors.filters.jvm.processor.enrich.MergeByEnrichController;
+import org.apache.streampipes.processors.filters.jvm.processor.merge.MergeByTimeController;
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterController;
 import org.apache.streampipes.processors.filters.jvm.processor.numericaltextfilter.NumericalTextFilterController;
 import org.apache.streampipes.processors.filters.jvm.processor.projection.ProjectionController;
@@ -78,6 +80,8 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new TextFilterController())
             .add(new ProjectionController())
             .add(new ComposeController())
+            .add(new MergeByEnrichController())
+            .add(new MergeByTimeController())
             .add(new TrendController())
             .add(new StreamStopController())
             .add(new CountArrayController())
