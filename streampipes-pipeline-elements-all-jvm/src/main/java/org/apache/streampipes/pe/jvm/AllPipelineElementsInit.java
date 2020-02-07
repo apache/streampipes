@@ -46,7 +46,6 @@ import org.apache.streampipes.processors.transformation.jvm.processor.booloperat
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.inverter.BooleanInverterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timekeeping.BooleanTimekeepingController;
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timer.BooleanTimerController;
-import org.apache.streampipes.processors.transformation.jvm.processor.statemonitor.StateMonitorController;
 import org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentController;
 import org.apache.streampipes.processors.transformation.jvm.processor.task.TaskDurationController;
 import org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor.TimestampExtractorController;
