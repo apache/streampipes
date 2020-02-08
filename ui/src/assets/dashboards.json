@@ -22,7 +22,7 @@
     "name": "Sample Dashboard 5",
     "widgets": [
       {
-        "id": "1",
+        "id": "9efc42508b0348a78304a84bbfda3363",
         "name": "Timeline",
         "component": "timeline",
         "widgetType": "number",

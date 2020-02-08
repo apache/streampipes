@@ -37,8 +37,8 @@ public class DashboardWidgetStorageImpl extends AbstractDao<DashboardWidgetModel
   }
 
   @Override
-  public void storeDashboardWidget(DashboardWidgetModel dashboardWidgetModel) {
-    persist(dashboardWidgetModel);
+  public String storeDashboardWidget(DashboardWidgetModel dashboardWidgetModel) {
+    return persist(dashboardWidgetModel).b;
   }
 
   @Override

@@ -81,8 +81,8 @@ public class DashboardWidget extends AbstractRestInterface implements IDashboard
   @Consumes(SpMediaType.JSONLD)
   @Override
   public Response createDashboardWidget(DashboardWidgetModel dashboardWidgetModel) {
-    getDashboardWidgetStorage().storeDashboardWidget(dashboardWidgetModel);
-    return ok();
+    String widgetId = getDashboardWidgetStorage().storeDashboardWidget(dashboardWidgetModel);
+    return ok(getDashboardWidgetStorage().getDashboardWidget(widgetId));
   }
 
   private IDashboardWidgetStorage getDashboardWidgetStorage() {

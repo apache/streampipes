@@ -9,7 +9,13 @@
     </div>
 
     <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="dashboardsLoaded">
+    <dashboard-overview (reloadDashboardsEmitter)="getDashboards($event)" [dashboards]="dashboards"
+                        *ngIf="!dashboardTabSelected">
+
+    </dashboard-overview>
     <dashboard-panel fxLayout="column" [dashboard]="selectedDashboard"
-                     style="height:100%;"></dashboard-panel>
+                     style="height:100%;" *ngIf="dashboardTabSelected">
+
+    </dashboard-panel>
     </div>
 </div>

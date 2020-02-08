@@ -48,27 +48,22 @@ export class DashboardService {
             });
     }
 
-    deserializeSchema(schema: any): EventSchema {
-        let eventSchema: EventSchema = new EventSchema();
-        let eventProperties = new Array<EventProperty>();
-
-        schema.eventProperties.forEach(ep => {
-           eventProperties.push(this.makeProperty(ep));
+    getDashboards(): Observable<Array<Dashboard>> {
+        return this.http.get(this.dashboardUrl).map(data => {
+           return data as Dashboard[];
         });
-
-        eventSchema.eventProperties = eventProperties;
-        return eventSchema;
     }
 
-    makeProperty(ep: any): EventProperty {
-        // TODO find a better way to deserialize the schema
-        if (ep.type === "org.apache.streampipes.model.schema.EventPropertyPrimitive") {
-            return Object.assign(new EventPropertyPrimitive(), ep.properties);
-        }
+    updateDashboard(dashboard: Dashboard): Observable<any> {
+        return this.http.put(this.dashboardUrl + "/" +dashboard._id, dashboard);
     }
 
-    getPipeline(pipelineId): Observable<any> {
-        return this.http.get('/pipeline/' + pipelineId);
+    deleteDashboard(dashboard: Dashboard): Observable<any> {
+        return this.http.delete(this.dashboardUrl + "/" +dashboard._id);
+    }
+
+    saveDashboard(dashboard: Dashboard): Observable<any> {
+        return this.http.post(this.dashboardUrl, dashboard);
     }
 
     private get baseUrl() {
@@ -97,16 +92,12 @@ export class DashboardService {
         return from(promise);
     }
 
-    saveWidget(widget: DashboardWidget): Observable<StatusMessage> {
+    saveWidget(widget: DashboardWidget): Observable<DashboardWidget> {
         return this.serializeAndPost(this.dashboardWidgetUrl, widget);
     }
 
-    saveDashboard(dashboard: Dashboard) {
-        this.http.post('/dashboard', dashboard);
-    }
-
-    serializeAndPost(url: string, object: any): Observable<StatusMessage> {
-        let promise = new Promise<StatusMessage>((resolve, reject) => {
+    serializeAndPost(url: string, object: any): Observable<DashboardWidget> {
+        let promise = new Promise<DashboardWidget>((resolve, reject) => {
             this.tsonLdSerializerService.toJsonLd(object).subscribe(serialized => {
                 const httpOptions = {
                     headers: new HttpHeaders({
@@ -114,7 +105,7 @@ export class DashboardService {
                     }),
                 };
                 this.http.post(url, serialized, httpOptions).pipe(map(response => {
-                    resolve(response as StatusMessage);
+                    resolve(this.tsonLdSerializerService.fromJsonLd(response, "sp:DashboardWidgetModel"));
                 })).subscribe();
             });
         });

@@ -18,8 +18,11 @@
 
 package org.apache.streampipes.model.dashboard;
 
+import com.google.gson.annotations.SerializedName;
 import org.apache.streampipes.vocabulary.StreamPipes;
 import org.streampipes.empire.annotations.RdfsClass;
+
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
@@ -27,9 +30,66 @@ import javax.persistence.MappedSuperclass;
 @RdfsClass(StreamPipes.DASHBOARD_MODEL)
 @MappedSuperclass
 @Entity
-public class DashboardModel extends DashboardEntity {
+public class DashboardModel {
+
+  private @SerializedName("_id") String couchDbId;
+  private @SerializedName("_rev") String couchDbRev;
+
+  private String id;
+  private String name;
+  private String description;
+
+  private List<DashboardItem> widgets;
 
   public DashboardModel() {
 
+  }
+
+  public String getCouchDbId() {
+    return couchDbId;
+  }
+
+  public void setCouchDbId(String couchDbId) {
+    this.couchDbId = couchDbId;
+  }
+
+  public String getCouchDbRev() {
+    return couchDbRev;
+  }
+
+  public void setCouchDbRev(String couchDbRev) {
+    this.couchDbRev = couchDbRev;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public List<DashboardItem> getWidgets() {
+    return widgets;
+  }
+
+  public void setWidgets(List<DashboardItem> widgets) {
+    this.widgets = widgets;
   }
 }

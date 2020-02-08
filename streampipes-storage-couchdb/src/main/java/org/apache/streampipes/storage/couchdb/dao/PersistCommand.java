@@ -19,10 +19,11 @@ package org.apache.streampipes.storage.couchdb.dao;
 
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.Response;
+import org.mapdb.Fun;
 
 import java.util.function.Supplier;
 
-public class PersistCommand<T> extends DbCommand<Boolean, T> {
+public class PersistCommand<T> extends DbCommand<Fun.Tuple2<Boolean, String>, T> {
 
   private T objectToPersist;
 
@@ -32,10 +33,10 @@ public class PersistCommand<T> extends DbCommand<Boolean, T> {
   }
 
   @Override
-  protected Boolean executeCommand(CouchDbClient couchDbClient) {
+  protected Fun.Tuple2<Boolean, String> executeCommand(CouchDbClient couchDbClient) {
     Response response = couchDbClient.save(objectToPersist);
 
-    return response.getError() == null;
+    return new Fun.Tuple2<>(response.getError() == null, response.getId());
 
   }
 }

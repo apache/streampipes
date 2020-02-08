@@ -53,6 +53,6 @@ public class DashboardStorageImpl extends AbstractDao<DashboardModel> implements
 
   @Override
   public void deleteDashboard(String dashboardId) {
-
+    delete(dashboardId);
   }
 }

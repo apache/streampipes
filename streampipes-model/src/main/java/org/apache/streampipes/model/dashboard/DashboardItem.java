@@ -17,5 +17,95 @@
  */
 package org.apache.streampipes.model.dashboard;
 
+import java.util.List;
+
 public class DashboardItem {
+
+  private String id;
+  private String name;
+  private String component;
+  private String widgetType;
+
+  private List<String> settings;
+
+  private Integer cols;
+  private Integer rows;
+  private Integer x;
+  private Integer y;
+
+  public DashboardItem() {
+
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getComponent() {
+    return component;
+  }
+
+  public void setComponent(String component) {
+    this.component = component;
+  }
+
+  public String getWidgetType() {
+    return widgetType;
+  }
+
+  public void setWidgetType(String widgetType) {
+    this.widgetType = widgetType;
+  }
+
+  public List<String> getSettings() {
+    return settings;
+  }
+
+  public void setSettings(List<String> settings) {
+    this.settings = settings;
+  }
+
+  public Integer getCols() {
+    return cols;
+  }
+
+  public void setCols(Integer cols) {
+    this.cols = cols;
+  }
+
+  public Integer getRows() {
+    return rows;
+  }
+
+  public void setRows(Integer rows) {
+    this.rows = rows;
+  }
+
+  public Integer getX() {
+    return x;
+  }
+
+  public void setX(Integer x) {
+    this.x = x;
+  }
+
+  public Integer getY() {
+    return y;
+  }
+
+  public void setY(Integer y) {
+    this.y = y;
+  }
 }

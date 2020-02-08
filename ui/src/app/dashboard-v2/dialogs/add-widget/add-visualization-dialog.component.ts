@@ -16,18 +16,19 @@
  *
  */
 
-import {Component, Inject} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {DashboardService} from "../services/dashboard.service";
-import {ElementIconText} from "../../services/get-element-icon-text.service";
-import {WidgetRegistry} from "../registry/widget-registry";
-import {MappingPropertyUnary} from "../../connect/model/MappingPropertyUnary";
-import {MappingPropertyGenerator} from "../sdk/matching/mapping-property-generator";
-import {EventProperty} from "../../connect/schema-editor/model/EventProperty";
-import {EventSchema} from "../../connect/schema-editor/model/EventSchema";
-import {DashboardWidget} from "../../core-model/dashboard/DashboardWidget";
-import {DashboardWidgetSettings} from "../../core-model/dashboard/DashboardWidgetSettings";
-import {VisualizablePipeline} from "../../core-model/dashboard/VisualizablePipeline";
+import {Component} from "@angular/core";
+import {MatDialogRef} from "@angular/material";
+import {DashboardService} from "../../services/dashboard.service";
+import {ElementIconText} from "../../../services/get-element-icon-text.service";
+import {WidgetRegistry} from "../../registry/widget-registry";
+import {MappingPropertyUnary} from "../../../connect/model/MappingPropertyUnary";
+import {MappingPropertyGenerator} from "../../sdk/matching/mapping-property-generator";
+import {EventProperty} from "../../../connect/schema-editor/model/EventProperty";
+import {EventSchema} from "../../../connect/schema-editor/model/EventSchema";
+import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
+import {DashboardWidgetSettings} from "../../../core-model/dashboard/DashboardWidgetSettings";
+import {VisualizablePipeline} from "../../../core-model/dashboard/VisualizablePipeline";
+import {Dashboard} from "../../models/dashboard.model";
 
 @Component({
     selector: 'add-visualization-dialog-component',
@@ -51,10 +52,12 @@ export class AddVisualizationDialogComponent {
     }];
 
     visualizablePipelines: Array<VisualizablePipeline> = [];
-    availableWidgets:  Array<DashboardWidgetSettings>;
+    availableWidgets: Array<DashboardWidgetSettings>;
 
     selectedPipeline: VisualizablePipeline;
     selectedWidget: DashboardWidgetSettings;
+
+    dashboard: Dashboard;
 
     selectedType: any;
     page: any = "select-pipeline";
@@ -69,14 +72,7 @@ export class AddVisualizationDialogComponent {
 
     ngOnInit() {
         this.dashboardService.getVisualizablePipelines().subscribe(visualizations => {
-            visualizations.forEach(vis => {
-                this.visualizablePipelines.push(vis);
-                // this.dashboardService.getPipeline(vis.doc.pipelineId)
-                //     .subscribe(pipeline => {
-                //         vis.doc.name = pipeline.name;
-                //         this.visualizablePipelines.push(vis);
-                //     });
-            });
+            this.visualizablePipelines = visualizations;
         });
         this.availableWidgets = WidgetRegistry.getAvailableWidgets();
     }
@@ -114,10 +110,10 @@ export class AddVisualizationDialogComponent {
     selectWidget(widget) {
         this.selectedWidget = widget;
         this.selectedWidget.config.forEach(sp => {
-           if (sp instanceof MappingPropertyUnary) {
-               let requirement: EventProperty = this.findRequirement(this.selectedWidget.requiredSchema, sp.internalName);
-               sp.mapsFromOptions = new MappingPropertyGenerator(requirement, this.selectedPipeline.schema.eventProperties).computeMatchingProperties();
-           }
+            if (sp instanceof MappingPropertyUnary) {
+                let requirement: EventProperty = this.findRequirement(this.selectedWidget.requiredSchema, sp.internalName);
+                sp.mapsFromOptions = new MappingPropertyGenerator(requirement, this.selectedPipeline.schema.eventProperties).computeMatchingProperties();
+            }
         });
         this.next();
     }
@@ -133,11 +129,11 @@ export class AddVisualizationDialogComponent {
             this.page = 'configure-widget';
         } else {
             let configuredWidget: DashboardWidget = new DashboardWidget();
-            configuredWidget.widgetId = "a";
+            configuredWidget._id = "asd";
             configuredWidget.dashboardWidgetSettings = this.selectedWidget;
             configuredWidget.dashboardWidgetDataConfig = this.selectedPipeline;
             this.dashboardService.saveWidget(configuredWidget).subscribe(response => {
-                this.dialogRef.close();
+                this.dialogRef.close(response);
             });
         }
     }

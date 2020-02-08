@@ -50,7 +50,6 @@ import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRu
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
-import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.model.dashboard.VisualizablePipeline;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
@@ -244,7 +243,6 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             EventRateTransformationRuleDescription.class,
             SecretStaticProperty.class,
             DashboardWidgetModel.class,
-            DashboardModel.class,
             VisualizablePipeline.class,
             StreamPipesJsonLdContainer.class
 

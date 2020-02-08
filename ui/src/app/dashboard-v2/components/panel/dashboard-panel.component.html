@@ -1,13 +1,13 @@
-<button mat-button mat-raised-button color="primary" (click)="addWidget()">Add visualization</button>
+<div fxFlex="100" fxLayout="column" class="m-20">
+    <div fxLayout="row wrap" style="margin-bottom:20px;">
+        <button mat-button mat-raised-button color="primary" (click)="addWidget()">Add visualization</button>
+    </div>
 
-<gridster [options]="options">
-
-    <ng-container *ngFor="let item of items">
-
-        <gridster-item [item]="item">
-            <dashboard-widget [widget]="item"></dashboard-widget>
-        </gridster-item>
-
-    </ng-container>
-
-</gridster>
+    <gridster [options]="options">
+        <ng-container *ngFor="let item of items">
+            <gridster-item [item]="item">
+                <dashboard-widget [widget]="item"></dashboard-widget>
+            </gridster-item>
+        </ng-container>
+    </gridster>
+</div>

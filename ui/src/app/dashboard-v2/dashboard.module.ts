@@ -11,20 +11,16 @@ import {DashboardWidgetComponent} from "./components/widget/dashboard-widget.com
 import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
 import {FormsModule} from "@angular/forms";
 import {ColorPickerModule} from "ngx-color-picker";
-import {AddVisualizationDialogComponent} from "./dialogs/add-visualization-dialog.component";
+import {AddVisualizationDialogComponent} from "./dialogs/add-widget/add-visualization-dialog.component";
 import {MatGridListModule} from "@angular/material/grid-list";
-import {ShapeService} from "../app-asset-monitoring/services/shape.service";
 import {ElementIconText} from "../services/get-element-icon-text.service";
 import {DashboardService} from "./services/dashboard.service";
 import {ConnectModule} from "../connect/connect.module";
-import {PropertySelectorService} from "../services/property-selector.service";
 import {NumberVizComponent} from "./components/widgets/number/number-viz.component";
 import {streamPipesStompConfig} from "./services/websocket.config";
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
-//import { DashboardWidgetsModule } from 'dashboard-widgets';
-//import { FunnelChartComponent, ParliamentChartComponent, PieChartComponent, TimelineComponent } from
-// 'dashboard-widgets';
-
+import {DashboardOverviewComponent} from "./components/overview/dashboard-overview.component";
+import {EditDashboardDialogComponent} from "./dialogs/edit-dashboard/edit-dashboard-dialog.component";
 
 const dashboardWidgets = [
 
@@ -49,9 +45,11 @@ const dashboardWidgets = [
     ],
     declarations: [
         DashboardComponent,
+        DashboardOverviewComponent,
         DashboardPanelComponent,
         DashboardWidgetComponent,
         AddVisualizationDialogComponent,
+        EditDashboardDialogComponent,
         NumberVizComponent
     ],
     providers: [
@@ -77,7 +75,8 @@ const dashboardWidgets = [
     ],
     entryComponents: [
         DashboardComponent,
-        AddVisualizationDialogComponent
+        AddVisualizationDialogComponent,
+        EditDashboardDialogComponent
     ]
 })
 export class DashboardModule {

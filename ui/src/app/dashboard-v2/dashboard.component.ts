@@ -1,8 +1,7 @@
-import {Component, Input, OnInit} from "@angular/core";
-import {Subscription} from "rxjs";
-import {GridType} from "angular-gridster2";
-import {Dashboard, DashboardConfig} from "./models/dashboard.model";
+import {Component, OnInit} from "@angular/core";
+import {Dashboard} from "./models/dashboard.model";
 import {MockDashboardService} from "./services/MockDashboard.service";
+import {DashboardService} from "./services/dashboard.service";
 
 @Component({
     selector: 'dashboard',
@@ -13,11 +12,12 @@ export class DashboardComponent implements OnInit {
 
     selectedDashboard: Dashboard;
     selectedIndex: number = 0;
-    dashboardsLoaded = false;
+    dashboardsLoaded: boolean = false;
+    dashboardTabSelected: boolean = false;
 
     dashboards: Array<Dashboard>;
 
-    constructor(private dashboardService: MockDashboardService) {}
+    constructor(private dashboardService: DashboardService) {}
 
     public ngOnInit() {
         this.getDashboards();
@@ -26,14 +26,19 @@ export class DashboardComponent implements OnInit {
 
 
     selectDashboard(index: number) {
-        this.selectedDashboard = this.dashboards[index];
+        if (index == 0) {
+            this.dashboardTabSelected = false;
+        } else {
+            this.dashboardTabSelected = true;
+            this.selectedDashboard = this.dashboards[index - 1];
+        }
     }
 
-    protected getDashboards() {
+    protected getDashboards(reload?: boolean) {
+        this.dashboardsLoaded = false;
         this.dashboardService.getDashboards().subscribe(data => {
             this.dashboards = data;
             this.selectedIndex = 0;
-            this.selectDashboard(0);
             this.dashboardsLoaded = true;
         });
     }

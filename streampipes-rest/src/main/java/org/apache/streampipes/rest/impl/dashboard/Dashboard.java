@@ -21,7 +21,6 @@ package org.apache.streampipes.rest.impl.dashboard;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.rest.api.dashboard.IDashboard;
 import org.apache.streampipes.rest.impl.AbstractRestInterface;
-import org.apache.streampipes.rest.shared.annotation.JsonLdSerialized;
 import org.apache.streampipes.storage.api.IDashboardStorage;
 
 import javax.ws.rs.DELETE;
@@ -38,7 +37,6 @@ import javax.ws.rs.core.Response;
 public class Dashboard extends AbstractRestInterface implements IDashboard {
 
   @GET
-  @JsonLdSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Override
   public Response getAllDashboards() {
@@ -46,7 +44,6 @@ public class Dashboard extends AbstractRestInterface implements IDashboard {
   }
 
   @GET
-  @JsonLdSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{dashboardId}")
   @Override
@@ -55,7 +52,6 @@ public class Dashboard extends AbstractRestInterface implements IDashboard {
   }
 
   @PUT
-  @JsonLdSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{dashboardId}")
   @Override
@@ -65,7 +61,6 @@ public class Dashboard extends AbstractRestInterface implements IDashboard {
   }
 
   @DELETE
-  @JsonLdSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{dashboardId}")
   @Override
@@ -75,7 +70,6 @@ public class Dashboard extends AbstractRestInterface implements IDashboard {
   }
 
   @POST
-  @JsonLdSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Override
   public Response createDashboard(DashboardModel dashboardModel) {

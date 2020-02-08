@@ -16,21 +16,40 @@
  *
  */
 
-package org.apache.streampipes.storage.api;
+.element-margin {
+    margin-top:10px;
+    margin-bottom:10px;
+}
 
-import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
+mat-toolbar {
+    background: #39b54a;
+    color:white;
+}
 
-import java.util.List;
+mat-dialog-content {
+    padding: 24px;
+    -webkit-box-ordinal-group: 2;
+    -webkit-order: 1;
+    order: 1;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
 
-public interface IDashboardWidgetStorage {
+.mat-dialog-content {
+    width:100%;
+    height:74%;
+    margin: 0px;
+}
 
-  List<DashboardWidgetModel> getAllDashboardWidgets();
+.mat-dialog-actions {
+    margin-bottom:0px;
+    padding-right:10px;
+}
 
-  String storeDashboardWidget(DashboardWidgetModel dashboardWidgetModel);
-
-  void updateDashboardWidget(DashboardWidgetModel dashboardWidgetModel);
-
-  DashboardWidgetModel getDashboardWidget(String dashboardWidgetId);
-
-  void deleteDashboardWidget(String dashboardWidgetId);
+.mat-radio-button {
+    padding: 10px;
 }

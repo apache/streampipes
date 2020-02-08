@@ -4,7 +4,7 @@ import {Subscription} from "rxjs";
 import {MockDashboardService} from "../../services/MockDashboard.service";
 import {GridType} from "angular-gridster2";
 import {MatDialog} from "@angular/material/dialog";
-import {AddVisualizationDialogComponent} from "../../dialogs/add-visualization-dialog.component";
+import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
 
 @Component({
     selector: 'dashboard-panel',
@@ -45,6 +45,7 @@ export class DashboardPanelComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                console.log(result);
                 // this.addNewVisulizationItem(result);
                 // this.measurementPresent = true;
                 // this.mainLayer.draw();
