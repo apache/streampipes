@@ -31,6 +31,8 @@ export abstract class EventProperty {
   parent: EventProperty;
   child?: EventProperty;
 
+  propertySelector:string;
+
   propertyNumber: number; // what the user sees in the UI
 
   @RdfId

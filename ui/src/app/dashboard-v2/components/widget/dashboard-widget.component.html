@@ -6,10 +6,12 @@
             </button>
         </div>
     </div>
-    <div class="sp-blue-border" style="height:100%;">
+    <div class="sp-blue-border h-100">
         <!--        <div *ngIf="widget."></div>-->
-        <div *ngIf="widgetLoaded">
-            {{configuredWidget.dashboardWidgetSettings.widgetName}}
+        <div *ngIf="widgetLoaded" class="h-100">
+            <div *ngIf="widget.widgetType === 'number'" class="h-100 p-0">
+                <number-viz [widget]="widget" [widgetConfig]="configuredWidget"></number-viz>
+            </div>
         </div>
     </div>
 </div>

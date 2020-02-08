@@ -1,0 +1,9 @@
+<div class="circleNumber" [ngStyle]="{'background-color': color}">
+    <div class="numberTitle">
+        {{title}}
+    </div>
+    <div class="numberItem">
+        <div *ngIf="isNumber(item)">{{item}}</div>
+        <div *ngIf="!isNumber(item)">{{item}}</div>
+    </div>
+</div>

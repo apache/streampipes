@@ -5,6 +5,9 @@ import {DashboardWidgetSettings} from "../../../../core-model/dashboard/Dashboar
 
 export class NumberConfig {
 
+    static TITLE_KEY: string = "hi";
+    static NUMBER_MAPPING_KEY: string = "number-mapping";
+
     constructor() {
 
     }
@@ -13,9 +16,9 @@ export class NumberConfig {
         return WidgetConfigBuilder.create("number", "number")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
-                .requiredPropertyWithUnaryMapping("number-mapping", "Select property", "", EpRequirements.numberReq())
+                .requiredPropertyWithUnaryMapping(this.TITLE_KEY, "Select property", "", EpRequirements.numberReq())
                 .build())
-            .requiredTextParameter("hi", "hi", "hi")
+            .requiredTextParameter(this.NUMBER_MAPPING_KEY, "hi", "hi")
             .build();
     }
 

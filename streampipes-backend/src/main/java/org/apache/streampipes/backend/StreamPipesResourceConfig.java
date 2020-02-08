@@ -18,12 +18,6 @@
 
 package org.apache.streampipes.backend;
 
-import org.apache.streampipes.rest.impl.dashboard.Dashboard;
-import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
-import org.apache.streampipes.rest.impl.dashboard.VisualizablePipeline;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.springframework.context.annotation.Configuration;
 import org.apache.streampipes.rest.impl.ApplicationLink;
 import org.apache.streampipes.rest.impl.AssetDashboard;
 import org.apache.streampipes.rest.impl.Authentication;
@@ -58,6 +52,9 @@ import org.apache.streampipes.rest.impl.User;
 import org.apache.streampipes.rest.impl.Version;
 import org.apache.streampipes.rest.impl.VirtualSensor;
 import org.apache.streampipes.rest.impl.Visualization;
+import org.apache.streampipes.rest.impl.dashboard.Dashboard;
+import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
+import org.apache.streampipes.rest.impl.dashboard.VisualizablePipeline;
 import org.apache.streampipes.rest.impl.datalake.DataLakeNoUserResourceV3;
 import org.apache.streampipes.rest.impl.datalake.DataLakeResourceV3;
 import org.apache.streampipes.rest.impl.nouser.FileServingResource;

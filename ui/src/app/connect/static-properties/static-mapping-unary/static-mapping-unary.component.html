@@ -27,7 +27,7 @@
             <mat-form-field class="example-full-width">
                 <!--<mat-form-field class="example-full-width">-->
                 <mat-select [placeholder]="staticProperty.label" [(value)]="staticProperty.selectedProperty">
-                    <mat-option *ngFor="let property of availableProperties " [value]="property.runtimeName">
+                    <mat-option *ngFor="let property of availableProperties " [value]="property.propertySelector">
                         {{getName(property)}}
                     </mat-option>
                 </mat-select>

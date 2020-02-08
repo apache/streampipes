@@ -46,6 +46,8 @@ export class StaticMappingUnaryComponent implements OnInit {
     private errorMessage = "Please enter a value";
     private availableProperties: Array<EventProperty>;
 
+    private firstStreamPropertySelector: string = "s0::";
+
     constructor(private staticPropertyUtil: StaticPropertyUtilService,
                 private PropertySelectorService: PropertySelectorService){
 
@@ -54,6 +56,7 @@ export class StaticMappingUnaryComponent implements OnInit {
 
     ngOnInit() {
         this.availableProperties = this.extractPossibleSelections();
+        this.availableProperties.forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
         this.unaryTextForm = new FormGroup({
             'unaryStaticText':new FormControl(this.inputValue, [
                 Validators.required,
@@ -66,12 +69,12 @@ export class StaticMappingUnaryComponent implements OnInit {
     }
 
     isInSelection(ep: EventProperty): boolean {
-        return this.staticProperty.mapsFromOptions.some(maps => maps === "s0::" + ep.runtimeName);
+        return this.staticProperty.mapsFromOptions.some(maps => maps === this.firstStreamPropertySelector + ep.runtimeName);
     }
 
     valueChange(inputValue) {
         this.inputValue = inputValue;
-        if(inputValue == "" || !inputValue) {
+        if (inputValue == "" || !inputValue) {
             this.hasInput = false;
         }
         else{
