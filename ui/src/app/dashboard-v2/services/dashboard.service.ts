@@ -54,8 +54,10 @@ export class DashboardService {
         });
     }
 
-    updateDashboard(dashboard: Dashboard): Observable<any> {
-        return this.http.put(this.dashboardUrl + "/" +dashboard._id, dashboard);
+    updateDashboard(dashboard: Dashboard): Observable<Dashboard> {
+        return this.http.put(this.dashboardUrl + "/" +dashboard._id, dashboard).map(data => {
+            return data as Dashboard;
+        });
     }
 
     deleteDashboard(dashboard: Dashboard): Observable<any> {

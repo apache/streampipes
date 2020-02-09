@@ -21,7 +21,7 @@ export class StaticPropertyExtractor {
     }
 
     getStaticPropertyByName(internalId: string): StaticProperty {
-        return this.staticProperties.find(sp => sp.internalName == internalId);
+        return this.staticProperties.find(sp => (sp.internalName == internalId));
     }
 
 

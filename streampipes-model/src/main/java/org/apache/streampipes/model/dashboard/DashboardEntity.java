@@ -41,4 +41,20 @@ public abstract class DashboardEntity extends UnnamedStreamPipesEntity {
   public DashboardEntity() {
     super();
   }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getRev() {
+    return rev;
+  }
+
+  public void setRev(String rev) {
+    this.rev = rev;
+  }
 }

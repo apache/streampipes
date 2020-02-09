@@ -74,7 +74,7 @@ export class AddVisualizationDialogComponent {
         this.dashboardService.getVisualizablePipelines().subscribe(visualizations => {
             this.visualizablePipelines = visualizations;
         });
-        this.availableWidgets = WidgetRegistry.getAvailableWidgets();
+        this.availableWidgets = WidgetRegistry.getAvailableWidgetTemplates();
     }
 
     onCancel(): void {
@@ -129,7 +129,6 @@ export class AddVisualizationDialogComponent {
             this.page = 'configure-widget';
         } else {
             let configuredWidget: DashboardWidget = new DashboardWidget();
-            configuredWidget._id = "asd";
             configuredWidget.dashboardWidgetSettings = this.selectedWidget;
             configuredWidget.dashboardWidgetDataConfig = this.selectedPipeline;
             this.dashboardService.saveWidget(configuredWidget).subscribe(response => {

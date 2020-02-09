@@ -5,3 +5,21 @@
 .p-0 {
     padding:0;
 }
+
+.m-0 {
+    margin:0;
+}
+
+.box {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+.box .row.content {
+    flex: 1 1 auto;
+}
+
+.box .row.header {
+    flex: 0 1 auto;
+}

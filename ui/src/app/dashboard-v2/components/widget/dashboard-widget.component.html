@@ -1,16 +1,21 @@
 <div style="height:100%;">
-    <div class="assemblyOptions sp-blue-bg">
-        <div flex="100" layout="row" layout-align="start center">
-            <button mat-button mat-raised-button color="primary">
-                <i class="material-icons">save</i>
-            </button>
+    <div class="box">
+        <div class="assemblyOptions sp-blue-bg m-0 row header" *ngIf="editMode">
+            <div fxFlex="100" layout="row" fxLayoutAlign="end center">
+                <button mat-button mat-icon-button color="white">
+                    <i class="material-icons">settings</i>
+                </button>
+                <button mat-button mat-icon-button color="white">
+                    <i class="material-icons">clear</i>
+                </button>
+            </div>
         </div>
-    </div>
-    <div class="sp-blue-border h-100">
-        <!--        <div *ngIf="widget."></div>-->
-        <div *ngIf="widgetLoaded" class="h-100">
-            <div *ngIf="widget.widgetType === 'number'" class="h-100 p-0">
-                <number-viz [widget]="widget" [widgetConfig]="configuredWidget"></number-viz>
+        <div class="sp-blue-border h-100 p-0 row content">
+            <!--        <div *ngIf="widget."></div>-->
+            <div *ngIf="widgetLoaded" class="h-100">
+                <div *ngIf="widget.widgetType === 'number'" class="h-100 p-0">
+                    <number-viz [widget]="widget" [widgetConfig]="configuredWidget"></number-viz>
+                </div>
             </div>
         </div>
     </div>

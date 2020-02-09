@@ -16,10 +16,10 @@ export class DashboardWidget extends UnnamedStreamPipesEntity {
     @RdfProperty('sp:hasDashboardWidgetDataConfig')
     dashboardWidgetDataConfig: VisualizablePipeline;
 
-    @RdfProperty('sp:hasCouchDbId')
+    @RdfProperty('sp:couchDbId')
     _id: string;
 
-    @RdfProperty('sp:hasCouchDbRev')
+    @RdfProperty('sp:couchDbRev')
     _ref:string;
 
     @RdfProperty('sp:hasDashboardWidgetId')

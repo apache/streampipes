@@ -57,7 +57,7 @@ public class Dashboard extends AbstractRestInterface implements IDashboard {
   @Override
   public Response modifyDashboard(DashboardModel dashboardModel) {
     getDashboardStorage().updateDashboard(dashboardModel);
-    return ok();
+    return ok(getDashboardStorage().getDashboard(dashboardModel.getCouchDbId()));
   }
 
   @DELETE

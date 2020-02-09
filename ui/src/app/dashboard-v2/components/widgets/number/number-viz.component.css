@@ -1,9 +1,17 @@
 .circleNumber {
     width:100%;
     height: 100%;
-    font-size: 30px;
     color: #fff;
-    line-height: 150px;
     text-align: center;
     left: 50%;
+    display:inline-grid;
+    align-content: center;
+}
+
+.numberTitle {
+    font-size:20px;
+}
+
+.numberItem {
+    font-size:30px;
 }

@@ -2,23 +2,24 @@ import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
 import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
 import {EpRequirements} from "../../../sdk/ep-requirements";
 import {DashboardWidgetSettings} from "../../../../core-model/dashboard/DashboardWidgetSettings";
+import {WidgetConfig} from "../base/base-config";
 
-export class NumberConfig {
+export class NumberConfig extends WidgetConfig {
 
-    static TITLE_KEY: string = "hi";
-    static NUMBER_MAPPING_KEY: string = "number-mapping";
+    static readonly TITLE_KEY: string = "hi";
+    static readonly NUMBER_MAPPING_KEY: string = "number-mapping";
 
     constructor() {
-
+        super();
     }
 
-    static getConfig(): DashboardWidgetSettings {
+    getConfig(): DashboardWidgetSettings {
         return WidgetConfigBuilder.create("number", "number")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
-                .requiredPropertyWithUnaryMapping(this.TITLE_KEY, "Select property", "", EpRequirements.numberReq())
+                .requiredPropertyWithUnaryMapping(NumberConfig.NUMBER_MAPPING_KEY, "Select property", "", EpRequirements.numberReq())
                 .build())
-            .requiredTextParameter(this.NUMBER_MAPPING_KEY, "hi", "hi")
+            .requiredTextParameter(NumberConfig.TITLE_KEY, "hi", "hi")
             .build();
     }
 

@@ -12,6 +12,7 @@ import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
 export class DashboardWidgetComponent implements OnInit {
 
     @Input() widget: DashboardItem;
+    @Input() editMode: boolean;
 
     widgetLoaded: boolean = false;
     configuredWidget: DashboardWidget;
