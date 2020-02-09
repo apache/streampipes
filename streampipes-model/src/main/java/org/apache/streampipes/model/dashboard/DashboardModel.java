@@ -38,6 +38,7 @@ public class DashboardModel {
   private String id;
   private String name;
   private String description;
+  private boolean displayHeader;
 
   private List<DashboardItem> widgets;
 
@@ -91,5 +92,13 @@ public class DashboardModel {
 
   public void setWidgets(List<DashboardItem> widgets) {
     this.widgets = widgets;
+  }
+
+  public boolean isDisplayHeader() {
+    return displayHeader;
+  }
+
+  public void setDisplayHeader(boolean displayHeader) {
+    this.displayHeader = displayHeader;
   }
 }

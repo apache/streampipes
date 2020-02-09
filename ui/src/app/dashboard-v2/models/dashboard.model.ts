@@ -11,6 +11,7 @@ export interface Dashboard {
     id?: string;
     name?: string;
     description?: string;
+    displayHeader?: boolean;
     widgets?: Array<DashboardItem>;
     _id?: string;
     _rev?: string;

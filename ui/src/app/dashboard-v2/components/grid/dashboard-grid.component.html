@@ -1,3 +1,7 @@
+<div *ngIf="dashboard.displayHeader" class="text-center">
+    <h2>{{dashboard.name}}</h2>
+    <h3>{{dashboard.description}}</h3>
+</div>
 <gridster [options]="options" [ngClass]="editMode ? 'edit' : ''">
     <ng-container *ngFor="let item of dashboard.widgets">
         <gridster-item [item]="item">

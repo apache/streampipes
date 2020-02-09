@@ -15,9 +15,10 @@ export class DashboardOverviewComponent implements OnInit {
 
     @Input() dashboards: Array<Dashboard>;
     @Output() reloadDashboardsEmitter = new EventEmitter<boolean>();
+    @Output() selectDashboardEmitter = new EventEmitter<Dashboard>();
 
     dataSource = new MatTableDataSource<Dashboard>();
-    displayedColumns: string[] = ['name', 'edit', 'delete'];
+    displayedColumns: string[] = ['name', 'open', 'openWindow', 'edit', 'delete'];
 
     constructor(private dashboardService: DashboardService,
                 public dialog: MatDialog) {
@@ -57,6 +58,14 @@ export class DashboardOverviewComponent implements OnInit {
         this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
             this.reloadDashboardsEmitter.emit(true);
         });
+    }
+
+    showDashboard(dashboard: Dashboard) {
+        this.selectDashboardEmitter.emit(dashboard);
+    }
+
+    openExternalDashboard(dashboard: Dashboard) {
+
     }
 
 }

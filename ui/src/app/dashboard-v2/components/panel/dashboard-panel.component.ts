@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@angular/core";
 import {Dashboard, DashboardConfig, DashboardItem} from "../../models/dashboard.model";
 import {Subscription} from "rxjs";
 import {GridType} from "angular-gridster2";
@@ -12,16 +12,16 @@ import {DashboardService} from "../../services/dashboard.service";
     templateUrl: './dashboard-panel.component.html',
     styleUrls: ['./dashboard-panel.component.css']
 })
-export class DashboardPanelComponent implements OnInit {
+export class DashboardPanelComponent implements OnInit, OnChanges {
 
     @Input() dashboard: Dashboard;
+    @Input("editMode") editMode: boolean;
+    @Output("editModeChange") editModeChange: EventEmitter<boolean> = new EventEmitter();
 
     public options: DashboardConfig;
     public items: DashboardItem[];
 
     protected subscription: Subscription;
-
-    editMode: boolean = false;
 
     constructor(private dashboardService: DashboardService,
                 public dialog: MatDialog) {}
@@ -30,10 +30,12 @@ export class DashboardPanelComponent implements OnInit {
         this.options = {
             disablePushOnDrag: true,
             draggable: { enabled: this.editMode },
-            gridType: GridType.ScrollVertical,
+            gridType: GridType.VerticalFixed,
             minCols: 8,
             maxCols: 8,
             minRows: 4,
+            fixedRowHeight: 100,
+            fixedColWidth: 100,
             resizable: { enabled: this.editMode }
         };
     }
@@ -72,14 +74,22 @@ export class DashboardPanelComponent implements OnInit {
         })
     }
 
-    toggleEditMode() {
-        if (this.editMode) {
-            this.updateDashboard();
-        }
-        this.editMode = !(this.editMode);
-        this.options.draggable.enabled = this.editMode;
-        this.options.resizable.enabled = this.editMode;
-        this.options.displayGrid = this.editMode ? 'always' : 'none';
-        this.options.api.optionsChanged();
+    updateDashboardAndCloseEditMode() {
+        this.updateDashboard();
+        this.editModeChange.emit(!(this.editMode));
     }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes["editMode"] && this.options) {
+            // if (this.editMode) {
+            //     this.updateDashboard();
+            // }
+            // this.editMode = !(this.editMode);
+            this.options.draggable.enabled = this.editMode;
+            this.options.resizable.enabled = this.editMode;
+            this.options.displayGrid = this.editMode ? 'always' : 'none';
+            this.options.api.optionsChanged();
+        }
+    }
+
 }

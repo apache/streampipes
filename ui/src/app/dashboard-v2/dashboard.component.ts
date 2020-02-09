@@ -15,6 +15,8 @@ export class DashboardComponent implements OnInit {
     dashboardsLoaded: boolean = false;
     dashboardTabSelected: boolean = false;
 
+    editMode: boolean = false;
+
     dashboards: Array<Dashboard>;
 
     constructor(private dashboardService: DashboardService) {}
@@ -24,8 +26,13 @@ export class DashboardComponent implements OnInit {
 
     }
 
+    openDashboard(dashboard: Dashboard) {
+        let index = this.dashboards.indexOf(dashboard);
+        this.selectDashboard((index + 1));
+    }
 
     selectDashboard(index: number) {
+        this.selectedIndex = index;
         if (index == 0) {
             this.dashboardTabSelected = false;
         } else {
@@ -41,5 +48,9 @@ export class DashboardComponent implements OnInit {
             this.selectedIndex = 0;
             this.dashboardsLoaded = true;
         });
+    }
+
+    toggleEditMode() {
+        this.editMode = ! (this.editMode);
     }
 }
