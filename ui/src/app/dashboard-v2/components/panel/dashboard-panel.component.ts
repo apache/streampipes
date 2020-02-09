@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
 import {Dashboard, DashboardConfig, DashboardItem} from "../../models/dashboard.model";
 import {Subscription} from "rxjs";
 import {GridType} from "angular-gridster2";
@@ -36,7 +36,6 @@ export class DashboardPanelComponent implements OnInit {
             minRows: 4,
             resizable: { enabled: this.editMode }
         };
-        this.items = this.dashboard.widgets;
     }
 
     addWidget(): void {
@@ -80,5 +79,4 @@ export class DashboardPanelComponent implements OnInit {
         this.options.displayGrid = this.editMode ? 'always' : 'none';
         this.options.api.optionsChanged();
     }
-
 }

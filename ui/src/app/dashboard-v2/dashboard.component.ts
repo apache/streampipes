@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
             this.dashboardTabSelected = false;
         } else {
             this.dashboardTabSelected = true;
-            this.selectedDashboard = this.dashboards[index - 1];
+            this.selectedDashboard = this.dashboards[(index - 1)];
         }
     }
 
