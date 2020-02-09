@@ -73,6 +73,9 @@ export class DashboardPanelComponent implements OnInit {
     }
 
     toggleEditMode() {
+        if (this.editMode) {
+            this.updateDashboard();
+        }
         this.editMode = !(this.editMode);
         this.options.draggable.enabled = this.editMode;
         this.options.resizable.enabled = this.editMode;

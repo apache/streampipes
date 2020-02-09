@@ -1,0 +1,8 @@
+
+gridster ::ng-deep {
+    background: white;
+}
+
+gridster.edit ::ng-deep {
+    background: #d3d3d3;
+}

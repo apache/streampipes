@@ -5,14 +5,7 @@
         </button>
         <button mat-button mat-raised-button color="primary" (click)="addWidget()" [disabled]="!editMode">Add
             visualization</button>
-
     </div>
 
-    <gridster [options]="options" [ngClass]="editMode ? 'edit' : ''">
-        <ng-container *ngFor="let item of dashboard.widgets">
-            <gridster-item [item]="item">
-                <dashboard-widget [widget]="item" [editMode]="editMode"></dashboard-widget>
-            </gridster-item>
-        </ng-container>
-    </gridster>
+    <dashboard-grid [editMode]="editMode" [dashboard]="dashboard" [options]="options" class="h-100"></dashboard-grid>
 </div>

@@ -1,0 +1,7 @@
+<gridster [options]="options" [ngClass]="editMode ? 'edit' : ''">
+    <ng-container *ngFor="let item of dashboard.widgets">
+        <gridster-item [item]="item">
+            <dashboard-widget [widget]="item" [editMode]="editMode"></dashboard-widget>
+        </gridster-item>
+    </ng-container>
+</gridster>

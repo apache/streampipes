@@ -2,10 +2,6 @@
     margin: 20px;
 }
 
-gridster ::ng-deep {
-    background: white;
-}
-
-gridster.edit ::ng-deep {
-    background: #d3d3d3;
+.h-100 {
+    height:100%;
 }

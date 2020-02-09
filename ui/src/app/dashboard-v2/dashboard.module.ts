@@ -21,6 +21,7 @@ import {streamPipesStompConfig} from "./services/websocket.config";
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
 import {DashboardOverviewComponent} from "./components/overview/dashboard-overview.component";
 import {EditDashboardDialogComponent} from "./dialogs/edit-dashboard/edit-dashboard-dialog.component";
+import {DashboardGridComponent} from "./components/grid/dashboard-grid.component";
 
 const dashboardWidgets = [
 
@@ -45,6 +46,7 @@ const dashboardWidgets = [
     ],
     declarations: [
         DashboardComponent,
+        DashboardGridComponent,
         DashboardOverviewComponent,
         DashboardPanelComponent,
         DashboardWidgetComponent,
