@@ -15,22 +15,16 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.rest.api;
 
-import {PipelineController} from "./pipeline.controller";
-declare const require: any;
+import javax.ws.rs.core.Response;
 
-export let PipelineComponent = {
-    template: require('./pipeline.tmpl.html'),
-    bindings: {
-        staticProperty : "=",
-        rawPipelineModel: "=",
-        allElements: "=",
-        preview: "<",
-        canvasId: "@",
-        pipelineValid: "=",
-        pipelineCacheRunning: "=",
-        pipelineCached: "="
-    },
-    controller: PipelineController,
-    controllerAs: 'ctrl'
-};
+public interface IPipelineCache {
+
+  Response updateCachedPipeline(String user, String rawPipelineModel);
+
+  Response getCachedPipeline(String user);
+
+  Response removePipelineFromCache(String user);
+
+}
