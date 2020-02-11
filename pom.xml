@@ -833,7 +833,7 @@
                                     <goal>jar</goal>
                                 </goals>
                                 <configuration>
-                                    <additionalparam>-Xdoclint:none</additionalparam>
+                                    <additionalJOption>-Xdoclint:none</additionalJOption>
                                     <doclint>none</doclint>
                                     <source>8</source>
                                 </configuration>
