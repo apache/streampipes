@@ -33,6 +33,7 @@ import { AlternativesStaticProperty } from "../model/AlternativesStaticProperty"
 import { AlternativeStaticProperty } from "../model/AlternativeStaticProperty";
 import { Option } from "../model/Option";
 import { URI } from "../model/URI";
+import {ColorPickerStaticProperty} from "../model/ColorPickerStaticProperty";
 
 
 @Injectable()
@@ -72,6 +73,11 @@ export class StaticPropertyUtilService{
             clone = new SecretStaticProperty(id);
             clone.value = val.value;
             clone.isEncrypted = val.isEncrypted;
+        }
+        else if (val instanceof ColorPickerStaticProperty) {
+            clone = new ColorPickerStaticProperty();
+            clone.id = id;
+            clone.selectedProperty = val.selectedColor;
         }
         else if (val instanceof GroupStaticProperty) {
             clone = new GroupStaticProperty(id);
@@ -150,6 +156,10 @@ export class StaticPropertyUtilService{
 
     public asFreeTextStaticProperty(val: StaticProperty): FreeTextStaticProperty {
         return <FreeTextStaticProperty> val;
+    }
+
+    public asColorPickerStaticProperty(val: StaticProperty): ColorPickerStaticProperty {
+        return <ColorPickerStaticProperty> val;
     }
 
     public asSecretStaticProperty(val: StaticProperty): SecretStaticProperty {

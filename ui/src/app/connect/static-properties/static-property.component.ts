@@ -36,6 +36,7 @@ import {SecretStaticProperty} from "../model/SecretStaticProperty";
 import {AlternativesStaticProperty} from '../model/AlternativesStaticProperty';
 import {GroupStaticProperty} from '../model/GroupStaticProperty';
 import { CollectionStaticProperty } from "../model/CollectionStaticProperty";
+import {ColorPickerStaticProperty} from "../model/ColorPickerStaticProperty";
 
 @Component({
   selector: 'app-static-property',
@@ -126,6 +127,10 @@ export class StaticPropertyComponent implements OnInit {
 
   isSecretStaticProperty(val) {
     return val instanceof SecretStaticProperty;
+  }
+
+  isColorPickerStaticProperty(val) {
+    return val instanceof ColorPickerStaticProperty;
   }
 
   isRuntimeResolvableAnyStaticProperty(val) {

@@ -6,8 +6,9 @@ import {WidgetConfig} from "../base/base-config";
 
 export class NumberConfig extends WidgetConfig {
 
-    static readonly TITLE_KEY: string = "hi";
+    static readonly TITLE_KEY: string = "title-key";
     static readonly NUMBER_MAPPING_KEY: string = "number-mapping";
+    static readonly COLOR_KEY: string = "color-key";
 
     constructor() {
         super();
@@ -19,7 +20,8 @@ export class NumberConfig extends WidgetConfig {
                 .create()
                 .requiredPropertyWithUnaryMapping(NumberConfig.NUMBER_MAPPING_KEY, "Select property", "", EpRequirements.numberReq())
                 .build())
-            .requiredTextParameter(NumberConfig.TITLE_KEY, "hi", "hi")
+            .requiredTextParameter(NumberConfig.TITLE_KEY, "Title", "The title")
+            .requiredColorParameter(NumberConfig.COLOR_KEY, "Background color", "The background color")
             .build();
     }
 

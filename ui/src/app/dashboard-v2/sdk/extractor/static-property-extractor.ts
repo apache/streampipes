@@ -2,6 +2,7 @@ import {EventSchema} from "../../../connect/schema-editor/model/EventSchema";
 import {StaticProperty} from "../../../connect/model/StaticProperty";
 import {MappingPropertyUnary} from "../../../connect/model/MappingPropertyUnary";
 import {FreeTextStaticProperty} from "../../../connect/model/FreeTextStaticProperty";
+import {ColorPickerStaticProperty} from "../../../connect/model/ColorPickerStaticProperty";
 
 export class StaticPropertyExtractor {
 
@@ -18,6 +19,11 @@ export class StaticPropertyExtractor {
     singleValueParameter(internalId: string): any {
         let sp: FreeTextStaticProperty = this.getStaticPropertyByName(internalId) as FreeTextStaticProperty;
         return sp.value;
+    }
+
+    selectedColor(internalId: string): any {
+        let sp: ColorPickerStaticProperty = this.getStaticPropertyByName(internalId) as ColorPickerStaticProperty;
+        return sp.selectedColor;
     }
 
     stringParameter(internalId: string): string {

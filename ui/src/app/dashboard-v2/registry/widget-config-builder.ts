@@ -4,6 +4,7 @@ import {EventSchema} from "../../connect/schema-editor/model/EventSchema";
 import {DashboardWidgetSettings} from "../../core-model/dashboard/DashboardWidgetSettings";
 import {Vocabulary} from "../sdk/model/vocabulary";
 import {Datatypes} from "../sdk/model/datatypes";
+import {ColorPickerStaticProperty} from "../../connect/model/ColorPickerStaticProperty";
 
 export class WidgetConfigBuilder {
 
@@ -23,6 +24,15 @@ export class WidgetConfigBuilder {
     requiredTextParameter(id: string, label: string, description: string): WidgetConfigBuilder {
         let fst: FreeTextStaticProperty = this.prepareStaticProperty(id, label, description, Datatypes.String.toUri())
         this.widget.config.push(fst);
+        return this;
+    }
+
+    requiredColorParameter(id: string, label: string, description: string): WidgetConfigBuilder {
+        let csp = new ColorPickerStaticProperty();
+        csp.internalName = id;
+        csp.label = label;
+        csp.description = description;
+        this.widget.config.push(csp);
         return this;
     }
 

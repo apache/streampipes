@@ -95,6 +95,7 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.QuantitativeValue;
 import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty;
 import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
 import org.apache.streampipes.model.staticproperty.FileStaticProperty;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
@@ -145,6 +146,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
   private List<Class<?>> getAnnotatedClasses() {
     return Arrays.asList(
             Accuracy.class,
+            ColorPickerStaticProperty.class,
             CustomOutputStrategy.class,
             DataSinkDescription.class,
             DataProcessorInvocation.class,

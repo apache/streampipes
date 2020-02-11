@@ -374,4 +374,6 @@ public class StreamPipes {
   public static final String CONTAINS_ELEMENTS = NS + "containsElement";
   public static final String HAS_DASHBOARD_WIDGET_ID = NS + "hasDashboardWidgetId";
   public static final String DASHBOARD_WIDGET_DATA_CONFIG = NS + "DashboardWidgetDataConfig" ;
+  public static final String COLOR_PICKER_STATIC_PROPERTY = NS + "ColorPickerStaticProperty";
+  public static final String SELECTED_COLOR = NS + "hasSelectedColor";
 }

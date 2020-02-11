@@ -21,6 +21,7 @@ package org.apache.streampipes.model.staticproperty;
 public enum StaticPropertyType {
     AnyStaticProperty,
     CollectionStaticProperty,
+    ColorPickerStaticProperty,
     DomainStaticProperty,
     FreeTextStaticProperty,
     FileStaticProperty,

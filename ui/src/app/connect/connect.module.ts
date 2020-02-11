@@ -94,6 +94,8 @@ import { TreeModule } from 'angular-tree-component';
 import { EventSchemaPreviewComponent } from './schema-editor/event-schema-preview/event-schema-preview.component';
 import {EventPropertyRowComponent} from "./schema-editor/event-property-row/event-property-row.component";
 import {PropertySelectorService} from "../services/property-selector.service";
+import {StaticColorPickerComponent} from "./static-properties/static-color-picker/static-color-picker.component";
+import {ColorPickerModule} from "ngx-color-picker";
 
 
 @NgModule({
@@ -111,6 +113,7 @@ import {PropertySelectorService} from "../services/property-selector.service";
         MatFormFieldModule,
         PlatformServicesModule,
         TreeModule.forRoot(),
+        ColorPickerModule
     ],
     exports: [
         StaticPropertyComponent,
@@ -156,6 +159,7 @@ import {PropertySelectorService} from "../services/property-selector.service";
         StaticGroupComponent,
         StaticAlternativesComponent,
         StaticCollectionComponent,
+        StaticColorPickerComponent
     ],
     providers: [
         RestService,
