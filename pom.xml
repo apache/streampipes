@@ -364,7 +364,8 @@
                         </executions>
                         <configuration>
                             <failOnError>false</failOnError>
-                            <additionalparam>-Xdoclint:none</additionalparam>
+                            <doclint>none</doclint>
+                            <additionalJOption>-Xdoclint:none</additionalJOption>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -460,7 +461,7 @@
                             </goals>
                             <configuration>
                                 <doclint>none</doclint>
-                                <additionalparam>-Xdoclint:none</additionalparam>
+                                <additionalJOption>-Xdoclint:none</additionalJOption>
                             </configuration>
                         </execution>
                     </executions>
@@ -570,7 +571,7 @@
                 <configuration>
                     <failOnError>false</failOnError>
                     <doclint>none</doclint>
-                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <additionalJOption>-Xdoclint:none</additionalJOption>
                 </configuration>
             </plugin>
         </plugins>
