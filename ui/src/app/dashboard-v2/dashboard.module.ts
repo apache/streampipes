@@ -16,12 +16,15 @@ import {MatGridListModule} from "@angular/material/grid-list";
 import {ElementIconText} from "../services/get-element-icon-text.service";
 import {DashboardService} from "./services/dashboard.service";
 import {ConnectModule} from "../connect/connect.module";
-import {NumberVizComponent} from "./components/widgets/number/number-viz.component";
+import {NumberWidgetComponent} from "./components/widgets/number/number-widget.component";
 import {streamPipesStompConfig} from "./services/websocket.config";
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
 import {DashboardOverviewComponent} from "./components/overview/dashboard-overview.component";
 import {EditDashboardDialogComponent} from "./dialogs/edit-dashboard/edit-dashboard-dialog.component";
 import {DashboardGridComponent} from "./components/grid/dashboard-grid.component";
+import {LineWidgetComponent} from "./components/widgets/line/line-widget.component";
+import {NgxChartsModule} from "@swimlane/ngx-charts";
+import {ResizeService} from "./services/resize.service";
 
 const dashboardWidgets = [
 
@@ -43,6 +46,7 @@ const dashboardWidgets = [
         ColorPickerModule,
         MatGridListModule,
         ConnectModule,
+        NgxChartsModule
     ],
     declarations: [
         DashboardComponent,
@@ -52,10 +56,12 @@ const dashboardWidgets = [
         DashboardWidgetComponent,
         AddVisualizationDialogComponent,
         EditDashboardDialogComponent,
-        NumberVizComponent
+        LineWidgetComponent,
+        NumberWidgetComponent
     ],
     providers: [
         DashboardService,
+        ResizeService,
         {
             provide: 'RestApi',
             useFactory: ($injector: any) => $injector.get('RestApi'),

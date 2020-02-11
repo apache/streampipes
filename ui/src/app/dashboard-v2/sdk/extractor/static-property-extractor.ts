@@ -20,6 +20,14 @@ export class StaticPropertyExtractor {
         return sp.value;
     }
 
+    stringParameter(internalId: string): string {
+        return this.singleValueParameter(internalId) as string;
+    }
+
+    integerParameter(internalId: string): number {
+        return this.singleValueParameter(internalId) as number;
+    }
+
     getStaticPropertyByName(internalId: string): StaticProperty {
         return this.staticProperties.find(sp => (sp.internalName == internalId));
     }

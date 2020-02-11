@@ -6,19 +6,22 @@ import {MatDialog} from "@angular/material/dialog";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
 import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
 import {DashboardService} from "../../services/dashboard.service";
+import {GridsterItem} from "angular-gridster2/lib/gridsterItem.interface";
+import {GridsterItemComponentInterface} from "angular-gridster2/lib/gridsterItemComponent.interface";
+import {ResizeService} from "../../services/resize.service";
+import {GridsterInfo} from "../../models/gridster-info.model";
 
 @Component({
     selector: 'dashboard-panel',
     templateUrl: './dashboard-panel.component.html',
     styleUrls: ['./dashboard-panel.component.css']
 })
-export class DashboardPanelComponent implements OnInit, OnChanges {
+export class DashboardPanelComponent implements OnInit {
 
     @Input() dashboard: Dashboard;
     @Input("editMode") editMode: boolean;
     @Output("editModeChange") editModeChange: EventEmitter<boolean> = new EventEmitter();
 
-    public options: DashboardConfig;
     public items: DashboardItem[];
 
     protected subscription: Subscription;
@@ -27,17 +30,7 @@ export class DashboardPanelComponent implements OnInit, OnChanges {
                 public dialog: MatDialog) {}
 
     public ngOnInit() {
-        this.options = {
-            disablePushOnDrag: true,
-            draggable: { enabled: this.editMode },
-            gridType: GridType.VerticalFixed,
-            minCols: 8,
-            maxCols: 8,
-            minRows: 4,
-            fixedRowHeight: 100,
-            fixedColWidth: 100,
-            resizable: { enabled: this.editMode }
-        };
+
     }
 
     addWidget(): void {
@@ -79,17 +72,5 @@ export class DashboardPanelComponent implements OnInit, OnChanges {
         this.editModeChange.emit(!(this.editMode));
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes["editMode"] && this.options) {
-            // if (this.editMode) {
-            //     this.updateDashboard();
-            // }
-            // this.editMode = !(this.editMode);
-            this.options.draggable.enabled = this.editMode;
-            this.options.resizable.enabled = this.editMode;
-            this.options.displayGrid = this.editMode ? 'always' : 'none';
-            this.options.api.optionsChanged();
-        }
-    }
 
 }

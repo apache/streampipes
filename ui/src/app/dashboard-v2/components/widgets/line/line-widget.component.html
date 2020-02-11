@@ -1,0 +1,23 @@
+<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" class="main-panel" #pbgChartContainer>
+    <ngx-charts-line-chart *ngIf="displayChart" #chart
+                           [showXAxisLabel]="false"
+                           [showYAxisLabel]="false"
+                           [timeline]="true"
+                           [view]="view"
+                           [autoScale]="true"
+                           [xAxis]="true"
+                           [yAxis]="true"
+                           [tooltipDisabled]="true"
+                           [animations]="false"
+                           [xAxisTickFormatting]="timestampTickFormatting"
+                           [results]="multi" style="margin-top:10px;margin-bottom:10px;">
+    </ngx-charts-line-chart>
+</div>
+<!--<ngx-charts-number-card *ngIf="displayChart" #chart-->
+<!--                        [results]="[{'name' : 'test', 'value': 'ads'}]"-->
+<!--                        [scheme]="'cool'"-->
+<!--                        [cardColor]="'blue'"-->
+<!--                        [bandColor]="'rgb(27, 20, 100)'"-->
+<!--                        [view]="view">-->
+<!--</ngx-charts-number-card>-->
+

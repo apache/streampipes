@@ -9,6 +9,10 @@ export class EpRequirements {
         return ep;
     }
 
+    static timestampReq(): EventProperty {
+        return EpRequirements.domainPropertyReq("http://schema.org/DateTime");
+    }
+
     static numberReq(): EventProperty {
         return EpRequirements.datatypeReq(Datatypes.Number);
     }

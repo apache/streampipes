@@ -14,6 +14,7 @@
     display: flex;
     flex-flow: column;
     height: 100%;
+    border:0px solid black;
 }
 
 .box .row.content {

@@ -10,11 +10,15 @@
                 </button>
             </div>
         </div>
-        <div class="sp-blue-border h-100 p-0 row content">
+        <div class="h-100 p-0 row content">
             <!--        <div *ngIf="widget."></div>-->
             <div *ngIf="widgetLoaded" class="h-100">
                 <div *ngIf="widget.widgetType === 'number'" class="h-100 p-0">
-                    <number-viz [widget]="widget" [widgetConfig]="configuredWidget"></number-viz>
+                    <number-widget [gridsterItem]="item" [widget]="widget"
+                                   [widgetConfig]="configuredWidget"></number-widget>
+                </div>
+                <div *ngIf="widget.widgetType === 'line'" class="h-100 p-0">
+                    <line-widget [gridsterItem]="item" [widget]="widget" [widgetConfig]="configuredWidget"></line-widget>
                 </div>
             </div>
         </div>

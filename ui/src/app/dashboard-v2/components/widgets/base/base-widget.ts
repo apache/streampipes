@@ -7,11 +7,13 @@ import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-ex
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {Message} from "@stomp/stompjs";
 import {Subscription} from "rxjs";
+import {GridsterItem} from "angular-gridster2";
 
 export abstract class BaseStreamPipesWidget {
 
     @Input() widget: DashboardItem;
     @Input() widgetConfig: DashboardWidget;
+    @Input() gridsterItem: GridsterItem;
 
     subscription: Subscription;
 

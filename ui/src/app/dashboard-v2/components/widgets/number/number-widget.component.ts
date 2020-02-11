@@ -2,14 +2,14 @@ import {Component, Input, OnDestroy, OnInit} from "@angular/core";
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {BaseStreamPipesWidget} from "../base/base-widget";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
-import {NumberConfig} from "./number-config.component";
+import {NumberConfig} from "./number-config";
 
 @Component({
-    selector: 'number-viz',
-    templateUrl: './number-viz.component.html',
-    styleUrls: ['./number-viz.component.css']
+    selector: 'number-widget',
+    templateUrl: './number-widget.component.html',
+    styleUrls: ['./number-widget.component.css']
 })
-export class NumberVizComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
+export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
 
     item: any;
     title: string;

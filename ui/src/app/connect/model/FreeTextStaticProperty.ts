@@ -30,6 +30,9 @@ export class FreeTextStaticProperty extends StaticProperty {
   @RdfProperty('sp:requiredDomainProperty')
   public requiredDomainProperty: string;
 
+  @RdfProperty('sp:requiresDatatype')
+  public requiredDatatype: string;
+
   //TODO find better solution
   public render: boolean;
 

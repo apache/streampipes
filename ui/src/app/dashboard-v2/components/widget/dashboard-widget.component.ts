@@ -1,8 +1,12 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {AfterViewInit, Component, Input, OnInit} from "@angular/core";
 import {Dashboard, DashboardItem} from "../../models/dashboard.model";
 import {DashboardService} from "../../services/dashboard.service";
 import {DashboardImageComponent} from "../../../app-transport-monitoring/components/dashboard-image/dashboard-image.component";
 import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
+import {Subject} from "rxjs";
+import {GridsterItem} from "angular-gridster2";
+import {GridsterInfo} from "../../models/gridster-info.model";
+import {ResizeService} from "../../services/resize.service";
 
 @Component({
     selector: 'dashboard-widget',
@@ -13,6 +17,7 @@ export class DashboardWidgetComponent implements OnInit {
 
     @Input() widget: DashboardItem;
     @Input() editMode: boolean;
+    @Input() item: GridsterItem;
 
     widgetLoaded: boolean = false;
     configuredWidget: DashboardWidget;
