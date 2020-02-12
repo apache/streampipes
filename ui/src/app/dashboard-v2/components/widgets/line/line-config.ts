@@ -19,9 +19,9 @@ export class LineConfig extends WidgetConfig {
                 .requiredPropertyWithUnaryMapping(LineConfig.TIMESTAMP_MAPPING_KEY, "Timestamp field", "", EpRequirements.timestampReq())
                 .requiredPropertyWithUnaryMapping(LineConfig.NUMBER_MAPPING_KEY, "Number field", "", EpRequirements.numberReq())
                 .build())
-            .requiredTextParameter(LineConfig.TITLE_KEY, "hi", "hi")
-            .requiredIntegerParameter(LineConfig.MIN_Y_AXIS_KEY, "Y-axis range (min)", "")
-            .requiredIntegerParameter(LineConfig.MAX_Y_AXIS_KEY, "Y-axis range (min)", "")
+            .requiredTextParameter(LineConfig.TITLE_KEY, "Line Chart Title", "The title of the cart")
+            //.requiredIntegerParameter(LineConfig.MIN_Y_AXIS_KEY, "Y-axis range (min)", "")
+            //.requiredIntegerParameter(LineConfig.MAX_Y_AXIS_KEY, "Y-axis range (min)", "")
             .build();
     }
 

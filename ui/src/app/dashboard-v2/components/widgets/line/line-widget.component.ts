@@ -6,38 +6,29 @@ import {LineConfig} from "./line-config";
 import {ResizeService} from "../../../services/resize.service";
 import {GridsterInfo} from "../../../models/gridster-info.model";
 import {NumberCardComponent} from "@swimlane/ngx-charts";
+import {BaseNgxChartsStreamPipesWidget} from "../base/base-ngx-charts-widget";
 
 @Component({
     selector: 'line-widget',
     templateUrl: './line-widget.component.html',
     styleUrls: ['./line-widget.component.css']
 })
-export class LineWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
-
-    @ViewChild('pbgChartContainer') pbgChartContainer: ElementRef;
-    @ViewChild('chart') chart: NumberCardComponent;
+export class LineWidgetComponent extends BaseNgxChartsStreamPipesWidget implements OnInit, OnDestroy {
 
     multi:any = [];
-    view: any[] = [];
 
     selectedNumberProperty: string;
     selectedTimestampProperty: string;
     title: string;
     minYAxisRange: number;
     maxYAxisRange: number;
-    displayChart: boolean = false;
 
-    constructor(rxStompService: RxStompService, private resizeService: ResizeService) {
-        super(rxStompService);
+    constructor(rxStompService: RxStompService, resizeService: ResizeService) {
+        super(rxStompService, resizeService);
     }
 
     ngOnInit(): void {
         super.ngOnInit();
-        this.view = [this.gridsterItem.width, this.gridsterItem.height];
-        this.displayChart = true;
-        this.resizeService.resizeSubject.subscribe(info => {
-            this.onResize(info);
-        });
         this.multi = [
             {
                 "name": this.selectedNumberProperty,
@@ -78,13 +69,4 @@ export class LineWidgetComponent extends BaseStreamPipesWidget implements OnInit
         return timeString;
     }
 
-    onResize(info: GridsterInfo) {
-        if (info.gridsterItem.id === this.gridsterItem.id) {
-            setTimeout(() => {
-                this.displayChart = false;
-                this.view = [info.gridsterItemComponent.width, info.gridsterItemComponent.height];
-                this.displayChart = true;
-            }, 100);
-        }
-    }
 }
