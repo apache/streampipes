@@ -53,6 +53,8 @@ export class StaticMappingNaryComponent extends StaticMappingComponent implement
         if (!this.staticProperty.selectedProperties) {
             this.staticProperty.selectedProperties = [];
         }
+        console.log(this.eventSchema);
+        console.log(this.staticProperty);
     }
 
     selectOption(property: EventProperty, $event) {

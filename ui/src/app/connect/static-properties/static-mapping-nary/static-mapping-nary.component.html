@@ -26,7 +26,7 @@
                 <mat-checkbox *ngFor="let property of availableProperties"
                               (change)="selectOption(property, $event)"
                               style="margin-left: 10px;">
-                    {{getName(property)}}
+                    {{property.runtimeName}}
                 </mat-checkbox>
     </div>
 </div>
