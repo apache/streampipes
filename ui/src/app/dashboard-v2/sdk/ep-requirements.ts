@@ -13,6 +13,10 @@ export class EpRequirements {
         return EpRequirements.ep();
     }
 
+    static imageReq(): EventProperty {
+        return EpRequirements.domainPropertyReq("https://image.com");
+    }
+
     static timestampReq(): EventProperty {
         return EpRequirements.domainPropertyReq("http://schema.org/DateTime");
     }

@@ -28,6 +28,8 @@ import {ResizeService} from "./services/resize.service";
 import {TableWidgetComponent} from "./components/widgets/table/table-widget.component";
 import {CdkTableModule} from "@angular/cdk/table";
 import {RefreshDashboardService} from "./services/refresh-dashboard.service";
+import {GaugeWidgetComponent} from "./components/widgets/gauge/gauge-widget.component";
+import {ImageWidgetComponent} from "./components/widgets/image/image-widget.component";
 
 const dashboardWidgets = [
 
@@ -62,7 +64,9 @@ const dashboardWidgets = [
         EditDashboardDialogComponent,
         LineWidgetComponent,
         NumberWidgetComponent,
-        TableWidgetComponent
+        TableWidgetComponent,
+        GaugeWidgetComponent,
+        ImageWidgetComponent
     ],
     providers: [
         DashboardService,

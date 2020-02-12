@@ -1,11 +1,8 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
-import {BaseStreamPipesWidget} from "../base/base-widget";
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit} from "@angular/core";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {LineConfig} from "./line-config";
 import {ResizeService} from "../../../services/resize.service";
-import {GridsterInfo} from "../../../models/gridster-info.model";
-import {NumberCardComponent} from "@swimlane/ngx-charts";
 import {BaseNgxChartsStreamPipesWidget} from "../base/base-ngx-charts-widget";
 
 @Component({

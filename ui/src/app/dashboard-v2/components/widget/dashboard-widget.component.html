@@ -24,6 +24,14 @@
                     <table-widget [gridsterItem]="item" [widget]="widget"
                                   [widgetConfig]="configuredWidget"></table-widget>
                 </div>
+                <div *ngIf="widget.widgetType === 'gauge'" class="h-100 p-0">
+                    <gauge-widget [gridsterItem]="item" [widget]="widget"
+                                  [widgetConfig]="configuredWidget"></gauge-widget>
+                </div>
+                <div *ngIf="widget.widgetType === 'image'" class="h-100 p-0">
+                    <image-widget [gridsterItem]="item" [widget]="widget"
+                                  [widgetConfig]="configuredWidget"></image-widget>
+                </div>
             </div>
         </div>
     </div>

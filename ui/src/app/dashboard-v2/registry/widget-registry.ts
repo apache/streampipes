@@ -3,13 +3,17 @@ import {DashboardWidgetSettings} from "../../core-model/dashboard/DashboardWidge
 import {WidgetConfig} from "../components/widgets/base/base-config";
 import {LineConfig} from "../components/widgets/line/line-config";
 import {TableConfig} from "../components/widgets/table/table-config";
+import {GaugeConfig} from "../components/widgets/gauge/gauge-config";
+import {ImageConfig} from "../components/widgets/image/image-config";
 
 export class WidgetRegistry {
 
     private static availableWidgets: Array<WidgetConfig> = [
         new NumberConfig(),
         new LineConfig(),
-        new TableConfig()
+        new TableConfig(),
+        new GaugeConfig(),
+        new ImageConfig()
     ];
 
     static getAvailableWidgetTemplates(): Array<DashboardWidgetSettings> {

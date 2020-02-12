@@ -1,0 +1,8 @@
+<div class="image-box" [ngStyle]="{'background-color': 'white'}">
+    <div class="imageTitle">
+        {{title}}
+    </div>
+    <div class="imageContent">
+        <img style="width: 100%;" src="data:image/jpg;base64,{{item}}" *ngIf="item" />
+    </div>
+</div>
