@@ -27,14 +27,18 @@ export class WidgetConfigBuilder {
         return this;
     }
 
-    requiredColorParameter(id: string, label: string, description: string): WidgetConfigBuilder {
+    requiredColorParameter(id: string, label: string, description: string, defaultColor?: string): WidgetConfigBuilder {
         let csp = new ColorPickerStaticProperty();
         csp.internalName = id;
         csp.label = label;
         csp.description = description;
+        if (defaultColor) {
+            csp.selectedColor = defaultColor;
+        }
         this.widget.config.push(csp);
         return this;
     }
+
 
     requiredIntegerParameter(id: string, label: string, description: string): WidgetConfigBuilder {
         let fst: FreeTextStaticProperty = this.prepareStaticProperty(id, label, description, Datatypes.Integer.toUri())

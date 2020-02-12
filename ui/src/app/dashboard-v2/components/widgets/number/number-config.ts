@@ -21,7 +21,7 @@ export class NumberConfig extends WidgetConfig {
                 .requiredPropertyWithUnaryMapping(NumberConfig.NUMBER_MAPPING_KEY, "Select property", "", EpRequirements.numberReq())
                 .build())
             .requiredTextParameter(NumberConfig.TITLE_KEY, "Title", "The title")
-            .requiredColorParameter(NumberConfig.COLOR_KEY, "Background color", "The background color")
+            .requiredColorParameter(NumberConfig.COLOR_KEY, "Background color", "The background color", "#000000")
             .build();
     }
 
