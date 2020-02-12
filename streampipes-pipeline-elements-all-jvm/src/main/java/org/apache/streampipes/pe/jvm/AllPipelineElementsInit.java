@@ -26,6 +26,7 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.pe.jvm.config.AllPipelineElementsConfig;
+import org.apache.streampipes.processors.enricher.jvm.processor.sizemeasure.SizeMeasureController;
 import org.apache.streampipes.processors.filters.jvm.processor.compose.ComposeController;
 import org.apache.streampipes.processors.filters.jvm.processor.enrich.MergeByEnrichController;
 import org.apache.streampipes.processors.filters.jvm.processor.merge.MergeByTimeController;
@@ -115,7 +116,8 @@ public class AllPipelineElementsInit extends StandaloneModelSubmitter {
             .add(new EmailController())
             .add(new OneSignalController())
             .add(new SlackNotificationController())
-            .add(new NumericalTextFilterController());
+            .add(new NumericalTextFilterController())
+            .add(new SizeMeasureController());
 
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
