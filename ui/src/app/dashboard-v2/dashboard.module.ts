@@ -28,6 +28,7 @@ import {ResizeService} from "./services/resize.service";
 import {TableWidgetComponent} from "./components/widgets/table/table-widget.component";
 import {CdkTableModule} from "@angular/cdk/table";
 import {RefreshDashboardService} from "./services/refresh-dashboard.service";
+import {SemanticTypeUtilsService} from '../core-services/semantic-type/semantic-type-utils.service';
 
 const dashboardWidgets = [
 
@@ -68,6 +69,7 @@ const dashboardWidgets = [
         DashboardService,
         ResizeService,
         RefreshDashboardService,
+        SemanticTypeUtilsService,
         {
             provide: 'RestApi',
             useFactory: ($injector: any) => $injector.get('RestApi'),
