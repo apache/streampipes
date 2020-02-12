@@ -129,6 +129,27 @@ export class AdapterStartedDialog {
         });
     }
 
+    isPropertyType(property, type) {
+      return property.properties.domainProperties !== undefined && property.properties.domainProperties.length === 1 &&
+        property.properties.domainProperties[0] === type;
+    }
+
+    isImage(property) {
+        return this.isPropertyType(property, 'https://image.com');
+    }
+
+    isTimestamp(property) {
+      return this.isPropertyType(property, 'http://schema.org/DateTime');
+    }
+
+    hasNoDomainProperty(property) {
+        if (this.isTimestamp(property) || this.isImage(property)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     onCloseConfirm() {
         this.pollingActive = false;
         this.dialogRef.close('Confirm');

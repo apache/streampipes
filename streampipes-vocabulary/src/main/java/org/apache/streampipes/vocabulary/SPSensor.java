@@ -33,5 +33,7 @@ public class SPSensor {
 
   public static final String IMAGE = "https://image.com";
 
+  public static final String STATE = "http://streampipes.org/process/state";
+
 
 }
