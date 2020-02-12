@@ -97,6 +97,7 @@ import {DashboardWidget} from "../core-model/dashboard/DashboardWidget";
 import {DashboardWidgetDataConfig} from "../core-model/dashboard/DashboardWidgetDataConfig";
 import {DashboardWidgetSettings} from "../core-model/dashboard/DashboardWidgetSettings";
 import {ColorPickerStaticProperty} from "../connect/model/ColorPickerStaticProperty";
+import {MappingPropertyNary} from "../connect/model/MappingPropertyNary";
 
 
 @Injectable()
@@ -126,6 +127,7 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(EventPropertyNested);
         tsonld.addClassMapping(PipelineTemplateInvocation);
         tsonld.addClassMapping(MappingPropertyUnary);
+        tsonld.addClassMapping(MappingPropertyNary);
         tsonld.addClassMapping(EventPropertyList);
         tsonld.addClassMapping(EventPropertyPrimitive);
         tsonld.addClassMapping(DomainPropertyProbability);

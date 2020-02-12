@@ -29,6 +29,7 @@ import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
 import {DashboardWidgetSettings} from "../../../core-model/dashboard/DashboardWidgetSettings";
 import {VisualizablePipeline} from "../../../core-model/dashboard/VisualizablePipeline";
 import {Dashboard} from "../../models/dashboard.model";
+import {MappingPropertyNary} from "../../../connect/model/MappingPropertyNary";
 
 @Component({
     selector: 'add-visualization-dialog-component',
@@ -110,7 +111,7 @@ export class AddVisualizationDialogComponent {
     selectWidget(widget) {
         this.selectedWidget = widget;
         this.selectedWidget.config.forEach(sp => {
-            if (sp instanceof MappingPropertyUnary) {
+            if (sp instanceof MappingPropertyUnary || sp instanceof MappingPropertyNary) {
                 let requirement: EventProperty = this.findRequirement(this.selectedWidget.requiredSchema, sp.internalName);
                 sp.mapsFromOptions = new MappingPropertyGenerator(requirement, this.selectedPipeline.schema.eventProperties).computeMatchingProperties();
             }

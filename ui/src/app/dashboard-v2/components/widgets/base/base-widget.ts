@@ -1,5 +1,3 @@
-import {EventSchema} from "../../../../connect/schema-editor/model/EventSchema";
-import {StaticProperty} from "../../../../connect/model/StaticProperty";
 import {Input, OnInit} from "@angular/core";
 import {DashboardItem} from "../../../models/dashboard.model";
 import {DashboardWidget} from "../../../../core-model/dashboard/DashboardWidget";

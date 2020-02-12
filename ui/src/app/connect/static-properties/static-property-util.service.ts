@@ -63,7 +63,8 @@ export class StaticPropertyUtilService{
             clone.selectedProperty = val.selectedProperty;
         }
         else if (val instanceof MappingPropertyNary) {
-            clone = new MappingPropertyNary(id);
+            clone = new MappingPropertyNary();
+            clone.id = id;
             clone.requirementSelector = val.requirementSelector;
             clone.mapsFromOptions = val.mapsFromOptions;
             clone.propertyScope = val.propertyScope;

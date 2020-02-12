@@ -62,7 +62,7 @@
                          [eventSchema]="eventSchema" (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
 </app-static-mapping-unary>
 
-<app-static-mapping-nary *ngIf="isMappingNaryProperty(staticProperty)"
+<app-static-mapping-nary *ngIf="isMappingNaryProperty(staticProperty)" [eventSchema]="eventSchema"
                          (inputEmitter)="valueChange($event)" [staticProperty]="staticProperty">
 </app-static-mapping-nary>
 

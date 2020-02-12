@@ -36,10 +36,8 @@ export class MappingPropertyNary extends StaticProperty {
   @RdfProperty('sp:mapsTo')
   public selectedProperties: string[];
 
-
-  constructor(id: string) {
+  constructor() {
       super();
-      this.id = id;
   }
 
 }

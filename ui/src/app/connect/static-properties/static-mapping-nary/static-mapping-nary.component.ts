@@ -17,11 +17,13 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FreeTextStaticProperty } from '../../model/FreeTextStaticProperty';
-import { StaticProperty } from '../../model/StaticProperty';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {MappingPropertyNary} from "../../model/MappingPropertyNary";
+import {StaticMappingComponent} from "../static-mapping/static-mapping";
+import {PropertySelectorService} from "../../../services/property-selector.service";
+import {EventProperty} from "../../schema-editor/model/EventProperty";
+import {EventSchema} from "../../schema-editor/model/EventSchema";
 
 
 @Component({
@@ -29,28 +31,40 @@ import {MappingPropertyNary} from "../../model/MappingPropertyNary";
     templateUrl: './static-mapping-nary.component.html',
     styleUrls: ['./static-mapping-nary.component.css']
 })
-export class StaticMappingNaryComponent implements OnInit {
+export class StaticMappingNaryComponent extends StaticMappingComponent implements OnInit {
 
 
     @Input() staticProperty: MappingPropertyNary;
+    @Input() eventSchema: EventSchema;
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
-    
-    private freeTextForm: FormGroup;
+
     private inputValue: String;
     private hasInput: Boolean;
-    private errorMessage = "Please enter a value";
+    private availableProperties: Array<EventProperty>;
 
-    constructor(private staticPropertyUtil: StaticPropertyUtilService){
-
+    constructor(staticPropertyUtil: StaticPropertyUtilService,
+                PropertySelectorService: PropertySelectorService){
+        super(staticPropertyUtil, PropertySelectorService);
     }
 
-
     ngOnInit() {
-        this.freeTextForm = new FormGroup({
-            'freeStaticText':new FormControl(this.inputValue, [
-                Validators.required,
-            ]),
-        })
+        this.availableProperties = this.extractPossibleSelections();
+        this.availableProperties.forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
+        if (!this.staticProperty.selectedProperties) {
+            this.staticProperty.selectedProperties = [];
+        }
+    }
+
+    selectOption(property: EventProperty, $event) {
+        if ($event.checked) {
+            this.staticProperty.selectedProperties.push(this.makeSelector(property));
+        } else {
+            this.staticProperty.selectedProperties.splice(this.staticProperty.selectedProperties.indexOf(this.makeSelector(property)));
+        }
+    }
+
+    makeSelector(property: EventProperty) {
+        return this.firstStreamPropertySelector + property.runtimeName;
     }
 
     valueChange(inputValue) {
@@ -63,6 +77,14 @@ export class StaticMappingNaryComponent implements OnInit {
         }
 
         this.inputEmitter.emit(this.hasInput);
+    }
+
+    extractPossibleSelections(): Array<EventProperty> {
+        return this.eventSchema.eventProperties.filter(ep => this.isInSelection(ep));
+    }
+
+    isInSelection(ep: EventProperty): boolean {
+        return this.staticProperty.mapsFromOptions.some(maps => maps === this.firstStreamPropertySelector + ep.runtimeName);
     }
 
 }

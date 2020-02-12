@@ -20,6 +20,10 @@
                 <div *ngIf="widget.widgetType === 'line'" class="h-100 p-0">
                     <line-widget [gridsterItem]="item" [widget]="widget" [widgetConfig]="configuredWidget"></line-widget>
                 </div>
+                <div *ngIf="widget.widgetType === 'table'" class="h-100 p-0">
+                    <table-widget [gridsterItem]="item" [widget]="widget"
+                                  [widgetConfig]="configuredWidget"></table-widget>
+                </div>
             </div>
         </div>
     </div>

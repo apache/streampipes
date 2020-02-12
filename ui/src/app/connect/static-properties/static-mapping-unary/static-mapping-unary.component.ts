@@ -25,6 +25,7 @@ import {EventSchema} from '../../schema-editor/model/EventSchema';
 import {PropertySelectorService} from "../../../services/property-selector.service";
 import {MappingPropertyUnary} from "../../model/MappingPropertyUnary";
 import {EventProperty} from "../../schema-editor/model/EventProperty";
+import {StaticMappingComponent} from "../static-mapping/static-mapping";
 
 
 @Component({
@@ -32,27 +33,30 @@ import {EventProperty} from "../../schema-editor/model/EventProperty";
     templateUrl: './static-mapping-unary.component.html',
     styleUrls: ['./static-mapping-unary.component.css']
 })
-export class StaticMappingUnaryComponent implements OnInit {
+export class StaticMappingUnaryComponent extends StaticMappingComponent implements OnInit {
 
-
+    @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Input() staticProperty: MappingPropertyUnary;
     @Input() eventSchema: EventSchema;
 
-    @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
-    
     private unaryTextForm: FormGroup;
     private inputValue: String;
     private hasInput: Boolean;
     private errorMessage = "Please enter a value";
     private availableProperties: Array<EventProperty>;
 
-    private firstStreamPropertySelector: string = "s0::";
-
-    constructor(private staticPropertyUtil: StaticPropertyUtilService,
-                private PropertySelectorService: PropertySelectorService){
-
+    constructor(staticPropertyUtil: StaticPropertyUtilService,
+                PropertySelectorService: PropertySelectorService){
+        super(staticPropertyUtil, PropertySelectorService);
     }
 
+    extractPossibleSelections(): Array<EventProperty> {
+        return this.eventSchema.eventProperties.filter(ep => this.isInSelection(ep));
+    }
+
+    isInSelection(ep: EventProperty): boolean {
+        return this.staticProperty.mapsFromOptions.some(maps => maps === this.firstStreamPropertySelector + ep.runtimeName);
+    }
 
     ngOnInit() {
         this.availableProperties = this.extractPossibleSelections();
@@ -64,13 +68,7 @@ export class StaticMappingUnaryComponent implements OnInit {
         })
     }
 
-    extractPossibleSelections(): Array<EventProperty> {
-        return this.eventSchema.eventProperties.filter(ep => this.isInSelection(ep));
-    }
 
-    isInSelection(ep: EventProperty): boolean {
-        return this.staticProperty.mapsFromOptions.some(maps => maps === this.firstStreamPropertySelector + ep.runtimeName);
-    }
 
     valueChange(inputValue) {
         this.inputValue = inputValue;
@@ -84,10 +82,6 @@ export class StaticMappingUnaryComponent implements OnInit {
         this.inputEmitter.emit(this.hasInput);
     }
 
-    getName(eventProperty) {
-    return eventProperty.label
-      ? eventProperty.label
-      : eventProperty.runTimeName;
-  }
+
 
 }

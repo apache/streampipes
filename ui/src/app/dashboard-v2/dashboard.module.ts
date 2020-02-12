@@ -25,6 +25,8 @@ import {DashboardGridComponent} from "./components/grid/dashboard-grid.component
 import {LineWidgetComponent} from "./components/widgets/line/line-widget.component";
 import {NgxChartsModule} from "@swimlane/ngx-charts";
 import {ResizeService} from "./services/resize.service";
+import {TableWidgetComponent} from "./components/widgets/table/table-widget.component";
+import {CdkTableModule} from "@angular/cdk/table";
 
 const dashboardWidgets = [
 
@@ -46,7 +48,8 @@ const dashboardWidgets = [
         ColorPickerModule,
         MatGridListModule,
         ConnectModule,
-        NgxChartsModule
+        NgxChartsModule,
+        CdkTableModule,
     ],
     declarations: [
         DashboardComponent,
@@ -57,7 +60,8 @@ const dashboardWidgets = [
         AddVisualizationDialogComponent,
         EditDashboardDialogComponent,
         LineWidgetComponent,
-        NumberWidgetComponent
+        NumberWidgetComponent,
+        TableWidgetComponent
     ],
     providers: [
         DashboardService,
