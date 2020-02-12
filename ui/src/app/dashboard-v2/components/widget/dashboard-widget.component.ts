@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit} from "@angular/core";
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {Dashboard, DashboardItem} from "../../models/dashboard.model";
 import {DashboardService} from "../../services/dashboard.service";
 import {DashboardImageComponent} from "../../../app-transport-monitoring/components/dashboard-image/dashboard-image.component";
@@ -18,6 +18,7 @@ export class DashboardWidgetComponent implements OnInit {
     @Input() widget: DashboardItem;
     @Input() editMode: boolean;
     @Input() item: GridsterItem;
+    @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
 
     widgetLoaded: boolean = false;
     configuredWidget: DashboardWidget;
@@ -30,5 +31,9 @@ export class DashboardWidgetComponent implements OnInit {
             this.configuredWidget = response;
             this.widgetLoaded = true;
         });
+    }
+
+    removeWidget() {
+        this.deleteCallback.emit(this.widget);
     }
 }

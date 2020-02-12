@@ -54,8 +54,8 @@ export class LineWidgetComponent extends BaseStreamPipesWidget implements OnInit
         this.title = extractor.singleValueParameter(LineConfig.TITLE_KEY);
         this.selectedNumberProperty = extractor.mappingPropertyValue(LineConfig.NUMBER_MAPPING_KEY);
         this.selectedTimestampProperty = extractor.mappingPropertyValue(LineConfig.TIMESTAMP_MAPPING_KEY);
-        this.minYAxisRange = extractor.integerParameter(LineConfig.MIN_Y_AXIS_KEY);
-        this.maxYAxisRange = extractor.integerParameter(LineConfig.MAX_Y_AXIS_KEY);
+        //this.minYAxisRange = extractor.integerParameter(LineConfig.MIN_Y_AXIS_KEY);
+        //this.maxYAxisRange = extractor.integerParameter(LineConfig.MAX_Y_AXIS_KEY);
     }
 
     protected onEvent(event: any) {

@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {Dashboard} from "./models/dashboard.model";
 import {MockDashboardService} from "./services/MockDashboard.service";
 import {DashboardService} from "./services/dashboard.service";
+import {RefreshDashboardService} from "./services/refresh-dashboard.service";
 
 @Component({
     selector: 'dashboard',
@@ -19,10 +20,14 @@ export class DashboardComponent implements OnInit {
 
     dashboards: Array<Dashboard>;
 
-    constructor(private dashboardService: DashboardService) {}
+    constructor(private dashboardService: DashboardService,
+                private refreshDashboardService: RefreshDashboardService) {}
 
     public ngOnInit() {
         this.getDashboards();
+        // this.refreshDashboardService.refreshSubject.subscribe(info => {
+        //     this.getDashboards();
+        // });
 
     }
 

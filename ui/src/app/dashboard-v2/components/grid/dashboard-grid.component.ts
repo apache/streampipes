@@ -1,8 +1,10 @@
 import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
-import {Dashboard, DashboardConfig} from "../../models/dashboard.model";
+import {Dashboard, DashboardConfig, DashboardItem} from "../../models/dashboard.model";
 import {GridsterInfo} from "../../models/gridster-info.model";
 import {ResizeService} from "../../services/resize.service";
 import {GridType} from "angular-gridster2";
+import {DashboardService} from "../../services/dashboard.service";
+import {RefreshDashboardService} from "../../services/refresh-dashboard.service";
 
 @Component({
     selector: 'dashboard-grid',
@@ -15,7 +17,9 @@ export class DashboardGridComponent implements OnInit, OnChanges {
     @Input() dashboard: Dashboard;
     options: DashboardConfig;
 
-    constructor(private resizeService: ResizeService) {
+    constructor(private resizeService: ResizeService,
+                private dashboardService: DashboardService,
+                private refreshDashboardService: RefreshDashboardService) {
 
     }
 
@@ -46,5 +50,13 @@ export class DashboardGridComponent implements OnInit, OnChanges {
             this.options.displayGrid = this.editMode ? 'always' : 'none';
             this.options.api.optionsChanged();
         }
+    }
+
+    removeItem(widget: DashboardItem) {
+        this.dashboard.widgets.splice(this.dashboard.widgets.indexOf(widget), 1);
+        this.dashboardService.updateDashboard(this.dashboard).subscribe(result => {
+            //this.refreshDashboardService.notify(true);
+        });
+
     }
 }

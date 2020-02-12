@@ -27,6 +27,7 @@ import {NgxChartsModule} from "@swimlane/ngx-charts";
 import {ResizeService} from "./services/resize.service";
 import {TableWidgetComponent} from "./components/widgets/table/table-widget.component";
 import {CdkTableModule} from "@angular/cdk/table";
+import {RefreshDashboardService} from "./services/refresh-dashboard.service";
 
 const dashboardWidgets = [
 
@@ -66,6 +67,7 @@ const dashboardWidgets = [
     providers: [
         DashboardService,
         ResizeService,
+        RefreshDashboardService,
         {
             provide: 'RestApi',
             useFactory: ($injector: any) => $injector.get('RestApi'),
