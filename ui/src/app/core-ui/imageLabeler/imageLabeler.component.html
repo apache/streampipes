@@ -16,22 +16,13 @@
   ~
   -->
 
-<div flex class="page-container page-container-padding" style="height: 1px">
-    <div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6; display: inline-block; width: 100%;" >
-        <div flex layout-fill layout="row" layout-align="start center"
-             style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <label style="font-size: 30px; padding-top: 10px;">Data Explorer</label>
-        </div>
-    </div>
+<button mat-button (click)="selectLabel('sign')">Sign</button>
+<button mat-button (click)="selectLabel('car')">Car</button>
 
-    <div class="container-fluid">
+<canvas (mousedown)="imageMouseDown($event)" (mousemove)="imageMouseMove($event)" (mouseup)="imageMouseUp($event)"
+        #test style="border:2px solid;" width="800" height="500" ></canvas>
+<!-- (scroll)="imageZoom($event)" -->
 
 
-        <sp-image-labeler></sp-image-labeler>
-
-
-
-
-        <!--    <sp-explorer></sp-explorer> -->
-    </div>
-</div>
+<button mat-button (click)="zoomin()"> <mat-icon>zoom_in</mat-icon></button>
+<button mat-button (click)="zoomout()"> <mat-icon>zoom_out</mat-icon></button>
