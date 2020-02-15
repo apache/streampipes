@@ -42,11 +42,15 @@ export abstract class BaseNgxChartsStreamPipesWidget extends BaseStreamPipesWidg
     }
 
     computeCurrentHeight(gridsterItemComponent: GridsterItemComponent): number {
-        return (gridsterItemComponent.height - (BaseNgxChartsStreamPipesWidget.PADDING * 2) - this.editModeOffset());
+        return (gridsterItemComponent.height - (BaseNgxChartsStreamPipesWidget.PADDING * 2) - this.editModeOffset() - this.titlePanelOffset());
     }
 
     editModeOffset(): number {
         return this.editMode ? BaseNgxChartsStreamPipesWidget.EDIT_HEADER_HEIGHT : 0;
+    }
+
+    titlePanelOffset(): number {
+        return this.hasTitlePanelSettings ? 20 : 0;
     }
 
 }

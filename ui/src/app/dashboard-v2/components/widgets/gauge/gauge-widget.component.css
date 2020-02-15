@@ -5,7 +5,10 @@
     align-content: center;
 }
 
-/*::ng-deep .ngx-charts {*/
-/*    margin-left:0px;*/
-/*    margin-top:20px;*/
-/*}*/
+.mt-20 {
+    margin-top:20px;
+}
+
+.title-panel {
+    font-size:20px;
+}

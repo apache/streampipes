@@ -39,7 +39,6 @@ export class LineWidgetComponent extends BaseNgxChartsStreamPipesWidget implemen
     }
 
     protected extractConfig(extractor: StaticPropertyExtractor) {
-        this.title = extractor.singleValueParameter(LineConfig.TITLE_KEY);
         this.selectedNumberProperty = extractor.mappingPropertyValue(LineConfig.NUMBER_MAPPING_KEY);
         this.selectedTimestampProperty = extractor.mappingPropertyValue(LineConfig.TIMESTAMP_MAPPING_KEY);
         //this.minYAxisRange = extractor.integerParameter(LineConfig.MIN_Y_AXIS_KEY);

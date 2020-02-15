@@ -10,7 +10,7 @@ export class WidgetConfigBuilder {
     static readonly PRIMARY_TEXT_COLOR_KEY: string = "spi-primary-text-color-key";
     static readonly SECONDARY_TEXT_COLOR_KEY: string = "spi-secondary-text-color-key";
 
-    static readonly TITLE_KEY: string = "title-key";
+    static readonly TITLE_KEY: string = "spi-title-key";
 
     private widget: DashboardWidgetSettings;
 
@@ -29,7 +29,7 @@ export class WidgetConfigBuilder {
             " color", "#bebebe")
         }
         if (withTitlePanel) {
-        this.requiredTextParameter(WidgetConfigBuilder.TITLE_KEY.TITLE_KEY, "Title", "The title")
+        this.requiredTextParameter(WidgetConfigBuilder.TITLE_KEY, "Title", "The title")
         }
     }
 
