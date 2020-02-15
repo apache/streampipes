@@ -1,8 +1,9 @@
-<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" class="main-panel">
+<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" class="main-panel" [ngStyle]="{'background-color': selectedBackgroundColor, 'color': selectedPrimaryTextColor}">
     <ngx-charts-line-chart *ngIf="displayChart"
                            [showXAxisLabel]="false"
                            [showYAxisLabel]="false"
-                           [timeline]="true"
+                           [scheme]="colorScheme"
+                           [timeline]="false"
                            [view]="view"
                            [autoScale]="true"
                            [xAxis]="true"
@@ -10,14 +11,8 @@
                            [tooltipDisabled]="true"
                            [animations]="false"
                            [xAxisTickFormatting]="timestampTickFormatting"
-                           [results]="multi" style="margin-top:10px;margin-bottom:10px;">
+                           [results]="multi" style="margin-top:10px;margin-bottom:10px;"
+                           [ngStyle]="{'fill': selectedPrimaryTextColor}">
     </ngx-charts-line-chart>
 </div>
-<!--<ngx-charts-number-card *ngIf="displayChart" #chart-->
-<!--                        [results]="[{'name' : 'test', 'value': 'ads'}]"-->
-<!--                        [scheme]="'cool'"-->
-<!--                        [cardColor]="'blue'"-->
-<!--                        [bandColor]="'rgb(27, 20, 100)'"-->
-<!--                        [view]="view">-->
-<!--</ngx-charts-number-card>-->
 

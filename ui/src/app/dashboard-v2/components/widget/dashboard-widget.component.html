@@ -1,6 +1,6 @@
 <div style="height:100%;">
     <div class="box">
-        <div class="assemblyOptions sp-blue-bg m-0 row header" *ngIf="editMode">
+        <div class="assemblyOptions sp-blue-bg m-0 row header h-40" *ngIf="editMode">
             <div fxFlex="100" layout="row" fxLayoutAlign="end center">
                 <button mat-button mat-icon-button color="white">
                     <i class="material-icons">settings</i>
@@ -14,23 +14,28 @@
             <!--        <div *ngIf="widget."></div>-->
             <div *ngIf="widgetLoaded" class="h-100">
                 <div *ngIf="widget.widgetType === 'number'" class="h-100 p-0">
-                    <number-widget [gridsterItem]="item" [widget]="widget"
-                                   [widgetConfig]="configuredWidget"></number-widget>
+                    <number-widget [gridsterItemComponent]="gridsterItemComponent" [gridsterItem]="item"
+                                   [widget]="widget" [editMode]="editMode"
+                                   [widgetConfig]="configuredWidget" class="h-100"></number-widget>
                 </div>
                 <div *ngIf="widget.widgetType === 'line'" class="h-100 p-0">
-                    <line-widget [gridsterItem]="item" [widget]="widget" [widgetConfig]="configuredWidget"></line-widget>
+                    <line-widget [gridsterItemComponent]="gridsterItemComponent" [editMode]="editMode"
+                                 [gridsterItem]="item" [widget]="widget" [widgetConfig]="configuredWidget" class="h-100"></line-widget>
                 </div>
                 <div *ngIf="widget.widgetType === 'table'" class="h-100 p-0">
-                    <table-widget [gridsterItem]="item" [widget]="widget"
-                                  [widgetConfig]="configuredWidget"></table-widget>
+                    <table-widget [gridsterItemComponent]="gridsterItemComponent"
+                                  [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
+                                  [widgetConfig]="configuredWidget" class="h-100"></table-widget>
                 </div>
                 <div *ngIf="widget.widgetType === 'gauge'" class="h-100 p-0">
-                    <gauge-widget [gridsterItem]="item" [widget]="widget"
-                                  [widgetConfig]="configuredWidget"></gauge-widget>
+                    <gauge-widget [gridsterItemComponent]="gridsterItemComponent"
+                                  [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
+                                  [widgetConfig]="configuredWidget" class="h-100"></gauge-widget>
                 </div>
                 <div *ngIf="widget.widgetType === 'image'" class="h-100 p-0">
-                    <image-widget [gridsterItem]="item" [widget]="widget"
-                                  [widgetConfig]="configuredWidget"></image-widget>
+                    <image-widget [gridsterItemComponent]="gridsterItemComponent"
+                                  [gridsterItem]="item" [widget]="widget" [editMode]="editMode"
+                                  [widgetConfig]="configuredWidget" class="h-100"></image-widget>
                 </div>
             </div>
         </div>

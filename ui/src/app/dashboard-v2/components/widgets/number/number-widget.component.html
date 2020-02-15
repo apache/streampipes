@@ -1,6 +1,6 @@
-<div class="circleNumber" [ngStyle]="{'background-color': color}">
-    <div class="numberTitle">
-        {{title}}
+<div class="circleNumber" [ngStyle]="{'background-color': selectedBackgroundColor, 'color': selectedPrimaryTextColor}">
+    <div class="numberTitle" *ngIf="hasTitlePanelSettings">
+        {{selectedTitle}}
     </div>
     <div class="numberItem">
         <div *ngIf="isNumber(item)">{{item}}</div>

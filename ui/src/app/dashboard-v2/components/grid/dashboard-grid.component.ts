@@ -1,8 +1,17 @@
-import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
+import {
+    AfterViewInit,
+    Component,
+    Input,
+    OnChanges,
+    OnInit,
+    QueryList,
+    SimpleChanges,
+    ViewChildren
+} from "@angular/core";
 import {Dashboard, DashboardConfig, DashboardItem} from "../../models/dashboard.model";
 import {GridsterInfo} from "../../models/gridster-info.model";
 import {ResizeService} from "../../services/resize.service";
-import {GridType} from "angular-gridster2";
+import {GridsterItemComponent, GridType} from "angular-gridster2";
 import {DashboardService} from "../../services/dashboard.service";
 import {RefreshDashboardService} from "../../services/refresh-dashboard.service";
 
@@ -16,6 +25,9 @@ export class DashboardGridComponent implements OnInit, OnChanges {
     @Input() editMode: boolean;
     @Input() dashboard: Dashboard;
     options: DashboardConfig;
+    loaded: boolean = false;
+
+    @ViewChildren(GridsterItemComponent) gridsterItemComponents: QueryList<GridsterItemComponent>;
 
     constructor(private resizeService: ResizeService,
                 private dashboardService: DashboardService,

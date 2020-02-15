@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit} from "@angular/core";
 import {BaseNgxChartsStreamPipesWidget} from "../base/base-ngx-charts-widget";
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {ResizeService} from "../../../services/resize.service";
@@ -21,7 +21,7 @@ export class GaugeWidgetComponent extends BaseNgxChartsStreamPipesWidget impleme
 
     selectedProperty: string;
 
-    constructor(rxStompService: RxStompService, resizeService: ResizeService) {
+    constructor(rxStompService: RxStompService, resizeService: ResizeService, private el: ElementRef) {
         super(rxStompService, resizeService);
     }
 

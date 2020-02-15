@@ -12,8 +12,6 @@ import {NumberConfig} from "./number-config";
 export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
 
     item: any;
-    title: string;
-    color: string = "green";
 
     selectedProperty: string;
 
@@ -30,8 +28,6 @@ export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnIn
     }
 
     extractConfig(extractor: StaticPropertyExtractor) {
-        this.color = extractor.selectedColor(NumberConfig.COLOR_KEY);
-        this.title = extractor.singleValueParameter(NumberConfig.TITLE_KEY);
         this.selectedProperty = extractor.mappingPropertyValue(NumberConfig.NUMBER_MAPPING_KEY);
     }
 

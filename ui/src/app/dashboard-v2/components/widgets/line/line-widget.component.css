@@ -4,8 +4,3 @@
     display:inline-grid;
     align-content: center;
 }
-
-::ng-deep .ngx-charts {
-    margin-left: 15px;
-    margin-top: -10px;
-}

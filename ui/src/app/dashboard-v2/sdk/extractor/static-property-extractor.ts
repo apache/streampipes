@@ -12,6 +12,10 @@ export class StaticPropertyExtractor {
 
     }
 
+    hasStaticProperty(internalId: string): boolean {
+        return this.getStaticPropertyByName(internalId) !== undefined;
+    }
+
     mappingPropertyValue(internalId: string): string {
         let sp: MappingPropertyUnary = this.getStaticPropertyByName(internalId) as MappingPropertyUnary;
         return this.removePrefix(sp.selectedProperty);
