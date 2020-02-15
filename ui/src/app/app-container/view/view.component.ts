@@ -95,7 +95,7 @@ SystemJS.set('ngx-color-picker', SystemJS.newModule(ngxColorPicker));
 export class ViewComponent implements AfterViewInit {
 
     @Input() installedApp: InstalledApp;
-    @ViewChild('pluginHost', { read: ViewContainerRef }) content: ViewContainerRef;
+    @ViewChild('pluginHost', { read: ViewContainerRef, static: true }) content: ViewContainerRef;
 
     constructor(private compiler: Compiler, private injector: Injector) {
     }

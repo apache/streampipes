@@ -34,7 +34,7 @@ export class DataDownloadDialog {
     downloadFinish: boolean = false;
     downloadedMBs: number = undefined;
 
-    @ViewChild('stepper') stepper: MatStepper;
+    @ViewChild('stepper', { static: true }) stepper: MatStepper;
 
     downloadHttpRequestSubscribtion;
 

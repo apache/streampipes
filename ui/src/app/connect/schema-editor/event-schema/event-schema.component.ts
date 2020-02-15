@@ -52,7 +52,7 @@ export class EventSchemaComponent implements OnChanges {
   @Output() eventSchemaChange = new EventEmitter<EventSchema>();
   @Output() oldEventSchemaChange = new EventEmitter<EventSchema>();
 
-  @ViewChild(TreeComponent) tree: TreeComponent;
+  @ViewChild(TreeComponent, { static: true }) tree: TreeComponent;
 
   schemaGuess: GuessSchema = new GuessSchema();
   countSelected: number = 0;

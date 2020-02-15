@@ -40,7 +40,7 @@ export class PipelineElementConfigurationComponent {
     consulServices: StreampipesPeContainer[];
 
     displayedColumns: string[] = ['status', 'name', 'action'];
-    @ViewChild(MatPaginator, {}) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     dataSource = new MatTableDataSource<StreampipesPeContainer>();
 
     expandedElement: any;

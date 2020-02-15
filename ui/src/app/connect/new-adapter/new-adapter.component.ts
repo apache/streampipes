@@ -79,7 +79,7 @@ export class NewAdapterComponent implements OnInit {
     @Output()
     updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
 
-    @ViewChild('stepper') myStepper: MatStepper;
+    @ViewChild('stepper', { static: true }) myStepper: MatStepper;
 
     allFormats: FormatDescription[] = [];
 
@@ -111,7 +111,7 @@ export class NewAdapterComponent implements OnInit {
     // deactivates all edit functions when user starts a template
     isEditable: Boolean = true;
 
-    @ViewChild(EventSchemaComponent)
+    @ViewChild(EventSchemaComponent, { static: true })
     private eventSchemaComponent: EventSchemaComponent;
 
     isSetAdapter: Boolean = false;

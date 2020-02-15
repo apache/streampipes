@@ -32,7 +32,7 @@ export class TransportSelectionComponent {
     transportProcesses: TransportProcessEventModel[] = [];
 
     displayedColumns: string[] = ['position', 'startTime', 'endTime', 'action'];
-    @ViewChild(MatPaginator, {}) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     dataSource = new MatTableDataSource<TransportProcessEventModel>();
 
     @Output() selectedProcess = new EventEmitter<TransportProcessEventModel>();
