@@ -22,6 +22,10 @@
                     <line-widget [gridsterItemComponent]="gridsterItemComponent" [editMode]="editMode"
                                  [gridsterItem]="item" [widget]="widget" [widgetConfig]="configuredWidget" class="h-100"></line-widget>
                 </div>
+                <div *ngIf="widget.widgetType === 'area'" class="h-100 p-0">
+                    <area-widget [gridsterItemComponent]="gridsterItemComponent" [editMode]="editMode"
+                                 [gridsterItem]="item" [widget]="widget" [widgetConfig]="configuredWidget" class="h-100"></area-widget>
+                </div>
                 <div *ngIf="widget.widgetType === 'table'" class="h-100 p-0">
                     <table-widget [gridsterItemComponent]="gridsterItemComponent"
                                   [gridsterItem]="item" [widget]="widget" [editMode]="editMode"

@@ -5,6 +5,7 @@ import {LineConfig} from "../components/widgets/line/line-config";
 import {TableConfig} from "../components/widgets/table/table-config";
 import {GaugeConfig} from "../components/widgets/gauge/gauge-config";
 import {ImageConfig} from "../components/widgets/image/image-config";
+import {AreaConfig} from "../components/widgets/area/area-config";
 
 export class WidgetRegistry {
 
@@ -13,7 +14,8 @@ export class WidgetRegistry {
         new LineConfig(),
         new TableConfig(),
         new GaugeConfig(),
-        new ImageConfig()
+        new ImageConfig(),
+        new AreaConfig()
     ];
 
     static getAvailableWidgetTemplates(): Array<DashboardWidgetSettings> {

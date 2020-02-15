@@ -31,6 +31,7 @@ import {RefreshDashboardService} from "./services/refresh-dashboard.service";
 import {SemanticTypeUtilsService} from '../core-services/semantic-type/semantic-type-utils.service';
 import {GaugeWidgetComponent} from "./components/widgets/gauge/gauge-widget.component";
 import {ImageWidgetComponent} from "./components/widgets/image/image-widget.component";
+import {AreaWidgetComponent} from "./components/widgets/area/area-widget.component";
 
 const dashboardWidgets = [
 
@@ -63,6 +64,7 @@ const dashboardWidgets = [
         DashboardWidgetComponent,
         AddVisualizationDialogComponent,
         EditDashboardDialogComponent,
+        AreaWidgetComponent,
         LineWidgetComponent,
         NumberWidgetComponent,
         TableWidgetComponent,

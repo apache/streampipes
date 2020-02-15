@@ -4,21 +4,14 @@ import {RxStompService} from "@stomp/ng2-stompjs";
 import {LineConfig} from "./line-config";
 import {ResizeService} from "../../../services/resize.service";
 import {BaseNgxChartsStreamPipesWidget} from "../base/base-ngx-charts-widget";
+import {BaseNgxLineChartsStreamPipesWidget} from "../base/base-ngx-line-charts-widget";
 
 @Component({
     selector: 'line-widget',
     templateUrl: './line-widget.component.html',
     styleUrls: ['./line-widget.component.css']
 })
-export class LineWidgetComponent extends BaseNgxChartsStreamPipesWidget implements OnInit, OnDestroy {
-
-    multi:any = [];
-
-    selectedNumberProperty: string;
-    selectedTimestampProperty: string;
-    title: string;
-    minYAxisRange: number;
-    maxYAxisRange: number;
+export class LineWidgetComponent extends BaseNgxLineChartsStreamPipesWidget implements OnInit, OnDestroy {
 
     constructor(rxStompService: RxStompService, resizeService: ResizeService) {
         super(rxStompService, resizeService);
@@ -26,43 +19,10 @@ export class LineWidgetComponent extends BaseNgxChartsStreamPipesWidget implemen
 
     ngOnInit(): void {
         super.ngOnInit();
-        this.multi = [
-            {
-                "name": this.selectedNumberProperty,
-                "series": [
-                ]
-            }];
     }
 
     ngOnDestroy(): void {
         super.ngOnDestroy();
-    }
-
-    protected extractConfig(extractor: StaticPropertyExtractor) {
-        this.selectedNumberProperty = extractor.mappingPropertyValue(LineConfig.NUMBER_MAPPING_KEY);
-        this.selectedTimestampProperty = extractor.mappingPropertyValue(LineConfig.TIMESTAMP_MAPPING_KEY);
-        //this.minYAxisRange = extractor.integerParameter(LineConfig.MIN_Y_AXIS_KEY);
-        //this.maxYAxisRange = extractor.integerParameter(LineConfig.MAX_Y_AXIS_KEY);
-    }
-
-    protected onEvent(event: any) {
-        let time = event[this.selectedTimestampProperty];
-        let value = event[this.selectedNumberProperty];
-        this.makeEvent(time, value);
-    }
-
-    makeEvent(time: any, value: any): void {
-        this.multi[0].series.push({"name": time, "value": value});
-        if (this.multi[0].series.length > 10) {
-            this.multi[0].series.shift();
-        }
-        this.multi = [...this.multi];
-    }
-
-    timestampTickFormatting(timestamp: any): string {
-        var date = new Date(timestamp);
-        let timeString = date.getHours() + ':' + date.getMinutes().toString().substr(-2) + ':' + date.getSeconds().toString().substr(-2);
-        return timeString;
     }
 
 }

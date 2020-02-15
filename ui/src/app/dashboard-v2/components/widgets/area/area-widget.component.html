@@ -2,7 +2,7 @@
     <div class="title-panel mt-20" *ngIf="hasTitlePanelSettings">
         {{selectedTitle}}
     </div>
-    <ngx-charts-line-chart *ngIf="displayChart"
+    <ngx-charts-area-chart *ngIf="displayChart"
                            [showXAxisLabel]="false"
                            [showYAxisLabel]="false"
                            [scheme]="colorScheme"
@@ -18,6 +18,6 @@
                            [xAxisTickFormatting]="timestampTickFormatting"
                            [results]="multi" style="margin-top:10px;margin-bottom:10px;"
                            [ngStyle]="{'fill': selectedPrimaryTextColor}">
-    </ngx-charts-line-chart>
+    </ngx-charts-area-chart>
 </div>
 
