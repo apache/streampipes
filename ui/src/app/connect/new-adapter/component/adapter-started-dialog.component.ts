@@ -35,7 +35,7 @@ import {MappingPropertyUnary} from '../../model/MappingPropertyUnary';
 })
 export class AdapterStartedDialog {
 
-    private adapterInstalled: boolean = false;
+    adapterInstalled: boolean = false;
     private adapterStatus: StatusMessage;
     private streamDescription: any;
     private pollingActive: boolean = false;

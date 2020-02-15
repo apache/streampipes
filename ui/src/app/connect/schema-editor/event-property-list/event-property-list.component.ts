@@ -35,7 +35,7 @@ export class EventPropertyListComponent implements OnInit {
   @Input() property: EventPropertyList;
   @Input() index: number;
 
-  private runtimeDataTypes;
+  runtimeDataTypes;
 
   @Input() isEditable: boolean;
 

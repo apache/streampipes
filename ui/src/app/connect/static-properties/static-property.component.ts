@@ -71,8 +71,8 @@ export class StaticPropertyComponent implements OnInit {
 
   constructor(
     private logger: Logger,
-    private xsService: xsService,
-    private staticPropertyUtil: StaticPropertyUtilService
+    public xsService: xsService,
+    public staticPropertyUtil: StaticPropertyUtilService
   ) {
     logger.log(this.staticProperty);
   }

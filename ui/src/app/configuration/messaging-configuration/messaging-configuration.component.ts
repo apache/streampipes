@@ -28,8 +28,8 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 })
 export class MessagingConfigurationComponent {
 
-    private messagingSettings: MessagingSettings;
-    private loadingCompleted: boolean = false;
+    messagingSettings: MessagingSettings;
+    loadingCompleted: boolean = false;
 
     constructor(private configurationService: ConfigurationService) {
 

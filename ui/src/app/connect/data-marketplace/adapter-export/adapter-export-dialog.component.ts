@@ -29,7 +29,7 @@ import {TsonLdSerializerService} from '../../../platform-services/tsonld-seriali
 })
 export class AdapterExportDialog {
 
-    private adapterJsonLd;
+    adapterJsonLd;
 
     constructor(
         public dialogRef: MatDialogRef<AdapterExportDialog>,

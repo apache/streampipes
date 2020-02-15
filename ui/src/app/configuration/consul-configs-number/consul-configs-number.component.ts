@@ -27,7 +27,7 @@ import {ConfigurationService} from '../shared/configuration.service';
 })
 export class ConsulConfigsNumberComponent {
     @Input() configuration: StreampipesPeContainerConifgs
-    constructor(private configService:ConfigurationService) {    
+    constructor(public configService:ConfigurationService) {
     }
 
 }

@@ -40,7 +40,7 @@ export class StaticMappingNaryComponent extends StaticMappingComponent implement
 
     private inputValue: String;
     private hasInput: Boolean;
-    private availableProperties: Array<EventProperty>;
+    availableProperties: Array<EventProperty>;
 
     constructor(staticPropertyUtil: StaticPropertyUtilService,
                 PropertySelectorService: PropertySelectorService){
@@ -53,8 +53,6 @@ export class StaticMappingNaryComponent extends StaticMappingComponent implement
         if (!this.staticProperty.selectedProperties) {
             this.staticProperty.selectedProperties = [];
         }
-        console.log(this.eventSchema);
-        console.log(this.staticProperty);
     }
 
     selectOption(property: EventProperty, $event) {

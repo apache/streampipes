@@ -35,12 +35,12 @@ export class StaticFreeInputComponent implements OnInit {
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Output() updateEmitter: EventEmitter<ConfigurationInfo> = new EventEmitter();
     
-    private freeTextForm: FormGroup;
-    private inputValue: String;
-    private hasInput: Boolean;
-    private errorMessage = "Please enter a value";
+    freeTextForm: FormGroup;
+    inputValue: String;
+    hasInput: Boolean;
+    errorMessage = "Please enter a value";
 
-    constructor(private staticPropertyUtil: StaticPropertyUtilService){
+    constructor(public staticPropertyUtil: StaticPropertyUtilService){
 
     }
 

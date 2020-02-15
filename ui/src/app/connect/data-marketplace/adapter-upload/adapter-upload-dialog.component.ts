@@ -31,7 +31,7 @@ import {AdapterDescription} from '../../model/connect/AdapterDescription';
 export class AdapterUploadDialog {
 
     private selectedUploadFile: File;
-    private uploaded: boolean;
+    uploaded: boolean;
 
     constructor(
         public dialogRef: MatDialogRef<AdapterUploadDialog>,

@@ -40,13 +40,13 @@ export class StaticNumberInputComponent implements OnInit {
 
 
 
-    private freeTextForm: FormGroup;
-    private inputValue: String;
-    private errorMessage = "Please enter a valid Number";
-    private hasInput: Boolean;
+    freeTextForm: FormGroup;
+    inputValue: String;
+    errorMessage = "Please enter a valid Number";
+    hasInput: Boolean;
 
 
-    constructor(private staticPropertyUtil: StaticPropertyUtilService){
+    constructor(public staticPropertyUtil: StaticPropertyUtilService){
 
     }
 

@@ -74,7 +74,7 @@ export class EventSchemaComponent implements OnChanges {
   };
 
 
-  private onUpdateData(treeComponent: TreeComponent): void {
+  public onUpdateData(treeComponent: TreeComponent): void {
     treeComponent.treeModel.expandAll();
   }
 
@@ -110,7 +110,7 @@ export class EventSchemaComponent implements OnChanges {
     this.tree.treeModel.update();
   }
 
-  public addNestedProperty(eventProperty): void {
+  public addNestedProperty(eventProperty?: EventPropertyNested): void {
     const uuid: string = UUID.UUID();
     if (eventProperty === undefined) {
       this.eventSchema.eventProperties.push(new EventPropertyNested(uuid, undefined));
@@ -121,7 +121,7 @@ export class EventSchemaComponent implements OnChanges {
   }
 
 
-  public removeSelectedProperties(eventProperties: any): void {
+  public removeSelectedProperties(eventProperties?: any): void {
     eventProperties = eventProperties || this.eventSchema.eventProperties;
     for (let i = eventProperties.length - 1; i >= 0; --i) {
       if (eventProperties[i].eventProperties) {

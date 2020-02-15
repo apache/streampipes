@@ -70,7 +70,7 @@ export class EventPropertyComponent implements OnInit {
         });
     }
 
-    private isEventPropertyPrimitive(instance: EventProperty): boolean {
+    isEventPropertyPrimitive(instance: EventProperty): boolean {
         return instance instanceof EventPropertyPrimitive;
     }
 
@@ -78,7 +78,7 @@ export class EventPropertyComponent implements OnInit {
         return instance instanceof EventPropertyNested;
     }
 
-    private isEventPropertyList(instance: EventProperty): boolean {
+    isEventPropertyList(instance: EventProperty): boolean {
         return instance instanceof EventPropertyList;
     }
 

@@ -11,7 +11,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class StaticColorPickerComponent implements OnInit {
 
-    constructor(private staticPropertyUtil: StaticPropertyUtilService){
+    constructor(public staticPropertyUtil: StaticPropertyUtilService){
 
     }
 
@@ -20,9 +20,9 @@ export class StaticColorPickerComponent implements OnInit {
     @Input() staticProperty: StaticProperty;
     @Output() inputEmitter: EventEmitter<any> = new EventEmitter<any>();
 
-    private inputValue: String;
-    private hasInput: Boolean;
-    private colorPickerForm: FormGroup;
+    inputValue: String;
+    hasInput: Boolean;
+    colorPickerForm: FormGroup;
 
     ngOnInit() {
         this.colorPickerForm = new FormGroup({
