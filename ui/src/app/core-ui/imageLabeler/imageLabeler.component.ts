@@ -18,6 +18,8 @@
 
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { CocoFormat } from "../../core-model/coco/Coco.format";
+import { InteractionMode } from "./interactionMode";
+import { ReactLabelingHelper } from "./labelingHelper/reactLabeling.helper";
 
 @Component({
   selector: 'sp-image-labeler',
@@ -30,96 +32,84 @@ export class ImageLabelerComponent implements OnInit {
   private canvas;
   private context;
 
-  //mouse position
-  private last_mousex = 0;
-  private last_mousey = 0;
-  private last_mousexTransformed = 0;
-  private last_mouseyTransformed = 0;
+  private isMouseDown = false;
 
-  private mousedown = false;
-
-  private reactHeight = 0;
-  private reactWidth = 0;
-
+  //canvas properties
   private canvasWidth;
   private canvasHeight;
 
-  private source;
+  //image
+  private image;
+  private imageTranslationX = 0;
+  private imageTranslationY = 0;
 
   private coco;
   private label = "Car";
 
+  //actual interaction mode
+  private interactionMode: InteractionMode = InteractionMode.ReactLabeling;
+
   //scale
-  private startScale = 1;
-  private scale: number = this.startScale;
+  private scale: number = 1;
 
   ngOnInit(): void {
-
     this.canvas = this.canvasRef.nativeElement;
     this.context = this.canvas.getContext('2d');
-    this.canvasWidth = this.canvas.widget;
+    this.canvasWidth = this.canvas.width;
     this.canvasHeight= this.canvas.height;
 
+    this.image = new Image();
 
-    this.source = new Image();
-
-    this.source.onload = () => {
-      this.context.drawImage(this.source, 0, 0,);
-      //  context.reactWidth = source.reactWidth;
-      //  context.height = source.height;
-      this.coco = new CocoFormat("Test.png", this.source.width, this.source.height);
-      //this.context.strokeRect(0, 0, 20, 30);
-
+    this.image.onload = () => {
+      this.coco = new CocoFormat("Test.png", this.image.width, this.image.height);
+      console.log('Image width: ' + this.image.width);
+      console.log('Image height: ' + this.image.height);
+      this.scale = Math.min(1, this.canvasWidth / this.image.width, this.canvasHeight / this.image.height);
+      console.log('Set Scale to: ' + this.scale);
+      this.draw();
     };
-    this.source.src = 'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg';
+    //this.image.src = 'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg';
+    this.image.src = 'https://www.hamburg.de/contentblob/1740056/7308ff64cbb71631d0463f5b6a34471c/data/bild-kohoevedstrasse3.jpg';
+   // this.source.src = 'https://previews.123rf.com/images/sahua/sahua1503/sahua150300006/38262839-autobahn-stra%C3%9Fe-schilder-autos-und-konstruktionen.jpg';
     this.context.lineWidth = 2;
   }
 
   imageMouseDown(e) {
-    let mousePos = this.getMousePosScreen(e.clientX, e.clientY);
-    this.last_mousex = mousePos[0];
-    this.last_mousey = mousePos[1];
-    let mousePosTransformed = this.getMousePosTransformed(e.clientX, e.clientY);
-    this.last_mousexTransformed = mousePosTransformed[0];
-    this.last_mouseyTransformed = mousePosTransformed[1];
-    this.mousedown = true;
+    if (this.interactionMode == InteractionMode.ReactLabeling) {
+      ReactLabelingHelper.mouseDown(this.getMousePosScreen(e.clientX, e.clientY),
+        this.getMousePosTransformed(e.clientX, e.clientY));
+    } else if (this.interactionMode == InteractionMode.Translate) {
+
+    }
+    this.isMouseDown = true;
   }
 
   imageMouseMove(e) {
-    let mousePos = this.getMousePosScreen(e.clientX, e.clientY);
-    let mousex = mousePos[0];
-    let mousey = mousePos[1];
-    if(this.mousedown) {
-      this.draw();
-
-      this.reactWidth = mousex - this.last_mousex;
-      this.reactHeight = mousey - this.last_mousey;
-      this.context.strokeStyle = this.getColor(this.label);
-      this.context.beginPath();
-      this.context.rect(this.last_mousex, this.last_mousey, this.reactWidth, this.reactHeight);
-      this.context.fillText(this.label, this.last_mousex, this.last_mousey + this.reactHeight);
-      this.context.stroke();
+    if(this.isMouseDown) {
+      if (this.interactionMode == InteractionMode.ReactLabeling) {
+        this.draw();
+        ReactLabelingHelper.mouseMove(this.getMousePosScreen(e.clientX, e.clientY),
+          this.getMousePosTransformed(e.clientX, e.clientY), this.context, this.label, this.getColor(this.label));
+      }
     }
+
+
   }
 
   imageMouseUp(e) {
-    this.mousedown = false;
+    this.isMouseDown = false;
 
-    let categoryId = this.coco.getCategoryId(this.label, "");
+    let labelId = this.coco.getLabelId(this.label, "");
 
-    let mousePosTransformed = this.getMousePosTransformed(e.clientX, e.clientY);
-    let mousexTransformed = mousePosTransformed[0];
-    let last_mouseyTransformed = mousePosTransformed[1];
-
-    let reactWidth = mousexTransformed - this.last_mousexTransformed;
-    let reactHeight = last_mouseyTransformed - this.last_mouseyTransformed;
-
-    this.coco.addReactAnnotation(this.last_mousexTransformed, this.last_mouseyTransformed, reactWidth, reactHeight, categoryId);
-    console.log(this.last_mousexTransformed, this.last_mouseyTransformed, reactWidth, reactHeight, categoryId);
-
+    if (this.interactionMode == InteractionMode.ReactLabeling) {
+      ReactLabelingHelper.mouseUp(this.getMousePosScreen(e.clientX, e.clientY),
+        this.getMousePosTransformed(e.clientX, e.clientY), this.coco, labelId);
+    }
   }
 
   draw() {
+    this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+
     let newWidth = this.canvasWidth * this.scale;
     let newHeight = this.canvasHeight * this.scale;
 
@@ -127,18 +117,17 @@ export class ImageLabelerComponent implements OnInit {
     this.context.translate(-((newWidth - this.canvasWidth) / 2), -((newHeight - this.canvasHeight) / 2));
     this.context.scale(this.scale, this.scale);
 
-    this.context.drawImage(this.source, 0, 0,);
+    this.context.drawImage(this.image, this.canvasWidth / 2 - this.image.width / 2, this.canvasHeight / 2 - this.image.height / 2);
+
+    this.context.lineWidth = 2;
 
     for(let annotation of this.coco.annotations) {
-      console.log(this.coco.annotations[0].bbox);
-      let label = this.coco.getCategoryName(annotation.category_id);
-      this.context.strokeStyle = this.getColor(label);
-      this.context.beginPath();
+      //console.log(this.coco.annotations[0].bbox);
+      let label = this.coco.getLabelById(annotation.category_id);
       //TODO if not BBox
-      let bbox = annotation.bbox;
-      this.context.rect(bbox[0], bbox[1], bbox[2], bbox[3]);
-      this.context.fillText(label, bbox[0], bbox[1] + bbox[3]);
-      this.context.stroke();
+      ReactLabelingHelper.draw(annotation, label, this.context, this.getColor(label),
+        (this.canvasWidth - this.image.width) / 2,
+        (this.canvasHeight - this.image.height) / 2)
     }
     this.context.restore();
   }
@@ -168,6 +157,7 @@ export class ImageLabelerComponent implements OnInit {
 
   selectLabel(label) {
     this.label = label;
+    this.interactionMode = InteractionMode.ReactLabeling;
   }
 
   getColor(label) {
@@ -192,9 +182,13 @@ export class ImageLabelerComponent implements OnInit {
 
   getMousePosTransformed(clientX, clientY): [any, any] {
     return [
-      parseInt((clientX - this.canvas.getBoundingClientRect().left) / this.scale),
-      parseInt((clientY - this.canvas.getBoundingClientRect().top) / this.scale),
+      parseInt(((clientX - this.canvas.getBoundingClientRect().left) / this.scale) - ((this.canvasWidth / this.scale - this.image.width) / 2)),
+      parseInt(((clientY - this.canvas.getBoundingClientRect().top) / this.scale) - ((this.canvasHeight / this.scale - this.image.height) / 2)),
     ]
+  }
+
+  setInteractionModeTranslate() {
+    this.interactionMode = InteractionMode.Translate;
   }
 
 

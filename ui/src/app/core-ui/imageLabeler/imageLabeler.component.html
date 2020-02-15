@@ -16,12 +16,16 @@
   ~
   -->
 
-<button mat-button (click)="selectLabel('sign')">Sign</button>
-<button mat-button (click)="selectLabel('car')">Car</button>
+<mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+    <mat-button-toggle (click)="selectLabel('sign')">Sign</mat-button-toggle>
+    <mat-button-toggle (click)="selectLabel('car')">Car</mat-button-toggle>
+    <mat-button-toggle (click)="setInteractionModeTranslate()"><mat-icon>zoom_out_map</mat-icon></mat-button-toggle>
+</mat-button-toggle-group>
 
 <canvas (mousedown)="imageMouseDown($event)" (mousemove)="imageMouseMove($event)" (mouseup)="imageMouseUp($event)"
         #test style="border:2px solid;" width="800" height="500" ></canvas>
 <!-- (scroll)="imageZoom($event)" -->
+
 
 
 <button mat-button (click)="zoomin()"> <mat-icon>zoom_in</mat-icon></button>
