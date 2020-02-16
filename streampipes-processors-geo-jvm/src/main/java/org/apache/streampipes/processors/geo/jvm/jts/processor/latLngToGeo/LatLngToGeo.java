@@ -51,7 +51,6 @@ public class LatLngToGeo implements EventProcessor<LatLngToGeoParameter> {
         if (!geom.isEmpty()){
             in.addField(LatLngToGeoController.WKT, geom.toString());
             out.collect(in);
-            System.out.println(in.getRaw());
         } else {
             LOG.warn("An empty point geometry in " + LatLngToGeoController.EPA_NAME + " is created due" +
                 "invalid input field. Latitude: " + lat + "Longitude: " + lng);

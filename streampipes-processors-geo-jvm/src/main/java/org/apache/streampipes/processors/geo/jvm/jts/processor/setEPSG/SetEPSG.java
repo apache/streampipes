@@ -45,7 +45,6 @@ public class SetEPSG implements EventProcessor<SetEpsgParameter> {
     public void onEvent(Event in, SpOutputCollector out)  {
         in.addField(SetEpsgController.EPSG, epsg_value);
         out.collect(in);
-        System.out.println(in.getRaw());
     }
 
     @Override
