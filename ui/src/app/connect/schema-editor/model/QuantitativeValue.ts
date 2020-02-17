@@ -19,8 +19,7 @@
 import { RdfsClass } from '../../../platform-services/tsonld/RdfsClass';
 import { RdfProperty } from '../../../platform-services/tsonld/RdfsProperty';
 import { RdfId } from '../../../platform-services/tsonld/RdfId';
-import { EventSchema } from './EventSchema';
-import { DomainPropertyProbabilityList } from './DomainPropertyProbabilityList';
+import { Float } from '../../../platform-services/tsonld/Float';
 
 @RdfsClass('http://schema.org/QuantitativeValue')
 export class QuantitativeValue {
@@ -30,12 +29,15 @@ export class QuantitativeValue {
     public id: string;
 
     @RdfProperty('http://schema.org/minValue')
+    @Float
     public minValue: Number;
 
     @RdfProperty('http://schema.org/maxValue')
+    @Float
     public maxValue: Number;
 
     @RdfProperty('http://schema.org/step')
+    @Float
     public step: Number;
 
     constructor() {}

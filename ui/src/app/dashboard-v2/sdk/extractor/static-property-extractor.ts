@@ -72,7 +72,7 @@ export class StaticPropertyExtractor {
 
 
     removePrefix(propertyValue: string) {
-        return propertyValue.split("::")[1];
+        return propertyValue.split("::").length > 1 ? propertyValue.split("::")[1] : propertyValue;
     }
 
 }

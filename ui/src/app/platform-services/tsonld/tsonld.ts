@@ -120,7 +120,12 @@ export class TsonLd {
         } else if (typeof jsObject[property] === 'object') {
           jsObject[newProperty] = this.toJsonLd(jsObject[property], false, allIds);
         } else {
-          jsObject[newProperty] = jsObject[property];
+          let parseHint = Reflect.hasMetadata('Float', object);
+          if (parseHint) {
+            jsObject[newProperty] = parseFloat(jsObject[property]);
+          } else {
+            jsObject[newProperty] = jsObject[property];
+          }
         }
       } else {
         jsObject['@id'] = jsObject[property];
