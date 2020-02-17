@@ -71,6 +71,7 @@ public class CouchDbInstallationStep implements InstallationStep {
             Utils.getCouchDbRdfEndpointClient();
             Utils.getCouchDbDashboardClient();
             Utils.getCouchDbVisualizablePipelineClient();
+            Utils.getCouchDbDashboardWidgetClient();
 
             return Collections.singletonList(Notifications.success(getTitle()));
         } catch (Exception e) {
