@@ -86,6 +86,7 @@
     "ng2-dragula": "^1.5.0",
     "ngmap": "1.18.0",
     "ngx-color-picker": "^9.0.0",
+    "plotly.js": "^1.52.2",
     "prismjs": "^1.16.0",
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.3.3",

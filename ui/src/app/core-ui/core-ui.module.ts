@@ -31,7 +31,7 @@ import {TableComponent} from './table/table.component';
 import {LineChartComponent} from './linechart/lineChart.component';
 
 //import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-import { PlotlyViaCDNModule } from 'angular-plotly.js';
+import { PlotlyViaWindowModule } from 'angular-plotly.js';
 //PlotlyViaCDNModule.plotlyjs = PlotlyJS;
 
 @NgModule({
@@ -46,7 +46,7 @@ import { PlotlyViaCDNModule } from 'angular-plotly.js';
         MatProgressSpinnerModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        PlotlyViaCDNModule,
+        PlotlyViaWindowModule,
     ],
     declarations: [
         TableComponent,
