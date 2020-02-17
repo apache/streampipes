@@ -28,7 +28,7 @@
                 </div>
                 <div fxFlex fxLayoutAlign="end center" class="mr-20">
                 <button mat-button mat-icon-button color="primary"
-                        *ngIf="selectedIndex > 0" (click)="toggleEditMode()">
+                        *ngIf="selectedIndex > 0" (click)="toggleEditMode()" [disabled]="editMode">
                     <i class="material-icons">edit</i>
                 </button>
                 </div>
@@ -38,7 +38,7 @@
 
     <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="dashboardsLoaded">
     <dashboard-overview (selectDashboardEmitter)="openDashboard($event)"
-                        (reloadDashboardsEmitter)="getDashboards($event)"
+                        (reloadDashboardsEmitter)="getDashboards()"
                         [dashboards]="dashboards"
                         *ngIf="!dashboardTabSelected">
 

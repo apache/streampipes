@@ -18,10 +18,10 @@
 
 import {
     AfterViewInit,
-    Component,
+    Component, EventEmitter,
     Input,
     OnChanges,
-    OnInit,
+    OnInit, Output,
     QueryList,
     SimpleChanges,
     ViewChildren
@@ -42,6 +42,9 @@ export class DashboardGridComponent implements OnInit, OnChanges {
 
     @Input() editMode: boolean;
     @Input() dashboard: Dashboard;
+
+    @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
+
     options: DashboardConfig;
     loaded: boolean = false;
 
@@ -82,11 +85,8 @@ export class DashboardGridComponent implements OnInit, OnChanges {
         }
     }
 
-    removeItem(widget: DashboardItem) {
-        this.dashboard.widgets.splice(this.dashboard.widgets.indexOf(widget), 1);
-        this.dashboardService.updateDashboard(this.dashboard).subscribe(result => {
-            //this.refreshDashboardService.notify(true);
-        });
-
+    propagateItemRemoval(widget: DashboardItem) {
+        this.deleteCallback.emit(widget);
     }
+
 }

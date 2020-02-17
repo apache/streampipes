@@ -21,9 +21,14 @@
         <button mat-button mat-raised-button color="primary" (click)="updateDashboardAndCloseEditMode()"
                 style="margin-right:10px;">Save
         </button>
+        <button mat-button mat-raised-button class="mat-basic" (click)="discardChanges()"
+                style="margin-right:10px;">Discard
+        </button>
         <button mat-button mat-raised-button color="primary" (click)="addWidget()" [disabled]="!editMode">Add
             visualization</button>
     </div>
 
-    <dashboard-grid [editMode]="editMode" [dashboard]="dashboard" class="h-100"></dashboard-grid>
+    <dashboard-grid [editMode]="editMode" [dashboard]="dashboard"
+                    (deleteCallback)="removeAndQueueItemForDeletion($event)"
+                    class="h-100"></dashboard-grid>
 </div>

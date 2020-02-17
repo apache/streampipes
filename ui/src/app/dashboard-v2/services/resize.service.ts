@@ -16,14 +16,14 @@
  *
  */
 
-import {BehaviorSubject} from "rxjs";
+import {ReplaySubject} from "rxjs";
 import {Injectable} from "@angular/core";
 import {GridsterInfo} from "../models/gridster-info.model";
 
 @Injectable()
 export class ResizeService {
 
-    public resizeSubject: BehaviorSubject<GridsterInfo> = new BehaviorSubject<GridsterInfo>(null);
+    public resizeSubject: ReplaySubject<GridsterInfo> = new ReplaySubject<GridsterInfo>();
 
     public notify(info: GridsterInfo): void {
         this.resizeSubject.next(info);

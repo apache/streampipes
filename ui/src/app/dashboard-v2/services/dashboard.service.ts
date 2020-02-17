@@ -98,6 +98,10 @@ export class DashboardService {
         return this.serializeAndPost(this.dashboardWidgetUrl, widget);
     }
 
+    deleteWidget(widgetId: string): Observable<any> {
+        return this.http.delete(this.dashboardWidgetUrl + "/" +widgetId);
+    }
+
     serializeAndPost(url: string, object: any): Observable<DashboardWidget> {
         let promise = new Promise<DashboardWidget>((resolve, reject) => {
             this.tsonLdSerializerService.toJsonLd(object).subscribe(serialized => {

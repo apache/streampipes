@@ -16,18 +16,14 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@angular/core";
-import {Dashboard, DashboardConfig, DashboardItem} from "../../models/dashboard.model";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {Dashboard, DashboardItem} from "../../models/dashboard.model";
 import {Subscription} from "rxjs";
-import {GridType} from "angular-gridster2";
 import {MatDialog} from "@angular/material/dialog";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
 import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
 import {DashboardService} from "../../services/dashboard.service";
-import {GridsterItem} from "angular-gridster2/lib/gridsterItem.interface";
-import {GridsterItemComponentInterface} from "angular-gridster2/lib/gridsterItemComponent.interface";
-import {ResizeService} from "../../services/resize.service";
-import {GridsterInfo} from "../../models/gridster-info.model";
+import {RefreshDashboardService} from "../../services/refresh-dashboard.service";
 
 @Component({
     selector: 'dashboard-panel',
@@ -44,8 +40,12 @@ export class DashboardPanelComponent implements OnInit {
 
     protected subscription: Subscription;
 
+    widgetIdsToRemove: Array<string> = [];
+
     constructor(private dashboardService: DashboardService,
-                public dialog: MatDialog) {}
+                public dialog: MatDialog,
+                private refreshDashboardService: RefreshDashboardService) {
+    }
 
     public ngOnInit() {
 
@@ -61,7 +61,6 @@ export class DashboardPanelComponent implements OnInit {
         dialogRef.afterClosed().subscribe(widget => {
             if (widget) {
                 this.addWidgetToDashboard(widget);
-                this.updateDashboard();
             }
         });
     }
@@ -79,16 +78,28 @@ export class DashboardPanelComponent implements OnInit {
         this.dashboard.widgets.push(dashboardItem);
     }
 
-    updateDashboard() {
+    updateDashboardAndCloseEditMode() {
         this.dashboardService.updateDashboard(this.dashboard).subscribe(result => {
             this.dashboard._rev = result._rev;
+            this.deleteWidgets();
+            this.editModeChange.emit(!(this.editMode));
+            this.refreshDashboardService.notify(this.dashboard._id);
         })
     }
 
-    updateDashboardAndCloseEditMode() {
-        this.updateDashboard();
+    discardChanges() {
         this.editModeChange.emit(!(this.editMode));
+        this.refreshDashboardService.notify(this.dashboard._id);
     }
 
+    removeAndQueueItemForDeletion(widget: DashboardItem) {
+        this.dashboard.widgets.splice(this.dashboard.widgets.indexOf(widget), 1);
+        this.widgetIdsToRemove.push(widget.id);
+    }
 
+    deleteWidgets() {
+        this.widgetIdsToRemove.forEach(widgetId => {
+           this.dashboardService.deleteWidget(widgetId).subscribe();
+        });
+    }
 }

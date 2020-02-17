@@ -43,9 +43,9 @@ export class DashboardComponent implements OnInit {
 
     public ngOnInit() {
         this.getDashboards();
-        // this.refreshDashboardService.refreshSubject.subscribe(info => {
-        //     this.getDashboards();
-        // });
+        this.refreshDashboardService.refreshSubject.subscribe(currentDashboardId => {
+            this.getDashboards(currentDashboardId);
+        });
 
     }
 
@@ -64,11 +64,16 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    protected getDashboards(reload?: boolean) {
+    protected getDashboards(currentDashboardId?: string) {
         this.dashboardsLoaded = false;
         this.dashboardService.getDashboards().subscribe(data => {
             this.dashboards = data;
-            this.selectedIndex = 0;
+            if (currentDashboardId) {
+                let currentDashboard = this.dashboards.find(d => d._id === currentDashboardId);
+                this.selectDashboard(this.dashboards.indexOf(currentDashboard) + 1);
+            } else {
+                this.selectedIndex = 0;
+            }
             this.dashboardsLoaded = true;
         });
     }

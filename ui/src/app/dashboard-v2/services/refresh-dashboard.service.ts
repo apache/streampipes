@@ -17,14 +17,14 @@
  */
 
 import {Injectable} from "@angular/core";
-import {BehaviorSubject} from "rxjs";
+import {ReplaySubject} from "rxjs";
 
 @Injectable()
 export class RefreshDashboardService {
 
-    public refreshSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+    public refreshSubject: ReplaySubject<string> = new ReplaySubject<string>();
 
-    public notify(reload: boolean): void {
-        this.refreshSubject.next(reload);
+    public notify(currentDashboard: string): void {
+        this.refreshSubject.next(currentDashboard);
     }
 }

@@ -32,7 +32,7 @@ import {EditDashboardDialogComponent} from "../../dialogs/edit-dashboard/edit-da
 export class DashboardOverviewComponent implements OnInit {
 
     @Input() dashboards: Array<Dashboard>;
-    @Output() reloadDashboardsEmitter = new EventEmitter<boolean>();
+    @Output() reloadDashboardsEmitter = new EventEmitter<void>();
     @Output() selectDashboardEmitter = new EventEmitter<Dashboard>();
 
     dataSource = new MatTableDataSource<Dashboard>();
@@ -63,7 +63,7 @@ export class DashboardOverviewComponent implements OnInit {
         dialogRef.componentInstance.dashboard = dashboard;
 
         dialogRef.afterClosed().subscribe(result => {
-            this.reloadDashboardsEmitter.emit(true);
+            this.reloadDashboardsEmitter.emit();
         });
     }
 
@@ -74,7 +74,7 @@ export class DashboardOverviewComponent implements OnInit {
     openDeleteDashboardDialog(dashboard: Dashboard) {
         // TODO add confirm dialog
         this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
-            this.reloadDashboardsEmitter.emit(true);
+            this.reloadDashboardsEmitter.emit();
         });
     }
 
