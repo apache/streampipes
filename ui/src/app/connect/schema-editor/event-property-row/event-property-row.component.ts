@@ -28,7 +28,7 @@ import {EventPropertyComponent} from "../event-property/event-property.component
 import {DomainPropertyProbabilityList} from "../model/DomainPropertyProbabilityList";
 import {TreeNode} from "angular-tree-component";
 import {DataTypesService} from "../data-type.service";
-import {MatDialog} from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
     selector: 'event-property-row',
@@ -43,7 +43,7 @@ export class EventPropertyRowComponent implements OnChanges {
     @Input() eventSchema: EventSchema = new EventSchema();
     @Input() countSelected: number;
 
-    @Output() nodeChange = new EventEmitter<TreeNode>();
+    //@Output() nodeChange = new EventEmitter<TreeNode>();
     @Output() isEditableChange = new EventEmitter<boolean>();
     @Output() eventSchemaChange = new EventEmitter<EventSchema>();
     @Output() refreshTreeEmitter = new EventEmitter<void>();

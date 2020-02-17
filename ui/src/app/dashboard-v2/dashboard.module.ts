@@ -6,7 +6,7 @@ import { GridsterModule } from 'angular-gridster2';
 import { DashboardComponent } from './dashboard.component';
 import { DynamicModule } from 'ng-dynamic-component';
 import { DashboardPanelComponent } from "./components/panel/dashboard-panel.component";
-import {MatTabsModule} from "@angular/material";
+import { MatTabsModule } from "@angular/material/tabs";
 import {DashboardWidgetComponent} from "./components/widget/dashboard-widget.component";
 import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
 import {FormsModule} from "@angular/forms";

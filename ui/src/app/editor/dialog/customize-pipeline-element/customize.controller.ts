@@ -57,7 +57,7 @@ export class CustomizeController {
 
     $onInit() {
         if (this.ShepherdService.isTourActive()) {
-            this.ShepherdService.trigger("customize-" +this.sepa.type);
+            this.ShepherdService.trigger("customize-" +this.selectedElement.type);
         }
     }
 
@@ -90,14 +90,14 @@ export class CustomizeController {
     saveProperties() {
         if (this.validate()) {
             this.selectedElement.uncompleted = false;
-            this.$rootScope.$broadcast("SepaElementConfigured", this.sepa.DOM);
+            this.$rootScope.$broadcast("SepaElementConfigured", this.selectedElement.DOM);
             this.selectedElement.configured = true;
             this.hide();
             if (this.sourceEndpoint) {
                 this.sourceEndpoint.setType("token");
             }
             if (this.ShepherdService.isTourActive()) {
-                this.ShepherdService.trigger("save-" +this.sepa.type);
+                this.ShepherdService.trigger("save-" +this.selectedElement.type);
             }
         }
         else this.invalid = true;
@@ -143,11 +143,6 @@ export class CustomizeController {
 
         return valid;
     }
-
-
-
-
-
 }
 
 CustomizeController.$inject = ['$rootScope', '$mdDialog', 'elementData', 'sourceEndpoint', 'sepa', 'ShepherdService'];

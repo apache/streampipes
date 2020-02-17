@@ -20,10 +20,8 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-    MatFormFieldModule,
-    MatGridListModule,
-} from '@angular/material';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -43,7 +41,7 @@ import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
 import { RestService } from './rest.service';
 
-import { MatInputModule } from '@angular/material';
+import { MatInputModule } from '@angular/material/input';
 import { DragulaModule } from 'ng2-dragula';
 import { AdapterStartedDialog } from './new-adapter/component/adapter-started-dialog.component';
 import { DataTypesService } from './schema-editor/data-type.service';

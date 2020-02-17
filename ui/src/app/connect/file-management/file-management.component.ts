@@ -18,7 +18,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FileRestService}  from './service/filerest.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'sp-file-management',

@@ -16,10 +16,6 @@
  *
  */
 
-
-export default function httpProviderConfig($httpProvider) {
-	$httpProvider.defaults.withCredentials = true;
-	//$httpProvider.interceptors.push('httpInterceptor');
-};
-
-httpProviderConfig.$inject = ['$httpProvider'];
+module.exports = (env) => {
+    return require(`./webpack.partial.${env}.js`)
+}

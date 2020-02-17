@@ -21,7 +21,7 @@ import { AdapterDescription } from '../../model/connect/AdapterDescription';
 import { ConnectService } from '../../connect.service';
 import {DataMarketplaceService} from "../data-marketplace.service";
 import {AdapterExportDialog} from '../adapter-export/adapter-export-dialog.component';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'sp-adapter-description',

@@ -20,10 +20,12 @@ export class PipelineStatusDialogController {
 
     $mdDialog: any;
     statusDetailsVisible: any;
+    data: any;
 
-    constructor($mdDialog) {
+    constructor($mdDialog, data) {
         this.$mdDialog = $mdDialog;
         this.statusDetailsVisible = false;
+        this.data = data;
     }
 
     hide() {
@@ -39,4 +41,4 @@ export class PipelineStatusDialogController {
     }
 }
 
-PipelineStatusDialogController.$inject = ['$mdDialog'];
+PipelineStatusDialogController.$inject = ['$mdDialog', 'data'];

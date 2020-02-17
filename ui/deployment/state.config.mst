@@ -16,7 +16,6 @@
  *
  */
 
-//stateConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
 declare const require: any;
 {{#modulesActive}}
 {{#ng5}}
@@ -169,3 +168,5 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         {{/ng5}}
         {{/modulesActive}};
 };
+
+stateConfig.$inject = ['$stateProvider', '$urlRouterProvider'];

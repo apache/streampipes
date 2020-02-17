@@ -17,14 +17,12 @@
  */
 
 import {NgModule} from '@angular/core';
-import {
-    MatButtonModule,
-    MatCheckboxModule,
-    MatGridListModule,
-    MatIconModule,
-    MatInputModule,
-    MatTooltipModule,
-} from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';

@@ -22,7 +22,7 @@ import {InfoResult} from '../core-model/datalake/InfoResult';
 import {Observable} from 'rxjs/Observable';
 import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
-import {MatSnackBar} from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'sp-data-explorer',

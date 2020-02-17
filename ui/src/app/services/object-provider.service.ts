@@ -121,4 +121,4 @@ export class ObjectProvider {
 
 }
 
-//ObjectProvider.$inject = ['RestApi', 'JsplumbBridge'];
+ObjectProvider.$inject = ['RestApi', 'JsplumbBridge'];

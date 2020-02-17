@@ -17,6 +17,7 @@
  */
 
 import * as angular from 'angular';
+import {AnyRemoteController} from "../any-remote/any-remote.controller";
 
 export class FreeTextController {
 
@@ -92,3 +93,5 @@ export class FreeTextController {
     }
 
 }
+
+FreeTextController.$inject = ['$scope', '$rootScope'];

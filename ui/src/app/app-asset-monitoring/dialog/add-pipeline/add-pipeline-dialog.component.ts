@@ -17,7 +17,7 @@
  */
 
 import {Component, Inject} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {RestApi} from "../../../services/rest-api.service";
 import {RestService} from "../../services/rest.service";
 import {ElementIconText} from "../../../services/get-element-icon-text.service";

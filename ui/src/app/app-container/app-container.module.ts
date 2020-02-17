@@ -25,7 +25,7 @@ import { AppContainerService } from './shared/app-container.service';
 import { ViewComponent } from './view/view.component';
 
 import { JitCompilerFactory } from '@angular/platform-browser-dynamic';
-import { MatDialogModule } from '@angular/material';
+import { MatDialogModule } from '@angular/material/dialog';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
 @NgModule({

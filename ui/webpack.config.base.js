@@ -54,15 +54,23 @@ module.exports = {
                 loader: 'file-loader?name=assets/[name].[hash].[ext]',
             },
             {
-                test: /\.(sass|scss)$/,
+                test: /\.(scss|sass)$/,
                 use: [
-                    "to-string-loader",
-                    "style-loader",
-                    MiniCssExtractPlugin.loader,
-                    "css-loader",
-                    "sass-loader"
-                ]
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader', options: { sourceMap: true } },
+                    { loader: 'sass-loader', options: { sourceMap: true } }
+                ],
+                include: path.join(__dirname, 'src',  'scss')
             },
+            {
+                test: /\.(scss|sass)$/,
+                use: [
+                    'to-string-loader',
+                    { loader: 'css-loader', options: { sourceMap: true } },
+                    { loader: 'sass-loader', options: { sourceMap: true } }
+                ],
+                include: path.join(__dirname, 'src', 'app')
+            }
         ],
     },
     resolve: {
@@ -83,9 +91,9 @@ module.exports = {
         new AngularCompilerPlugin({
             mainPath: 'main.ts',
             platform: 0,
-            sourceMap: true,
+            sourceMap: false,
             tsConfigPath: path.join(__dirname, 'src', 'tsconfig.app.json'),
-            skipCodeGeneration: true,
+            skipCodeGeneration: false,
             compilerOptions: {},
         }),
         new CopyWebpackPlugin(

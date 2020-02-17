@@ -17,7 +17,7 @@
  */
 
 import {Component} from "@angular/core";
-import {MatDialogRef} from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import {DashboardService} from "../../services/dashboard.service";
 import {ElementIconText} from "../../../services/get-element-icon-text.service";
 import {WidgetRegistry} from "../../registry/widget-registry";

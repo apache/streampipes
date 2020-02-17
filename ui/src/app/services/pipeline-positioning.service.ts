@@ -18,7 +18,6 @@
 
 //import * from 'lodash';
 import * as dagre from "dagre";
-import {PipelineValidationService} from "../editor/services/pipeline-validation.service";
 import {JsplumbBridge} from "./jsplumb-bridge.service";
 import {JsplumbConfigService} from "./jsplumb-config.service";
 import {JsplumbService} from "./jsplumb.service";
@@ -30,9 +29,8 @@ export class PipelinePositioningService {
     JsplumbService: JsplumbService;
     JsplumbConfigService: JsplumbConfigService;
     JsplumbBridge: JsplumbBridge;
-    PipelineValidationService: PipelineValidationService;
 
-    constructor(JsplumbService, JsplumbConfigService, JsplumbBridge, PipelineValidationService) {
+    constructor(JsplumbService, JsplumbConfigService, JsplumbBridge) {
         this.JsplumbService = JsplumbService;
         this.JsplumbConfigService = JsplumbConfigService;
         this.JsplumbBridge = JsplumbBridge;
@@ -134,4 +132,4 @@ export class PipelinePositioningService {
 
 }
 
-//PipelinePositioningService.$inject = ['JsplumbService', 'JsplumbConfigService', 'JsplumbBridge'];
+PipelinePositioningService.$inject = ['JsplumbService', 'JsplumbConfigService', 'JsplumbBridge'];

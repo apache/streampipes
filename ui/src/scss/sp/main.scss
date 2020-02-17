@@ -55,6 +55,10 @@ body {
   background-attachment: fixed;
 }
 
+code[class*="language-"], pre[class*="language-"] {
+  white-space:pre-wrap;
+}
+
 .editor-error-notifications {
   position: absolute;
   left: -226px;

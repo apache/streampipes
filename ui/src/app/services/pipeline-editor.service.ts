@@ -64,4 +64,4 @@ export class PipelineEditorService {
 
 }
 
-//PipelineEditorService.$inject = ['JsplumbBridge'];
+PipelineEditorService.$inject = ['JsplumbBridge'];

@@ -18,6 +18,7 @@
 
 import {AuthService} from "./auth.service";
 import {AuthStatusService} from "./auth-status.service";
+import {RestApi} from "./rest-api.service";
 
 export class RouteTransitionInterceptorService {
 
@@ -75,5 +76,5 @@ export class RouteTransitionInterceptorService {
     isProtectedPage(target) {
         return !(this.publicPages.some(p => p === target));
     }
-
 }
+RouteTransitionInterceptorService.$inject = ['AuthService', 'AuthStatusService', '$q'];

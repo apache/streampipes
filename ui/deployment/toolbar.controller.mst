@@ -251,3 +251,5 @@ export class ToolbarController {
     }
 
 };
+
+ToolbarController.$inject = ['$mdSidenav', '$mdUtil', 'RestApi', '$state', '$window', '$location', 'AuthStatusService', '$scope'];

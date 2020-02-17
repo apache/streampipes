@@ -17,13 +17,16 @@
  */
 
 import * as angular from 'angular';
+import {ObjectProvider} from "./object-provider.service";
+import {JsplumbConfigService} from "./jsplumb-config.service";
+import {JsplumbBridge} from "./jsplumb-bridge.service";
 
 export class JsplumbService {
 
-    objectProvider: any;
+    objectProvider: ObjectProvider;
     apiConstants: any;
-    JsplumbConfigService: any;
-    JsplumbBridge: any;
+    JsplumbConfigService: JsplumbConfigService;
+    JsplumbBridge: JsplumbBridge;
     $timeout: any;
     idCounter: any;
     RestApi: any;
@@ -218,7 +221,7 @@ export class JsplumbService {
         return pipelineElementDomId;
     };
 
-    getJsplumbConfig(preview) {
+    getJsplumbConfig(preview): any {
         return preview ? this.JsplumbConfigService.getPreviewConfig() : this.JsplumbConfigService.getEditorConfig();
     }
 
@@ -253,4 +256,4 @@ export class JsplumbService {
     }
 }
 
-//JsplumbService.$inject = ['ObjectProvider', 'JsplumbConfigService', 'JsplumbBridge', '$timeout'];
+JsplumbService.$inject = ['ObjectProvider', 'JsplumbConfigService', 'JsplumbBridge', '$timeout', 'RestApi'];

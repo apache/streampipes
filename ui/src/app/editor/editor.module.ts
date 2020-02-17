@@ -29,6 +29,7 @@ import 'jquery.panzoom';
 import 'npm/bootstrap';
 import 'npm/angular-trix';
 import 'npm/angular-datatables';
+import 'npm/angular-sanitize';
 import 'npm/ng-showdown';
 
 import {EditorCtrl} from './editor.controller';
@@ -76,7 +77,7 @@ import {FileUploadComponent} from "./components/fileupload/fileupload.component"
 import {AnyRemoteComponent} from "./components/any-remote/any-remote.component";
 
 
-export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate', 'datatables', 'ng-showdown'])
+export default angular.module('sp.editor', [spServices, 'ngSanitize', 'angularTrix', 'ngAnimate', 'datatables', 'ng-showdown'])
     .controller('EditorCtrl', EditorCtrl)
     .directive('myDataBind', myDataBind)
     .directive('imageBind', imageBind)

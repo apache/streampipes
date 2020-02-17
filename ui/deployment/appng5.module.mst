@@ -24,7 +24,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { UIRouterUpgradeModule } from '@uirouter/angular-hybrid';
 import { HttpClientModule } from '@angular/common/http';
-import { MatIconModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 
@@ -82,6 +82,6 @@ export class AppModule {
     }
 
     ngDoBootstrap() {
-        this.upgrade.bootstrap(document.body, ['streamPipesApp']);
+        this.upgrade.bootstrap(document.body, ['streamPipesApp'], {strictDi: true});
     }
 }

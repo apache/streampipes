@@ -17,6 +17,8 @@
  *
  */
 
+import {ShepherdService} from "../services/tour/shepherd.service";
+
 export class LoginCtrl {
 
     $timeout: any;
@@ -30,7 +32,7 @@ export class LoginCtrl {
     loading: any;
     authenticationFailed: any;
     credentials: any;
-    ShepherdService: any;
+    ShepherdService: ShepherdService;
 
     constructor($timeout, $log, $location, $state, $stateParams, RestApi, $window, AuthStatusService, ShepherdService) {
         this.$timeout = $timeout;
@@ -84,4 +86,4 @@ export class LoginCtrl {
     }
 };
 
-//LoginCtrl.$inject = ['$timeout', '$log', '$location', '$state', '$stateParams', 'RestApi', '$window', 'AuthStatusService'];
+LoginCtrl.$inject = ['$timeout', '$log', '$location', '$state', '$stateParams', 'RestApi', '$window', 'AuthStatusService', 'ShepherdService'];

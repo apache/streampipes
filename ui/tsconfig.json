@@ -2,6 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "downlevelIteration": true,
+    "importHelpers": true,
     "module": "esnext",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
@@ -13,10 +14,13 @@
     "typeRoots": [
       "node_modules/@types"
     ],
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "baseUrl": "./"
   }
 }
