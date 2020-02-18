@@ -62,6 +62,7 @@ export class AddVisualizationDialogComponent {
 
     selectedType: any;
     page: any = "select-pipeline";
+    dialogTitle: string;
 
 
     constructor(
@@ -73,11 +74,13 @@ export class AddVisualizationDialogComponent {
 
     ngOnInit() {
         if (!this.data) {
+            this.dialogTitle = "Add widget";
             this.dashboardService.getVisualizablePipelines().subscribe(visualizations => {
                 this.visualizablePipelines = visualizations;
             });
             this.availableWidgets = WidgetRegistry.getAvailableWidgetTemplates();
         } else {
+            this.dialogTitle = "Edit widget";
             this.selectedPipeline = this.data.widget.dashboardWidgetDataConfig;
             this.selectedWidget = this.data.widget.dashboardWidgetSettings;
             this.page = 'configure-widget';

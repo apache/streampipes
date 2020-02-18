@@ -18,7 +18,7 @@
 
 <mat-toolbar>
         <div class="md-toolbar-tools">
-            <h2>Add a new Widget</h2>
+            <h2>{{dialogTitle}}</h2>
             <span fxFlex></span>
             <button mat-icon-button (click)="onCancel()">
                 <i class="material-icons">close</i>
@@ -81,13 +81,14 @@
         <button mat-button mat-raised-button class="mat-basic" (click)="onCancel()">
             Cancel
         </button>
-        <button mat-button mat-raised-button class="mat-basic" (click)="back()" *ngIf="!('select-pipeline'===page)">
+        <button mat-button mat-raised-button class="mat-basic" (click)="back()" *ngIf="(!('select-pipeline'===page))
+        && !(data)">
             Back
         </button>
         <button mat-button mat-raised-button color="primary" (click)="next()">
             <span *ngIf="!data && 'configure-widget' === page">Create</span>
             <span *ngIf="data && 'configure-widget' === page">Save</span>
-            <span *ngIf="!data && !'configure-widget' === page">Next</span>
+            <span *ngIf="data == null && !('configure-widget' === page)">Next</span>
         </button>
     </div>
 
