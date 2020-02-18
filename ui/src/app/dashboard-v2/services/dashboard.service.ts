@@ -87,7 +87,10 @@ export class DashboardService {
     getWidget(widgetId: string): Observable<DashboardWidget> {
         let promise = new Promise<DashboardWidget>((resolve, reject) => {
             this.http.get(this.dashboardWidgetUrl + "/" +widgetId).subscribe(response => {
-                let dashboardWidget = this.tsonLdSerializerService.fromJsonLd(response, "sp:DashboardWidgetModel");
+                let dashboardWidget: DashboardWidget = this.tsonLdSerializerService.fromJsonLd(response, "sp:DashboardWidgetModel");
+                dashboardWidget.dashboardWidgetSettings.config.sort((a, b) => {
+                    return a.index - b.index;
+                });
                 resolve(dashboardWidget);
             });
         });
