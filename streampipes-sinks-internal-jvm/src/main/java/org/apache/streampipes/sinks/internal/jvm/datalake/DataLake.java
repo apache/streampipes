@@ -36,10 +36,7 @@ import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,9 +52,15 @@ public class DataLake implements EventSink<DataLakeParameters> {
 
   private List<EventProperty> imageProperties;
 
+  private String imageDirectory;
+
+  private String timestampField;
+
   @Override
   public void onInvocation(DataLakeParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     LOG = parameters.getGraph().getLogger(DataLake.class);
+
+    this.timestampField = parameters.getTimestampField();
 
     this.influxDbClient = new InfluxDbClient(
             parameters.getInfluxDbHost(),
@@ -81,22 +84,21 @@ public class DataLake implements EventSink<DataLakeParameters> {
                     eventProperty.getDomainProperties().get(0).toString().equals(SPSensor.IMAGE))
             .collect(Collectors.toList());
 
-    // TODO
-    // get directory location for files
+    imageDirectory = SinksInternalJvmConfig.INSTANCE.getImageStorageLocation() + parameters.getMeasurementName() + "/";
+
   }
 
   @Override
   public void onEvent(Event event) {
     try {
 
+      String eventTimestamp = Long.toString(event.getFieldBySelector(this.timestampField).getAsPrimitive().getAsLong());
       this.imageProperties.stream().forEach(eventProperty -> {
-        // TODO
-        // how should I name the file? (get timestamp field)
-        // 1. get image from event
-        // 2. write image to file (writeToImageFile)
-        // 3. replace property with image location
+        String fileRoute = this.imageDirectory + eventProperty.getRuntimeName() + "/" + eventTimestamp + ".png";
+        String image = event.getFieldByRuntimeName(eventProperty.getRuntimeName()).getAsPrimitive().getAsString();
 
-
+        this.writeToImageFile(image, fileRoute);
+        event.updateFieldBySelector("s0::" + eventProperty.getRuntimeName(), fileRoute);
       });
 
       influxDbClient.save(event);
@@ -112,7 +114,10 @@ public class DataLake implements EventSink<DataLakeParameters> {
 
   private void writeToImageFile(String image, String fileRoute) {
     byte[] data = Base64.decodeBase64(image);
-    try (OutputStream stream = new FileOutputStream(fileRoute)) {
+    try {
+      File file = new File(fileRoute);
+      file.getParentFile().mkdirs();
+      OutputStream stream = new FileOutputStream(file, false);
       stream.write(data);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
