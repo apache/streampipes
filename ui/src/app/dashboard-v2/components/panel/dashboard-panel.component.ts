@@ -41,7 +41,7 @@ export class DashboardPanelComponent implements OnInit {
     protected subscription: Subscription;
 
     widgetIdsToRemove: Array<string> = [];
-    widgetsToUpdate: Array<DashboardWidget> = [];
+    widgetsToUpdate: Map<string, DashboardWidget> = new Map<string, DashboardWidget>();
 
     constructor(private dashboardService: DashboardService,
                 public dialog: MatDialog,
@@ -81,7 +81,7 @@ export class DashboardPanelComponent implements OnInit {
 
     updateDashboardAndCloseEditMode() {
         this.dashboardService.updateDashboard(this.dashboard).subscribe(result => {
-            if (this.widgetsToUpdate.length > 0) {
+            if (this.widgetsToUpdate.size > 0) {
                 forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
                     this.closeEditModeAndReloadDashboard();
                 });
@@ -99,7 +99,7 @@ export class DashboardPanelComponent implements OnInit {
 
     prepareWidgetUpdates(): Array<Observable<any>> {
         let promises: Array<Observable<any>> = [];
-        this.widgetsToUpdate.forEach(widget => {
+        this.widgetsToUpdate.forEach((widget, key) => {
             promises.push(this.dashboardService.updateWidget(widget));
         })
 
@@ -117,7 +117,7 @@ export class DashboardPanelComponent implements OnInit {
     }
 
     updateAndQueueItemForDeletion(dashboardWidget: DashboardWidget) {
-        this.widgetsToUpdate.push(dashboardWidget);
+        this.widgetsToUpdate.set(dashboardWidget._id, dashboardWidget);
     }
 
     deleteWidgets() {
