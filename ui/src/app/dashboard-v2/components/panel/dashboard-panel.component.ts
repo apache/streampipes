@@ -18,7 +18,7 @@
 
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {Dashboard, DashboardItem} from "../../models/dashboard.model";
-import {Subscription} from "rxjs";
+import {forkJoin, Observable, Subscription} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
 import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
@@ -41,6 +41,7 @@ export class DashboardPanelComponent implements OnInit {
     protected subscription: Subscription;
 
     widgetIdsToRemove: Array<string> = [];
+    widgetsToUpdate: Array<DashboardWidget> = [];
 
     constructor(private dashboardService: DashboardService,
                 public dialog: MatDialog,
@@ -80,11 +81,29 @@ export class DashboardPanelComponent implements OnInit {
 
     updateDashboardAndCloseEditMode() {
         this.dashboardService.updateDashboard(this.dashboard).subscribe(result => {
-            this.dashboard._rev = result._rev;
-            this.deleteWidgets();
-            this.editModeChange.emit(!(this.editMode));
-            this.refreshDashboardService.notify(this.dashboard._id);
+            if (this.widgetsToUpdate.length > 0) {
+                forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
+                    this.closeEditModeAndReloadDashboard();
+                });
+            } else {
+                this.deleteWidgets();
+                this.closeEditModeAndReloadDashboard()
+            }
         })
+    }
+
+    closeEditModeAndReloadDashboard() {
+        this.editModeChange.emit(!(this.editMode));
+        this.refreshDashboardService.notify(this.dashboard._id);
+    }
+
+    prepareWidgetUpdates(): Array<Observable<any>> {
+        let promises: Array<Observable<any>> = [];
+        this.widgetsToUpdate.forEach(widget => {
+            promises.push(this.dashboardService.updateWidget(widget));
+        })
+
+        return promises;
     }
 
     discardChanges() {
@@ -97,9 +116,13 @@ export class DashboardPanelComponent implements OnInit {
         this.widgetIdsToRemove.push(widget.id);
     }
 
+    updateAndQueueItemForDeletion(dashboardWidget: DashboardWidget) {
+        this.widgetsToUpdate.push(dashboardWidget);
+    }
+
     deleteWidgets() {
         this.widgetIdsToRemove.forEach(widgetId => {
-           this.dashboardService.deleteWidget(widgetId).subscribe();
+            this.dashboardService.deleteWidget(widgetId).subscribe();
         });
     }
 }

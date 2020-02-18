@@ -16,7 +16,7 @@
  *
  */
 
-import {Input, OnInit} from "@angular/core";
+import {Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
 import {DashboardItem} from "../../../models/dashboard.model";
 import {DashboardWidget} from "../../../../core-model/dashboard/DashboardWidget";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
@@ -26,7 +26,7 @@ import {Subscription} from "rxjs";
 import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
 import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
 
-export abstract class BaseStreamPipesWidget {
+export abstract class BaseStreamPipesWidget implements OnChanges {
 
     @Input() widget: DashboardItem;
     @Input() widgetConfig: DashboardWidget;
@@ -55,6 +55,13 @@ export abstract class BaseStreamPipesWidget {
     }
 
     ngOnInit(): void {
+        this.prepareConfigExtraction();
+        this.subscription = this.rxStompService.watch("/topic/" +this.widgetConfig.dashboardWidgetDataConfig.topic).subscribe((message: Message) => {
+            this.onEvent(JSON.parse(message.body));
+        });
+    }
+
+    prepareConfigExtraction() {
         let extractor: StaticPropertyExtractor = new StaticPropertyExtractor(this.widgetConfig.dashboardWidgetDataConfig.schema, this.widgetConfig.dashboardWidgetSettings.config);
         if (extractor.hasStaticProperty(WidgetConfigBuilder.BACKGROUND_COLOR_KEY)) {
             this.hasSelectableColorSettings = true;
@@ -70,11 +77,7 @@ export abstract class BaseStreamPipesWidget {
             this.hasTitlePanelSettings = true;
             this.selectedTitle = extractor.stringParameter(WidgetConfigBuilder.TITLE_KEY);
         }
-
         this.extractConfig(extractor);
-        this.subscription = this.rxStompService.watch("/topic/" +this.widgetConfig.dashboardWidgetDataConfig.topic).subscribe((message: Message) => {
-            this.onEvent(JSON.parse(message.body));
-        });
     }
 
     ngOnDestroy(): void {
@@ -84,4 +87,10 @@ export abstract class BaseStreamPipesWidget {
     protected abstract extractConfig(extractor: StaticPropertyExtractor);
 
     protected abstract onEvent(event: any);
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes["widgetConfig"]) {
+            this.prepareConfigExtraction();
+        }
+    }
 }

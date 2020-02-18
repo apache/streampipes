@@ -85,7 +85,9 @@
             Back
         </button>
         <button mat-button mat-raised-button color="primary" (click)="next()">
-            Next
+            <span *ngIf="!data && 'configure-widget' === page">Create</span>
+            <span *ngIf="data && 'configure-widget' === page">Save</span>
+            <span *ngIf="!data && !'configure-widget' === page">Next</span>
         </button>
     </div>
 

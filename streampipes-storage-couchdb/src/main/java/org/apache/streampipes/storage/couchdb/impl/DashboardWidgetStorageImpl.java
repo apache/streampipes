@@ -43,7 +43,7 @@ public class DashboardWidgetStorageImpl extends AbstractDao<DashboardWidgetModel
 
   @Override
   public void updateDashboardWidget(DashboardWidgetModel dashboardWidgetModel) {
-    updateDashboardWidget(dashboardWidgetModel);
+    update(dashboardWidgetModel);
   }
 
   @Override

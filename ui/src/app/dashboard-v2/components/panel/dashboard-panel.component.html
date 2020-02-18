@@ -29,6 +29,7 @@
     </div>
 
     <dashboard-grid [editMode]="editMode" [dashboard]="dashboard"
+                    (updateCallback)="updateAndQueueItemForDeletion($event)"
                     (deleteCallback)="removeAndQueueItemForDeletion($event)"
                     class="h-100"></dashboard-grid>
 </div>

@@ -25,6 +25,8 @@ import {Subject} from "rxjs";
 import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
 import {GridsterInfo} from "../../models/gridster-info.model";
 import {ResizeService} from "../../services/resize.service";
+import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
     selector: 'dashboard-widget',
@@ -39,11 +41,13 @@ export class DashboardWidgetComponent implements OnInit {
     @Input() gridsterItemComponent: GridsterItemComponent;
 
     @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
+    @Output() updateCallback: EventEmitter<DashboardWidget> = new EventEmitter<DashboardWidget>();
 
     widgetLoaded: boolean = false;
     configuredWidget: DashboardWidget;
 
-    constructor(private dashboardService: DashboardService) {
+    constructor(private dashboardService: DashboardService,
+                private dialog: MatDialog) {
     }
 
     ngOnInit(): void {
@@ -55,5 +59,23 @@ export class DashboardWidgetComponent implements OnInit {
 
     removeWidget() {
         this.deleteCallback.emit(this.widget);
+    }
+
+    editWidget(): void {
+        const dialogRef = this.dialog.open(AddVisualizationDialogComponent, {
+            width: '70%',
+            height: '500px',
+            panelClass: 'custom-dialog-container',
+            data: {
+                "widget": this.configuredWidget
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(widget => {
+            if (widget) {
+                this.configuredWidget = widget;
+                this.updateCallback.emit(this.configuredWidget);
+            }
+        });
     }
 }

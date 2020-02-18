@@ -20,7 +20,7 @@
     <div class="box">
         <div class="assemblyOptions sp-blue-bg m-0 row header h-40" *ngIf="editMode">
             <div fxFlex="100" layout="row" fxLayoutAlign="end center">
-                <button mat-button mat-icon-button color="white">
+                <button mat-button mat-icon-button color="white" (click)="editWidget()">
                     <i class="material-icons">settings</i>
                 </button>
                 <button mat-button mat-icon-button color="white" (click)="removeWidget()">
