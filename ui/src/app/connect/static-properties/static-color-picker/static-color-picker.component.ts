@@ -42,6 +42,8 @@ export class StaticColorPickerComponent implements OnInit {
     hasInput: Boolean;
     colorPickerForm: FormGroup;
 
+    presetColors: Array<any> = ["#39B54A", "#1B1464", "#f44336", "#4CAF50", "#FFEB3B", "#FFFFFF", "#000000"];
+
     ngOnInit() {
         this.colorPickerForm = new FormGroup({
             'colorPickerStaticProperty': new FormControl(this.inputValue, [
