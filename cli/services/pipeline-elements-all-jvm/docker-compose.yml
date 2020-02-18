@@ -23,8 +23,13 @@ services:
 #      - "8098:8090"
     extra_hosts:
       - host.docker.internal:${HOST_DOCKER_INTERNAL}
+    volumes:
+      - sinks_internal:/sp_images
     networks:
       spnet:
+
+volumes:
+  sinks_internal:
 
 networks:
   spnet:

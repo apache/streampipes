@@ -24,7 +24,7 @@ services:
     extra_hosts:
       - host.docker.internal:${HOST_DOCKER_INTERNAL}
     volumes:
-      - influx:/sp_images
+      - sinks_internal:/sp_images
     networks:
       spnet:
 
