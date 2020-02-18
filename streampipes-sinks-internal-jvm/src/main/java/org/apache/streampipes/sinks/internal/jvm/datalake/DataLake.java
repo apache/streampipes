@@ -127,6 +127,12 @@ public class DataLake implements EventSink<DataLakeParameters> {
 
   }
 
+  /**
+   * Adds a new measurement to the StreamPipes data lake
+   * @param measure
+   * @param eventSchema
+   * @throws SpRuntimeException
+   */
   private void registerAtDataLake(String measure, EventSchema eventSchema) throws SpRuntimeException {
     HttpClient httpClient = new DefaultHttpClient();
     String url = SinksInternalJvmConfig.INSTANCE.getStreamPipesBackendUrl();
