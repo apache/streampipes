@@ -15,3 +15,12 @@
  * limitations under the License.
  *
  */
+
+.title-panel {
+    font-size:20px;
+    text-align:center;
+}
+
+.mt-20 {
+    margin-top:20px;
+}

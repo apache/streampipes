@@ -32,7 +32,7 @@ export class TableConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.create("table", "table")
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("table", "table")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
                 .requiredPropertyWithNaryMapping(TableConfig.SELECTED_PROPERTIES_KEYS, "Select properties", "", EpRequirements.anyProperty())

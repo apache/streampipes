@@ -32,8 +32,6 @@ import {GaugeConfig} from "./gauge-config";
 export class GaugeWidgetComponent extends BaseNgxChartsStreamPipesWidget implements OnInit, OnDestroy {
 
     data: any = [];
-    title: string;
-    color: string = "green";
     min: number;
     max: number;
 
@@ -52,10 +50,8 @@ export class GaugeWidgetComponent extends BaseNgxChartsStreamPipesWidget impleme
     }
 
     extractConfig(extractor: StaticPropertyExtractor) {
-        this.color = extractor.selectedColor(GaugeConfig.COLOR_KEY);
         this.min = extractor.integerParameter(GaugeConfig.MIN_KEY);
         this.max = extractor.integerParameter(GaugeConfig.MAX_KEY);
-        this.title = extractor.singleValueParameter(GaugeConfig.TITLE_KEY);
         this.selectedProperty = extractor.mappingPropertyValue(GaugeConfig.NUMBER_MAPPING_KEY);
     }
 

@@ -31,7 +31,6 @@ import {SemanticTypeUtilsService} from "../../../../core-services/semantic-type/
 })
 export class TableWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
 
-    title: string;
     selectedProperties: Array<string>;
 
     displayedColumns: String[] = [];
@@ -55,7 +54,6 @@ export class TableWidgetComponent extends BaseStreamPipesWidget implements OnIni
     }
 
     extractConfig(extractor: StaticPropertyExtractor) {
-        this.title = extractor.singleValueParameter(TableConfig.TITLE_KEY);
         this.selectedProperties = extractor.mappingPropertyValues(TableConfig.SELECTED_PROPERTIES_KEYS);
     }
 

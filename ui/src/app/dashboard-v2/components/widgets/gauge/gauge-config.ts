@@ -35,15 +35,13 @@ export class GaugeConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.create("gauge", "gauge")
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("gauge", "gauge")
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
                 .requiredPropertyWithUnaryMapping(GaugeConfig.NUMBER_MAPPING_KEY, "Select property", "", EpRequirements.numberReq())
                 .build())
-            .requiredTextParameter(GaugeConfig.TITLE_KEY, "Title", "The title")
             .requiredIntegerParameter(GaugeConfig.MIN_KEY, "Min Y axis value", "")
             .requiredIntegerParameter(GaugeConfig.MAX_KEY, "Max Y axis value", "")
-            .requiredColorParameter(GaugeConfig.COLOR_KEY, "Color", "The background color", "#000000")
             .build();
     }
 
