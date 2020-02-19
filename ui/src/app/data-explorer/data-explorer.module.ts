@@ -16,64 +16,70 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
-import {DataExplorerComponent} from './data-explorer.component';
+import { DataExplorerComponent } from './data-explorer.component';
 
-import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
-import {DatalakeRestService} from '../core-services/datalake/datalake-rest.service';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {CdkTableModule} from '@angular/cdk/table';
+import { CdkTableModule } from '@angular/cdk/table';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import {CoreUiModule} from '../core-ui/core-ui.module';
-import {ExplorerComponent} from './explorer/explorer.component';
-import {DataDownloadDialog} from './explorer/datadownloadDialog/dataDownload.dialog';
+import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
+import { CoreUiModule } from '../core-ui/core-ui.module';
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { DataDownloadDialog } from './explorer-widget/datadownloadDialog/dataDownload.dialog';
+import { ExplorerComponent } from './explorer-widget/explorer.component';
 
-import {OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlNativeDateTimeModule} from '@danielmoncada/angular-datetime-picker';
+import { OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { PlotlyViaWindowModule } from 'angular-plotly.js';
+import { LineChartComponent } from './explorer-widget/explorer-visualisations/linechart/lineChart.component';
+import { TableComponent } from './explorer-widget/explorer-visualisations/table/table.component';
 
 export const MY_NATIVE_FORMATS = {
-    fullPickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false},
-    datePickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false},
-    timePickerInput: {hour: 'numeric', minute: 'numeric', hour12: false},
-    monthYearLabel: {year: 'numeric', month: 'short', hour12: false},
-    dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric', hour12: false},
-    monthYearA11yLabel: {year: 'numeric', month: 'long', hour12: false},
+  fullPickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false},
+  datePickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false},
+  timePickerInput: {hour: 'numeric', minute: 'numeric', hour12: false},
+  monthYearLabel: {year: 'numeric', month: 'short', hour12: false},
+  dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric', hour12: false},
+  monthYearA11yLabel: {year: 'numeric', month: 'long', hour12: false},
 };
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FlexLayoutModule,
-        CustomMaterialModule,
-        ReactiveFormsModule,
-        FormsModule,
-        CdkTableModule,
-        MatSnackBarModule,
-        MatProgressSpinnerModule,
-        CoreUiModule,
-        OwlDateTimeModule,
-        OwlNativeDateTimeModule,
-    ],
-    declarations: [
-        DataExplorerComponent,
-        ExplorerComponent,
-        DataDownloadDialog,
-    ],
-    providers: [
-        DatalakeRestService,
-        {
-            provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS
-        },
-    ],
-    entryComponents: [
-        DataExplorerComponent,
-        DataDownloadDialog,
-    ],
-    exports: [
-    ]
+  imports: [
+    CommonModule,
+    FlexLayoutModule,
+    CustomMaterialModule,
+    ReactiveFormsModule,
+    FormsModule,
+    CdkTableModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
+    CoreUiModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
+    PlotlyViaWindowModule,
+  ],
+  declarations: [
+    DataExplorerComponent,
+    ExplorerComponent,
+    DataDownloadDialog,
+    TableComponent,
+    LineChartComponent,
+  ],
+  providers: [
+    DatalakeRestService,
+    {
+      provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS
+    },
+  ],
+  entryComponents: [
+    DataExplorerComponent,
+    DataDownloadDialog,
+  ],
+  exports: [
+  ]
 })
 export class DataExplorerModule {
 }

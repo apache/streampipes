@@ -16,20 +16,20 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import {BaseChartComponent} from '../chart/baseChart.component';
-import {DataResult} from '../../core-model/datalake/DataResult';
-import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
+import { DataResult } from '../../../../core-model/datalake/DataResult';
+import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
+import { BaseVisualisationComponent } from '../base/baseVisualisation.component';
 
 @Component({
     selector: 'sp-table',
     templateUrl: './table.component.html',
     styleUrls: ['./table.component.css']
 })
-export class TableComponent extends BaseChartComponent {
+export class TableComponent extends BaseVisualisationComponent {
 
-    displayedColumns: String[] = [];
+    displayedColumns: string[] = [];
     dataSource = new MatTableDataSource();
 
     selectedGroup: string = undefined;
@@ -38,8 +38,8 @@ export class TableComponent extends BaseChartComponent {
         super();
     }
 
-    transformData(data: DataResult, xKey: String): DataResult {
-        let tmp = [];
+    transformData(data: DataResult, xKey: string): DataResult {
+        const tmp = [];
         data.rows.forEach(row =>
             tmp.push(this.createTableObject(data.headers, row))
         );
@@ -49,8 +49,8 @@ export class TableComponent extends BaseChartComponent {
     }
 
     transformGroupedData(data: GroupedDataResult, xKey: string): GroupedDataResult {
-        for (var key in data.dataResults) {
-            let dataResult = data.dataResults[key];
+        for (const key in data.dataResults) {
+            const dataResult = data.dataResults[key];
             dataResult.rows = this.transformData(dataResult, xKey).rows;
         }
         return data;
@@ -64,7 +64,7 @@ export class TableComponent extends BaseChartComponent {
     }
 
     displayGroupedData(transformedData: GroupedDataResult, yKeys: string[]) {
-        this.displayedColumns = Object.assign([], yKeys);
+        this.displayedColumns = {...[], ...yKeys};
         this.displayedColumns.unshift(this.xKey);
 
         if (this.selectedGroup === undefined) {
@@ -74,11 +74,11 @@ export class TableComponent extends BaseChartComponent {
     }
 
     stopDisplayData() {
-        this.dataSource.data = []
+        // this.dataSource.data = [];
     }
 
     createTableObject(keys, values) {
-        let object = {};
+        const object = {};
         keys.forEach((key, index) => {
             object[key] = values[index];
         });

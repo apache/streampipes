@@ -16,23 +16,17 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
-import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {CdkTableModule} from '@angular/cdk/table';
+import { CdkTableModule } from '@angular/cdk/table';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import {TableComponent} from './table/table.component';
-import {LineChartComponent} from './linechart/lineChart.component';
-
-//import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-import { PlotlyViaWindowModule } from 'angular-plotly.js';
-//PlotlyViaCDNModule.plotlyjs = PlotlyJS;
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
 @NgModule({
     imports: [
@@ -46,11 +40,9 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
         MatProgressSpinnerModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        PlotlyViaWindowModule,
     ],
     declarations: [
-        TableComponent,
-        LineChartComponent,
+
     ],
     providers: [
         MatDatepickerModule
@@ -58,8 +50,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     entryComponents: [
     ],
     exports: [
-        TableComponent,
-        LineChartComponent,
+
     ]
 })
 export class CoreUiModule {

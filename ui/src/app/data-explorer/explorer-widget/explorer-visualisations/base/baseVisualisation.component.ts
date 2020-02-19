@@ -16,18 +16,18 @@
  *
  */
 
-import {Directive, EventEmitter, Injectable, Input, Output} from '@angular/core';
-import {EventSchema} from '../../connect/schema-editor/model/EventSchema';
-import {DataResult} from '../../core-model/datalake/DataResult';
-import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
+import { Directive, EventEmitter, Injectable, Input, Output } from '@angular/core';
+import { EventSchema } from '../../../../connect/schema-editor/model/EventSchema';
+import { DataResult } from '../../../../core-model/datalake/DataResult';
+import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
 
 @Injectable()
 @Directive()
-export abstract class BaseChartComponent {
+export abstract class BaseVisualisationComponent {
 
 
     @Input() set datas(value: DataResult | GroupedDataResult) {
-        if (value != undefined) {
+        if (value !== undefined) {
             this.data = this.clone(value);
             if (this.data !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
                 this.transform();
@@ -39,7 +39,7 @@ export abstract class BaseChartComponent {
         }
     }
     @Input() set xAxesKey(value: string) {
-        if (value != undefined) {
+        if (value !== undefined) {
             this.xKey = value;
             if (this.data !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
                 this.transform();
@@ -54,8 +54,9 @@ export abstract class BaseChartComponent {
         if (value !== undefined) {
             this.yKeys = value;
             if (this.data !== undefined && this.xKey !== undefined && this.yKeys !== undefined) {
-                if (this.transformedData === undefined)
+                if (this.transformedData === undefined) {
                     this.transform();
+                }
                 this.display();
             }
         } else {
@@ -66,13 +67,13 @@ export abstract class BaseChartComponent {
 
     @Input() eventschema: EventSchema = undefined;
 
-    @Input() startDateData:Date = undefined;
-    @Input() endDateData:Date = undefined;
+    @Input() startDateData: Date = undefined;
+    @Input() endDateData: Date = undefined;
 
 
     @Input() currentPage: number = undefined;
     @Input() maxPage: number = undefined;
-    @Input() enablePaging: boolean = false;
+    @Input() enablePaging = false;
 
     @Output() previousPage = new EventEmitter<boolean>();
     @Output() nextPage = new EventEmitter<boolean>();
@@ -86,11 +87,11 @@ export abstract class BaseChartComponent {
     transformedData: DataResult | GroupedDataResult = undefined;
 
 
-    dataMode: string = '';
+    dataMode = '';
 
 
     transform() {
-        if (this.data["headers"] !== undefined) {
+        if (this.data['headers'] !== undefined) {
             this.transformedData = this.transformData(this.data as DataResult, this.xKey);
             this.dataMode = 'single';
         } else {
@@ -100,42 +101,42 @@ export abstract class BaseChartComponent {
     }
 
     display() {
-        if (this.data["headers"] !== undefined) {
+        if (this.data['headers'] !== undefined) {
             this.displayData(this.transformedData as DataResult, this.yKeys);
         } else {
             this.displayGroupedData(this.transformedData as GroupedDataResult, this.yKeys);
         }
     }
 
-    //transform the input data to the schema of the chart
+    // transform the input data to the schema of the chart
     abstract transformData(data: DataResult, xKey: String): DataResult;
 
-    //transform the grouped input data to the schema of the chart
+    // transform the grouped input data to the schema of the chart
     abstract transformGroupedData(data: GroupedDataResult, xKey: string): GroupedDataResult;
 
-    //display the data
+    // display the data
     abstract displayData(transformedData: DataResult, yKeys: string[]);
 
-    //display the grouped data
+    // display the grouped data
     abstract displayGroupedData(transformedData: GroupedDataResult, yKeys: string[]);
 
     //
-    abstract stopDisplayData()
+    abstract stopDisplayData();
 
-    clickPreviousPage(){
-        this.previousPage.emit()
+    clickPreviousPage() {
+        this.previousPage.emit();
     }
 
     clickNextPage() {
-        this.nextPage.emit()
+        this.nextPage.emit();
     }
 
-    clickFirstPage(){
-        this.firstPage.emit()
+    clickFirstPage() {
+        this.firstPage.emit();
     }
 
     clickLastPage() {
-        this.lastPage.emit()
+        this.lastPage.emit();
     }
 
     clone(value): DataResult {

@@ -16,13 +16,13 @@
  *
  */
 
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {DatalakeRestService} from '../core-services/datalake/datalake-rest.service';
-import {InfoResult} from '../core-model/datalake/InfoResult';
-import {Observable} from 'rxjs/Observable';
-import {FormControl} from '@angular/forms';
-import {map, startWith} from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable } from 'rxjs/Observable';
+import { map, startWith } from 'rxjs/operators';
+import { InfoResult } from '../core-model/datalake/InfoResult';
+import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
 
 @Component({
     selector: 'sp-data-explorer',
@@ -35,12 +35,11 @@ export class DataExplorerComponent implements OnInit {
     infoResult: InfoResult[];
     filteredIndexInfos: Observable<InfoResult[]>;
 
-    page: number = 0;
-    //selectedIndex: string = '';
+    page = 0;
     selectedInfoResult: InfoResult = undefined;
 
-    downloadFormat: string = 'csv';
-    isDownloading: boolean = false;
+    downloadFormat = 'csv';
+    isDownloading = false;
 
     constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar) {
 
@@ -59,9 +58,7 @@ export class DataExplorerComponent implements OnInit {
     }
 
     selectIndex(index: string) {
-        this.selectedInfoResult = this._filter(index)[0]
-
-      //  this.selectedIndex = index;
+        this.selectedInfoResult = this._filter(index)[0];
     }
 
     _filter(value: string): InfoResult[] {

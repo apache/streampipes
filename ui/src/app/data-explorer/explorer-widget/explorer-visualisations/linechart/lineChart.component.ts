@@ -16,10 +16,10 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {BaseChartComponent} from '../chart/baseChart.component';
-import {DataResult} from '../../core-model/datalake/DataResult';
-import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { DataResult } from '../../../../core-model/datalake/DataResult';
+import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
+import { BaseVisualisationComponent } from '../base/baseVisualisation.component';
 
 
 @Component({
@@ -27,7 +27,7 @@ import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
     templateUrl: './lineChart.component.html',
     styleUrls: ['./lineChart.component.css']
 })
-export class LineChartComponent extends BaseChartComponent implements OnChanges {
+export class LineChartComponent extends BaseVisualisationComponent implements OnChanges {
 
     @Output() zoomEvent =  new EventEmitter<[number, number]>();
 
@@ -37,13 +37,13 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
 
     dataToDisplay: any[] = undefined;
 
-    updatemenus=[
+    updatemenus = [
         {
             buttons: [
                 {
                     args: ['mode', 'lines'],
-                    label:'Line',
-                    method:'restyle'
+                    label: 'Line',
+                    method: 'restyle'
                 },
                 {
                     args: ['mode', 'markers'],
@@ -53,8 +53,8 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
 
                 {
                     args: ['mode', 'lines+markers'],
-                    label:'Dots + Lines',
-                    method:'restyle'
+                    label: 'Dots + Lines',
+                    method: 'restyle'
                 }
             ],
             direction: 'left',
@@ -74,8 +74,8 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
     graph = {
         layout: {
             autosize: true,
-            plot_bgcolor:"#fafafa",
-            paper_bgcolor:"#fafafa",
+            plot_bgcolor: '#fafafa',
+            paper_bgcolor: '#fafafa',
             xaxis: {
                 type: 'date',
             },
@@ -87,14 +87,14 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
     };
 
     ngOnChanges(changes: SimpleChanges) {
-        //TODO: is needed because bindings are not working correct
+        // TODO: is needed because bindings are not working correct
         if (changes.endDateData !== undefined) {
             this.endDateData = changes.endDateData.currentValue;
         }
         if (changes.startDateData !== undefined) {
             this.startDateData = changes.startDateData.currentValue;
         }
-        //TODO should be done in displaydata
+        // TODO should be done in displaydata
         if (this.startDateData !== undefined && this.endDateData !== undefined) {
             this.graph.layout.xaxis['range'] = [this.startDateData.getTime(), this.endDateData.getTime()];
         }
@@ -107,9 +107,10 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
             const tmp = [];
             this.yKeys.forEach(key => {
                 transformedData.rows.forEach(serie => {
-                    if (serie.name === key)
-                        tmp.push(serie)
-                })
+                    if (serie.name === key) {
+                        tmp.push(serie);
+                    }
+                });
             });
             this.dataToDisplay = tmp;
 
@@ -124,16 +125,16 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
 
             const tmp = [];
 
-            let groupNames = Object.keys(transformedData.dataResults);
-            for(let groupName of groupNames)  {
-                let value = transformedData.dataResults[groupName];
+            const groupNames = Object.keys(transformedData.dataResults);
+            for (const groupName of groupNames)  {
+                const value = transformedData.dataResults[groupName];
                 this.yKeys.forEach(key => {
                     value.rows.forEach(serie => {
                         if (serie.name === key) {
                             serie.name = groupName + ' ' + serie.name;
-                            tmp.push(serie)
+                            tmp.push(serie);
                         }
-                    })
+                    });
                 });
             }
             this.dataToDisplay = tmp;
@@ -146,7 +147,7 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
     transformData(data: DataResult, xKey: String): DataResult {
         const tmp: any[] = [];
 
-        let dataKeys = [];
+        const dataKeys = [];
 
         data.rows.forEach(row => {
             data.headers.forEach((headerName, index) => {
@@ -156,24 +157,24 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
             });
         });
 
-        let indexXkey = data.headers.findIndex(headerName => headerName === this.xKey);
+        const indexXkey = data.headers.findIndex(headerName => headerName === this.xKey);
 
         dataKeys.forEach(key => {
-            let headerName = data.headers[key];
+            const headerName = data.headers[key];
             tmp[key] = {
-                type: 'scatter', mode: 'lines', name: headerName, connectgaps: false, x: [], y: []}
+                type: 'scatter', mode: 'lines', name: headerName, connectgaps: false, x: [], y: []};
             });
         data.rows.forEach(row => {
            data.headers.forEach((headerName, index) => {
                if (dataKeys.includes(index)) {
                    tmp[index].x.push(new Date(row[indexXkey]));
                    if ((row[index]) !== undefined) {
-                       tmp[index].y.push(row[index])
+                       tmp[index].y.push(row[index]);
                    } else {
-                       tmp[index].y.push(null)
+                       tmp[index].y.push(null);
                    }
                }
-           })
+           });
         });
         data.rows = tmp;
 
@@ -181,8 +182,8 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
     }
 
     transformGroupedData(data: GroupedDataResult, xKey: string): GroupedDataResult {
-        for (var key in data.dataResults) {
-            let dataResult = data.dataResults[key];
+        for (const key in data.dataResults) {
+            const dataResult = data.dataResults[key];
             dataResult.rows = this.transformData(dataResult, xKey).rows;
         }
 
@@ -193,7 +194,7 @@ export class LineChartComponent extends BaseChartComponent implements OnChanges 
     }
 
   zoomIn($event) {
-        this.zoomEvent.emit([$event["xaxis.range[0]"], $event["xaxis.range[1]"]])
+        this.zoomEvent.emit([$event['xaxis.range[0]'], $event['xaxis.range[1]']]);
   }
 
 }

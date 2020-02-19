@@ -16,18 +16,18 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
-import {DatalakeRestService} from '../../core-services/datalake/datalake-rest.service';
-import {InfoResult} from '../../core-model/datalake/InfoResult';
-import {Observable} from 'rxjs/Observable';
-import {FormControl, FormGroup} from '@angular/forms';
-import {map, startWith} from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {DataDownloadDialog} from './datadownloadDialog/dataDownload.dialog';
-import {timer} from 'rxjs/internal/observable/timer';
-import {DataResult} from '../../core-model/datalake/DataResult';
-import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
+import { timer } from 'rxjs/internal/observable/timer';
+import { Observable } from 'rxjs/Observable';
+import { map, startWith } from 'rxjs/operators';
+import { DataResult } from '../../core-model/datalake/DataResult';
+import { GroupedDataResult } from '../../core-model/datalake/GroupedDataResult';
+import { InfoResult } from '../../core-model/datalake/InfoResult';
+import { DatalakeRestService } from '../../core-services/datalake/datalake-rest.service';
+import { DataDownloadDialog } from './datadownloadDialog/dataDownload.dialog';
 
 @Component({
     selector: 'sp-explorer',
@@ -40,27 +40,27 @@ export class ExplorerComponent implements OnInit {
     infoResult: InfoResult[];
     filteredIndexInfos: Observable<InfoResult[]>;
 
-    page: number = 0;
-    //selectedIndex: string = '';
+    page = 0;
+    // selectedIndex: string = '';
     selectedInfoResult: InfoResult = undefined;
 
-    //timeunit selection
+    // timeunit selection
     selectedTimeUnit = '1 Hour';
 
-    //aggregation / advanced options
-    //group by
+    // aggregation / advanced options
+    // group by
     enableAdvanceOptions = false;
     groupbyUnit = 'd';
     groupbyValue = 1;
 
-    //key selections
+    // key selections
     dataKeys: string[] = [];
 
-    //grouped Data
+    // grouped Data
     dimensionProperties: string[] = [];
     selectedGroup = undefined;
 
-    //y and x axe
+    // y and x axe
     yAxesKeys: [] = [];
     xAxesKey = 'time';
 
@@ -69,26 +69,26 @@ export class ExplorerComponent implements OnInit {
     isLoadingData;
     displayIsLoadingData = false;
 
-    //user messages
+    // user messages
     noDateFoundinTimeRange;
     noKeySelected;
     noIndexSelection;
 
-    //custom time range
+    // custom time range
     dateRange: Date []; // [0] start, [1] end
 
-    //Mat Group
+    // Mat Group
     selectedMatGroup = new FormControl(0);
 
-    //auto update data
-    optionAutoUpdateData: boolean = false;
-    autoUpdateData:boolean = false;
-    autoUpdatePeriod: number = 10;
+    // auto update data
+    optionAutoUpdateData = false;
+    autoUpdateData = false;
+    autoUpdatePeriod = 10;
     autoUpdateTimer;
     autoUpdateTimerSubcribtion;
 
     constructor(private restService: DatalakeRestService, private snackBar: MatSnackBar, public dialog: MatDialog) {
-        let dateTmp = new Date();
+        const dateTmp = new Date();
         this.setDateRange(dateTmp, new Date(dateTmp.getTime() - 60000 * 60 * 1));
     }
 
@@ -111,8 +111,7 @@ export class ExplorerComponent implements OnInit {
         if (this.selectedTimeUnit === '1 Day') {
             this.groupbyUnit = 's';
             this.groupbyValue = 10;
-        }
-        else if (this.selectedTimeUnit === '1 Day') {
+        } else if (this.selectedTimeUnit === '1 Day') {
             this.groupbyUnit = 'm';
             this.groupbyValue = 1;
         } else if (this.selectedTimeUnit === '1 Week') {
@@ -139,7 +138,7 @@ export class ExplorerComponent implements OnInit {
         }
 
         if (this.selectedTimeUnit !== 'Custom') {
-            let endDateTmp = new Date();
+            const endDateTmp = new Date();
             let startDateTmp;
 
             if (this.selectedTimeUnit === '1 Hour') {
@@ -151,7 +150,7 @@ export class ExplorerComponent implements OnInit {
             } else if (this.selectedTimeUnit === '1 Month') {
                 startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 30); // 30 Days
             } else if (this.selectedTimeUnit === '1 Year') {
-                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 365); //365 Days
+                startDateTmp = new Date(endDateTmp.getTime() - 60000 * 60 * 24 * 365); // 365 Days
             }
             this.setDateRange(startDateTmp, endDateTmp);
         }
@@ -162,12 +161,12 @@ export class ExplorerComponent implements OnInit {
             if (this.groupbyUnit === 'month') {
                 groupbyUnit = 'w';
                 groupbyValue = 4 * groupbyValue;
-            } else if(this.groupbyUnit === 'year') {
+            } else if (this.groupbyUnit === 'year') {
                 groupbyUnit = 'd';
                 groupbyValue = 365 * groupbyValue;
             }
             if (this.selectedGroup === undefined) {
-                let startTime = new Date().getTime();
+                const startTime = new Date().getTime();
                 this.restService.getData(this.selectedInfoResult.measureName, this.dateRange[0].getTime(), this.dateRange[1].getTime(),
                     groupbyUnit, groupbyValue).subscribe(
                     res => {
@@ -181,7 +180,7 @@ export class ExplorerComponent implements OnInit {
                         res => {
                             this.processReceivedGroupedData(res);
                         }
-                )
+                );
             }
 
         } else {
@@ -197,7 +196,7 @@ export class ExplorerComponent implements OnInit {
                     res => {
                         this.processReceivedGroupedData(res);
                     }
-                )
+                );
             }
 
         }
@@ -213,19 +212,19 @@ export class ExplorerComponent implements OnInit {
                 this.autoUpdateData = true;
                 this.autoUpdateTimer = timer(this.autoUpdatePeriod * 1000, this.autoUpdatePeriod * 1000);
                 this.autoUpdateTimerSubcribtion = this.autoUpdateTimer.subscribe(val => {
-                    //Just Load new data if last request finished
+                    // Just Load new data if last request finished
                     if (!this.isLoadingData) {
-                        this.loadData(true)
+                        this.loadData(true);
                     }
-                })
+                });
             }
         } else {
-            this.loadData(false)
+            this.loadData(false);
         }
     }
 
     processReceivedData(res) {
-        if(res.total > 0) {
+        if (res.total > 0) {
             this.data = res as DataResult;
             this.noDateFoundinTimeRange = false;
             if (this.yAxesKeys.length === 0) {
@@ -259,21 +258,19 @@ export class ExplorerComponent implements OnInit {
         this.selectedInfoResult = this._filter(index)[0];
         this.selectedInfoResult.eventSchema.eventProperties.forEach(property => {
 
-            //Check if property is Primitive (only primitives has a runtimeType
+            // Check if property is Primitive (only primitives has a runtimeType
             if (property['runtimeType'] !== undefined) {
                 if (property['propertyScope'] !== undefined && property['propertyScope'] === 'DIMENSION_PROPERTY') {
-                    this.dimensionProperties.push(property['runtimeName'])
-                }
-                //if property is number and is no timestamp property
-                else if (this.isNumberProperty(property) &&
+                    this.dimensionProperties.push(property['runtimeName']);
+                } else if (this.isNumberProperty(property) &&
                     (property['domainProperties'] === undefined || (property.domainProperty !== 'http://schema.org/DateTime' &&
                         property['domainProperties'][0] != 'http://schema.org/DateTime'))) {
 
                     this.dataKeys.push(property['runtimeName']);
                 }
             } else {
-                //list and nested properties
-                this.dataKeys.push(property['runtimeName'])
+                // list and nested properties
+                this.dataKeys.push(property['runtimeName']);
             }
         });
         this.selectKey(this.dataKeys.slice(0, 3));
@@ -297,11 +294,11 @@ export class ExplorerComponent implements OnInit {
 
     selectDimensionProperty(value) {
         if (value !== this.selectedGroup) {
-            //remove group property from the "data selection"
+            // remove group property from the "data selection"
             this.dataKeys = this.dataKeys.filter(key => key !== value);
             this.selectKey(this.dataKeys.filter(key => key !== value));
 
-            //add last grouped property
+            // add last grouped property
             if (this.selectedGroup !== undefined) {
                 this.dataKeys.push(this.selectedGroup);
             }
@@ -363,11 +360,11 @@ export class ExplorerComponent implements OnInit {
     }
 
     handleFirstPage() {
-        //TODO
+        // TODO
     }
 
     handleLastPage() {
-        //TODO
+        // TODO
     }
 
     setDateRange(start, end) {
