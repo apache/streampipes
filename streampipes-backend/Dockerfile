@@ -14,11 +14,11 @@
 # limitations under the License.
 
 ARG BASE_IMAGE=adoptopenjdk/openjdk8-openj9:alpine-slim
-FROM $BASE_IMAGE
+FROM ${BASE_IMAGE}
 
 EXPOSE 8030
 ENV CONSUL_LOCATION consul
 
-ADD ./target/streampipes-backend.jar  /streampipes-backend.jar
+COPY target/streampipes-backend.jar  /streampipes-backend.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-backend.jar"]

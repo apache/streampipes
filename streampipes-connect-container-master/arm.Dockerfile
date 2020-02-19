@@ -15,13 +15,13 @@
 
 ARG BASE_IMAGE=arm32v7/openjdk:11-jre-slim
 ARG QEMU=qemu-arm-static
-FROM $BASE_IMAGE
+FROM ${BASE_IMAGE}
 
 ENV CONSUL_LOCATION consul
 
 EXPOSE 8099
 
-COPY $QEMU /usr/bin
+COPY ${QEMU} /usr/bin
 COPY target/streampipes-connect-container-master.jar  /streampipes-connect-container-master.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-connect-container-master.jar"]

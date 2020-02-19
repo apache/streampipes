@@ -54,31 +54,31 @@ jobs:
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
       - name: Build and Push Docker Backend Image
+        working-directory: ./streampipes-backend
         env:
           IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:${{ env.MVN_VERSION }}
           IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:amd64-${{ env.MVN_VERSION }}
           IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:arm32v7-${{ env.MVN_VERSION }}
           IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:arm64v8-${{ env.MVN_VERSION }}
-          DFILE_DIR: streampipes-backend
         run: |
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f ./$DFILE_DIR/Dockerfile ./$DFILE_DIR
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM32V7 --build-arg QEMU=qemu-arm-static -t $IMG_NAME_ARM32V7 -f ./$DFILE_DIR/arm.Dockerfile ./$DFILE_DIR
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM64V8 --build-arg QEMU=qemu-aarch64-static -t $IMG_NAME_ARM64V8 -f ./$DFILE_DIR/aarch64.Dockerfile ./$DFILE_DIR
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM32V7 --build-arg QEMU=qemu-arm-static -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM64V8 --build-arg QEMU=qemu-aarch64-static -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
           docker push $IMG_NAME_DEFAULT
           docker push $IMG_NAME_AMD64
           docker push $IMG_NAME_ARM32V7
           docker push $IMG_NAME_ARM64V8
       - name: Build and Push Docker Connect Image
+        working-directory: ./streampipes-connect-container-master
         env:
           IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:${{ env.MVN_VERSION }}
           IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:amd64-${{ env.MVN_VERSION }}
           IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:arm32v7-${{ env.MVN_VERSION }}
           IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:arm64v8-${{ env.MVN_VERSION }}
-          DFILE_DIR: streampipes-connect-container-master
         run: |
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f ./$DFILE_DIR/Dockerfile ./$DFILE_DIR
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM32V7 --build-arg QEMU=qemu-arm-static -t $IMG_NAME_ARM32V7 -f ./$DFILE_DIR/arm.Dockerfile ./$DFILE_DIR
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM64V8 --build-arg QEMU=qemu-aarch64-static -t $IMG_NAME_ARM64V8 -f ./$DFILE_DIR/aarch64.Dockerfile ./$DFILE_DIR
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM32V7 --build-arg QEMU=qemu-arm-static -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM64V8 --build-arg QEMU=qemu-aarch64-static -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
           docker push $IMG_NAME_DEFAULT
           docker push $IMG_NAME_AMD64
           docker push $IMG_NAME_ARM32V7
@@ -91,16 +91,16 @@ jobs:
           npm install --unsafe-perm
           npm run build
       - name: Build and Push Docker UI Image
+        working-directory: ./ui
         env:
           IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:${{ env.MVN_VERSION }}
           IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:amd64-${{ env.MVN_VERSION }}
           IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:arm32v7-${{ env.MVN_VERSION }}
           IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:arm64v8-${{ env.MVN_VERSION }}
-          DFILE_DIR: ui
         run: |
-          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f ./$DFILE_DIR/Dockerfile ./$DFILE_DIR
-          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_ARM32V7 --build-arg QEMU=qemu-arm-static -t $IMG_NAME_ARM32V7 -f ./$DFILE_DIR/arm.Dockerfile ./$DFILE_DIR
-          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_ARM64V8 --build-arg QEMU=qemu-aarch64-static -t $IMG_NAME_ARM64V8 -f ./$DFILE_DIR/aarch64.Dockerfile ./$DFILE_DIR
+          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
+          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_ARM32V7 --build-arg QEMU=qemu-arm-static -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_ARM64V8 --build-arg QEMU=qemu-aarch64-static -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
           docker push $IMG_NAME_DEFAULT
           docker push $IMG_NAME_AMD64
           docker push $IMG_NAME_ARM32V7
