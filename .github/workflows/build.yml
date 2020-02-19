@@ -36,7 +36,6 @@ jobs:
       - name: Build with Maven
         run: mvn clean package javadoc:aggregate
       - name: Set env variables for Docker builds
-        # set environment variables to be available for all steps
         run: |
           echo "::set-env name=MVN_VERSION::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
           echo "::set-env name=DOCKERHUB_APACHE_REPO::apachestreampipes"
