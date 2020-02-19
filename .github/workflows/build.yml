@@ -55,10 +55,10 @@ jobs:
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
       - name: Build and Push Docker Backend Image
         env:
-          IMG_NAME_DEFAULT: $DOCKERHUB_APACHE_REPO/backend:$MVN_VERSION
-          IMG_NAME_AMD64: $DOCKERHUB_APACHE_REPO/backend:amd64-$MVN_VERSION
-          IMG_NAME_ARM32V7: $DOCKERHUB_APACHE_REPO/backend:arm32v7-$MVN_VERSION
-          IMG_NAME_ARM64V8: $DOCKERHUB_APACHE_REPO/backend:arm64v8-$MVN_VERSION
+          IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:${{ env.MVN_VERSION }}
+          IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:amd64-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:arm32v7-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:arm64v8-${{ env.MVN_VERSION }}
           DFILE_DIR: streampipes-backend
         run: |
           docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f ./$DFILE_DIR/Dockerfile ./$DFILE_DIR
@@ -70,10 +70,10 @@ jobs:
           docker push $IMG_NAME_ARM64V8
       - name: Build and Push Docker Connect Image
         env:
-          IMG_NAME_DEFAULT: $DOCKERHUB_APACHE_REPO/streampipes-connect-container:$MVN_VERSION
-          IMG_NAME_AMD64: $DOCKERHUB_APACHE_REPO/streampipes-connect-container:amd64-$MVN_VERSION
-          IMG_NAME_ARM32V7: $DOCKERHUB_APACHE_REPO/streampipes-connect-container:arm32v7-$MVN_VERSION
-          IMG_NAME_ARM64V8: $DOCKERHUB_APACHE_REPO/streampipes-connect-container:arm64v8-$MVN_VERSION
+          IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:${{ env.MVN_VERSION }}
+          IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:amd64-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:arm32v7-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:arm64v8-${{ env.MVN_VERSION }}
           DFILE_DIR: streampipes-connect-container-master
         run: |
           docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f ./$DFILE_DIR/Dockerfile ./$DFILE_DIR
@@ -92,10 +92,10 @@ jobs:
           npm run build
       - name: Build and Push Docker UI Image
         env:
-          IMG_NAME_DEFAULT: $DOCKERHUB_APACHE_REPO/ui:$MVN_VERSION
-          IMG_NAME_AMD64: $DOCKERHUB_APACHE_REPO/ui:amd64-$MVN_VERSION
-          IMG_NAME_ARM32V7: $DOCKERHUB_APACHE_REPO/ui:arm32v7-$MVN_VERSION
-          IMG_NAME_ARM64V8: $DOCKERHUB_APACHE_REPO/ui:arm64v8-$MVN_VERSION
+          IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:${{ env.MVN_VERSION }}
+          IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:amd64-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:arm32v7-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:arm64v8-${{ env.MVN_VERSION }}
           DFILE_DIR: ui
         run: |
           docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f ./$DFILE_DIR/Dockerfile ./$DFILE_DIR
