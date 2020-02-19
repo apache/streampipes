@@ -27,6 +27,8 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.processors.geo.jvm.config.GeoJvmConfig;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo.LatLngToGeoController;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG.SetEpsgController;
 import org.apache.streampipes.processors.geo.jvm.processor.distancecalculator.DistanceCalculatorController;
 import org.apache.streampipes.processors.geo.jvm.processor.geocoder.GoogleMapsGeocodingController;
 import org.apache.streampipes.processors.geo.jvm.processor.revgeocoder.ReverseGeocodingController;
@@ -36,11 +38,14 @@ public class GeoJvmInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton
-            .getInstance()
-            .add(new DistanceCalculatorController())
-            .add(new GoogleMapsGeocodingController())
-            .add(new StaticGoogleMapsGeocodingController())
-            .add(new ReverseGeocodingController());
+        .getInstance()
+        .add(new DistanceCalculatorController())
+        .add(new GoogleMapsGeocodingController())
+        .add(new StaticGoogleMapsGeocodingController())
+        .add(new ReverseGeocodingController())
+        .add(new SetEpsgController())
+        .add(new LatLngToGeoController());
+
 
     DeclarersSingleton.getInstance().registerDataFormats(new JsonDataFormatFactory(),
             new CborDataFormatFactory(),

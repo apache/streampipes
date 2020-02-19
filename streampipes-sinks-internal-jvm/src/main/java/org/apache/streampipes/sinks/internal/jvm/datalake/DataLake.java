@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.sinks.internal.jvm.datalake;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -27,13 +28,17 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.serializers.json.Utils;
 import org.apache.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
+import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Code is the same as InfluxDB (org.apache.streampipes.sinks.databases.jvm.influxdb) sink. Changes applied here should also be applied in the InfluxDB sink
@@ -45,31 +50,57 @@ public class DataLake implements EventSink<DataLakeParameters> {
 
   private static Logger LOG;
 
+  private List<EventProperty> imageProperties;
+
+  private String imageDirectory;
+
+  private String timestampField;
+
   @Override
   public void onInvocation(DataLakeParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     LOG = parameters.getGraph().getLogger(DataLake.class);
 
-    this.influxDbClient = new InfluxDbClient(
-        parameters.getInfluxDbHost(),
-        parameters.getInfluxDbPort(),
-        parameters.getDatabaseName(),
-        parameters.getMeasurementName(),
-        parameters.getUsername(),
-        parameters.getPassword(),
-        parameters.getTimestampField(),
-        parameters.getBatchSize(),
-        parameters.getFlushDuration(),
-        parameters.getDimensionProperties(),
-        LOG
-    );
-    registerAtDataLake(parameters.getMeasurementName(), runtimeContext.getInputSchemaInfo().get(0).getEventSchema());
+    this.timestampField = parameters.getTimestampField();
 
+    this.influxDbClient = new InfluxDbClient(
+            parameters.getInfluxDbHost(),
+            parameters.getInfluxDbPort(),
+            parameters.getDatabaseName(),
+            parameters.getMeasurementName(),
+            parameters.getUsername(),
+            parameters.getPassword(),
+            parameters.getTimestampField(),
+            parameters.getBatchSize(),
+            parameters.getFlushDuration(),
+            parameters.getDimensionProperties(),
+            LOG
+    );
+
+    EventSchema schema = runtimeContext.getInputSchemaInfo().get(0).getEventSchema();
+    registerAtDataLake(parameters.getMeasurementName(), schema);
+
+    imageProperties = schema.getEventProperties().stream()
+            .filter(eventProperty -> eventProperty.getDomainProperties().size() > 0 &&
+                    eventProperty.getDomainProperties().get(0).toString().equals(SPSensor.IMAGE))
+            .collect(Collectors.toList());
+
+    imageDirectory = SinksInternalJvmConfig.INSTANCE.getImageStorageLocation() + parameters.getMeasurementName() + "/";
 
   }
 
   @Override
   public void onEvent(Event event) {
     try {
+
+      String eventTimestamp = Long.toString(event.getFieldBySelector(this.timestampField).getAsPrimitive().getAsLong());
+      this.imageProperties.stream().forEach(eventProperty -> {
+        String fileRoute = this.imageDirectory + eventProperty.getRuntimeName() + "/" + eventTimestamp + ".png";
+        String image = event.getFieldByRuntimeName(eventProperty.getRuntimeName()).getAsPrimitive().getAsString();
+
+        this.writeToImageFile(image, fileRoute);
+        event.updateFieldBySelector("s0::" + eventProperty.getRuntimeName(), fileRoute);
+      });
+
       influxDbClient.save(event);
     } catch (SpRuntimeException e) {
       LOG.error(e.getMessage());
@@ -81,6 +112,27 @@ public class DataLake implements EventSink<DataLakeParameters> {
     influxDbClient.stop();
   }
 
+  private void writeToImageFile(String image, String fileRoute) {
+    byte[] data = Base64.decodeBase64(image);
+    try {
+      File file = new File(fileRoute);
+      file.getParentFile().mkdirs();
+      OutputStream stream = new FileOutputStream(file, false);
+      stream.write(data);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+  }
+
+  /**
+   * Adds a new measurement to the StreamPipes data lake
+   * @param measure
+   * @param eventSchema
+   * @throws SpRuntimeException
+   */
   private void registerAtDataLake(String measure, EventSchema eventSchema) throws SpRuntimeException {
     HttpClient httpClient = new DefaultHttpClient();
     String url = SinksInternalJvmConfig.INSTANCE.getStreamPipesBackendUrl();

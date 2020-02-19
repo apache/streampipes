@@ -1,0 +1,6 @@
+org.apache.streampipes.processor.geo.jvm.staticgeocoding.title=Static Google Maps Geocoder
+org.apache.streampipes.processor.geo.jvm.staticgeocoding.description=Geocodes a fixed placename to lat/lng coordinates and
+appends these coordinates to every input event.
+
+place.title=Place
+place.description=The place name that should be converted to a lat/lng combination

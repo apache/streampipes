@@ -35,6 +35,7 @@ public class ConfigKeys {
     final static String BACKEND_HOST = "SP_BACKEND_HOST";
     final static String BACKEND_PORT = "SP_BACKEND_PORT";
     final static String BACKEND_PROTOCOL = "SP_BACKEND_PROTOCOL";
+    final static String IMAGE_STORAGE_LOCATION = "SP_IMAGE_STORAGE_LOCATION";
 
 
     final static String SERVICE_NAME = "SP_SERVICE_NAME";
