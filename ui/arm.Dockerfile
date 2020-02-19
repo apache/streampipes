@@ -19,21 +19,22 @@ FROM $BASE_IMAGE
 
 COPY $QEMU /usr/bin
 
-COPY dist/assets/img/ /usr/share/nginx/html/assets/img/
-COPY dist/assets/css/ /usr/share/nginx/html/assets/css/
-COPY dist/assets/lib/ /usr/share/nginx/html/assets/lib/
-COPY dist/assets/templates/ /usr/share/nginx/html/assets/templates/
-COPY dist/assets/fonts/ /usr/share/nginx/html/assets/fonts/
-COPY dist/index.html /usr/share/nginx/html/
-COPY dist/main.bundle.js /usr/share/nginx/html/
-COPY dist/main.bundle.js.gz /usr/share/nginx/html/
-COPY dist/polyfills.bundle.js /usr/share/nginx/html/
-COPY dist/polyfills.bundle.js.gz /usr/share/nginx/html/
-#COPY dist/runtime.bundle.js /usr/share/nginx/html/
-COPY dist/style.bundle.js /usr/share/nginx/html/
-COPY dist/style.bundle.js.gz /usr/share/nginx/html/
-COPY dist/style.css /usr/share/nginx/html/
-COPY dist/style.css.gz /usr/share/nginx/html/
+COPY dist/ /usr/share/nginx/html/
+#COPY dist/assets/img/ /usr/share/nginx/html/assets/img/
+#COPY dist/assets/css/ /usr/share/nginx/html/assets/css/
+#COPY dist/assets/lib/ /usr/share/nginx/html/assets/lib/
+#COPY dist/assets/templates/ /usr/share/nginx/html/assets/templates/
+#COPY dist/assets/fonts/ /usr/share/nginx/html/assets/fonts/
+#COPY dist/index.html /usr/share/nginx/html/
+#COPY dist/main.bundle.js /usr/share/nginx/html/
+#COPY dist/main.bundle.js.gz /usr/share/nginx/html/
+#COPY dist/polyfills.bundle.js /usr/share/nginx/html/
+#COPY dist/polyfills.bundle.js.gz /usr/share/nginx/html/
+##COPY dist/runtime.bundle.js /usr/share/nginx/html/
+#COPY dist/style.bundle.js /usr/share/nginx/html/
+#COPY dist/style.bundle.js.gz /usr/share/nginx/html/
+#COPY dist/style.css /usr/share/nginx/html/
+#COPY dist/style.css.gz /usr/share/nginx/html/
 
 #COPY javadoc/ /usr/share/nginx/html/javadoc
 
