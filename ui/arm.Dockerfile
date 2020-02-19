@@ -44,7 +44,7 @@ COPY nginx_config/ssl.conf /app/nginx-confs/ssl.conf
 
 COPY docker-entrypoint.sh /
 
-RUN chown -R nginx:nginx /usr/share/nginx/html/
+#RUN chown -R nginx:nginx /usr/share/nginx/html/
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
