@@ -14,7 +14,7 @@
 # limitations under the License.
 
 ARG BASE_IMAGE=nginx
-FROM ${BASE_IMAGE}
+FROM $BASE_IMAGE
 
 COPY dist/ /usr/share/nginx/html/
 #COPY dist/assets/img/ /usr/share/nginx/html/assets/img/

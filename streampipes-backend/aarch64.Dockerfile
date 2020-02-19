@@ -14,14 +14,14 @@
 # limitations under the License.
 
 ARG BASE_IMAGE=arm64v8/openjdk:11-jre-slim
-ARG QEMU=qemu-aarch64-static
-FROM ${BASE_IMAGE}
+FROM $BASE_IMAGE
 
+ARG QEMU=qemu-aarch64-static
 ENV CONSUL_LOCATION consul
 
 EXPOSE 8030
 
-COPY ${QEMU} /usr/bin
+COPY $QEMU /usr/bin
 COPY target/streampipes-backend.jar  /streampipes-backend.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-backend.jar"]
