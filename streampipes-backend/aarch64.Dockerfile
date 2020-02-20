@@ -13,14 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARG BASE_IMAGE=arm64v8/adoptopenjdk:11-jre-openj9
+ARG BASE_IMAGE=arm64v8/openjdk:11-jre-slim
 FROM $BASE_IMAGE
 
 ENV CONSUL_LOCATION consul
 
 EXPOSE 8030
 
-COPY qemu-arm-static /usr/bin
-ADD ./target/streampipes-backend.jar  /streampipes-backend.jar
+COPY qemu-aarch64-static /usr/bin
+COPY target/streampipes-backend.jar  /streampipes-backend.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-backend.jar"]
