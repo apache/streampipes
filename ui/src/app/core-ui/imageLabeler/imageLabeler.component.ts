@@ -16,19 +16,20 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { CocoFormat } from "../../core-model/coco/Coco.format";
 import { InteractionMode } from "./interactionMode";
-import { ReactLabelingHelper } from "./labelingHelper/reactLabeling.helper";
+import { ReactLabelingHelper } from "./helper/reactLabeling.helper";
+import { ImageTranslationHelper } from "./helper/imageTranslation.helper";
 
 @Component({
   selector: 'sp-image-labeler',
   templateUrl: './imageLabeler.component.html',
   styleUrls: ['./imageLabeler.component.css']
 })
-export class ImageLabelerComponent implements OnInit {
+export class ImageLabelerComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('test') canvasRef;
+  @ViewChild('canvas') canvasRef;
   private canvas;
   private context;
 
@@ -53,6 +54,10 @@ export class ImageLabelerComponent implements OnInit {
   private scale: number = 1;
 
   ngOnInit(): void {
+
+  }
+
+  ngAfterViewInit() {
     this.canvas = this.canvasRef.nativeElement;
     this.context = this.canvas.getContext('2d');
     this.canvasWidth = this.canvas.width;
@@ -70,29 +75,34 @@ export class ImageLabelerComponent implements OnInit {
     };
     //this.image.src = 'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg';
     this.image.src = 'https://www.hamburg.de/contentblob/1740056/7308ff64cbb71631d0463f5b6a34471c/data/bild-kohoevedstrasse3.jpg';
-   // this.source.src = 'https://previews.123rf.com/images/sahua/sahua1503/sahua150300006/38262839-autobahn-stra%C3%9Fe-schilder-autos-und-konstruktionen.jpg';
+    // this.source.src = 'https://previews.123rf.com/images/sahua/sahua1503/sahua150300006/38262839-autobahn-stra%C3%9Fe-schilder-autos-und-konstruktionen.jpg';
     this.context.lineWidth = 2;
   }
 
   imageMouseDown(e) {
-    if (this.interactionMode == InteractionMode.ReactLabeling) {
+       if (this.interactionMode == InteractionMode.ReactLabeling) {
       ReactLabelingHelper.mouseDown(this.getMousePosScreen(e.clientX, e.clientY),
         this.getMousePosTransformed(e.clientX, e.clientY));
     } else if (this.interactionMode == InteractionMode.Translate) {
-
+      ImageTranslationHelper.mouseDown(this.getMousePosScreen(e.clientX, e.clientY), this.imageTranslationX, this.imageTranslationY)
     }
     this.isMouseDown = true;
   }
 
   imageMouseMove(e) {
     if(this.isMouseDown) {
+
       if (this.interactionMode == InteractionMode.ReactLabeling) {
         this.draw();
         ReactLabelingHelper.mouseMove(this.getMousePosScreen(e.clientX, e.clientY),
           this.getMousePosTransformed(e.clientX, e.clientY), this.context, this.label, this.getColor(this.label));
+      } else if (this.interactionMode == InteractionMode.Translate) {
+        let translation = ImageTranslationHelper.mouseMove(this.getMousePosScreen(e.clientX, e.clientY));
+        this.imageTranslationX = translation[0];
+        this.imageTranslationY = translation[1];
+        this.draw();
       }
     }
-
 
   }
 
@@ -114,20 +124,23 @@ export class ImageLabelerComponent implements OnInit {
     let newHeight = this.canvasHeight * this.scale;
 
     this.context.save();
-    this.context.translate(-((newWidth - this.canvasWidth) / 2), -((newHeight - this.canvasHeight) / 2));
+
+
+    this.context.translate(-((newWidth - this.canvasWidth) / 2) + this.imageTranslationX,
+      -((newHeight - this.canvasHeight) / 2) + this.imageTranslationY);
     this.context.scale(this.scale, this.scale);
 
     this.context.drawImage(this.image, this.canvasWidth / 2 - this.image.width / 2, this.canvasHeight / 2 - this.image.height / 2);
-
-    this.context.lineWidth = 2;
 
     for(let annotation of this.coco.annotations) {
       //console.log(this.coco.annotations[0].bbox);
       let label = this.coco.getLabelById(annotation.category_id);
       //TODO if not BBox
+
+
       ReactLabelingHelper.draw(annotation, label, this.context, this.getColor(label),
-        (this.canvasWidth - this.image.width) / 2,
-        (this.canvasHeight - this.image.height) / 2)
+        ((this.canvasWidth - this.image.width) / 2),
+        ((this.canvasHeight - this.image.height) / 2))
     }
     this.context.restore();
   }
@@ -175,15 +188,15 @@ export class ImageLabelerComponent implements OnInit {
 
   getMousePosScreen(clientX, clientY): [any, any] {
     return [
-      parseInt(clientX - this.canvas.getBoundingClientRect().left),
-      parseInt(clientY - this.canvas.getBoundingClientRect().top ),
+      Math.floor(clientX - this.canvas.getBoundingClientRect().left),
+      Math.floor(clientY - this.canvas.getBoundingClientRect().top),
     ]
   }
 
   getMousePosTransformed(clientX, clientY): [any, any] {
     return [
-      parseInt(((clientX - this.canvas.getBoundingClientRect().left) / this.scale) - ((this.canvasWidth / this.scale - this.image.width) / 2)),
-      parseInt(((clientY - this.canvas.getBoundingClientRect().top) / this.scale) - ((this.canvasHeight / this.scale - this.image.height) / 2)),
+      Math.floor(((clientX - this.canvas.getBoundingClientRect().left) / this.scale) - ((this.canvasWidth / this.scale - this.image.width) / 2) - (this.imageTranslationX / this.scale)),
+      Math.floor(((clientY - this.canvas.getBoundingClientRect().top) / this.scale) - ((this.canvasHeight / this.scale - this.image.height) / 2) - (this.imageTranslationY / this.scale)),
     ]
   }
 
