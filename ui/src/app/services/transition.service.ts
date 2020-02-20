@@ -55,3 +55,4 @@ export class TransitionService {
         return this.$mdDialog.show(confirm);
     }
 }
+TransitionService.$inject = ['AuthService', '$mdDialog'];

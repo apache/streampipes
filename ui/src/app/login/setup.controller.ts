@@ -98,4 +98,4 @@ export class SetupCtrl {
     }
 };
 
-//SetupCtrl.$inject = ['$location', 'RestApi', '$mdToast'];
+SetupCtrl.$inject = ['$location', 'RestApi', '$mdToast'];

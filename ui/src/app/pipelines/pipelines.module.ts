@@ -18,6 +18,9 @@
 
 import * as angular from 'angular';
 
+import 'npm/angular-datatables';
+import 'npm/angular-sanitize';
+
 import spServices from '../services/services.module';
 
 import { PipelineCtrl } from './pipelines.controller';
@@ -28,7 +31,7 @@ import { PipelineOperationsService } from "./services/pipeline-operations.servic
 
 import ngFileUpload from 'ng-file-upload';
 
-export default angular.module('sp.pipeline', [spServices, ngFileUpload])
+export default angular.module('sp.pipeline', [spServices, ngFileUpload, 'ngSanitize', 'datatables'])
 	.controller('PipelineCtrl', PipelineCtrl)
 	.component('pipelineDetails', PipelineDetailsComponent)
 	.filter('pipelineCategoryFilter', PipelineCategoryFilter)

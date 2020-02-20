@@ -17,7 +17,7 @@
  */
 
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {ShepherdService} from '../../../services/tour/shepherd.service';
 import {RestService} from "../../rest.service";
 import {StatusMessage} from "../../model/message/StatusMessage";
@@ -35,7 +35,7 @@ import {MappingPropertyUnary} from '../../model/MappingPropertyUnary';
 })
 export class AdapterStartedDialog {
 
-    private adapterInstalled: boolean = false;
+    adapterInstalled: boolean = false;
     private adapterStatus: StatusMessage;
     private streamDescription: any;
     private pollingActive: boolean = false;

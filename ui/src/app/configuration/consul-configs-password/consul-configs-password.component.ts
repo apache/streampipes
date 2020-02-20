@@ -34,11 +34,11 @@ export class ConsulConfigsPasswordComponent {
     @Input() configuration: StreampipesPeContainerConifgs;
 
     password: string; 
-    private show: Boolean;
-    private className: String;
+    show: Boolean;
+    className: String;
     private hide: Boolean;
     
-    constructor(private configService: ConfigurationService) { 
+    constructor(public configService: ConfigurationService) {
         this.password = hiddenPasswordString; 
         this.show = false;
         this.className  = "hideText";

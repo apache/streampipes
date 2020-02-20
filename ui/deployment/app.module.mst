@@ -34,6 +34,9 @@ import spNotifications from './notifications/notifications.module';
 import spAppLinks from './applinks/applinks.module';
 import spPipelineDetails from './pipeline-details/pipeline-details.module';
 import { SpButtonDirective } from "./core/button/button.directive";
+import mdThemingProviderConfig from "./core/md-theming-provider.config";
+import rootScopeDelegate from "./core/root-scope-delegate.decorator";
+
 {{#modulesActive}}
 {{^ng5}}
 import {{module}} from '{{{path}}}';
@@ -60,74 +63,17 @@ export const Ng1AppModule = angular
         {{/ng5}}
         {{/modulesActive}}
     ])
- .decorator('$rootScope', $delegate => {
-    const originalDigest = $delegate.$digest;
-    $delegate.$digest = () => {
-      if (!$delegate.$$phase) {
-        originalDigest.call($delegate);
-      }
-    };
-    return $delegate;
-  })
+    .decorator('$rootScope', rootScopeDelegate)
     .config(['$urlServiceProvider', ($urlService) => $urlService.deferIntercept()])
-    .run(["$rootScope", "$transitions", "ObjectProvider", "TransitionService", "RouteTransitionInterceptorService",
-        function ($rootScope, $transitions, ObjectProvider, TransitionService, RouteTransitionInterceptorService) {
+    .run(["$rootScope", "$transitions", "TransitionService", "RouteTransitionInterceptorService",
+        function ($rootScope, $transitions, TransitionService, RouteTransitionInterceptorService) {
             $transitions.onBefore({}, transition => {
               return RouteTransitionInterceptorService.onTransitionStarted(transition);
             });
             $transitions.onStart({}, transition => {
                 return TransitionService.onTransitionStarted(transition);
             });
-            $rootScope.state = new ObjectProvider.State();
             window['loading_screen'].finish();
-    }]).config(function($mdThemingProvider) {
-
-        $mdThemingProvider.definePalette('streamPipesPrimary', {
-            '50': '304269',
-            '100': '304269',
-            '200': '304269',
-            '300': '304269',
-            '400': '304269',
-            '500': '304269',
-            '600': '304269',
-            '700': '003B3D',
-            '800': '39b54a',
-            '900': '39b54a',
-            'A100': '39b54a',
-            'A200': '39b54a',
-            'A400': '39b54a',
-            'A700': '39b54a',
-            'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
-                                                // on this palette should be dark or light
-
-            'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
-                '200', '300', '400', 'A100'],
-        });
-
-        $mdThemingProvider.definePalette('streamPipesAccent', {
-            '50': 'DF5A49',
-            '100': 'DF5A49',
-            '200': '007F54',
-            '300': '007F54',
-            '400': '39B54A',
-            '500': '45DA59',
-            '600': '45DA59',
-            '700': '45DA59',
-            '800': '45DA59',
-            '900': '1B1464',
-            'A100': '1B1464',
-            'A200': '1B1464',
-            'A400': '1B1464',
-            'A700': '1B1464',
-            'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
-                                                // on this palette should be dark or light
-
-            'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
-                '200', '300', '400', 'A100'],
-        });
-
-        $mdThemingProvider.theme('default')
-            .primaryPalette('streamPipesPrimary')
-            .accentPalette('streamPipesAccent')
-
-    }).directive("spButton", ['$mdButtonInkRipple', '$mdTheming', '$mdAria', '$mdInteraction', ($mdButtonInkRipple, $mdTheming, $mdAria, $mdInteraction) => new SpButtonDirective($mdButtonInkRipple, $mdTheming, $mdAria, $mdInteraction)]);
+    }])
+    .config(mdThemingProviderConfig)
+    .directive("spButton", ['$mdButtonInkRipple', '$mdTheming', '$mdAria', '$mdInteraction', ($mdButtonInkRipple, $mdTheming, $mdAria, $mdInteraction) => new SpButtonDirective($mdButtonInkRipple, $mdTheming, $mdAria, $mdInteraction)]);

@@ -1,15 +1,29 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@angular/core";
-import {Dashboard, DashboardConfig, DashboardItem} from "../../models/dashboard.model";
-import {Subscription} from "rxjs";
-import {GridType} from "angular-gridster2";
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {Dashboard, DashboardItem} from "../../models/dashboard.model";
+import {forkJoin, Observable, Subscription} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
 import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
 import {DashboardService} from "../../services/dashboard.service";
-import {GridsterItem} from "angular-gridster2/lib/gridsterItem.interface";
-import {GridsterItemComponentInterface} from "angular-gridster2/lib/gridsterItemComponent.interface";
-import {ResizeService} from "../../services/resize.service";
-import {GridsterInfo} from "../../models/gridster-info.model";
+import {RefreshDashboardService} from "../../services/refresh-dashboard.service";
 
 @Component({
     selector: 'dashboard-panel',
@@ -26,8 +40,13 @@ export class DashboardPanelComponent implements OnInit {
 
     protected subscription: Subscription;
 
+    widgetIdsToRemove: Array<string> = [];
+    widgetsToUpdate: Map<string, DashboardWidget> = new Map<string, DashboardWidget>();
+
     constructor(private dashboardService: DashboardService,
-                public dialog: MatDialog) {}
+                public dialog: MatDialog,
+                private refreshDashboardService: RefreshDashboardService) {
+    }
 
     public ngOnInit() {
 
@@ -43,7 +62,6 @@ export class DashboardPanelComponent implements OnInit {
         dialogRef.afterClosed().subscribe(widget => {
             if (widget) {
                 this.addWidgetToDashboard(widget);
-                this.updateDashboard();
             }
         });
     }
@@ -61,16 +79,50 @@ export class DashboardPanelComponent implements OnInit {
         this.dashboard.widgets.push(dashboardItem);
     }
 
-    updateDashboard() {
+    updateDashboardAndCloseEditMode() {
         this.dashboardService.updateDashboard(this.dashboard).subscribe(result => {
-            this.dashboard._rev = result._rev;
+            if (this.widgetsToUpdate.size > 0) {
+                forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
+                    this.closeEditModeAndReloadDashboard();
+                });
+            } else {
+                this.deleteWidgets();
+                this.closeEditModeAndReloadDashboard()
+            }
         })
     }
 
-    updateDashboardAndCloseEditMode() {
-        this.updateDashboard();
+    closeEditModeAndReloadDashboard() {
         this.editModeChange.emit(!(this.editMode));
+        this.refreshDashboardService.notify(this.dashboard._id);
     }
 
+    prepareWidgetUpdates(): Array<Observable<any>> {
+        let promises: Array<Observable<any>> = [];
+        this.widgetsToUpdate.forEach((widget, key) => {
+            promises.push(this.dashboardService.updateWidget(widget));
+        })
 
+        return promises;
+    }
+
+    discardChanges() {
+        this.editModeChange.emit(!(this.editMode));
+        this.refreshDashboardService.notify(this.dashboard._id);
+    }
+
+    removeAndQueueItemForDeletion(widget: DashboardItem) {
+        this.dashboard.widgets.splice(this.dashboard.widgets.indexOf(widget), 1);
+        this.widgetIdsToRemove.push(widget.id);
+    }
+
+    updateAndQueueItemForDeletion(dashboardWidget: DashboardWidget) {
+        this.widgetsToUpdate.set(dashboardWidget._id, dashboardWidget);
+    }
+
+    deleteWidgets() {
+        this.widgetIdsToRemove.forEach(widgetId => {
+            this.dashboardService.deleteWidget(widgetId).subscribe();
+        });
+    }
 }

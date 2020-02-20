@@ -23,14 +23,16 @@ import {CommonModule} from '@angular/common';
 import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
-import {MatDatepickerModule, MatNativeDateModule, MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {TableComponent} from './table/table.component';
 import {LineChartComponent} from './linechart/lineChart.component';
 
-import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-import { PlotlyModule } from 'angular-plotly.js';
-import { ImageLabelerComponent } from "./imageLabeler/imageLabeler.component";
-PlotlyModule.plotlyjs = PlotlyJS;
+//import * as PlotlyJS from 'plotly.js/dist/plotly.js';
+import { PlotlyViaWindowModule } from 'angular-plotly.js';
+//PlotlyViaCDNModule.plotlyjs = PlotlyJS;
 
 @NgModule({
     imports: [
@@ -44,12 +46,11 @@ PlotlyModule.plotlyjs = PlotlyJS;
         MatProgressSpinnerModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        PlotlyModule,
+        PlotlyViaWindowModule,
     ],
     declarations: [
         TableComponent,
         LineChartComponent,
-        ImageLabelerComponent,
     ],
     providers: [
         MatDatepickerModule
@@ -59,7 +60,6 @@ PlotlyModule.plotlyjs = PlotlyJS;
     exports: [
         TableComponent,
         LineChartComponent,
-        ImageLabelerComponent,
     ]
 })
 export class CoreUiModule {

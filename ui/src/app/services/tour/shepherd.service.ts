@@ -19,6 +19,7 @@
 import Shepherd from 'shepherd.js';
 //import "shepherd.js/dist/css/shepherd-theme-arrows.css";
 import {Inject, Injectable} from "@angular/core";
+import {LoginCtrl} from "../../login/login.controller";
 
 @Injectable()
 export class ShepherdService {
@@ -183,3 +184,5 @@ export class ShepherdService {
        return this.TourProviderService.getTime();
     }
 }
+
+ShepherdService.$inject = ['$timeout', '$state', 'TourProviderService'];

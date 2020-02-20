@@ -27,7 +27,7 @@ export class MappingPropertyNary extends StaticProperty {
   @RdfProperty('sp:mapsFrom')
   public requirementSelector: string;
 
-  @RdfProperty('sp:mapsFromOptions')
+  @RdfProperty('sp:hasMapsFromOptions')
   public mapsFromOptions: string[];
 
   @RdfProperty('sp:hasPropertyScope')

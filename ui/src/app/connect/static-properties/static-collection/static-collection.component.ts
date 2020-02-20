@@ -31,7 +31,7 @@ import {StaticPropertyUtilService} from '../static-property-util.service';
 })
 export class StaticCollectionComponent {
 
-    @Input() staticProperty: StaticProperty;
+    @Input() staticProperty: CollectionStaticProperty;
     @Input() adapterId: string;
     @Input() eventSchema: EventSchema;
 

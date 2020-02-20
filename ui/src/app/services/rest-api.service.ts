@@ -579,4 +579,4 @@ export class RestApi {
     }
 }
 
-//RestApi.$inject = ['$http', 'apiConstants', 'AuthStatusService'];
+RestApi.$inject = ['$http', 'apiConstants', 'AuthStatusService'];

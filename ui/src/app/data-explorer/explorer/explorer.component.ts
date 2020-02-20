@@ -22,7 +22,8 @@ import {InfoResult} from '../../core-model/datalake/InfoResult';
 import {Observable} from 'rxjs/Observable';
 import {FormControl, FormGroup} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
-import {MatDialog, MatSnackBar} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {DataDownloadDialog} from './datadownloadDialog/dataDownload.dialog';
 import {timer} from 'rxjs/internal/observable/timer';
 import {DataResult} from '../../core-model/datalake/DataResult';
@@ -128,7 +129,7 @@ export class ExplorerComponent implements OnInit {
      this.loadData(false);
     }
 
-    loadData(silentLoading) {
+    loadData(silentLoading?) {
         this.isLoadingData = true;
         this.noDateFoundinTimeRange = false;
         this.noIndexSelection = false;

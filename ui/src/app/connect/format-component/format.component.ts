@@ -36,9 +36,8 @@ export class FormatComponent {
   editableEmitter = new EventEmitter();
   @Output()
   selectedFormatEmitter = new EventEmitter();
-  private hasConfig: Boolean;
 
-
+  hasConfig: Boolean;
 
   constructor(private ShepherdService: ShepherdService) {
     this.hasConfig = true;

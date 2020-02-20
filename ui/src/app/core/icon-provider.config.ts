@@ -16,7 +16,6 @@
  *
  */
 
-//iconProviderConfig.$inject = ['$mdIconProvider'];
 export default function iconProviderConfig($mdIconProvider, apiConstants) {
 	const getServerUrl = () => {
 		return apiConstants.contextPath + apiConstants.api;
@@ -42,3 +41,5 @@ export default function iconProviderConfig($mdIconProvider, apiConstants) {
 		.iconSet('avatars', 'assets/img/svg/avatar-icons.svg', 24)
 		.defaultIconSet('assets/img/svg/svg-sprite-action.svg', 24);
 };
+
+iconProviderConfig.$inject = ['$mdIconProvider', 'apiConstants'];

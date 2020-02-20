@@ -17,7 +17,8 @@
  */
 
 import {Component, Inject, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef, MatStepper} from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatStepper } from '@angular/material/stepper';
 import {HttpEventType} from '@angular/common/http';
 import {DatalakeRestService} from '../../../core-services/datalake/datalake-rest.service';
 
@@ -34,7 +35,7 @@ export class DataDownloadDialog {
     downloadFinish: boolean = false;
     downloadedMBs: number = undefined;
 
-    @ViewChild('stepper') stepper: MatStepper;
+    @ViewChild('stepper', { static: true }) stepper: MatStepper;
 
     downloadHttpRequestSubscribtion;
 

@@ -22,8 +22,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RestService } from '../rest.service';
 import { FormatDescription } from '../model/connect/grounding/FormatDescription';
 import { AdapterDescription } from '../model/connect/AdapterDescription';
-import { MatDialog } from '@angular/material';
-import { MatStepper } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatStepper } from '@angular/material/stepper';
 import { AdapterStartedDialog } from './component/adapter-started-dialog.component';
 import { Logger } from '../../shared/logger/default-log.service';
 import { GenericAdapterSetDescription } from '../model/connect/GenericAdapterSetDescription';
@@ -79,7 +79,7 @@ export class NewAdapterComponent implements OnInit {
     @Output()
     updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
 
-    @ViewChild('stepper') myStepper: MatStepper;
+    @ViewChild('stepper', { static: true }) myStepper: MatStepper;
 
     allFormats: FormatDescription[] = [];
 
@@ -111,7 +111,7 @@ export class NewAdapterComponent implements OnInit {
     // deactivates all edit functions when user starts a template
     isEditable: Boolean = true;
 
-    @ViewChild(EventSchemaComponent)
+    @ViewChild(EventSchemaComponent, { static: true })
     private eventSchemaComponent: EventSchemaComponent;
 
     isSetAdapter: Boolean = false;

@@ -58,6 +58,7 @@ public class DashboardWidget extends AbstractRestInterface implements IDashboard
 
   @PUT
   @JsonLdSerialized
+  @Consumes(SpMediaType.JSONLD)
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{widgetId}")
   @Override

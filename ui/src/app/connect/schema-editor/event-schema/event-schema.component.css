@@ -55,7 +55,7 @@ ul {
   padding: 10px;
   width: 95%;
 }
-:host /deep/ .tree-node {
+:host ::ng-deep .tree-node {
   color: #000;
   border-left: none;
   border-right: none;
@@ -65,19 +65,19 @@ ul {
   background: transparent;
   margin: 0;
 }
-:host /deep/ tree-node-expander {
+:host ::ng-deep tree-node-expander {
   display: none;
 }
-:host /deep/ .node-content-wrapper {
+:host ::ng-deep .node-content-wrapper {
   flex: 1;
 }
-:host /deep/ .node-content-wrapper:hover {
+:host ::ng-deep .node-content-wrapper:hover {
   background-color: darkgrey;
 }
-:host /deep/ .node-content-wrapper-active, .node-content-wrapper-focused {
+:host ::ng-deep .node-content-wrapper-active, .node-content-wrapper-focused {
   background: transparent;
 }
-:host /deep/ .node-drop-slot {
+:host ::ng-deep .node-drop-slot {
   position: relative;
   /*background: red;*/
   /* padding: 8px 0;*/
@@ -85,22 +85,22 @@ ul {
   margin: -7px 0;
   z-index: 1000;
 }
-:host /deep/ .node-drop-slot.is-dragging-over {
+:host ::ng-deep .node-drop-slot.is-dragging-over {
   background-color: rgb(27, 20, 100);
   border: none;
 }
-:host /deep/ .tree-node-expanded {
+:host ::ng-deep .tree-node-expanded {
   border-left: 2px dashed black;
 }
-:host /deep/ tree-viewport {
+:host ::ng-deep tree-viewport {
   overflow: hidden;
 }
 
-:host /deep/ .tree-node-level-1 {
+:host ::ng-deep .tree-node-level-1 {
   border: none;
 }
 
-:host /deep/ .node-content-wrapper-focused, .node-content-wrapper:hover, .node-content-wrapper-active, .node-content-wrapper.node-content-wrapper-active:hover, .node-content-wrapper-active.node-content-wrapper-focused {
+:host ::ng-deep .node-content-wrapper-focused, .node-content-wrapper:hover, .node-content-wrapper-active, .node-content-wrapper.node-content-wrapper-active:hover, .node-content-wrapper-active.node-content-wrapper-focused {
   background: none !important;
 }
 
@@ -109,19 +109,19 @@ ul {
   margin-right: 3px;
 }
 
-:host /deep/ .node-content-wrapper .dimension-star {
+:host ::ng-deep .node-content-wrapper .dimension-star {
   opacity: 0.2;
 }
 
-:host /deep/ .node-content-wrapper:hover .dimension-star {
+:host ::ng-deep .node-content-wrapper:hover .dimension-star {
   opacity: 1;
 }
 
-:host /deep/ .node-content-wrapper mat-checkbox {
+:host ::ng-deep .node-content-wrapper mat-checkbox {
   opacity: 0.2;
 }
 
-:host /deep/ .node-content-wrapper:hover mat-checkbox {
+:host ::ng-deep .node-content-wrapper:hover mat-checkbox {
   opacity: 1;
 }
 

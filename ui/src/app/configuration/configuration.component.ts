@@ -21,7 +21,8 @@ import {Component, ViewChild} from '@angular/core';
 import { ConfigurationService } from './shared/configuration.service';
 import { StreampipesPeContainer } from "./shared/streampipes-pe-container.model";
 import { StreampipesPeContainerConifgs } from "./shared/streampipes-pe-container-configs";
-import {MatPaginator, MatTableDataSource} from "@angular/material";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatTableDataSource } from "@angular/material/table";
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({

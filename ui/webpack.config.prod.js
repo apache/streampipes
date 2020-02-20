@@ -58,14 +58,14 @@ module.exports = merge(baseConfig, {
                     warnings: false,
                     parse: {},
                     compress: {},
-                    mangle: false, // Note `mangle.properties` is `false` by default.
+                    mangle: true, // Note `mangle.properties` is `false` by default.
                     module: false,
                     output: null,
                     toplevel: false,
                     nameCache: null,
                     ie8: false,
-                    keep_classnames: true,
-                    keep_fnames: true,
+                    keep_classnames: false,
+                    keep_fnames: false,
                     safari10: false,
                 },
             }),

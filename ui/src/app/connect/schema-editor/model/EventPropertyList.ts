@@ -19,13 +19,14 @@
 import {EventProperty} from './EventProperty';
 import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
 import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
+import {EventPropertyPrimitive} from "./EventPropertyPrimitive";
 //  extends EventProperty
 
 @RdfsClass('sp:EventPropertyList')
 export class EventPropertyList extends EventProperty {
 
     @RdfProperty('sp:hasEventProperty')
-    eventProperty: EventProperty;
+    eventProperty: EventPropertyPrimitive;
 
     constructor(propertyID: string, parent: EventProperty) {
         super(propertyID, parent);

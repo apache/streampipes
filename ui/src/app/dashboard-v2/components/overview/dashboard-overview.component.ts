@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {Dashboard} from "../../models/dashboard.model";
 import {MatTableDataSource} from "@angular/material/table";
@@ -14,7 +32,7 @@ import {EditDashboardDialogComponent} from "../../dialogs/edit-dashboard/edit-da
 export class DashboardOverviewComponent implements OnInit {
 
     @Input() dashboards: Array<Dashboard>;
-    @Output() reloadDashboardsEmitter = new EventEmitter<boolean>();
+    @Output() reloadDashboardsEmitter = new EventEmitter<void>();
     @Output() selectDashboardEmitter = new EventEmitter<Dashboard>();
 
     dataSource = new MatTableDataSource<Dashboard>();
@@ -45,7 +63,7 @@ export class DashboardOverviewComponent implements OnInit {
         dialogRef.componentInstance.dashboard = dashboard;
 
         dialogRef.afterClosed().subscribe(result => {
-            this.reloadDashboardsEmitter.emit(true);
+            this.reloadDashboardsEmitter.emit();
         });
     }
 
@@ -56,7 +74,7 @@ export class DashboardOverviewComponent implements OnInit {
     openDeleteDashboardDialog(dashboard: Dashboard) {
         // TODO add confirm dialog
         this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
-            this.reloadDashboardsEmitter.emit(true);
+            this.reloadDashboardsEmitter.emit();
         });
     }
 

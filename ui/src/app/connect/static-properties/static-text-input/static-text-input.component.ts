@@ -30,7 +30,7 @@ import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
 })
 export class StaticTextInputComponent implements OnInit {
 
-    constructor(private staticPropertyUtil: StaticPropertyUtilService){
+    constructor(public staticPropertyUtil: StaticPropertyUtilService){
 
     }
 
@@ -39,10 +39,11 @@ export class StaticTextInputComponent implements OnInit {
     @Input() staticProperty: StaticProperty;
     @Output() inputEmitter: EventEmitter<any> = new EventEmitter<any>();
 
-    private freeTextForm: FormGroup;
-    private inputValue: String;
-    private hasInput: Boolean;
-    private errorMessage = "Please enter a valid Text";
+    freeTextForm: FormGroup;
+    inputValue: String;
+    hasInput: Boolean;
+    errorMessage = "Please enter a valid Text";
+
     ngOnInit() {
         this.freeTextForm = new FormGroup({
             'freeStaticTextString': new FormControl(this.inputValue, [

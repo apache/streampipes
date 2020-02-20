@@ -33,16 +33,17 @@ import {StaticPropertyUtilService} from '../static-property-util.service';
     styleUrls: ['./static-url-input.component.css']
 })
 export class StaticUrlInputComponent implements OnInit {
-    constructor(private staticPropertyUtil: StaticPropertyUtilService){
+
+    constructor(public staticPropertyUtil: StaticPropertyUtilService){
 
     }
 
     @Input() staticProperty: StaticProperty;
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     
-    private freeTextForm: FormGroup;
+    freeTextForm: FormGroup;
     private inputValue: String;
-    private hasInput: Boolean;
+    hasInput: Boolean;
     private errorMessage = "Please enter a valid Url";
     ngOnInit() {
         this.freeTextForm = new FormGroup({

@@ -16,12 +16,13 @@
  *
  */
 
-import {EventEmitter, Injectable, Input, Output} from '@angular/core';
+import {Directive, EventEmitter, Injectable, Input, Output} from '@angular/core';
 import {EventSchema} from '../../connect/schema-editor/model/EventSchema';
 import {DataResult} from '../../core-model/datalake/DataResult';
 import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
 
 @Injectable()
+@Directive()
 export abstract class BaseChartComponent {
 
 

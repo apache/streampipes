@@ -21,7 +21,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
-import {MatFormFieldModule, MatGridListModule, MatInputModule} from "@angular/material";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatGridListModule } from "@angular/material/grid-list";
+import { MatInputModule } from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {AppTransportMonitoringComponent} from "./app-transport-monitoring.component";
 import {IncomingViewComponent} from "./components/incoming/incoming-view.component";

@@ -30,7 +30,7 @@ import {ConfigurationInfo} from "../../model/message/ConfigurationInfo";
 })
 export class StaticSecretInputComponent implements OnInit {
 
-    constructor(private staticPropertyUtil: StaticPropertyUtilService){
+    constructor(public staticPropertyUtil: StaticPropertyUtilService){
 
     }
 
@@ -39,9 +39,9 @@ export class StaticSecretInputComponent implements OnInit {
     @Input() staticProperty: StaticProperty;
     @Output() inputEmitter: EventEmitter<any> = new EventEmitter<any>();
 
-    private inputValue: String;
-    private hasInput: Boolean;
-    private secretForm: FormGroup;
+    inputValue: String;
+    hasInput: Boolean;
+    secretForm: FormGroup;
     private errorMessage = "Please enter a valid Text";
 
     ngOnInit() {

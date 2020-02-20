@@ -28,7 +28,7 @@ import {ConfigurationService} from '../shared/configuration.service'
 })
 export class ConsulConfigsBooleanComponent {
     @Input() configuration: StreampipesPeContainerConifgs
-    constructor(private configService:ConfigurationService) {    
+    constructor(public configService:ConfigurationService) {
     }
 
 }

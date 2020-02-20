@@ -18,6 +18,7 @@
 
 import {RestApi} from "./rest-api.service";
 import {AuthStatusService} from "./auth-status.service";
+import {TransitionService} from "./transition.service";
 
 export class AuthService {
 
@@ -65,3 +66,5 @@ export class AuthService {
         })
     }
 }
+
+AuthService.$inject = ['$rootScope', '$location', '$state', 'RestApi', 'AuthStatusService'];

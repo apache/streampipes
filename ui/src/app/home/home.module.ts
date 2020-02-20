@@ -19,7 +19,8 @@
 import { NgModule } from '@angular/core';
 import { HomeComponent } from './home.component';
 import { HomeService } from './home.service';
-import { MatGridListModule, MatIconModule } from '@angular/material';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
 import { StatusComponent } from "./components/status.component";

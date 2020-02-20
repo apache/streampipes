@@ -40,15 +40,14 @@ export class EventPropertyPrimitiveComponent implements OnInit, DoCheck {
   @Input() index: number;
 
   @Input() domainPropertyGuess: DomainPropertyProbabilityList;
-
   @Input() isEditable: boolean;
 
-
-  private propertyPrimitivForm: FormGroup;
-  private runtimeDataTypes;
   @Output() delete: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
   @Output() addPrimitive: EventEmitter<EventProperty> = new EventEmitter<EventProperty>();
   @Output() addNested: EventEmitter<any> = new EventEmitter<any>();
+
+  private propertyPrimitivForm: FormGroup;
+  runtimeDataTypes;
 
   private transformUnitEnable = false;
   private possibleUnitTransformations: UnitDescription[] = [];

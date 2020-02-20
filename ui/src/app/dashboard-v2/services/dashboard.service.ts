@@ -87,7 +87,10 @@ export class DashboardService {
     getWidget(widgetId: string): Observable<DashboardWidget> {
         let promise = new Promise<DashboardWidget>((resolve, reject) => {
             this.http.get(this.dashboardWidgetUrl + "/" +widgetId).subscribe(response => {
-                let dashboardWidget = this.tsonLdSerializerService.fromJsonLd(response, "sp:DashboardWidgetModel");
+                let dashboardWidget: DashboardWidget = this.tsonLdSerializerService.fromJsonLd(response, "sp:DashboardWidgetModel");
+                dashboardWidget.dashboardWidgetSettings.config.sort((a, b) => {
+                    return a.index - b.index;
+                });
                 resolve(dashboardWidget);
             });
         });
@@ -98,19 +101,37 @@ export class DashboardService {
         return this.serializeAndPost(this.dashboardWidgetUrl, widget);
     }
 
+    deleteWidget(widgetId: string): Observable<any> {
+        return this.http.delete(this.dashboardWidgetUrl + "/" +widgetId);
+    }
+
+    updateWidget(widget: DashboardWidget): Observable<any> {
+        let promise = new Promise<DashboardWidget>((resolve, reject) => {
+            this.tsonLdSerializerService.toJsonLd(widget).subscribe(serialized => {
+                this.http.put(this.dashboardWidgetUrl + "/" +widget._id, serialized, this.jsonLdHeaders()).subscribe(result => {
+                    resolve();
+                })
+            });
+        });
+        return from(promise);
+    }
+
     serializeAndPost(url: string, object: any): Observable<DashboardWidget> {
         let promise = new Promise<DashboardWidget>((resolve, reject) => {
             this.tsonLdSerializerService.toJsonLd(object).subscribe(serialized => {
-                const httpOptions = {
-                    headers: new HttpHeaders({
-                        'Content-Type': 'application/ld+json',
-                    }),
-                };
-                this.http.post(url, serialized, httpOptions).pipe(map(response => {
+                this.http.post(url, serialized, this.jsonLdHeaders()).pipe(map(response => {
                     resolve(this.tsonLdSerializerService.fromJsonLd(response, "sp:DashboardWidgetModel"));
                 })).subscribe();
             });
         });
         return from(promise);
+    }
+
+    jsonLdHeaders(): any {
+        return {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/ld+json',
+            }),
+        };
     }
 }

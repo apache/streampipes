@@ -42,7 +42,7 @@ import * as angularPlatformBrowserAnimations from '@angular/platform-browser/ani
 import * as angularCdk from '@angular/cdk';
 import * as angularCdkObservers from '@angular/cdk/observers';
 import * as angularCommonHttp from '@angular/common/http';
-import * as angularMaterial from '@angular/material';
+//import * as angularMaterial from '@angular/material';
 import * as angularFlexLayout from '@angular/flex-layout';
 import * as angularForms from '@angular/forms';
 import * as angularMaterialDialog from '@angular/material/dialog';
@@ -74,7 +74,7 @@ SystemJS.set('@angular/platform-browser/animations', SystemJS.newModule(angularP
 SystemJS.set('@angular/cdk', SystemJS.newModule(angularCdk));
 SystemJS.set('@angular/cdk/observers', SystemJS.newModule(angularCdkObservers));
 SystemJS.set('@angular/common/http', SystemJS.newModule(angularCommonHttp));
-SystemJS.set('@angular/material', SystemJS.newModule(angularMaterial));
+//SystemJS.set('@angular/material', SystemJS.newModule(angularMaterial));
 SystemJS.set('@angular/flex-layout', SystemJS.newModule(angularFlexLayout));
 SystemJS.set('@angular/forms', SystemJS.newModule(angularForms));
 SystemJS.set('@angular/material/dialog', SystemJS.newModule(angularMaterialDialog));
@@ -95,7 +95,7 @@ SystemJS.set('ngx-color-picker', SystemJS.newModule(ngxColorPicker));
 export class ViewComponent implements AfterViewInit {
 
     @Input() installedApp: InstalledApp;
-    @ViewChild('pluginHost', { read: ViewContainerRef }) content: ViewContainerRef;
+    @ViewChild('pluginHost', { read: ViewContainerRef, static: true }) content: ViewContainerRef;
 
     constructor(private compiler: Compiler, private injector: Injector) {
     }

@@ -39,11 +39,11 @@ export class StaticMappingUnaryComponent extends StaticMappingComponent implemen
     @Input() staticProperty: MappingPropertyUnary;
     @Input() eventSchema: EventSchema;
 
-    private unaryTextForm: FormGroup;
+    unaryTextForm: FormGroup;
     private inputValue: String;
     private hasInput: Boolean;
     private errorMessage = "Please enter a value";
-    private availableProperties: Array<EventProperty>;
+    availableProperties: Array<EventProperty>;
 
     constructor(staticPropertyUtil: StaticPropertyUtilService,
                 PropertySelectorService: PropertySelectorService){

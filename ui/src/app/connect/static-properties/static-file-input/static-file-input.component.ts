@@ -37,18 +37,17 @@ export class StaticFileInputComponent implements OnInit {
     @Input() adapterId: String;
     @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
-    private inputValue: String;
-    private fileName: String;
+    inputValue: String;
+    fileName: String;
 
+    selectedUploadFile: File;
 
-    private selectedUploadFile: File;
+    hasInput: Boolean;
+    errorMessage = "Please enter a value";
 
-    private hasInput: Boolean;
-    private errorMessage = "Please enter a value";
+    uploadStatus = 0;
 
-    private uploadStatus = 0;
-
-    constructor(private staticPropertyUtil: StaticPropertyUtilService, private staticFileRestService: StaticFileRestService){
+    constructor(public staticPropertyUtil: StaticPropertyUtilService, private staticFileRestService: StaticFileRestService){
 
     }
 

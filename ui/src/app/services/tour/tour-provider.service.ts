@@ -17,6 +17,8 @@
  *
  */
 
+import {AppCtrl} from "../../layout/app.controller";
+
 export class TourProviderService {
 
     guidedTours: any;
@@ -53,3 +55,6 @@ export class TourProviderService {
         return this.time;
     }
 }
+
+TourProviderService.$inject = ['createPipelineTourConstants', 'dashboardTourConstants',
+    'adapterTourConstants', 'adapterTour2Constants', 'adapterTour3Constants'];

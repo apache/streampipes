@@ -23,7 +23,7 @@ import { ShepherdService } from "../../services/tour/shepherd.service";
 import { ConnectService } from '../connect.service';
 import { FilterPipe } from './filter.pipe';
 import {AdapterUploadDialog} from './adapter-upload/adapter-upload-dialog.component';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {AdapterDescriptionList} from '../model/connect/AdapterDescriptionList';
 import {TsonLdSerializerService} from '../../platform-services/tsonld-serializer.service';
 

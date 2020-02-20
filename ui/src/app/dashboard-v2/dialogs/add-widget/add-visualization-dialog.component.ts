@@ -16,8 +16,8 @@
  *
  */
 
-import {Component} from "@angular/core";
-import {MatDialogRef} from "@angular/material";
+import {Component, Inject} from "@angular/core";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {DashboardService} from "../../services/dashboard.service";
 import {ElementIconText} from "../../../services/get-element-icon-text.service";
 import {WidgetRegistry} from "../../registry/widget-registry";
@@ -62,20 +62,29 @@ export class AddVisualizationDialogComponent {
 
     selectedType: any;
     page: any = "select-pipeline";
+    dialogTitle: string;
 
 
     constructor(
         public dialogRef: MatDialogRef<AddVisualizationDialogComponent>,
-        //@Inject(MAT_DIALOG_DATA) public data: SelectedVisualizationData,
+        @Inject(MAT_DIALOG_DATA) public data: any,
         private dashboardService: DashboardService,
         public elementIconText: ElementIconText) {
     }
 
     ngOnInit() {
-        this.dashboardService.getVisualizablePipelines().subscribe(visualizations => {
-            this.visualizablePipelines = visualizations;
-        });
-        this.availableWidgets = WidgetRegistry.getAvailableWidgetTemplates();
+        if (!this.data) {
+            this.dialogTitle = "Add widget";
+            this.dashboardService.getVisualizablePipelines().subscribe(visualizations => {
+                this.visualizablePipelines = visualizations;
+            });
+            this.availableWidgets = WidgetRegistry.getAvailableWidgetTemplates();
+        } else {
+            this.dialogTitle = "Edit widget";
+            this.selectedPipeline = this.data.widget.dashboardWidgetDataConfig;
+            this.selectedWidget = this.data.widget.dashboardWidgetSettings;
+            this.page = 'configure-widget';
+        }
     }
 
     onCancel(): void {
@@ -132,9 +141,16 @@ export class AddVisualizationDialogComponent {
             let configuredWidget: DashboardWidget = new DashboardWidget();
             configuredWidget.dashboardWidgetSettings = this.selectedWidget;
             configuredWidget.dashboardWidgetDataConfig = this.selectedPipeline;
-            this.dashboardService.saveWidget(configuredWidget).subscribe(response => {
-                this.dialogRef.close(response);
-            });
+            if (!this.data) {
+                this.dashboardService.saveWidget(configuredWidget).subscribe(response => {
+                    this.dialogRef.close(response);
+                });
+            } else {
+                configuredWidget._id = this.data.widget._id;
+                configuredWidget._ref = this.data.widget._ref;
+                configuredWidget.widgetId = this.data.widget.widgetId;
+                this.dialogRef.close(configuredWidget);
+            }
         }
     }
 

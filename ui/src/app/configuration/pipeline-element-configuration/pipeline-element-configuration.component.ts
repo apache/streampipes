@@ -21,7 +21,8 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {ConfigurationService} from "../shared/configuration.service";
 import {StreampipesPeContainer} from "../shared/streampipes-pe-container.model";
 import {StreampipesPeContainerConifgs} from "../shared/streampipes-pe-container-configs";
-import {MatPaginator, MatTableDataSource} from "@angular/material";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
     selector: 'pipeline-element-configuration',
@@ -40,7 +41,7 @@ export class PipelineElementConfigurationComponent {
     consulServices: StreampipesPeContainer[];
 
     displayedColumns: string[] = ['status', 'name', 'action'];
-    @ViewChild(MatPaginator, {}) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     dataSource = new MatTableDataSource<StreampipesPeContainer>();
 
     expandedElement: any;

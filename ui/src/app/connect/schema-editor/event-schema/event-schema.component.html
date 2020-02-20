@@ -87,7 +87,7 @@
             <div fxLayout="column" fxLayoutAlign="space-evenly stretched" class="drag-drop-tree">
                 <tree-root #tree [nodes]="nodes" [options]="options" (updateData)="onUpdateData(tree)">
                     <ng-template #treeNodeTemplate let-node let-index="index">
-                        <event-property-row [(node)]="node"  [(isEditable)]="isEditable"
+                        <event-property-row [node]="node"  [(isEditable)]="isEditable"
                                             [(eventSchema)]="eventSchema"
                                             (refreshTreeEmitter)="refreshTree()" [(countSelected)]="countSelected"></event-property-row>
                     </ng-template>

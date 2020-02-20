@@ -20,7 +20,8 @@ import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {AppTransportMonitoringRestService} from "../../services/app-transport-monitoring-rest.service";
 import {TransportProcessEventModel} from "../../model/transport-process-event.model";
 import {TimestampConverterService} from "../../services/timestamp-converter.service";
-import {MatPaginator, MatTableDataSource} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
     selector: 'transport-selection',
@@ -32,7 +33,7 @@ export class TransportSelectionComponent {
     transportProcesses: TransportProcessEventModel[] = [];
 
     displayedColumns: string[] = ['position', 'startTime', 'endTime', 'action'];
-    @ViewChild(MatPaginator, {}) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     dataSource = new MatTableDataSource<TransportProcessEventModel>();
 
     @Output() selectedProcess = new EventEmitter<TransportProcessEventModel>();

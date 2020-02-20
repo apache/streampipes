@@ -18,7 +18,7 @@
 
 import {Component, Inject} from "@angular/core";
 import {RestService} from "../../services/rest.service";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {CanvasConfiguration} from "../../model/canvas-configuration.model";
 import {DashboardConfiguration} from "../../model/dashboard-configuration.model";
 import {ImageInfo} from "../../model/image-info.model";

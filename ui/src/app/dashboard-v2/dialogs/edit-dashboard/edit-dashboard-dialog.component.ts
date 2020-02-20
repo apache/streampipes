@@ -17,7 +17,7 @@
  */
 
 import {Component, Inject} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {DashboardService} from "../../services/dashboard.service";
 import {DashboardWidgetSettings} from "../../../core-model/dashboard/DashboardWidgetSettings";
 import {VisualizablePipeline} from "../../../core-model/dashboard/VisualizablePipeline";
