@@ -50,12 +50,12 @@ jobs:
           sudo apt-get install qemu-user-static
           echo "./streampipes-backend/ ./streampipes-connect-container-master/ ./ui/" | xargs -n 1 cp -v /usr/bin/qemu-*
       - name: Enable Docker experimental feature for multi-arch builds
-         run: |
-           sudo mkdir $HOME/.docker
-           sudo touch $HOME/.docker/config.json
-           echo '{"experimental": "enabled"}' | sudo tee $HOME/.docker/config.json
-           echo '{"experimental": true}' | sudo tee /etc/docker/daemon.json
-           sudo service docker restart
+        run: |
+          sudo mkdir $HOME/.docker
+          sudo touch $HOME/.docker/config.json
+          echo '{"experimental": "enabled"}' | sudo tee $HOME/.docker/config.json
+          echo '{"experimental": true}' | sudo tee /etc/docker/daemon.json
+          sudo service docker restart
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
       - name: Build and Push Docker Backend Image
