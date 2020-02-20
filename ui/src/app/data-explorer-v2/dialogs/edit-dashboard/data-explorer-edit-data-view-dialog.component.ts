@@ -16,26 +16,24 @@
  *
  */
 
-import {Component, Inject} from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import {DashboardService} from "../../services/dashboard.service";
-import {DashboardWidgetSettings} from "../../../core-model/dashboard/DashboardWidgetSettings";
-import {VisualizablePipeline} from "../../../core-model/dashboard/VisualizablePipeline";
-import {Dashboard} from "../../models/dashboard.model";
+import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { IDataViewDashboard } from '../../models/dataview-dashboard.model';
+import { DataViewDashboardService } from '../../services/data-view-dashboard.service';
 
 @Component({
-    selector: 'edit-dashboard-dialog-component',
-    templateUrl: './edit-dashboard-dialog.component.html',
-    styleUrls: ['./edit-dashboard-dialog.component.css']
+    selector: 'sp-data-explorer-edit-data-view-dialog-component',
+    templateUrl: './data-explorer-edit-data-view-dialog.component.html',
+    styleUrls: ['./data-explorer-edit-data-view-dialog.component.css']
 })
-export class EditDashboardDialogComponent {
+export class DataExplorerEditDataViewDialogComponent implements OnInit {
 
     createMode: boolean;
-    dashboard: Dashboard;
+    dashboard: IDataViewDashboard;
 
     constructor(
-        public dialogRef: MatDialogRef<EditDashboardDialogComponent>,
-        private dashboardService: DashboardService) {
+        public dialogRef: MatDialogRef<DataExplorerEditDataViewDialogComponent>,
+        private dashboardService: DataViewDashboardService) {
     }
 
     ngOnInit() {
@@ -48,7 +46,7 @@ export class EditDashboardDialogComponent {
 
     onSave(): void {
         if (this.createMode) {
-            this.dashboardService.saveDashboard(this.dashboard).subscribe();
+            this.dashboardService.saveDataView(this.dashboard).subscribe();
         } else {
             this.dashboardService.updateDashboard(this.dashboard).subscribe();
         }

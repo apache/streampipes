@@ -16,17 +16,21 @@
  *
  */
 
-.main-panel {
-    width:100%;
-    height: 100%;
-    display:inline-grid;
-    align-content: center;
+import { GridsterConfig, GridsterItem } from 'angular-gridster2';
+
+export interface IDataViewDashboardConfig extends GridsterConfig {}
+
+export interface IDataViewDashboardItem extends GridsterItem {
+    widgetId: string;
+    id: string;
 }
 
-.mt-20 {
-    margin-top:20px;
-}
-
-.title-panel {
-    font-size:20px;
+export interface IDataViewDashboard {
+    id?: string;
+    name?: string;
+    description?: string;
+    displayHeader?: boolean;
+    widgets?: IDataViewDashboardItem[];
+    _id?: string;
+    _rev?: string;
 }

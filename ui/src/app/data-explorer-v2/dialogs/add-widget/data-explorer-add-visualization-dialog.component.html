@@ -35,11 +35,11 @@
                             [cols]="3" [rowHeight]="200"
                             [gutterSize]="100">
 
-                        <mat-grid-tile class="gray" *ngFor="let pipeline of visualizablePipelines">
-                            <div [ngClass]="getSelectedPipelineCss(pipeline)"
-                                 (click)="selectPipeline(pipeline)">
-                                {{iconText(pipeline.visualizationName)}}
-                                <h5>{{pipeline.visualizationName}}</h5>
+                        <mat-grid-tile class="gray" *ngFor="let dataSet of visualizableData">
+                            <div [ngClass]="getSelectedPipelineCss(dataSet)"
+                                 (click)="selectPipeline(dataSet)">
+                                {{iconText(dataSet.measureName)}}
+                                <h5>{{dataSet.measureName}}</h5>
                             </div>
                         </mat-grid-tile>
                     </mat-grid-list>

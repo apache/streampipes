@@ -16,21 +16,21 @@
  *
  */
 
-import {BaseStreamPipesWidget} from "./base-widget";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {ResizeService} from "../../../services/resize.service";
-import {GridsterInfo} from "../../../models/gridster-info.model";
-import {GridsterItemComponent} from "angular-gridster2";
+import { OnInit } from '@angular/core';
+import { GridsterItemComponent } from 'angular-gridster2';
+import { GridsterInfo } from '../../../../dashboard-v2/models/gridster-info.model';
+import { ResizeService } from '../../../services/resize.service';
+import { BaseStreamPipesWidget } from './base-widget';
 
-export abstract class BaseNgxChartsStreamPipesWidget extends BaseStreamPipesWidget {
+export abstract class BaseNgxChartsStreamPipesWidget extends BaseStreamPipesWidget implements OnInit {
 
     view: any[] = [];
-    displayChart: boolean = false;
+    displayChart = false;
 
     colorScheme: any;
 
-    constructor(rxStompService: RxStompService, protected resizeService: ResizeService) {
-        super(rxStompService);
+    constructor(protected resizeService: ResizeService) {
+        super();
     }
 
     ngOnInit() {
@@ -60,7 +60,8 @@ export abstract class BaseNgxChartsStreamPipesWidget extends BaseStreamPipesWidg
     }
 
     computeCurrentHeight(gridsterItemComponent: GridsterItemComponent): number {
-        return (gridsterItemComponent.height - (BaseNgxChartsStreamPipesWidget.PADDING * 2) - this.editModeOffset() - this.titlePanelOffset());
+        return (gridsterItemComponent.height - (BaseNgxChartsStreamPipesWidget.PADDING * 2)
+          - this.editModeOffset() - this.titlePanelOffset());
     }
 
     editModeOffset(): number {

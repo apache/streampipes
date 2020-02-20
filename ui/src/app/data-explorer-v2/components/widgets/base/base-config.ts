@@ -16,7 +16,7 @@
  *
  */
 
-import {DashboardWidgetSettings} from "../../../../core-model/dashboard/DashboardWidgetSettings";
+import { DashboardWidgetSettings } from '../../../../core-model/dashboard/DashboardWidgetSettings';
 
 export abstract class WidgetConfig {
 

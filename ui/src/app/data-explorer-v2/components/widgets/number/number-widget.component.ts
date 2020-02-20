@@ -16,11 +16,10 @@
  *
  */
 
-import {Component, Input, OnDestroy, OnInit} from "@angular/core";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {BaseStreamPipesWidget} from "../base/base-widget";
-import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
-import {NumberConfig} from "./number-config";
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
+import { BaseStreamPipesWidget } from '../base/base-widget';
+import { NumberConfig } from './number-config';
 
 @Component({
     selector: 'number-widget',
@@ -33,8 +32,8 @@ export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnIn
 
     selectedProperty: string;
 
-    constructor(rxStompService: RxStompService) {
-        super(rxStompService);
+    constructor() {
+        super();
     }
 
     ngOnInit(): void {

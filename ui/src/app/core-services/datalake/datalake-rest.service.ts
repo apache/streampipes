@@ -16,13 +16,13 @@
  *
  */
 
-import {HttpClient, HttpRequest} from '@angular/common/http';
-import {InfoResult} from '../../core-model/datalake/InfoResult';
-import {AuthStatusService} from '../../services/auth-status.service';
-import {Injectable} from '@angular/core';
-import {PageResult} from '../../core-model/datalake/PageResult';
-import {DataResult} from '../../core-model/datalake/DataResult';
-import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';
+import { HttpClient, HttpRequest } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { DataResult } from '../../core-model/datalake/DataResult';
+import { GroupedDataResult } from '../../core-model/datalake/GroupedDataResult';
+import { InfoResult } from '../../core-model/datalake/InfoResult';
+import { PageResult } from '../../core-model/datalake/PageResult';
+import { AuthStatusService } from '../../services/auth-status.service';
 
 @Injectable()
 export class DatalakeRestService {
@@ -36,12 +36,12 @@ export class DatalakeRestService {
     }
 
     private get dataLakeUrlV3() {
-        return this.baseUrl + '/api/v3/users/' + this.authStatusService.email + '/datalake'
+        return this.baseUrl + '/api/v3/users/' + this.authStatusService.email + '/datalake';
     }
 
 
     getAllInfos() {
-        return this.http.get<InfoResult[]>(this.dataLakeUrlV3 + "/info");
+        return this.http.get<InfoResult[]>(this.dataLakeUrlV3 + '/info');
     }
 
     getDataPage(index, itemsPerPage, page) {
@@ -81,28 +81,28 @@ export class DatalakeRestService {
         @deprecate
      */
     getFile(index, format) {
-        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + "?format=" + format,  {
+        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + '?format=' + format,  {
             reportProgress: true,
             responseType: 'text'
         });
-        return this.http.request(request)
+        return this.http.request(request);
     }
 
     downloadRowData(index, format) {
-        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + "/download?format=" + format,  {
+        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + '/download?format=' + format,  {
             reportProgress: true,
             responseType: 'text'
         });
-        return this.http.request(request)
+        return this.http.request(request);
     }
 
     downloadRowDataTimeInterval(index, format, startDate, endDate) {
-        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + "/download" +
-            "?format=" + format, {
+        const request = new HttpRequest('GET', this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate + '/download' +
+            '?format=' + format, {
             reportProgress: true,
             responseType: 'text'
         });
-        return this.http.request(request)
+        return this.http.request(request);
     }
 
 }

@@ -23,10 +23,10 @@
 <gridster [options]="options" [ngClass]="editMode ? 'edit' : ''">
     <ng-container *ngFor="let item of dashboard.widgets;let i=index">
         <gridster-item [item]="item" #gridsterItemComponent>
-            <dashboard-widget (updateCallback)="propagateItemUpdate($event)"
+            <sp-data-explorer-dashboard-widget (updateCallback)="propagateItemUpdate($event)"
                               (deleteCallback)="propagateItemRemoval($event)"
                               [item]="item" [widget]="item"
-            [editMode]="editMode" [gridsterItemComponent]="gridsterItemComponent"></dashboard-widget>
+            [editMode]="editMode" [gridsterItemComponent]="gridsterItemComponent"></sp-data-explorer-dashboard-widget>
         </gridster-item>
     </ng-container>
 </gridster>

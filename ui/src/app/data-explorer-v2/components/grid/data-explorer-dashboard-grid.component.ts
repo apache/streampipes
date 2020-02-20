@@ -17,7 +17,6 @@
  */
 
 import {
-    AfterViewInit,
     Component, EventEmitter,
     Input,
     OnChanges,
@@ -25,35 +24,35 @@ import {
     QueryList,
     SimpleChanges,
     ViewChildren
-} from "@angular/core";
-import {Dashboard, DashboardConfig, DashboardItem} from "../../models/dashboard.model";
-import {GridsterInfo} from "../../models/gridster-info.model";
-import {ResizeService} from "../../services/resize.service";
-import {GridsterItemComponent, GridType} from "angular-gridster2";
-import {DashboardService} from "../../services/dashboard.service";
-import {RefreshDashboardService} from "../../services/refresh-dashboard.service";
-import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
+} from '@angular/core';
+import { GridsterItemComponent, GridType } from 'angular-gridster2';
+import { DashboardWidget } from '../../../core-model/dashboard/DashboardWidget';
+import { GridsterInfo } from '../../../dashboard-v2/models/gridster-info.model';
+import { IDataViewDashboard, IDataViewDashboardConfig, IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
+import { DataViewDashboardService } from '../../services/data-view-dashboard.service';
+import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
+import { ResizeService } from '../../services/resize.service';
 
 @Component({
-    selector: 'dashboard-grid',
-    templateUrl: './dashboard-grid.component.html',
-    styleUrls: ['./dashboard-grid.component.css']
+    selector: 'sp-data-explorer-dashboard-grid',
+    templateUrl: './data-explorer-dashboard-grid.component.html',
+    styleUrls: ['./data-explorer-dashboard-grid.component.css']
 })
-export class DashboardGridComponent implements OnInit, OnChanges {
+export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
     @Input() editMode: boolean;
-    @Input() dashboard: Dashboard;
+    @Input() dashboard: IDataViewDashboard;
 
-    @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
+    @Output() deleteCallback: EventEmitter<IDataViewDashboardItem> = new EventEmitter<IDataViewDashboardItem>();
     @Output() updateCallback: EventEmitter<DashboardWidget> = new EventEmitter<DashboardWidget>();
 
-    options: DashboardConfig;
-    loaded: boolean = false;
+    options: IDataViewDashboardConfig;
+    loaded = false;
 
     @ViewChildren(GridsterItemComponent) gridsterItemComponents: QueryList<GridsterItemComponent>;
 
     constructor(private resizeService: ResizeService,
-                private dashboardService: DashboardService,
+                private dashboardService: DataViewDashboardService,
                 private refreshDashboardService: RefreshDashboardService) {
 
     }
@@ -79,7 +78,7 @@ export class DashboardGridComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes["editMode"] && this.options) {
+        if (changes['editMode'] && this.options) {
             this.options.draggable.enabled = this.editMode;
             this.options.resizable.enabled = this.editMode;
             this.options.displayGrid = this.editMode ? 'always' : 'none';
@@ -87,7 +86,7 @@ export class DashboardGridComponent implements OnInit, OnChanges {
         }
     }
 
-    propagateItemRemoval(widget: DashboardItem) {
+    propagateItemRemoval(widget: IDataViewDashboardItem) {
         this.deleteCallback.emit(widget);
     }
 

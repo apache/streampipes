@@ -16,37 +16,33 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {Dashboard, DashboardItem} from "../../models/dashboard.model";
-import {DashboardService} from "../../services/dashboard.service";
-import {DashboardImageComponent} from "../../../app-transport-monitoring/components/dashboard-image/dashboard-image.component";
-import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
-import {Subject} from "rxjs";
-import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
-import {GridsterInfo} from "../../models/gridster-info.model";
-import {ResizeService} from "../../services/resize.service";
-import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
+import { DashboardWidget } from '../../../core-model/dashboard/DashboardWidget';
+import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
+import { IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
+import { DataViewDashboardService } from '../../services/data-view-dashboard.service';
 
 @Component({
-    selector: 'dashboard-widget',
-    templateUrl: './dashboard-widget.component.html',
-    styleUrls: ['./dashboard-widget.component.css']
+    selector: 'sp-data-explorer-dashboard-widget',
+    templateUrl: './data-explorer-dashboard-widget.component.html',
+    styleUrls: ['./data-explorer-dashboard-widget.component.css']
 })
-export class DashboardWidgetComponent implements OnInit {
+export class DataExplorerDashboardWidgetComponent implements OnInit {
 
-    @Input() widget: DashboardItem;
+    @Input() widget: IDataViewDashboardItem;
     @Input() editMode: boolean;
     @Input() item: GridsterItem;
     @Input() gridsterItemComponent: GridsterItemComponent;
 
-    @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
+    @Output() deleteCallback: EventEmitter<IDataViewDashboardItem> = new EventEmitter<IDataViewDashboardItem>();
     @Output() updateCallback: EventEmitter<DashboardWidget> = new EventEmitter<DashboardWidget>();
 
-    widgetLoaded: boolean = false;
+    widgetLoaded = false;
     configuredWidget: DashboardWidget;
 
-    constructor(private dashboardService: DashboardService,
+    constructor(private dashboardService: DataViewDashboardService,
                 private dialog: MatDialog) {
     }
 
@@ -62,12 +58,12 @@ export class DashboardWidgetComponent implements OnInit {
     }
 
     editWidget(): void {
-        const dialogRef = this.dialog.open(AddVisualizationDialogComponent, {
+        const dialogRef = this.dialog.open(DataExplorerAddVisualizationDialogComponent, {
             width: '70%',
             height: '500px',
             panelClass: 'custom-dialog-container',
             data: {
-                "widget": this.configuredWidget
+                'widget': this.configuredWidget
             }
         });
 

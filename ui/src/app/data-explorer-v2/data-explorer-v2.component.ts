@@ -17,27 +17,27 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { Dashboard } from './models/dashboard.model';
-import { DashboardService } from './services/dashboard.service';
+import { IDataViewDashboard } from './models/dataview-dashboard.model';
+import { DataViewDashboardService } from './services/data-view-dashboard.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 
 @Component({
-    selector: 'data-explorer-v2',
+    selector: 'sp-data-explorer-v2',
     templateUrl: './data-explorer-v2.component.html',
     styleUrls: ['./data-explorer-v2.component.css']
 })
 export class DataExplorerV2Component implements OnInit {
 
-    selectedDashboard: Dashboard;
+    selectedDataViewDashboard: IDataViewDashboard;
     selectedIndex = 0;
     dashboardsLoaded = false;
     dashboardTabSelected = false;
 
     editMode = false;
 
-    dashboards: Dashboard[];
+    dataViewDashboards: IDataViewDashboard[];
 
-    constructor(private dashboardService: DashboardService,
+    constructor(private dataViewService: DataViewDashboardService,
                 private refreshDashboardService: RefreshDashboardService) {}
 
     public ngOnInit() {
@@ -48,28 +48,28 @@ export class DataExplorerV2Component implements OnInit {
 
     }
 
-    openDashboard(dashboard: Dashboard) {
-        const index = this.dashboards.indexOf(dashboard);
+    openDashboard(dashboard: IDataViewDashboard) {
+        const index = this.dataViewDashboards.indexOf(dashboard);
         this.selectDashboard((index + 1));
     }
 
     selectDashboard(index: number) {
         this.selectedIndex = index;
-        if (index == 0) {
+        if (index === 0) {
             this.dashboardTabSelected = false;
         } else {
             this.dashboardTabSelected = true;
-            this.selectedDashboard = this.dashboards[(index - 1)];
+            this.selectedDataViewDashboard = this.dataViewDashboards[(index - 1)];
         }
     }
 
     protected getDashboards(currentDashboardId?: string) {
         this.dashboardsLoaded = false;
-        this.dashboardService.getDashboards().subscribe(data => {
-            this.dashboards = data;
+        this.dataViewService.getDataViews().subscribe(data => {
+            this.dataViewDashboards = data;
             if (currentDashboardId) {
-                const currentDashboard = this.dashboards.find(d => d._id === currentDashboardId);
-                this.selectDashboard(this.dashboards.indexOf(currentDashboard) + 1);
+                const currentDashboard = this.dataViewDashboards.find(d => d._id === currentDashboardId);
+                this.selectDashboard(this.dataViewDashboards.indexOf(currentDashboard) + 1);
             } else {
                 this.selectedIndex = 0;
             }

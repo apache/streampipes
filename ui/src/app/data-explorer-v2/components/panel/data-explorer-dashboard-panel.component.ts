@@ -16,34 +16,34 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {Dashboard, DashboardItem} from "../../models/dashboard.model";
-import {forkJoin, Observable, Subscription} from "rxjs";
-import {MatDialog} from "@angular/material/dialog";
-import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
-import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
-import {DashboardService} from "../../services/dashboard.service";
-import {RefreshDashboardService} from "../../services/refresh-dashboard.service";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { forkJoin, Observable, Subscription } from 'rxjs';
+import { DashboardWidget } from '../../../core-model/dashboard/DashboardWidget';
+import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
+import { IDataViewDashboard, IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
+import { DataViewDashboardService } from '../../services/data-view-dashboard.service';
+import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
 
 @Component({
-    selector: 'dashboard-panel',
-    templateUrl: './dashboard-panel.component.html',
-    styleUrls: ['./dashboard-panel.component.css']
+    selector: 'sp-data-explorer-dashboard-panel',
+    templateUrl: './data-explorer-dashboard-panel.component.html',
+    styleUrls: ['./data-explorer-dashboard-panel.component.css']
 })
-export class DashboardPanelComponent implements OnInit {
+export class DataExplorerDashboardPanelComponent implements OnInit {
 
-    @Input() dashboard: Dashboard;
-    @Input("editMode") editMode: boolean;
-    @Output("editModeChange") editModeChange: EventEmitter<boolean> = new EventEmitter();
+    @Input() dashboard: IDataViewDashboard;
+    @Input('editMode') editMode: boolean;
+    @Output('editModeChange') editModeChange: EventEmitter<boolean> = new EventEmitter();
 
-    public items: DashboardItem[];
+    public items: IDataViewDashboardItem[];
 
     protected subscription: Subscription;
 
-    widgetIdsToRemove: Array<string> = [];
+    widgetIdsToRemove: string[] = [];
     widgetsToUpdate: Map<string, DashboardWidget> = new Map<string, DashboardWidget>();
 
-    constructor(private dashboardService: DashboardService,
+    constructor(private dashboardService: DataViewDashboardService,
                 public dialog: MatDialog,
                 private refreshDashboardService: RefreshDashboardService) {
     }
@@ -53,7 +53,7 @@ export class DashboardPanelComponent implements OnInit {
     }
 
     addWidget(): void {
-        const dialogRef = this.dialog.open(AddVisualizationDialogComponent, {
+        const dialogRef = this.dialog.open(DataExplorerAddVisualizationDialogComponent, {
             width: '70%',
             height: '500px',
             panelClass: 'custom-dialog-container'
@@ -67,7 +67,7 @@ export class DashboardPanelComponent implements OnInit {
     }
 
     addWidgetToDashboard(widget: DashboardWidget) {
-        let dashboardItem = {} as DashboardItem;
+        const dashboardItem = {} as IDataViewDashboardItem;
         dashboardItem.widgetId = widget._id;
         dashboardItem.id = widget._id;
         // TODO there should be a widget type DashboardWidget
@@ -87,9 +87,9 @@ export class DashboardPanelComponent implements OnInit {
                 });
             } else {
                 this.deleteWidgets();
-                this.closeEditModeAndReloadDashboard()
+                this.closeEditModeAndReloadDashboard();
             }
-        })
+        });
     }
 
     closeEditModeAndReloadDashboard() {
@@ -98,10 +98,10 @@ export class DashboardPanelComponent implements OnInit {
     }
 
     prepareWidgetUpdates(): Array<Observable<any>> {
-        let promises: Array<Observable<any>> = [];
+        const promises: Array<Observable<any>> = [];
         this.widgetsToUpdate.forEach((widget, key) => {
             promises.push(this.dashboardService.updateWidget(widget));
-        })
+        });
 
         return promises;
     }
@@ -111,7 +111,7 @@ export class DashboardPanelComponent implements OnInit {
         this.refreshDashboardService.notify(this.dashboard._id);
     }
 
-    removeAndQueueItemForDeletion(widget: DashboardItem) {
+    removeAndQueueItemForDeletion(widget: IDataViewDashboardItem) {
         this.dashboard.widgets.splice(this.dashboard.widgets.indexOf(widget), 1);
         this.widgetIdsToRemove.push(widget.id);
     }

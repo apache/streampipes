@@ -18,7 +18,7 @@
 
 <mat-toolbar>
     <div class="md-toolbar-tools">
-        <h2>{{createMode ? 'New dashboard' : 'Edit dashboard'}}</h2>
+        <h2>{{createMode ? 'New Data View' : 'Edit Data View'}}</h2>
         <span fxFlex></span>
         <button mat-icon-button (click)="onCancel()">
             <i class="material-icons">close</i>
@@ -30,14 +30,14 @@
     <div fxFlex="100">
         <div fxFlex="100" fxLayout="column" style="margin:5px;width:100%">
             <mat-form-field class="full-width">
-                <mat-label>Dashboard Name</mat-label>
+                <mat-label>Data View Name</mat-label>
                 <input matInput [(ngModel)]="dashboard.name">
             </mat-form-field>
             <mat-form-field class="full-width">
                 <mat-label>Description</mat-label>
                 <input matInput [(ngModel)]="dashboard.description">
             </mat-form-field>
-            <mat-checkbox [(ngModel)]="dashboard.displayHeader">Show name and description in dashboard</mat-checkbox>
+            <!--<mat-checkbox [(ngModel)]="dashboard.displayHeader">Show name and description in dashboard</mat-checkbox>-->
 
         </div>
     </div>

@@ -16,26 +16,27 @@
  *
  */
 
-import {Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
-import {DashboardItem} from "../../../models/dashboard.model";
-import {DashboardWidget} from "../../../../core-model/dashboard/DashboardWidget";
-import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {Message} from "@stomp/stompjs";
-import {Subscription} from "rxjs";
-import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
-import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
+import { Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
+import { Subscription } from 'rxjs';
+import { DashboardWidget } from '../../../../core-model/dashboard/DashboardWidget';
+import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model';
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
+import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 
-export abstract class BaseStreamPipesWidget implements OnChanges {
+export abstract class BaseStreamPipesWidget implements OnChanges, OnInit, OnDestroy {
 
-    @Input() widget: DashboardItem;
+    protected constructor() {
+    }
+
+    static readonly PADDING: number = 20;
+    static readonly EDIT_HEADER_HEIGHT: number = 40;
+
+    @Input() widget: IDataViewDashboardItem;
     @Input() widgetConfig: DashboardWidget;
     @Input() gridsterItem: GridsterItem;
     @Input() gridsterItemComponent: GridsterItemComponent;
     @Input() editMode: boolean;
-
-    static readonly PADDING: number = 20;
-    static readonly EDIT_HEADER_HEIGHT: number = 40;
 
     subscription: Subscription;
 
@@ -47,22 +48,17 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
     selectedSecondaryTextColor: string;
     selectedTitle: string;
 
-    defaultBackgroundColor: string = "#1B1464";
-    defaultPrimaryTextColor: string = "#FFFFFF";
-    defaultSecondaryTextColor: string = "#39B54A";
-
-    protected constructor(private rxStompService: RxStompService) {
-    }
+    defaultBackgroundColor = '#1B1464';
+    defaultPrimaryTextColor = '#FFFFFF';
+    defaultSecondaryTextColor = '#39B54A';
 
     ngOnInit(): void {
         this.prepareConfigExtraction();
-        this.subscription = this.rxStompService.watch("/topic/" +this.widgetConfig.dashboardWidgetDataConfig.topic).subscribe((message: Message) => {
-            this.onEvent(JSON.parse(message.body));
-        });
     }
 
     prepareConfigExtraction() {
-        let extractor: StaticPropertyExtractor = new StaticPropertyExtractor(this.widgetConfig.dashboardWidgetDataConfig.schema, this.widgetConfig.dashboardWidgetSettings.config);
+        const extractor: StaticPropertyExtractor = new StaticPropertyExtractor(
+          this.widgetConfig.dashboardWidgetDataConfig.schema, this.widgetConfig.dashboardWidgetSettings.config);
         if (extractor.hasStaticProperty(WidgetConfigBuilder.BACKGROUND_COLOR_KEY)) {
             this.hasSelectableColorSettings = true;
             this.selectedBackgroundColor = extractor.selectedColor(WidgetConfigBuilder.BACKGROUND_COLOR_KEY);
@@ -89,7 +85,7 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
     protected abstract onEvent(event: any);
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes["widgetConfig"]) {
+        if (changes['widgetConfig']) {
             this.prepareConfigExtraction();
         }
     }

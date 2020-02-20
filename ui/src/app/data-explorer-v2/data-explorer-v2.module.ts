@@ -32,23 +32,17 @@ import { ConnectModule } from '../connect/connect.module';
 import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { ElementIconText } from '../services/get-element-icon-text.service';
-import { DashboardGridComponent } from './components/grid/dashboard-grid.component';
-import { DashboardOverviewComponent } from './components/overview/dashboard-overview.component';
-import { DashboardPanelComponent } from './components/panel/dashboard-panel.component';
-import { DashboardWidgetComponent } from './components/widget/dashboard-widget.component';
-import { AreaWidgetComponent } from './components/widgets/area/area-widget.component';
-import { GaugeWidgetComponent } from './components/widgets/gauge/gauge-widget.component';
-import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
-import { LineWidgetComponent } from './components/widgets/line/line-widget.component';
+import { DataExplorerDashboardGridComponent } from './components/grid/data-explorer-dashboard-grid.component';
+import { DataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview.component';
+import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
+import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
 import { NumberWidgetComponent } from './components/widgets/number/number-widget.component';
-import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { DataExplorerV2Component } from './data-explorer-v2.component';
-import { AddVisualizationDialogComponent } from './dialogs/add-widget/add-visualization-dialog.component';
-import { EditDashboardDialogComponent } from './dialogs/edit-dashboard/edit-dashboard-dialog.component';
-import { DashboardService } from './services/dashboard.service';
+import { DataExplorerAddVisualizationDialogComponent } from './dialogs/add-widget/data-explorer-add-visualization-dialog.component';
+import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
+import { DataViewDashboardService } from './services/data-view-dashboard.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
-import { streamPipesStompConfig } from './services/websocket.config';
 
 const dashboardWidgets = [
 
@@ -75,21 +69,16 @@ const dashboardWidgets = [
     ],
     declarations: [
         DataExplorerV2Component,
-        DashboardGridComponent,
-        DashboardOverviewComponent,
-        DashboardPanelComponent,
-        DashboardWidgetComponent,
-        AddVisualizationDialogComponent,
-        EditDashboardDialogComponent,
-        AreaWidgetComponent,
-        LineWidgetComponent,
+        DataExplorerDashboardGridComponent,
+        DataExplorerDashboardOverviewComponent,
+        DataExplorerDashboardPanelComponent,
+        DataExplorerDashboardWidgetComponent,
+        DataExplorerAddVisualizationDialogComponent,
+        DataExplorerEditDataViewDialogComponent,
         NumberWidgetComponent,
-        TableWidgetComponent,
-        GaugeWidgetComponent,
-        ImageWidgetComponent
     ],
     providers: [
-        DashboardService,
+        DataViewDashboardService,
         ResizeService,
         RefreshDashboardService,
         SemanticTypeUtilsService,
@@ -101,7 +90,6 @@ const dashboardWidgets = [
         ElementIconText,
         {
             provide: InjectableRxStompConfig,
-            useValue: streamPipesStompConfig
         },
         {
             provide: RxStompService,
@@ -114,8 +102,8 @@ const dashboardWidgets = [
     ],
     entryComponents: [
         DataExplorerV2Component,
-        AddVisualizationDialogComponent,
-        EditDashboardDialogComponent
+        DataExplorerAddVisualizationDialogComponent,
+        DataExplorerEditDataViewDialogComponent
     ]
 })
 export class DataExplorerV2Module {

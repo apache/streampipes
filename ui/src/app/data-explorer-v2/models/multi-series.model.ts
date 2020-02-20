@@ -16,14 +16,13 @@
  *
  */
 
-import {DashboardItem} from "./dashboard.model";
 
-export interface MultiSeries {
+export interface IMultiSeries {
     name?: string;
-    series?: Array<MultiSeriesEntry>;
+    series?: IMultiSeriesEntry[];
 }
 
-export interface MultiSeriesEntry {
+export interface IMultiSeriesEntry {
     name: string;
     value: any;
 }
