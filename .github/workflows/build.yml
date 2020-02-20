@@ -37,6 +37,7 @@ jobs:
         run: mvn clean package javadoc:aggregate
       - name: Set env variables for Docker builds
         run: |
+          echo "::set-env name=DOCKER_CLI_EXPERIMENTAL::enabled"
           echo "::set-env name=MVN_VERSION::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
           echo "::set-env name=DOCKERHUB_APACHE_REPO::apachestreampipes"
           echo "::set-env name=BASE_IMG_JRE_DEFAULT::adoptopenjdk/openjdk8-openj9:alpine-slim"
@@ -53,7 +54,6 @@ jobs:
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
       - name: Enable Docker experimental feature for multi-arch builds
         run: |
-          echo '{"experimental": "enabled"}' | tee $HOME/.docker/config.json
           echo '{"experimental": true}' | sudo tee /etc/docker/daemon.json
           sudo service docker restart
       - name: Build and Push Docker Backend Image
