@@ -23,4 +23,6 @@ import javax.ws.rs.core.Response;
 public interface IVisualizablePipeline {
 
   Response getVisualizablePipelines();
+
+  Response getVisualizablePipeline(String id);
 }

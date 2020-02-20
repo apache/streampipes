@@ -33,10 +33,10 @@ export class VisualizablePipeline {
     @RdfProperty('sp:hasPipelineId')
     pipelineId: string;
 
-    @RdfProperty('sp:hasCouchDbId')
+    @RdfProperty('sp:couchDbId')
     _id: string;
 
-    @RdfProperty('sp:hasCouchDbRev')
+    @RdfProperty('sp:couchDbRev')
     _ref:string;
 
     @RdfProperty('sp:hasVisualizationName')

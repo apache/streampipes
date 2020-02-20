@@ -39,10 +39,8 @@ public class DashboardWidgetModel extends DashboardEntity {
   @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_SETTINGS)
   private DashboardWidgetSettings dashboardWidgetSettings;
 
-  @OneToOne(fetch = FetchType.EAGER,
-          cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @RdfProperty(StreamPipes.HAS_DASHBOARD_WIDGET_DATA_CONFIG)
-  private DashboardWidgetDataConfig dashboardWidgetDataConfig;
+  @RdfProperty(StreamPipes.HAS_PIPELINE_ID)
+  private String visualizablePipelineId;
 
   public DashboardWidgetModel() {
     super();
@@ -64,11 +62,11 @@ public class DashboardWidgetModel extends DashboardEntity {
     this.dashboardWidgetSettings = dashboardWidgetSettings;
   }
 
-  public DashboardWidgetDataConfig getDashboardWidgetDataConfig() {
-    return dashboardWidgetDataConfig;
+  public String getVisualizablePipelineId() {
+    return visualizablePipelineId;
   }
 
-  public void setDashboardWidgetDataConfig(DashboardWidgetDataConfig dashboardWidgetDataConfig) {
-    this.dashboardWidgetDataConfig = dashboardWidgetDataConfig;
+  public void setVisualizablePipelineId(String visualizablePipelineId) {
+    this.visualizablePipelineId = visualizablePipelineId;
   }
 }

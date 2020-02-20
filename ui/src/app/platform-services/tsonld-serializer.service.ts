@@ -94,7 +94,6 @@ import {GroupStaticProperty} from '../connect/model/GroupStaticProperty';
 import { CollectionStaticProperty } from "../connect/model/CollectionStaticProperty";
 import {VisualizablePipeline} from "../core-model/dashboard/VisualizablePipeline";
 import {DashboardWidget} from "../core-model/dashboard/DashboardWidget";
-import {DashboardWidgetDataConfig} from "../core-model/dashboard/DashboardWidgetDataConfig";
 import {DashboardWidgetSettings} from "../core-model/dashboard/DashboardWidgetSettings";
 import {ColorPickerStaticProperty} from "../connect/model/ColorPickerStaticProperty";
 import {MappingPropertyNary} from "../connect/model/MappingPropertyNary";
@@ -187,7 +186,6 @@ export class TsonLdSerializerService {
         tsonld.addClassMapping(CollectionStaticProperty);
 
         tsonld.addClassMapping(DashboardWidget);
-        tsonld.addClassMapping(DashboardWidgetDataConfig);
         tsonld.addClassMapping(DashboardWidgetSettings);
 
         tsonld.addClassMapping(VisualizablePipeline);

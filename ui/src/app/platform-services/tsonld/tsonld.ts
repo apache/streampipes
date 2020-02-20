@@ -120,9 +120,9 @@ export class TsonLd {
         } else if (typeof jsObject[property] === 'object') {
           jsObject[newProperty] = this.toJsonLd(jsObject[property], false, allIds);
         } else {
-          let parseHint = Reflect.hasMetadata('Float', object);
+          let parseHint = Reflect.hasMetadata('Float', object, property);
           if (parseHint) {
-            jsObject[newProperty] = parseFloat(jsObject[property]);
+            jsObject[newProperty] = parseFloat(jsObject[property]).toFixed(2);
           } else {
             jsObject[newProperty] = jsObject[property];
           }

@@ -27,6 +27,7 @@ import {GridsterInfo} from "../../models/gridster-info.model";
 import {ResizeService} from "../../services/resize.service";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
+import {VisualizablePipeline} from "../../../core-model/dashboard/VisualizablePipeline";
 
 @Component({
     selector: 'dashboard-widget',
@@ -45,6 +46,7 @@ export class DashboardWidgetComponent implements OnInit {
 
     widgetLoaded: boolean = false;
     configuredWidget: DashboardWidget;
+    widgetDataConfig: VisualizablePipeline;
 
     constructor(private dashboardService: DashboardService,
                 private dialog: MatDialog) {
@@ -53,7 +55,10 @@ export class DashboardWidgetComponent implements OnInit {
     ngOnInit(): void {
         this.dashboardService.getWidget(this.widget.id).subscribe(response => {
             this.configuredWidget = response;
-            this.widgetLoaded = true;
+            this.dashboardService.getVisualizablePipelineById(this.configuredWidget.visualizablePipelineId).subscribe(pipeline => {
+                this.widgetDataConfig = pipeline;
+                this.widgetLoaded = true;
+            });
         });
     }
 
