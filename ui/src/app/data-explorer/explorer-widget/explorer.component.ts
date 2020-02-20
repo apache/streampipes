@@ -105,28 +105,28 @@ export class ExplorerComponent implements OnInit {
         );
     }
 
-    selectTimeUnit(value) {
-        this.selectedTimeUnit = value;
-
-        if (this.selectedTimeUnit === '1 Day') {
-            this.groupbyUnit = 's';
-            this.groupbyValue = 10;
-        } else if (this.selectedTimeUnit === '1 Day') {
-            this.groupbyUnit = 'm';
-            this.groupbyValue = 1;
-        } else if (this.selectedTimeUnit === '1 Week') {
-            this.groupbyUnit = 'm';
-            this.groupbyValue = 30;
-        } else if (this.selectedTimeUnit === '1 Month') {
-            this.groupbyUnit = 'h';
-            this.groupbyValue = 4;
-        } else if (this.selectedTimeUnit === '1 Year') {
-            this.groupbyUnit = 'h';
-            this.groupbyValue = 12;
-        }
-
-     this.loadData(false);
-    }
+    // selectTimeUnit(value) {
+    //     this.selectedTimeUnit = value;
+    //
+    //     if (this.selectedTimeUnit === '1 Day') {
+    //         this.groupbyUnit = 's';
+    //         this.groupbyValue = 10;
+    //     } else if (this.selectedTimeUnit === '1 Day') {
+    //         this.groupbyUnit = 'm';
+    //         this.groupbyValue = 1;
+    //     } else if (this.selectedTimeUnit === '1 Week') {
+    //         this.groupbyUnit = 'm';
+    //         this.groupbyValue = 30;
+    //     } else if (this.selectedTimeUnit === '1 Month') {
+    //         this.groupbyUnit = 'h';
+    //         this.groupbyValue = 4;
+    //     } else if (this.selectedTimeUnit === '1 Year') {
+    //         this.groupbyUnit = 'h';
+    //         this.groupbyValue = 12;
+    //     }
+    //
+    //  this.loadData(false);
+    // }
 
     loadData(silentLoading?) {
         this.isLoadingData = true;

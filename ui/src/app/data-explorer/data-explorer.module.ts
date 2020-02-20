@@ -36,6 +36,7 @@ import { OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlNativeDateTimeModule } fro
 import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { LineChartComponent } from './explorer-widget/explorer-visualisations/linechart/lineChart.component';
 import { TableComponent } from './explorer-widget/explorer-visualisations/table/table.component';
+import { TimeRangeSelectorComponent } from './time-selector/timeRangeSelector.component';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false},
@@ -67,6 +68,7 @@ export const MY_NATIVE_FORMATS = {
     DataDownloadDialog,
     TableComponent,
     LineChartComponent,
+    TimeRangeSelectorComponent,
   ],
   providers: [
     DatalakeRestService,
