@@ -64,6 +64,7 @@ export class ReactLabelingHelper {
 
   static draw(annotation,label, context, color, imageXShift, imageYShift) {
     context.strokeStyle = color;
+    context.fillStyle = color;
     context.beginPath();
     let bbox = annotation.bbox;
     context.rect(bbox[0] + imageXShift, bbox[1] + imageYShift, bbox[2], bbox[3]);

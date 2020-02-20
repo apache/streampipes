@@ -16,19 +16,58 @@
   ~
   -->
 
-<mat-button-toggle-group name="fontStyle" aria-label="Font Style">
-    <mat-button-toggle (click)="selectLabel('sign')">Sign</mat-button-toggle>
-    <mat-button-toggle (click)="selectLabel('car')">Car</mat-button-toggle>
-    <mat-button-toggle (click)="setInteractionModeTranslate()"><mat-icon>zoom_out_map</mat-icon></mat-button-toggle>
-</mat-button-toggle-group>
 
-<mat-hint>Tips: Move image with right click, zoom with mouse wheel</mat-hint>
-<canvas (mousedown)="imageMouseDown($event)" (mousemove)="imageMouseMove($event)" (mouseup)="imageMouseUp($event)"
-        #canvas style="border:2px solid;" width="800" height="500" >
-    Your browser does not support the canvas element.
-</canvas>
+<div fxLayout="column" fxLayoutAlign="space-between " >
+    <div  fxLayout="row" fxLayoutAlign="space-around start">
+        <div fxLayout="column" fxLayoutAlign="space-around center">
+            <h2>Labels</h2>
+            <button mat-raised-button color="accent" (click)="selectLabel('sign')">Sign</button>
+            <br />
+            <button mat-raised-button color="accent" (click)="selectLabel('car')">Car</button>
+            <!--  <button mat-raised-button color="accent"(click)="setInteractionModeTranslate()">
+            <mat-icon>zoom_out_map</mat-icon></button>-->
+        </div>
+
+        <div fxLayout="column" fxLayoutAlign="space-around center">
+            <mat-hint>Tip: Move the image with the right mouse button and zoom with the mouse wheel</mat-hint>
+            <canvas (mousedown)="imageMouseDown($event)" (mousemove)="imageMouseMove($event)" (mouseup)="imageMouseUp($event)"
+                    #canvas width="800" height="500" >
+                Your browser does not support the canvas element.
+            </canvas>
+            <div class="zoomButton">
+                <button mat-button (click)="zoomin()"> <mat-icon>zoom_in</mat-icon></button>
+                <button mat-button (click)="zoomout()"> <mat-icon>zoom_out</mat-icon></button>
+            </div>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="space-between center">
+            <h2>Selected</h2>
+        </div>
+    </div>
+
+    <br />
+    <br />
+
+    <div fxLayout="row" fxLayoutAlign="space-around center" >
+        <button mat-icon-button> <mat-icon>keyboard_arrow_left</mat-icon></button>
+
+        <div fxLayout="row" fxLayoutAlign="center " style="height: 70px" class="imageBar">
+            <img src="https://cdn.pixabay.com/photo/2015/05/01/14/46/new-york-748595_1280.jpg">
+            <img src="https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg">
+            <img src="https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg">
+            <img src="https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg">
+            <img src="https://cdn.pixabay.com/photo/2016/02/19/11/01/taxi-1209542_1280.jpg">
+            <img src="https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg">
+            <img src="https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg">
+            <img src="https://cdn.pixabay.com/photo/2016/02/19/11/01/taxi-1209542_1280.jpg">
+            <img src="https://cdn.pixabay.com/photo/2015/05/01/14/46/new-york-748595_1280.jpg">
+            <img src="https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg">
+        </div>
+
+
+        <button mat-icon-button> <mat-icon>keyboard_arrow_right</mat-icon></button>
+
+    </div>
+</div>
 
 
 
-<button mat-button (click)="zoomin()"> <mat-icon>zoom_in</mat-icon></button>
-<button mat-button (click)="zoomout()"> <mat-icon>zoom_out</mat-icon></button>

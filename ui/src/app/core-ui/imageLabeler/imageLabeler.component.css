@@ -16,6 +16,21 @@
  *
  */
 canvas {
-    background: white;
-    box-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAIUlEQVQoU2NkYGCQYiACMEIVPiOgVmpUIb4QggcPwSAHAJ3ICQ/mI97EAAAAAElFTkSuQmCC);
+    background-color: #fafafa;
+    border-color: lightgrey;
+    border-style: solid;
+}
+
+.zoomButton {
+    top: 30px;
+}
+
+.imageBar {
+    background-color: lightgrey;
+}
+
+img {
+    max-height: 100%;
+    margin: 5px;
 }

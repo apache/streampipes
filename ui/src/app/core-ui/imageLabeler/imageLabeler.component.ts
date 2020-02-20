@@ -79,9 +79,7 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
       console.log('Set Scale to: ' + this.scale);
       this.draw();
     };
-    //this.image.src = 'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg';
-    this.image.src = 'https://www.hamburg.de/contentblob/1740056/7308ff64cbb71631d0463f5b6a34471c/data/bild-kohoevedstrasse3.jpg';
-    //this.image.src = 'https://previews.123rf.com/images/sahua/sahua1503/sahua150300006/38262839-autobahn-stra%C3%9Fe-schilder-autos-und-konstruktionen.jpg';
+    this.image.src = 'https://cdn.pixabay.com/photo/2017/10/29/21/05/bridge-2900839_1280.jpg';
     this.context.lineWidth = 2;
   }
 
@@ -161,7 +159,6 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
 
     this.context.drawImage(this.image, this.canvasWidth / 2 - this.image.width / 2, this.canvasHeight / 2 - this.image.height / 2);
 
-
     for(let annotation of this.coco.annotations) {
       //console.log(this.coco.annotations[0].bbox);
       let label = this.coco.getLabelById(annotation.category_id);
@@ -174,32 +171,29 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
 
     this.context.beginPath();
     this.context.globalAlpha = 0.8;
-    this.context.fillStyle = 'grey';
+    this.context.fillStyle = 'lightgrey';
     this.context.fillRect(0, 0, 50, 20);
     this.context.globalAlpha = 1;
     this.context.font = '12px Arial';
     this.context.fillStyle = 'black';
     this.context.fillText((Math.round(this.scale  * 100) / 100).toFixed(2) + " x", 5,15);
     this.context.stroke();
-
   }
 
   scroll(e) {
-    if (e.wheelDeltaY > 0) {
-      this.zoomin();
-    } else {
-      this.zoomout();
-    }
+    console.log(e);
+    this.scale += e.wheelDeltaY * (1/6000);
+    this.draw();
   }
 
   zoomin()
   {
-    this.scale += 0.02;
+    this.scale += 0.05;
     this.draw();
   }
   zoomout()
   {
-    this.scale -= 0.02;
+    this.scale -= 0.05;
     this.draw();
   }
 
@@ -240,5 +234,4 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   }
 
 
-
-  }
+}
