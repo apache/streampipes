@@ -44,6 +44,7 @@ export class ReactLabelingHelper {
       this.reactWidth = mouseX - this.lastMouseX;
       this.reactHeight = mouseY - this.lastMouseY;
       context.strokeStyle = color;
+      context.fillStyle = color;
       context.beginPath();
       context.rect(this.lastMouseX, this.lastMouseY, this.reactWidth, this.reactHeight);
       context.fillText(label, this.lastMouseX, this.lastMouseY + this.reactHeight);
