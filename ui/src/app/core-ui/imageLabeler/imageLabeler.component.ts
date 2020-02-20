@@ -33,7 +33,8 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   private canvas;
   private context;
 
-  private isMouseDown = false;
+  private isLeftMouseDown = false;
+  private isRightMouseDown = false;
 
   //canvas properties
   private canvasWidth;
@@ -63,6 +64,11 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     this.canvasWidth = this.canvas.width;
     this.canvasHeight= this.canvas.height;
 
+    this.canvas.addEventListener('contextmenu', event => event.preventDefault());
+
+    this.canvas.addEventListener('DOMMouseScroll',event => this.scroll(event),false);
+    this.canvas.addEventListener('mousewheel',event => this.scroll(event),false);
+
     this.image = new Image();
 
     this.image.onload = () => {
@@ -80,18 +86,30 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   }
 
   imageMouseDown(e) {
-       if (this.interactionMode == InteractionMode.ReactLabeling) {
-      ReactLabelingHelper.mouseDown(this.getMousePosScreen(e.clientX, e.clientY),
-        this.getMousePosTransformed(e.clientX, e.clientY));
-    } else if (this.interactionMode == InteractionMode.Translate) {
+
+    if (e.which == 1) {
+      //left click
+      if (this.interactionMode == InteractionMode.ReactLabeling) {
+        ReactLabelingHelper.mouseDown(this.getMousePosScreen(e.clientX, e.clientY),
+          this.getMousePosTransformed(e.clientX, e.clientY));
+      } else if (this.interactionMode == InteractionMode.Translate) {
+        ImageTranslationHelper.mouseDown(this.getMousePosScreen(e.clientX, e.clientY), this.imageTranslationX, this.imageTranslationY)
+      }
+      this.isLeftMouseDown = true;
+
+    } else if (e.which == 2) {
+      //middle click
+    } else {
+      //right click
+      this.isRightMouseDown = true;
       ImageTranslationHelper.mouseDown(this.getMousePosScreen(e.clientX, e.clientY), this.imageTranslationX, this.imageTranslationY)
     }
-    this.isMouseDown = true;
+
+
   }
 
   imageMouseMove(e) {
-    if(this.isMouseDown) {
-
+    if (this.isLeftMouseDown) {
       if (this.interactionMode == InteractionMode.ReactLabeling) {
         this.draw();
         ReactLabelingHelper.mouseMove(this.getMousePosScreen(e.clientX, e.clientY),
@@ -102,19 +120,30 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
         this.imageTranslationY = translation[1];
         this.draw();
       }
+    } else if (this.isRightMouseDown) {
+      let translation = ImageTranslationHelper.mouseMove(this.getMousePosScreen(e.clientX, e.clientY));
+      this.imageTranslationX = translation[0];
+      this.imageTranslationY = translation[1];
+      this.draw();
     }
 
   }
 
   imageMouseUp(e) {
-    this.isMouseDown = false;
+    if (this.isLeftMouseDown) {
+      this.isLeftMouseDown = false;
 
-    let labelId = this.coco.getLabelId(this.label, "");
+      let labelId = this.coco.getLabelId(this.label, "");
+      if (this.interactionMode == InteractionMode.ReactLabeling) {
+        ReactLabelingHelper.mouseUp(this.getMousePosScreen(e.clientX, e.clientY),
+          this.getMousePosTransformed(e.clientX, e.clientY), this.coco, labelId);
+      }
 
-    if (this.interactionMode == InteractionMode.ReactLabeling) {
-      ReactLabelingHelper.mouseUp(this.getMousePosScreen(e.clientX, e.clientY),
-        this.getMousePosTransformed(e.clientX, e.clientY), this.coco, labelId);
     }
+    if (this.isRightMouseDown) {
+      this.isRightMouseDown = false;
+    }
+
   }
 
   draw() {
@@ -145,26 +174,22 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     this.context.restore();
   }
 
-  imageZoom(e) {
-    console.log(e);
-    let theEvent = e.originalEvent.wheelDelta || e.originalEvent.detail*-1;
-    if(theEvent / 120 > 0) {
+  scroll(e) {
+    if (e.wheelDeltaY > 0) {
       this.zoomin();
     } else {
       this.zoomout();
     }
-    if (e.preventDefault)
-      e.preventDefault();
   }
 
   zoomin()
   {
-    this.scale += 0.01;
+    this.scale += 0.02;
     this.draw();
   }
   zoomout()
   {
-    this.scale -= 0.01;
+    this.scale -= 0.02;
     this.draw();
   }
 

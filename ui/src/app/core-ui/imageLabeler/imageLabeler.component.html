@@ -22,9 +22,11 @@
     <mat-button-toggle (click)="setInteractionModeTranslate()"><mat-icon>zoom_out_map</mat-icon></mat-button-toggle>
 </mat-button-toggle-group>
 
+<mat-hint>Tips: Move image with right click, zoom with mouse wheel</mat-hint>
 <canvas (mousedown)="imageMouseDown($event)" (mousemove)="imageMouseMove($event)" (mouseup)="imageMouseUp($event)"
-        #canvas style="border:2px solid;" width="800" height="500" ></canvas>
-<!-- (scroll)="imageZoom($event)" -->
+        #canvas style="border:2px solid;" width="800" height="500" >
+    Your browser does not support the canvas element.
+</canvas>
 
 
 
