@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM adoptopenjdk/openjdk8-openj9:alpine-slim
+ARG BASE_IMAGE=adoptopenjdk/openjdk8-openj9:alpine-slim
+FROM $BASE_IMAGE
 
 ENV CONSUL_LOCATION consul
 
