@@ -16,12 +16,11 @@
 ARG BASE_IMAGE=arm32v7/openjdk:11-jre-slim
 FROM $BASE_IMAGE
 
-ARG QEMU=qemu-arm-static
 ENV CONSUL_LOCATION consul
 
 EXPOSE 8030
 
-COPY $QEMU /usr/bin
+COPY qemu-arm-static /usr/bin
 COPY target/streampipes-backend.jar  /streampipes-backend.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-backend.jar"]

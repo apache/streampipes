@@ -16,9 +16,7 @@
 ARG BASE_IMAGE=arm64v8/nginx
 FROM $BASE_IMAGE
 
-ARG QEMU=qemu-aarch64-static
-
-COPY $QEMU /usr/bin
+COPY qemu-aarch64-static /usr/bin
 
 COPY dist/ /usr/share/nginx/html/
 #COPY dist/assets/img/ /usr/share/nginx/html/assets/img/

@@ -16,9 +16,7 @@
 ARG BASE_IMAGE=arm32v7/nginx
 FROM $BASE_IMAGE
 
-ARG QEMU=qemu-arm-static
-
-COPY $QEMU /usr/bin
+COPY qemu-arm-static /usr/bin
 
 COPY dist/ /usr/share/nginx/html/
 #COPY dist/assets/img/ /usr/share/nginx/html/assets/img/

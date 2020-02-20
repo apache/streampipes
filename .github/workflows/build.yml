@@ -45,12 +45,10 @@ jobs:
           echo "::set-env name=BASE_IMG_NGINX_DEFAULT::nginx"
           echo "::set-env name=BASE_IMG_NGINX_ARM32V7::arm32v7/nginx"
           echo "::set-env name=BASE_IMG_NGINX_ARM64V8::arm64v8/nginx"
-      - name: Download and distribute qemu for multi-arch builds
+      - name: Install qemu-user-static for multi-arch builds
         run: |
-          wget https://github.com/multiarch/qemu-user-static/releases/download/v4.0.0/qemu-arm-static
-          wget https://github.com/multiarch/qemu-user-static/releases/download/v4.0.0/qemu-aarch64-static
-          chmod 554 qemu-arm-static qemu-aarch64-static
-          echo "./streampipes-backend/ ./streampipes-connect-container-master/ ./ui/" | xargs -n 1 cp -v qemu-*
+          sudo apt-get install qemu-user-static
+          echo "./streampipes-backend/ ./streampipes-connect-container-master/ ./ui/" | xargs -n 1 cp -v /usr/bin/qemu-*
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
       - name: Build and Push Docker Backend Image
@@ -62,8 +60,8 @@ jobs:
           IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:arm64v8-${{ env.MVN_VERSION }}
         run: |
           docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM32V7 --build-arg QEMU=qemu-arm-static -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM64V8 --build-arg QEMU=qemu-aarch64-static -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
           docker push $IMG_NAME_DEFAULT
           docker push $IMG_NAME_AMD64
           docker push $IMG_NAME_ARM32V7
@@ -77,8 +75,8 @@ jobs:
           IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/streampipes-connect-container:arm64v8-${{ env.MVN_VERSION }}
         run: |
           docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM32V7 --build-arg QEMU=qemu-arm-static -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
-          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM64V8 --build-arg QEMU=qemu-aarch64-static -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --pull --build-arg BASE_IMG=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
           docker push $IMG_NAME_DEFAULT
           docker push $IMG_NAME_AMD64
           docker push $IMG_NAME_ARM32V7
@@ -99,8 +97,8 @@ jobs:
           IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/ui:arm64v8-${{ env.MVN_VERSION }}
         run: |
           docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
-          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_ARM32V7 --build-arg QEMU=qemu-arm-static -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
-          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_ARM64V8 --build-arg QEMU=qemu-aarch64-static -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
+          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --no-cache --pull --build-arg BASE_IMG=$BASE_IMG_NGINX_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
           docker push $IMG_NAME_DEFAULT
           docker push $IMG_NAME_AMD64
           docker push $IMG_NAME_ARM32V7
