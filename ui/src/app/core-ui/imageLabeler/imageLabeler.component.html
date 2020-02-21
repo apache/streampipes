@@ -51,7 +51,7 @@
 
         <div fxLayout="column" fxLayoutAlign="space-around center">
             <mat-hint>Tip: Move the image with the right mouse button and zoom with the mouse wheel, Use number shortcut to select label</mat-hint>
-            <mat-hint>Tip: Use number 'E' and 'Q' to get previous/next image, Move image with WASD</mat-hint>
+            <mat-hint>Tip: Use number 'E' and 'Q' to get previous/next image, Move image with WASD, Delete selected Annotatoin with 'Delete' button</mat-hint>
             <canvas (mousedown)="imageMouseDown($event)" (mousemove)="imageMouseMove($event)" (mouseup)="imageMouseUp($event)"
                     (mouseover)="enterCanvas()" (mouseout)="leaveCanvas()"
                     #canvas width="800" height="500" >

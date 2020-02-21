@@ -31,10 +31,17 @@ export class ReactLabelingHelper {
   private static reactWidth = 0;
 
   //resize
-  private static pressedResizeTopLeft = false;
-  private static pressedResizeTopRight = false;
-  private static pressedResizeButtonLeft = false;
-  private static pressedResizeButtonRight = false;
+  private static pressedTopLeft = false;
+  private static pressedTopRight = false;
+  private static pressedButtomLeft = false;
+  private static pressedButtomRight = false;
+  private static pressedTop = false;
+  private static pressedRight = false;
+  private static pressedLeft = false;
+  private static pressedButtom = false;
+
+  private static offSetX;
+  private static offSetY;
 
   static mouseDownCreate(imageCord) {
     this.lastImageCordX = imageCord[0];
@@ -42,17 +49,15 @@ export class ReactLabelingHelper {
     this.isMouseDown = true;
   }
 
-  static mouseDownResize(imageCord, annotation, scale) {
+  static mouseDownTransform(imageCord, annotation, scale) {
     //check if pressing movement button
     this.lastImageCordX = imageCord[0];
     this.lastImageCordY = imageCord[1];
 
-    this.pressedResizeTopLeft = false;
-    this.pressedResizeTopRight = false;
-    this.pressedResizeButtonLeft = false;
-    this.pressedResizeButtonRight = false;
-
     this.setSelectedResizeBox(annotation, scale);
+
+    this.offSetX = annotation.bbox[0] - imageCord[0];
+    this.offSetY = annotation.bbox[1] - imageCord[1];
   }
 
   static mouseMoveCreate(imageCord, imageXShift, imageYShift, context, label, color) {
@@ -73,23 +78,37 @@ export class ReactLabelingHelper {
       }
   }
 
-  static mouseMoveResize(imageCord, annotation) {
-    if (this.pressedResizeTopLeft) {
+  static mouseMoveTansform(imageCord, annotation) {
+
+    if (this.pressedTopLeft) {
       annotation.bbox[2] += annotation.bbox[0]- imageCord[0];
       annotation.bbox[3] += annotation.bbox[1]- imageCord[1];
       annotation.bbox[0] = imageCord[0];
       annotation.bbox[1] = imageCord[1];
-    } else if (this.pressedResizeTopRight) {
-      annotation.bbox[2] = Math.abs(annotation.bbox[0]- imageCord[0]);
+    } else if (this.pressedTopRight) {
+      annotation.bbox[2] = Math.abs(annotation.bbox[0] - imageCord[0]);
       annotation.bbox[3] += annotation.bbox[1] - imageCord[1];
       annotation.bbox[1] = imageCord[1];
-    } else if (this.pressedResizeButtonLeft) {
+    } else if (this.pressedButtomLeft) {
       annotation.bbox[2] += annotation.bbox[0]- imageCord[0];
       annotation.bbox[3] = Math.abs(annotation.bbox[1] - imageCord[1]);
       annotation.bbox[0] = imageCord[0];
-    } else if (this.pressedResizeButtonRight) {
-      annotation.bbox[2] = Math.abs(annotation.bbox[0]- imageCord[0]);
+    } else if (this.pressedButtomRight) {
+      annotation.bbox[2] = Math.abs(annotation.bbox[0] - imageCord[0]);
       annotation.bbox[3] = Math.abs(annotation.bbox[1] - imageCord[1]);
+    } else if (this.pressedTop) {
+      annotation.bbox[3] += annotation.bbox[1] - imageCord[1];
+      annotation.bbox[1] = imageCord[1];
+    } else if (this.pressedRight) {
+      annotation.bbox[2] = Math.abs(annotation.bbox[0] - imageCord[0]);
+    } else if (this.pressedLeft) {
+      annotation.bbox[2] += annotation.bbox[0] - imageCord[0];
+      annotation.bbox[0] = imageCord[0];
+    } else if (this.pressedButtom) {
+      annotation.bbox[3] = Math.abs(annotation.bbox[1] - imageCord[1]);
+    } else {
+      annotation.bbox[0] = imageCord[0] + this.offSetX ;
+      annotation.bbox[1] = imageCord[1] + this.offSetY;
     }
 
   }
@@ -127,12 +146,18 @@ export class ReactLabelingHelper {
     context.fillText(label, bbox[0] + imageXShift, bbox[1] + imageYShift - 5 );
     //context.stroke();
 
+    //Control boxes for transformation
     if (annotation.isSelected) {
       let size = this.getResizeBoxSize(scale);
-      this.drawCircle(bbox[0] + imageXShift, bbox[1] + imageYShift, size, context);
-      this.drawCircle(bbox[0] + bbox[2] + imageXShift - size, bbox[1] + imageYShift, size, context);
-      this.drawCircle(bbox[0] + imageXShift, bbox[1] + bbox[3] + imageYShift  - size, size, context);
-      this.drawCircle( bbox[0] + bbox[2] + imageXShift  - size, bbox[1] + bbox[3] + imageYShift  - size, size, context);
+      this.drawTransformBox(bbox[0] + imageXShift, bbox[1] + imageYShift, size, size, context);
+      this.drawTransformBox(bbox[0] + bbox[2] + imageXShift - size, bbox[1] + imageYShift, size, size, context);
+      this.drawTransformBox(bbox[0] + imageXShift, bbox[1] + bbox[3] + imageYShift  - size, size, size, context);
+      this.drawTransformBox( bbox[0] + bbox[2] + imageXShift  - size, bbox[1] + bbox[3] + imageYShift  - size, size, size, context);
+
+      this.drawTransformBox(bbox[0] + imageXShift + size, bbox[1] + imageYShift, annotation.bbox[2] - 2* size, size, context);
+      this.drawTransformBox(bbox[0] + imageXShift, bbox[1] + imageYShift + size, size, annotation.bbox[3] - 2* size, context);
+      this.drawTransformBox(bbox[0] + bbox[2] + imageXShift - size, bbox[1] + imageYShift + size, size, annotation.bbox[3] - 2* size, context);
+      this.drawTransformBox(bbox[0] + imageXShift + size, bbox[1] + bbox[3] + imageYShift - size, annotation.bbox[2] - 2* size, size, context);
     }
 
   }
@@ -141,37 +166,58 @@ export class ReactLabelingHelper {
     return Math.floor(15 / scale);
   }
 
-  private static drawCircle(x, y, size, context) {
-    context.fillStyle = '#fafafa';
+  private static drawTransformBox(x, y, widght, heigt, context) {
+    //context.fillStyle = '#fafafa';
 
     context.beginPath();
-    context.fillRect(x, y, size, size);
-    context.strokeStyle = 'black';
-    context.strokeRect(x, y, size, size);
+   // context.fillRect(x, y, widght, heigt);
+    //context.strokeStyle = 'black';
+    context.strokeRect(x, y, widght, heigt);
     context.stroke();
   }
 
   private static setSelectedResizeBox(annotation, scale) {
+    this.pressedTopLeft = false;
+    this.pressedTopRight = false;
+    this.pressedButtomLeft = false;
+    this.pressedButtomRight = false;
+    this.pressedTop = false;
+    this.pressedRight = false;
+    this.pressedLeft = false;
+    this.pressedButtom = false;
+
     let size = this.getResizeBoxSize(scale);
 
     if (annotation.bbox[0] <= this.lastImageCordX && this.lastImageCordX <= annotation.bbox[0] + size  &&
       annotation.bbox[1] <= this.lastImageCordY && this.lastImageCordY <= annotation.bbox[1] + size) {
-      this.pressedResizeTopLeft = true;
-      return true;
+      this.pressedTopLeft = true;
     } else if (annotation.bbox[0] + annotation.bbox[2] - size <= this.lastImageCordX && this.lastImageCordX <= annotation.bbox[0] + annotation.bbox[2] &&
       annotation.bbox[1] <= this.lastImageCordY && this.lastImageCordY <= annotation.bbox[1] + size) {
-      this.pressedResizeTopRight = true;
-      return true;
+      this.pressedTopRight = true;
     } else if (annotation.bbox[0] <= this.lastImageCordX && this.lastImageCordX <= annotation.bbox[0] + size &&
       annotation.bbox[1] + annotation.bbox[3] >= this.lastImageCordY && this.lastImageCordY >= annotation.bbox[1] + annotation.bbox[3] - size) {
-      this.pressedResizeButtonLeft = true;
+      this.pressedButtomLeft = true;
       return true;
     } else if (annotation.bbox[0] + annotation.bbox[2] - size <= this.lastImageCordX && this.lastImageCordX <= annotation.bbox[0] + annotation.bbox[2] &&
       annotation.bbox[1] + annotation.bbox[3] >= this.lastImageCordY && this.lastImageCordY >= annotation.bbox[1] + annotation.bbox[3] - size) {
-      this.pressedResizeButtonRight = true;
-      return true;
+      this.pressedButtomRight = true;
+    } else if(annotation.bbox[0] + size <= this.lastImageCordX && this.lastImageCordX <= annotation.bbox[0] + annotation.bbox[2] - size  &&
+      annotation.bbox[1] <= this.lastImageCordY && this.lastImageCordY <= annotation.bbox[1] + size) {
+      this.pressedTop = true;
+      console.log('pressed top')
+    } else if (annotation.bbox[0] + annotation.bbox[2] - size <= this.lastImageCordX && this.lastImageCordX <= annotation.bbox[0] + annotation.bbox[2] &&
+      annotation.bbox[1] + size <= this.lastImageCordY && this.lastImageCordY <= annotation.bbox[1] + annotation.bbox[3]  - size) {
+      this.pressedRight = true;
+      console.log('pressedRight')
+    } else if (annotation.bbox[0] - size <= this.lastImageCordX && this.lastImageCordX <= annotation.bbox[0] + size &&
+      annotation.bbox[1] + size <= this.lastImageCordY && this.lastImageCordY <= annotation.bbox[1] + annotation.bbox[3]  - size) {
+      this.pressedLeft = true;
+      console.log('pressedLeft')
+    } else if (annotation.bbox[0] + size <= this.lastImageCordX && this.lastImageCordX <= annotation.bbox[0] + annotation.bbox[2] - size  &&
+      annotation.bbox[1] + annotation.bbox[3] - size <= this.lastImageCordY && this.lastImageCordY <= annotation.bbox[1] + annotation.bbox[3]) {
+      this.pressedButtom = true;
+      console.log('pressedButtom')
     }
-    return false;
   }
 
 

@@ -127,7 +127,7 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
         ReactLabelingHelper.mouseDownCreate(this.getImageCords(e.clientX, e.clientY));
       } else if (this.interactionMode == InteractionMode.ReactResize){
         this.draw();
-        ReactLabelingHelper.mouseDownResize(this.getImageCords(e.clientX, e.clientY),
+        ReactLabelingHelper.mouseDownTransform(this.getImageCords(e.clientX, e.clientY),
           this.selectedAnnotation, this.scale)
       }
       this.isLeftMouseDown = true;
@@ -157,7 +157,7 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
       } else if (this.interactionMode == InteractionMode.ReactResize){
         this.startDraw();
         this.annotationDraw();
-        ReactLabelingHelper.mouseMoveResize(this.getImageCords(e.clientX, e.clientY), this.selectedAnnotation);
+        ReactLabelingHelper.mouseMoveTansform(this.getImageCords(e.clientX, e.clientY), this.selectedAnnotation);
         this.endDraw();
       }
     } else if (this.isRightMouseDown) {
@@ -238,8 +238,9 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     this.endDraw();
   }
 
-  @HostListener('document:keypress', ['$event'])
+  @HostListener('document:keydown', ['$event'])
   handleShortCuts(event: KeyboardEvent) {
+    console.log(event.key);
     if (this.isHoverCanvas) {
       if (event.code.toLowerCase().includes('digit')) {
         // Number
@@ -249,7 +250,7 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
         }
       } else {
         let key = event.key;
-        switch (key) {
+        switch (key.toLowerCase()) {
           case 'q': alert('Previous image'); //TODO
             break;
           case 'e': alert('Next image'); //TODOd
@@ -262,6 +263,7 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
             break;
           case 'd': this.imageTranslationX -= 5; this.draw();
             break;
+          case 'delete': this.deleteAnnotation(this.selectedAnnotation);
         }
       }
     }
@@ -334,8 +336,10 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   }
 
   deleteAnnotation(annotation) {
-    this.coco.removeAnnotation(annotation.id);
-    this.draw();
+    if (annotation !== undefined) {
+      this.coco.removeAnnotation(annotation.id);
+      this.draw();
+    }
   }
 
 
