@@ -21,6 +21,7 @@ import { CocoFormat } from "../../core-model/coco/Coco.format";
 import { InteractionMode } from "./interactionMode";
 import { ReactLabelingHelper } from "./helper/reactLabeling.helper";
 import { ImageTranslationHelper } from "./helper/imageTranslation.helper";
+import { DatalakeRestService } from "../../core-services/datalake/datalake-rest.service";
 
 @Component({
   selector: 'sp-image-labeler',
@@ -45,8 +46,11 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   private imageTranslationX = 0;
   private imageTranslationY = 0;
 
-  private coco;
-  private label = "Car";
+  public coco;
+  public labels;
+  public labelCategories;
+  public labelCategory;
+  private selectedLabel;
 
   //actual interaction mode
   private interactionMode: InteractionMode = InteractionMode.ReactLabeling;
@@ -54,8 +58,20 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   //scale
   private scale: number = 1;
 
-  ngOnInit(): void {
 
+  constructor(private restService: DatalakeRestService) {
+
+  }
+
+  ngOnInit(): void {
+    //1. get Image Paths
+    //2. get Images
+
+    //3. get Labels
+    this.labels = this.restService.getLabels();
+    this.labelCategories = Object.keys(this.restService.getLabels());
+    this.labelCategory = this.labelCategories[1];
+    this.selectedLabel = this.labels[this.labelCategory][0]
   }
 
   ngAfterViewInit() {
@@ -108,10 +124,11 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
 
   imageMouseMove(e) {
     if (this.isLeftMouseDown) {
+
       if (this.interactionMode == InteractionMode.ReactLabeling) {
         this.draw();
         ReactLabelingHelper.mouseMove(this.getMousePosScreen(e.clientX, e.clientY),
-          this.getMousePosTransformed(e.clientX, e.clientY), this.context, this.label, this.getColor(this.label));
+          this.getMousePosTransformed(e.clientX, e.clientY), this.context, this.selectedLabel, this.getColor(this.selectedLabel));
       } else if (this.interactionMode == InteractionMode.Translate) {
         let translation = ImageTranslationHelper.mouseMove(this.getMousePosScreen(e.clientX, e.clientY));
         this.imageTranslationX = translation[0];
@@ -131,12 +148,12 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     if (this.isLeftMouseDown) {
       this.isLeftMouseDown = false;
 
-      let labelId = this.coco.getLabelId(this.label, "");
+      let labelId = this.coco.getLabelId(this.selectedLabel, this.labelCategory);
       if (this.interactionMode == InteractionMode.ReactLabeling) {
         ReactLabelingHelper.mouseUp(this.getMousePosScreen(e.clientX, e.clientY),
           this.getMousePosTransformed(e.clientX, e.clientY), this.coco, labelId);
       }
-
+      this.draw()
     }
     if (this.isRightMouseDown) {
       this.isRightMouseDown = false;
@@ -151,7 +168,6 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     let newHeight = this.canvasHeight * this.scale;
 
     this.context.save();
-
 
     this.context.translate(-((newWidth - this.canvasWidth) / 2) + this.imageTranslationX,
       -((newHeight - this.canvasHeight) / 2) + this.imageTranslationY);
@@ -181,7 +197,6 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   }
 
   scroll(e) {
-    console.log(e);
     this.scale += e.wheelDeltaY * (1/6000);
     this.draw();
   }
@@ -198,7 +213,7 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   }
 
   selectLabel(label) {
-    this.label = label;
+    this.selectedLabel = label;
     this.interactionMode = InteractionMode.ReactLabeling;
   }
 
@@ -231,6 +246,30 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
 
   setInteractionModeTranslate() {
     this.interactionMode = InteractionMode.Translate;
+  }
+
+  enterAnnotation(annotation) {
+    this.context.save();
+    let newWidth = this.canvasWidth * this.scale;
+    let newHeight = this.canvasHeight * this.scale;
+    this.context.translate(-((newWidth - this.canvasWidth) / 2) + this.imageTranslationX,
+      -((newHeight - this.canvasHeight) / 2) + this.imageTranslationY);
+    this.context.scale(this.scale, this.scale);
+
+    let label = this.coco.getLabelById(annotation.category_id);
+    ReactLabelingHelper.drawHighlighted(annotation, label, this.context, this.getColor(label),
+      ((this.canvasWidth - this.image.width) / 2),
+      ((this.canvasHeight - this.image.height) / 2));
+    this.context.restore();
+  }
+
+  leaveAnnotation(annotation) {
+    this.draw()
+  }
+
+  deleteAnnotation(annotation) {
+    this.coco.removeAnnotation(annotation.id);
+    this.draw();
   }
 
 

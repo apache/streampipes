@@ -34,3 +34,15 @@ img {
     max-height: 100%;
     margin: 5px;
 }
+
+labelCategorySelectContainer {
+
+}
+
+.mat-list-item {
+    height: 5px;
+}
+
+::ng-deep .mat-form-field-underline {
+    background-color: rgba(255, 255, 255, 0.8);
+}

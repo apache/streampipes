@@ -105,4 +105,23 @@ export class DatalakeRestService {
         return this.http.request(request)
     }
 
+    getImage(path) {
+
+    }
+
+    getLabels() {
+        return {
+          "person": ["person"],
+          "vehicle": ["bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat"],
+          "outdoor": ["traffic light", "fire hydrant", "stop sign", "parking meter", "bench"],
+          "animal": ["bird", "cat", "dog"],
+          "accessory": ["backpack", "umbrella", "handbag", "suitcase"],
+          "sports": ["frisbee", "sports ball", "skis", "frisbee", "baseball bat"],
+          "kitchen": ["bottle", "cup", "fork", "knife", "spoon"],
+          "furniture": ["chair", "couch", "bed", "table"],
+          "electronic": ["tv", "laptop", "mouse", "keyboard"]
+        }
+    }
+
+
 }

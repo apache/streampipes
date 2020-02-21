@@ -49,4 +49,8 @@ export class CocoFormat {
     this.annotations.push(annnotation)
   }
 
+  removeAnnotation(id) {
+    this.annotations = this.annotations.filter(anno => anno.id !== id);
+  }
+
 }

@@ -18,6 +18,8 @@
 
 export class ReactLabelingHelper {
 
+  private static backgroundAlpha = 0.6;
+
   //mouse position
   private static lastMouseX = 0;
   private static lastMouseY = 0;
@@ -43,13 +45,10 @@ export class ReactLabelingHelper {
     if(this.isMouseDown) {
       this.reactWidth = mouseX - this.lastMouseX;
       this.reactHeight = mouseY - this.lastMouseY;
-      context.strokeStyle = color;
-      context.fillStyle = color;
-      context.beginPath();
-      context.rect(this.lastMouseX, this.lastMouseY, this.reactWidth, this.reactHeight);
-      context.fillText(label, this.lastMouseX, this.lastMouseY + this.reactHeight);
-      context.stroke();
 
+      context.globalAlpha = this.backgroundAlpha;
+      this.drawBox(this.lastMouseX, this.lastMouseY, this.reactWidth, this.reactHeight, color, label, context, true);
+      context.globalAlpha = 1;
     }
   }
 
@@ -59,16 +58,33 @@ export class ReactLabelingHelper {
     let reactHeight = mousePosTransformed[1] - this.lastMouseYTransformed;
 
     coco.addReactAnnotation(this.lastMouseXTransformed, this.lastMouseYTransformed , reactWidth, reactHeight, labelId);
-    //console.log('Add react Label:', this.lastMouseXTransformed, this.lastMouseYTransformed, reactWidth, reactHeight, labelId)
+    console.log('Add react Label:', this.lastMouseXTransformed, this.lastMouseYTransformed, reactWidth, reactHeight, labelId)
   }
 
   static draw(annotation,label, context, color, imageXShift, imageYShift) {
     context.strokeStyle = color;
     context.fillStyle = color;
-    context.beginPath();
     let bbox = annotation.bbox;
-    context.rect(bbox[0] + imageXShift, bbox[1] + imageYShift, bbox[2], bbox[3]);
-    context.fillText(label, bbox[0] + imageXShift, bbox[1] + bbox[3] + imageYShift);
+    this.drawBox(bbox[0] + imageXShift, bbox[1] + imageYShift, bbox[2], bbox[3], color, label, context, false);
+  }
+
+  static drawHighlighted(annotation, label, context, color, imageXShift, imageYShift) {
+    context.globalAlpha = 0.6;
+    let bbox = annotation.bbox;
+    this.drawBox(bbox[0] + imageXShift, bbox[1] + imageYShift, bbox[2], bbox[3], color, label, context, true);
+    context.globalAlpha = 1;
+  }
+
+  private static drawBox(x,y, widht, height, color, label, context, filled) {
+    context.strokeStyle = color;
+    context.fillStyle = color;
+    context.beginPath();
+    if (filled) {
+      context.fillRect(x, y, widht, height);
+    } else {
+      context.rect(x, y, widht, height);
+    }
+    context.fillText(label, x, y - 5 );
     context.stroke();
   }
 
