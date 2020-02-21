@@ -67,7 +67,8 @@
 
             <mat-list>
                 <mat-list-item *ngFor="let annotation of coco?.annotations" (mouseover)="enterAnnotation(annotation)" (mouseout)="leaveAnnotation(annotation)"
-                               style="height: 30px; padding-top: 5px; padding-buttom: 5px; border-radius: 50px; margin-bottom: 5px">
+                               style="height: 30px; padding-top: 5px; padding-buttom: 5px; border-radius: 50px; margin-bottom: 5px"
+                               [style.background-color]="annotation.isHovered || annotation.isSelected ? 'lightgrey' : 'white'">
                     <mat-icon matListIcon [style.color]="getColor(coco.getLabelById(annotation.category_id))" style="margin-top: -8px;">color_lens</mat-icon>
                     <h4 style="margin-top: -3px;"> {{annotation.id}} - {{coco.getLabelById(annotation.category_id)}}</h4>
                     <button mat-icon-button (click)="deleteAnnotation(annotation)" style="margin-top: -10px; margin-left: 10px"> <mat-icon>delete_forever</mat-icon></button>
