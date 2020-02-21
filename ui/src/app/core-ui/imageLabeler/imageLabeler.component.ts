@@ -16,7 +16,7 @@
  *
  */
 
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from "@angular/core";
 import { CocoFormat } from "../../core-model/coco/Coco.format";
 import { InteractionMode } from "./interactionMode";
 import { ReactLabelingHelper } from "./helper/reactLabeling.helper";
@@ -40,6 +40,7 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   //canvas properties
   private canvasWidth;
   private canvasHeight;
+  private isHoverCanvas;
 
   //image
   private image;
@@ -58,7 +59,6 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
   //scale
   private scale: number = 1;
 
-
   constructor(private restService: DatalakeRestService) {
 
   }
@@ -72,7 +72,12 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     this.labelCategories = Object.keys(this.restService.getLabels());
     this.labelCategory = this.labelCategories[1];
     this.selectedLabel = this.labels[this.labelCategory][0]
+
+    this.isHoverCanvas = false;
   }
+
+
+
 
   ngAfterViewInit() {
     this.canvas = this.canvasRef.nativeElement;
@@ -81,9 +86,9 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     this.canvasHeight= this.canvas.height;
 
     this.canvas.addEventListener('contextmenu', event => event.preventDefault());
-
     this.canvas.addEventListener('DOMMouseScroll',event => this.scroll(event),false);
     this.canvas.addEventListener('mousewheel',event => this.scroll(event),false);
+    this.canvas.addEventListener('keydown',event => console.log(event),false);
 
     this.image = new Image();
 
@@ -196,6 +201,35 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     this.context.stroke();
   }
 
+  @HostListener('document:keypress', ['$event'])
+  handleShortCuts(event: KeyboardEvent) {
+    if (this.isHoverCanvas) {
+      if (event.code.toLowerCase().includes('digit')) {
+        // Number
+        let value = Number(event.key);
+        if (value != 0 && value <= this.labels[this.labelCategory].length) {
+          this.selectedLabel = this.labels[this.labelCategory][value - 1]
+        }
+      } else {
+        let key = event.key;
+        switch (key) {
+          case 'q': alert('Previous image'); //TODO
+            break;
+          case 'e': alert('Next image'); //TODOd
+            break;
+          case 'w': this.imageTranslationY += 5; this.draw();
+            break;
+          case 'a': this.imageTranslationX += 5; this.draw();
+            break;
+          case 's': this.imageTranslationY -= 5; this.draw();
+            break;
+          case 'd': this.imageTranslationX -= 5; this.draw();
+            break;
+        }
+      }
+    }
+  }
+
   scroll(e) {
     this.scale += e.wheelDeltaY * (1/6000);
     this.draw();
@@ -267,10 +301,20 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
     this.draw()
   }
 
+  enterCanvas() {
+    this.isHoverCanvas = true;
+  }
+
+  leaveCanvas() {
+    this.isHoverCanvas = false;
+  }
+
   deleteAnnotation(annotation) {
     this.coco.removeAnnotation(annotation.id);
     this.draw();
   }
+
+
 
 
 }

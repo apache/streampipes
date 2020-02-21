@@ -17,7 +17,7 @@
   -->
 
 
-<div fxLayout="column" fxLayoutAlign="space-between " >
+<div fxLayout="column" fxLayoutAlign="space-between ">
     <div  fxLayout="row" fxLayoutAlign="space-around start">
         <div fxLayout="column" fxLayoutAlign="space-around center">
             <h2>Labels</h2>
@@ -37,12 +37,12 @@
             </div>
 
             <mat-list>
-                <mat-list-item *ngFor="let label of labels[labelCategory]"
+                <mat-list-item *ngFor="let label of labels[labelCategory]; index as i"
                                [style.background-color]="selectedLabel == label ? 'lightgrey' : 'white'"
                                style="height: 30px; padding-top: 5px; padding-buttom: 5px; border-radius: 50px; margin-bottom: 5px"
                                (click)="selectLabel(label)">
                     <mat-icon matListIcon [style.color]="getColor(label)" style="margin-top: -8px;">color_lens</mat-icon>
-                    <h4 style="margin-top: -3px;"> {{label}} </h4>
+                    <h4 style="margin-top: -3px;"> {{label}} <label *ngIf="i < 10"> #{{i+1}}</label> </h4>
                 </mat-list-item>
             </mat-list>
 
@@ -50,8 +50,10 @@
         </div>
 
         <div fxLayout="column" fxLayoutAlign="space-around center">
-            <mat-hint>Tip: Move the image with the right mouse button and zoom with the mouse wheel</mat-hint>
+            <mat-hint>Tip: Move the image with the right mouse button and zoom with the mouse wheel, Use number shortcut to select label</mat-hint>
+            <mat-hint>Tip: Use number 'E' and 'Q' to get previous/next image, Move image with WASD</mat-hint>
             <canvas (mousedown)="imageMouseDown($event)" (mousemove)="imageMouseMove($event)" (mouseup)="imageMouseUp($event)"
+                    (mouseover)="enterCanvas()" (mouseout)="leaveCanvas()"
                     #canvas width="800" height="500" >
                 Your browser does not support the canvas element.
             </canvas>
