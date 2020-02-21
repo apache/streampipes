@@ -25,7 +25,7 @@
                  style="padding-left: 5px; padding-right: 5px; border-radius: 50px; font-size: 20px;">
                 <mat-form-field style="margin-top: -15px; margin-bottom: -10px">
                     <mat-select [(value)]="labelCategory">
-                        <mat-option style="background-color: #FFFFFF" *ngFor="let labelCategory of labelCategories" [value]="labelCategory">
+                        <mat-option *ngFor="let labelCategory of labelCategories" [value]="labelCategory">
                             {{labelCategory}}
                         </mat-option>
                     </mat-select>
@@ -65,12 +65,22 @@
         <div fxLayout="column" fxLayoutAlign="space-between center">
             <h2>Annotations</h2>
 
+
+
             <mat-list>
                 <mat-list-item *ngFor="let annotation of coco?.annotations" (mouseover)="enterAnnotation(annotation)" (mouseout)="leaveAnnotation(annotation)"
                                style="height: 30px; padding-top: 5px; padding-buttom: 5px; border-radius: 50px; margin-bottom: 5px"
                                [style.background-color]="annotation.isHovered || annotation.isSelected ? 'lightgrey' : 'white'">
                     <mat-icon matListIcon [style.color]="getColor(coco.getLabelById(annotation.category_id))" style="margin-top: -8px;">color_lens</mat-icon>
-                    <h4 style="margin-top: -3px;"> {{annotation.id}} - {{coco.getLabelById(annotation.category_id)}}</h4>
+                    <mat-form-field>
+                        <mat-select [value]="coco.getLabelById(annotation.category_id)">
+                            <mat-optgroup *ngFor="let labelCategor of labelCategories" [label]="labelCategor">
+                                <mat-option *ngFor="let label of labels[labelCategor]" [value]="label" (click)="changeLabel(annotation, label, labelCategory)">
+                                    {{label}}
+                                </mat-option>
+                            </mat-optgroup>
+                        </mat-select>
+                    </mat-form-field>
                     <button mat-icon-button (click)="deleteAnnotation(annotation)" style="margin-top: -10px; margin-left: 10px"> <mat-icon>delete_forever</mat-icon></button>
                 </mat-list-item>
             </mat-list>

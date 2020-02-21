@@ -139,8 +139,6 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
       this.isRightMouseDown = true;
       ImageTranslationHelper.mouseDown(this.getCanvasCords(e.clientX, e.clientY), this.imageTranslationX, this.imageTranslationY);
     }
-
-
   }
 
   imageMouseMove(e) {
@@ -340,6 +338,13 @@ export class ImageLabelerComponent implements OnInit, AfterViewInit {
       this.coco.removeAnnotation(annotation.id);
       this.draw();
     }
+  }
+
+  changeLabel(annonation, label, category) {
+    console.log(label, category)
+    let labelId = this.coco.getLabelId(label, category);
+    annonation.category_id = labelId;
+    this.draw();
   }
 
 

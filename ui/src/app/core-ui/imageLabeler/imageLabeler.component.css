@@ -46,3 +46,11 @@ labelCategorySelectContainer {
 ::ng-deep .mat-form-field-underline {
     background-color: rgba(255, 255, 255, 0.8);
 }
+
+::ng-deep .mat-optgroup-label {
+    background-color: #FFFFFF !important;
+}
+
+::ng-deep .mat-option {
+    background-color: #FFFFFF !important;
+}
