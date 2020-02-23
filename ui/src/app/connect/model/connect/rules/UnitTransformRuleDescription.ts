@@ -16,10 +16,10 @@
  *
  */
 
-import { RdfsClass } from '../../../../platform-services/tsonld/RdfsClass';
-import { RdfId } from '../../../../platform-services/tsonld/RdfId';
-import { RdfProperty } from '../../../../platform-services/tsonld/RdfsProperty';
-import { TransformationRuleDescription } from './TransformationRuleDescription';
+import {RdfsClass} from '../../../../platform-services/tsonld/RdfsClass';
+import {RdfId} from '../../../../platform-services/tsonld/RdfId';
+import {RdfProperty} from '../../../../platform-services/tsonld/RdfsProperty';
+import {TransformationRuleDescription} from './TransformationRuleDescription';
 
 @RdfsClass('sp:UnitTransformRuleDescription')
 export class UnitTransformRuleDescription extends TransformationRuleDescription {

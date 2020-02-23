@@ -17,6 +17,7 @@
  */
 
 import {DomainConceptPropertyController} from "./domain-concept-property.controller";
+
 declare const require: any;
 
 export let DomainConceptPropertyComponent = {

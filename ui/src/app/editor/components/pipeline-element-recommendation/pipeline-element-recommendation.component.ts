@@ -17,6 +17,7 @@
  */
 
 import {PipelineElementRecommendationController} from "./pipeline-element-recommendation.controller";
+
 declare const require: any;
 
 export let PipelineElementRecommendationComponent = {

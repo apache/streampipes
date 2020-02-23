@@ -18,8 +18,6 @@
 
 import * as angular from 'angular';
 
-import * as _ from 'lodash';
-
 import 'angular-ui-sortable';
 import 'angular-ui-bootstrap';
 
@@ -31,58 +29,57 @@ import 'legacy/malhar-angular-dashboard';
 //import 'npm/epoch-charting';
 import 'npm/ngmap'
 
-import { ConfigItemComponent } from "./components/config-item.component";
-import { DashboardCtrl } from './dashboard.controller';
-import { AddWidgetCtrl } from './add-widget.controller';
-import { WidgetInstances } from './widget-instances.service';
-import { WidgetTemplates } from './templates/widget-templates.service';
+import {ConfigItemComponent} from "./components/config-item.component";
+import {DashboardCtrl} from './dashboard.controller';
+import {AddWidgetCtrl} from './add-widget.controller';
+import {WidgetInstances} from './widget-instances.service';
+import {WidgetTemplates} from './templates/widget-templates.service';
 
 import {WidgetDataModel} from "./widget-data-model.service";
 
-import { SocketConnectionDataModel } from './socket-connection-data-model.service';
+import {SocketConnectionDataModel} from './socket-connection-data-model.service';
 
 import soFilter from './templates/so.filter';
 
 import spNumberWidget from './templates/number/number.directive';
-import { spNumberWidgetConfig }from './templates/number/number-config.component';
-import { NumberDataModel } from './templates/number/number-data-model.service';
+import {spNumberWidgetConfig} from './templates/number/number-config.component';
+import {NumberDataModel} from './templates/number/number-data-model.service';
 
 import spVerticalbarWidget from './templates/verticalbar/verticalbar.directive';
-import { spVerticalbarWidgetConfig } from './templates/verticalbar/verticalbar-config.component';
-import { VerticalbarDataModel } from './templates/verticalbar/verticalbar-data-model.service';
+import {spVerticalbarWidgetConfig} from './templates/verticalbar/verticalbar-config.component';
+import {VerticalbarDataModel} from './templates/verticalbar/verticalbar-data-model.service';
 
 import spTableWidget from './templates/table/table.directive';
-import { spTableWidgetConfig } from './templates/table/table-config.component';
-import { TableDataModel } from './templates/table/table-data-model.service';
+import {spTableWidgetConfig} from './templates/table/table-config.component';
+import {TableDataModel} from './templates/table/table-data-model.service';
 
 import spLineWidget from './templates/line/line.directive';
-import { spLineWidgetConfig } from './templates/line/line-config.component';
-import { LineDataModel } from './templates/line/line-data-model.service';
+import {spLineWidgetConfig} from './templates/line/line-config.component';
+import {LineDataModel} from './templates/line/line-data-model.service';
 
 import spGaugeWidget from './templates/gauge/gauge.directive';
-import { spGaugeWidgetConfig } from './templates/gauge/gauge-config.component';
-import { GaugeDataModel } from './templates/gauge/gauge-data-model.service';
+import {spGaugeWidgetConfig} from './templates/gauge/gauge-config.component';
+import {GaugeDataModel} from './templates/gauge/gauge-data-model.service';
 
 import spTrafficlightWidget from './templates/trafficlight/trafficlight.directive';
-import { spTrafficlightWidgetConfig } from './templates/trafficlight/trafficlight-config.component';
-import { TrafficLightDataModel } from './templates/trafficlight/trafficlight-data-model.service';
+import {spTrafficlightWidgetConfig} from './templates/trafficlight/trafficlight-config.component';
+import {TrafficLightDataModel} from './templates/trafficlight/trafficlight-data-model.service';
 
 import spRawWidget from './templates/raw/raw.directive';
-import { spRawWidgetConfig } from './templates/raw/raw-config.component';
-import { RawDataModel } from './templates/raw/raw-data-model.service';
+import {spRawWidgetConfig} from './templates/raw/raw-config.component';
+import {RawDataModel} from './templates/raw/raw-data-model.service';
 //
 import spMapWidget from './templates/map/map.directive';
-import { spMapWidgetConfig } from './templates/map/map-config.component';
-import { MapDataModel } from './templates/map/map-data-model.service';
+import {spMapWidgetConfig} from './templates/map/map-config.component';
+import {MapDataModel} from './templates/map/map-data-model.service';
 
 import spHeatmapWidget from './templates/heatmap/heatmap.directive';
-import { spHeatmapWidgetConfig } from './templates/heatmap/heatmap-config.component';
-import { HeatmapDataModel } from './templates/heatmap/heatmap-data-model.service';
+import {spHeatmapWidgetConfig} from './templates/heatmap/heatmap-config.component';
+import {HeatmapDataModel} from './templates/heatmap/heatmap-data-model.service';
 
 import spImageWidget from './templates/image/image.directive';
-import { spImageWidgetConfig } from './templates/image/image-config.component';
-import { ImageDataModel } from './templates/image/image-data-model.service';
-import {DomainConceptComponent} from "../editor/components/domainconcept/domainconcept.component";
+import {spImageWidgetConfig} from './templates/image/image-config.component';
+import {ImageDataModel} from './templates/image/image-data-model.service';
 
 import spHtmlWidget from './templates/html/html.directive';
 import {HtmlDataModel} from './templates/html/html-data-model.service';

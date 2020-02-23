@@ -17,7 +17,7 @@
  */
 
 import 'reflect-metadata';
-import {Observable, from} from 'rxjs';
+import {from, Observable} from 'rxjs';
 
 import * as jsonld from 'jsonld';
 

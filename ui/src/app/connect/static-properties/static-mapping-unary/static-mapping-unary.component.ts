@@ -16,10 +16,8 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FreeTextStaticProperty } from '../../model/FreeTextStaticProperty';
-import { StaticProperty } from '../../model/StaticProperty';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {EventSchema} from '../../schema-editor/model/EventSchema';
 import {PropertySelectorService} from "../../../services/property-selector.service";

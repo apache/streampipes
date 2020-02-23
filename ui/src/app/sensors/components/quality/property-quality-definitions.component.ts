@@ -17,6 +17,7 @@
  */
 
 import {PropertyQualityDefinitionsController} from "./property-quality-definitions.controller";
+
 declare const require: any;
 
 export let PropertyQualityDefinitionsComponent = {

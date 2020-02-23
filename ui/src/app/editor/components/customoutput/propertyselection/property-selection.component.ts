@@ -17,6 +17,7 @@
  */
 
 import {PropertySelectionController} from "./property-selection.controller";
+
 declare const require: any;
 
 export let PropertySelectionComponent = {

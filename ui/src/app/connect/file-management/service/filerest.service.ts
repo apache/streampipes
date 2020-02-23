@@ -18,7 +18,7 @@
 
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import { map } from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {HttpClient, HttpRequest} from '@angular/common/http';
 import {AuthStatusService} from '../../../services/auth-status.service';
 

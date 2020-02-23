@@ -16,8 +16,8 @@
  *
  */
 
-import { TestBed, async, getTestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {getTestBed, TestBed} from '@angular/core/testing';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {TransformationRuleService} from './transformation-rule.service';
 import {Logger} from '../shared/logger/default-log.service';
 import {EventSchema} from './schema-editor/model/EventSchema';
@@ -26,7 +26,6 @@ import {RenameRuleDescription} from './model/connect/rules/RenameRuleDescription
 import {EventProperty} from './schema-editor/model/EventProperty';
 import {EventPropertyNested} from './schema-editor/model/EventPropertyNested';
 import {AddNestedRuleDescription} from './model/connect/rules/AddNestedRuleDescription';
-import {e, r} from '@angular/core/src/render3';
 import {MoveRuleDescription} from './model/connect/rules/MoveRuleDesctiption';
 import {DeleteRuleDescription} from './model/connect/rules/DeleteRuleDescription';
 

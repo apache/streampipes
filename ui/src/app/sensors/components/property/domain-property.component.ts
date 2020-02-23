@@ -17,6 +17,7 @@
  */
 
 import {DomainPropertyController} from "./domain-property.controller";
+
 declare const require: any;
 
 export let DomainPropertyComponent = {

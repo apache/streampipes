@@ -16,7 +16,8 @@
  *
  */
 
-import { WidgetInstances } from '../../widget-instances.service'
+import {WidgetInstances} from '../../widget-instances.service'
+
 'use strict';
 imageWidget.$inject = ['WidgetInstances'];
 declare const require: any;

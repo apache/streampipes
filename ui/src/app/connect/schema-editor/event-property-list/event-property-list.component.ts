@@ -16,10 +16,10 @@
  *
  */
 
-import { Component, DoCheck, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EventPropertyList } from '../model/EventPropertyList';
-import { EventProperty } from '../model/EventProperty';
-import { DataTypesService } from '../data-type.service';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {EventPropertyList} from '../model/EventPropertyList';
+import {EventProperty} from '../model/EventProperty';
+import {DataTypesService} from '../data-type.service';
 
 
 @Component({

@@ -17,6 +17,7 @@
  */
 
 import * as angular from "angular";
+
 import {PipelineValidationService} from "../../services/pipeline-validation.service";
 import {RestApi} from "../../../services/rest-api.service";
 

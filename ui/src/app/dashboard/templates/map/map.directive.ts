@@ -16,7 +16,8 @@
  *
  */
 
-import { WidgetInstances } from '../../widget-instances.service'
+import {WidgetInstances} from '../../widget-instances.service'
+
 'use strict';
 mapWidget.$inject = ['WidgetInstances', 'NgMap'];
 declare let L;

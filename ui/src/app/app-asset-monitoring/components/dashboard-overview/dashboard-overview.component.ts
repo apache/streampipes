@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from "@angular/core";
+import {Component, EventEmitter, Output} from "@angular/core";
 import {RestService} from "../../services/rest.service";
 import {DashboardConfiguration} from "../../model/dashboard-configuration.model";
 

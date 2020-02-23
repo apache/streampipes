@@ -21,7 +21,6 @@ import {Dashboard} from "../../models/dashboard.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {DashboardService} from "../../services/dashboard.service";
-import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
 import {EditDashboardDialogComponent} from "../../dialogs/edit-dashboard/edit-dashboard-dialog.component";
 
 @Component({

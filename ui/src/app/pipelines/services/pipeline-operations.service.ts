@@ -19,6 +19,7 @@
 import * as angular from 'angular';
 import {PipelineStatusDialogController} from "../dialog/pipeline-status-dialog.controller";
 import {DeletePipelineDialogController} from "../dialog/delete-pipeline-dialog.controller";
+
 declare const require: any;
 
 export class PipelineOperationsService {

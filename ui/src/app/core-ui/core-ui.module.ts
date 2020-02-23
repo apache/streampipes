@@ -23,15 +23,15 @@ import {CommonModule} from '@angular/common';
 import {CustomMaterialModule} from '../CustomMaterial/custom-material.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {TableComponent} from './table/table.component';
 import {LineChartComponent} from './linechart/lineChart.component';
-
 //import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-import { PlotlyViaWindowModule } from 'angular-plotly.js';
+import {PlotlyViaWindowModule} from 'angular-plotly.js';
+
 //PlotlyViaCDNModule.plotlyjs = PlotlyJS;
 
 @NgModule({

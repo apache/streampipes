@@ -16,15 +16,11 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {Dashboard, DashboardItem} from "../../models/dashboard.model";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {DashboardItem} from "../../models/dashboard.model";
 import {DashboardService} from "../../services/dashboard.service";
-import {DashboardImageComponent} from "../../../app-transport-monitoring/components/dashboard-image/dashboard-image.component";
 import {DashboardWidget} from "../../../core-model/dashboard/DashboardWidget";
-import {Subject} from "rxjs";
 import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
-import {GridsterInfo} from "../../models/gridster-info.model";
-import {ResizeService} from "../../services/resize.service";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {VisualizablePipeline} from "../../../core-model/dashboard/VisualizablePipeline";

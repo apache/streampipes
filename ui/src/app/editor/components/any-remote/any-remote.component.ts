@@ -17,6 +17,7 @@
  */
 
 import {AnyRemoteController} from "./any-remote.controller";
+
 declare const require: any;
 
 export let AnyRemoteComponent = {

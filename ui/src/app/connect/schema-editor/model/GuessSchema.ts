@@ -16,11 +16,11 @@
  *
  */
 
-import { RdfsClass } from '../../../platform-services/tsonld/RdfsClass';
-import { RdfProperty } from '../../../platform-services/tsonld/RdfsProperty';
-import { RdfId } from '../../../platform-services/tsonld/RdfId';
-import { EventSchema } from './EventSchema';
-import { DomainPropertyProbabilityList } from './DomainPropertyProbabilityList';
+import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
+import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
+import {RdfId} from '../../../platform-services/tsonld/RdfId';
+import {EventSchema} from './EventSchema';
+import {DomainPropertyProbabilityList} from './DomainPropertyProbabilityList';
 
 @RdfsClass('sp:GuessSchema')
 export class GuessSchema {

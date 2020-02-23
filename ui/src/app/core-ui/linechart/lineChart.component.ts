@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {BaseChartComponent} from '../chart/baseChart.component';
 import {DataResult} from '../../core-model/datalake/DataResult';
 import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';

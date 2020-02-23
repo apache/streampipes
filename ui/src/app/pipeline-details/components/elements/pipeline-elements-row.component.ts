@@ -17,6 +17,7 @@
  */
 
 import {PipelineElementsRowController} from "./pipeline-elements-row.controller";
+
 declare const require: any;
 
 export let PipelineElementsRowComponent = {

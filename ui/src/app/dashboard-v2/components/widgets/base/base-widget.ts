@@ -16,7 +16,7 @@
  *
  */
 
-import {Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
+import {Input, OnChanges, SimpleChanges} from "@angular/core";
 import {DashboardItem} from "../../../models/dashboard.model";
 import {DashboardWidget} from "../../../../core-model/dashboard/DashboardWidget";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";

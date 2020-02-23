@@ -16,18 +16,24 @@
  *
  */
 
-import { DebugElement} from '@angular/core';
-import { TestBed, async, inject,  ComponentFixture} from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ConsulConfigsPasswordComponent } from './consul-configs-password.component';
+import {DebugElement} from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {ConsulConfigsPasswordComponent} from './consul-configs-password.component';
 import {ConfigurationService} from '../shared/configuration.service'
-import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatButtonModule, MatGridListModule, MatInputModule, MatIconModule, MatTooltipModule, MatCheckboxModule } from '@angular/material';
-import { FormsModule } from '@angular/forms';
-import { Component } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { By } from '@angular/platform-browser';
+import {CommonModule} from '@angular/common';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {
+    MatButtonModule,
+    MatCheckboxModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatTooltipModule
+} from '@angular/material';
+import {FormsModule} from '@angular/forms';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {By} from '@angular/platform-browser';
 
 
 describe('ConsulConfigsPasswordComponent', () =>{

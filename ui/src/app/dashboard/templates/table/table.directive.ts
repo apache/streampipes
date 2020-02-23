@@ -16,8 +16,9 @@
  *
  */
 
-import { WidgetInstances } from '../../widget-instances.service'
+import {WidgetInstances} from '../../widget-instances.service'
 import * as angular from 'angular';
+
 'use strict';
 declare const require: any;
 tableWidget.$inject = ['WidgetInstances', '$filter'];

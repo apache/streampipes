@@ -16,13 +16,10 @@
  *
  */
 
-import { AfterViewInit, Compiler, Component, Input, ViewChild, ViewContainerRef, Injector } from '@angular/core';
-
-import { InstalledApp } from '../shared/installed-app.model';
-
-declare const SystemJS;
-
 import * as angularCore from '@angular/core';
+import {AfterViewInit, Compiler, Component, Injector, Input, ViewChild, ViewContainerRef} from '@angular/core';
+
+import {InstalledApp} from '../shared/installed-app.model';
 import * as angularCommon from '@angular/common';
 import * as angularPlatformBrowser from '@angular/platform-browser';
 import * as angularAnimations from '@angular/animations';
@@ -54,6 +51,9 @@ import * as angularMaterialTooltip from '@angular/material/tooltip';
 import * as rxjs from 'rxjs';
 import * as angularCdkTree from '@angular/cdk/tree';
 import * as ngxColorPicker from 'ngx-color-picker';
+
+declare const SystemJS;
+
 SystemJS.set('@angular/core', SystemJS.newModule(angularCore));
 SystemJS.set('@angular/common', SystemJS.newModule(angularCommon));
 SystemJS.set('@angular/platform-browser', SystemJS.newModule(angularPlatformBrowser));

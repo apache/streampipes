@@ -17,6 +17,7 @@
  */
 
 import {MappingUnaryController} from "./mappingunary.controller";
+
 declare const require: any;
 
 export let MappingUnaryComponent = {

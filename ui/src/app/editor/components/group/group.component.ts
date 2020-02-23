@@ -17,6 +17,7 @@
  */
 
 import {GroupController} from "./group.controller";
+
 declare const require: any;
 
 export let GroupComponent = {

@@ -16,10 +16,10 @@
  *
  */
 
-import { Component } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { HomeService } from './home.service';
-import { StateService } from '@uirouter/core';
+import {Component} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
+import {HomeService} from './home.service';
+import {StateService} from '@uirouter/core';
 
 @Component({
     templateUrl: './home.component.html',

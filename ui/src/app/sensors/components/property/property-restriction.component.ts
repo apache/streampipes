@@ -17,6 +17,7 @@
  */
 
 import {PropertyRestrictionController} from "./property-restriction.controller";
+
 declare const require: any;
 
 export let PropertyRestrictionComponent = {

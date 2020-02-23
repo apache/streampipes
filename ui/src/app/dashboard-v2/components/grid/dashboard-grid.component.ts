@@ -17,11 +17,12 @@
  */
 
 import {
-    AfterViewInit,
-    Component, EventEmitter,
+    Component,
+    EventEmitter,
     Input,
     OnChanges,
-    OnInit, Output,
+    OnInit,
+    Output,
     QueryList,
     SimpleChanges,
     ViewChildren

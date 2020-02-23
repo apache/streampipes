@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, ViewChild} from "@angular/core";
+import {Component} from "@angular/core";
 import {ConfigurationService} from "../shared/configuration.service";
 import {MessagingSettings} from "../shared/messaging-settings.model";
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';

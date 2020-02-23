@@ -17,6 +17,7 @@
  */
 
 import {StreamQualityDefinitionsController} from "./stream-quality-definitions.controller";
+
 declare const require: any;
 
 export let StreamQualityDefinitionsComponent = {

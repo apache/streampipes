@@ -17,6 +17,7 @@
  */
 
 import {FreeTextController} from "./freetext.controller";
+
 declare const require: any;
 
 export let FreeTextComponent = {

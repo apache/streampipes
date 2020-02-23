@@ -17,6 +17,7 @@
  */
 
 import {EventPropertiesController} from "./event-properties.controller";
+
 declare const require: any;
 
 export let EventPropertiesComponent = {

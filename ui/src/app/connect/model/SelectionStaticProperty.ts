@@ -16,11 +16,10 @@
  *
  */
 
-import { RdfId } from '../../platform-services/tsonld/RdfId';
-import { RdfProperty } from '../../platform-services/tsonld/RdfsProperty';
-import { RdfsClass } from '../../platform-services/tsonld/RdfsClass';
-import { StaticProperty } from './StaticProperty';
-import { Option } from './Option';
+import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
+import {RdfsClass} from '../../platform-services/tsonld/RdfsClass';
+import {StaticProperty} from './StaticProperty';
+import {Option} from './Option';
 
 @RdfsClass('sp:SelectionStaticProperty')
 export class SelectionStaticProperty extends StaticProperty {

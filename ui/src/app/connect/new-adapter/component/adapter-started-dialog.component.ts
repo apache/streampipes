@@ -17,7 +17,7 @@
  */
 
 import {Component, Inject} from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ShepherdService} from '../../../services/tour/shepherd.service';
 import {RestService} from "../../rest.service";
 import {StatusMessage} from "../../model/message/StatusMessage";
@@ -25,7 +25,6 @@ import {GenericAdapterSetDescription} from '../../model/connect/GenericAdapterSe
 import {SpecificAdapterSetDescription} from '../../model/connect/SpecificAdapterSetDescription';
 import {PipelineTemplateService} from '../../../platform-services/apis/pipeline-template.service';
 import {FreeTextStaticProperty} from '../../model/FreeTextStaticProperty';
-import {StaticProperty} from '../../model/StaticProperty';
 import {MappingPropertyUnary} from '../../model/MappingPropertyUnary';
 
 @Component({

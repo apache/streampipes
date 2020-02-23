@@ -22,12 +22,7 @@ import {map} from "rxjs/operators";
 import {from, Observable} from "rxjs";
 import {AuthStatusService} from "../../services/auth-status.service";
 import {Dashboard} from "../models/dashboard.model";
-import {EventSchema} from "../../connect/schema-editor/model/EventSchema";
-import {EventProperty} from "../../connect/schema-editor/model/EventProperty";
-import {EventPropertyPrimitive} from "../../connect/schema-editor/model/EventPropertyPrimitive";
 import {TsonLdSerializerService} from "../../platform-services/tsonld-serializer.service";
-import {StatusMessage} from "../../connect/model/message/StatusMessage";
-import {RuntimeOptionsResponse} from "../../connect/model/connect/runtime/RuntimeOptionsResponse";
 import {DashboardWidget} from "../../core-model/dashboard/DashboardWidget";
 import {VisualizablePipeline} from "../../core-model/dashboard/VisualizablePipeline";
 

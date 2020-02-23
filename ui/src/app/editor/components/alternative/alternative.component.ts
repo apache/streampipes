@@ -17,6 +17,7 @@
  */
 
 import {AlternativeController} from "./alternative.controller";
+
 declare const require: any;
 
 export let AlternativeComponent = {

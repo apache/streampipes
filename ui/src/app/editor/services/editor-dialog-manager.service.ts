@@ -17,9 +17,6 @@
  */
 
 import * as angular from 'angular';
-
-declare const require: any;
-
 import {CustomizeController} from "../dialog/customize-pipeline-element/customize.controller";
 import {MatchingErrorController} from "../dialog/matching-error/matching-error.controller";
 import {TopicSelectionDialog} from "../dialog/topic/topic-selection-modal.controller";
@@ -28,6 +25,8 @@ import {HelpDialogController} from "../dialog/help/help-dialog.controller";
 import {SavePipelineController} from "../dialog/save-pipeline/save-pipeline.controller";
 import {WelcomeTourDialogController} from "../dialog/welcome-tour/welcome-tour-dialog.controller";
 import {MissingElementsForTutorialDialogController} from "../dialog/missing-elements-for-tutorial/missing-elements-for-tutorial-dialog.controller";
+
+declare const require: any;
 
 export class EditorDialogManager {
 

@@ -17,6 +17,7 @@
  */
 
 import {QuickEditController} from "./quickedit.controller";
+
 declare const require: any;
 
 export let QuickEditComponent = {

@@ -19,7 +19,6 @@
 import {AddWidgetCtrl} from './add-widget.controller';
 import * as angular from 'angular';
 import * as _ from 'lodash';
-import {MissingElementsForTutorialDialogController} from "../editor/dialog/missing-elements-for-tutorial/missing-elements-for-tutorial-dialog.controller";
 import {NoPipelinePresentDialogController} from "./dialog/no-pipeline-present-dialog.controller";
 
 declare const require: any;

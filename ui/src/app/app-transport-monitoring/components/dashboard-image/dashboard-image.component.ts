@@ -16,9 +16,9 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output, SecurityContext} from '@angular/core';
+import {Component, Input, SecurityContext} from '@angular/core';
 import {ParcelInfoEventModel} from "../../model/parcel-info-event.model";
-import {DomSanitizer, SafeStyle, SafeValue} from "@angular/platform-browser";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
     selector: 'dashboard-image',

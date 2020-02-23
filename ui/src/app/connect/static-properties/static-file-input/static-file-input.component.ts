@@ -16,10 +16,9 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FreeTextStaticProperty } from '../../model/FreeTextStaticProperty';
-import { StaticProperty } from '../../model/StaticProperty';
-import { StaticPropertyUtilService } from '../static-property-util.service';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {StaticProperty} from '../../model/StaticProperty';
+import {StaticPropertyUtilService} from '../static-property-util.service';
 import {StaticFileRestService} from './static-file-rest.service';
 import {FileStaticProperty} from '../../model/FileStaticProperty';
 import {HttpEventType, HttpResponse} from '@angular/common/http';

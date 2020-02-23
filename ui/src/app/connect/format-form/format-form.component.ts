@@ -16,9 +16,9 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormatDescription } from '../model/connect/grounding/FormatDescription';
-import { isUndefined } from 'util';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {FormatDescription} from '../model/connect/grounding/FormatDescription';
+import {isUndefined} from 'util';
 
 @Component({
     selector: 'app-format-form',

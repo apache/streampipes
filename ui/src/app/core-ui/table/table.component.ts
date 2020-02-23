@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import {Component} from '@angular/core';
+import {MatTableDataSource} from '@angular/material/table';
 import {BaseChartComponent} from '../chart/baseChart.component';
 import {DataResult} from '../../core-model/datalake/DataResult';
 import {GroupedDataResult} from '../../core-model/datalake/GroupedDataResult';

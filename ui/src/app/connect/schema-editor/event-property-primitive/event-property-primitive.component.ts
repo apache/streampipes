@@ -16,18 +16,18 @@
  *
  */
 
-import { Component, DoCheck, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EventProperty } from '../model/EventProperty';
-import { Subscription, Observable } from 'rxjs';
-import { EventPropertyPrimitive } from '../model/EventPropertyPrimitive';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { DataTypesService } from '../data-type.service';
-import { DomainPropertyProbabilityList } from '../model/DomainPropertyProbabilityList';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { RestService } from '../../rest.service';
-import { UnitDescription } from '../../model/UnitDescription';
-import { UnitProviderService } from '../unit-provider.service';
-import { map, startWith } from 'rxjs/operators';
+import {Component, DoCheck, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {EventProperty} from '../model/EventProperty';
+import {Observable, Subscription} from 'rxjs';
+import {EventPropertyPrimitive} from '../model/EventPropertyPrimitive';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {DataTypesService} from '../data-type.service';
+import {DomainPropertyProbabilityList} from '../model/DomainPropertyProbabilityList';
+import {ShepherdService} from '../../../services/tour/shepherd.service';
+import {RestService} from '../../rest.service';
+import {UnitDescription} from '../../model/UnitDescription';
+import {UnitProviderService} from '../unit-provider.service';
+import {map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-event-property-primitive',

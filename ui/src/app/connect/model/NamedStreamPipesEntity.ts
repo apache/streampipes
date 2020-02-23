@@ -16,10 +16,10 @@
  *
  */
 
-import { RdfId } from '../../platform-services/tsonld/RdfId';
-import { RdfProperty } from '../../platform-services/tsonld/RdfsProperty';
-import { RdfsClass } from '../../platform-services/tsonld/RdfsClass';
-import { ApplicationLink } from "./ApplicationLink";
+import {RdfId} from '../../platform-services/tsonld/RdfId';
+import {RdfProperty} from '../../platform-services/tsonld/RdfsProperty';
+import {RdfsClass} from '../../platform-services/tsonld/RdfsClass';
+import {ApplicationLink} from "./ApplicationLink";
 
 @RdfsClass('sp:StaticProperty')
 export class NamedStreamPipesEntity {

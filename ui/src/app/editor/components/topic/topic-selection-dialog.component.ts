@@ -17,6 +17,7 @@
  */
 
 import {TopicSelectionDialogController} from "./topic-selection-dialog.controller";
+
 declare const require: any;
 
 export let TopicSelectionDialogComponent = {

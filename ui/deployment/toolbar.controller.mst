@@ -16,7 +16,7 @@
  *
  */
 
-declare const Stomp: any;
+import { Client } from '@stomp/stompjs';
 
 export class ToolbarController {
     AuthStatusService: any;
@@ -204,16 +204,23 @@ export class ToolbarController {
         var brokerUrl = websocketProtocol + '://' + this.$location.host() + ':' + this.$location.port() + '/streampipes/ws';
         var inputTopic = '/topic/org.apache.streampipes.notifications';
 
-        var client = Stomp.client(brokerUrl + inputTopic);
+        let stompClient = new Client({
+            brokerURL: brokerUrl,
+            connectHeaders: {
+                login: login,
+                passcode: passcode
+            },
+            reconnectDelay: 5000
+        });
 
-        var onConnect = (frame) => {
+        stompClient.onConnect = (frame) => {
 
-            client.subscribe(inputTopic, message => {
+            stompClient.subscribe(inputTopic, message => {
                 this.notificationCount++;
             });
         };
 
-        client.connect(login, passcode, onConnect);
+        stompClient.activate();
     }
 
     triggerAccountMenu($mdMenu, $event) {

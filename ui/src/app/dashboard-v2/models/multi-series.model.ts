@@ -16,8 +16,6 @@
  *
  */
 
-import {DashboardItem} from "./dashboard.model";
-
 export interface MultiSeries {
     name?: string;
     series?: Array<MultiSeriesEntry>;

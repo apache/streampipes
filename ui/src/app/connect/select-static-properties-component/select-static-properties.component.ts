@@ -16,12 +16,12 @@
  *
  */
 
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
-import { StaticProperty } from '../model/StaticProperty';
-import { DataSetDescription } from '../model/DataSetDescription';
+import {StaticProperty} from '../model/StaticProperty';
 import {EventSchema} from '../schema-editor/model/EventSchema';
 import {ConfigurationInfo} from "../model/message/ConfigurationInfo";
+
 @Component({
   selector: 'app-select-static-properties',
   templateUrl: './select-static-properties.component.html',

@@ -17,6 +17,7 @@
  */
 
 import {ReplaceOutputController} from "./replaceoutput.controller";
+
 declare const require: any;
 
 export let ReplaceOutputComponent = {

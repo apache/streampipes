@@ -18,7 +18,8 @@
 
 declare const google: any;
 
-import { WidgetInstances } from '../../widget-instances.service'
+import {WidgetInstances} from '../../widget-instances.service'
+
 'use strict';
 
 declare const require: any;

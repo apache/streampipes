@@ -16,12 +16,9 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit} from "@angular/core";
-import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {RxStompService} from "@stomp/ng2-stompjs";
-import {LineConfig} from "./line-config";
 import {ResizeService} from "../../../services/resize.service";
-import {BaseNgxChartsStreamPipesWidget} from "../base/base-ngx-charts-widget";
 import {BaseNgxLineChartsStreamPipesWidget} from "../base/base-ngx-line-charts-widget";
 
 @Component({

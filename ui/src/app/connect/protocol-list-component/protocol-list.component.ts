@@ -16,9 +16,10 @@
  *
  */
 
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ProtocolDescription} from '../model/connect/grounding/ProtocolDescription';
 import {FormatDescription} from '../model/connect/grounding/FormatDescription';
+
 @Component({
     selector: 'app-protocol-list',
     templateUrl: './protocol-list.component.html',

@@ -40,19 +40,11 @@ md-progress-linear.md-accent .md-container {
 
 body {
   overflow: auto;
-  background: #ffffff; /* Old browsers */
-  background: -moz-linear-gradient(top, #ffffff 0%, #ccc 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #ccc)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #ffffff 0%, #ccc 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #ffffff 0%, #ccc 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #ffffff 0%, #ccc 100%); /* IE10+ */
-  background: linear-gradient(to bottom, #ffffff 0%, #ccc 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ccc', GradientType=0); /* IE6-9 */
+  background: #ffffff;
 
   font-family: 'Arial', sans-serif !important;
   height: auto !important;
   width: 100%;
-  background-attachment: fixed;
 }
 
 code[class*="language-"], pre[class*="language-"] {
@@ -435,7 +427,7 @@ md-list-item._md-button-wrap > div.md-button:first-child {
   margin-right: auto;
   display: block;
   font-size: 30px;
-  font-family: RobotoDraft;
+  font-family: Roboto;
   margin-top: 20px;
 }
 
@@ -1008,7 +1000,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
   background-color: white;
   text-align: center;
   font-size: 24px;
-  font-family: RobotoDraft;
+  font-family: Roboto;
 }
 
 .connectable-preview {
@@ -1037,7 +1029,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
   margin-right: auto;
   display: block;
   font-size: 30px;
-  font-family: RobotoDraft;
+  font-family: Roboto;
   margin-top: 20px;
 }
 

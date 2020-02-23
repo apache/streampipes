@@ -17,6 +17,7 @@
  */
 
 import {GeneratedElementImplementationController} from "./generated-element-implementation.controller";
+
 declare const require: any;
 
 export let GeneratedElementImplementationComponent = {

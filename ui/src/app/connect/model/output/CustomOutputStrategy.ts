@@ -16,11 +16,9 @@
  *
  */
 
-import {RdfId} from '../../../platform-services/tsonld/RdfId';
 import {RdfProperty} from '../../../platform-services/tsonld/RdfsProperty';
 import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
-import { PropertyRenameRule } from './PropertyRenameRule';
-import { OutputStrategy } from './OutputStrategy';
+import {OutputStrategy} from './OutputStrategy';
 
 @RdfsClass('sp:CustomOutputStrategy')
 export class CustomOutputStrategy extends OutputStrategy{

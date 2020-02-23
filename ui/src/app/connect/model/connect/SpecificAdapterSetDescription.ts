@@ -17,7 +17,7 @@
  */
 
 import {RdfsClass} from '../../../platform-services/tsonld/RdfsClass';
-import { AdapterSetDescription } from './AdapterSetDescription';
+import {AdapterSetDescription} from './AdapterSetDescription';
 
 @RdfsClass('sp:SpecificAdapterSetDescription')
 export class SpecificAdapterSetDescription extends AdapterSetDescription {

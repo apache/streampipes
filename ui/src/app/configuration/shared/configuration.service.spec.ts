@@ -16,10 +16,10 @@
  *
  */
 
-import { TestBed, async, getTestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ConfigurationService } from './configuration.service';
-import { StreampipesPeContainer } from './streampipes-pe-container.model';
+import {getTestBed, TestBed} from '@angular/core/testing';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {ConfigurationService} from './configuration.service';
+import {StreampipesPeContainer} from './streampipes-pe-container.model';
 
 describe('ConfigurationService', () => {
 
