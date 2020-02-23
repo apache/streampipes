@@ -16,7 +16,7 @@
 version: "2"
 services:
   couchdb:
-    image: couchdb:2.3.1
+    image: fogsyio/couchdb:2.3.1
     ports:
       - "5984:5984"
     volumes:

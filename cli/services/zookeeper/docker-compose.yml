@@ -16,7 +16,7 @@
 version: "2"
 services:
   zookeeper:
-    image: wurstmeister/zookeeper
+    image: fogsyio/zookeeper:3.4.13
     ports:
       - "2181:2181"
     volumes:

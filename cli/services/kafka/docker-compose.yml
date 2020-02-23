@@ -16,7 +16,7 @@
 version: "2"
 services:
   kafka:
-    image: wurstmeister/kafka:2.12-2.2.0
+    image: fogsyio/kafka:2.2.0
     hostname: kafka
     ports:
       - "9094:9094"
