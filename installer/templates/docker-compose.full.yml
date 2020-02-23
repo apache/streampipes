@@ -121,7 +121,7 @@ services:
 #### StreamPipes services
 
   backend:
-    image: "${SP_REGISTRY_MAIN}/backend:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/backend:${SP_BACKEND_VERSION}"
     depends_on:
       - consul
       - couchdb
@@ -134,7 +134,7 @@ services:
       spnet:
 
   connect-master:
-    image: "${SP_REGISTRY_MAIN}/streampipes-connect-container:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/streampipes-connect-container:${SP_BACKEND_VERSION}"
     depends_on:
       - consul
       - couchdb
@@ -150,7 +150,7 @@ services:
       spnet:
 
   connect-worker-main:
-    image: "${SP_REGISTRY_CONNECT}/streampipes-connect-worker:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/connect-worker:${SP_BACKEND_VERSION}"
     depends_on:
       - consul
       - couchdb
@@ -165,7 +165,7 @@ services:
       spnet:
 
   nginx:
-    image: "${SP_REGISTRY_UI}/ui:${SP_UI_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/ui:${SP_BACKEND_VERSION}"
     ports:
       - "80:80"
     depends_on:
@@ -181,66 +181,63 @@ services:
 #### Lite version pipeline elements
 
   processors-filters-jvm:
-    image: "${SP_REGISTRY_PE}/processors-filters-jvm:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-filters-jvm:${SP_PE_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   processors-filters-siddhi:
-    image: "${SP_REGISTRY_PE}/processors-filters-siddhi:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-filters-siddhi:${SP_PE_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   processors-image-processing-jvm:
-    image: "${SP_REGISTRY_PE}/processors-image-processing-jvm:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-image-processing-jvm:${SP_PE_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   processors-transformation-jvm:
-    image: "${SP_REGISTRY_PE}/processors-transformation-jvm:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-transformation-jvm:${SP_PE_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   sinks-brokers-jvm:
-    image: "${SP_REGISTRY_PE}/sinks-brokers-jvm:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sinks-brokers-jvm:${SP_PE_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   sinks-databases-jvm:
-    image: "${SP_REGISTRY_PE}/sinks-databases-jvm:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sinks-databases-jvm:${SP_PE_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   sinks-internal-jvm:
-    image: "${SP_REGISTRY_PE}/sinks-internal-jvm:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sinks-internal-jvm:${SP_PE_VERSION}"
     depends_on:
       - "consul"
-    environment:
-      - STREAMPIPES_HOST=${SP_HOST}
-      - SP_NGINX_HOST=${SP_HOST}
     networks:
       spnet:
 
   sinks-notifications-jvm:
-    image: "${SP_REGISTRY_PE}/sinks-notifications-jvm:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sinks-notifications-jvm:${SP_PE_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   sources-watertank-simulator:
-    image: "${SP_REGISTRY_PE}/sources-watertank-simulator:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sources-watertank-simulator:${SP_PE_VERSION}"
     depends_on:
       - "consul"
       - "kafka"
@@ -250,49 +247,49 @@ services:
 #### Full version pipeline elements
 
   processors-aggregation-flink:
-    image: "${SP_REGISTRY_PE}/processors-aggregation-flink:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-aggregation-flink:${SP_PE_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   processors-enricher-flink:
-    image: "${SP_REGISTRY_PE}/processors-enricher-flink:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-enricher-flink:${SP_PE_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   processors-pattern-detection-flink:
-    image: "${SP_REGISTRY_PE}/processors-pattern-detection-flink:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-pattern-detection-flink:${SP_PE_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   processors-statistics-flink:
-    image: "${SP_REGISTRY_PE}/processors-statistics-flink:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-statistics-flink:${SP_PE_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   processors-transformation-flink:
-    image: "${SP_REGISTRY_PE}/processors-transformation-flink:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/processors-transformation-flink:${SP_PE_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   sinks-databases-flink:
-    image: "${SP_REGISTRY_PE}/sinks-databases-flink:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sinks-databases-flink:${SP_PE_VERSION}"
     depends_on:
       - "consul"
     networks:
       spnet:
 
   sources-vehicle-simulator:
-    image: "${SP_REGISTRY_PE}/sources-vehicle-simulator:${SP_VERSION}"
+    image: "${SP_DOCKER_REGISTRY}/sources-vehicle-simulator:${SP_PE_VERSION}"
     depends_on:
       - "consul"
       - "kafka"
