@@ -28,7 +28,7 @@ import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 import org.apache.streampipes.commons.Utils;
-import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
+import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
 import org.apache.streampipes.manager.endpoint.HttpJsonParser;
 import org.apache.streampipes.manager.storage.UserManagementService;
 import org.apache.streampipes.manager.storage.UserService;

@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.model;
 
-import org.streampipes.empire.annotations.RdfProperty;
-import org.streampipes.empire.annotations.RdfsClass;
+import io.fogsy.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.quality.EventStreamQualityDefinition;
 import org.apache.streampipes.model.schema.EventSchema;

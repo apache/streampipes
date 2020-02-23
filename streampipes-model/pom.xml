@@ -57,12 +57,16 @@
 			<artifactId>persistence-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-empire-annotations</artifactId>
+			<groupId>io.fogsy</groupId>
+			<artifactId>empire-annotations</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-empire-core</artifactId>
+			<groupId>io.fogsy</groupId>
+			<artifactId>empire-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient-osgi</artifactId>
 		</dependency>
 
 		<!-- Test dependencies -->

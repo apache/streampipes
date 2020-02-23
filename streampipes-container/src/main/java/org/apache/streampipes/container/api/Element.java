@@ -20,8 +20,8 @@ package org.apache.streampipes.container.api;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import org.eclipse.rdf4j.model.Graph;
-import org.eclipse.rdf4j.rio.RDFHandlerException;
+import io.fogsy.empire.core.empire.SupportsRdfId;
+import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
 import org.apache.streampipes.commons.Utils;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.container.assets.AssetZipGenerator;
@@ -31,8 +31,6 @@ import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.locales.LabelGenerator;
 import org.apache.streampipes.container.transform.Transformer;
-import org.streampipes.empire.core.empire.SupportsRdfId;
-import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -42,6 +40,8 @@ import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -221,10 +221,10 @@ public abstract class Element<D extends Declarer> {
 
   protected String toJsonLd(NamedStreamPipesEntity namedElement) {
     if (namedElement != null) {
-      Graph rdfGraph;
+      Model rdfModel;
       try {
-        rdfGraph = Transformer.toJsonLd(namedElement);
-        return Utils.asString(rdfGraph);
+        rdfModel = Transformer.toJsonLd(namedElement);
+        return Utils.asString(rdfModel);
       } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException | InvalidRdfException | RDFHandlerException e) {
         e.printStackTrace();
       }

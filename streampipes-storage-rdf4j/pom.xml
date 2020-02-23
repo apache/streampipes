@@ -77,8 +77,8 @@
             <artifactId>rdf4j-queryparser-sparql</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-empire-rdf4j</artifactId>
+            <groupId>io.fogsy</groupId>
+            <artifactId>empire-rdf4j</artifactId>
         </dependency>
         <dependency>
             <groupId>uk.com.robust-it</groupId>

@@ -19,9 +19,9 @@
 package org.apache.streampipes.model.base;
 
 
-import org.streampipes.empire.annotations.Namespaces;
-import org.streampipes.empire.core.empire.SupportsRdfId;
-import org.streampipes.empire.core.empire.annotation.SupportsRdfIdImpl;
+import io.fogsy.empire.annotations.Namespaces;
+import io.fogsy.empire.core.empire.SupportsRdfId;
+import io.fogsy.empire.core.empire.annotation.SupportsRdfIdImpl;
 import org.apache.streampipes.vocabulary.RDF;
 import org.apache.streampipes.vocabulary.RDFS;
 import org.apache.streampipes.vocabulary.SO;

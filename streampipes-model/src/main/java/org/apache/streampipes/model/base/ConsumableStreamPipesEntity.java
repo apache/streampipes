@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.model.base;
 
-import org.streampipes.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.staticproperty.StaticProperty;

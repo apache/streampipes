@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.model.util;
 
-import org.eclipse.rdf4j.model.Graph;
+import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.Rio;
@@ -55,10 +55,10 @@ public class ModelUtils {
 		else return null;
 	}
 	
-	public static String asString(Graph graph) throws RDFHandlerException
+	public static String asString(Model model) throws RDFHandlerException
 	{
 		OutputStream stream = new ByteArrayOutputStream();
-		Rio.write(graph, stream, RDFFormat.JSONLD);
+		Rio.write(model, stream, RDFFormat.JSONLD);
 		return stream.toString();
 	}
 	

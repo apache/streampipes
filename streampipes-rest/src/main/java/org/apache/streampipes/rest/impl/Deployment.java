@@ -23,7 +23,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.apache.streampipes.codegeneration.api.CodeGenerator;
 import org.apache.streampipes.commons.Utils;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
-import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
+import io.fogsy.empire.core.empire.annotation.InvalidRdfException;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.deployment.DeploymentConfiguration;

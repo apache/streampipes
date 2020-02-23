@@ -20,8 +20,8 @@ package org.apache.streampipes.model.base;
 
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.streampipes.empire.annotations.RdfId;
-import org.streampipes.empire.annotations.RdfProperty;
+import io.fogsy.empire.annotations.RdfId;
+import io.fogsy.empire.annotations.RdfProperty;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 /**

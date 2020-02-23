@@ -21,7 +21,7 @@ package org.apache.streampipes.storage.rdf4j.impl;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
-import org.streampipes.empire.core.empire.impl.RdfQuery;
+import io.fogsy.empire.core.empire.impl.RdfQuery;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;

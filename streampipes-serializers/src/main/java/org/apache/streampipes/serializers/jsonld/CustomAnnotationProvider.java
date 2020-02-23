@@ -117,7 +117,7 @@ import org.apache.streampipes.model.template.BoundPipelineElement;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
-import org.streampipes.empire.core.empire.util.EmpireAnnotationProvider;
+import io.fogsy.empire.core.empire.util.EmpireAnnotationProvider;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -131,7 +131,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
   @Override
   public Collection<Class<?>> getClassesWithAnnotation(
           Class<? extends Annotation> arg0) {
-    if (arg0.getName().equals("org.streampipes.empire.annotations.RdfsClass")) {
+    if (arg0.getName().equals("io.fogsy.empire.annotations.RdfsClass")) {
       return getAnnotatedClasses();
     } else {
       return Collections.emptyList();

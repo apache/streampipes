@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.model.connect.rules;
 
-import org.streampipes.empire.annotations.Namespaces;
-import org.streampipes.empire.annotations.RdfsClass;
+import io.fogsy.empire.annotations.Namespaces;
+import io.fogsy.empire.annotations.RdfsClass;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
