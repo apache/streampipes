@@ -544,6 +544,16 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
   border-radius: 0px 0px 0 0;
 }
 
+.full-background {
+  background: #FFF;
+}
+
+.box-shadow-login {
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2), 0px 1px 4px 0px rgba(0, 0, 0, 0.14), 0px 2px 4px -1px rgba(0, 0, 0, 0.12);
+}
+
 .logo-production {
   background: url('/assets/img/login/background.png') no-repeat center center fixed;
   -webkit-background-size: cover;

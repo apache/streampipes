@@ -49,13 +49,70 @@
     <meta name="msapplication-wide310x150logo" content="assets/img/favicon/mstile-310x150.png?v=2"/>
     <meta name="msapplication-square310x310logo" content="assets/img/favicon/mstile-310x310.png?v=2"/>
 
+    <style type="text/css">
+
+        body {
+            margin: 0;
+        }
+
+        .app-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100%;
+            z-index: 80;
+        }
+
+        .logo-splash {
+            width: 50px;
+            height: 50px;
+        }
+
+        @keyframes heartbeat-anim
+        {
+            0% {
+                transform: scale( .75 );
+            }
+            20% {
+                transform: scale( 1 );
+            }
+            40% {
+                transform: scale( .75 );
+            }
+            60% {
+                transform: scale( 1 );
+            }
+            80% {
+                transform: scale( .75 );
+            }
+            100% {
+                transform: scale( .75 );
+            }
+        }
+
+        .animated-logo {
+            width: 50px;
+            height: 50px;
+            animation: heartbeat-anim 1.5s infinite;
+        }
+    </style>
+
 </head>
 
 <body layout="row" ng-controller="AppCtrl as appCtrl">
-<app-root></app-root>
+<app-root>
+</app-root>
 
 <div layout="column" style="height:100%;" role="main" tabindex="-1" flex>
-    <div class="sp-fade" ui-view="container" flex layout="column" style="min-height: 100vh"></div>
+    <div class="sp-fade" ui-view="container" flex layout="column" style="min-height: 100vh">
+        <div class="app-loading">
+            <div class="animated-logo">
+                <img src="/assets/img/favicon/favicon-128.png" class="logo-splash"/>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>
