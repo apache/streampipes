@@ -37,7 +37,7 @@ spec:
             claimName: kafka-pvc
       containers:
         - name: kafka
-          image: wurstmeister/kafka:{{ .Values.external.kafkaVersion }}
+          image: fogsyio/kafka:{{ .Values.external.kafkaVersion }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: 9092

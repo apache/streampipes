@@ -33,7 +33,7 @@ spec:
             claimName: consul-pvc
       containers:
         - name: consul
-          image: consul:{{ .Values.external.consulVersion }}
+          image: fogsyio/consul:{{ .Values.external.consulVersion }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: 8500

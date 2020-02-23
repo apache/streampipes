@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: activemq
-          image: streampipes/activemq:{{ .Values.external.activemqVersion }}
+          image: fogsyio/activemq:{{ .Values.external.activemqVersion }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: 61616

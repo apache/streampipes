@@ -18,7 +18,7 @@ services:
 
 #### Mandatory external services
   activemq:
-    image: streampipes/activemq:5.15.9
+    image: fogsyio/activemq:5.15.9
     ports:
       - "61616:61616"
       - "61614:61614"
@@ -28,7 +28,7 @@ services:
       spnet:
 
   consul:
-    image: consul:1.6.0
+    image: fogsyio/consul:1.7.0
     environment:
       - "CONSUL_LOCAL_CONFIG={\"disable_update_check\": true}"
       - "CONSUL_BIND_INTERFACE=eth0"
@@ -54,7 +54,7 @@ services:
         ipv4_address: 172.31.0.9
 
   couchdb:
-    image: couchdb:2.3.1
+    image: fogsyio/couchdb:2.3.1
     ports:
       - "5984:5984"
     volumes:
@@ -63,7 +63,7 @@ services:
       spnet:
 
   kafka:
-    image: wurstmeister/kafka:2.12-2.2.0
+    image: fogsyio/kafka:2.2.0
     hostname: kafka
     ports:
       - "9094:9094"
@@ -107,7 +107,7 @@ services:
       spnet:
 
   zookeeper:
-    image: wurstmeister/zookeeper
+    image: fogsyio/zookeeper:3.4.13
     ports:
       - "2181:2181"
     volumes:
@@ -327,7 +327,7 @@ services:
       spnet:
 
   influxdb:
-    image: influxdb:1.7
+    image: fogsyio/influxdb:1.7
     ports:
       - "8083:8083"
       - "8086:8086"

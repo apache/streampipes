@@ -18,15 +18,15 @@ deployment: lite
 pullPolicy: "Always"
 
 streampipes:
-  version: "0.65.0"
-  registry: "streampipes"
+  version: "0.65.1-SNAPSHOT"
+  registry: "apachestreampipes"
 
 external:
   activemqVersion: latest
-  consulVersion: 1.6.0
+  consulVersion: 1.7.0
   couchdbVersion: 2.3.1
   flinkVersion: 1.9.1-scala_2.11
-  kafkaVersion: 2.12-2.2.0
+  kafkaVersion: 2.2.0
   kafkarestVersion: 5.2.3
   zookeeperVersion: 3.4.13
   influxVersion: 1.7

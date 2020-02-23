@@ -34,7 +34,7 @@ spec:
             claimName: influxdb-pvc
       containers:
         - name: influxdb
-          image: influxdb:{{ .Values.external.influxdbVersion }}
+          image: fogsyio/influxdb:{{ .Values.external.influxdbVersion }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: 8083
