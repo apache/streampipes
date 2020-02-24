@@ -29,7 +29,7 @@ external:
   kafkaVersion: 2.2.0
   kafkarestVersion: 5.2.3
   zookeeperVersion: 3.4.13
-  influxVersion: 1.7
+  influxdbVersion: 1.7
   iotdbVersion: latest
   kibanaVersion: 6.2.3
   elasticsearchVersion: 6.2.3
