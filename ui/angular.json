@@ -21,15 +21,6 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/angular-material/angular-material.scss",
-              "node_modules/bootstrap/dist/css/bootstrap.css",
-              "node_modules/trix/dist/trix.css",
-              "node_modules/slick-carousel/slick/slick.scss",
-              "node_modules/slick-carousel/slick/slick-theme.scss",
-              "node_modules/datatables.net-dt/css/jquery.dataTables.css",
-              "node_modules/@fortawesome/fontawesome-free/css/all.css",
-              "src/assets/fonts/MaterialIcons-Regular.css",
-              "src/assets/fonts/Roboto-Regular.css",
               "src/scss/main.scss"
             ],
             "scripts": [

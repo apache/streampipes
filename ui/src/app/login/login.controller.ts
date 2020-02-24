@@ -49,9 +49,8 @@ export class LoginCtrl {
         this.authenticationFailed = false;
     }
 
-
     openDocumentation(){
-        this.$window.open('https://docs.streampipes.org', '_blank');
+        this.$window.open('https://streampipes.apache.org/docs', '_blank');
     };
 
     logIn() {
