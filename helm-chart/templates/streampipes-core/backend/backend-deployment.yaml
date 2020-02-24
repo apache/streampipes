@@ -47,5 +47,3 @@ spec:
           volumeMounts:
             - mountPath: "/root/.streampipes"
               name: backend-pv
-      imagePullSecrets:
-        - name: gitlab-registry

@@ -47,5 +47,3 @@ spec:
               value: kafka
           ports:
             - containerPort: 8099
-      imagePullSecrets:
-        - name: gitlab-registry

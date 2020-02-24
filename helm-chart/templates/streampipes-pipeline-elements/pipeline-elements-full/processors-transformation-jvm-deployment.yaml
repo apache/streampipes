@@ -38,6 +38,4 @@ spec:
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: 8090
-      imagePullSecrets:
-        - name: gitlab-registry
 {{- end }}
