@@ -51,6 +51,14 @@ export class DashboardService {
             });
     }
 
+    getVisualizablePipelineByTopic(topic: string): Observable<VisualizablePipeline> {
+        return this.http
+            .get(this.visualizablePipelineUrl + "/topic/" + topic)
+            .map(data => {
+                return this.tsonLdSerializerService.fromJsonLd(data, 'sp:VisualizablePipeline')
+            });
+    }
+
     getDashboards(): Observable<Array<Dashboard>> {
         return this.http.get(this.dashboardUrl).map(data => {
            return data as Dashboard[];

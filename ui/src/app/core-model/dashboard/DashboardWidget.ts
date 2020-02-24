@@ -30,6 +30,9 @@ export class DashboardWidget extends UnnamedStreamPipesEntity {
     @RdfProperty('sp:hasPipelineId')
     visualizablePipelineId: string;
 
+    @RdfProperty('sp:hasTopic')
+    visualizablePipelineTopic: string;
+
     @RdfProperty('sp:couchDbId')
     _id: string;
 

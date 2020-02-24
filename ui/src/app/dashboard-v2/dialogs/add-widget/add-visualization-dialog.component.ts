@@ -77,7 +77,6 @@ export class AddVisualizationDialogComponent {
             this.dialogTitle = "Add widget";
             this.dashboardService.getVisualizablePipelines().subscribe(visualizations => {
                 this.visualizablePipelines = visualizations;
-                console.log(this.visualizablePipelines);
             });
             this.availableWidgets = WidgetRegistry.getAvailableWidgetTemplates();
         } else {
@@ -142,8 +141,8 @@ export class AddVisualizationDialogComponent {
             let configuredWidget: DashboardWidget = new DashboardWidget();
             configuredWidget.dashboardWidgetSettings = this.selectedWidget;
             configuredWidget.visualizablePipelineId = this.selectedPipeline._id;
+            configuredWidget.visualizablePipelineTopic = this.selectedPipeline.topic;
             if (!this.data) {
-                console.log(configuredWidget);
                 this.dashboardService.saveWidget(configuredWidget).subscribe(response => {
                     this.dialogRef.close(response);
                 });
