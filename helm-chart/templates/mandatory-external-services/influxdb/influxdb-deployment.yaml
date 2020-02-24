@@ -41,11 +41,11 @@ spec:
             - containerPort: 8090
           env:
             - name: INFLUXDB_DATA_ENGINE
-              value: tsm1
+              value: "tsm1"
             - name: INFLUXDB_REPORTING_DISABLED
-              value: false
+              value: "false"
             - name: INFLUXDB_ADMIN_ENABLED
-              value: true
+              value: "true"
           volumeMounts:
             - mountPath: "/var/lib/influxdb"
               name: influxdb-pv
