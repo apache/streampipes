@@ -32,6 +32,11 @@ public class JmsTransportProtocol extends TransportProtocol {
 	
 	@RdfProperty(StreamPipes.JMS_PORT)
 	private int port;
+
+	public JmsTransportProtocol(String uri, int port) {
+		super(uri, new SimpleTopicDefinition());
+		this.port = port;
+	}
 	
 	public JmsTransportProtocol(String uri, int port, String topicName)
 	{
