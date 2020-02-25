@@ -18,13 +18,14 @@
 package org.apache.streampipes.node.controller.container.mock;
 
 import org.apache.streampipes.model.node.NodeInfo;
+import org.apache.streampipes.model.node.NodeInfoBuilder;
 
 import java.util.Arrays;
 
 public class NodeInfoMock {
 
     public static NodeInfo mockNodeInfo() {
-        return NodeInfo.newBuilder("my-id")
+        return NodeInfoBuilder.create("my-id")
                 .withNodeName("Jetson Nano")
                 .withNodeDescription("The Jetson Nano node description")
                 .withJmsTransportProtocol("ipe-girlitz.fzi.de", 61616)

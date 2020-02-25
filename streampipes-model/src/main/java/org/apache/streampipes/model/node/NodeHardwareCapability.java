@@ -20,4 +20,8 @@ package org.apache.streampipes.model.node;
 public class NodeHardwareCapability {
 
     // TODO add hardware capabilities
+
+    public NodeHardwareCapability() {
+
+    }
 }

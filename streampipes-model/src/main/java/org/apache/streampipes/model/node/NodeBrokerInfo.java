@@ -17,24 +17,23 @@
  */
 package org.apache.streampipes.model.node;
 
-import org.apache.streampipes.model.grounding.TransportProtocol;
-
 public class NodeBrokerInfo {
 
-    private TransportProtocol transportProtocol;
+    //private JmsTransportProtocol transportProtocol;
 
     public NodeBrokerInfo() {
     }
 
-    public NodeBrokerInfo(TransportProtocol transportProtocol) {
+    /*public NodeBrokerInfo(JmsTransportProtocol transportProtocol) {
         this.transportProtocol = transportProtocol;
     }
+     */
 
-    public TransportProtocol getTransportProtocol() {
-        return transportProtocol;
-    }
-
-    public void setTransportProtocol(TransportProtocol transportProtocol) {
-        this.transportProtocol = transportProtocol;
-    }
+//    public TransportProtocol getTransportProtocol() {
+//        return transportProtocol;
+//    }
+//
+//    public void setTransportProtocol(JmsTransportProtocol transportProtocol) {
+//        this.transportProtocol = transportProtocol;
+//    }
 }

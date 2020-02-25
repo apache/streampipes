@@ -23,12 +23,16 @@ import {map} from 'rxjs/operators';
 
 import {StreampipesPeContainer} from './streampipes-pe-container.model';
 import {MessagingSettings} from './messaging-settings.model';
+import {AuthStatusService} from "../../services/auth-status.service";
+import {Dashboard} from "../../dashboard-v2/models/dashboard.model";
+import {NodeInfo} from "../model/NodeInfo.model";
 
 @Injectable()
 export class ConfigurationService {
 
     
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient,
+                private authStatusService: AuthStatusService,) {
     }
 
     getServerUrl() {
@@ -42,6 +46,14 @@ export class ConfigurationService {
                     return response as MessagingSettings;
                 })
             )
+    }
+
+    getAvailableEdgeNodes(): Observable<Array<NodeInfo>> {
+        return this.http.get(this.getServerUrl() + '/api/v2/users/' + this.authStatusService.email + "/nodes")
+            .map(data => {
+            return data as NodeInfo[];
+        });
+
     }
 
     getConsulServices(): Observable<StreampipesPeContainer[]> {

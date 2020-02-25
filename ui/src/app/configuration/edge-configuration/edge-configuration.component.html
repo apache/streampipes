@@ -1,0 +1,16 @@
+<div fxFlex="100" fxLayout="column" style="margin-top:40px;">
+    <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch">
+        <div fxFlex="100" class="assemblyOptions sp-blue-bg" style="padding:5px;">
+            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
+                <h4>Edge Nodes</h4>
+                <span flex></span>
+            </div>
+        </div>
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="sp-blue-border page-container-padding-inner">
+            <div *ngFor="let node of availableEdgeNodes">
+                <h3>{{node.nodeId}}</h3>
+                <h4>{{node.nodeDescription}}</h4>
+            </div>
+        </div>
+    </div>
+</div>
