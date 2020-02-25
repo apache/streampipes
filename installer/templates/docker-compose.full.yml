@@ -28,7 +28,7 @@ services:
       spnet:
 
   consul:
-    image: fogsyio/consul:1.7.0
+    image: fogsyio/consul:1.7.1
     environment:
       - "CONSUL_LOCAL_CONFIG={\"disable_update_check\": true}"
       - "CONSUL_BIND_INTERFACE=eth0"
