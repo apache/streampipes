@@ -48,6 +48,7 @@ public class ConsulUtil {
   //private static final String HEALTH_CHECK_TTL = "15s";
   //private static final String CONSUL_DEREGISTER_SERIVER_AFTER = "10s";
   private static final String PE_SERVICE_NAME = "pe";
+  private static final String NODE_SERVICE_NAME = "node";
 
   private static final String CONSUL_ENV_LOCATION = "CONSUL_LOCATION";
   private static final String CONSUL_URL_REGISTER_SERVICE = "v1/agent/service/register";
@@ -70,6 +71,10 @@ public class ConsulUtil {
     } catch (IOException e) {
       LOG.error("Register service: " + serviceID, " - " + e.toString());
     }
+  }
+
+  public static void registerNodeControllerService(String serviceID, String url, int port) {
+    registerService(NODE_SERVICE_NAME, serviceID, url, port, "node");
   }
 
   //NOT TESTED

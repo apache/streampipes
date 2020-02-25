@@ -820,6 +820,7 @@
         <module>streampipes-connect-container-master</module>
         <module>streampipes-connect-container-worker</module>
         <module>streampipes-container-base</module>
+        <module>streampipes-node-controller-container</module>
     </modules>
 
     <profiles>

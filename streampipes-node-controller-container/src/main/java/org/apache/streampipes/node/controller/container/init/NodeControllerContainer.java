@@ -1,3 +1,4 @@
+package org.apache.streampipes.node.controller.container.init;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,33 +17,45 @@
  *
  */
 
-package org.apache.streampipes.connect.container.master.init;
-
+import org.apache.streampipes.container.util.ConsulUtil;
+import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.apache.streampipes.connect.config.ConnectContainerConfig;
-
+import javax.annotation.PreDestroy;
 import java.util.Collections;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({ org.apache.streampipes.connect.container.master.init.AdapterMasterContainerResourceConfig.class })
-public class AdapterMasterContainer {
+@Import({ NodeControllerContainerResourceConfig.class })
+public class NodeControllerContainer {
 
-  private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterContainer.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(NodeControllerContainer.class.getCanonicalName());
 
-  public static void main(String... args) {
+    public static void main(String [] args) {
 
-    Integer masterPort = ConnectContainerConfig.INSTANCE.getConnectContainerMasterPort();
+        NodeControllerConfig nodeConfig = NodeControllerConfig.INSTANCE;
 
-    LOG.info("Started StreamPipes Connect Resource in MASTER mode");
+        SpringApplication app = new SpringApplication(NodeControllerContainer.class);
+        app.setDefaultProperties(Collections.singletonMap("server.port", nodeConfig.getNodePort()));
+        app.run();
 
-    SpringApplication app = new SpringApplication(AdapterMasterContainer.class);
-    app.setDefaultProperties(Collections.singletonMap("server.port", masterPort));
-    app.run();
-  }
+        // registration with consul here
+        ConsulUtil.registerNodeControllerService(
+                nodeConfig.getNodeID(),
+                nodeConfig.getNodeHostName(),
+                nodeConfig.getNodePort()
+        );
+
+        // registration with backend here
+
+    }
+
+    @PreDestroy
+    public void onExit(){
+    }
 }
