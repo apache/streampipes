@@ -17,7 +17,8 @@
   ~
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -110,7 +111,9 @@
     </properties>
 
     <name>Apache StreamPipes</name>
-    <description>A self-service (Industrial) IoT toolbox to enable non-technical users to connect, analyze and explore IoT data streams.</description>
+    <description>A self-service (Industrial) IoT toolbox to enable non-technical users to connect, analyze and explore
+        IoT data streams.
+    </description>
     <url>https://streampipes.apache.org</url>
 
     <dependencyManagement>
@@ -824,32 +827,53 @@
 
     <profiles>
         <profile>
-            <id>java8-doclint-disabled</id>
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <properties>
-                <javadoc.opts>-Xdoclint:none</javadoc.opts>
-            </properties>
-        </profile>
-        <profile>
-            <id>release</id>
-            <activation>
-                <property>
-                    <name>release</name>
-                </property>
-            </activation>
+            <id>apache-release</id>
             <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-javadoc-plugin</artifactId>
-                            <version>3.0.0</version>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>source-release-assembly</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration combine.self="append">
+                                    <finalName>apache-streampipes-${project.version}-incubating</finalName>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>net.nicoulaj.maven.plugins</groupId>
+                        <artifactId>checksum-maven-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>sign-source-release</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>files</goal>
+                                </goals>
+                                <configuration>
+                                    <algorithms>
+                                        <algorithm>SHA-512</algorithm>
+                                    </algorithms>
+                                    <fileSets>
+                                        <fileSet>
+                                            <directory>${project.build.directory}</directory>
+                                            <includes>
+                                                <include>apache-streampipes-${project.version}-incubating-source-release.zip
+                                                </include>
+                                            </includes>
+                                        </fileSet>
+                                    </fileSets>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
@@ -866,51 +890,18 @@
                                 </configuration>
                             </execution>
                         </executions>
-
-                    </plugin>
-                    <plugin>
-                        <groupId>external.atlassian.jgitflow</groupId>
-                        <artifactId>jgitflow-maven-plugin</artifactId>
-                        <version>1.0-m5.1</version>
-                        <configuration>
-                            <flowInitContext>
-                                <masterBranchName>master</masterBranchName>
-                                <developBranchName>dev</developBranchName>
-                                <featureBranchPrefix>feature-</featureBranchPrefix>
-                                <releaseBranchPrefix>release-</releaseBranchPrefix>
-                                <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
-                            </flowInitContext>
-                            <noDeploy>true</noDeploy>
-                            <autoVersionSubmodules>true</autoVersionSubmodules>
-                            <pushReleases>false</pushReleases>
-                            <localOnly>true</localOnly>
-                            <squash>false</squash>
-                            <scmCommentPrefix>[RELEASE] [skip-ci]</scmCommentPrefix>
-                            <enableSshAgent>true</enableSshAgent>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>java8-doclint-disabled</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <javadoc.opts>-Xdoclint:none</javadoc.opts>
+            </properties>
         </profile>
     </profiles>
 
@@ -974,7 +965,7 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <dependencyConvergence />
+                                <dependencyConvergence/>
                             </rules>
                         </configuration>
                     </execution>
