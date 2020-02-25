@@ -1,4 +1,3 @@
-package org.apache.streampipes.node.controller.container.api;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,28 +15,20 @@ package org.apache.streampipes.node.controller.container.api;
  * limitations under the License.
  *
  */
+package org.apache.streampipes.node.controller.container.mock;
 
+import org.apache.streampipes.model.node.NodeInfo;
 
-import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
-import org.apache.streampipes.node.controller.container.mock.NodeInfoMock;
+import java.util.Arrays;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+public class NodeInfoMock {
 
-@Path("/")
-public class NodeStatusResource {
-
-    NodeControllerConfig nodeControllerConfig = NodeControllerConfig.INSTANCE;
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getStatus() {
-        return Response
-                .ok()
-                .entity(NodeInfoMock.mockNodeInfo())
+    public static NodeInfo mockNodeInfo() {
+        return NodeInfo.newBuilder("my-id")
+                .withNodeName("Jetson Nano")
+                .withNodeDescription("The Jetson Nano node description")
+                .withJmsTransportProtocol("ipe-girlitz.fzi.de", 61616)
+                .withSupportedPipelineElements(Arrays.asList("org.streampipes.dashboard"))
                 .build();
     }
 }

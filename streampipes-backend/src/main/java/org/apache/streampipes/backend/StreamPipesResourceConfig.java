@@ -28,6 +28,7 @@ import org.apache.streampipes.rest.impl.Couchdb;
 import org.apache.streampipes.rest.impl.DataStream;
 import org.apache.streampipes.rest.impl.Deployment;
 import org.apache.streampipes.rest.impl.InternalPipelineTemplates;
+import org.apache.streampipes.rest.impl.Node;
 import org.apache.streampipes.rest.impl.Notification;
 import org.apache.streampipes.rest.impl.OntologyContext;
 import org.apache.streampipes.rest.impl.OntologyKnowledge;
@@ -118,6 +119,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     register(Dashboard.class);
     register(VisualizablePipeline.class);
     register(PipelineCache.class);
+    register(Node.class);
 
 
     // Serializers

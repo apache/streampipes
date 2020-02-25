@@ -1,4 +1,3 @@
-package org.apache.streampipes.node.controller.container.api;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,10 +15,11 @@ package org.apache.streampipes.node.controller.container.api;
  * limitations under the License.
  *
  */
+package org.apache.streampipes.rest.impl;
 
-
-import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
-import org.apache.streampipes.node.controller.container.mock.NodeInfoMock;
+import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.rest.api.INode;
+import org.apache.streampipes.rest.shared.annotation.GsonClientModel;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -27,17 +27,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/")
-public class NodeStatusResource {
-
-    NodeControllerConfig nodeControllerConfig = NodeControllerConfig.INSTANCE;
+@Path("/v2/users/{username}/nodes")
+public class Node extends AbstractRestInterface implements INode {
 
     @GET
+    @GsonClientModel
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getStatus() {
-        return Response
-                .ok()
-                .entity(NodeInfoMock.mockNodeInfo())
-                .build();
+    @Override
+    public Response getAvailableNodes() {
+        return ok(Operations.getAvailableNodes());
     }
 }

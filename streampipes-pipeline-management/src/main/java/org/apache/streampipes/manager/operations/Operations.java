@@ -26,6 +26,7 @@ import org.apache.streampipes.manager.execution.http.PipelineExecutor;
 import org.apache.streampipes.manager.execution.http.PipelineStorageService;
 import org.apache.streampipes.manager.matching.DataSetGroundingSelector;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandler;
+import org.apache.streampipes.manager.node.AvailableNodesFetcher;
 import org.apache.streampipes.manager.recommender.ElementRecommender;
 import org.apache.streampipes.manager.remote.ContainerProvidedOptionsHandler;
 import org.apache.streampipes.manager.runtime.PipelineElementRuntimeInfoFetcher;
@@ -45,6 +46,7 @@ import org.apache.streampipes.model.client.pipeline.PipelineElementRecommendatio
 import org.apache.streampipes.model.client.pipeline.PipelineModificationMessage;
 import org.apache.streampipes.model.client.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.client.runtime.ContainerProvidedOptionsParameterRequest;
+import org.apache.streampipes.model.node.NodeInfo;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
@@ -182,5 +184,9 @@ public class Operations {
 
   public static String getRuntimeInfo(SpDataStream spDataStream) throws SpRuntimeException {
     return PipelineElementRuntimeInfoFetcher.INSTANCE.getCurrentData(spDataStream);
+  }
+
+  public static List<NodeInfo> getAvailableNodes() {
+    return new AvailableNodesFetcher().fetchNodes();
   }
 }

@@ -67,7 +67,7 @@ public class ConsulUtil {
     String body = createServiceRegisterBody(serviceName, serviceID, url, port, tag);
     try {
       registerServiceHttpClient(body);
-      LOG.info("Register service " + serviceID, "succesful");
+      LOG.info("Register service " + serviceID +" successful");
     } catch (IOException e) {
       LOG.error("Register service: " + serviceID, " - " + e.toString());
     }
@@ -159,15 +159,30 @@ public class ConsulUtil {
   }
 
   public static List<String> getActivePEServicesEndPoints() {
-    LOG.info("Load active PE services endpoints");
+    LOG.info("Load active PE service endpoints");
+    return getServiceEndpoints(PE_SERVICE_NAME, true);
+  }
+
+  public static List<String> getActiveNodeEndpoints() {
+    LOG.info("Load active node service endpoints");
+    // TODO set restrictToHealthy to true, this is just for debugging
+    return getServiceEndpoints(NODE_SERVICE_NAME, false);
+  }
+
+  public static List<String> getServiceEndpoints(String serviceGroup, boolean restrictToHealthy) {
     Consul consul = consulInstance();
     HealthClient healthClient = consul.healthClient();
     List<String> endpoints = new LinkedList<>();
 
-    List<ServiceHealth> nodes = healthClient.getHealthyServiceInstances(PE_SERVICE_NAME).getResponse();
+    List<ServiceHealth> nodes;
+    if (!restrictToHealthy) {
+      nodes = healthClient.getAllServiceInstances(serviceGroup).getResponse();
+    } else {
+      nodes = healthClient.getHealthyServiceInstances(serviceGroup).getResponse();
+    }
     for (ServiceHealth node : nodes) {
       String endpoint = node.getService().getAddress() + ":" + node.getService().getPort();
-      LOG.info("Active PE endpoint:" + endpoint);
+      LOG.info("Active" +serviceGroup + " endpoint:" + endpoint);
       endpoints.add(endpoint);
     }
     return endpoints;
