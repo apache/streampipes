@@ -8,13 +8,26 @@ jobs:
   build-and-push-to-docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Extract Branch
+        run: |
+          echo "::set-env name=GIT_BRANCH::${GITHUB_REF##*/}"
+          echo $GIT_BRANCH
+      - name: Checkout incubator-streampipes project
+        uses: actions/checkout@v2
+        with:
+          repository: 'apache/incubator-streampipes'
+          path: './incubator-streampipes'
       - name: Checkout
         uses: actions/checkout@v1
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Build and install incubator-streampipes with Maven
+        working-directory: ./incubator-streampipes
+        run: mvn clean install -DskipTests -Denforcer.skip
       - name: Build Extensions with Maven
+        working-directory: ./
         run: mvn clean package javadoc:aggregate -U -DskipTests -Denforcer.skip
       - name: Set env variables for Docker builds
         run: |
