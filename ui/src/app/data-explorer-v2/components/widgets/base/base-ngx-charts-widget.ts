@@ -20,9 +20,9 @@ import { OnInit } from '@angular/core';
 import { GridsterItemComponent } from 'angular-gridster2';
 import { GridsterInfo } from '../../../../dashboard-v2/models/gridster-info.model';
 import { ResizeService } from '../../../services/resize.service';
-import { BaseStreamPipesWidget } from './base-widget';
+import { BaseDataExplorerWidget } from './base-widget';
 
-export abstract class BaseNgxChartsStreamPipesWidget extends BaseStreamPipesWidget implements OnInit {
+export abstract class BaseNgxChartsStreamPipesWidget extends BaseDataExplorerWidget implements OnInit {
 
     view: any[] = [];
     displayChart = false;

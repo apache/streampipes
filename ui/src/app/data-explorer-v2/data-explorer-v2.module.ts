@@ -31,12 +31,13 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { ConnectModule } from '../connect/connect.module';
 import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { DataExplorerModule } from '../data-explorer/data-explorer.module';
 import { ElementIconText } from '../services/get-element-icon-text.service';
 import { DataExplorerDashboardGridComponent } from './components/grid/data-explorer-dashboard-grid.component';
 import { DataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview.component';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
-import { NumberWidgetComponent } from './components/widgets/number/number-widget.component';
+import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { DataExplorerV2Component } from './data-explorer-v2.component';
 import { DataExplorerAddVisualizationDialogComponent } from './dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
@@ -65,6 +66,7 @@ const dashboardWidgets = [
         MatGridListModule,
         ConnectModule,
         NgxChartsModule,
+        DataExplorerModule,
         CdkTableModule,
     ],
     declarations: [
@@ -75,7 +77,7 @@ const dashboardWidgets = [
         DataExplorerDashboardWidgetComponent,
         DataExplorerAddVisualizationDialogComponent,
         DataExplorerEditDataViewDialogComponent,
-        NumberWidgetComponent,
+        TableWidgetComponent,
     ],
     providers: [
         DataViewDashboardService,

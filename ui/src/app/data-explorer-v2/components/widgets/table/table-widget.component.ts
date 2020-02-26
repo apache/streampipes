@@ -18,15 +18,15 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
-import { BaseStreamPipesWidget } from '../base/base-widget';
-import { NumberConfig } from './number-config';
+import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { TableConfig } from './table-config';
 
 @Component({
-    selector: 'number-widget',
-    templateUrl: './number-widget.component.html',
-    styleUrls: ['./number-widget.component.css']
+    selector: 'sp-data-explorer-table-widget',
+    templateUrl: './table-widget.component.html',
+    styleUrls: ['./table-widget.component.css']
 })
-export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
+export class TableWidgetComponent extends BaseDataExplorerWidget implements OnInit, OnDestroy {
 
     item: any;
 
@@ -45,7 +45,7 @@ export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnIn
     }
 
     extractConfig(extractor: StaticPropertyExtractor) {
-        this.selectedProperty = extractor.mappingPropertyValue(NumberConfig.NUMBER_MAPPING_KEY);
+        this.selectedProperty = extractor.mappingPropertyValue(TableConfig.NUMBER_MAPPING_KEY);
     }
 
     isNumber(item: any): boolean {

@@ -26,103 +26,108 @@ import { DataViewDashboardService } from '../../services/data-view-dashboard.ser
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
 
 @Component({
-    selector: 'sp-data-explorer-dashboard-panel',
-    templateUrl: './data-explorer-dashboard-panel.component.html',
-    styleUrls: ['./data-explorer-dashboard-panel.component.css']
+  selector: 'sp-data-explorer-dashboard-panel',
+  templateUrl: './data-explorer-dashboard-panel.component.html',
+  styleUrls: ['./data-explorer-dashboard-panel.component.css']
 })
 export class DataExplorerDashboardPanelComponent implements OnInit {
 
-    @Input() dashboard: IDataViewDashboard;
-    @Input('editMode') editMode: boolean;
-    @Output('editModeChange') editModeChange: EventEmitter<boolean> = new EventEmitter();
+  @Input() dashboard: IDataViewDashboard;
+  @Input('editMode') editMode: boolean;
+  @Output('editModeChange') editModeChange: EventEmitter<boolean> = new EventEmitter();
 
-    public items: IDataViewDashboardItem[];
+  public items: IDataViewDashboardItem[];
 
-    protected subscription: Subscription;
+  protected subscription: Subscription;
 
-    widgetIdsToRemove: string[] = [];
-    widgetsToUpdate: Map<string, DashboardWidget> = new Map<string, DashboardWidget>();
+  widgetIdsToRemove: string[] = [];
+  widgetsToUpdate: Map<string, DashboardWidget> = new Map<string, DashboardWidget>();
 
-    constructor(private dashboardService: DataViewDashboardService,
-                public dialog: MatDialog,
-                private refreshDashboardService: RefreshDashboardService) {
-    }
+  constructor(private dashboardService: DataViewDashboardService,
+              public dialog: MatDialog,
+              private refreshDashboardService: RefreshDashboardService) {
+  }
 
-    public ngOnInit() {
+  public ngOnInit() {
 
-    }
+  }
 
-    addWidget(): void {
-        const dialogRef = this.dialog.open(DataExplorerAddVisualizationDialogComponent, {
-            width: '70%',
-            height: '500px',
-            panelClass: 'custom-dialog-container'
-        });
+  addWidget(): void {
+    const dialogRef = this.dialog.open(DataExplorerAddVisualizationDialogComponent, {
+      width: '70%',
+      height: '500px',
+      panelClass: 'custom-dialog-container'
+    });
 
-        dialogRef.afterClosed().subscribe(widget => {
-            if (widget) {
-                this.addWidgetToDashboard(widget);
-            }
-        });
-    }
+    dialogRef.afterClosed().subscribe(widget => {
+      if (widget) {
+        this.addWidgetToDashboard(widget);
+      }
+    });
+  }
 
-    addWidgetToDashboard(widget: DashboardWidget) {
-        const dashboardItem = {} as IDataViewDashboardItem;
-        dashboardItem.widgetId = widget._id;
-        dashboardItem.id = widget._id;
-        // TODO there should be a widget type DashboardWidget
-        dashboardItem.widgetType = widget.dashboardWidgetSettings.widgetName;
-        dashboardItem.cols = 2;
-        dashboardItem.rows = 2;
-        dashboardItem.x = 0;
-        dashboardItem.y = 0;
-        this.dashboard.widgets.push(dashboardItem);
-    }
+  addWidgetToDashboard(widget: DashboardWidget) {
+    const dashboardItem = {} as IDataViewDashboardItem;
+    dashboardItem.widgetId = widget._id;
+    dashboardItem.id = widget._id;
+    // TODO there should be a widget type DashboardWidget
+    dashboardItem.widgetType = widget.dashboardWidgetSettings.widgetName;
+    dashboardItem.cols = 2;
+    dashboardItem.rows = 2;
+    dashboardItem.x = 0;
+    dashboardItem.y = 0;
+    this.dashboard.widgets.push(dashboardItem);
+  }
 
-    updateDashboardAndCloseEditMode() {
-        this.dashboardService.updateDashboard(this.dashboard).subscribe(result => {
-            if (this.widgetsToUpdate.size > 0) {
-                forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
-                    this.closeEditModeAndReloadDashboard();
-                });
-            } else {
-                this.deleteWidgets();
-                this.closeEditModeAndReloadDashboard();
-            }
-        });
-    }
+  updateDashboardAndCloseEditMode() {
+    // this.dashboardService.updateDashboard(this.dashboard).subscribe(result => {
+    //     if (this.widgetsToUpdate.size > 0) {
+    //         forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
+    //             this.closeEditModeAndReloadDashboard();
+    //         });
+    //     } else {
+    //         this.deleteWidgets();
+    //         this.closeEditModeAndReloadDashboard();
+    //     }
+    // });
 
-    closeEditModeAndReloadDashboard() {
-        this.editModeChange.emit(!(this.editMode));
-        this.refreshDashboardService.notify(this.dashboard._id);
-    }
+    this.editModeChange.emit(!(this.editMode));
+    this.refreshDashboardService.notify(this.dashboard._id);
+    this.closeEditModeAndReloadDashboard();
 
-    prepareWidgetUpdates(): Array<Observable<any>> {
-        const promises: Array<Observable<any>> = [];
-        this.widgetsToUpdate.forEach((widget, key) => {
-            promises.push(this.dashboardService.updateWidget(widget));
-        });
+  }
 
-        return promises;
-    }
+  closeEditModeAndReloadDashboard() {
+    this.editModeChange.emit(!(this.editMode));
+    this.refreshDashboardService.notify(this.dashboard._id);
+  }
 
-    discardChanges() {
-        this.editModeChange.emit(!(this.editMode));
-        this.refreshDashboardService.notify(this.dashboard._id);
-    }
+  prepareWidgetUpdates(): Array<Observable<any>> {
+    const promises: Array<Observable<any>> = [];
+    this.widgetsToUpdate.forEach((widget, key) => {
+      promises.push(this.dashboardService.updateWidget(widget));
+    });
 
-    removeAndQueueItemForDeletion(widget: IDataViewDashboardItem) {
-        this.dashboard.widgets.splice(this.dashboard.widgets.indexOf(widget), 1);
-        this.widgetIdsToRemove.push(widget.id);
-    }
+    return promises;
+  }
 
-    updateAndQueueItemForDeletion(dashboardWidget: DashboardWidget) {
-        this.widgetsToUpdate.set(dashboardWidget._id, dashboardWidget);
-    }
+  discardChanges() {
+    this.editModeChange.emit(!(this.editMode));
+    this.refreshDashboardService.notify(this.dashboard._id);
+  }
 
-    deleteWidgets() {
-        this.widgetIdsToRemove.forEach(widgetId => {
-            this.dashboardService.deleteWidget(widgetId).subscribe();
-        });
-    }
+  removeAndQueueItemForDeletion(widget: IDataViewDashboardItem) {
+    this.dashboard.widgets.splice(this.dashboard.widgets.indexOf(widget), 1);
+    this.widgetIdsToRemove.push(widget.id);
+  }
+
+  updateAndQueueItemForDeletion(dashboardWidget: DashboardWidget) {
+    this.widgetsToUpdate.set(dashboardWidget._id, dashboardWidget);
+  }
+
+  deleteWidgets() {
+    this.widgetIdsToRemove.forEach(widgetId => {
+      this.dashboardService.deleteWidget(widgetId).subscribe();
+    });
+  }
 }

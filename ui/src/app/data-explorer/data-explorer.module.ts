@@ -81,6 +81,8 @@ export const MY_NATIVE_FORMATS = {
     DataDownloadDialog,
   ],
   exports: [
+    DataExplorerComponent,
+    ExplorerComponent
   ]
 })
 export class DataExplorerModule {

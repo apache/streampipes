@@ -24,7 +24,7 @@ import { IDataViewDashboardItem } from '../../../models/dataview-dashboard.model
 import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 
-export abstract class BaseStreamPipesWidget implements OnChanges, OnInit, OnDestroy {
+export abstract class BaseDataExplorerWidget implements OnChanges, OnInit, OnDestroy {
 
     protected constructor() {
     }
@@ -53,7 +53,7 @@ export abstract class BaseStreamPipesWidget implements OnChanges, OnInit, OnDest
     defaultSecondaryTextColor = '#39B54A';
 
     ngOnInit(): void {
-        this.prepareConfigExtraction();
+        // this.prepareConfigExtraction();
     }
 
     prepareConfigExtraction() {

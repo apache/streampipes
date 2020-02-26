@@ -18,12 +18,12 @@
 
 import { DashboardWidgetSettings } from '../../core-model/dashboard/DashboardWidgetSettings';
 import { WidgetConfig } from '../../dashboard-v2/components/widgets/base/base-config';
-import { NumberConfig } from '../components/widgets/number/number-config';
+import { TableConfig } from '../components/widgets/table/table-config';
 
 export class WidgetRegistry {
 
     private static availableWidgets: WidgetConfig[] = [
-        new NumberConfig(),
+        new TableConfig(),
     ];
 
     static getAvailableWidgetTemplates(): DashboardWidgetSettings[] {

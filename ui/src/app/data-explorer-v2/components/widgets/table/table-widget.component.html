@@ -20,8 +20,9 @@
     <div class="title-panel" *ngIf="hasTitlePanelSettings">
         {{selectedTitle}}
     </div>
-    <div class="numberItem">
-        <div *ngIf="isNumber(item)">{{item}}</div>
-        <div *ngIf="!isNumber(item)">{{item}}</div>
-    </div>
+
+
+    <!--<sp-data-explorer></sp-data-explorer>-->
+    <sp-explorer></sp-explorer>
+
 </div>

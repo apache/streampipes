@@ -31,10 +31,11 @@
         <div class="h-100 p-0 row content">
             <!--        <div *ngIf="widget."></div>-->
             <div *ngIf="widgetLoaded" class="h-100">
-                <div *ngIf="widget.widgetType === 'number'" class="h-100 p-0">
-                    <sp-data-exploerer-number-widget [gridsterItemComponent]="gridsterItemComponent" [gridsterItem]="item"
+                <!--<div *ngIf="widget.widgetType === 'number'" class="h-100 p-0">-->
+                    <div class="h-100 p-0">
+                    <sp-data-explorer-table-widget [gridsterItemComponent]="gridsterItemComponent" [gridsterItem]="item"
                                    [widget]="widget" [editMode]="editMode"
-                                   [widgetConfig]="configuredWidget" class="h-100"></sp-data-exploerer-number-widget>
+                                   [widgetConfig]="configuredWidget" class="h-100"></sp-data-explorer-table-widget>
                 </div>
             </div>
         </div>
