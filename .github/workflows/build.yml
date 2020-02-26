@@ -4,14 +4,13 @@ on:
   push:
     branches:
       - dev
+env:
+  GITHUB_BRANCH: ${GITHUB_REF##*/}
+
 jobs:
   build-and-push-to-docker:
     runs-on: ubuntu-latest
     steps:
-      - name: Extract Branch
-        run: |
-          echo "::set-env name=GIT_BRANCH::${GITHUB_REF##*/}"
-          echo $GIT_BRANCH
       - name: Checkout incubator-streampipes project
         uses: actions/checkout@v2
         with:
