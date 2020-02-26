@@ -49,6 +49,19 @@
             <artifactId>streampipes-model</artifactId>
             <version>0.65.1-SNAPSHOT</version>
         </dependency>
+
+        <!--external dependencies-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.oshi</groupId>-->
+<!--            <artifactId>oshi-core</artifactId>-->
+<!--            <version>4.1.1</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.21</version>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -1,0 +1,47 @@
+nodeInfo:
+    nodeId: "my-node-id"
+    nodeBrokerInfo:
+      host: "ipe-girlitz.fzi.de"
+      port: 61616
+    nodeMetadata:
+      nodeName: "ipe-biber.fzi.de"
+      nodePort: 7077
+      nodeDescription: "agent"
+      nodeLocation: "edge"
+    nodeCapabilities:
+      hardware:
+        cpu:
+          cores: 12
+          arch: "amd64"
+        mem:
+          size: 16
+        disk:
+          size: 30
+          type: "ssd"
+        gpu:
+          hasGPU: True
+          arch: "Maxwell"
+          cudaCores: 128
+          type: "NVIDIA Tegra X1"
+      software:
+        os: "Linux"
+        cuda:
+          cudaDriverVersion: "10.0"
+          cudaRuntimeVersion: "10.0"
+        docker:
+          hasDocker: True
+          hasNvidiaRuntime: True
+          clientVersion: "19.03.5"
+          serverVersion: "19.03.5"
+          apiVersion: "1.40"
+          apiMinVersion: "1.12"
+      interfaces:
+        - name: "camera"
+          type: "picam"
+          domainProperty: "https://image.com"
+        - name: "SPS"
+          type: "S7"
+          domainProperty: "https://schema.org/sps/s7"
+    supportedPipelineElementAppIds:
+      - "pipeline-elements-all-jvm"
+      - "sources-watertank-simulator"

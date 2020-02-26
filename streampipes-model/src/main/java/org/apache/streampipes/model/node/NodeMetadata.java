@@ -20,14 +20,18 @@ package org.apache.streampipes.model.node;
 public class NodeMetadata {
 
     private String nodeName;
+    private int nodePort;
     private String nodeDescription;
+    private String nodeLocation;
 
     public NodeMetadata() {
     }
 
-    public NodeMetadata(String nodeName, String nodeDescription) {
+    public NodeMetadata(String nodeName, int nodePort, String nodeDescription, String nodeLocation) {
         this.nodeName = nodeName;
+        this.nodePort = nodePort;
         this.nodeDescription = nodeDescription;
+        this.nodeLocation = nodeLocation;
     }
 
     public String getNodeName() {
@@ -38,11 +42,27 @@ public class NodeMetadata {
         this.nodeName = nodeName;
     }
 
+    public int getNodePort() {
+        return nodePort;
+    }
+
+    public void setNodePort(int nodePort) {
+        this.nodePort = nodePort;
+    }
+
     public String getNodeDescription() {
         return nodeDescription;
     }
 
     public void setNodeDescription(String nodeDescription) {
         this.nodeDescription = nodeDescription;
+    }
+
+    public String getNodeLocation() {
+        return nodeLocation;
+    }
+
+    public void setNodeLocation(String nodeLocation) {
+        this.nodeLocation = nodeLocation;
     }
 }

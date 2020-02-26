@@ -1,5 +1,4 @@
-package org.apache.streampipes.node.controller.container.config;
-/*
+package org.apache.streampipes.model.node.capabilities.software;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -17,9 +16,35 @@ package org.apache.streampipes.node.controller.container.config;
  *
  */
 
-public class ConfigKeys {
-    final static String NODE_ID_KEY = "SP_NODE_ID";
-    final static String NODE_SERVICE_PORT_KEY = "SP_NODE_SERVICE_PORT";
-    final static String NODE_METADATA_HOSTNAME_KEY = "SP_NODE_METADATA_HOSTNAME";
-    final static String NODE_METADATA_LOCATION_KEY = "SP_NODE_METADATA_LOCATION";
+import org.apache.streampipes.model.node.capabilities.software.resources.Cuda;
+import org.apache.streampipes.model.node.capabilities.software.resources.Docker;
+
+public class Software {
+    private String os;
+    private Cuda cuda;
+    private Docker docker;
+
+    public String getOs() {
+        return os;
+    }
+
+    public void setOs(String os) {
+        this.os = os;
+    }
+
+    public Docker getDocker() {
+        return docker;
+    }
+
+    public void setDocker(Docker docker) {
+        this.docker = docker;
+    }
+
+    public Cuda getCuda() {
+        return cuda;
+    }
+
+    public void setCuda(Cuda cuda) {
+        this.cuda = cuda;
+    }
 }
