@@ -20,23 +20,29 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { InjectableRxStompConfig, RxStompService, rxStompServiceFactory } from '@stomp/ng2-stompjs';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GridsterModule } from 'angular-gridster2';
+import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { DynamicModule } from 'ng-dynamic-component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ConnectModule } from '../connect/connect.module';
 import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
+import { CoreUiModule } from '../core-ui/core-ui.module';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
-import { DataExplorerModule } from '../data-explorer/data-explorer.module';
 import { ElementIconText } from '../services/get-element-icon-text.service';
 import { DataExplorerDashboardGridComponent } from './components/grid/data-explorer-dashboard-grid.component';
 import { DataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview.component';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
+import { DataDownloadDialog } from './components/widgets/old-explorer-widget/datadownloadDialog/dataDownload.dialog';
+import { OldExplorerComponent } from './components/widgets/old-explorer-widget/old-explorer.component';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { DataExplorerV2Component } from './data-explorer-v2.component';
 import { DataExplorerAddVisualizationDialogComponent } from './dialogs/add-widget/data-explorer-add-visualization-dialog.component';
@@ -49,68 +55,89 @@ const dashboardWidgets = [
 
 ];
 
+export const MY_NATIVE_FORMATS = {
+  fullPickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false},
+  datePickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false},
+  timePickerInput: {hour: 'numeric', minute: 'numeric', hour12: false},
+  monthYearLabel: {year: 'numeric', month: 'short', hour12: false},
+  dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric', hour12: false},
+  monthYearA11yLabel: {year: 'numeric', month: 'long', hour12: false},
+};
+
+
 @NgModule({
-    imports: [
-        CommonModule,
-        MatTabsModule,
-        DynamicModule.withComponents(
-            dashboardWidgets
-        ),
-        FlexLayoutModule,
-        GridsterModule,
-        CommonModule,
-        FlexLayoutModule,
-        CustomMaterialModule,
-        FormsModule,
-        ColorPickerModule,
-        MatGridListModule,
-        ConnectModule,
-        NgxChartsModule,
-        DataExplorerModule,
-        CdkTableModule,
-    ],
-    declarations: [
-        DataExplorerV2Component,
-        DataExplorerDashboardGridComponent,
-        DataExplorerDashboardOverviewComponent,
-        DataExplorerDashboardPanelComponent,
-        DataExplorerDashboardWidgetComponent,
-        DataExplorerAddVisualizationDialogComponent,
-        DataExplorerEditDataViewDialogComponent,
-        TableWidgetComponent,
-    ],
-    providers: [
-        DataViewDashboardService,
-        ResizeService,
-        RefreshDashboardService,
-        SemanticTypeUtilsService,
-        {
-            provide: 'RestApi',
-            useFactory: ($injector: any) => $injector.get('RestApi'),
-            deps: ['$injector'],
-        },
-        ElementIconText,
-        {
-            provide: InjectableRxStompConfig,
-        },
-        {
-            provide: RxStompService,
-            useFactory: rxStompServiceFactory,
-            deps: [InjectableRxStompConfig]
-        }
-    ],
-    exports: [
-        DataExplorerV2Component
-    ],
-    entryComponents: [
-        DataExplorerV2Component,
-        DataExplorerAddVisualizationDialogComponent,
-        DataExplorerEditDataViewDialogComponent
-    ]
+  imports: [
+    CommonModule,
+    MatTabsModule,
+    DynamicModule.withComponents(
+      dashboardWidgets
+    ),
+    FlexLayoutModule,
+    GridsterModule,
+    CommonModule,
+    FlexLayoutModule,
+    CustomMaterialModule,
+    FormsModule,
+    ColorPickerModule,
+    MatGridListModule,
+    ConnectModule,
+    NgxChartsModule,
+    CdkTableModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
+    ReactiveFormsModule,
+    CoreUiModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
+    PlotlyViaWindowModule,
+  ],
+  declarations: [
+    DataExplorerV2Component,
+    DataExplorerDashboardGridComponent,
+    DataExplorerDashboardOverviewComponent,
+    DataExplorerDashboardPanelComponent,
+    DataExplorerDashboardWidgetComponent,
+    DataExplorerAddVisualizationDialogComponent,
+    DataExplorerEditDataViewDialogComponent,
+    TableWidgetComponent,
+    DataDownloadDialog,
+    OldExplorerComponent
+  ],
+  providers: [
+    DataViewDashboardService,
+    ResizeService,
+    RefreshDashboardService,
+    SemanticTypeUtilsService,
+    {
+      provide: 'RestApi',
+      useFactory: ($injector: any) => $injector.get('RestApi'),
+      deps: ['$injector'],
+    },
+    ElementIconText,
+    {
+      provide: InjectableRxStompConfig,
+    },
+    {
+      provide: RxStompService,
+      useFactory: rxStompServiceFactory,
+      deps: [InjectableRxStompConfig]
+    },
+    {
+      provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS
+    },
+  ],
+  exports: [
+    DataExplorerV2Component
+  ],
+  entryComponents: [
+    DataExplorerV2Component,
+    DataExplorerAddVisualizationDialogComponent,
+    DataExplorerEditDataViewDialogComponent
+  ]
 })
 export class DataExplorerV2Module {
 
-    constructor() {
-    }
+  constructor() {
+  }
 
 }
