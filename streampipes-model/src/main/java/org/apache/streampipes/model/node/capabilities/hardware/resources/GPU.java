@@ -1,5 +1,4 @@
-package org.apache.streampipes.node.controller.container.config;
-/*
+package org.apache.streampipes.model.node.capabilities.hardware.resources;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -17,9 +16,41 @@ package org.apache.streampipes.node.controller.container.config;
  *
  */
 
-public class ConfigKeys {
-    final static String NODE_ID_KEY = "SP_NODE_ID";
-    final static String NODE_SERVICE_PORT_KEY = "SP_NODE_SERVICE_PORT";
-    final static String NODE_METADATA_HOSTNAME_KEY = "SP_NODE_METADATA_HOSTNAME";
-    final static String NODE_METADATA_LOCATION_KEY = "SP_NODE_METADATA_LOCATION";
+public class GPU {
+    public boolean hasGPU;
+    public String arch;
+    public int cudaCores;
+    public String type;
+
+    public boolean hasGPU() {
+        return hasGPU;
+    }
+
+    public void setHasGPU(boolean hasGPU) {
+        this.hasGPU = hasGPU;
+    }
+
+    public String getArch() {
+        return arch;
+    }
+
+    public void setArch(String arch) {
+        this.arch = arch;
+    }
+
+    public int getCudaCores() {
+        return cudaCores;
+    }
+
+    public void setCudaCores(int cudaCores) {
+        this.cudaCores = cudaCores;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

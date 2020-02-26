@@ -1,4 +1,4 @@
-/*
+package org.apache.streampipes.model.node.capabilities.interfaces;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,21 +15,34 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.container.mock;
 
-import org.apache.streampipes.model.node.NodeInfo;
-import org.apache.streampipes.model.node.NodeInfoBuilder;
 
-import java.util.Arrays;
+public class Interfaces {
+    public String name;
+    public String type;
+    public String domainProperty;
 
-public class NodeInfoMock {
+    public String getName() {
+        return name;
+    }
 
-    public static NodeInfo mockNodeInfo() {
-        return NodeInfoBuilder.create("my-id")
-                .withNodeName("Jetson Nano")
-                .withNodeDescription("The Jetson Nano node description")
-                .withJmsTransportProtocol("ipe-girlitz.fzi.de", 61616)
-                .withSupportedPipelineElements(Arrays.asList("org.streampipes.dashboard"))
-                .build();
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getDomainProperty() {
+        return domainProperty;
+    }
+
+    public void setDomainProperty(String domainProperty) {
+        this.domainProperty = domainProperty;
     }
 }

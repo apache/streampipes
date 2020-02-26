@@ -17,9 +17,8 @@ package org.apache.streampipes.node.controller.container.api;
  *
  */
 
+import org.apache.streampipes.node.controller.container.description.NodeInfoDescription;
 
-import org.apache.streampipes.node.controller.container.config.NodeControllerConfig;
-import org.apache.streampipes.node.controller.container.mock.NodeInfoMock;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -30,14 +29,12 @@ import javax.ws.rs.core.Response;
 @Path("/")
 public class NodeStatusResource {
 
-    NodeControllerConfig nodeControllerConfig = NodeControllerConfig.INSTANCE;
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStatus() {
         return Response
                 .ok()
-                .entity(NodeInfoMock.mockNodeInfo())
+                .entity(NodeInfoDescription.retrieveNodeInfo())
                 .build();
     }
 }

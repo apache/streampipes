@@ -19,10 +19,30 @@ package org.apache.streampipes.model.node;
 
 public class NodeBrokerInfo {
 
+    private String host;
+    private int port;
+
     //private JmsTransportProtocol transportProtocol;
 
     public NodeBrokerInfo() {
     }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
 
     /*public NodeBrokerInfo(JmsTransportProtocol transportProtocol) {
         this.transportProtocol = transportProtocol;

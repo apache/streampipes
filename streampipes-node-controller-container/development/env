@@ -15,8 +15,5 @@
 
 # Those parameters are used by IntelliJ to set the default consul parameters for development
 SP_BACKEND_HOST=localhost
-SP_NODE_ID=node1
-SP_NODE_HOSTNAME=host.docker.internal
-SP_NODE_SERVICE_NAME=node-controller-1
-SP_NODE_PORT=7077
 CONSUL_LOCATION=host.docker.internal
+NODE_INFO_YAML_FILE=node_info.yml

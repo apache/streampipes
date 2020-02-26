@@ -17,44 +17,52 @@ package org.apache.streampipes.node.controller.container.config;/*
  */
 
 import org.apache.streampipes.config.SpConfig;
+import org.apache.streampipes.model.node.NodeInfo;
+import org.apache.streampipes.model.node.Node;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+
+import java.io.InputStream;
 
 public enum NodeControllerConfig {
     INSTANCE;
 
     private SpConfig config;
-
     private final static String node_service_id = "node/";
-//    private UUID uuid = UUID.randomUUID();
-//    String nodeUUID = uuid.toString();
+    private Node node = parseNodeConfig(System.getenv("NODE_INFO_YAML_FILE"));
 
     NodeControllerConfig() {
-        config = SpConfig.getSpConfig(node_service_id + getEnvVariable(ConfigKeys.NODE_HOSTNAME_KEY));
+        config = SpConfig.getSpConfig(node_service_id + node.getNodeInfo().getNodeId());
 
-        config.register(ConfigKeys.NODE_ID_KEY, getEnvVariable(ConfigKeys.NODE_ID_KEY), "node controller id");
-        config.register(ConfigKeys.NODE_SERVICE_NAME_KEY, getEnvVariable(ConfigKeys.NODE_SERVICE_NAME_KEY), "node service name");
-        config.register(ConfigKeys.NODE_PORT_KEY, getEnvVariable(ConfigKeys.NODE_PORT_KEY), "node controller port");
-        config.register(ConfigKeys.NODE_HOSTNAME_KEY, getEnvVariable(ConfigKeys.NODE_HOSTNAME_KEY), "node hostname");
+        config.register(ConfigKeys.NODE_ID_KEY, node.getNodeInfo().getNodeId(), "node id");
+        config.register(ConfigKeys.NODE_SERVICE_PORT_KEY, node.getNodeInfo().getNodeMetadata().getNodePort(), "node port");
+        config.register(ConfigKeys.NODE_METADATA_HOSTNAME_KEY, node.getNodeInfo().getNodeMetadata().getNodeName(), "node host name");
+        config.register(ConfigKeys.NODE_METADATA_LOCATION_KEY, node.getNodeInfo().getNodeMetadata().getNodeLocation(), "node location");
+
     }
-
-    private String getEnvVariable(String key) {
-        return System.getenv(key);
-    }
-
-    public String getNodeControllerURL() { return "http://" + getNodeHostName() + ":" + getNodePort(); }
-
-    public String getNodeControllerServiceName() { return config.getString(ConfigKeys.NODE_SERVICE_NAME_KEY); }
 
     public String getNodeID() {
-        return config.getString(ConfigKeys.NODE_ID_KEY);
+        return node.getNodeInfo().getNodeId();
     }
 
-    public Integer getNodePort(){
-        return config.getInteger(ConfigKeys.NODE_PORT_KEY);
+    public int getNodeServicePort(){
+        return node.getNodeInfo().getNodeMetadata().getNodePort();
     }
 
     public String getNodeHostName(){
-        return config.getString(ConfigKeys.NODE_HOSTNAME_KEY);
+        return node.getNodeInfo().getNodeMetadata().getNodeName();
     }
 
+    public Node getNodeInfoFromConfig(){
+        return node;
+    }
+
+    private static Node parseNodeConfig(String s) {
+        Yaml yaml = new Yaml(new Constructor(Node.class));
+        InputStream inputStream = NodeInfo.class
+                .getClassLoader()
+                .getResourceAsStream(s);
+        return yaml.load(inputStream);
+    }
 
 }

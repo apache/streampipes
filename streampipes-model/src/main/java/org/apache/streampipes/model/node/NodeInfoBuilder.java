@@ -18,6 +18,9 @@
 package org.apache.streampipes.model.node;
 
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
+import org.apache.streampipes.model.node.capabilities.hardware.Hardware;
+import org.apache.streampipes.model.node.capabilities.interfaces.Interfaces;
+import org.apache.streampipes.model.node.capabilities.software.Software;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +28,7 @@ import java.util.List;
 public class NodeInfoBuilder {
     private NodeInfo nodeInfo;
     private NodeMetadata nodeMetadata;
-    private List<NodeHardwareCapability> nodeHardwareCapabilities;
+    private NodeCapabilities nodeCapabilities;
     private List<String> supportedPipelineElementAppIds;
     private NodeBrokerInfo nodeBrokerInfo;
 
@@ -33,7 +36,7 @@ public class NodeInfoBuilder {
         this.nodeInfo = new NodeInfo();
         this.nodeInfo.setNodeId(nodeId);
         this.nodeMetadata = new NodeMetadata();
-        this.nodeHardwareCapabilities = new ArrayList<>();
+        this.nodeCapabilities = new NodeCapabilities();
         this.supportedPipelineElementAppIds = new ArrayList<>();
         this.nodeBrokerInfo = new NodeBrokerInfo();
     }
@@ -42,8 +45,18 @@ public class NodeInfoBuilder {
        return new NodeInfoBuilder(nodeId);
     }
 
-    public NodeInfoBuilder withNodeName(String nodeName) {
-        this.nodeMetadata.setNodeName(nodeName);
+//    public NodeInfoBuilder withNodeName(String nodeName) {
+//        this.nodeMetadata.setNodeName(nodeName);
+//        return this;
+//    }
+
+    public NodeInfoBuilder withNodeNameAndPort(String nodeName, int nodePort) {
+        this.nodeMetadata.setNodePort(nodePort);
+        return this;
+    }
+
+    public NodeInfoBuilder withNodeLocation(String nodeLocation) {
+        this.nodeMetadata.setNodeLocation(nodeLocation);
         return this;
     }
 
@@ -59,6 +72,15 @@ public class NodeInfoBuilder {
 
     public NodeInfoBuilder withJmsTransportProtocol(String brokerHost, Integer brokerPort) {
         //this.nodeBrokerInfo.setTransportProtocol(makeJmsTransportProtocol(brokerHost, brokerPort));
+        this.nodeBrokerInfo.setHost(brokerHost);
+        this.nodeBrokerInfo.setPort(brokerPort);
+        return this;
+    }
+
+    public NodeInfoBuilder withNodeCapabilities(Hardware hardware, Software software, List<Interfaces> interfaces) {
+        this.nodeCapabilities.setHardware(hardware);
+        this.nodeCapabilities.setSoftware(software);
+        this.nodeCapabilities.setInterfaces(interfaces);
         return this;
     }
 
@@ -66,10 +88,12 @@ public class NodeInfoBuilder {
         return new JmsTransportProtocol(brokerHost, brokerPort);
     }
 
+
     public NodeInfo build() {
         nodeInfo.setNodeMetadata(nodeMetadata);
-        nodeInfo.setNodeHardwareCapabilities(nodeHardwareCapabilities);
+        nodeInfo.setNodeCapabilities(nodeCapabilities);
         nodeInfo.setNodeBrokerInfo(nodeBrokerInfo);
+        nodeInfo.setSupportedPipelineElementAppIds(supportedPipelineElementAppIds);
         return nodeInfo;
     }
 }

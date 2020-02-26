@@ -1,4 +1,4 @@
-/*
+package org.apache.streampipes.model.node;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,13 +15,16 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.node;
 
-public class NodeHardwareCapability {
+public class Node {
 
-    // TODO add hardware capabilities
+    public NodeInfo nodeInfo;
 
-    public NodeHardwareCapability() {
+    public NodeInfo getNodeInfo() {
+        return nodeInfo;
+    }
 
+    public void setNodeInfo(NodeInfo nodeInfo) {
+        this.nodeInfo = nodeInfo;
     }
 }

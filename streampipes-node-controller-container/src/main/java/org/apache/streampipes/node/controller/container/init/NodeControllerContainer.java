@@ -41,17 +41,15 @@ public class NodeControllerContainer {
         NodeControllerConfig nodeConfig = NodeControllerConfig.INSTANCE;
 
         SpringApplication app = new SpringApplication(NodeControllerContainer.class);
-        app.setDefaultProperties(Collections.singletonMap("server.port", nodeConfig.getNodePort()));
+        app.setDefaultProperties(Collections.singletonMap("server.port", nodeConfig.getNodeServicePort()));
         app.run();
 
         // registration with consul here
         ConsulUtil.registerNodeControllerService(
                 nodeConfig.getNodeID(),
                 nodeConfig.getNodeHostName(),
-                nodeConfig.getNodePort()
+                nodeConfig.getNodeServicePort()
         );
-
-        // registration with backend here
 
     }
 
