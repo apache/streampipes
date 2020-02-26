@@ -62,6 +62,9 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   @RdfProperty(StreamPipes.CORRESPONDING_PIPELINE)
   private String correspondingPipeline;
 
+  @RdfProperty(StreamPipes.DEPLOYMENT_TARGET_NODE_ID)
+  private String deploymentTargetNodeId;
+
   private List<SpDataStream> streamRequirements;
 
   private boolean configured;
@@ -159,6 +162,14 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   public void setStatusInfoSettings(ElementStatusInfoSettings statusInfoSettings) {
     this.statusInfoSettings = statusInfoSettings;
+  }
+
+  public String getDeploymentTargetNodeId() {
+    return deploymentTargetNodeId;
+  }
+
+  public void setDeploymentTargetNodeId(String deploymentTargetNodeId) {
+    this.deploymentTargetNodeId = deploymentTargetNodeId;
   }
 
   //public Logger getLogger(Class clazz, PeConfig peConfig) {
