@@ -29,16 +29,27 @@ import org.apache.streampipes.config.model.ConfigurationScope;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public class ConsulSpConfig extends SpConfig implements Runnable {
 
     private static final String CONSUL_ENV_LOCATION = "CONSUL_LOCATION";
+    private static final String NODE_ID_ENV_KEY = "SP_NODE_ID";
+
     public static final String SERVICE_ROUTE_PREFIX = "sp/v1/";
+    private static final String BASE_PREFIX = "base";
+    private static final String CONFIG_PREIFX = "config";
+    private static final String SLASH = "/";
+    private static final String MAIN_NODE_KEY = "main";
+
     private String serviceName;
     private  KeyValueClient kvClient;
+
+    private List<String> baseConfigKeys = Arrays.asList("SP_HOST", "SP_PORT");
 
 
     // TODO Implement mechanism to update the client when some configuration parameters change in Consul
@@ -235,7 +246,17 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
     }
 
     private String addSn(String key) {
-       return SERVICE_ROUTE_PREFIX + serviceName + "/" + key;
+        String configAppendix;
+        if (this.baseConfigKeys.contains(key)) {
+            String nodeId = System.getenv(NODE_ID_ENV_KEY);
+            if (nodeId == null) {
+                nodeId = MAIN_NODE_KEY;
+            }
+            configAppendix = BASE_PREFIX + SLASH + nodeId;
+        } else {
+            configAppendix = CONFIG_PREIFX;
+        }
+       return SERVICE_ROUTE_PREFIX + serviceName + SLASH +configAppendix +SLASH + key;
     }
 
     private ConfigItem fromJson(String content) {
