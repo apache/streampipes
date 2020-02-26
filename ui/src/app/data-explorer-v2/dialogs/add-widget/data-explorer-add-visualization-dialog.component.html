@@ -61,18 +61,6 @@
                         </mat-grid-tile>
                     </mat-grid-list>
                 </div>
-
-                <!-- Select Scheme -->
-                <div *ngIf="page == 'configure-widget'" fxLayout="column">
-                    <b><h4>{{pages[2].description}}</h4></b>
-                    <div fxFlex="100" fxLayout="column">
-                        <app-static-property *ngFor="let config of selectedWidget.config" [staticProperty]="config"
-                                             [staticProperties]="selectedWidget.config"
-                                             [eventSchema]="selectedPipeline.schema"></app-static-property>
-                    </div>
-
-                </div>
-
             </div>
         </div>
     </div>

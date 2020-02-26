@@ -26,8 +26,8 @@ import { map, startWith } from 'rxjs/operators';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
 import { InfoResult } from '../../../../core-model/datalake/InfoResult';
+import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 import { DataDownloadDialog } from './datadownloadDialog/dataDownload.dialog';
-import { DatalakeRestService } from "../../../../core-services/datalake/datalake-rest.service";
 
 @Component({
     selector: 'sp-old-explorer',

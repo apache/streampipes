@@ -85,6 +85,11 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
+  public IDashboardStorage getDataExplorerDashboardStorage() {
+    return new DataExplorerDashboardStorageImpl();
+  }
+
+  @Override
   public IDashboardWidgetStorage getDashboardWidgetStorage() {
     return new DashboardWidgetStorageImpl();
   }

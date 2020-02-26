@@ -42,6 +42,8 @@ public interface INoSqlStorage {
 
   IDashboardStorage getDashboardStorage();
 
+  IDashboardStorage getDataExplorerDashboardStorage();
+
   IDashboardWidgetStorage getDashboardWidgetStorage();
 
   IVisualizablePipelineStorage getVisualizablePipelineStorage();

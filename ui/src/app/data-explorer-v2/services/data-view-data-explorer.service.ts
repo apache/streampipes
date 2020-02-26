@@ -24,20 +24,22 @@ import { map } from 'rxjs/operators';
 import { DashboardWidget } from '../../core-model/dashboard/DashboardWidget';
 import { InfoResult } from '../../core-model/datalake/InfoResult';
 import { DatalakeRestService } from '../../core-services/datalake/datalake-rest.service';
+import { SharedDatalakeRestService } from '../../core-services/shared/shared-dashboard.service';
 import { TsonLdSerializerService } from '../../platform-services/tsonld-serializer.service';
 import { AuthStatusService } from '../../services/auth-status.service';
 import { IDataViewDashboard } from '../models/dataview-dashboard.model';
 
 
 @Injectable()
-export class DataViewDashboardService {
+export class DataViewDataExplorerService {
 
     localDashboards: IDataViewDashboard[] = [];
 
     constructor(private http: HttpClient,
                 private authStatusService: AuthStatusService,
                 private tsonLdSerializerService: TsonLdSerializerService,
-                private dataLakeRestService: DatalakeRestService) {
+                private dataLakeRestService: DatalakeRestService,
+                private sharedDatalakeRestService: SharedDatalakeRestService) {
     }
 
     getVisualizableData(): Observable<InfoResult[]> {
@@ -50,43 +52,42 @@ export class DataViewDashboardService {
     }
 
     getDataViews(): Observable<IDataViewDashboard[]> {
-       return Observable.of(this.localDashboards);
+      return this.sharedDatalakeRestService.getDashboards(this.getDashboardUrl());
     }
 
     updateDashboard(dashboard: IDataViewDashboard): Observable<IDataViewDashboard> {
-        return this.http.put(this.dashboardUrl + '/' + dashboard._id, dashboard).map(data => {
-            return data as IDataViewDashboard;
-        });
+      return this.sharedDatalakeRestService.updateDashboard(this.getDashboardUrl(), dashboard);
     }
 
     deleteDashboard(dashboard: IDataViewDashboard): Observable<any> {
-      return Observable.of(this.localDashboards);
+      return this.sharedDatalakeRestService.deleteDashboard(this.getDashboardUrl(), dashboard);
     }
 
     saveDataView(dataViewDashboard: IDataViewDashboard): Observable<any> {
-      this.localDashboards.push(dataViewDashboard);
-      return Observable.of(this.localDashboards);
+      // this.localDashboards.push(dataViewDashboard);
+      // return Observable.of(this.localDashboards);
+      return this.sharedDatalakeRestService.saveDashboard(this.getDashboardUrl(), dataViewDashboard);
     }
 
-    private get baseUrl() {
+    private getbaseUrl() {
         return '/streampipes-backend';
     }
 
-    private get dashboardUrl() {
-        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/ld/dashboards';
+    private getDashboardUrl() {
+        return this.getbaseUrl() + '/api/v3/users/' + this.authStatusService.email + '/datalake/dashboard';
     }
 
-    private get dashboardWidgetUrl() {
-        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/ld/widgets';
+    private getDashboardWidgetUrl() {
+        return this.getbaseUrl() + '/api/v2/users/' + this.authStatusService.email + '/ld/widgets';
     }
 
-    private get visualizablePipelineUrl() {
-        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/ld/pipelines';
+    private getvisualizablePipelineUrl() {
+        return this.getbaseUrl() + '/api/v2/users/' + this.authStatusService.email + '/ld/pipelines';
     }
 
     getWidget(widgetId: string): Observable<DashboardWidget> {
         const promise = new Promise<DashboardWidget>((resolve, reject) => {
-            this.http.get(this.dashboardWidgetUrl + '/' + widgetId).subscribe(response => {
+            this.http.get(this.getDashboardWidgetUrl() + '/' + widgetId).subscribe(response => {
                 const dashboardWidget: DashboardWidget = this.tsonLdSerializerService.fromJsonLd(response, 'sp:DashboardWidgetModel');
                 dashboardWidget.dashboardWidgetSettings.config.sort((a, b) => {
                     return a.index - b.index;
@@ -98,17 +99,17 @@ export class DataViewDashboardService {
     }
 
     saveWidget(widget: DashboardWidget): Observable<DashboardWidget> {
-        return this.serializeAndPost(this.dashboardWidgetUrl, widget);
+        return this.serializeAndPost(this.getDashboardWidgetUrl(), widget);
     }
 
     deleteWidget(widgetId: string): Observable<any> {
-        return this.http.delete(this.dashboardWidgetUrl + '/' + widgetId);
+        return this.http.delete(this.getDashboardWidgetUrl() + '/' + widgetId);
     }
 
     updateWidget(widget: DashboardWidget): Observable<any> {
         const promise = new Promise<DashboardWidget>((resolve, reject) => {
             this.tsonLdSerializerService.toJsonLd(widget).subscribe(serialized => {
-                this.http.put(this.dashboardWidgetUrl + '/' + widget._id, serialized, this.jsonLdHeaders()).subscribe(result => {
+                this.http.put(this.getDashboardWidgetUrl() + '/' + widget._id, serialized, this.jsonLdHeaders()).subscribe(result => {
                     resolve();
                 });
             });

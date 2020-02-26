@@ -29,7 +29,7 @@ import { ElementIconText } from '../../../services/get-element-icon-text.service
 import { IDataViewDashboard } from '../../models/dataview-dashboard.model';
 import { WidgetRegistry } from '../../registry/widget-registry';
 import { MappingPropertyGenerator } from '../../sdk/matching/mapping-property-generator';
-import { DataViewDashboardService } from '../../services/data-view-dashboard.service';
+import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 
 @Component({
     selector: 'sp-data-explorer-add-visualization-dialog-component',
@@ -42,7 +42,7 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
     constructor(
         public dialogRef: MatDialogRef<DataExplorerAddVisualizationDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private dashboardService: DataViewDashboardService,
+        private dashboardService: DataViewDataExplorerService,
         public elementIconText: ElementIconText) {
     }
 
@@ -54,10 +54,6 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
         type: 'select-widget',
         title: 'Select Widget',
         description: 'Select widget'
-    }, {
-        type: 'configure-widget',
-        title: 'Configure Widget',
-        description: 'Configure widget'
     }];
 
     visualizableData: InfoResult[] = [];
@@ -111,8 +107,8 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
         if (page === this.page) { return 'md-fab md-accent'; } else { return 'md-fab md-accent wizard-inactive'; }
     }
 
-    selectPipeline(vis) {
-        this.selectedDataSet = vis;
+    selectPipeline(ds) {
+        this.selectedDataSet = ds;
         this.next();
     }
 
@@ -136,29 +132,28 @@ export class DataExplorerAddVisualizationDialogComponent implements OnInit {
         if (this.page === 'select-pipeline') {
             this.page = 'select-widget';
         } else if (this.page === 'select-widget') {
-            this.page = 'configure-widget';
-        } else {
             const configuredWidget: DashboardWidget = new DashboardWidget();
             configuredWidget.dashboardWidgetSettings = this.selectedWidget;
+
+            this.dialogRef.close();
+
             // configuredWidget.dashboardWidgetDataConfig = this.selectedDataSet;
-            if (!this.data) {
-                this.dashboardService.saveWidget(configuredWidget).subscribe(response => {
-                    this.dialogRef.close(response);
-                });
-            } else {
-                configuredWidget._id = this.data.widget._id;
-                configuredWidget._ref = this.data.widget._ref;
-                configuredWidget.widgetId = this.data.widget.widgetId;
-                this.dialogRef.close(configuredWidget);
-            }
+            // if (!this.data) {
+            //     this.dashboardService.saveWidget(configuredWidget).subscribe(response => {
+            //         this.dialogRef.close(response);
+            //     });
+            // } else {
+            //     configuredWidget._id = this.data.widget._id;
+            //     configuredWidget._ref = this.data.widget._ref;
+            //     configuredWidget.widgetId = this.data.widget.widgetId;
+            //     this.dialogRef.close(configuredWidget);
+            // }
         }
     }
 
     back() {
         if (this.page === 'select-widget') {
             this.page = 'select-pipeline';
-        } else if (this.page === 'configure-widget') {
-            this.page = 'select-widget';
         }
     }
 

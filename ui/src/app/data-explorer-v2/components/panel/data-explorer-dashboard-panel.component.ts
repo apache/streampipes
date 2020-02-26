@@ -22,7 +22,7 @@ import { forkJoin, Observable, Subscription } from 'rxjs';
 import { DashboardWidget } from '../../../core-model/dashboard/DashboardWidget';
 import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { IDataViewDashboard, IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
-import { DataViewDashboardService } from '../../services/data-view-dashboard.service';
+import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
 
 @Component({
@@ -43,7 +43,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   widgetIdsToRemove: string[] = [];
   widgetsToUpdate: Map<string, DashboardWidget> = new Map<string, DashboardWidget>();
 
-  constructor(private dashboardService: DataViewDashboardService,
+  constructor(private dashboardService: DataViewDataExplorerService,
               public dialog: MatDialog,
               private refreshDashboardService: RefreshDashboardService) {
   }

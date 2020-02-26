@@ -22,7 +22,7 @@ import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { DashboardWidget } from '../../../core-model/dashboard/DashboardWidget';
 import { DataExplorerAddVisualizationDialogComponent } from '../../dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
-import { DataViewDashboardService } from '../../services/data-view-dashboard.service';
+import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-widget',
@@ -42,7 +42,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
     widgetLoaded = false;
     configuredWidget: DashboardWidget;
 
-    constructor(private dashboardService: DataViewDashboardService,
+    constructor(private dashboardService: DataViewDataExplorerService,
                 private dialog: MatDialog) {
     }
 

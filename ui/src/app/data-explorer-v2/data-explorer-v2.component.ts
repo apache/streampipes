@@ -18,7 +18,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { IDataViewDashboard } from './models/dataview-dashboard.model';
-import { DataViewDashboardService } from './services/data-view-dashboard.service';
+import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 
 @Component({
@@ -37,7 +37,7 @@ export class DataExplorerV2Component implements OnInit {
 
     dataViewDashboards: IDataViewDashboard[];
 
-    constructor(private dataViewService: DataViewDashboardService,
+    constructor(private dataViewService: DataViewDataExplorerService,
                 private refreshDashboardService: RefreshDashboardService) {}
 
     public ngOnInit() {

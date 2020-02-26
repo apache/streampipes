@@ -21,7 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataExplorerEditDataViewDialogComponent } from '../../dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
 import { IDataViewDashboard } from '../../models/dataview-dashboard.model';
-import { DataViewDashboardService } from '../../services/data-view-dashboard.service';
+import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 
 @Component({
     selector: 'sp-data-explorer-dashboard-overview',
@@ -37,7 +37,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
     dataSource = new MatTableDataSource<IDataViewDashboard>();
     displayedColumns: string[] = ['name', 'open', 'openWindow', 'edit', 'delete'];
 
-    constructor(private dashboardService: DataViewDashboardService,
+    constructor(private dashboardService: DataViewDataExplorerService,
                 public dialog: MatDialog) {
 
     }

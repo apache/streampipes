@@ -17,7 +17,7 @@
  */
 
 import { DashboardWidgetSettings } from '../../core-model/dashboard/DashboardWidgetSettings';
-import { WidgetConfig } from '../../dashboard-v2/components/widgets/base/base-config';
+import { WidgetConfig } from '../components/widgets/base/base-config';
 import { TableConfig } from '../components/widgets/table/table-config';
 
 export class WidgetRegistry {

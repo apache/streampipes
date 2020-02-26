@@ -19,7 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { IDataViewDashboard } from '../../models/dataview-dashboard.model';
-import { DataViewDashboardService } from '../../services/data-view-dashboard.service';
+import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 
 @Component({
     selector: 'sp-data-explorer-edit-data-view-dialog-component',
@@ -33,7 +33,7 @@ export class DataExplorerEditDataViewDialogComponent implements OnInit {
 
     constructor(
         public dialogRef: MatDialogRef<DataExplorerEditDataViewDialogComponent>,
-        private dashboardService: DataViewDashboardService) {
+        private dashboardService: DataViewDataExplorerService) {
     }
 
     ngOnInit() {

@@ -34,6 +34,7 @@ import { DynamicModule } from 'ng-dynamic-component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ConnectModule } from '../connect/connect.module';
 import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
+import { SharedDatalakeRestService } from '../core-services/shared/shared-dashboard.service';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { ElementIconText } from '../services/get-element-icon-text.service';
@@ -47,7 +48,7 @@ import { TableWidgetComponent } from './components/widgets/table/table-widget.co
 import { DataExplorerV2Component } from './data-explorer-v2.component';
 import { DataExplorerAddVisualizationDialogComponent } from './dialogs/add-widget/data-explorer-add-visualization-dialog.component';
 import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
-import { DataViewDashboardService } from './services/data-view-dashboard.service';
+import { DataViewDataExplorerService } from './services/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
 
@@ -104,7 +105,8 @@ export const MY_NATIVE_FORMATS = {
     OldExplorerComponent
   ],
   providers: [
-    DataViewDashboardService,
+    SharedDatalakeRestService,
+    DataViewDataExplorerService,
     ResizeService,
     RefreshDashboardService,
     SemanticTypeUtilsService,

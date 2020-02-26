@@ -45,7 +45,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget implements OnIn
     }
 
     extractConfig(extractor: StaticPropertyExtractor) {
-        this.selectedProperty = extractor.mappingPropertyValue(TableConfig.NUMBER_MAPPING_KEY);
+        // this.selectedProperty = extractor.mappingPropertyValue(TableConfig.NUMBER_MAPPING_KEY);
     }
 
     isNumber(item: any): boolean {

@@ -29,7 +29,7 @@ import { GridsterItemComponent, GridType } from 'angular-gridster2';
 import { DashboardWidget } from '../../../core-model/dashboard/DashboardWidget';
 import { GridsterInfo } from '../../../dashboard-v2/models/gridster-info.model';
 import { IDataViewDashboard, IDataViewDashboardConfig, IDataViewDashboardItem } from '../../models/dataview-dashboard.model';
-import { DataViewDashboardService } from '../../services/data-view-dashboard.service';
+import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
 import { ResizeService } from '../../services/resize.service';
 
@@ -52,7 +52,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
     @ViewChildren(GridsterItemComponent) gridsterItemComponents: QueryList<GridsterItemComponent>;
 
     constructor(private resizeService: ResizeService,
-                private dashboardService: DataViewDashboardService,
+                private dashboardService: DataViewDataExplorerService,
                 private refreshDashboardService: RefreshDashboardService) {
 
     }
