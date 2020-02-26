@@ -40,6 +40,7 @@ jobs:
           echo "::set-env name=BASE_IMG_JRE_ARM64V8::arm64v8/openjdk:11-jre-slim"
       - name: Install qemu-user-static for multi-arch builds
         run: |
+          sudo apt-get update
           sudo apt-get install qemu-user-static
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
