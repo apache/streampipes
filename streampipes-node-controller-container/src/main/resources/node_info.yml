@@ -45,3 +45,4 @@ nodeInfo:
     supportedPipelineElementAppIds:
       - "pipeline-elements-all-jvm"
       - "sources-watertank-simulator"
+      - "org.apache.streampipes.sinks.internal.jvm.dashboard"
