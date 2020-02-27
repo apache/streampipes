@@ -23,6 +23,7 @@ export class EdgeConfigurationComponent {
     getAvailableEdgeNodes() {
         this.configurationService.getAvailableEdgeNodes().subscribe(response => {
             this.availableEdgeNodes = response;
+            console.log(this.availableEdgeNodes);
         })
     }
 }

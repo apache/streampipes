@@ -16,7 +16,7 @@
   ~
   -->
 
-<md-dialog aria-label="Save" flex="60">
+<md-dialog aria-label="Save" flex="70">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Save Pipeline</h2>
@@ -54,6 +54,30 @@
                 <md-checkbox ng-click="ctrl.triggerTutorial()" ng-disabled="false" aria-label="Start Pipeline" ng-model="ctrl.startPipelineAfterStorage">
                     Start pipeline immediately
                 </md-checkbox>
+                <md-checkbox ng-disabled="false" aria-label="Start Pipeline"
+                             ng-model="ctrl.advancedSettings">
+                    Deployment settings
+                </md-checkbox>
+                <div ng-if="ctrl.advancedSettings">
+                    <h4>Nodes</h4>
+                    <div ng-repeat="pipelineElement in ctrl.pipeline.actions">
+                        <div flex="100" layout="row">
+                            <div flex="50" layout="row" layout-align="start center">
+                                <span>{{pipelineElement.name}}</span>
+                            </div>
+                            <div flex="50" layout="row" layout-align="start center">
+                                <md-select ng-model="pipelineElement.deploymentTargetNodeId" style="margin: 0;">
+                                    <md-option
+                                            ng-value = "node.nodeId" ng-repeat="node in
+                                            ctrl.deploymentOptions[pipelineElement.appId]">
+                                        <em>{{node.nodeMetadata.nodeDescription}}
+                                        </em>
+                                    </md-option>
+                                </md-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </md-dialog-content>

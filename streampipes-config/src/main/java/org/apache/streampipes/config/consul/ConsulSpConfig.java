@@ -44,7 +44,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
     private static final String BASE_PREFIX = "base";
     private static final String CONFIG_PREIFX = "config";
     private static final String SLASH = "/";
-    private static final String MAIN_NODE_KEY = "main";
+    private static final String PRIMARY_NODE_KEY = "primary";
 
     private String serviceName;
     private  KeyValueClient kvClient;
@@ -250,7 +250,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
         if (this.baseConfigKeys.contains(key)) {
             String nodeId = System.getenv(NODE_ID_ENV_KEY);
             if (nodeId == null) {
-                nodeId = MAIN_NODE_KEY;
+                nodeId = PRIMARY_NODE_KEY;
             }
             configAppendix = BASE_PREFIX + SLASH + nodeId;
         } else {
